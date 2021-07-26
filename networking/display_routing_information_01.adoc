@@ -1,0 +1,69 @@
+---
+sidebar: sidebar 
+permalink: networking/display_routing_information_01.html 
+keywords: display, view, show, route, svm, storage, virtual, machine, display routing information, view information about routes within an svm 
+summary: 查看有关 SVM 中路由的信息 
+---
+= 显示路由信息
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以显示有关 SVM 中路由的信息。
+
+根据要查看的路由信息类型，输入相应的命令：
+
+[cols="2*"]
+|===
+| 查看有关… 的信息 | 输入 ... 
+
+
+| 静态路由，每个 SVM | `network route show` 
+
+
+| 每个 SVM 的每个路由上的 LIF | `network route show-lifs` 
+|===
+您可以通过指定 ` -instance` 参数来显示每个路由的详细信息。以下命令显示集群 1 中 SVM 内的静态路由：
+
+....
+network route show
+Vserver             Destination     Gateway         Metric
+------------------- --------------- --------------- ------
+Cluster
+                    0.0.0.0/0       10.63.0.1       10
+cluster-1
+                    0.0.0.0/0       198.51.9.1      10
+vs1
+                    0.0.0.0/0       192.0.2.1       20
+vs3
+                    0.0.0.0/0       192.0.2.1       20
+....
+以下命令显示 cluster-1 中所有 SVM 中静态路由和逻辑接口（ LIF ）的关联：
+
+....
+network route show-lifs
+Vserver: Cluster
+Destination             Gateway                 Logical Interfaces
+----------------------  ----------------------  -------------------
+0.0.0.0/0               10.63.0.1               -
+
+Vserver: cluster-1
+Destination             Gateway                 Logical Interfaces
+----------------------  ----------------------  -------------------
+0.0.0.0/0               198.51.9.1              cluster_mgmt,
+                                                cluster-1_mgmt1,
+
+Vserver: vs1
+Destination             Gateway                 Logical Interfaces
+----------------------  ----------------------  -------------------
+0.0.0.0/0               192.0.2.1               data1_1, data1_2
+
+Vserver: vs3
+Destination             Gateway                 Logical Interfaces
+----------------------  ----------------------  -------------------
+0.0.0.0/0               192.0.2.1               data2_1, data2_2
+....

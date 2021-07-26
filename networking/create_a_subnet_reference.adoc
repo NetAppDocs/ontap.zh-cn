@@ -1,0 +1,64 @@
+---
+sidebar: sidebar 
+permalink: networking/create_a_subnet_reference.html 
+keywords: create, creation, creating, add, adding, subnet, create a subnet, subnet create, force-update-lif-associations, network subnet rename 
+summary: 创建子网以分配或预留特定的 IP 地址块以用于 ONTAP 网络配置 
+---
+= 创建子网
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以创建一个子网来为 ONTAP 网络配置分配或预留特定的 IPv4 或 IPv6 地址块。这样，您就可以通过指定子网名称，而不必为每个新接口指定 IP 地址和网络掩码值来更轻松地创建接口。
+
+要添加子网的广播域和 IP 空间必须已存在。
+
+.关于此任务
+* 所有子网名称在 IP 空间中必须是唯一的。
+* 在将 IP 地址范围添加到子网时，您必须确保网络中没有重叠的 IP 地址，以便不同的子网或主机不会尝试使用相同的 IP 地址。
+* 如果在定义子网时指定了网关，则在使用该子网创建 LIF 时，指向该网关的默认路由会自动添加到 SVM 中。如果不使用子网，或者在定义子网时未指定网关，则需要使用 `route create` 命令手动向 SVM 添加路由。
+
+
+创建子网：
+
+....
+network subnet create -subnet-name subnet_name -broadcast-domain <broadcast_domain_name> [- ipspace <ipspace_name>] -subnet <subnet_address> [-gateway <gateway_address>] [-ip-ranges <ip_address_list>] [-force-update-lif-associations <true>]
+....
+* `ssubnet_name` 是要创建的第 3 层子网的名称。
++
+此名称可以是 "Mgmt " 等文本字符串，也可以是 192.0.2.0/24 等特定子网 IP 值。
+
+* `broadcast_domain_name` 是子网所在广播域的名称。
+* `ipspace_name` 是广播域所属 IP 空间的名称。
++
+除非为此选项指定值，否则将使用 "Default" IP 空间。
+
+* `ssubnet_address` 是子网的 IP 地址和掩码；例如 192.0.2.0/24 。
+* `gateway_address` 是子网默认路由的网关；例如 192.0.2.1 。
+* `ip_address_list` 是要分配给子网的 IP 地址的列表或范围。
++
+IP 地址可以是单个地址， IP 地址范围或逗号分隔列表中的组合。
+
+* 可以为 ` force-update-lif-associations` 选项设置值 `true` 。
++
+如果任何服务处理器或网络接口当前正在使用指定范围内的 IP 地址，则此命令将失败。如果将此值设置为 true ，则会将任何手动寻址的接口与当前子网相关联，并允许命令成功执行。
+
+
+
+以下命令将在默认 IP 空间的广播域 Default-1 中创建子网 sub1 。它会添加 IPv4 子网 IP 地址和掩码，网关以及一系列 IP 地址：
+
+....
+network subnet create -subnet-name sub1 -broadcast-domain Default-1 -subnet 192.0.2.0/24 - gateway 192.0.2.1 -ip-ranges 192.0.2.1-192.0.2.100, 192.0.2.122
+....
+以下命令将在 "Default" IP 空间的广播域 Default 中创建子网 sub2 。它会添加一系列 IPv6 地址：
+
+....
+network subnet create -subnet-name sub2 -broadcast-domain Default -subnet 3FFE::/64 - gateway 3FFE::1 -ip-ranges "3FFE::10-3FFE::20"
+....
+您可以使用子网中的地址将 SVM 和接口分配给 IP 空间。
+
+如果需要更改现有子网的名称，请使用 `network subnet rename` 命令。

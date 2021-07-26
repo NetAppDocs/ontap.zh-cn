@@ -1,0 +1,156 @@
+---
+permalink: software_setup/task_create_an_svm_using_ontap_template.html 
+sidebar: sidebar 
+keywords: ontap, software, setup, provision, svm, preconfigured, template 
+summary: 从 ONTAP 9.3 开始，您可以使用预配置的模板创建和配置 SVM 。您必须为模板中定义的参数提供值。 
+---
+= 使用预配置的 ONTAP 模板配置 SVM
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，您可以使用预配置的模板创建和配置 SVM 。您必须为模板中定义的参数提供值。* 问题：用户为什么需要这样做？ *
+
+必须在集群上安装所有必需的功能许可证。
+
+VserverEnvironmentSetup 模板是预配置的模板，可用于配置 SVM 。您可以使用 VserverEnvironmentSetup 模板设置以下配置：
+
+* SVM 的安全模式，语言设置和 IP 空间
+* 协议
+* 数据 LIF
+* 网络路由
+* DNS 配置
+* Active Directory 配置
+* NIS 配置
+* LDAP 客户端和服务器配置
+* CIFS 服务器
+
+
+VserverEnvironmentSetup 模板是一个只读模板。您不能修改此模板的默认参数值。如果要修改模板中任何参数的默认值，必须复制此模板，然后修改这些参数的默认值。
+
+. 查看并记下用于创建和配置 SVM 的模板中定义的参数值： `template parameter show`
++
+[listing]
+----
+cluster1::> template parameter show
+
+  Template: VserverEnvironmentSetup
+Permission: readonly
+                                 Default      Read
+Parameter           Type         Value        Only Description
+------------------- ------------ ------------ ---- ----------------------------
+vserver             string       -            no   Vserver Name
+security_style      string       unix         no   Vserver Security Style
+language            string       C.UTF-8      no   Vserver Language
+ipspace             string       Default      no   Vserver IPSpace
+protocols           enum         -            no   Protocols to configure
+   Allowed Values: nfs, cifs, iscsi, fcp
+data_lif            array of lifInfoStruct
+                                 -            yes  Data LIF Info Struct
+data_lif[#].ipaddr  IPAddress    -            no   IP Addr
+data_lif[#].netmask IPAddress    -            no   NetMask
+data_lif[#].protocol
+                    string       -            no   LIF Protocol
+data_lif[#].homenode
+                    string       -            no   Node Name
+data_lif[#].homeport
+                    string       -            no   Port
+gateway             array of IPAddress
+                                 -            yes  Gateway
+gateway[#]          IPAddress                 no   Gateway
+search_domain       string       -            no   Search Domain
+dns_server          string       -            no   DNS IP Addresses List
+ad_admin_name       string       -            no   AD Admin Name
+ad_admin_passwd     string       ***          no   AD Admin Passwd
+ad_domain           string       -            no   AD Domain
+ad_ou               string       CN=Computers no   Organizational Name
+wg_name             string       -            no   WG Name
+nis_domain          string       -            no   NIS Domains
+nis_ipaddr          string       -            no   NIS IP Address
+ldap_server         string       -            no   LDAP Server IP
+ldap_base_dn        string       -            no   LDAP Base DN
+client_config       string       -            no   LDAP Client Config
+cifs_server         string       -            no   CIFS Server Name
+26 entries were displayed.
+----
+. 如果要修改模板中任何参数的默认值，请自定义现有模板：
++
+.. 复制模板： `template copy -name template_name -destination_name new_template_name`
++
+[listing]
+----
+cluster1::> template copy -name VserverEnvironmentSetup -destination-name template1
+----
++
+新模板是一个读 / 写模板。
+
+.. 修改要更改的参数的默认值： `template parameter modify -template template_name -name parameter_name -default-value new_default_value`
++
+[listing]
+----
+cluster1::> template parameter modify -template template1 -name security_style -default-value ntfs
+----
+
+
+. 通过为模板中的参数指定值来配置 SVM ： `template provision-name template_name`
++
+[listing]
+----
+cluster-1::> template provision -name template1
+	    Press Ctrl+C to abort.
+	    ********************
+	    * Setup of vserver *
+	    ********************
+	    Vserver Name: vs0
+	    Vserver Language [C.UTF-8]:
+	    Vserver Security Style [ntfs]:
+	    Vserver IPSpace [Default]:
+
+	    ******************************
+	    * Setup of network.interface *
+	    ******************************
+	    Enter number of instances for object network.interface: 2
+	    (1/2)LIF Protocol: nfs
+	    (1/2)IP Addr: 1.1.1.1
+	    (1/2)NetMask: 255.255.255.0
+	    (1/2)Node Name: node1-vsim1
+	    (1/2)Port: e0c
+	    (2/2)LIF Protocol: nfs
+	    (2/2)IP Addr: 1.1.1.1
+	    (2/2)NetMask: 255.255.255.0
+	    (2/2)Node Name: node1-vsim1
+	    (2/2)Port: e0c
+
+	    ***************************
+	    * Setup of network.routes *
+	    ***************************
+	    Enter number of instances for object network.routes: 1
+	    (1/1)Gateway: 1.1.1.1
+
+	    ***********************
+	    * Setup of access.dns *
+	    ***********************
+	    Search Domain: netapp.com
+	    DNS IP Addresses List: 1.1.1.1
+
+	    *************************
+	    * Setup of security.nis *
+	    *************************
+	    NIS Domains: netapp.com
+	    NIS IP Address: 1.1.1.1
+
+	    *********************
+	    * Setup of security *
+	    *********************
+	    LDAP Client Config: ldapconfig
+	    LDAP Server IP: 1.1.1.1
+	    LDAP Base DN: dc=examplebasedn
+
+	    **********************
+	    * Setup of protocols *
+	    **********************
+	    Protocols to configure: nfs
+	    [Job 15] Configuring vserver for vs0 (100%)
+----
+

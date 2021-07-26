@@ -1,0 +1,52 @@
+---
+sidebar: sidebar 
+permalink: networking/modify_mtu_setting_for_interface_group_ports.html 
+keywords: modify, modifying, change, changing, mtu, modify mtu setting for interface group ports, modify the mtu of the broadcast domain 
+summary: 修改广播域的 MTU 
+---
+= 修改接口组端口的 MTU 设置
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+要修改接口组的 MTU 设置，必须修改广播域的 MTU 。
+
+.步骤
+. 修改广播域设置：
++
+`broadcast-domain modify -broadcast-domain _broadcast_domain_name_ -mtu _mtu _setting_`
+
++
+此时将显示以下警告消息：
+
++
+....
+Warning: Changing broadcast domain settings will cause a momentary data-serving interruption.
+Do you want to continue? {y|n}: y
+....
+. 输入 y 继续。
+. 验证是否已正确修改 MTU 设置：
++
+`net port show`
+
+
+
+....
+net port show
+(network port show)
+Node: vsim-01
+                                                              Ignore
+                                         Speed(Mbps) Health   Health
+Port IPspace Broadcast Domain  Link  MTU Admin/Oper  Status   Status
+---- ------- ----------------  ---- ---- ----------- -------- ------
+a0a  Default Default-1         up   1300 auto/1000   healthy  false
+e0a  Default Default-1         up   1300 auto/1000   healthy  false
+e0b  Default Default           up   1500 auto/1000   healthy  false
+e0c  Default Default           up   1500 auto/1000   healthy  false
+e0d  Default Default           up   1500 auto/1000   healthy  false
+5 entries were displayed.
+....

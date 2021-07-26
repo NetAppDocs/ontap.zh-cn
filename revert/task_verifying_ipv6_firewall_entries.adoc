@@ -1,0 +1,60 @@
+---
+permalink: revert/task_verifying_ipv6_firewall_entries.html 
+sidebar: sidebar 
+keywords: revert, reverting, reversion, ipv6, firewall, entries, verify 
+summary: 从任何版本的 ONTAP 9 还原可能会导致防火墙策略中某些服务缺少默认 IPv6 防火墙条目。您需要验证所需的防火墙条目是否已还原到系统。 
+---
+= 验证 IPv6 防火墙条目
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从任何版本的 ONTAP 9 还原可能会导致防火墙策略中某些服务缺少默认 IPv6 防火墙条目。您需要验证所需的防火墙条目是否已还原到系统。
+
+. 通过将所有防火墙策略与默认策略进行比较来验证它们是否正确： `ssystem services firewall policy show`
++
+以下示例显示了默认策略：
+
++
+[listing]
+----
+cluster1::*> system services firewall policy show
+Policy           Service    Action IP-List
+---------------- ---------- ------ --------------------
+cluster
+                 dns        allow  0.0.0.0/0
+                 http       allow  0.0.0.0/0
+                 https      allow  0.0.0.0/0
+                 ndmp       allow  0.0.0.0/0
+                 ntp        allow  0.0.0.0/0
+                 rsh        allow  0.0.0.0/0
+                 snmp       allow  0.0.0.0/0
+                 ssh        allow  0.0.0.0/0
+                 telnet     allow  0.0.0.0/0
+data
+                 dns        allow  0.0.0.0/0, ::/0
+                 http       deny   0.0.0.0/0, ::/0
+                 https      deny   0.0.0.0/0, ::/0
+                 ndmp       allow  0.0.0.0/0, ::/0
+                 ntp        deny   0.0.0.0/0, ::/0
+                 rsh        deny   0.0.0.0/0, ::/0
+.
+.
+.
+----
+. 通过创建新的防火墙策略，手动添加任何缺少的默认 IPv6 防火墙条目： `ssystem services firewall policy create`
++
+[listing]
+----
+cluster1::*> system services firewall policy create -policy newIPv6
+-service ssh -action allow -ip-list ::/0
+----
+. 将新策略应用于 LIF 以允许访问网络服务： `network interface modify`
++
+[listing]
+----
+cluster1::*> network interface modify -vserver VS1 -lif LIF1
+-firewall-policy newIPv6
+----
+

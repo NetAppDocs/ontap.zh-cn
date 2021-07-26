@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: concept_metrocluster_manage_nodes.html 
+keywords: manage, metrocluster, clusters, nodes, mcc, HA, config, peering, peers, pairing, pairs 
+summary: 从 ONTAP 9.8 开始，您可以使用 System Manager 管理 MetroCluster 操作。 
+---
+= 管理 MetroCluster 站点
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+从 ONTAP 9.8 开始，您可以使用 System Manager 作为简化的界面来管理 MetroCluster 设置的配置。
+
+MetroCluster 配置允许两个集群相互镜像数据，以便在一个集群发生故障时不会丢失数据。
+
+通常，组织会在两个不同的地理位置设置集群。每个位置的管理员都会设置并配置一个集群。然后，其中一个管理员可以在集群之间设置对等关系，以便他们可以共享数据。
+
+该组织还可以在第三个位置安装 ONTAP 调解器。ONTAP 调解器服务可监控每个集群的状态。当其中一个集群检测到无法与配对集群通信时，它会查询监控器以确定此错误是集群系统问题还是网络连接问题。
+
+如果网络连接出现问题，系统管理员将执行故障排除方法来更正错误并重新连接。如果配对集群已关闭，另一个集群将启动切换过程来控制两个集群的数据 I/O 。
+
+您还可以执行切换以关闭其中一个集群系统以进行计划内维护。配对集群负责处理两个集群的所有数据 I/O 操作，直到启动执行维护和切回操作的集群为止。
+
+您可以管理以下操作：
+
+* link:task_metrocluster_setup.html["设置 IP MetroCluster 站点"]
+* link:task_metrocluster_peering.html["设置 IP MetroCluster 对等"]
+* link:task_metrocluster_configure.html["配置 IP MetroCluster 站点"]
+* link:task_metrocluster_switchover_switchback.html["执行 IP MetroCluster 切换和切回"]
+* link:task_metrocluster_troubleshooting.html["对 IP MetroCluster 配置问题进行故障排除"]
+* link:task_metrocluster_ANDU_upgrade.html["升级 MetroCluster 集群上的 ONTAP"]
+

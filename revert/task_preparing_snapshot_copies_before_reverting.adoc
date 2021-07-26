@@ -1,0 +1,81 @@
+---
+permalink: revert/task_preparing_snapshot_copies_before_reverting.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, reversion, snapshot, copies, prepare, preparing, disable, delete 
+summary: 在还原到早期的 ONTAP 版本之前，您必须禁用所有 Snapshot 副本策略并删除在升级到当前版本后创建的任何 Snapshot 副本。 
+---
+= 还原前准备 Snapshot 副本
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在还原到早期的 ONTAP 版本之前，您必须禁用所有 Snapshot 副本策略并删除在升级到当前版本后创建的任何 Snapshot 副本。
+
+如果要在 SnapMirror 环境中还原，则必须先删除以下镜像关系：
+
+* 所有负载共享镜像关系
+* 在 ONTAP 8.3.x 中创建的任何数据保护镜像关系
+* 如果在 ONTAP 8.3.x 中重新创建了集群，则为所有数据保护镜像关系
++
+.. 为所有数据 SVM 禁用 Snapshot 副本策略： `volume snapshot policy modify -vserver * -enabled false`
+.. 为每个节点的聚合禁用 Snapshot 副本策略：
++
+... 使用 run-nodenameaggr status 命令确定节点的聚合。
+... 为每个聚合禁用 Snapshot 副本策略： `run -node nodename aggr options aggr_name nosnap on`
+... 对其余每个节点重复此步骤。
+
+
+.. 为每个节点的根卷禁用 Snapshot 副本策略：
++
+... 使用 run-nodenamevol status 命令确定节点的根卷。
++
+您可以通过 vol status 命令输出的 Options 列中的 root 一词来标识根卷。
+
++
+[listing]
+----
+vs1::> run -node node1 vol status
+
+         Volume State           Status            Options
+           vol0 online          raid_dp, flex     root, nvfail=on
+                                64-bit
+----
+... 在根卷上禁用 Snapshot 副本策略： `run -node nodename vol options root_volume_name nosnap on`
+... 对其余每个节点重复此步骤。
+
+
+.. 删除升级到当前版本后创建的所有 Snapshot 副本：
++
+... 将权限级别设置为 advanced ： `set -privilege advanced`
+... 禁用快照：``snapshot policy modify -vserver * -enabled false``
+... 删除节点的较新版本 Snapshot 副本： `volume snapshot prepare-for-revert -node nodename`
++
+此命令将删除每个数据卷，根聚合和根卷上的较新版本 Snapshot 副本。
+
++
+如果无法删除任何 Snapshot 副本，则此命令将失败，并通知您在删除 Snapshot 副本之前必须执行的任何必要操作。您必须完成所需的操作，然后重新运行 volume snapshot prepare-for-revert 命令，然后再继续下一步。
+
++
+[listing]
+----
+cluster1::*> volume snapshot prepare-for-revert -node node1
+
+Warning: This command will delete all Snapshot copies that have the format used by the current version of ONTAP. It will fail if any Snapshot copy polices are enabled, or
+         if any Snapshot copies have an owner. Continue? {y|n}: y
+----
+... 验证是否已删除 Snapshot 副本： `volume snapshot show -node nodename`
++
+如果仍存在任何较新版本的 Snapshot 副本，请强制将其删除： `volume snapshot delete ｛ -fs-version 9.0 -node nodename -is-constituent true ｝ -ignore-owners -force`
+
+... 对其余每个节点重复此步骤 c 。
+... 返回到管理权限级别： `set -privilege admin`
+
+
+
+
++
+
+NOTE: 您必须对 MetroCluster 配置中的两个集群执行这些步骤。
+
+

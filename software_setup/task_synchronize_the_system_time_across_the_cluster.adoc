@@ -1,0 +1,79 @@
+---
+permalink: software_setup/task_synchronize_the_system_time_across_the_cluster.html 
+sidebar: sidebar 
+keywords: ontap, software, setup, synchronize, system, time, across, cluster 
+summary: 同步时间可确保集群中的每个节点都有相同的时间，并防止 CIFS 和 Kerberos 出现故障。 
+---
+= 在集群中同步系统时间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+同步时间可确保集群中的每个节点都有相同的时间，并防止 CIFS 和 Kerberos 出现故障。
+
+应在您的站点上设置网络时间协议（ Network Time Protocol ， NTP ）服务器。从 ONTAP 9.5 开始，您可以使用对称身份验证设置 NTP 服务器。有关详细信息，请参见 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/GUID-1E923D05-447D-4323-8D87-12B82F49B6F1.html?cp=4_7_6["管理集群时间（仅限集群管理员）"]。
+
+您可以通过将集群与一个或多个 NTP 服务器关联来同步整个集群的时间。
+
+. 验证是否已为每个节点正确设置系统时间和时区。
++
+集群中的所有节点应设置为同一时区。
+
++
+.. 使用 cluster date show 命令显示每个节点的当前日期，时间和时区。
++
+[listing]
+----
+cluster1::> cluster date show
+Node         Date                Time zone
+------------ ------------------- -----------------
+cluster1-01  01/06/2015 09:35:15 America/New_York
+cluster1-02  01/06/2015 09:35:15 America/New_York
+cluster1-03  01/06/2015 09:35:15 America/New_York
+cluster1-04  01/06/2015 09:35:15 America/New_York
+4 entries were displayed.
+----
+.. 使用 cluster date modify 命令更改所有节点的日期或时区。
++
+此示例将集群的时区更改为 GMT ：
+
++
+[listing]
+----
+cluster1::> cluster date modify -timezone GMT
+----
+
+
+. 使用 cluster time-service ntp server create 命令将集群与 NTP 服务器相关联。
++
+** 要在不使用对称身份验证的情况下设置 NTP 服务器，请输入以下命令： `cluster time-service ntp server create -server server_name`
+** 要为 NTP 服务器设置对称身份验证，请输入以下命令： `cluster time-service ntp server create -server server_ip_address -key-id key_id`
++
+
+NOTE: 从 ONTAP 9.5 开始，可以使用对称身份验证。在 ONTAP 9.4 或更早版本中不提供此功能。
+
++
+此示例假设已为集群配置 DNS 。如果尚未配置 DNS ，则必须指定 NTP 服务器的 IP 地址：
+
++
+[listing]
+----
+cluster1::> cluster time-service ntp server create -server ntp1.example.com
+----
+
+
+. 验证集群是否与 NTP 服务器关联： `cluster time-service ntp server show`
++
+[listing]
+----
+cluster1::> cluster time-service ntp server show
+Server               Version
+-------------------- -----------
+ntp1.example.com     auto
+----
+
+
+* 相关信息 *
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html["系统管理"]

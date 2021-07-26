@@ -1,0 +1,60 @@
+---
+permalink: software_setup/task_join_remaining_nodes_to_the_cluster.html 
+sidebar: sidebar 
+keywords: ontap, software, setup, join, remaining, nodes, cluster, HA, high availability, autosupport 
+summary: 创建新集群后，您可以使用集群设置向导一次将其余每个节点加入一个集群。此向导可帮助您配置每个节点的节点管理接口。 
+---
+= 将其余节点加入集群
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+创建新集群后，您可以使用集群设置向导一次将其余每个节点加入一个集群。此向导可帮助您配置每个节点的节点管理接口。
+
+在集群中加入两个节点时，您将创建高可用性（ HA ）对。如果加入 4 个节点，则会创建两个 HA 对。要了解有关 HA 的详细信息，请参见 link:https://docs.netapp.com/us-en/ontap/high-availability/index.html["了解 HA"]。
+
+一次只能将一个节点加入集群。开始将某个节点加入集群时，必须完成该节点的加入操作，并且该节点必须是集群的一部分，然后才能开始加入下一个节点。
+
+* 最佳实践： * 如果您的 FAS2720 包含 24 个或更少的 NL-SAS 驱动器，则应验证存储配置默认值是否设置为主动 / 被动以优化性能。有关详细信息，请参见 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/GUID-4AC35094-4077-4F1E-8D6E-82BF111354B0.html?cp=4_5_5_11["在使用根数据分区的节点上设置主动 - 被动配置"]
+
+. 登录到要加入集群的节点。
++
+集群设置向导将在控制台上启动。
+
++
+[listing]
+----
+Welcome to the cluster setup wizard....
+----
+. 确认 AutoSupport 语句。
++
+
+NOTE: 默认情况下， AutoSupport 处于启用状态。
+
++
+[listing]
+----
+Type yes to confirm and continue {yes}: yes
+----
+. 按照屏幕上的说明为节点分配 IP 地址。
+. 将节点加入集群： `join`
+. 按照屏幕上的说明设置节点并将其加入集群。
+. 设置完成后，验证节点是否运行状况良好且符合加入集群的条件： `cluster show`
++
+以下示例显示了第二个节点（ cluster1-02 ）加入集群后的集群：
+
++
+[listing]
+----
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+cluster1-01           true    true
+cluster1-02           true    true
+----
++
+您可以使用 cluster setup 命令访问集群设置向导以更改为管理 SVM 或节点 SVM 输入的任何值。
+
+. 对其余每个节点重复此任务。
+

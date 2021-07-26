@@ -1,0 +1,86 @@
+---
+sidebar: sidebar 
+permalink: task_nas_provision_windows_smb.html 
+keywords: netapp, ontap, provisioning, nas, windows, servers, provision, smb, cifs, SMB/CIFS, share name 
+summary: 创建卷以使用 SMB/CIFS 协议为 Windows 服务器提供存储。 
+---
+= 使用 SMB/CIFS 为 Windows 服务器配置 NAS 存储
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+创建卷以使用 SMB/CIFS 协议为 Windows 服务器提供存储。
+
+此操作步骤会在上创建新卷 link:task_nas_enable_windows_smb.html["已启用 SMB 的现有 Storage VM"]。您可以在配置卷或指定自定义配置时接受系统默认值。
+
+您可以创建 FlexVol 卷，也可以为具有高性能要求的大型文件系统创建 FlexGroup 卷。另请参见 link:task_nas_provision_flexgroup.html["使用 FlexGroup 卷为大型文件系统配置 NAS 存储"]。
+
+您也可以将此卷的规格保存到 Ansible 攻略手册中。有关详细信息，请访问 link:task_admin_use_ansible_playbooks_add_edit_volumes_luns.html["使用 Ansible 攻略手册添加或编辑卷或 LUN"]。
+
+.步骤
+. 在启用了 SMB 的 Storage VM 中添加新卷。
++
+.. 单击 * 存储 > 卷 * ，然后单击 * 添加 * 。
+.. 输入名称，选择 Storage VM 并输入大小。
++
+仅列出配置了 SMB 协议的 Storage VM 。如果只有一个配置了 SMB 协议的 Storage VM 可用，则不会显示 * Storage VM* 字段。
+
++
+*** 如果此时单击 * 保存 * ，则 System Manager 将使用系统默认值创建和添加 FlexVol 卷。
+*** 您可以单击 * 更多选项 * 自定义卷的配置，以启用授权，服务质量和数据保护等服务。请参见 <<Customize the volume configuration>>，然后返回此处完成以下步骤。
+
+
+
+
+. 【工作流中的步骤 2 ，步骤 2 】切换到 Windows 客户端以验证共享是否可访问。
++
+.. 在 Windows 资源管理器中，按以下格式将驱动器映射到共享： ` +\\_SMB_SERVER_Name__Share_Name_+`
+.. 在新创建的驱动器上，创建一个测试文件，向该文件写入文本，然后删除该文件。
+
+
+
+
+验证访问后，您可以 link:task_nas_provision_export_policies.html["使用共享 ACL 限制客户端访问"] 并在映射的驱动器上设置所需的任何安全属性。
+
+
+
+== 自定义卷配置
+
+您可以在添加卷时自定义卷配置，而不是接受系统默认值。
+
+单击 * 更多选项 * 后，选择所需功能并输入所需值。
+
+* 远程卷的缓存。
+* 性能服务级别（服务质量， QoS ）。
++
+从 ONTAP 9.8 开始，除了默认值选择之外，您还可以指定自定义 QoS 策略或禁用 QoS 。
+
++
+** 要禁用 QoS ，请依次选择 * 自定义 * ， * 现有 * 和 * 无 * 。
+** 如果选择 * 自定义 * 并指定现有服务级别，则会自动选择一个本地层。
+** 从 ONTAP 9.1.1 开始，如果选择创建自定义性能服务级别，则可以使用 System Manager 手动选择要放置所创建卷的本地层（ * 手动放置 * ）。
++
+如果选择远程缓存或 FlexGroup 卷选项，则此选项不可用。
+
+
+
+* FlexGroup 卷（选择 * 在集群中分布卷数据 * ）。
++
+如果先前在 * 性能服务级别 * 下选择了 * 手动放置 * ，则此选项不可用。否则，默认情况下，您要添加的卷将成为 FlexVol 卷。
+
+* 配置了卷的协议的访问权限。
+* 使用 SnapMirror （本地或远程）保护数据，然后从下拉列表中指定目标集群的保护策略和设置。
+* 单击 * 保存 * 以创建卷并将其添加到集群和 Storage VM 。
+
+
+
+NOTE: 保存卷后，返回到 <<step2>> 使用 SMB/CIFS 完成 Windows 服务器的配置。

@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: task_admin_recover_deleted_volumes.html 
+keywords: netapp, ontap, administration, recover, recovering, recovery, deleted, undelete, volume, volumes, recover deleted volume, SVM, storage VM, vserver, FlexVol volume, purging volume, volume retention time, deleting a volume 
+summary: 如果您意外删除了一个或多个 FlexVol 卷，则可以恢复这些卷。您也可以通过清除卷来永久删除卷。 
+---
+= 恢复已删除的卷
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+如果您意外删除了一个或多个 FlexVol 卷，则可以恢复这些卷。从 System Manager 9.8 开始，您还可以恢复 FlexGroup 卷。您也可以通过清除卷来永久删除卷。
+
+可以在 Storage VM 级别设置卷保留时间。默认情况下，卷保留时间设置为 12 小时。
+
+
+
+== 选择已删除的卷
+
+.步骤
+. 单击 * 存储 > 卷 * 。
+. 单击 * 更多 > 显示已删除卷 * 。
+. 选择卷并单击所需的操作以恢复或永久删除卷。
+
+
+
+
+== 重置卷配置
+
+删除卷将删除卷的关联配置。恢复卷不会重置所有配置。在恢复卷后手动执行以下任务，以将卷恢复到其原始状态：
+
+.步骤
+. 重命名卷。
+. 设置接合路径（ NAS ）。
+. 为卷（ SAN ）中的 LUN 创建映射。
+. 将 Snapshot 策略和导出策略与卷关联。
+. 为卷添加新的配额策略规则。
+. 为卷添加 QoS 策略。
+

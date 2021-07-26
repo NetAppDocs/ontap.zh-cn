@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: networking/commands_for_diagnosing_network_problems.html 
+keywords: diagnose, errors, problems, error, problem, ping, traceroute, ndp, tcpdump, ping6, traceroute6, neighbor, discovery, protocol, ipv4, ipv6, commands for diagnosing network problems, network device-discovery show, network test-path -source-node, ifstat 
+summary: 诊断网络上的问题 
+---
+= 用于诊断网络问题的命令
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以使用 `ping ， traceroute ， NDP ，` 和 `tcpdump` 等命令诊断网络上的问题。您也可以使用 `ping6` 和 `traceroute6` 等命令来诊断 IPv6 问题。
+
+[cols="2*"]
+|===
+| 如果您要 ... | 输入此命令 ... 
+
+
+| 测试节点是否可以访问网络上的其他主机 | 网络 ping 
+
+
+| 测试节点是否可以访问 IPv6 网络上的其他主机 | 网络 ping6. 
+
+
+| 跟踪 IPv4 数据包到达网络节点的路由 | 网络 traceroute 
+
+
+| 跟踪 IPv6 数据包到达网络节点的路由 | 网络跟踪程序 6. 
+
+
+| 管理邻居发现协议（ NDP ） | 网络 NDP 
+
+
+| 显示有关在指定网络接口或所有网络接口上接收和发送的数据包的统计信息 | run -node node_name ifstat * Note* ：此命令可从 nodeshell 访问。 
+
+
+| 显示有关从集群中的每个节点和端口发现的相邻设备的信息，包括远程设备类型和设备平台 | network device-discovery show 
+
+
+| 查看节点的 CDP 邻居（ ONTAP 仅支持 CDPv1 公告） | run -node node_name cdpdshow -neighbors * 注意 * ：此命令可从 nodeshell 中使用。 
+
+
+| 跟踪网络中发送和接收的数据包 | network tcpdump start -node node-name - port port_name * 注意 * ：此命令可从 nodeshell 中使用。 
+
+
+| 测量集群间或集群内节点之间的延迟和吞吐量 | network test-path -source-node source_nodename 
+
+
+| local -destination-cluster destination_clustername - destination-node destination_nodename - 会话类型默认值 | AsyncMirrorLocal 
+
+
+| AsyncMirrorRemote | SyncMirrorRemote 
+|===
+有关这些命令的详细信息，请参见相应的手册页： http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]

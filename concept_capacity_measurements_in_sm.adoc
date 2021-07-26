@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: concept_capacity_measurements_in_sm.html 
+keywords: capacity, measurement, physical, logical, storage, used storage, aggregate capacity, block 
+summary: System Manager 中的某些测量值反映了系统的存储容量。 
+---
+= System Manager 中的容量测量
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+系统容量可以通过物理空间或逻辑空间来衡量。System Manager 的最新版本使用物理和逻辑容量的测量值。
+
+以下说明介绍了这两个测量值之间的差异：
+
+* * 物理容量 * ：物理空间是指卷中使用的物理存储块。由于存储效率功能（例如重复数据删除和数据压缩）中的数据减少，物理已用容量值通常小于逻辑已用容量值。
+* * 逻辑容量 * ：逻辑空间是指卷中的可用空间（逻辑块）。逻辑空间是指在不考虑重复数据删除或数据压缩结果的情况下如何使用理论空间。已用逻辑空间值是从已用物理空间量加上已配置的存储效率功能（例如重复数据删除和数据压缩）节省的空间得出的。此度量值通常会大于已用物理容量，因为它包括 Snapshot 副本，克隆和其他组件，并且不会反映数据压缩以及物理空间的其他缩减。因此，总逻辑容量可能会高于配置的空间。
+
+
+
+NOTE: 在 System Manager 中，容量表示不考虑根存储层（聚合）容量。
+
+
+
+== 已用容量的测量值
+
+已用容量的测量值会根据您使用的 System Manager 版本而有所不同，如下表所述：
+
+[cols="30,30,40"]
+|===
+| System Manager 版本 | 容量术语 | 引用的容量类型 
+
+
+| 9.5 和 9.6 （经典视图） | 已用 | 已用物理空间 
+
+
+| 9.7 和 9.8 | 已用 | 已用逻辑空间（如果已启用存储效率设置） 
+
+
+| 9.9.1 | 已用逻辑容量 | 已用逻辑空间（如果已启用存储效率设置） 
+|===
+
+
+== 测量术语
+
+* * 物理已用 * ：显示卷的物理块中的已用容量。
+* * 物理已用 %* ：显示卷的物理块中已用容量与配置大小之比。
+* * 已用逻辑空间 * ：显示已用空间量，而不考虑存储效率功能节省的空间。
+* * 已用逻辑 %* ：显示当前已用逻辑容量与已配置大小之比的百分比，不包括卷的 Snapshot 预留。此值可以大于 100% ，因为它包括卷中的效率节省。
+
+
+link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-vsmg/GUID-65C34C6C-29A0-4DB7-A2EE-019BA8EB8A83.html["卷的逻辑空间报告和强制实施"] 中的主题 

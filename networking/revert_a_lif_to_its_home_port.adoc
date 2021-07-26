@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: networking/revert_a_lif_to_its_home_port.html 
+keywords: revert, home, port, home port, lif, logical, interface, migrate, migration, migrating, reverting, reversion, manual, manually, automatic, automatically, auto-revert, revert a lif to its home port, revert a lif to its home port after it fails over or is migrated, network interface revert, network interface modify 
+summary: 在故障转移或迁移 LIF 后，将其还原到其主端口 
+---
+= 将 LIF 还原到其主端口
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以在 LIF 发生故障转移或手动或自动迁移到其他端口后将其还原到主端口。如果特定 LIF 的主端口不可用，则 LIF 将保留在其当前端口，不会还原。
+
+.关于此任务
+* 如果在设置自动还原选项之前以管理方式将 LIF 的主端口置于 up 状态，则 LIF 不会返回到主端口。
+* 除非 "auto-revert" 选项的值设置为 true ，否则节点管理 LIF 不会自动还原。
+* 您必须确保为集群 LIF 启用了 "auto-revert" 选项，以还原到其主端口。
+
+
+手动或自动将 LIF 还原到其主端口：
+
+[cols="2*"]
+|===
+| 如果要将 LIF 还原到其主端口 ... | 然后输入以下命令 ... 
+
+
+| 手动 | network interface revert -vserver vserver_name -lif lif_name 
+
+
+| 自动 | network interface modify -vserver vserver_name -lif lif_name -auto-revert true 
+|===

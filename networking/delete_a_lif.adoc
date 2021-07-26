@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: networking/delete_a_lif.html 
+keywords: remove a lif, destroy a lif, delete, deleting, remove, removing, logical, interface, lif, delete a lif, delete a network interface (lif) that is no longer required, network interface delete 
+summary: 删除不再需要的网络接口（ LIF ） 
+---
+= 删除 LIF
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以删除不再需要的网络接口（ LIF ）。
+
+要删除的 LIF 不得正在使用中。
+
+.步骤
+. 使用以下命令将要删除的 LIF 标记为 administratively down ：
++
+....
+-status-admin down
+....
+. 使用 `network interface delete` 命令删除一个或所有 LIF ：
++
+[cols="2*"]
+|===
+| 要删除的内容 | 输入命令： 
+
+
+| 特定 LIF | `network interface delete -lif lif_name` 
+
+
+| 所有 LIFs | `network interface delete -lif` 
+|===
++
+以下命令将删除 LIF mgmtlif2 ：
+
++
+....
+network interface delete -vserver vs1 -lif mgmtlif2
+....
+. 使用 `network interface show` 命令确认已删除 LIF 。
+

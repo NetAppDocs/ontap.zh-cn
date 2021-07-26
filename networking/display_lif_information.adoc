@@ -1,0 +1,104 @@
+---
+sidebar: sidebar 
+permalink: networking/display_lif_information.html 
+keywords: display, view, show, lif, logical, interface, display lif information, view detailed information about a lif to determine its configuration 
+summary: 查看有关 LIF 的详细信息以确定其配置 
+---
+= 显示 LIF 信息
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以查看有关 LIF 的详细信息以确定其配置。
+
+您可能还需要查看此信息以诊断基本的 LIF 问题，例如检查重复的 IP 地址或验证网络端口是否属于正确的子网。Storage Virtual Machine （ SVM ）管理员只能查看与 SVM 关联的 LIF 的信息。
+
+此时将显示以下信息：
+
+* 与 LIF 关联的 IP 地址
+* LIF 的管理状态
+* LIF 的运行状态
++
+数据 LIF 的运行状态取决于与数据 LIF 关联的 SVM 的状态。停止 SVM 后， LIF 的运行状态将更改为 down 。当 SVM 重新启动时，运行状态将更改为 up
+
+* 节点以及 LIF 所在的端口
+
+
+如果字段的数据不可用（例如，如果没有扩展状态信息），则字段值将列为 ` -` 。
+
+使用 network interface show 命令显示 LIF 信息。
+
+您可以通过指定 -instance 参数来查看每个 LIF 的详细信息，也可以通过使用 -fields 参数指定字段名称来获取特定信息。
+
+以下命令显示有关集群中所有 LIF 的常规信息：
+
+....
+network interface show
+           Logical    Status     Network          Current      Current Is
+Vserver    Interface  Admin/Oper Address/Mask     Node         Port    Home
+---------- ---------- ---------- ---------------- ------------ ------- ----
+example
+           lif1         up/up    192.0.2.129/22   node-01
+                                                               e0d     false
+node
+           cluster_mgmt up/up    192.0.2.3/20     node-02
+                                                               e0c     false
+node-01
+           clus1        up/up    192.0.2.65/18    node-01
+                                                               e0a     true
+           clus2        up/up    192.0.2.66/18    node-01
+                                                               e0b     true
+           mgmt1        up/up    192.0.2.1/20     node-01
+                                                               e0c     true
+node-02
+           clus1        up/up    192.0.2.67/18    node-02
+                                                               e0a     true
+           clus2        up/up    192.0.2.68/18    node-02
+                                                               e0b     true
+           mgmt2        up/up    192.0.2.2/20     node-02
+                                                               e0d     true
+vs1
+           d1           up/up    192.0.2.130/21   node-01
+                                                               e0d     false
+           d2           up/up    192.0.2.131/21   node-01
+                                                               e0d     true
+           data3        up/up    192.0.2.132/20   node-02
+                                                               e0c     true
+....
+以下命令显示有关单个 LIF 的详细信息：
+
+....
+network interface show -lif data1 -instance
+
+                    Vserver Name: vs1
+          Logical Interface Name: data1
+                            Role: data
+                   Data Protocol: nfs,cifs
+                       Home Node: node-01
+                       Home Port: e0c
+                    Current Node: node-03
+                    Current Port: e0c
+              Operational Status: up
+                 Extended Status: -
+                         Is Home: false
+                 Network Address: 192.0.2.128
+                         Netmask: 255.255.192.0
+             Bits in the Netmask: 18
+                 IPv4 Link Local: -
+                     Subnet Name: -
+           Administrative Status: up
+                 Failover Policy: local-only
+                 Firewall Policy: data
+                     Auto Revert: false
+   Fully Qualified DNS Zone Name: xxx.example.com
+         DNS Query Listen Enable: false
+             Failover Group Name: Default
+                        FCP WWPN: -
+                  Address family: ipv4
+                         Comment: -
+                  IPspace of LIF: Default
+....

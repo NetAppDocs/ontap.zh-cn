@@ -1,0 +1,81 @@
+---
+permalink: upgrade/task_verifying_the_lif_failover_configuration.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, verifying, verify, lif, failover, configuration 
+summary: 在执行升级之前，您必须验证是否已正确配置故障转移策略和故障转移组。 
+---
+= 验证 LIF 故障转移配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在执行升级之前，您必须验证是否已正确配置故障转移策略和故障转移组。
+
+
+NOTE: 在升级过程中，将根据升级方法迁移 LIF 。根据升级方法，可能会使用 LIF 故障转移策略，也可能不使用该策略。
+
+如果集群中有 8 个或更多节点，则会使用批处理方法执行自动升级。批量升级方法包括将集群划分为多个升级批处理，升级第一批处理中的一组节点，升级其高可用性（ HA ）配对节点，然后对其余批重复此过程。在 ONTAP 9.7 及更早版本中，如果使用批处理方法，则 LIF 会迁移到要升级的节点的 HA 配对节点。在 ONTAP 9.8 及更高版本中，如果使用批处理方法，则 LIF 会迁移到其他批处理组。
+
+如果集群中的节点数少于 8 个，则会使用滚动方法执行自动升级。滚动升级方法包括对 HA 对中的每个节点启动故障转移操作，更新 " 故障 " 节点，启动交还，然后对集群中的每个 HA 对重复此过程。如果使用滚动方法，则 LIF 将迁移到 LIF 故障转移策略定义的故障转移目标节点。
+
+. 显示每个数据 LIF 的故障转移策略：
++
+[cols="2*"]
+|===
+| 如果您的 ONTAP 版本为 ... | 使用此命令 ... 
+
+
+| 9.6 或更高版本  a| 
+`network interface show -service-policy data -failover`
+
+
+
+| 9.5 或更早版本  a| 
+`network interface show -role data -failover`
+
+|===
++
+此示例显示了具有两个数据 LIF 的双节点集群的默认故障转移配置：
+
++
+[listing]
+----
+cluster1::> network interface show -role data -failover
+         Logical         Home                  Failover        Failover
+Vserver  Interface       Node:Port             Policy          Group
+-------- --------------- --------------------- --------------- ---------------
+vs0
+         lif0            node0:e0b             nextavail       system-defined
+                         Failover Targets: node0:e0b, node0:e0c,
+                                           node0:e0d, node0:e0e,
+                                           node0:e0f, node1:e0b,
+                                           node1:e0c, node1:e0d,
+                                           node1:e0e, node1:e0f
+vs1
+         lif1            node1:e0b             nextavail       system-defined
+                         Failover Targets: node1:e0b, node1:e0c,
+                                           node1:e0d, node1:e0e,
+                                           node1:e0f, node0:e0b,
+                                           node0:e0c, node0:e0d,
+                                           node0:e0e, node0:e0f
+----
++
+"* 故障转移目标 * " 字段显示每个 LIF 的故障转移目标的优先级列表。例如，如果 lif0 从其主端口（ node0 上的 e0b ）进行故障转移，则它会首先尝试故障转移到 node0 上的端口 e0c 。如果 lif0 无法故障转移到 e0c ，则它接下来会尝试故障转移到 node0 上的端口 e0d ，依此类推。
+
+. 如果对 SAN LIF 以外的任何 LIF 将故障转移策略设置为禁用，请使用 network interface modify 命令启用故障转移。
+. 对于每个 LIF ，请验证 * 故障转移目标 * 字段是否包含不同节点的数据端口，这些数据端口将在升级 LIF 的主节点时保持正常运行。
++
+您可以使用 `network interface failover-groups modify` 命令向故障转移组添加故障转移目标。
+
++
+.示例
+[listing]
+----
+network interface failover-groups modify -vserver vs0 -failover-group fg1 -targets sti8-vsim-ucs572q:e0d,sti8-vsim-ucs572r:e0d
+----
+
+
+* 相关信息 *
+
+link:https://docs.netapp.com/us-en/ontap/networking/networking_reference.html["网络和 LIF 管理"]

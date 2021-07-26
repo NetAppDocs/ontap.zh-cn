@@ -1,0 +1,134 @@
+---
+sidebar: sidebar 
+permalink: high-availability/ha_manual_takeover.html 
+keywords: ontap, high, availability, ha, pair, manual, takeover, moving, move, epislon, manually, initiated 
+summary: 当需要对配对系统进行维护时，以及在其他类似情况下，您可以手动执行接管。 
+---
+= 手动接管命令
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+当需要对配对系统进行维护时，以及在其他类似情况下，您可以手动执行接管。根据配对节点的状态，用于执行接管的命令会有所不同。
+
+[cols="2*"]
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+| 接管配对节点 | `s存储故障转移接管` 
+
+
+| 在将配对节点的聚合移至执行接管的节点时，监控接管的进度 | `storage failover show‑takeover` 
+
+
+| 显示集群中所有节点的存储故障转移状态 | `s存储故障转移显示` 
+
+
+| 接管配对节点而不迁移 LIF | `s存储故障转移接管 ‑skip‑lif‑migration‑before‑takeover true` 
+
+
+| 即使磁盘不匹配，也接管配对节点 | `s存储故障转移接管 ‑skip‑lif‑migration‑before‑takeover true` 
+
+
+| 即使 ONTAP 版本不匹配，也接管配对节点 * 注意： * 只有在无中断 ONTAP 升级过程中才会使用此选项。 | `s存储故障转移接管 ‑选项允许‑版本‑不匹配` 
+
+
+| 接管配对节点而不执行聚合重新定位 | `s存储故障转移接管 ‑绕过‑优化 true` 
+
+
+| 在配对节点有时间正常关闭其存储资源之前接管配对节点 | `s存储故障转移接管 ‑option immediate` 
+|===
+* 注意： * 在使用 immediate 选项对 storage failover 命令执行问题描述操作之前，必须使用以下命令将数据 LIF 迁移到另一个节点： `network interface migrate-all -node _node_`
+
+* 
++
+如果在未事先迁移数据 LIF 的情况下指定 `storage failover takeover ‑option immediate` 命令，则即使未指定 `skip‑lif‑migration‑before‑takeover` 选项，从节点迁移数据 LIF 也会明显延迟。
+
+* 
++
+同样，如果指定 immediate 选项，则即使 bypass‑optimization 选项设置为 _false_ ，也会绕过协商接管优化。
+
+
+
+
+
+== 移动 epsilon 以执行某些手动启动的接管
+
+如果您预计任何手动启动的接管可能会导致存储系统发生意外节点故障，从而避免集群范围内的仲裁丢失，则应移动 epsilon 。
+
+* 关于此任务 *
+
+要执行计划内维护，您必须接管 HA 对中的一个节点。必须保持集群范围的仲裁，以防止其余节点发生计划外客户端数据中断。在某些情况下，执行接管可能会导致集群发生意外节点故障，从而避免集群范围内的仲裁丢失。
+
+如果被接管的节点持有 epsilon 或使用 epsilon 的节点运行状况不正常，则可能会发生这种情况。为了保持集群的故障恢复能力更强，您可以将 epsilon 传输到未被接管的运行状况良好的节点。通常，这是 HA 配对节点。
+
+只有运行状况良好且符合条件的节点才会参与仲裁投票。要保持集群范围的仲裁，需要使用 N/2 以上的投票（其中 _N_ 表示运行状况良好，符合条件的联机节点之和）。在联机节点数为偶数的集群中， epsilon 会增加额外的表决权重，以保持分配给它的节点的仲裁。
+
+
+NOTE: 尽管可以使用 `cluster modify ‑eligibility false` 命令修改集群形成投票，但除非发生还原节点配置或延长节点维护时间等情况，否则应避免这种情况。如果将某个节点设置为不符合条件，它将停止提供 SAN 数据，直到该节点重置为符合条件并重新启动为止。如果节点不符合条件，则对该节点的 NAS 数据访问也可能会受到影响。
+
+* 步骤 *
+
+. 
++
+验证集群状态并确认 epsilon 由未被接管的运行正常的节点持有：
+
++
+.. 
++
+更改为高级权限级别，确认要在高级模式提示符（ * > ）出现时继续操作： `set -privilege advanced`
+
+.. 
++
+确定哪个节点持有 epsilon ： `cluster show`
+
++
+--
+在以下示例中， Node1 持有 epsilon ：
+
+[cols=",,,"]
+|===
+| 节点 | 运行状况 | 资格 | Epsilon 
+
+
+| 节点 1 节点 2  a| 
+true true
+ a| 
+true true
+ a| 
+true false
+
+|===
+如果要接管的节点不持有 epsilon ，请继续执行步骤 4 。
+
+--
+
+
+. 
++
+从要接管的节点中删除 epsilon ： `cluster modify -node Node1 -epsilon false`
+
+
+
+. 
++
+使用以下命令将 epsilon 分配给配对节点（在此示例中为 Node2 ）： `cluster modify -node Node2 -epsilon true`
+
+
+
+. 
++
+执行接管操作： `storage failover takeover -ofnode _node_name_`
+
+
+
+. 
++
+返回到管理权限级别： `set -privilege admin`
+
+

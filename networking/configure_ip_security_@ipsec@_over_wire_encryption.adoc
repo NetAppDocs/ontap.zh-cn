@@ -1,0 +1,161 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_ip_security_@ipsec@_over_wire_encryption.html 
+keywords: ipsec, security, internet protocol, on wire, in transit, encrypt, encryption, secure, configure ip security (ipsec) over wire encryption, ensure data is continuously secure and encrypted, ipsec protocol, enable ipsec on the cluster, security ipsec config show, ipsec enabled, ipsec config modify, ipsec config show, security ipsec policy create, protocols, local-ports, remote-ports, define the security policy database (spd), use ipsec identities, subnet configuration, allow all clients configuration, ipsec statistics 
+summary: 为了确保数据持续安全和加密，即使在传输期间， ONTAP 也会在传输模式下使用 IPsec 协议 
+---
+= 通过线缆加密配置 IP 安全性（ IP security ， IPsec ）
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+从 ONTAP 9.8 开始， ONTAP 在传输模式下使用 IPsec 协议来确保数据持续安全和加密，即使在传输过程中也是如此。IPsec 为所有 IP 流量提供数据加密，包括 NFS ， iSCSI 和 SMB/CIFS 协议。IPsec 为 iSCSI 流量提供了唯一的传输加密选项。
+
+在集群上启用 IPsec 功能时，网络需要在客户端上提供安全策略数据库（ SPD ）条目和预先共享的机密密钥，才能使流量流动。
+
+配置 IPsec 后，客户端和 ONTAP 之间的网络流量将通过预防措施得到保护，以防止重放和中间人（ MIM ）攻击。
+
+对于 NetApp SnapMirror 和集群对等流量加密，仍然建议使用基于 IPsec 的集群对等加密（ Cluster peering encryption ， CPE ），以便通过线缆安全地进行传输。这是因为 CPe 的性能优于 IPsec 。您不需要 IPsec 许可证，也不存在任何导入或导出限制。
+
+
+
+== 在集群上启用 IPsec
+
+您可以在集群上启用 Internet 协议安全性（ Internet Protocol Security ， IPsec ），以确保数据持续安全和加密，即使在传输期间也是如此。
+
+.步骤
+. 发现是否已启用 IPsec ：
++
+`sIPsec 安全配置 show`
+
++
+如果结果包括 `IPsec Enabled ： false` ，请继续执行下一步。
+
+. 启用 IPsec ：
++
+`sIPsec 安全配置 modify -is-enabled true`
+
+. 再次运行 discovery 命令：
++
+`sIPsec 安全配置 show`
+
++
+结果现在包括 `IPsec Enabled ： true` 。
+
+
+
+
+
+== 定义安全策略数据库（ SPD ）
+
+在允许流量在网络上流动之前， IPsec 需要 SPD 条目。
+
+.步骤
+. 使用 `security ipsec policy create` 命令执行以下操作：
++
+.. 选择要参与 ONTAP 传输的 IPsec IP 地址或 IP 地址子网。
+.. 选择要连接到 ONTAP IP 地址的客户端 IP 地址。
++
+
+NOTE: 客户端必须使用预共享密钥（ psk ）支持 Internet 密钥交换版本 2 （ IKEv2 ）。
+
+.. 可选选择要保护的上层协议（ UDP ， TCP ， ICMP 等），本地端口号和远程端口号。相应的参数分别为 `protocols` ， `local-ports` 和 `remote-ports` 。
++
+跳过此步骤可保护 ONTAP IP 地址和客户端 IP 地址之间的所有流量。默认情况下，保护所有流量。
+
+.. 输入要在客户端和 ONTAP 之间使用的预共享密钥。
+
+
+
+
+....
+security ipsec policy create -vserver <vs1> -name <test34> -local-ip-subnets <192.168.134.34/32> -remote-ip-subnets <192.168.134.44/32>
+Enter the preshared key for IPsec Policy _test34_ on Vserver _vs1_:
+....
+
+NOTE: 在 IPsec 客户端上设置客户端预共享密钥之前， IP 流量无法在客户端和服务器之间流动。
+
+
+
+== 使用 IPsec 身份
+
+某些 IPsec 客户端（如 LibresWAN ）除了需要使用预共享密钥之外，还需要使用身份来对 IPsec 连接进行身份验证。
+
+在 ONTAP 中，标识是通过修改 SPD 条目或在创建 SPD 策略期间指定的。SPD 可以是 IP 地址或字符串格式的标识名称。
+
+要向现有 SPD 添加标识，请使用以下命令：
+
+`sIPsec 安全策略修改`
+
+`sIPsec 安全策略 modify -vserver _vs1_ -name _test34_ -local-identity _192.168.134.34_ -remote-identity _client.fooboo.com_`
+
+
+
+== IPsec 多客户端配置
+
+如果少数客户端需要利用 IPsec ，则为每个客户端使用一个 SPD 条目就足以满足要求。但是，当数百甚至数千个客户端需要利用 IPsec 时， NetApp 建议使用 IPsec 多客户端配置。
+
+ONTAP 支持将多个网络中的多个客户端连接到启用了 IPsec 的单个 SVM IP 地址。您可以使用以下方法之一完成此操作：
+
+* * 子网配置 *
++
+要允许特定子网上的所有客户端（例如 192.168.134.0/24 ）使用单个 SPD 策略条目连接到单个 SVM IP 地址，您必须以子网形式指定 `remot-ip-subnets` 。此外，您还必须使用正确的客户端标识指定 `remot-identity` 字段。
+
+
+
+
+NOTE: 在子网配置中使用单个策略条目时，该子网中的 IPsec 客户端将共享 IPsec 身份和预共享密钥（ PSk ）。
+
+* * 允许所有客户端配置 *
++
+要允许任何客户端（无论其源 IP 地址如何）连接到启用了 SVM IPsec 的 IP 地址，请在指定 `remote-ip-subnets` 字段时使用 `0.0.0.0/0` 通配符。
+
++
+此外，您还必须使用正确的客户端标识指定 `remot-identity` 字段。
+
++
+此外，如果使用 `0.0.0.0/0` 通配符，则必须配置要使用的特定本地或远程端口号。例如， `NFS 端口 2049` 。
+
++
+.步骤
+.. 使用以下命令之一为多个客户端配置 IPsec ：
++
+... 如果使用 * 子网配置 * 支持多个 IPsec 客户端：
++
+`sIPsec 安全策略 create -vserver _vserver_name_ -name _policy_name_ -local-ip-subnets _ipsec_ip_address/32_ -remote-ip-subnets _ip_address/subnet_ -local-identity _local_id_ -remote-identity _remote_id_`
+
++
+`sIPsec 安全策略 create -vserver _vs1_ -name _subnet134_ -local-ip-subnets _192.168.134.344/32_ -remote-ip-subnets _192.168.134.0/24 _ -local-identity _ontap_side _identity_ -remote-identity _client_side identity_`
+
+... 如果使用 * 允许所有客户端配置 * 来支持多个 IPsec 客户端：
++
+`sIPsec 安全策略 create -vserver _vserver_name_ -name _policy_name_ -local-ip-subnets _ipsec_ip_address/32_ -remote-ip-subnets _0.0.0.0/0_ -local-ports _port_number_ -local-identity _local_id_ -remote-identity _remote_identity_id_`
+
++
+`sIPsec 安全策略 create -vserver _vs1_ -name _test35_ -local-ip-subnets _ipsec_ip_address/32_ -remote-ip-subnets _0.0.0.0/0_ -local-ports _2049_ -local-identity _ontap_side _identity_ -remote-identity _client_side identity_`
+
+
+
+
+
+
+
+
+
+== IPsec 统计信息
+
+通过协商，可以在 ONTAP SVM IP 地址和客户端 IP 地址之间建立一个称为 "ike 安全关联（ SA ） " 的安全通道。IPsec SAS 安装在两个端点上，用于执行实际的数据加密和解密工作。
+
+您可以使用 statistics 命令来检查 IPsec SAS 和 ike SAS 的状态。
+
+IKESA 命令示例：
+
+`sIPsec Security show-ikesasa -node _hosting node_name_for_SVM_IP_`
+
+IPsec SA 命令示例：
+
+`sipsec ecurity show-ipsecsa -node _hosting node_name_for_SVM_IP_`

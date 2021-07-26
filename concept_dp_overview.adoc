@@ -1,0 +1,54 @@
+---
+sidebar: sidebar 
+permalink: concept_dp_overview.html 
+keywords: netapp, ontap, protection, overview, data, protect, loss, backup, back up, types, mirror, vault, snapmirror, snapvault, SVM, storage VM, LIF, network interface, intercluster, single file snap restore, metrocluster, sfsr, disaster recovery, SnapMirror, protection policy, vault relationship, mirror relationship, relationship, snapshot, Snapshot copy, policy, schedule, replica, standards compliance, vault, default protection policy, asynchronous policy, synchronous policy, custom policy 
+summary: 通过创建和管理 Snapshot 副本，镜像，存储以及镜像和存储关系来保护数据。 
+---
+= 保护数据
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+本节中的主题介绍如何在 ONTAP 9.7 及更高版本中使用 ONTAP System Manager 配置和管理数据保护。
+
+如果您使用 ONTAP 命令行界面配置和管理数据保护，请参见以下内容：
+
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-arch-con/home.html["《使用 SnapLock 技术实现归档和合规高级指南》"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-csp/home.html["《集群和 SVM 对等高级指南》"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-dap/home.html["数据保护高级指南"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ptbrg/home.html["《数据保护磁带备份和恢复指南》"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-ndmp/home.html["《 NDMP 配置快速指南》"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-sdbak/home.html["在 NetApp Element 软件和 ONTAP 之间进行复制"]
+
+
+如果要使用适用于 ONTAP 9.7 及更早版本的旧版 OnCommand System Manager 配置和管理数据保护，请参见 ONTAP 版本的内容：
+
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-clus-peer/home.html["《集群和 SVM 对等快速指南》"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-sm-ic-fr/home.html["《卷灾难恢复快速指南》"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-sm-ic-cg/home.html["《卷灾难恢复准备快速指南》"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-buvault/home.html["《使用 SnapVault 备份卷快速指南》"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-buvault-restore/home.html["《使用 SnapVault 还原卷快速指南》"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-960/home.html["使用 System Manager 9.6 和 9.7 进行集群管理"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-950/home.html["使用 System Manager 9.5 进行集群管理"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-930/home.html["使用 System Manager 9.3 和 9.4 进行集群管理"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-900/home.html["使用 System Manager 9.2 及更早版本进行集群管理"]
+
+
+
+
+== 数据保护概述
+
+通过创建和管理 Snapshot 副本，镜像，存储以及镜像和存储关系来保护数据。
+
+_snapmirror_ 是一种灾难恢复技术，用于从主存储故障转移到地理位置偏远的站点上的二级存储。顾名思义， SnapMirror 会在二级存储中为您的工作数据创建一个副本或镜像，当主站点发生灾难时，您可以从该副本或镜像继续提供数据。
+
+_vaults_ 专为磁盘到磁盘 Snapshot 副本复制而设计，用于符合标准和其他监管相关目的。在 SnapMirror 关系中，目标通常仅包含源卷中当前的 Snapshot 副本，而存储目标则通常保留较长时间内创建的时间点 Snapshot 副本。

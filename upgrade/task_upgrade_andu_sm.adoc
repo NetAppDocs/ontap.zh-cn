@@ -1,0 +1,128 @@
+---
+sidebar: sidebar 
+permalink: upgrade/task_upgrade_andu_sm.html 
+keywords: netapp, ontap, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
+summary: 您可以无中断地更新集群上的 ONTAP 版本。 
+---
+= 使用 System Manager 实现自动化无中断
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+您可以使用 System Manager 无中断地更新集群上的 ONTAP 版本。
+
+了解 ONTAP 9.8 System Manager 中简化的 ONTAP 升级功能。
+
+video::xwwX8vrrmIk[youtube, width=848,height=480]
+更新过程会检查硬件平台和配置，以验证要升级到的 ONTAP 版本是否支持您的系统。ONTAP 会在升级期间在集群之间自动切换工作负载，以便您可以继续提供数据。
+
+此操作步骤会将您的系统更新到指定版本的 ONTAP 。假定目标版本支持您的硬件平台和配置。
+
+image:workflow_admin_upgrade_ontap.gif["升级任务的工作流图"]
+
+
+NOTE: 如果在自动升级期间遇到问题，您可以在 ONTAP 系统管理器中查看 EMS 消息和详细信息：单击 * 事件和作业 * > * 事件 * 。
+
+.步骤
+. 如果要将软件映像下载到网络上的 HTTP 或 FTP 服务器，请将软件映像从 NetApp 支持站点复制到 HTTP 或 FTP 服务器上要提供此映像的目录。
++
+如果要将软件映像下载到本地文件夹，请单击 NetApp 支持站点上的软件映像，选择 * 另存为 * ，然后选择本地文件夹以放置此映像。
+
+. 根据您运行的 System Manager 版本，执行以下步骤之一：
++
+[cols="2*"]
+|===
+| ONTAP 版本 | 步骤 
+
+
+| ONTAP 9.8 或更高版本  a| 
+单击 * 集群 > 概述 * 。
+
+
+
+| ONTAP 9.5 或 9.6  a| 
+单击 * 配置 * > * 集群 * > * 更新 * 。
+
+
+
+| ONTAP 9.4 或更早版本  a| 
+单击 * 配置 * > * 集群更新 * 。
+
+|===
+. 在概述窗格的右角，单击 image:icon_kabob.gif["菜单图标"]。
+. 单击 * ONTAP Update* 。
+. 在集群更新选项卡中，添加新映像或选择可用映像。
++
+[cols="2*"]
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+从本地客户端添加新软件映像
+
+* 注： * 您应已将映像下载到本地客户端。
+
+xref:task_download_and_install_ontap_software_image.adoc[下载并安装 ONTAP 软件映像]
+ a| 
+.. 在 Available Software images 下，单击 * 从本地添加 * 。
+.. 浏览到保存软件映像的位置，选择该映像，然后单击 * 打开 * 。
++
+单击 * 打开 * 后，软件映像将上传。
+
+
+
+
+
+ a| 
+从 NetApp 支持站点添加新的软件映像
+ a| 
+.. 单击 * 从服务器添加 * 。
+.. 在添加新软件映像对话框中，输入用于保存从 NetApp 支持站点下载的映像的 HTTP 服务器或 FTP 服务器的 URL 。
++
+对于匿名 FTP ，必须在中指定 URL ftp://anonymous@ftpserver[] 格式。
+
+.. 单击 * 添加 * 。
+
+
+
+
+ a| 
+选择一个可用映像
+ a| 
+从列出的映像中选择一个。
+
+|===
+. 单击 * 验证 * 以运行更新前验证检查，以验证集群是否已做好更新准备。
++
+验证操作将检查集群组件，以验证更新是否可以无中断地完成，然后显示任何错误或警告。此外，它还会显示在更新软件之前必须执行的任何必要补救措施。
+
++
+
+IMPORTANT: 在继续更新之前，您必须针对这些错误执行所有必要的补救措施。尽管您可以忽略警告的补救措施，但最佳做法是在继续更新之前执行所有补救措施。
+
+. 单击 * 下一步 * 。
+. 单击 * 更新 * 。
++
+此时将再次执行验证。
+
++
+** 验证完成后，一个表将显示任何错误和警告，以及继续操作前需要采取的任何补救措施。
+** 如果验证完成后出现警告，您可以选择 * 继续出现警告的更新 * 复选框，然后单击 * 继续 * 。
++
+验证完成且更新正在进行中时，更新可能会因错误而暂停。您可以单击错误消息以查看详细信息，然后执行补救措施，然后再恢复更新。
+
+
+
+
+
+更新成功完成后，节点将重新启动，您将重定向到 ONTAP System Manager 登录页面。如果节点重新启动需要很长时间，则必须刷新浏览器。

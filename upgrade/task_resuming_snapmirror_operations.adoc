@@ -1,0 +1,52 @@
+---
+permalink: upgrade/task_resuming_snapmirror_operations.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, resuming, resume, snapmirror 
+summary: 完成无中断升级后，您必须恢复已暂停的任何 SnapMirror 关系。 
+---
+= 恢复 SnapMirror 操作
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+完成无中断升级后，您必须恢复已暂停的任何 SnapMirror 关系。
+
+现有 SnapMirror 关系必须已使用 snapmirror quiesce 命令暂停，并且集群必须已无中断升级。
+
+. 恢复先前暂停的每个 SnapMirror 关系的传输： `snapmirror resume *`
++
+此命令将恢复所有已暂停的 SnapMirror 关系的传输。
+
+. 验证 SnapMirror 操作是否已恢复： `snapmirror show`
++
+[listing]
+----
+cluster1::> snapmirror show
+
+Source            Destination  Mirror  Relationship  Total             Last
+Path        Type  Path         State   Status        Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+cluster1-vs1:dp_src1
+            DP   cluster1-vs2:dp_dst1
+                              Snapmirrored
+                                      Idle           -         true    -
+cluster1-vs1:xdp_src1
+            XDP  cluster1-vs2:xdp_dst1
+                              Snapmirrored
+                                      Idle           -         true    -
+cluster1://cluster1-vs1/ls_src1
+            LS   cluster1://cluster1-vs1/ls_mr1
+                              Snapmirrored
+                                      Idle           -         true    -
+                 cluster1://cluster1-vs1/ls_mr2
+                              Snapmirrored
+                                      Idle           -         true    -
+4 entries were displayed.
+----
++
+对于每个 SnapMirror 关系，请验证此关系的状态是否为 * 闲置 * 。如果状态为 * 正在传输 * ，请等待 SnapMirror 传输完成，然后重新输入命令以验证状态是否已更改为 * 闲置 * 。
+
+
+
+对于配置为按计划运行的每个 SnapMirror 关系，您应验证第一个计划的 SnapMirror 传输是否已成功完成。

@@ -1,0 +1,148 @@
+---
+sidebar: sidebar 
+permalink: task_admin_troubleshoot_hardware_problems.html 
+keywords: netapp, ontap, troubleshoot, hardware, controller, fan, switch, system, problems, errors, issues, card, high temperature, heat, port, FRU, hardware visualization, hardware view, disk shelf, adapter card, console ports, view node, view disk shelf, view disk shelves, view switch 
+summary: 您可以查看网络上节点，磁盘架和存储交换机的配置，并对可能出现的问题进行故障排除。 
+---
+= 查看硬件配置以确定问题
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+对于 ONTAP 9.8 及更高版本，您可以使用 System Manager 查看网络上 AFF 硬件的配置并确定是否可能出现问题。
+
+通过硬件可视化功能，用户可以快速直观地查看硬件状态以及任何潜在的连接问题。
+
+video::Jdf5dxSQsDY[youtube, width=848,height=480]
+对于 ONTAP 9.8 ， System Manager 提供了一个 _preview_ 功能来查看 AFF 硬件配置。从 ONTAP 9.1.1 开始，您可以查看所有 AFF 硬件配置。
+
+要查看 AFF 硬件配置，请执行以下步骤：
+
+. 在 System Manager 中，选择 * 集群 > 硬件 * 。
+. 将鼠标悬停在组件上可查看状态和其他详细信息。
++
+您可以查看各种类型的信息：
+
++
+** <<Information about controllers>>
+** <<Information about disk shelves>>
+** <<Information about storage switches>>
+
+
+
+
+
+
+== 有关控制器的信息
+
+您可以查看以下内容：
+
+* 节点 * ：
+
+* 显示后视图。
+* 带有内部磁盘架的型号也会在正面图中显示磁盘布局。
+* 您可以查看以下平台型号：
++
+[cols="35,65"]
+|===
+| 如果系统正在运行 ... | 然后，您可以查看 ... 
+
+
+| ONTAP 9.8 | C190 ， A220 ， A300 ， A400 和 A700 
+
+
+| ONTAP 9.9.1 | C190 ， A220 ， A250 ， A300 ， A320 ， A400 ， A700 ， A700s ， A800 ， FAS500f 
+|===
+
+
+* 端口 *
+
+* 未显示控制台端口。
+* 如果端口已关闭，则为红色。
+* 将鼠标悬停在端口上方时，将显示端口状态和其他详细信息。
+
+
+* FRU * ：
+
+只有当 FRU 的状态不是最佳状态时，才会显示有关 FRU 的信息。
+
+* 节点或机箱中的 PSU 发生故障。
+* 在节点中检测到温度过高。
+* 节点或机箱上的风扇出现故障。
+
+
+* 适配器卡 * ：
+
+* 如果已插入外部卡，则插槽中会显示具有已定义部件号字段的卡。
+* 显示了卡上的端口。
+* 某些卡会显示特定的卡图片。如果此卡不在支持的部件号列表中，则会显示一个通用图形。
+
+
+
+
+== 有关磁盘架的信息
+
+您可以查看以下内容：
+
+* 磁盘架 * ：
+
+* 此时将显示正面视图和背面视图。
+* 您可以查看以下磁盘架型号：
++
+[cols="35,65"]
+|===
+| 如果系统正在运行 ... | 然后，您可以查看 ... 
+
+
+| ONTAP 9.8 | DS4243 ， DS4486 ， DS212C ， DS2246 ， DS224C ， 和 NS224 
+
+
+| ONTAP 9.9.1 | 所有受支持的磁盘架型号 
+|===
+
+
+* 磁盘架端口 * ：
+
+* 此时将显示端口状态。
+* 如果端口已连接，则会显示远程端口信息。
+
+
+* 磁盘架 FRU * ：
+
+* 此时将显示 PSU 故障信息。
+
+
+
+
+== 有关存储交换机的信息
+
+* 此时将显示用作存储交换机的交换机，用于将磁盘架连接到节点。
+* 从 9.1.1 开始， System Manager 将显示有关同时用作存储交换机和集群的交换机的信息，此类交换机也可以在 HA 对的节点之间共享。
+* 您可以查看以下存储交换机型号：
++
+[cols="35,65"]
+|===
+| 如果系统正在运行 ... | 然后，您可以查看 ... 
+
+
+| ONTAP 9.8 | Cisco Nexus 3232C 交换机 
+
+
+| ONTAP 9.9.1 | Cisco Nexus 3232C 交换机 Cisco Nexus 9336C-x2 交换机 
+|===
+* 您可以查看以下内容：
++
+** * 存储交换机 * 信息包括交换机名称， IP 地址，序列号， SNMP 版本和系统版本。
+** * 存储交换机端口 * 信息包括身份名称，身份索引，状态和其他详细信息，包括远程连接。
+
+
+

@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: task_dp_prepare_mirror.html 
+keywords: netapp, ontap, snapshot copy, snapshots, configure lifs, intercluster lifs, pairing nodes, peering nodes, mirror, vault, snapvault,  snapmirror, network interface, intercluster, intercluster interface, HA pair, node, replicate, remote cluster, generate passphrase, SVM peer relationship, storage VM peer, intercluster setting, peer cluster 
+summary: 您可以通过将数据复制到远程集群来进行数据备份和灾难恢复来保护数据。 
+---
+= 准备镜像和存储
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以通过将数据复制到远程集群来进行数据备份和灾难恢复来保护数据。
+
+可以使用多个默认保护策略。如果要使用自定义策略，必须已创建保护策略。
+
+image:workflow_dp_prepare_mirror.gif["为镜像和存储做准备的任务的工作流图"]
+
+.步骤
+. 在本地集群中，单击 * 保护 > 概述 * 。
+. 展开 * 集群间设置 * 。单击 * 添加网络接口 * 并为集群添加集群间网络接口。
++
+在远程集群上重复此步骤。
+
+. 在远程集群中，单击 * 保护 > 概述 * 。单击 image:icon_kabob.gif["菜单选项图标"] 在 Cluster peers 部分中，单击 * 生成密码短语 * 。
+. 复制生成的密码短语并将其粘贴到本地集群中。
+. 在本地集群中的集群对等方下，单击 * 对等集群 * 并对本地和远程集群建立对等关系。
+. （可选）在 Storage VM peers 下，单击 image:icon_kabob.gif["菜单选项图标"] 然后，使用 * 对等 Storage VM* 对等 Storage VM 。
+. 单击 * 保护卷 * 以保护卷。要保护 LUN ，请单击 * 存储 > LUN* ，选择要保护的 LUN ，然后单击 image:icon_protect.gif["Alt= 保护按钮"]。
++
+根据需要的数据保护类型选择保护策略。
+
+. 要验证卷和 LUN 是否已成功从本地集群中保护，请单击 * 存储 > 卷 * 或 * 存储 > LUN* ，然后展开卷 /LUN 视图。
+

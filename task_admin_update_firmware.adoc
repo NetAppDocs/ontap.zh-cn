@@ -1,0 +1,92 @@
+---
+sidebar: sidebar 
+permalink: task_admin_update_firmware.html 
+keywords: netapp, ontap, upgrade, nondisruptive, nondisruptively, firmware, update, disks, disk, shelves, qualification, package, service, processor, baseboard, management, controller, dqp, sp, bmc 
+summary: 您可以将更新后的固件应用于集群中支持的设备，例如磁盘，磁盘架，磁盘认证包（ DQP ），服务处理器（ SP ）或基板管理控制器（ BMC ）。 
+---
+= 更新固件
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以将固件更新应用于集群中支持的设备，例如磁盘，磁盘架，磁盘认证包（ DQP ），服务处理器（ SP ）或基板管理控制器（ BMC ）。
+
+从 ONTAP 9.1.1 开始，您可以从 Active IQ 收到警报，通知您集群上的固件更新处于待定状态。然后，您可以使用 System Manager 下载并上传固件映像。
+
+image:workflow_admin_update_firmware.gif["更新固件任务的工作流图"]
+
+
+
+== 从 Active IQ 查看固件更新警报
+
+从 ONTAP 9.1.1 开始，您可以从 Active IQ Unified Manager 收到警报，通知您集群上的固件更新处于待定状态。
+
+
+NOTE: 使用 ONTAP 9.1.1 时，要接收有关固件更新的警报，必须向 Active IQ Unified Manager 注册。请参见 link:https://netapp.com/support-and-training/documentation/active-iq-unified-manager["Active IQ Unified Manager 文档资源"]。
+
+.步骤
+. 转至 * 信息板 * 。
++
+在 * 运行状况 * 部分中，如果为集群建议了任何固件更新，则会显示一条消息。
+
+. 单击警报消息。
++
+* 固件更新 * 选项卡将显示在 * 更新 * 页面中。
+
+
+
+
+
+== 下载集群固件
+
+
+NOTE: 对于 ONTAP 9.8 ，您必须导航到 NetApp 支持站点以下载更新后的固件映像包。
+
+从 ONTAP 9.1.1 开始，您可以在查看固件警报时从 * 更新 * 页面下载固件更新（请参见 <<View firmware update alerts from Active IQ>>）。
+
+执行适用于集群上安装的 ONTAP 版本的操作步骤。
+
+[cols="40,60"]
+|===
+| 对于 ONTAP 9.8 和 ONTAP 9.1.1 ，如果未向 Active IQ Unified Manager 注册，请执行以下步骤 ... | 从 ONTAP 9.1.1 开始，如果您已向 Active IQ Unified Manager 注册，请执行以下步骤 ... 
+
+
+ a| 
+. 导航到 NetApp 支持站点。
+. 登录到 NetApp 支持站点。
+. 选择要用于更新集群固件的固件包。
+. 将文件复制到网络上的 HTTP 或 FTP 服务器或本地文件夹。
+
+ a| 
+. 在 * 更新 * 页面上，对于要执行的固件更新，请单击 * 从 NetApp 支持站点下载 " 链接。
++
+此时将显示 NetApp 支持站点。
+
+. 登录到 NetApp 支持站点。
+. 下载要更新的固件映像包。
+. 将文件复制到网络上的 HTTP 或 FTP 服务器或本地文件夹。
+
+
+|===
+
+
+== 更新集群固件
+
+下载固件包文件后，您可以更新集群固件。
+
+.步骤
+. 在 ONTAP 系统管理器中，单击 * 集群 > 概述 * 。
+. 在 * 概述 * 窗格的右角，单击 image:icon_kabob.gif["菜单图标"] 并选择 * ONTAP Update* 。
+. 单击 * 固件更新 * ，选择 * 从服务器 * 或 * 本地客户端 * ，并提供服务器 URL 或文件位置。
+
+
+您可以在 * 固件更新摘要 * 下监控或验证更新。

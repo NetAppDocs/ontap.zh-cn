@@ -1,0 +1,114 @@
+---
+sidebar: sidebar 
+permalink: networking/lif_roles95.html 
+keywords: lif, role, ontap 9.5, lif roles in ontap 9.5 and earlier, lifs with different roles have different characteristics, lif compatibility with port types, network interface modify -vserver _vserver name_ -lif _intercluster lif_ -status-admin up|down, lif security, lif failover, lif routing, lif rebalancing 
+summary: 具有不同角色的 LIF 具有不同的特征 
+---
+= ONTAP 9.5 及更早版本中的 LIF 角色
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+具有不同角色的 LIF 具有不同的特征。LIF 角色可确定接口支持的流量类型，适用的故障转移规则，已设置的防火墙限制，每个 LIF 的安全性，负载平衡以及路由行为。LIF 可以具有以下五个角色中的任一角色：节点管理，集群管理，集群，集群间和数据。
+
+从 ONTAP 9.6 开始， LIF 角色已弃用。您应为 LIF 指定服务策略，而不是为角色指定服务策略。使用服务策略创建 LIF 时，无需指定 LIF 角色。
+
+
+
+== LIF 与端口类型的兼容性
+
+
+NOTE: 如果在同一子网中配置了集群间 LIF 和管理 LIF 以与静态路由关联，并且此路由与集群间 LIF 关联，则管理流量将被外部防火墙阻止，并且 AutoSupport 和 NTP 连接将失败。您可以通过运行 `network interface modify -vserver _vserver name_ -lif _intercluster LIF_ -status-admin up_down` 命令来切换集群间 LIF 来恢复系统。但是，您应在不同子网中设置集群间 LIF 和管理 LIF ，以避免使用此问题描述。
+
+[cols="2*"]
+|===
+| LIF 角色 | 说明 
+
+
+| 数据 LIF | 与 Storage Virtual Machine （ SVM ）关联并用于与客户端通信的 LIF 。一个端口上可以有多个数据 LIF 。这些接口可以在整个集群中进行迁移或故障转移。您可以通过将数据 LIF 的防火墙策略修改为 mgmt 来将其用作 SVM 管理 LIF 。与 NIS ， LDAP ， Active Directory ， WINS 和 DNS 服务器建立的会话使用数据 LIF 。 
+
+
+| 集群 LIF | 一种 LIF ，用于在集群中的节点之间传输集群内流量。必须始终在 10-GbE 网络端口上创建集群 LIF 。集群 LIF 可以在同一节点上的集群端口之间进行故障转移，但不能迁移或故障转移到远程节点。当新节点加入集群时，系统会自动生成 IP 地址。但是，如果要手动为集群 LIF 分配 IP 地址，则必须确保新 IP 地址与现有集群 LIF 位于同一子网范围内。 
+
+
+| 节点管理 LIF | 一种 LIF ，用于提供用于管理集群中特定节点的专用 IP 地址。节点管理 LIF 是在创建或加入集群时创建的。这些 LIF 用于系统维护，例如，当节点无法从集群访问时。 
+
+
+| 集群管理 LIF | 为整个集群提供一个管理接口的 LIF 。集群管理 LIF 可以故障转移到集群中的任何节点管理端口或数据端口。它不能故障转移到集群或集群间端口集群间 LIF 用于跨集群通信，备份和复制的 LIF 。您必须先在集群中的每个节点上创建一个集群间 LIF ，然后才能建立集群对等关系。这些 LIF 只能故障转移到同一节点中的端口。它们不能迁移或故障转移到集群中的另一个节点。 
+|===
+[cols="6*"]
+|===
+|  | 数据 LIF | 集群 LIF | 节点管理 LIF | 集群管理 LIF | 集群间 LIF 
+
+
+| 主要流量类型 | NFS 服务器， CIFS 服务器， NIS 客户端， Active Directory ， LDAP ， WINS ， DNS 客户端和服务器， iSCSI 和 FC 服务器 | 集群内 | SSH 服务器， HTTPS 服务器， NTP 客户端， SNMP ， AutoSupport 客户端， DNS 客户端，正在加载软件更新 | SSH 服务器， HTTPS 服务器 | 跨集群复制 
+|===
+
+
+== LIF 安全性
+
+[cols="6*"]
+|===
+|  | 数据 LIF | 集群 LIF | 节点管理 LIF | 集群管理 LIF | 集群间 LIF 
+
+
+| 是否需要专用 IP 子网？ | 否 | 是的。 | 否 | 否 | 否 
+
+
+| 是否需要安全网络？ | 否 | 是的。 | 否 | 否 | 是的。 
+
+
+| 默认防火墙策略 | 限制性很强 | 完全开放 | 中等 | 中等 | 限制性很强 
+
+
+| 防火墙是否可自定义？ | 是的。 | 否 | 是的。 | 是的。 | 是的。 
+|===
+
+
+== LIF 故障转移
+
+[cols="6*"]
+|===
+|  | 数据 LIF | 集群 LIF | 节点管理 LIF | 集群管理 LIF | 集群间 LIF 
+
+
+| 默认行为 | 仅限同一故障转移组中位于 LIF 主节点和非 SFO 配对节点上的端口 | 仅限同一故障转移组中位于 LIF 主节点上的端口 | 仅限同一故障转移组中位于 LIF 主节点上的端口 | 同一故障转移组中的任何端口 | 仅限同一故障转移组中位于 LIF 主节点上的端口 
+
+
+| 是否可自定义？ | 是的。 | 否 | 是的。 | 是的。 | 是的。 
+|===
+
+
+== LIF 路由
+
+[cols="6*"]
+|===
+|  | 数据 LIF | 集群 LIF | 节点管理 LIF | 集群管理 LIF | 集群间 LIF 
+
+
+| 何时需要默认路由？ | 客户端或域控制器位于不同的 IP 子网上 | 从不 | 当任何主要流量类型需要访问其他 IP 子网时 | 管理员从另一个 IP 子网进行连接时 | 其他集群间 LIF 位于不同的 IP 子网上时 
+
+
+| 何时需要静态路由到特定 IP 子网？ | 极少 | 从不 | 极少 | 极少 | 另一个集群的节点的集群间 LIF 位于不同的 IP 子网中 
+
+
+| 何时需要静态主机路由到特定服务器？ | 要使其中一种流量类型列在节点管理 LIF 下，请执行数据 LIF ，而不是节点管理 LIF 。这需要相应地更改防火墙。 | 从不 | 极少 | 极少 | 极少 
+|===
+
+
+== LIF 重新平衡
+
+[cols="6*"]
+|===
+|  | 数据 LIF | 集群 LIF | 节点管理 LIF | 集群管理 LIF | 集群间 LIF 
+
+
+| DNS ：是否用作 DNS 服务器？ | 是的。 | 否 | 否 | 否 | 否 
+
+
+| DNS ：是否导出为区域？ | 是的。 | 否 | 否 | 否 | 否 
+|===

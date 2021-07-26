@@ -1,0 +1,103 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_dns_for_host-name_resolution.html 
+keywords: configure, configuring, configuration, setup, set, setting, dns, local, remote, host, name, host-name, resolution, configure dns for host-name resolution, nsswitch.conf, configure an svm and data lifs for host-name resolution using an external dns server, vserver services name-service dns, vserver services name-service dns create, network interface modify -lif lifname -dns-zone, network interface create -lif lifname -dns-zone, vserver services name-service dns check, configure the name service switch table for host-name resolution 
+summary: 使用 DNS 访问本地或远程源以获取主机信息 
+---
+= 配置 DNS 以进行主机名解析
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以使用 DNS 访问本地或远程源来获取主机信息。您必须配置 DNS 才能访问其中一个或两个源。
+
+ONTAP 必须能够查找主机信息，才能正确访问客户端。您必须配置名称服务，以使 ONTAP 能够访问本地或外部 DNS 服务以获取主机信息。
+
+ONTAP 将名称服务配置信息存储在一个表中，该表相当于 UNIX 系统上的 ` /etc/nsswitch.conf` 文件。
+
+
+
+== 使用外部 DNS 服务器配置 SVM 和数据 LIF 以进行主机名解析
+
+您可以使用 `vserver services name-service dns` 命令在 SVM 上启用 DNS ，并将其配置为使用 DNS 进行主机名解析。主机名可使用外部 DNS 服务器进行解析。
+
+站点范围的 DNS 服务器必须可用于主机名查找。
+
+您应配置多个 DNS 服务器，以避免单点故障。如果您仅输入一个 DNS 服务器名称，则 `vserver services name-service dns create` 命令会发出警告。
+
+《网络管理指南》包含有关在 SVM 上配置动态 DNS 的信息。
+
+.步骤
+. 在 SVM 上启用 DNS ：
++
+....
+vserver services name-service dns create -vserver vserver_name -domains domain_name - name-servers ip_addresses -state enabled
+....
++
+以下命令将在 SVM vs1 上启用外部 DNS 服务器：
+
++
+....
+vserver services name-service dns create -vserver <vs1.example.com> -domains <example.com> -name-servers <192.0.2.201,192.0.2.202> -state <enabled>
+....
++
+
+NOTE: vserver services name-service dns create 命令会执行自动配置验证，如果 ONTAP 无法与名称服务器联系，则会报告错误消息。
+
+. 在 SVM 所拥有的 LIF 上启用 DNS ：
++
+[cols="2*"]
+|===
+| 如果您 ... | 使用此命令 ... 
+
+
+| 修改现有 LIF 分区名称 | network interface modify -lif lifname -ds-zone 
+
+
+| 创建新的 LIF 分区名称 | network interface create -lif lifname -ds-zone 
+|===
++
+....
+vserver services name-service dns create -vserver <vs1> -domains <example.com> -name-servers <192.0.2.201, 192.0.2.202> -state <enabled> network interface modify -lif <datalif1> -dns-zone <zonename.whatever.com>
+....
+. 使用 `vserver services name-service dns check` 命令验证名称服务器的状态。
++
+....
+vserver services name-service dns check -vserver vs1.example.com
+VserverName       Server     Status    Status Details
+----------------  ---------- -------   --------------------------
+vs1.example.com   10.0.0.50  up        Response time (msec): 2
+vs1.example.com   10.0.0.51  up        Response time (msec): 2
+....
+
+
+
+
+== 配置名称服务切换表以进行主机名解析
+
+您必须正确配置名称服务切换表，以使 ONTAP 能够查询本地或外部名称服务以检索主机信息。
+
+您必须已确定要在环境中使用哪个名称服务进行主机映射。
+
+.步骤
+. 将必要的条目添加到名称服务切换表：
++
+....
+vserver services name-service <ns-switch> create -vserver <vserver_name> -database <database_name> -source <source_names>
+....
+. 验证名称服务切换表是否包含所需顺序的预期条目：
++
+....
+vserver services name-service <ns-switch> show -vserver <vserver_name>
+....
+
+
+以下示例将在名称服务切换表中为 SVM vs1 创建一个条目，以便首先使用本地主机文件，然后使用外部 DNS 服务器来解析主机名：
+
+....
+vserver services name-service ns-switch create -vserver vs1 -database hosts -sources files dns
+....

@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: networking/modify_network_port_attributes.html 
+keywords: change, changing, modify, modifying, network, port, attributes, modify network port attributes, change the autonegotiation, duplex, flow control, speed, and health settings of a physical network port 
+summary: 更改物理网络端口的自动协商，双工，流量控制，速度和运行状况设置 
+---
+= 修改网络端口属性
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以修改物理网络端口的自动协商，双工，流量控制，速度和运行状况设置。
+
+要修改的端口不能托管任何 LIF 。
+
+.关于此任务
+* 您不应修改 100 GbE ， 40 GbE ， 10 GbE 或 1 GbE 网络接口的管理设置。
++
+您可以为双工模式和端口速度设置的值称为管理设置。根据网络限制，管理设置可能与操作设置不同（即端口实际使用的双工模式和速度）。
+
+* 您不应修改接口组中底层物理端口的管理设置。
++
+` up-admin` 参数（可在高级权限级别使用）可修改端口的管理设置。
+
+* 对于节点上的所有端口或节点上托管最后一个可运行集群 LIF 的端口，不应将 ` up-admin` 管理设置为 false 。
+* 您不应修改管理端口的 MTU 大小 `e0M` 。
+* 广播域中端口的 MTU 大小不能与为广播域设置的 MTU 值进行更改。
+* VLAN 的 MTU 大小不能超过其基本端口的 MTU 大小值。
+
+
+.步骤
+. 修改网络端口的属性：
++
+`network port modify`
+
+. 您可以将 ` -ignore-health-status` 字段设置为 true ，以指定系统可以忽略指定端口的网络端口运行状况。
++
+网络端口运行状况会自动从已降级更改为运行状况良好，此端口现在可用于托管 LIF 。您应将集群端口的流量控制设置为 `none` 。默认情况下，流量控制设置为 `Full` 。
+
+
+
+以下命令通过将流量控制设置为 none 来禁用端口 e0b 上的流量控制：
+
+....
+network port modify -node cluster-1-01 -port e0b -flowcontrol-admin none
+....

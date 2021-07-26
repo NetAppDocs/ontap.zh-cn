@@ -1,0 +1,34 @@
+---
+sidebar: sidebar 
+permalink: task_dp_configure_mirror.html 
+keywords: netapp, ontap, snapmirror, snapvault, point-in-time copy, mirror, vault, configure, disaster recovery, DR, archive data, roll back, rollback, remote cluster, data protection 
+summary: 创建卷的镜像和存储以进行灾难恢复 
+---
+= 配置镜像和存储
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+创建卷的镜像和存储，以便在发生灾难时保护数据，并为多个归档版本的数据回滚。仅支持组合的镜像和存储策略。您不能指定单独的镜像和存储策略。
+
+此操作步骤会在远程集群上创建镜像和存储策略。源集群和目标集群使用集群间网络接口来交换数据。操作步骤采用 link:task_dp_prepare_mirror.html["此时将创建集群间网络接口，并为包含卷的集群建立对等关系"] （已配对）。您也可以对等 Storage VM 以实现数据保护；但是，如果 Storage VM 未建立对等关系，但已启用权限，则在创建保护关系时， Storage VM 会自动建立对等关系。
+
+image:workflow_configure_mirrors_and_vaults.gif["用于配置镜像和存储的任务的工作流图"]
+
+.步骤
+. 选择要保护的卷或 LUN ：单击 * 存储 > 卷 * 或 * 存储 > LUN* ，然后单击所需的卷或 LUN 名称。
+. 单击 image:icon_protect.gif["Alt= 保护按钮"]。
+. 选择目标集群和 Storage VM 。
+. 默认情况下，异步策略处于选中状态。要选择同步策略，请单击 * 更多选项 * 。
+. 单击 * 保护 * 。
+. 单击选定卷或 LUN 的 * SnapMirror （本地或远程） * 选项卡以验证是否已正确设置保护。
+

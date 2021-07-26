@@ -1,0 +1,51 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_troubleshoot_aufo_not_triggered_on_site_b.html 
+keywords: SM-BC, SMBC, troubleshooting, automatic unplanned failover, aufo, failover, Mediator, quorum 
+summary: 站点 A 故障不会在站点 B 上触发计划外故障转移 
+---
+= 站点 B 未触发自动计划外故障转移
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+站点 A 故障不会在站点 B 上触发计划外故障转移
+
+未配置调解器。要确定是否为发生原因，问题描述请在站点 B 集群上运行 `snapmirror mediator show` 命令。
+
+....
+Cluster2::*> snapmirror mediator show
+This table is currently empty.
+....
+此示例指示未在站点 B 上配置调解器
+
+确保已在两个集群上配置调解器，并且状态为已连接且仲裁设置为 True 。
+
+SnapMirror 一致性组不同步。要确定这是否为发生原因，请查看事件日志以查看一致性组在站点 A 发生故障期间是否处于同步状态。
+
+....
+cluster::*> event log show -event *out.of.sync*
+
+Time                Node             Severity      Event
+------------------- ---------------- ------------- ---------------------------
+10/1/2020 23:26:12  sti42-vsim-ucs511w ERROR       sms.status.out.of.sync: Source volume "vs0:zrto_cg_556844_511u_RW1" and destination volume "vs1:zrto_cg_556881_511w_DP1" with relationship UUID "55ab7942-03e5-11eb-ba5a-005056a7dc14" is in "out-of-sync" status due to the following reason: "Transfer failed."
+....
+要在站点 B 上执行强制故障转移，请完成以下步骤
+
+. 从站点 B 取消映射属于一致性组的所有 LUN
+. 使用 `force` 选项删除 SnapMirror 一致性组关系。
+. 在一致性组成分卷上输入 `snapmirror break` 命令，将卷从 DP 转换为 R/W ，从而从站点 B 启用 I/O
+. 启动站点 A 节点以创建从站点 B 到站点 A 的零 RTO 关系
+. 释放站点 A 上具有 `relationship-info-only` 的一致性组，以保留通用 Snapshot 副本并取消映射属于一致性组的 LUN 。
+. 通过使用 Sync 策略或异步策略设置卷级别关系，将站点 A 上的卷从 R/W 转换为 DP 。
+. 问题描述 the `snapmirror resync` to synchronize the relationships.
+. 删除站点 A 上具有 Sync 策略的 SnapMirror 关系
+. 在站点 B 上使用 `relationship-info-only true` 释放带有 Sync 策略的 SnapMirror 关系
+. 创建从站点 B 到站点 A 的一致性组关系
+. 从站点 A 执行一致性组重新同步，然后验证一致性组是否处于同步状态。
+. 重新扫描主机 LUN I/O 路径以还原 LUN 的所有路径。
+

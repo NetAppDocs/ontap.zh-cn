@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: networking/display_lif_failover_targets.html 
+keywords: display, view, show, lif, logical, interface, failover, fail, over, target, display lif failover targets, verify the failover policy and failover group configuration for a lif, network interface show 
+summary: 验证 LIF 的故障转移策略和故障转移组配置 
+---
+= 显示 LIF 故障转移目标
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可能需要检查 LIF 的故障转移策略和故障转移组是否配置正确。为了防止故障转移规则配置不当，您可以显示一个 LIF 或所有 LIF 的故障转移目标。
+
+通过显示 LIF 故障转移目标，您可以检查以下内容：
+
+* LIF 是否配置了正确的故障转移组和故障转移策略
+* 生成的故障转移目标端口列表是否适用于每个 LIF
+* 数据 LIF 的故障转移目标是否不是管理端口（ e0M ）
+
+
+使用 `network interface show` 命令的 `failover` 选项显示 LIF 的故障转移目标。
+
+以下命令显示有关双节点集群中所有 LIF 的故障转移目标的信息。`Failover` `Targets` 行显示了给定 LIF 的节点 - 端口组合列表（按优先级排序）。
+
+....
+network interface show -failover
+         Logical       Home                  Failover        Failover
+Vserver  Interface     Node:Port             Policy          Group
+-------- ------------- --------------------- --------------- ---------
+Cluster
+         node1_clus1   node1:e0a             local-only      Cluster
+                       Failover Targets: node1:e0a,
+                                         node1:e0b
+         node1_clus2   node1:e0b             local-only      Cluster
+                       Failover Targets: node1:e0b,
+                                         node1:e0a
+         node2_clus1   node2:e0a             local-only      Cluster
+                       Failover Targets: node2:e0a,
+                                         node2:e0b
+         node2_clus2   node2:e0b             local-only      Cluster
+                       Failover Targets: node2:e0b,
+                                         node2:e0a
+cluster1
+         cluster_mgmt  node1:e0c             broadcast-domain-wide
+                                                             Default
+                       Failover Targets: node1:e0c,
+                                         node1:e0d,
+                                         node2:e0c,
+                                         node2:e0d
+         node1_mgmt1   node1:e0c             local-only      Default
+                       Failover Targets: node1:e0c,
+                                         node1:e0d
+         node2_mgmt1   node2:e0c             local-only      Default
+                       Failover Targets: node2:e0c,
+                                         node2:e0d
+vs1
+         data1         node1:e0e             system-defined  bcast1
+                       Failover Targets: node1:e0e,
+                                         node1:e0f,
+                                         node2:e0e,
+                                         node2:e0f
+....

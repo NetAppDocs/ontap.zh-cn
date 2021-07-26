@@ -1,0 +1,56 @@
+---
+sidebar: sidebar 
+permalink: task_object_provision_enable_s3_server.html 
+keywords: netapp, ontap, System Manager, S3, S3 server, storage VM, storage VMs, S3 client, client, clients, server, certificate, network, protocol, protocol servers, configure protocols, Fully Qualified Domain Name, FQDN, client, client access, network, network interface, network interfaces, DNS 
+summary: 添加带有 S3 服务器的 Storage VM ，以便为 S3 客户端提供内容。 
+---
+= 在存储上启用 S3 服务器
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+将 S3 服务器添加到新的或现有的 Storage VM 中，以便向 S3 客户端提供内容。
+
+S3 服务器可以与其他协议服务器共存于 Storage VM 中，也可以创建新的 Storage VM 以隔离命名空间和工作负载。
+
+您应准备为接口角色数据输入 S3 服务器名称（ FQDN ）和 IP 地址。
+
+如果您使用的是外部 CA 签名证书，则在此操作步骤期间，系统将提示您输入此证书；您也可以选择使用系统生成的证书。
+
+.步骤
+. 在 Storage VM 上启用 S3 。
++
+.. 添加新的 Storage VM ：单击 * 存储 > Storage VM* ，然后单击 * 添加 * 。
++
+如果这是一个没有现有 Storage VM 的新系统：单击 * 信息板 > 配置协议 * 。
+
++
+如果要将 S3 服务器添加到现有 Storage VM ：单击 * 存储 > Storage VM* ，选择一个 Storage VM ，单击 * 设置 * ，然后单击 image:icon_gear.gif["设置图标"] 在 * S3 下。
+
+.. 单击 * 启用 S3* ，然后输入 S3 服务器名称。
++
+这是客户端将使用的完全限定域名（ FQDN ）。
+
+.. 选择证书类型。
++
+无论选择系统生成的证书还是您自己的证书之一，客户端访问都需要此证书。
+
+.. 输入网络接口。
+
+
+. 如果选择了系统生成的证书，则在确认创建新 Storage VM 后，您将看到证书信息。单击 * 下载 * 并保存以供客户端访问。
++
+** 不会再显示此机密密钥。
+** 如果您再次需要证书信息：单击 * 存储 > 存储 VM* ，选择 Storage VM ，然后单击 * 设置 * 。
+
+
+

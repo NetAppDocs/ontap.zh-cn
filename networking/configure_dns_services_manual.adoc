@@ -1,0 +1,141 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_dns_services_manual.html 
+keywords: dns, service, services, configuration, configure, configuring, set, up, setup, nfs, smb, cifs, active, directory, statistics, configure dns services, files, dns, hosts, , vserver services name-service dns create, configure dynamic dns on the svm, vserver-fqdn 
+summary: 在创建 NFS 或 SMB 服务器之前，为 SVM 配置 DNS 服务 
+---
+= 配置 DNS 服务
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+在创建 NFS 或 CIFS 服务器之前，您必须为 SVM 配置 DNS 服务。通常， DNS 名称服务器是 NFS 或 CIFS 服务器要加入的域的 Active Directory 集成 DNS 服务器。
+
+Active Directory 集成的 DNS 服务器包含域 LDAP 和域控制器服务器的服务位置记录（ SRV ）。如果 SVM 找不到 Active Directory LDAP 服务器和域控制器，则 NFS 或 CIFS 服务器设置将失败。
+
+SVM 使用 hosts 名称服务 ns-switch 数据库确定要使用的名称服务以及查找有关主机的信息的顺序。主机数据库支持的两个名称服务为 `files` 和 `dns` 。
+
+在创建 CIFS 服务器之前，您必须确保 `dns` 是其中一个源。
+
+
+NOTE: 要查看 mgwd 进程和 SecD 进程的 DNS 名称服务统计信息，请使用统计信息 UI 。
+
+.步骤
+. 确定 `hosts` name services 数据库的当前配置。
++
+在此示例中， hosts 名称服务数据库使用默认设置。
+
++
+`vserver services name-service _ns-switch_ show -vserver _vs1_ -database _hosts_`
+
++
+....
+                     Vserver: vs1
+Name Service Switch Database: hosts
+   Name Service Source Order: files, dns
+....
+. 如果需要，请执行以下操作。
++
+.. 按所需顺序将 DNS 名称服务添加到主机名称服务数据库中，或者重新排列源。
++
+在此示例中， hosts 数据库配置为按此顺序使用 DNS 和本地文件。
+
++
+`vserver services name-service _ns-switch_ modify -vserver _vs1_ -database _hosts_ -sources _dns ， files_`
+
+.. 验证名称服务配置是否正确。
++
+`vserver services name-service _ns-switch_ show -vserver _vs1_ -database _hosts_`
+
+
+
+. 配置 DNS 服务。
++
+`vserver services name-service dns create -vserver _vs1_ -domains _example.com,example2.com_ -name-servers _10.0.0.5010.0.0.51_`
+
++
+
+NOTE: vserver services `name-service dns create` 命令会执行自动配置验证，如果 ONTAP 无法与名称服务器联系，则会报告错误消息。
+
+. 验证 DNS 配置是否正确以及服务是否已启用。
++
+....
+           Vserver: vs1
+           Domains: example.com, example2.com Name
+           Servers: 10.0.0.50, 10.0.0.51
+Enable/Disable DNS: enabled Timeout (secs): 2
+  Maximum Attempts: 1
+....
+. 验证名称服务器的状态。
++
+`vserver services name-service dns check -vserver _vs1_`
+
++
+....
+Vserver  Name Server  Status  Status Details
+-------  -----------  ------  -----------------------
+vs1      10.0.0.50    up      Response time (msec): 2
+vs1      10.0.0.51    up      Response time (msec): 2
+....
+
+
+
+
+== 在 SVM 上配置动态 DNS
+
+如果您希望 Active Directory 集成的 DNS 服务器在 DNS 中动态注册 NFS 或 SMB 服务器的 DNS 记录，则必须在 SVM 上配置动态 DNS （ DDNS ）。
+
+必须在 SVM 上配置 DNS 名称服务。如果您使用的是安全 DDNS ，则必须使用 Active Directory 集成的 DNS 名称服务器，并且必须已为 SVM 创建 NFS 或 SMB 服务器或 Active Directory 帐户。
+
+指定的完全限定域名（ FQDN ）必须是唯一的：
+
+* 对于 NFS ，在 `vserver services name-service dns dynamic-update` 命令的一部分在 ` -vserver-fqdn` 中指定的值将成为 LIF 的注册 FQDN 。
+* 对于 SMB/CIFS ，指定为 CIFS 服务器 NetBIOS 名称和 CIFS 服务器完全限定域名的值将成为 LIF 的注册 FQDN 。这在 ONTAP 中是不可配置的。在以下情形中， LIF FQDN 为 CIFS_VS1.EXAMPLE.COM":
++
+....
+cluster1::> cifs server show -vserver vs1
+
+                                          Vserver: vs1
+                         CIFS Server NetBIOS Name: CIFS_VS1
+                    NetBIOS Domain/Workgroup Name: EXAMPLE
+                      Fully Qualified Domain Name: EXAMPLE.COM
+                              Organizational Unit: CN=Computers
+Default Site Used by LIFs Without Site Membership:
+                                   Workgroup Name: -
+                                   Kerberos Realm: -
+                             Authentication Style: domain
+                CIFS Server Administrative Status: up
+                          CIFS Server Description:
+                          List of NetBIOS Aliases: -
+....
+
+
+
+NOTE: 要避免不符合 DDNS 更新的 RFC 规则的 SVM FQDN 配置失败，请使用符合 RFC 的 FQDN 名称。有关详细信息，请参见 link:https://tools.ietf.org/html/rfc1123["RFC 1123"]。
+
+.步骤
+. 在 SVM 上配置 DDNS ：
++
+`vserver services name-service dns dynamic-update modify -vserver _vserver_name_ -is- enabled _true_[-use-secure ｛ true_false ｝ -vserver-fqdn _fqdn_used_for_dns_updates_`
+
++
+`vserver services name-service dns dynamic-update modify -vserver _vs1_ -is-enabled _tru_ - use-secure _tru_ -vserver-fqdn _vs1.example.com_`
+
++
+星号不能用作自定义 FQDN 的一部分。例如， ` * .netapp.com` 无效。
+
+. 验证 DDNS 配置是否正确：
++
+`vserver services name-service dns dynamic-update show`
+
++
+....
+Vserver  Is-Enabled Use-Secure Vserver FQDN      TTL
+-------- ---------- ---------- ----------------- -------
+vs1      true       true       vs1.example.com   24h
+....
+

@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_install_creating_a_consistency_group_relationship.html 
+keywords: SM-BC, SMBC, consistency group, create, constituent 
+summary: 您必须创建一个 SnapMirror 一致性组，该一致性组还会建立同步一致性组关系。 
+---
+= 创建一致性组关系
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须创建一个 SnapMirror 一致性组，该一致性组还会建立同步一致性组关系。
+
+以下前提条件和限制适用：
+
+* 您必须是集群或 Storage VM 管理员
+* 您必须具有 SnapMirror 同步许可证
+* 目标卷的类型必须为 DP
+* 主 Storage VM 和二级 Storage VM 必须处于对等关系
+* 一致性组中的所有成分卷都必须位于一个 Storage VM 中
+* 您不能在 ASA 集群和非 ASA 集群之间建立 SM-BC 一致性组关系
+
+
+您必须从目标集群创建一致性组关系。您可以使用 `snapmirror create` 命令上的 `cg-item-mapings` 参数映射多达 12 个成分卷。
+
+.步骤
+. 创建一致性组和成分卷关系。此示例将创建两个一致性组：包含成分卷 vol1 和 vol2 的 srcg 以及包含成分卷 vol1_dr 和 vol2_dr 的 dstcg 。
++
+`d目标：： > snapmirror create -source-path vs1_src ： /CG/cG_src -destination-path vs1_dst ： /CG_c_dst -cg-item-mappings vol_src1 ：@vol_dst1 ， vol_src2 ：@vol_dst2 -policy AutomatedFailover`
+
+

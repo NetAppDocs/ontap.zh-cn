@@ -1,0 +1,44 @@
+---
+permalink: upgrade/concept_considerations_for_session_oriented_protocols.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, update, considerations, session-oriented, protocols 
+summary: 在升级期间，集群和面向会话的协议可能会对某些区域的客户端和应用程序产生发生原因不利影响。 
+---
+= 面向会话的协议的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在升级期间，集群和面向会话的协议可能会对某些区域的客户端和应用程序产生发生原因不利影响。
+
+如果您使用面向会话的协议，请考虑以下几点：
+
+* CIFS
++
+基于 SMB 的 Hyper-V 和 SQL Server 支持无中断运行（ NDO ）。如果您通过 SMB 解决方案配置了 Hyper-V 或 SQL Server ，则应用程序服务器以及包含的虚拟机或数据库将保持联机状态，并在 ONTAP 升级期间提供持续可用性。
+
++
+对于所有其他 CIFS 配置，客户端会话将终止。您应指示用户在升级之前结束其会话。
+
+* NFSv4.x
++
+NFSv4.x 客户端将使用正常的 NFSv4.x 恢复过程自动从升级期间发生的连接丢失中恢复。在此过程中，应用程序可能会遇到临时 I/O 延迟。
+
+* NDMP
++
+状态已丢失，客户端用户必须重试此操作。
+
+* 备份和还原
++
+状态已丢失，客户端用户必须重试此操作。
+
++
+
+IMPORTANT: 请勿在升级期间或升级之前立即启动备份或还原。这样做可能会导致数据丢失。
+
+* 应用程序（例如 Oracle 或 Exchange ）
++
+影响取决于应用程序。对于基于超时的应用程序，您可以将超时设置更改为比 ONTAP 重新启动时间长的时间，以最大限度地减少不利影响。
+
+

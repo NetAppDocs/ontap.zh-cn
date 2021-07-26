@@ -1,0 +1,122 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_network_security_using_federal_information_processing_standards_@fips@.html 
+keywords: federal, information, processing, standards, fips, 140-2, compliant, ssl, connections, tlsv1.2, tlsv1.1, tlsv1, enable, enabling, disable, disabling, view, status, federal information processing standards (fips) 140-2 compliant for all ssl connections, configure network security using federal information processing standards (fips), enable fips, disable fips, view fips compliance status 
+summary: 所有 SSL 连接均符合联邦信息处理标准（ FIPS ） 140-2 
+---
+= 使用联邦信息处理标准（ FIPS ）配置网络安全性
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+对于所有 SSL 连接， ONTAP 均符合联邦信息处理标准（ FIPS ） 140-2 的要求。您可以在 ONTAP 中打开和关闭 SSL FIPS 模式，全局设置 SSL 协议以及关闭 RC4 等任何弱密码。
+
+默认情况下， ONTAP 上的 SSL 设置为禁用 FIPS 合规性，并启用 SSL 协议，其中包括以下内容：
+
+* TLSv1.2
+* TLSv1.1
+* TLSv1
+
+
+启用 SSL FIPS 模式后，从 ONTAP 到外部客户端或 ONTAP 外部服务器组件的 SSL 通信将使用 FIPS 兼容的 SSL 加密。
+
+
+
+== 启用 FIPS
+
+建议所有安全用户在系统安装或升级后立即调整其安全配置。启用 SSL FIPS 模式后，从 ONTAP 到外部客户端或 ONTAP 外部服务器组件的 SSL 通信将使用 FIPS 兼容的 SSL 加密。
+
+建议使用以下设置启用 FIPS ：
+
+* `FIPS ：启用`
+* `sSL 协议 = ｛ TLSv1.2 ｝`
+* `sSL 密码 = ｛ all ：！ low ：！ aNULL ：！ EXP ：！ eNULL ：！ RC4 ｝`
+
+
+.步骤
+. 更改为高级权限级别：
++
+`set -privilege advanced`
+
+. 启用 FIPS ：
++
+`security config modify -interface ssl -is-fips-enabled true`
+
+. 当系统提示您继续时，输入 `y`
+. 逐个手动重新启动集群中的每个节点。
+
+
+....
+security config modify -interface SSL -is-fips-enabled true
+
+Warning: This command will enable FIPS compliance and can potentially cause some non-compliant components to fail. MetroCluster and Vserver DR require FIPS to be enabled on both sites in order to be compatible.
+Do you want to continue? {y|n}: y
+
+Warning: When this command completes, reboot all nodes in the cluster. This is necessary to prevent components from failing due to an inconsistent security configuration state in the cluster. To avoid a service outage, reboot one node at a time and wait for it to completely initialize before rebooting the next node. Run "security config status show" command to monitor the reboot status.
+Do you want to continue? {y|n}: y
+....
+
+
+== 禁用 FIPS
+
+如果您仍在运行较旧的系统配置，并且希望为 ONTAP 配置向后兼容性，则只有在禁用 FIPS 时才能打开 SSLv3 。
+
+建议使用以下设置禁用 FIPS ：
+
+* `FIPS = false`
+* `sSL 协议 = ｛ SSLv3 ｝`
+* `sSL 密码 = ｛ all ：！ low ：！ aNULL ：！ expp ：！ eNULL ｝`
+
+
+.步骤
+. 更改为高级权限级别：
++
+`set -privilege advanced`
+
+. 通过键入以下命令禁用 FIPS ：
++
+`sSecurity config modify -interface ssl -supported -protocols SSLv3`
+
+. 当系统提示您继续时，输入 `y` 。
+. 手动重新启动集群中的每个节点。
+
+
+....
+security config modify -interface SSL -supported-protocols SSLv3
+
+Warning: Enabling the SSLv3 protocol may reduce the security of the interface, and is not recommended.
+Do you want to continue? {y|n}: y
+
+Warning: When this command completes, reboot all nodes in the cluster. This is necessary to prevent components from failing due to an inconsistent security configuration state in the cluster. To avoid a service outage, reboot one node at a time and wait for it to completely initialize before rebooting the next node. Run "security config status show" command to monitor the reboot status.
+Do you want to continue? {y|n}: y
+....
+
+
+== 查看 FIPS 合规状态
+
+您可以查看整个集群是否正在运行当前安全配置设置。
+
+.步骤
+. 逐个重新启动集群中的每个节点。
++
+请勿同时重新启动所有集群节点。要确保集群中的所有应用程序都运行新的安全配置，并对 FIPS 开关模式，协议和密码进行所有更改，需要重新启动。
+
+. 查看当前合规状态：
++
+`s安全性配置显示`
+
+
+
+....
+security config show
+
+          Cluster                                              Cluster Security
+Interface FIPS Mode  Supported Protocols     Supported Ciphers Config Ready
+--------- ---------- ----------------------- ----------------- ----------------
+SSL       false      TLSv1_2, TLSv1_1, TLSv1 ALL:!LOW:!aNULL:  yes
+                                             !EXP:!eNULL
+....

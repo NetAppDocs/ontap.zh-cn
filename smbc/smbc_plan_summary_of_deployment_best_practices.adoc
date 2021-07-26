@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_plan_summary_of_deployment_best_practices.html 
+keywords: SM-BC, SMBC, best practices, planning, SAN, Mediator, SnapMirror 
+summary: 在规划 SnapMirror 业务连续性部署时，您应考虑几个最佳实践。 
+---
+= 部署最佳实践摘要
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在规划 SnapMirror 业务连续性部署时，您应考虑几个最佳实践。
+
+
+
+=== SAN
+
+SnapMirror 业务连续性解决方案仅支持 SAN 工作负载。在所有情况下，都应遵循 SAN 最佳实践。
+
+此外：
+
+* 必须将二级集群中复制的 LUN 映射到主机，并且必须在配置主机时发现主集群和二级集群中 LUN 的 I/O 路径。
+* 在异步（ OOS ）事件超过 80 秒后或自动执行计划外故障转移后，请务必重新扫描主机 LUN I/O 路径，以确保 I/O 路径不会丢失。有关详细信息，请参见相应主机操作系统供应商提供的有关重新扫描 LUN I/O 路径的文档。
+
+
+
+
+=== 调解器
+
+要全面发挥功能并启用自动计划外故障转移，应配置外部 ONTAP 调解器并为其配置 ONTAP 集群。
+
+安装调解器时，应将自签名证书替换为由主流可靠 CA 签名的有效证书。
+
+
+
+=== SnapMirror
+
+您应按以下顺序终止 SnapMirror 关系：
+
+. 在目标集群上执行 `snapmirror delete`
+. 在源集群上执行 `snapmirror release`
+

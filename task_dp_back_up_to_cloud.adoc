@@ -1,0 +1,118 @@
+---
+sidebar: sidebar 
+permalink: task_dp_back_up_to_cloud.html 
+keywords: netapp, ontap, System Manager, System Manager 9.9.1, cloud backup, SnapMirror Cloud, cloud object store, add cloud object store, remove cloud object store, StorageGRID, ONTAP S3, cloud restore, restore from cloud 
+summary: 从 System Manager 9.1.1 开始，您可以使用 System Manager 将数据备份到云，并将数据从云存储还原到其他卷。您可以使用 StorageGRID 或 ONTAP S3 作为云对象存储。 
+---
+= 备份到云
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+从 System Manager 9.1.1 开始，您可以使用 System Manager 将数据备份到云，并将数据从云存储还原到其他卷。您可以使用 StorageGRID 或 ONTAP S3 作为云对象存储。
+
+在将 SnapMirror Cloud 与 System Manager 结合使用之前，您应在 NetApp 支持站点上生成 SnapMirror Cloud API 许可证密钥： link:https://mysupport.netapp.com/site/tools/snapmirror-cloud-api-key["生成 SnapMirror Cloud API 许可证密钥"]
+
+
+
+== 添加云对象存储
+
+在配置 SnapMirror 云备份之前，您应添加 StorageGRID 或 ONTAP S3 云对象存储。
+
+.步骤
+. 单击 * 保护 > 概述 > 云对象存储 * 。
+. 单击 image:icon_add.gif["添加图标"]。
+
+
+
+
+== 使用默认策略进行备份
+
+您可以使用默认云保护策略 DailyBackup 为现有卷快速配置 SnapMirror 云备份。
+
+.步骤
+. 单击 * 保护 > 概述 * ，然后选择 * 将卷备份到云 * 。
+. 如果这是您首次备份到云，请按所示在许可证字段中输入 SnapMirror Cloud API 许可证密钥。
+. 单击 * 身份验证并继续 * 。
+. 选择源卷。
+. 选择云对象存储。
+. 单击 * 保存 * 。
+
+
+
+
+== 创建自定义云备份策略
+
+如果您不想对 SnapMirror Cloud 备份使用默认的 DailyBackup 云策略，则可以创建自己的策略。
+
+.步骤
+. 单击 * 保护 > 概述 > 本地策略设置 * ，然后选择 * 保护策略 * 。
+. 单击 * 添加 * 并输入新策略详细信息。
+. 在 * 策略类型 * 部分中，选择 * 备份到云 * 以指示您正在创建云策略。
+. 单击 * 保存 * 。
+
+
+
+
+== 从卷页面创建备份
+
+如果要同时为多个卷选择和创建云备份，或者要使用自定义保护策略，可以使用 System Manager * 卷 * 页面。
+
+.步骤
+. 单击 * 存储 > 卷 * 。
+. 选择要备份到云的卷，然后单击 * 保护 * 。
+. 在 * 保护卷 * 窗口中，单击 * 更多选项 * 。
+. 选择一个策略。
++
+您可以选择默认策略 DailyBackup 或您创建的自定义云策略。
+
+. 选择云对象存储。
+. 单击 * 保存 * 。
+
+
+
+
+== 从云还原
+
+您可以使用 System Manager 将已备份的数据从云存储还原到源集群上的其他卷。
+
+.步骤
+. 单击 * 存储 > 卷 * ，然后选择要还原的卷。
+. 单击 image:icon_kabob.gif["Alt= 菜单选项"] 在源卷旁边，选择 * 还原 * 。
+. 在 * 源 * 下，选择一个 Storage VM ，然后输入要将数据还原到的卷的名称。
+. 在 * 目标 * 下，选择要还原的 Snapshot 副本。
+. 单击 * 保存 * 。
+
+
+
+
+== 删除 SnapMirror 云关系
+
+您可以使用 System Manager 删除云关系。
+
+.步骤
+. 单击 * 存储 > 卷 * ，然后选择要删除的卷。
+. 单击 image:icon_kabob.gif["Alt= 菜单选项"] 在源卷旁边，选择 * 删除 * 。
+. 如果要删除云对象存储端点，请选择 * 删除云对象存储端点（可选） * 。
+. 单击 * 删除 * 。
+
+
+
+
+== 删除云对象存储
+
+如果云对象存储不属于云备份关系，您可以使用 System Manager 将其删除。如果云对象存储属于云备份关系，则无法将其删除。
+
+.步骤
+. 单击 * 保护 > 概述 > 云对象存储 * 。
+. 选择要删除的对象存储，然后单击 image:icon_kabob.gif["Alt= 菜单选项"] 并选择 * 删除 * 。
+

@@ -1,0 +1,72 @@
+---
+sidebar: sidebar 
+permalink: concept_security_overview.html 
+keywords: netapp, ontap, security, overview, secure data, data, cluster, access, storage, virus scanning, encryption, WORM storage, client authentication, client authorization, administrator authentication, RBAC, role-based access control, login, log in, antivirus, anti-virus, Vscan, SnapLock, regulation 
+summary: System Manager 使用 ONTAP 标准安全方法 
+---
+= 最大限度地提高安全性
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+本节中的主题介绍如何在 ONTAP 9.7 及更高版本中使用 ONTAP System Manager 管理集群安全性。
+
+如果您使用 ONTAP 命令行界面管理集群安全性，请参见以下内容：
+
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-adm-auth-rbac/home.html["管理员身份验证和 RBAC 高级指南"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-acg/home.html["《防病毒配置指南》"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/home.html["《 NetApp 加密高级指南》"]
+
+
+如果要使用适用于 ONTAP 9.7 及更早版本的旧版 OnCommand System Manager 管理集群安全性，请参见 ONTAP 版本的内容：
+
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-960/home.html["使用 System Manager 9.6 和 9.7 进行集群管理"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-950/home.html["使用 System Manager 9.5 进行集群管理"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-930/home.html["使用 System Manager 9.3 和 9.4 进行集群管理"]
+* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-900/home.html["使用 System Manager 9.2 及更早版本进行集群管理"]
+
+
+
+
+== System Manager 安全概述
+
+借助 System Manager ，您可以使用 ONTAP 标准方法来保护客户端和管理员对存储的访问，并防止病毒的侵害。高级技术可用于对空闲数据进行加密以及对 WORM 存储进行加密。
+
+
+
+=== 客户端身份验证和授权
+
+ONTAP 通过向可信源验证客户端计算机和用户的身份来对其进行身份验证。ONTAP 通过将用户凭据与文件或目录上配置的权限进行比较来授权用户访问文件或目录。
+
+
+
+=== 管理员身份验证和 RBAC
+
+管理员可以使用本地或远程登录帐户向集群和 Storage VM 进行身份验证。基于角色的访问控制（ Role-Based Access Control ， RBAC ）可确定管理员有权访问的命令。
+
+
+
+=== 病毒扫描
+
+您可以在存储系统上使用集成的防病毒功能，防止数据受到病毒或其他恶意代码的侵害。称为 _Vscan_ 的 ONTAP 病毒扫描将同类最佳的第三方防病毒软件与 ONTAP 功能相结合，让您可以灵活地控制扫描哪些文件以及何时扫描。
+
+
+
+=== 加密
+
+ONTAP 提供了基于软件和基于硬件的加密技术，可确保在存储介质被重新利用，退回，放置在不当位置或被盗时无法读取空闲数据。
+
+
+
+=== WORM 存储
+
+_WORM_ 是一种高性能合规解决方案，适用于使用 _write once ， _read many （ SnapLock ） _ 存储以未经修改的形式保留关键文件以满足监管要求的组织。

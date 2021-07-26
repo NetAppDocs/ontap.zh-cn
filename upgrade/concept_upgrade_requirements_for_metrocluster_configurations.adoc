@@ -1,0 +1,76 @@
+---
+permalink: upgrade/concept_upgrade_requirements_for_metrocluster_configurations.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, update, requirements, metrocluster, mcc, general, normal, operations, switchover 
+summary: 如果您必须升级 MetroCluster 配置，则应了解一些重要要求。 
+---
+= MetroCluster 配置的升级要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您必须升级 MetroCluster 配置，则应了解一些重要要求。
+
+
+
+== 执行 MetroCluster 配置的主要和次要升级所需的方法
+
+可以使用自动无中断升级（ NDU ）操作步骤对 MetroCluster 配置执行修补程序升级。
+
+从 ONTAP 9.3 开始，可以使用自动无中断升级（ NDU ）操作步骤对 MetroCluster 配置执行重大升级。在运行 ONTAP 9.2 或更早版本的系统上，必须使用特定于 MetroCluster 配置的 NDU 操作步骤对 MetroCluster 配置执行重大升级。
+
+
+
+== 一般要求
+
+* 两个集群必须运行相同版本的 ONTAP 。
++
+您可以使用 version 命令验证 ONTAP 版本。
+
+* MetroCluster 配置必须处于正常或切换模式。
++
+
+NOTE: 只有次要修补程序升级才支持在切换模式下进行升级。
+
+* 对于除双节点集群之外的所有配置，您可以同时无中断地升级这两个集群。
++
+要在双节点集群中实现无中断升级，必须一次升级一个节点的集群。
+
+* 两个集群中的聚合不能处于正在重新同步 RAID 状态。
++
+在 MetroCluster 修复期间，镜像聚合会重新同步。您可以使用 `storage aggregate plex show -in-progress true` 命令验证 MetroCluster 配置是否处于此状态。如果正在同步任何聚合，则在重新同步完成之前，不应执行升级。
+
+* 升级过程中，协商切换操作将失败。
++
+为了避免升级或还原操作出现问题，请勿在升级或还原操作期间尝试计划外切换，除非两个集群上的所有节点都运行相同版本的 ONTAP 。
+
+
+
+
+
+== 正常运行的配置要求
+
+* 源 SVM LIF 必须已启动并位于其主节点上。
++
+目标 SVM 的数据 LIF 不需要启动或位于其主节点上。
+
+* 本地站点上的所有聚合都必须处于联机状态。
+* 本地集群的 SVM 所拥有的所有根卷和数据卷都必须处于联机状态。
+
+
+
+
+== 切换的配置要求
+
+* 所有 LIF 必须已启动并位于其主节点上。
+* 除灾难恢复站点的根聚合外，所有聚合都必须处于联机状态。
++
+在切换的某些阶段，灾难恢复站点的根聚合处于脱机状态。
+
+* 所有卷都必须联机。
+
+
+* 相关信息 *
+
+xref:task_verifying_the_networking_and_storage_status_for_metrocluster_cluster_is_ready.adoc[验证 MetroCluster 配置的网络连接和存储状态]

@@ -1,0 +1,248 @@
+---
+sidebar: sidebar 
+permalink: networking/display_cluster_connections.html 
+keywords: display, view, show, cluster, connections, active, client, listening, lif, protocol, service, display cluster connections, view all the active or listening connections in the cluster or a count of active connections on the node by client, lif, protocol, or service, display active connections by client (cluster administrators only), network connections active show-clients, display active connections by protocol (cluster administrators only), network connections active show-protocols, display active connections by service (cluster administrators only), network connections active show-services, display active connections by lif on a node and svm, network connections active show-lifs, display active connections in a cluster, network connections active show, display listening connections in a cluster, network connections listening show 
+summary: 按客户端， LIF ，协议或服务查看集群中的所有活动连接或侦听连接，或者节点上的活动连接计数 
+---
+= 显示集群连接
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以按客户端，逻辑接口，协议或服务显示集群中的所有活动连接或节点上的活动连接计数。您还可以显示集群中的所有侦听连接。
+
+
+
+== 按客户端显示活动连接（仅限集群管理员）
+
+您可以按客户端查看活动连接，以验证特定客户端正在使用的节点，并查看每个节点的客户端数量之间可能存在的不平衡。
+
+在以下情况下，按客户端显示的活动连接数非常有用：
+
+* 查找繁忙或过载的节点。
+* 确定特定客户端对卷的访问速度较慢的原因。
++
+您可以查看有关客户端正在访问的节点的详细信息，然后将其与卷所在的节点进行比较。如果访问卷需要遍历集群网络，则客户端可能会因远程访问超额预订的远程节点上的卷而导致性能下降。
+
+* 验证所有节点是否均用于数据访问。
+* 查找连接数意外高的客户端。
+* 验证某些客户端是否已连接到节点。
+
+
+使用 `network connections active show-clients` 命令按客户端显示节点上的活动连接计数。
+
+有关此命令的详细信息，请参见手册页： http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]
+
+....
+network connections active show-clients
+Node    Vserver Name    Client IP Address     Count
+------  --------------  -----------------     ------
+node0   vs0             192.0.2.253                1
+        vs0             192.0.2.252                2
+        Cluster         192.10.2.124               5
+node1   vs0             192.0.2.250                1
+        vs0             192.0.2.252                3
+        Cluster         192.10.2.123               4
+node2   vs1             customer.example.com       1
+        vs1             192.0.2.245                3
+        Cluster         192.10.2.122               4
+node3   vs1             customer.example.org       1
+        vs1             customer.example.net       3
+        Cluster         192.10.2.121               4
+....
+
+
+== 按协议显示活动连接（仅限集群管理员）
+
+您可以按协议（ TCP 或 UDP ）显示节点上的活动连接计数，以比较集群中协议的使用情况。
+
+在以下情况下，按协议显示的活动连接数非常有用：
+
+* 查找断开连接的 UDP 客户端。
++
+如果某个节点接近其连接限制，则 UDP 客户端将最先被丢弃。
+
+* 验证是否未使用任何其他协议。
+
+
+使用 `network connections active show-protocols` 命令按协议显示节点上的活动连接计数。
+
+有关此命令的详细信息，请参见手册页。
+
+....
+network connections active show-protocols
+Node     Vserver Name  Protocol   Count
+-------  ------------  ---------  ------
+node0
+         vs0           UDP            19
+         Cluster       TCP            11
+node1
+         vs0           UDP            17
+         Cluster       TCP             8
+node2
+         vs1           UDP            14
+         Cluster       TCP            10
+node3
+         vs1           UDP            18
+         Cluster       TCP             4
+....
+
+
+== 按服务显示活动连接（仅限集群管理员）
+
+您可以按服务类型（例如 NFS ， SMB ，挂载等）显示集群中每个节点的活动连接计数。这对于比较集群中的服务使用情况非常有用，有助于确定节点的主工作负载。
+
+在以下情况下，按服务显示的活动连接数非常有用：
+
+* 验证所有节点是否都用于相应的服务，以及该服务的负载平衡是否正常工作。
+* 验证是否未使用任何其他服务。使用 `network connections active show-services` 命令按服务显示节点上的活动连接计数。
+
+
+有关此命令的详细信息，请参见手册页： http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]
+
+....
+network connections active show-services
+Node       Vserver Name    Service    Count
+---------  --------------  ---------  ------
+node0
+           vs0             mount           3
+           vs0             nfs            14
+           vs0             nlm_v4          4
+           vs0             cifs_srv        3
+           vs0             port_map       18
+           vs0             rclopcp        27
+           Cluster         ctlopcp        60
+node1
+           vs0             cifs_srv        3
+           vs0             rclopcp        16
+           Cluster         ctlopcp        60
+node2
+           vs1             rclopcp        13
+           Cluster         ctlopcp        60
+node3
+           vs1             cifs_srv        1
+           vs1             rclopcp        17
+           Cluster         ctlopcp        60
+....
+
+
+== 按 LIF 显示节点和 SVM 上的活动连接
+
+您可以按节点和 Storage Virtual Machine （ SVM ）显示每个 LIF 的活动连接计数，以查看集群中 LIF 之间的连接不平衡。
+
+在以下情况下，按 LIF 显示的活动连接数非常有用：
+
+* 通过比较每个 LIF 上的连接数来查找过载的 LIF 。
+* 验证 DNS 负载平衡是否适用于所有数据 LIF 。
+* 比较与各种 SVM 的连接数以查找使用量最多的 SVM 。
+
+
+使用 `network connections active show-lifs` 命令按 SVM 和节点显示每个 LIF 的活动连接计数。
+
+有关此命令的详细信息，请参见手册页： http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]
+
+....
+network connections active show-lifs
+Node      Vserver Name  Interface Name  Count
+--------  ------------  --------------- ------
+node0
+          vs0           datalif1             3
+          Cluster       node0_clus_1         6
+          Cluster       node0_clus_2         5
+node1
+          vs0           datalif2             3
+          Cluster       node1_clus_1         3
+          Cluster       node1_clus_2         5
+node2
+          vs1           datalif2             1
+          Cluster       node2_clus_1         5
+          Cluster       node2_clus_2         3
+node3
+          vs1           datalif1             1
+          Cluster       node3_clus_1         2
+          Cluster       node3_clus_2         2
+....
+
+
+== 显示集群中的活动连接
+
+您可以显示有关集群中活动连接的信息，以查看各个连接使用的 LIF ，端口，远程主机，服务， Storage Virtual Machine （ SVM ）和协议。
+
+在以下情况下，查看集群中的活动连接非常有用：
+
+* 验证各个客户端是否在正确的节点上使用了正确的协议和服务。
+* 如果客户端在使用节点，协议和服务的特定组合访问数据时遇到问题，您可以使用此命令查找类似的客户端以进行配置或数据包跟踪比较。
+
+
+使用 `network connections active show` 命令显示集群中的活动连接。
+
+有关此命令的详细信息，请参见手册页： http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]
+
+以下命令显示节点 node1 上的活动连接：
+
+....
+network connections active show -node node1
+Vserver  Interface           Remote
+Name     Name:Local Port     Host:Port           Protocol/Service
+-------  ------------------  ------------------  ----------------
+Node: node1
+Cluster  node1_clus_1:50297  192.0.2.253:7700    TCP/ctlopcp
+Cluster  node1_clus_1:13387  192.0.2.253:7700    TCP/ctlopcp
+Cluster  node1_clus_1:8340   192.0.2.252:7700    TCP/ctlopcp
+Cluster  node1_clus_1:42766  192.0.2.252:7700    TCP/ctlopcp
+Cluster  node1_clus_1:36119  192.0.2.250:7700    TCP/ctlopcp
+vs1      data1:111           host1.aa.com:10741  UDP/port-map
+vs3      data2:111           host1.aa.com:10741  UDP/port-map
+vs1      data1:111           host1.aa.com:12017  UDP/port-map
+vs3      data2:111           host1.aa.com:12017  UDP/port-map
+....
+以下命令显示 SVM vs1 上的活动连接：
+
+....
+network connections active show -vserver vs1
+Vserver  Interface           Remote
+Name     Name:Local Port     Host:Port           Protocol/Service
+-------  ------------------  ------------------  ----------------
+Node: node1
+vs1      data1:111           host1.aa.com:10741  UDP/port-map
+vs1      data1:111           host1.aa.com:12017  UDP/port-map
+....
+
+
+== 显示集群中的侦听连接
+
+您可以显示集群中侦听连接的信息，以查看接受给定协议和服务连接的 LIF 和端口。
+
+在以下情况下，查看集群中的侦听连接非常有用：
+
+* 如果客户端与 LIF 的连接始终失败，请验证所需的协议或服务是否正在侦听 LIF 。
+* 如果通过另一节点上的 LIF 对某个节点上的卷进行远程数据访问失败，请验证是否在每个集群 LIF 上打开了 UDP/rclopcp 侦听器。
+* 如果同一集群中的两个节点之间的 SnapMirror 传输失败，验证是否在每个集群 LIF 上打开了 UDP/rclopcp 侦听器。
+* 如果不同集群中两个节点之间的 SnapMirror 传输失败，请验证是否在每个集群间 LIF 上打开了 tcp/ctlopcp 侦听器。
+
+
+使用 `network connections listening show` 命令显示每个节点的侦听连接。
+
+....
+network connections listening show
+Vserver Name     Interface Name:Local Port        Protocol/Service
+---------------- -------------------------------  ----------------
+Node: node0
+Cluster          node0_clus_1:7700                TCP/ctlopcp
+vs1              data1:4049                       UDP/unknown
+vs1              data1:111                        TCP/port-map
+vs1              data1:111                        UDP/port-map
+vs1              data1:4046                       TCP/sm
+vs1              data1:4046                       UDP/sm
+vs1              data1:4045                       TCP/nlm-v4
+vs1              data1:4045                       UDP/nlm-v4
+vs1              data1:2049                       TCP/nfs
+vs1              data1:2049                       UDP/nfs
+vs1              data1:635                        TCP/mount
+vs1              data1:635                        UDP/mount
+Cluster          node0_clus_2:7700                TCP/ctlopcp
+....

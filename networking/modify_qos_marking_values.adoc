@@ -1,0 +1,37 @@
+---
+sidebar: sidebar 
+permalink: networking/modify_qos_marking_values.html 
+keywords: change, changing, modify, modifying, qos, quality, service, marking, performance, modify qos marking values, change the qos marking values for different protocols, network qos-marking modify 
+summary: 更改不同协议的 QoS 标记值 
+---
+= 修改 QoS 标记值
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以为每个 IP 空间修改不同协议的服务质量（ QoS ）标记值。
+
+集群中的所有节点都必须运行相同版本的 ONTAP 。
+
+使用 `network qos-marking modify` 命令修改 QoS 标记值。
+
+* ` – ipspace` 参数指定要修改 QoS 标记条目的 IP 空间。
+* ` – protocol` 参数指定要修改 QoS 标记条目的协议。`network qos-marking modify` 手册页介绍了协议的可能值。
+* ` – dscp` 参数用于指定差分服务代码点（ DSCP ）值。可能的值介于 0 到 63 之间。
+* ` -is-enabled` 参数用于在 ` – ipspace` 参数提供的 IP 空间中为指定协议启用或禁用 QoS 标记。
+
+
+以下命令将在默认 IP 空间中为 NFS 协议启用 QoS 标记：
+
+....
+network qos-marking modify -ipspace Default -protocol NFS -is-enabled true
+....
+以下命令会将默认 IP 空间中 NFS 协议的 DSCP 值设置为 20 ：
+
+....
+network qos-marking modify -ipspace Default -protocol NFS -dscp 20
+....

@@ -1,0 +1,226 @@
+---
+sidebar: sidebar 
+permalink: networking/combine_physical_ports_to_create_interface_groups.html 
+keywords: combine, ports, ifgrp, interface, group, create, creating, add, adding, types, single-mode, single, mode, static, dynamic, multimode, best, practice, port-based, port, based, load, balance, balancing, ip, address, mac, sequential, remove, removing, delete, deleting, combine physical ports to create interface groups, interface group types, characteristics of single-mode interface groups, characteristics of static multimode interface groups, dynamic multimode interface group, load balancing in multimode interface groups, port-based load balancing, ip address and mac address load balancing, sequential load balancing, create an interface group, add a port to an interface group, remove a port from an interface group, delete an interface group 
+summary: 将两个或更多物理端口组合成一个逻辑端口以创建接口组 
+---
+= 将物理端口组合在一起以创建接口组
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+通过将两个或更多物理端口组合成一个逻辑端口来创建接口组。逻辑端口可提高故障恢复能力，提高可用性并实现负载共享。
+
+
+
+== 接口组类型
+
+存储系统支持三种类型的接口组：单模式，静态多模式和动态多模式。每个接口组提供不同级别的容错。多模式接口组提供了对网络流量进行负载平衡的方法。
+
+
+
+=== 单模式接口组的特征
+
+在单模式接口组中，该接口组中只有一个接口处于活动状态。其他接口处于备用状态，可在活动接口发生故障时接管。
+
+单模式接口组的特征：
+
+* 对于故障转移，集群会监控主动链路并控制故障转移。由于集群监控活动链路，因此不需要配置交换机。
+* 一个单模式接口组中可以有多个接口处于备用状态。
+* 如果单模式接口组跨越多个交换机，则必须使用交换机间链路（ ISL ）连接这些交换机。
+* 对于单模式接口组，交换机端口必须位于同一广播域中。
+* 源地址为 0.0.0.0 的链路监控 ARP 数据包将通过端口发送，以验证端口是否位于同一广播域中。
+
+
+下图是单模式接口组的示例。在图中， e0a 和 e1a 属于 a0a 单模式接口组。如果活动接口 e0a 发生故障，备用 e1a 接口将接管并保持与交换机的连接。
+
+image:ontap_nm_image6.png["单模式接口组的图像"]
+
+
+NOTE: 要实现单模式功能，建议改用故障转移组。通过使用故障转移组，第二个端口仍可用于其他 LIF ，无需保持未使用状态。此外，故障转移组可以跨越两个以上的端口，也可以跨越多个节点上的端口。
+
+
+
+=== 静态多模式接口组的特征
+
+ONTAP 中的静态多模式接口组实施符合 IEEE 802.3ad （静态）标准。任何支持聚合但不具有用于配置聚合的控制数据包交换的交换机都可以与静态多模式接口组结合使用。
+
+静态多模式接口组不符合 IEEE 802.3ad （动态），也称为链路聚合控制协议（ LACP ）。LACP 相当于 Cisco 专有链路聚合协议端口聚合协议（ PAgP ）。
+
+以下是静态多模式接口组的特征：
+
+* 接口组中的所有接口均处于活动状态，并共享一个 MAC 地址。
++
+** 接口组中的接口之间分布有多个单独的连接。
+** 每个连接或会话都使用接口组中的一个接口。使用顺序负载平衡方案时，所有会话都会按数据包分布在可用链路之间，并且不会绑定到接口组中的特定接口。
+
+
+* 静态多模式接口组可以从多达 "n-1 " 接口故障中恢复，其中 n 是构成该接口组的接口总数。
+* 如果端口发生故障或已拔出，则遍历故障链路的流量会自动重新分配到其余接口之一。
+* 静态多模式接口组可以检测到链路丢失，但无法检测到与客户端的连接断开或交换机配置不当，从而可能影响连接和性能。
+* 静态多模式接口组需要一个支持通过多个交换机端口进行链路聚合的交换机。配置交换机后，接口组的链路所连接的所有端口都属于一个逻辑端口。某些交换机可能不支持为巨型帧配置的端口的链路聚合。有关详细信息，请参见交换机供应商的文档。
+* 可以使用多种负载平衡选项在静态多模式接口组的接口之间分布流量。
+
+
+下图是静态多模式接口组的示例。接口 e0a ， e1a ， e2a 和 e3a 属于 A1A 多模式接口组。A1A 多模式接口组中的所有四个接口均处于活动状态。
+
+image:ontap_nm_image7.png["静态多模式接口组的图像"]
+
+通过多种技术，可以在一个聚合链路中的流量分布在多个物理交换机上。用于实现此功能的技术因网络产品而异。ONTAP 中的静态多模式接口组符合 IEEE 802.3 标准。如果某种特定的多交换机链路聚合技术可与 IEEE 802.3 标准互操作或符合这些标准，则该技术应与 ONTAP 配合使用。
+
+IEEE 802.3 标准规定，聚合链路中的传输设备决定了传输的物理接口。因此， ONTAP 仅负责分配出站流量，无法控制入站帧的到达方式。如果要管理或控制聚合链路上的入站流量传输，则必须在直连网络设备上修改此传输。
+
+
+
+=== 动态多模式接口组
+
+动态多模式接口组可通过链路聚合控制协议（ Link Aggregation Control Protocol ， LACP ）将组成员资格传递给直连交换机。LACP 可用于检测链路丢失状态以及节点无法与直连交换机端口通信。
+
+ONTAP 中的动态多模式接口组实施符合 IEEE 802.3 AD （ 802.1 AX ）的要求。ONTAP 不支持端口聚合协议（ PAgP ），它是 Cisco 提供的一种专有链路聚合协议。
+
+动态多模式接口组需要支持 LACP 的交换机。
+
+ONTAP 在不可配置的主动模式下实施 LACP ，与配置为主动或被动模式的交换机配合使用效果良好。ONTAP 实施长 LACP 计时器和短 LACP 计时器（用于不可配置的值 3 秒和 90 秒），如 IEEE 802.3 AD （ 802.1AX ）中所指定。
+
+ONTAP 负载平衡算法可确定用于传输出站流量的成员端口，而不控制如何接收入站帧。交换机根据交换机端口通道组中配置的负载平衡算法确定要用于传输的端口通道组的成员（单个物理端口）。因此，交换机配置决定了要接收流量的存储系统的成员端口（单个物理端口）。有关配置交换机的详细信息，请参见交换机供应商提供的文档。
+
+如果单个接口无法接收连续的 LACP 协议数据包，则该接口将在 "ifgrp status" 命令的输出中标记为 "lag_inactive" 。现有流量会自动重新路由到任何剩余的活动接口。
+
+使用动态多模式接口组时，以下规则适用：
+
+* 动态多模式接口组应配置为使用基于端口，基于 IP ，基于 MAC 或轮循负载平衡方法。
+* 在动态多模式接口组中，所有接口都必须处于活动状态并共享一个 MAC 地址。
+
+
+下图是动态多模式接口组的一个示例。接口 e0a ， e1a ， e2a 和 e3a 属于 A1A 多模式接口组。A1A 动态多模式接口组中的所有四个接口都处于活动状态。
+
+image:ontap_nm_image7.png["动态多模式接口组的图像"]
+
+
+
+=== 多模式接口组中的负载平衡
+
+通过使用 IP 地址， MAC 地址，顺序负载平衡或基于端口的负载平衡方法在多模式接口组的网络端口上平均分布网络流量，您可以确保多模式接口组的所有接口都能均衡地用于传出流量。
+
+只有在创建多模式接口组时，才能为该接口组指定负载平衡方法。
+
+* 最佳实践 * ：建议尽可能实现基于端口的负载平衡。请使用基于端口的负载平衡，除非网络中存在特定的原因或限制，以阻止此负载平衡。
+
+
+
+==== 基于端口的负载平衡
+
+建议使用基于端口的负载平衡方法。
+
+您可以使用基于端口的负载平衡方法根据传输层（ TCP/UDP ）端口均衡多模式接口组上的流量。
+
+基于端口的负载平衡方法对源和目标 IP 地址以及传输层端口号使用快速哈希算法。
+
+
+
+==== IP 地址和 MAC 地址负载平衡
+
+IP 地址和 MAC 地址负载平衡是用于平衡多模式接口组上的流量的方法。
+
+这些负载平衡方法对源地址和目标地址（ IP 地址和 MAC 地址）使用快速哈希算法。如果哈希算法的结果映射到的接口不处于 up 链路状态，则会使用下一个活动接口。
+
+
+NOTE: 在直接连接到路由器的系统上创建接口组时，请勿选择 MAC 地址负载平衡方法。在这种设置中，对于每个传出 IP 帧，目标 MAC 地址是路由器的 MAC 地址。因此，只会使用接口组的一个接口。
+
+IPv4 和 IPv6 地址的 IP 地址负载平衡工作方式相同。
+
+
+
+==== 顺序负载平衡
+
+您可以使用顺序负载平衡，使用轮循算法在多个链路之间平均分布数据包。您可以使用顺序选项在多个链路之间对单个连接的流量进行负载平衡，以提高单个连接的吞吐量。
+
+但是，由于顺序负载平衡可能发生原因会导致数据包交付无序，因此可能会导致性能极差。因此，通常不建议进行顺序负载平衡。
+
+
+
+== 创建接口组
+
+您可以创建一个接口组，即单模式，静态多模式或动态多模式（ LACP ），以便通过组合聚合网络端口的功能为客户端提供一个接口。
+
+.关于此任务
+* 有关适用于端口接口组的配置限制的完整列表，请参见 `network port ifgrp add-port` 手册页。
+* 创建多模式接口组时，您可以指定以下任一负载平衡方法：
++
+** port ：网络流量基于传输层（ TCP/UDP ）端口进行分布。这是建议的负载平衡方法。
+** MAC ：网络流量按 MAC 地址分布。
+** IP ：网络流量按 IP 地址分布。
+** 顺序：网络流量在收到时进行分布。
+
+
+
+
+
+NOTE: 接口组的 MAC 地址取决于底层端口的顺序以及这些端口在启动期间的初始化方式。因此，您不应假定 ifgrp MAC 地址在重新启动或 ONTAP 升级后持久存在。
+
+使用 `network port ifgrp create` 命令创建接口组。
+
+接口组必须使用语法 `a< 数字 >< 字母 >` 进行命名。例如， a0a ， a0b ， a1c 和 a2a 是有效的接口组名称。
+
+有关此命令的详细信息，请参见 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]。
+
+以下示例显示了如何创建一个名为 a0a 的接口组，该接口组具有端口的分发功能和多模式：
+
+`network port ifgrp create -node _cluster-1-01_ -ifgrp _a0a_ -cluster-func _port_ -mode _multimodum_`
+
+
+
+== 将端口添加到接口组
+
+对于所有端口速度，您最多可以将 16 个物理端口添加到一个接口组中。
+
+将网络端口添加到接口组：
+
+`网络端口 ifgrp add-port`
+
+有关此命令的详细信息，请参见 link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]。
+
+以下示例显示了如何将端口 e0c 添加到名为 a0a 的接口组：
+
+`network port ifgrp add-port -node _cluster-1-01_ -ifgrp _a0a_ -port _e0c_`
+
+从 ONTAP 9.8 开始，接口组会在将第一个物理端口添加到接口组后大约一分钟自动放置到相应的广播域中。如果您不希望 ONTAP 执行此操作，而希望手动将 ifgrp 置于广播域中，请在 `ifgrp add-port` 命令中指定 ` skip-broadcast-domain-placement` 参数。
+
+
+
+== 从接口组中删除端口
+
+您可以从托管 LIF 的接口组中删除端口，但前提是它不是接口组中的最后一个端口。考虑到您不会从接口组中删除最后一个端口，因此不要求接口组不能托管 LIF 或接口组不能是 LIF 的主端口。但是，如果要删除最后一个端口，则必须先从接口组迁移或移动 LIF 。
+
+您最多可以从一个接口组中删除 16 个端口（物理接口）。
+
+从接口组中删除网络端口：
+
+`网络端口 ifgrp remove-port`
+
+以下示例显示了如何从名为 a0a 的接口组中删除端口 e0c ：
+
+`network port ifgrp remove-port -node _cluster-1-01_ -ifgrp _a0a_ -port _e0c_`
+
+
+
+== 删除接口组
+
+如果要直接在底层物理端口上配置 LIF ，或者决定更改接口组模式或分发功能，则可以删除接口组。
+
+.开始之前
+* 接口组不得托管 LIF 。
+* 接口组既不能是 LIF 的主端口，也不能是故障转移目标。
+
+
+使用 `network port ifgrp delete` 命令删除接口组。
+
+有关此命令的详细信息，请参见 link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]。
+
+以下示例显示了如何删除名为 a0b 的接口组：
+
+`network port ifgrp delete -node _cluster-1-01_ -ifgrp _a0b_`

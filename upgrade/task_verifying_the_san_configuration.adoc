@@ -1,0 +1,42 @@
+---
+permalink: upgrade/task_verifying_the_san_configuration.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, verify, verifying, san, configuration 
+summary: 在 SAN 环境中升级会更改直接路径。因此，在执行升级之前，您应验证是否为每个主机配置了正确数量的直接和间接路径，以及每个主机是否连接到正确的 LIF 。 
+---
+= 验证 SAN 配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 SAN 环境中升级会更改直接路径。因此，在执行升级之前，您应验证是否为每个主机配置了正确数量的直接和间接路径，以及每个主机是否连接到正确的 LIF 。
+
+. 在每个主机上，验证是否配置了足够数量的直接和间接路径，以及每个路径是否处于活动状态。
++
+每个主机都必须具有指向集群中每个节点的路径。
+
+. 验证每个主机是否已连接到每个节点上的 LIF 。
++
+您应记录启动程序列表，以便在升级后进行比较。
+
++
+[cols="2*"]
+|===
+| 针对 ... | 输入 ... 
+
+
+ a| 
+iSCSI
+ a| 
+`iscsi initiator show -fields igroup ， initiator-name ， tpgroup`
+
+
+
+ a| 
+FC
+ a| 
+`FCP 启动程序 show -fields igroup ， wwpn ， lif`
+
+|===
+

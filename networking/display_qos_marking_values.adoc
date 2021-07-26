@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: networking/display_qos_marking_values.html 
+keywords: qos, quality, service, marking, ipspace, display, show, display qos marking values, display the qos marking values for different protocols, by ipspace, network qos-marking show 
+summary: 按 IP 空间显示不同协议的 QoS 标记值 
+---
+= 显示 QoS 标记值
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以为每个 IP 空间显示不同协议的 QoS 标记值。
+
+使用 `network qos-marking show` 命令显示 QoS 标记值。
+
+以下命令显示默认 IP 空间中所有协议的 QoS 标记：
+
+....
+network qos-marking show -ipspace Default
+IPspace             Protocol           DSCP  Enabled?
+------------------- ----------------- -----  --------
+Default
+                    CIFS                 10  false
+                    FTP                  48  false
+                    HTTP-admin           48  false
+                    HTTP-filesrv         10  false
+                    NDMP                 10  false
+                    NFS                  10  true
+                    SNMP                 48  false
+                    SSH                  48  false
+                    SnapMirror           10  false
+                    Telnet               48  false
+                    iSCSI                10  false
+11 entries were displayed.
+....

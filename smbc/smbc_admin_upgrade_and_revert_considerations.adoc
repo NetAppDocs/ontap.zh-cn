@@ -1,0 +1,92 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_admin_upgrade_and_revert_considerations.html 
+keywords: SM-BC, SMBC, upgrade, revert, ONTAP 
+summary: 您应了解升级和还原 SM-BC 配置的要求。 
+---
+= SM-BC 升级和还原注意事项
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应了解升级和还原 SM-BC 配置的要求。
+
+
+
+=== 升级
+
+在配置和使用 SM-BC 之前，您必须将源集群和目标集群上的所有节点升级到 ONTAP 9.8 或更高版本。link:https://docs.netapp.com/us-en/ontap/upgrade/index.html["在 ONTAP 集群上更新软件"]
+
+
+NOTE: 混合 ONTAP 9.7 和 ONTAP 9.8 集群不支持 SM-BC 。
+
+
+
+=== 从 ONTAP 9.8 还原到 ONTAP 9.7
+
+从 ONTAP 9.8 还原到 ONTAP 9.7 时，必须注意以下事项：
+
+* 如果集群托管的是 SM-BC 目标，则在中断并删除此关系之前，不允许还原到 ONTAP 9.7 。
+* 如果集群托管的是 SM-BC 源，则在释放此关系之前，不允许还原到 ONTAP 9.7 。
+* 还原到 ONTAP 9.7 之前，必须删除用户创建的所有自定义 SM-BC SnapMirror 策略。
+
+
+.步骤
+. 从 SM-BC 关系中的一个集群执行还原检查：
++
+`cluster ：：： * > system node revert-to -version 9.7 -check-only`
+
++
+示例
+
++
+....
+cluster::*> system node revert-to -version 9.7 -check-only
+Error: command failed: The revert check phase failed. The following issues must be resolved before revert can be completed. Bring the data LIFs down on running vservers. Command to list the running vservers: vserver show -admin-state running Command to list the data LIFs that are up: network interface show -role data -status-admin up Command to bring all data LIFs down: network interface modify {-role data} -status-admin down
+Disable snapshot policies.
+    Command to list snapshot policies: "snapshot policy show".
+    Command to disable snapshot policies: "snapshot policy modify -vserver
+   * -enabled false"
+
+   Break off the initialized online data-protection (DP) volumes and delete
+   Uninitialized online data-protection (DP) volumes present on the local
+   node.
+    Command to list all online data-protection volumes on the local node:
+   volume show -type DP -state online -node <local-node-name>
+    Before breaking off the initialized online data-protection volumes,
+   quiesce and abort transfers on associated SnapMirror relationships and
+   wait for the Relationship Status to be Quiesced.
+    Command to quiesce a SnapMirror relationship: snapmirror quiesce
+    Command to abort transfers on a SnapMirror relationship: snapmirror
+   abort
+    Command to see if the Relationship Status of a SnapMirror relationship
+   is Quiesced: snapmirror show
+    Command to break off a data-protection volume: snapmirror break
+    Command to break off a data-protection volume which is the destination
+   of a SnapMirror relationship with a policy of type "vault": snapmirror
+   break -delete-snapshots
+    Uninitialized data-protection volumes are reported by the "snapmirror
+   break" command when applied on a DP volume.
+    Command to delete volume: volume delete
+
+   Delete current version snapshots in advanced privilege level.
+    Command to list snapshots: "snapshot show -fs-version 9.8"
+    Command to delete snapshots: "snapshot prepare-for-revert -node
+   <nodename>"
+
+   Delete all user-created policies of the type active-strict-sync-mirror
+   and active-sync-mirror.
+   The command to see all active-strict-sync-mirror and active-sync-mirror
+   type policies is:
+    snapmirror policy show -type
+   active-strict-sync-mirror,active-sync-mirror
+   The command to delete a policy is :
+    snapmirror policy delete -vserver <vserver-name> -policy <policy-name>
+....
+
+
+有关还原集群的信息，请参见 https://docs.netapp.com/us-en/ontap/revert/index.html["还原 ONTAP"]。

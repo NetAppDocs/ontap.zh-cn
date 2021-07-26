@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: networking/migrate_a_lif.html 
+keywords: move the lif, change lif port, migrate a lif, migrate a LIF to a different port on the same node or a different node within the cluster 
+summary: 将 LIF 迁移到集群中同一节点或不同节点上的其他端口 
+---
+= 迁移 LIF
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+如果 LIF 端口出现故障或需要维护，则可能需要将此端口迁移到集群中同一节点或不同节点上的其他端口。迁移 LIF 与 LIF 故障转移类似，但 LIF 迁移是手动操作，而 LIF 故障转移则是在 LIF 当前网络端口出现链路故障时自动迁移 LIF 。
+
+.开始之前
+* 必须已为 LIF 配置故障转移组。
+* 目标节点和端口必须正常运行，并且必须能够访问与源端口相同的网络。
+
+
+.关于此任务
+* 在从节点中删除 NIC 之前，必须将属于 NIC 的端口上托管的 LIF 迁移到集群中的其他端口。
+* 您必须执行命令，从托管集群 LIF 的节点迁移集群 LIF 。
+* 无法将节点范围的 LIF （例如，节点范围的管理 LIF ，集群 LIF ，集群间 LIF ）迁移到远程节点。
+* 在节点之间迁移 NFSv4 LIF 时，在新端口上提供 LIF 之前，最多会出现 45 秒的延迟。
++
+要解决此问题，请在未遇到延迟的情况下使用 NFSv4.1 。
+
+* 您不能将 iSCSI LIF 从一个节点迁移到另一个节点。
++
+要解决此限制，您必须在目标节点上创建 iSCSI LIF 。有关创建 iSCSI LIF 的准则的信息，请参见 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/home.html["SAN 管理"^]。
+
+* 迁移源或目标 LIF 时， VMware VAAI 副本卸载操作失败。有关 VMware VAAI 的详细信息，请参见 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.cdot-famg-nfs/GUID-39C8E616-EAE8-46A4-881A-87C4B8421281.html["NFS 参考"^] 或。
+
+
+根据您要迁移特定 LIF 还是所有 LIF ，请执行相应的操作：
+
+[cols="2*"]
+|===
+| 如果要迁移… | 输入以下命令… 
+
+
+ a| 
+特定 LIF
+ a| 
+`网络接口迁移`
+
+
+
+ a| 
+节点上的所有数据和集群管理 LIF
+ a| 
+`network interface migrate-all`
+
+
+
+ a| 
+端口的所有 LIF
+ a| 
+`network interface migrate-all -node <node> -port <port>`
+
+|===
+以下示例显示了如何将 SVM vs0 上名为 datalif1 的 LIF 迁移到 node0b 上的端口 e0d ：
+
+....
+network interface migrate -vserver vs0 -lif datalif1 -dest-node node0b -dest-port e0d
+....
+以下示例显示了如何从当前（本地）节点迁移所有数据和集群管理 LIF ：
+
+....
+network interface migrate-all -node local
+....

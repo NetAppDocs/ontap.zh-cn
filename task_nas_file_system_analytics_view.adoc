@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: task_nas_file_system_analytics_view.html 
+keywords: netapp, ontap, data, file, files, system, analytics, explorer, File System Analytics, File System Analytics Explorer, volume, volumes, ONTAP System Manager, system manager explorer, directory, directories, subdirectory, subdirectories, object, tree, subtree, tree view, history, historical data, active data, inactive data 
+summary: 启用文件系统分析后， System Manager 资源管理器选项卡将显示选定卷的默认视图，并按每个子树中使用的空间对卷的根目录内容进行排序。 
+---
+= 查看文件系统活动
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+默认情况下，启用文件系统分析后，您可以按每个子树中使用的空间排序查看选定卷的根目录内容
+
+单击任何文件系统对象可浏览文件系统并显示有关目录中每个对象的详细信息。有关目录的信息也可以以图形方式显示。随着时间的推移，会显示每个子树的历史数据。如果目录数超过 3000 个，则不会对已用空间进行排序。
+
+文件系统分析 * 资源管理器 * 屏幕包含三个区域：
+
+* 目录和子目录的树视图；显示名称，大小，修改历史记录和访问历史记录的可扩展列表。
+* 文件；显示目录列表中选定对象的名称，大小和访问时间。
+* 目录列表中选定对象的活动和非活动数据比较。
++
+从 ONTAP 9.1.1 开始，您可以自定义要报告的范围。默认值为一年。根据这些自定义设置，您可以采取更正操作，例如移动卷和修改分层策略。
+
+
+
+默认情况下，会显示访问时间。但是，如果在命令行界面中更改了卷默认值，则使用 `volume modify` 命令将 ` -atime-update` 选项设置为 `false` ，则仅会显示上次修改时间。例如：
+
+* 树视图不会显示 * 访问历史记录 * 。
+* 文件视图将被更改。
+* 活动 / 非活动数据视图将基于修改后的时间（ `m时间` ）。
+
+
+使用这些显示，您可以检查以下内容：
+
+* 文件系统位置占用的空间最多
+* 有关目录树的详细信息，包括目录和子目录中的文件和子目录计数
+* 包含旧数据的文件系统位置（例如， Scratch ， temp 或日志树）
+
+
+在解释文件系统分析输出时，请记住以下几点：
+
+* 文件系统分析可显示数据的使用位置和时间，而不是显示正在处理的数据量。例如，最近访问或修改的文件占用的空间较大并不一定表示系统处理负载较高。
+* * 卷资源管理器 * 选项卡计算文件系统分析所需空间的方式可能与其他工具不同。特别是，如果卷启用了存储效率功能，则与 * 卷概述 * 中报告的使用量可能会有显著差异。这是因为 * 卷资源管理器 * 选项卡不包括效率节省。
+* 由于目录显示中的空间限制，无法在 _List View_ 中查看超过 8 个级别的目录深度。要查看深度超过 8 个级别的目录，必须切换到 _Graphical View_ ，找到所需的目录，然后切换回 _List View_ 。这样可以在显示中留出更多的屏幕空间。
+
+
+.步骤
+. 单击 * 存储 > 卷 * ，选择所需的卷，然后单击 * 资源管理器 * 。
+

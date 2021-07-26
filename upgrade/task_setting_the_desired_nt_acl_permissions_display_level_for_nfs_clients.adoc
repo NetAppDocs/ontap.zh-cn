@@ -1,0 +1,25 @@
+---
+permalink: upgrade/task_setting_the_desired_nt_acl_permissions_display_level_for_nfs_clients.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, setting, set, desired, nt, acl, permissions, display, level, nfs, clients 
+summary: 从 ONTAP 8.3.0 升级后，向 NFS 客户端显示 NT ACL 权限的默认处理方式已更改。您应检查此设置，并根据需要将其更改为环境所需的设置。如果要从 ONTAP 8.3.1 或更高版本升级，则此任务不适用。 
+---
+= 为 NFS 客户端设置所需的 NT ACL 权限显示级别
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 8.3.0 升级后，向 NFS 客户端显示 NT ACL 权限的默认处理方式已更改。您应检查此设置，并根据需要将其更改为环境所需的设置。如果要从 ONTAP 8.3.1 或更高版本升级，则此任务不适用。
+
+在多协议环境中， ONTAP 会根据 NT ACL 授予任何用户的访问权限向 NFS 客户端显示 NTFS 安全模式文件和目录的权限。在 ONTAP 8.3.0 中，默认情况下， ONTAP 会根据 NT ACL 授予的最大访问权限向 NFS 客户端显示权限。升级后，默认设置将根据 NT ACL 授予的最小访问权限进行更改以显示权限。这将更改适用场景新的和现有的 Storage Virtual Machine （ SVM ）。
+
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 检查用于显示 NFS 客户端的 NT ACL 权限的设置： `vserver nfs show -vserver vserver_name -fields ntacl-display-pery-perms`
++
+从 8.3.0 升级后，此新参数的值将被禁用，这意味着 ONTAP 将显示最小权限。
+
+. 如果您希望显示最大权限，请根据需要分别更改每个 SVM 的设置： `vserver nfs modify -vserver vserver_name -ntacl-display-pery-perms enabled`
+. 验证更改是否已生效： `vserver nfs show -vserver vserver_name -fields ntacl-display-perfy-perms`
+. 返回到管理权限级别： `set -privilege admin`
+

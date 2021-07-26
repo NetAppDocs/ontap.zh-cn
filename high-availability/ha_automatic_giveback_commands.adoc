@@ -1,0 +1,203 @@
+---
+sidebar: sidebar 
+permalink: high-availability/ha_automatic_giveback_commands.html 
+keywords: ontap, high, availability, ha, pair, automatic, giveback, commands 
+summary: 自动交还命令 
+---
+= 自动交还命令
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+在某些情况下，您可能需要使用 ONTAP 命令管理自动交还设置。
+
+[cols="2*"]
+|===
+| * 如果要 ...* | * 使用此命令 ...* 
+
+
+ a| 
+启用自动交还，以便在被接管节点启动，达到 Waiting for Giveback 状态以及自动交还前的延迟已过期后立即进行交还。
+
+默认设置为 true 。
+ a| 
+storage failover modify ‑node _nodename_
+
+‑auto‑giveback true
+
+
+
+ a| 
+禁用自动交还。默认设置为 true 。
+
+* 注： * 将此参数设置为 false 不会禁用在崩溃时接管后自动交还以及重新启动时接管后自动交还；必须通过将 `‑auto‑giveback‑after‑panic` 参数设置为 false 来禁用在崩溃后接管后自动交还。
+ a| 
+storage failover modify ‑node _nodename_
+
+‑auto‑giveback false
+
+
+
+ a| 
+在发生崩溃时禁用接管后自动交还（默认情况下，此设置处于启用状态）。
+ a| 
+storage failover modify ‑node _nodename_
+
+‑auto‑giveback‑after‑panic false
+
+
+
+ a| 
+将自动交还延迟指定的秒数（默认值为 600 ）。此选项用于确定在执行自动交还之前节点仍处于接管状态的最短时间。
+ a| 
+storage failover modify ‑node _nodename_
+
+‑delay‑seconds_seconds_
+
+|===
+
+
+== storage failover modify 命令的变体如何影响自动交还
+
+自动交还的操作取决于您如何配置 storage failover modify 命令的参数。
+
+下表列出了适用于非崩溃引起的接管事件的 storage failover modify 命令参数：
+
+[cols="2*"]
+|===
+| * 参数 * | * 默认设置 * 
+
+
+ a| 
+-auto-giveback _tru_ _ _ _ _ _ false_
+ a| 
+_true_
+
+
+
+ a| 
+-delay-seconds _integer _ （秒）
+ a| 
+600
+
+
+
+ a| 
+-onreboot _tru_ _ _ _ _ _false_
+ a| 
+_true_
+
+|===
+下表介绍了 ` -onreboot` 和 ` -auto-giveback` 参数的组合如何影响非崩溃引起的接管事件的自动交还。
+
+[cols="3*"]
+|===
+| * 使用的存储故障转移修改参数 * | 接管的 * 发生原因 | * 是否发生自动交还？ * 
+
+
+ a| 
+-onreboot _tru_
+
+-auto-giveback _tru_
+| reboot 命令 | 是的。 
+
+
+|  | halt 命令，或者从服务处理器发出的重新启动操作 | 是的。 
+
+
+ a| 
+-onreboot _tru_
+
+-auto-giveback _false_
+| reboot 命令 | 是的。 
+
+
+|  | halt 命令，或者从服务处理器发出的重新启动操作 | 否 
+
+
+ a| 
+-onreboot _false_
+
+-auto-giveback _tru_
+| reboot 命令 | 否 
+
+
+|  | halt 命令，或者从服务处理器发出的重新启动操作 | 是的。 
+
+
+ a| 
+-onreboot _false_
+
+-auto-giveback _false_
+| reboot 命令 | 否 
+
+
+|  | halt 命令，或者从服务处理器发出的重新启动操作 | 否 
+|===
+
+NOTE: 如果将 ` -onreboot` 参数设置为 true ，并且由于重新启动而发生接管，则无论 ` -auto-giveback` 参数是否设置为 true ，始终会执行自动交还。
+
+如果将 ` -onreboot` 参数设置为 false ，则在节点重新启动时不会发生接管。因此，无论 ` -auto-giveback` 参数是否设置为 true ，都不会发生自动交还。发生客户端中断。
+
+
+
+== 适用于崩溃情况的自动交还参数组合的影响。
+
+下表列出了适用于崩溃情况的 `storage failover modify` 命令参数：
+
+[cols="2*"]
+|===
+| * 参数 * | * 默认设置 * 
+
+
+ a| 
+-onpanic _true _ false _
+| _true_ 
+
+
+ a| 
+-auto-giveback-after-panic _true | false_
+
+（权限：高级）
+| _true_ 
+
+
+| -auto-giveback _true | false_  a| 
+_true_
+
+|===
+下表介绍了 `storage failover modify` 命令的参数组合如何影响崩溃情况下的自动交还。
+
+[cols="2*"]
+|===
+| 使用的存储故障转移参数 | 崩溃后是否发生自动交还？ 
+
+
+| -onpanic `false` -auto-giveback-after-panic `true` | 否 
+
+
+| -onpanic `false` -auto-giveback-after-panic `false` | 否 
+
+
+| -onpanic `true` -auto-giveback `true` -auto-giveback-after-panic `true` | 是的。 
+
+
+| -onpanic `true` -auto-giveback `true` -auto-giveback-after-panic `false` | 否 
+
+
+| -onpanic `true` -auto-giveback `false` -auto-giveback-after-panic `true` | 是的。 
+
+
+| -onpanic `true` -auto-giveback `false` -auto-giveback-after-panic `false` | 否 
+
+
+| -onpanic `false` 如果 -onpanic 设置为 `false` ，则无论为 -auto-giveback 或 - auto-giveback-after-panic 设置的值如何，都不会发生接管 / 交还 | 否 
+|===
+
+NOTE: 如果 -onpanic 参数设置为 `true` ，则在发生崩溃时始终会执行自动交还，除非您更改了 -auto-giveback 和 -auto-giveback-after-panic 参数的默认设置。如果这两个参数都从其默认值（`true` ，）更改为 `false` ，则在发生崩溃后不会发生自动交还，即使 -onpanic 参数设置为 `true` 也是如此。
+
+如果 -onpanic 参数设置为 `false` ，则不会发生接管。因此，即使将 auto giveback after panic 参数设置为 `true` ，也不会发生自动交还。发生客户端中断。

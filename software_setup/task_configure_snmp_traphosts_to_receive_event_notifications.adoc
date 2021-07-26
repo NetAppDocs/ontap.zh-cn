@@ -1,0 +1,31 @@
+---
+permalink: software_setup/task_configure_snmp_traphosts_to_receive_event_notifications.html 
+sidebar: sidebar 
+keywords: ontap, software, setup, configure, snmp, traphosts, receive, event, notifications 
+summary: 要在 SNMP 陷阱主机上接收事件通知，必须配置陷阱主机。 
+---
+= 配置 SNMP 陷阱主机以接收事件通知
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要在 SNMP 陷阱主机上接收事件通知，必须配置陷阱主机。
+
+* 必须在集群上启用 SNMP 和 SNMP 陷阱。
++
+
+NOTE: 默认情况下， SNMP 和 SNMP 陷阱处于启用状态。
+
+* 要解析陷阱主机名称，必须在集群上配置 DNS 。
+
+
+如果尚未将 SNMP 陷阱主机配置为接收事件通知（ SNMP 陷阱），则必须添加一个。
+
+您可以在集群运行时随时通过在 ONTAP 命令行上输入命令来执行此任务。
+
+. 如果您的环境尚未配置 SNMP 陷阱主机以接收事件通知，请添加一个： `ssystem snmp traphost add -peer-address snmp_traphost_name`
++
+默认情况下， SNMP 支持的所有事件通知都会转发到 SNMP 陷阱主机。
+
+

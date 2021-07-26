@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: networking/create_a_broadcast_domain.html 
+keywords: create, creating, add, adding, new, broadcast, domain, ipspace, create a broadcast domain, broadcast-domain create, broadcast-domain show 
+summary: 创建广播域 
+---
+= 创建广播域
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您必须为自定义 IP 空间创建广播域。在 IP 空间中创建的 SVM 使用广播域中的端口。
+
+
+NOTE: 此任务与 ONTAP 9.0 - 9.7 相关，而不是与 ONTAP 9.8 相关。
+
+您必须是集群管理员才能执行此任务。
+
+LIF 故障转移到的端口必须是 LIF 故障转移组的成员。创建广播域时， ONTAP 会自动创建同名的故障转移组。故障转移组包含分配给广播域的所有端口。
+
+.步骤
+. 创建广播域。
++
+`network port broadcast-domain create -ipspace ipspace1 -broadcast-domain -ipspace1 -mtu 1500 -ports node1 ： e0d ， node1 ： e0e ， node2 ： e0d ， node2 ： e0e`
+
+. 验证广播域配置是否正确。
++
+.. 验证广播域是否正确：
++
+`network port broadcast-domain show`
+
+.. 验证网络端口是否正确：
++
+`network port show`
+
+.. 验证故障转移组名称和故障转移目标是否正确：
++
+`network interface failover-groups show`
+
+
+
+

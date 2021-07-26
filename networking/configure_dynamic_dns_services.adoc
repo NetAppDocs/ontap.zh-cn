@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_dynamic_dns_services.html 
+keywords: dns, service, services, configuration, configure, configuring, set, up, setup, nfs, smb, cifs, active, directory, statistics, configure dns services for the svm before creating an nfs or smb server, ddns, vserver services name-service dns dynamic-update modify, vserver services name-service dns dynamic-update show 
+summary: 在创建 NFS 或 SMB 服务器之前，为 SVM 配置 DNS 服务 
+---
+= 配置动态 DNS 服务
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+如果您希望 Active Directory 集成的 DNS 服务器在 DNS 中动态注册 NFS 或 SMB 服务器的 DNS 记录，则必须在 SVM 上配置动态 DNS （ DDNS ）。
+
+必须在 SVM 上配置 DNS 名称服务。如果您使用的是安全 DDNS ，则必须使用 Active Directory 集成的 DNS 名称服务器，并且必须已为 SVM 创建 NFS 或 SMB 服务器或 Active Directory 帐户。
+
+指定的 FQDN 必须是唯一的。
+
+
+NOTE: 要避免不符合 DDNS 更新的 RFC 规则的 SVM FQDN 配置失败，请使用符合 RFC 的 FQDN 名称。
+
+.步骤
+. 在 SVM 上配置 DDNS ：
++
+`vserver services name-service dns dynamic-update modify -vserver _vserver_name_ -is- enabled _true_[-use-secure ｛ true_false ｝ -vserver-fqdn _fqdn_used_for_dns_updates_`
+
++
+`vserver services name-service dns dynamic-update modify -vserver _vs1_ -is-enabled _tru_ - use-secure _tru_ -vserver-fqdn _vs1.example.com_`
+
++
+星号不能用作自定义 FQDN 的一部分。例如， ` * .netapp.com` 无效。
+
+. 验证 DDNS 配置是否正确：
++
+`vserver services name-service dns dynamic-update show`
+
++
+....
+Vserver  Is-Enabled Use-Secure Vserver FQDN      TTL
+-------- ---------- ---------- ----------------- -------
+vs1      true       true       vs1.example.com   24h
+....
+

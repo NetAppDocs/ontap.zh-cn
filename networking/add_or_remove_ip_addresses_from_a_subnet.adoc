@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: networking/add_or_remove_ip_addresses_from_a_subnet.html 
+keywords: adding, add, create, creating, remove, removing, delete, deleting, ip, internet, protocol, address, addresses, subnet, add or remove ip addresses from a subnet, force update lif associations, network subnet add ranges, network subnet remove ranges 
+summary: 创建子网时添加 IP 地址，或者向现有子网添加或删除 IP 地址 
+---
+= 在子网中添加或删除 IP 地址
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以在最初创建子网时添加 IP 地址，也可以将 IP 地址添加到已存在的子网中。您还可以从现有子网中删除 IP 地址。这样，您就可以仅为 SVM 分配所需的 IP 地址。
+
+添加 IP 地址时，如果任何服务处理器或网络接口正在使用所添加范围内的 IP 地址，则会收到错误。如果要将任何手动寻址的接口与当前子网相关联，可以将 "-force-update-lif-associations" 选项设置为 true 。
+
+删除 IP 地址时，如果任何服务处理器或网络接口正在使用要删除的 IP 地址，则会收到错误。如果希望接口在从子网中删除 IP 地址后继续使用这些 IP 地址，可以将 "-force-update-lif-associations " 选项设置为 true 。
+
+在子网中添加或删除 IP 地址：
+
+[cols="2*"]
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+将 IP 地址添加到子网
+ a| 
+网络子网添加范围
+
+
+
+ a| 
+从子网中删除 IP 地址
+ a| 
+网络子网删除范围
+
+|===
+有关这些命令的详细信息，请参见手册页。
+
+以下命令会将 IP 地址 192.0.2.82 到 192.0.2.85 添加到子网 sub1 ：
+
+....
+network subnet add-ranges -subnet-name <sub1> -ip-ranges <192.0.2.82-192.0.2.85>
+....
+以下命令从子网 sub3 中删除 IP 地址 198.51.100.9 ：
+
+....
+network subnet remove-ranges -subnet-name <sub3> -ip-ranges <198.51.100.9>
+....
+如果当前范围包括 1 到 10 以及 20 到 40 ，并且您要添加 11 到 19 以及 41 到 50 （基本上允许 1 到 50 ），则可以使用以下命令重叠现有地址范围。此命令仅添加新地址，不会影响现有地址：
+
+....
+network subnet add-ranges -subnet-name <sub3> -ip-ranges <198.51.10.1-198.51.10.50>
+....

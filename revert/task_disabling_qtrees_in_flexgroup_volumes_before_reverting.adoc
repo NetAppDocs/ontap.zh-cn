@@ -1,0 +1,83 @@
+---
+permalink: revert/task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, reversion, disable, disabling, qtree, functionality, function, flexgroup, volumes 
+summary: ONTAP 9.3 之前版本不支持 FlexGroup 卷的 qtree 。在从 ONTAP 9.3 还原到早期版本的 ONTAP 之前，必须在 FlexGroup 卷上禁用 qtree 功能。 
+---
+= 还原之前，请在 FlexGroup 卷中禁用 qtree 功能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 9.3 之前版本不支持 FlexGroup 卷的 qtree 。在从 ONTAP 9.3 还原到早期版本的 ONTAP 之前，必须在 FlexGroup 卷上禁用 qtree 功能。
+
+在创建 qtree 时或修改默认 qtree 的安全模式和机会锁模式属性时，系统会启用 qtree 功能。
+
+. 确定并删除每个 FlexGroup 卷中使用 qtree 功能启用的所有非默认 qtree ：
++
+.. 登录到高级权限级别： `set -privilege advanced`
+.. 验证是否已使用 qtree 功能启用任何 FlexGroup 卷。
++
+对于 ONTAP 9.6 或更高版本，请使用： `volume show is-qtree-caching-enabled true`
+
++
+对于 ONTAP 9.5 或更早版本，请使用： `volume show -is-flexgroup-qtree-enabled true`
+
++
+[listing]
+----
+cluster1::*> volume show -is-flexgroup-qtree-enabled true
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vs0       fg           -            online     RW        320MB    220.4MB   31%
+----
+.. 删除每个 FlexGroup 卷中使用 qtree 功能启用的所有非默认 qtree ： `volume qtree delete -vserver svm_name -volume volume_name -qtree qtree_name`
++
+如果由于修改了默认 qtree 的属性而启用了 qtree 功能，并且没有任何 qtree ，则可以跳过此步骤。
+
++
+[listing]
+----
+cluster1::*> volume qtree delete -vserver vs0 -volume fg -qtree qtree4
+WARNING: Are you sure you want to delete qtree qtree4 in volume fg vserver vs0?  {y|n}: y
+[Job 38] Job is queued: Delete qtree qtree4 in volume fg vserver vs0.
+----
+
+
+. 在每个 FlexGroup 卷上禁用 qtree 功能： `volume FlexGroup qtree-disable -vserver svm_name -volume volume_name`
++
+[listing]
+----
+cluster1::*> volume flexgroup qtree-disable -vserver vs0 -volume fg
+----
+. 确定并删除通过 qtree 功能启用的所有 Snapshot 副本。
++
+.. 验证是否已使用 qtree 功能启用任何 Snapshot 副本： `volume snapshot show -vserver vserver_name -volume volume_name -fields is-flexgroup-qtree-enabled`
++
+[listing]
+----
+cluster1::*> volume snapshot show -vserver vs0 -volume fg -fields is-flexgroup-qtree-enabled
+vserver volume snapshot is-flexgroup-qtree-enabled
+------- ------ -------- --------------------------
+vs0     fg     fg_snap1 true
+vs0     fg     daily.2017-09-27_0010 true
+vs0     fg     daily.2017-09-28_0010 true
+vs0     fg     snapmirror.0241f354-a865-11e7-a1c0-00a098a71764_2147867740.2017-10-04_124524 true
+----
+.. 删除使用 qtree 功能启用的所有 Snapshot 副本： `volume snapshot delete -vserver svm_name -volume volume_name -snapshot snapshot_name -force true -ignore-owners true`
++
+必须删除的 Snapshot 副本包括常规 Snapshot 副本以及为 SnapMirror 关系创建的 Snapshot 副本。如果您为目标集群运行 ONTAP 9.2 或更早版本的 FlexGroup 卷创建了任何 SnapMirror 关系，则必须删除在为 qtree 功能启用源 FlexGroup 卷时创建的所有 Snapshot 副本。
+
++
+[listing]
+----
+cluster1::> volume snapshot delete -vserver vs0 -volume fg -snapshot daily.2017-09-27_0010 -force true -ignore-owners true
+----
+
+
+
+
+* 相关信息 *
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-fg-mgmt/home.html["FlexGroup 卷管理"]

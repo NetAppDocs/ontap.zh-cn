@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: networking/create_a_subnet.html 
+keywords: move, moving, broadcast, domain, ipspace, create a subnet, network subnet create, network subnet show -ipspace 
+summary: 创建子网 
+---
+= 创建子网
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+创建广播域后，您可以创建一个子网来分配特定的 IPv4 或 IPv6 地址块，以便稍后在为 SVM 创建 LIF 时使用。
+
+这样，您就可以通过指定子网名称，而不必为每个 LIF 指定 IP 地址和网络掩码值来更轻松地创建 LIF 。
+
+您必须是集群管理员才能执行此任务。
+
+.步骤
+. 创建子网。
++
+[listing]
+----
+network subnet create -broadcast-domain ipspace1 -ipspace ipspace1 -subnet-name ipspace1 -subnet 10.0.0.0/24 -gateway 10.0.0.1 -ip-ranges "10.0.0.128-10.0.0.130,10.0.0.132"
+----
++
+子网名称可以是 `192.0.2.0/24` 之类的子网 IP 值，也可以是与本示例中使用的` ipspace1 `之类的字符串。
+
+. 验证子网配置是否正确。
++
+此示例的输出显示了有关 ipspace1 IP 空间中名为 ipspace1 的子网的信息。子网属于广播域名 ipspace1 。您可以将此子网中的 IP 地址分配给在 ipspace1 IP 空间中创建的 SVM 的数据 LIF 。
+
++
+`network subnet show -ipspace ipspace1`
+
+

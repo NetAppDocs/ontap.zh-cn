@@ -1,0 +1,26 @@
+---
+sidebar: sidebar 
+permalink: networking/manage_routing_in_an_svm_overview.html 
+keywords: introducing, introduction, overview, route, routing, svm, storage, virtual, machine, network, path, overview, introducing routing tables and network paths 
+summary: 引入路由表和网络路径 
+---
+= 概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+SVM 的路由表决定了 SVM 与目标进行通信所使用的网络路径。了解路由表的工作原理非常重要，这样您就可以在发生网络问题之前防患于未然。
+
+路由规则如下：
+
+* ONTAP 会通过最特定的可用路由路由流量。
+* 当更多特定路由不可用时， ONTAP 会作为最后一种方法通过默认网关路由（具有 0 位网络掩码）路由流量。
+
+
+如果路由的目标，网络掩码和度量指标相同，则无法保证系统在重新启动后或升级后使用相同的路由。如果您配置了多个默认路由，则此问题描述尤其如此。
+
+最佳做法是，仅为 SVM 配置一个默认路由。为避免中断，您应确保默认路由能够访问更特定的路由无法访问的任何网络地址。有关详细信息，请参见知识库文章 https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU134["SU134 ：集群模式 ONTAP 中的路由配置不正确，可能会中断网络访问"^]

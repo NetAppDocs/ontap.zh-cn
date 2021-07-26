@@ -1,0 +1,275 @@
+---
+sidebar: sidebar 
+permalink: networking/lifs_and_service_policies96.html 
+keywords: service policies for system svms, lif service policies, lif, logical, interface, service, policy, policies, lifs and service policies in ontap 9.6 and later, assign service policies to lifs to specify the supported traffic, service policies for system svms, service policies for data svms, data-core service 
+summary: 为 LIF 分配服务策略以指定支持的流量 
+---
+= ONTAP 9.6 及更高版本中的 LIF 和服务策略
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以为 LIF 分配服务策略（而不是 LIF 角色），以确定 LIF 支持的流量类型。服务策略定义 LIF 支持的一组网络服务。ONTAP 提供了一组可与 LIF 关联的内置服务策略。
+
+
+
+== 系统 SVM 的服务策略
+
+管理 SVM 和任何系统 SVM 都包含可用于该 SVM 中 LIF 的服务策略，包括管理和集群间 LIF 。创建 IP 空间时，系统会自动创建这些策略。下表列出了系统 SVM 中 LIF 的内置策略：
+
+[cols="4*"]
+|===
+| 策略 | 包括的服务 | 等效角色 | 说明 
+
+
+ a| 
+default-intercluster
+ a| 
+集群间核心
+ a| 
+集群间
+ a| 
+由传输集群间流量的 LIF 使用。注意：可从 ONTAP 9.5 获得，名称为 net-intercluster service policy 。
+
+
+
+ a| 
+default-route-announce
+ a| 
+管理 BGP
+ a| 
+-
+ a| 
+由传输 BGP 对等连接的 LIF 使用注：可从 ONTAP 9.5 获得，名称为 net-route-announce 服务策略。
+
+
+
+ a| 
+default-management
+ a| 
+management-core ， management-EMS ， management-ssh ， management-https ， management-autosupport
+ a| 
+node-mgmt 或 cluster-mgmt
+ a| 
+由处理管理请求的 LIF 使用。management-EMS 控制哪些 LIF 可以发布 EMS 内容。
+
+|===
+下表列出了可在系统 SVM 上使用的服务以及每个服务对 LIF 的故障转移策略施加的任何限制：
+
+[cols="3*"]
+|===
+| 服务 | 故障转移限制 | 说明 
+
+
+ a| 
+集群间核心
+ a| 
+仅主节点
+ a| 
+核心集群间服务
+
+
+
+ a| 
+管理核心
+ a| 
+-
+ a| 
+核心管理服务
+
+
+
+ a| 
+management-ssh
+ a| 
+-
+ a| 
+用于 SSH 管理访问的服务
+
+
+
+ a| 
+management-https
+ a| 
+-
+ a| 
+用于 HTTPS 管理访问的服务
+
+
+
+ a| 
+management-autosupport
+ a| 
+-
+ a| 
+与发布 AutoSupport 有效负载相关的服务
+
+
+
+ a| 
+管理 BGP
+ a| 
+仅主端口
+ a| 
+与 BGP 对等交互相关的服务
+
+|===
+
+
+== 数据 SVM 的服务策略
+
+所有数据 SVM 都包含可由该 SVM 中的 LIF 使用的服务策略。下表列出了数据 SVM 中 LIF 的内置策略：
+
+[cols="4*"]
+|===
+| 策略 | 包括的服务 | 等效数据协议 | 说明 
+
+
+ a| 
+default-management
+ a| 
+management-ssh ， management-https
+ a| 
+无
+ a| 
+由处理管理请求的 LIF 使用
+
+
+
+ a| 
+default-data-blocks
+ a| 
+数据 iSCSI
+ a| 
+iSCSI
+ a| 
+由传输面向块的 SAN 数据流量的 LIF 使用
+
+
+
+ a| 
+default-data-files
+ a| 
+data-nfs ， data-cifs ， data-FlexCache ， data-fpolicy-client
+ a| 
+NFS ， CIFS ， fcache
+ a| 
+由传输面向文件的 NAS 数据流量的 LIF 使用。
+
+|===
+下表列出了可在数据 SVM 上使用的服务以及每个服务对 LIF 的故障转移策略施加的任何限制：
+
+[cols="4*"]
+|===
+| 策略 | 包括的服务 | 等效数据协议 | 说明 
+
+
+ a| 
+management-ssh
+ a| 
+-
+ a| 
+-
+ a| 
+用于 SSH 管理访问的服务
+
+
+
+ a| 
+management-https
+ a| 
+-
+ a| 
+-
+ a| 
+用于 HTTPS 管理访问的服务
+
+
+
+ a| 
+数据核心
+ a| 
+-
+ a| 
+纯数据
+ a| 
+核心数据服务（有关详细信息，请参见。
+
+
+
+ a| 
+数据 NFS
+ a| 
+-
+ a| 
+纯数据
+ a| 
+与 NFS 数据服务相关的协议
+
+
+
+ a| 
+数据 CIFS
+ a| 
+-
+ a| 
+纯数据
+ a| 
+与 CIFS 数据服务相关的协议
+
+
+
+ a| 
+数据 FlexCache
+ a| 
+-
+ a| 
+纯数据
+ a| 
+与 FlexCache 数据服务相关的协议
+
+
+
+ a| 
+数据 iSCSI
+ a| 
+仅主端口
+ a| 
+纯数据
+ a| 
+与 iSCSI 数据服务相关的协议
+
+|===
+您应了解如何将服务策略分配给数据 SVM 中的 LIF ：
+
+* 如果创建的数据 SVM 包含一系列数据服务，则会使用指定的服务创建该 SVM 中的内置 "default-data-files" 和 "default-data-blocs" 服务策略。
+* 如果在创建数据 SVM 时未指定数据服务列表，则会使用默认数据服务列表创建该 SVM 中的内置 "default-data-files" 和 "default-data-blocs" 服务策略。
++
+默认数据服务列表包括 iSCSI ， NFS ， SMB 和 FlexCache 服务。
+
+* 创建包含数据协议列表的 LIF 时，系统会为 LIF 分配与指定数据协议等效的服务策略。
++
+如果不存在等效服务策略，则会创建自定义服务策略。
+
+* 如果创建 LIF 时没有服务策略或数据协议列表，则默认情况下会将 default-data-files 服务策略分配给 LIF 。
+
+
+
+
+== 数据核心服务
+
+通过数据核心服务，以前使用具有数据角色的 LIF 的组件可以在已升级的集群上按预期工作，以便使用服务策略而不是 LIF 角色（在 ONTAP 9.6 中已弃用）来管理 LIF 。
+
+将数据核心指定为服务不会打开防火墙中的任何端口，但此服务应包含在数据 SVM 的任何服务策略中。例如， default-data-files 服务策略默认包含以下服务：
+
+* 数据核心
+* 数据 NFS
+* 数据 CIFS
+* 数据 FlexCache
+
+
+策略中应包含数据核心服务，以确保使用 LIF 的所有应用程序均按预期运行，但如果需要，可以删除其他三项服务。

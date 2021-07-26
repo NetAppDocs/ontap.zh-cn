@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: networking/example_of_using_ipspaces.html 
+keywords: example, sample, ipspace, example of using ipspaces, sample using ipspaces, hosts.equiv 
+summary: 使用 IP 空间的示例 
+---
+= 使用 IP 空间的示例
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+使用 IP 空间的一个常见应用是，当存储服务提供商（ SSP ）需要将公司 A 和 B 的客户连接到 SSP 内部的 ONTAP 集群时，这两家公司都使用相同的专用 IP 地址范围。
+
+SSP 在集群上为每个客户创建 SVM ，并提供从两个 SVM 到公司 A 网络以及从其他两个 SVM 到公司 B 网络的专用网络路径。
+
+下图显示了这种类型的部署，如果这两家公司都使用非专用 IP 地址范围，则此部署也适用。但是，图中显示了这两家公司使用相同的专用 IP 地址范围，这会导致出现问题。
+
+image:ontap_nm_image9.jpeg["IP 空间示例"]
+
+这两家公司都使用专用 IP 地址子网 10.0.0.0 ，从而导致以下问题：
+
+* 如果这两家公司决定为各自的 SVM 使用相同的 IP 地址，则位于 SSP 位置的集群中的 SVM 具有冲突的 IP 地址。
+* 即使两家公司同意为其 SVM 使用不同的 IP 地址，也可能会出现问题。
+* 例如，如果 A 网络中的任何客户端与 B 网络中的客户端具有相同的 IP 地址，则发往 A 地址空间中的客户端的数据包可能会路由到 B 地址空间中的客户端，反之亦然。
+* 如果这两家公司决定使用互斥的地址空间（例如， A 使用网络掩码为 255.128.0.0 的 10.0.0.0 地址空间， B 使用网络掩码为 255.128.0.0 的 10.128.0.0 地址空间）， SSP 需要在集群上配置静态路由，以便将流量正确路由到 A 和 B 的网络。
+* 此解决方案既不可扩展（因为存在静态路由），也不安全（广播流量会发送到集群的所有接口）。为了解决这些问题， SSP 会在集群上定义两个 IP 空间—每个公司一个。由于不路由跨 IP 空间流量，因此，即使所有 SVM 都配置在 10.0.0.0 地址空间中，每个公司的数据也会安全路由到各自的网络，如下图所示：
+
+
+image:ontap_nm_image10.jpeg["IP 空间示例"]
+
+此外，各种配置文件（例如 ` /etc/hosts` file ， ` /etc/hosts.equiv` file 和 `/etc/rc` file ）引用的 IP 地址与该 IP 空间相关。因此，通过 IP 空间， SSP 可以为多个 SVM 的配置和身份验证数据配置相同的 IP 地址，而不会产生冲突。

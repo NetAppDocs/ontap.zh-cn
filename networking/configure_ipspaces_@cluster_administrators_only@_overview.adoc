@@ -1,0 +1,23 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_ipspaces_@cluster_administrators_only@_overview.html 
+keywords: ipspace, ipspaces, introduction, introducing, overview, ipv4, ipv6, routing, route, domain, configure ipspaces overview 
+summary: IP 空间定义了 Storage Virtual Machine （ SVM ）所在的不同 IP 地址空间 
+---
+= 概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以通过 IP 空间配置一个 ONTAP 集群，以便客户端可以从多个管理上独立的网络域访问该集群，即使这些客户端使用相同的 IP 地址子网范围也是如此。这样可以隔离客户端流量，以确保隐私和安全。
+
+IP 空间定义了 Storage Virtual Machine （ SVM ）所在的不同 IP 地址空间。为 IP 空间定义的端口和 IP 地址仅适用于该 IP 空间。系统会为 IP 空间中的每个 SVM 维护一个不同的路由表；因此，不会发生跨 SVM 或跨 IP 空间的流量路由。
+
+
+NOTE: IP 空间支持其路由域上的 IPv4 和 IPv6 地址。
+
+如果您要管理单个组织的存储，则无需配置 IP 空间。如果您要在一个 ONTAP 集群上管理多家公司的存储，并且确定您的客户没有任何网络配置冲突，则也不需要使用 IP 空间。在许多情况下，可以使用 Storage Virtual Machine （ SVM ）及其各自不同的 IP 路由表来隔离唯一的网络配置，而不是使用 IP 空间。

@@ -1,0 +1,44 @@
+---
+permalink: revert/concept_reversion_requirements_for_snapmirror_and_snapvault_relationships.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, reversion, requirements, snapmirror, snapvault, relationships 
+summary: system node revert-to 命令会通知您需要删除或重新配置的任何 SnapMirror 和 SnapVault 关系，以便完成还原过程。但是，在开始还原之前，您应了解这些要求。 
+---
+= SnapMirror 和 SnapVault 关系的还原要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+system node revert-to 命令会通知您需要删除或重新配置的任何 SnapMirror 和 SnapVault 关系，以便完成还原过程。但是，在开始还原之前，您应了解这些要求。
+
+* 所有 SnapVault 和数据保护镜像关系都必须先暂停，然后再断开。
++
+还原完成后，如果存在通用 Snapshot 副本，您可以重新同步和恢复这些关系。
+
+* SnapVault 关系不能包含以下 SnapMirror 策略类型：
++
+** 异步镜像
++
+您必须删除使用此策略类型的任何关系。
+
+** MirrorAndVault
++
+如果存在其中任何关系，则应将 SnapMirror 策略更改为 mirror-vault 。
+
+
+
+* 必须删除所有负载共享镜像关系和目标卷。
+* 必须删除与 FlexClone 目标卷的 SnapMirror 关系。
+* 必须为每个 SnapMirror 策略禁用网络压缩。
+* 必须从任何异步镜像类型的 SnapMirror 策略中删除 all_source_snapshot 规则。
++
+
+NOTE: 根卷上已弃用单文件快照还原（ SFSR ）和部分文件快照还原（ PFSR ）操作。
+
+* 必须先完成当前正在运行的任何单个文件和 Snapshot 还原操作，然后才能继续还原。
++
+您可以等待还原操作完成，也可以中止还原操作。
+
+* 必须使用 snapmirror restore 命令删除任何不完整的单个文件和 Snapshot 还原操作。
+

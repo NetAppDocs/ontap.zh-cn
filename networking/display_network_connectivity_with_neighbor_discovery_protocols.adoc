@@ -1,0 +1,478 @@
+---
+sidebar: sidebar 
+permalink: networking/display_network_connectivity_with_neighbor_discovery_protocols.html 
+keywords: display, view, show, network, connectivity, neighbor, discovery, protocol, ndp, cdp, cisco, link, layer, lldp, display network connectivity with neighbor discovery protocols, use neighbor discovery protocols to view network connectivity between a pair of physical or virtual systems and their network interfaces, use cdp to detect network connectivity, considerations for using cdp, enable or disable cdp, view cdp neighbor information, example of showing and clearing statistics, use lldp to detect network connectivity, enable or disable lldp, view lldp neighbor information, adjust the interval for transmitting lldp advertisements 
+summary: 使用邻居发现协议查看一对物理或虚拟系统及其网络接口之间的网络连接 
+---
+= 显示使用邻居发现协议的网络连接
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+在数据中心中，您可以使用邻居发现协议查看一对物理或虚拟系统及其网络接口之间的网络连接。ONTAP 支持两种邻居发现协议： Cisco 发现协议（ CDP ）和链路层发现协议（ LLDP ）。
+
+通过邻居发现协议，您可以自动发现和查看有关网络中已启用协议的直连设备的信息。每个设备都会公布标识，功能和连接信息。此信息以以以太网帧的形式传输到多播 MAC 地址，并由所有已启用协议的相邻设备接收。
+
+要使两个设备成为邻居，每个设备都必须启用并正确配置一个协议。发现协议功能仅限于直连网络。邻居可以包括启用了协议的设备，例如交换机，路由器，网桥等。ONTAP 支持两种邻居发现协议，可以单独使用，也可以同时使用。
+
+* Cisco 发现协议（ CDP ） *
+
+CDP 是 Cisco Systems 开发的一种专有链路层协议。默认情况下，它在 ONTAP 中对集群端口启用，但必须对数据端口明确启用。
+
+* 链路层发现协议（ LLDP ） *
+
+LLDP 是标准文档 IEEE 802.1AB 中指定的与供应商无关的协议。必须为所有端口显式启用此功能。
+
+
+
+== 使用 CDP 检测网络连接
+
+使用 CDP 检测网络连接包括查看部署注意事项，在数据端口上启用它，查看相邻设备以及根据需要调整 CDP 配置值。默认情况下， CDP 在集群端口上处于启用状态。
+
+还必须在任何交换机和路由器上启用 CDP ，才能显示有关相邻设备的信息。
+
+集群交换机运行状况监控器还使用 CDP 自动发现集群和管理网络交换机。
+
+* 相关信息 *
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html["系统管理"^]
+
+
+
+=== 使用 CDP 的注意事项
+
+默认情况下， CDP 兼容设备会发送 CDPv2 公告。CDP 兼容设备仅在收到 CDPv1 公告时才会发送 CDPv1 公告。ONTAP 仅支持 CDPv1 。因此，当 ONTAP 节点发送 CDPv1 公告时， CDP 兼容的相邻设备会发回 CDPv1 公告。
+
+在节点上启用 CDP 之前，应考虑以下信息：
+
+* CDP 始终在集群端口上启用。
+* 默认情况下，所有非集群端口上都会禁用 CDP 。
+* 所有端口均支持 CDP 。
+* CDP 公告由处于 up 状态的端口发送和接收。
+* 必须在传输和接收设备上启用 CDP ，才能发送和接收 CDP 公告。
+* CDP 公告会定期发送，您可以配置时间间隔。
+* 更改 LIF 的 IP 地址后，节点会在下一个 CDP 公告中发送更新后的信息。
+
+
+
+NOTE: 有时，当节点上的 LIF 发生更改时， CDP 信息不会在接收设备端（例如交换机）进行更新。如果遇到此类问题，应将节点的网络接口配置为 down 状态，然后再配置为 up 状态。
+
+* 只有 IPv4 地址才会在 CDP 公告中公布。
+* 对于带有 VLAN 的物理网络端口，该端口上 VLAN 上配置的所有 LIF 都会公布。
+* 对于属于接口组的物理端口，该接口组上配置的所有 IP 地址都会在每个物理端口上公布。
+* 对于托管 VLAN 的接口组，接口组上配置的所有 LIF 和 VLAN 都会在每个网络端口上公布。
+* 对于 MTU 大小等于或大于 1 ， 500 字节的数据包，仅公布可容纳 1500 MTU 大小的数据包的 LIF 数。
+
+
+
+
+=== 启用或禁用 CDP
+
+要发现并向 CDP 兼容的相邻设备发送公告，必须在集群的每个节点上启用 CDP 。默认情况下， CDP 在节点的所有集群端口上启用，在节点的所有非集群端口上禁用。
+
+`cdpd.enable` 选项用于控制在节点的端口上启用还是禁用 CDP ：
+
+* on 在非集群端口上启用 CDP 。
+* off 在非集群端口上禁用 CDP ；您不能在集群端口上禁用 CDP 。
+
+
+如果在连接到 CDP 兼容设备的端口上禁用 CDP ，则网络流量可能无法优化。
+
+.步骤
+. 显示节点或集群中所有节点的当前 CDP 设置：
++
+[cols="2*"]
+|===
+| 要查看 CDP 设置 ... | 输入 ... 
+
+
+ a| 
+节点
+| run —节点 <node_name> 选项 cdpd.enable 
+
+
+ a| 
+集群中的所有节点
+| options cdpd.enable 
+|===
+. 在节点的所有端口或集群中所有节点的所有端口上启用或禁用 CDP ：
++
+[cols="2*"]
+|===
+| 要启用或禁用 CDP ，请执行以下操作 ... | 输入 ... 
+
+
+ a| 
+节点
+ a| 
+运行 -node node_name options cdpd.enable ｛ on or off ｝
+
+
+
+ a| 
+集群中的所有节点
+ a| 
+options cdpd.enable ｛ on or off ｝
+
+|===
+
+
+
+
+=== 查看 CDP 邻居信息
+
+您可以查看有关连接到集群节点的每个端口的相邻设备的信息，前提是该端口连接到 CDP 兼容设备。您可以使用 `network device-discovery show -protocol cdp` 命令查看邻居信息。
+
+由于 CDP 始终为集群端口启用，因此始终会为这些端口显示 CDP 邻居信息。必须在非集群端口上启用 CDP ，才能显示这些端口的邻居信息。
+
+显示有关连接到集群中节点上端口的所有 CDP 兼容设备的信息：
+
+....
+network device-discovery show -node node -protocol cdp
+....
+以下命令显示连接到节点 cluster-1_01 上端口的邻居：
+
+....
+network device-discovery show -node sti2650-212 -protocol cdp
+Node/       Local  Discovered
+Protocol    Port   Device (LLDP: ChassisID)  Interface         Platform
+----------- ------ ------------------------- ----------------  ----------------
+sti2650-212/cdp
+            e0M    RTP-LF810-510K37.gdl.eng.netapp.com(SAL1942R8JS)
+                                             Ethernet1/14      N9K-C93120TX
+            e0a    CS:RTP-CS01-510K35        0/8               CN1610
+            e0b    CS:RTP-CS01-510K36        0/8               CN1610
+            e0c    RTP-LF350-510K34.gdl.eng.netapp.com(FDO21521S76)
+                                             Ethernet1/21      N9K-C93180YC-FX
+            e0d    RTP-LF349-510K33.gdl.eng.netapp.com(FDO21521S4T)
+                                             Ethernet1/22      N9K-C93180YC-FX
+            e0e    RTP-LF349-510K33.gdl.eng.netapp.com(FDO21521S4T)
+                                             Ethernet1/23      N9K-C93180YC-FX
+            e0f    RTP-LF349-510K33.gdl.eng.netapp.com(FDO21521S4T)
+                                             Ethernet1/24      N9K-C93180YC-FX
+....
+输出列出了连接到指定节点的每个端口的 Cisco 设备。
+
+
+
+=== 配置 CDP 消息的保持时间
+
+保持时间是 CDP 公告存储在相邻 CDP 兼容设备的缓存中的时间段。保持时间在每个 CDPv1 数据包中公布，并且每当节点收到 CDPv1 数据包时都会更新。
+
+* 在 HA 对的两个节点上， `CDPD.HoldTime` 选项的值应设置为相同的值。
+* 默认保持时间值为 180 秒，但您可以输入 10 秒到 255 秒之间的值。
+* 如果在保持时间到期之前删除 IP 地址，则会缓存 CDP 信息，直到保持时间到期为止。
+
+
+.步骤
+. 显示节点或集群中所有节点的当前 CDP 保持时间：
++
+|===
+| 要查看保持时间 ... | 输入 ... 
+
+
+| 节点 | `run -node node_name options cdpd.holdTime` 
+
+
+| 集群中的所有节点 | `options cdpd.holdTime` 
+|===
+. 在节点的所有端口或集群中所有节点的所有端口上配置 CDP 保持时间：
++
+|===
+| 要设置保持时间 ... | 输入 ... 
+
+
+| 节点 | `run -node node_name options cdpd.holdTime holdTime` 
+
+
+| 集群中的所有节点 | 操作时间`tions CDPD.HoldTime HoldTime` 
+|===
+
+
+
+
+=== 设置发送 CDP 公告的间隔
+
+CDP 公告会定期发送到 CDP 邻居。您可以根据网络流量和网络拓扑变化增加或减少发送 CDP 公告的间隔。
+
+* 在 HA 对的两个节点上，应将 `cdpd.interval` 选项的值设置为相同的值。
+* 默认间隔为 60 秒，但您可以输入一个介于 5 秒到 900 秒之间的值。
+
+
+.步骤
+. 显示节点或集群中所有节点的当前 CDP 公告时间间隔：
++
+|===
+| 要查看间隔 ... | 输入 ... 
+
+
+| 节点 | `运行 -node node_name options cdpd.interval` 
+
+
+| 集群中的所有节点 | `options cdpd.interval` 
+|===
+. 配置为节点的所有端口或集群中所有节点的所有端口发送 CDP 公告的间隔：
++
+|===
+| 要设置间隔 ... | 输入 ... 
+
+
+| 节点 | `run -node node_name options cdpd.interval interval` 
+
+
+| 集群中的所有节点 | `options cdpd.interval interval` 
+|===
+
+
+
+
+=== 查看或清除 CDP 统计信息
+
+您可以查看每个节点上的集群和非集群端口的 CDP 统计信息，以检测潜在的网络连接问题。CDP 统计信息是自上次清除以来累积的。
+
+由于 CDP 始终对集群端口启用，因此始终会显示这些端口上的流量的 CDP 统计信息。必须在非集群端口上启用 CDP ，才能显示这些端口的统计信息。
+
+显示或清除节点上所有端口的当前 CDP 统计信息：
+
+|===
+| 如果您要 ... | 输入 ... 
+
+
+| 查看 CDP 统计信息 | `run -node node_name CDPD show-stats` 
+
+
+| 清除 CDP 统计信息 | `run -node node_name CDPD zero-stats` 
+|===
+
+
+==== 显示和清除统计信息的示例
+
+以下命令显示清除之前的 CDP 统计信息。输出将显示自上次清除统计信息以来已发送和接收的数据包总数。
+
+....
+run -node node1 cdpd show-stats
+
+RECEIVE
+ Packets:         9116  | Csum Errors:       0  | Unsupported Vers:  4561
+ Invalid length:     0  | Malformed:         0  | Mem alloc fails:      0
+ Missing TLVs:       0  | Cache overflow:    0  | Other errors:         0
+
+TRANSMIT
+ Packets:         4557  | Xmit fails:        0  | No hostname:          0
+ Packet truncated:   0  | Mem alloc fails:   0  | Other errors:         0
+
+OTHER
+ Init failures:      0
+....
+以下命令将清除 CDP 统计信息：
+
+....
+run -node node1 cdpd zero-stats
+....
+....
+run -node node1 cdpd show-stats
+
+RECEIVE
+ Packets:            0  | Csum Errors:       0  | Unsupported Vers:     0
+ Invalid length:     0  | Malformed:         0  | Mem alloc fails:      0
+ Missing TLVs:       0  | Cache overflow:    0  | Other errors:         0
+
+TRANSMIT
+ Packets:            0  | Xmit fails:        0  | No hostname:          0
+ Packet truncated:   0  | Mem alloc fails:   0  | Other errors:         0
+
+OTHER
+ Init failures:      0
+....
+清除统计信息后，在发送或接收下一个 CDP 公告后，这些统计信息将开始累积。
+
+
+
+== 使用 LLDP 检测网络连接
+
+使用 LLDP 检测网络连接包括查看部署注意事项，在所有端口上启用 LLDP ，查看相邻设备以及根据需要调整 LLDP 配置值。
+
+还必须在任何交换机和路由器上启用 LLDP ，才能显示有关相邻设备的信息。
+
+ONTAP 当前报告以下类型 - 长度 - 值结构（ TLV ）：
+
+* 机箱 ID
+* 端口 ID
+* 生存时间（ TTL ）
+* 系统名称
++
+系统名称 TLV 不会在 CNA 设备上发送。
+
+
+
+某些融合网络适配器（ CNA ）（例如 X1143 适配器和 UTA2 板载端口）包含 LLDP 卸载支持：
+
+* LLDP 卸载用于数据中心桥接（ DCB ）。
+* 显示的信息可能因集群和交换机而异。
++
+例如，对于 CNA 端口和非 CNA 端口，交换机显示的机箱 ID 和端口 ID 数据可能有所不同，但对于这些端口类型，集群显示的数据是一致的。
+
+
+
+
+NOTE: LLDP 规范定义了通过 SNMP MIB 访问收集的信息。但是， ONTAP 当前不支持 LLDP MIB 。
+
+
+
+=== 启用或禁用 LLDP
+
+要发现并向 LLDP 兼容的相邻设备发送公告，必须在集群的每个节点上启用 LLDP 。从 ONTAP 9.7 开始，默认情况下会在节点的所有端口上启用 LLDP 。
+
+`lldp.enable` 选项控制是否在节点的端口上启用或禁用 LLDP ：
+
+* `on` 在所有端口上启用 LLDP 。
+* `off` 在所有端口上禁用 LLDP 。
+
+
+.步骤
+. 显示节点或集群中所有节点的当前 LLDP 设置：
++
+** 单节点： `run -node node_name options lldp.enable`
+** 所有节点： options `lldp.enable`
+
+
+. 在节点的所有端口或集群中所有节点的所有端口上启用或禁用 LLDP ：
++
+|===
+| 要启用或禁用 LLDP ，请执行以下操作 ... | 输入 ... 
+
+
+| 节点  a| 
+`运行 -node node_name options lldp.enable ｛ on_off ｝`
+
+
+
+| 集群中的所有节点  a| 
+`options lldp.enable ｛ on|off ｝`
+
+|===
++
+** 单个节点
++
+....
+run -node node_name options lldp.enable {on|off}
+....
+** 所有节点：
++
+....
+options lldp.enable {on|off}
+....
+
+
+
+
+
+
+=== 查看 LLDP 邻居信息
+
+您可以查看有关连接到集群节点的每个端口的相邻设备的信息，前提是该端口连接到 LLDP 兼容的设备。您可以使用 network device-discovery show 命令查看邻居信息。
+
+显示有关连接到集群中节点上端口的所有 LLDP 兼容设备的信息：
+
+....
+network device-discovery show -node node -protocol lldp
+....
+以下命令显示了连接到节点 cluster-1_01 上端口的邻居。输出列出了连接到指定节点的每个端口且已启用 LLDP 的设备。如果省略 ` 协议` 选项，则输出还会列出启用了 CDP 的设备。
+
+....
+network device-discovery show -node cluster-1_01 -protocol lldp
+Node/       Local  Discovered
+Protocol    Port   Device                    Interface         Platform
+----------- ------ ------------------------- ----------------  ----------------
+cluster-1_01/lldp
+            e2a    0013.c31e.5c60            GigabitEthernet1/36
+            e2b    0013.c31e.5c60            GigabitEthernet1/35
+            e2c    0013.c31e.5c60            GigabitEthernet1/34
+            e2d    0013.c31e.5c60            GigabitEthernet1/33
+....
+
+
+=== 调整传输 LLDP 公告的间隔
+
+LLDP 公告会定期发送到 LLDP 邻居。您可以根据网络流量和网络拓扑变化增加或减少发送 LLDP 公告的间隔。
+
+IEEE 建议的默认间隔为 30 秒，但您可以输入一个介于 5 秒到 300 秒之间的值。
+
+.步骤
+. 显示节点或集群中所有节点的当前 LLDP 公告时间间隔：
++
+** 单个节点
++
+....
+run -node <node_name> options lldp.xmit.interval
+....
+** 所有节点：
++
+....
+options lldp.xmit.interval
+....
+
+
+. 调整节点的所有端口或集群中所有节点的所有端口发送 LLDP 公告的间隔：
++
+** 单个节点
++
+....
+run -node <node_name> options lldp.xmit.interval <interval>
+....
+** 所有节点：
++
+....
+options lldp.xmit.interval <interval>
+....
+
+
+
+
+
+
+=== 调整 LLDP 公告的生存时间值
+
+生存时间（ TTL ）是 LLDP 公告存储在相邻 LLDP 兼容设备的缓存中的时间段。TTL 会在每个 LLDP 数据包中公布，并在节点收到 LLDP 数据包时进行更新。可以在传出 LLDP 帧中修改 TTL 。
+
+.关于此任务
+* TTL 是一个计算值，它是传输间隔（ `lldp.xmit.interval` ）和保持乘数（ `lldp.xmit.hold` ）加 1 的乘积。
+* 默认保持倍数值为 4 ，但您可以输入 1 到 100 之间的值。
+* 因此，根据 IEEE 的建议，默认 TTL 为 121 秒，但通过调整传输间隔和保持乘数值，您可以为传出帧指定一个介于 6 秒到 30001 秒之间的值。
+* 如果在 TTL 过期之前删除 IP 地址，则 LLDP 信息将缓存，直到 TTL 过期为止。
+
+
+.步骤
+. 显示节点或集群中所有节点的当前保持乘数值：
++
+** 单个节点
++
+....
+run -node <node_name> options lldp.xmit.hold
+....
+** 所有节点：
++
+....
+options lldp.xmit.hold
+....
+
+
+. 调整节点的所有端口或集群中所有节点的所有端口上的保持倍数值：
++
+** 单个节点
++
+....
+run -node <node_name> options lldp.xmit.hold <hold_value>
+....
+** 所有节点：
++
+....
+options lldp.xmit.hold <hold_value>
+....
+
+
+

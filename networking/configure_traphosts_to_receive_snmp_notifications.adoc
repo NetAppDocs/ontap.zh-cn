@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_traphosts_to_receive_snmp_notifications.html 
+keywords: configure, configuration, configuring, setup, setting, set, up, traphosts, trap, host, receive, snmp, notifications, configure traphosts to receive snmp notifications. system snmp traphost add 
+summary: 配置 SNMP 管理器以接收陷阱通知 
+---
+= 配置陷阱主机以接收 SNMP 通知
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以将陷阱主机（ SNMP 管理器）配置为在集群中生成 SNMP 陷阱时接收通知（ SNMP 陷阱 PDU ）。您可以指定 SNMP 陷阱主机的主机名或 IP 地址（ IPv4 或 IPv6 ）。
+
+.开始之前
+* 必须在集群上启用 SNMP 和 SNMP 陷阱。
+
+
+
+NOTE: 默认情况下， SNMP 和 SNMP 陷阱处于启用状态。
+
+* 必须在集群上配置 DNS 以解析陷阱主机名称。
+* 要使用 IPv6 地址配置 SNMP 陷阱主机，必须在集群上启用 IPv6 。
+* 对于 ONTAP 9.1 及更高版本，在创建陷阱主机时，您必须已指定预定义的基于用户的安全模型（ USM ）身份验证和隐私凭据。
+
+
+添加 SNMP 陷阱主机：
+
+....
+system snmp traphost add
+....
+
+NOTE: 只有在至少将一个 SNMP 管理工作站指定为陷阱主机时，才能发送陷阱。
+
+以下命令将使用已知的 USM 用户添加一个名为 yyy.example.com 的新 SNMPv3 陷阱主机：
+
+....
+system snmp traphost add -peer-address yyy.example.com -usm-username MyUsmUser
+....
+以下命令将使用主机的 IPv6 地址添加陷阱主机：
+
+....
+system snmp traphost add -peer-address 2001:0db8:1:1:209:6bff:feae:6d67
+....

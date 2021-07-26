@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: networking/create_ipspaces_01.html 
+keywords: create, creation, creating, add, adding, ipspace, create ipspaces, ipspace create, broadcast-domain move 
+summary: IP 空间是 SVM 所在的不同 IP 地址空间 
+---
+= 创建 IP 空间
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+IP 空间是 Storage Virtual Machine （ SVM ）所在的不同 IP 地址空间。当您需要 SVM 具有自己的安全存储，管理和路由时，您可以创建 IP 空间。
+
+集群范围内的 IP 空间限制为 512 个。如果集群中的节点 RAM 小于或等于 6 GB ，则对于 FAS2220 或 FAS2240 等平台，集群范围的限制将减少为 256 个 IP 空间。请参见 Hardware Universe 以确定您的平台是否具有其他限制。
+
+https://hwu.netapp.com/["NetApp Hardware Universe"^]
+
+
+NOTE: IP 空间名称不能为 "all" ，因为 "all" 是系统保留名称。
+
+创建 IP 空间：
+
+....
+network ipspace create -ipspace ipspace_name
+....
+`ipspace_name` 是要创建的 IP 空间的名称。以下命令将在集群上创建 IP 空间 ipspace1 ：
+
+....
+network ipspace create -ipspace ipspace1
+....
+如果在采用 MetroCluster 配置的集群中创建 IP 空间，则必须手动将 IP 空间对象复制到配对集群。在复制 IP 空间之前创建并分配给此 IP 空间的任何 SVM 都不会复制到配对集群。
+
+广播域会自动在 " 默认 "IP 空间中创建，并可使用以下命令在 IP 空间之间移动：
+
+....
+network port broadcast-domain move
+....
+例如，如果要将广播域从 "Default" 移动到 "ips1" ，请使用以下命令：
+
+....
+network port broadcast-domain move -ipspace Default -broadcast-domain Default -to-ipspace ips1
+....

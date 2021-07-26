@@ -1,0 +1,35 @@
+---
+sidebar: sidebar 
+permalink: networking/network_cabling_guidelines.html 
+keywords: network, cable, wire, cabling, wiring, best practice, best practices, intracluster, interconnect, traffic, network cabling guidelines, management, data, network cabling, network cabling best practices, network cabling diagram 
+summary: 网络布线最佳实践 
+---
+= 网络布线准则
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+网络布线最佳实践可将流量分隔到以下网络：集群，管理和数据。
+
+您应该为集群布线，使集群流量与所有其他流量位于一个单独的网络上。将网络管理流量与数据和集群内流量分开是一种可选的做法，但建议这样做。通过维护单独的网络，您可以提高性能，简化管理，并提高对节点的安全性和管理访问。
+
+下图显示了包含三个独立网络的四节点 HA 集群的网络布线：
+
+image:Network_Cabling_Guidelines.png["网络布线图"]
+
+在为网络连接布线时，应遵循以下特定准则：
+
+* 每个节点应连接到三个不同的网络。
++
+一个网络用于管理，一个网络用于数据访问，一个网络用于集群内通信。管理网络和数据网络可以在逻辑上分开。
+
+* 您可以为每个节点建立多个数据网络连接，以改善客户端（数据）流量。
+* 可以在不连接数据网络的情况下创建集群，但集群必须包括集群互连连接。
+* 每个节点应始终有两个或更多集群连接，但 FAS22xx 系统上的节点可以配置一个 10-GbE 集群端口。
+
+
+有关网络布线的详细信息，请参见 http://docs.netapp.com/platstor/index.jsp["AFF 和 FAS 系统文档中心"^] 和。

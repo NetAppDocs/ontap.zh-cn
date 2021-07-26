@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: networking/types_of_network_ports.html 
+keywords: introducing, introduction, overview, network, port, port type, type, physical, interface group, vlan, vip, virtual, naming, convention, types of network ports, introducing physical and virtual network ports, physical ports, interface groups, virtual local area networks, virtual ip, port_name-vlan-id 
+summary: 引入物理和虚拟网络端口 
+---
+= 网络端口的类型
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+网络端口可以是物理端口，也可以是虚拟化端口。
+
+虚拟局域网（ VLAN ）和接口组构成虚拟端口。接口组将多个物理端口视为一个端口，而 VLAN 则将一个物理端口细分为多个单独的逻辑端口。
+
+* 物理端口：可以直接在物理端口上配置 LIF 。
+* 接口组：一个端口聚合，其中包含两个或更多物理端口，用作单个中继端口。接口组可以是单模式，多模式或动态多模式。
+* VLAN ：一种逻辑端口，用于接收和发送带有 VLAN 标记（ IEEE 802.1Q 标准）的流量。VLAN 端口特征包括端口的 VLAN ID 。底层物理端口或接口组端口被视为 VLAN 中继端口，必须将连接的交换机端口配置为对 VLAN ID 进行中继。
++
+VLAN 端口的底层物理端口或接口组端口可以继续托管 LIF ，从而传输和接收未标记的流量。
+
+* 虚拟 IP （ VIP ）端口：用作 VIP LIF 主端口的逻辑端口。VIP 端口由系统自动创建，仅支持有限数量的操作。从 ONTAP 9.5 开始，支持 VIP 端口。
+
+
+端口命名约定为 _enumberletter_ ：
+
+* 第一个字符用于描述端口类型。"e" 表示以太网。
+* 第二个字符表示端口适配器所在的编号插槽。
+* 第三个字符表示端口在多端口适配器上的位置。"a" 表示第一个端口， "b" 表示第二个端口，依此类推。
+
+
+例如， `e0b` 表示以太网端口是节点主板上的第二个端口。
+
+VLAN 必须使用语法 `port_name-vlan-id` 进行命名。
+
+`port_name` 指定物理端口或接口组。
+
+`vlan-id` 指定网络上的 VLAN 标识。例如， `e1c-80` 是有效的 VLAN 名称。

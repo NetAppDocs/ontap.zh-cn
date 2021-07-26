@@ -1,0 +1,48 @@
+---
+sidebar: sidebar 
+permalink: networking/move_broadcast_domains.html 
+keywords: move, moving, broadcast, domain, ipspace, move broadcast domains into ipspaces, move the system created broadcast domains into the ipspaces you created 
+summary: 将系统创建的广播域移动到您创建的 IP 空间中 
+---
+= 将广播域移动到 IP 空间
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+将系统根据第 2 层可访问性创建的广播域移动到您创建的 IP 空间中。
+
+在移动广播域之前，您必须验证广播域中端口的可访问性。
+
+端口的自动扫描可以确定哪些端口可以彼此连接并将其放置在同一广播域中，但此扫描无法确定适当的 IP 空间。如果广播域属于非默认 IP 空间，则必须使用本节中的步骤手动移动它。
+
+广播域会在集群创建和加入操作中自动配置。ONTAP 将 " 默认 " 广播域定义为一组端口，这些端口通过第 2 层连接到集群中创建的第一个节点上管理接口的主端口。如果需要，还会创建其他广播域，这些域的名称为 * 默认 -1* ， * 默认 -2* 等。
+
+当节点加入现有集群时，其网络端口会根据其第 2 层可访问性自动加入现有广播域。如果它们无法访问现有广播域，则会将这些端口置于一个或多个新广播域中。
+
+.关于此任务
+* 具有集群 LIF 的端口会自动置于 " 集群 " IP 空间中。
+* 可访问节点管理 LIF 主端口的端口将置于 " 默认 " 广播域中。
+* 其他广播域由 ONTAP 在集群创建或加入操作期间自动创建。
+* 添加 VLAN 和接口组时，它们会在创建后大约一分钟自动放置到相应的广播域中。
+
+
+.步骤
+. 验证广播域中端口的可访问性。ONTAP 会自动监控第 2 层可访问性。使用以下命令验证每个端口是否已添加到广播域并具有 " 正常 " 可访问性。
++
+`网络端口可访问性 show -detail`
+
+. 如有必要，请将广播域移动到其他 IP 空间：
++
+`网络端口 broadcast-domain move`
+
++
+例如，如果要将广播域从 "Default" 移动到 "ips1" ：
+
++
+`network port broadcast-domain move -ipspace default -broadcast-domain default -to ipspace ips1`
+
+

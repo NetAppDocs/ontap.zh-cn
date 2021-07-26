@@ -1,0 +1,69 @@
+---
+permalink: revert/task_verifying_storage_health_before_revert.html 
+sidebar: sidebar 
+keywords: ontap, revert, verify, verifying, storage, health, before, revert, reverting 
+summary: 在升级，还原或降级集群前后，您应验证磁盘，聚合和卷的状态。 
+---
+= 在还原之前验证存储运行状况
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在还原或降级集群之前和之后，您应验证磁盘，聚合和卷的状态。
+
+. 验证磁盘状态：
++
+[cols="2*"]
+|===
+| 要检查 ... | 执行此操作 ... 
+
+
+ a| 
+磁盘已损坏
+ a| 
+.. 显示任何损坏的磁盘： `storage disk show -state broken`
+.. 卸下或更换任何损坏的磁盘
+
+
+
+
+ a| 
+正在进行维护或重建的磁盘
+ a| 
+.. 显示处于维护，待定或重建状态的所有磁盘： `storage disk show -state maintenance
+
+
+
+
+| 待定 | 正在重建` ……等待维护或重建操作完成，然后再继续。+ 
+|===
+. 通过显示物理和逻辑存储的状态（包括存储聚合）来验证所有聚合是否已联机： `storage aggregate show -state ！ online`
++
+此命令将显示 _not_ 联机的聚合。在执行重大还原之前和之后，所有聚合都必须处于联机状态。
+
++
+[listing]
+----
+cluster1::> storage aggregate show -state !online
+There are no entries matching your query.
+----
+. 通过显示任何 _not_ online 卷来验证所有卷是否均已联机： `volume show -state ！ online`
++
+在执行重大还原之前和之后，所有卷都必须处于联机状态。
+
++
+[listing]
+----
+cluster1::> volume show -state !online
+There are no entries matching your query.
+----
+. 确认没有不一致的卷： `volume show -is-inconsistent true`
++
+如果返回任何不一致的卷，则必须在返回之前联系 NetApp 支持部门。
+
+
+
+* 相关信息 *
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html["磁盘和聚合管理"]

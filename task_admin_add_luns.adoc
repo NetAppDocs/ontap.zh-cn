@@ -1,0 +1,125 @@
+---
+sidebar: sidebar 
+permalink: task_admin_add_luns.html 
+keywords: volume, storage, add, increase storage, create, add lun, create lun, lun format, group related luns, add to storage VM, manual placement, Ansible Playbook, initiator, initiator group, protection, QoS policy, performance service level policy, 
+summary: 您可以创建 LUN 并将其添加到配置了 SAN 协议的现有 Storage VM 中。 
+---
+= 添加 LUN
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以创建 LUN 并将其添加到配置了 SAN 协议的现有 Storage VM 中。
+
+image:workflow_admin_add_luns.gif["添加 LUN 任务的工作流图"]
+
+集群中应存在为 SAN 服务配置的 Storage VM 。
+
+.步骤
+. 转至 * 存储 > LUN* 。
+. 单击 image:icon_add.gif["添加图标"]。
+. 指定要在每个 LUN 名称开头使用的前缀。（如果仅创建一个 LUN ，请输入 LUN 名称。）
+. 从下拉列表中选择一个 Storage VM 。
++
+仅会列出为 SAN 协议配置的 Storage VM 。如果只有一个为 SAN 协议配置的 Storage VM 可用，则不会显示 * Storage VM* 字段。
+
+. 指示要创建的 LUN 数量以及每个 LUN 的大小。
+. 从下拉列表中选择主机操作系统和 LUN 格式。
+. 输入主机启动程序，并使用逗号将其分隔开。
+. 执行以下操作之一：
++
+[cols="30,70"]
+|===
+| 单击此按钮 ... | 要执行此操作 ... 
+
+
+| * 保存 * | 此时将使用您输入的规范创建 LUN 。系统默认值用于其他规格。无需执行其他步骤。 
+
+
+| * 更多选项 * | 继续执行 <<step9>> 为 LUN 定义其他规范。 
+|===
+. 【第 9 步，第 9 步】如果您先前输入了 LUN 前缀，则该前缀已显示，但您可以对其进行修改。否则，请输入前缀。
+. 从下拉列表中选择一个 Storage VM 。
++
+仅会列出为 SAN 协议配置的 Storage VM 。如果只有一个为 SAN 协议配置的 Storage VM 可用，则不会显示 * Storage VM* 字段。
+
+. 确定 LUN 的分组方式：
++
+[cols="40,60"]
+|===
+| 选择时 ... | 发生这种情况 ... 
+
+
+| * 使用相关 LUN 的组 * | 这些 LUN 将与 Storage VM 上现有卷上的相关 LUN 进行分组。 
+
+
+| 无选择 | 这些 LUN 将在一个名为 " 容器 " 的卷上分组在一起。 
+|===
+. 在 * 存储和优化 * 部分中，指定以下值：
++
+.. 如果先前输入了 LUN ，则会显示其数量和容量，但您可以对其进行修改。否则，请输入值。
+.. 在 * 性能服务级别 * 字段中，选择一个服务级别：
++
+[cols="55,45"]
+|===
+| 选择此服务级别时 ... | 发生这种情况 ... 
+
+
+ a| 
+现有服务级别，例如 " 至高 " ， " 性能 " 或 " 价值 " 。
+
+仅显示对系统平台有效的服务级别（ AFF ， FAS 或其他）。
+| 此时将自动选择本地层。继续执行 <<step13>>。 
+
+
+| 自定义 | 继续执行 <<step12c>> 定义新服务级别。 
+|===
+.. 自 ONTAP 9.1.1 起，您可以使用 System Manager 手动选择要放置所创建 LUN 的本地层（如果选择了 " 自定义 " 服务级别）。
++
+[cols="55,45"]
+|===
+| 选择时 ... | 您执行的步骤 
+
+
+| * 手动放置 * | 已启用手动放置。继续执行 <<step12d>> 以完成此过程。 
+
+
+| 无选择 | 未启用手动选择。此时将自动选择本地层。继续执行 <<step13>>。 
+|===
+.. 【第 12d 步，第 12d 步】从下拉菜单中选择一个本地层。
+.. 选择 QoS 策略。
++
+选择 " 现有 " 以从现有策略列表中进行选择，或者选择 " 新建 " 以输入新策略的规范。
+
+
+
+. 在 * 主机信息 * 部分中，已显示主机操作系统和 LUN 格式，但您可以对其进行修改。
+. 在 * 主机映射 * 下，选择 LUN 的启动程序类型：
++
+** * 现有启动程序组 * ：为显示的列表选择一个启动程序组。
+** * 使用现有启动程序组新建启动程序组 * ：指定新组的名称，然后选择要用于创建新组的组。
+** * 主机启动程序 * ：指定新启动程序组的名称，然后单击 * + 添加启动程序 * 将启动程序添加到组中。
+
+
+. 在 * 保护 * 部分中，指定 LUN 的保护。
++
+如果选择 * 启用 SnapMirror （本地或远程） * ，则从下拉列表中指定目标集群的保护策略和设置。
+
+. 单击 * 保存 * 。
++
+此时将创建 LUN 并将其添加到集群和 Storage VM 中。
+
++
+
+NOTE: 您也可以将这些 LUN 的规格保存到 Ansible 攻略手册中。有关详细信息，请访问 link:https://docs.netapp.com/us-en/ontap/task_use_ansible_playbooks_add_edit_volumes_luns.html["使用 Ansible 攻略手册添加或编辑卷或 LUN"]。
+
+

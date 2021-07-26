@@ -1,0 +1,537 @@
+---
+sidebar: sidebar 
+permalink: upgrade/task_upgrade_nondisruptive_manual_cli.html 
+keywords: netapp, ontap, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
+summary: 您可以无中断地更新集群上的 ONTAP 版本。 
+---
+= 使用 CLI 手动无中断（滚动方法）
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过滚动升级方法，您可以无中断地更新由两个或更多节点组成的集群。此方法包括几个步骤：在 HA 对中的每个节点上启动故障转移操作，更新 "`failed` " 节点，启动交还，然后对集群中的每个 HA 对重复此过程。
+
+您必须满足升级准备要求。
+
+. 更新 HA 对中的第一个节点
++
+您可以通过启动 HA 对中第一个节点的配对节点接管来升级该节点。在升级第一个节点时，配对节点将提供节点的数据。
+
+. 更新 HA 对中的第二个节点
++
+升级或降级 HA 对中的第一个节点后，您可以通过对其启动接管来升级其配对节点。升级配对节点时，第一个节点将提供配对节点的数据。
+
+. 对其他每个 HA 对重复上述步骤。
+
+
+您应完成升级后任务。
+
+
+
+== 更新 HA 对中的第一个节点
+
+您可以通过启动节点的配对节点接管来更新 HA 对中的第一个节点。在升级第一个节点时，配对节点将提供节点的数据。
+
+如果您要执行重大升级，则要升级的第一个节点必须与您为外部连接配置了数据 LIF 并安装了第一个 ONTAP 映像的节点相同。
+
+升级第一个节点后，您应尽快升级配对节点。请勿让这两个节点在版本不匹配状态下的时间过长。
+
+. 通过调用 AutoSupport 消息更新集群中的第一个节点： `AutoSupport invoke -node * -type all -message "staring_NDU"`
++
+此 AutoSupport 通知包括更新前的系统状态记录。如果更新过程出现问题，它会保存有用的故障排除信息。
+
++
+如果集群未配置为发送 AutoSupport 消息，则通知的副本将保存在本地。
+
+. 将权限级别设置为高级，在系统提示您继续时输入 * y* ： `set -privilege advanced`
++
+此时将显示高级提示符（` * >` ）。
+
+. 将新的 ONTAP 软件映像设置为默认映像： `ssystem image modify ｛ -node nodenameA -iscurrent false ｝ -isdefault true`
++
+system image modify 命令使用扩展查询将新的 ONTAP 软件映像（作为备用映像安装）更改为节点的默认映像。
+
+. 监控更新进度： `ssystem node upgrade-revert show`
+. 验证新的 ONTAP 软件映像是否设置为默认映像： `ssystem image show`
++
+在以下示例中， image2 是新的 ONTAP 版本，并设置为 node0 上的默认映像：
+
++
+[listing]
+----
+cluster1::*> system image show
+                 Is      Is                Install
+Node     Image   Default Current Version    Date
+-------- ------- ------- ------- --------- -------------------
+node0
+         image1  false   true    X.X.X     MM/DD/YYYY TIME
+         image2  true    false   Y.Y.Y     MM/DD/YYYY TIME
+node1
+         image1  true    true    X.X.X     MM/DD/YYYY TIME
+         image2  false   false   Y.Y.Y     MM/DD/YYYY TIME
+4 entries were displayed.
+----
+. 如果配对节点已启用，请在其上禁用自动交还： `storage failover modify -node nodenameB -auto-giveback false`
++
+如果集群是双节点集群，则会显示一条消息，警告您禁用自动交还会阻止管理集群服务在发生交替故障时联机。输入 `y` 以继续。
+
+. 验证是否已为节点的配对节点禁用自动交还： `storage failover show -node nodenameB -fields auto-giveback`
++
+[listing]
+----
+cluster1::> storage failover show -node node1 -fields auto-giveback
+node     auto-giveback
+-------- -------------
+node1    false
+1 entry was displayed.
+----
+. 运行以下命令两次，以确定要更新的节点当前是否正在为任何客户端提供服务 `ssystem node run -node nodenameA -command uptime`
++
+uptime 命令显示节点自上次启动以来对 NFS ， CIFS ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您必须运行两次命令以确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。
+
++
+* 注 * ：您应记下客户端操作不断增加的每个协议，以便在更新节点后验证客户端流量是否已恢复。
+
++
+以下示例显示了具有 NFS ， CIFS ， FC 和 iSCSI 操作的节点。但是，此节点当前仅为 NFS 和 iSCSI 客户端提供服务。
+
++
+[listing]
+----
+cluster1::> system node run -node node0 -command uptime
+  2:58pm up  7 days, 19:16 800000260 NFS ops, 1017333 CIFS ops, 0 HTTP ops, 40395 FCP ops, 32810 iSCSI ops
+
+cluster1::> system node run -node node0 -command uptime
+  2:58pm up  7 days, 19:17 800001573 NFS ops, 1017333 CIFS ops, 0 HTTP ops, 40395 FCP ops, 32815 iSCSI ops
+----
+. 将所有数据 LIF 迁移出节点： `network interface migrate-all -node nodenameA`
+. 验证已迁移的任何 LIF ： `network interface show`
++
+有关可用于验证 LIF 状态的参数的详细信息，请参见 network interface show 手册页。
+
++
+以下示例显示 node0 的数据 LIF 已成功迁移。对于每个 LIF ，您可以使用此示例中包含的字段来验证 LIF 的主节点和端口， LIF 迁移到的当前节点和端口以及 LIF 的运行和管理状态。
+
++
+[listing]
+----
+cluster1::> network interface show -data-protocol nfs|cifs -role data -home-node node0 -fields home-node,curr-node,curr-port,home-port,status-admin,status-oper
+vserver lif     home-node home-port curr-node curr-port status-oper status-admin
+------- ------- --------- --------- --------- --------- ----------- ------------
+vs0     data001 node0     e0a       node1     e0a       up          up
+vs0     data002 node0     e0b       node1     e0b       up          up
+vs0     data003 node0     e0b       node1     e0b       up          up
+vs0     data004 node0     e0a       node1     e0a       up          up
+4 entries were displayed.
+----
+. 启动接管： `storage failover takeover -ofnode nodenameA`
++
+请勿指定 -option immediate 参数，因为要接管的节点需要正常接管才能启动到新软件映像。如果您未手动将 LIF 从节点迁移出，则 LIF 会自动迁移到节点的 HA 配对节点，以确保不会发生服务中断。
+
++
+第一个节点将启动至 Waiting for giveback 状态。
+
++
+* 注 * ：如果启用了 AutoSupport ，则会发送一条 AutoSupport 消息，指示节点已超出集群仲裁。您可以忽略此通知并继续更新。
+
+. 验证接管是否成功： `storage failover show`
++
+您可能会看到指示版本不匹配和邮箱格式问题的错误消息。这是预期行为，它表示重大无中断升级中的临时状态，不会造成负面影响。
+
++
+以下示例显示接管已成功。节点 node0 处于 Waiting for giveback 状态，其配对节点处于 In takeover 状态。
+
++
+[listing]
+----
+cluster1::> storage failover show
+                              Takeover
+Node           Partner        Possible State Description
+-------------- -------------- -------- -------------------------------------
+node0          node1          -        Waiting for giveback (HA mailboxes)
+node1          node0          false    In takeover
+2 entries were displayed.
+----
+. 至少等待八分钟，以使以下条件生效：
++
+** 客户端多路径（如果已部署）已稳定。
+** 客户端将从接管期间发生的 I/O 操作暂停中恢复。
++
+恢复时间特定于客户端，可能需要超过八分钟，具体取决于客户端应用程序的特征。
+
+
+
+. 将聚合返回到第一个节点： `storage failover giveback – ofnode nodenameA`
++
+交还首先将根聚合返回到配对节点，然后在该节点完成启动后，返回非根聚合以及设置为自动还原的任何 LIF 。一旦返回聚合，新启动的节点就会开始从每个聚合向客户端提供数据。
+
+. 验证是否已返回所有聚合： `storage failover show-giveback`
++
+如果 Giveback Status 字段指示没有要交还的聚合，则表示所有聚合均已返回。如果交还被否决，则该命令将显示交还进度以及否决了交还的子系统。
+
+. 如果尚未返回任何聚合，请执行以下步骤：
++
+.. 查看否决临时解决策以确定您是要解决 " `ve到` " 条件还是覆盖此否决。
++
+link:https://docs.netapp.com/us-en/ontap/high-availability/index.html["高可用性配置"]
+
+.. 如有必要，请解决错误消息中所述的 " 从 `ve到` " 条件，确保已确定的任何操作均正常终止。
+.. 重新运行 storage failover giveback 命令。
++
+如果您决定覆盖 " `ve到` " 条件，请将 -override-vetoes 参数设置为 true 。
+
+
+
+. 至少等待八分钟，以使以下条件生效：
++
+** 客户端多路径（如果已部署）已稳定。
+** 客户端将从交还期间发生的 I/O 操作暂停中恢复。
++
+恢复时间特定于客户端，可能需要超过八分钟，具体取决于客户端应用程序的特征。
+
+
+
+. 验证是否已成功完成节点的更新：
++
+.. 转至高级权限级别：``set -privilege advanced``
+.. 验证节点的更新状态是否已完成： `ssystem node upgrade-revert show -node nodenameA`
++
+此状态应列为已完成。
+
++
+如果状态为未完成，请从节点中运行 system node upgrade-revert upgrade 命令。如果命令未完成更新，请联系技术支持。
+
+.. 返回到管理权限级别： `set -privilege admin`
+
+
+. 验证节点的端口是否已启动： `network port show -node nodenameA`
++
+您必须在升级到更高版本的 ONTAP 9 的节点上运行此命令。
+
++
+以下示例显示节点的所有端口均已启动：
+
++
+[listing]
+----
+cluster1::> network port show -node node0
+                                                             Speed (Mbps)
+Node   Port      IPspace      Broadcast Domain Link   MTU    Admin/Oper
+------ --------- ------------ ---------------- ----- ------- ------------
+node0
+       e0M       Default      -                up       1500  auto/100
+       e0a       Default      -                up       1500  auto/1000
+       e0b       Default      -                up       1500  auto/1000
+       e1a       Cluster      Cluster          up       9000  auto/10000
+       e1b       Cluster      Cluster          up       9000  auto/10000
+5 entries were displayed.
+----
+. 将 LIF 还原到节点： `network interface revert *`
++
+此命令将返回已从节点迁移的 LIF 。
+
++
+[listing]
+----
+cluster1::> network interface revert *
+8 entries were acted on.
+----
+. 验证节点的数据 LIF 是否已成功还原回节点，以及它们是否已启动： `network interface show`
++
+以下示例显示此节点托管的所有数据 LIF 均已成功还原回此节点，并且其运行状态为已启动：
+
++
+[listing]
+----
+cluster1::> network interface show
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+vs0
+            data001      up/up    192.0.2.120/24     node0         e0a     true
+            data002      up/up    192.0.2.121/24     node0         e0b     true
+            data003      up/up    192.0.2.122/24     node0         e0b     true
+            data004      up/up    192.0.2.123/24     node0         e0a     true
+4 entries were displayed.
+----
+. 如果您之前确定此节点为客户端提供服务，请验证此节点是否正在为先前提供的每个协议提供服务： `ssystem node run -node nodenameA -command uptime`
++
+更新期间，操作计数重置为零。
+
++
+以下示例显示更新后的节点已恢复为其 NFS 和 iSCSI 客户端提供服务：
+
++
+[listing]
+----
+cluster1::> system node run -node node0 -command uptime
+  3:15pm up  0 days, 0:16 129 NFS ops, 0 CIFS ops, 0 HTTP ops, 0 FCP ops, 2 iSCSI ops
+----
+. 如果先前已禁用配对节点，请在其上重新启用自动交还： `storage failover modify -node nodenameB -auto-giveback true`
+
+
+您应继续尽快更新节点的 HA 配对节点。如果出于任何原因必须暂停更新过程，则 HA 对中的两个节点应运行相同的 ONTAP 版本。
+
+
+
+== 更新 HA 对中的配对节点
+
+更新 HA 对中的第一个节点后，您可以通过对其启动接管来更新其配对节点。升级配对节点时，第一个节点将提供配对节点的数据。
+
+. 将权限级别设置为高级，在系统提示您继续时输入 * y* ： `set -privilege advanced`
++
+此时将显示高级提示符（` * >` ）。
+
+. 将新的 ONTAP 软件映像设置为默认映像： `ssystem image modify ｛ -node nodenameB -iscurrent false ｝ -isdefault true`
++
+system image modify 命令使用扩展查询将新的 ONTAP 软件映像（作为备用映像安装）更改为节点的默认映像。
+
+. 监控更新进度： `ssystem node upgrade-revert show`
+. 验证新的 ONTAP 软件映像是否设置为默认映像： `ssystem image show`
++
+在以下示例中， `image2` 是 ONTAP 的新版本，并设置为节点上的默认映像：
+
++
+[listing]
+----
+cluster1::*> system image show
+                 Is      Is                Install
+Node     Image   Default Current Version    Date
+-------- ------- ------- ------- --------- -------------------
+node0
+         image1  false   false   X.X.X     MM/DD/YYYY TIME
+         image2  true    true    Y.Y.Y     MM/DD/YYYY TIME
+node1
+         image1  false   true    X.X.X     MM/DD/YYYY TIME
+         image2  true    false   Y.Y.Y     MM/DD/YYYY TIME
+4 entries were displayed.
+----
+. 如果配对节点已启用，请在其上禁用自动交还： `storage failover modify -node nodenameA -auto-giveback false`
++
+如果集群是双节点集群，则会显示一条消息，警告您禁用自动交还会阻止管理集群服务在发生交替故障时联机。输入 `y` 以继续。
+
+. 验证是否已为配对节点禁用自动交还： `storage failover show -node nodenameA -fields auto-giveback`
++
+[listing]
+----
+cluster1::> storage failover show -node node0 -fields auto-giveback
+node     auto-giveback
+-------- -------------
+node0    false
+1 entry was displayed.
+----
+. 运行以下命令两次，以确定要更新的节点当前是否正在为任何客户端提供服务： `ssystem node run -node nodenameB -command uptime`
++
+uptime 命令显示节点自上次启动以来对 NFS ， CIFS ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您必须运行两次命令以确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。
+
++
+* 注 * ：您应记下客户端操作不断增加的每个协议，以便在更新节点后验证客户端流量是否已恢复。
+
++
+以下示例显示了具有 NFS ， CIFS ， FC 和 iSCSI 操作的节点。但是，此节点当前仅为 NFS 和 iSCSI 客户端提供服务。
+
++
+[listing]
+----
+cluster1::> system node run -node node1 -command uptime
+  2:58pm up  7 days, 19:16 800000260 NFS ops, 1017333 CIFS ops, 0 HTTP ops, 40395 FCP ops, 32810 iSCSI ops
+
+cluster1::> system node run -node node1 -command uptime
+  2:58pm up  7 days, 19:17 800001573 NFS ops, 1017333 CIFS ops, 0 HTTP ops, 40395 FCP ops, 32815 iSCSI ops
+----
+. 将所有数据 LIF 迁移出节点： `network interface migrate-all -node nodenameB`
+. 验证已迁移的任何 LIF 的状态： `network interface show`
++
+有关可用于验证 LIF 状态的参数的详细信息，请参见 network interface show 手册页。
+
++
+以下示例显示 node1 的数据 LIF 已成功迁移。对于每个 LIF ，您可以使用此示例中包含的字段来验证 LIF 的主节点和端口， LIF 迁移到的当前节点和端口以及 LIF 的运行和管理状态。
+
++
+[listing]
+----
+cluster1::> network interface show -data-protocol nfs|cifs -role data -home-node node1 -fields home-node,curr-node,curr-port,home-port,status-admin,status-oper
+vserver lif     home-node home-port curr-node curr-port status-oper status-admin
+------- ------- --------- --------- --------- --------- ----------- ------------
+vs0     data001 node1     e0a       node0     e0a       up          up
+vs0     data002 node1     e0b       node0     e0b       up          up
+vs0     data003 node1     e0b       node0     e0b       up          up
+vs0     data004 node1     e0a       node0     e0a       up          up
+4 entries were displayed.
+----
+. 启动接管： `storage failover takeover -ofnode nodenameB -option allow-version-mismatch`
++
+请勿指定 -option immediate 参数，因为要接管的节点需要正常接管才能启动到新软件映像。如果您未手动将 LIF 从节点迁移出，则 LIF 会自动迁移到节点的 HA 配对节点，以避免服务中断。
+
++
+被接管的节点将启动至等待交还状态。
+
++
+* 注 * ：如果启用了 AutoSupport ，则会发送一条 AutoSupport 消息，指示节点已超出集群仲裁。您可以忽略此通知并继续更新。
+
+. 验证接管是否成功： `storage failover show`
++
+以下示例显示接管已成功。节点 node1 处于 Waiting for giveback 状态，其配对节点处于 In takeover 状态。
+
++
+[listing]
+----
+cluster1::> storage failover show
+                              Takeover
+Node           Partner        Possible State Description
+-------------- -------------- -------- -------------------------------------
+node0          node1          -        In takeover
+node1          node0          false    Waiting for giveback (HA mailboxes)
+2 entries were displayed.
+----
+. 至少等待八分钟，以使以下条件生效：
++
+** 客户端多路径（如果已部署）已稳定。
+** 客户端将从接管期间发生的 I/O 暂停中恢复。
++
+恢复时间特定于客户端，可能需要超过八分钟，具体取决于客户端应用程序的特征。
+
+
+
+. 将聚合返回到配对节点： `storage failover giveback -ofnode nodenameB`
++
+交还操作首先将根聚合返回到配对节点，然后在该节点完成启动后，返回非根聚合以及设置为自动还原的任何 LIF 。一旦返回聚合，新启动的节点就会开始从每个聚合向客户端提供数据。
+
+. 验证是否已返回所有聚合： `storage failover show-giveback`
++
+如果 Giveback Status 字段指示没有要交还的聚合，则会返回所有聚合。如果交还被否决，则该命令将显示交还进度以及否决交还操作的子系统。
+
+. 如果未返回任何聚合，请执行以下步骤：
++
+.. 查看否决临时解决策以确定您是要解决 " `ve到` " 条件还是覆盖此否决。
++
+link:https://docs.netapp.com/us-en/ontap/high-availability/index.html["高可用性配置"]
+
+.. 如有必要，请解决错误消息中所述的 " 从 `ve到` " 条件，确保已确定的任何操作均正常终止。
+.. 重新运行 storage failover giveback 命令。
++
+如果您决定覆盖 " `ve到` " 条件，请将 -override-vetoes 参数设置为 true 。
+
+
+
+. 至少等待八分钟，以使以下条件生效：
++
+** 客户端多路径（如果已部署）已稳定。
+** 客户端将从交还期间发生的 I/O 操作暂停中恢复。
++
+恢复时间特定于客户端，可能需要超过八分钟，具体取决于客户端应用程序的特征。
+
+
+
+. 验证是否已成功完成节点的更新：
++
+.. 转至高级权限级别：``set -privilege advanced``
+.. 验证节点的更新状态是否已完成： `ssystem node upgrade-revert show -node nodenameB`
++
+此状态应列为已完成。
+
++
+如果状态为未完成，请从节点中运行 system node upgrade-revert upgrade 命令。如果命令未完成更新，请联系技术支持。
+
+.. 返回到管理权限级别： `set -privilege admin`
+
+
+. 验证节点的端口是否已启动： `network port show -node nodenameB`
++
+您必须在已升级到 ONTAP 9.4 的节点上运行此命令。
+
++
+以下示例显示节点的所有数据端口均已启动：
+
++
+[listing]
+----
+cluster1::> network port show -node node1
+                                                             Speed (Mbps)
+Node   Port      IPspace      Broadcast Domain Link   MTU    Admin/Oper
+------ --------- ------------ ---------------- ----- ------- ------------
+node1
+       e0M       Default      -                up       1500  auto/100
+       e0a       Default      -                up       1500  auto/1000
+       e0b       Default      -                up       1500  auto/1000
+       e1a       Cluster      Cluster          up       9000  auto/10000
+       e1b       Cluster      Cluster          up       9000  auto/10000
+5 entries were displayed.
+----
+. 将 LIF 还原到节点： `network interface revert *`
++
+此命令将返回已从节点迁移的 LIF 。
+
++
+[listing]
+----
+cluster1::> network interface revert *
+8 entries were acted on.
+----
+. 验证节点的数据 LIF 是否已成功还原回节点，以及它们是否已启动： `network interface show`
++
+以下示例显示节点托管的所有数据 LIF 均已成功还原回节点，并且其运行状态为已启动：
+
++
+[listing]
+----
+cluster1::> network interface show
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+vs0
+            data001      up/up    192.0.2.120/24     node1         e0a     true
+            data002      up/up    192.0.2.121/24     node1         e0b     true
+            data003      up/up    192.0.2.122/24     node1         e0b     true
+            data004      up/up    192.0.2.123/24     node1         e0a     true
+4 entries were displayed.
+----
+. 如果您之前确定此节点为客户端提供服务，请验证此节点是否正在为先前提供的每个协议提供服务： `ssystem node run -node nodenameB -command uptime`
++
+更新期间，操作计数重置为零。
+
++
+以下示例显示更新后的节点已恢复为其 NFS 和 iSCSI 客户端提供服务：
+
++
+[listing]
+----
+cluster1::> system node run -node node1 -command uptime
+  3:15pm up  0 days, 0:16 129 NFS ops, 0 CIFS ops, 0 HTTP ops, 0 FCP ops, 2 iSCSI ops
+----
+. 如果这是集群中要更新的最后一个节点，则触发 AutoSupport 通知： `AutoSupport invoke -node * -type all -message "fining_NDU"`
++
+此 AutoSupport 通知包括更新前的系统状态记录。如果更新过程出现问题，它会保存有用的故障排除信息。
+
++
+如果集群未配置为发送 AutoSupport 消息，则通知的副本将保存在本地。
+
+. 确认新的 ONTAP 软件正在 HA 对的两个节点上运行： `ssystem node image show`
++
+在以下示例中， image2 是 ONTAP 的更新版本，也是两个节点上的默认版本：
+
++
+[listing]
+----
+cluster1::*> system node image show
+                 Is      Is                Install
+Node     Image   Default Current Version    Date
+-------- ------- ------- ------- --------- -------------------
+node0
+         image1  false   false   X.X.X     MM/DD/YYYY TIME
+         image2  true    true    Y.Y.Y     MM/DD/YYYY TIME
+node1
+         image1  false   false   X.X.X     MM/DD/YYYY TIME
+         image2  true    true    Y.Y.Y     MM/DD/YYYY TIME
+4 entries were displayed.
+----
+. 如果先前已禁用配对节点，请在其上重新启用自动交还： `storage failover modify -node nodenameA -auto-giveback true`
+. 使用 cluster show 和 cluster ring show （高级权限级别）命令验证集群是否处于仲裁状态以及服务是否正在运行。
++
+在升级任何其他 HA 对之前，必须执行此步骤。
+
+. 返回到管理权限级别： `set -privilege admin`
+
+
+升级任何其他 HA 对。

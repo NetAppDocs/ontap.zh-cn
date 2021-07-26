@@ -1,0 +1,73 @@
+---
+sidebar: sidebar 
+permalink: networking/create_lifs.html 
+keywords: create, creation, creating, add, adding, lifs, logical, interface, create lifs 
+summary: 创建 LIF 以向客户端提供 SVM 数据 
+---
+= 创建 LIF
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+SVM 通过一个或多个网络逻辑接口（ LIF ）向客户端提供数据。您必须在要用于访问数据的端口上创建 LIF 。
+
+您必须是集群管理员才能执行此任务。
+
+从 ONTAP 9.7 开始，只要该 IP 空间的同一子网中至少已存在一个 LIF ， ONTAP 就会自动选择 LIF 的主端口。ONTAP 会选择与该子网中的其他 LIF 位于同一广播域中的主端口。您仍然可以指定主端口，但不再需要此端口（除非指定 IP 空间中的子网中尚不存在 LIF ）。
+
+您不应将传输 CIFS 流量的 LIF 配置为自动还原到其主节点。如果 CIFS 服务器要托管解决方案，以便通过 SMB 在 Hyper-V 或 SQL Server 上执行无中断操作，则必须执行此建议。
+
+.步骤
+. 确定要用于 LIF 的广播域端口。
++
+`network port broadcast-domain show -ipspace _ipspace1_`
+
++
+....
+IPspace     Broadcast                       Update
+Name        Domain name   MTU   Port List   Status Details
+ipspace1
+            default       1500
+                                node1:e0d   complete
+                                node1:e0e   complete
+                                node2:e0d   complete
+                                node2:e0e   complete
+....
+. 验证要用于 LIF 的子网是否包含足够的未使用 IP 地址。
++
+`network subnet show -ipspace _ipspace1_`
+
+. 在要用于访问数据的端口上创建一个或多个 LIF 。
++
+`network interface create -vserver _vs1_ -lif _lif1_ -home-node _node1_ -home-port _e0d_ -service-policy _default-data-files_ -subnet-name _ipspace1_`
+
+. 验证 LIF 接口配置是否正确。
++
+`network interface show -vserver vs1`
+
++
+....
+          Logical    Status     Network         Current   Current Is
+Vserver   Interface  Admin/Oper Address/Mask    Node      Port    Home
+--------- ---------- ---------- --------------- --------- ------- ----
+vs1
+           lif1       up/up      10.0.0.128/24   node1     e0d     true
+....
+. 验证故障转移组配置是否符合要求。
++
+`network interface show -failover -vserver _vs1_`
+
++
+....
+         Logical    Home       Failover        Failover
+Vserver  interface  Node:Port  Policy          Group
+-------- ---------- ---------  ---------       --------
+vs1
+         lif1       node1:e0d  system-defined  ipspace1
+Failover Targets: node1:e0d, node1:e0e, node2:e0d, node2:e0e
+....
+

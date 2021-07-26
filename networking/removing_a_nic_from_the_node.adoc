@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: networking/removing_a_nic_from_the_node.html 
+keywords: delete, deleting, remove, removing, nic, network, interface, card, slot, maintenance, faulty, error, bad, failed, fail, node, remove a faulty NIC from its slot or move the NIC to another slot for maintenance purposes, removing a nic from the node on ontap 9.8 or later, controller-replacement, network displaced-vlans, displaced-vlans show, displaced-vlans restore, 
+summary: ONTAP 9.8 及更高版本，从插槽中卸下故障 NIC 或将此 NIC 移至另一个插槽以进行维护 
+---
+= 从 ONTAP 9.8 或更高版本上的节点中删除 NIC
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+本主题为适用场景 ONTAP 9.8 或更高版本。出于维护目的，您可能需要从插槽中删除故障 NIC 或将此 NIC 移至其他插槽。
+
+.步骤
+. 关闭节点。
+. 从插槽中物理卸下 NIC 。
+. 打开节点电源。
+. 验证是否已删除此端口：
++
+....
+network port show
+....
++
+
+NOTE: ONTAP 会自动从任何接口组中删除此端口。如果端口是接口组的唯一成员，则会删除该接口组。
+
+. 如果端口上配置了任何 VLAN ，则这些 VLAN 将被替换。您可以使用以下命令查看已替换的 VLAN ：
++
+....
+cluster controller-replacement network displaced-vlans show
+....
++
+
+NOTE: `displaced-interface show` ， `displaced-vlans show` 和 `displaced-vlans restore` 命令是唯一的，不需要完全限定的命令名称，该名称以 `cluster controller-replacement network` 开头。
+
+. 这些 VLAN 将被删除，但可以使用以下命令进行还原：
++
+....
+displaced-vlans restore
+....
+. 如果此端口配置了任何 LIF ，则 ONTAP 会自动为同一广播域中另一个端口上的 LIF 选择新的主端口。如果在同一个存储器上找不到合适的主端口，则会将这些 LIF 视为已替换。您可以使用以下命令查看已替换的 LIF ：
++
+`displaced interface show`
+
+. 将新端口添加到同一节点上的广播域后， LIF 的主端口将自动还原。或者，您也可以使用 `network interface modify -home-port -home-node 或使用 replaced - interface restore` 命令设置主端口。
+

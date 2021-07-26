@@ -1,0 +1,39 @@
+---
+permalink: revert/concept_revert_process_considerations.html 
+sidebar: sidebar 
+keywords: ontap, revert, considerations 
+summary: 在开始 ONTAP 还原之前，您需要考虑还原问题和限制。 
+---
+= 还原注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在开始 ONTAP 还原之前，您需要考虑还原问题和限制。
+
+* 还原会造成中断。
++
+还原期间无法进行客户端访问。如果要还原生产集群，请务必在规划中包括此中断。
+
+* 还原会影响集群中的所有节点。
++
+还原会影响集群中的所有节点；但是，在还原其他 HA 对之前，必须在每个 HA 对上执行并完成还原。
+
+* 当所有节点都运行新的目标版本时，还原完成。
++
+当集群处于混合版本状态时，除非为了满足还原要求而需要，否则不应输入任何更改集群操作或配置的命令；允许执行监控操作。
+
++
+
+IMPORTANT: 如果由于任何原因无法完成还原，请立即联系技术支持。如果已还原部分节点，但并非所有节点，请勿尝试将集群升级回源版本。
+
+* 还原节点时，它会清除 Flash Cache 模块中缓存的数据。
++
+由于 Flash Cache 模块中没有缓存的数据，因此该节点会从磁盘提供初始读取请求，从而导致此期间的读取性能下降。节点在处理读取请求时会重新填充缓存。
+
+* 将 LUN 备份到 ONTAP 9.x 上运行的磁带时， LUN 只能还原到 9.x 及更高版本，而不能还原到早期版本。
+* 如果您当前版本的 ONTAP 支持带内 ACP （ IBACP ）功能，而您还原到不支持 IBACP 的 ONTAP 版本，则磁盘架的备用路径将被禁用。
+* 如果任何 Storage Virtual Machine （ SVM ）使用 LDAP ，则必须先禁用 LDAP 转介，然后才能还原。
+* 在使用符合 MetroCluster 但未经 MetroCluster 验证的交换机的 MetroCluster IP 系统中，从 ONTAP 9.7 还原到 9.6 会造成中断，因为不支持使用 ONTAP 9.6 及更早版本的系统。
+

@@ -1,0 +1,97 @@
+---
+sidebar: sidebar 
+permalink: task_rest_access_log.html 
+keywords: netapp, ontap, rest api log, accessing rest api log, accessing api log 
+summary: 您可以访问记录 System Manager 发出的 ONTAP REST API 调用的日志。显示日志时，您还可以重新发出 API 调用并查看结果。 
+---
+= 访问 REST API 日志
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以访问包含 System Manager 发出的 ONTAP REST API 调用记录的日志。显示日志时，您还可以重新发出 API 调用并查看输出。
+
+.步骤
+. 在页面顶部，单击 image:icon_double_arrow.gif["显示 API 日志"] 以显示 REST API 日志。
++
+最新条目显示在页面底部。
+
+. 在左侧，单击 * 信息板 * ，然后观察为刷新页面而发出的 API 调用创建的新条目。
+. 单击 * 存储 * ，然后单击 * qtree* 。
++
+这将导致 System Manager 对特定 API 调用进行问题描述，以检索 qtree 列表。
+
+. 找到描述 API 调用的日志条目，其格式为：
++
+`GET /API/storage/qtree`
+
++
+您将看到此条目附带的其他 HTTP 查询参数，例如 `max_records` 。
+
+. 单击日志条目以重新发出 GET API 调用并显示原始 JSON 输出。
++
+示例
+
++
+[source, json]
+----
+{
+  "records": [
+    {
+      "svm": {
+        "uuid": "19507946-e801-11e9-b984-00a0986ab770",
+        "name": "SMQA",
+        "_links": {
+          "self": {
+            "href": "/api/svm/svms/19507946-e801-11e9-b984-00a0986ab770"
+          }
+        }
+      },
+      "volume": {
+        "uuid": "1e173258-f98b-11e9-8f05-00a0986abd71",
+        "name": "vol_vol_test2_dest_dest",
+        "_links": {
+          "self": {
+            "href": "/api/storage/volumes/1e173258-f98b-11e9-8f05-00a0986abd71"
+          }
+        }
+      },
+      "id": 1,
+      "name": "test2",
+      "security_style": "mixed",
+      "unix_permissions": 777,
+      "export_policy": {
+        "name": "default",
+        "id": 12884901889,
+        "_links": {
+          "self": {
+            "href": "/api/protocols/nfs/export-policies/12884901889"
+          }
+        }
+      },
+      "path": "/vol_vol_test2_dest_dest/test2",
+      "_links": {
+        "self": {
+          "href": "/api/storage/qtrees/1e173258-f98b-11e9-8f05-00a0986abd71/1"
+        }
+      }
+    },
+    ],
+    "num_records": 1,
+    "_links": {
+      "self": {
+        "href": "/api/storage/qtrees?max_records=20&fields=*&name=!%22%22"
+      }
+    }
+  }
+----
+

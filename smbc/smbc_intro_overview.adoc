@@ -1,0 +1,45 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_intro_overview.html 
+keywords: SM-BC, SMBC, overview, benefits, use cases, architecture 
+summary: 从 ONTAP 9.8 开始，您可以使用 SnapMirror 业务连续性（ SM-BC ）来保护具有 LUN 的应用程序，从而使应用程序能够透明地进行故障转移，从而确保在发生灾难时的业务连续性。 
+---
+= 概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.8 开始，您可以使用 SnapMirror 业务连续性（ SM-BC ）保护具有 LUN 的应用程序，从而使应用程序能够透明地进行故障转移，从而确保在发生灾难时的业务连续性。AFF 集群或全 SAN 阵列（ ASA ）集群支持 SM-BC ，其中主集群和二级集群可以是 AFF 或 ASA 。SM-BC 使用 iSCSI 或 FCP LUN 保护应用程序。
+
+
+
+=== 优势
+
+SnapMirror 业务连续性具有以下优势：
+
+* 为业务关键型应用程序提供持续可用性
+* 可以从主站点和二级站点交替托管关键应用程序
+* 使用一致性组简化应用程序管理，实现依赖写入顺序一致性
+* 测试每个应用程序的故障转移的能力
+* 即时创建镜像克隆而不影响应用程序可用性
+
+
+
+
+=== 典型使用情形
+
+透明应用程序故障转移基于基于主机多路径 I/O （ MPIO ）软件的路径故障转移，可实现对存储的无中断访问。两个 LUN 副本（例如主（ L1P ）和镜像副本（ L1 ））具有相同的标识（序列号），并报告为可读写。但是，只能由主卷处理读取和写入操作。向镜像副本发出的 I/O 代理到主副本。根据非对称逻辑单元访问（ Asymmetric Logical Unit Access ， ALUA ）访问状态 Active Optimized （ Active Optimized ， A/O ），主机的首选 L1 路径为 vs1 ： N1 。建议在部署过程中使用调解器，主要用于在主系统发生存储中断时执行故障转移。
+
+托管主集群的站点发生灾难。主机多路径软件会将集群中的所有路径标记为关闭，并使用二级集群中的路径。这样就可以无中断故障转移到 LUN L1 的镜像副本。将 L1 从镜像副本转换为 LUN L1 的活动副本。配置外部调解器后，将自动进行故障转移。主机到 L1 的首选路径变为 vs2 ： n1 。
+
+
+
+=== 架构
+
+下图简要说明了 SnapMirror 业务连续性功能的运行情况。
+
+image:workflow_san_snapmirror_business_continuity.png["SnapMirror 业务连续性工作流"]

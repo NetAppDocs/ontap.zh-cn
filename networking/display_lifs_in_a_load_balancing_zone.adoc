@@ -1,0 +1,85 @@
+---
+sidebar: sidebar 
+permalink: networking/display_lifs_in_a_load_balancing_zone.html 
+keywords: display, view, show, lif, logical, interface, load, balancing, zone, balance, performance, display lifs in a load balancing zone, verify whether a load balancing zone is configured correctly by displaying all of the lifs that belong to it, examples of displaying load balancing zones for lifs 
+summary: 通过显示负载平衡区域所属的所有 LIF 来验证是否已正确配置负载平衡区域 
+---
+= 显示负载平衡区域中的 LIF
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以通过显示属于负载平衡区域的所有 LIF 来验证是否已正确配置该区域。您还可以查看特定 LIF 的负载平衡区域或所有 LIF 的负载平衡区域。
+
+使用以下命令之一显示所需的 LIF 和负载平衡详细信息
+
+[cols="2*"]
+|===
+| 要显示 ... | 输入 ... 
+
+
+ a| 
+特定负载平衡区域中的 LIF
+ a| 
+network interface show -ds-zone zone_name zone_name 用于指定负载平衡区域的名称
+
+
+
+ a| 
+特定 LIF 的负载平衡区域
+ a| 
+network interface show -lif lif_name -fields dns-zone
+
+
+
+ a| 
+所有 LIF 的负载平衡区域
+ a| 
+network interface show -fields ds-zone
+
+|===
+
+
+== 显示 LIF 的负载平衡区域的示例
+
+以下命令显示 SVM vs0 的负载平衡区域 storage.company.com 中所有 LIF 的详细信息：
+
+....
+net int show -vserver vs0 -dns-zone storage.company.com
+
+         Logical    Status     Network           Current   Current Is
+Vserver  Interface  Admin/Oper Address/Mask      Node      Port    Home
+-------- ---------- ---------- ----------------- --------- ------- ----
+vs0
+         lif3         up/up    10.98.226.225/20  ndeux-11  e0c     true
+         lif4         up/up    10.98.224.23/20   ndeux-21  e0c     true
+         lif5         up/up    10.98.239.65/20   ndeux-11  e0c     true
+         lif6         up/up    10.98.239.66/20   ndeux-11  e0c     true
+         lif7         up/up    10.98.239.63/20   ndeux-21  e0c     true
+         lif8         up/up    10.98.239.64/20   ndeux-21  e0c     true
+....
+以下命令显示 LIF data3 的 DNS 区域详细信息：
+
+....
+network interface show -lif data3 -fields dns-zone
+Vserver  lif    dns-zone
+-------  -----  --------
+vs0      data3  storage.company.com
+....
+以下命令显示集群中所有 LIF 的列表及其对应的 DNS 区域：
+
+....
+network interface show -fields dns-zone
+Vserver   lif          dns-zone
+-------   ------------ --------
+cluster   cluster_mgmt none
+ndeux-21  clus1        none
+ndeux-21  clus2        none
+ndeux-21  mgmt1        none
+vs0       data1        storage.company.com
+vs0       data2        storage.company.com
+....

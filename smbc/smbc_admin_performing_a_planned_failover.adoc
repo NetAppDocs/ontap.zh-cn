@@ -1,0 +1,39 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_admin_performing_a_planned_failover.html 
+keywords: SM-BC, SMBC, testing failover, planned failover, maintenance, Mediator, quorum 
+summary: 您可以执行计划内故障转移以测试灾难恢复配置或对主集群执行维护。 
+---
+= 执行计划内故障转移
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以执行计划内故障转移以测试灾难恢复配置或对主集群执行维护。
+
+.开始之前
+* 此关系必须处于同步状态
+* 不能运行无中断操作
+* ONTAP 调解器必须已配置，已连接并处于仲裁状态
+
+
+计划内故障转移由二级集群的管理员启动。此操作需要切换主角色和二级角色，以便二级集群从主集群接管。然后，新的主集群便可开始在本地处理输入和输出请求，而不会中断客户端操作。
+
+.步骤
+. 启动故障转移操作：
++
+`d目标：： >snapmirror failover start -destination-path vs1_dst ： /CG/CG_DST`
+
+. 监控故障转移的进度：
++
+`d目标：： >snapmirror failover show`
+
+. 故障转移操作完成后，您可以从目标监控同步 SnapMirror 保护关系状态：
++
+`d目标：： >snapmirror show`
+
+

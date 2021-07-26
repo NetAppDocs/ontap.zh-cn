@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: networking/display_dns_domain_configurations.html 
+keywords: display, view, show, dns, domain, configuration, verify, display dns domain configurations, verify dns domain configuration for one or more svms, vserver services name-service dns show 
+summary: 验证一个或多个 SVM 的 DNS 域配置 
+---
+= 显示 DNS 域配置
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以显示集群中一个或多个 Storage Virtual Machine （ SVM ）的 DNS 域配置，以验证其配置是否正确。
+
+使用 `vserver services name-service dns show` 命令查看 DNS 域配置。
+
+以下命令显示集群中所有 SVM 的 DNS 配置：
+
+....
+vserver services name-service dns show
+                                                  Name
+Vserver        State     Domains                  Servers
+-------------- --------- ------------------------ -------------
+cluster-1       enabled   xyz.company.com          192.56.0.129,
+                                                  192.56.0.130
+vs1            enabled   xyz.company.com          192.56.0.129,
+                                                  192.56.0.130
+vs2            enabled   xyz.company.com          192.56.0.129,
+                                                  192.56.0.130
+vs3            enabled   xyz.company.com          192.56.0.129,
+                                                  192.56.0.130
+....
+以下命令显示 SVM vs1 的详细 DNS 配置信息：
+
+....
+vserver services name-service dns show -vserver vs1
+               Vserver: vs1
+               Domains: xyz.company.com
+          Name Servers: 192.56.0.129, 192.56.0.130
+    Enable/Disable DNS: enabled
+        Timeout (secs): 2
+      Maximum Attempts: 1
+....

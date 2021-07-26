@@ -1,0 +1,30 @@
+---
+permalink: software_setup/concept_decide_whether_to_use_ontap_cli.html 
+sidebar: sidebar 
+keywords: ontap, software, setup, deciding, decide, if, whether, use, cli, cluster, System Manager, IPv6, HA, root volumes, FlexArray 
+summary: 只有当您的 ONTAP System Manager 版本不支持初始集群设置时，才应使用 ONTAP 命令行界面执行此设置。 
+---
+= 确定是否使用 ONTAP 命令行界面进行集群设置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+虽然您可以使用 ONTAP 命令行界面设置新集群，但 NetApp 建议您尽可能使用 ONTAP 系统管理器来简化集群设置过程。只有当您的 ONTAP System Manager 版本不支持为您计划的 ONTAP 部署进行初始集群设置时，才能使用这些过程。
+
+您应了解以下 System Manager 支持要求：
+
+* 只有单个节点和 HA 对才支持集群设置
+* 使用命令行界面手动设置节点管理时， System Manager 仅支持 IPv4 ，不支持 IPv6 。但是，如果在使用 DHCP 并使用自动分配的 IP 地址和 Windows 发现完成硬件设置后启动 System Manager ，则 System Manager 可以配置 IPv6 管理地址。
++
+在 ONTAP 9.6 及更早版本中， System Manager 不支持需要 IPv6 网络的部署。
+
+* MetroCluster 设置支持适用于每个站点具有两个节点的 MetroCluster IP 配置。
++
+在 ONTAP 9.7 及更早版本中， System Manager 不支持对 MetroCluster 配置进行新的集群设置。
+
+
+
+如果要在非 NetApp 磁盘上配置 FlexArray ，则需要使用 ONTAP 命令行界面在阵列 LUN 上配置根卷，然后使用集群设置向导设置集群。有关详细信息，请参见 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.vs-irrg/home.html?cp=9_2["《 FlexArray 虚拟化安装和要求参考》"]。
+
+在完成上述任一过程之前，您应已根据适用于您的平台型号的安装和设置说明安装新存储系统，并为其布线和加电。请参见 link:https://docs.netapp.com/platstor/index.jsp["AFF 和 FAS 文档中心"]。

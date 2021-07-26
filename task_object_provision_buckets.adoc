@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: task_object_provision_buckets.html 
+keywords: netapp, ontap, S3 bucket, bucket, buckets, S3 object store, S3-enabled storage VM, S3, SVM, storage, object, object store, FabricPool, FabricPool tiering, tier, FQDN, Quality of Service, QoS 
+summary: 为新的 S3 对象存储添加 S3 存储分段或向现有对象存储添加其他分段。 
+---
+= 配置存储分段
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+为新的 S3 对象存储添加 S3 存储分段或向现有对象存储添加其他分段。
+
+要进行远程客户端访问，您必须在启用了 S3 的 Storage VM 中配置存储分段。如果在未启用 S3 的 Storage VM 中创建存储分段，则此分段仅可用于本地分层。
+
+
+NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
+
+.步骤
+. 在启用了 S3 的 Storage VM 上添加新存储分段。
++
+.. 单击 * 存储 > 分段 * ，然后单击 * 添加 * 。
+.. 输入名称，选择 Storage VM 并输入大小。
++
+*** 如果此时单击 * 保存 * ，则会使用以下默认设置创建一个存储分段：
++
+**** 除非任何组策略已生效，否则不会向任何用户授予对存储分段的访问权限。
++
+
+NOTE: 您不应使用 S3 root 用户管理 ONTAP 对象存储并共享其权限，因为它对对象存储具有无限制的访问权限。而是使用您分配的管理权限创建一个用户或组。
+
+**** 系统可用性最高的服务质量（性能）级别。
+
+
+*** 您可以在配置存储分段时单击 * 更多选项 * 来配置用户权限和性能级别，也可以稍后修改这些设置。
++
+**** 在使用 * 更多选项 * 配置用户和组权限之前，您必须已创建用户和组。
+**** 如果要使用 S3 对象存储进行 FabricPool 分层，请考虑选择 * 用于分层 * （使用低成本介质，为分层数据提供最佳性能），而不是性能服务级别。
+
+
+
+
+
+
+. 在 S3 客户端应用程序（另一个 ONTAP 系统或外部第三方应用程序）上，输入以下命令验证对新存储分段的访问：
++
+** S3 服务器 CA 证书。
+** 用户的访问密钥和机密密钥。
+** S3 服务器 FQDN 名称和存储分段名称。
+
+
+

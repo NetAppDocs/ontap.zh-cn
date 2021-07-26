@@ -1,0 +1,98 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_plan_prerequisites.html 
+keywords: SM-BC, SMBC, prerequisites, planning, software, hardware, licensing, protocols, network 
+summary: 在规划 SnapMirror 业务连续性解决方案部署时，您应考虑几个前提条件。 
+---
+= 前提条件
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在规划 SnapMirror 业务连续性解决方案部署时，您应考虑几个前提条件。
+
+
+
+=== 硬件
+
+* 仅支持双节点 HA 集群
+* 两个集群必须为 AFF 或 ASA （不能混用）
+
+
+
+
+=== 软件
+
+* ONTAP 9.8 或更高版本
+* ONTAP 调解器 1.2 或更高版本
+* 用于 ONTAP 调解器的 Linux 服务器或虚拟机，运行以下任一项：
++
+** RedHat Enterprise Linux 7.6 或 7 。7.
+** CentOS 8.0 或 8.1
+
+
+
+
+
+
+=== 许可
+
+* 必须在两个集群上应用 SnapMirror 同步（ SM-S ）许可证
+* 必须在两个集群上应用 SnapMirror 许可证
++
+
+NOTE: 如果您的 ONTAP 存储系统是在 2019 年 6 月之前购买的，请单击 https://mysupport.netapp.com/NOW/knowledge/docs/olio/guides/master_lickey/["NetApp ONTAP 主许可证密钥"^] 以获取所需的 SM-S 许可证。
+
+
+
+
+
+=== 网络环境
+
+* 集群间延迟往返时间（ RTT ）必须小于 10 毫秒
+
+
+
+
+=== 支持的协议
+
+* 仅支持 SAN 协议（而不是 NFS/CIFS ）
+* 仅支持光纤通道和 iSCSI 协议
+
+
+
+
+=== ONTAP 调解器
+
+* 必须在外部配置并连接到 ONTAP ，以实现透明的应用程序故障转移
+
+
+
+
+=== 读写目标卷
+
+* 读写目标卷不支持 SM-BC 关系。在使用读写卷之前，必须先创建卷级 SnapMirror 关系，然后删除此关系，将其转换为 DP 卷。有关详细信息，请参见 link:smbc_admin_converting_existing_relationships_to_smbc.html#["将现有关系转换为 SM-BC 关系"]
+
+
+
+
+=== 大型 LUN 和大型卷
+
+* 只有所有 SAN 阵列才支持大 LUN 和大于 100TB 的大卷
+
+
+
+NOTE: 您必须确保主集群和二级集群都是 SAN 阵列，并且它们都安装了 ONTAP 9.8 。如果二级集群运行的版本低于 ONTAP 9.8 ，或者如果它不是全 SAN 阵列，则如果主卷增长超过 100 TB ，则同步关系可能会不同步。
+
+
+
+=== AppDM 应用程序卷
+
+SM-BC 不支持与 AppDM 应用程序关联的卷。在为一组卷创建 SM- BC 关系之前，请确保所有卷均未与 AppDM 应用程序关联。
+
+
+NOTE: 在 ONTAP 9.8 RC 版本中，在与一组 AppDM 应用程序卷创建关系之前， SM-BC 不会自动检查。

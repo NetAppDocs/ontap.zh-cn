@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: networking/add_or_remove_ports_from_a_broadcast_domain97.html 
+keywords: adding, add, create, creating, remove, removing, delete, deleting, port, broadcast, domain, reachability, repair, physical, switch, configuration, manually add or remove ports from a broadcast domain, network port broadcast-domain add-ports, network port broadcast-domain remove-ports, examples of adding and removing ports 
+summary: 不需要或建议手动从广播域添加和删除端口 
+---
+= 在广播域中添加或删除端口
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以在最初创建广播域时添加网络端口，也可以在已存在的广播域中添加或删除端口。这样，您就可以高效地使用集群中的所有端口。
+
+.开始之前
+* 计划添加到广播域的端口不能属于另一个广播域。
+* 不能将已属于接口组的端口单独添加到广播域中。
+
+
+添加和删除网络端口时，应遵循以下规则：
+
+[cols="2*"]
+|===
+| 添加端口时 ... | 删除端口时 ... 
+
+
+| 端口可以是网络端口， VLAN 或接口组（ ifgrp ）。 | 不适用 
+
+
+| 这些端口将添加到广播域的系统定义的故障转移组中。 | 端口将从广播域中的所有故障转移组中删除。 
+
+
+| 端口的 MTU 将更新为广播域中设置的 MTU 值。 | 端口的 MTU 不变。 
+
+
+| 端口的 IP 空间将更新为广播域的 IP 空间值。 | 这些端口将移至 " 默认 "IP 空间，而不具有广播域属性。 
+|===
+
+NOTE: 如果使用 `network port ifgrp remove-port` 命令删除接口组的最后一个成员端口，则会导致从广播域中删除接口组端口，因为广播域中不允许使用空接口组端口。
+
+.步骤
+. 使用 `network port show` 命令显示当前已分配或未分配给广播域的端口。
+. 在广播域中添加或删除网络端口：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 使用 ... 
+
+
+ a| 
+向广播域添加端口
+ a| 
+`网络端口 broadcast-domain add-ports`
+
+
+
+ a| 
+从广播域中删除端口
+ a| 
+`network port broadcast-domain remove-ports`
+
+|===
+
+
+有关这些命令的详细信息，请参见 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]。
+
+
+
+== 添加和删除端口的示例
+
+以下命令会将节点 cluster-1-01 上的端口 e0g 和节点 cluster-1-02 上的端口 e0g 添加到默认 IP 空间中的广播域 bcast1 ：
+
+`cluster-1 ：：： > 网络端口 broadcast-domain add-ports -broadcast-domain bcast1 -ports cluster-1-01 ： e0g ， cluster1-02 ： e0g`
+
+以下命令会将两个集群端口添加到集群 IP 空间中的广播域集群：
+
+`cluster-1 ：：： > 网络端口 broadcast-domain add-ports -broadcast-domain Cluster -ports cluster-2-03 ： e0f ， cluster2-04 ： e0f -IPSpace Cluster`
+
+以下命令将从默认 IP 空间的广播域 bcast1 中删除节点 cluster1-01 上的端口 e0e ：
+
+`cluster-1 ：：： > network port broadcast-domain remove-ports -broadcast-domain bcast1 -ports cluster-1-01 ： e0e`

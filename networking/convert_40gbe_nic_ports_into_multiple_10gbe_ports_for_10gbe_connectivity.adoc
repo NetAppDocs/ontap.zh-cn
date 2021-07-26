@@ -1,0 +1,37 @@
+---
+sidebar: sidebar 
+permalink: networking/convert_40gbe_nic_ports_into_multiple_10gbe_ports_for_10gbe_connectivity.html 
+keywords: configure, configuration, configuring, setup, setting, set, up, network, interface, card, nic, gigabit, ethernet, 40, 10, port, convert, convert 40gbe nic ports into multiple 10gbe ports for 10gbe connectivity 
+summary: 40GbE NIC 可支持四个 10GbE 端口 
+---
+= 将 40GbE NIC 端口转换为多个 10GbE 端口以实现 10GbE 连接
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以将 X1144A-R6 和 X91440A-R6 40GbE 网络接口卡（ NIC ）转换为支持四个 10GbE 端口。
+
+如果要将支持其中一个 NIC 的硬件平台连接到支持 10GbE 集群互连和客户数据连接的集群，则必须转换此 NIC 以提供必要的 10GbE 连接。
+
+您必须使用受支持的分支缆线。
+
+有关支持 NIC 的平台的完整列表，请参见 https://hwu.netapp.com/["Hardware Universe"^]。
+
+
+NOTE: 在 X1144A-R6 NIC 上，只能转换端口 A 以支持四个 10GbE 连接。转换端口 A 后，端口 e 将不可用。
+
+.步骤
+. 进入维护模式。
+. 将 NIC 从 40GbE 支持转换为 10GbE 支持。
++
+....
+nicadmin convert –m [40G | 10G] [port-name]
+....
+. 使用 convert 命令后，暂停节点。
+. 安装或更换缆线。
+. 根据硬件型号，使用 SP （服务处理器）或 BMC （基板管理控制器）重新启动节点，以使转换生效。
+

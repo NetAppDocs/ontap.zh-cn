@@ -1,0 +1,119 @@
+---
+sidebar: sidebar 
+permalink: task_nas_secure_client_access_with_kerberos.html 
+keywords: netapp, ontap, kerberos, security, client access, group permissions, user permissions, UNIX permissions, name mapping, NAS client, storage access 
+summary: 启用 Kerberos 以保护 NAS 客户端的存储访问。 
+---
+= 使用 Kerberos 确保客户端访问安全
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+启用 Kerberos 以保护 NAS 客户端的存储访问。
+
+此操作步骤会在已启用的现有 Storage VM 上配置 Kerberos link:task_nas_enable_linux_nfs.html["NFS"] 或 。
+
+开始之前，您应已配置 DNS ， NTP 和 link:task_nas_provide_client_access_with_name_services.html["LDAP"] 在存储系统上。
+
+image:workflow_nas_secure_client_access_with_kerberos.gif["使用 Kerberos 确保客户端访问安全的工作流"]
+
+.步骤
+. 在 ONTAP 命令行中，为 Storage VM 根卷设置 UNIX 权限。
++
+.. 显示 Storage VM 根卷上的相关权限： `volume show -volume _root_vol_name_-fields user ， group ， unix-permissions`
++
+Storage VM 的根卷必须具有以下配置：
+
++
+[cols="2"]
+|===
+| 名称 | 正在设置 ... 
+
+
+| UID | root 或 ID 0 
+
+
+| GID | root 或 ID 0 
+
+
+| UNIX 权限 | 755 
+|===
+.. 如果未显示这些值，请使用 `volume modify` 命令对其进行更新。
+
+
+. 设置 Storage VM 根卷的用户权限。
++
+.. 显示本地 UNIX 用户： `vserver services name-service unix-user show -vserver _vserver_name_`
++
+此 Storage VM 应配置以下 UNIX 用户：
+
++
+[cols="3"]
+|===
+| 用户名 | 用户 ID | 主组 ID 
+
+
+| NFS | 500 | 0 
+
+
+| 根 | 0 | 0 
+|===
++
+* 注： * 如果 NFS 客户端用户的 SPN 存在 Kerberos - UNIX 名称映射，则不需要 NFS 用户；请参见第 5 步。
+
+.. 如果未显示这些值，请使用 `vserver services name-service unix-user modify` 命令对其进行更新。
+
+
+. 设置 Storage VM 根卷的组权限。
++
+.. 显示本地 UNIX 组： `vserver services name-service unix-group show -vserver _vserver_name_`
++
+此 Storage VM 应配置以下 UNIX 组：
+
++
+[cols="2"]
+|===
+| 组名称 | 组 ID 
+
+
+| 守护进程 | 1. 
+
+
+| 根 | 0 
+|===
+.. 如果未显示这些值，请使用 `vserver services name-service unix-group modify` 命令对其进行更新。
+
+
+. 切换到 System Manager 以配置 Kerberos
+. 在 ONTAP 系统管理器中，单击 * 存储 > 存储 VM* 并选择 Storage VM 。
+. 单击 * 设置 * 。
+. 单击 image:icon_arrow.gif["箭头"] 在 Kerberos 下。
+. 单击 Kerberos 域下的 * 添加 * ，然后完成以下部分：
++
+** 添加 Kerberos 域
++
+根据 KDC 供应商输入配置详细信息。
+
+** 将网络接口添加到域
++
+单击 * 添加 * 并选择一个网络接口。
+
+
+
+. 如果需要，可将 Kerberos 主体名称与本地用户名之间的映射添加到其中。
++
+.. 单击 * 存储 > 存储 VM* 并选择此 Storage VM 。
+.. 单击 * 设置 * ，然后单击 image:icon_arrow.gif["箭头"] 在 * 名称映射 * 下。
+.. 在 * Kerberos 到 UNIX* 下，使用正则表达式添加模式和替换项。
+
+
+

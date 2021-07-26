@@ -1,0 +1,33 @@
+---
+permalink: upgrade/task_reconfiguring_kmip_servers_connections_after_upgrading_to_ontap_9_3_or_later.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, reconfigure, reconfiguring, kmip, server, connections, 9.3, later 
+summary: 在升级到 ONTAP 9.3 或更高版本后，您必须重新配置外部密钥管理（ KMIP ）服务器连接。 
+---
+= 升级到 ONTAP 9.3 或更高版本后重新配置 KMIP 服务器连接
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在升级到 ONTAP 9.3 或更高版本后，您必须重新配置外部密钥管理（ KMIP ）服务器连接。
+
+. 配置密钥管理器连接：``security key-manager setup``
+. 添加 KMIP 服务器： `security key-manager add -address key_management_server_ip_address`
+. 验证 KMIP 服务器是否已连接： `security key-manager show -status`
+. 查询密钥服务器： `security key-manager query`
+. 创建新的身份验证密钥和密码短语： `security key-manager create-key -prompt-for-key true`
++
+密码短语必须至少包含 32 个字符。
+
+. 查询新的身份验证密钥： `security key-manager query`
+. 将新的身份验证密钥分配给自加密磁盘（ SED ）： `storage encryption disk modify -disk disk_ID -data-key-id key_ID`
++
+
+NOTE: 确保使用查询中的新身份验证密钥。
+
+. 如果需要，请将 FIPS 密钥分配给 SED ： `storage encryption disk modify -disk disk_id -fips-key-id fips_authentication_key_id`
++
+如果您的安全设置要求您使用不同的密钥进行数据身份验证和 FIPS 140-2 身份验证，则应为每个密钥创建一个单独的密钥。否则，您可以使用与数据访问相同的身份验证密钥来满足 FIPS 合规性要求。
+
+

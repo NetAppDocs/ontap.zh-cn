@@ -1,0 +1,23 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_failover_groups_and_policies_for_lifs_overview.html 
+keywords: lif, failover, fail, over, target, automatic, automatically, port, link, failure, group, broadcast, domain, lif failover is the automatic migration of a lif to a different network port in response to a link failure, configure failover groups and policies for lifs overview, network interface show -failover 
+summary: LIF 故障转移是指在发生链路故障时将 LIF 自动迁移到其他网络端口 
+---
+= 概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+LIF 故障转移是指在 LIF 的当前端口发生链路故障时， LIF 自动迁移到其他网络端口。这是为 SVM 连接提供高可用性的一个关键组件。配置 LIF 故障转移包括创建故障转移组，修改 LIF 以使用故障转移组以及指定故障转移策略。
+
+故障转移组包含一组来自集群中一个或多个节点的网络端口（物理端口， VLAN 和接口组）。故障转移组中的网络端口定义了可用于 LIF 的故障转移目标。可以为故障转移组分配集群管理，节点管理，集群间和 NAS 数据 LIF 。
+
+
+IMPORTANT: 如果在配置 LIF 时没有有效的故障转移目标，则在 LIF 尝试进行故障转移时会发生中断。您可以使用 "network interface show -failover" 命令验证故障转移配置。
+
+创建广播域时，系统会自动创建一个同名的故障转移组，该故障转移组包含相同的网络端口。此故障转移组由系统自动管理，这意味着在从广播域添加或删除端口时，这些端口会自动添加或从此故障转移组中删除。对于不想管理自己的故障转移组的管理员来说，这是一种效率。

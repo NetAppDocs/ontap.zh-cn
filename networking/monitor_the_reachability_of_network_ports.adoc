@@ -1,0 +1,108 @@
+---
+sidebar: sidebar 
+permalink: networking/monitor_the_reachability_of_network_ports.html 
+keywords: monitor, monitoring, manage, managing, automatic, reachability, port, network, identify, determine, monitor the reachability of network ports in ontap 9.8 and later, ontap 9.8 and later, determine if the physical network topology does not match the ontap configuration 
+summary: ONTAP 9.8 及更高版本，确定物理网络拓扑是否与 ONTAP 配置不匹配 
+---
+= 在 ONTAP 9.8 及更高版本中监控网络端口的可访问性
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+ONTAP 9.8 及更高版本内置了可访问性监控功能。使用此监控功能确定物理网络拓扑何时与 ONTAP 配置不匹配。在某些情况下， ONTAP 可以修复端口可访问性。在其他情况下，需要执行其他步骤。
+
+使用以下命令验证，诊断和修复因 ONTAP 配置与物理布线或网络交换机配置不匹配而导致的网络配置错误。
+
+.步骤
+. 查看端口可访问性：
++
+....
+network port reachability show
+....
+. 使用以下决策树和表确定下一步（如果有）。
+
+
+image:ontap_nm_image1.png["修复可访问性决策树"]
+
+[cols="2*"]
+|===
+| 可访问性状态 | 说明 
+
+
+ a| 
+确定
+ a| 
+此端口可通过第 2 层访问其分配的广播域。如果可访问性状态为 " 正常 " ，但存在 " 意外端口 " ，请考虑合并一个或多个广播域。有关详细信息，请参见以下 _unexpected ports_行 。
+
+如果可访问性状态为 " 正常 " ，但存在 " 无法访问的端口 " ，请考虑拆分一个或多个广播域。有关详细信息，请参见以下 _Unreachable ports_行 。
+
+如果可访问性状态为 " 正常 " ，并且没有意外或无法访问的端口，则表示您的配置正确。
+
+
+
+ a| 
+意外端口
+ a| 
+此端口可通过第 2 层访问其分配的广播域；但是，它也可通过第 2 层访问至少其他一个广播域。
+
+检查物理连接和交换机配置以确定它是否不正确，或者端口分配的广播域是否需要与一个或多个广播域合并。
+
+有关详细信息，请参见 link:merge_broadcast_domains.html["合并广播域"]。
+
+
+
+ a| 
+无法访问的端口
+ a| 
+如果一个广播域已分区为两个不同的可访问性集，则可以拆分一个广播域，以便将 ONTAP 配置与物理网络拓扑同步。
+
+通常，不可访问的端口列表定义了在确认物理和交换机配置准确之后应拆分为另一个广播域的一组端口。
+
+有关详细信息，请参见 link:split_broadcast_domains.html["拆分广播域"]。
+
+
+
+ a| 
+配置不当的可访问性
+ a| 
+此端口无法通过第 2 层访问其分配的广播域；但是，此端口确实可以通过第 2 层访问其他广播域。
+
+您可以修复端口可访问性。运行以下命令时，系统会将此端口分配给其可访问性所在的广播域：
+
+`network port reachability repair -node -port` 有关详细信息，请参见 link:repair_port_reachability.html["修复端口可访问性"]。
+
+
+
+ a| 
+不可访问性
+ a| 
+此端口无法通过第 2 层访问任何现有广播域。
+
+您可以修复端口可访问性。运行以下命令时，系统会将此端口分配给默认 IP 空间中自动创建的新广播域：
+
+`network port reachability repair -node -port` 有关详细信息，请参见 link:repair_port_reachability.html["修复端口可访问性"]。
+
+
+
+ a| 
+多域可访问性
+ a| 
+此端口可通过第 2 层访问其分配的广播域；但是，它也可通过第 2 层访问至少其他一个广播域。
+
+检查物理连接和交换机配置以确定它是否不正确，或者端口分配的广播域是否需要与一个或多个广播域合并。
+
+有关详细信息，请参见 link:merge_broadcast_domains.html["合并广播域"] 或 。
+
+
+
+ a| 
+未知
+ a| 
+如果可访问性状态为 "unknown" ，请等待几分钟，然后重试此命令。
+
+|===
+修复端口后，您需要检查并解决已替换的 LIF 和 VLAN 。如果端口属于某个接口组，则还需要了解该接口组发生了什么情况。有关详细信息，请参见 link:repair_port_reachability.html["修复端口可访问性"]。

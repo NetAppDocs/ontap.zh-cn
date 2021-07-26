@@ -1,0 +1,46 @@
+---
+permalink: revert/concept_pre_revert_checks.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, revision, plan, planning, pre-checks 
+summary: 根据您的环境，您需要在开始还原之前考虑某些因素。 
+---
+= 还原前检查
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根据您的环境，您需要在还原之前考虑某些因素。首先查看下表，了解需要考虑的特殊注意事项。
+
+[cols="2*"]
+|===
+| 问自己 ... | 如果您的问题解答为 * 是 * ，请执行此操作 ... 
+
+
+| 我的集群是否正在运行 SnapMirror ？  a| 
+* xref:concept_consideration_for_reverting_systems_with_snapmirror_synchronous_relationships.html[查看还原具有 SnapMirror 同步关系的系统的注意事项]
+* xref:concept_reversion_requirements_for_snapmirror_and_snapvault_relationships.html[查看 SnapMirror 和 SnapVault 关系的还原要求]
+
+
+
+
+| 我的集群是否正在运行 SnapLock ？ | xref:task_setting_autocommit_periods_for_snaplock_volumes_before_reverting.html[设置自动提交期限] 
+
+
+| 是否已拆分 FlexClone 卷？ | xref:task_reverting_the_physical_block_sharing_in_split_flexclone_volumes.html[反向物理块共享] 
+
+
+| 我是否有 FlexGroup 卷？ | xref:task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html[禁用 qtree 功能] 
+
+
+| 是否已将 CIFS 服务器置于工作组模式？ | xref:task_identifying_and_moving_cifs_servers_in_workgroup_mode.html[在工作组模式下移动或删除 CIFS 服务器] 
+
+
+| 是否已对卷进行重复数据删除？ | xref:task_reverting_systems_with_deduplicated_volumes.html[验证卷是否包含足够的可用空间] 
+
+
+| 我是否具有 2 节点或 4 节点 MetroCluster 配置？ | xref:task_disable_asuo.html[禁用自动计划外切换] 
+
+
+| 我是否具有 Snapshot 副本？ | xref:task_preparing_snapshot_copies_before_reverting.html[准备 Snapshop 副本] 
+|===

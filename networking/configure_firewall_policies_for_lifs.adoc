@@ -1,0 +1,228 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_firewall_policies_for_lifs.html 
+keywords: firewall, policy, policies, security, cluster, unauthorized, access, storage, system, service, enable, enabling, disable, disabling, apply, applying, create, creating, add, adding, lif, protocols, nfs, smb, cifs, svm, firewall policies enhance the security of the cluster, configure firewall policies for lifs, firewall policies and lifs, network interface create, network interface modify, firewall-policy, portmap service configuration, what behavior you can expect portmap service, how to add or remove the portmap service, create a firewall policy and assigning it to a lif, example of creating a firewall policy and applying it to a lif 
+summary: 防火墙策略可增强集群的安全性 
+---
+= 为 LIF 配置防火墙策略
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+设置防火墙可增强集群的安全性，并有助于防止未经授权访问存储系统。默认情况下，防火墙服务允许远程系统访问一组特定的默认数据，管理和集群间 LIF 服务。
+
+防火墙策略可用于控制对 SSH ， HTTP ， HTTPS ， Telnet ， NTP ， NDMP ， NDMPS ， RSH ， DNS 或 SNMP 。无法为 NFS 或 SMB/CIFS 等数据协议设置防火墙策略。
+
+您可以通过以下方式管理防火墙服务和策略：
+
+* 启用或禁用防火墙服务
+* 显示当前防火墙服务配置
+* 使用指定的策略名称和网络服务创建新的防火墙策略
+* 将防火墙策略应用于逻辑接口
+* 创建与现有策略完全相同的新防火墙策略
++
+您可以使用此选项在同一 SVM 中创建具有类似特征的策略，或者将此策略复制到其他 SVM 。
+
+* 显示有关防火墙策略的信息
+* 修改防火墙策略使用的 IP 地址和网络掩码
+* 删除 LIF 未使用的防火墙策略
+
+
+
+
+== 防火墙策略和 LIF
+
+LIF 防火墙策略用于限制通过每个 LIF 对集群的访问。您需要了解默认防火墙策略如何影响通过每种类型的 LIF 进行的系统访问，以及如何自定义防火墙策略以通过 LIF 提高或降低安全性。
+
+使用 `network interface create` 或 `network interface modify` 命令配置 LIF 时，为 ` firewall-policy` 参数指定的值将确定允许访问 LIF 的服务协议和 IP 地址。
+
+在许多情况下，您可以接受默认防火墙策略值。在其他情况下，您可能需要限制对某些 IP 地址和某些管理服务协议的访问。可用的管理服务协议包括 SSH ， HTTP ， HTTPS ， Telnet ， NTP ， NDMP ， NDMPS ， RSH ， DNS 和 SNMP 。
+
+所有集群 LIF 的防火墙策略默认为 ` ""` ，无法修改。
+
+下表介绍了在创建 LIF 时分配给每个 LIF 的默认防火墙策略，具体取决于其角色（ ONTAP 9.5 及更早版本）或服务策略（ ONTAP 9.6 及更高版本）：
+
+[cols="4*"]
+|===
+| 防火墙策略 | 默认服务协议 | 默认访问 | 应用于的 LIF 
+
+
+ a| 
+管理
+ a| 
+DNS ， http ， https ， NDMP ， NDMPS ， NTP ， SNMP ， ssh
+ a| 
+任何地址（ 0.0.0.0/0 ）
+ a| 
+集群管理， SVM 管理和节点管理 LIF
+
+
+
+ a| 
+MGMT-NFS
+ a| 
+DNS ， http ， https ， NDMP ， NDMPS ， NTP ，端口映射， SNMP ， ssh
+ a| 
+任何地址（ 0.0.0.0/0 ）
+ a| 
+也支持 SVM 管理访问的数据 LIF
+
+
+
+ a| 
+集群间
+ a| 
+HTTPS ， NDMP ， NDMPS
+ a| 
+任何地址（ 0.0.0.0/0 ）
+ a| 
+所有集群间 LIF
+
+
+
+ a| 
+数据
+ a| 
+DNS ， NDMP ， NDMPS ， portmap
+ a| 
+任何地址（ 0.0.0.0/0 ）
+ a| 
+所有数据 LIF
+
+|===
+
+
+== portmap 服务配置
+
+portmap 服务会将 RPC 服务映射到它们侦听的端口。
+
+portmap 服务在 ONTAP 9.3 及更早版本中始终可访问，在 ONTAP 9.4 至 ONTAP 9.6 中可配置，并从 ONTAP 9.7 开始自动进行管理。
+
+* 在 ONTAP 9.3 及更早版本中， portmap 服务（ rpcbind ）始终可通过网络配置中的端口 111 访问，该端口依赖于内置的 ONTAP 防火墙，而不是第三方防火墙。
+* 从 ONTAP 9.4 到 ONTAP 9.6 ，您可以修改防火墙策略，以控制是否可通过特定 LIF 访问 portmap 服务。
+* 从 ONTAP 9.7 开始，不再使用 portmap 防火墙服务。而是会自动为支持 NFS 服务的所有 LIF 打开 portmap 端口。
+
+
+* 在 ONTAP 9.4 到 ONTAP 9.6* 中，可以在防火墙中配置端口映射服务
+
+本主题的其余部分将讨论如何为 ONTAP 9.4 到 ONTAP 9.6 版配置 portmap 防火墙服务。
+
+根据您的配置，您可能会禁止对特定类型的 LIF （通常为管理 LIF 和集群间 LIF ）访问服务。在某些情况下，您甚至可以禁止对数据 LIF 进行访问。
+
+ONTAP 9.4 到 ONTAP 9.6 的行为旨在在升级时实现无缝过渡。如果 portmap 服务已通过特定类型的 LIF 进行访问，则它将继续通过这些类型的 LIF 进行访问。与先前的 ONTAP 版本一样，您可以在防火墙策略中为 LIF 类型指定可在防火墙内访问的服务。
+
+要使此行为生效，集群中的所有节点都必须运行 ONTAP 9.4 到 ONTAP 9.6 。仅影响入站流量。
+
+新规则如下： * 升级到版本 9.4 到 9.6 时， ONTAP 会将 portmap 服务添加到所有现有防火墙策略中，默认或自定义。* 创建新集群或新 IP 空间时， ONTAP 仅会将 portmap 服务添加到默认数据策略中，而不会添加到默认管理或集群间策略中。* 您可以根据需要将 portmap 服务添加到默认或自定义策略中，并根据需要删除该服务。
+
+要将 portmap 服务添加到 SVM 或集群防火墙策略中（使其可在防火墙内访问），请输入：
+
+`s系统服务防火墙策略 create -vserver SVM -policy mgmt| 集群间 | 数据 | 自定义 -service portmap`
+
+要从 SVM 或集群防火墙策略中删除 portmap 服务（使其无法在防火墙内访问），请输入：
+
+`s系统服务防火墙策略 delete -vserver SVM -policy mgmt| 集群间 | 数据 | 自定义 -service portmap`
+
+您可以使用 network interface modify 命令将防火墙策略应用于现有 LIF 。有关完整的命令语法，请参见 link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]。
+
+
+
+== 创建防火墙策略并将其分配给 LIF
+
+创建 LIF 时，系统会为每个 LIF 分配默认防火墙策略。在许多情况下，默认防火墙设置运行良好，您无需更改它们。如果要更改可访问 LIF 的网络服务或 IP 地址，可以创建自定义防火墙策略并将其分配给 LIF 。
+
+.关于此任务
+* 您不能使用 `policy` name `data` ， `intercluster` ， `cluster` 或 `mGMT` 创建防火墙策略。
++
+这些值是为系统定义的防火墙策略保留的。
+
+* 您不能为集群 LIF 设置或修改防火墙策略。
++
+对于所有服务类型，集群 LIF 的防火墙策略均设置为 0.0.0.0/0 。
+
+* 如果需要修改或删除服务，则必须删除现有防火墙策略并创建新策略。
+* 如果集群上启用了 IPv6 ，则可以使用 IPv6 地址创建防火墙策略。
++
+启用 IPv6 后， `data` 和 `mGMT` 防火墙策略会在其可接受地址列表中包含：： /0 ， IPv6 通配符。
+
+* 在使用 ONTAP 系统管理器跨集群配置数据保护功能时，您必须确保允许列表中包含集群间 LIF IP 地址，并且允许在集群间 LIF 和公司拥有的防火墙上使用 HTTPS 服务。
++
+默认情况下， `集群间` 防火墙策略允许从所有 IP 地址（ 0.0.0.0/0 ）进行访问，并启用 HTTPS ， NDMP 和 NDMPS 服务。如果修改此默认策略，或者为集群间 LIF 创建自己的防火墙策略，则必须将每个集群间 LIF IP 地址添加到允许列表中并启用 HTTPS 服务。
+
+* 从 ONTAP 9.6 开始，不支持 HTTPS 和 SSH 防火墙服务。
++
+在 ONTAP 9.6 中，可以使用 `manmanagement-https` 和 `manmanagement-ssh` LIF 服务进行 HTTPS 和 SSH 管理访问。
+
+
+
+.步骤
+. 创建可供特定 SVM 上的 LIF 使用的防火墙策略：
++
+`s系统服务防火墙策略 create -vserver _vserver_name_ -policy _policy_name_ -service _network_service_ -allow-list _ip_address/mask_`
+
++
+您可以多次使用此命令为防火墙策略中的每个服务添加多个网络服务和允许的 IP 地址列表。
+
+. 使用 `ssystem services firewall policy show` 命令验证是否已正确添加此策略。
+. 将防火墙策略应用于 LIF ：
++
+`network interface modify -vserver _vserver_name_ -lif _lif_name_ -firewall-policy _policy_name_`
+
+. 使用 `network interface show -fields firewall-policy` 命令验证是否已将此策略正确添加到 LIF 中。
+
+
+以下命令将创建一个名为 data_http 的防火墙策略，用于从 10.10 子网上的 IP 地址访问 HTTP 和 HTTPS 协议，并将该策略应用于 SVM vs1 上名为 data1 的 LIF ，然后显示集群上的所有防火墙策略：
+
+....
+system services firewall policy create -vserver vs1 -policy data_http -service http - allow-list 10.10.0.0/16
+....
+....
+system services firewall policy show
+
+Vserver Policy       Service    Allowed
+------- ------------ ---------- -------------------
+cluster-1
+        data
+                     dns        0.0.0.0/0
+                     ndmp       0.0.0.0/0
+                     ndmps      0.0.0.0/0
+cluster-1
+        intercluster
+                     https      0.0.0.0/0
+                     ndmp       0.0.0.0/0
+                     ndmps      0.0.0.0/0
+cluster-1
+        mgmt
+                     dns        0.0.0.0/0
+                     http       0.0.0.0/0
+                     https      0.0.0.0/0
+                     ndmp       0.0.0.0/0
+                     ndmps      0.0.0.0/0
+                     ntp        0.0.0.0/0
+                     snmp       0.0.0.0/0
+                     ssh        0.0.0.0/0
+vs1
+        data_http
+                     http       10.10.0.0/16
+                     https      10.10.0.0/16
+
+network interface modify -vserver vs1 -lif data1 -firewall-policy data_http
+
+network interface show -fields firewall-policy
+
+vserver  lif                  firewall-policy
+-------  -------------------- ---------------
+Cluster  node1_clus_1
+Cluster  node1_clus_2
+Cluster  node2_clus_1
+Cluster  node2_clus_2
+cluster-1 cluster_mgmt         mgmt
+cluster-1 node1_mgmt1          mgmt
+cluster-1 node2_mgmt1          mgmt
+vs1      data1                data_http
+vs3      data2                data
+....

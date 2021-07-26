@@ -1,0 +1,95 @@
+---
+sidebar: sidebar 
+permalink: networking/create_svms.html 
+keywords: create, creation, creating, add, adding, svm, storage, virtual, machine, create svms, create storage virtual machines, create an svm to serve data to clients 
+summary: 创建 SVM 以向客户端提供数据 
+---
+= 创建 SVM
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您必须创建 SVM 以向客户端提供数据。
+
+.开始之前
+* 您必须是集群管理员才能执行此任务。
+* 您必须知道 SVM 根卷将采用哪种安全模式。
++
+如果您计划在此 SVM 上通过 SMB 解决方案实施 Hyper-V 或 SQL Server ，则应对根卷使用 NTFS 安全模式。包含 Hyper-V 文件或 SQL 数据库文件的卷在创建时必须设置为 NTFS 安全性。通过将根卷安全模式设置为 NTFS ，您可以确保不会无意中创建 UNIX 或混合安全模式数据卷。
+
+
+
+.步骤
+. 确定哪些聚合是包含 SVM 根卷的候选聚合。
++
+`storage aggregate show -is-mroot false`
+
++
+您必须选择至少具有 1 GB 可用空间的聚合来容纳根卷。如果要在 SVM 上配置 NAS 审核，则根聚合上必须至少有 3 GB 的额外可用空间，并在启用审核时使用额外空间来创建审核暂存卷。
+
++
+
+NOTE: 如果已在现有 SVM 上启用 NAS 审核，则聚合的暂存卷将在成功创建聚合后立即创建。
+
+. 记录要在其中创建 SVM 根卷的聚合的名称。
+. 如果您计划在创建 SVM 时指定语言，但不知道要使用的值，请确定并记录要指定的语言值：
++
+`vserver create -language ？`
+
+. 如果您计划在创建 SVM 时指定 Snapshot 策略，但不知道该策略的名称，请列出可用策略并确定并记录要使用的 Snapshot 策略的名称：
++
+`volume snapshot policy show -vserver <vserver_name>`
+
+. 如果您计划在创建 SVM 时指定配额策略，但不知道该策略的名称，请列出可用策略并确定并记录要使用的配额策略的名称：
++
+`volume quota policy show -vserver <vserver_name>`
+
+. 创建 SVM ：
++
+`vserver create -vserver <vserver_name> -aggregate <aggregate_name> ‑rootvolume <root_volume_name> -rootvolume-security-style ｛ unix_ntfs_mixed ｝ （ -ipspace <IPspace_name> ） ] （ -language <language>> ））（ -snapshot-policy <snapshot_policy_name> ） ] （ -quota_policy <quota_name> ）` comment>
+
++
+`vserver create -vserver vs1 -aggregate aggr3 -rootvolume vs1_root ‑rootvolume-security-style ntfs -ipspace ipspace1 -language en_US.UTF-8`
+
++
+` 作业 72] 作业成功： SVM 创建已完成`
+
+. 验证 SVM 配置是否正确。
++
+`vserver show -vserver vs1`
+
++
+....
+Vserver: vs1
+Vserver Type: data
+Vserver Subtype: default
+Vserver UUID: 11111111-1111-1111-1111-111111111111
+Root Volume: vs1_root
+Aggregate: aggr3
+NIS Domain: -
+Root Volume Security Style: ntfs
+LDAP Client: -
+Default Volume Language Code: en_US.UTF-8
+Snapshot Policy: default
+Comment:
+Quota Policy: default
+List of Aggregates Assigned: -
+Limit on Maximum Number of Volumes allowed: unlimited
+Vserver Admin State: running
+Vserver Operational State: running
+Vserver Operational State Stopped Reason: -
+Allowed Protocols: nfs, cifs, ndmp
+Disallowed Protocols: fcp, iscsi
+QoS Policy Group: -
+Config Lock: false
+IPspace Name: ipspace1
+Is Vserver Protected: false
+....
++
+在此示例中，命令会在 IP 空间 "ipspace1" 中创建名为 "VS1" 的 SVM 。根卷名为 vs1_root ，并在 aggr3 上使用 NTFS 安全模式创建。
+
+

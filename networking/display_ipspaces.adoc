@@ -1,0 +1,44 @@
+---
+sidebar: sidebar 
+permalink: networking/display_ipspaces.html 
+keywords: display, view, show, ipspace, display ipspaces, list the ipspaces and view ipspace information for the cluster 
+summary: 列出 IP 空间并查看集群的 IP 空间信息 
+---
+= 显示 IP 空间
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以显示集群中的 IP 空间列表，也可以查看分配给每个 IP 空间的 Storage Virtual Machine （ SVM ），广播域和端口。
+
+显示集群中的 IP 空间和 SVM ：
+
+....
+network ipspace show [-ipspace ipspace_name]
+....
+以下命令显示集群中的所有 IP 空间， SVM 和广播域：
+
+....
+network ipspace show
+IPspace        Vserver List             Broadcast Domains
+-------------  -----------------------  -------------------
+Cluster
+               Cluster                  Cluster
+Default
+               vs1, cluster-1            Default
+ipspace1
+               vs3, vs4, ipspace1       bcast1
+....
+以下命令显示属于 IP 空间 ipspace1 的节点和端口：
+
+....
+network ipspace show -ipspace ipspace1
+IPspace name: ipspace1
+Ports: cluster-1-01:e0c, cluster-1-01:e0d, cluster-1-01:e0e, cluster-1-02:e0c, cluster-1-02:e0d, cluster-1-02:e0e
+Broadcast Domains: Default-1
+Vservers: vs3, vs4, ipspace1
+....

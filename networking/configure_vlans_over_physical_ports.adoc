@@ -1,0 +1,81 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_vlans_over_physical_ports.html 
+keywords: configure, configuration, configuring, setup, setting, set, up, vlan, virtual, local, area, network, physical, port, logical, segmentation, configure vlans over physical ports, vlans provide logical segmentation of networks, create a vlan, network port vlan create, delete a vlan, network port vlan delete 
+summary: VLAN 可为网络提供逻辑分段 
+---
+= 通过物理端口配置 VLAN
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+VLAN 通过创建单独的广播域来提供网络的逻辑分段，这些广播域是基于交换机端口定义的，而不是基于物理边界定义的传统广播域。
+
+一个 VLAN 可以跨越多个物理网段。属于 VLAN 的终端工作站按功能或应用程序相关联。
+
+例如， VLAN 中的终端工作站可以按部门（如工程和会计）或项目（如 release1 和 release2 ）进行分组。由于终端工作站的物理位置在 VLAN 中并不重要，因此您可以将终端工作站分散在不同的地理位置，并且仍会将广播域包含在交换网络中。
+
+您可以通过创建，删除或显示 VLAN 的相关信息来管理 VLAN 。
+
+
+NOTE: 您不应在标识符与交换机的原生 VLAN 相同的网络接口上创建 VLAN 。例如，如果网络接口 e0b 位于原生 VLAN 10 上，则不应在此接口上创建 VLAN e0b-10 。
+
+
+
+== 创建 VLAN
+
+您可以使用 `network port vlan create` 命令创建 VLAN ，以便在同一网络域中维护单独的广播域。
+
+您的网络管理员必须已确认满足以下要求：
+
+* 网络中部署的交换机必须符合 IEEE 802.1Q 标准，或者实施供应商专用的 VLAN 。
+* 要支持多个 VLAN ，必须静态配置一个终端工作站，使其属于一个或多个 VLAN 。
+* VLAN 未连接到托管集群 LIF 的端口。
+* VLAN 未连接到分配给集群 IP 空间的端口。
+* 不会在不包含任何成员端口的接口组端口上创建 VLAN 。
+
+
+在某些情况下，如果要在已降级的端口上创建 VLAN 端口而不更正硬件问题描述或任何软件配置不当，则可以将 `network port modify` 命令的 ` -ignore-health-status` 参数设置为 true 。
+
+创建 VLAN 会将 VLAN 连接到集群中指定节点上的网络端口。
+
+首次通过端口配置 VLAN 时，此端口可能会关闭，从而导致网络暂时断开连接。随后向同一端口添加 VLAN 不会影响端口状态。
+
+
+NOTE: 您不应在标识符与交换机的原生 VLAN 相同的网络接口上创建 VLAN 。例如，如果网络接口 e0b 位于原生 VLAN 10 上，则不应在此接口上创建 VLAN e0b-10 。
+
+.步骤
+. 使用 `network port vlan create` 命令创建 VLAN 。
+. 创建 VLAN 时，必须指定 `vlan-name` 或 `port` 和 `vlan-id` 选项。VLAN 名称是端口（或接口组）名称和网络交换机 VLAN 标识符的组合，两者之间带有连字符。例如， `e0c-24` 和 `e1c-80` 是有效的 VLAN 名称。
+
+
+以下示例显示了如何在节点 `cluster-1-01` 上创建连接到网络端口 `e1c` 的 VLAN `e1c-80` ：
+
+....
+network port vlan create -node cluster-1-01 -vlan-name e1c-80
+....
+从 ONTAP 9.8 开始， VLAN 会在创建后大约一分钟自动放置到相应的广播域中。如果您不希望 ONTAP 执行此操作，并且希望手动将 VLAN 置于广播域中，请在 `vlan create` 命令中指定 ` skip-broadcast-domain-placement` 参数。
+
+有关此命令的详细信息，请参见 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]。
+
+
+
+== 删除 VLAN
+
+在从插槽中删除 NIC 之前，您可能需要删除 VLAN 。删除 VLAN 时，它会自动从使用它的所有故障转移规则和组中删除。
+
+确保没有与 VLAN 关联的 LIF 。
+
+从端口删除最后一个 VLAN 可能发生原因会导致网络与端口暂时断开连接。
+
+使用 `network port vlan delete` 命令删除 VLAN 。
+
+以下示例显示了如何从节点 `cluster-1-01` 上的网络端口 `e1c` 中删除 VLAN `e1c-80` ：
+
+....
+network port vlan delete -node cluster-1-01 -vlan-name e1c-80
+....

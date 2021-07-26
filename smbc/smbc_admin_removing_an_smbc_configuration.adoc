@@ -1,0 +1,30 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_admin_removing_an_smbc_configuration.html 
+keywords: SM-BC, SMBC, removing, protection relationship 
+summary: 您可以删除零 RTO 同步 SnapMirror 保护并删除 SM-BC 关系配置。 
+---
+= 删除 SM-BC 配置
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以删除零 RTO 同步 SnapMirror 保护并删除 SM-BC 关系配置。
+
+在删除 SM-BC 关系之前，必须取消映射目标集群中的所有 LUN 。取消映射 LUN 并重新扫描主机后， SCSI 目标会通知主机 LUN 清单已更改。删除零 RTO 关系后，零 RTO 二级卷上的现有 LUN 将发生更改，以反映新的身份。主机会将二级卷 LUN 发现为与源卷 LUN 无关系的新 LUN 。删除关系后，二级卷仍保留 DP 卷。您可以通过问题描述 snapmirror break 命令将其转换为读 / 写。如果关系未反转，则在故障转移状态下不允许删除此关系。
+
+.步骤
+. 删除 SM-BC 一致性组关系：
++
+`d目标： >snapmirror delete -destination-path vs1_dst ： /CG/CG_DST`
+
+. 从源集群释放一致性组关系以及为此关系创建的 Snapshot 副本：
++
+`ssource ：： >snapmirror release -destination-path vs1_dst ： /CG/CG_DST`
+
+. 执行主机重新扫描以更新 LUN 清单。
+

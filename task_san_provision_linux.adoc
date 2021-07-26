@@ -1,0 +1,100 @@
+---
+sidebar: sidebar 
+permalink: task_san_provision_linux.html 
+keywords: netapp, ontap, san, provisioning, linux, servers, provision, storage, create lun, fc, iscsi, zone switches, scsi disk 
+summary: 创建 LUN 以使用 FC 或 iSCSI SAN 协议为 Linux 服务器提供存储。LUN 在 Linux 中显示为 SCSI 磁盘设备。 
+---
+= 为 Linux 服务器配置 SAN 存储
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+创建 LUN 以使用 FC 或 iSCSI SAN 协议为 Linux 服务器提供存储。LUN 在 Linux 中显示为 SCSI 磁盘设备。
+
+此操作步骤会在现有 Storage VM 上创建新的 LUN 。应已设置 FC 或 iSCSI 协议。您需要了解 Linux 服务器的启动程序标识符（ FC WWPN 或 iSCSI iqn ）。
+
+image:workflow_san_provision_linux.gif["为 Linux 配置 SAN 存储的工作流图"]
+
+
+NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
+
+.步骤
+. 在 Linux 服务器上，安装 link:https://mysupport.netapp.com/NOW/download/software/sanhost_linux/Linux/["NetApp Linux Host Utilities"] 软件包。
+. 在 ONTAP 系统管理器中，单击 * 存储 > LUN* ，然后单击 * 添加 * 。
++
+.. 输入创建 LUN 所需的信息。
+.. 根据您的 ONTAP 版本，您可以单击 * 更多选项 * 执行以下操作。
++
+[cols="2"]
+|===
+| 选项 | 可在中使用 
+
+
+ a| 
+使用现有启动程序组创建新的启动程序组
+
+*** * 更多选项 > 主机信息 *
+*** 选择 * 使用现有启动程序组新建启动程序组 * 。
++
+* 注 * ：创建包含其他 igroup 的 igroup 后，无法更改其操作系统类型。
+
+
+| ONTAP 9.9.1 
+
+
+ a| 
+将问题描述添加到 igroup 或主机启动程序
+
+问题描述用作 igroup 或主机启动程序的别名。
+
+*** * 更多选项 > 主机信息 *
+
+| ONTAP 9.9.1 
+
+
+ a| 
+在现有卷上创建 LUN
+
+默认情况下，会在新卷中创建新的 LUN 。
+
+*** * 更多选项 > 添加 LUN*
+*** 选择 * 组相关 LUN* 。
+
+| ONTAP 9.9.1 
+
+
+ a| 
+禁用 QoS 或选择自定义 QoS 策略
+
+*** * 更多选项 > 存储和优化 *
+*** 选择 * 性能服务级别 * 。
++
+* 注 * ：在 ONTAP 9.9.1 及更高版本中，如果选择自定义 QoS 策略，则还可以选择手动放置在指定的本地层上。
+
+
+| ONTAP 9.8 或更高版本 
+|===
+
+
+
+
+. 对于 FC ，请按 WWPN 对 FC 交换机进行分区。每个启动程序使用一个分区，并在每个分区中包含所有目标端口。
+. 在 Linux 服务器上，发现新的 LUN ：
++
+` /usr/bin/resscan-scsi-bus.sh`
+
++
+
+NOTE: 也可以对 LUN 进行分区并创建文件系统。
+
+. 验证 Linux 服务器是否可以在 LUN 上写入和读取数据。
+

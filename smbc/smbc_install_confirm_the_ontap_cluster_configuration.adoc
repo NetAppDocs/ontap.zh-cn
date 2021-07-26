@@ -1,0 +1,53 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_install_confirm_the_ontap_cluster_configuration.html 
+keywords: SM-BC, SMBC, ONTAP, cluster, configure, peering, volume, SVM, SAN, LIFs, map, igroup, discover 
+summary: 您应确保已正确配置源和目标集群。 
+---
+= 确认 ONTAP 集群配置
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应确保已正确配置源和目标集群。
+
+继续执行以下每个步骤。对于每个步骤，您都应确认已执行特定配置。使用每个步骤后面的链接根据需要获取更多信息。
+
+.步骤
+. 确认集群之间存在集群对等关系。
++
+
+NOTE: 对于集群对等关系， SM-BC 需要默认 IP 空间。不支持自定义 IP 空间。
+
++
+link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-csp/GUID-5AC8B2CD-9203-4F61-A5FB-C177A22F0C29.html?cp=8_1_3["配置对等关系"^]
+
+. 确认已在每个集群上创建 Storage VM 。
++
+link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-960/GUID-4CF9FEB6-083C-42A0-8B4B-78F51EFCE2F4.html?cp=4_1_5_0_1_4["创建 SVM"^]
+
+. 确认每个集群上的 Storage VM 之间存在对等关系。
++
+link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-clus-peer/GUID-84C089E7-1A5C-43AF-99B5-9DDB5100B3EA.html?cp=8_2_2_1_2["创建 SVM 对等关系"^]
+
+. 确认 LUN 存在卷。
++
+link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-cifs-cg/GUID-A8F1A48F-81B8-46B6-AFAC-F4A01B99CFF6.html?cp=13_6_3_0_0["创建卷"^]
+
+. 确认在集群中的每个节点上至少创建了一个 SAN LIF 。
++
+link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-A34528DF-C287-4B1A-9BEF-3EC4CCFA240F.html?cp=13_6_7_4_0_1["集群 SAN 环境中 LIF 的注意事项"^]
+
++
+link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-4B666C44-694A-48A3-B0A9-517FA7FD2502.html?cp=13_6_4_0["创建 LIF"^]
+
+. 确认已创建必要的 LUN 并将其映射到 igroup ， igroup 用于将 LUN 映射到应用程序主机上的启动程序。
++
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-D4DAC7DB-A6B0-4696-B972-7327EE99FD72.html?cp=13_6_1_0_2_5["创建 LUN 并映射 igroup"^]
+
+. 重新扫描应用程序主机以发现任何新的 LUN 。
+

@@ -1,0 +1,283 @@
+---
+sidebar: sidebar 
+permalink: networking/worksheet_for_nas_path_failover_configuration_auto.html 
+keywords: ipspace configuration, broadcast domain configuration, subnet configuration, SVM configuration, LIF configuration, DNS configuration, dynamic DNS configuration, worksheet for nas path failover configuration for ontap 9.8 and later, complete all sections of the worksheet before configuring nas path failover for ontap 9.8 and later, ipspace configuration, broadcast domain configuration, mtu, maximum transmission unit, mtu is 1500 mtu is 9000, subnet configuration, storage virtual machine configuration, svm configuration, lif configuration, dynamic dns configuration, dns configuration 
+summary: 在为 ONTAP 9.8 及更高版本配置 NAS 路径故障转移之前，请完成工作表的所有部分 
+---
+= ONTAP 9.8 及更高版本的 NAS 路径故障转移配置工作表
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+在配置 NAS 路径故障转移之前，您应完成工作表的所有部分。
+
+
+
+== IPspace 配置
+
+您可以使用 IP 空间为集群中的每个 SVM 创建不同的 IP 地址空间。这样，在管理上独立的网络域中的客户端就可以访问集群数据，同时使用来自同一 IP 地址子网范围的重叠 IP 地址。
+
+[cols="3*"]
+|===
+| 信息 | 必需 | 您的价值 
+
+
+| IP 空间名称 IP 空间的唯一标识符。 | 是的。 |  
+|===
+
+
+== 广播域配置
+
+广播域对属于同一第 2 层网络的端口进行分组，并为广播域端口设置 MTU 。
+
+广播域将分配给 IP 空间。一个 IP 空间可以包含一个或多个广播域。
+
+
+NOTE: LIF 故障转移到的端口必须是 LIF 故障转移组的成员。对于 ONTAP 创建的每个广播域，还会创建一个同名的故障转移组，其中包含广播域中的所有端口。
+
+[cols="3*"]
+|===
+| 信息 | 必需 | 您的价值 
+
+
+ a| 
+IP 空间名称广播域分配到的 IP 空间。
+
+此 IP 空间必须存在。
+ a| 
+是的。
+ a| 
+
+
+
+ a| 
+广播域名广播域的名称。
+
+此名称在 IP 空间中必须是唯一的。
+ a| 
+是的。
+ a| 
+
+
+
+ a| 
+MTU 广播域的最大传输单元值，为 * ， 1500 * 或 * ， 9000 * 。
+
+MTU 值将应用于广播域中的所有端口以及稍后添加到广播域的任何端口。
+
+MTU 值必须与除 e0M 端口处理管理流量以外的所有连接到该网络的设备匹配。
+ a| 
+是的。
+ a| 
+
+
+
+ a| 
+端口端口会根据可访问性分配给广播域。端口分配完成后，运行 `network port reachability show` 命令检查可访问性。
+
+这些端口可以是物理端口， VLAN 或接口组。
+ a| 
+是的。
+ a| 
+
+|===
+
+
+== 子网配置
+
+子网包含 IP 地址池和一个默认网关，可将其分配给 IP 空间中的 SVM 所使用的 LIF 。
+
+* 在 SVM 上创建 LIF 时，您可以指定子网的名称，而不是提供 IP 地址和子网。
+* 由于子网可以使用默认网关进行配置，因此在创建 SVM 时，不必单独创建默认网关。
+* 广播域可以包含一个或多个子网。
+* 您可以通过将多个子网与 IP 空间的广播域关联来配置位于不同子网上的 SVM LIF 。
+* 每个子网都必须包含不与分配给同一 IP 空间中其他子网的 IP 地址重叠的 IP 地址。
+* 您可以为 SVM 数据 LIF 分配特定的 IP 地址，并为 SVM 创建默认网关，而不是使用子网。
+
+
+[cols="3*"]
+|===
+| 信息 | 必需 | 您的价值 
+
+
+ a| 
+IP 空间名称子网将分配到的 IP 空间。
+
+此 IP 空间必须存在。
+ a| 
+是的。
+ a| 
+
+
+
+ a| 
+子网名称子网的名称。
+
+此名称在 IP 空间中必须是唯一的。
+ a| 
+是的。
+ a| 
+
+
+
+ a| 
+广播域名子网将分配到的广播域。
+
+此广播域必须驻留在指定的 IP 空间中。
+ a| 
+是的。
+ a| 
+
+
+
+ a| 
+子网名称并屏蔽 IP 地址所在的子网和掩码。
+ a| 
+是的。
+ a| 
+
+
+
+ a| 
+网关您可以为子网指定默认网关。
+
+如果在创建子网时未分配网关，则可以稍后分配一个网关。
+ a| 
+否
+ a| 
+
+
+
+ a| 
+IP 地址范围您可以指定 IP 地址范围或特定 IP 地址。
+
+例如，您可以指定一个范围，例如：
+
+`192.168.1.1-192.168.1.100 ， 192.168.1.112 ， 192.168.1.145`
+
+如果未指定 IP 地址范围，则指定子网中的整个 IP 地址范围可分配给 LIF 。
+ a| 
+否
+ a| 
+
+
+
+ a| 
+强制更新 LIF 关联指定是否强制更新现有 LIF 关联。
+
+默认情况下，如果任何服务处理器接口或网络接口使用提供范围内的 IP 地址，则子网创建将失败。
+
+使用此参数可将任何手动寻址的接口与子网相关联，并使命令成功执行。
+ a| 
+否
+ a| 
+
+|===
+
+
+== SVM 配置
+
+您可以使用 SVM 为客户端和主机提供数据。
+
+您记录的值用于创建默认数据 SVM 。如果要创建 MetroCluster 源 SVM ，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-fc/index.html["《光纤连接的 MetroCluster 安装和配置指南》"^] 或 。
+
+[cols="3*"]
+|===
+| 信息 | 必需 | 您的价值 
+
+
+| SVM 名称 SVM 的完全限定域名（ FQDN ）。此名称在集群联盟中必须是唯一的。 | 是的。 |  
+
+
+| 根卷名称 SVM 根卷的名称。 | 是的。 |  
+
+
+| 聚合名称保存 SVM 根卷的聚合的名称。此聚合必须存在。 | 是的。 |  
+
+
+| 安全模式 SVM 根卷的安全模式。可能的值包括 * NTFS * ， * UNIX * 和 * 混合 * 。 | 是的。 |  
+
+
+| IP 空间名称 SVM 分配到的 IP 空间。此 IP 空间必须存在。 | 否 |  
+
+
+| SVM 语言设置 SVM 及其卷使用的默认语言。如果未指定默认语言，则默认 SVM 语言将设置为 * 。 C.UTF-8 * 。SVM 语言设置用于确定用于显示 SVM 中所有 NAS 卷的文件名和数据的字符集。您可以在创建 SVM 后修改此语言。 | 否 |  
+|===
+
+
+== LIF 配置
+
+SVM 通过一个或多个网络逻辑接口（ LIF ）向客户端和主机提供数据。
+
+[cols="3*"]
+|===
+| 信息 | 必需 | 您的价值 
+
+
+| SVM 名称 LIF 的 SVM 的名称。 | 是的。 |  
+
+
+| LIF 名称 LIF 的名称。您可以为每个节点分配多个数据 LIF ，并且可以为集群中的任何节点分配 LIF ，前提是该节点具有可用的数据端口。要提供冗余，应为每个数据子网至少创建两个数据 LIF ，并为分配给特定子网的 LIF 分配不同节点上的主端口。* 重要说明： * 如果要将 SMB 服务器配置为通过 SMB 托管 Hyper-V 或 SQL Server 以实现无中断运行解决方案，则 SVM 必须在集群中的每个节点上至少具有一个数据 LIF 。 | 是的。 |  
+
+
+| LIF 的服务策略服务策略。服务策略定义了哪些网络服务可以使用 LIF 。内置服务和服务策略可用于管理数据和系统 SVM 上的数据和管理流量。 | 是的。 |  
+
+
+| 基于 IP 的允许协议 LIF 不需要允许的协议，请改用服务策略行。为 FibreChannel 端口上的 SAN LIF 指定允许的协议。这些协议可以使用该 LIF 。创建 LIF 后，无法修改使用 LIF 的协议。配置 LIF 时，应指定所有协议。 | 否 |  
+
+
+| 主节点 LIF 还原到其主端口时返回到的节点。您应为每个数据 LIF 记录一个主节点。 | 是的。 |  
+
+
+| 主端口或广播域选择以下选项之一： * 端口 * ：指定将 LIF 还原到其主端口时逻辑接口返回到的端口。只有 IP 空间子网中的第一个 LIF 才会执行此操作，否则不需要执行此操作。* 广播域 * ：指定广播域，系统将选择在将 LIF 还原到其主端口时逻辑接口返回到的相应端口。 | 是的。 |  
+
+
+| 要分配给 SVM 的子网名称。用于创建与应用程序服务器的持续可用 SMB 连接的所有数据 LIF 必须位于同一子网中。 | 是（如果使用子网） |  
+|===
+
+
+== DNS 配置
+
+在创建 NFS 或 SMB 服务器之前，必须在 SVM 上配置 DNS 。
+
+[cols="3*"]
+|===
+| 信息 | 必需 | 您的价值 
+
+
+| SVM 名称要在其中创建 NFS 或 SMB 服务器的 SVM 的名称。 | 是的。 |  
+
+
+| DNS 域名执行主机到 IP 名称解析时要附加到主机名的域名列表。首先列出本地域，然后列出最常进行 DNS 查询的域名。 | 是的。 |  
+
+
+| DNS 服务器的 IP 地址将为 NFS 或 SMB 服务器提供名称解析的 DNS 服务器的 IP 地址列表。列出的 DNS 服务器必须包含为 SMB 服务器将加入的域定位 Active Directory LDAP 服务器和域控制器所需的服务位置记录（服务位置记录）。SRV 记录用于将服务名称映射到提供该服务的服务器的 DNS 计算机名称。如果 ONTAP 无法通过本地 DNS 查询获取服务位置记录，则 SMB 服务器创建将失败。确保 ONTAP 可以找到 Active Directory SRV 记录的最简单方法是将 Active Directory 集成的 DNS 服务器配置为 SVM DNS 服务器。您可以使用非 Active Directory 集成的 DNS 服务器，前提是 DNS 管理员已手动将 SRV 记录添加到包含 Active Directory 域控制器信息的 DNS 区域。有关 Active Directory 集成的 SRV 记录的信息，请参见主题 link:http://technet.microsoft.com/library/cc759550(WS.10).aspx["Microsoft TechNet 上适用于 Active Directory 的 DNS 支持的工作原理"^]。 | 是的。 |  
+|===
+
+
+== 动态 DNS 配置
+
+在使用动态 DNS 自动向 Active Directory 集成的 DNS 服务器添加 DNS 条目之前，必须在 SVM 上配置动态 DNS （ DDNS ）。
+
+系统会为 SVM 上的每个数据 LIF 创建 DNS 记录。通过在 SVM 上创建多个数据 LIF ，您可以对客户端与分配的数据 IP 地址的连接进行负载平衡。DNS 以轮循方式对使用主机名与分配的 IP 地址建立的连接进行负载平衡。
+
+[cols="3*"]
+|===
+| 信息 | 必需 | 您的价值 
+
+
+| SVM 名称要在其中创建 NFS 或 SMB 服务器的 SVM 。 | 是的。 |  
+
+
+| 是否使用 DDNS 指定是否使用 DDNS 。SVM 上配置的 DNS 服务器必须支持 DDNS 。默认情况下， DDNS 处于禁用状态。 | 是的。 |  
+
+
+| 是否使用安全 DDNS 只有 Active Directory 集成的 DNS 才支持安全 DDNS 。如果 Active Directory 集成的 DNS 仅允许安全 DDNS 更新，则此参数的值必须为 true 。默认情况下，安全 DDNS 处于禁用状态。只有在为 SVM 创建 SMB 服务器或 Active Directory 帐户后，才能启用安全 DDNS 。 | 否 |  
+
+
+| DNS 域的 FQDN DNS 域的 FQDN 。您必须使用为 SVM 上的 DNS 名称服务配置的相同域名。 | 否 |  
+|===

@@ -1,0 +1,33 @@
+---
+sidebar: sidebar 
+permalink: networking/create_ipspaces.html 
+keywords: create, creation, creating, add, adding, ipspace, create ipspaces, ipspace create, ipspace show, create ipspaces, ipspace create, broadcast-domain move 
+summary: 为集群中的每个 SVM 创建 IP 空间 
+---
+= 创建 IP 空间
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以使用 IP 空间为集群中的每个 SVM 创建不同的 IP 地址空间。这样，在管理上独立的网络域中的客户端就可以访问集群数据，同时使用来自同一 IP 地址子网范围的重叠 IP 地址。
+
+您必须是集群管理员才能执行此任务。
+
+创建 IP 空间。
+
+`network ipspace create -ipspace ipspace1`
+
+`network IPspace show`
+
+....
+IPspace             Vserver List          Broadcast Domains
+------------------- --------------------- ----------------------------
+Cluster             Cluster               Cluster
+Default             Cluster1              Default
+ipspace1            ipspace1              -
+....
+此时将创建 IP 空间以及此 IP 空间的系统 SVM 。系统 SVM 传输管理流量。

@@ -1,0 +1,54 @@
+---
+sidebar: sidebar 
+permalink: task_object_provision_manage_svm_access.html 
+keywords: netapp, ontap, manage, manage user access, user, users, group, group policy, access, VM, storage VM, object, objects, bucket, buckets, bucketname, bucket capacity, permissions, policy, policies, effect, actions, resources, conditions, object tagging, AWS client 
+summary: 编辑 Storage VM 以添加一个策略，用于控制对多个存储分段的用户和组访问权限。 
+---
+= 管理用户对启用了 S3 的 Storage VM 的访问
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+编辑 Storage VM 以添加一个策略，用于控制对多个存储分段的用户和组访问权限。
+
+您可以添加组策略来管理对启用了 S3 的 Storage VM 中一个或多个存储分段的访问，而不是管理各个存储分段的访问权限。这样可以简化在添加存储分段或访问需求发生变化时的管理。
+
+在策略中授予权限之前，您必须已创建用户和至少一个组。
+
+在 ONTAP 9.9.1 及更高版本中，如果您计划在 ONTAP S3 服务器上支持 AWS 客户端对象标记功能，则需要允许使用存储分段或组策略执行操作 `GetObjectTagging` ， `PutObjectTagging` 和 `DDeleteObjectTagging` 。
+
+.步骤
+. 编辑 Storage VM ：单击 * 存储 > Storage VM* ，单击此 Storage VM ，单击 * 设置 * ，然后单击 image:icon_pencil.gif["铅笔图标"] 在 S3 下。
+. 添加用户：单击 * 策略 * ，然后单击 * 添加 * 。
++
+.. 输入策略名称并从组列表中进行选择。
+.. 选择现有默认策略或添加新策略。
++
+添加或修改组策略时，您可以指定以下参数：
+
++
+*** group ：授予访问权限的组。
+*** 影响：允许或拒绝对一个或多个组的访问。
+*** 操作：给定组的一个或多个分段中允许的操作。
+*** 资源：授予或拒绝访问权限的一个或多个分段中的对象的路径和名称。例如：
++
+**** *** 授予对 Storage VM 中所有分段的访问权限。
+**** * bucketname* 和 * bucketname/* 授予对特定存储分段中所有对象的访问权限。
+**** *bucketname/readme.txt 授予对特定存储分段中某个对象的访问权限。
+
+
+
+
+.. 如果需要，可将语句添加到现有策略中。
+
+
+

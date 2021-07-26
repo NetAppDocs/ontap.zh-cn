@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: task_admin_balance_load_by_moving_luns.html 
+keywords: netapp, ontap, administration, balance, load, moving, move, LUN, LUNs, utilization, performance service level, qtree, origin volume, source volume, destination volume 
+summary: 您可以移动 LUN 以平衡存储负载或提高性能。 
+---
+= 通过移动 LUN 平衡负载
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以将 LUN 移动到 Storage VM 中的另一个卷以平衡负载，也可以将其移动到性能服务级别更高的卷以提高性能。
+
+
+
+== 移动限制
+
+* 不能将 LUN 移动到同一卷中的 qtree 。
+* 无法使用 System Manager 移动使用 CLI 从文件创建的 LUN 。
+* 无法移动联机并提供数据的 LUN 。
+* 如果目标卷中分配的空间不能包含 LUN ，则无法移动 LUN （即使在卷上启用了自动增长也是如此）。
+* 无法使用 System Manager 移动 SnapLock 卷上的 LUN 。
+
+
+image:workflow_balance_load_by_moving_luns.gif["通过移动 LUN 平衡负载的任务工作流图"]
+
+.步骤
+. 单击 * 存储 > LUN* 。
+. 选择要移动的 LUN ，然后单击 * 移动 * 。
+. 选择要将 LUN 移动到的现有卷。如果卷包含 qtree ，请选择该 qtree 。
+
+
+
+NOTE: 在执行移动操作期间， LUN 会同时显示在原始卷和目标卷上。

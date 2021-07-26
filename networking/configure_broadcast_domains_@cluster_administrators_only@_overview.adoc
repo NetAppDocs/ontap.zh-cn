@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_broadcast_domains_@cluster_administrators_only@_overview.html 
+keywords: broadcast, domain, overview, introduction, introducing, configure broadcast domains overview for ontap 9.8 and later, broadcast domains group network ports that belong to the same layer 2 network 
+summary: 广播域对属于同一第 2 层网络的网络端口进行分组 
+---
+= ONTAP 9.8 及更高版本概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+广播域用于对属于同一第 2 层网络的网络端口进行分组。然后， Storage Virtual Machine （ SVM ）可以使用组中的端口来传输数据或管理流量。
+
+广播域驻留在 IP 空间中。在集群初始化期间，系统会创建两个默认广播域：
+
+* "Default" 广播域包含位于 "Default" IP 空间中的端口。
++
+这些端口主要用于提供数据。集群管理和节点管理端口也位于此广播域中。
+
+* " 集群 " 广播域包含位于 " 集群 " IP 空间中的端口。
++
+这些端口用于集群通信，并包括集群中所有节点的所有集群端口。
+
++
+系统会根据需要在默认 IP 空间中创建其他广播域。" 默认 " 广播域包含管理 LIF 的主端口，以及可通过第 2 层访问该端口的任何其他端口。其他广播域名为 "Default-1" ， "Default-2" 等。
+
+

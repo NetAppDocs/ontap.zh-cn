@@ -1,0 +1,56 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_troubleshoot_link_between_site_a_and_mediator_down.html 
+keywords: SM-BC, SMBC, troubleshooting, link down, Mediator 
+summary: 对站点 A 和调解器关闭以及站点 B 关闭之间的链路故障进行故障排除。 
+---
+= 站点 A 和调解器之间的链路关闭，站点 B 关闭
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+从站点 A 检查调解器的状态
+
+....
+C1_cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+10.237.86.17     C2_cluster       unreachable       true
+
+C1_cluster::*> snapmirror list-destinations
+                                                  Progress
+Source             Destination         Transfer   Last         Relationship
+Path         Type  Path         Status Progress   Updated      Id
+----------- ----- ------------ ------- --------- ------------ ---------------
+vs0:/cg/src_cg_1  XDP   vs1:/cg/dst_cg_1  OutOfSync  -         -            bba7d354-06f6-11eb-9138-005056acec19
+....
+检查站点 B 连接：
+
+....
+C1_sti78-vsim-ucs188a_cluster::*> cluster peer show
+Peer Cluster Name         Cluster Serial Number Availability   Authentication
+------------------------- --------------------- -------------- --------------
+C2_cluster                1-80-000011           Unavailable    ok
+....
+检查 SM-BC 卷上的协商一致状态：
+
+....
+C1_cluster::*> volume show zrto_cg_894191_188b_RW1 -fields smbc-consensus
+vserver volume                  smbc-consensus
+------- ----------------------- ------------------
+vs0     zrto_cg_894191_188b_RW1 Awaiting-consensus
+....
+完成以下步骤以覆盖 SM-BC 共识并强制恢复站点 A 上的 I/O ：
+
+. 取消映射站点 A 上的 LUN
+. 在站点 A 上使用 ` -force` 和 `override-smbc-consenson` 选项对 SnapMirror release 命令执行问题描述
+. 重新映射 LUN 。
+. 首先，启动调解器，然后启动站点 B 节点。
+. 使用 `snapmirror resync` 重新同步一致性组关系。
+. 站点 B 启动后，验证一致性组关系是否已启动且处于同步状态。
+. 在主机上执行 LUN 重新扫描，以还原 LUN 的所有路径。
+

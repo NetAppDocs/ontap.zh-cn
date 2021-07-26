@@ -1,0 +1,38 @@
+---
+permalink: upgrade/task_verifying_the_san_configuration_after_an_upgrade.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, post, after, san, verify 
+summary: 如果要在 SAN 环境中升级，则在升级后，您应验证在升级成功重新连接到 LIF 之前连接到 LIF 的每个启动程序。 
+---
+= 升级后验证 SAN 配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要在 SAN 环境中升级，则在升级后，您应验证在升级成功重新连接到 LIF 之前连接到 LIF 的每个启动程序。
+
+. 验证每个启动程序是否已连接到正确的 LIF 。
++
+您应将启动程序列表与升级准备期间创建的列表进行比较。
+
++
+[cols="2*"]
+|===
+| 针对 ... | 输入 ... 
+
+
+ a| 
+iSCSI
+ a| 
+`iscsi initiator show -fields igroup ， initiator-name ， tpgroup`
+
+
+
+ a| 
+FC
+ a| 
+`FCP 启动程序 show -fields igroup ， wwpn ， lif`
+
+|===
+

@@ -1,0 +1,170 @@
+---
+sidebar: sidebar 
+permalink: networking/repair_port_reachability.html 
+keywords: port, reachability, repair, fix, error, switch, configuration, cable, cabling, wiring, wire, wired, re-cabled, layer 2, repair port reachability, network port reachability show -detail -node -port, repair reachability decision tree, unexpected ports, unreachable ports, lifs and repaired ports, vlans and repaired ports, interface groups and repaired ports 
+summary: 如果端口重新布线或交换机配置发生更改，则可能需要将端口修复到其他新的或现有的广播域中 
+---
+= 修复端口可访问性
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+系统会自动创建广播域。但是，如果端口已重新连接，或者交换机配置发生更改，则可能需要将端口修复到其他广播域（新域或现有域）中。
+
+您必须是集群管理员才能执行此任务。
+
+可以使用一个命令根据 ONTAP 检测到的第 2 层可访问性自动修复端口的广播域配置。
+
+.步骤
+. 检查交换机配置和布线。
+. 检查端口的可访问性：
++
+`network port reachability show -detail -node -port`
+
++
+命令输出包含可访问性结果。
+
+. 使用以下决策树和表了解可访问性结果并确定下一步要执行的操作（如果有）。
++
+image:ontap_nm_image1.png["修复可访问性决策树"]
+
+
+
+[cols="2*"]
+|===
+| 可访问性状态 | 说明 
+
+
+ a| 
+确定
+ a| 
+此端口可通过第 2 层访问其分配的广播域。如果可访问性状态为 " 正常 " ，但存在 " 意外端口 " ，请考虑合并一个或多个广播域。有关详细信息，请参见以下 _unexpected ports_行 。
+
+如果可访问性状态为 " 正常 " ，但存在 " 无法访问的端口 " ，请考虑拆分一个或多个广播域。有关详细信息，请参见以下 _Unreachable ports_行 。
+
+如果可访问性状态为 " 正常 " ，并且没有意外或无法访问的端口，则表示您的配置正确。
+
+
+
+ a| 
+意外端口
+ a| 
+此端口可通过第 2 层访问其分配的广播域；但是，它也可通过第 2 层访问至少其他一个广播域。
+
+检查物理连接和交换机配置以确定它是否不正确，或者端口分配的广播域是否需要与一个或多个广播域合并。
+
+有关详细信息，请参见 link:merge_broadcast_domains.html["合并广播域"]。
+
+
+
+ a| 
+无法访问的端口
+ a| 
+如果一个广播域已分区为两个不同的可访问性集，则可以拆分一个广播域，以便将 ONTAP 配置与物理网络拓扑同步。
+
+通常，不可访问的端口列表定义了在确认物理和交换机配置准确之后应拆分为另一个广播域的一组端口。
+
+有关详细信息，请参见 link:split_broadcast_domains.html["拆分广播域"]。
+
+
+
+ a| 
+配置不当的可访问性
+ a| 
+此端口无法通过第 2 层访问其分配的广播域；但是，此端口确实可以通过第 2 层访问其他广播域。
+
+您可以修复端口可访问性。运行以下命令时，系统会将此端口分配给其可访问性所在的广播域：
+
+`network port reachability repair -node -port`
+
+
+
+ a| 
+不可访问性
+ a| 
+此端口无法通过第 2 层访问任何现有广播域。
+
+您可以修复端口可访问性。运行以下命令时，系统会将此端口分配给默认 IP 空间中自动创建的新广播域：
+
+`network port reachability repair -node -port`
+
+
+
+ a| 
+多域可访问性
+ a| 
+此端口可通过第 2 层访问其分配的广播域；但是，它也可通过第 2 层访问至少其他一个广播域。
+
+检查物理连接和交换机配置以确定它是否不正确，或者端口分配的广播域是否需要与一个或多个广播域合并。
+
+有关详细信息，请参见 link:merge_broadcast_domains.html["合并广播域"]。
+
+
+
+ a| 
+未知
+ a| 
+如果可访问性状态为 "unknown" ，请等待几分钟，然后重试此命令。
+
+|===
+修复端口后，请检查是否存在已替换的 LIF 和 VLAN 。如果端口属于某个接口组，则还需要了解该接口组发生了什么情况。
+
+
+
+== LIF
+
+修复某个端口并将其移动到其他广播域后，在修复的端口上配置的任何 LIF 都将自动分配一个新的主端口。如果可能，会从同一节点上的同一广播域中选择此主端口。或者，选择其他节点的主端口，或者，如果不存在合适的主端口，则清除主端口。
+
+如果将 LIF 的主端口移至另一个节点或将其清除，则此 LIF 将视为已 " 替换 " 。您可以使用以下命令查看这些已替换的 LIF ：
+
+`displaced interface show`
+
+如果存在任何已替换的 LIF ，您必须：
+
+* 还原已替换 LIF 的主目录：
++
+`displaced interface restore`
+
+* 手动设置 LIF 的主目录：
++
+`network interface modify -home-port -home-node`
+
+* 如果对 LIF 当前配置的主接口感到满意，请从 "removed-interface" 表中删除此条目：
++
+`displaced interface delete`
+
+
+
+
+
+== VLAN
+
+如果修复后的端口具有 VLAN ，则这些 VLAN 会自动删除，但也会记录为已 " 替换 " 。您可以查看以下已替换的 VLAN ：
+
+`displaced VLAN show`
+
+如果存在任何已替换的 VLAN ，您必须：
+
+* 将 VLAN 还原到其他端口：
++
+`displaced VLAN restore`
+
+* 从 "Displaced VLAN " 表中删除此条目：
++
+`displaced -vlans delete`
+
+
+
+
+
+== 接口组
+
+如果修复后的端口属于某个接口组，则会将其从该接口组中删除。如果该端口是分配给接口组的唯一成员端口，则会删除该接口组本身。
+
+link:https://docs.netapp.com/us-en/ontap/networking/verify_your_network_configuration.html["升级后验证网络配置"]
+
+link:monitor_the_reachability_of_network_ports.html["监控网络端口的可访问性"]

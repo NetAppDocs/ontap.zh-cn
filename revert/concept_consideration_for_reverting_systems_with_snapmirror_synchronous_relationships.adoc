@@ -1,0 +1,29 @@
+---
+permalink: revert/concept_consideration_for_reverting_systems_with_snapmirror_synchronous_relationships.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, reversion, considerations, snapmirror, synchronous, relationships 
+summary: 在从 ONTAP 9.6 还原到 ONTAP 9.5 之前，您必须了解 SnapMirror 同步关系的注意事项。 
+---
+= 还原具有 SnapMirror 同步关系的系统的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在从 ONTAP 9.6 还原到 ONTAP 9.5 之前，您必须了解 SnapMirror 同步关系的注意事项。
+
+还原之前，如果您具有 SnapMirror 同步关系，则必须执行以下步骤：
+
+* 您必须删除源卷使用 NFSv4 或 SMB/CIFS 提供数据的任何 SnapMirror 同步关系。
++
+ONTAP 9.5 不支持 NFSv4 和 SMB/CIFS 。
+
+* 您必须删除镜像 - 镜像级联部署中的任何 SnapMirror 同步关系。
++
+ONTAP 9.5 中的 SnapMirror 同步关系不支持镜像 - 镜像级联部署。
+
+* 如果还原期间 ONTAP 9.5 中的通用 Snapshot 副本不可用，则必须在还原后初始化 SnapMirror 同步关系。
++
+升级到 ONTAP 9.6 两小时后， ONTAP 9.5 中的通用 Snapshot 副本将自动替换为 ONTAP 9.6 中的通用 Snapshot 副本。因此，如果 ONTAP 9.5 中的通用 Snapshot 副本不可用，则还原后无法重新同步 SnapMirror 同步关系。
+
+

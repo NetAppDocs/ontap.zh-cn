@@ -1,0 +1,80 @@
+---
+sidebar: sidebar 
+permalink: task_metrocluster_setup.html 
+keywords: metrocluster, set up, setup, start, initialize, cluster, config, nodes 
+summary: 从 ONTAP 9.8 开始，您可以使用 System Manager 设置 MetroCluster 站点的 IP 配置。 
+---
+= 设置 IP MetroCluster 站点
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+从 ONTAP 9.8 开始，您可以使用 System Manager 设置 MetroCluster 站点的 IP 配置。
+
+MetroCluster 站点由两个集群组成。通常，集群位于不同的地理位置。
+
+.开始之前
+* 您的系统应已按照安装并布线 http://docs.netapp.com/platstor/index.jsp["《安装和设置说明》"^] 随系统提供。
+* 应在每个集群的每个节点上配置集群网络接口，以便进行集群内通信。
+
+
+video::PiX41bospbQ[youtube, width=848,height=480]
+
+
+== 分配节点管理 IP 地址
+
+
+
+=== Windows 系统
+
+您应将 Windows 计算机连接到与控制器相同的子网。此操作将自动为您的系统分配节点管理 IP 地址。
+
+.步骤
+. 在 Windows 系统中，打开 * 网络 * 驱动器以发现节点。
+. 双击节点以启动集群设置向导。
+
+
+
+
+=== 其他系统
+
+您应为集群中的一个节点配置节点管理 IP 地址。您可以使用此节点管理 IP 地址启动集群设置向导。
+
+请参见 link:https://docs.netapp.com/us-en/ontap/software_setup/task_create_the_cluster_on_the_first_node.html["在第一个节点上创建集群"] 有关分配节点管理 IP 地址的信息。
+
+
+
+== 初始化和配置集群
+
+您可以通过设置集群的管理密码以及设置集群管理和节点管理网络来初始化集群。您还可以配置 DNS 服务器等服务来解析主机名，并配置 NTP 服务器来同步时间。
+
+.步骤
+. 在 Web 浏览器上，输入您配置的节点管理 IP 地址： "https://node-management-IP"[]
++
+System Manager 会自动发现集群中的其余节点。
+
+. 在 * 初始化存储系统 * 窗口中，执行以下操作：
++
+.. 输入集群管理网络配置数据。
+.. 输入所有节点的节点管理 IP 地址。
+.. 提供域名服务器（ DNS ）详细信息。
+.. 在 * 其他 * 部分中，选中标记为 * 使用时间服务（ NTP ） * 的复选框以添加时间服务器。
+
+
+
+
+单击 * 提交 * 后，请等待创建和配置集群。然后，将执行验证过程。
+
+设置，初始化和配置两个集群后，执行以下操作步骤：
+
+* link:task_metrocluster_peering.html["设置 IP MetroCluster 对等"]
+

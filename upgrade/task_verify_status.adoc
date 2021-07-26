@@ -1,0 +1,190 @@
+---
+permalink: upgrade/task_verify_status.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, upgrade, verify, status, ha, ldap, dns, networking, storage, metrocluster 
+summary: 各种配置设置可能会影响集群升级准备情况。 
+---
+= 验证状态
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在升级之前，您应验证以下内容：
+
+* HA 对状态
+* LDAP 状态（适用于 ONTAP 9.2 或更高版本）
+* DNS 服务器状态（适用于 ONTAP 9.2 或更高版本），
+* 网络连接和存储状态（对于 MetroCluster 配置）
+
+
+
+
+== 正在验证 HA 状态
+
+在执行无中断升级之前，您应验证是否已为每个 HA 对启用存储故障转移。如果集群仅包含两个节点，则还应验证是否已启用集群 HA 。
+
+如果您计划执行中断升级，则无需验证 HA 状态，因为此升级方法不需要存储故障转移。
+
+. 验证是否已为每个 HA 对启用存储故障转移并可进行此操作： `storage failover show`
++
+此示例显示 node0 和 node1 上已启用并可执行存储故障转移：
+
++
+[listing]
+----
+cluster1::> storage failover show
+                              Takeover
+Node           Partner        Possible State
+-------------- -------------- -------- -------------------------------------
+node0          node1          true     Connected to node1
+node1          node0          true     Connected to node0
+2 entries were displayed.
+----
++
+如有必要，您可以使用 storage failover modify 命令启用存储故障转移。
+
+. 如果集群仅包含两个节点（一个 HA 对），请验证是否已配置集群 HA ： `cluster ha show`
++
+此示例显示已配置集群 HA ：
+
++
+[listing]
+----
+cluster1::> cluster ha show
+High Availability Configured: true
+----
++
+如有必要，您可以使用 cluster ha modify 命令启用集群 HA 。
+
+
+
+
+
+== 验证 LDAP 状态（ ONTAP 9.2 及更高版本）
+
+从 ONTAP 9.2 开始，如果 Storage Virtual Machine （ SVM ）使用 LDAP ，则必须建立 LDAP 连接才能执行无中断升级。在开始升级之前，您应验证 LDAP 连接。
+
+如果您要从 ONTAP 9.1 或更早版本升级，则此任务不适用。
+
+. 检查 LDAP 状态： `ldap check -vserver vserver_name`
+. 如果 LDAP 状态为 down ，请将其修改为： `ldap client modify -client-config ldap_client -ldap-servers ip_address`
+. 验证 LDAP 状态是否为 up ： `ldap check -vserver vserver_name`
+
+
+
+
+== 验证 DNS 服务器状态（ ONTAP 9.2 及更高版本）
+
+从 ONTAP 9.2 及更高版本开始，您应在执行无中断升级前后验证域名服务（ DNS ）服务器的状态。
+
+如果您要从 ONTAP 9.1 或更早版本升级，则此任务不适用。
+
+. 检查 DNS 服务器的状态： `dns check -vserver vserver_name`
++
+up 状态表示服务正在运行。关闭状态表示服务未运行。
+
+. 如果 DNS 服务器已关闭，请修改它： `dns modify -vserver vserver_name -domains domain_name -name-servers name_server_ipaddress`
+. 验证 DNS 服务器的状态是否为已启动。
+
+
+
+
+== 验证 MetroCluster 配置的网络连接和存储状态
+
+在 MetroCluster 配置中执行更新前后，您应验证每个集群的 LIF ，聚合和卷的状态。
+
+. 验证 LIF 状态： `network interface show`
++
+在正常操作下，源 SVM 的 LIF 的管理状态必须为 up ，并且位于其主节点上。目标 SVM 的 LIF 不需要启动或位于其主节点上。在切换中，所有 LIF 的管理状态均为 up ，但无需位于其主节点上。
+
++
+[listing]
+----
+cluster1::> network interface show
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+Cluster
+            cluster1-a1_clus1
+                         up/up    192.0.2.1/24       cluster1-01
+                                                                   e2a     true
+            cluster1-a1_clus2
+                         up/up    192.0.2.2/24       cluster1-01
+                                                                   e2b     true
+
+
+cluster1-01
+            clus_mgmt    up/up    198.51.100.1/24    cluster1-01
+                                                                   e3a     true
+            cluster1-a1_inet4_intercluster1
+                         up/up    198.51.100.2/24    cluster1-01
+                                                                   e3c     true
+            ...
+
+27 entries were displayed.
+----
+. 验证聚合的状态： `storage aggregate show -state ！ online`
++
+此命令将显示所有处于 _not_ 联机状态的聚合。在正常操作下，位于本地站点的所有聚合都必须处于联机状态。但是，如果 MetroCluster 配置处于切换状态，则允许灾难恢复站点上的根聚合脱机。
+
++
+此示例显示了正常运行的集群：
+
++
+[listing]
+----
+cluster1::> storage aggregate show -state !online
+There are no entries matching your query.
+----
++
+此示例显示了正在切换的集群，其中灾难恢复站点上的根聚合处于脱机状态：
+
++
+[listing]
+----
+cluster1::> storage aggregate show -state !online
+Aggregate     Size Available Used% State   #Vols  Nodes            RAID Status
+--------- -------- --------- ----- ------- ------ ---------------- ------------
+aggr0_b1
+                0B        0B    0% offline      0 cluster2-01      raid_dp,
+                                                                   mirror
+                                                                   degraded
+aggr0_b2
+                0B        0B    0% offline      0 cluster2-02      raid_dp,
+                                                                   mirror
+                                                                   degraded
+2 entries were displayed.
+----
+. 验证卷的状态： `volume show -state ！ online`
++
+此命令将显示所有处于 _not_ 联机状态的卷。
+
++
+如果 MetroCluster 配置处于正常运行状态（未处于切换状态），则输出应显示集群的二级 SVM 所拥有的所有卷（ SVM 名称后附加 "-MC" 的卷）。
+
++
+只有在发生切换时，这些卷才会联机。
+
++
+此示例显示了正常运行的集群，其中灾难恢复站点上的卷未联机。
+
++
+[listing]
+----
+cluster1::> volume show -state !online
+  (volume show)
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vs2-mc    vol1         aggr1_b1     -          RW            -          -     -
+vs2-mc    root_vs2     aggr0_b1     -          RW            -          -     -
+vs2-mc    vol2         aggr1_b1     -          RW            -          -     -
+vs2-mc    vol3         aggr1_b1     -          RW            -          -     -
+vs2-mc    vol4         aggr1_b1     -          RW            -          -     -
+5 entries were displayed.
+----
+. 确认没有不一致的卷： `volume show -is-inconsistent true`
++
+如果返回任何不一致的卷，您必须在升级之前联系 NetApp 支持部门。
+
+

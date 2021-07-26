@@ -1,0 +1,22 @@
+---
+sidebar: sidebar 
+permalink: networking/how_dns_load_balancing_works.html 
+keywords: introducing, introduction, overview, dns, naming, name, service, load, balance, balancing, performance, how dns load balancing works, introducing dns load balancing 
+summary: 引入 DNS 负载平衡 
+---
+= DNS 负载平衡的工作原理
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+客户端通过指定 IP 地址（与 LIF 关联）或主机名（与多个 IP 地址关联）来挂载 SVM 。默认情况下，站点范围的 DNS 服务器会以轮循方式选择 LIF ，从而在所有 LIF 之间平衡工作负载。
+
+循环负载平衡可能会导致某些 LIF 过载，因此您可以选择使用 DNS 负载平衡区域来处理 SVM 中的主机名解析。使用 DNS 负载平衡区域可确保在可用资源之间更好地平衡新客户端连接，从而提高集群性能。
+
+DNS 负载平衡区域是集群中的 DNS 服务器，用于动态评估所有 LIF 上的负载并返回适当加载的 LIF 。在负载平衡区域中， DNS 会根据负载为每个 LIF 分配权重（度量指标）。
+
+系统会根据每个 LIF 的端口负载及其主节点的 CPU 利用率为其分配权重。负载较低的端口上的 LIF 在 DNS 查询中返回的可能性较高。也可以手动分配权重。

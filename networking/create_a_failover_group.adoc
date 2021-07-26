@@ -1,0 +1,47 @@
+---
+sidebar: sidebar 
+permalink: networking/create_a_failover_group.html 
+keywords: create, creation, creating, add, adding, failover, fail, over, group, create a failover group, failover group of network ports automatically migrate a lif to a different port when a link failure occurs, failover-groups create, ifgrps 
+summary: 创建网络端口故障转移组会在链路发生故障时自动将 LIF 迁移到其他端口 
+---
+= 创建故障转移组
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以创建网络端口的故障转移组，以便在 LIF 的当前端口发生链路故障时， LIF 可以自动迁移到其他端口。这样，系统就可以将网络流量重新路由到集群中的其他可用端口。
+
+您可以使用 `network interface failover-groups create` 命令创建组并向组添加端口。
+
+* 添加到故障转移组的端口可以是网络端口， VLAN 或接口组（ ifgrp ）。
+* 添加到故障转移组的所有端口必须属于同一广播域。
+* 一个端口可以驻留在多个故障转移组中。
+* 如果 LIF 位于不同的 VLAN 或广播域中，则必须为每个 VLAN 或广播域配置故障转移组。
+* 故障转移组不适用于 SAN iSCSI 或 FC 环境。
+
+
+创建故障转移组：
+
+`network interface failover-groups create -vserver _vserver_name_ -failover-group _failover_group_name_ -targets _ports_list_`
+
+* ` _vserver_name_` 是可使用故障转移组的 SVM 的名称。
+* ` failover_group_name_` 是要创建的故障转移组的名称。
+* ` ports_list_` 是要添加到故障转移组的端口列表。添加的端口格式为 _node_name> ： <port_number>_ ，例如 node1 ： e0c 。
+
+
+以下命令将为 SVM vs3 创建故障转移组 fg3 并添加两个端口：
+
+....
+network interface failover-groups create -vserver vs3 -failover-group fg3 -targets cluster1-01:e0e,cluster1-02:e0e
+....
+.完成后
+* 既然已创建故障转移组，您应将此故障转移组应用于 LIF 。
+* 如果应用的故障转移组不能为 LIF 提供有效的故障转移目标，则会显示一条警告消息。
++
+如果没有有效故障转移目标的 LIF 尝试进行故障转移，可能会发生中断。
+
+

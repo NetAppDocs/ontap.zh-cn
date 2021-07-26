@@ -1,0 +1,65 @@
+---
+permalink: software_setup/task_create_the_cluster_on_the_first_node.html 
+sidebar: sidebar 
+keywords: ontap, software, setup, create, cluster, first, node, autosupport, CLI 
+summary: 您可以使用集群设置向导在第一个节点上创建集群。此向导可帮助您配置用于连接节点的集群网络（如果集群包含两个或更多节点），创建集群管理 Storage Virtual Machine （ SVM\ ），添加功能许可证密钥以及为第一个节点创建节点管理接口。 
+---
+= 在第一个节点上创建集群
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用集群设置向导在第一个节点上创建集群。此向导可帮助您配置连接节点的集群网络，创建集群管理 Storage Virtual Machine （ SVM ），添加功能许可证密钥以及为第一个节点创建节点管理接口。
+
+. 打开要添加到集群中的所有节点的电源。要为集群设置启用发现，必须执行此操作。
+. 连接到第一个节点的控制台。
++
+节点将启动，然后在控制台上启动集群设置向导。
+
++
+[listing]
+----
+Welcome to the cluster setup wizard....
+----
+. 确认 AutoSupport 语句。
++
+[listing]
+----
+Type yes to confirm and continue {yes}: yes
+----
++
+
+NOTE: 默认情况下， AutoSupport 处于启用状态。
+
+. 按照屏幕上的说明为节点分配 IP 地址。
+. 如果使用 GUI 向导执行设置，请按照说明在 Web 浏览器中完成设置。如果使用命令行界面向导执行设置，请按 Enter 继续。
++
+[listing]
+----
+Use your web browser to complete cluster setup by accessing
+https://10.63.11.29
+
+Otherwise, press Enter to complete cluster setup using the
+command line interface:
+
+Do you want to create a new cluster or join an existing cluster? {create, join}:
+----
+. 创建新集群： `create`
+. 接受系统默认值或输入您自己的值。
+. 设置完成后，登录到集群，并输入以下 ONTAP 命令行界面命令验证集群是否处于活动状态，以及第一个节点是否运行正常： `cluster show`
++
+以下示例显示了一个集群，其中第一个节点（ cluster1-01 ）运行状况良好且符合参与条件：
+
++
+[listing]
+----
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+cluster1-01           true    true
+----
++
+您可以使用 `cluster setup` 命令访问集群设置向导以更改为管理 SVM 或节点 SVM 输入的任何值。
+
+

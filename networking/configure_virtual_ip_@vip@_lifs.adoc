@@ -1,0 +1,258 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_virtual_ip_@vip@_lifs.html 
+keywords: configure, configuration, configuring, setup, setting, set, up, virtual, vip, ip, lif, data, configure virtual IP (vip) lifs, set up border gateway protocol (bgp), use-peer-as-next-hop, asn-prepend-type, asn-prepend-count, community, network bgp peer-group, med, multi-exit discriminator, create a virtual ip (vip) data lif, commands for managing the BGP, network bgp, manage bgp configuration, manage bgp default values, manage bgp peer groups 
+summary: 跨子网故障转移 LIF 
+---
+= 配置虚拟 IP （ VIP ） LIF
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+某些下一代数据中心使用网络第 3 层机制，这些机制要求 LIF 跨子网进行故障转移。从 ONTAP 9.5 开始，支持 VIP 数据 LIF 以及相关的路由协议边界网关协议（ BGP ），从而使 ONTAP 能够加入这些下一代网络。
+
+VIP 数据 LIF 不属于任何子网，可从同一 IP 空间中托管 BGP LIF 的所有端口访问。VIP 数据 LIF 可消除主机对各个网络接口的依赖。由于多个物理适配器传输数据流量，因此整个负载不会集中在一个适配器以及关联的子网上。VIP 数据 LIF 的存在通过路由协议边界网关协议（ BGP ）公布给对等路由器。
+
+VIP 数据 LIF 具有以下优势：
+
+* 超越广播域或子网的 LIF 可移植性： VIP 数据 LIF 可以通过 BGP 向路由器公布每个 VIP 数据 LIF 的当前位置，从而故障转移到网络中的任何子网。
+* 聚合吞吐量： VIP 数据 LIF 可以支持超过任何单个端口带宽的聚合吞吐量，因为 VIP LIF 可以同时从多个子网或端口发送或接收数据。
+
+
+
+
+== 设置边界网关协议（ BGP ）
+
+在创建 VIP LIF 之前，您必须设置 BGP ，这是用于向对等路由器宣布存在 VIP LIF 的路由协议。
+
+从 ONTAP 9.1.1 开始， VIP BGP 使用 BGP 对等分组提供默认路由自动化，以简化配置。
+
+当 BGP 对等方位于同一子网上时， ONTAP 可以使用 BGP 对等方作为下一跳路由器来学习默认路由，这种方法非常简单。要使用此功能，请将 ` -use-peer-as -next 跃点` 属性设置为 `true` 。默认情况下，此属性为 `false` 。
+
+如果配置了静态路由，则这些路由仍优先于这些自动默认路由。
+
+必须将对等路由器配置为接受来自 BGP LIF 的 BGP 连接，以连接已配置的自治系统编号（ ASN ）。
+
+
+NOTE: ONTAP 不会处理从路由器传入的任何路由公告；因此，您应将对等路由器配置为不向集群发送任何路由更新。
+
+设置 BGP 包括选择性地创建 BGP 配置，创建 BGP LIF 以及创建 BGP 对等组。在给定节点上创建第一个 BGP 对等组时， ONTAP 会自动使用默认值创建默认 BGP 配置。BGP LIF 用于与对等路由器建立 BGP TCP 会话。对于对等路由器， BGP LIF 是访问 VIP LIF 的下一个跃点。BGP LIF 已禁用故障转移。BGP 对等组公布对等组 IP 空间中所有 SVM 的 VIP 路由。
+
+从 ONTAP 9.8 开始，这些字段已添加到 `network BGP peer-group` 命令中：
+
+* -ASN-prepend-type
+* -ASN-prepend-count
+* 社区
+
+
+通过这些 BGP 属性，您可以为 BGP 对等组配置为路径和社区属性。
+
+从 ONTAP 9.1.1 开始，已添加以下字段：
+
+* -ASN 或 -peer-ASN （ 4 字节值）属性本身不是新属性，但现在使用 4 字节整数。
+* -med
+* -use-peer-as 下一跳
+
+
+您可以通过多出口鉴别器（ Multi-Exit Mixator ， MED ）支持进行高级路由选择，以确定路径优先级。Med 是 BGP 更新消息中的一个可选属性，用于指示路由器为流量选择最佳路由。MED 是一个无符号的 32 位整数（ 0 - 4294967295 ）；最好使用更低的值。
+
+
+NOTE: 虽然 ONTAP 支持上述 BGP 属性，但路由器不必遵守这些属性。NetApp 强烈建议您确认路由器支持哪些属性，并相应地配置 BGP 对等组。有关详细信息，请参阅路由器提供的 BGP 文档。
+
+.步骤
+. 登录到高级权限级别：
++
+`set -privilege advanced`
+
+. 可选：执行以下操作之一，创建 BGP 配置或修改集群的默认 BGP 配置：
++
+.. 创建 BGP 配置：
++
+....
+network bgp config create -node {node_name | local} -asn asn_integer -holdtime
+hold_time -routerid local_router_IP_address
+....
++
+带有 2 字节 ASN 的示例：
+
++
+....
+network bgp config create -node node1 -asn 65502 -holdtime 180 -routerid 1.1.1.1
+....
++
+包含 4 字节 ASN 的示例：
+
++
+....
+network bgp config create -node node1 -asn 85502 -holdtime 180 -routerid 1.1.1.1
+....
+.. 修改默认 BGP 配置：
++
+....
+network bgp defaults modify -asn asn_integer -holdtime hold_time
+network bgp defaults modify -asn 65502
+....
++
+*** `ASN_integer` 指定 ASN 。从 ONTAP 9.8 开始，适用于 BGP 的 ASN 支持一个 2 字节非负整数。这是一个 16 位数（ 0 - 64511 可用值）。从 ONTAP 9.1.1 开始，适用于 BGP 的 ASN 支持一个 4 字节非负整数（ 65536 - 4294967295 ）。默认 ASN 为 65501 。ASN 23456 保留用于与未公布 4 字节 ASN 功能的对等方建立 ONTAP 会话。
+*** `Hold_Time` 指定保持时间（以秒为单位）。默认值为 180s 。
+
+
+
+
+. 为系统 SVM 创建 BGP LIF ：
++
+....
+network interface create -vserver system_svm -lif lif_name -service-policy default-route-announce -home-node home_node -home-port home_port -address ip_address -netmask netmask
+....
++
+您可以对 BGP LIF 使用 `default-route-announce` 服务策略。
+
++
+....
+network interface create -vserver cluster1 -lif bgp1 -service-policy default-route-announce -home-node cluster1-01 -home-port e0c -address 10.10.10.100 -netmask 255.255.255.0
+....
+. 创建 BGP 对等组，用于与远程对等路由器建立 BGP 会话，并配置向对等路由器公布的 VIP 路由信息：
++
+示例 1 ：创建不具有自动默认路由的对等组
+
++
+在这种情况下，管理员必须创建指向 BGP 对等方的静态路由。
+
++
+....
+network bgp peer-group create -peer-group group_name -ipspace ipspace_name -bgp-lif bgp_lif -peer-address peer-router_ip_address -peer-asn 65502 -route-preference integer
+-asn-prepend-type <ASN_prepend_type> -asn-prepend-count integer -med integer -community BGP community list <0-65535>:<0-65535>
+....
++
+....
+network bgp peer-group create -peer-group group1 -ipspace Default -bgp-lif bgp1 -peer-address 10.10.10.1 -peer-asn 65502 -route-preference 100 -asn-prepend-type local-asn -asn-prepend-count 2 -med 100 -community 9000:900,8000:800
+....
++
+示例 2 ：使用自动默认路由创建对等组
+
++
+....
+network bgp peer-group create -peer-group group_name -ipspace ipspace_name -bgp-lif bgp_lif -peer-address peer-router_ip_address -peer-asn 65502 -use-peer-as-next-hop true -route-preference integer -asn-prepend-type <ASN_prepend_type> -asn-prepend-count integer -med integer -community BGP community list <0-65535>:<0-65535>
+....
++
+....
+network bgp peer-group create -peer-group group1 -ipspace Default -bgp-lif bgp1 -peer-address 10.10.10.1 -peer-asn 65502 -use-peer-as-next-hop true -route-preference 100 -asn-prepend-type local-asn -asn-prepend-count 2 -med 100 -community 9000:900,8000:800
+....
+
+
+
+
+== 创建虚拟 IP （ VIP ）数据 LIF
+
+VIP 数据 LIF 的存在通过路由协议边界网关协议（ BGP ）公布给对等路由器。
+
+.开始之前
+* 必须设置 BGP 对等组，并且要创建 LIF 的 SVM 的 BGP 会话必须处于活动状态。
+* 必须为 SVM 的任何传出 VIP 流量创建指向 BGP 路由器或 BGP LIF 子网中任何其他路由器的静态路由。
+* 您应启用多路径路由，以便传出 VIP 流量可以利用所有可用的路由。
++
+如果未启用多路径路由，则所有传出 VIP 流量都会从一个接口传输。
+
+
+
+.步骤
+. 创建 VIP 数据 LIF ：
++
+....
+network interface create -vserver svm_name -lif lif_name -role data -data-protocol
+{nfs|cifs|iscsi|fcache|none|fc-nvme} -home-node home_node -address ip_address -is-vip true
+....
++
+如果未使用 `network interface create` 命令指定主端口，则会自动选择 VIP 端口。
+
++
+默认情况下， VIP 数据 LIF 属于系统为每个 IP 空间创建的名为 "VIP" 的广播域。您不能修改 VIP 广播域。
+
++
+在托管 IP 空间 BGP LIF 的所有端口上，均可同时访问 VIP 数据 LIF 。如果本地节点上 VIP 的 SVM 没有活动的 BGP 会话，则 VIP 数据 LIF 将故障转移到为该 SVM 建立了 BGP 会话的节点上的下一个 VIP 端口。
+
+. 验证 VIP 数据 LIF 的 SVM 的 BGP 会话是否处于 up 状态：
++
+....
+network bgp vserver-status show
+
+Node        Vserver  bgp status
+	    ----------  -------- ---------
+	    node1       vs1      up
+....
++
+如果某个节点上的 SVM 的 BGP 状态为 `down` ，则 VIP 数据 LIF 将故障转移到 SVM 的 BGP 状态为 up 的其他节点。如果所有节点上的 BGP 状态均为 `dOwn` ，则 VIP 数据 LIF 不能托管在任何位置，并且 LIF 状态为 down 。
+
+
+
+
+
+== 用于管理 BGP 的命令
+
+从 ONTAP 9.5 开始，您可以使用 `network BGP` 命令在 ONTAP 中管理 BGP 会话。
+
+
+
+=== 管理 BGP 配置
+
+[cols="2*"]
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+| 创建 BGP 配置 | 网络 BGP 配置创建 
+
+
+| 修改 BGP 配置 | 网络 BGP 配置修改 
+
+
+| 删除 BGP 配置 | 网络 BGP 配置删除 
+
+
+| 显示 BGP 配置 | network BGP config show 
+
+
+| 显示 VIP LIF 的 SVM 的 BGP 状态 | network BGP vserver-status show 
+|===
+
+
+=== 管理 BGP 默认值
+
+[cols="2*"]
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+| 修改 BGP 默认值 | 网络 BGP 默认修改 
+
+
+| 显示 BGP 默认值 | network BGP defaults show 
+|===
+
+
+=== 管理 BGP 对等组
+
+[cols="2*"]
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+| 创建 BGP 对等组 | 网络 BGP 对等组创建 
+
+
+| 修改 BGP 对等组 | network BGP 对等组修改 
+
+
+| 删除 BGP 对等组 | 网络 BGP 对等组删除 
+
+
+| 显示 BGP 对等组信息 | network BGP peer-group show 
+
+
+| 重命名 BGP 对等组 | 网络 BGP 对等组重命名 
+|===
+相关信息 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]

@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: networking/networking_components_of_a_cluster_overview.html 
+keywords: routing, DNS zones, physical ports, logical ports, IPspaces, broadcast domains, subnets, logical interfaces, familiarize yourself with the networking components of a cluster before setting up the cluster, networking components of a cluster overview, network components of a cluster, four-node cluster diagram, 4 node cluster diagram, four node cluster diagram 
+summary: 在设置集群之前，请熟悉集群的网络组件 
+---
+= 概述
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+在设置集群之前，您应熟悉集群的网络组件。将集群的物理网络组件配置为逻辑组件可在 ONTAP 中提供灵活性和多租户功能。
+
+集群中的各种网络组件如下所示：
+
+* 物理端口
++
+网络接口卡（ NIC ）和主机总线适配器（ HBA ）提供从每个节点到物理网络（管理和数据网络）的物理（以太网和光纤通道）连接。
+
++
+有关站点要求，交换机信息，端口布线信息和控制器板载端口布线，请参见上的 Hardware Universe https://hwu.netapp.com/["hwu.netapp.com"^]。
+
+* 逻辑端口
++
+虚拟局域网（ VLAN ）和接口组构成逻辑端口。接口组将多个物理端口视为一个端口，而 VLAN 则将一个物理端口细分为多个单独的端口。
+
+* IP 空间
++
+您可以使用 IP 空间为集群中的每个 SVM 创建不同的 IP 地址空间。这样，在管理上独立的网络域中的客户端就可以访问集群数据，同时使用来自同一 IP 地址子网范围的重叠 IP 地址。
+
+* 广播域
++
+广播域驻留在 IP 空间中，并包含一组网络端口，这些端口可能来自集群中的多个节点，这些端口属于同一个第 2 层网络。组中的端口用于 SVM 中的数据流量。
+
+* 子网
++
+子网是在广播域中创建的，其中包含属于同一第 3 层子网的 IP 地址池。此 IP 地址池可简化创建 LIF 期间的 IP 地址分配。
+
+* 逻辑接口
++
+逻辑接口（ LIF ）是指与端口关联的 IP 地址或全球通用端口名称（ WWPN ）。它与故障转移组，故障转移规则和防火墙规则等属性相关联。LIF 通过当前绑定到的端口（物理或逻辑）通过网络进行通信。
+
++
+集群中不同类型的 LIF 包括数据 LIF ，集群范围的管理 LIF ，节点范围的管理 LIF ，集群间 LIF 和集群 LIF 。LIF 的所有权取决于 LIF 所在的 SVM 。数据 LIF 属于数据 SVM ，节点范围的管理 LIF ，集群范围的管理 LIF 和集群间 LIF 属于管理 SVM ，集群 LIF 属于集群 SVM 。
+
+* DNS 区域
++
+可以在创建 LIF 期间指定 DNS 区域，从而为要通过集群的 DNS 服务器导出的 LIF 提供一个名称。多个 LIF 可以共享同一个名称，从而使 DNS 负载平衡功能可以根据负载为该名称分配 IP 地址。
+
++
+SVM 可以具有多个 DNS 区域。
+
+* 路由
++
+每个 SVM 在网络连接方面均可自行使用。SVM 拥有可访问每个已配置外部服务器的 LIF 和路由。
+
++
+下图说明了不同的网络组件在四节点集群中的关联方式：
+
+
+
+image:ontap_nm_image2.jpeg["四节点集群示意图"]

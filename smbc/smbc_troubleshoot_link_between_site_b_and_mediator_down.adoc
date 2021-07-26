@@ -1,0 +1,55 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_troubleshoot_link_between_site_b_and_mediator_down.html 
+keywords: SM-BC, SMBC, troubleshooting, link down, Mediator 
+summary: 从站点 B 建立的调解器连接显示为无法访问。 
+---
+= 站点 B 和调解器之间的链路已关闭，站点 A 已关闭
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+....
+cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+10.237.86.17     C1_cluster       unreachable       true
+SnapMirror consistency group relationship status is out of sync.
+
+C2_cluster::*> snapmirror show -expand
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vs0:/cg/src_cg_1 XDP vs1:/cg/dst_cg_1 Snapmirrored OutOfSync - false   -
+vs0:zrto_cg_655724_188a_RW1 XDP vs1:zrto_cg_655755_188c_DP1 Snapmirrored OutOfSync - false -
+vs0:zrto_cg_655733_188a_RW2 XDP vs1:zrto_cg_655762_188c_DP2 Snapmirrored OutOfSync - false -
+vs0:zrto_cg_655739_188b_RW1 XDP vs1:zrto_cg_655768_188d_DP1 Snapmirrored OutOfSync - false -
+vs0:zrto_cg_655748_188b_RW2 XDP vs1:zrto_cg_655776_188d_DP2 Snapmirrored OutOfSync - false -
+5 entries were displayed.
+
+Site B cluster is unable to reach Site A.
+C2_cluster::*> cluster peer show
+Peer Cluster Name         Cluster Serial Number Availability   Authentication
+------------------------- --------------------- -------------- --------------
+C1_cluster 			  1-80-000011           Unavailable    ok
+....
+强制执行故障转移以启用站点 B 的 I/O ，然后从站点 B 到站点 A 建立零 RTO 关系
+
+要在站点 B 上执行强制故障转移，请完成以下步骤
+
+. 从站点 B 取消映射属于一致性组的所有 LUN
+. 使用 force 选项删除 SnapMirror 一致性组关系。
+. 在一致性组成分卷上输入 snapmirror break 命令，将卷从 DP 转换为 RW ，以便从站点 B 启用 I/O
+. 启动站点 A 节点以创建从站点 B 到站点 A 的零 RTO 关系
+. 释放站点 A 上具有 relationship-info-only 的一致性组，以保留通用 Snapshot 副本并取消映射属于此一致性组的 LUN 。
+. 通过使用 Sync 策略或异步策略设置卷级别关系，将站点 A 上的卷从 RW 转换为 DP 。
+. 通过问题描述重新同步 SnapMirror 以同步关系。
+. 删除站点 A 上的同步 SnapMirror 关系策略
+. 在站点 B 上使用 relationship-info-only true 释放带有 Sync 策略的 SnapMirror 关系
+. 创建从站点 B 到站点 A 的一致性组关系
+. 从站点 A 执行一致性组重新同步，然后验证一致性组是否处于同步状态。
+. 重新扫描主机 LUN I/O 路径以还原 LUN 的所有路径。
+

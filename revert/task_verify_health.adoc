@@ -1,0 +1,168 @@
+---
+permalink: revert/task_verify_health.html 
+sidebar: sidebar 
+keywords: ontap, revert, reverting, reversion, downgrade, downgrading, verifying, verify, cluster, health 
+summary: 还原或降级集群后，您应验证节点是否运行正常且符合加入集群的条件，以及集群是否处于仲裁状态。 
+---
+= 降级或还原后验证集群和存储运行状况
+
+
+[role="lead"]
+降级或还原集群后，您应验证节点是否运行正常且符合加入集群的条件，以及集群是否处于仲裁状态。您还应验证磁盘，聚合和卷的状态。
+
+
+
+== 验证集群运行状况
+
+. 验证集群中的节点是否已联机且符合加入集群的条件： `cluster show`
++
+[listing]
+----
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node0                 true    true
+node1                 true    true
+----
++
+如果任何节点运行状况不正常或不符合条件，请检查 EMS 日志中的错误并采取更正措施。
+
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 输入 `y` 以继续。
+. 验证每个 RDB 进程的配置详细信息。
++
+** 每个节点的关系数据库 epoch 和数据库 epochs 应匹配。
+** 所有节点的每环仲裁主机都应相同。
++
+请注意，每个环可能具有不同的仲裁主环。
+
+
+
++
+[cols="2*"]
+|===
+| 要显示此 RDB 进程 ... | 输入此命令 ... 
+
+
+ a| 
+管理应用程序
+ a| 
+`cluster ring show -unitname mgmt`
+
+
+
+ a| 
+卷位置数据库
+ a| 
+`cluster ring show -unitname vldb`
+
+
+
+ a| 
+虚拟接口管理器
+ a| 
+`cluster ring show -unitname vifmgr`
+
+
+
+ a| 
+SAN 管理守护进程
+ a| 
+`cluster ring show -unitname bcomd`
+
+|===
++
+此示例显示了卷位置数据库过程：
+
+
+
+[listing]
+----
+cluster1::*> cluster ring show -unitname vldb
+Node      UnitName Epoch    DB Epoch DB Trnxs Master    Online
+--------- -------- -------- -------- -------- --------- ---------
+node0     vldb     154      154      14847    node0     master
+node1     vldb     154      154      14847    node0     secondary
+node2     vldb     154      154      14847    node0     secondary
+node3     vldb     154      154      14847    node0     secondary
+4 entries were displayed.
+----
+. 如果您在 SAN 环境中运行，请验证每个节点是否处于 SAN 仲裁状态： `event log show -messagename scsiblade.*`
++
+每个节点的最新 scsiblade 事件消息应指示 SCSI 刀片处于仲裁状态。
+
++
+[listing]
+----
+cluster1::*> event log show -messagename scsiblade.*
+Time                Node             Severity      Event
+------------------- ---------------- ------------- ---------------------------
+MM/DD/YYYY TIME  node0            INFORMATIONAL scsiblade.in.quorum: The scsi-blade ...
+MM/DD/YYYY TIME  node1            INFORMATIONAL scsiblade.in.quorum: The scsi-blade ...
+----
+. 返回到管理权限级别： `set -privilege admin`
+
+
+* 相关信息 *
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/home.html["系统管理"]
+
+
+
+== 验证存储运行状况
+
+还原或降级集群后，您应验证磁盘，聚合和卷的状态。
+
+. 验证磁盘状态：
++
+[cols="2*"]
+|===
+| 要检查 ... | 执行此操作 ... 
+
+
+ a| 
+磁盘已损坏
+ a| 
+.. 显示任何损坏的磁盘： `storage disk show -state broken`
+.. 卸下或更换任何损坏的磁盘
+
+
+
+
+ a| 
+正在进行维护或重建的磁盘
+ a| 
+.. 显示处于维护，待定或重建状态的所有磁盘： `storage disk show -state maintenance| pending" reconstructing`
+.. 等待维护或重建操作完成，然后再继续。
+
+
+|===
+. 通过显示物理和逻辑存储的状态（包括存储聚合）来验证所有聚合是否已联机： `storage aggregate show -state ！ online`
++
+此命令将显示 _not_ 联机的聚合。在执行重大升级或还原之前和之后，所有聚合都必须处于联机状态。
+
++
+[listing]
+----
+cluster1::> storage aggregate show -state !online
+There are no entries matching your query.
+----
+. 通过显示任何 _not_ online 卷来验证所有卷是否均已联机： `volume show -state ！ online`
++
+在执行重大升级或还原之前和之后，所有卷都必须处于联机状态。
+
++
+[listing]
+----
+cluster1::> volume show -state !online
+There are no entries matching your query.
+----
+. 确认没有不一致的卷： `volume show -is-inconsistent true`
++
+如果返回任何不一致的卷，您必须在升级之前联系 NetApp 支持部门。
+
+
+
+* 相关信息 *
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-psmg/home.html["磁盘和聚合管理"]

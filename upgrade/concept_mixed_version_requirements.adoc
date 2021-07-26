@@ -1,0 +1,27 @@
+---
+permalink: upgrade/concept_mixed_version_requirements.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, mixed, version, requirements 
+summary: 从 ONTAP 9.3 开始，默认情况下，如果集群运行的 ONTAP 版本与现有节点上运行的版本不同，则不能将新节点加入该集群。 
+---
+= 混合版本要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，默认情况下，如果集群运行的 ONTAP 版本与现有节点上运行的版本不同，则不能将新节点加入该集群。
+
+如果您计划向运行的 ONTAP 版本高于现有集群中节点的集群添加新节点，则应先将集群中的节点升级到更高版本，然后再添加新节点。
+
+不建议使用混合版本集群，但在某些情况下，您可能需要暂时进入混合版本状态。例如，如果要升级到现有集群中某些节点不支持的更高版本的 ONTAP ，则需要进入混合版本状态。在这种情况下，您应升级支持更高版本 ONTAP 的节点，然后使用高级权限 `cluster unjoin -skip-last-low-version-node check` 命令取消加入不支持要升级到的 ONTAP 版本的节点。
+
+您可能还需要进入混合版本状态才能进行技术更新或中断升级。在这种情况下，您可以覆盖 ONTAP 9.3 的默认行为，并使用以下高级权限命令加入不同版本的节点：
+
+* `cluster join -allow-mixed-version-join`
+* `cluster add-node -allow-mixed-version-join`
+
+
+如果必须进入混合版本状态，则应尽快完成升级。一个 HA 对运行的 ONTAP 版本不得超过七天，该版本与集群中的其他 HA 对不同。要使集群正常运行，集群处于混合版本状态的时间应尽可能短。
+
+当集群处于混合版本状态时，除非为满足升级要求而需要，否则不应输入任何更改集群操作或配置的命令。

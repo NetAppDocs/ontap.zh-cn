@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: task_nas_file_system_analytics_take_corrective_action.html 
+keywords: netapp, ontap, file, system, analytics, File System Analytics, volume, volumes, ONTAP System Manager, storage, explorer, active data, inactive data, historical data, fast directory delete, move volume, media cost, storage cost comparison 
+summary: 从 ONTAP 9.1.1 开始，您可以根据当前数据和所需结果直接从文件系统分析显示中执行更正操作。 
+---
+= 根据分析结果采取更正操作
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+从 ONTAP 9.1.1 开始，您可以根据当前数据和所需结果直接从文件系统分析显示中执行更正操作。
+
+启用分析后，您可以执行以下操作：
+
+* 删除目录和文件
++
+在资源管理器显示中，您可以选择要删除的目录或单个文件。使用低延迟快速目录删除功能删除目录。（从 ONTAP 9.9.1 开始，也可以快速删除目录，而不会启用分析。）
+
+* 在存储层中分配介质成本，以比较非活动数据存储位置的成本
++
+介质成本是根据存储成本评估结果分配的一个值，表示为您选择的每 GB 货币。设置后， ONTAP 系统管理器将使用分配的介质成本预测移动卷时的预计节省量。
+
++
+您设置的介质成本不是永久性的；只能为单个浏览器会话设置。
+
+* 移动卷以降低存储成本根据分析显示和介质成本比较，您可以将卷移动到本地层中成本较低的存储。
++
+一次只能比较和移动一个卷。
+
+
+
+|===
+| 要执行此操作，请执行… | 执行以下步骤 ... 
+
+
+ a| 
+删除目录或文件
+ a| 
+. 单击 * 存储 > 卷 * ，然后单击 * 资源管理器 * 。
++
+将鼠标悬停在文件或文件夹上时，将显示删除选项。一次只能删除一个对象。
+
+
+
+删除目录和文件后，不会立即显示新的存储容量值。
+
+
+
+ a| 
+启用介质成本比较
+ a| 
+. 单击 * 存储 > 层 * ，然后在所需的本地层（聚合）图块中单击 * 设置介质成本 * 。
++
+请务必选择活动层和非活动层以进行比较。
+
+. 输入货币类型和金额。
++
+输入或更改介质成本时，所有介质类型都会进行更改。
+
+
+
+
+
+ a| 
+将卷移至成本较低的层
+ a| 
+. 启用介质成本显示后，单击 * 存储 > 层 * ，然后单击 * 卷 * 。
+. 要比较卷的目标选项，请单击 image:icon_kabob.gif["菜单图标"] 对于卷，请单击 * 移动 * 。
+. 在 * 选择目标本地层 * 显示中，选择目标层以显示估计成本差异。
+. 比较选项后，选择所需层并单击 * 移动 * 。
+
+
+|===

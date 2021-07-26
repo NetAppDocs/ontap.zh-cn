@@ -1,0 +1,85 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_plan_additional_restrictions_and_limitations.html 
+keywords: SM-BC, SMBC, restrictions, limitations, consistency group, volume 
+summary: 使用 SnapMirror Business Continuity 解决方案时，还存在一些其他限制和限制。 
+---
+= 其他限制和限制
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 SnapMirror Business Continuity 解决方案时，还存在一些其他限制和限制。
+
+
+
+=== 一致性组
+
+一个集群中的最大 SnapMirror 同步一致性组关系数为五个，这一限制与平台无关。如果达到或尝试超过此限制，则会显示以下消息：
+
+....
+The number of SnapMirror Synchronous consistency group relationships in a cluster cannot exceed 5
+....
+
+
+=== 每个一致性组的卷数
+
+每个 SnapMirror 同步一致性组关系支持的最大卷数为 12 个，这一限制与平台无关。如果达到或尝试超过此限制，则会显示以下消息：
+
+....
+The number of volumes in a SnapMirror Synchronous Consistency Group cannot exceed 12
+....
+
+
+=== 卷
+
+
+NOTE: 限制是端点数量，而不是关系数量。包含 12 个卷的一致性组会在源和目标上提供 12 个端点。与同一 HA 对上的源卷和目标卷建立的 SnapMirror 同步关系会提供 2 个端点。
+
+下表列出了每个平台的最大端点数量。
+
+|===
+| S否 | 平台 | SM-BC 的每个 HA 端点 | 每个 HA 的整体同步端点和 SM-BC 端点 
+
+
+| 1. | AFF | 60 | 80 
+
+
+| 2. | ASA | 60 | 80 
+|===
+
+
+=== SAN 对象限制
+
+下表列出了以下 SAN 对象限制，这些限制与平台无关。
+
+|===
+| SM-BC 关系中的对象限制 | 计数 
+
+
+| 每个卷的 LUN 数 | 256 
+
+
+| 每个节点的 LUN 映射数 | 2048 
+
+
+| 每个集群的 LUN 映射数 | 4096 
+
+
+| 每个 SVM 的 LIF （至少有一个卷处于 SM-BC 关系） | 256 
+
+
+| 每个节点的集群间 LIF | 4. 
+
+
+| 每个集群的集群间 LIF | 8. 
+|===
+
+
+=== NTFS 安全模式
+
+SM-BC 卷不支持 NTFS 安全模式。

@@ -1,0 +1,29 @@
+---
+permalink: software_setup/task_configure_important_ems_events_to_forward_notifications_to_a_syslog_server.html 
+sidebar: sidebar 
+keywords: ontap, software, setup, configure, important,ems, events, forward, notifications, syslog, server 
+summary: 要在系统日志服务器上记录最严重事件的通知，您必须配置 EMS 以转发用于表示重要活动的事件的通知。 
+---
+= 配置重要的 EMS 事件以将通知转发到系统日志服务器
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要在系统日志服务器上记录最严重事件的通知，您必须配置 EMS 以转发用于表示重要活动的事件的通知。
+
+要解析系统日志服务器名称，必须在集群上配置 DNS 。
+
+如果您的环境尚未包含用于发送事件通知的系统日志服务器，则必须先创建一个。如果您的环境已包含一个用于记录其他系统中的事件的系统日志服务器，则您可能需要使用该服务器来发送重要事件通知。
+
+您可以在集群运行时随时通过在 ONTAP 命令行上输入命令来执行此任务。
+
+. 为重要事件创建系统日志服务器目标：
++
+`事件通知目标 create -name syslog-ems -syslog syslog-server-address`
+
+. 配置重要事件以将通知转发到系统日志服务器：
++
+`event notification create -filter-name importal-events -destinations syslog-ems`
+
+

@@ -1,0 +1,62 @@
+---
+sidebar: sidebar 
+permalink: networking/display_interface_group_information_@cluster_administrators_only@.html 
+keywords: display, view, show, interface, group, information, display interface group information (cluster administrators only), verify interface group configuration, network port ifgrp show 
+summary: 验证接口组配置 
+---
+= 显示接口组信息（仅限集群管理员）
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以显示有关接口组的信息以确定其配置。
+
+此时将显示以下信息：
+
+* 接口组所在的节点
+* 接口组中包含的网络端口列表
+* 接口组的名称
+* 分发功能（ MAC ， IP ，端口或顺序）
+* 接口组的介质访问控制（ MAC ）地址
+* 端口活动状态；即所有聚合端口是否均处于活动状态（完全参与），某些端口是否处于活动状态（部分参与）或是否无处于活动状态
+
+
+使用 `network port ifgrp show` 命令显示有关接口组的信息。
+
+您可以通过指定 ` -instance` 参数来显示每个节点的详细信息。您可以使用 ` 字段` 参数指定字段名称来显示特定信息。
+
+以下命令显示集群中所有接口组的相关信息：
+
+....
+network port ifgrp show
+         Port     Distribution                    Active
+Node     IfGrp    Function     MAC Address        Ports   Ports
+-------- -------- ------------ -----------------  ------- --------
+cluster-1-01
+         a0a      ip           02:a0:98:06:10:b2  full    e7a, e7b
+cluster-1-02
+         a0a      sequential   02:a0:98:06:10:ca  full    e7a, e7b
+cluster-1-03
+         a0a      port         02:a0:98:08:5b:66  full    e7a, e7b
+cluster-1-04
+         a0a      mac          02:a0:98:08:61:4e  full    e7a, e7b
+....
+以下命令显示单个节点的详细接口组信息：
+
+....
+network port ifgrp show -instance -node cluster-1-01
+
+                 Node: cluster-1-01
+ Interface Group Name: a0a
+Distribution Function: ip
+        Create Policy: multimode
+          MAC Address: 02:a0:98:06:10:b2
+   Port Participation: full
+        Network Ports: e7a, e7b
+             Up Ports: e7a, e7b
+           Down Ports: -
+....

@@ -1,0 +1,118 @@
+---
+sidebar: sidebar 
+permalink: task_admin_add_a_volume.html 
+keywords: volume, storage, add, increase storage, NFS volume, create, add a volume, create a volume, add to storage VM, Ansible Playbook, manual placement, distribute volume data across cluster, add FlexGroup volume, add FlexVol volume, access permissions, SnapMirror, protection, QoS policy, cache for remote volume, performance service level policy, 
+summary: 您可以创建 NFS 卷并将其添加到为 NFS 或 SMB/CIFS 服务配置的现有 Storage VM 。 
+---
+= 添加卷
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以创建 NFS 卷并将其添加到为 NFS 或 SMB/CIFS 服务配置的现有 Storage VM 。
+
+image:workflow_admin_add_a_volume.gif["添加卷任务的工作流图"]
+
+集群中应存在为 NFS 或 SMB/CIFS 服务配置的 Storage VM 。
+
+.步骤
+. 转至 * 存储 > 卷 * 。
+. 单击 image:icon_add.gif["添加图标"]。
+. 指定卷的名称和大小。
+. 执行以下步骤之一：
++
+[cols="35,65"]
+|===
+| 单击此按钮 ... | 要执行此操作 ... 
+
+
+| * 保存 * | 此卷将使用系统默认值创建和添加。无需执行其他步骤。 
+
+
+| * 更多选项 * | 继续执行 <<step5>> 定义卷的规格。 
+|===
+. 如果您先前指定了卷名称和大小，则会显示这些名称和大小。否则，请输入名称和大小。
+. 从下拉列表中选择一个 Storage VM 。
++
+仅列出配置了 NFS 协议的 Storage VM 。如果只有一个配置了 NFS 协议的 Storage VM 可用，则不会显示 * Storage VM* 字段。
+
+. 要为远程卷添加缓存，请选择 * 为远程卷添加缓存 * 并指定以下值：
++
+** 选择一个集群。
+** 选择一个 Storage VM 。
+** 选择要用作缓存卷的卷。
+
+
+. 在 * 存储和优化 * 部分中，指定以下值：
++
+.. 此时已显示卷的容量，但您可以对其进行修改。
+.. 在 * 性能服务级别 * 字段中，选择一个服务级别：
++
+[cols="60,40"]
+|===
+| 选择此服务级别时 ... | 发生这种情况 ... 
+
+
+ a| 
+现有服务级别，例如 " 至高 " ， " 性能 " 或 " 价值 " 。
+
+仅显示对系统平台有效的服务级别（ AFF ， FAS 或其他）。
+| 系统会自动选择一个或多个本地层。继续执行 <<step9>>。 
+
+
+| 自定义 | 继续执行 <<step8c>> 定义新服务级别。 
+|===
+.. 自 ONTAP 9.1.1 起，您可以使用 System Manager 手动选择要放置所创建卷的本地层（如果选择了 " 自定义 " 服务级别）。
++
+
+NOTE: 如果选择 * 添加作为远程卷的缓存 * 或 * 在集群中分布卷数据 * （请参见下文），则此选项不可用。
+
++
+|===
+| 选择时 ... | 您执行的步骤 
+
+
+| * 手动放置 * | 已启用手动放置。已禁用 * 在集群中分布卷数据 * 选项（请参见下文）。继续执行 <<step8d>> 以完成此过程。 
+
+
+| 无选择 | 未启用手动放置。此时将自动选择本地层。继续执行 <<step9>>。 
+|===
+.. 【第 8d 步，第 8d 步】从下拉菜单中选择一个本地层。
+.. 选择 QoS 策略。
++
+选择 " 现有 " 以从现有策略列表中进行选择，或者选择 " 新建 " 以输入新策略的规范。
+
+
+
+. 【第 9 步，第 9 步】在 * 优化选项 * 部分中，确定是否要在集群中分布卷数据：
++
+[cols="40,60"]
+|===
+| 选择时 ... | 发生这种情况 ... 
+
+
+| * 在集群中分布卷数据 * | 要添加的卷将成为 FlexGroup 卷。如果先前选择了 * 手动放置 * ，则此选项不可用。 
+
+
+| 无选择 | 默认情况下，您要添加的卷将成为 FlexVol 卷。 
+|===
+. 在 * 访问权限 * 部分中，指定为其配置卷的协议的访问权限。
+. 在 * 保护 * 部分中，指定卷的保护。如果选择 * 启用 SnapMirror （本地或远程） * ，则从下拉列表中指定目标集群的保护策略和设置。
+. 单击 * 保存 * 。
++
+此时将创建卷并将其添加到集群和 Storage VM 中。
+
++
+
+NOTE: 您也可以将此卷的规格保存到 Ansible 攻略手册中。有关详细信息，请访问 link:https://docs.netapp.com/us-en/ontap/task_use_ansible_playbooks_add_edit_volumes_luns.html["使用 Ansible 攻略手册添加或编辑卷或 LUN"]。
+
+

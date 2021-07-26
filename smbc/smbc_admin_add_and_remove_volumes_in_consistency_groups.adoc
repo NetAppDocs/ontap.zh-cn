@@ -1,0 +1,69 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_admin_add_and_remove_volumes_in_consistency_groups.html 
+keywords: SM-BC, SMBC, volume, consistency group, remove volume, add volume 
+summary: 如果要通过添加或删除卷来更改一致性组的构成，则必须先删除原始关系，然后使用新的构成重新创建一致性组。 
+---
+= 在一致性组中添加和删除卷
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要通过添加或删除卷来更改一致性组的构成，则必须先删除原始关系，然后使用新的构成重新创建一致性组。
+
+.关于此任务
+* 如果一致性组处于 "INSYNC" 状态，则不允许更改成分组合。
+* 目标卷的类型应为 DP 。
+
+
+为扩展一致性组而添加的新卷必须在源卷和目标卷之间具有一对通用 Snapshot 副本。
+
+此操作步骤假定端点 vs1_src ： /CG/CG_src 和 vs1_dst ： /CG/cG_dst 之间存在两个一致性组关系： vol_src1 <-> vol_dst1 和 vol_src2 <-> vol_dst2 。
+
+. 验证源集群和目标集群上的源卷和目标卷之间是否存在通用 Snapshot 副本：
++
+`ssource ：： >snapshot show -vserver vs1_src -volume vol_src3 -snapshot snapmirror*`
+
++
+`d目标：： >snapshot show -vserver vs1_dst -volume vol_dst3 -snapshot snapmirror*`
+
+. 如果不存在通用 Snapshot 副本，请创建并初始化 FlexVol SnapMirror 关系：
++
+`d目标：： >snapmirror initialize -source-path vs1_src ： vol_src3 -destination-path vs1_dst ： vol_dst2`
+
+. 删除零 RTO 一致性组关系：
++
+`d目标：： >snapmirror delete -destination-path vs1_dst ： vol_dst3`
+
+. 释放源 SnapMirror 关系并保留通用 Snapshot 副本：
++
+`ssource ：：： >snapmirror release -relationship-info-only true -destination-path vs1_dst ： vol_dst3`
+
+. 取消映射 LUN 并删除现有一致性组关系：
++
+`d目标： >lun mapping delete -vserver vs1_dst -path <lun_path> -igroup <igroup_name>` 注：目标 LUN 未映射，而主副本上的 LUN 继续为主机 I/O 提供服务
+
++
+`d目标： >snapmirror delete -destination-path vs1_dst ： /CG/CG_DST`
+
++
+`ssource ：：： >snapmirror release -destination-path vs1_dst ： /CG/CG_dst -relationship-info-only true`
+
+. 使用新的构成创建新的一致性组：
++
+`d目标：：： >snapmirror create -source-path vs1_src ： /CG/cG_src -destination-path vs1_dst ： /CG_c_dst -cg-item-mappings vol_src1 ：@vol_dst1 ， vol_src2 ：@vol_dst2 ， vol_src3 ：@vol_dst3`
+
+. 重新同步零 RTO 一致性组关系以确保其处于同步状态：
++
+`d目标：： >snapmirror resync -destination-path vs1_dst ： /CG/CG_DST`
+
+. 重新映射步骤 5 中未映射的 LUN ：
++
+`d目标：： > lun map -vserver vs1_dst -path <lun_path> -igroup <igroup_name>`
+
+. 重新扫描主机 LUN I/O 路径以还原 LUN 的所有路径。
+

@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: networking/recover_from_an_incorrectly_configured_cluster_lif.html 
+keywords: misconfigured, misconfigurations, incorrect, incorrectly, switch, switches, switched, cable, physical, wiring, wired, reachability, port, cluster, ontap 9.8 and later, recover from an incorrectly configured cluster lif, how to identify and correct a cluster that has been misconfigured, cluster create, network port, reachability show -detail, reset the home port 
+summary: 如何识别和更正配置不当的集群 
+---
+= ONTAP 9.8 及更高版本：从配置不正确的集群 LIF 中恢复
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+如果集群网络已连接到交换机，则无法创建集群，但集群 IP 空间中配置的所有端口并非都能访问集群 IP 空间中配置的其他端口。
+
+在有交换机的集群中，如果在错误的端口上配置了集群网络接口（ LIF ），或者集群端口连接到错误的网络，则 `cluster create` 命令可能会失败，并显示以下错误：
+
+....
+Not all local cluster ports have reachability to one another.
+Use the "network port reachability show -detail" command for more details.
+....
+`network port show` 命令的结果可能会显示已向集群 IP 空间添加多个端口，因为这些端口连接到配置了集群 LIF 的端口。但是， `network port` `reachability show -detail` 命令的结果显示了哪些端口无法彼此连接。
+
+要从配置了集群 LIF 的其他端口无法访问的端口上配置的集群 LIF 进行恢复，请执行以下步骤：
+
+.步骤
+. 将集群 LIF 的主端口重置为正确的端口：
++
+....
+net port modify -home-port
+....
+. 从集群广播域中删除未配置集群 LIF 的端口：
++
+....
+net port broadcast-domain remove-ports
+....
+. 创建集群：
++
+....
+cluster create
+....
+
+
+创建完集群后，系统将检测到正确的配置并将端口放置到正确的广播域中。

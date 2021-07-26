@@ -1,0 +1,164 @@
+---
+sidebar: sidebar 
+permalink: high-availability/ha_test_takeover_giveback.html 
+keywords: ontap, high, availability, ha, pair, test, testing, takeover, giveback 
+summary: 配置完 HA 对的所有方面后，您需要验证 HA 对是否按预期运行，以便在接管和交还操作期间保持对两个节点存储的无中断访问 
+---
+= 测试接管和交还
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+配置完 HA 对的所有方面后，您需要验证 HA 对是否按预期运行，以便在接管和交还操作期间保持对两个节点存储的无中断访问。在整个接管过程中，本地（或接管）节点应继续提供配对节点通常提供的数据。在交还期间，对配对节点存储的控制和交付应返回到配对节点。
+
+* 步骤 *
+
+. 
++
+检查 HA 互连缆线的布线情况，确保其牢固。
+
+. 
++
+验证您是否可以在两个节点上为每个许可协议创建和检索文件。
+
+. 
++
+输入以下命令： `storage failover takeover -ofnode partnernode`
+
++
+有关命令的详细信息，请参见手册页。
+
+. 
++
+输入以下任一命令以确认已发生接管： `storage failover show-takeover` `storage failover show`
+
++
+--
+如果已启用 `storage failover` 命令的 ` -auto-giveback` 选项：
+
+[cols="4*"]
+|===
+| 节点 | 合作伙伴 | 可以接管 | 状态问题描述 
+
+
+| 节点 1 | 节点 2 | - | 正在等待交还 
+
+
+| 节点 2 | 节点 1 | false | 在接管过程中，自动交还将在秒数内启动 
+|===
+如果已禁用 `storage failover` 命令的 ` -auto-giveback` 选项：
+
+[cols="4*"]
+|===
+| 节点 | 合作伙伴 | 可以接管 | 状态问题描述 
+
+
+| 节点 1 | 节点 2 | - | 正在等待交还 
+
+
+| 节点 2 | 节点 1 | false | 正在接管 
+|===
+--
+. 
++
+输入以下命令以显示接管节点（ Node1 ）可以检测到的配对节点（ Node2 ）中的所有磁盘： `storage disk show -home node2 -ownership`
+
++
+--
+以下命令显示 Node1 可以检测到的属于 Node2 的所有磁盘： `cluster ：： > storage disk show -home node2 -ownership`
+
+[cols="10*"]
+|===
+| 磁盘 | 聚合 | 主页 | 所有者 | 灾难恢复主页 | 主 ID | 所有者 ID | DR 主目录 ID | 预留器 | 池 
+
+
+| 1.0.2 | - | 节点 2. | 节点 2. | - | 40783124553 | 40783124553 | - | 4078312452 | Pool0 
+
+
+| 1.0.3 | - | 节点 2. | 节点 2. | - | 40783124553 | 40783124553 | - | 4078312452 | Pool0 
+|===
+--
+. 
++
+输入以下命令以确认接管节点（ Node1 ）控制配对节点（ Node2 ）的聚合： `aggr show ‑fields home‑id ， home‑name ， is‑home`
+
++
+--
+[cols="4*"]
+|===
+| 聚合 | 主 ID | 主名称 | 在家 
+
+
+ a| 
+aggr0_1
+ a| 
+2014942045
+ a| 
+节点 1
+ a| 
+对
+
+
+
+ a| 
+aggr0_2
+ a| 
+40783124553
+ a| 
+节点 2.
+ a| 
+false
+
+
+
+ a| 
+aggr1_1
+ a| 
+2014942045
+ a| 
+节点 1
+ a| 
+对
+
+
+
+| aggr1_2 | 40783124553 | 节点 2.  a| 
+false
+
+|===
+接管期间，配对节点聚合的 is-home 值为 false 。
+
+--
+. 
++
+输入以下命令，在配对节点的数据服务显示 Waiting for giveback 消息后交还该节点的数据服务： `storage failover giveback -ofnode partnernode`
+
+
+
+. 
++
+输入以下任一命令以观察交还操作的进度： `storage failover show-giveback storage failover show`
+
+
+
+. 
++
+根据您是否看到有关交还已成功完成的消息，继续操作：
+
++
+--
+|===
+| 如果接管和交还 ... | 那么 ... 
+
+
+| 已成功完成 | 在配对节点上重复步骤 2 到步骤 8 。 
+
+
+| 失败 | 更正接管或交还故障，然后重复此操作步骤。 
+|===
+--
+

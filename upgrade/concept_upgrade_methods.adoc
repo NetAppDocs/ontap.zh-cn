@@ -1,0 +1,101 @@
+---
+permalink: upgrade/concept_upgrade_methods.html 
+sidebar: sidebar 
+keywords: upgrade, methods, andu, ndu, automated, automatic, system manager, cli, nondisruptive, disruptive 
+summary: 升级方法取决于您的配置。如果可用，则首选使用 System Manager 进行自动无中断升级（ ANDU ）。 
+---
+= 我应使用哪种升级方法？
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+升级方法取决于您的配置。如果可用，则首选使用 System Manager 进行自动无中断升级（ ANDU ）。
+
+* * 无中断升级 * ：在无中断升级中，在后台执行更新过程，同时为客户端提供服务。可以使用自动化或手动方法执行无中断升级。
++
+** * 可以使用 System Manager 或 ONTAP 命令行界面（ CLI ）执行自动无中断升级（ ANDU ） * 。如果适用于您的配置，则建议使用 System Manager 进行升级。使用 andu 时， ONTAP 会自动在每个节点上安装目标 ONTAP 映像，验证集群组件以确保集群可以无中断升级，然后在后台执行升级。
+** * 手动无中断升级 * 包括手动步骤，用于确认每个节点上的 ONTAP 配置，然后使用滚动更新方法执行升级。在滚动更新方法中，节点将脱机并进行升级，而其配对节点将接管其存储。节点升级完成后，配对节点会将控制权交还给原始所属节点，此过程将在配对节点上重复执行。每个附加 HA 对都会按顺序进行升级，直到所有 HA 对都运行目标版本为止。使用 ONTAP 命令行界面执行手动无中断升级。
+
+
+* * 中断 * ：在中断升级中，每个 HA 对禁用存储故障转移，然后每次重新启动一个节点。与无中断升级相比，执行中断升级的速度更快，完成操作所需的步骤更少。但是，除非您可以在升级期间使集群脱机，否则不应执行中断升级。如果您在 SAN 环境中运行，则在执行中断升级之前，应准备关闭或暂停所有 SAN 客户端。使用 ONTAP 命令行界面执行中断升级。
+
+
+只有在您的配置不支持 ANDU 时，才应使用手动方法。
+
+
+
+== Non-MCC 配置
+
+每个配置可用的升级方法按建议使用顺序列出。
+
+[cols="3*"]
+|===
+| ONTAP 版本 | 节点数 | 升级方法 
+
+
+| 9.0 或更高版本 | 2 ， 4 ， 8  a| 
+* xref:task_upgrade_andu_sm.html[使用 System Manager 实现自动化无中断]
+* xref:task_upgrade_andu_cli.html[使用命令行界面自动实现无中断]
+* xref:task_upgrade_nondisruptive_manual_cli.html[使用 CLI 手动无中断（滚动方法）]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用 CLI 手动中断]
+
+
+
+
+| 9.0 或更高版本 | 12  a| 
+* xref:task_upgrade_andu_cli.html[使用命令行界面自动实现无中断]
+* xref:task_upgrade_nondisruptive_manual_cli.html[使用 CLI 手动无中断（滚动方法）]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用 CLI 手动中断]
+
+
+
+
+| 9.2 或更高版本 | 单节点 | xref:task_upgrade_disruptive_automated_cli.html[使用 CLI 自动中断] 
+|===
+
+
+== MCC 配置
+
+每个配置可用的升级方法按建议使用顺序列出。
+
+[cols="3*"]
+|===
+| ONTAP 版本 | 节点数 | 升级方法 
+
+
+| 9.3 或更高版本 | 2 ， 4  a| 
+* xref:task_upgrade_andu_sm.html[使用 System Manager 实现自动化无中断]
+* xref:task_upgrade_andu_cli.html[使用命令行界面自动实现无中断]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用 CLI 手动中断]
+
+
+
+
+| 9.3 或更高版本 | 8.  a| 
+* xref:task_upgrade_andu_cli.html[使用命令行界面自动实现无中断]
+* xref:task_updating_a_four_or_eight_node_mcc.html[使用 CLI 手动无中断]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用 CLI 手动中断]
+
+
+
+
+| 9.2 或更早版本 | 2.  a| 
+* xref:task_updating_a_two_node_metrocluster_configuration_in_ontap_9_2_and_earlier.html[使用 CLI 手动无中断（对于双节点集群）]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用 CLI 手动中断]
+
+
+
+
+| 9.2 或更早版本 | 4 ， 8.  a| 
+* xref:task_updating_a_four_or_eight_node_mcc.html[使用 CLI 手动无中断]
+* xref:task_updating_an_ontap_cluster_disruptively.html[使用 CLI 手动中断]
+
+
+
+
+| 9.0 或更高版本 | 4 ， 8 （仅限修补程序） | xref:task_upgrade_andu_sm.html[使用 System Manager 实现自动化无中断] 
+
+
+| 9.2 或更早版本 | 2 ， 4 ， 8 （仅限修补程序） | xref:task_upgrade_andu_sm.html[使用 System Manager 实现自动化无中断] 
+|===

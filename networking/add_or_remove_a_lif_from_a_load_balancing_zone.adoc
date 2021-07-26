@@ -1,0 +1,52 @@
+---
+sidebar: sidebar 
+permalink: networking/add_or_remove_a_lif_from_a_load_balancing_zone.html 
+keywords: lif, adding, add, create, creating, remove, removing, delete, deleting, load, balancing, zone, dns, svm, storage, virtual, add or remove a LIF from a load balancing zone, machine, add a lif, remove a single lif, remove all lifs 
+summary: 从 Storage Virtual Machine （ SVM ）的 DNS 负载平衡区域添加或删除 LIF 
+---
+= 在负载平衡区域中添加或删除 LIF
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以从虚拟机（ SVM ）的 DNS 负载平衡区域添加或删除 LIF 。您还可以从负载平衡区域同时删除所有 LIF 。
+
+.开始之前
+* 负载平衡区域中的所有 LIF 都应属于同一个 SVM 。
+* 一个 LIF 只能属于一个 DNS 负载平衡区域。
+* 如果 LIF 属于不同的子网，则必须已为每个子网设置故障转移组。
+
+
+处于管理关闭状态的 LIF 将暂时从 DNS 负载平衡区域中删除。当 LIF 返回到管理 up 状态时， LIF 会自动添加到 DNS 负载平衡区域。
+
+在负载平衡区域中添加 LIF 或删除 LIF ：
+
+[cols="2*"]
+|===
+| 如果您要 ... | 输入 ... 
+
+
+ a| 
+添加 LIF
+ a| 
+network interface modify -vserver vserver_name -lif lif_name-ds-zone zone_name 示例： network interface modify -vserver vs1 -lif data1 -ds-zone cifs.company.com
+
+
+
+ a| 
+删除一个 LIF
+ a| 
+network interface modify -vserver vserver_name -lif lif_name-dns-zone none 示例： network interface modify -vserver vs1 -lif data1 -dns-zone none
+
+
+
+ a| 
+删除所有 LIF
+ a| 
+network interface modify -vserver vserver_name -lif * -ds-zone none 示例： network interface modify -vserver vs0 -lif * -ds-zone none 您可以通过从负载平衡区域中删除 SVM 中的所有 LIF 来从该区域中删除 SVM 。
+
+|===

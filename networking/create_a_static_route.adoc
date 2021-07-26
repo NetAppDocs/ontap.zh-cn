@@ -1,0 +1,24 @@
+---
+sidebar: sidebar 
+permalink: networking/create_a_static_route.html 
+keywords: create, creation, creating, add, adding, static, route, svm, traffic, network, create a static route, network route create 
+summary: 在 SVM 中创建静态路由，以控制 LIF 如何使用网络传输出站流量 
+---
+= 创建静态路由。
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以在 Storage Virtual Machine （ SVM ）中创建静态路由，以控制 LIF 使用网络传输出站流量的方式。
+
+在创建与 SVM 关联的路由条目时，此路由将由指定 SVM 拥有的所有 LIF 使用，这些 LIF 与网关位于同一子网上。
+
+使用 `network route create` 命令创建路由。
+
+....
+network route create -vserver vs0 -destination 0.0.0.0/0 -gateway 10.61.208.1
+....

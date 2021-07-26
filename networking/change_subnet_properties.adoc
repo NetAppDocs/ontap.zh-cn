@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: networking/change_subnet_properties.html 
+keywords: change, changing, modify, modifying, gateway, ip, address, internet, protocol, mask, value, subnet, address, range, property, properties, change subnet properties, network subnet modify, subnet-name, -ipspace, -subnet, -gateway, -ip-ranges, -force-update-lif-associations 
+summary: 更改子网地址，掩码值，网关地址或 IP 地址范围 
+---
+= 更改子网属性
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以更改现有子网中的子网地址和掩码值，网关地址或 IP 地址范围。
+
+.关于此任务
+* 修改 IP 地址时，必须确保网络中的 IP 地址不重叠，以便不同的子网或主机不会尝试使用相同的 IP 地址。
+* 如果添加或更改网关 IP 地址，则在使用子网在新 SVM 中创建 LIF 时，修改后的网关将应用于这些 SVM 。如果 SVM 还不存在网关的默认路由，则会为该路由创建。更改网关 IP 地址时，您可能需要手动向 SVM 添加新路由。
+
+
+修改子网属性：
+
+....
+network subnet modify -subnet-name <subnet_name> [-ipspace <ipspace_name>] [-subnet <subnet_address>] [-gateway <gateway_address>] [-ip-ranges <ip_address_list>] [-force-update-lif-associations <true>]
+....
+* `ssubnet_name` 是要修改的子网的名称。
+* `IPSpace` 是子网所在 IP 空间的名称。
+* 如果适用， `ssubnet` 是子网的新地址和掩码；例如 192.0.2.0/24 。
+* 如果适用， `gateway` 是子网的新网关；例如 192.0.2.1 。输入 * "* 将删除网关条目。
+* 如果适用， `IP_ranges` 是要分配给子网的新 IP 地址列表或范围。IP 地址可以是单个地址，范围或 IP 地址，也可以是逗号分隔列表中的组合。此处指定的范围将替换现有 IP 地址。
+* 更改 IP 地址范围时，需要 `force-update-lif-associations` 。修改 IP 地址范围时，可以将此选项的值设置为 * true * 。如果任何服务处理器或网络接口使用指定范围内的 IP 地址，则此命令将失败。如果将此值设置为 * true * ，则会将任何手动寻址的接口与当前子网相关联，并允许命令成功执行。
+
+
+以下命令修改子网 sub3 的网关 IP 地址：
+
+....
+network subnet modify -subnet-name <sub3> -gateway <192.0.3.1>
+....

@@ -1,0 +1,36 @@
+---
+sidebar: sidebar 
+permalink: networking/change_the_mtu_value_for_ports_in_a_broadcast_domain.html 
+keywords: modify, modifying, mtu, mtu_value, change, changing, broadcast, domain, ports, port, change the mtu value for ports in a broadcast domain 
+summary: 修改广播域的 MTU 值以更改广播域中所有端口的 MTU 值 
+---
+= 更改广播域中端口的 MTU 值
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以修改广播域的 MTU 值，以更改该广播域中所有端口的 MTU 值。这样可以支持在网络中进行的拓扑更改。
+
+MTU 值必须与连接到该第 2 层网络的所有设备匹配，但处理管理流量的 e0M 端口除外。
+
+更改 MTU 值会导致受影响端口上的流量短暂中断。系统将显示一条提示，提示您必须使用 y 进行问题解答才能进行 MTU 更改。
+
+更改广播域中所有端口的 MTU 值：
+
+....
+network port broadcast-domain modify -broadcast-domain <broadcast_domain_name> -mtu <mtu_valu> [-ipspace <ipspace_name>]
+....
+* `broadcast_domain` 是广播域的名称。
+* `mtu` 是 IP 数据包的 MTU 大小； 1500 和 9000 是典型值。
+* `IPSpace` 是此广播域所在 IP 空间的名称。除非为此选项指定值，否则将使用 "Default" IP 空间。以下命令会将广播域 bcast1 中所有端口的 MTU 更改为 9000 ：
+
+
+....
+network port broadcast-domain modify -broadcast-domain <Default-1> -mtu < 9000 >
+Warning: Changing broadcast domain settings will cause a momentary data-serving interruption.
+Do you want to continue? {y|n}: <y>
+....

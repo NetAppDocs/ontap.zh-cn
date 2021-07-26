@@ -1,0 +1,22 @@
+---
+sidebar: sidebar 
+permalink: smbc/smbc_troubleshoot_vol_move_reference_snapshot_showing_as_newest.html 
+keywords: SM-BC, SMBC, volume move, troubleshooting, consistency group, Snapshot copy 
+summary: 执行卷移动操作后，卷移动操作的参考 Snapshot 副本将显示为 SnapMirror 关系的最新副本。 
+---
+= 卷移动参考 Snapshot 副本显示为最新的
+:hardbreaks:
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+对一致性组卷执行卷移动操作后，卷移动参考 Snapshot 副本可能会显示为 SnapMirror 关系的最新版本。
+
+您可以使用以下命令查看最新的 Snapshot 副本：
+
+`snapmirror show -fields lateds-snapshot status -expand`
+
+在卷移动操作完成后，手动执行 `snapmirror resync` 或等待下一个自动重新同步操作。
