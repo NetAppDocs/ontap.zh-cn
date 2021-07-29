@@ -97,7 +97,7 @@ network bgp defaults modify -asn asn_integer -holdtime hold_time
 network bgp defaults modify -asn 65502
 ....
 +
-*** `ASN_integer` 指定 ASN 。从 ONTAP 9.8 开始，适用于 BGP 的 ASN 支持一个 2 字节非负整数。这是一个 16 位数（ 0 - 64511 可用值）。从 ONTAP 9.1.1 开始，适用于 BGP 的 ASN 支持一个 4 字节非负整数（ 65536 - 4294967295 ）。默认 ASN 为 65501 。ASN 23456 保留用于与未公布 4 字节 ASN 功能的对等方建立 ONTAP 会话。
+*** `ASN_integer` 指定 ASN 。从 ONTAP 9.8 开始，适用于 BGP 的 ASN 支持一个 2 字节非负整数。这是一个 16 位数（ 1 - 65534 可用值）。从 ONTAP 9.1.1 开始，适用于 BGP 的 ASN 支持一个 4 字节非负整数（ 1 - 4294967295 ）。默认 ASN 为 65501 。ASN 23456 保留用于与未公布 4 字节 ASN 功能的对等方建立 ONTAP 会话。
 *** `Hold_Time` 指定保持时间（以秒为单位）。默认值为 180s 。
 
 
@@ -109,7 +109,7 @@ network bgp defaults modify -asn 65502
 network interface create -vserver system_svm -lif lif_name -service-policy default-route-announce -home-node home_node -home-port home_port -address ip_address -netmask netmask
 ....
 +
-您可以对 BGP LIF 使用 `default-route-announce` 服务策略。
+您可以对 BGP LIF 使用 `default-route-announce` 服务策略，也可以对包含 "management-BGP " 服务的任何自定义服务策略使用此服务策略。
 
 +
 ....

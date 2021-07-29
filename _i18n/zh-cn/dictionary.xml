@@ -2758,11 +2758,8 @@
   <block id="dedbd6cf0efff316abaa01e895452d31" category="paragraph">这些值是为系统定义的防火墙策略保留的。</block>
   <block id="37671de3d7f205a7a1452d04b72fabba" category="list-text">您不能为集群 LIF 设置或修改防火墙策略。</block>
   <block id="5eab16c6f5f25b85fc299b6dcf003613" category="paragraph">对于所有服务类型，集群 LIF 的防火墙策略均设置为 0.0.0.0/0 。</block>
-  <block id="68f1d1900ea8bbc4d488e4cb5d143e29" category="list-text">如果需要修改或删除服务，则必须删除现有防火墙策略并创建新策略。</block>
   <block id="2c98409c037d192dfa75a766a13830ff" category="list-text">如果集群上启用了 IPv6 ，则可以使用 IPv6 地址创建防火墙策略。</block>
-  <block id="bc24a9298e52ad43aa86c14b0ce8ff73" category="paragraph">启用 IPv6 后， `data` 和 `mGMT` 防火墙策略会在其可接受地址列表中包含：： /0 ， IPv6 通配符。</block>
   <block id="0807348b81e5bd835ead79033ddfd2ee" category="list-text">在使用 ONTAP 系统管理器跨集群配置数据保护功能时，您必须确保允许列表中包含集群间 LIF IP 地址，并且允许在集群间 LIF 和公司拥有的防火墙上使用 HTTPS 服务。</block>
-  <block id="c7fc712f972684c41ed8264345e42fcf" category="paragraph">默认情况下， `集群间` 防火墙策略允许从所有 IP 地址（ 0.0.0.0/0 ）进行访问，并启用 HTTPS ， NDMP 和 NDMPS 服务。如果修改此默认策略，或者为集群间 LIF 创建自己的防火墙策略，则必须将每个集群间 LIF IP 地址添加到允许列表中并启用 HTTPS 服务。</block>
   <block id="b03fc7b808061387322c82dad527fc3a" category="list-text">从 ONTAP 9.6 开始，不支持 HTTPS 和 SSH 防火墙服务。</block>
   <block id="2705f917d45048be3e18dbd8fe279157" category="paragraph">在 ONTAP 9.6 中，可以使用 `manmanagement-https` 和 `manmanagement-ssh` LIF 服务进行 HTTPS 和 SSH 管理访问。</block>
   <block id="437d99c13fd30ea872b9decd8f731752" category="list-text">创建可供特定 SVM 上的 LIF 使用的防火墙策略：</block>
@@ -2810,7 +2807,6 @@
   <block id="b6ac901dbc5d5b7f5039feeac5ccc881" category="section-title">数据 SVM 的服务策略</block>
   <block id="1100aa09b766698f8855cf38a4835880" category="paragraph">所有数据 SVM 都包含可由该 SVM 中的 LIF 使用的服务策略。下表列出了数据 SVM 中 LIF 的内置策略：</block>
   <block id="95dfc37a936ef3254335a0d3a2f9377c" category="cell">等效数据协议</block>
-  <block id="7d510c45483ffb56b5c26d66b6205cc6" category="paragraph">management-ssh ， management-https</block>
   <block id="334c4a4c42fdb79d7ebc3e73b517e6f8" category="paragraph">无</block>
   <block id="6b22c4ad7c93b34632b0fe00c49f8e70" category="paragraph">由处理管理请求的 LIF 使用</block>
   <block id="6ee97f4349d48b4c53372dfd08835169" category="paragraph">default-data-blocks</block>
@@ -2818,13 +2814,11 @@
   <block id="39eea648dab96b0ee6022dabb38bc420" category="paragraph">iSCSI</block>
   <block id="f0c0722e00d5d614d3f08567e26cca21" category="paragraph">由传输面向块的 SAN 数据流量的 LIF 使用</block>
   <block id="891e111023ee3cccd4407be6ddd24c21" category="paragraph">default-data-files</block>
-  <block id="b3a795a121714b9965007b6d6fa7996f" category="paragraph">data-nfs ， data-cifs ， data-FlexCache ， data-fpolicy-client</block>
   <block id="13a87514a6cfa125b69c162825a4cad8" category="paragraph">NFS ， CIFS ， fcache</block>
   <block id="c6d8eee1e2d93dbe79f7fc721d23bda0" category="paragraph">由传输面向文件的 NAS 数据流量的 LIF 使用。</block>
   <block id="baac46f8b9de0095646b7ffc728c7d29" category="paragraph">下表列出了可在数据 SVM 上使用的服务以及每个服务对 LIF 的故障转移策略施加的任何限制：</block>
   <block id="848f3ab391766401ac1b6a705dc3780e" category="paragraph">数据核心</block>
   <block id="6a2b234c4d6bdf11e370ebfdb4837d6b" category="paragraph">纯数据</block>
-  <block id="dff0ec8755b8edc6c722301cccd396b5" category="paragraph">核心数据服务（有关详细信息，请参见。</block>
   <block id="8e3c7d99361f90ae0019bdc6b46bb631" category="paragraph">数据 NFS</block>
   <block id="2f3a90b63ce315c9ccef8c7602ad94d2" category="paragraph">与 NFS 数据服务相关的协议</block>
   <block id="f9523ff986600e77fbe83fc589767ad6" category="paragraph">数据 CIFS</block>
@@ -2899,8 +2893,6 @@
   <block id="83b8a0042e3650c5af884c9601f53043" category="doc">将 LIF 还原到其主端口</block>
   <block id="35ae87d2696114789bc077e3e5ee8344" category="paragraph">您可以在 LIF 发生故障转移或手动或自动迁移到其他端口后将其还原到主端口。如果特定 LIF 的主端口不可用，则 LIF 将保留在其当前端口，不会还原。</block>
   <block id="ef7c39bafa0bbf34327b3c036b5b0874" category="list-text">如果在设置自动还原选项之前以管理方式将 LIF 的主端口置于 up 状态，则 LIF 不会返回到主端口。</block>
-  <block id="7cd2652561ad0de97fd917a7156d7376" category="list-text">除非 "auto-revert" 选项的值设置为 true ，否则节点管理 LIF 不会自动还原。</block>
-  <block id="cf3c72d8da3c49b52fe5a531cbe813bd" category="list-text">您必须确保为集群 LIF 启用了 "auto-revert" 选项，以还原到其主端口。</block>
   <block id="acc9b9fe410117a3e8610c980e7e842b" category="paragraph">手动或自动将 LIF 还原到其主端口：</block>
   <block id="7074fd65a55e2b5e9423c69328332ae8" category="cell">如果要将 LIF 还原到其主端口 ...</block>
   <block id="3cba76c1c13a69c63a619740e3d6a010" category="cell">然后输入以下命令 ...</block>
@@ -3301,7 +3293,6 @@
   <block id="aa74aa582ded3053a2e308c5064314a8" category="list-text">如果应用的故障转移组不能为 LIF 提供有效的故障转移目标，则会显示一条警告消息。</block>
   <block id="00168315e4762d2b2b9c5462bdf8c7cc" category="summary">具有不同角色的 LIF 具有不同的特征</block>
   <block id="8396bc39accde3594cc1abbe0798f2ec" category="doc">ONTAP 9.5 及更早版本中的 LIF 角色</block>
-  <block id="d9b577b2d10bbf5b6323e8b9a8ad603c" category="paragraph">具有不同角色的 LIF 具有不同的特征。LIF 角色可确定接口支持的流量类型，适用的故障转移规则，已设置的防火墙限制，每个 LIF 的安全性，负载平衡以及路由行为。LIF 可以具有以下五个角色中的任一角色：节点管理，集群管理，集群，集群间和数据。</block>
   <block id="55be25f2d613951fc86ef605c1fa20ec" category="paragraph">从 ONTAP 9.6 开始， LIF 角色已弃用。您应为 LIF 指定服务策略，而不是为角色指定服务策略。使用服务策略创建 LIF 时，无需指定 LIF 角色。</block>
   <block id="2627215f600219ccfa80dfa1258453d7" category="section-title">LIF 与端口类型的兼容性</block>
   <block id="c29db11403a0214b2995add52ab264c8" category="admonition">如果在同一子网中配置了集群间 LIF 和管理 LIF 以与静态路由关联，并且此路由与集群间 LIF 关联，则管理流量将被外部防火墙阻止，并且 AutoSupport 和 NTP 连接将失败。您可以通过运行 `network interface modify -vserver _vserver name_ -lif _intercluster LIF_ -status-admin up_down` 命令来切换集群间 LIF 来恢复系统。但是，您应在不同子网中设置集群间 LIF 和管理 LIF ，以避免使用此问题描述。</block>
@@ -3313,7 +3304,6 @@
   <block id="e2578ec54f85b5b6333c94364b756a1c" category="cell">节点管理 LIF</block>
   <block id="cc6ff18647a66c1d43119d8291d3ab95" category="cell">一种 LIF ，用于提供用于管理集群中特定节点的专用 IP 地址。节点管理 LIF 是在创建或加入集群时创建的。这些 LIF 用于系统维护，例如，当节点无法从集群访问时。</block>
   <block id="15a4d902a9e2eeb56724bdb94f9d1977" category="cell">集群管理 LIF</block>
-  <block id="57c6f23ac30d0c3c2bdf370a5f31317f" category="cell">为整个集群提供一个管理接口的 LIF 。集群管理 LIF 可以故障转移到集群中的任何节点管理端口或数据端口。它不能故障转移到集群或集群间端口集群间 LIF 用于跨集群通信，备份和复制的 LIF 。您必须先在集群中的每个节点上创建一个集群间 LIF ，然后才能建立集群对等关系。这些 LIF 只能故障转移到同一节点中的端口。它们不能迁移或故障转移到集群中的另一个节点。</block>
   <block id="54f7d853bcd07992f133218c21a038be" category="cell">集群间 LIF</block>
   <block id="91c997ac411302de89a704da8c90a365" category="cell">主要流量类型</block>
   <block id="863fafa226fdca241847822df0d9cf40" category="cell">NFS 服务器， CIFS 服务器， NIS 客户端， Active Directory ， LDAP ， WINS ， DNS 客户端和服务器， iSCSI 和 FC 服务器</block>
@@ -3426,10 +3416,8 @@
   <block id="70f825c7d49d40f33647c1934e4be032" category="paragraph">带有 2 字节 ASN 的示例：</block>
   <block id="15fe172d14b75fec051cdb340f809f6e" category="paragraph">包含 4 字节 ASN 的示例：</block>
   <block id="12a0ffd9ceb1126d56eed9db45a9d9b5" category="list-text">修改默认 BGP 配置：</block>
-  <block id="ee57f87db1f05cb1cc5480c74b19ec0c" category="list-text">`ASN_integer` 指定 ASN 。从 ONTAP 9.8 开始，适用于 BGP 的 ASN 支持一个 2 字节非负整数。这是一个 16 位数（ 0 - 64511 可用值）。从 ONTAP 9.1.1 开始，适用于 BGP 的 ASN 支持一个 4 字节非负整数（ 65536 - 4294967295 ）。默认 ASN 为 65501 。ASN 23456 保留用于与未公布 4 字节 ASN 功能的对等方建立 ONTAP 会话。</block>
   <block id="536e17d3c7fbea2167dcc3159c46c9f0" category="list-text">`Hold_Time` 指定保持时间（以秒为单位）。默认值为 180s 。</block>
   <block id="d62b34e19fa5b9ea077c1600c28a81af" category="list-text">为系统 SVM 创建 BGP LIF ：</block>
-  <block id="4d9c887cbd36564ffaaa27401d4299eb" category="paragraph">您可以对 BGP LIF 使用 `default-route-announce` 服务策略。</block>
   <block id="25ba927686519e17fa55760b41096efb" category="list-text">创建 BGP 对等组，用于与远程对等路由器建立 BGP 会话，并配置向对等路由器公布的 VIP 路由信息：</block>
   <block id="57b9b647aa0ddcd808e02454c641f257" category="paragraph">示例 1 ：创建不具有自动默认路由的对等组</block>
   <block id="e740a035b125bcb4c9814ff3e13ba758" category="paragraph">在这种情况下，管理员必须创建指向 BGP 对等方的静态路由。</block>
@@ -4173,9 +4161,7 @@
   <block id="fb68c70c737dc43df49f842ea1780c72" category="list-text">使用 `network interface delete` 命令删除一个或所有 LIF ：</block>
   <block id="56e6ca515ffcd020b7f5ae2cabf1dbd4" category="cell">要删除的内容</block>
   <block id="ca802c050d1e3515057340be105e3987" category="cell">输入命令：</block>
-  <block id="b9f9ae4f456816f8b3c2698178a4ba17" category="cell">`network interface delete -lif lif_name`</block>
   <block id="952de65cb5923c781a01fb4c1a2a63c8" category="cell">所有 LIFs</block>
-  <block id="3cc8423533f1e16f06bc5384605ed4af" category="cell">`network interface delete -lif`</block>
   <block id="809a1beaacbd0dde738092cce5af6f15" category="paragraph">以下命令将删除 LIF mgmtlif2 ：</block>
   <block id="bb28cf766beced4226b4880f389e8734" category="list-text">使用 `network interface show` 命令确认已删除 LIF 。</block>
   <block id="4c243dc395d9228ecc862d029910359d" category="paragraph">以下命令将删除 IP 空间 ipspace1 中的广播域 bcast1 ：</block>
@@ -4326,7 +4312,6 @@
   <block id="26310c8682ed9bf921fea2a6c84ad06e" category="doc">工作流：适用于 ONTAP 9.0 - 9.7 的 NAS 路径故障转移</block>
   <block id="84a47c3e71a349db7a7c36aa470b64f8" category="summary">引入 LIF 配置</block>
   <block id="7c2fa6061a5b41013685a5bc1ed14aa6" category="paragraph">LIF 表示集群中某个节点的网络访问点。您可以在集群通过网络发送和接收通信的端口上配置 LIF 。</block>
-  <block id="dd5523f7aec3c1d0f84b9e301b75e821" category="paragraph">集群管理员可以创建，查看，修改，迁移或删除 LIF 。SVM 管理员只能查看与 SVM 关联的 LIF 。</block>
   <block id="4703822b37e43914c3aac2c64ff984f5" category="summary">按 IP 空间显示不同协议的 QoS 标记值</block>
   <block id="c1fb62507afd5364cf82be06f1e368fe" category="doc">显示 QoS 标记值</block>
   <block id="bff55a6966cbf78f3b258cad5cb8d652" category="paragraph">您可以为每个 IP 空间显示不同协议的 QoS 标记值。</block>
@@ -7414,4 +7399,22 @@
   <block id="05807e454c19f244770adae059b3c330" category="sidebar">高可用性</block>
   <block id="6c1d7651c3b7199160da6cd272e31005" category="list-text"><block ref="89990deeff33ca5901c9179d097feed9" category="inline-link-macro-rx"></block>。</block>
   <block id="669de74d3083480bce94ddebfeab68bf" category="list-text">集群 IP 空间</block>
+  <block id="15975a5e16a5e04f1a4eb669a8705bcd" category="paragraph">集群管理员可以创建，查看，修改，迁移，还原， 或删除 LIF 。SVM 管理员只能查看与 SVM 关联的 LIF 。</block>
+  <block id="9c239bb64b4421d6ed425e431d5f6c0f" category="paragraph">数据核心， management-ssh ， management-https</block>
+  <block id="465be40a73b2e56b25c7f4229e72ac6b" category="paragraph">数据核心，数据 iSCSI</block>
+  <block id="c4e0d6b7041e222bfc4ca43ba33759bd" category="paragraph">data-core ， data-nfs ， data-cifs ， data-FlexCache ， data-fpolicy-client</block>
+  <block id="d1224f858e0d7e842dca425714bbb184" category="paragraph">核心数据服务</block>
+  <block id="4bc56a6c256e4d5b2fbffd8399a5a338" category="list-text">`ASN_integer` 指定 ASN 。从 ONTAP 9.8 开始，适用于 BGP 的 ASN 支持一个 2 字节非负整数。这是一个 16 位数（ 1 - 65534 可用值）。从 ONTAP 9.1.1 开始，适用于 BGP 的 ASN 支持一个 4 字节非负整数（ 1 - 4294967295 ）。默认 ASN 为 65501 。ASN 23456 保留用于与未公布 4 字节 ASN 功能的对等方建立 ONTAP 会话。</block>
+  <block id="dd488ce5ab144852c7dbb8c0ff289a2f" category="paragraph">您可以对 BGP LIF 使用 `default-route-announce` 服务策略，也可以对包含 "management-BGP " 服务的任何自定义服务策略使用此服务策略。</block>
+  <block id="7bbee198af002fe1c29ff626e7735702" category="cell">`network interface delete -vserver vserver_name -lif lif_name`</block>
+  <block id="894e3570a98cc47da57b2358c69df077" category="cell">`network interface delete -vserver vserver_name -lif *`</block>
+  <block id="971dbc285b73d7c6f7ac90280984bb27" category="paragraph">具有不同角色的 LIF 具有不同的特征。LIF 角色可确定接口支持的流量类型，适用的故障转移规则，已设置的防火墙限制，每个 LIF 的安全性，负载平衡以及路由行为。LIF 可以具有以下任一角色：集群，集群管理，数据，集群间，节点管理， 和 UNDEF （未定义）。BGP LIF 使用 UNDEF 角色。</block>
+  <block id="8112643f2216c92c95655d7fa3866d3e" category="cell">为整个集群提供一个管理接口的 LIF 。集群管理 LIF 可以故障转移到集群中的任何节点管理端口或数据端口。它无法故障转移到集群或集群间端口</block>
+  <block id="c46b415b735a844431face26e3dd78c5" category="cell">一种用于跨集群通信，备份和复制的 LIF 。您必须先在集群中的每个节点上创建一个集群间 LIF ，然后才能建立集群对等关系。这些 LIF 只能故障转移到同一节点中的端口。它们不能迁移或故障转移到集群中的另一个节点。</block>
+  <block id="a60bc7e76772c2e18ae4af7cda2f8093" category="list-text">除非 "auto-revert" 选项的值设置为 true ，否则 LIF 不会自动还原。</block>
+  <block id="44a2b2362cfe1c461d177053fa6240dd" category="list-text">您必须确保为 LIF 启用了 "auto-revert" 选项以还原到其主端口。</block>
+  <block id="e2e5004a5c4f9cfa72767a2776ed5410" category="list-text">如果需要从策略中删除服务，则必须删除现有防火墙策略并创建新策略。</block>
+  <block id="c079ef1148e414b72f24a0b775a23e93" category="paragraph">启用 IPv6 后， `data` ， `intercluster` 和 `mGMT` 防火墙策略会在其可接受地址列表中包含：： /0 ， IPv6 通配符。</block>
+  <block id="c13dfd110840cb005cd60eee39923a0c" category="paragraph">默认情况下， `intercluster` 防火墙策略允许从所有 IP 地址（对于 IPv6 为 0.0.0.0/0 或：：： /0 ）进行访问，并启用 HTTPS ， NDMP 和 NDMPS 服务。如果修改此默认策略，或者为集群间 LIF 创建自己的防火墙策略，则必须将每个集群间 LIF IP 地址添加到允许列表中并启用 HTTPS 服务。</block>
+  <block id="25b6e8a4d9a310f19bea82094ae6e221" category="list-text">BGP LIF 位于主端口上，不能迁移到任何其他节点或端口。</block>
 </blocks>

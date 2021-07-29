@@ -21,7 +21,7 @@ summary: 删除不再需要的网络接口（ LIF ）
 . 使用以下命令将要删除的 LIF 标记为 administratively down ：
 +
 ....
--status-admin down
+network interface modify -vserver vserver_name -lif lif_name -status-admin down
 ....
 . 使用 `network interface delete` 命令删除一个或所有 LIF ：
 +
@@ -30,10 +30,10 @@ summary: 删除不再需要的网络接口（ LIF ）
 | 要删除的内容 | 输入命令： 
 
 
-| 特定 LIF | `network interface delete -lif lif_name` 
+| 特定 LIF | `network interface delete -vserver vserver_name -lif lif_name` 
 
 
-| 所有 LIFs | `network interface delete -lif` 
+| 所有 LIFs | `network interface delete -vserver vserver_name -lif *` 
 |===
 +
 以下命令将删除 LIF mgmtlif2 ：
