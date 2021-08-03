@@ -177,12 +177,6 @@ _true_
 | 使用的存储故障转移参数 | 崩溃后是否发生自动交还？ 
 
 
-| -onpanic `false` -auto-giveback-after-panic `true` | 否 
-
-
-| -onpanic `false` -auto-giveback-after-panic `false` | 否 
-
-
 | -onpanic `true` -auto-giveback `true` -auto-giveback-after-panic `true` | 是的。 
 
 
@@ -197,7 +191,11 @@ _true_
 
 | -onpanic `false` 如果 -onpanic 设置为 `false` ，则无论为 -auto-giveback 或 - auto-giveback-after-panic 设置的值如何，都不会发生接管 / 交还 | 否 
 |===
+[NOTE]
+====
+* 在节点崩溃期间，接管可能出于其他原因发生。在这种情况下，交还不受自动崩溃后交还设置的控制。
+* 如果 -onpanic 参数设置为 `true` ，则在发生崩溃时始终会执行自动交还，除非您更改了 -auto-giveback 和 -auto-giveback-after-panic 参数的默认设置。如果这两个参数都从其默认值（`true` ，）更改为 `false` ，则在发生崩溃后不会发生自动交还，即使 -onpanic 参数设置为 `true` 也是如此。
+* 如果 -onpanic 参数设置为 `false` ，则不会发生接管。因此，即使将 auto giveback after panic 参数设置为 `true` ，也不会发生自动交还。发生客户端中断。
 
-NOTE: 如果 -onpanic 参数设置为 `true` ，则在发生崩溃时始终会执行自动交还，除非您更改了 -auto-giveback 和 -auto-giveback-after-panic 参数的默认设置。如果这两个参数都从其默认值（`true` ，）更改为 `false` ，则在发生崩溃后不会发生自动交还，即使 -onpanic 参数设置为 `true` 也是如此。
 
-如果 -onpanic 参数设置为 `false` ，则不会发生接管。因此，即使将 auto giveback after panic 参数设置为 `true` ，也不会发生自动交还。发生客户端中断。
+====
