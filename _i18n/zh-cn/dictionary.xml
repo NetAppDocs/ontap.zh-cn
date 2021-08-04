@@ -6371,7 +6371,6 @@
   <block id="db18ec6973b75239368a8ceaca67f4c9" category="list-text">您不能在 ASA 集群和非 ASA 集群之间建立 SM-BC 一致性组关系</block>
   <block id="b6baec7960bc1e0656085606b96267a7" category="paragraph">您必须从目标集群创建一致性组关系。您可以使用 `snapmirror create` 命令上的 `cg-item-mapings` 参数映射多达 12 个成分卷。</block>
   <block id="b2b469a6fcc4dd642a43e4d21a73d140" category="list-text">创建一致性组和成分卷关系。此示例将创建两个一致性组：包含成分卷 vol1 和 vol2 的 srcg 以及包含成分卷 vol1_dr 和 vol2_dr 的 dstcg 。</block>
-  <block id="51d487966d2740596bba3a77c9344cd4" category="paragraph">`d目标：： &gt; snapmirror create -source-path vs1_src ： /CG/cG_src -destination-path vs1_dst ： /CG_c_dst -cg-item-mappings vol_src1 ：@vol_dst1 ， vol_src2 ：@vol_dst2 -policy AutomatedFailover`</block>
   <block id="087883e60f46854476300ac3a5d4c7ef" category="summary">ONTAP 调解器为 SM-BC 关系中的 ONTAP 集群建立仲裁，并协调故障期间的自动故障转移。</block>
   <block id="3d4df5081998c3ca680e149459c1a8c8" category="doc">准备使用 ONTAP 调解器</block>
   <block id="bd32fe592cad4acb8313af5687a61387" category="paragraph">ONTAP 调解器为 SM-BC 关系中的 ONTAP 集群建立仲裁。它可以在检测到故障时协调自动故障转移，并有助于避免在每个集群同时尝试建立主集群控制时出现脑裂情况。</block>
@@ -7402,4 +7401,6 @@
   <block id="c13dfd110840cb005cd60eee39923a0c" category="paragraph">默认情况下， `intercluster` 防火墙策略允许从所有 IP 地址（对于 IPv6 为 0.0.0.0/0 或：：： /0 ）进行访问，并启用 HTTPS ， NDMP 和 NDMPS 服务。如果修改此默认策略，或者为集群间 LIF 创建自己的防火墙策略，则必须将每个集群间 LIF IP 地址添加到允许列表中并启用 HTTPS 服务。</block>
   <block id="25b6e8a4d9a310f19bea82094ae6e221" category="list-text">BGP LIF 位于主端口上，不能迁移到任何其他节点或端口。</block>
   <block id="04677b06f09edfb1de72307d52939f0e" category="list-text">在节点崩溃期间，接管可能出于其他原因发生。在这种情况下，交还不受自动崩溃后交还设置的控制。</block>
+  <block id="721e3f4f13ca3571d6f99ce624a5a252" category="paragraph">您必须创建一个 SM-BC 一致性组，该一致性组还会建立同步一致性组关系。</block>
+  <block id="44e9deed4e01180acd28f32c9f1b61f0" category="paragraph">`d目标：： &gt; snapmirror create -source-path vs1_src ： /CG/cG_src -destination-path vs1_dst ： /CG_c_dst -cg-item-mappings vol_src1 ：@vol_dst1 ， vol_src2 ：@vol_dst2 -policy AutomatedFailover`</block>
 </blocks>
