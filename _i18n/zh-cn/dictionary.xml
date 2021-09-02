@@ -2683,7 +2683,6 @@
   <block id="0ea098eb63eea4005e18c15a6463f889" category="list-text">您正在运行 ONTAP 9.8 或更高版本的新系统上配置网络连接。</block>
   <block id="aeb079249bff63583c60c259e039709d" category="paragraph">如果您运行的 ONTAP 版本高于 9.7 ，则应使用以下 NAS 路径故障转移文档：</block>
   <block id="57e1317b607ce67686550d96b78223d7" category="inline-link-macro">ONTAP 9.8 及更高版本的 NAS 路径故障转移工作流</block>
-  <block id="6b4dcc58fc6ffc64e6611bb2f7ace4a9" category="list-text"><block ref="6b4dcc58fc6ffc64e6611bb2f7ace4a9" category="inline-link-macro-rx"></block></block>
   <block id="43c67c200c072266e6ebbedf8dc24490" category="paragraph">如果您需要网络管理详细信息，应使用以下《 ONTAP 9 网络管理参考》：</block>
   <block id="2b72b25c85b4fee38e72569dd156e20b" category="inline-link-macro">《 ONTAP 9 网络管理参考》</block>
   <block id="8aaadb35a968f55eb2d96245471f29e6" category="list-text"><block ref="8aaadb35a968f55eb2d96245471f29e6" category="inline-link-macro-rx"></block></block>
@@ -3289,12 +3288,10 @@
   <block id="8396bc39accde3594cc1abbe0798f2ec" category="doc">ONTAP 9.5 及更早版本中的 LIF 角色</block>
   <block id="55be25f2d613951fc86ef605c1fa20ec" category="paragraph">从 ONTAP 9.6 开始， LIF 角色已弃用。您应为 LIF 指定服务策略，而不是为角色指定服务策略。使用服务策略创建 LIF 时，无需指定 LIF 角色。</block>
   <block id="2627215f600219ccfa80dfa1258453d7" category="section-title">LIF 与端口类型的兼容性</block>
-  <block id="c29db11403a0214b2995add52ab264c8" category="admonition">如果在同一子网中配置了集群间 LIF 和管理 LIF 以与静态路由关联，并且此路由与集群间 LIF 关联，则管理流量将被外部防火墙阻止，并且 AutoSupport 和 NTP 连接将失败。您可以通过运行 `network interface modify -vserver _vserver name_ -lif _intercluster LIF_ -status-admin up_down` 命令来切换集群间 LIF 来恢复系统。但是，您应在不同子网中设置集群间 LIF 和管理 LIF ，以避免使用此问题描述。</block>
   <block id="77e741be92ecc04ee13fcfd53988b199" category="cell">LIF 角色</block>
   <block id="f86f4a50388930909d983126e43601d2" category="cell">数据 LIF</block>
   <block id="72618f91e0500b0de0f483f4ac9372c7" category="cell">与 Storage Virtual Machine （ SVM ）关联并用于与客户端通信的 LIF 。一个端口上可以有多个数据 LIF 。这些接口可以在整个集群中进行迁移或故障转移。您可以通过将数据 LIF 的防火墙策略修改为 mgmt 来将其用作 SVM 管理 LIF 。与 NIS ， LDAP ， Active Directory ， WINS 和 DNS 服务器建立的会话使用数据 LIF 。</block>
   <block id="aff7b3c6a1a82a339ee68a62e5bf859e" category="cell">集群 LIF</block>
-  <block id="55f778b00e3c5f61e8d4dde81a16650d" category="cell">一种 LIF ，用于在集群中的节点之间传输集群内流量。必须始终在 10-GbE 网络端口上创建集群 LIF 。集群 LIF 可以在同一节点上的集群端口之间进行故障转移，但不能迁移或故障转移到远程节点。当新节点加入集群时，系统会自动生成 IP 地址。但是，如果要手动为集群 LIF 分配 IP 地址，则必须确保新 IP 地址与现有集群 LIF 位于同一子网范围内。</block>
   <block id="e2578ec54f85b5b6333c94364b756a1c" category="cell">节点管理 LIF</block>
   <block id="cc6ff18647a66c1d43119d8291d3ab95" category="cell">一种 LIF ，用于提供用于管理集群中特定节点的专用 IP 地址。节点管理 LIF 是在创建或加入集群时创建的。这些 LIF 用于系统维护，例如，当节点无法从集群访问时。</block>
   <block id="15a4d902a9e2eeb56724bdb94f9d1977" category="cell">集群管理 LIF</block>
@@ -7392,7 +7389,6 @@
   <block id="7bbee198af002fe1c29ff626e7735702" category="cell">`network interface delete -vserver vserver_name -lif lif_name`</block>
   <block id="894e3570a98cc47da57b2358c69df077" category="cell">`network interface delete -vserver vserver_name -lif *`</block>
   <block id="971dbc285b73d7c6f7ac90280984bb27" category="paragraph">具有不同角色的 LIF 具有不同的特征。LIF 角色可确定接口支持的流量类型，适用的故障转移规则，已设置的防火墙限制，每个 LIF 的安全性，负载平衡以及路由行为。LIF 可以具有以下任一角色：集群，集群管理，数据，集群间，节点管理， 和 UNDEF （未定义）。BGP LIF 使用 UNDEF 角色。</block>
-  <block id="8112643f2216c92c95655d7fa3866d3e" category="cell">为整个集群提供一个管理接口的 LIF 。集群管理 LIF 可以故障转移到集群中的任何节点管理端口或数据端口。它无法故障转移到集群或集群间端口</block>
   <block id="c46b415b735a844431face26e3dd78c5" category="cell">一种用于跨集群通信，备份和复制的 LIF 。您必须先在集群中的每个节点上创建一个集群间 LIF ，然后才能建立集群对等关系。这些 LIF 只能故障转移到同一节点中的端口。它们不能迁移或故障转移到集群中的另一个节点。</block>
   <block id="a60bc7e76772c2e18ae4af7cda2f8093" category="list-text">除非 "auto-revert" 选项的值设置为 true ，否则 LIF 不会自动还原。</block>
   <block id="44a2b2362cfe1c461d177053fa6240dd" category="list-text">您必须确保为 LIF 启用了 "auto-revert" 选项以还原到其主端口。</block>
@@ -7433,4 +7429,13 @@
   <block id="49ccd4da2ef8cd987e3e8781b62c6a3c" category="list-text">受影响的节点</block>
   <block id="5334db8236a9684d1c675f5561cc39e7" category="list-text">所需的缓解类型</block>
   <block id="3b1702a34e7e9227f5b26c5276fd25b3" category="list-text">您可以采取的更正操作</block>
+  <block id="5332061b15c5e539606de0f42ba37eec" category="list-text"><block ref="5332061b15c5e539606de0f42ba37eec" category="inline-link-macro-rx"></block></block>
+  <block id="3dac1553cd34a4387f92153c3a582713" category="summary">LIF 可以具有不同的特性来支持不同的端口类型</block>
+  <block id="86554767e9874406e845da28cd086b0b" category="paragraph">LIF 可以具有不同的特性来支持不同的端口类型。</block>
+  <block id="ad678c0f71ca384bc3202876203e73d2" category="admonition">如果在同一子网中配置了集群间和管理 LIF ，则管理流量可能会被外部防火墙阻止，并且 AutoSupport 和 NTP 连接可能会失败。您可以通过运行 `network interface modify -vserver _vserver name_ -lif _intercluster LIF_ -status-admin up_down` 命令来切换集群间 LIF 来恢复系统。但是，您应在不同子网中设置集群间 LIF 和管理 LIF ，以避免使用此问题描述。</block>
+  <block id="95416f2c916dabe21f738406546ebc53" category="cell">LIF</block>
+  <block id="bb6b3eeeeea530b9d443139aa98bab5b" category="cell">一种 LIF ，用于在集群中的节点之间传输集群内流量。必须始终在集群端口上创建集群 LIF 。集群 LIF 可以在同一节点上的集群端口之间进行故障转移，但不能迁移或故障转移到远程节点。当新节点加入集群时，系统会自动生成 IP 地址。但是，如果要手动为集群 LIF 分配 IP 地址，则必须确保新 IP 地址与现有集群 LIF 位于同一子网范围内。</block>
+  <block id="fdb61a9372481ce365c4df0d03c756b9" category="cell">为整个集群提供一个管理接口的 LIF 。集群管理 LIF 可以故障转移到集群中的任何节点。它无法故障转移到集群或集群间端口</block>
+  <block id="960e2e9197894ba266cc974be53f97d7" category="cell">VIP LIF</block>
+  <block id="910ccea314c6d72f2cd102d7f31bedd7" category="cell">VIP LIF 是指在 VIP 端口上创建的任何数据 LIF 。要了解更多信息，请参见 <block ref="43d93948b7becfd15462e91085fd63cc" category="inline-link-macro-rx"></block>。</block>
 </blocks>
