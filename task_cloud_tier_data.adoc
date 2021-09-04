@@ -22,9 +22,13 @@ summary: 将数据存储在层中可以提高存储系统的效率。
 
 此操作步骤会将对象存储设置为 FabricPool 的云层。请注意，一旦附加到本地层（ aggr ），则无法取消附加此云层。
 
-使用 StorageGRID 或 ONTAP S3 作为云层或使用 Amazon S3 ， Google Cloud Storage 或 Microsoft Azure Blob Storage 作为适用于 ONTAP 的 Cloud Volumes 的云层时，不需要 FabricPool 许可证。其他云层位置需要 FabricPool 许可证。
+自 2021 年 8 月 21 日起，为使用 Cloud Tiering 服务在 Cloud Manager 中支持的分层配置引入了全新的 Cloud Tiering BYOL 许可。 link:cloud-install-fabricpool-task.html["了解有关安装 FabricPool 许可证的更多信息"]。
 
-如果要分层到 ONTAP S3 ，则还有其他要求： * 在为管理 Storage VM 配置的 DNS 服务器中，必须为远程 ONTAP S3 服务器的主机名提供一个条目，包括 S3 服务器的 FQDN 名称及其网络接口上的 IP 地址。* link:task_dp_prepare_mirror.html["集群间网络接口"] 必须在本地和远程集群上配置，但不需要集群对等。
+如果要分层到 ONTAP S3 ，则还需要满足以下要求：
+
+* 在为管理 Storage VM 配置的 DNS 服务器中，必须为远程 ONTAP S3 服务器的主机名提供一个条目，包括 S3 服务器的 FQDN 名称及其网络接口上的 IP 地址。
+* link:task_dp_prepare_mirror.html["集群间网络接口"] 必须在本地和远程集群上配置，但不需要集群对等。
+
 
 您还可以选择在 System Manager 中创建卷分层策略。
 
