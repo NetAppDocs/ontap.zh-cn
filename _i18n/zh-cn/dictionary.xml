@@ -406,14 +406,6 @@
   <block id="eac8356f063099af6c6c02ee2bd2f6ce" category="list-text">您在 ONTAP 9.5 或更高版本中创建了卷，需要还原到早期版本。还原之前，必须对使用自适应数据压缩的卷进行解压缩。</block>
   <block id="7456b00468747ccac9774f7eba75d3be" category="summary">如果您还原到任何 ONTAP 9 版本之前的版本，则 SHA-2 帐户用户将无法再使用其密码进行身份验证。因此，您必须让他们使用还原到的版本支持的加密类型 \ （ md5\ ）将密码重置为。</block>
   <block id="715442926be6416c0e8e7796bf091bf8" category="doc">将密码哈希函数还原为支持的加密类型</block>
-  <block id="5f5d32b3adbdbe5c2ae7047900074841" category="paragraph">如果您还原到任何 ONTAP 9 版本之前的版本，则 SHA-2 帐户用户将无法再使用其密码进行身份验证。因此，您必须让他们使用还原到的版本支持的加密类型（ MD5 ）将密码重置为。</block>
-  <block id="1142940b7407e34b282dba4035140bbb" category="list-text">在还原之前，请确定使用 SHA-2 哈希函数的用户帐户（高级权限级别）： `ssecurity login show -vserver * -username * -application * -authentication-method password -hash-function ！ md5`</block>
-  <block id="92300e6114bf159c7dc93fec0ca02174" category="paragraph">您应保留命令输出。还原后，您需要帐户信息。</block>
-  <block id="852ddb7ee8cb800bf19519451a6929d6" category="list-text">在还原期间，根据提示运行高级命令 security Login password-prepare-to-downgrade ，将您自己的密码重置为使用 MD5 哈希函数。</block>
-  <block id="acb62b345b8c5ac48b4cd531f3ae47b4" category="paragraph">如果您的密码未使用 MD5 加密，则此命令将提示您输入新密码并使用 MD5 加密，以便在还原后对凭据进行身份验证。</block>
-  <block id="1ef08b3c55d44b77654b32f3423bcf42" category="list-text">还原后，将 SHA-2 帐户重置为 MD5 ：</block>
-  <block id="f6532ab5c59270618153dfb6cff18fcf" category="list-text">对于您确定的每个 SHA-2 帐户，将密码更改为临时密码： `ssecurity login password -username user_name -vserver vserver_name`</block>
-  <block id="8d9f0dc4e21226dbf5c74ad375bf7731" category="paragraph">更改后的密码将使用 MD5 哈希函数。</block>
   <block id="e62e2701fd3944b8f83a573507a44dbc" category="list-text">将临时密码告知受影响的用户，并让他们通过控制台或 SSH 会话登录以根据系统提示更改其密码。</block>
   <block id="00865e604e4e8f4feaed03c26e0ca9db" category="summary">各种配置设置可能会影响集群升级准备情况。</block>
   <block id="ae32af85d775efae84f50ff2158ae08a" category="doc">还原前需要验证的事项</block>
@@ -1069,7 +1061,6 @@
   <block id="a2ddda2c7f7dc9bcbb676e13bb3308a1" category="paragraph">此示例显示已在两个节点上启用自动交还：</block>
   <block id="77d788e5e693bde43b79cc942ac4f3fe" category="summary">在升级之前，您应执行各种预检查。</block>
   <block id="4860067078ae9f737278ce5fc42b85a3" category="doc">升级前要检查的内容</block>
-  <block id="7d93b88276a9eaf79c51758bd503717a" category="paragraph">即使您使用，也是如此 <block ref="8c75b68b7b6bfb4853050ecc7ee62ad9" category="inline-link-macro-rx"></block> Upgrade Advisor 要规划升级，您仍应在升级之前执行各种预检查。</block>
   <block id="805b01a1a82b30af28db06b04082b762" category="summary">ONTAP 9.8 及更高版本会自动监控第 2 层可访问性。从 ONTAP 9.7x 或更早版本升级到 ONTAP 9.8 或更高版本后，您应验证每个 .network 端口是否可访问其预期广播域。</block>
   <block id="023c8aa577a3bd629f28532869730e4a" category="doc">升级后验证网络配置</block>
   <block id="80bba69c7109f61bac07cfac2b1c4052" category="list-text">验证每个端口是否可访问其预期域：``network port reachability show -detail``</block>
@@ -1729,7 +1720,6 @@
   <block id="e66e572a2b3f5949bd3180bf13b1e483" category="list-text"><block ref="e66e572a2b3f5949bd3180bf13b1e483" category="inline-xref-macro-rx"></block></block>
   <block id="9537a9029ba53162a1ca5139b86328bf" category="inline-xref-macro">查看 SnapLock 的升级注意事项</block>
   <block id="330a135068c96187e0ed582b5172e76e" category="cell"><block ref="330a135068c96187e0ed582b5172e76e" category="inline-xref-macro-rx"></block></block>
-  <block id="6ad5aa1e8b8fd67d918c0b75fb266966" category="cell">我是从 ONTAP 8.3 升级的，并且具有负载共享镜像</block>
   <block id="98b9a764b3a42240925cc0445ee8acce" category="inline-xref-macro">准备所有负载共享镜像以进行升级</block>
   <block id="1f02c4eb80a374e769e31fa1f020e1ff" category="cell"><block ref="1f02c4eb80a374e769e31fa1f020e1ff" category="inline-xref-macro-rx"></block></block>
   <block id="532fef33eba3416a243e90f098bfcf23" category="cell">我是否正在对外部密钥管理服务器使用 NetApp 存储加密？</block>
@@ -1741,7 +1731,6 @@
   <block id="933fc9e8d00bba66b92f520a1ff7660f" category="cell">我是否有使用 SSLv3 的 LDAP 客户端？</block>
   <block id="09ac20443b3e4ae93541da58168ec6d5" category="inline-xref-macro">配置 LDAP 客户端以使用 TLS</block>
   <block id="c0b4f4ba5a18507347175dd3f8de1703" category="cell"><block ref="c0b4f4ba5a18507347175dd3f8de1703" category="inline-xref-macro-rx"></block></block>
-  <block id="eb5b091306a6f7770af703dde1ab6d73" category="cell">我是否使用面向会话的协议？</block>
   <block id="dfa0d63053e77d2017f770bc721c7c9e" category="inline-xref-macro">查看面向会话的协议的注意事项</block>
   <block id="0078c347222210ee5d4ea13a0f18435c" category="cell"><block ref="0078c347222210ee5d4ea13a0f18435c" category="inline-xref-macro-rx"></block></block>
   <block id="0b06e435715dd9b134a1914915052cd9" category="summary">对于双节点 MetroCluster 配置，您可以无中断地升级 ONTAP 。此方法包括几个步骤：启动协商切换，更新 " 故障 " 站点上的集群，启动切回，然后在另一站点的集群上重复此过程。</block>
@@ -6339,7 +6328,6 @@
   <block id="d4eb27d1e627d3739f66d1fc0ae299fc" category="list-text">一致性组中的所有成分卷都必须位于一个 Storage VM 中</block>
   <block id="db18ec6973b75239368a8ceaca67f4c9" category="list-text">您不能在 ASA 集群和非 ASA 集群之间建立 SM-BC 一致性组关系</block>
   <block id="b6baec7960bc1e0656085606b96267a7" category="paragraph">您必须从目标集群创建一致性组关系。您可以使用 `snapmirror create` 命令上的 `cg-item-mapings` 参数映射多达 12 个成分卷。</block>
-  <block id="b2b469a6fcc4dd642a43e4d21a73d140" category="list-text">创建一致性组和成分卷关系。此示例将创建两个一致性组：包含成分卷 vol1 和 vol2 的 srcg 以及包含成分卷 vol1_dr 和 vol2_dr 的 dstcg 。</block>
   <block id="087883e60f46854476300ac3a5d4c7ef" category="summary">ONTAP 调解器为 SM-BC 关系中的 ONTAP 集群建立仲裁，并协调故障期间的自动故障转移。</block>
   <block id="3d4df5081998c3ca680e149459c1a8c8" category="doc">准备使用 ONTAP 调解器</block>
   <block id="bd32fe592cad4acb8313af5687a61387" category="paragraph">ONTAP 调解器为 SM-BC 关系中的 ONTAP 集群建立仲裁。它可以在检测到故障时协调自动故障转移，并有助于避免在每个集群同时尝试建立主集群控制时出现脑裂情况。</block>
@@ -7273,11 +7261,7 @@
   <block id="a96247d74e8f3388ae05adb8175917ae" category="sidebar">自动更新 SP 固件</block>
   <block id="6e95a3f5271b3948f5b5d44358a1bc39" category="sidebar">升级集群</block>
   <block id="882a8137b7233d27b96997b2552abe4f" category="sidebar">升级路径</block>
-  <block id="8a62173953227a1a0662155b58beaec4" category="sidebar">如何规划升级？</block>
-  <block id="2cc6ff17db529df685f410f5e1a8ade1" category="sidebar">使用 Upgrade Advisor</block>
-  <block id="81eae165355c99f39a228a7d5251d562" category="sidebar">不使用 Upgrade Advisor</block>
   <block id="ab4692a9aa22a3aea52f0587a2bbfa50" category="sidebar">升级前应阅读哪些内容？</block>
-  <block id="3c6cf0d0270865a1c65a413c2c2fe041" category="sidebar">在升级之前，应验证哪些内容？</block>
   <block id="ed536b68b3a73ea019053d0dfcc51362" category="sidebar">集群升级限制</block>
   <block id="ee54566cb573ccba8c8fbcf76bedcb7c" category="sidebar">当前集群活动</block>
   <block id="34adc89a66777cf23558ae3740c5d0ea" category="sidebar">如何在升级期间更新固件</block>
@@ -7285,7 +7269,6 @@
   <block id="d7bbc8eac6664738ec4585d9e11e1dae" category="sidebar">存储运行状况</block>
   <block id="301489382c0ab09f0cc446a75f9bdb35" category="sidebar">SVM 路由配置</block>
   <block id="3bcd932934ae6c565de6b0441b32da3f" category="sidebar">LIF 故障转移配置</block>
-  <block id="5d773ab5cddc2c7e5df7a173c387905d" category="sidebar">状态（ HA ， LDAP ， DNS ， MCC 网络和存储）</block>
   <block id="dd7ca3d46c58664dc35920c92af2722f" category="sidebar">所有 LIF 都位于主端口上</block>
   <block id="c6fc1c86ed8124bf28a038b4c071ba0e" category="sidebar">常见配置错误</block>
   <block id="7c91325c0db693b8239e5716163f5545" category="sidebar">特殊注意事项</block>
@@ -7303,8 +7286,6 @@
   <block id="2f8fa4b901540d64544fa0721085d78f" category="sidebar">使用 SSLv3 的 LDAP 客户端</block>
   <block id="e1f72521c04306a6bb88c23e708ba408" category="sidebar">面向会话的协议</block>
   <block id="4f6b3390ee0ee14224c8b381872620c9" category="sidebar">如何获取和安装升级软件映像？</block>
-  <block id="d66c619b1db792005177277d347f7959" category="sidebar">自动升级出错后，使用 System Manager 恢复升级</block>
-  <block id="85670756f042e355dbd30bf713f32fb7" category="sidebar">自动升级出错后，使用命令行界面恢复升级</block>
   <block id="350389a9a77eab6434639665c502fb93" category="sidebar">4 个或 8 个节点</block>
   <block id="778efe6b6ee56d0862f79c2f19d40174" category="sidebar">双节点 9.2 或更早版本</block>
   <block id="2fe1bde15fe37fea039261f67be17a3f" category="sidebar">升级后应执行什么操作？</block>
@@ -7471,4 +7452,33 @@
   <block id="50d9f2f9ba77f2415250541c8744753e" category="sidebar">使用 CLI 管理网络</block>
   <block id="ff5d1ff66dcba99b749cdbcf0453955b" category="sidebar">配置广播域（仅限集群管理员）</block>
   <block id="28f076073cc5f94a3cbb352384ae6f64" category="sidebar">关于 ONTAP 9.7 及更早版本的广播域</block>
+  <block id="a7488370af12b30d879b57a42f5e6367" category="list-text">创建一致性组和成分卷关系。此示例将创建两个一致性组：包含成分卷 vol1 和 vol2 的 CG_src 以及包含成分卷 vol1_dr 和 vol2_dr 的 CG_dist 。</block>
+  <block id="54c2e99fbac4670d54738170423561e3" category="paragraph">即使您使用，也是如此 <block ref="8c75b68b7b6bfb4853050ecc7ee62ad9" category="inline-link-macro-rx"></block> Upgrade Advisor 要规划升级，您仍应在升级之前执行各种预检查，以验证集群运行状况，存储运行状况，配置等。</block>
+  <block id="d4d9a484cff55722e89d3c0d7df29acb" category="cell">我是从 ONTAP 8.3 升级的，并且具有负载共享镜像</block>
+  <block id="cd0ce68fb0877de7231aa1670958557d" category="cell">我是否使用面向会话的协议？</block>
+  <block id="186bf097514f63e08f3f14da4d30e4b1" category="doc">确定使用 SHA-2 哈希函数的用户帐户</block>
+  <block id="a36102670ec996c78e93a1c4e98b8283" category="paragraph">如果要从 ONTAP 9.1 或 ONTAP 9.0 还原到 ONTAP 8.3.x ，则 SHA-2 帐户用户将无法再使用其密码进行身份验证。还原之前，您应确定使用 SHA-2 哈希函数的用户帐户，以便还原后，您可以让他们重置密码，以使用还原到的版本支持的加密类型（ MD5 ）。</block>
+  <block id="104632fcd73849c5c4895cab96aaaca3" category="list-text">将权限设置更改为高级： `set -privilege advanced`</block>
+  <block id="38b3a630a9be185bdfab05d14d107c34" category="list-text">确定使用 SHA-2 的用户帐户具有以下功能： `ssecurity login show -vserver * -username * -application * -authentication-method password -hash-function ！ md5`</block>
+  <block id="f759b4982480c4adb654021be20d8f26" category="list-text">保留命令输出，以便在还原后使用。</block>
+  <block id="781b9a752195c7a229ab490773c46946" category="admonition">在还原期间，系统将提示您运行高级命令 `ssecurity login password-prepare-to-downgrade` 来重置您自己的密码以使用 MD5 哈希函数。如果您的密码未使用 MD5 加密，则此命令将提示您输入新密码并使用 MD5 加密，以便在还原后对凭据进行身份验证。</block>
+  <block id="36a6e0f9d99ed22ef356d8023b20ab66" category="cell">是否正在还原到 ONTAP 8.3.x ？</block>
+  <block id="12903d0b112bd2907347fb3cedacb36a" category="cell"><block ref="12903d0b112bd2907347fb3cedacb36a" category="inline-xref-macro-rx"></block></block>
+  <block id="23bba9daea731c6fc641b7c70434d4f3" category="summary">如果您从 ONTAP 9.1 或 ONTAP 9.0 还原到 ONTAP 8.3.x ，则 SHA-2 帐户用户将无法再使用其密码进行身份验证。要使用 MDS 加密类型，必须重置密码。</block>
+  <block id="43655de70fc9de9b5e3b8e37ca1a9cd0" category="inline-xref-macro">在还原之前确定</block>
+  <block id="09f31e1deec0f14c9b57f35af88d5a81" category="list-text">为您的每个 SHA-2 用户帐户设置一个临时密码 <block ref="9b6f07242a15055515fa6b2beb7e9aad" category="inline-xref-macro-rx"></block>： `ssecurity login password -username user_name -vserver vserver_name`</block>
+  <block id="738444b4cf200afbb9ca7aa82981411b" category="sidebar">使用 Upgrade Advisor 进行升级</block>
+  <block id="cd25e7275b32469842a596a41fbbe490" category="sidebar">不使用 Upgrade Advisor 升级</block>
+  <block id="59a7ec44b65ee0ced2ab119d3d5f1a09" category="sidebar">是否应在不使用 Upgrade Advisor 的情况下升级？</block>
+  <block id="a552c29a19c42990509e6a0c6c55796c" category="sidebar">在不使用 Upgrade Advisor 进行升级之前，应验证哪些内容？</block>
+  <block id="80657b26852d1e45db2bc166bc6d899d" category="sidebar">在使用或不使用 Upgrade Advisor 升级之前，应验证什么？</block>
+  <block id="1349f56b2b4a3316580fe2ff9e796e50" category="sidebar">升级前验证概述</block>
+  <block id="67951041e05c4ce2bbf19fe5a48ed1c6" category="sidebar">状态（ HA ， LDAP ， DNS ， MetroCluster 网络和存储）</block>
+  <block id="576fd28129f0bc16d407c21da540cc3a" category="sidebar">特殊注意事项摘要</block>
+  <block id="4eae73f52f6229c840ecfe4a2aad0b8e" category="sidebar">升级方法概述</block>
+  <block id="993a1243b6d051b335abc4640a230761" category="sidebar">Non-MetroCluster 配置</block>
+  <block id="2f3bf161ba03943ace2303cbca5240b3" category="sidebar">升级后验证概述</block>
+  <block id="e1760dbe3b9a00718d25b86c147892b6" category="sidebar">特殊配置验证摘要</block>
+  <block id="6327de4ae6a2f125537aa547f80f1302" category="sidebar">还原前检查摘要</block>
+  <block id="2d438656ab646077f6fb27ab44eab4a2" category="sidebar">使用 SHA-2 哈希函数的用户帐户</block>
 </blocks>
