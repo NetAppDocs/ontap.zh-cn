@@ -1,0 +1,44 @@
+---
+permalink: nas-audit/verify-auditing-config-task.html 
+sidebar: sidebar 
+keywords: verify, audit, configuration 
+summary: 完成审核配置后，您应验证是否已正确配置并启用审核。 
+---
+= 验证审核配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+完成审核配置后，您应验证是否已正确配置并启用审核。
+
+.步骤
+. 验证审核配置：
++
+`vserver audit show -instance -vserver vserver_name`
+
++
+以下命令以列表形式显示 Storage Virtual Machine （ SVM ） vs1 的所有审核配置信息：
+
++
+`vserver audit show -instance -vserver vs1`
+
++
+[listing]
+----
+
+                             Vserver: vs1
+                      Auditing state: true
+                Log Destination Path: /audit_log
+       Categories of Events to Audit: file-ops
+                          Log Format: evtx
+                 Log File Size Limit: 200MB
+        Log Rotation Schedule: Month: -
+  Log Rotation Schedule: Day of Week: -
+          Log Rotation Schedule: Day: -
+         Log Rotation Schedule: Hour: -
+       Log Rotation Schedule: Minute: -
+                  Rotation Schedules: -
+            Log Files Rotation Limit: 0
+----
+

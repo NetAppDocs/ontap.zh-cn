@@ -1,0 +1,53 @@
+---
+permalink: antivirus/enable-on-access-policy-task.html 
+sidebar: sidebar 
+keywords: enable, on-access, policy 
+summary: 必须先在 SVM 上启用实时策略，然后才能扫描其文件。如果您为集群中的所有 SVM 创建了实时策略，则必须分别在每个 SVM 上启用该策略。一次只能在 SVM 上启用一个实时策略。 
+---
+= 启用实时策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须先在 SVM 上启用实时策略，然后才能扫描其文件。如果您为集群中的所有 SVM 创建了实时策略，则必须分别在每个 SVM 上启用该策略。一次只能在 SVM 上启用一个实时策略。
+
+.步骤
+. 启用实时策略：
++
+`vserver vscan on-access-policy enable -vserver data_svm -policy-name policy_name`
+
++
+以下命令将在 ``vs1``SVM 上启用名为 `Policy1` 的实时策略：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-access-policy enable -vserver vs1 -policy-name Policy1
+----
+. 验证是否已启用实时策略： `vserver vscan on-access-policy show -instance data_sVM -policy-name policy_name`
++
+有关完整的选项列表，请参见命令手册页。
+
++
+以下命令显示 `Policy1` 实时策略的详细信息：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-access-policy show -instance vs1 -policy-name Policy1
+
+                           Vserver: vs1
+                            Policy: Policy1
+                     Policy Status: on
+               Policy Config Owner: vserver
+              File-Access Protocol: CIFS
+                           Filters: scan-ro-volume
+                    Mandatory Scan: on
+Max File Size Allowed for Scanning: 3GB
+            File Paths Not to Scan: \vol\a b\, \vol\a,b\
+       File Extensions Not to Scan: mp3, txt
+           File Extensions to Scan: mp*, tx*
+      Scan Files with No Extension: false
+----
+

@@ -1,0 +1,37 @@
+---
+permalink: antivirus/run-on-demand-task-immediately-task.html 
+sidebar: sidebar 
+keywords: run, on-demand, task, immediately 
+summary: 无论是否分配了计划，您都可以立即运行按需任务。 
+---
+= 立即运行按需任务
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+无论是否分配了计划，您都可以立即运行按需任务。
+
+您必须已在 SVM 上启用扫描。
+
+.步骤
+. 立即运行按需任务：
++
+`vserver vscan on-demand-task run -vserver data_sVM -task-name task_name`
+
++
+以下命令会在 ``vs1``SVM 上运行名为 `Task1` 的实时任务：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-demand-task run -vserver vs1 -task-name Task1
+[Job 161]: Vscan On-Demand job is queued. Use the "job show -id 161" command to view the status.
+----
++
+[NOTE]
+====
+您可以使用 `job show` 命令查看作业状态。您可以使用 `job pause` 和 `job resume` 命令暂停并重新启动作业，或者使用 `job stop` 命令结束作业。
+
+====
+

@@ -1,0 +1,35 @@
+---
+permalink: san-admin/nvme-namespaces-considerations-concept.html 
+sidebar: sidebar 
+keywords: nvme, namespaces, considerations 
+summary: 要在 SAN 环境中设置 NVMe 协议，您必须为 NVMe 配置 SVM ，创建命名空间和子系统，配置 NVMe/FC LIF ，然后将命名空间映射到子系统。 
+---
+= NVMe 命名空间注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要在 SAN 环境中设置 NVMe 协议，您必须为 NVMe 配置 SVM ，创建命名空间和子系统，配置 NVMe/FC LIF ，然后将命名空间映射到子系统。使用 NVMe 命名空间时，您应注意一些注意事项。
+
+* 如果 LUN 中的数据丢失，则无法从命名空间还原数据，反之亦然。
+* 命名空间的空间保证与所属卷的空间保证相同。
+* 从 ONTAP 9.6 开始，命名空间支持 512 字节块和 4096 字节块。
++
+默认值为 4096 。只有当主机操作系统不支持 4096 字节块时，才应使用 512 。
+
+* 命名空间不支持以下内容：
++
+** 正在重命名
++
+您不能重命名命名空间。
+
+** 调整大小
++
+不能增加或减小命名空间的大小。
+
+** 卷间移动
+** 卷间副本
+
+
+

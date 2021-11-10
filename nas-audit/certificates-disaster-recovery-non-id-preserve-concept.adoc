@@ -1,0 +1,17 @@
+---
+permalink: nas-audit/certificates-disaster-recovery-non-id-preserve-concept.html 
+sidebar: sidebar 
+keywords: certificates, replicate, svm, disaster recovery, relationships, non-ID-preserve, configuration 
+summary: 在连接到 FPolicy 服务器时用于 SSL 身份验证的安全证书不会复制到具有非 ID-preserve 配置的 SVM 灾难恢复目标。虽然会复制 SVM 上的 FPolicy 外部引擎配置，但不会复制安全证书。您必须在目标上手动安装安全证书。 
+---
+= 证书不会在具有非 ID-preserve 配置的 SVM 灾难恢复关系中进行复制
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在连接到 FPolicy 服务器时用于 SSL 身份验证的安全证书不会复制到具有非 ID-preserve 配置的 SVM 灾难恢复目标。虽然会复制 SVM 上的 FPolicy 外部引擎配置，但不会复制安全证书。您必须在目标上手动安装安全证书。
+
+设置 SVM 灾难恢复关系时，为 `snapmirror create` 命令的 ` -identity-preserve` 选项选择的值将确定复制到目标 SVM 中的配置详细信息。
+
+如果将 ` -identity-preserve` 选项设置为 `true` （ ID-preserve ），则会复制所有 FPolicy 配置详细信息，包括安全证书信息。只有在将选项设置为 `false` （ non-ID-preserve ）时，才必须在目标上安装安全证书。

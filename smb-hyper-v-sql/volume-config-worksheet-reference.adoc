@@ -1,0 +1,107 @@
+---
+permalink: smb-hyper-v-sql/volume-config-worksheet-reference.html 
+sidebar: sidebar 
+keywords: complete, volume, configuration, worksheet, sql, server, hyper, v, smb, configuration 
+summary: 通过此工作表，您可以轻松地记录为 SQL Server 和基于 SMB 的 Hyper-V 配置创建卷时所需的值。 
+---
+= 填写卷配置工作表
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过此工作表，您可以轻松地记录为 SQL Server 和基于 SMB 的 Hyper-V 配置创建卷时所需的值。
+
+对于每个卷，必须指定以下信息：
+
+* Storage Virtual Machine （ SVM ）名称
++
+所有卷的 SVM 名称都相同。
+
+* Volume name
+* Aggregate name
++
+您可以在集群中任何节点上的聚合上创建卷。
+
+* Size
+* Junction path
+
+
+在创建用于存储应用程序服务器数据的卷时，应牢记以下几点：
+
+* 如果根卷没有 NTFS 安全模式，则必须在创建卷时将安全模式指定为 NTFS 。
++
+默认情况下，卷会继承 SVM 根卷的安全模式。
+
+* 应使用默认卷空间保证配置卷。
+* 您可以选择配置自动调整大小空间管理设置。
+* 您应将用于确定 Snapshot 副本空间预留的选项设置为 `0` 。
+* 必须禁用应用于卷的 Snapshot 策略。
++
+如果禁用了 SVM Snapshot 策略，则无需为卷指定 Snapshot 策略。这些卷将继承 SVM 的 Snapshot 策略。如果 SVM 的 Snapshot 策略未禁用，并且配置为创建 Snapshot 副本，则必须在卷级别指定 Snapshot 策略，并且必须禁用该策略。启用了卷影复制服务的备份和 SQL Server 备份可管理 Snapshot 副本的创建和删除。
+
+* 您不能为卷配置负载共享镜像。
+
+
+应选择要创建应用程序服务器使用的共享的接合路径，以便在共享入口点下方没有接合卷。
+
+例如，如果要将虚拟机文件存储在名为 "`vol1` " ， "`vol2` " ， "`vol3` " 和 "`vol4` " 的四个卷上，则可以创建示例中所示的命名空间。然后，您可以通过以下路径为应用程序服务器创建共享： ` /data1/vol1` ， ` /data1/vol2` ， ` /data2/vol3` 和 ` /data2/vol4` 。
+
+[listing]
+----
+
+                     Junction                       Junction
+Vserver Volume       Active   Junction Path         Path Source
+------- ------------ -------- -------------------   -----------
+vs1     data1         true     /data1               RW_volume
+vs1     vol1          true     /data1/vol1          RW_volume
+vs1     vol2          true     /data1/vol2          RW_volume
+vs1     data2         true     /data2               RW_volume
+vs1     vol3          true     /data2/vol3          RW_volume
+vs1     vol4          true     /data2/vol4          RW_volume
+----
+|===
+| 信息类型 | 值 
+
+
+ a| 
+_Volume 1 ：卷名称，聚合，大小，接合路径 _
+ a| 
+
+
+
+ a| 
+_Volume 2 ：卷名称，聚合，大小，接合路径 _
+ a| 
+
+
+
+ a| 
+_Volume 3 ：卷名称，聚合，大小，接合路径 _
+ a| 
+
+
+
+ a| 
+_Volume 4 ：卷名称，聚合，大小，接合路径 _
+ a| 
+
+
+
+ a| 
+_Volume 5 ：卷名称，聚合，大小，接合路径 _
+ a| 
+
+
+
+ a| 
+_Volume 6 ：卷名称，聚合，大小，接合路径 _
+ a| 
+
+
+
+ a| 
+附加卷：卷名称，聚合，大小，接合路径 _
+ a| 
+
+|===

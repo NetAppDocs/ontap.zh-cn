@@ -1,0 +1,23 @@
+---
+permalink: volumes/quotas-applied-users-multiple-ids-concept.html 
+sidebar: sidebar 
+keywords: how, quotas are applied, users, multiple ids 
+summary: 一个用户可以由多个 ID 表示。您可以通过将 ID 列表指定为配额目标来为此类用户设置单个用户配额。这些 ID 中的任何一个所拥有的文件都受用户配额限制。 
+---
+= 如何将配额应用于具有多个 ID 的用户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+一个用户可以由多个 ID 表示。您可以通过将 ID 列表指定为配额目标来为此类用户设置单个用户配额。这些 ID 中的任何一个所拥有的文件都受用户配额限制。
+
+假设用户具有 UNIX UID 20 和 Windows ID corp\john_smith 和 engineering\jsmith 。对于此用户，您可以指定一个配额，其中配额目标是 UID 和 Windows ID 的列表。此用户写入存储系统时，无论写入来自 UID 20 ， corp\john_smith 还是 engineering\jsmith ，都将应用指定的配额。
+
+[NOTE]
+====
+单独的配额文件条目被视为单独的目标，即使这些 ID 属于同一个用户也是如此。例如，对于同一个用户，您可以指定一个配额将 UID 20 限制为 1 GB 磁盘空间，而另一个配额将 corp\john_smith 限制为 2 GB 磁盘空间，即使这两个 ID 代表同一个用户也是如此。ONTAP 会将配额分别应用于 UID 20 和 corp\john_smith 。
+
+在这种情况下，不会对 engineering\jsmith 应用任何限制，即使对同一用户使用的其他 ID 应用了限制也是如此。
+
+====

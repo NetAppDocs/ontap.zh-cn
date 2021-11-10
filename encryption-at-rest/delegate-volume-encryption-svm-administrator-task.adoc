@@ -1,0 +1,33 @@
+---
+permalink: encryption-at-rest/delegate-volume-encryption-svm-administrator-task.html 
+sidebar: sidebar 
+keywords: delegating, authority, run, volume move, command 
+summary: 您可以使用 volume move 命令对现有卷进行加密，移动加密的卷或取消对卷的加密。集群管理员可以自行运行 volume move 命令，也可以将运行该命令的权限委派给 SVM 管理员。 
+---
+= 委派运行 volume move 命令的权限
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume move` 命令对现有卷进行加密，移动加密的卷或取消对卷的加密。集群管理员可以自行运行 `volume move` 命令，也可以将运行该命令的权限委派给 SVM 管理员。
+
+默认情况下，系统会为 SVM 管理员分配 `vsadmin` 角色，该角色不包括卷移动权限。您必须将 `vsadmin-volume` 角色分配给 SVM 管理员，以使其能够运行 `volume move` 命令。
+
+.步骤
+. 委派权限运行 `volume move` 命令：
++
+`ssecurity login modify -vserver svm_name -user-or-group-name user_or_group_name -application application -authmethod authentication_method -role vsadmin-volume`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令授予 SVM 管理员运行 `volume move` 命令的权限。
+
++
+[listing]
+----
+cluster1::>security login modify -vserver engData -user-or-group-name SVM-admin -application ssh -authmethod domain -role vsadmin-volume
+----
+

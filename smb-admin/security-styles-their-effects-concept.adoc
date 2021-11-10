@@ -1,0 +1,108 @@
+---
+permalink: smb-admin/security-styles-their-effects-concept.html 
+sidebar: sidebar 
+keywords: unix, ntfs, mixed, unified, security, style, effect, permission, handle, data, what the security styles and their effects are 
+summary: 安全模式有四种： UNIX ， NTFS ，混合和统一。每个安全模式对处理数据权限的方式具有不同的影响。您必须了解不同的影响，以确保选择适合您的安全模式。 
+---
+= 安全模式及其影响是什么
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安全模式有四种： UNIX ， NTFS ，混合和统一。每个安全模式对处理数据权限的方式具有不同的影响。您必须了解不同的影响，以确保选择适合您的安全模式。
+
+请务必了解，安全模式并不确定哪些客户端类型可以或不可以访问数据。安全模式仅确定 ONTAP 用于控制数据访问的权限类型以及可以修改这些权限的客户端类型。
+
+例如，如果某个卷使用 UNIX 安全模式，则由于 ONTAP 的多协议性质， SMB 客户端仍可访问数据（前提是它们正确进行身份验证和授权）。但是， ONTAP 使用的是 UNIX 权限，只有 UNIX 客户端才能使用原生工具进行修改。
+
+|===
+| 安全风格 | 可以修改权限的客户端 | 客户端可以使用的权限 | 生成的有效安全模式 | 可以访问文件的客户端 
+
+
+ a| 
+"unix"
+ a| 
+NFS
+ a| 
+NFSv3 模式位
+ a| 
+"unix"
+ a| 
+NFS 和 SMB
+
+
+
+ a| 
+NFSv4.x ACL
+ a| 
+"unix"
+
+
+
+ a| 
+NTFS
+ a| 
+SMB
+ a| 
+NTFS ACL
+ a| 
+NTFS
+
+
+
+ a| 
+混合
+ a| 
+NFS 或 SMB
+ a| 
+NFSv3 模式位
+ a| 
+"unix"
+
+
+
+ a| 
+NFSv4.x ACL
+ a| 
+"unix"
+
+
+
+ a| 
+NTFS ACL
+ a| 
+NTFS
+ a| 
+统一：
+ a| 
+NFS 或 SMB
+
+
+
+ a| 
+NFSv3 模式位
+ a| 
+"unix"
+
+
+
+ a| 
+NFSv4.1 ACL
+ a| 
+"unix"
+ a| 
+NTFS ACL
+ a| 
+NTFS
+
+|===
+FlexVol 卷支持 UNIX ， NTS 和混合安全模式。混合或统一安全模式时，有效权限取决于上次修改权限的客户端类型，因为用户会逐个设置安全模式。如果修改权限的最后一个客户端是 NFSv3 客户端，则权限为 UNIX NFSv3 模式位。如果最后一个客户端是 NFSv4 客户端，则权限为 NFSv4 ACL 。如果最后一个客户端是 SMB 客户端，则权限为 Windows NTFS ACL 。
+
+从 ONTAP 9.2 开始，使用 `vserver security file-directory` 命令的 `show -effective-permissions` 参数，您可以显示为 Windows 或 UNIX 用户授予的对指定文件或文件夹路径的有效权限。此外，可选参数 ` -share-name` 可用于显示有效共享权限。
+
+[NOTE]
+====
+ONTAP 最初会设置一些默认文件权限。默认情况下， UNIX ，混合和统一安全模式卷中所有数据的有效安全模式为 UNIX ，有效权限类型为 UNIX 模式位（ 0755 ，除非另有指定），直到客户端按照默认安全模式进行配置为止。默认情况下， NTFS 安全模式卷中所有数据的有效安全模式为 NTFS ，并且具有一个 ACL ，允许对任何人进行完全控制。
+
+====

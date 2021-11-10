@@ -15,6 +15,9 @@ summary: 您必须创建一个 SnapMirror 一致性组，该一致性组还会�
 [role="lead"]
 您必须创建一个 SM-BC 一致性组，该一致性组还会建立同步一致性组关系。
 
+
+NOTE: 此工作流可在 ONTAP 9.8 和 9.9 中为适用场景用户提供支持。如果使用从 ONTAP 9.10.1 开始的这些 ONTAP 命令行界面命令，它们仍可用于创建一致性组，但是建议您使用 System Manager 或 ONTAP REST API 管理一致性组。
+
 以下前提条件和限制适用：
 
 * 您必须是集群或 Storage VM 管理员
@@ -23,6 +26,7 @@ summary: 您必须创建一个 SnapMirror 一致性组，该一致性组还会�
 * 主 Storage VM 和二级 Storage VM 必须处于对等关系
 * 一致性组中的所有成分卷都必须位于一个 Storage VM 中
 * 您不能在 ASA 集群和非 ASA 集群之间建立 SM-BC 一致性组关系
+* 一致性组的名称必须是唯一的
 
 
 您必须从目标集群创建一致性组关系。您可以使用 `snapmirror create` 命令上的 `cg-item-mapings` 参数映射多达 12 个成分卷。

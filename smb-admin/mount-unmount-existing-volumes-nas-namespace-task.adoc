@@ -1,0 +1,75 @@
+---
+permalink: smb-admin/mount-unmount-existing-volumes-nas-namespace-task.html 
+sidebar: sidebar 
+keywords: volume, mount, nas, namespace, configure, client, access, data, contain, storage, virtual, machine, svm, junction, point, mount, unmount, mount or unmount existing volumes in the nas namespace 
+summary: 必须先在 NAS 命名空间上挂载卷，然后才能配置 NAS 客户端对 Storage Virtual Machine （ SVM ）卷中所含数据的访问。如果卷当前未挂载，则可以将其挂载到接合点。您也可以卸载卷。 
+---
+= 挂载或卸载 NAS 命名空间中的现有卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须先在 NAS 命名空间上挂载卷，然后才能配置 NAS 客户端对 Storage Virtual Machine （ SVM ）卷中所含数据的访问。如果卷当前未挂载，则可以将其挂载到接合点。您也可以卸载卷。
+
+如果卸载卷并使其脱机，则 NAS 客户端将无法访问接合点内的所有数据，包括已卸载卷的命名空间中包含接合点的卷中的数据。
+
+[NOTE]
+====
+要停止 NAS 客户端对卷的访问，仅仅卸载卷是不够的。您必须使卷脱机或执行其他步骤以确保客户端文件句柄缓存失效。有关详细信息，请参见以下知识库文章： https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/NFSv3_clients_still_have_access_to_a_volume_after_being_removed_from_the_namespace_in_ONTAP[NFSv3 clients still have access to a volume after being removed from the namespace in ONTAP
+
+====
+卸载卷并使其脱机时，卷中的数据不会丢失。此外，在卷上或在已卸载卷内的目录和接合点上创建的现有卷导出策略和 SMB 共享也会保留下来。如果重新挂载卸载的卷， NAS 客户端可以使用现有导出策略和 SMB 共享访问卷中包含的数据。
+
+.步骤
+. 执行所需的操作：
++
+|===
+| 如果您要 ... | 输入命令 ... 
+
+
+ a| 
+挂载卷
+ a| 
+`volume mount -vserver _svm_name_ -volume _volume_name_ -junction-path _junction_path_`
+
+
+
+ a| 
+卸载卷
+ a| 
+`volume unmount -vserver _svm_name_ -volume _volume_name_ volume offline -vserver _svm_name_ -volume _volume_name_`
+
+|===
+. 验证卷是否处于所需的挂载状态： `volume show -vserver _vserver_name_ -volume _volume_name_ -fields state ， junction-path ， junction-active`
+
+
+以下示例将位于 SVM vs1 上的名为 `sales` 的卷挂载到接合点 ` /sales` ：
+
+[listing]
+----
+cluster1::> volume mount -vserver vs1 -volume sales -junction-path /sales
+
+cluster1::> volume show -vserver vs1 state,junction-path,junction-active
+
+vserver   volume     state     junction-path   junction-active
+--------- ---------- -------- --------------- ----------------
+vs1       data       online    /data           true
+vs1       home4      online    /eng/home       true
+vs1       sales      online    /sales          true
+----
+以下示例将卸载 SVM vs1 上名为 `data` 的卷并使其脱机：
+
+[listing]
+----
+cluster1::> volume unmount -vserver vs1 -volume data
+cluster1::> volume offline -vserver vs1 -volume data
+
+cluster1::> volume show -vserver vs1 -fields state,junction-path,junction-active
+
+vserver   volume     state     junction-path   junction-active
+--------- ---------- --------- --------------- ---------------
+vs1       data       offline   -               -
+vs1       home4      online    /eng/home       true
+vs1       sales      online    /sales          true
+----

@@ -1,0 +1,25 @@
+---
+permalink: nfs-admin/how-ontap-creates-file-directory-names-concept.html 
+sidebar: sidebar 
+keywords: ontap, create, file, directory, name 
+summary: ONTAP 会为可从 SMB 客户端访问的任何目录中的文件或目录创建并维护两个名称：原始长名称和 8.3 格式的名称。 
+---
+= ONTAP 如何创建文件和目录名称
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 会为可从 SMB 客户端访问的任何目录中的文件或目录创建并维护两个名称：原始长名称和 8.3 格式的名称。
+
+对于超过八个字符名称或三个字符扩展名限制的文件或目录名称（对于文件）， ONTAP 将生成 8.3 格式的名称，如下所示：
+
+* 如果原始文件或目录名称超过 6 个字符，则会将其截断为 6 个字符。
+* 它会在截断后不再唯一的文件或目录名称后面附加一个颚化符（~ ）和一个数字（ 1 到 5 ）。
++
+如果由于名称相似而导致数字用尽，则会创建一个与原始名称无关的唯一名称。
+
+* 对于文件，它会将文件扩展名截断为三个字符。
+
+
+例如，如果 NFS 客户端创建一个名为 `specations.html` 的文件，则 ONTAP 创建的 8.3 格式文件名为 `specif~1.htm` 。如果此名称已存在，则 ONTAP 会在文件名末尾使用其他数字。例如，如果 NFS 客户端随后创建另一个名为 `spections_new.html` 的文件，则 8.3 格式的 `spections_new.html` 为 `specif~2.htm` 。

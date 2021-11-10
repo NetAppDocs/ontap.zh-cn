@@ -1,0 +1,52 @@
+---
+permalink: encryption-at-rest/secure-purge-data-encrypted-volume-concept.html 
+sidebar: sidebar 
+keywords: secure, purge, scrub, data, encrypted, volume, nve, netapp 
+summary: '从 ONTAP 9.4 开始，您可以使用安全清除功能无中断擦洗启用了 NVE 的卷上的数据。擦除加密卷上的数据可确保无法从物理介质恢复数据，例如，在 `s磁盘占用的情况下，` 在覆盖块时可能会留下数据跟踪，或者用于安全删除正在腾空的租户的数据。' 
+---
+= 安全清除加密卷上的数据概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.4 开始，您可以使用安全清除功能无中断擦洗启用了 NVE 的卷上的数据。擦除加密卷上的数据可确保无法从物理介质恢复数据，例如，在 " `s占用，` " 的情况下，覆盖块时可能会留下数据跟踪，或者用于安全删除空出租户的数据。
+
+安全清除仅适用于启用了 NVE 的卷上先前删除的文件。您不能擦除未加密的卷。您必须使用 KMIP 服务器提供密钥，而不是板载密钥管理器。
+
+安全清除功能因 ONTAP 版本而异。
+
+* 在 ONTAP 9.8 及更高版本中：
++
+** MetroCluster 和 FlexGroup 支持安全清除。
+** 如果要清除的卷是 SnapMirror 关系的源，则无需中断 SnapMirror 关系即可执行安全清除。
+** 对于使用 SnapMirror 数据保护的卷，重新加密方法与不使用 SnapMirror 数据保护（ DP ）或使用 SnapMirror 扩展数据保护的卷不同。
++
+*** 默认情况下，使用 SnapMirror 数据保护（ DP ）模式的卷使用卷移动重新加密方法重新加密数据。
+*** 默认情况下，未使用 SnapMirror 数据保护的卷或使用 SnapMirror 扩展数据保护（ XDP ）模式的卷使用原位重新加密方法。
+*** 可以使用 `secure purge re-encryption-method [volume-move| in-place-rekey]` 命令更改这些默认值。
+
+
+** 默认情况下， FlexVol 卷中的所有 Snapshot 副本都会在安全清除操作期间自动删除。默认情况下，在安全清除操作期间，不会自动删除使用 SnapMirror 数据保护的 FlexGroup 卷和卷中的快照。可以使用 `spurge delete-all-snapshots [true|false]` 更改这些默认值。命令：
+
+
+* 在 ONTAP 9.8 及更早版本中：
++
+** 安全清除不支持以下内容：
++
+*** FlexClone
+*** SnapVault
+*** FabricPool
+
+
+** 如果要清除的卷是 SnapMirror 关系的源，则必须先断开 SnapMirror 关系，然后才能清除该卷。
++
+如果卷中的 Snapshot 副本繁忙，则必须先释放 Snapshot 副本，然后才能清除卷。例如，您可能需要将 FlexClone 卷从其父卷拆分。
+
+
+
+* 成功调用安全清除功能将触发卷移动，以便使用新密钥重新加密其余未清除的数据。
++
+移动的卷将保留在当前聚合上。旧密钥会自动销毁，以确保已清除的数据无法从存储介质恢复。
+
+

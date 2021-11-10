@@ -1,0 +1,52 @@
+---
+permalink: nfs-admin/perform-access-check-netgroups-verify-domains-task.html 
+sidebar: sidebar 
+keywords: perform, strict, access, check, netgroup, verify, domain 
+summary: 默认情况下， ONTAP 在评估网络组的客户端访问时会执行额外的验证。此附加检查可确保客户端的域与 Storage Virtual Machine （ SVM ）的域配置匹配。否则， ONTAP 将拒绝客户端访问。 
+---
+= 通过验证域对网络组执行更严格的访问检查
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+默认情况下， ONTAP 在评估网络组的客户端访问时会执行额外的验证。此附加检查可确保客户端的域与 Storage Virtual Machine （ SVM ）的域配置匹配。否则， ONTAP 将拒绝客户端访问。
+
+当 ONTAP 评估客户端访问的导出策略规则且导出策略规则包含网络组时， ONTAP 必须确定客户端的 IP 地址是否属于该网络组。为此， ONTAP 会使用 DNS 将客户端的 IP 地址转换为主机名，并获取完全限定域名（ FQDN ）。
+
+如果网络组文件仅列出主机的短名称，而主机的短名称存在于多个域中，则来自不同域的客户端可以在不进行此检查的情况下获得访问权限。
+
+为了防止这种情况发生， ONTAP 会将从主机的 DNS 返回的域与为 SVM 配置的 DNS 域名列表进行比较。如果匹配，则允许访问。如果不匹配，则拒绝访问。
+
+默认情况下，此验证处于启用状态。您可以通过修改 ` -netgroup-dns-domain-search` 参数来管理它，该参数可在高级权限级别下使用。
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 执行所需的操作：
++
+[cols="2*"]
+|===
+| 网络组的域验证条件 | 输入 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver nfs modify -vserver vserver_name -netgroup-dns-domain-search enabled`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver nfs modify -vserver vserver_name -netgroup-ds-domain-search disabled`
+
+|===
+. 将权限级别设置为 admin ：
++
+`set -privilege admin`
+
+

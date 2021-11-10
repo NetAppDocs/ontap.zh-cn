@@ -1,0 +1,17 @@
+---
+permalink: disks-aggregates/hot-spare-disks-work-concept.html 
+sidebar: sidebar 
+keywords: hot, spare disks, work 
+summary: 热备用磁盘是指已分配给存储系统并可随时使用，但未被 RAID 组使用且不包含任何数据的磁盘。 
+---
+= 热备用磁盘的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+热备用磁盘是指已分配给存储系统并可随时使用，但未被 RAID 组使用且不包含任何数据的磁盘。
+
+如果 RAID 组中发生磁盘故障，则会自动将热备用磁盘分配给 RAID 组以更换故障磁盘。故障磁盘的数据会在后台通过 RAID 奇偶校验磁盘在热备用更换磁盘上重建。重建活动会记录在 ` /etc/message` 文件中，并发送 AutoSupport 消息。
+
+如果可用热备用磁盘与故障磁盘的大小不同，则会选择下一个较大大小的磁盘，然后减小其大小，以匹配要替换的磁盘的大小。

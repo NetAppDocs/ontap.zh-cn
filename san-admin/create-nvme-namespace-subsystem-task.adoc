@@ -1,0 +1,40 @@
+---
+permalink: san-admin/create-nvme-namespace-subsystem-task.html 
+sidebar: sidebar 
+keywords: create, nvme, namespace, subsystem 
+summary: 对于使用 NVMe 协议的系统，您必须创建一个或多个 NVMe 命名空间和子系统。然后，可以将每个命名空间映射到 NVMe 子系统，以便从主机系统访问数据。 
+---
+= 创建 NVMe 命名空间和子系统
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对于使用 NVMe 协议的系统，您必须创建一个或多个 NVMe 命名空间和子系统。然后，可以将每个命名空间映射到 NVMe 子系统，以便从主机系统访问数据。
+
+必须已为 NVMe 配置 SVM 。
+
+.步骤
+. 验证是否已为 NVMe 配置 SVM ：
++
+`vserver show -vserver _svm_name_ -fields allowed-protocols`
+
++
+`NVMe` 应显示在 `allowed-protocols` 列下。
+
+. 创建 NVMe 命名空间：
++
+`vserver nvme namespace create -vserver _svm_name_ -path _path_ -size _size_of_namespace_-ostype _os_type_`
+
+. 创建 NVMe 子系统：
++
+`vserver nvme subsystem create -vserver _svm_name_ -subsystem _name_of_subsystem_ -ostype _os_type_`
+
+. 验证是否已创建子系统：
++
+`vserver nvme subsystem show -vserver _svm_name_`
+
++
+`NVMe` 子系统应显示在 `Ssubsystem` 列下。
+
+

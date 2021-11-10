@@ -1,0 +1,307 @@
+---
+permalink: fabricpool/requirements-concept.html 
+sidebar: sidebar 
+keywords: considerations, requirements, using, fabricpool 
+summary: 您应熟悉有关使用 FabricPool 的一些注意事项和要求。 
+---
+= 使用 FabricPool 的注意事项和要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应熟悉有关使用 FabricPool 的一些注意事项和要求。
+
+
+
+== 一般注意事项和要求
+
+* 要使用 FabricPool ，必须至少运行 ONTAP 9.2 。
+* 您必须运行 ONTAP 9.4 或更高版本才能使用以下 FabricPool 功能：
++
+** `auto` 分层策略
++
+link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricPool 分层策略的类型"]
+
+** 指定分层最小冷却期
+** 非活动数据报告
+** 使用适用于云的 Microsoft Azure Blob Storage 作为 FabricPool 的云层
+** 将 FabricPool 与 ONTAP Select 结合使用
+
+
+* 要使用以下 FabricPool 功能，您必须运行 ONTAP 9.5 或更高版本：
++
+** 指定分层填充度阈值
+** 使用 IBM 云对象存储作为 FabricPool 的云层
+** 云层的 NetApp 卷加密（ NVE ），默认情况下处于启用状态。
+
+
+* 您必须运行 ONTAP 9.6 或更高版本才能使用以下 FabricPool 功能：
++
+** `All` 分层策略
+** 在 HDD 聚合上手动启用非活动数据报告
+** 升级到 ONTAP 9.6 并在创建聚合时， SSD 聚合会自动启用非活动数据报告，但 CPU 不足 4 个， RAM 不足 6 GB 或 WAFL-buffer-cache 大小小于 3 GB 的低端系统除外。
++
+ONTAP 会监控系统负载，如果负载持续保持高 4 分钟，则会禁用 IDR ，而不会自动启用。您可以手动重新启用 IDR ，但手动启用的 IDR 不会自动禁用。
+
+** 使用阿里云对象存储作为 FabricPool 的云层
+** 使用 Google 云平台作为 FabricPool 的云层
+** 卷移动而不复制云层数据
+
+
+* 您必须运行 ONTAP 9.7 或更高版本才能使用以下 FabricPool 功能：
++
+** 非透明的 HTTP 和 HTTPS 代理，用于仅提供对列入白名单的访问点的访问权限，并提供审核和报告功能。
+** FabricPool 镜像，可将冷数据同时分层到两个对象存储
+** MetroCluster 配置上的 FabricPool 镜像
+** 默认情况下， FabricPool 连接的聚合会启用 NDMP 转储和还原。
++
+[NOTE]
+====
+如果备份应用程序使用 NDMP 以外的协议，例如 NFS 或 CIFS ，则性能层中备份的所有数据都会变得很热，并可能影响将该数据分层到云层。非 NDMP 读取可以将发生原因数据从云层迁移回性能层。
+
+====
++
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/NDMP_Backup_and_Restore_supported_for_FabricPool%3F["FabricPool 的 NDMP 备份和还原支持"]
+
+
+
+* 要使用以下 FabricPool 功能，必须运行 ONTAP 9.8 或更高版本：
++
+** 云迁移控制，用于覆盖默认分层策略
+** 将数据提升到性能层
+** 采用 SnapLock Enterprise 的 FabricPool
+** 最短冷却期最长为 183 天
+** 使用用户创建的自定义标记进行对象标记
+** HDD 平台和聚合上的 FabricPools
++
+只有具有 6 个或更多 CPU 核的系统（包括以下型号）才支持 SAS ， FSAS ， BSAS 和 MSATA 磁盘使用 HDD FabricPool ：
+
++
+*** FAS9000
+*** FAS8700
+*** FAS8300
+*** FAS8200
+*** FAS8080
+*** FAS8060
+*** FAS8040
+*** FAS8020
+*** FAS2750
+*** FAS2720
+*** FAS2650
+*** FAS2620
++
+检查 https://hwu.netapp.com/Home/Index["Hardware Universe"] 适用于最新支持的型号。
+
+
+
+
+
+* 除以下平台外，所有能够运行 ONTAP 9.2 的平台均支持 FabricPool ：
++
+** FAS2554
+** FAS2552
+** FAS2520
+
+
+* FabricPool 支持以下聚合类型：
++
+** 在 AFF 系统上，您只能对 FabricPool 使用全闪存（全 SSD ）聚合。
++
+您不能使用 Flash Pool 聚合（同时包含 SSD 和 HDD ）。
+
+** 在 FAS 系统上，您可以对 FabricPool 使用全闪存（全 SSD ）或 HDD 聚合。
+** 在 Cloud Volumes ONTAP 和 ONTAP Select 上，您可以对 FabricPool 使用 SSD 或 HDD 聚合。
++
+但是，建议使用 SSD 聚合。
+
+
+
+* FabricPool 支持使用以下对象存储作为云层：
++
+** NetApp StorageGRID 10.3 或更高版本
+** NetApp ONTAP S3 （ ONTAP 9.8 及更高版本）
+** 阿里云对象存储
+** Amazon Web Services Simple Storage Service （ AWS S3 ）
+** Google Cloud 存储
+** IBM 云对象存储
+** 适用于云的 Microsoft Azure Blob Storage
+
+
+* 您计划使用的对象存储 "`bucket` " （容器）必须已设置，必须至少具有 10 GB 的存储空间，并且不能重命名。
+* 使用 FabricPool 的 HA 对需要集群间 LIF 与对象存储进行通信。
+* 连接对象存储分段后，您无法将其与 FabricPool 配置断开。
+* 如果使用吞吐量下限（ QoS 最小值），则必须先将卷上的分层策略设置为 `none` ，然后才能将聚合附加到 FabricPool 。
++
+其他分层策略会阻止将聚合附加到 FabricPool 。
+
+* 您应遵循在特定情形下使用 FabricPool 的最佳实践准则。
++
+http://www.netapp.com/us/media/tr-4598.pdf["NetApp 技术报告 4598 ：《 ONTAP 9 中的 FabricPool 最佳实践》"]
+
+
+
+
+
+== 使用 Cloud Volumes ONTAP 时的其他注意事项
+
+无论您使用的对象存储提供程序是什么， Cloud Volumes ONTAP 都不需要 FabricPool 许可证。
+
+
+
+== 将 StorageGRID 与 FabricPool 结合使用的其他注意事项
+
+* 除非明确禁用证书检查，否则您需要为 StorageGRID 安装 CA 证书。
+* 不能在对象存储分段上启用 StorageGRID 对象版本控制。
+* 不需要 FabricPool 许可证。
+* 如果 StorageGRID 节点部署在从 NetApp AFF 系统分配存储的虚拟机中，请确认此卷未启用 FabricPool 分层策略。
++
+对 StorageGRID 节点使用的卷禁用 FabricPool 分层可简化故障排除和存储操作。
+
++
+[NOTE]
+====
+切勿使用 FabricPool 将与 StorageGRID 相关的任何数据分层回 StorageGRID 本身。将 StorageGRID 数据分层回 StorageGRID 会增加故障排除和操作复杂性。
+
+====
+
+
+
+
+== 将阿里云对象存储与 FabricPool 结合使用的其他注意事项
+
+* 您可能需要 FabricPool 许可证。
++
+新订购的 AFF 系统附带了 10 TB 的可用容量，可用于使用 FabricPool 。如果您需要在 AFF 系统上添加容量，在非 AFF 系统上使用阿里云对象存储或从现有集群升级，则需要 FabricPool 许可证。
+
+* 在 AFF 和 FAS 系统以及 ONTAP Select 上， FabricPool 支持以下阿里对象存储服务类：
++
+** 阿里对象存储服务标准
+** Alibaba 对象存储服务不常访问
++
+https://www.alibabacloud.com/help/doc-detail/51374.htm["阿里云：存储类简介"]
+
+
+
+
+
+有关未列出的存储类的信息，请与 NetApp 销售代表联系。
+
+
+
+== 将 AWS S3 与 FabricPool 结合使用的其他注意事项
+
+* 您可能需要 FabricPool 许可证。
++
+** 新订购的 AFF 系统附带了 10 TB 的可用容量，可用于使用 FabricPool 。
++
+如果您需要在 AFF 系统上添加容量，在非 AFF 系统上使用 AWS S3 或从现有集群升级，则需要 FabricPool 许可证。
+
++
+如果您是首次为现有集群订购 FabricPool ，则可以获得具有 10 TB 可用容量的 FabricPool 许可证。
+
+
+
+* ONTAP 用于连接到 AWS S3 对象服务器的 LIF 必须位于 10 Gbps 端口上。
+* 在 AFF 和 FAS 系统以及 ONTAP Select 上， FabricPool 支持以下 Amazon S3 存储类：
++
+** Amazon S3 标准版
+** Amazon S3 Standard —不常访问（ Standard — IA ）
+** Amazon S3 一个区域 - 不常访问（一个区域 - IA ）
+** Amazon S3 智能分层
+** Amazon Commercial Cloud Services
++
+https://aws.amazon.com/s3/storage-classes/["Amazon Web Services （ AWS ）文档： Amazon S3 存储类"]
+
+
+
++
+有关未列出的存储类的信息，请联系您的销售代表。
+
+* 在 Cloud Volumes ONTAP 上， FabricPool 支持从 Amazon Elastic Block Store （ EBS ）的通用 SSD （ GP2 ）和吞吐量优化 HDD （ st1 ）卷分层。
+
+
+
+
+== 将 Google Cloud Storage 与 FabricPool 结合使用的其他注意事项
+
+* 您可能需要 FabricPool 许可证。
++
+新订购的 AFF 系统附带了 10 TB 的可用容量，可用于使用 FabricPool 。如果您需要在 AFF 系统上添加容量，在非 AFF 系统上使用 Google 云存储或从现有集群升级，则需要 FabricPool 许可证。
+
+* ONTAP 用于连接到 Google 云存储对象服务器的 LIF 必须位于 10 Gbps 端口上。
+* 在 AFF 和 FAS 系统以及 ONTAP Select 上， FabricPool 支持以下 Google 云对象存储类：
++
+** Google Cloud Multi-Regional
+** Google Cloud 区域
+** Google Cloud 近线
+** Google Cloud Coldline
++
+https://cloud.google.com/storage/docs/storage-classes["Google Cloud ：存储类"]
+
+
+
+
+
+
+
+== 将 IBM 云对象存储与 FabricPool 结合使用的其他注意事项
+
+* 您可能需要 FabricPool 许可证。
++
+新订购的 AFF 系统附带了 10 TB 的可用容量，可用于使用 FabricPool 。如果您需要在 AFF 系统上添加容量，在非 AFF 系统上使用 IBM 云对象存储或从现有集群升级，则需要 FabricPool 许可证。
+
++
+如果您是首次为现有集群订购 FabricPool ，则可以获得具有 10 TB 可用容量的 FabricPool 许可证。
+
+* ONTAP 用于连接到 IBM 云对象服务器的 LIF 必须位于 10 Gbps 端口上。
+
+
+
+
+== 将 Microsoft Azure Blob Storage 与 FabricPool 结合使用的其他注意事项
+
+* 您可能需要 FabricPool 许可证。
++
+新订购的 AFF 系统附带了 10 TB 的可用容量，可用于使用 FabricPool 。如果您需要在 AFF 系统上添加容量，在非 AFF 系统上使用 Azure Blob Storage 或从现有集群升级，则需要 FabricPool 许可证。
+
++
+如果您是首次为现有集群订购 FabricPool ，则可以获得具有 10 TB 可用容量的 FabricPool 许可证。
+
+* 如果将 Azure Blob Storage 与 Cloud Volumes ONTAP 结合使用，则不需要 FabricPool 许可证。
+* ONTAP 用于连接到 Azure Blob 存储对象服务器的 LIF 必须位于 10 Gbps 端口上。
+* FabricPool 目前不支持 Azure 堆栈，它是内部 Azure 服务。
+* 在 Microsoft Azure Blob Storage 的帐户级别， FabricPool 仅支持热存储层和冷存储层。
++
+FabricPool 不支持 Blob 级别的分层。它也不支持分层到 Azure 的归档存储层。
+
+
+
+
+
+== 对 SAN 协议访问的数据进行分层的其他注意事项
+
+在对 SAN 协议访问的数据进行分层时， NetApp 建议使用私有云，例如 StorageGRID ，因为需要考虑连接问题。
+
+
+
+== FabricPool 不支持的功能
+
+* 启用了 WORM 并启用了对象版本控制的对象存储。
+* 应用于对象存储分段的信息生命周期管理（ ILM ）策略
++
+ILM 通常包括各种移动和删除策略。这些策略可能会对 FabricPool 云层中的数据造成中断。将 FabricPool 与对象存储上配置的 ILM 策略结合使用可能会导致数据丢失。
+
+* 使用 ONTAP 命令行界面命令或 7- 模式过渡工具进行 7- 模式数据过渡
+* FlexArray 虚拟化
+* RAID SyncMirror ， MetroCluster 配置除外
+* 使用 ONTAP 9.7 及更早版本时的 SnapLock 卷
+* 对启用了 FabricPool 的聚合使用 SMTape 进行磁带备份
+* 自动平衡功能
+* 使用非 `none` 的空间保证的卷
++
+FabricPool 不支持将云层附加到使用 `none` 以外的空间保证的卷所在的聚合。例如，不支持使用空间保证 `volume` （` -space-guarantee` `volume` ）的卷。
+
+* 具有 DP_Optimized 许可证的集群
+* Flash Pool 聚合
+

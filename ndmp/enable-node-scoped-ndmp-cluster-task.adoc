@@ -1,0 +1,62 @@
+---
+permalink: ndmp/enable-node-scoped-ndmp-cluster-task.html 
+sidebar: sidebar 
+keywords: enable, node, scope, ndmp, cluster 
+summary: 您可以通过在集群上启用节点范围的 NDMP 以及在集群的所有节点上启用 NDMP 服务来配置节点范围的 NDMP 。启用 NDMP 服务时，还必须为 NDMP 配置 root 用户。 
+---
+= 在集群上启用节点范围的 NDMP
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过启用节点范围的 NDMP ，为 root 用户设置密码以及为数据和控制连接配置 LIF 来备份节点上托管的卷。
+
+您可以通过在集群上启用节点范围的 NDMP 以及在集群的所有节点上启用 NDMP 服务来配置节点范围的 NDMP 。启用 NDMP 服务时，还必须为 NDMP 配置 `root` 用户。
+
+.步骤
+. 使用带有 `node-scope-mode` 参数的 `ssystem services ndmp` 命令启用节点范围的 NDMP 模式。
++
+[listing]
+----
+cluster1::> system services ndmp node-scope-mode on
+NDMP node-scope-mode is enabled.
+----
+. 使用 `ssystem services ndmp on` 命令在集群中的所有节点上启用 NDMP 服务。
++
+使用通配符 "` *` " 可同时在所有节点上启用 NDMP 服务。
+
++
+您必须指定一个密码，用于通过备份应用程序对 NDMP 连接进行身份验证。
+
++
+[listing]
+----
+cluster1::> system services ndmp on -node *
+
+Please enter password:
+Confirm password:
+2 entries were modified.
+----
+. 使用 `ssystem services ndmp modify` 命令禁用 ` -clear-text` 选项，以确保 NDMP 密码的安全通信。
++
+使用通配符 "` *` " 会同时在所有节点上禁用 ` -clear-text` 选项。
+
++
+[listing]
+----
+cluster1::> system services ndmp modify -node * -clear-text false
+2 entries were modified.
+----
+. 使用 `ssystem services ndmp show` 命令验证是否已启用 NDMP 服务以及是否已禁用 ` -clear-text` 选项。
++
+[listing]
+----
+cluster1::> system services ndmp show
+Node                  Enabled   Clear text  User Id
+--------------------- --------- ----------- ---------
+cluster1-1            true      false        root
+cluster1-2            true      false        root
+2 entries were displayed.
+----
+

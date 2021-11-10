@@ -1,0 +1,26 @@
+---
+permalink: nfs-admin/how-name-mappings-used-concept.html 
+sidebar: sidebar 
+keywords: configure, name, mapping 
+summary: ONTAP 使用名称映射将 CIFS 身份映射到 UNIX 身份，将 Kerberos 身份映射到 UNIX 身份，并将 UNIX 身份映射到 CIFS 身份。无论用户是从 NFS 客户端还是从 CIFS 客户端进行连接，它都需要此信息来获取用户凭据并提供正确的文件访问权限。 
+---
+= 配置名称映射概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 使用名称映射将 CIFS 身份映射到 UNIX 身份，将 Kerberos 身份映射到 UNIX 身份，并将 UNIX 身份映射到 CIFS 身份。无论用户是从 NFS 客户端还是从 CIFS 客户端进行连接，它都需要此信息来获取用户凭据并提供正确的文件访问权限。
+
+除了两个例外情况，您无需使用名称映射：
+
+* 您配置的是纯 UNIX 环境，不打算对卷使用 CIFS 访问或 NTFS 安全模式。
+* 您可以配置要使用的默认用户。
++
+在这种情况下，不需要进行名称映射，因为所有客户端凭据都映射到同一默认用户，而不是映射每个客户端凭据。
+
+
+
+请注意，您只能对用户使用名称映射，而不能对组使用名称映射。
+
+但是，您可以将一组用户映射到特定用户。例如，您可以将以 SALES 开头或结尾的所有 AD 用户映射到特定 UNIX 用户和用户的 UID 。

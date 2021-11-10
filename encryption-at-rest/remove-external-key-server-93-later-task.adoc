@@ -1,0 +1,55 @@
+---
+permalink: encryption-at-rest/remove-external-key-server-93-later-task.html 
+sidebar: sidebar 
+keywords: deleting, external key manager, connection 
+summary: 当您不再需要 KMIP 服务器时，可以将其从节点断开。例如，在过渡到卷加密时，您可能会断开 KMIP 服务器的连接。 
+---
+= 删除外部密钥管理器连接
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当您不再需要 KMIP 服务器时，可以将其从节点断开。例如，在过渡到卷加密时，您可能会断开 KMIP 服务器的连接。
+
+要执行此任务，您必须是集群或 SVM 管理员。
+
+当您从 HA 对中的一个节点断开 KMIP 服务器的连接时，系统会自动断开此服务器与所有集群节点的连接。
+
+[NOTE]
+====
+如果您计划在断开 KMIP 服务器连接后继续使用外部密钥管理，请确保另一个 KMIP 服务器可用于提供身份验证密钥。
+
+====
+.步骤
+. 断开 KMIP 服务器与当前节点的连接：
++
+|===
+| 对于此 ONTAP 版本 ... | 使用此命令 ... 
+
+
+ a| 
+ONTAP 9.6 及更高版本
+ a| 
+`security key-manager external remove-servers -vserver SVM -key-servers host_name_ip_address ： port ， ...`
+
+
+
+ a| 
+ONTAP 9.5 及更早版本
+ a| 
+`security key-manager delete -address key_management_server_ipaddress`
+
+|===
++
+有关完整的命令语法，请参见手册页。
+
++
+以下 ONTAP 9.6 命令会禁用 `cluster1` 与两个外部密钥管理服务器的连接，第一个名为 `KS1` ，侦听默认端口 5696 ，第二个使用 IP 地址 10.0.0.0.20 ，侦听端口 24482 ：
+
++
+[listing]
+----
+clusterl::> security key-manager external remove-servers -vserver cluster-1 -key-servers ks1,10.0.0.20:24482
+----
+

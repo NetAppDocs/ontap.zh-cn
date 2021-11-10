@@ -1,0 +1,37 @@
+---
+permalink: nfs-admin/enable-access-windows-nfs-clients-task.html 
+sidebar: sidebar 
+keywords: enable, access, windows, nfs, clients 
+summary: ONTAP 支持从 Windows NFSv3 客户端访问文件。这意味着，运行支持 NFSv3 的 Windows 操作系统的客户端现在可以访问集群上 NFSv3 导出上的文件。要成功使用此功能，您必须正确配置 Storage Virtual Machine （ SVM ）并了解某些要求和限制。 
+---
+= 为 Windows NFS 客户端启用访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 支持从 Windows NFSv3 客户端访问文件。这意味着，运行支持 NFSv3 的 Windows 操作系统的客户端现在可以访问集群上 NFSv3 导出上的文件。要成功使用此功能，您必须正确配置 Storage Virtual Machine （ SVM ）并了解某些要求和限制。
+
+必须在 SVM 上启用 NFSv3 。
+
+默认情况下， Windows NFSv3 客户端支持处于禁用状态。
+
+Windows NFSv3 客户端不支持网络状态监控器（ NSM ）协议。因此，在存储故障转移和卷移动操作期间， Windows NFSv3 客户端会话可能会发生中断。
+
+.步骤
+. 启用 Windows NFSv3 客户端支持：
++
+`vserver nfs modify -vserver vserver_name -v3-ms-dos-client enabled`
+
+. 在支持 Windows NFSv3 客户端的所有 SVM 上，禁用 ` -enable-ejukebox` 和 ` -v3-connection-drop` 参数： `vserver nfs modify -vserver vserver_name -enable-ejukebox false -v3-connection-drop disabled`
++
+Windows NFSv3 客户端现在可以在存储系统上挂载导出。
+
+. 通过指定 ` -o mtype=hard` 选项，确保每个 Windows NFSv3 客户端都使用硬挂载。
++
+这是确保可靠挂载所必需的。
+
++
+`mount -o mtype=hard \\10.53.33.10\vol\vol1 z ： \`
+
+

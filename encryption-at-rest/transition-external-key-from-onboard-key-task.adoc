@@ -1,0 +1,58 @@
+---
+permalink: encryption-at-rest/transition-external-key-from-onboard-key-task.html 
+sidebar: sidebar 
+keywords: transitioning, external key management, onboard key management 
+summary: 如果要从板载密钥管理切换到外部密钥管理，则必须先删除板载密钥管理配置，然后才能启用外部密钥管理。 
+---
+= 从板载密钥管理过渡到外部密钥管理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要从板载密钥管理切换到外部密钥管理，则必须先删除板载密钥管理配置，然后才能启用外部密钥管理。
+
+.您需要什么？ #8217 ；将需要什么
+* 对于基于硬件的加密，必须将所有 FIPS 驱动器或 SED 的数据密钥重置为默认值。
++
+xref:return-seds-unprotected-mode-task.adoc[将 FIPS 驱动器或 SED 恢复到未受保护的模式]
+
+* 对于基于软件的加密，您必须取消对所有卷的加密。
++
+xref:unencrypt-volume-data-task.adoc[取消卷数据加密]
+
+* 您必须是集群管理员才能执行此任务。
+
+
+.步骤
+. 删除集群的板载密钥管理配置：
++
+|===
+| 对于此 ONTAP 版本 ... | 使用此命令 ... 
+
+
+ a| 
+ONTAP 9.6 及更高版本
+ a| 
+`security key-manager on板 载 disable -vserver SVM`
+
+
+
+ a| 
+ONTAP 9.5 及更早版本
+ a| 
+`s安全密钥管理器 delete-key-database`
+
+|===
++
+有关完整的命令语法，请参见手册页。
+
++
+以下 ONTAP 9.6 命令将删除 `cluster1` 的板载密钥管理配置：
+
++
+[listing]
+----
+clusterl::> security key-manager onboard disable
+----
+

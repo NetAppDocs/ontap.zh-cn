@@ -1,0 +1,33 @@
+---
+permalink: san-admin/iscsi-endpoint-isolation-concept.html 
+sidebar: sidebar 
+keywords: iscsi, endpoint, isolation, add, remove, initiator, address, range 
+summary: 从 ONTAP 9.1 开始，现有的 iSCSI 安全命令得到了增强，可接受一个 IP 地址范围或多个 IP 地址。 
+---
+= iSCSI 端点隔离
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.1 开始，现有的 iSCSI 安全命令得到了增强，可接受一个 IP 地址范围或多个 IP 地址。
+
+在与目标建立会话或连接时，所有 iSCSI 启动程序都必须提供源 IP 地址。如果源 IP 地址不受支持或未知，此新功能可防止启动程序登录到集群，从而提供唯一的标识方案。如果任何启动程序的 IP 地址不受支持或未知，则会在 iSCSI 会话层拒绝其登录，从而阻止启动程序访问集群中的任何 LUN 或卷。
+
+使用两个新命令实施此新功能，以帮助管理原有条目。
+
+
+
+== 添加启动程序地址范围
+
+使用 `vserver iscsi security add-initiator-address-range` 命令添加 IP 地址范围或多个 IP 地址，以改进 iSCSI 启动程序安全管理。
+
+`cluster1 ：：： > vserver iscsi security add-initiator-address-range`
+
+
+
+== 删除启动程序地址范围
+
+使用 `vserver iscsi security remove-initiator-address-range` 命令删除一个或多个 IP 地址。
+
+`cluster1 ：：： > vserver iscsi security remove-initiator-address-range`

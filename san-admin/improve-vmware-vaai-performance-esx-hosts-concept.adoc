@@ -1,0 +1,89 @@
+---
+permalink: san-admin/improve-vmware-vaai-performance-esx-hosts-concept.html 
+sidebar: sidebar 
+keywords: improve, vmware, vaai, performance, esx, hosts 
+summary: 如果 ESX 主机运行的是 ESX 4.1 或更高版本，则 ONTAP 支持某些 VMware vStorage APIs for Array Integration （ VAAI ）功能。这些功能有助于将操作从 ESX 主机卸载到存储系统，并提高网络吞吐量。ESX 主机会在正确的环境中自动启用这些功能。 
+---
+= 提高 ESX 主机的 VMware VAAI 性能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果 ESX 主机运行的是 ESX 4.1 或更高版本，则 ONTAP 支持某些 VMware vStorage APIs for Array Integration （ VAAI ）功能。这些功能有助于将操作从 ESX 主机卸载到存储系统，并提高网络吞吐量。ESX 主机会在正确的环境中自动启用这些功能。
+
+VAAI 功能支持以下 SCSI 命令：
+
+* `extended_copy`
++
+通过此功能，主机可以在 LUN 之间或 LUN 内部启动数据传输，而无需主机参与数据传输。这样可以节省 ESX CPU 周期并提高网络吞吐量。扩展副本功能也称为 " 副本卸载 " ，用于克隆虚拟机等情形。ESX 主机调用副本卸载功能时，该功能会复制存储系统中的数据，而不是通过主机网络进行复制。副本卸载可通过以下方式传输数据：
+
++
+** 在 LUN 中
+** 卷中的 LUN 之间
+** 在 Storage Virtual Machine （ SVM ）中不同卷上的 LUN 之间
+** 在集群中不同 SVM 上的 LUN 之间如果无法调用此功能， ESX 主机将自动使用标准读写命令执行复制操作。
+
+
+* `write_same`
++
+此功能可减轻向存储阵列写入重复模式（例如全零）的工作负担。ESX 主机在零填充文件等操作中使用此功能。
+
+* `compare 和 _write`
++
+此功能可绕过某些文件访问并发限制，从而加快启动虚拟机等操作的速度。
+
+
+
+
+
+== 使用 VAAI 环境的要求
+
+VAAI 功能是 ESX 操作系统的一部分，设置正确的环境后， ESX 主机会自动调用这些功能。
+
+环境要求如下：
+
+* ESX 主机必须运行 ESX 4.1 或更高版本。
+* 托管 VMware 数据存储库的 NetApp 存储系统必须运行 ONTAP 。
+* （仅限副本卸载） VMware 副本操作的源和目标必须托管在同一集群中的同一存储系统上。
++
+[NOTE]
+====
+当前，副本卸载功能不支持在不同存储系统上托管的 VMware 数据存储库之间复制数据。
+
+====
+
+
+
+
+== 确定 ESX 是否支持 VAAI 功能
+
+要确认 ESX 操作系统是否支持 VAAI 功能，您可以检查 vSphere Client 或使用任何其他方式访问主机。默认情况下， ONTAP 支持 SCSI 命令。
+
+您可以检查 ESX 主机的高级设置以确定是否已启用 VAAI 功能。下表说明了哪些 SCSI 命令与 ESX 控制名称相对应。
+
+[cols="2*"]
+|===
+| SCSI 命令 | ESX 控制名称（ VAAI 功能） 
+
+
+ a| 
+extended_copy
+ a| 
+`HardwareAcceleratedMove`
+
+
+
+ a| 
+write_same
+ a| 
+`HardwareAcceleratedInit`
+
+
+
+ a| 
+compare 和 _write
+ a| 
+`HardwareAcceleratedLocking`
+
+|===

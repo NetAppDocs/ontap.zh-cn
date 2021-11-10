@@ -1,0 +1,30 @@
+---
+permalink: san-admin/lun-san-environments-concept.html 
+sidebar: sidebar 
+keywords: lun, guidelines 
+summary: 开始在集群上设置 LUN 之前，您需要查看 LUN 准则。 
+---
+= LUN 准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FC 协议和 iSCSI 协议均通过使用 LUN 来配置存储。设置 LUN 后，您可以执行各种管理任务，例如增加或减小 LUN 大小。配置卷并设置相应的操作系统类型后，您必须完成设置 LUN 所需的步骤。
+
+
+
+== 分配 LUN ID 的准则
+
+通常，默认 LUN ID 以 0 开头，并为每个附加映射的 LUN 以 1 为增量进行分配。主机会将 LUN ID 与 LUN 的位置和路径名称相关联。有效的 LUN ID 编号范围取决于主机。有关详细信息，请参见 Host Utilities 附带的文档。
+
+
+
+== 将 LUN 映射到 igroup 的准则
+
+* 一个 LUN 只能映射到一个 igroup 。
+* 您只能通过 igroup 将 LUN 映射到一个特定启动程序。
+* 您可以将一个启动程序添加到多个 igroup ，但该启动程序只能映射到一个 LUN 。
+* 不能对映射到同一 igroup 的两个 LUN 使用相同的 LUN ID 。
+* igroup 和端口集应使用相同的协议类型。
+

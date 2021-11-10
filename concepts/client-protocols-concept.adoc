@@ -1,0 +1,57 @@
+---
+permalink: concepts/client-protocols-concept.html 
+sidebar: sidebar 
+keywords: client protocols 
+summary: ONTAP 支持所有主要的行业标准客户端协议： NFS ， SMB ， FC ， FCoE ， iSCSI ， 和 NVMe/FC 。 
+---
+= 客户端协议
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 支持所有主要的行业标准客户端协议： NFS ， SMB ， FC ， FCoE ， iSCSI ， 和 NVMe/FC 。
+
+
+
+== NFS
+
+NFS 是 UNIX 和 Linux 系统的传统文件访问协议。客户端可以使用 NFSv3 ， NFSv4 ， NFSv4.1 和 pNFS 协议访问 ONTAP 卷中的文件。您可以使用 UNIX 模式的权限， NTFS 模式的权限或两者的混合来控制文件访问。
+
+客户端可以使用 NFS 和 SMB 协议访问相同的文件。
+
+
+
+== SMB
+
+SMB 是 Windows 系统的传统文件访问协议。客户端可以使用 SMB 2.0 ， SMB 2.1 ， SMB 3.0 和 SMB 3.1.1 协议访问 ONTAP 卷中的文件。与 NFS 一样，支持混合使用多种权限模式。
+
+SMB 1.0 可用，但在 ONTAP 9.3 及更高版本中默认处于禁用状态。
+
+
+
+== FC
+
+光纤通道是初始的网络块协议。块协议将整个虚拟磁盘呈现给客户端，而不是文件。传统 FC 协议使用具有专用 FC 交换机的专用 FC 网络，并要求客户端计算机具有 FC 网络接口。
+
+LUN 表示虚拟磁盘，一个或多个 LUN 存储在 ONTAP 卷中。可以通过 FC ， FCoE 和 iSCSI 协议访问同一个 LUN ，但多个客户端只有在属于可防止写入冲突的集群时才能访问同一个 LUN 。
+
+
+
+== FCoE
+
+FCoE 与 FC 基本上是相同的协议，但使用数据中心级以太网网络代替传统 FC 传输。客户端仍需要 FCoE 专用的网络接口。
+
+
+
+== iSCSI
+
+iSCSI 是一种可在标准以太网网络上运行的块协议。大多数客户端操作系统都提供一个通过标准以太网端口运行的软件启动程序。如果您需要为特定应用程序使用块协议，但没有可用的专用 FC 网络，则 iSCSI 是一个不错的选择。
+
+
+
+== NVMe/FC
+
+最新的块协议 NVMe/FC 专为使用基于闪存的存储而设计。它可以提供可扩展的会话，显著降低延迟并提高并行性，因此非常适合内存数据库和分析等低延迟和高吞吐量应用程序。
+
+与 FC 和 iSCSI 不同， NVMe 不使用 LUN 。而是使用存储在 ONTAP 卷中的命名空间。NVMe 命名空间只能通过 NVMe 协议进行访问。

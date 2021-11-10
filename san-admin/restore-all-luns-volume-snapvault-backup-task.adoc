@@ -1,0 +1,115 @@
+---
+permalink: san-admin/restore-all-luns-volume-snapvault-backup-task.html 
+sidebar: sidebar 
+keywords: ontap 9.2, restore, luns, in a volume, snapvault, backup 
+summary: 如果需要从 SnapVault 备份还原卷中的一个或多个 LUN ，则可以还原整个卷。还原卷会影响卷中的所有 LUN 。 
+---
+= 从 SnapVault 备份还原卷中的所有 LUN
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果需要从 SnapVault 备份还原卷中的一个或多个 LUN ，则可以还原整个卷。还原卷会影响卷中的所有 LUN 。
+
+必须初始化 SnapVault 关系，并且 SnapVault 二级卷必须包含要还原的相应 Snapshot 副本。
+
+还原整个卷会将卷恢复到创建 Snapshot 副本时的状态。如果在 Snapshot 副本之后向卷添加了 LUN ，则在还原过程中会删除该 LUN 。
+
+还原卷后， LUN 仍会映射到还原前映射到的 igroup 。LUN 映射可能与创建 Snapshot 副本时的映射不同。主机集群中 LUN 上的永久性预留会保留下来。
+
+.步骤
+. 停止卷中所有 LUN 的 I/O 。
+. 运行 `snapmirror show` 命令验证包含 SnapVault 二级卷的二级卷。
++
+[listing]
+----
+cluster::> snapmirror show
+
+Source         Dest     Mirror  Relation  Total             Last
+Path     Type  Path     State   Status    Progress  Healthy Updated
+-------- ---- --------- ------- --------- --------- ------- -------
+vserverA:srcvolA
+         XDP  vserverB:dstvolB
+                        Snapmirrored
+                                Idle       -         true    -
+----
+. 运行 `volume snapshot show` 命令以确定要从中还原的 Snapshot 副本。
++
+[listing]
+----
+cluster::> volume snapshot show
+
+Vserver  Volume  Snapshot               State Size   Total% Used%
+-------- ------- ---------------------- ----- ------ ------ -----
+vserverB
+         dstvolB
+                 snap2.2013-02-10_0010  valid  124KB     0%    0%
+                 snap1.2013-02-10_0015 valid  112KB     0%    0%
+                 snap2.2013-02-11_0010  valid  164KB     0%    0%
+----
+. 运行 `snapmirror restore` 命令并指定 ` -source-snapshot` 选项以指定要使用的 Snapshot 副本。
++
+为还原指定的目标是要还原到的原始卷。
+
++
+[listing]
+----
+cluster::> snapmirror restore -destination-path vserverA:srcvolA
+  -source-path vserverB:dstvolB -source-snapshot daily.2013-02-10_0010
+
+Warning: All data newer than Snapshot copy hourly.2013-02-11_1205 on
+volume vserverA:src_volA will be deleted.
+Do you want to continue? {y|n}: y
+[Job 98] Job is queued: snapmirror restore from source
+"vserverB:dstvolB" for the snapshot daily.2013-02-10_0010.
+----
+. 如果要在整个主机集群中共享 LUN ，请从受影响的主机还原 LUN 上的永久性预留。
+
+
+
+
+== 从 SnapVault 备份还原卷
+
+在以下示例中，创建 Snapshot 副本后，名为 LUN_D 的 LUN 添加到卷中。从 Snapshot 副本还原整个卷后， lun_D 不再显示。
+
+在 `lun show` 命令输出中，您可以看到主卷 srcvolA 中的 LUN 以及这些 LUN 在 SnapVault 二级卷 dstvolB 中的只读副本。SnapVault 备份中没有 LUN_D 的副本。
+
+[listing]
+----
+cluster::> lun show
+Vserver   Path                State   Mapped   Type          Size
+--------- ------------------  ------- -------- --------      -------
+vserverA  /vol/srcvolA/lun_A  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_B  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_C  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_D  online  mapped   windows  250.0GB
+vserverB  /vol/dstvolB/lun_A  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_B  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
+
+7 entries were displayed.
+
+cluster::>snapmirror restore -destination-path vserverA:srcvolA
+  -source-path vserverB:dstvolB
+  -source-snapshot daily.2013-02-10_0010
+
+Warning: All data newer than Snapshot copy hourly.2013-02-11_1205
+on volume vserverA:src_volA will be deleted.
+Do you want to continue? {y|n}: y
+[Job 98] Job is queued: snapmirror restore from source
+"vserverB:dstvolB" for the snapshot daily.2013-02-10_0010.
+
+cluster::> lun show
+Vserver   Path                State   Mapped   Type          Size
+--------- ------------------  ------- -------- --------      -------
+vserverA  /vol/srcvolA/lun_A  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_B  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_C  online  mapped   windows  300.0GB
+vserverB  /vol/dstvolB/lun_A  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_B  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
+
+6 entries were displayed.
+----
+从 SnapVault 二级卷还原卷后，源卷不再包含 LUN_D还原后，您无需重新映射源卷中的 LUN ，因为它们仍处于映射状态。

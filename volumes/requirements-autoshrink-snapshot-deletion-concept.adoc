@@ -1,0 +1,19 @@
+---
+permalink: volumes/requirements-autoshrink-snapshot-deletion-concept.html 
+sidebar: sidebar 
+keywords: requirements, enabling, autoshrink, automatic, snapshot copy, deletion 
+summary: 如果满足特定配置要求，则自动缩减功能可与 Snapshot 副本自动删除结合使用。 
+---
+= 同时启用自动缩减和自动 Snapshot 副本删除的要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果满足特定配置要求，则自动缩减功能可与 Snapshot 副本自动删除结合使用。
+
+如果要同时启用自动缩减功能和 Snapshot 副本自动删除，则您的配置必须满足以下要求：
+
+* 必须将 ONTAP 配置为在尝试删除 Snapshot 副本之前尝试增加卷大小（必须将 ` -space-mgmt-try-first` 选项设置为 `volume_grow` ）。
+* 自动删除 Snapshot 副本的触发器必须为卷填充度（ `trigger` 参数必须设置为 `volume` ）。
+

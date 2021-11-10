@@ -1,0 +1,31 @@
+---
+permalink: nas-audit/display-security-trace-filters-task.html 
+sidebar: sidebar 
+keywords: display, information, security trace filters 
+summary: 您可以显示有关在 Storage Virtual Machine （ SVM ）上配置的安全跟踪筛选器的信息。这样，您可以查看每个筛选器跟踪的访问事件类型。 
+---
+= 显示有关安全跟踪筛选器的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关在 Storage Virtual Machine （ SVM ）上配置的安全跟踪筛选器的信息。这样，您可以查看每个筛选器跟踪的访问事件类型。
+
+.步骤
+. 使用 `vserver security trace filter show` 命令显示有关安全跟踪筛选器条目的信息。
++
+有关使用此命令的详细信息，请参见手册页。
+
+
+
+以下命令显示有关 SVM vs1 上所有安全跟踪筛选器的信息：
+
+[listing]
+----
+cluster1::> vserver security trace filter show -vserver vs1
+Vserver  Index   Client-IP            Path            Trace-Allow  Windows-Name
+-------- -----  -----------  ----------------------   -----------  -------------
+vs1        1    -            /dir1/dir2/file.txt          yes      -
+vs1        2    -            /dir3/dir4/                  no       mydomain\joe
+----

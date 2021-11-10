@@ -1,0 +1,49 @@
+---
+permalink: smb-admin/display-branchcache-config-task.html 
+sidebar: sidebar 
+keywords: display, information, branchcache, configuration, storage, virtual, machine, svm, verify, setting, modify, display information about branchcache configurations 
+summary: 您可以显示 Storage Virtual Machine （ SVM ）上的 BranchCache 配置信息，这些信息可在验证配置或在修改配置之前确定当前设置时使用。 
+---
+= 显示有关 BranchCache 配置的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示 Storage Virtual Machine （ SVM ）上的 BranchCache 配置信息，这些信息可在验证配置或在修改配置之前确定当前设置时使用。
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 要显示的内容 | 输入此命令 ... 
+
+
+ a| 
+有关所有 SVM 上 BranchCache 配置的摘要信息
+ a| 
+`Vserver CIFS BranchCache show`
+
+
+
+ a| 
+有关特定 SVM 上配置的详细信息
+ a| 
+`vserver cifs BranchCache show -vserver _vserver_name_`
+
+|===
+
+
+以下示例显示了有关 SVM vs1 上 BranchCache 配置的信息：
+
+[listing]
+----
+cluster1::> vserver cifs branchcache show -vserver vs1
+
+                                   Vserver: vs1
+            Supported BranchCache Versions: enable_all
+                        Path to Hash Store: /hash_data
+            Maximum Size of the Hash Store: 20GB
+  Encryption Key Used to Secure the Hashes: -
+          CIFS BranchCache Operating Modes: per_share
+----

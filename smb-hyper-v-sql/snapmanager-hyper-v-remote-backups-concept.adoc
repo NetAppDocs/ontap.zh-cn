@@ -1,0 +1,59 @@
+---
+permalink: smb-hyper-v-sql/snapmanager-hyper-v-remote-backups-concept.html 
+sidebar: sidebar 
+keywords: snapmanager, hyper, v, remote, manage, vss, backup, smb 
+summary: 您可以使用 SnapManager for Hyper-V 管理基于 VSS 的远程备份服务。使用适用于 Hyper-V 的 SnapManager 托管备份服务创建节省空间的备份集具有一定优势。 
+---
+= SnapManager for Hyper-V 如何通过 SMB 管理 Hyper-V 基于 VSS 的远程备份
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 SnapManager for Hyper-V 管理基于 VSS 的远程备份服务。使用适用于 Hyper-V 的 SnapManager 托管备份服务创建节省空间的备份集具有一定优势。
+
+Hyper-V 托管备份的 SnapManager 优化包括以下内容：
+
+* SnapDrive 与 ONTAP 的集成可在发现 SMB 共享位置时实现性能优化。
++
+ONTAP 为 SnapDrive 提供共享所在卷的名称。
+
+* SnapManager for Hyper-V 指定卷影复制服务需要复制的 SMB 共享中的虚拟机文件列表。
++
+通过提供目标虚拟机文件列表，卷影复制服务无需为共享中的所有文件创建卷影副本。
+
+* Storage Virtual Machine （ SVM ）会保留 SnapManager for Hyper-V 的 Snapshot 副本以用于还原。
++
+没有备份阶段。备份是节省空间的 Snapshot 副本。
+
+
+
+SnapManager for Hyper-V 可通过以下过程为基于 SMB 的 HyperV 提供备份和还原功能：
+
+. 准备卷影复制操作
++
+SnapManager for Hyper-V 应用程序的 VSS 客户端会设置卷影副本集。VSS 客户端收集有关卷影副本集中要包含的共享的信息，并将此信息提供给 ONTAP 。一个卷集可能包含一个或多个卷影副本，一个卷影副本对应于一个共享。
+
+. 创建卷影副本集（如果使用自动恢复）
++
+对于卷影副本集中包含的每个共享， ONTAP 会创建一个卷影副本并使卷影副本可写。
+
+. 公开卷影副本集
++
+在 ONTAP 创建卷影副本后，这些副本会公开到 SnapManager for Hyper-V 中，以便应用程序的 VSS 写入程序可以执行自动恢复。
+
+. 自动恢复卷影副本集
++
+在创建卷影副本集期间，会有一段时间对备份集中的文件进行活动更改。应用程序的 VSS 写入程序必须更新卷影副本，以确保它们在备份之前处于完全一致的状态。
+
++
+[NOTE]
+====
+自动恢复的执行方式取决于应用程序。此阶段不涉及远程 VSS 。
+
+====
+. 完成并清理卷影副本集
++
+VSS 客户端会在完成自动恢复后通知 ONTAP 。卷影副本集将设为只读，然后准备好进行备份。使用 SnapManager for Hyper-V 进行备份时， Snapshot 副本中的文件将成为备份；因此，在备份阶段，系统会为包含备份集中共享的每个卷创建 Snapshot 副本。备份完成后，卷影副本集将从 CIFS 服务器中删除。
+
+

@@ -1,0 +1,67 @@
+---
+permalink: san-admin/restore-single-lun-snapshot-copy-task.html 
+sidebar: sidebar 
+keywords: restore, single lun, snapshot copy 
+summary: 您可以从 Snapshot 副本还原单个 LUN ，而无需还原包含单个 LUN 的整个卷。您可以将 LUN 还原到原位，也可以将其还原到卷中的新路径。此操作仅还原单个 LUN ，而不会影响卷中的其他文件或 LUN 。您还可以使用流还原文件。 
+---
+= 从 Snapshot 副本还原单个 LUN
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以从 Snapshot 副本还原单个 LUN ，而无需还原包含单个 LUN 的整个卷。您可以将 LUN 还原到原位，也可以将其还原到卷中的新路径。此操作仅还原单个 LUN ，而不会影响卷中的其他文件或 LUN 。您还可以使用流还原文件。
+
+.您需要什么？ #8217 ；将需要什么
+* 您的卷必须具有足够的空间才能完成还原操作：
++
+** 如果要还原预留空间百分比为 0% 的预留空间 LUN ，则需要使用已还原 LUN 大小的一倍。
+** 如果要还原预留空间百分比为 100% 的预留空间 LUN ，则需要还原的 LUN 大小是所还原 LUN 大小的两倍。
+** 如果要还原未预留空间的 LUN ，则只需要还原的 LUN 所使用的实际空间。
+
+
+* 必须已创建目标 LUN 的 Snapshot 副本。
++
+如果还原操作失败，则目标 LUN 可能会被截断。在这种情况下，您可以使用 Snapshot 副本防止数据丢失。
+
+* 必须已创建源 LUN 的 Snapshot 副本。
++
+在极少数情况下， LUN 还原可能会失败，从而使源 LUN 无法使用。如果发生这种情况，您可以使用 Snapshot 副本将 LUN 恢复到尝试还原之前的状态。
+
+* 目标 LUN 和源 LUN 必须具有相同的操作系统类型。
++
+如果目标 LUN 与源 LUN 具有不同的操作系统类型，则在执行还原操作后，主机可能无法访问目标 LUN 的数据。
+
+
+
+.步骤
+. 从主机停止对 LUN 的所有主机访问。
+. 卸载主机上的 LUN ，使主机无法访问此 LUN 。
+. 取消映射 LUN ：
++
+`lun mapping delete -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
+
+. 确定要将 LUN 还原到的 Snapshot 副本：
++
+`volume snapshot show -vserver _vserver_name_ -volume _volume_name_`
+
+. 在还原 LUN 之前创建 LUN 的 Snapshot 副本：
++
+`volume snapshot create -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
+
+. 还原卷中的指定 LUN ：
++
+`volume snapshot restore-file -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_ -path _lun_path_`
+
+. 按照屏幕上的步骤进行操作。
+. 如有必要，将 LUN 置于联机状态：
++
+`lun modify -vserver _vserver_name_ -path _lun_path_ -state online`
+
+. 如有必要，请重新映射 LUN ：
++
+`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
+
+. 从主机重新挂载 LUN 。
+. 从主机重新启动对 LUN 的访问。
+

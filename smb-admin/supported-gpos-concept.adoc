@@ -1,0 +1,310 @@
+---
+permalink: smb-admin/supported-gpos-concept.html 
+sidebar: sidebar 
+keywords: group, policy, object, gpo, applicable, cifs-enabled, storage, virtual, machine, svm, recognize, process, relevant, set, supported gpos 
+summary: 虽然并非所有组策略对象（ GPO ）都适用于启用了 CIFS 的 Storage Virtual Machine （ SVM ），但 SVM 可以识别和处理相关的 GPO 集。 
+---
+= 支持的 GPO
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+虽然并非所有组策略对象（ GPO ）都适用于启用了 CIFS 的 Storage Virtual Machine （ SVM ），但 SVM 可以识别和处理相关的 GPO 集。
+
+SVM 当前支持以下 GPO ：
+
+* 高级审核策略配置设置：
++
+对象访问：中央访问策略暂存
+
++
+指定要为中央访问策略（ CAP ）暂存审核的事件类型，包括以下设置：
+
++
+** 请勿审核
+** 仅审核成功事件
+** 仅审核失败事件
+** 审核成功和失败事件
+
+
++
+[NOTE]
+====
+如果设置了三个审核选项中的任何一个（仅审核成功事件，仅审核失败事件，审核成功和失败事件），则 ONTAP 将同时审核成功和失败事件。
+
+====
++
+通过使用 `Advanced Audit Policy Configuration/Audit Policies/Object Access` GPO 中的 `Audit Central Access Policy Staging` 设置进行设置。
+
++
+[NOTE]
+====
+要使用高级审核策略配置 GPO 设置，必须在已启用 CIFS 且要应用这些设置的 SVM 上配置审核。如果未在 SVM 上配置审核，则 GPO 设置将不会应用，并将被丢弃。
+
+====
+* 注册表设置：
++
+** 已启用 CIFS 的 SVM 的组策略刷新间隔
++
+使用 `Registry` GPO 进行设置。
+
+** 组策略刷新随机偏移
++
+使用 `Registry` GPO 进行设置。
+
+** BranchCache 的哈希发布
++
+BranchCache 的哈希发布 GPO 对应于 BranchCache 操作模式。支持以下三种操作模式：
+
++
+*** 每个共享
+*** 所有共享
+*** 已使用 `Registry` GPO 设置为 disabled 。
+
+
+** BranchCache 的哈希版本支持
++
+支持以下三种哈希版本设置：
+
++
+*** BranchCache 1.7 版
+*** BranchCache 1.7 版
+*** BranchCache 版本 1 和 2 使用 `Registry` GPO 进行设置。
+
+
+
+
++
+[NOTE]
+====
+要使用 BranchCache GPO 设置，必须在已启用 CIFS 且要应用这些设置的 SVM 上配置 BranchCache 。如果未在 SVM 上配置 BranchCache ，则 GPO 设置将不会应用，并将被丢弃。
+
+====
+* 安全设置
++
+** 审核策略和事件日志
++
+*** 审核登录事件
++
+指定要审核的登录事件的类型，包括以下设置：
+
++
+**** 请勿审核
+**** 仅审核成功事件
+**** 审核失败事件
+**** 使用 `Local Policies/Audit Policy` GPO 中的 `Audit logon events` 设置审核所设置的成功和失败事件。
+
+
++
+[NOTE]
+====
+如果设置了三个审核选项中的任何一个（仅审核成功事件，仅审核失败事件，审核成功和失败事件），则 ONTAP 将同时审核成功和失败事件。
+
+====
+*** 审核对象访问
++
+指定要审核的对象访问类型，包括以下设置：
+
++
+**** 请勿审核
+**** 仅审核成功事件
+**** 审核失败事件
+**** 使用 `Local Policies/Audit Policy` GPO 中的 `Audit object access` 设置审核所设置的成功和失败事件。
+
+
++
+[NOTE]
+====
+如果设置了三个审核选项中的任何一个（仅审核成功事件，仅审核失败事件，审核成功和失败事件），则 ONTAP 将同时审核成功和失败事件。
+
+====
+*** 日志保留方法
++
+指定审核日志保留方法，包括以下设置：
+
++
+**** 如果日志文件大小超过最大日志大小，则覆盖事件日志
+**** 请勿覆盖使用 `Event Log` GPO 中的 `Retention method for security log` 设置设置的事件日志（手动清除日志）。
+
+
+*** 最大日志大小
++
+指定审核日志的最大大小。
+
++
+通过使用 `Event Log` GPO 中的 `M最大安全日志大小` 设置进行设置。
+
+
+
++
+[NOTE]
+====
+要使用审核策略和事件日志 GPO 设置，必须在已启用 CIFS 且要应用这些设置的 SVM 上配置审核。如果未在 SVM 上配置审核，则 GPO 设置将不会应用，并将被丢弃。
+
+====
+** 文件系统安全性
++
+指定通过 GPO 应用文件安全性的文件或目录列表。
+
++
+使用 `File System` GPO 进行设置。
+
++
+[NOTE]
+====
+配置文件系统安全 GPO 的卷路径必须位于 SVM 中。
+
+====
+** Kerberos 策略
++
+*** 最大时钟偏差
++
+指定计算机时钟同步的最大容错（以分钟为单位）。
+
++
+通过使用 `Account Policies/Kerberos Policy` GPO 中的 `MMaximum tolerance for computer clock synchronization` 设置进行设置。
+
+*** 最长票证期限
++
+指定用户服务单的最长生命周期（以小时为单位）。
+
++
+通过使用 `Account Policies/Kerberos Policy` GPO 中的 `MMaximum lifetime for user ticket` 设置进行设置。
+
+*** 最长票证续订期限
++
+指定用户票证续订的最长生命周期（以天为单位）。
+
++
+通过使用 `Account Policies/Kerberos Policy` GPO 中的 `MMaximum lifetime for user ticket renewal` 设置进行设置。
+
+
+
+** 用户权限分配（权限）
++
+*** 取得所有权
++
+指定有权取得任何安全对象所有权的用户和组的列表。
+
++
+通过使用 `Local Policies/User Rights Assignment` GPO 中的 `Take ownership of files or other objects` 设置进行设置。
+
+*** 安全权限
++
+指定可以为文件，文件夹和 Active Directory 对象等单个资源的对象访问指定审核选项的用户和组列表。
+
++
+通过使用 `Local Policies/User Rights Assignment` GPO 中的 `Manage auditing and security log` 设置进行设置。
+
+*** 更改通知权限（绕过遍历检查）
++
+指定可以遍历目录树的用户和组列表，即使用户和组可能对遍历的目录没有权限也是如此。
+
++
+用户接收文件和目录更改通知需要相同的权限。通过使用 `Local Policies/User Rights Assignment` GPO 中的 `Bypass traverse checking` 设置进行设置。
+
+
+
+** 注册表值
++
+*** 需要签名设置
++
+指定是启用还是禁用所需的 SMB 签名。
+
++
+通过使用 `SSecurity Options` GPO 中的 `Microsoft network server ： Digitally sign communications （ always ）` 设置进行设置。
+
+
+
+** 限制匿名
++
+指定匿名用户的限制并包括以下三个 GPO 设置：
+
++
+*** 不枚举安全帐户管理器（ SAM ）帐户：
++
+此安全设置可确定为匿名连接到计算机授予哪些其他权限。如果启用了此选项，则此选项在 ONTAP 中显示为 `no-enumeration` 。
+
++
+通过使用 `Local Policies/Security Options` GPO 中的 `Network access ： Do not allow anonymous enumeration of SAM accounts` 设置进行设置。
+
+*** 不枚举 SAM 帐户和共享
++
+此安全设置确定是否允许匿名枚举 SAM 帐户和共享。如果启用了此选项，则此选项在 ONTAP 中显示为 `no-enumeration` 。
+
++
+通过使用 `Local Policies/Security Options` GPO 中的 `Network access ： Do not allow anonymous enumeration of SAM accounts and shares` 设置进行设置。
+
+*** 限制对共享和命名管道的匿名访问
++
+此安全设置限制对共享和管道的匿名访问。如果启用了此选项，则此选项在 ONTAP 中显示为 `no-access` 。
+
++
+通过使用 `Local Policies/Security Options` GPO 中的 `Network access ： restrict anonymous access to Named Pipes and Shares` 设置进行设置。
+
+
+
+
+
++
+显示有关已定义和已应用的组策略的信息时， `Resultant restriction for anonymous user` 输出字段提供了有关三个限制匿名 GPO 设置所产生限制的信息。可能产生的限制如下：
+
++
+** `无访问权限`
++
+匿名用户被拒绝访问指定的共享和命名管道，并且不能使用 SAM 帐户和共享枚举。如果启用了 `Network access ： Restrict anonymous access to Named Pipes and Shares` GPO ，则会显示由此产生的限制。
+
+** `无枚举`
++
+匿名用户有权访问指定的共享和命名管道，但不能使用 SAM 帐户和共享枚举。如果同时满足以下两个条件，则会显示由此产生的限制：
+
++
+*** 已禁用 `Network access ： Restrict anonymous access to Named Pipes and Shares` GPO 。
+*** 已启用 `Network access ： Do not allow anonymous enumeration of SAM accounts` 或 `Network access ： Do not allow anonymous enumeration of SAM accounts and shares` GPO 。
+
+
+** `无限制`
++
+匿名用户具有完全访问权限，可以使用枚举。如果同时满足以下两个条件，则会显示由此产生的限制：
+
++
+*** 已禁用 `Network access ： Restrict anonymous access to Named Pipes and Shares` GPO 。
+*** `Network access ： Do not allow anonymous enumeration of SAM accounts` 和 `Network access ： Do not allow anonymous enumeration of SAM accounts and shares` GPO 均已禁用。
++
+**** 受限组
++
+您可以配置受限组以集中管理内置或用户定义的组的成员资格。通过组策略应用受限组时， CIFS 服务器本地组的成员资格会自动设置为与应用的组策略中定义的成员资格列表设置匹配。
+
++
+使用 `Restricted Groups` GPO 进行设置。
+
+
+
+
+
+
+
+* 中央访问策略设置
++
+指定中央访问策略的列表。中央访问策略和关联的中央访问策略规则可确定 SVM 上多个文件的访问权限。
+
+
+
+* 相关信息 *
+
+xref:enable-disable-gpo-support-task.adoc[在 CIFS 服务器上启用或禁用 GPO 支持]
+
+xref:secure-file-access-dynamic-access-control-concept.adoc[使用动态访问控制（ DAC ）保护文件访问]
+
+link:../nas-audit/index.html["SMB 和 NFS 审核和安全跟踪"]
+
+xref:modify-server-kerberos-security-settings-task.adoc[修改 CIFS 服务器 Kerberos 安全设置]
+
+xref:branchcache-cache-share-content-branch-office-concept.adoc[使用 BranchCache 在分支机构缓存 SMB 共享内容]
+
+xref:signing-enhance-network-security-concept.adoc[使用 SMB 签名增强网络安全性]
+
+xref:configure-bypass-traverse-checking-concept.adoc[配置绕过遍历检查]
+
+xref:configure-access-restrictions-anonymous-users-task.adoc[配置匿名用户的访问限制]

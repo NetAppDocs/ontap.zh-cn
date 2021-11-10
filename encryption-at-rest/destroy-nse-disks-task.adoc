@@ -1,0 +1,86 @@
+---
+permalink: encryption-at-rest/destroy-nse-disks-task.html 
+sidebar: sidebar 
+keywords: destroy, fips, drive, sed 
+summary: 如果要使 FIPS 驱动器或 SED 上的数据永久不可访问，并且不需要重复使用该驱动器，可以使用 storage encryption disk destroy 命令销毁该磁盘。 
+---
+= 销毁 FIPS 驱动器或 SED
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要使 FIPS 驱动器或 SED 上的数据永久不可访问，并且不需要重复使用该驱动器，可以使用 `storage encryption disk destroy` 命令销毁该磁盘。
+
+您必须是集群管理员才能执行此任务。
+
+销毁 FIPS 驱动器或 SED 后，系统会将磁盘加密密钥设置为未知的随机值，并永久锁定该驱动器。这样做会使磁盘几乎不可用，并且磁盘上的数据永远不可访问。但是，您可以使用磁盘标签上印有的 PSID 将磁盘重置为出厂配置的设置。有关详细信息，请参见 xref:return-self-encrypting-disks-keys-not-available-task.adoc[丢失身份验证密钥后，使 FIPS 驱动器或 SED 恢复正常运行]。
+
+[NOTE]
+====
+除非您拥有不可退回的磁盘加载服务（ NRD Plus ），否则不应销毁 FIPS 驱动器或 SED 。销毁磁盘将使其保修失效。
+
+====
+.步骤
+. 将需要保留的所有数据迁移到其他磁盘的聚合。
+. 删除要销毁的 FIPS 驱动器或 SED 上的聚合：
++
+`storage aggregate delete -aggregate aggregate_name`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[listing]
+----
+cluster1::> storage aggregate delete -aggregate aggr1
+----
+. 确定要销毁的 FIPS 驱动器或 SED 的磁盘 ID ：
++
+`s存储加密磁盘 show`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[listing]
+----
+cluster1::> storage encryption disk show
+Disk    Mode Data Key ID
+-----   ---- ----------------------------------------------------------------
+0.0.0   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+0.0.1   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+1.10.2  data F1CB30AFF1CB30B00101000000000000CF0EFD81EA9F6324EA97B369351C56AC
+[...]
+----
+. 销毁磁盘：
++
+`s存储加密磁盘销毁 -disk disk_id`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+系统将提示您输入确认短语，然后再继续。输入屏幕上所示的短语。
+
+====
++
+[listing]
+----
+cluster1::> storage encryption disk destroy -disk 1.10.2
+
+Warning: This operation will cryptographically destroy 1 spare or broken
+         self-encrypting disks on 1 node.
+         You cannot reuse destroyed disks unless you revert
+         them to their original state using the PSID value.
+         To continue, enter
+          destroy disk
+         :destroy disk
+
+Info: Starting destroy on 1 disk.
+      View the status of the operation by using the
+      "storage encryption disk show-status" command.
+----
+

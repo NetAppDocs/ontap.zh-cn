@@ -1,0 +1,54 @@
+---
+permalink: snaplock/initialize-complianceclock-task.html 
+sidebar: sidebar 
+keywords: snaplock, complianceclock, initialize, worm, retention, period, node 
+summary: SnapLock ComplianceClock 可确保不会发生可能更改 WORM 文件保留期限的篡改。您必须在托管 SnapLock 聚合的每个节点上初始化系统 ComplianceClock 。在节点上初始化 ComplianceClock 后，您将无法再次初始化它。 
+---
+= 初始化 ComplianceClock
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapLock ComplianceClock 可确保不会发生可能更改 WORM 文件保留期限的篡改。您必须在托管 SnapLock 聚合的每个节点上初始化 _system ComplianceClock_ 。在节点上初始化 ComplianceClock 后，您将无法再次初始化它。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须是集群管理员才能执行此任务。
+* 节点上必须安装 SnapLock 许可证。
+
+
+系统 ComplianceClock 上的时间由 _volume ComplianceClock_ 继承，该卷控制卷上 WORM 文件的保留期限。创建新的 SnapLock 卷时，卷 ComplianceClock 将自动初始化。
+
+[NOTE]
+====
+ComplianceClock 的初始设置基于当前系统时钟。因此，在初始化 ComplianceClock 之前，您应验证系统时间和时区是否正确。在节点上初始化 ComplianceClock 后，您将无法再次初始化它。
+
+====
+.步骤
+. 初始化系统 ComplianceClock ：
++
+` * SnapLock Compliance 时钟 initialize -node _node_name_*`
+
++
+以下命令将在 `node1` 上初始化系统 ComplianceClock ：
+
++
+[listing]
+----
+cluster1::> snaplock compliance-clock initialize -node node1
+----
+. 出现提示时，确认系统时钟正确无误，并且您要初始化 ComplianceClock ：
++
+[listing]
+----
+Warning: You are about to initialize the secure ComplianceClock of
+the node "node1" to the current value of the node's system clock.
+This procedure can be performed only once on a given node, so you
+should ensure that the system time is set correctly before proceeding.
+
+The current node's system clock is: Mon Apr 25 06:04:10 GMT 2016
+
+Do you want to continue? (y|n): y
+----
+. 对托管 SnapLock 聚合的每个节点重复此操作步骤。
+

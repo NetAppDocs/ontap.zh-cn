@@ -1,0 +1,38 @@
+---
+permalink: san-admin/define-authentication-method-initiator-task.html 
+sidebar: sidebar 
+keywords: define, security, policy, method, initiator 
+summary: 您可以定义启动程序及其身份验证方法的列表。您还可以修改适用场景启动程序的默认身份验证方法，因为这些启动程序没有用户定义的身份验证方法。 
+---
+= 定义启动程序的安全策略方法
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以定义启动程序及其身份验证方法的列表。您还可以修改适用场景启动程序的默认身份验证方法，因为这些启动程序没有用户定义的身份验证方法。
+
+您可以在产品中使用安全策略算法生成唯一密码，也可以手动指定要使用的密码。
+
+[NOTE]
+====
+并非所有启动程序都支持十六进制 CHAP 密码。
+
+====
+.步骤
+. 使用 `vserver iscsi security create` 命令为启动程序创建安全策略方法。
++
+`vserver iscsi security create -vserver vs2 -initiator iqn.1991-05.com.microsoft:host1 -auth-type CHAP -user-name bob1 -outbound -user-name bob2`
+
+. 按照屏幕命令添加密码。
++
+使用入站和出站 CHAP 用户名和密码为启动程序 iqn.1991-05.com.microsoft:host1 创建安全策略方法。
+
+
+
+* 相关信息 *
+
+* xref:iscsi-authentication-concept.adoc[iSCSI 身份验证的工作原理]
+* xref:using-chap-authentication-concept.adoc[使用 CHAP 身份验证的准则]
+* xref:chap-authentication-concept.adoc[什么是 CHAP 身份验证]
+

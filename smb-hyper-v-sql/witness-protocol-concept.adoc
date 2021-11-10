@@ -1,0 +1,25 @@
+---
+permalink: smb-hyper-v-sql/witness-protocol-concept.html 
+sidebar: sidebar 
+keywords: witness, protocol, node, sfo, partner, failure, smb, client 
+summary: ONTAP 通过使用节点的 SFO 配对节点作为见证来实施见证协议。如果发生故障，配对节点会快速检测到故障并通知 SMB 客户端。 
+---
+= 见证协议的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 通过使用节点的 SFO 配对节点作为见证来实施见证协议。如果发生故障，配对节点会快速检测到故障并通知 SMB 客户端。
+
+见证协议可通过以下过程提供增强的故障转移：
+
+. 当应用程序服务器与 Node1 建立持续可用的 SMB 连接时， CIFS 服务器会通知应用程序服务器见证可用。
+. 应用程序服务器从 Node1 请求见证服务器的 IP 地址，并接收分配给 Storage Virtual Machine （ SVM ）的 Node2 （ SFO 配对节点）数据 LIF IP 地址列表。
+. 应用程序服务器会选择一个 IP 地址，创建与 Node2 的见证连接，并注册以在 Node1 上持续可用的连接必须移动时收到通知。
+. 如果 Node1 上发生故障转移事件，则见证者会协助处理故障转移事件，但不会涉及交还。
+. 见证服务器检测故障转移事件，并通过见证连接通知应用程序服务器， SMB 连接必须移至 Node2 。
+. 应用程序服务器会将 SMB 会话移至 Node2 ，并在不中断客户端访问的情况下恢复连接。
+
+
+image::../media/how-witness-works.gif[见证的工作原理]

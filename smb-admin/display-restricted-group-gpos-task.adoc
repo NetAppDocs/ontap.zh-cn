@@ -1,0 +1,109 @@
+---
+permalink: smb-admin/display-restricted-group-gpos-task.html 
+sidebar: sidebar 
+keywords: display, detail, information, restrict, group, define, group, policy, object, gpo, active, directory, applied, apply, cifs, server, display detailed information about restricted group gpos 
+summary: 您可以显示有关在 Active Directory 中定义为组策略对象（ GPO ）并应用于 CIFS 服务器的受限组的详细信息。 
+---
+= 显示有关受限组 GPO 的详细信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关在 Active Directory 中定义为组策略对象（ GPO ）并应用于 CIFS 服务器的受限组的详细信息。
+
+默认情况下，将显示以下信息：
+
+* 组策略名称
+* 组策略版本
+* 链接。
++
+指定配置组策略的级别。可能的输出值包括：
+
++
+** 在 ONTAP 中配置组策略时， `local`
+** 在域控制器的站点级别配置组策略时， `site`
+** 在域控制器的域级别配置组策略时， `domain`
+** 在域控制器的组织单位（ OU ）级别配置组策略时， `OrganizationalUnit`
+** `RSOP` 从各个级别定义的所有组策略派生的一组策略
+
+
+* 受限组名称
+* 属于和不属于受限制组的用户和组
+* 添加受限制组的组的列表
++
+组可以是此处列出的组以外的组的成员。
+
+
+
+.步骤
+. 通过执行以下操作之一显示有关所有受限组 GPO 的信息：
++
+|===
+| 要显示有关所有受限组 GPO 的信息 ... | 输入命令 ... 
+
+
+ a| 
+在 Active Directory 中定义
+ a| 
+`vserver cifs group-policy restricted-group show-defined -vserver vserver_name`
+
+
+
+ a| 
+应用于 CIFS 服务器
+ a| 
+`vserver cifs group-policy restricted-group show-applied -vserver vserver_name`
+
+|===
+
+
+以下示例显示了有关在启用了 CIFS 且名为 vs1 的 SVM 所属的 Active Directory 域中定义的受限组 GPO 的信息：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy restricted-group show-defined -vserver vs1
+
+Vserver: vs1
+-------------
+
+     Group Policy Name: gpo1
+               Version: 16
+                  Link: OrganizationalUnit
+            Group Name: group1
+               Members: user1
+              MemberOf: EXAMPLE\group9
+
+     Group Policy Name: Resultant Set of Policy
+               Version: 0
+                  Link: RSOP
+            Group Name: group1
+               Members: user1
+              MemberOf: EXAMPLE\group9
+----
+以下示例显示了应用于启用了 CIFS 的 SVM vs1 的受限组 GPO 的信息：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy restricted-group show-applied -vserver vs1
+
+Vserver: vs1
+-------------
+
+     Group Policy Name: gpo1
+               Version: 16
+                  Link: OrganizationalUnit
+            Group Name: group1
+               Members: user1
+              MemberOf: EXAMPLE\group9
+
+     Group Policy Name: Resultant Set of Policy
+               Version: 0
+                  Link: RSOP
+            Group Name: group1
+               Members: user1
+              MemberOf: EXAMPLE\group9
+----
+* 相关信息 *
+
+xref:display-gpo-config-task.adoc[显示有关 GPO 配置的信息]

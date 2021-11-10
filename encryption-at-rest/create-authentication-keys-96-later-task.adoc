@@ -1,0 +1,87 @@
+---
+permalink: encryption-at-rest/create-authentication-keys-96-later-task.html 
+sidebar: sidebar 
+keywords: creating, authentication keys, ontap 9.6, later 
+summary: 您可以使用 security key-manager key create 命令为节点创建身份验证密钥，并将其存储在已配置的 KMIP 服务器上。 
+---
+= 在 ONTAP 9.6 及更高版本中创建身份验证密钥
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `security key-manager key create` 命令为节点创建身份验证密钥并将其存储在已配置的 KMIP 服务器上。
+
+您必须是集群管理员才能执行此任务。
+
+如果您的安全设置要求您使用不同的密钥进行数据身份验证和 FIPS 140-2 身份验证，则应为每个密钥创建一个单独的密钥。否则，您可以使用与数据访问相同的身份验证密钥来满足 FIPS 合规性要求。
+
+ONTAP 会为集群中的所有节点创建身份验证密钥。
+
+* 启用板载密钥管理后，不支持此命令。
+* 如果已配置的密钥管理服务器已存储超过 128 个身份验证密钥，则会收到警告。
++
+您可以使用 `security key-manager key delete` 命令删除任何未使用的密钥。如果给定密钥当前由 ONTAP 使用，则 `security key-manager key delete` 命令将失败。
+
+
+
+.步骤
+. 为集群节点创建身份验证密钥：
++
+`sSecurity key-manager key create -key-tag passphrase_label -prompt-for-key true_false`
+
++
+[NOTE]
+====
+如果设置 `prompt-for-key=true` ，则系统会提示集群管理员输入对加密驱动器进行身份验证时要使用的密码短语。否则，系统将自动生成 32 字节密码短语。使用 `security key-manager key create` 命令可替换 `security key-manager create-key` 命令。有关完整的命令语法，请参见手册页。
+
+====
++
+以下示例将为 `cluster1` 创建身份验证密钥，并自动生成 32 字节密码短语：
+
++
+[listing]
+----
+cluster1::> security key-manager key create
+Key ID: 000000000000000002000000000001006268333f870860128fbe17d393e5083b0000000000000000
+----
+. 验证是否已创建身份验证密钥：
++
+`sSecurity key-manager key query -node node`
+
++
+[NOTE]
+====
+使用 `security key-manager key query` 命令可替换 `security key-manager query key` 命令。有关完整的命令语法，请参见手册页。输出中显示的密钥 ID 是用于引用身份验证密钥的标识符。它不是实际的身份验证密钥或数据加密密钥。
+
+====
++
+以下示例验证是否已为 `cluster1` 创建身份验证密钥：
+
++
+[listing]
+----
+cluster1::> security key-manager key query
+       Vserver: cluster1
+   Key Manager: external
+          Node: node1
+
+Key Tag                               Key Type  Restored
+------------------------------------  --------  --------
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001000c11b3863f78c2273343d7ec5a67762e0000000000000000
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001006f4e2513353a674305872a4c9f3bf7970000000000000000
+
+       Vserver: cluster1
+   Key Manager: external
+          Node: node2
+
+Key Tag                               Key Type  Restored
+------------------------------------  --------  --------
+node2                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001000c11b3863f78c2273343d7ec5a67762e0000000000000000
+node2                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001006f4e2513353a674305872a4c9f3bf7970000000000000000
+----
+

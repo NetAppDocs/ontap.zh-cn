@@ -1,0 +1,39 @@
+---
+permalink: data-protection/create-replication-job-schedule-task.html 
+sidebar: sidebar 
+keywords: create, replication, job, schedule 
+summary: 您可以使用 job schedule cron create 命令创建复制作业计划。作业计划用于确定 SnapMirror 何时自动更新分配了该计划的数据保护关系。 
+---
+= 创建复制作业计划
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `job schedule cron create` 命令创建复制作业计划。作业计划用于确定 SnapMirror 何时自动更新分配了该计划的数据保护关系。
+
+您可以在创建数据保护关系时分配作业计划。如果不分配作业计划，则必须手动更新此关系。
+
+.步骤
+. 创建作业计划：
++
+`job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
+
++
+对于 ` - 月` ， ` - 天 / 周` 和 ` - 小时` ，您可以指定 `所有` 来分别按每月，一周中的一天和每小时运行作业。
+
++
+从 ONTAP 9.10.1 开始，您可以在作业计划中包含 Vserver ：
+
++
+`job schedule cron create -name _job_name_ -vserver _vserver_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
+
++
+以下示例将创建一个名为 `my_weekly` 的作业计划，该计划将在星期六凌晨 3 ： 00 运行：
+
++
+[listing]
+----
+cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
+----
+

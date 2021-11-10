@@ -1,0 +1,46 @@
+---
+permalink: nfs-admin/limitations-support-nfsv4-concept.html 
+sidebar: sidebar 
+keywords: limitation, ontap, support, nfsv4 
+summary: 您应了解 ONTAP 对 NFSv4 的支持存在一些限制。 
+---
+= NFSv4 的 ONTAP 支持限制
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应了解 ONTAP 对 NFSv4 的支持存在一些限制。
+
+* 并非每种客户端类型都支持委派功能。
+* 在 ONTAP 9.4 及更早版本中，存储系统会拒绝 UTF8 卷以外的卷上具有非 ASCII 字符的名称。
++
+在 ONTAP 9.5 及更高版本中，使用 utf8mb4 语言设置创建并使用 NFS v4 挂载的卷不再受此限制。
+
+* 所有文件句柄都是永久性的；服务器不提供易失性文件句柄。
+* 不支持迁移和复制。
+* 只读负载共享镜像不支持 NFSv4 客户端。
++
+ONTAP 会将 NFSv4 客户端路由到负载共享镜像的源，以实现直接读写访问。
+
+* 不支持命名属性。
+* 支持所有建议属性，但以下属性除外：
++
+** `归档`
+** `隐藏`
+** `同构`
+** `mimetype`
+** `quota_avail_hard`
+** `quota_avail_soft`
+** `quota_used`
+** `s系统`
+** `time_backup`
+
+
++
+[NOTE]
+====
+尽管 ONTAP 不支持 `quotas*` 属性，但它通过 RQUOTA 边带协议支持用户和组配额。
+
+====
+

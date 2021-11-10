@@ -1,0 +1,50 @@
+---
+permalink: smb-admin/display-members-local-groups-task.html 
+sidebar: sidebar 
+keywords: display, list, member, local, group, configure, cluster, storage, virtual, machine, svm, information, troubleshoot, file-access, issue, user-rights, privilege, display information about members of local groups 
+summary: 您可以显示在集群或指定 Storage Virtual Machine （ SVM ）上配置的本地组的所有成员的列表。在对文件访问问题或用户权限（权限）问题进行故障排除时，此信息非常有用。 
+---
+= 显示有关本地组成员的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示在集群或指定 Storage Virtual Machine （ SVM ）上配置的本地组的所有成员的列表。在对文件访问问题或用户权限（权限）问题进行故障排除时，此信息非常有用。
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 要显示的信息 | 输入命令 ... 
+
+
+ a| 
+集群上所有本地组的成员
+ a| 
+`Vserver cifs users-and-groups local-group show-members`
+
+
+
+ a| 
+SVM 上所有本地组的成员
+ a| 
+`vserver cifs users-and-groups local-group show-members -vserver _vserver_name_`
+
+|===
+
+
+以下示例显示了有关 SVM vs1 上所有本地组的成员的信息：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group show-members -vserver vs1
+Vserver   Group Name                   Members
+--------- ---------------------------- ------------------------
+vs1       BUILTIN\Administrators       CIFS_SERVER\Administrator
+                                       AD_DOMAIN\Domain Admins
+                                       AD_DOMAIN\dom_grp1
+          BUILTIN\Users                AD_DOMAIN\Domain Users
+                                       AD_DOMAIN\dom_usr1
+          CIFS_SERVER\engineering      CIFS_SERVER\james
+----

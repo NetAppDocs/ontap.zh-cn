@@ -1,0 +1,68 @@
+---
+permalink: smb-admin/configure-required-encryption-concept.html 
+sidebar: sidebar 
+keywords: smb, encryption, data, transfer, security, enhancement, enable, disable, server, configure, desire, share-by-share, basis, property, setting, configure, configure required smb encryption on smb servers for data transfer over smb 
+summary: 通过 SMB 进行数据传输的 SMB 加密是一种安全增强功能，您可以在 SMB 服务器上启用或禁用此功能。您还可以通过共享属性设置在共享基础上配置所需的 SMB 加密设置。 
+---
+= 在 SMB 服务器上配置所需的 SMB 加密以通过 SMB 进行数据传输概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过 SMB 进行数据传输的 SMB 加密是一种安全增强功能，您可以在 SMB 服务器上启用或禁用此功能。您还可以通过共享属性设置在共享基础上配置所需的 SMB 加密设置。
+
+默认情况下，在 Storage Virtual Machine （ SVM ）上创建 SMB 服务器时， SMB 加密处于禁用状态。您必须启用 SMB 加密才能利用 SMB 加密提供的增强安全性。
+
+要创建加密的 SMB 会话， SMB 客户端必须支持 SMB 加密。从 Windows Server 2012 和 Windows 8 开始的 Windows 客户端支持 SMB 加密。
+
+SVM 上的 SMB 加密通过两种设置控制：
+
+* SMB 服务器安全选项，用于在 SVM 上启用此功能
+* SMB 共享属性，用于在共享基础上配置 SMB 加密设置
+
+
+您可以决定是要求加密才能访问 SVM 上的所有数据，还是要求 SMB 加密才能仅访问选定共享中的数据。SVM 级别的设置将取代共享级别的设置。
+
+有效的 SMB 加密配置取决于这两种设置的组合，下表对此进行了介绍：
+
+|===
+| 已启用 SMB 服务器 SMB 加密 | 已启用共享加密数据设置 | 服务器端加密行为 
+
+
+ a| 
+true
+ a| 
+false
+ a| 
+已为 SVM 中的所有共享启用服务器级别加密。使用此配置时，整个 SMB 会话都会进行加密。
+
+
+
+ a| 
+true
+ a| 
+true
+ a| 
+无论共享级别加密如何， SVM 中的所有共享都会启用服务器级别加密。使用此配置时，整个 SMB 会话都会进行加密。
+
+
+
+ a| 
+false
+ a| 
+true
+ a| 
+已为特定共享启用共享级别加密。使用此配置时，会从树连接进行加密。
+
+
+
+ a| 
+false
+ a| 
+false
+ a| 
+未启用加密。
+
+|===
+不支持加密的 SMB 客户端无法连接到需要加密的 SMB 服务器或共享。

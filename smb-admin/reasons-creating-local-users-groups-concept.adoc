@@ -1,0 +1,48 @@
+---
+permalink: smb-admin/reasons-creating-local-users-groups-concept.html 
+sidebar: sidebar 
+keywords: creating, create, local, user, group, storage, virtual, machine, svm, access, smb, domain, controllers, dc, assign, privilege, workgroup, server, reasons for creating local users and local groups 
+summary: 在 Storage Virtual Machine （ SVM ）上创建本地用户和本地组的原因有多种。例如，如果域控制器（ DC ）不可用，您可能希望使用本地组分配权限或 SMB 服务器位于工作组中，则可以使用本地用户帐户访问 SMB 服务器。 
+---
+= 创建本地用户和本地组的原因
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 Storage Virtual Machine （ SVM ）上创建本地用户和本地组的原因有多种。例如，如果域控制器（ DC ）不可用，您可能希望使用本地组分配权限或 SMB 服务器位于工作组中，则可以使用本地用户帐户访问 SMB 服务器。
+
+您可以出于以下原因创建一个或多个本地用户帐户：
+
+* SMB 服务器位于工作组中，域用户不可用。
++
+在工作组配置中需要本地用户。
+
+* 您希望在域控制器不可用时能够进行身份验证并登录到 SMB 服务器。
++
+当域控制器关闭或网络问题导致 SMB 服务器无法联系域控制器时，本地用户可以使用 NTLM 身份验证向 SMB 服务器进行身份验证。
+
+* 您希望将 _User Rights Management_ 权限分配给本地用户。
++
+_User Rights Management_ 是 SMB 服务器管理员控制用户和组对 SVM 拥有的权限的能力。您可以通过为用户的帐户分配权限或使用户成为具有这些权限的本地组的成员来为用户分配权限。
+
+
+
+您可以出于以下原因创建一个或多个本地组：
+
+* SMB 服务器位于工作组中，并且域组不可用。
++
+工作组配置不需要本地组，但它们对于管理本地工作组用户的访问权限非常有用。
+
+* 您希望通过使用本地组进行共享和文件访问控制来控制对文件和文件夹资源的访问。
+* 您希望使用自定义的 _User Rights Management_ 权限创建本地组。
++
+某些内置用户组具有预定义的权限。要分配一组自定义权限，您可以创建一个本地组并为该组分配必要的权限。然后，您可以将本地用户，域用户和域组添加到本地组。
+
+
+
+* 相关信息 *
+
+xref:local-user-authentication-concept.adoc[本地用户身份验证的工作原理]
+
+xref:local-privileges-concept.adoc[什么是本地权限]

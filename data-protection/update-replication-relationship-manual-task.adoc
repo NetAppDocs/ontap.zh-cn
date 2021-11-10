@@ -1,0 +1,41 @@
+---
+permalink: data-protection/update-replication-relationship-manual-task.html 
+sidebar: sidebar 
+keywords: update, replication, relationship, manual 
+summary: 如果由于源卷已移动而导致更新失败，您可能需要手动更新复制关系。 
+---
+= 手动更新复制关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果由于源卷已移动而导致更新失败，您可能需要手动更新复制关系。
+
+SnapMirror 会中止从移动的源卷进行的所有传输，直到您手动更新复制关系为止。
+
+从 ONTAP 9.5 开始，支持 SnapMirror 同步关系。尽管源卷和目标卷在这些关系中始终处于同步状态，但二级集群中的视图只会每小时与主卷同步一次。如果要查看目标上的时间点数据，应运行 `snapmirror update` 命令来执行手动更新。
+
+.步骤
+. 手动更新复制关系：
++
+`snapmirror update -source-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _svm ： volume| cluster ： //svm/volume_ ， ...`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 `snapmirror initialize` 重新初始化此关系。
+
+====
++
+以下示例更新了源卷 `vola` on `svm1` 与目标卷 `vola_dst` on `svm_backup` 之间的关系：
+
++
+[listing]
+----
+cluster_src::> snapmirror update -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+

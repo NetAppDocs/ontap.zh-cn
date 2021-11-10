@@ -1,0 +1,44 @@
+---
+permalink: nas-audit/enable-disable-fpolicy-policies-task.html 
+sidebar: sidebar 
+keywords: enable, disable, fpolicy policies 
+summary: 配置完成后，您可以启用 FPolicy 策略。启用此策略可设置其优先级并开始监控此策略的文件访问。如果要停止对策略的文件访问监控，可以禁用 FPolicy 策略。 
+---
+= 启用或禁用 FPolicy 策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+配置完成后，您可以启用 FPolicy 策略。启用此策略可设置其优先级并开始监控此策略的文件访问。如果要停止对策略的文件访问监控，可以禁用 FPolicy 策略。
+
+启用 FPolicy 策略之前，必须完成 FPolicy 配置。
+
+.关于此任务
+* 如果在 Storage Virtual Machine （ SVM ）上启用了多个策略，并且多个策略已订阅同一文件访问事件，则会使用此优先级。
+* 对于任何其他引擎，使用原生引擎配置的策略的优先级都高于策略，无论启用策略时为其分配的序列号如何。
+* 如果要更改 FPolicy 策略的优先级，必须禁用该策略，然后使用新序列号重新启用它。
+
+
+.步骤
+. 执行相应的操作：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 输入以下命令 ... 
+
+
+ a| 
+启用 FPolicy 策略
+ a| 
+`vserver fpolicy enable -vserver-name vserver_name -policy-name policy_name -sequence-number integer`
+
+
+
+ a| 
+禁用 FPolicy 策略
+ a| 
+`vserver fpolicy disable -vserver-name vserver_name -policy-name policy_name`
+
+|===
+

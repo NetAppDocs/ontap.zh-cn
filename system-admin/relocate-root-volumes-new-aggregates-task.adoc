@@ -1,0 +1,54 @@
+---
+permalink: system-admin/relocate-root-volumes-new-aggregates-task.html 
+sidebar: sidebar 
+keywords: relocate, root, volume, new, aggregates, disks, disruption, replacement 
+summary: 根替换操作步骤可将当前根聚合迁移到另一组磁盘，而不会造成中断。 
+---
+= 将根卷重新定位到新聚合
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+根替换操作步骤可将当前根聚合迁移到另一组磁盘，而不会造成中断。
+
+要重新定位根卷，必须启用存储故障转移。您可以使用 `storage failover modify -node _nodename_ -enable true` 命令来启用故障转移。
+
+在以下情况下，您可以将根卷的位置更改为新聚合：
+
+* 根聚合不在您首选的磁盘上时
+* 重新排列连接到节点的磁盘时
+* 在执行 EOS 磁盘架的磁盘架更换时
+
+
+.步骤
+. 将权限级别设置为高级：
++
+` * 设置 -privilege advanced*`
+
+. 重新定位根聚合：
++
+` * 系统节点 migrate-root -node _nodename_ -disklist _disklist_ -raid-type _raid-type_*`
+
++
+** * 节点 *
++
+指定拥有要迁移的根聚合的节点。
+
+** * 磁盘列表 *
++
+指定要在其中创建新根聚合的磁盘的列表。所有磁盘都必须为备用磁盘，并归同一节点所有。所需的最小磁盘数取决于 RAID 类型。
+
+** * — RAID 类型 *
++
+指定根聚合的 RAID 类型。默认值为 `RAID-DP` 。
+
+
+
+. 监控作业进度：
++
+` * job show -id _jobid_ -instance*`
+
+
+
+如果所有预检均成功，则该命令将启动根卷更换作业并退出。希望节点重新启动。

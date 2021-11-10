@@ -1,0 +1,17 @@
+---
+permalink: smb-admin/ontap-differs-windows-locks-share-path-concept.html 
+sidebar: sidebar 
+keywords: windows, ontap, component, path, file, behavior, affect, smb, share, path, how ontap differs from windows on handling locks on share path components 
+summary: 与 Windows 不同， ONTAP 不会在打开文件时锁定打开文件的路径的每个组件。此行为也会影响 SMB 共享路径。 
+---
+= 在处理共享路径组件上的锁定时， ONTAP 与 Windows 有何不同
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+与 Windows 不同， ONTAP 不会在打开文件时锁定打开文件的路径的每个组件。此行为也会影响 SMB 共享路径。
+
+由于 ONTAP 不会锁定路径的每个组件，因此可以重命名打开的文件或共享上方的路径组件，这可能会导致某些应用程序出现发生原因问题，也可能发生原因会使 SMB 配置中的共享路径无效。这可能发生原因会使此共享无法访问。
+
+为了避免重命名路径组件导致的问题，您可以应用安全设置来防止用户或应用程序重命名关键目录。

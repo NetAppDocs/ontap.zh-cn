@@ -1,0 +1,55 @@
+---
+permalink: system-admin/accessg-node-log-core-dump-mib-files-task.html 
+sidebar: sidebar 
+keywords: service, processor, infrastructure, spi, web, service, node, log, core, dump, mib, file, browser 
+summary: 默认情况下，服务处理器基础架构（ Service Processor Infrastructure ， SPI ） Web 服务处于启用状态，以使 Web 浏览器能够访问集群中节点的日志，核心转储和 MIB 文件。即使节点关闭，只要节点由其配对节点接管，这些文件仍可访问。 
+---
+= 使用 Web 浏览器访问节点的日志，核心转储和 MIB 文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+默认情况下，服务处理器基础架构（ `sPI` ） Web 服务处于启用状态，以便 Web 浏览器可以访问集群中节点的日志，核心转储和 MIB 文件。即使节点关闭，只要节点由其配对节点接管，这些文件仍可访问。
+
+.您需要什么？ #8217 ；将需要什么
+* 集群管理 LIF 必须已启动。
++
+您可以使用集群或节点的管理 LIF 访问 `sPI` Web 服务。但是，建议使用集群管理 LIF 。
+
++
+`network interface show` 命令可显示集群中所有 LIF 的状态。
+
+* 如果您的用户帐户没有 "`admin` " 角色（默认情况下，该角色有权访问 `sPI` Web 服务），则必须为您的访问控制角色授予对 `sPI` Web 服务的访问权限。
++
+`vserver services web access show` 命令可显示为哪些角色授予对哪些 Web 服务的访问权限。
+
+* 如果您不使用 "`admin` " 用户帐户（默认情况下包括 `http` 访问方法），则必须使用 `http` 访问方法设置您的用户帐户。
++
+`ssecurity login show` 命令可显示用户帐户的访问和登录方法及其访问控制角色。
+
+* 如果要使用 HTTPS 进行安全 Web 访问，则必须启用 SSL 并安装数字证书。
++
+`ssystem services web show` 命令可显示集群级别的 Web 协议引擎配置。
+
+
+
+默认情况下， `sPI` Web 服务处于启用状态，可以手动禁用此服务（`vserver services web modify -vserver * -name spi -enabled false` ）。
+
+默认情况下， "`admin` " 角色会被授予对 `sPI` Web 服务的访问权限，并且可以手动禁用此访问权限（ `services web access delete -vserver _cluster_name_ -name spi -role admin` ）。
+
+.步骤
+. 将 Web 浏览器指向以下格式之一的 `sPI` Web 服务 URL ：
++
+** `http://_cluster-mgmt-LIF_/spi/`
+** `https://_cluster-mgmt-LIF_/spi/`
++
+`cluster-mgmt-LIF` 是集群管理 LIF 的 IP 地址。
+
+
+
+. 当浏览器出现提示时，输入您的用户帐户和密码。
++
+在您的帐户通过身份验证后，浏览器将显示指向集群中每个节点的 ` /mroot/etc/log/` ， ` /mroot/etc/crash/` 和 ` /mroot/etc/mib/` 目录的链接。
+
+

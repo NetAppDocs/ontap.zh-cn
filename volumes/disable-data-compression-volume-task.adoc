@@ -1,0 +1,37 @@
+---
+permalink: volumes/disable-data-compression-volume-task.html 
+sidebar: sidebar 
+keywords: disable data compression 
+summary: 您可以使用 volume efficiency modify 命令在卷上禁用数据压缩。 
+---
+= 在卷上禁用数据压缩
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume efficiency modify` 命令在卷上禁用数据压缩。
+
+如果要禁用后处理压缩，必须先在卷上禁用实时压缩。
+
+.步骤
+. 停止卷上当前处于活动状态的任何卷效率操作：
++
+`卷效率停止`
+
+. 禁用数据压缩：
++
+`卷效率修改`
+
++
+卷上的现有压缩数据将保持压缩状态。只有传入卷的新写入才不会压缩。
+
+
+
+以下命令会对卷 VolA 禁用实时压缩：
+
+`volume efficiency modify -vserver vs1 -volume VolA -inline-compression false`
+
+以下命令会对卷 VolA 同时禁用后处理压缩和实时压缩：
+
+`volume efficiency modify -vserver vs1 -volume VolA -compression false -inline-compression false`

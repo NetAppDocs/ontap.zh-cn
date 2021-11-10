@@ -1,0 +1,77 @@
+---
+permalink: smb-admin/using-odx-concept.html 
+sidebar: sidebar 
+keywords: odx, copy, offload, aware, guideline, volume, intra-cluster, inter-cluster, consideration, guidelines for using odx 
+summary: 在使用 ODX 进行副本卸载之前，您需要了解相关准则。例如，您需要了解可以使用 ODX 的卷类型，并了解集群内和集群间 ODX 的注意事项。 
+---
+= 使用 ODX 的准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用 ODX 进行副本卸载之前，您需要了解相关准则。例如，您需要了解可以使用 ODX 的卷类型，并了解集群内和集群间 ODX 的注意事项。
+
+
+
+== 卷准则
+
+* 在以下卷配置中，不能使用 ODX 进行副本卸载：
++
+** 源卷大小小于 1.25 GB
++
+要使用 ODX ，卷大小必须大于或等于 1.25 GB 。
+
+** 只读卷
++
+ODX 不用于驻留在负载共享镜像或 SnapMirror 或 SnapVault 目标卷中的文件和文件夹。
+
+** 如果源卷未进行重复数据删除
+
+
+* 只有集群内副本才支持 ODX 副本。
++
+您不能使用 ODX 将文件或文件夹复制到另一个集群中的卷。
+
+
+
+
+
+== 其他准则
+
+* 在 SMB 环境中，要使用 ODX 进行副本卸载，文件必须大于或等于 256 KB 。
++
+较小的文件通过传统复制操作进行传输。
+
+* ODX 副本卸载会在复制过程中使用重复数据删除。
++
+如果您不希望在复制或移动数据时在 SVM 卷上发生重复数据删除，则应在该 SVM 上禁用 ODX 副本卸载。
+
+* 必须写入执行数据传输的应用程序以支持 ODX 。
++
+支持 ODX 的应用程序操作包括：
+
++
+** Hyper-V 管理操作，例如创建和转换虚拟硬盘（ VHD ），管理 Snapshot 副本以及在虚拟机之间复制文件
+** Windows 资源管理器操作
+** Windows PowerShell copy 命令
+** Windows 命令提示符复制命令
++
+Windows 命令提示符处的 Robocopy 支持 ODX 。
+
++
+[NOTE]
+====
+应用程序必须在支持 ODX 的 Windows 服务器或客户端上运行。
+
+====
++
+有关 Windows 服务器和客户端上支持的 ODX 应用程序的详细信息，请参阅 Microsoft TechNet 库。
+
+
+
+
+
+* 相关信息 *
+
+http://technet.microsoft.com/en-us/library/["Microsoft TechNet 库： technet.microsoft.com/en-us/library/"]

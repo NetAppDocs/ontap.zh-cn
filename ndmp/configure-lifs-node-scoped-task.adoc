@@ -1,0 +1,91 @@
+---
+permalink: ndmp/configure-lifs-node-scoped-task.html 
+sidebar: sidebar 
+keywords: configure, lif 
+summary: 您必须确定用于在节点和备份应用程序之间建立数据连接和控制连接的 LIF 。确定 LIF 后，您必须验证是否为 LIF 设置了防火墙和故障转移策略。 
+---
+= 配置 LIF
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须确定用于在节点和备份应用程序之间建立数据连接和控制连接的 LIF 。确定 LIF 后，您必须验证是否为 LIF 设置了防火墙和故障转移策略。
+
+.步骤
+. 使用带有 ` -role` 参数的 `network interface show` 命令确定节点上托管的集群间 LIF 。
++
+[listing]
+----
+cluster1::> network interface show -role intercluster
+
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+cluster1    IC1        up/up      192.0.2.65/24      cluster1-1    e0a     true
+cluster1    IC2        up/up      192.0.2.68/24      cluster1-2    e0b     true
+----
+. 确保已为集群间 LIF 上的 NDMP 启用防火墙策略：
++
+.. 使用 `ssystem services firewall policy show` 命令验证是否已为 NDMP 启用防火墙策略。
++
+以下命令显示集群间 LIF 的防火墙策略：
+
++
+[listing]
+----
+cluster1::> system services firewall policy show -policy intercluster
+
+Vserver     Policy       Service    Allowed
+-------     ------------ ---------- -------------------
+cluster1    intercluster dns        -
+                         http       -
+                         https      -
+                         **ndmp       0.0.0.0/0, ::/0**
+                         ndmps      -
+                         ntp        -
+                         rsh        -
+                         ssh        -
+                         telnet     -
+9 entries were displayed.
+----
+.. 如果未启用防火墙策略，请使用带有 ` -service` 参数的 `ssystem services firewall policy modify` 命令启用防火墙策略。
++
+以下命令将为集群间 LIF 启用防火墙策略：
+
++
+[listing]
+----
+cluster1::> system services firewall policy modify -vserver cluster1 -policy intercluster -service ndmp 0.0.0.0/0
+----
+
+
+. 确保已为集群间 LIF 正确设置故障转移策略：
++
+.. 使用 `network interface show -failover` 命令验证集群间 LIF 的故障转移策略是否设置为 `local-only` 。
++
+[listing]
+----
+cluster1::> network interface show -failover
+            Logical          Home              Failover     Failover
+Vserver     Interface        Node:Port         Policy       Group
+--------    ---------------  ----------------- ------------ --------
+cluster1    **IC1               cluster1-1:e0a    local-only   Default**
+                                                    Failover Targets:
+                                                    .......
+            **IC2               cluster1-2:e0b    local-only   Default**
+                                                    Failover Targets:
+                                                    .......
+cluster1-1  cluster1-1_mgmt1 cluster1-1:e0m    local-only    Default
+                                                    Failover Targets:
+                                                    .......
+----
+.. 如果未正确设置故障转移策略，请使用带有 ` failover-policy` 参数的 `network interface modify` 命令修改故障转移策略。
++
+[listing]
+----
+cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy local-only
+----
+
+
+

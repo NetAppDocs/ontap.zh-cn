@@ -1,0 +1,73 @@
+---
+permalink: nas-audit/display-enabled-fpolicy-policies-task.html 
+sidebar: sidebar 
+keywords: display, information, enabled fpolicy policies 
+summary: 您可以显示有关已启用 FPolicy 策略的信息，以确定配置为使用的 FPolicy 外部引擎，策略的优先级以及 FPolicy 策略与哪个 Storage Virtual Machine （ SVM ）关联。 
+---
+= 显示有关已启用的 FPolicy 策略的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关已启用 FPolicy 策略的信息，以确定配置为使用的 FPolicy 外部引擎，策略的优先级以及 FPolicy 策略与哪个 Storage Virtual Machine （ SVM ）关联。
+
+如果未指定任何参数，则此命令将显示以下信息：
+
+* SVM name
+* Policy name
+* 策略优先级
+
+
+您可以使用命令参数按指定条件筛选命令的输出。
+
+.步骤
+. 使用相应的命令显示有关已启用的 FPolicy 策略的信息：
++
+[cols="2*"]
+|===
+| 要显示有关已启用策略的信息 ... | 输入命令 ... 
+
+
+ a| 
+在集群上
+ a| 
+`vserver fpolicy show-enabled`
+
+
+
+ a| 
+在指定的 SVM 上
+ a| 
+`vserver fpolicy show-enabled -vserver vserver_name`
+
+
+
+ a| 
+使用指定的策略名称
+ a| 
+`vserver fpolicy show-enabled -policy-name policy_name`
+
+
+
+ a| 
+具有指定的序列号
+ a| 
+`vserver fpolicy show-enabled -priority integer`
+
+|===
+
+
+以下示例显示了有关集群上已启用的 FPolicy 策略的信息：
+
+[listing]
+----
+cluster1::> vserver fpolicy show-enabled
+Vserver                 Policy Name               Priority
+
+----------------------- ------------------------- ----------
+vs1.example.com         pol_native                native
+vs1.example.com         pol_native2               native
+vs1.example.com         pol1                      2
+vs1.example.com         pol2                      4
+----

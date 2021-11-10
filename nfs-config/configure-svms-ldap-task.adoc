@@ -1,0 +1,67 @@
+---
+permalink: nfs-config/configure-svms-ldap-task.html 
+sidebar: sidebar 
+keywords: verify, ldap, sources, name, service, switch, table 
+summary: 您必须验证 SVM 的名称服务切换表中是否正确列出了名称服务的 LDAP 源。 
+---
+= 在名称服务切换表中验证 LDAP 源
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须验证 SVM 的名称服务切换表中是否正确列出了名称服务的 LDAP 源。
+
+.步骤
+. 显示当前名称服务切换表内容：
++
+`vserver services name-service ns-switch show -vserver _svm_name_`
+
++
+以下命令显示 SVM My_SVM 的结果：
+
++
+[listing]
+----
+ie3220-a::> vserver services name-service ns-switch show -vserver My_SVM
+                               Source
+Vserver         Database       Order
+--------------- ------------   ---------
+My_SVM          hosts          files,
+                               dns
+My_SVM          group          files,ldap
+My_SVM          passwd         files,ldap
+My_SVM          netgroup       files
+My_SVM          namemap        files
+5 entries were displayed.
+----
++
+`namemap` 指定用于搜索名称映射信息的源以及搜索顺序。在纯 UNIX 环境中，不需要此条目。只有同时使用 UNIX 和 Windows 的混合环境才需要名称映射。
+
+. 根据需要更新 `ns-switch` 条目：
++
+|===
+| 要更新 ns-switch 条目的项 | 输入命令 ... 
+
+
+ a| 
+用户信息
+ a| 
+`vserver services name-service ns-switch modify -vserver _vserver_name_ -database passwd -sources ldap ， files`
+
+
+
+ a| 
+组信息
+ a| 
+`vserver services name-service ns-switch modify -vserver _vserver_name_ -database group -sources ldap ， files`
+
+
+
+ a| 
+网络组信息
+ a| 
+`vserver services name-service ns-switch modify -vserver _vserver_name_ -database netgroup -sources ldap ， files`
+
+|===
+

@@ -1,0 +1,43 @@
+---
+permalink: smb-admin/modify-local-groups-reference.html 
+sidebar: sidebar 
+keywords: modify, exist, local, group, description, exist, local, group, renaming, rename, modify local groups 
+summary: 您可以通过更改现有本地组的问题描述或重命名组来修改现有本地组。 
+---
+= 修改本地组
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过更改现有本地组的问题描述或重命名组来修改现有本地组。
+
+|===
+| 如果您要 ... | 使用命令 ... 
+
+
+ a| 
+修改本地组问题描述
+ a| 
+`vserver cifs users-and-groups local-group modify -vserver _vserver_name_ -group-name _group_name_ -cifs 问题描述 text` 如果问题描述包含空格，则必须将其用双引号括起来。
+
+
+
+ a| 
+重命名本地组
+ a| 
+`vserver cifs users-and-groups local-group rename -vserver _vserver_name_ -group-name _group_name_ -new-group-name _new_group_name_`
+
+|===
+以下示例将本地组 "`CIFS_SERVER\engineering` " 重命名为 "`CIFS_SERVER\engineering_new` " ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group rename -vserver vs1 -group-name CIFS_SERVER\engineering -new-group-name CIFS_SERVER\engineering_new
+----
+以下示例修改本地组 "`CIFS_SERVER\engineering` " 的问题描述：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group modify -vserver vs1 -group-name CIFS_SERVER\engineering -description "New Description"
+----

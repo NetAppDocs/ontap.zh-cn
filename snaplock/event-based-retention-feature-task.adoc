@@ -1,0 +1,74 @@
+---
+permalink: snaplock/event-based-retention-feature-task.html 
+sidebar: sidebar 
+keywords: event, based, retention, ebr, feature, snaplock, file 
+summary: 从 ONTAP 9.3 开始，您可以使用 SnapLock 基于事件的保留（ EBR ）功能定义发生事件后文件的保留时间。 
+---
+= 使用基于事件的保留（ EBR ）功能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，您可以使用 SnapLock 基于事件的保留（ EBR ） _ 功能来定义发生事件后文件的保留时间。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须是 SnapLock 管理员才能执行此任务。
++
+xref:create-compliance-administrator-account-task.adoc[创建 SnapLock 管理员帐户]
+
+* 您必须已通过安全连接（ SSH ，控制台或 ZAPI ）登录。
+
+
+事件保留策略定义事件发生后文件的保留期限。该策略可以应用于单个文件或目录中的所有文件。
+
+* 如果某个文件不是 WORM 文件，则会在策略中定义的保留期限内将其提交到 WORM 状态。
+* 如果文件是 WORM 文件或 WORM 可附加文件，则其保留期限将按策略中定义的保留期限延长。
+
+
+您可以使用合规模式或企业模式卷。
+
+[NOTE]
+====
+EBR 策略不能应用于合法保留下的文件。
+
+====
+有关高级用法，请参见 link:https://www.netapp.com/us/media/tr-4526.pdf["使用 NetApp SnapLock 的合规 WORM 存储"]。
+
+|===
+
+
+ a| 
+* 使用 EBR 延长现有 WORM 文件的保留期限 _*
+
+如果要延长现有 WORM 文件的保留期限， EBR 非常方便。例如，贵公司的政策可能是，在员工更改预提选择后，以未经修改的形式保留员工 W-4 记录三年。另一项公司策略可能要求在员工被终止后将 W-4 记录保留五年。
+
+在这种情况下，您可以创建一个保留期限为五年的 EBR 策略。员工被终止（ "`event` " ）后，您会将 EBR 策略应用于员工的 W-4 记录，从而延长其保留期限。这通常比手动延长保留期限更容易，尤其是在涉及大量文件时。
+
+|===
+.步骤
+. 创建 EBR 策略：
++
+` * SnapLock 事件保留策略 create -vserver _svm_name_ -name _policy_name_ -retention-period _retention_period_*`
+
++
+以下命令会在 `vs1` 上创建 EBR 策略 `emone_exit` ，保留期限为 10 年：
+
++
+[listing]
+----
+cluster1::>snaplock event-retention policy create -vserver vs1 -name employee_exit -retention-period 10years
+----
+. 应用 EBR 策略：
++
+` * SnapLock 事件保留应用 -vserver _svm_name_ -name _policy_name_ -volume _volume_name_ -path _path_name_*`
+
++
+以下命令会将 EBR 策略 `emple_exit` on `vs1` 应用于目录 `D 1` 中的所有文件：
+
++
+[listing]
+----
+cluster1::>snaplock event-retention apply -vserver vs1 -name employee_exit -volume vol1 -path /d1
+----
+

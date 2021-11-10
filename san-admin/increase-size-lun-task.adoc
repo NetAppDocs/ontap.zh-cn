@@ -1,0 +1,62 @@
+---
+permalink: san-admin/increase-size-lun-task.html 
+sidebar: sidebar 
+keywords: increase, size, lun 
+summary: 从 ONTAP 9.5 开始，无论 LUN 的原始大小如何，您都可以将其扩展到 16 TB 。在 ONTAP 9.4 及更早版本中， LUN 只能增长到原始大小的大约 10 倍，但不能超过 16 TB 。 
+---
+= 增加 LUN 的大小
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将 LUN 增加到的大小因 ONTAP 版本而异。
+
+[cols="2"]
+|===
+| ONTAP 版本 | 最大 LUN 大小 
+
+
+| ONTAP 9.8 及更高版本  a| 
+* 所有 SAN 阵列（ ASA ）为 128 TB
+* 对于非 ASA ， 16 TB
+
+
+
+
+| ONTAP 9.5 ， 9.6 ， 9.7 | 16 TB 
+
+
+| ONTAP 9.4 或更早版本 | LUN 大小是原始 LUN 大小的 10 倍，但不超过 16 TB ，例如，如果创建 100 GB 的 LUN ，则只能将其增加到 1 ， 000 GB 。 
+|===
+您无需使 LUN 脱机即可增加大小。但是，增加大小后，必须重新扫描主机上的 LUN ，以使主机能够识别大小的变化。
+
+有关调整 LUN 大小的详细信息，请参见 `lun resize` 命令的命令参考页面。
+
+[NOTE]
+====
+无法调整 Solaris LUN 的大小。
+
+====
+.步骤
+. 增加 LUN 的大小：
++
+`lun resize -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -size _lun_size_`
+
+. 验证增加的 LUN 大小：
++
+`lun show -vserver _vserver_name_`
+
++
+[NOTE]
+====
+ONTAP 操作将对 LUN 的实际最大大小进行舍入，使其略小于预期值。此外，实际 LUN 大小可能会因 LUN 的操作系统类型而略有不同。要获取调整大小后的精确值，请在高级模式下运行以下命令：
+
+`set -unit B`
+
+`lun show -fields max-resize-size -volume _volume_name_ -lun _lun_name_`
+
+====
+. 重新扫描主机上的 LUN 。
+. 按照主机文档进行操作，使新创建的 LUN 大小对主机文件系统可见。
+

@@ -1,0 +1,37 @@
+---
+permalink: smb-hyper-v-sql/health-monitoring-nondisruptive-operation-concept.html 
+sidebar: sidebar 
+keywords: health, monitoring, nondisruptive, operation, status, healthy, ndo, hyper, v, sql, server, recovery, cluster, system 
+summary: 运行状况监控可提供有关整个集群中的系统运行状况的信息。运行状况监控器可通过 SMB 监控 Hyper-V 和 SQL Server 配置，以确保应用程序服务器无中断运行（ NDO ）。如果状态为 degraded ，则可以查看有关问题的详细信息，包括可能的发生原因和建议的恢复操作。 
+---
+= 使用运行状况监控来确定无中断运行状态是否正常
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+运行状况监控可提供有关整个集群中的系统运行状况的信息。运行状况监控器可通过 SMB 监控 Hyper-V 和 SQL Server 配置，以确保应用程序服务器无中断运行（ NDO ）。如果状态为 degraded ，则可以查看有关问题的详细信息，包括可能的发生原因和建议的恢复操作。
+
+有多个运行状况监控器。ONTAP 可监控各个运行状况监控器的整体系统运行状况和运行状况。节点连接运行状况监控器包含 CIFS-NDO 子系统。监控器具有一组运行状况策略，可在某些物理条件可能导致中断时触发警报，如果存在中断情况，则会生成警报并提供有关更正操作的信息。对于基于 SMB 的 NDO 配置，将针对以下两种情况生成警报：
+
+|===
+| 警报 ID | severity | 条件 
+
+
+ a| 
+` * 哈诺 ReadyCifsNDo_Aler*`
+ a| 
+major
+ a| 
+节点上聚合中某个卷托管的一个或多个文件已通过持续可用的 SMB 共享打开，并承诺在发生故障时会持久存在；但是，与配对节点的 HA 关系未配置或运行状况不佳。
+
+
+
+ a| 
+` * NoStandbyLifeCifsNdo 警报 *`
+ a| 
+次要
+ a| 
+Storage Virtual Machine （ SVM ）正在通过节点主动通过 SMB 提供数据，并且在持续可用的共享上持久打开了 SMB 文件；但是，其配对节点不会公开 SVM 的任何活动数据 LIF 。
+
+|===

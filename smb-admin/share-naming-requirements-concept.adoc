@@ -1,0 +1,45 @@
+---
+permalink: smb-admin/share-naming-requirements-concept.html 
+sidebar: sidebar 
+keywords: ontap, share, naming, name, requirement, mind, creating, create, smb, server, smb share naming requirements 
+summary: 在 SMB 服务器上创建 ONTAP 共享时，应牢记 SMB 共享命名要求。 
+---
+= SMB 共享命名要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 SMB 服务器上创建 ONTAP 共享时，应牢记 SMB 共享命名要求。
+
+ONTAP 的共享命名约定与 Windows 相同，其中包括以下要求：
+
+* 每个共享的名称对于 SMB 服务器必须是唯一的。
+* 共享名称不区分大小写。
+* 最大共享名称长度为 80 个字符。
+* 支持 Unicode 共享名称。
+* 以 $ 字符结尾的共享名称是隐藏的共享。
+* admin$ ， ipc$ 和 c$ 管理共享会自动在每个 CIFS 服务器上创建，它们是预留的共享名称。
+* 创建共享时，不能使用共享名称 ontap_admin$ 。
+* 支持包含空格的共享名称：
++
+** 不能使用空格作为共享名称中的第一个字符或最后一个字符。
+** 必须将包含空格的共享名称用引号括起来。
++
+[NOTE]
+====
+单引号被视为共享名称的一部分，不能代替引号。
+
+====
+
+
+* 命名 SMB 共享时，支持以下特殊字符：
++
+！@ # $ % & ' _ - 。~ （） ｛ ｝
+
+* 命名 SMB 共享时不支持以下特殊字符：
++
+** " / \ ：； _< > ，？* =
+
+
+

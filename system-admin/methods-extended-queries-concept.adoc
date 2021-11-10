@@ -1,0 +1,34 @@
+---
+permalink: system-admin/methods-extended-queries-concept.html 
+sidebar: sidebar 
+keywords: method, extended, queries, operations, perform, specified, values 
+summary: 您可以使用扩展查询来匹配具有指定值的对象并对其执行操作。 
+---
+= 使用扩展查询的方法
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用扩展查询来匹配具有指定值的对象并对其执行操作。
+
+您可以通过将扩展查询括在花括号（ ｛ ｝ ）中来指定这些查询。扩展查询必须指定为命令名称后面的第一个参数，然后再指定任何其他参数。例如，要将名称包含字符串 `tmp` 的所有卷设置为脱机，请运行以下示例中的命令：
+
+[listing]
+----
+cluster1::> volume modify {-volume *tmp*} -state offline
+----
+扩展查询通常仅适用于 `m修改` 和 `d删除` 命令。它们在 `create` 或 `show` 命令中没有意义。
+
+将查询和修改操作组合在一起是一个有用的工具。但是，如果实施不正确，可能会导致发生原因混淆和错误。例如，使用（ advanced privilege ） `ssystem node image modify` 命令设置节点的默认软件映像会自动将其他软件映像设置为非默认软件映像。以下示例中的命令实际上是空操作：
+
+[listing]
+----
+cluster1::*> system node image modify {-isdefault true} -isdefault false
+----
+此命令会将当前默认映像设置为非默认映像，然后将新的默认映像（以前的非默认映像）设置为非默认映像，从而保留原始默认设置。要正确执行此操作，您可以使用以下示例中提供的命令：
+
+[listing]
+----
+cluster1::*> system node image modify {-iscurrent false} -isdefault true
+----

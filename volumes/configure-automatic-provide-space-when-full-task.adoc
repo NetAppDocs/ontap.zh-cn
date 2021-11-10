@@ -1,0 +1,44 @@
+---
+permalink: volumes/configure-automatic-provide-space-when-full-task.html 
+sidebar: sidebar 
+keywords: configure, volumes, automatically, provide, more, space, when, full 
+summary: 当 FlexVol 卷已满时， ONTAP 可以使用各种方法尝试自动为卷提供更多可用空间。您可以根据应用程序和存储架构的要求选择 ONTAP 可以使用的方法以及使用的顺序。 
+---
+= 将卷配置为在其已满时自动提供更多空间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当 FlexVol 卷已满时， ONTAP 可以使用各种方法尝试自动为卷提供更多可用空间。您可以根据应用程序和存储架构的要求选择 ONTAP 可以使用的方法以及使用的顺序。
+
+ONTAP 可以使用以下一种或两种方法自动为已满的卷提供更多可用空间：
+
+* 增加卷的大小（称为 _autogrow_ ）。
++
+如果卷包含的聚合具有足够的空间来支持更大的卷，则此方法非常有用。您可以对 ONTAP 进行配置，以设置卷的最大大小。根据写入卷的数据量与当前已用空间量和设置的任何阈值的关系，系统会自动触发增加。
+
++
+不会触发自动增长来支持创建 Snapshot 副本。如果尝试创建 Snapshot 副本且空间不足，则即使启用了自动增长， Snapshot 副本创建也会失败。
+
+* 删除 Snapshot 副本， FlexClone 文件或 FlexClone LUN 。
++
+例如，您可以将 ONTAP 配置为自动删除未链接到克隆卷或 LUN 中 Snapshot 副本的 Snapshot 副本，也可以定义您希望 ONTAP 先删除哪些 Snapshot 副本—最旧或最新的 Snapshot 副本。您还可以确定 ONTAP 应在何时开始删除 Snapshot 副本—例如，当卷接近全满或卷的 Snapshot 预留接近全满时。
+
+
+
+如果同时启用这两种方法，则可以指定 ONTAP 在卷接近全满时首先尝试哪种方法。如果第一种方法不能为卷提供足够的额外空间，则 ONTAP 接下来会尝试另一种方法。
+
+默认情况下， ONTAP 会首先尝试增加卷的大小。在大多数情况下，最好使用默认配置，因为删除 Snapshot 副本后，它将无法还原。但是，如果您需要尽可能避免增加卷的大小，可以将 ONTAP 配置为在增加卷大小之前删除 Snapshot 副本。
+
+.步骤
+. 如果希望 ONTAP 在卷已满时尝试增加卷的大小，请在 `grow` 模式下使用 `volume autosize` 命令为卷启用自动增长功能。
++
+请记住，当卷增长时，它会从关联聚合中占用更多可用空间。如果您依赖于卷在需要时的增长能力，则必须监控关联聚合中的可用空间，并在需要时添加更多可用空间。
+
+. 如果希望 ONTAP 在卷已满时删除 Snapshot 副本， FlexClone 文件或 FlexClone LUN ，请为这些对象类型启用自动删除。
+. 如果同时启用了卷自动增长功能以及一个或多个自动删除功能，请使用 `volume modify` 命令和 ` -space-mgmt-try-first` 选项，选择 ONTAP 为卷提供可用空间时应使用的第一种方法。
++
+要指定先增加卷大小（默认值），请使用 `volume_grow` 。要指定先删除 Snapshot 副本，请使用 `snap_delete` 。
+
+

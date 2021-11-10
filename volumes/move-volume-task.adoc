@@ -1,0 +1,69 @@
+---
+permalink: volumes/move-volume-task.html 
+sidebar: sidebar 
+keywords: move, volume 
+summary: 在确定存储容量不平衡后，您可以将 FlexVol 卷移动到同一 Storage Virtual Machine （ SVM ）中的其他聚合，节点或两者，以平衡存储容量。 
+---
+= 移动卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在确定存储容量不平衡后，您可以将 FlexVol 卷移动到同一 Storage Virtual Machine （ SVM ）中的其他聚合，节点或两者，以平衡存储容量。
+
+默认情况下，如果转换操作无法在 30 秒内完成，则会重试。您可以使用 ` -cutover-window` 和 ` -cutover-action` 参数来调整默认行为，这两个参数都需要高级权限级别访问。有关详细信息，请参见 `volume move start` 手册页。
+
+.步骤
+. 如果要移动数据保护镜像，但尚未初始化镜像关系，请使用 `snapmirror initialize` 命令初始化镜像关系。
++
+必须先初始化数据保护镜像关系，然后才能移动其中一个卷。
+
+. 使用 `volume move target-aggr show` 命令确定可将卷移动到的聚合。
++
+您选择的聚合必须具有足够的空间来容纳卷；也就是说，可用大小大于要移动的卷。
+
++
+以下示例显示了可以将 vs2 卷移动到列出的任何聚合：
+
++
+[listing]
+----
+cluster1::> volume move target-aggr show -vserver vs2 -volume user_max
+Aggregate Name   Available Size   Storage Type
+--------------   --------------   ------------
+aggr2            467.9GB          hdd
+node12a_aggr3    10.34GB          hdd
+node12a_aggr2    10.36GB          hdd
+node12a_aggr1    10.36GB          hdd
+node12a_aggr4    10.36GB          hdd
+5 entries were displayed.
+----
+. 使用 `volume move start -perform-validation-only` 命令运行验证检查，以验证是否可以将卷移动到目标聚合。
+. 使用 `volume move start` 命令移动卷。
++
+以下命令会将 vs2 SVM 上的 user_max 卷移动到 node12a_aggr3 聚合。移动操作将作为后台进程运行。
+
++
+[listing]
+----
+cluster1::> volume move start -vserver vs2 -volume user_max
+-destination-aggregate node12a_aggr3
+----
+. 使用 `volume move show` 命令确定卷移动操作的状态。
++
+以下示例显示了已完成复制阶段且处于转换阶段的卷移动的状态：
+
++
+[listing]
+----
+
+cluster1::> volume move show
+Vserver   Volume     State    Move Phase  Percent-Complete Time-To-Complete
+--------- ---------- -------- ----------  ---------------- ----------------
+vs2       user_max   healthy  cutover     -                -
+----
++
+如果卷移动不再显示在 `volume move show` 命令输出中，则表示卷移动已完成。
+
+

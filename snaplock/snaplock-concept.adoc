@@ -1,0 +1,223 @@
+---
+permalink: snaplock/snaplock-concept.html 
+sidebar: sidebar 
+keywords: snaplock, worm, storage, compliance, enterprise, mode, sec, rule, 17a, license 
+summary: SnapLock 是一款高性能合规解决方案，适用于使用 WORM 存储以未经修改的形式保留文件以满足监管要求的组织。通过一个许可证，您可以在严格合规模式下使用 SnapLock ，以满足 SEC 规则 17a-4 等外部要求，并可在宽松的企业模式下使用，以满足内部强制要求的数字资产保护法规。 
+---
+= 什么是 SnapLock
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapLock 是一款高性能合规解决方案，适用于使用 WORM 存储以未经修改的形式保留文件以满足监管要求的组织。通过一个许可证，您可以在 Stric_Compliance 模式 _ 下使用 SnapLock ，以满足 SEC 规则 17a-4 和宽松 _Enterprise 模式 _ 等外部要求，从而满足内部强制要求的数字资产保护法规。
+
+
+
+== 合规性模式与企业模式之间的差异
+
+SnapLock 合规性模式和企业模式主要在每个模式保护 WORM 文件的级别上有所不同：
+
+* 合规模式 WORM 文件在磁盘级别受到保护。
++
+您不能重新初始化包含合规模式聚合的磁盘。
+
+* 企业模式 WORM 文件在文件级别受到保护。
+
+
+一个相关的差异涉及每个模式对文件删除的严格管理方式：
+
+* 在保留期限内，无法删除合规模式 WORM 文件。
+* 合规性管理员可以在保留期限内使用已审核的 _privileged delete_ 操作步骤删除企业模式 WORM 文件。
+
+
+保留期限过后，您负责删除不再需要的任何文件。将文件提交到 WORM 后，无论是在合规模式下还是在企业模式下，都无法对其进行修改，即使保留期限已过也是如此。
+
+不能在保留期限内或之后移动 WORM 文件。您可以复制 WORM 文件，但此副本不会保留其 WORM 特征。
+
+下表显示了 SnapLock 合规性模式与企业模式之间的差异：
+
+|===
+| 功能 | SnapLock 合规性 | SnapLock 企业 
+
+
+ a| 
+特权删除
+ a| 
+否
+ a| 
+是的。
+
+
+
+ a| 
+重新初始化磁盘
+ a| 
+否
+ a| 
+是的。
+
+
+
+ a| 
+在保留期限内销毁 SnapLock 聚合和卷
+ a| 
+否
+ a| 
+是的。
+
+
+
+ a| 
+重命名聚合或卷
+ a| 
+否
+ a| 
+是的。
+
+
+
+ a| 
+Non-NetApp 磁盘
+ a| 
+否
+ a| 
+是（使用 FlexArray 虚拟化）
+
+
+
+ a| 
+使用 SnapLock 卷进行审核日志记录
+ a| 
+是的。
+ a| 
+是，从 ONTAP 9.5 开始
+
+
+
+ a| 
+单文件 SnapRestore
+ a| 
+否
+ a| 
+是的。
+
+
+
+ a| 
+SnapRestore
+ a| 
+否
+ a| 
+是的。
+
+
+
+ a| 
+FlexClone
+ a| 
+您可以克隆 SnapLock 卷，但不能克隆 SnapLock 卷上的文件。
+ a| 
+您可以克隆 SnapLock 卷，但不能克隆 SnapLock 卷上的文件。
+
+
+
+ a| 
+LUN
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SMTape
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+MetroCluster 配置
+ a| 
+支持使用 SnapLock Compliance 或 Enterprise 聚合在 MetroCluster 配置上托管 SnapLock 审核日志卷，但有以下限制：
+
+* 镜像聚合和未镜像聚合支持 SnapLock Enterprise 。
+* 只有未镜像聚合才支持 SnapLock 合规性。
+
+
+所有 MetroCluster 配置均支持镜像聚合。请参见 ONTAP 发行说明以确定您的 MetroCluster 配置是否支持未镜像聚合。
+
+https://library.netapp.com/ecmdocs/ECMLP2492508/html/frameset.html["《 ONTAP 9 发行说明》"]
+ a| 
+否
+
+
+
+ a| 
+支持 SnapLock 聚合上的 FabricPool
+ a| 
+否
+ a| 
+是，从 ONTAP 9.8 开始
+
+[NOTE]
+====
+您应注意， FabricPool 分层到公有或私有云的任何数据都不再受 SnapLock 保护，因为云管理员可以删除这些数据。
+
+====
+|===
+
+
+== MetroCluster 配置和合规性时钟
+
+MetroCluster 配置使用两种合规时钟机制，即卷合规时钟（ Volume Compliance Clock ， VCC ）和系统合规时钟（ System Compliance Clock ， SCC ）。VCC 和 SCC 可用于所有 SnapLock 配置。在节点上创建新卷时，其 VCC 将使用该节点上的当前 SCC 值进行初始化。创建卷后，系统会始终使用 VCC 跟踪卷和文件保留时间。
+
+将卷复制到另一站点时，也会复制其 VCC 。例如，在从站点 A 切换到站点 B 时， VCC 会继续在站点 B 上进行更新，而站点 A 上的 SCC 会在站点 A 脱机时暂停。
+
+当站点 A 恢复联机并执行卷切回时，站点 A 的 SCC 时钟将重新启动，而卷的 VCC 将继续更新。由于无论切换和切回操作如何， VCC 都会持续更新，因此文件保留时间不取决于 SCC 时钟，也不会延长。
+
+
+
+== 将文件提交到 WORM
+
+您可以使用应用程序通过 NFS 或 CIFS 将文件提交到 WORM ，或者使用 SnapLock 自动提交功能将文件自动提交到 WORM 。您可以使用 _WORM 可附加文件 _ 来保留以增量方式写入的数据，例如日志信息。
+
+
+
+== 数据保护
+
+SnapLock 支持应满足大多数合规性要求的数据保护方法：
+
+* 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot 副本进行 WORM 保护。
+* 您可以使用 SnapMirror 将 WORM 文件复制到其他地理位置以进行灾难恢复。
+
+
+
+
+== 存储效率
+
+从 ONTAP 9.1.1 开始， SnapLock 支持存储效率功能，例如数据缩减，跨卷重复数据删除以及 SnapLock 卷和聚合的自适应数据压缩。
+
+
+
+== 7- 模式过渡
+
+您可以使用 7- 模式过渡工具的基于副本的过渡（ CBT ）功能将 SnapLock 卷从 7- 模式迁移到 ONTAP 。目标卷的 SnapLock 模式（合规性或企业）必须与源卷的 SnapLock 模式匹配。您不能使用无副本过渡（ CFT ）迁移 SnapLock 卷。
+
+
+
+== 加密
+
+ONTAP 提供了基于软件和基于硬件的加密技术，可确保在存储介质被重新利用，退回，放置在不当位置或被盗时无法读取空闲数据。
+
+* 免责声明： * NetApp 无法保证，如果身份验证密钥丢失或身份验证尝试失败次数超过指定限制并导致驱动器永久锁定，则自加密驱动器或卷上受 SnapLock 保护的 WORM 文件可以检索。您有责任确保身份验证不会失败。
+
+[NOTE]
+====
+从 ONTAP 9.2 开始， SnapLock 聚合支持加密卷。
+
+====

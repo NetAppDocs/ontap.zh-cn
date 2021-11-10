@@ -1,0 +1,50 @@
+---
+permalink: fabricpool/modify-tiering-policy-cooling-period-task.html 
+sidebar: sidebar 
+keywords: managing, storage, tiering, modifying, volume, tiering, policy, tiering, minimum, cooling period 
+summary: 您可以更改卷的分层策略，以控制数据在变为非活动（冷）时是否移动到云层。对于采用仅快照或自动分层策略的卷，您还可以指定用户数据在移至云层之前必须保持非活动状态的分层最小冷却期。 
+---
+= 通过修改卷的分层策略或分层最小冷却期来管理存储分层
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以更改卷的分层策略，以控制数据在变为非活动状态（ _c冷 _ ）时是否移动到云层。对于采用 `snapshot-only` 或 `auto` 分层策略的卷，您还可以指定用户数据在移至云层之前必须保持非活动状态的分层最小冷却期。
+
+将卷更改为 `auto` tiering 策略或修改分层最小冷却期需要 ONTAP 9.4 或更高版本。
+
+更改卷的分层策略仅会更改卷的后续分层行为。它不会追溯性地将数据移至云层。
+
+更改分层策略可能会影响数据变冷并移至云层所需的时间。
+
+link:tiering-policies-concept.html#what-happens-when-you-modify-the-tiering-policy-of-a-volume-in-fabricpool["在 FabricPool 中修改卷的分层策略时会发生什么情况"]
+
+.步骤
+. 使用带有 ` -tiering-policy` 参数的 `volume modify` 命令修改现有卷的分层策略：
++
+您可以指定以下分层策略之一：
+
++
+** `snapshot-only` （默认）
+** `auto`
+** `全部`
+** `无`
++
+link:tiering-policies-concept.html#types-of-fabricPool-tiering-policies["FabricPool 分层策略的类型"]
+
+
+
+. 如果卷使用 `snapshot-only` 或 `auto` tiering 策略，并且您要修改分层最小冷却期，请在高级权限级别使用 `volume modify` 命令和 ` -tiering-minimum-cooling-days` 可选参数。
++
+您可以为分层最小冷却天数指定一个介于 2 到 183 之间的值。如果您使用的 ONTAP 版本早于 9.8 ，则可以为分层最小冷却天数指定一个介于 2 到 63 之间的值。
+
+
+
+以下示例将 SVM"`vs1` " 中卷 " `myvol` " 的分层策略更改为 `auto` ，并将分层最小冷却期更改为 45 天：
+
+[listing]
+----
+cluster1::> volume modify -vserver vs1 -volume myvol
+-tiering-policy auto -tiering-minimum-cooling-days 45
+----

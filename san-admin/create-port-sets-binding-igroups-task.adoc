@@ -1,0 +1,44 @@
+---
+permalink: san-admin/create-port-sets-binding-igroups-task.html 
+sidebar: sidebar 
+keywords: create, port, sets, binding, igroups, port sets 
+summary: 除了使用选择性 LUN 映射（ SLM ）之外，您还可以创建一个端口集并将该端口集绑定到 igroup ，以进一步限制启动程序可使用哪些 LIF 访问 LUN 。如果不将端口集绑定到 igroup ，则 igroup 中的所有启动程序都可以通过 LUN 所属节点及其 HA 配对节点上的所有 LIF 访问映射的 LUN 。 
+---
+= 创建端口集并将 igroup 绑定到端口集
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+除了使用选择性 LUN 映射（ SLM ）之外，您还可以创建一个端口集并将该端口集绑定到 igroup ，以进一步限制启动程序可使用哪些 LIF 访问 LUN 。如果不将端口集绑定到 igroup ，则 igroup 中的所有启动程序都可以通过 LUN 所属节点及其 HA 配对节点上的所有 LIF 访问映射的 LUN 。
+
+必须至少具有一个 LIF 和一个 igroup 。
+
+除非使用接口组，否则建议为 iSCSI 和 FC 配置两个 LIF 以实现冗余。建议接口组仅使用一个 LIF 。
+
+如果一个节点上的 LIF 超过两个，并且您希望将某个启动程序限制为 LIF 的一部分，则将端口集与 SLM 结合使用比较有利。如果没有端口集，则可以通过 LUN 所属节点及其 HA 配对节点访问 LUN 的所有启动程序都可以访问节点上的所有目标。
+
+.步骤
+. 创建包含相应 LIF 的端口集：
++
+`portset create -vserver _vserver_name_ -portset _portset_name_ -protocol _protocol_ -port-name _port_name_`
+
++
+如果您使用的是 FC ，请将 `protocol` 参数指定为 `fcp` 。如果您使用的是 iSCSI ，请将 `protocol` 参数指定为 `iscsi` 。
+
+. 将 igroup 绑定到端口集：
++
+`lun igroup bind -vserver _vserver_name_ -igroup _igroup_name_ -portset _portset_name_`
+
+. 验证端口集和 LIF 是否正确：
++
+`portset show -vserver _vserver_name_`
+
++
+[listing]
+----
+Vserver   Portset   Protocol Port Names    Igroups
+--------- --------- -------- ------------- --------
+vs3       portset0  iscsi    lif0,lif1     igroup1
+----
+

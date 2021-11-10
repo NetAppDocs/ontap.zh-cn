@@ -1,0 +1,88 @@
+---
+permalink: smb-admin/supported-dynamic-access-control-reference.html 
+sidebar: sidebar 
+keywords: dynamic, access, control, dac, cifs, server, understand, ontap, support, functionality, active, directory, environment, supported dynamic access control functionality 
+summary: 如果要在 CIFS 服务器上使用动态访问控制（ DAC ），则需要了解 ONTAP 如何在 Active Directory 环境中支持动态访问控制功能。 
+---
+= 支持的动态访问控制功能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要在 CIFS 服务器上使用动态访问控制（ DAC ），则需要了解 ONTAP 如何在 Active Directory 环境中支持动态访问控制功能。
+
+
+
+== 支持动态访问控制
+
+在 CIFS 服务器上启用动态访问控制时， ONTAP 支持以下功能：
+
+|===
+| 功能 | 注释 
+
+
+ a| 
+声明到文件系统
+ a| 
+声明是简单的名称和值对，用于说明有关用户的一些事实。现在，用户凭据包含声明信息，文件上的安全描述符可以执行包括声明检查在内的访问检查。这样，管理员可以更精细地控制谁可以访问文件。
+
+
+
+ a| 
+文件访问检查的条件表达式
+ a| 
+修改文件的安全参数时，用户现在可以向文件的安全描述符添加任意复杂的条件表达式。条件表达式可以包括对声明的检查。
+
+
+
+ a| 
+通过中央访问策略集中控制文件访问
+ a| 
+中央访问策略是存储在 Active Directory 中的一种 ACL ，可以标记为文件。只有在磁盘上的安全描述符和带标记的中央访问策略的访问检查均允许访问时，才会授予对文件的访问权限。这样，管理员便可以从中央位置（ AD ）控制对文件的访问，而无需修改磁盘上的安全描述符。
+
+
+
+ a| 
+中央访问策略暂存
+ a| 
+增加了在不影响实际文件访问的情况下尝试安全更改的功能，方法是 " `staging` " 对中央访问策略的更改，并在审核报告中查看更改的影响。
+
+
+
+ a| 
+支持使用 ONTAP 命令行界面显示有关中央访问策略安全性的信息
+ a| 
+扩展 `vserver security file-directory show` 命令以显示有关应用的中央访问策略的信息。
+
+
+
+ a| 
+包括中央访问策略的安全跟踪
+ a| 
+扩展了 `vserver security trace` 命令系列，以显示包括应用的中央访问策略信息的结果。
+
+|===
+
+
+== 不支持动态访问控制
+
+在 CIFS 服务器上启用动态访问控制时， ONTAP 不支持以下功能：
+
+|===
+| 功能 | 注释 
+
+
+ a| 
+NTFS 文件系统对象的自动分类
+ a| 
+这是 ONTAP 不支持的 Windows 文件分类基础架构的扩展。
+
+
+
+ a| 
+除中央访问策略暂存之外的高级审核
+ a| 
+高级审核仅支持中央访问策略暂存。
+
+|===

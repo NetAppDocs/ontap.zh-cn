@@ -1,0 +1,165 @@
+---
+permalink: tape-backup/format-tape-config-file-concept.html 
+sidebar: sidebar 
+keywords: format, tape, configuration, file, vendor, id, product, compression, type, drive 
+summary: 磁带配置文件格式由供应商 ID ，产品 ID 和磁带驱动器压缩类型详细信息等字段组成。此文件还包含一些可选字段，用于启用磁带驱动器的自动加载功能以及更改磁带驱动器的命令超时值。 
+---
+= 磁带配置文件的格式
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+磁带配置文件格式由供应商 ID ，产品 ID 和磁带驱动器压缩类型详细信息等字段组成。此文件还包含一些可选字段，用于启用磁带驱动器的自动加载功能以及更改磁带驱动器的命令超时值。
+
+下表显示了磁带配置文件的格式：
+
+|===
+| 项目 | Size | Description 
+
+
+ a| 
+`vendor_id` （字符串）
+ a| 
+最多 8 个字节
+ a| 
+`SCSI Inquiry` 命令报告的供应商 ID 。
+
+
+
+ a| 
+`product_id` （字符串）
+ a| 
+最多 16 个字节
+ a| 
+`SCSI Inquiry` 命令报告的产品 ID 。
+
+
+
+ a| 
+`id_match_size` （数字）
+ a| 
+ a| 
+要用于匹配以检测要标识的磁带驱动器的产品 ID 字节数，从查询数据中的产品 ID 第一个字符开始。
+
+
+
+ a| 
+`vendor_pretty` （字符串）
+ a| 
+最多 16 个字节
+ a| 
+如果此参数存在，则它由命令 `storage tape show -device-names` 显示的字符串指定；否则，将显示 inq_vendor_ID 。
+
+
+
+ a| 
+`product_pretty` （字符串）
+ a| 
+最多 16 个字节
+ a| 
+如果存在此参数，则该参数由命令 `storage tape show -device-names` 显示的字符串指定；否则，将显示 inq_product_ID 。
+
+|===
+[NOTE]
+====
+`vendor_pretty` 和 `product_pretty` 字段是可选的，但如果其中一个字段具有值，则另一个字段也必须具有值。
+
+====
+下表介绍了各种压缩类型的问题描述，密度代码和压缩算法，例如 `l` ， `m` ， `h` 和 `a` ：
+
+|===
+| 项目 | Size | Description 
+
+
+ a| 
+` ｛ l = m = h = a ｝ _description= （字符串）`
+ a| 
+最多 24 个字节
+ a| 
+用于为 nodeshell 命令 `ssysconfig -t` 打印的字符串，用于描述特定密度设置的特征。
+
+
+
+ a| 
+` ｛ l = m = h = a ｝ _density= （十六进制代码）`
+ a| 
+ a| 
+要在与 l ， m ， h 或 a 所需密度代码对应的 SCSI 模式页面块描述符中设置的密度代码
+
+
+
+ a| 
+` ｛ l = m = h = a ｝ _aloration= （十六进制代码）`
+ a| 
+ a| 
+要在与密度代码和所需密度特征对应的 SCSI 压缩模式页面中设置的压缩算法。
+
+|===
+下表介绍了磁带配置文件中的可选字段：
+
+|===
+| 字段 | Description 
+
+
+ a| 
+`autoload= （布尔值是 / 否）`
+ a| 
+如果磁带驱动器具有自动加载功能，则此字段会设置为 `yes` ；也就是说，在插入磁带盒后，磁带驱动器将变为就绪状态，而无需执行 `SCSI load` （ start/stop unit ）命令。此字段的默认值为 `no` 。
+
+
+
+ a| 
+`cmd_timeout_0x`
+ a| 
+单个超时值。只有当您要指定与磁带驱动程序默认使用的超时值不同的超时值时，才必须使用此字段。此示例文件列出了磁带驱动器使用的默认 SCSI 命令超时值。超时值可以用分钟（ m ），秒（ s ）或毫秒（ ms ）表示。
+
+[NOTE]
+====
+您只能在技术支持的指导下更改此字段。
+
+====
+|===
+您可以从 NetApp 支持站点下载并查看磁带配置文件。
+
+HP LTO5 Ultrium 磁带驱动器的磁带配置文件格式如下：
+
+`vendor_id` ="HP"
+
+`product_id` ="Ultrium 5-SCSI"
+
+`id_match_size` =9
+
+`vendor_pretty` "Hewlett-Packard "
+
+`product_pretty` ="LTO-5"
+
+`l_description` ="LTO-3 （ ro ） /4 4/800 GB "
+
+`l_density` = 0x00
+
+`l_alorm` = 0x00
+
+`M 说明` ="LTO-3 （ ro ） /4 8/1600 GB CM"
+
+`M 密度` = 0x00
+
+`M 算法` = 0x01
+
+`h_description` ="LTO-5 1600GB"
+
+`h_density` = 0x58
+
+`h_alorm` = 0x00
+
+`A_description` ="LTO-5 3200GB CM"
+
+`A_density` = 0x58
+
+`A_算法` = 0x01
+
+`自动加载` ="yes"
+
+* 相关信息 *
+
+http://mysupport.netapp.com/NOW/download/tools/tape_config["NetApp 下载：磁带设备配置文件"]

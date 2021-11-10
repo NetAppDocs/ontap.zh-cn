@@ -1,0 +1,80 @@
+---
+permalink: nfs-admin/display-dns-statistics-task.html 
+sidebar: sidebar 
+keywords: display, dns, statistics 
+summary: 您可以显示存储系统上 Storage Virtual Machine （ SVM ）的 DNS 统计信息，以监控性能并诊断问题。 
+---
+= 显示 DNS 统计信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示存储系统上 Storage Virtual Machine （ SVM ）的 DNS 统计信息，以监控性能并诊断问题。
+
+.步骤
+. 使用 `satictics catalog object show` 命令确定可从中查看数据的 DNS 对象。
++
+`satictics catalog object show -object external_service_op*`
+
+. 使用 `satictics start` 和 `satictics stop` 命令从一个或多个对象收集数据样本。
+. 使用 `statictics show` 命令查看样本数据。
+
+
+
+
+== 监控 DNS 统计信息
+
+以下示例显示了 DNS 查询的性能数据。以下命令将开始收集新样本的数据：
+
+[listing]
+----
+vs1::*> statistics start -object external_service_op -sample-id dns_sample1
+vs1::*> statistics start -object external_service_op_error -sample-id dns_sample2
+----
+以下命令通过指定计数器来显示样本中的数据，这些计数器显示发送的 DNS 查询数与接收，失败或超时的 DNS 查询数：
+
+[listing]
+----
+vs1::*> statistics show -sample-id dns_sample1 -counter num_requests_sent|num_responses_received|num_successful_responses|num_timeouts|num_request_failures|num_not_found_responses
+
+Object: external_service_op
+Instance: vs1:DNS:Query:10.72.219.109
+Start-time: 3/8/2016 11:15:21
+End-time: 3/8/2016 11:16:52
+Elapsed-time: 91s
+Scope: vs1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    num_not_found_responses                                         0
+    num_request_failures                                            0
+    num_requests_sent                                               1
+    num_responses_received                                          1
+    num_successful_responses                                        1
+    num_timeouts                                                    0
+6 entries were displayed.
+----
+以下命令通过指定计数器来显示样本中的数据，这些计数器显示特定服务器上的 DNS 查询收到特定错误的次数：
+
+[listing]
+----
+vs1::*> statistics show -sample-id dns_sample2 -counter server_ip_address|error_string|count
+
+Object: external_service_op_error
+Instance: vs1:DNS:Query:NXDOMAIN:10.72.219.109
+Start-time: 3/8/2016 11:23:21
+End-time: 3/8/2016 11:24:25
+Elapsed-time: 64s
+Scope: vs1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    count                                                           1
+    error_string                                             NXDOMAIN
+    server_ip_address                                   10.72.219.109
+3 entries were displayed.
+----
+* 相关信息 *
+
+link:../performance-config/index.html["性能监控设置"]

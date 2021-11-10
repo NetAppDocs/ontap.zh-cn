@@ -1,0 +1,91 @@
+---
+permalink: volumes/space-reserved-luns-semi-thick-provisioning-concept.html 
+sidebar: sidebar 
+keywords: configuration, settings, space-reserved files, luns, semi-thick volume provisioning 
+summary: 与完全配置的组合相比， FlexVol 卷和文件或 LUN 的这种配置组合所需预先分配的存储较少，但会限制可用于卷的效率技术。对于此配置组合，系统会尽力满足覆盖要求。 
+---
+= 半厚卷配置中预留了空间的文件或 LUN 的配置设置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+与完全配置的组合相比， FlexVol 卷和文件或 LUN 的这种配置组合所需预先分配的存储较少，但会限制可用于卷的效率技术。对于此配置组合，系统会尽力满足覆盖要求。
+
+要使用半厚配置在卷中配置预留了空间的 LUN ，需要以下设置：
+
+[cols="2*"]
+|===
+| 卷设置 | 价值 
+
+
+ a| 
+保证
+ a| 
+Volume
+
+
+
+ a| 
+预留百分比
+ a| 
+0
+
+
+
+ a| 
+Snapshot 预留
+ a| 
+0
+
+
+
+ a| 
+Snapshot 自动删除
+ a| 
+On ，承诺级别为 destroy ，销毁列表包括所有对象，触发器设置为 volume 以及启用了自动删除的所有 FlexClone LUN 和 FlexClone 文件。
+
+
+
+ a| 
+自动增长
+ a| 
+可选；如果启用，则必须主动监控聚合可用空间。
+
+|===
+[cols="2*"]
+|===
+| 文件或 LUN 设置 | 价值 
+
+
+ a| 
+空间预留
+ a| 
+enabled
+
+|===
+
+
+== 技术限制
+
+不能对此配置组合使用以下卷存储效率技术：
+
+* 压缩
+* 重复数据删除
+* ODX 和 FlexClone 副本卸载
+* 未标记为自动删除的 FlexClone LUN 和 FlexClone 文件（活动克隆）
+* FlexClone 子文件
+* ODX/ 副本卸载
+
+
+
+
+== 其他注意事项
+
+使用此配置组合时，必须考虑以下事实：
+
+* 支持该 LUN 的卷空间不足时，保护数据（ FlexClone LUN 和文件， Snapshot 副本）将被销毁。
+* 当卷用尽可用空间时，写入操作可能会超时并失败。
+
+
+默认情况下， AFF 平台会启用数据压缩。对于要在 AFF 平台上使用半厚配置的任何卷，您必须明确禁用数据压缩。

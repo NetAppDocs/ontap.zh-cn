@@ -1,0 +1,63 @@
+---
+permalink: authentication/define-custom-roles-task.html 
+sidebar: sidebar 
+keywords: define, custom roles 
+summary: 您可以使用 security login role create 命令定义自定义角色。您可以根据需要多次执行此命令，以实现要与角色关联的功能的精确组合。 
+---
+= 定义自定义角色
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `ssecurity login role create` 命令定义自定义角色。您可以根据需要多次执行此命令，以实现要与角色关联的功能的精确组合。
+
+您必须是集群管理员才能执行此任务。
+
+.关于此任务
+* 角色（无论是预定义的还是自定义的）可以授予或拒绝对 ONTAP 命令或命令目录的访问权限。
++
+命令目录（例如`volume` ）是一组相关命令和命令子目录。除非本操作步骤中所述，否则授予或拒绝对命令目录的访问权限将授予或拒绝对该目录及其子目录中的每个命令的访问权限。
+
+* 特定命令访问或子目录访问将覆盖父目录访问。
++
+如果使用命令目录定义角色，然后为某个特定命令或父目录的子目录再次定义不同的访问级别，则为该命令或子目录指定的访问级别将覆盖父级的访问级别。
+
+
+
+[NOTE]
+====
+您不能为 SVM 管理员分配一个角色，使其能够访问仅供 `admin` cluster administrator 使用的命令或命令目录，例如， `security` 命令目录。
+
+====
+.步骤
+. 定义自定义角色：
++
+`ssecurity login role create -vserver svm_name -role -cmddirname command_or_directory_name -access access_level -query query`
+
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+以下命令会为 `vol_role` role 授予对 `volume` 命令目录中的命令的完全访问权限，并对 `volume snapshot` 子目录中的命令授予只读访问权限。
+
++
+[listing]
+----
+cluster1::>security login role create -role vol_role -cmddirname "volume" -access all
+
+cluster1::>security login role create -role vol_role -cmddirname "volume snapshot" -access readonly
+----
++
+以下命令会为 `Svm_storage` role 授予对 `storage` 命令目录中的命令的只读访问权限，不能访问 `storage encryption` 子目录中的命令，也不能完全访问 `storage aggregate plex offline` nonintrinsic 命令。
+
++
+[listing]
+----
+cluster1::>security login role create -role SVM_storage -cmddirname "storage" -access readonly
+
+cluster1::>security login role create -role SVM_storage -cmddirname "storage encryption" -access none
+
+cluster1::>security login role create -role SVM_storage -cmddirname "storage aggregate plex offline" -access all
+----
+

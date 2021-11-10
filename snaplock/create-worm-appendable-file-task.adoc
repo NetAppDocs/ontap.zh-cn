@@ -1,0 +1,68 @@
+---
+permalink: snaplock/create-worm-appendable-file-task.html 
+sidebar: sidebar 
+keywords: command, program, create, worm, appendable, file, nfs, cifs, chunk 
+summary: 您可以通过 NFS 或 CIFS 使用任何合适的命令或程序来创建 WORM 可附加文件。WORM 可附加文件会保留以增量方式写入的数据，如日志条目。数据以 256 KB 区块的形式附加到文件中。写入每个区块时，上一个区块将受 WORM 保护。在保留期限结束之前，您无法删除此文件。 
+---
+= 使用命令或程序创建 WORM 可附加文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过 NFS 或 CIFS 使用任何合适的命令或程序来创建 WORM 可附加文件。WORM 可附加文件会保留以增量方式写入的数据，如日志条目。数据以 256 KB 区块的形式附加到文件中。写入每个区块时，上一个区块将受 WORM 保护。在保留期限结束之前，您无法删除此文件。
+
+WORM 可附加文件必须驻留在 SnapLock 卷上。
+
+数据不必按顺序写入活动的 256 KB 区块。将数据写入文件的字节 n×256 KB+1 时，先前的 256 KB 区块将受 WORM 保护。
+
+.步骤
+. 使用合适的命令或程序创建具有所需保留时间的零长度文件。
++
+在 UNIX Shell 中，使用以下命令将保留时间设置为 2020 年 11 月 21 日早上 6 ： 00在名为 `document.txt` 的零长度文件上：
+
++
+[listing]
+----
+touch -a -t 202011210600 document.txt
+----
+. 使用合适的命令或程序将文件的读写属性更改为只读。
++
+在 UNIX Shell 中，使用以下命令将名为 `document.txt` 的文件设置为只读：
+
++
+[listing]
+----
+chmod 444 document.txt
+----
+. 使用合适的命令或程序将文件的读写属性重新更改为可写。
++
+[NOTE]
+====
+此步骤不会被视为合规风险，因为文件中没有数据。
+
+====
++
+在 UNIX Shell 中，使用以下命令使名为 `document.txt` 的文件可写：
+
++
+[listing]
+----
+chmod 777 document.txt
+----
+. 使用合适的命令或程序开始向文件写入数据。
++
+在 UNIX Shell 中，使用以下命令将数据写入 `document.txt` ：
+
++
+[listing]
+----
+echo test data >> document.txt
+----
++
+[NOTE]
+====
+如果您不再需要向文件附加数据，请将文件权限改回只读状态。
+
+====
+

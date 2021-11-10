@@ -1,0 +1,57 @@
+---
+permalink: flexgroup/enable-storage-efficiency-task.html 
+sidebar: sidebar 
+keywords: enable, storage, efficiency, flexgroup, volume 
+summary: 您可以在 FlexGroup 卷上同时或单独运行重复数据删除和数据压缩，以实现最佳空间节省。 
+---
+= 在 FlexGroup 卷上启用存储效率
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在 FlexGroup 卷上同时或单独运行重复数据删除和数据压缩，以实现最佳空间节省。
+
+FlexGroup 卷必须处于联机状态。
+
+.步骤
+. 在 FlexGroup 卷上启用存储效率： `volume efficiency on -vserver svm_name -volume volume_name`
++
+FlexGroup 卷的所有成分卷都启用了存储效率操作。
+
++
+如果在卷上启用存储效率后扩展 FlexGroup 卷，则新成分卷会自动启用存储效率。
+
+. 使用 `volume efficiency modify` 命令在 FlexGroup 卷上启用所需的存储效率操作。
++
+您可以在 FlexGroup 卷上启用实时重复数据删除，后处理重复数据删除，实时压缩和后处理压缩。您还可以设置压缩类型（二级或自适应），并为 FlexGroup 卷指定计划或效率策略。
+
+. 如果未使用计划或效率策略运行存储效率操作，请启动效率操作： `volume efficiency start -vserver svm_name -volume volume_name`
++
+如果在卷上启用了重复数据删除和数据压缩，则先运行数据压缩，然后再运行重复数据删除。如果 FlexGroup 卷上已有任何效率操作处于活动状态，则此命令将失败。
+
+. 验证在 FlexGroup 卷上启用的效率操作： `volume efficiency show -vserver svm_name -volume volume_name`
++
+[listing]
+----
+cluster1::> volume efficiency show -vserver vs1 -volume fg1
+             Vserver Name: vs1
+              Volume Name: fg1
+              Volume Path: /vol/fg1
+                    State: Enabled
+                   Status: Idle
+                 Progress: Idle for 17:07:25
+                     Type: Regular
+                 Schedule: sun-sat@0
+
+...
+
+             Compression: true
+      Inline Compression: true
+Incompressible Data Detection: false
+      Constituent Volume: false
+Compression Quick Check File Size: 524288000
+           Inline Dedupe: true
+         Data Compaction: false
+----
+

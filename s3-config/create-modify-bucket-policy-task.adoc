@@ -1,0 +1,81 @@
+---
+permalink: s3-config/create-modify-bucket-policy-task.html 
+sidebar: sidebar 
+keywords: modify, bucket, policy 
+summary: 您可以向默认存储分段策略添加访问规则。其访问控制的范围是包含的存储分段，因此，只有一个存储分段时，它才是最合适的。 
+---
+= 修改存储分段策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以向默认存储分段策略添加访问规则。其访问控制的范围是包含的存储分段，因此，只有一个存储分段时，它才是最合适的。
+
+包含 S3 服务器和存储分段且已启用 S3 的 SVM 必须已存在。
+
+您可以为新用户和组添加新语句，也可以修改现有语句的属性。有关更多选项，请参见 `vserver object-store-server bucket policy` 手册页。
+
+.步骤
+. 向存储分段策略添加语句：
++
+`vserver object-store-server bucket policy add-statement -vserver svm_name -bucket bucket_name -Effect ｛ allow_deny ｝ -action object_store_actions -principal user_and_group_name -resource object_store_resources [-SID text] [-index integer ]`
+
++
+以下参数用于定义访问权限：
+
++
+[cols="2*"]
+|===
+
+
+ a| 
+` 效果`
+ a| 
+该语句可能允许或拒绝访问
+
+
+
+ a| 
+` 操作`
+ a| 
+您可以指定 ` *` 表示所有操作，也可以指定包含以下一项或多项操作的列表： `GetObject ， PutObject ， DeleteObject ， ListBucket ， GetBucketAcl ， GetObjectAcl ， ListBucketMultipartu上传 ，` 和 `ListMultipartu上传 部件` 。
+
+
+
+ a| 
+` 主体`
+ a| 
+一个或多个 S3 用户或组的列表。
+
+** 最多可以指定 10 个用户或组。
+** 如果指定了 S3 组，则其格式必须为 `group/group_name 。`
+** 可以将 ` *` 指定为表示公有访问；即，不使用访问密钥和机密密钥进行访问。
+** 如果未指定主体，则 SVM 中的所有 S3 用户都将获得访问权限。
+
+
+
+
+ a| 
+` 资源`
+ a| 
+分段及其包含的任何对象。通配符 ` *` 和 ` ？` 可用于形成用于指定资源的正则表达式。
+
+|===
++
+您也可以使用 ` -SID` 选项指定文本字符串作为注释。
+
+
+
+以下示例将为 SVM svm1.example.com 和 bucket1 创建一个对象存储服务器存储分段策略语句，用于指定允许的对象存储服务器用户 user1 自述文件夹访问权限。
+
+[listing]
+----
+cluster1::> vserver object-store-server bucket policy statement create -vserver svm1.example.com -bucket bucket1 -effect allow -action GetObject,PutObject,DeleteObject,ListBucket -principal user1 -resource bucket1/readme/* -sid "fullAccessToReadmeForUser1"
+----
+以下示例将为 SVM svm1.example.com 和 bucket1 创建一个对象存储服务器存储分段策略语句，用于指定允许访问对象存储服务器组 group1 的所有对象。
+
+[listing]
+----
+cluster1::> vserver object-store-server bucket policy statement create -vserver svm1.example.com -bucket bucket1 -effect allow -action GetObject,PutObject,DeleteObject,ListBucket -principal group/group1 -resource bucket1/* -sid "fullAccessForGroup1"
+----

@@ -1,0 +1,51 @@
+---
+permalink: smb-admin/display-local-users-task.html 
+sidebar: sidebar 
+keywords: display, list, local, user, summary, form, determine, account, setting, configure, specific, user, detail, troubleshoot, authentication, file, access, issue, display information about local users 
+summary: 您可以通过摘要形式显示所有本地用户的列表。如果要确定为特定用户配置了哪些帐户设置，则可以显示该用户的详细帐户信息以及多个用户的帐户信息。此信息可帮助您确定是否需要修改用户的设置，以及对身份验证或文件访问问题进行故障排除。 
+---
+= 显示有关本地用户的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过摘要形式显示所有本地用户的列表。如果要确定为特定用户配置了哪些帐户设置，则可以显示该用户的详细帐户信息以及多个用户的帐户信息。此信息可帮助您确定是否需要修改用户的设置，以及对身份验证或文件访问问题进行故障排除。
+
+不会显示有关用户密码的信息。
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 如果您要 ... | 输入命令 ... 
+
+
+ a| 
+显示有关 Storage Virtual Machine （ SVM ）上所有用户的信息
+ a| 
+`vserver cifs users-and-groups local-user show -vserver _vserver_name_`
+
+
+
+ a| 
+显示用户的详细帐户信息
+ a| 
+`vserver cifs users-and-groups local-user show -instance -vserver _vserver_name_ -user-name _user_name_`
+
+|===
++
+运行命令时，您还可以选择其他可选参数。有关详细信息，请参见手册页。
+
+
+
+以下示例显示了有关 SVM vs1 上所有本地用户的信息：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user show -vserver vs1
+Vserver  User Name                   Full Name     Description
+-------- --------------------------- ------------- -------------
+vs1      CIFS_SERVER\Administrator   James Smith   Built-in administrator account
+vs1      CIFS_SERVER\sue             Sue   Jones
+----

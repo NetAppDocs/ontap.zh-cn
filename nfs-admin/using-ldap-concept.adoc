@@ -1,0 +1,84 @@
+---
+permalink: nfs-admin/using-ldap-concept.html 
+sidebar: sidebar 
+keywords: use, ldap 
+summary: 通过 LDAP （轻型目录访问协议）服务器，您可以集中维护用户信息。如果您将用户数据库存储在环境中的 LDAP 服务器上，则可以将存储系统配置为在现有 LDAP 数据库中查找用户信息。 
+---
+= LDAP 概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过 LDAP （轻型目录访问协议）服务器，您可以集中维护用户信息。如果您将用户数据库存储在环境中的 LDAP 服务器上，则可以将存储系统配置为在现有 LDAP 数据库中查找用户信息。
+
+* 在为 ONTAP 配置 LDAP 之前，您应验证站点部署是否符合 LDAP 服务器和客户端配置的最佳实践。具体而言，必须满足以下条件：
++
+** LDAP 服务器的域名必须与 LDAP 客户端上的条目匹配。
+** LDAP 服务器支持的 LDAP 用户密码哈希类型必须包括 ONTAP 支持的类型：
++
+*** 加密（所有类型）和 SHA-1 （ SHA ， SSHA ）。
+*** 从 ONTAP 9.8 开始， SHA-2 哈希（ SHA-256 ， SSH/384 ， SHA-512 ， SSHA-256 ， SSHA-384 和 SSHA-512 ）。
+
+
+** 如果 LDAP 服务器需要会话安全措施，则必须在 LDAP 客户端中配置这些措施。
++
+可以使用以下会话安全选项：
+
++
+*** LDAP 签名（提供数据完整性检查）和 LDAP 签名和签章（提供数据完整性检查和加密）
+*** START TLS
+*** LDAPS （基于 TLS 或 SSL 的 LDAP ）
+
+
+** 要启用签名和签章的 LDAP 查询，必须配置以下服务：
++
+*** LDAP 服务器必须支持 GSSAPI （ Kerberos ） SASL 机制。
+*** LDAP 服务器必须在 DNS 服务器上设置 DNS A/AAAA 记录以及 PTR 记录。
+*** Kerberos 服务器必须在 DNS 服务器上存在 SRV 记录。
+
+
+** 要启用启动 TLS 或 LDAPS ，应考虑以下几点。
++
+*** NetApp 最佳实践是使用 Start TLS ，而不是 LDAPS 。
+*** 如果使用 LDAPS ，则必须在 ONTAP 9.5 及更高版本中为 TLS 或 SSL 启用 LDAP 服务器。ONTAP 9.09.4 不支持 SSL 。
+*** 必须已在域中配置证书服务器。
+
+
+** 要启用 LDAP 转介跟踪（在 ONTAP 9.5 及更高版本中），必须满足以下条件：
++
+*** 这两个域都应配置以下信任关系之一：
++
+**** 双向
+**** 单向，主站点信任转介域
+**** 父 - 子
+
+
+*** 必须配置 DNS 以解析所有转介的服务器名称。
+*** 当 ` -bind-as-cifs-server` 设置为 true 时，域密码应相同以进行身份验证。
+
+
+
+
++
+[NOTE]
+====
+LDAP 转介跟踪不支持以下配置。
+
+** 对于所有 ONTAP 版本：
+** 管理 SVM 上的 LDAP 客户端
+** 对于 ONTAP 9.8 及更早版本（ 9.9.1 及更高版本支持这些功能）：
+** LDAP 签名和签章（ ` -session-security` 选项）
+** 加密 TLS 连接（ ` -use-start-tls` 选项）
+** 通过 LDAPS 端口 636 进行通信（ ` -use-ldaps for-ad-ldap` 选项）
+
+
+====
+* 在 SVM 上配置 LDAP 客户端时，必须输入 LDAP 模式。
++
+在大多数情况下，默认 ONTAP 模式之一是合适的。但是，如果环境中的 LDAP 模式与这些模式不同，则必须在创建 LDAP 客户端之前为 ONTAP 创建新的 LDAP 客户端模式。有关您的环境要求，请咨询 LDAP 管理员。
+
+* 不支持使用 LDAP 进行主机名解析。
+
+
+对于追加信息，请参见 https://www.netapp.com/pdf.html?item=/media/19423-tr-4835.pdf["NetApp 技术报告 4835 ：《如何在 ONTAP 中配置 LDAP 》"]。

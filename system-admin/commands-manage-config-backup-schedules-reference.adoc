@@ -1,0 +1,57 @@
+---
+permalink: system-admin/commands-manage-config-backup-schedules-reference.html 
+sidebar: sidebar 
+keywords: command, manage, configuration, backup, schedule, settings 
+summary: 您可以使用 system configuration backup settings 命令管理配置备份计划。 
+---
+= 用于管理配置备份计划的命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `ssystem configuration backup settings` 命令管理配置备份计划。
+
+这些命令可在高级权限级别下使用。
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+更改配置备份计划的设置：
+
+* 指定除了集群中的默认位置之外，还要将配置备份文件上传到的远程 URL （ HTTP ， HTTPS 或 FTP ）
+* 指定用于登录到远程 URL 的用户名
+* 设置每个配置备份计划要保留的备份数
+
+ a| 
+`s系统配置备份设置 modify`
+
+在远程 URL 中使用 HTTPS 时，请使用 ` -validate-certificate` 选项启用或禁用数字证书验证。默认情况下，证书验证处于禁用状态。
+
+[NOTE]
+====
+要将配置备份文件上传到的 Web 服务器必须已为 HTTP 启用了操作，并为 HTTPS 启用了 POST 操作。有关详细信息，请参见 Web 服务器的文档。
+
+====
+
+
+ a| 
+设置用于登录到远程 URL 的密码
+ a| 
+`s系统配置备份设置 set-password`
+
+
+
+ a| 
+查看配置备份计划的设置
+ a| 
+`s系统配置备份设置显示`
+
+[NOTE]
+====
+您可以设置 ` -instance` 参数来查看用户名以及每个计划要保留的备份数。
+
+====
+|===

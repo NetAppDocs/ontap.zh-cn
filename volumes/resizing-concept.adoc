@@ -1,0 +1,69 @@
+---
+permalink: volumes/resizing-concept.html 
+sidebar: sidebar 
+keywords: when to, use, resizing 
+summary: 由于配额调整大小比配额初始化快，因此应尽可能使用调整大小。但是，调整大小仅适用于某些类型的配额更改。 
+---
+= 何时可以使用调整大小
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+由于配额调整大小比配额初始化快，因此应尽可能使用调整大小。但是，调整大小仅适用于某些类型的配额更改。
+
+在对配额规则进行以下类型的更改时，您可以调整配额大小：
+
+* 更改现有配额。
++
+例如，更改现有配额的限制。
+
+* 为存在默认配额或默认跟踪配额的配额目标添加配额。
+* 删除指定了默认配额或默认跟踪配额条目的配额。
+* 将单独的用户配额合并为一个多用户配额。
+
+
+[NOTE]
+====
+对配额进行大量更改后，您应执行完全重新初始化，以确保所有更改生效。
+
+====
+[NOTE]
+====
+如果您尝试调整大小，但调整大小操作并不能将所有配额更改合并在一起，则 ONTAP 会发出警告。您可以从配额报告中确定存储系统是否正在跟踪特定用户，组或 qtree 的磁盘使用量。如果在配额报告中看到配额，则表示存储系统正在跟踪配额目标所拥有的磁盘空间和文件数。
+
+====
+调整大小可以使某些配额规则更改生效。请考虑以下配额：
+
+[listing]
+----
+
+#Quota Target type             disk  files thold sdisk sfile
+#------------ ----             ----  ----- ----- ----- -----
+*             user@/vol/vol2    50M   15K
+*             group@/vol/vol2  750M   85K
+*             tree@/vol/vol2      -     -
+jdoe          user@/vol/vol2/  100M   75K
+kbuck         user@/vol/vol2/  100M   75K
+----
+假设您进行了以下更改：
+
+* 增加默认用户目标的文件数。
+* 为需要比默认用户配额更多磁盘限制的新用户 boris 添加新的用户配额。
+* 删除 kbuck 用户的显式配额条目；新用户现在只需要默认配额限制。
+
+
+这些更改会产生以下配额：
+
+[listing]
+----
+
+#Quota Target type             disk  files thold sdisk sfile
+#------------ ----             ----  ----- ----- ----- -----
+*             user@/vol/vol2    50M   25K
+*             group@/vol/vol2  750M   85K
+*             tree@/vol/vol2      -     -
+jdoe          user@/vol/vol2/  100M   75K
+boris         user@/vol/vol2/  100M   75K
+----
+调整大小将激活所有这些更改；不需要完全重新初始化配额。

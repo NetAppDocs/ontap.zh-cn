@@ -1,0 +1,98 @@
+---
+permalink: volumes/flexvol-fullness-overallocation-alerts-concept.html 
+sidebar: sidebar 
+keywords: how to, address, flexvol, volume, fullness, overallocation, alerts 
+summary: 当 FlexVol 卷空间即将用尽时， ONTAP 会发出 EMS 消息，以便您可以通过为已满的卷提供更多空间来采取更正操作。了解警报类型及其解决方法有助于确保数据可用性。 
+---
+= 解决 FlexVol 卷已满和过度分配警报
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当 FlexVol 卷空间即将用尽时， ONTAP 会发出 EMS 消息，以便您可以通过为已满的卷提供更多空间来采取更正操作。了解警报类型及其解决方法有助于确保数据可用性。
+
+如果将卷描述为 _full_ ，则表示卷中可供活动文件系统（用户数据）使用的空间百分比已降至低于（可配置）阈值。当卷变为 _overallocate_ 时， ONTAP 用于元数据和支持基本数据访问的空间已用尽。有时，通常为其他目的预留的空间可用于保持卷正常运行，但空间预留或数据可用性可能会面临风险。
+
+过度分配可以是逻辑分配，也可以是物理分配。_Logical Overallocation_means that space reserved to honour future space commitments ， such as space reservation ， has been used for another purpose 。_physical overallocation_means that the volume is running out of physical blocks to use.处于此状态的卷面临拒绝写入，脱机或可能导致控制器中断的风险。
+
+由于元数据已使用或预留的空间，卷可能会超过 100% 已满。但是，已满超过 100% 的卷可能会分配过度，也可能不会分配过度。如果 qtree 级别和卷级别的共享位于同一个 FlexVol 或 SCVMM 池中，则 qtree 在 FlexVol 共享上显示为目录。因此，您需要注意不要意外删除它们。
+
+下表介绍了卷填充度和过度分配警报，可用于解决问题描述的操作以及不采取措施的风险：
+
+[cols="6*"]
+|===
+| 警报类型 | EMS 级别 | 是否可配置？ | 定义 | 解决方法 | 如果未采取任何措施，则会产生风险 
+
+
+ a| 
+接近全满
+ a| 
+调试
+ a| 
+Y
+ a| 
+文件系统已超过为此警报设置的阈值（默认值为 95% ）。此百分比等于 `used` total 减去 Snapshot 预留的大小。
+ a| 
+* 增加卷大小
+* 减少用户数据
+
+ a| 
+写入操作或数据可用性目前没有风险。
+
+
+
+ a| 
+已满
+ a| 
+调试
+ a| 
+Y
+ a| 
+文件系统已超过为此警报设置的阈值（默认值为 98% ）。此百分比等于 `used` total 减去 Snapshot 预留的大小。
+ a| 
+* 增加卷大小
+* 减少用户数据
+
+ a| 
+写入操作或数据可用性目前没有风险，但卷即将达到写入操作可能面临风险的阶段。
+
+
+
+ a| 
+逻辑分配过度
+ a| 
+SVC 错误
+ a| 
+不包括
+ a| 
+除了文件系统已满之外，卷中用于元数据的空间也已用尽。
+ a| 
+* 增加卷大小
+* 正在删除 Snapshot 副本
+* 减少用户数据
+* 禁用文件或 LUN 的空间预留
+
+ a| 
+对未预留的文件执行写入操作可能会失败。
+
+
+
+ a| 
+物理分配过度
+ a| 
+节点错误
+ a| 
+不包括
+ a| 
+卷可写入的物理块即将用尽。
+ a| 
+* 增加卷大小
+* 正在删除 Snapshot 副本
+* 减少用户数据
+
+ a| 
+写入操作以及数据可用性都存在风险；卷可能会脱机。
+
+|===
+每当超过卷的阈值时，无论填充度百分比是上升还是下降，都会生成 EMS 消息。当卷的填充度级别降至阈值以下时，将生成 `volume ok` EMS 消息。

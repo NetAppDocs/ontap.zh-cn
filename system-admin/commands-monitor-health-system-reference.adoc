@@ -1,0 +1,281 @@
+---
+permalink: system-admin/commands-monitor-health-system-reference.html 
+sidebar: sidebar 
+keywords: command, monitor, health, system, display, status, cli, software, version, switches, alert 
+summary: 您可以使用 system health 命令显示有关系统资源运行状况的信息，响应警报以及配置未来的警报。使用命令行界面命令，您可以深入查看有关如何配置运行状况监控的信息。这些命令的手册页包含更多信息。 
+---
+= 用于监控系统运行状况的命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `ssystem health` 命令显示有关系统资源运行状况的信息，响应警报以及配置未来的警报。使用命令行界面命令，您可以深入查看有关如何配置运行状况监控的信息。这些命令的手册页包含更多信息。
+
+
+
+== 显示系统运行状况的状态
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+显示系统的运行状况，其中反映了各个运行状况监控器的整体状态
+ a| 
+`s系统运行状况显示`
+
+
+
+ a| 
+显示运行状况监控可用的子系统的运行状况
+ a| 
+`s系统运行状况子系统显示`
+
+|===
+
+
+== 显示节点连接的状态
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+显示有关从节点到存储架的连接的详细信息，包括端口信息， HBA 端口速度， I/O 吞吐量以及每秒 I/O 操作速率
+ a| 
+`s存储架 show -connectivity`
+
+使用 ` -instance` 参数可显示有关每个磁盘架的详细信息。
+
+
+
+ a| 
+显示有关驱动器和阵列 LUN 的信息，包括可用空间，磁盘架和托架编号以及所属节点名称
+ a| 
+`s存储磁盘显示`
+
+使用 ` -instance` 参数显示有关每个驱动器的详细信息。
+
+
+
+ a| 
+显示有关存储架端口的详细信息，包括端口类型，速度和状态
+ a| 
+`storage port show`
+
+使用 ` -instance` 参数显示有关每个适配器的详细信息。
+
+|===
+
+
+== 管理集群和管理网络交换机的发现
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+显示集群监控的交换机
+ a| 
+`ssystem cluster-switch show`
+
+
+
+ a| 
+显示集群当前监控的交换机，包括您删除的交换机（显示在命令输出的原因列中）以及通过网络访问集群和管理网络交换机所需的配置信息。
+
+此命令可在高级权限级别下使用。
+ a| 
+`ssystem cluster-switch show-all`
+
+
+
+ a| 
+配置发现未发现的交换机
+ a| 
+`ssystem cluster-switch create`
+
+
+
+ a| 
+修改有关集群监控的交换机的信息（例如，设备名称， IP 地址， SNMP 版本和社区字符串）
+ a| 
+`ssystem cluster-switch modify`
+
+
+
+ a| 
+禁用对交换机的监控
+ a| 
+`ssystem cluster-switch modify -disable-monitoring`
+
+
+
+ a| 
+显示运行状况监控器轮询交换机以收集信息的间隔
+ a| 
+`ssystem cluster-switch polling-interval show`
+
+
+
+ a| 
+修改运行状况监控器轮询交换机以收集信息的间隔。
+
+此命令可在高级权限级别下使用。
+ a| 
+`ssystem cluster-switch polling-interval modify`
+
+
+
+ a| 
+禁用对交换机的发现和监控，并删除交换机配置信息
+ a| 
+`ssystem cluster-switch delete`
+
+
+
+ a| 
+永久删除存储在数据库中的交换机配置信息（这样做会重新启用交换机的自动发现）
+ a| 
+`ssystem cluster-switch delete -force`
+
+
+
+ a| 
+启用自动日志记录以随 AutoSupport 消息一起发送。
+
+此命令可在高级权限级别下使用。
+ a| 
+`s系统集群交换机日志`
+
+|===
+
+
+== 响应生成的警报
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+显示有关生成的警报的信息，例如触发警报的资源和节点，警报的严重性和可能的发生原因
+ a| 
+`s系统运行状况警报显示`
+
+
+
+ a| 
+显示有关生成的每个警报的信息
+ a| 
+`ssystem health alert show -instance`
+
+
+
+ a| 
+指示有人正在处理警报
+ a| 
+`s系统运行状况警报修改`
+
+
+
+ a| 
+确认警报
+ a| 
+`ssystem health alert modify -acknowledge`
+
+
+
+ a| 
+禁止后续警报，使其不会影响子系统的运行状况
+ a| 
+`ssystem health alert modify -suppress`
+
+
+
+ a| 
+删除未自动清除的警报
+ a| 
+`s系统运行状况警报删除`
+
+
+
+ a| 
+显示有关上周触发警报的 AutoSupport 消息的信息，例如，确定警报是否触发 AutoSupport 消息
+ a| 
+`s系统运行状况 AutoSupport 触发器历史记录显示`
+
+|===
+
+
+== 配置未来警报
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+启用或禁用控制特定资源状态是否引发特定警报的策略
+ a| 
+`s系统运行状况策略定义 modify`
+
+|===
+
+
+== 显示有关如何配置运行状况监控的信息
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+显示有关运行状况监控器的信息，例如其节点，名称，子系统和状态
+ a| 
+`ssystem health config show`
+
+[NOTE]
+====
+使用 ` -instance` 参数显示有关每个运行状况监控器的详细信息。
+
+====
+
+
+ a| 
+显示有关运行状况监控器可能生成的警报的信息
+ a| 
+`s系统运行状况警报定义显示`
+
+[NOTE]
+====
+使用 ` -instance` 参数显示有关每个警报定义的详细信息。
+
+====
+
+
+ a| 
+显示有关运行状况监控策略的信息，这些策略可确定何时发出警报
+ a| 
+`s系统运行状况策略定义显示`
+
+[NOTE]
+====
+使用 ` -instance` 参数显示有关每个策略的详细信息。使用其他参数筛选警报列表，例如，按策略状态（是否已启用），运行状况监控器，警报等进行筛选。
+
+====
+|===
+
+
+== 降级两个次要版本之间的软件版本
+
+将集群从 Data ONTAP 8.2.1 降级到 Data ONTAP 8.2 时， ONTAP 会清除已删除交换机的历史记录。如果自动发现的交换机不支持运行状况监控，则它还会将 `Model` 列设置为 `Other` 。
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+降级软件版本命令
+ a| 
+`s系统集群交换机准备降级`
+
+|===

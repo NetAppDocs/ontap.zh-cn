@@ -1,0 +1,30 @@
+---
+permalink: san-admin/flexclone-luns-protect-your-data-concept.html 
+sidebar: sidebar 
+keywords: use, flexclone, luns, protect, your, data 
+summary: FlexClone LUN 是活动卷或 Snapshot 副本中另一个 LUN 的时间点可写副本。可以独立修改克隆及其父级，而不会彼此影响。 
+---
+= 使用 FlexClone LUN 保护您的数据概览
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FlexClone LUN 是活动卷或 Snapshot 副本中另一个 LUN 的时间点可写副本。可以独立修改克隆及其父级，而不会彼此影响。
+
+FlexClone LUN 最初与其父 LUN 共享空间。默认情况下， FlexClone LUN 会继承父 LUN 的空间预留属性。例如，如果父 LUN 未预留空间，则默认情况下， FlexClone LUN 也未预留空间。但是，您可以从作为空间预留 LUN 的父级创建未预留空间的 FlexClone LUN 。
+
+克隆 LUN 时，块共享会在后台进行，在块共享完成之前，您无法创建卷 Snapshot 副本。
+
+您必须使用 `volume snapshot autodelete modify` 命令配置卷以启用 FlexClone LUN 自动删除功能。否则，如果您希望自动删除 FlexClone LUN ，但没有为卷配置 FlexClone 自动删除，则不会删除任何 FlexClone LUN 。
+
+创建 FlexClone LUN 时， FlexClone LUN 自动删除功能默认处于禁用状态。您必须在每个 FlexClone LUN 上手动启用此功能，然后才能自动删除此 FlexClone LUN 。如果您使用的是半厚卷配置，并且希望此选项提供 "`尽力服务` " 写入保证，则必须使 _all_ FlexClone LUN 可自动删除。
+
+[NOTE]
+====
+从 Snapshot 副本创建 FlexClone LUN 时，会使用节省空间的后台进程自动从 Snapshot 副本拆分 LUN ，以便 LUN 不再依赖于 Snapshot 副本或占用任何额外空间。如果此后台拆分尚未完成，并且此 Snapshot 副本会自动删除，则即使您已为该 FlexClone LUN 禁用 FlexClone 自动删除功能，该 FlexClone LUN 也会被删除。后台拆分完成后，即使删除了此 Snapshot 副本，也不会删除此 FlexClone LUN 。
+
+====
+* 相关信息 *
+
+link:../volumes/index.html["逻辑存储管理"]

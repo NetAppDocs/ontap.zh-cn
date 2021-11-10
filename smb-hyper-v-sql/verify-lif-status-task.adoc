@@ -1,0 +1,102 @@
+---
+permalink: smb-hyper-v-sql/verify-lif-status-task.html 
+sidebar: sidebar 
+keywords: verify, lif, status, storage, virtual, machine, hyper, v, sql, server, smb, configuration, cluster 
+summary: 即使您将采用 Hyper-V 和基于 SMB 的 SQL Server 配置的 Storage Virtual Machine （ SVM ）配置为在集群中的每个节点上都具有 LIF ，在日常操作期间，某些 LIF 也可能会移至另一节点上的端口。您必须验证 LIF 状态并采取任何必要的更正操作。 
+---
+= 验证 LIF 状态
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+即使您将采用 Hyper-V 和基于 SMB 的 SQL Server 配置的 Storage Virtual Machine （ SVM ）配置为在集群中的每个节点上都具有 LIF ，在日常操作期间，某些 LIF 也可能会移至另一节点上的端口。您必须验证 LIF 状态并采取任何必要的更正操作。
+
+要提供无缝，无中断的操作支持，集群中的每个节点必须至少为 SVM 配置一个 LIF ，并且所有 LIF 都必须与主端口关联。如果某些已配置的 LIF 当前未与其主端口关联，则必须修复任何端口问题，然后将 LIF 还原到其主端口。
+
+.步骤
+. 显示有关为 SVM 配置的 LIF 的信息：
++
+` * 网络接口 show -vserver _vserver_name_*`
+
++
+在此示例中， "`lif1` " 不位于主端口上。
+
++
+`network interface show -vserver vs1`
+
++
+[listing]
+----
+
+            Logical    Status     Network          Current    Current Is
+Vserver     Interface  Admin/Oper Address/Mask     Node       Port    Home
+----------- ---------- ---------- ---------------- ---------- ------- ----
+vs1
+            lif1         up/up    10.0.0.128/24    node2      e0d     false
+            lif2         up/up    10.0.0.129/24    node2      e0d     true
+----
+. 如果某些 LIF 不在其主端口上，请执行以下步骤：
++
+.. 对于每个 LIF ，确定 LIF 的主端口是什么：
++
+` * 网络接口 show -vserver _vserver_name_ -lif _lif_name_ -fields home-node ， home-port*`
+
++
+` * 网络接口 show -vserver vs1 -lif lif1 -fields home-node ， home-port*`
+
++
+[listing]
+----
+
+vserver lif  home-node  home-port
+------- ---- ---------- ---------
+vs1     lif1 node1      e0d
+----
+.. 对于每个 LIF ，确定 LIF 的主端口是否已启动：
++
+` * 网络端口 show -node _node_name_ -port _port_ -fields port ， link*`
+
++
+`network port show -node node1 -port e0d -fields port ， link`
+
++
+[listing]
+----
+
+node       port link
+---------- ---- ----
+node1      e0d  up
+----
++
+在此示例中，应将 "`lif1` " 迁移回其主端口 `node1 ： e0d` 。
+
+
+
+. 如果应与 LIF 关联的任何主端口网络接口未处于 `up` 状态，请解决此问题，使这些接口正常运行。
+. 如果需要，请将 LIF 还原到其主端口：
++
+` * 网络接口还原 -vserver _vserver_name_ -lif _lif_name_*`
+
++
+` * 网络接口还原 -vserver vs1 -lif lif1*`
+
+. 验证集群中的每个节点是否都具有适用于 SVM 的活动 LIF ：
++
+` * 网络接口 show -vserver _vserver_name_*`
+
++
+` * 网络接口 show -vserver vs1*`
+
++
+[listing]
+----
+
+            Logical    Status     Network          Current    Current Is
+Vserver     Interface  Admin/Oper Address/Mask     Node       Port    Home
+----------- ---------- ---------- ---------------- ---------- ------- ----
+vs1
+            lif1         up/up    10.0.0.128/24    node1      e0d     true
+            lif2         up/up    10.0.0.129/24    node2      e0d     true
+----
+

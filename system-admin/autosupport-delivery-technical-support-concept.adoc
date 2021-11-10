@@ -1,0 +1,61 @@
+---
+permalink: system-admin/autosupport-delivery-technical-support-concept.html 
+sidebar: sidebar 
+keywords: autosupport, ondemand, delivery, instructions, technical, support 
+summary: AutoSupport OnDemand 会定期与技术支持进行通信，以获取有关发送，重新发送和拒绝 AutoSupport 消息以及将大型文件上传到 NetApp 支持站点的交付说明。通过 AutoSupport OnDemand ，可以按需发送 AutoSupport 消息，而无需等待每周 AutoSupport 作业运行。 
+---
+= AutoSupport OnDemand 如何从技术支持获取交付指令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AutoSupport OnDemand 会定期与技术支持进行通信，以获取有关发送，重新发送和拒绝 AutoSupport 消息以及将大型文件上传到 NetApp 支持站点的交付说明。通过 AutoSupport OnDemand ，可以按需发送 AutoSupport 消息，而无需等待每周 AutoSupport 作业运行。
+
+AutoSupport OnDemand 包含以下组件：
+
+* 在每个节点上运行的 AutoSupport OnDemand 客户端
+* 驻留在技术支持中的 AutoSupport OnDemand 服务
+
+
+AutoSupport OnDemand 客户端会定期轮询 AutoSupport OnDemand 服务，以从技术支持获取传送指令。例如，技术支持可以使用 AutoSupport OnDemand 服务请求生成新的 AutoSupport 消息。当 AutoSupport OnDemand 客户端轮询 AutoSupport OnDemand 服务时，客户端将获取传送指令，并根据请求按需发送新的 AutoSupport 消息。
+
+默认情况下， AutoSupport OnDemand 处于启用状态。但是， AutoSupport OnDemand 依靠某些 AutoSupport 设置来继续与技术支持进行通信。满足以下要求时， AutoSupport OnDemand 会自动与技术支持通信：
+
+* AutoSupport 已启用
+* AutoSupport 已配置为向技术支持发送消息。
+* AutoSupport 已配置为使用 HTTPS 传输协议。
+
+
+AutoSupport OnDemand 客户端会将 HTTPS 请求发送到 AutoSupport 消息所发送到的同一技术支持位置。AutoSupport OnDemand 客户端不接受传入连接。
+
+[NOTE]
+====
+AutoSupport OnDemand 使用 "`AutoSupport` " 用户帐户与技术支持进行通信。ONTAP 会阻止您删除此帐户。
+
+====
+如果要禁用 AutoSupport OnDemand ，但保持启用 AutoSupport 并将其配置为使用 HTTPS 传输协议向技术支持发送消息，请联系技术支持。
+
+下图显示了 AutoSupport OnDemand 如何向技术支持发送 HTTPS 请求以获取传送指令。
+
+image::../media/autosupport-ondemand.gif[本图通过周围的文字进行了说明。]
+
+传送指令可以包括请求 AutoSupport 执行以下操作：
+
+* 生成新的 AutoSupport 消息。
++
+技术支持可能会请求新的 AutoSupport 消息来帮助鉴别问题。
+
+* 生成新的 AutoSupport 消息，将核心转储文件或性能归档文件上传到 NetApp 支持站点。
++
+技术支持可能会请求核心转储或性能归档文件来帮助鉴别问题。
+
+* 重新传输先前生成的 AutoSupport 消息。
++
+如果由于传送失败而未收到消息，则会自动发出此请求。
+
+* 禁止传送特定触发事件的 AutoSupport 消息。
++
+技术支持可能会禁止传送未使用的数据。
+
+

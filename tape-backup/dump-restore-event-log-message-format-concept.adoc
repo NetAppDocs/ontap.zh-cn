@@ -1,0 +1,49 @@
+---
+permalink: tape-backup/dump-restore-event-log-message-format-concept.html 
+sidebar: sidebar 
+keywords: event, dump, restore, log, message, 
+summary: 对于每个转储和还原事件，都会向备份日志文件写入一条消息。 
+---
+= 转储和还原事件日志消息格式概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对于每个转储和还原事件，都会向备份日志文件写入一条消息。
+
+转储和还原事件日志消息的格式如下：
+
+` 类型时间戳标识符事件（ event_info ） _`
+
+以下列表介绍了事件日志消息格式的字段：
+
+* 每个日志消息都以下表所述的一种类型指示符开头：
++
+|===
+| Type | Description 
+
+
+ a| 
+日志
+ a| 
+日志记录事件
+
+
+
+ a| 
+DMP
+ a| 
+转储事件
+
+
+
+ a| 
+RST
+ a| 
+还原事件
+
+|===
+* `timestamp` 显示事件的日期和时间。
+* 转储事件的 `identifier` 字段包括转储路径和转储的唯一 ID 。还原事件的 `identifier` 字段仅使用还原目标路径名称作为唯一标识符。与日志记录相关的事件消息不包含 `identifier` 字段。
+

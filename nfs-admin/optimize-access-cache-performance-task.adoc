@@ -1,0 +1,67 @@
+---
+permalink: nfs-admin/optimize-access-cache-performance-task.html 
+sidebar: sidebar 
+keywords: optimize, access, cache, performance 
+summary: 您可以配置多个参数来优化访问缓存，并在性能与存储在访问缓存中的信息的最新程度之间找到适当的平衡。 
+---
+= 优化访问缓存性能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以配置多个参数来优化访问缓存，并在性能与存储在访问缓存中的信息的最新程度之间找到适当的平衡。
+
+配置访问缓存刷新周期时，请记住以下几点：
+
+* 值越高意味着条目在访问缓存中的保留时间越长。
++
+其优势在于性能更好，因为 ONTAP 在刷新访问缓存条目上花费的资源更少。缺点是，如果导出策略规则发生更改，而访问缓存条目因此变得陈旧，则更新这些条目需要的时间会较长。因此，应获取访问权限的客户端可能会被拒绝，而应被拒绝的客户端可能会获得访问权限。
+
+* 值越低意味着 ONTAP 更新访问缓存条目的频率越高。
++
+其优势在于，条目更新，客户端更有可能被正确授予或拒绝访问。缺点是性能下降，因为 ONTAP 会花费更多资源来刷新访问缓存条目。
+
+
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 执行所需的操作：
++
+[cols="2*"]
+|===
+| 要修改的内容 | 输入 ... 
+
+
+ a| 
+肯定条目的刷新期限
+ a| 
+`vserver export-policy access-cache config modify-all-vservers -refresh-period-positive timeout_value`
+
+
+
+ a| 
+否定条目的刷新期限
+ a| 
+`vserver export-policy access-cache config modify-all-vservers -refresh-period-负 超时值`
+
+
+
+ a| 
+旧条目的超时期限
+ a| 
+`vserver export-policy access-cache config modify-all-vservers -harvest-timeout timeout_value`
+
+|===
+. 验证新参数设置：
++
+`vserver export-policy access-cache config show-all-vservers`
+
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+

@@ -1,0 +1,67 @@
+---
+permalink: smb-hyper-v-sql/create-continuously-available-shares-task.html 
+sidebar: sidebar 
+keywords: create, continuous, smb, available, share, sql, database, file, server, hyper, v, virtual, machine 
+summary: 创建数据卷后，您可以创建持续可用的共享，应用程序服务器可使用这些共享访问 Hyper-V 虚拟机，配置文件和 SQL Server 数据库文件。创建 SMB 共享时，应使用共享配置工作表。 
+---
+= 创建持续可用的 SMB 共享
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+创建数据卷后，您可以创建持续可用的共享，应用程序服务器可使用这些共享访问 Hyper-V 虚拟机，配置文件和 SQL Server 数据库文件。创建 SMB 共享时，应使用共享配置工作表。
+
+.步骤
+. 显示有关现有数据卷及其接合路径的信息：
++
+` * volume show -vserver _vserver_name_ -junction*`
+
+. 创建持续可用的 SMB 共享：
++
+` * vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path _path_ -share-properties oplocks ， continuous-available -symlink "" [-comment text]*`
+
++
+** 您可以选择向共享配置添加注释。
+** 默认情况下，在共享上配置脱机文件共享属性，并将其设置为 `manual` 。
+** ONTAP 使用 Windows 默认共享权限 `Everyone` / `Full Control` 创建共享。
+
+
+. 对共享配置工作表中的所有共享重复上述步骤。
+. 使用 `vserver cifs share show` 命令验证您的配置是否正确。
+. 通过将驱动器映射到每个共享并使用 * Windows 属性 * 窗口配置文件权限，在持续可用的共享上配置 NTFS 文件权限。
+
+
+以下命令会在 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 上创建名为 `data2` 的持续可用共享。通过将 ` -symlink` 参数设置为 ` ""` ，可以禁用符号链接：
+
+[listing]
+----
+cluster1::> volume show -vserver vs1 -junction
+                      Junction                  Junction
+Vserver   Volume      Active   Junction Path    Path Source
+--------- ----------- -------- ---------------- ------------
+vs1       data        true     /data            RW_volume
+vs1       data1       true     /data/data1      RW_volume
+vs1       data2       true     /data/data2      RW_volume
+vs1       vs1_root    -        /                -
+
+cluster1::> vserver cifs share create -vserver vs1 -share-name data2 -path /data/data2 -share-properties oplocks,continuously-available -symlink ""
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data2
+
+                      Vserver: vs1
+                        Share: data2
+     CIFS Server NetBIOS Name: VS1
+                         Path: /data/data2
+             Share Properties: oplocks
+                               continuously-available
+           Symlink Properties: -
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: -
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+----

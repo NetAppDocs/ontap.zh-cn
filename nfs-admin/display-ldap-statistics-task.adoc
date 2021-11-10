@@ -1,0 +1,54 @@
+---
+permalink: nfs-admin/display-ldap-statistics-task.html 
+sidebar: sidebar 
+keywords: display, ldap, statistics 
+summary: 从 ONTAP 9.2 开始，您可以显示存储系统上 Storage Virtual Machine （ SVM ）的 LDAP 统计信息，以监控性能并诊断问题。 
+---
+= 显示 LDAP 统计信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.2 开始，您可以显示存储系统上 Storage Virtual Machine （ SVM ）的 LDAP 统计信息，以监控性能并诊断问题。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须已在 SVM 上配置 LDAP 客户端。
+* 您必须已确定可从中查看数据的 LDAP 对象。
+
+
+.步骤
+. 查看计数器对象的性能数据：
++
+`s` 的结果显示
+
+
+
+以下示例显示了对象 `sECD_external_service_op` 的性能数据：
+
+[listing]
+----
+cluster::*> statistics show -vserver vserverName -object secd_external_service_op -instance “vserverName:LDAP (NIS & Name Mapping):GetUserInfoFromName:1.1.1.1”
+
+Object: secd_external_service_op
+Instance: vserverName:LDAP (NIS & Name Mapping):GetUserInfoFromName:1.1.1.1
+Start-time: 4/13/2016 22:15:38
+End-time: 4/13/2016 22:15:38
+Scope: vserverName
+Counter                            Value
+-------------------------------- --------------------------------
+instance_name                      vserverName:LDAP (NIS & Name
+                                   Mapping):GetUserInfoFromName:
+                                   1.1.1.1
+last_modified_time                 1460610787
+node_name                          nodeName
+num_not_found_responses            1
+num_request_failures               1
+num_requests_sent                  1
+num_responses_received             1
+num_successful_responses           0
+num_timeouts                       0
+operation                          GetUserInfoFromName
+process_name                       secd
+request_latency                    52131us
+----

@@ -1,0 +1,38 @@
+---
+permalink: volumes/view-status-efficiency-operations-task.html 
+sidebar: sidebar 
+keywords: efficiency, operation, status, view 
+summary: 您可以查看卷上是否启用了重复数据删除或数据压缩。您还可以使用 volume efficiency show 命令查看卷上的效率操作的状态，状态，类型和进度。 
+---
+= 查看效率操作的状态
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以查看卷上是否启用了重复数据删除或数据压缩。您还可以使用 `volume efficiency show` 命令查看卷上的压缩状态，状态，类型和效率操作进度。
+
+.步骤
+. 使用 `volume efficiency show` 命令查看卷上效率操作的状态。
++
+以下命令显示分配了自适应压缩类型的卷 VolA 上的效率操作的状态：
+
++
+`volume efficiency show -instance -vserver vs1 -volume VolA`
+
++
+如果在卷 VolA 上启用了效率操作，并且该操作处于空闲状态，则可以在系统输出中看到以下内容：
+
++
+[listing]
+----
+cluster1::> volume efficiency show -vserver vs1 -volume VolA
+
+  Vserver Name: vs1
+   Volume Name: VolA
+   Volume Path: /vol/VolA
+         State: Enabled
+        Status: Idle
+      Progress: Idle for 00:03:20
+----
+

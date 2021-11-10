@@ -1,0 +1,45 @@
+---
+permalink: performance-admin/check-disk-response-times-task.html 
+sidebar: sidebar 
+keywords: check, disk, throughput, latency 
+summary: 您可以检查集群节点的磁盘吞吐量和延迟指标，以帮助您进行故障排除。 
+---
+= 检查磁盘吞吐量和延迟
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以检查集群节点的磁盘吞吐量和延迟指标，以帮助您进行故障排除。
+
+此任务需要高级权限级别命令。
+
+.步骤
+. 更改为高级权限级别：
++
+`set -privilege advanced`
+
+. 检查磁盘吞吐量和延迟指标：
++
+`satictics disk show -sort-key latency`
+
+
+
+以下示例显示了 `cluster1` 上的 `node2` 的每个用户读取或写入操作中的总数：
+
+[listing]
+----
+::*> statistics disk show -sort-key latency
+cluster1 : 8/24/2015 12:44:15
+                    Busy Total Read  Write  Read    Write   *Latency
+  Disk       Node  (%)   Ops   Ops   Ops   (Bps)    (Bps)       (us)
+------------ ----   ---- ----   ----- ----- ------   -----    -----
+
+1.10.20      node2     4    5       3     2  95232  367616    23806
+1.10.8       node2     4    5       3     2 138240  386048    22113
+
+1.10.6       node2     3    4       2     2  48128  371712    19113
+1.10.19      node2     4    6       3     2 102400  443392    19106
+
+1.10.11      node2     4    4       2     2 122880  408576    17713
+----

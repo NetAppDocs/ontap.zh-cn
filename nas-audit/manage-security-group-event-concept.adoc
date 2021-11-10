@@ -1,0 +1,41 @@
+---
+permalink: nas-audit/manage-security-group-event-concept.html 
+sidebar: sidebar 
+keywords: manage, security-group, event 
+summary: 如果为 Storage Virtual Machine （ SVM ）配置了安全组事件并启用了审核，则会生成审核事件。 
+---
+= 管理安全组事件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果为 Storage Virtual Machine （ SVM ）配置了安全组事件并启用了审核，则会生成审核事件。
+
+如果在系统中创建或删除本地 CIFS 或 NFS 组，并在组中添加或删除本地用户，则会生成事件 ID 为 4731 ， 4732 ， 4733 ， 4734 和 4735 的安全组事件。使用 `vserver cifs users-and-groups <local-group>` 和 `vserver services name-service <unix-group>` 命令修改用户帐户时，将生成 security-group-events 。
+
+以下示例显示了创建本地 UNIX 安全组时生成的 ID 为 4731 的安全组事件：
+
+[listing]
+----
+netapp-clus1::*> vserver services name-service unix-group create -name testunixgroup -id 20
+- System
+  - Provider
+   [ Name]  NetApp-Security-Auditing
+   [ Guid]  {3CB2A168-FE19-4A4E-BDAD-DCF422F13473}
+   EventID 4731
+   EventName Local Unix Security Group Created
+   ...
+   ...
+  SubjectUserName admin
+  SubjectUserSid 65533-1001
+  SubjectDomainName ~
+  SubjectIP console
+  SubjectPort
+  TargetUserName testunixgroup
+  TargetDomainName
+  TargetGid 20
+  TargetType NFS
+  PrivilegeList ~
+  GidHistory ~
+----

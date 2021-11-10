@@ -1,0 +1,79 @@
+---
+permalink: encryption-at-rest/change-key-management-passphrase-task.html 
+sidebar: sidebar 
+keywords: changing, onboard, key, management, passphrase 
+summary: 安全最佳做法是定期更改板载密钥管理密码短语。您应将新的板载密钥管理密码短语复制到存储系统以外的安全位置，以供将来使用。 
+---
+= 更改板载密钥管理密码短语
+
+
+[role="lead"]
+安全最佳做法是定期更改板载密钥管理密码短语。您应将新的板载密钥管理密码短语复制到存储系统以外的安全位置，以供将来使用。
+
+.您需要什么？ #8217 ；将需要什么
+* 要执行此任务，您必须是集群或 SVM 管理员。
+* 此任务需要高级权限。
+
+
+.步骤
+. 更改为高级权限级别：
++
+`set -privilege advanced`
+
+. 更改板载密钥管理密码短语：
++
+|===
+| 对于此 ONTAP 版本 ... | 使用此命令 ... 
+
+
+ a| 
+ONTAP 9.6 及更高版本
+ a| 
+`s安全密钥管理器板载更新密码短语`
+
+
+
+ a| 
+ONTAP 9.5 及更早版本
+ a| 
+`s安全密钥管理器 update-passphrase`
+
+|===
++
+有关完整的命令语法，请参见手册页。
+
++
+以下 ONTAP 9.6 命令可用于更改 `cluster1` 的板载密钥管理密码短语：
+
++
+[listing]
+----
+clusterl::> security key-manager onboard update-passphrase
+Warning: This command will reconfigure the cluster passphrase for onboard key management for Vserver "cluster1".
+Do you want to continue? {y|n}: y
+Enter current passphrase:
+Enter new passphrase:
+----
+. 在提示符处输入 `y` 以更改板载密钥管理密码短语。
+. 在当前密码短语提示符处输入当前密码短语。
+. 在新的密码短语提示符处，输入 32 到 256 个字符的密码短语，或者对于 "`cc-mode` " ，输入 64 到 256 个字符的密码短语。
++
+[NOTE]
+====
+如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置向导再次显示密码短语提示之前会有五秒的延迟。
+
+====
+. 在密码短语确认提示符处，重新输入密码短语。
+
+
+在 MetroCluster 环境中，您必须更新配对集群上的密码短语：
+
+* 在 ONTAP 9.5 及更早版本中，您必须在配对集群上使用相同的密码短语运行 `security key-manager update-passphrase` 。
+* 在 ONTAP 9.6 及更高版本中，系统会提示您在配对集群上使用相同的密码短语运行 `sSecurity key-manager on板 载同步` 。
+
+
+您应将板载密钥管理密码短语复制到存储系统以外的安全位置，以供将来使用。
+
+更改板载密钥管理密码短语时，您应手动备份密钥管理信息。
+
+xref:backup-key-management-information-manual-task.adoc[手动备份板载密钥管理信息]

@@ -1,0 +1,92 @@
+---
+permalink: system-admin/troubleshoot-issues-saml-config-task.html 
+sidebar: sidebar 
+keywords: troubleshoot, issues, saml, configuration, security, assertion, markup, language, repair, process 
+summary: 如果配置安全断言标记语言（ SAML ）身份验证失败，您可以手动修复 SAML 配置失败的每个节点并从故障中恢复。在修复过程中， Web 服务器将重新启动，并且任何活动的 HTTP 连接或 HTTPS 连接将中断。 
+---
+= 对 SAML 配置问题进行故障排除
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果配置安全断言标记语言（ SAML ）身份验证失败，您可以手动修复 SAML 配置失败的每个节点并从故障中恢复。在修复过程中， Web 服务器将重新启动，并且任何活动的 HTTP 连接或 HTTPS 连接将中断。
+
+配置 SAML 身份验证时， ONTAP 会按节点应用 SAML 配置。启用 SAML 身份验证后，如果存在配置问题， ONTAP 会自动尝试修复每个节点。如果任何节点上的 SAML 配置出现问题，您可以禁用 SAML 身份验证，然后重新启用 SAML 身份验证。有时，即使重新启用 SAML 身份验证， SAML 配置也无法应用于一个或多个节点。您可以确定 SAML 配置失败的节点，然后手动修复该节点。
+
+.步骤
+. 登录到高级权限级别：
++
+` * 设置 -privilege advanced*`
+
+. 确定 SAML 配置失败的节点：
++
+` * security SAML -sp status show -instance*`
+
++
+[listing]
+----
+cluster_12::*> security saml-sp status show -instance
+
+                         Node: node1
+                Update Status: config-success
+               Database Epoch: 9
+   Database Transaction Count: 997
+                   Error Text:
+SAML Service Provider Enabled: false
+        ID of SAML Config Job: 179
+
+                         Node: node2
+                Update Status: config-failed
+               Database Epoch: 9
+   Database Transaction Count: 997
+                   Error Text: SAML job failed, Reason: Internal error. Failed to receive the SAML IDP Metadata file.
+SAML Service Provider Enabled: false
+        ID of SAML Config Job: 180
+2 entries were displayed.
+----
+. 修复故障节点上的 SAML 配置：
++
+` * security SAML -sp repair -node _node_name_*`
+
++
+[listing]
+----
+cluster_12::*> security saml-sp repair -node node2
+
+Warning: This restarts the web server. Any HTTP/S connections that are active
+         will be disrupted.
+Do you want to continue? {y|n}: y
+[Job 181] Job is running.
+[Job 181] Job success.
+----
++
+Web 服务器将重新启动，并且任何活动的 HTTP 连接或 HTTPS 连接将中断。
+
+. 验证是否已在所有节点上成功配置 SAML ：
++
+` * security SAML -sp status show -instance*`
+
++
+[listing]
+----
+cluster_12::*> security saml-sp status show -instance
+
+                         Node: node1
+                Update Status: config-success
+               Database Epoch: 9
+   Database Transaction Count: 997
+                   Error Text:
+SAML Service Provider Enabled: false
+        ID of SAML Config Job: 179
+
+                         Node: node2
+                Update Status: **config-success**
+               Database Epoch: 9
+   Database Transaction Count: 997
+                   Error Text:
+SAML Service Provider Enabled: false
+        ID of SAML Config Job: 180
+2 entries were displayed.
+----
+

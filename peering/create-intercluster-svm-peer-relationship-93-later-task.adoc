@@ -1,0 +1,69 @@
+---
+permalink: peering/create-intercluster-svm-peer-relationship-93-later-task.html 
+sidebar: sidebar 
+keywords: create, intercluster, svm, peer, relationship 
+summary: 您可以使用 vserver peer create 命令在本地和远程集群上的 SVM 之间创建对等关系。 
+---
+= 创建集群间 SVM 对等关系（ ONTAP 9.3 及更高版本）
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `vserver peer create` 命令在本地和远程集群上的 SVM 之间创建对等关系。
+
+.您需要什么？ #8217 ；将需要什么
+* 源集群和目标集群必须建立对等关系。
+* 集群必须运行 ONTAP 9.3 。
+* 您必须为远程集群上的 SVM 建立 " 预先授权 " 对等关系。
++
+有关详细信息，请参见 xref:create-cluster-relationship-93-later-task.adoc[创建集群对等关系（ ONTAP 9.3 及更高版本）]。
+
+
+
+先前版本的 ONTAP 允许一次仅为一个 SVM 授权对等关系。每次授权待定 SVM 对等关系时，您都需要运行 `vserver peer accept` 命令。
+
+从 ONTAP 9.3 开始，您可以通过在创建集群对等关系时在 ` -initial-allowed-vserver` 选项中列出 SVM 来 " 预先授权 " 多个 SVM 的对等关系。有关详细信息，请参见 xref:create-cluster-relationship-93-later-task.adoc[创建集群对等关系（ ONTAP 9.3 及更高版本）]。
+
+.步骤
+. 在数据保护目标集群上，显示已预先授权建立对等关系的 SVM ：
++
+`vserver peer permission show`
+
++
+[listing]
+----
+cluster02::> vserver peer permission show
+Peer Cluster         Vserver               Applications
+-------------------  --------------------  --------------------
+cluster02            vs1,vs2               snapmirror
+----
+. 在数据保护源集群上，创建与数据保护目标集群上预先授权的 SVM 的对等关系：
++
+`vserver peer create -vserver _local_svm_ -peer-vserver _remote_svm_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将在本地 SVM `pvs1` 和预先授权的远程 SVM `vs1` 之间创建对等关系：
+
++
+[listing]
+----
+cluster01::> vserver peer create -vserver pvs1 -peer-vserver vs1
+----
+. 验证 SVM 对等关系：
++
+`vserver peer show`
+
++
+[listing]
+----
+cluster01::> vserver peer show
+            Peer        Peer                           Peering        Remote
+Vserver     Vserver     State        Peer Cluster      Applications   Vserver
+----------- ----------- ------------ ----------------- -------------- ---------
+pvs1        vs1         peered       cluster02         snapmirror     vs1
+----
+

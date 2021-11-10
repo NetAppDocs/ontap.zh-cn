@@ -1,0 +1,73 @@
+---
+permalink: consistency-groups/index.html 
+sidebar: sidebar 
+keywords: consistency groups, consistency group protection, application protection 
+summary: 此内容介绍如何在 ONTAP 中使用一致性组，并说明分层和单个一致性组，保护策略以及升级注意事项。 
+---
+= 一致性组概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+一致性组是一组卷，可为跨越多个卷的应用程序工作负载提供写入顺序一致性保证。
+
+一致性组有助于管理应用程序工作负载，便于管理本地和远程保护策略，并在一个时间点同时为一组卷提供崩溃状态一致或应用程序一致的 Snapshot 副本。通过一致性组中的快照，可以还原整个应用程序工作负载。
+
+一致性组支持任何 FlexVol 卷，而不考虑协议（ NAS ， SAN 或 NVMe ），并且可以通过 ONTAP REST API 或 System Manager 中的 * 存储 > 一致性组 * 菜单项进行管理。
+
+一致性组可以单独存在，也可以存在分层关系。单个一致性组是一组卷。卷可以使用单个或共享的本地 Snapshot 策略。一致性组只能有一个共享的 SM-BC 策略，此策略可用于恢复整个一致性组。
+
+image:../media/consistency-group-single-diagram.gif["一个一致性组的示意图及其所在的卷和本地 Snapshot 策略"]
+
+较大的应用程序工作负载可能需要多个一致性组。在这种情况下，可以将多个一致性组置于一个分层关系中。在此配置中，单个一致性组将成为父一致性组的子组件。父一致性组最多可以包含五个子一致性组。与各个一致性组一样，可以对一致性组（父级和子级）的整个配置应用远程 SM-BC 保护策略来恢复应用程序工作负载。
+
+image:../media/consistency-group-nested-diagram.gif["嵌套一致性组及其所在卷的示意图"]
+
+
+
+== 保护
+
+一致性组通过 SnapMirror 业务连续性（ SM-BC ）提供远程保护，并通过 Snapshot 策略提供本地保护。要使用远程保护，您必须满足的要求 xref:../smbc/smbc_plan_prerequisites.html#licensing[SnapMirror 业务连续性部署]。默认情况下，一致性组没有设置保护策略，除非选择策略，否则不会保护您的数据。请参见 xref:protect-task.adoc[" 保护一致性组 "] 有关详细信息 ...
+
+
+
+== 升级注意事项
+
+在 ONTAP 9.8 和 9.9 中使用 SM-BC 创建的一致性组将自动升级，并在升级到 ONTAP 9.10.1 时在 System Manager 中的 * 存储 > 一致性组 * 或 ONTAP REST API 下进行管理。有关升级的详细信息，请参见 xref:../smbc/smbc_admin_upgrade_and_revert_considerations.adoc[SM-BC 升级和还原注意事项]。
+
+使用 ONTAP REST API 创建的一致性组快照可以通过 System Manager 的一致性组界面和一致性组 API 端点进行管理。
+
+使用 ONTAPI 命令 `cg-start` 和 `cg-commit` 创建的快照不会被识别为一致性组快照，因此无法通过 ONTAP API 中的 System Manager 一致性组界面或一致性组端点进行管理。
+
+
+
+== 一致性组对象限制
+
+|===
+
+
+| 一致性组 | 范围 | 最小值 | 最大值 
+
+
+| 一致性组的数量 | 集群 | 0 | 与集群中的最大卷数相同 
+
+
+| 父一致性组的数量 | 集群 | 0 | 与集群中的最大卷数相同 
+
+
+| 单个和父一致性组的数量 | 集群 | 0 | 一致性组中的卷数 
+
+
+| 一致性组 | 与集群中的最大卷数相同 | 1. | 80 
+
+
+| 父一致性组子级中的卷数 | 父一致性组 | 1. | 80 
+
+
+| 子一致性组中的卷数 | 子一致性组 | 1. | 80 
+
+
+| 父一致性组中的子一致性组的数量 | 父一致性组 | 1. | 5. 
+|===
+如果您使用的是 SM-BC ，请参见 xref:../smbc/smbc_plan_additional_restrictions_and_limitations.html#volumes[SM-BC 限制和限制]。

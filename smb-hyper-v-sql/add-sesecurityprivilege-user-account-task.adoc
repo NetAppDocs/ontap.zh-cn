@@ -1,0 +1,43 @@
+---
+permalink: smb-hyper-v-sql/add-sesecurityprivilege-user-account-task.html 
+sidebar: sidebar 
+keywords: add, sesecurityprivilege, privilege, user, aacount, sql, server, smb, share 
+summary: '要在 CIFS 服务器上执行某些操作，必须为用于安装 SQL 服务器的域用户帐户分配 "SeSecurityPrivilege " 权限，这些操作要求默认情况下不向域用户分配权限。' 
+---
+= 将 SeSecurityPrivilege 权限添加到用户帐户（对于 SMB 共享的 SQL Server ）
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须为用于安装 SQL 服务器的域用户帐户分配 `SeSecurityPrivilege` 特权，才能在 CIFS 服务器上执行某些操作，这些操作需要默认情况下未分配给域用户的权限。
+
+用于安装 SQL Server 的域帐户必须已存在。
+
+在将权限添加到 SQL Server 安装程序的帐户时， ONTAP 可能会通过联系域控制器来验证此帐户。如果 ONTAP 无法与域控制器联系，则此命令可能会失败。
+
+.步骤
+. 添加 " `SeSecurityPrivilege` " 权限：
++
+` * vserver cifs users-and-groups privilege add-privilege -vserver _vserver_name_ -user-or-group-name _account_name_ -privileges SeSecurityPrivilege *`
+
++
+` -user-or-group-name` 参数的值是用于安装 SQL Server 的域用户帐户的名称。
+
+. 验证是否已将此权限应用于此帐户：
++
+` * vserver cifs users-and-groups privilege show -vserver _vserver_name_ ‑user-or-group-name _account_name_*`
+
+
+
+以下命令会将 " `SeSecurityPrivilege` " 权限添加到 Storage Virtual Machine （ SVM ） vs1 的示例域中的 SQL Server 安装程序帐户：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups privilege add-privilege -vserver vs1 -user-or-group-name EXAMPLE\SQLinstaller -privileges SeSecurityPrivilege
+
+cluster1::> vserver cifs users-and-groups privilege show -vserver vs1
+Vserver   User or Group Name          Privileges
+--------- ---------------------       ---------------
+vs1       EXAMPLE\SQLinstaller        SeSecurityPrivilege
+----

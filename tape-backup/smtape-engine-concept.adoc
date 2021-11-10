@@ -1,0 +1,24 @@
+---
+permalink: tape-backup/smtape-engine-concept.html 
+sidebar: sidebar 
+keywords: smtape, disaster, recovery, solution, blocks, data, tape, qtree, subtree, volume, license, baseline, differential, incremental, backup 
+summary: SMTape 是 ONTAP 的灾难恢复解决方案，可将数据块备份到磁带。您可以使用 SMTape 对磁带执行卷备份。但是，您不能在 qtree 或子树级别执行备份。SMTape 支持基线备份，差异备份和增量备份。SMTape 不需要许可证。 
+---
+= 关于 FlexVol 卷的 SMTape 引擎
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SMTape 是 ONTAP 的灾难恢复解决方案，可将数据块备份到磁带。您可以使用 SMTape 对磁带执行卷备份。但是，您不能在 qtree 或子树级别执行备份。SMTape 支持基线备份，差异备份和增量备份。SMTape 不需要许可证。
+
+您可以使用符合 NDMP 的备份应用程序执行 SMTape 备份和还原操作。您可以选择 SMTape ，以便仅在 Storage Virtual Machine （ SVM ）范围的 NDMP 模式下执行备份和还原操作。
+
+[NOTE]
+====
+当 SMTape 备份或还原会话正在进行中时，不支持还原过程。您必须等待会话完成，或者必须中止 NDMP 会话。
+
+====
+使用 SMTape ，您可以备份 255 个 Snapshot 副本。对于后续的基线备份，增量备份或差异备份，您必须删除较早备份的 Snapshot 副本。
+
+在执行基线还原之前，要将数据还原到的卷的类型必须为 `DP` ，并且此卷必须处于受限状态。成功还原后，此卷将自动联机。您可以按执行备份的顺序对此卷执行后续的增量或差异还原。

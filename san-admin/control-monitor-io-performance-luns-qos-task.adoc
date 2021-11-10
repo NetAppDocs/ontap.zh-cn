@@ -1,0 +1,35 @@
+---
+permalink: san-admin/control-monitor-io-performance-luns-qos-task.html 
+sidebar: sidebar 
+keywords: control, monitor, i/o, performance, luns, using, storage qos 
+summary: 您可以通过将 LUN 分配给存储 QoS 策略组来控制 LUN 的输入 / 输出（ I/O ）性能。您可以控制 I/O 性能，以确保工作负载实现特定的性能目标，或者限制对其他工作负载产生负面影响的工作负载。 
+---
+= 使用存储 QoS 控制和监控 LUN 的 I/O 性能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过将 LUN 分配给存储 QoS 策略组来控制 LUN 的输入 / 输出（ I/O ）性能。您可以控制 I/O 性能，以确保工作负载实现特定的性能目标，或者限制对其他工作负载产生负面影响的工作负载。
+
+策略组强制实施最大吞吐量限制（例如 100 MB/ 秒）。您可以在不指定最大吞吐量的情况下创建策略组，从而可以在控制工作负载之前监控性能。
+
+您还可以将具有 FlexVol 卷和 LUN 的 Storage Virtual Machine （ SVM ）分配给策略组。
+
+在将 LUN 分配给策略组时，请注意以下要求：
+
+* LUN 必须包含在策略组所属的 SVM 中。
++
+您可以在创建策略组时指定 SVM 。
+
+* 如果将 LUN 分配给策略组，则不能将 LUN 所在的卷或 SVM 分配给策略组。
+
+
+有关如何使用存储 QoS 的详细信息，请参见 link:../system-admin/index.html["《系统管理参考》"]。
+
+.步骤
+. 使用 `qos policy-group create` 命令创建策略组。
+. 使用 `lun create` 命令或带有 ` qos-policy-group` 参数的 `lun modify` 命令将 LUN 分配给策略组。
+. 使用 `qos statistics` 命令查看性能数据。
+. 如有必要，请使用 `qos policy-group modify` 命令调整策略组的最大吞吐量限制。
+

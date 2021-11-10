@@ -1,0 +1,27 @@
+---
+permalink: nfs-admin/ontap-controls-access-files-concept.html 
+sidebar: sidebar 
+keywords: ontap, control, access, file 
+summary: ONTAP 会根据您指定的基于身份验证和基于文件的限制来控制对文件的访问。 
+---
+= ONTAP 如何控制对文件的访问概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 会根据您指定的基于身份验证和基于文件的限制来控制对文件的访问。
+
+当客户端连接到存储系统以访问文件时， ONTAP 必须执行两项任务：
+
+* 身份验证
++
+ONTAP 必须通过使用可信源验证身份来对客户端进行身份验证。此外，客户端的身份验证类型是一种可用于确定客户端在配置导出策略时是否可以访问数据的方法（对于 CIFS 为可选）。
+
+* Authorization
++
+ONTAP 必须通过将用户凭据与文件或目录上配置的权限进行比较并确定要提供的访问类型（如果有）来授权用户。
+
+
+
+要正确管理文件访问控制， ONTAP 必须与 NIS ， LDAP 和 Active Directory 服务器等外部服务进行通信。要使用 CIFS 或 NFS 配置存储系统以进行文件访问，需要根据您在 ONTAP 中的环境设置相应的服务。

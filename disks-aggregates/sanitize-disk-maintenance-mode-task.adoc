@@ -1,0 +1,62 @@
+---
+permalink: disks-aggregates/sanitize-disk-maintenance-mode-task.html 
+sidebar: sidebar 
+keywords: sanitize, disk, maintenance mode 
+summary: 从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。这样，您就可以从已停用或无法运行的系统上的磁盘或一组磁盘中删除数据，从而无法恢复这些数据。 
+---
+= 在维护模式下清理磁盘
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。这样，您就可以从已停用或无法运行的系统上的磁盘或一组磁盘中删除数据，从而无法恢复这些数据。
+
+.您需要什么？ #8217 ；将需要什么
+* 磁盘不能是自加密磁盘（ SED ）。
++
+您必须使用 `storage encryption disk sanitize` 命令对 SED 进行清理。
+
++
+link:../encryption-at-rest/index.html["空闲数据加密"]
+
+
+
+.步骤
+. 启动至维护模式：
+. 如果要清理的磁盘已分区，请取消每个磁盘的分区：
++
+`d取消分区 disk_name`
+
+. 清理指定磁盘：
++
+`d清理开始时间（ -p _pattern1_v-r （ -p _pattern2_-r ）（ -p _pattern3_-r]] （ -c _cycle_count_） _disk_list_`
+
++
+[NOTE]
+====
+清理期间，请勿关闭节点电源，中断存储连接或删除目标磁盘。如果在格式化阶段中断清理，则必须重新启动格式化阶段并允许完成此阶段，然后才能对磁盘进行清理并准备好返回到备用池。如果您需要中止清理过程，可以使用 `ddisk sanitize abort` 命令来中止清理过程。如果指定磁盘正处于清理的格式化阶段，则在该阶段完成之前不会中止。
+
+====
++
+` -p` ` _Pattern1_` ` -p` ` _pattern2_` ` -p` ` _pattern3_` 指定一到三个用户定义的十六进制字节覆盖模式的周期，这些模式可连续应用于要清理的磁盘。默认模式为三次，第一次使用 0x55 ，第二次使用 0xAA ，第三次使用 0x3c 。
+
++
+` -r` 将模式覆盖替换为任意或所有遍的随机覆盖。
+
++
+` -c` ` c_cycle_count__` 指定应用指定覆盖模式的次数。默认值为一个周期。最大值为七个周期。
+
++
+` disk_list_` 指定要清理的备用磁盘 ID 的空格分隔列表。
+
+. 如果需要，请检查磁盘清理过程的状态：
++
+`d清理状态 [_disk_list_]`
+
+. 清理过程完成后，将每个磁盘的磁盘恢复为备用状态：
++
+`d清理版本 _disk_name_`
+
+. 退出维护模式：
+

@@ -1,0 +1,74 @@
+---
+permalink: antivirus/apply-scanner-policy-pool-task.html 
+sidebar: sidebar 
+keywords: apply, scanner policy, single, cluster 
+summary: 扫描程序策略用于确定扫描程序池是否处于活动状态。您必须先使扫描程序池处于活动状态，然后扫描程序池中定义的 Vscan 服务器才能连接到 SVM 。 
+---
+= 在单个集群上应用扫描程序策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+扫描程序策略用于确定扫描程序池是否处于活动状态。您必须先使扫描程序池处于活动状态，然后扫描程序池中定义的 Vscan 服务器才能连接到 SVM 。
+
+.关于此任务
+* 一个扫描程序池只能应用一个扫描程序策略。
+* 如果您为集群中的所有 SVM 创建了扫描程序池，则必须分别对每个 SVM 应用扫描程序策略。
+* 对于灾难恢复和 MetroCluster 配置，必须将扫描程序策略应用于本地集群和配对集群的扫描程序池。
++
+在为本地集群创建的策略中，您必须在 `cluster` 参数中指定本地集群。在为配对集群创建的策略中，您必须在 `cluster` 参数中指定配对集群。然后，配对集群可以在发生灾难时接管病毒扫描操作。
+
+
+
+.步骤
+. 应用扫描程序策略：
++
+`vserver vscan scanner-pool apply-policy -vserver data_svm -scanner-pool scanner_pool -scanner-policy primary|secondary` idle -cluster cluster_to_apply_policy_on
+
++
+扫描程序策略可以具有以下值之一：
+
++
+** `Primary` 指定扫描程序池处于活动状态。
+** `secondary` 指定，只有在主扫描程序池中的 Vscan 服务器均未连接时，扫描程序池才处于活动状态。
+** `Idle` 指定扫描程序池处于非活动状态。
+
+
++
+以下示例显示 ``vs1`` SVM 上名为 `SP` 的扫描程序池处于活动状态：
+
++
+[listing]
+----
+cluster1::> vserver vscan scanner-pool apply-policy -vserver vs1 -scanner-pool SP  -scanner-policy primary
+----
+. 验证扫描程序池是否处于活动状态：
++
+`vserver vscan scanner-pool show -vserver data_svm_cluster_admin_sVM -scanner-pool scanner_pool`
+
++
+有关完整的选项列表，请参见命令手册页。
+
++
+以下命令显示 `SP` 扫描程序池的详细信息：
+
++
+[listing]
+----
+cluster1::> vserver vscan scanner-pool show -vserver vs1 -scanner-pool SP
+
+                                    Vserver: vs1
+                               Scanner Pool: SP
+                             Applied Policy: primary
+                             Current Status: on
+         Cluster on Which Policy Is Applied: cluster1
+                  Scanner Pool Config Owner: vserver
+       List of IPs of Allowed Vscan Servers: 1.1.1.1, 10.72.204.27
+List of Host Names of Allowed Vscan Servers: 1.1.1.1, vmwin204-27.fsct.nb
+                   List of Privileged Users: cifs\u1, cifs\u2
+----
++
+您可以使用 `vserver vscan scanner-pool show-active` 命令查看 SVM 上的活动扫描程序池。有关完整的命令语法，请参见命令的手册页。
+
+

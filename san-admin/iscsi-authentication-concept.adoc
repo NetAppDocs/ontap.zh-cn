@@ -1,0 +1,40 @@
+---
+permalink: san-admin/iscsi-authentication-concept.html 
+sidebar: sidebar 
+keywords: how, iscsi, authentication, works 
+summary: 在 iSCSI 会话的初始阶段，启动程序会向存储系统发送登录请求，以启动 iSCSI 会话。然后，存储系统会允许或拒绝登录请求，或者确定不需要登录。 
+---
+= iSCSI 身份验证的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 iSCSI 会话的初始阶段，启动程序会向存储系统发送登录请求，以启动 iSCSI 会话。然后，存储系统会允许或拒绝登录请求，或者确定不需要登录。
+
+iSCSI 身份验证方法包括：
+
+* 质询握手身份验证协议（ CHAP ）—启动程序使用 CHAP 用户名和密码登录。
++
+您可以指定 CHAP 密码或生成十六进制密码。CHAP 用户名和密码有两种类型：
+
++
+** 入站—存储系统对启动程序进行身份验证。
++
+如果使用 CHAP 身份验证，则需要入站设置。
+
+** 出站—这是一个可选设置，用于使启动程序能够对存储系统进行身份验证。
++
+只有在存储系统上定义了入站用户名和密码时，才能使用出站设置。
+
+
+
+* deny-- 拒绝启动程序访问存储系统。
+* 无—存储系统不需要对启动程序进行身份验证。
+
+
+您可以定义启动程序及其身份验证方法的列表。您还可以定义不在此列表中的适用场景启动程序的默认身份验证方法。
+
+* 相关信息 *
+
+https://www.netapp.com/pdf.html?item=/media/19668-tr-3441.pdf["采用 Data ONTAP 的 Windows 多路径选项：光纤通道和 iSCSI"]

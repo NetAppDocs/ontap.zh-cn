@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: task_nas_provision_windows_smb.html 
-keywords: netapp, ontap, provisioning, nas, windows, servers, provision, smb, cifs, SMB/CIFS, share name 
-summary: 创建卷以使用 SMB/CIFS 协议为 Windows 服务器提供存储。 
+keywords: netapp, ontap, provisioning, nas, windows, servers, provision, smb, cifs, SMB, share name,shares, share access permissions, share access properties, hyper-v over smb, sql server over smb, continuously available shares 
+summary: 创建卷以使用 SMB 协议为 Windows 服务器提供存储。 
 ---
-= 使用 SMB/CIFS 为 Windows 服务器配置 NAS 存储
+= 使用 SMB 为 Windows 服务器配置 NAS 存储
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -18,9 +18,9 @@ summary: 创建卷以使用 SMB/CIFS 协议为 Windows 服务器提供存储。
 
 
 [role="lead"]
-创建卷以使用 SMB/CIFS 协议为 Windows 服务器提供存储。
+创建卷以使用 SMB 协议为 Windows 服务器提供存储。
 
-此操作步骤会在上创建新卷 link:task_nas_enable_windows_smb.html["已启用 SMB 的现有 Storage VM"]。您可以在配置卷或指定自定义配置时接受系统默认值。
+此操作步骤会在上创建新卷 link:task_nas_enable_windows_smb.html["已启用 SMB 的现有 Storage VM"] 并为卷根目录（ / ）目录创建共享。您可以在配置卷或指定自定义配置时接受系统默认值。在初始 SMB 配置后，您还可以创建其他共享并修改其属性。
 
 您可以创建 FlexVol 卷，也可以为具有高性能要求的大型文件系统创建 FlexGroup 卷。另请参见 link:task_nas_provision_flexgroup.html["使用 FlexGroup 卷为大型文件系统配置 NAS 存储"]。
 
@@ -49,11 +49,80 @@ summary: 创建卷以使用 SMB/CIFS 协议为 Windows 服务器提供存储。
 
 
 
-验证访问后，您可以 link:task_nas_provision_export_policies.html["使用共享 ACL 限制客户端访问"] 并在映射的驱动器上设置所需的任何安全属性。
+验证访问后，您可以使用共享 ACL 限制客户端访问，并在映射的驱动器上设置所需的任何安全属性。请参见 xref:smb-config/create-share-task.html[创建 SMB 共享] 有关详细信息 ...
+
+
+
+== 添加或修改共享
+
+您可以在初始 SMB 配置后添加其他共享。共享是使用您选择的默认值和属性创建的。这些内容可以稍后修改。
+
+您可以在配置共享时设置以下共享属性：
+
+* 访问权限
+* 共享属性
++
+** 通过 SMB 数据为包含 Hyper-V 和 SQL Server 的共享启用持续可用性（从 ONTAP 9.10.1 开始）。另请参见：
++
+*** xref:smb-hyper-v-sql/continuously-available-share-hyper-v-concept.html[基于 SMB 的 Hyper-V 的持续可用共享要求]
+*** xref:smb-hyper-v-sql/continuously-available-share-sql-concept.html[通过 SMB 实现 SQL Server 持续可用的共享要求]
+
+
+** 访问此共享时使用 SMB 3.0 加密数据。
+
+
+
+
+初始配置后，您还可以修改以下属性：
+
+* 符号链接
++
+** 启用或禁用符号链接和 Widelink
+
+
+* 共享属性
++
+** 允许客户端访问 Snapshot 副本目录。
+** 启用机会锁，允许客户端在本地锁定文件并缓存内容（默认）。
+** 启用基于访问的枚举（ ABE ）以根据用户的访问权限显示共享资源。
+
+
+
+
+要在启用了 SMB 的卷中添加新共享，请单击 "* 存储 ">" 共享 " ，单击 "* 添加 " ，然后选择 "* 共享 " 。
+
+要修改现有共享，请单击 "** 存储 ">" 共享 " ，然后单击 image:icon_kabob.gif["三点式 veritcal kabob 图标"] 并选择 "* 编辑 "* 。
 
 
 
 == 自定义卷配置
+
+您可以在添加卷时自定义卷配置，而不是接受系统默认值。
+
+单击 * 更多选项 * 后，选择所需功能并输入所需值。
+
+* 远程卷的缓存。
+* 性能服务级别（服务质量， QoS ）。
++
+从 ONTAP 9.8 开始，除了默认值选择之外，您还可以指定自定义 QoS 策略或禁用 QoS 。
+
++
+** 要禁用 QoS ，请依次选择 * 自定义 * ， * 现有 * 和 * 无 * 。
+** 如果选择 * 自定义 * 并指定现有服务级别，则会自动选择一个本地层。
+** 从 ONTAP 9.1.1 开始，如果选择创建自定义性能服务级别，则可以使用 System Manager 手动选择要放置所创建卷的本地层（ * 手动放置 * ）。
++
+如果选择远程缓存或 FlexGroup 卷选项，则此选项不可用。
+
+
+
+* FlexGroup 卷（选择 * 在集群中分布卷数据 * ）。
++
+如果先前在 * 性能服务级别 * 下选择了 * 手动放置 * ，则此选项不可用。否则，默认情况下，您要添加的卷将成为 FlexVol 卷。
+
++
+* 如果先前在 * 性能服务级别 * 下选择了 * 手动放置 * ，则此选项不可用。否则，默认情况下，您要添加的卷将成为 FlexVol 卷。* 对配置了卷的协议的访问权限。* 使用 SnapMirror 进行数据保护（本地或远程），然后从下拉列表中指定目标集群的保护策略和设置。* 单击 * 保存 * 以创建卷并将其添加到集群和 Storage VM 。
+
+
 
 您可以在添加卷时自定义卷配置，而不是接受系统默认值。
 
@@ -83,4 +152,21 @@ summary: 创建卷以使用 SMB/CIFS 协议为 Windows 服务器提供存储。
 
 
 
-NOTE: 保存卷后，返回到 <<step2>> 使用 SMB/CIFS 完成 Windows 服务器的配置。
+NOTE: 保存卷后，返回到 <<step2>> 使用 SMB 完成 Windows 服务器的配置。
+
+
+
+== 在 ONTAP 中执行此操作的其他方法
+
+本主题介绍如何使用 System Manager （ ONTAP 9.7 及更高版本）配置 SMB 存储。
+
+[cols="2"]
+|===
+| 执行此任务的对象 | 查看此内容 ... 
+
+
+| System Manager 经典版（ ONTAP 9.7 及更早版本 | link:https://docs.netapp.com/us-en/ontap-sm-classic/smb-config/index.html["SMB 配置概述"^] 
+
+
+| 命令行界面 | link:smb-config/index.html["使用命令行界面概述 SMB 配置"] 
+|===

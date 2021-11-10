@@ -1,0 +1,55 @@
+---
+permalink: disks-aggregates/customize-size-raid-groups-task.html 
+sidebar: sidebar 
+keywords: raidsize, customize, raid groups 
+summary: 您可以自定义 RAID 组的大小，以确保 RAID 组大小适合您计划为聚合包含的存储量。 
+---
+= 自定义 RAID 组的大小
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以自定义 RAID 组的大小，以确保 RAID 组大小适合您计划为聚合包含的存储量。
+
+对于标准聚合，您可以更改每个聚合的 RAID 组大小。对于 Flash Pool 聚合，您可以单独更改 SSD RAID 组和 HDD RAID 组的 RAID 组大小。
+
+以下列表概括了有关更改 RAID 组大小的一些事实：
+
+* 默认情况下，如果最近创建的 RAID 组中的磁盘或阵列 LUN 数量小于新的 RAID 组大小，则会将磁盘或阵列 LUN 添加到最近创建的 RAID 组中，直到其达到新大小为止。
+* 该聚合中所有其他现有 RAID 组的大小保持不变，除非您明确向其添加磁盘。
+* 您不能将 RAID 组的发生原因设置为大于聚合的当前最大 RAID 组大小。
+* 您不能减小已创建的 RAID 组的大小。
+* 新大小的适用场景将显示该聚合中的所有 RAID 组（对于 Flash Pool 聚合，则为受影响的 RAID 组类型— SSD 或 HDD 的所有 RAID 组）。
+
+
+.步骤
+. 使用适用的命令：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 输入以下命令 ... 
+
+
+ a| 
+更改 Flash Pool 聚合的 SSD RAID 组的最大 RAID 组大小
+ a| 
+`storage aggregate modify -aggregate aggr_name -cache-raid-group-size size`
+
+
+
+ a| 
+更改任何其他 RAID 组的最大大小
+ a| 
+`storage aggregate modify -aggregate aggr_name -maxraidsize size size`
+
+|===
+
+
+以下命令会将聚合 n1_a4 的最大 RAID 组大小更改为 20 个磁盘或阵列 LUN ：
+
+`storage aggregate modify -aggregate n1_a4 -maxraidsize 20`
+
+以下命令会将 Flash Pool 聚合 n1_cache_a2 的 SSD 缓存 RAID 组的最大 RAID 组大小更改为 24 ：
+
+`storage aggregate modify -aggregate n1_cache_a2 -cache-raid-group-size 24`

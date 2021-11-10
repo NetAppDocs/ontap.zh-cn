@@ -1,0 +1,51 @@
+---
+permalink: smb-admin/modify-local-user-accounts-reference.html 
+sidebar: sidebar 
+keywords: modify, local, user, account, change, exist, name, description, enable, disable, rename, compromise, administrative, modify local user accounts 
+summary: 如果要更改现有用户的全名或问题描述，并且要启用或禁用用户帐户，则可以修改本地用户帐户。如果用户的名称受到影响或者出于管理目的需要更改名称，您也可以重命名本地用户帐户。 
+---
+= 修改本地用户帐户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要更改现有用户的全名或问题描述，以及要启用或禁用用户帐户，则可以修改本地用户帐户。如果用户的名称受到影响或出于管理目的需要更改名称，您也可以重命名本地用户帐户。
+
+|===
+| 如果您要 ... | 输入命令 ... 
+
+
+ a| 
+修改本地用户的全名
+ a| 
+`vserver cifs users-and-groups local-user modify -vserver _vserver_name_ -user-name _user_name_ ‑full-name text` 如果全名包含空格，则必须将其用双引号括起来。
+
+
+
+ a| 
+修改本地用户的问题描述
+ a| 
+`vserver cifs users-and-groups local-user modify -vserver _vserver_name_ -user-name _user_name_ ‑问题描述 text` 如果问题描述包含空格，则必须将其用双引号括起来。
+
+
+
+ a| 
+启用或禁用本地用户帐户
+ a| 
+`vserver cifs users-and-groups local-user modify -vserver _vserver_name_ -user-name _user_name_ -is-account-disabled ｛ true_false ｝`
+
+
+
+ a| 
+重命名本地用户帐户
+ a| 
+`vserver cifs users-and-groups local-user rename -vserver _vserver_name_ -user-name _user_name_ -new-user-name _new_user_name_` 重命名本地用户时，新用户名必须与旧用户名保持关联。
+
+|===
+以下示例将 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 上的本地用户 "`CIFS_SERVER\sue` " 重命名为 "`CIFS_SERVER\sue_new` " ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user rename -user-name CIFS_SERVER\sue -new-user-name CIFS_SERVER\sue_new -vserver vs1
+----

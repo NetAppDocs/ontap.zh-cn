@@ -1,0 +1,155 @@
+---
+permalink: nas-audit/cli-change-events-concept.html 
+sidebar: sidebar 
+keywords: cli change events, audited 
+summary: ONTAP 可以审核某些命令行界面更改事件，包括某些 CIFS-share 事件，某些审核策略事件，某些本地安全组事件，本地用户组事件和授权策略事件。了解可以审核哪些变更事件有助于解释事件日志中的结果。 
+---
+= 可审核的 CLI 更改事件概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 可以审核某些命令行界面更改事件，包括某些 CIFS-share 事件，某些审核策略事件，某些本地安全组事件，本地用户组事件和授权策略事件。了解可以审核哪些变更事件有助于解释事件日志中的结果。
+
+您可以通过手动轮换审核日志，启用或禁用审核，显示有关审核更改事件的信息，修改审核更改事件以及删除审核更改事件来管理 Storage Virtual Machine （ SVM ）审核 CLI 更改事件。
+
+作为管理员，如果您执行任何命令来更改与 cifs-share ，本地用户组，本地安全组，授权策略和审核策略事件相关的配置， 生成记录并审核相应的事件：
+
+[cols="4*"]
+|===
+| 审核类别 | 事件 | 事件 IDs | 运行此命令 ... 
+
+
+ a| 
+Mhost 审核
+ a| 
+策略更改
+ a| 
+[4719] Audit configuration changed
+ a| 
+`SVM audit disable| 启用 | 修改`
+
+
+
+|   a| 
+文件共享
+ a| 
+[5142] Network share was add得
+ a| 
+`Vserver cifs share create`
+
+
+
+|  |   a| 
+[5143] Network share was modified
+ a| 
+`vserver cifs share modify` `vserver cifs share cree|modify-delete` `vserver cifs share adds| remove`
+
+
+
+|  |   a| 
+[5144] Network share deleted
+ a| 
+`Vserver cifs share delete`
+
+
+
+ a| 
+审核
+ a| 
+用户帐户
+ a| 
+[4720] 已创建本地用户
+ a| 
+`vserver cifs users-and-groups local-user create` `vserver services name-service unix-user create`
+
+
+
+|  |   a| 
+[4722] 已启用本地用户
+ a| 
+`Vserver cifs users-and-groups local-user create-modify`
+
+
+
+|  |   a| 
+[4724] 本地用户密码重置
+ a| 
+`Vserver cifs users-and-groups local-user set-password`
+
+
+
+|  |   a| 
+[4725] 已禁用本地用户
+ a| 
+`Vserver cifs users-and-groups local-user create-modify`
+
+
+
+|  |   a| 
+[4726] 本地用户已删除
+ a| 
+`vserver cifs users-and-groups local-user delete` `vserver services name-service unix-user delete`
+
+
+
+|  |   a| 
+[4738] Local user Change.
+ a| 
+`vserver cifs users-and-groups local-user modify` `vserver services name-service unix-user modify`
+
+
+
+|  |   a| 
+【 4781 】本地用户重命名
+ a| 
+`Vserver cifs users-and-groups local-user rename`
+
+
+
+|   a| 
+安全组
+ a| 
+【 4731 】已创建本地安全组
+ a| 
+`vserver cifs users-and-groups local-group create` `vserver services name-service unix-group create`
+
+
+
+|  |   a| 
+[4734] Local Security Group deleted
+ a| 
+`vserver cifs users-and-groups local-group delete` `vserver services name-service unix-group delete`
+
+
+
+|  |   a| 
+[4735] Local Security Group Modified
+ a| 
+`vserver cifs users-and-groups local-group rename_modify` `vserver services name-service unix-group modify`
+
+
+
+|  |   a| 
+[4732] 已将用户添加到本地组
+ a| 
+`vserver cifs users-and-groups local-group add-members` `vserver services name-service unix-group adduser`
+
+
+
+|  |   a| 
+[4733] 已从本地组中删除此用户
+ a| 
+`vserver cifs users-and-groups local-group remove-members` `vserver services name-service unix-group deluser`
+
+
+
+|   a| 
+authorization-policy-change
+ a| 
+【 4704 】已分配用户权限
+ a| 
+`Vserver cifs users-and-groups privilege add-privilege`
+
+|===

@@ -1,0 +1,45 @@
+---
+permalink: nas-audit/interpret-security-trace-results-concept.html 
+sidebar: sidebar 
+keywords: interpret, security trace, results 
+summary: 安全跟踪结果提供了允许或拒绝请求的原因。输出将结果显示为允许或拒绝访问的原因以及访问检查路径中允许或拒绝访问的位置的组合。您可以使用结果隔离并确定允许或不允许执行操作的原因。 
+---
+= 解释安全跟踪结果
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安全跟踪结果提供了允许或拒绝请求的原因。输出将结果显示为允许或拒绝访问的原因以及访问检查路径中允许或拒绝访问的位置的组合。您可以使用结果隔离并确定允许或不允许执行操作的原因。
+
+
+
+== 查找有关结果类型列表和筛选器详细信息的信息
+
+您可以在 `vserver security trace trace-result show` 命令的手册页中找到可包含在安全跟踪结果中的结果类型列表和筛选器详细信息。
+
+以下是在跟踪结果日志中以 `allow` result 类型显示的 `reason` 字段的输出示例：
+
+[listing]
+----
+Access is allowed because SMB implicit permission grants requested
+access while opening existing file or directory.
+----
+[listing]
+----
+Access is allowed because NFS implicit permission grants requested
+access while opening existing file or directory.
+----
+以下是在 `D结果日志中以` eny` result 类型显示的 `reason 字段的输出示例：
+
+[listing]
+----
+Access is denied. The requested permissions are not granted by the
+ACE while checking for child-delete access on the parent.
+----
+以下是跟踪结果日志中 `Filter details` 字段的输出示例，其中列出了包含符合筛选条件的文件和文件夹的文件系统的有效安全模式：
+
+[listing]
+----
+Security Style: MIXED and ACL
+----

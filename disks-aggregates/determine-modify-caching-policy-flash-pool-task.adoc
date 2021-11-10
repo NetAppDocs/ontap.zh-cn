@@ -1,0 +1,53 @@
+---
+permalink: disks-aggregates/determine-modify-caching-policy-flash-pool-task.html 
+sidebar: sidebar 
+keywords: determine, modify, cache, policy, flash pool, aggregates 
+summary: 您可以为 Flash Pool 聚合中的卷分配缓存保留策略，以确定卷数据在 Flash Pool 缓存中的保留时间。但是，在某些情况下，更改缓存保留策略可能不会影响卷数据在缓存中的保留时间。 
+---
+= 确定是否修改 Flash Pool 聚合概述的缓存策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以为 Flash Pool 聚合中的卷分配缓存保留策略，以确定卷数据在 Flash Pool 缓存中的保留时间。但是，在某些情况下，更改缓存保留策略可能不会影响卷数据在缓存中的保留时间。
+
+如果数据满足以下任一条件，更改缓存保留策略可能不会产生影响：
+
+* 您的工作负载是顺序的。
+* 您的工作负载不会重新读取固态驱动器（ SSD ）中缓存的随机块。
+* 卷的缓存大小太小。
+
+
+以下步骤将检查这些情况。此任务必须在高级权限模式下完成。
+
+.步骤
+. 查看工作负载卷：
++
+`satictics start -object workload_volume`
+
+. 确定卷的工作负载模式：
++
+`satictics show -object workload_volume -instance _volume-workload_ -counter sequental_reads`
+
+. 确定卷的命中率：
++
+`satictics show -object wafl_hag_vvol -instance _volume_-counter read_ops_replaced_pwercentswc_write_blks_overwrite_percent`
+
+. 确定卷的 `可缓存读取` 和 `项目缓存 Aloc` ：
++
+`ssystem node run -node node_name WAFL awa start _aggr_name_`
+
+. 显示 AWA 摘要：
++
+`ssystem node run -node node_name WAFL awa print _aggr_name_`
+
+. 将卷的命中率与 `cachable read` 进行比较。
++
+如果卷的命中率大于 `可缓存读取` ，则工作负载不会重新读取 SSD 中缓存的随机块。
+
+. 将卷的当前缓存大小与 `Project Cache Aloc` 进行比较。
++
+如果卷的当前缓存大小大于 `Project Cache Aloc` ，则卷缓存大小过小。
+
+

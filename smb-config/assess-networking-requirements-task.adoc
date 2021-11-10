@@ -1,0 +1,44 @@
+---
+permalink: smb-config/assess-networking-requirements-task.html 
+sidebar: sidebar 
+keywords: provide, smb, storage, client, verify, network, configure, provision, requirement, assess, assess networking requirements 
+summary: 在向客户端提供 SMB 存储之前，您必须验证网络配置是否正确，以满足 SMB 配置要求。 
+---
+= 评估网络连接要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在向客户端提供 SMB 存储之前，您必须验证网络配置是否正确，以满足 SMB 配置要求。
+
+必须配置以下集群网络对象：
+
+* 物理和逻辑端口
+* 广播域
+* 子网（如果需要）
+* IP 空间（除默认 IP 空间外，根据需要）
+* 故障转移组（根据需要，除每个广播域的默认故障转移组外）
+* 外部防火墙
+
+
+.步骤
+. 显示可用的物理和虚拟端口： `network port show`
++
+** 如果可能，您应使用数据网络速度最快的端口。
+** 数据网络中的所有组件都必须具有相同的 MTU 设置，才能获得最佳性能。
+
+
+. 如果您计划使用子网名称为 LIF 分配 IP 地址和网络掩码值，请验证子网是否存在且具有足够的可用地址： `network subnet show`
++
+子网包含属于同一第 3 层子网的 IP 地址池。使用 `network subnet create` 命令创建子网。
+
+. 显示可用 IP 空间： `network ipspace show`
++
+您可以使用默认 IP 空间或自定义 IP 空间。
+
+. 如果要使用 IPv6 地址，请验证是否已在集群上启用 IPv6 ： `network options ipv6 show`
++
+如果需要，您可以使用 `network options ipv6 modify` 命令启用 IPv6 。
+
+

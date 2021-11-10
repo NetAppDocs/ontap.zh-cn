@@ -1,0 +1,113 @@
+---
+permalink: tape-backup/transfer-data-ndmpcopy-task.html 
+sidebar: sidebar 
+keywords: transfer, data, ndmpcopy, incremental, full, qtree, directory, files, v4, ndmp 
+summary: ndmpcopy 命令可在支持 NDMP v4 的存储系统之间传输数据。您可以执行完整数据传输和增量数据传输。您可以传输完整或部分卷， qtree ，目录或单个文件。 
+---
+= 使用 ndmpcopy 概述传输数据
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+`ndmpcopy` 命令可在支持 NDMP v4 的存储系统之间传输数据。您可以执行完整数据传输和增量数据传输。您可以传输完整或部分卷， qtree ，目录或单个文件。
+
+使用 ONTAP 8.x 及更早版本时，增量传输限制为最多两个级别（一个完整备份和最多两个增量备份）。
+
+从 ONTAP 9.0 及更高版本开始，增量传输限制为最多九个级别（一个完整备份和最多九个增量备份）。
+
+您可以在源存储系统和目标存储系统的命令行上运行 `ndmpcopy` ，也可以在既不是数据传输源又不是数据传输目标的存储系统上运行。您也可以在同时作为数据传输源和目标的单个存储系统上运行 `ndmpcopy` 。
+
+您可以在 `ndmpcopy` 命令中使用源存储系统和目标存储系统的 IPv4 或 IPv6 地址。路径格式为 ` /vserver_name/volume_name \[path\]` 。
+
+.步骤
+. 在源和目标存储系统上启用 NDMP 服务：
++
+|===
+| 如果在源或目标上执行数据传输 ... | 使用以下命令 ... 
+
+
+ a| 
+SVM 范围的 NDMP 模式
+ a| 
+`Vserver services ndmp on`
+
+[NOTE]
+====
+对于管理 SVM 中的 NDMP 身份验证，用户帐户为 `admin` ，用户角色为 `admin` 或 `backup` 。在数据 SVM 中，用户帐户为 `vsadmin` ，用户角色为 `vsadmin` 或 `vsadmin-backup` role 。
+
+====
+
+
+ a| 
+节点范围的 NDMP 模式
+ a| 
+`s在` 上提供系统服务 NDMP
+
+|===
+. 在 nodeshell 中使用 `ndmpcopy` 命令在存储系统内部或存储系统之间传输数据：
++
+` * ndmpcopy [options]source_ip ： source_pathdestination_ip ： destination_path （ -mcs ｛ inet_inet6 ｝ ）【 -mcd ｛ inet_inet6 ｝ 】【 -md ｛ inet_inet6 ｝ ]*`
+
++
+[NOTE]
+====
+ndmpcopy 不支持 DNS 名称。您必须提供源和目标的 IP 地址。源 IP 地址或目标 IP 地址不支持环回地址（ 127.0.0.1 ）。
+
+====
++
+** `ndmpcopy` 命令可按如下所示确定控制连接的地址模式：
++
+*** 控制连接的地址模式与提供的 IP 地址相对应。
+*** 您可以使用 ` -mcs` 和 ` -mcd` 选项覆盖这些规则。
+
+
+** 如果源或目标是 ONTAP 系统，则根据 NDMP 模式（节点范围或 SVM 范围），使用允许访问目标卷的 IP 地址。
+** `ssource_path` 和 `destination _path` 是卷， qtree ，目录或文件粒度级别之前的绝对路径名称。
+** ` -mcs` 指定与源存储系统的控制连接的首选地址模式。
++
+`inet` 表示 IPv4 地址模式， `inet6` 表示 IPv6 地址模式。
+
+** ` -mcd` 指定与目标存储系统的控制连接的首选地址模式。
++
+`inet` 表示 IPv4 地址模式， `inet6` 表示 IPv6 地址模式。
+
+** ` -md` 指定源存储系统与目标存储系统之间数据传输的首选寻址模式。
++
+`inet` 表示 IPv4 地址模式， `inet6` 表示 IPv6 地址模式。
+
++
+如果未在 `ndmpcopy` 命令中使用 ` -md` 选项，则数据连接的寻址模式将按以下方式确定：
+
++
+*** 如果为控制连接指定的任一地址为 IPv6 地址，则数据连接的地址模式为 IPv6 。
+*** 如果为控制连接指定的两个地址均为 IPv4 地址，则 `ndmpcopy` 命令会首先尝试对数据连接使用 IPv6 地址模式。
++
+如果失败，此命令将使用 IPv4 地址模式。
+
+
+
+
+
++
+[NOTE]
+====
+如果指定了 IPv6 地址，则必须将其括在方括号内。
+
+====
+
+
+此示例命令会将数据从源路径（ `ssource_path` ）迁移到目标路径（ `destination _path` ）。
+
+[listing]
+----
+>ndmpcopy -sa admin:<ndmp_password> -da admin:<ndmp_password>
+ -st md5 -dt md5 192.0.2.129:/<src_svm>/<src_vol> 192.0.2.131:/<dst_svm>/<dst_vol>
+----
+此示例命令明确将控制连接和数据连接设置为使用 IPv6 地址模式：
+
+[listing]
+----
+>ndmpcopy -sa admin:<ndmp_password> -da admin:<ndmp_password> -st md5 -dt md5 -mcs inet6 -mcd inet6 -md
+ inet6 [2001:0db8:1:1:209:6bff:feae:6d67]:/<src_svm>/<src_vol> [2001:0ec9:1:1:200:7cgg:gfdf:7e78]:/<dst_svm>/<dst_vol>
+----

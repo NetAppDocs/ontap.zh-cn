@@ -1,0 +1,38 @@
+---
+permalink: nfs-config/associate-export-policy-flexvol-task.html 
+sidebar: sidebar 
+keywords: assign, export, policy, volume 
+summary: SVM 中包含的每个卷都必须与一个导出策略相关联，该导出策略包含导出规则，客户端可以通过这些规则访问卷中的数据。 
+---
+= 为卷分配导出策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SVM 中包含的每个卷都必须与一个导出策略相关联，该导出策略包含导出规则，客户端可以通过这些规则访问卷中的数据。
+
+您可以在创建卷时或创建卷后随时将导出策略与卷关联。您可以将一个导出策略与卷关联，但一个策略可以与多个卷关联。
+
+.步骤
+. 如果在创建卷时未指定导出策略，请为此卷分配一个导出策略：
++
+`volume modify -vserver _vserver_name_ -volume _volume_name_ -policy _export_policy_name_`
+
+. 验证是否已将此策略分配给卷：
++
+`volume show -volume _volume_name_ -fields policy`
+
+
+
+以下命令会将导出策略 nfs_policy 分配给 SVM vs1 上的卷 vol1 并验证分配情况：
+
+[listing]
+----
+cluster::> volume modify -v1server vs1 -volume vol1 -policy nfs_policy
+
+cluster::>volume show -volume vol -fields policy
+vserver volume       policy
+------- ------------ ----------------
+vs1     vol1         nfs_policy
+----

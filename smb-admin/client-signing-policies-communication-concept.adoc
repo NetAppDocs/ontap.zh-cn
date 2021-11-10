@@ -1,0 +1,171 @@
+---
+permalink: smb-admin/client-signing-policies-communication-concept.html 
+sidebar: sidebar 
+keywords: addition, cifs, server, smb, sign, security, windows, client, control, digital, communication, business, requirement, how smb signing policies affect communication with a cifs server 
+summary: 除了 CIFS 服务器 SMB 签名安全设置之外， Windows 客户端上的两个 SMB 签名策略还控制客户端与 CIFS 服务器之间通信的数字签名。您可以配置满足业务要求的设置。 
+---
+= SMB 签名策略如何影响与 CIFS 服务器的通信
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+除了 CIFS 服务器 SMB 签名安全设置之外， Windows 客户端上的两个 SMB 签名策略还控制客户端与 CIFS 服务器之间通信的数字签名。您可以配置满足业务要求的设置。
+
+客户端 SMB 策略通过 Windows 本地安全策略设置进行控制，这些设置通过使用 Microsoft 管理控制台（ MMC ）或 Active Directory GPO 进行配置。有关客户端 SMB 签名和安全问题的详细信息，请参见 Microsoft Windows 文档。
+
+下面介绍了 Microsoft 客户端上的两个 SMB 签名策略：
+
+* `mMicrosoft 网络客户端：对通信进行数字签名（如果服务器同意）`
++
+此设置控制是否启用客户端的 SMB 签名功能。默认情况下，此选项处于启用状态。如果在客户端上禁用此设置，则客户端与 CIFS 服务器的通信取决于 CIFS 服务器上的 SMB 签名设置。
+
+* `mMicrosoft 网络客户端：对通信进行数字签名（始终）`
++
+此设置控制客户端是否需要 SMB 签名才能与服务器进行通信。默认情况下，此选项处于禁用状态。在客户端上禁用此设置时， SMB 签名行为取决于 `Microsoft 网络客户端：对通信进行数字签名（如果服务器同意）` 的策略设置以及 CIFS 服务器上的设置。
+
++
+[NOTE]
+====
+如果您的环境包含配置为需要 SMB 签名的 Windows 客户端，则必须在 CIFS 服务器上启用 SMB 签名。否则， CIFS 服务器将无法为这些系统提供数据。
+
+====
+
+
+客户端和 CIFS 服务器 SMB 签名设置的有效结果取决于 SMB 会话是使用 SMB 1.0 还是 SMB 2.x 及更高版本。
+
+下表总结了会话使用 SMB 1.0 时有效的 SMB 签名行为：
+
+|===
+| 客户端 | 不需要 ONTAP 签名 | 需要 ONTAP 签名 
+
+
+ a| 
+已禁用且不需要签名
+ a| 
+未签名
+ a| 
+已签名
+
+
+
+ a| 
+已启用签名，但不需要签名
+ a| 
+未签名
+ a| 
+已签名
+
+
+
+ a| 
+签名已禁用且为必填项
+ a| 
+已签名
+ a| 
+已签名
+
+
+
+ a| 
+已启用且需要签名
+ a| 
+已签名
+ a| 
+已签名
+
+|===
+[NOTE]
+====
+如果在客户端上禁用了签名，但在 CIFS 服务器上需要签名，则较早的 Windows SMB 1 客户端和某些非 Windows SMB 1 客户端可能无法连接。
+
+====
+下表总结了会话使用 SMB 2.x 或 SMB 3.0 时有效的 SMB 签名行为：
+
+[NOTE]
+====
+对于 SMB 2.x 和 SMB 3.0 客户端， SMB 签名始终处于启用状态。不能将其禁用。
+
+====
+|===
+| 客户端 | 不需要 ONTAP 签名 | 需要 ONTAP 签名 
+
+
+ a| 
+不需要签名
+ a| 
+未签名
+ a| 
+已签名
+
+
+
+ a| 
+需要签名
+ a| 
+已签名
+ a| 
+已签名
+
+|===
+下表总结了默认的 Microsoft 客户端和服务器 SMB 签名行为：
+
+|===
+| 协议 | 哈希算法 | 可以启用 / 禁用 | 可能需要 / 不需要 | 客户端默认值 | 服务器默认值 | DC 默认值 
+
+
+ a| 
+SMB 1.0
+ a| 
+MD5
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+已启用（不需要）
+ a| 
+已禁用（不需要）
+ a| 
+Required
+
+
+
+ a| 
+SMB 2.x
+ a| 
+HMAC SHA-256
+ a| 
+否
+ a| 
+是的。
+ a| 
+不需要
+ a| 
+不需要
+ a| 
+Required
+
+
+
+ a| 
+SMB 3.0
+ a| 
+AES-CMAC 。
+ a| 
+否
+ a| 
+是的。
+ a| 
+不需要
+ a| 
+不需要
+ a| 
+Required
+
+|===
+[NOTE]
+====
+Microsoft 不再建议使用 `Digitally sign communications （ if client agrees ）` 或 `Digitally sign communications （ if server agrees ）` 组策略设置。Microsoft 也不再建议使用 `EnableSecuritySignature` 注册表设置。这些选项仅影响 SMB 1 行为，可替换为 `Digitally sign communications （ always ）` Group Policy 设置或 `RequireSecuritySignature` 注册表设置。您还可以从 Microsoft 博客获取详细信息。 http://blogs.technet.com/b/josebda/archive/2010/12/01/the-basics-of-smb-signing-covering-both-smb1-and-smb2.aspx[The SMB 签名基础知识（涵盖 SMB1 和 SMB2 ） ]
+
+====

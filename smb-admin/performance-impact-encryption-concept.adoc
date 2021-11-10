@@ -1,0 +1,25 @@
+---
+permalink: smb-admin/performance-impact-encryption-concept.html 
+sidebar: sidebar 
+keywords: smb, session, encryption, communication, windows, client, experience, performance, impact, affect, server, node, svm, performance impact of smb encryption 
+summary: 当 SMB 会话使用 SMB 加密时，与 Windows 客户端之间的所有 SMB 通信都会受到性能影响，从而影响客户端和服务器（即运行包含 SMB 服务器的 SVM 的集群上的节点）。 
+---
+= SMB 加密对性能的影响
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当 SMB 会话使用 SMB 加密时，与 Windows 客户端之间的所有 SMB 通信都会受到性能影响，从而影响客户端和服务器（即运行包含 SMB 服务器的 SVM 的集群上的节点）。
+
+性能影响显示为客户端和服务器上的 CPU 利用率增加，但网络流量不会改变。
+
+性能影响的程度取决于所运行的 ONTAP 9 版本。从 ONTAP 9.7 开始，新的加密负载下算法可以提高加密 SMB 流量的性能。如果启用了 SMB 加密，则默认情况下会启用 SMB 加密卸载。
+
+增强的 SMB 加密性能需要 AES-NI 卸载功能。请参见 Hardware Universe （ HWU ）以验证您的平台是否支持 AES-NI 卸载。
+
+如果您能够使用支持速度更快的 GCM 算法的 SMB 版本 3.11 （ Windows 10 和 Windows Server 2016 支持此版本），则还可以进一步提高性能。
+
+根据您的网络， ONTAP 9 版本， SMB 版本和 SVM 实施情况， SMB 加密对性能的影响可能差别很大；您只能通过在网络环境中进行测试来验证它。
+
+SMB 服务器默认禁用 SMB 加密。您应仅在需要加密的 SMB 共享或 SMB 服务器上启用 SMB 加密。通过 SMB 加密， ONTAP 可以对请求进行解密，并对每个请求的响应进行加密。因此，只有在必要时才应启用 SMB 加密。

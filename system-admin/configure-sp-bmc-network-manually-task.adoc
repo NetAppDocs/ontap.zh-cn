@@ -1,0 +1,92 @@
+---
+permalink: system-admin/configure-sp-bmc-network-manually-task.html 
+sidebar: sidebar 
+keywords: configure, sp, bmc, network, manually, ip, address 
+summary: 如果没有为 SP 设置自动网络配置，则必须手动配置节点的 SP 网络，才能使用 IP 地址访问 SP 。 
+---
+= 手动配置 SP/BMC 网络
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您没有为 SP 设置自动网络配置，则必须手动配置节点的 SP 网络，才能使用 IP 地址访问 SP 。
+
+如果要对 SP 使用 IPv6 连接，则必须已为 ONTAP 配置并启用 IPv6 。`network options ipv6` 命令用于管理 ONTAP 的 IPv6 设置。
+
+[NOTE]
+====
+此任务会同时对 SP 和 BMC 执行适用场景。
+
+====
+您可以将 SP 配置为使用 IPv4 ， IPv6 或同时使用这两者。SP IPv4 配置支持静态寻址和 DHCP 寻址，而 SP IPv6 配置仅支持静态寻址。
+
+如果已设置 SP 自动网络配置，则无需为各个节点手动配置 SP 网络，并且使用 `ssystem service-processor network modify` 命令只能启用或禁用 SP 网络接口。
+
+.步骤
+. 使用 `ssystem service-processor network modify` 命令为节点配置 SP 网络。
++
+** ` -address-family` 参数指定是修改 SP 的 IPv4 配置还是 IPv6 配置。
+** ` -enable` 参数用于启用指定 IP 地址系列的网络接口。
+** ` -dhcp` 参数指定是使用 DHCP 服务器的网络配置还是使用您提供的网络地址。
++
+只有在使用 IPv4 时，才能启用 DHCP （通过将 ` -dhcp` 设置为 `v4` ）。您不能为 IPv6 配置启用 DHCP 。
+
+** ` -ip-address` 参数指定 SP 的公有 IP 地址。
++
+如果尝试使用分配给子网的地址手动配置 SP 网络，则会显示一条警告消息。忽略警告并继续手动分配地址可能会导致分配重复的地址。
+
+** ` -netmask` 参数指定 SP 的网络掩码（如果使用 IPv4 ）。
+** ` -prefix-length` 参数指定 SP 子网掩码的网络前缀长度（如果使用 IPv6 ）。
+** ` -gateway` 参数指定 SP 的网关 IP 地址。
+
+
+. 重复步骤 1 ，为集群中的其余节点配置 SP 网络。
+. 使用带有 ` – instance` 或 ` – field setup-status` 参数的 `ssystem service-processor network show` 命令显示 SP 网络配置并验证 SP 设置状态。
++
+节点的 SP 设置状态可以是以下状态之一：
+
++
+** `not-setup` —未配置
+** `s已更新` —配置成功
+** `in-progress` —正在进行配置
+** `Failed` —配置失败
+
+
+
+
+以下示例将节点的 SP 配置为使用 IPv4 ，启用 SP 并显示 SP 网络配置以验证设置：
+
+[listing]
+----
+
+cluster1::> system service-processor network modify -node local
+-address-family IPv4 -enable true -ip-address 192.168.123.98
+-netmask 255.255.255.0 -gateway 192.168.123.1
+
+cluster1::> system service-processor network show -instance -node local
+
+                               Node: node1
+                       Address Type: IPv4
+                  Interface Enabled: true
+                     Type of Device: SP
+                             Status: online
+                        Link Status: up
+                        DHCP Status: none
+                         IP Address: 192.168.123.98
+                        MAC Address: ab:cd:ef:fe:ed:02
+                            Netmask: 255.255.255.0
+       Prefix Length of Subnet Mask: -
+         Router Assigned IP Address: -
+              Link Local IP Address: -
+                 Gateway IP Address: 192.168.123.1
+                  Time Last Updated: Thu Apr 10 17:02:13 UTC 2014
+                        Subnet Name: -
+Enable IPv6 Router Assigned Address: -
+            SP Network Setup Status: succeeded
+    SP Network Setup Failure Reason: -
+
+1 entries were displayed.
+
+cluster1::>
+----

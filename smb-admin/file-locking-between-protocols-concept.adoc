@@ -1,0 +1,26 @@
+---
+permalink: smb-admin/file-locking-between-protocols-concept.html 
+sidebar: sidebar 
+keywords: file, lock, method, use, client, application, prevent, user, access, open, ontap, protocol, about file locking between protocols 
+summary: 文件锁定是客户端应用程序用来防止用户访问先前由另一用户打开的文件的方法。ONTAP 锁定文件的方式取决于客户端的协议。 
+---
+= 关于协议之间的文件锁定
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+文件锁定是客户端应用程序用来防止用户访问先前由另一用户打开的文件的方法。ONTAP 锁定文件的方式取决于客户端的协议。
+
+如果客户端是 NFS 客户端，则建议锁定；如果客户端是 SMB 客户端，则必须锁定。
+
+由于 NFS 和 SMB 文件锁定之间的差异， NFS 客户端可能无法访问先前由 SMB 应用程序打开的文件。
+
+当 NFS 客户端尝试访问 SMB 应用程序锁定的文件时，会发生以下情况：
+
+* 在混合卷或 NTFS 卷中，文件操作（例如 `rm` ， `rmdir` 和 `mv` ）可以使 NFS 应用程序发生原因失败。
+* SMB 拒绝读取和拒绝写入打开模式分别拒绝 NFS 读取和写入操作。
+* 如果文件的写入范围使用独占 SMB 字节锁锁定，则 NFS 写入操作将失败。
+
+
+在 UNIX 安全模式卷中， NFS 取消链接和重命名操作会忽略 SMB 锁定状态并允许访问文件。UNIX 安全模式卷上的所有其他 NFS 操作均遵循 SMB 锁定状态。

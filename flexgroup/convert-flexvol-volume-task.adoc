@@ -1,0 +1,78 @@
+---
+permalink: flexgroup/convert-flexvol-volume-task.html 
+sidebar: sidebar 
+keywords: convert, flexvol, volume, flexgroup 
+summary: 从 ONTAP 9.7 开始，您可以将 FlexVol 卷原位转换为 FlexGroup 卷，而无需数据副本或额外的磁盘空间。 
+---
+= 将 FlexVol 卷转换为 FlexGroup 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.7 开始，您可以将 FlexVol 卷原位转换为 FlexGroup 卷，而无需数据副本或额外的磁盘空间。
+
+.您需要什么？ #8217 ；将需要什么
+* 过渡后的卷可以转换为 FlexGroup 卷。
++
+要将过渡后的卷转换为 FlexGroup 卷，需要使用 diag 模式，并且只能在 NetApp 支持部门的监督下执行。强烈建议您在继续进行转换过程之前联系 NetApp 支持部门。
+
+* 要转换的 FlexVol 卷必须处于联机状态。
+* FlexVol 卷上的操作和配置必须与转换过程兼容。
++
+如果 FlexVol 卷不兼容，并且卷转换已中止，则会生成一条错误消息。您可以采取更正操作并重试转换。
+
+
+
+.步骤
+. 验证 FlexVol 卷是否联机： `volume show vol_name -volume-style-Extended ， state`
++
+[listing]
+----
+cluster-1::> volume show my_volume -fields volume-style-extended,state
+vserver volume    state  volume-style-extended
+------- --------- ------ ---------------------
+vs0     my_volume online flexvol
+----
+. 验证是否可以无问题地转换 FlexVol 卷：
++
+.. 登录到高级权限模式： `set -privilege advanced`
+.. 验证转换过程： `volume conversion start -vserver vs1 -volume FlexVol -check-only true`
++
+在转换卷之前，必须更正所有错误。
+
++
+[NOTE]
+====
+您不能将 FlexGroup 卷转换回 FlexVol 卷。如果要执行此操作，应联系支持部门。
+
+====
+
+
+. 开始转换： `volume conversion start -vserver svm_name -volume vol_name`
++
+[listing]
+----
+cluster-1::*> volume conversion start -vserver vs0 -volume my_volume
+
+Warning: Converting flexible volume "my_volume" in Vserver "vs0" to a FlexGroup
+         will cause the state of all Snapshot copies from the volume to be set
+         to "pre-conversion". Pre-conversion Snapshot copies cannot be
+         restored.
+Do you want to continue? {y|n}: y
+[Job 57] Job succeeded: success
+----
+. 验证转换是否成功： `volume show vol_name -fields -volume-style-Extended ， state`
++
+[listing]
+----
+cluster-1::*> volume show my_volume -fields volume-style-extended,state
+vserver volume    state  volume-style-extended
+------- --------- ------ ---------------------
+vs0     my_volume online flexgroup
+----
+
+
+FlexVol 卷将转换为单成员 FlexGroup 卷。
+
+您可以根据需要扩展 FlexGroup 卷。

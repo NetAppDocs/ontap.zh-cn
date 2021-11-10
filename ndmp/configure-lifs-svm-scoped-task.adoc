@@ -1,0 +1,196 @@
+---
+permalink: ndmp/configure-lifs-svm-scoped-task.html 
+sidebar: sidebar 
+keywords: configure, lifs 
+summary: 您必须确定用于在数据和磁带资源之间建立数据连接以及在管理 SVM 和备份应用程序之间建立控制连接的 LIF 。确定 LIF 后，您必须验证是否为 LIF 设置了防火墙和故障转移策略，并指定首选接口角色。 
+---
+= 配置 LIF
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须确定用于在数据和磁带资源之间建立数据连接以及在管理 SVM 和备份应用程序之间建立控制连接的 LIF 。确定 LIF 后，您必须验证是否为 LIF 设置了防火墙和故障转移策略，并指定首选接口角色。
+
+.步骤
+. 使用带有 ` -role` 参数的 `network interface show` 命令确定集群间 LIF ，集群管理 LIF 和节点管理 LIF 。
++
+以下命令显示集群间 LIF ：
+
++
+[listing]
+----
+cluster1::> network interface show -role intercluster
+
+            Logical           Status     Network            Current       Current Is
+Vserver     Interface         Admin/Oper Address/Mask       Node          Port    Home
+----------- ----------        ---------- ------------------ ------------- ------- ----
+cluster1    IC1               up/up      192.0.2.65/24      cluster1-1    e0a     true
+cluster1    IC2               up/up      192.0.2.68/24      cluster1-2    e0b     true
+----
++
+以下命令显示集群管理 LIF ：
+
++
+[listing]
+----
+cluster1::> network interface show -role cluster-mgmt
+
+            Logical           Status     Network            Current       Current Is
+Vserver     Interface         Admin/Oper Address/Mask       Node          Port    Home
+----------- ----------        ---------- ------------------ ------------- ------- ----
+cluster1    cluster_mgmt      up/up      192.0.2.60/24      cluster1-2    e0M     true
+----
++
+以下命令显示节点管理 LIF ：
+
++
+[listing]
+----
+cluster1::> network interface show -role node-mgmt
+
+            Logical           Status     Network            Current       Current Is
+Vserver     Interface         Admin/Oper Address/Mask       Node          Port    Home
+----------- ----------        ---------- ------------------ ------------  ------  ------
+cluster1    cluster1-1_mgmt1  up/up      192.0.2.69/24      cluster1-1    e0M     true
+            cluster1-2_mgmt1  up/up      192.0.2.70/24      cluster1-2    e0M     true
+----
+. 确保已在集群间 LIF ，集群管理（ cluster-mgmt ） LIF 和节点管理（ node-mgmt ） LIF 上为 NDMP 启用防火墙策略：
++
+.. 使用 `ssystem services firewall policy show` 命令验证是否已为 NDMP 启用防火墙策略。
++
+以下命令显示集群管理 LIF 的防火墙策略：
+
++
+[listing]
+----
+cluster1::> system services firewall policy show -policy cluster
+
+Vserver     Policy       Service    Allowed
+-------     ------------ ---------- -----------------
+cluster     cluster      dns        0.0.0.0/0
+                         http       0.0.0.0/0
+                         https      0.0.0.0/0
+                        ** ndmp       0.0.0.0/0**
+                         ndmps      0.0.0.0/0
+                         ntp        0.0.0.0/0
+                         rsh        0.0.0.0/0
+                         snmp       0.0.0.0/0
+                         ssh        0.0.0.0/0
+                         telnet     0.0.0.0/0
+10 entries were displayed.
+----
++
+以下命令显示集群间 LIF 的防火墙策略：
+
++
+[listing]
+----
+cluster1::> system services firewall policy show -policy intercluster
+
+Vserver     Policy       Service    Allowed
+-------     ------------ ---------- -------------------
+cluster1    intercluster dns        -
+                         http       -
+                         https      -
+                         **ndmp       0.0.0.0/0, ::/0**
+                         ndmps      -
+                         ntp        -
+                         rsh        -
+                         ssh        -
+                         telnet     -
+9 entries were displayed.
+----
++
+以下命令显示节点管理 LIF 的防火墙策略：
+
++
+[listing]
+----
+cluster1::> system services firewall policy show -policy mgmt
+
+Vserver     Policy       Service    Allowed
+-------     ------------ ---------- -------------------
+cluster1-1  mgmt         dns        0.0.0.0/0, ::/0
+                         http       0.0.0.0/0, ::/0
+                         https      0.0.0.0/0, ::/0
+                         **ndmp       0.0.0.0/0, ::/0**
+                         ndmps      0.0.0.0/0, ::/0
+                         ntp        0.0.0.0/0, ::/0
+                         rsh        -
+                         snmp       0.0.0.0/0, ::/0
+                         ssh        0.0.0.0/0, ::/0
+                         telnet     -
+10 entries were displayed.
+----
+.. 如果未启用防火墙策略，请使用带有 ` -service` 参数的 `ssystem services firewall policy modify` 命令启用防火墙策略。
++
+以下命令将为集群间 LIF 启用防火墙策略：
+
++
+[listing]
+----
+cluster1::> system services firewall policy modify -vserver cluster1 -policy intercluster -service ndmp 0.0.0.0/0
+----
+
+
+. 确保已为所有 LIF 正确设置故障转移策略：
++
+.. 使用 `network interface show -failover` 命令验证集群管理 LIF 的故障转移策略是否设置为 `broadcast-domain-wide` ，以及集群间和节点管理 LIF 的策略是否设置为 `local-only` 。
++
+以下命令显示集群管理 LIF ，集群间 LIF 和节点管理 LIF 的故障转移策略：
+
++
+[listing]
+----
+cluster1::> network interface show -failover
+
+           Logical            Home              Failover              Failover
+Vserver    Interface          Node:Port         Policy                Group
+---------- -----------------  ----------------- --------------------  --------
+cluster    cluster1_clus1     cluster1-1:e0a    local-only            cluster
+                                                     Failover Targets:
+                   	                                 .......
+
+**cluster1   cluster_mgmt       cluster1-1:e0m    broadcast-domain-wide Default**
+                                                     Failover Targets:
+                                                     .......
+           **IC1                 cluster1-1:e0a    local-only           Default**
+                                                     Failover Targets:
+           **IC2                 cluster1-1:e0b    local-only           Default**
+                                                     Failover Targets:
+                                                     .......
+**cluster1-1 cluster1-1_mgmt1   cluster1-1:e0m    local-only            Default**
+                                                     Failover Targets:
+                                                     ......
+**cluster1-2 cluster1-2_mgmt1   cluster1-2:e0m    local-only            Default**
+                                                     Failover Targets:
+                                                     ......
+----
+.. 如果未正确设置故障转移策略，请使用带有 ` failover-policy` 参数的 `network interface modify` 命令修改故障转移策略。
++
+[listing]
+----
+cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy local-only
+----
+
+
+. 使用带有 `preferred-interface-role` 参数的 `vserver services ndmp modify` 命令指定数据连接所需的 LIF 。
++
+[listing]
+----
+cluster1::> vserver services ndmp modify -vserver cluster1 -preferred-interface-role intercluster,cluster-mgmt,node-mgmt
+----
+. 使用 `vserver services ndmp show` 命令验证是否为集群设置了首选接口角色。
++
+[listing]
+----
+cluster1::> vserver services ndmp show -vserver cluster1
+
+                             Vserver: cluster1
+                        NDMP Version: 4
+                        .......
+                        .......
+            Preferred Interface Role: intercluster, cluster-mgmt, node-mgmt
+----
+

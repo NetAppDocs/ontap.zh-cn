@@ -1,0 +1,143 @@
+---
+permalink: data-protection/convert-snapmirror-version-flexible-task.html 
+sidebar: sidebar 
+keywords: convert, exist, dp-type, relationship, xdp 
+summary: 您可以轻松地将现有 DP 类型关系转换为 XDP ，以利用版本灵活的 SnapMirror 。 
+---
+= 将现有 DP 类型关系转换为 XDP
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以轻松地将现有 DP 类型关系转换为 XDP ，以利用版本灵活的 SnapMirror 。
+
+SnapMirror 不会自动将现有的 DP 类型关系转换为 XDP 。要转换此关系，您需要中断并删除现有关系，创建新的 XDP 关系并重新同步此关系。有关背景信息，请参见 link:version-flexible-snapmirror-default-concept.html["XDP 取代 DP 作为 SnapMirror 默认设置"]。
+
+[NOTE]
+====
+将 SnapMirror 关系类型从 DP 转换为 XDP 后，自动调整大小和空间保证等空间相关设置将不再复制到目标。
+
+====
+.步骤
+. 暂停现有 DP 类型关系：
++
+`snapmirror quiesce -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。
+
+====
++
+以下示例将暂停源卷 `vola` on `svm1` 与目标卷 `vola_dst` on `svm_backup` 之间的关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror quiesce -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+. 中断现有的 DP 类型关系：
++
+`snapmirror break -source-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。
+
+====
++
+以下示例将中断源卷 `vola` on `svm1` 与目标卷 `vola_dst` on `svm_backup` 之间的关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+. 禁用自动删除目标卷上的 Snapshot 副本：
++
+`volume snapshot autodelete modify -vserver _svm_ -volume _volume" -enabled false`
+
++
+以下示例将在目标卷 `vola_dst` 上禁用 Snapshot 副本自动删除：
+
++
+[listing]
+----
+cluster_dst::> volume snapshot autodelete modify -vserver svm_backup -volume volA_dst -enabled false
+----
+. 删除现有 DP 类型关系：
++
+`snapmirror delete -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。
+
+====
++
+以下示例将删除源卷 `vola` on `svm1` 与目标卷 `vola_dst` on `svm_backup` 之间的关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+. 创建新的 XDP 类型关系：
++
+`snapmirror create -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -type XDP -schedule _schedule_ -policy _policy_`
+
++
+新关系必须使用相同的源卷和目标卷。有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。
+
+====
++
+以下示例将使用默认的 `MirrorAllSnapshots` 策略在源卷 `volA` on `svm1` 和目标卷 `vola_dst` on `svm_backup` 之间创建 SnapMirror DR 关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst
+-type XDP -schedule my_daily -policy MirrorAllSnapshots
+----
+. 重新同步源卷和目标卷：
++
+`snapmirror resync -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。虽然重新同步不需要基线传输，但它可能非常耗时。您可能希望在非高峰时段运行重新同步。
+
+====
++
+以下示例将重新同步源卷 `volA` on `svm1` 与目标卷 `vola_dst` on `svm_backup` 之间的关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+
+
+使用 `snapmirror show` 命令验证是否已创建 SnapMirror 关系。有关完整的命令语法，请参见手册页。

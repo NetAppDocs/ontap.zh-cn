@@ -1,0 +1,39 @@
+---
+permalink: volumes/configure-automatic-grow-shrink-size-task.html 
+sidebar: sidebar 
+keywords: configure, volumes, automatically, grow, shrink, size 
+summary: 您可以将 FlexVol 卷配置为根据其当前所需的空间量自动增长和缩减。如果聚合可以提供更多空间，则自动增长有助于防止卷空间不足。自动缩减可防止卷超出所需大小，从而腾出聚合中的空间供其他卷使用。 
+---
+= 将卷配置为自动增长和缩减其大小
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将 FlexVol 卷配置为根据其当前所需的空间量自动增长和缩减。如果聚合可以提供更多空间，则自动增长有助于防止卷空间不足。自动缩减可防止卷超出所需大小，从而腾出聚合中的空间供其他卷使用。
+
+FlexVol 卷必须处于联机状态。
+
+自动缩减只能与自动增长结合使用，以满足不断变化的空间需求，而不能单独使用。启用自动缩减后， ONTAP 会自动管理卷的缩减行为，以防止自动增长和自动缩减操作出现无限循环。
+
+随着卷的增长，它可以包含的最大文件数可能会自动增加。卷缩减后，其可包含的最大文件数保持不变，并且卷不能自动缩减到低于其当前最大文件数对应的大小。因此，可能无法将卷一直自动缩减到其原始大小。
+
+默认情况下，卷可以增长到的最大大小为启用自动增长时大小的 120% 。如果需要确保卷的大小可以增长到大于该大小，则必须相应地设置卷的最大大小。
+
+.步骤
+. 将卷配置为自动增长和缩减其大小：
++
+`volume autosize -vserver vserver_namevol_name -mode grow_shrink`
+
++
+以下命令将为名为 test2 的卷启用自动大小更改。卷配置为在已满 60% 时开始缩减。默认值用于开始增长的时间及其最大大小。
+
++
+[listing]
+----
+cluster1::> volume autosize -vserver vs2 test2 -shrink-threshold-percent 60
+vol autosize: Flexible volume "vs2:test2" autosize settings UPDATED.
+
+Volume modify successful on volume: test2
+----
+

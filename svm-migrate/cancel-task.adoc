@@ -1,0 +1,27 @@
+---
+permalink: svm-migrate/cancel-task.html 
+sidebar: sidebar 
+keywords: svm, migrate, cancel, abort 
+summary: '如果需要在 SVM 迁移完成之前取消此迁移，可以使用 `vserver migrate abort` 命令。只有在操作处于暂停或失败状态时，才能取消 SVM 迁移。如果状态为 "cutover-started" 或转换完成，则无法取消 SVM 迁移。在进行 SVM 迁移时，不能使用 `abort` 选项。' 
+---
+= 取消 SVM 迁移
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果需要在 SVM 迁移完成之前取消此迁移，可以使用 `vserver migrate abort` 命令。只有在操作处于暂停或失败状态时，才能取消 SVM 迁移。如果状态为 "cutover-started" 或转换完成，则无法取消 SVM 迁移。在进行 SVM 迁移时，不能使用 `abort` 选项。
+
+.步骤
+. 检查迁移状态：
++
+` * 目标集群 > vserver migrate show -vserver <vserver name>*`
+
+. 取消迁移：
++
+` * dest_cluster> vserver migrate abort -vserver <vserver name>*` 检查取消操作的进度：
+
++
+` * 目标集群 > vserver migrate show*` 在执行取消操作期间，迁移状态显示 migrate-aborting 。取消操作完成后，迁移状态不会显示任何内容。
+
+

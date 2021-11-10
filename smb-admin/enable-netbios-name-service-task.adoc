@@ -1,0 +1,40 @@
+---
+permalink: smb-admin/enable-netbios-name-service-task.html 
+sidebar: sidebar 
+keywords: ontap, netbios, name, service, nbns, windows, internet, name, service, wins, disable, default, cifs-enable, storage, virtual, machine, svm, registration, broadcast, network, server, wnable the netbios name service 
+summary: 从 ONTAP 9 开始， NetBIOS 名称服务（ NBNS ，有时称为 Windows Internet 名称服务或 WINS ）默认处于禁用状态。以前，无论网络上是否启用了 WINS ，启用了 CIFS 的 Storage Virtual Machine （ SVM ）都会发送名称注册广播。要将此类广播限制为需要 NBNS 的配置，必须为新的 CIFS 服务器显式启用 NBNS 。 
+---
+= 启用 NetBIOS 名称服务
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9 开始， NetBIOS 名称服务（ NBNS ，有时称为 Windows Internet 名称服务或 WINS ）默认处于禁用状态。以前，无论网络上是否启用了 WINS ，启用了 CIFS 的 Storage Virtual Machine （ SVM ）都会发送名称注册广播。要将此类广播限制为需要 NBNS 的配置，必须为新的 CIFS 服务器显式启用 NBNS 。
+
+.开始之前
+* 如果您已在使用 NBNS ，并且已升级到 ONTAP 9 ，则无需完成此任务。NBNS 将继续照常运行。
+* NBNS 通过 UDP （端口 137 ）启用。
+* 不支持基于 IPv6 的 NBNS 。
+
+
+.步骤
+. 将权限级别设置为高级：
++
+[listing]
+----
+set -privilege advanced
+----
+. 在 CIFS 服务器上启用 NBNS 。
++
+[listing]
+----
+vserver cifs options  modify -vserver <vserver name> -is-nbns-enabled true
+----
+. 返回到管理权限级别：
++
+[listing]
+----
+set -privilege admin
+----
+

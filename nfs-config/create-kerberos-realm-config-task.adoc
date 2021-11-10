@@ -1,0 +1,44 @@
+---
+permalink: nfs-config/create-kerberos-realm-config-task.html 
+sidebar: sidebar 
+keywords: create, nfs, kerberos, realm, configuration 
+summary: 如果您希望 ONTAP 访问环境中的外部 Kerberos 服务器，则必须先将 SVM 配置为使用现有 Kerberos 域。为此，您需要收集 Kerberos KDC 服务器的配置值，然后使用 vserver nfs kerberos realm create 命令在 SVM 上创建 Kerberos 域配置。 
+---
+= 创建 NFS Kerberos 域配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您希望 ONTAP 访问环境中的外部 Kerberos 服务器，则必须先将 SVM 配置为使用现有 Kerberos 域。为此，您需要收集 Kerberos KDC 服务器的配置值，然后使用 `vserver nfs kerberos realm create` 命令在 SVM 上创建 Kerberos 域配置。
+
+集群管理员应已在存储系统，客户端和 KDC 服务器上配置 NTP ，以避免出现身份验证问题。客户端和服务器之间的时间差异（时钟偏差）是常见的身份验证失败发生原因。
+
+.步骤
+. 请咨询 Kerberos 管理员以确定要在 `vserver nfs kerberos realm create` 命令中提供的适当配置值。
+. 在 SVM 上创建 Kerberos 域配置：
++
+`vserver nfs kerberos realm create -vserver _vserver_name_ -realm _realm_name_ ｛ ad_kw_server_values |ad_kw_server_values ｝ _ -comment "_text_"`
+
+. 验证是否已成功创建 Kerberos 域配置：
++
+`vserver nfs kerberos realm show`
+
+
+
+以下命令将为 SVM vs1 创建一个 NFS Kerberos 域配置，该配置使用 Microsoft Active Directory 服务器作为 KDC 服务器。Kerberos 域为 AUTH.EXAMPLE.COM 。Active Directory 服务器名为 AD-1 ，其 IP 地址为 10.10.8.14 。允许的时钟偏差为 300 秒（默认值）。KDC 服务器的 IP 地址为 10.10.8.14 ，其端口号为 88 （默认值）。"Microsoft Kerberos config" 是注释。
+
+[listing]
+----
+vs1::> vserver nfs kerberos realm create -vserver vs1 -realm AUTH.EXAMPLE.COM -adserver-name ad-1
+-adserver-ip 10.10.8.14 -clock-skew 300 -kdc-ip 10.10.8.14 -kdc-port 88 -kdc-vendor Microsoft
+-comment "Microsoft Kerberos config"
+----
+以下命令将为使用 MIT KDC 的 SVM vs1 创建 NFS Kerberos 域配置。Kerberos 域为 SECURITY.EXAMPLE.COM 。允许的时钟偏差为 300 秒。KDC 服务器的 IP 地址为 10.10.9.1 ，端口号为 88 。KDC 供应商为 "Other" ，表示 UNIX 供应商。管理服务器的 IP 地址为 10.10.9.1 ，端口号为 749 （默认值）。密码服务器的 IP 地址为 10.10.9.1 ，端口号为 464 （默认值）。"UNIX Kerberos config" 是注释。
+
+[listing]
+----
+vs1::> vserver nfs kerberos realm create -vserver vs1 -realm SECURITY.EXAMPLE.COM. -clock-skew 300
+-kdc-ip 10.10.9.1 -kdc-port 88 -kdc-vendor Other -adminserver-ip 10.10.9.1 -adminserver-port 749
+-passwordserver-ip 10.10.9.1 -passwordserver-port 464 -comment "UNIX Kerberos config"
+----

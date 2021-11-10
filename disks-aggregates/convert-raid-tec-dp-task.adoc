@@ -1,0 +1,30 @@
+---
+permalink: disks-aggregates/convert-raid-tec-dp-task.html 
+sidebar: sidebar 
+keywords: convert, raid-tec, raid-dp 
+summary: 如果减小聚合的大小而不再需要三重奇偶校验，则可以将 RAID 策略从 RAID-TEC 转换为 RAID-DP ，并减少 RAID 奇偶校验所需的磁盘数量。 
+---
+= 将 RAID-TEC 转换为 RAID-DP
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果减小聚合的大小而不再需要三重奇偶校验，则可以将 RAID 策略从 RAID-TEC 转换为 RAID-DP ，并减少 RAID 奇偶校验所需的磁盘数量。
+
+RAID-TEC 的最大 RAID 组大小大于 RAID-DP 的最大 RAID 组大小。如果最大的 RAID-TEC 组大小不在 RAID-DP 限制范围内，则无法转换为 RAID-DP 。
+
+.步骤
+. 验证聚合是否联机且至少具有六个磁盘：
++
+`storage aggregate show-status -aggregate _aggregate_name_`
+
+. 将聚合从 RAID-TEC 转换为 RAID-DP ：
++
+`storage aggregate modify -aggregate _aggregate_name_ -raidtype raid_dp`
+
+. 验证聚合 RAID 策略是否为 RAID-DP ：
++
+`storage aggregate show _aggregate_name_`
+
+

@@ -1,0 +1,32 @@
+---
+permalink: smb-admin/manage-smb-level-acls-concept.html 
+sidebar: sidebar 
+keywords: change, share-level, acl, user, access, right, share, configure, windows, unix, group, guidelines for managing smb share-level acls 
+summary: 您可以更改共享级 ACL ，为用户授予对共享的或多或少的访问权限。您可以使用 Windows 用户和组或 UNIX 用户和组配置共享级 ACL 。 
+---
+= 管理 SMB 共享级 ACL 的准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以更改共享级 ACL ，为用户授予对共享的或多或少的访问权限。您可以使用 Windows 用户和组或 UNIX 用户和组配置共享级 ACL 。
+
+默认情况下，创建共享后，共享级 ACL 会为名为 Everyone 的标准组授予读取访问权限。ACL 中的读取访问权限意味着域和所有受信任域中的所有用户都对共享具有只读访问权限。
+
+您可以使用 Windows 客户端上的 Microsoft 管理控制台（ MMC ）或 ONTAP 命令行更改共享级别 ACL 。
+
+使用 MMC 时，请遵循以下准则：
+
+* 指定的用户名和组名必须为 Windows 名称。
+* 您只能指定 Windows 权限。
+
+
+使用 ONTAP 命令行时，请遵循以下准则：
+
+* 指定的用户和组名称可以是 Windows 名称或 UNIX 名称。
++
+如果在创建或修改 ACL 时未指定用户和组类型，则默认类型为 Windows 用户和组。
+
+* 您只能指定 Windows 权限。
+

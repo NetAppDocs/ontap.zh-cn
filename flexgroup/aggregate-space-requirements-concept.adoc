@@ -1,0 +1,41 @@
+---
+permalink: flexgroup/aggregate-space-requirements-concept.html 
+sidebar: sidebar 
+keywords: guideline, aggregate, space, provision, flexgroup, volume 
+summary: 您应了解在选择聚合以配置 FlexGroup 卷时的注意事项和要求。 
+---
+= 配置 FlexGroup 卷时的聚合空间准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应了解在选择聚合以配置 FlexGroup 卷时的注意事项和要求。
+
+创建 FlexGroup 卷时，要获得使用 FlexGroup 卷的最佳性能结果，必须考虑以下准则：
+
+* FlexGroup 卷只能跨越相同硬件系统上的聚合。
++
+使用相同的硬件系统有助于在 FlexGroup 卷中提供可预测的性能。
+
+* FlexGroup 卷应跨越具有相同磁盘类型和 RAID 组配置的聚合。
++
+为了获得一致的性能，您必须确保所有聚合都由所有 SSD ，所有 HDD 或所有混合聚合组成。此外，聚合应在 FlexGroup 卷中具有相同数量的驱动器和 RAID 组。
+
+* FlexGroup 卷可以跨越集群的一部分。
++
+不必将 FlexGroup 卷配置为跨越整个集群，但这样做可以更好地利用可用的硬件资源。
+
+* 创建 FlexGroup 卷时，部署 FlexGroup 卷的聚合最好具有以下特征：
++
+** 多个聚合应具有大致相同的可用空间量，尤其是在使用精简配置时。
+** 创建 FlexGroup 卷后，应为聚合元数据预留大约 3% 的可用空间。
+
+
+* 对于 FAS 系统，每个节点最好有两个聚合；对于 AFF 系统， FlexGroup 卷每个节点必须有一个聚合。
+* 对于每个 FlexGroup 卷，应至少创建八个成分卷，这些成分卷分布在 FAS 系统上的两个或更多聚合上，以及 AFF 系统上的一个或多个聚合上。
+
+
+* 相关信息 *
+
+http://www.netapp.com/us/media/tr-4571.pdf["NetApp 技术报告 4571 ：《 NetApp FlexGroup 最佳实践和实施指南》"]

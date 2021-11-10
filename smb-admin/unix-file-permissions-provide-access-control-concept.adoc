@@ -1,0 +1,40 @@
+---
+permalink: smb-admin/unix-file-permissions-provide-access-control-concept.html 
+sidebar: sidebar 
+keywords: flexvol, volume, security, style, ntfs, unix, mixed, access, data, smb, regardless, access, effective, how unix file permissions provide access control when accessing files over smb 
+summary: FlexVol 卷可以采用以下三种安全模式之一： NTFS ， UNIX 或混合。无论安全模式如何，您都可以通过 SMB 访问数据；但是，要以 UNIX 有效安全模式访问数据，需要适当的 UNIX 文件权限。 
+---
+= 通过 SMB 访问文件时， UNIX 文件权限如何提供访问控制
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FlexVol 卷可以采用以下三种安全模式之一： NTFS ， UNIX 或混合。无论安全模式如何，您都可以通过 SMB 访问数据；但是，要以 UNIX 有效安全模式访问数据，需要适当的 UNIX 文件权限。
+
+通过 SMB 访问数据时，在确定用户是否有权执行请求的操作时，会使用多种访问控制：
+
+* 导出权限
++
+配置 SMB 访问的导出权限是可选的。
+
+* 共享权限
+* 文件权限
++
+以下类型的文件权限可能会应用于用户要执行操作的数据：
+
++
+** NTFS
+** UNIX NFSv4 ACL
+** UNIX 模式位
+
+
+
+
+对于设置了 NFSv4 ACL 或 UNIX 模式位的数据，将使用 UNIX 模式权限来确定对数据的文件访问权限。SVM 管理员需要设置适当的文件权限，以确保用户有权执行所需的操作。
+
+[NOTE]
+====
+混合安全模式卷中的数据可能采用 NTFS 或 UNIX 有效安全模式。如果数据采用 UNIX 有效安全模式，则在确定数据的文件访问权限时会使用 NFSv4 权限或 UNIX 模式位。
+
+====

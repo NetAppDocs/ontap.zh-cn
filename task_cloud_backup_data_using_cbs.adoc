@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: task_cloud_backup_data_using_cbs.html 
-keywords: cloud, data, backup, back up, storage, volume, lun, connector, secret key, access key, Cloud Backup Service, CBS, restore data, protect volumes, ipspace 
+keywords: cloud, data, backup, back up, storage, volume, lun, connector, secret key, access key, Cloud Backup Service, CBS, restore data, protect volumes, ipspace, storagegrid, storage grid, archive, archival, archiving, cost, calculator, glacier, deep archive 
 summary: 从 ONTAP 9.1.1 开始，您可以使用 System Manager 使用 Cloud Backup Service 备份云中的数据。 
 ---
 = 使用 Cloud Backup Service 备份数据
@@ -31,6 +31,11 @@ NOTE: Cloud Backup Service 支持 FlexVol 读写卷和数据保护（ DP ）卷�
 ** Microsoft Azure
 ** Amazon Web Services （ AWS ）
 ** Google Cloud Platform （ GCP ）
+** StorageGRID （ ONTAP 9.10.1 ）
++
+
+NOTE: 从 ONTAP 9.10.1 开始，您可以选择 StorageGRID 作为云备份提供程序，但前提是 Cloud Manager 部署在内部。Cloud Manager 连接器必须安装在内部，并可通过 Cloud Manager 软件即服务（ SaaS ）应用程序使用。
+
 
 
 . link:https://docs.netapp.com/us-en/occm/concept_backup_to_cloud.html["在 Cloud Manager 中订阅 Cloud Backup Service"] （需要相应的许可证）。
@@ -58,52 +63,126 @@ NOTE: Cloud Backup Service 支持 FlexVol 读写卷和数据保护（ DP ）卷�
 
 == 启用 Cloud Backup Service
 
-将集群注册到 Cloud Manager 后，您可以启用 Cloud Backup Service 并启动首次备份到云。
+在将集群注册到 Cloud Manager 后，您需要启用 Cloud Backup Service 并启动首次到云的备份。
 
 .步骤
-. 在 * 启用 Cloud Backup Service * 页面上，提供以下详细信息：
+. 在 System Manager 中，单击 * 保护 > 概述 * ，然后滚动到 * Cloud Backup Service * 部分。
+. 输入 * 客户端 ID* 和 * 客户端机密 * 。
 +
-** 保护策略（现有策略或新策略）
-** 集群 IP 空间
 
+NOTE: 从 ONTAP 9.10.1 开始，您可以单击 * 了解有关使用云的成本的更多信息 * 来了解使用云的成本。
 
-. 如果要备份集群中的所有卷，请选中此复选框。
-. 选择 * 启用 * 。
-. 根据您指定的云提供商，您需要提供以下特定信息：
+. 单击 * 连接并启用 Cloud Backup Service * 。
+. 在 * 启用 Cloud Backup Service * 页面上，根据您选择的提供程序提供以下详细信息。
 +
-[cols="25,75"]
+[cols="35,65"]
 |===
+
+
 | 对于此云提供商 ... | 输入以下数据 ... 
 
 
-| Azure 酒店  a| 
+ a| 
+Azure 酒店
+ a| 
 ** Azure 订阅 ID
+** Region
 ** 资源组名称（现有或新）
-** 地区
-** IP 空间
 
 
 
 
-| AWS  a| 
-** AWS 帐户 ID
+ a| 
+AWS
+ a| 
+** AWS Account ID
 ** 访问密钥
 ** 机密密钥
-** 地区
-** IP 空间
+** Region
 
 
 
 
-| Google Cloud Project （ GCP ）  a| 
+ a| 
+Google Cloud Project （ GCP ）
+ a| 
 ** Google Cloud Project 名称
 ** Google Cloud Access 密钥
 ** Google Cloud 机密密钥
-** 地区
-** IP 空间
+** Region
+
+
+
+
+ a| 
+StorageGRID （ ONTAP 9.10.1 及更高版本，仅适用于 Cloud Manager 的内部部署）
+ a| 
+** 服务器
+** SG 访问密钥
+** SG 机密密钥
 
 
 |===
+. 选择 * 保护策略 * ：
++
+** * 现有策略 * ：选择现有策略。
+** * 新策略 * ：指定名称并设置传输计划。
++
+
+NOTE: 从 ONTAP 9.10.1 开始，您可以指定是要使用 Azure 还是 AWS 进行归档。
+
++
+
+IMPORTANT: 如果使用 Azure 或 AWS 为卷启用归档，则无法禁用归档。
+
++
+如果为 Azure 或 AWS 启用归档，请指定以下内容：
+
++
+*** 卷经过多少天之后才进行归档。
+*** 要保留在归档中的备份数。指定 "0" （零）可归档到最新备份。
+*** 对于 AWS ，选择归档存储类。
+
+
+
+
+. 选择要备份的卷。
+. 选择 * 保存 * 。
+
+
+
+
+== 编辑用于 Cloud Backup Service 的保护策略
+
+您可以更改 Cloud Backup Service 使用的保护策略。
+
+.步骤
+. 在 System Manager 中，单击 * 保护 > 概述 * ，然后滚动到 * Cloud Backup Service * 部分。
+. 单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后是 * 编辑 * 。
+. 选择 * 保护策略 * ：
++
+** * 现有策略 * ：选择现有策略。
+** * 新策略 * ：指定名称并设置传输计划。
++
+
+NOTE: 从 ONTAP 9.10.1 开始，您可以指定是要使用 Azure 还是 AWS 进行归档。
+
++
+
+IMPORTANT: 如果使用 Azure 或 AWS 为卷启用归档，则无法禁用归档。
+
++
+如果为 Azure 或 AWS 启用归档，请指定以下内容：
+
++
+*** 卷经过多少天之后才进行归档。
+*** 要保留在归档中的备份数。指定 "0" （零）可归档到最新备份。
+*** 对于 AWS ，选择归档存储类。
+
+
+
+
+. 选择 * 保存 * 。
 
 
 
@@ -114,22 +193,22 @@ NOTE: Cloud Backup Service 支持 FlexVol 读写卷和数据保护（ DP ）卷�
 
 .开始之前
 * 您应具有 SnapMirror 许可证。
-* 应禁用 WORM 功能。
 * 应配置集群间 LIF 。
 * 应配置 NTP 。
 * 集群必须运行 ONTAP 9.1.1 。
-* 不能对以下集群配置使用此功能：
-+
-** 集群不能位于 MetroCluster 环境中。
-** 不支持 SVM-DR 。
-** 无法使用 Cloud Backup Service 备份 FlexGroup 。
 
 
+对于以下集群配置，您无法保护云上的新卷或 LUN ：
+
+* 集群不能位于 MetroCluster 环境中。
+* 不支持 SVM-DR 。
+* 无法使用 Cloud Backup Service 备份 FlexGroup 。
 
 
 .步骤
-. 配置卷或 LUN 时，在 * 保护 * 页面上，选中标记为 * 启用 SnapMirror （本地或远程） * 的复选框。
-. 选择 * 启用 Cloud Backup Service * 。
+. 配置卷或 LUN 时，在 System Manager 的 * 保护 * 页面上，选中标记为 * 启用 SnapMirror （本地或远程） * 的复选框。
+. 选择 Cloud Backup Service 策略类型。
+. 如果未启用 Cloud Backup Service ，请选择 * 启用 Cloud Backup Service * 。
 
 
 
@@ -140,7 +219,7 @@ NOTE: Cloud Backup Service 支持 FlexVol 读写卷和数据保护（ DP ）卷�
 
 .步骤
 . 选择现有卷或 LUN ，然后单击 * 保护 * 。
-. 在 * 保护卷 * 页面上，为保护策略指定 " 使用 Cloud Backup Service 备份 " 。
+. 在 * 保护卷 * 页面上，为保护策略指定 * 使用 Cloud Backup Service 备份 * 。
 . 单击 * 保护 * 。
 . 在 * 保护 * 页面上，选中标记为 * 启用 SnapMirror （本地或远程） * 的复选框。
 . 选择 * 启用 Cloud Backup Service * 。
@@ -150,4 +229,4 @@ NOTE: Cloud Backup Service 支持 FlexVol 读写卷和数据保护（ DP ）卷�
 
 == 从备份文件还原数据
 
-您只能使用 Cloud Manager 执行备份管理操作，例如还原数据，更新关系和删除关系。请参见 link:https://docs.netapp.com/us-en/occm/task_restore_backups.html["从备份文件还原数据"] 有关详细信息 ...
+只有在使用 Cloud Manager 界面时，您才能执行备份管理操作，例如还原数据，更新关系和删除关系。请参见 link:https://docs.netapp.com/us-en/occm/task_restore_backups.html["从备份文件还原数据"] 有关详细信息 ...

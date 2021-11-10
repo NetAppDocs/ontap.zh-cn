@@ -1,0 +1,41 @@
+---
+permalink: tape-backup/smtape-backup-restore-operations-mcc-config-concept.html 
+sidebar: sidebar 
+keywords: smtape, backup, restore, operation, metrocluster, configuration, switchover, switchback 
+summary: 在 MetroCluster 配置中执行 SMTape 备份和还原操作之前，您必须了解在发生切换或切回操作时 SMTape 操作会受到什么影响。 
+---
+= SMTape 备份和还原操作在 MetroCluster 配置中会受到什么影响
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 MetroCluster 配置中执行 SMTape 备份和还原操作之前，您必须了解在发生切换或切回操作时 SMTape 操作会受到什么影响。
+
+
+
+== SMTape 备份或还原操作后进行切换
+
+请考虑两个集群：集群 1 和集群 2 。在对集群 1 执行 SMTape 备份或还原操作期间，如果启动从集群 1 到集群 2 的切换，则会发生以下情况：
+
+* 如果 ` – override-vetoes` 选项的值为 `false` ，则切换过程将中止，备份或还原操作将继续。
+* 如果选项的值为 `true` ，则 SMTape 备份或还原操作将中止，切换过程将继续。
+
+
+
+
+== SMTape 备份或还原操作后进行切回
+
+从集群 1 切换到集群 2 ，并在集群 2 上启动 SMTape 备份或还原操作。SMTape 操作会备份或还原位于集群 2 上的卷。此时，如果从集群 2 切回集群 1 ，则会发生以下情况：
+
+* 如果 ` – override-vetoes` 选项的值为 `false` ，则切回过程将中止，备份或还原操作将继续。
+* 如果此选项的值为 `true` ，则备份或还原操作将中止，而切回过程将继续。
+
+
+
+
+== 在切换或切回期间启动 SMTape 备份或还原操作
+
+在从集群 1 切换到集群 2 的过程中，如果在集群 1 上启动 SMTape 备份或还原操作，则备份或还原操作将失败，而切换将继续。
+
+在从集群 2 切回集群 1 的过程中，如果从集群 2 启动 SMTape 备份或还原操作，则备份或还原操作将失败，而切回操作将继续。

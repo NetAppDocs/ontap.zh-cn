@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/enable-ldap-over-ssl-tls-task.html 
+sidebar: sidebar 
+keywords: cifs, server, tls, secure, communication, active, directory, ldap, security, enable ldap over tls on the cifs server 
+summary: 在 CIFS 服务器使用 TLS 与 Active Directory LDAP 服务器进行安全通信之前，您必须修改 CIFS 服务器安全设置以启用基于 TLS 的 LDAP 。 
+---
+= 在 CIFS 服务器上启用基于 TLS 的 LDAP
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 CIFS 服务器使用 TLS 与 Active Directory LDAP 服务器进行安全通信之前，您必须修改 CIFS 服务器安全设置以启用基于 TLS 的 LDAP 。
+
+.步骤
+. 配置允许与 Active Directory LDAP 服务器进行安全 LDAP 通信的 CIFS 服务器安全设置： `vserver cifs security modify -vserver _vserver_name_ -use-start-tls-for-ad-ldap true`
+. 验证基于 TLS 的 LDAP 安全设置是否设置为 `true` ： `vserver cifs security show -vserver _vserver_name_`
++
+[NOTE]
+====
+如果 SVM 使用同一个 LDAP 服务器来查询名称映射或其他 UNIX 信息（例如用户，组和网络组），则还必须使用 `vserver services name-service ldap client modify` 命令修改 ` use-start-tls` 选项。
+
+====
+
+
+* 相关信息 *
+
+xref:ldaps-concepts-concept.adoc[LDAPS 概念]
+
+link:../nfs-admin/index.html["NFS 管理"]

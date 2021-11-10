@@ -1,0 +1,56 @@
+---
+permalink: smb-admin/display-netbios-over-tcp-connections-task.html 
+sidebar: sidebar 
+keywords: display, information, netbios, tcp, nbt, connection, useful, troubleshoot, issue, display information about netbios over tcp connections 
+summary: 您可以显示有关基于 TCP （ NBT ）的 NetBIOS 连接的信息。在对 NetBIOS 相关问题进行故障排除时，此功能非常有用。 
+---
+= 显示有关基于 TCP 连接的 NetBIOS 的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关基于 TCP （ NBT ）的 NetBIOS 连接的信息。在对 NetBIOS 相关问题进行故障排除时，此功能非常有用。
+
+.步骤
+. 使用 `vserver cifs nbtstat` 命令显示有关基于 TCP 连接的 NetBIOS 的信息。
++
+[NOTE]
+====
+不支持基于 IPv6 的 NetBIOS 名称服务（ NBNS ）。
+
+====
+
+
+以下示例显示了为 "`cluster1` " 显示的 NetBIOS 名称服务信息：
+
+[listing]
+----
+cluster1::> vserver cifs nbtstat
+
+          Vserver: vs1
+          Node:    cluster1-01
+          Interfaces:
+                   10.10.10.32
+                   10.10.10.33
+         Servers:
+                   17.17.1.2  (active  )
+         NBT Scope:
+                  [ ]
+         NBT Mode:
+                  [h]
+         NBT Name    NetBIOS Suffix   State   Time Left   Type
+         ----------- ---------------  ------- ---------   -----
+         CLUSTER_1   00               wins    57
+         CLUSTER_1   20               wins    57
+
+         Vserver: vs1
+         Node:    cluster1-02
+         Interfaces:
+                 10.10.10.35
+         Servers:
+                 17.17.1.2  (active  )
+         CLUSTER_1          00               wins          58
+         CLUSTER_1          20               wins          58
+         4 entries were displayed.
+----

@@ -1,0 +1,48 @@
+---
+permalink: nfs-admin/enable-disable-modification-nfsv4-acls-task.html 
+sidebar: sidebar 
+keywords: enable, disable, modification, nfsv4, acl 
+summary: 当 ONTAP 收到带有 ACL 的文件或目录的 chmod 命令时，默认情况下会保留并修改 ACL 以反映模式位更改。如果您希望删除 ACL ，则可以禁用 -v4-acl-preserve 参数以更改此行为。 
+---
+= 启用或禁用修改 NFSv4 ACL
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当 ONTAP 收到针对带有 ACL 的文件或目录的 `chmod` 命令时，默认情况下会保留并修改 ACL 以反映模式位更改。如果您希望删除 ACL ，则可以禁用 ` -v4-acl-preserve` 参数来更改行为。
+
+使用统一安全模式时，此参数还指定客户端为文件或目录发送 chmod ， chgroup 或 chown 命令时是保留还是删除 NTFS 文件权限。
+
+此参数的默认值为 enabled 。
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 执行以下操作之一：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 输入以下命令： 
+
+
+ a| 
+启用保留和修改现有 NFSv4 ACL （默认）
+ a| 
+`vserver nfs modify -vserver vserver_name -v4-acl-preserve enabled`
+
+
+
+ a| 
+更改模式位时禁用保留并丢弃 NFSv4 ACL
+ a| 
+`vserver nfs modify -vserver vserver_name -v4-acl-preserve disabled`
+
+|===
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+

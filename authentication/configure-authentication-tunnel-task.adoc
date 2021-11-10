@@ -1,0 +1,43 @@
+---
+permalink: authentication/configure-authentication-tunnel-task.html 
+sidebar: sidebar 
+keywords: configure, authentication tunnel 
+summary: 如果您已为数据 SVM 配置 CIFS 服务器，则可以使用 security login domain-tunnel create 命令将 SVM 配置为对集群进行 AD 访问的网关或通道。 
+---
+= 配置身份验证通道
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您已为数据 SVM 配置 CIFS 服务器，则可以使用 `ssecurity login domain-tunnel create` 命令将 SVM 配置为网关或 _tunnet_ ，以便对集群进行 AD 访问。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须已为数据 SVM 配置 CIFS 服务器。
+* 您必须已启用 AD 域用户帐户才能访问集群的管理 SVM 。
+* 您必须是集群管理员才能执行此任务。
+
+
+.步骤
+. 将启用了 CIFS 的数据 SVM 配置为 AD 域控制器访问集群的身份验证通道：
++
+`ssecurity login domain-tunnel create -vserver svm_name`
+
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+[NOTE]
+====
+要对用户进行身份验证，必须运行 SVM 。
+
+====
++
+以下命令会将启用了 CIFS 的数据 SVM``engData`` 配置为身份验证通道。
+
++
+[listing]
+----
+cluster1::>security login domain-tunnel create -vserver engData
+----
+

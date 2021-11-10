@@ -1,0 +1,105 @@
+---
+permalink: element-replication/define-rule-policy-task.html 
+sidebar: sidebar 
+keywords: define, rule, policy 
+summary: '对于策略类型为 "mirror-vaule" 的自定义策略，您必须至少定义一个规则，用于确定在初始化和更新期间传输哪些 Snapshot 副本。您还可以为默认策略定义 " 镜像 - 存储 " 策略类型的规则。' 
+---
+= 为策略定义规则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对于策略类型为 `mirror-vault` 的自定义策略，您必须至少定义一个规则来确定初始化和更新期间传输的 Snapshot 副本。您还可以为 `mirror-vault` 策略类型的默认策略定义规则。
+
+每个策略类型为 `mirror-vault` 的策略都必须具有一条规则，用于指定要复制的 Snapshot 副本。例如，规则 "`bi-monthly` " 表示仅应复制分配了 SnapMirror 标签 "`bi-monthly` " 的 Snapshot 副本。您可以在配置 Element Snapshot 副本时分配 SnapMirror 标签。
+
+每个策略类型都与一个或多个系统定义的规则相关联。指定策略类型时，系统会自动为策略分配这些规则。下表显示了系统定义的规则。
+
+[cols="3*"]
+|===
+| 系统定义的规则 | 用于策略类型 | 结果 
+
+
+ a| 
+sm_created
+ a| 
+异步镜像，镜像存储
+ a| 
+在初始化和更新时传输 SnapMirror 创建的 Snapshot 副本。
+
+
+
+ a| 
+每天
+ a| 
+镜像存储
+ a| 
+在初始化和更新时传输源上 SnapMirror 标签为 `daily` 的新 Snapshot 副本。
+
+
+
+ a| 
+每周
+ a| 
+镜像存储
+ a| 
+在初始化和更新时，会传输源上 SnapMirror 标签为 "`weekly` " 的新 Snapshot 副本。
+
+
+
+ a| 
+每月
+ a| 
+镜像存储
+ a| 
+在初始化和更新时，会传输源上 SnapMirror 标签为 " `m月` 日 " 的新 Snapshot 副本。
+
+|===
+您可以根据需要为默认策略或自定义策略指定其他规则。例如：
+
+* 对于默认的 `MirrorAndVault` 策略，您可以创建一个名为 "`bi-monthly` " 的规则，以匹配源上具有 "`bi-monthly` " SnapMirror 标签的 Snapshot 副本。
+* 对于策略类型为 `mirror-vault` 的自定义策略，您可以创建一个名为 "`bi-weekly` " 的规则，以匹配源上具有 "`bi-weekly` " SnapMirror 标签的 Snapshot 副本。
+
+
+.步骤
+. 为策略定义规则：
++
+`snapmirror policy add-rule -vserver _svm_ -policy _policy_for_rule_ -snapmirror-label _snapmirror-label _ -keep _retention_count_s`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将 SnapMirror 标签为 `bi-monthly` 的规则添加到默认的 `MirrorAndVault` 策略中：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy MirrorAndVault -snapmirror-label bi-monthly -keep 6
+----
++
+以下示例将 SnapMirror 标签为 `bi-weekly` 的规则添加到自定义的 `my_SnapVault` 策略中：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy my_snapvault -snapmirror-label bi-weekly -keep 26
+----
++
+以下示例将 SnapMirror 标签为 `app_consistent` 的规则添加到自定义 `Sync` 策略中：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy Sync -snapmirror-label app_consistent -keep 1
+----
++
+然后，您可以从与此 SnapMirror 标签匹配的源集群复制 Snapshot 副本：
+
++
+[listing]
+----
+cluster_src::> snapshot create -vserver vs1 -volume vol1 -snapshot snapshot1 -snapmirror-label app_consistent
+----
+

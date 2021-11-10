@@ -1,0 +1,57 @@
+---
+permalink: encryption-at-rest/unencrypt-volume-data-task.html 
+sidebar: sidebar 
+keywords: unencrypting, volume, data 
+summary: 您可以使用 volume move start 命令移动和取消加密卷数据。 
+---
+= 取消卷数据加密
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume move start` 命令移动和取消加密卷数据。
+
+要执行此任务，您必须是集群管理员，或者集群管理员已向其委派权限的 SVM 管理员。
+
+xref:delegate-volume-encryption-svm-administrator-task.adoc[委派权限以运行 volume move 命令]
+
+.步骤
+. 移动现有加密卷并取消对卷上的数据加密：
++
+`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令会将名为 `vol1` 的现有卷移至目标聚合 `aggr3` 并取消对卷上数据的加密：
+
++
+[listing]
+----
+cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate aggr3 -encrypt-destination false
+----
++
+系统将删除卷的加密密钥。卷上的数据未加密。
+
+. 验证卷是否已禁用加密：
++
+`volume show -encryption`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令显示 `cluster1` 上的卷是否已加密：
+
++
+[listing]
+----
+cluster1::> volume show -encryption
+
+Vserver  Volume   Aggregate   State    Encryption State
+-------  ------   ---------   -----    ----------------
+vs1      vol1     aggr1       online   none
+----
+

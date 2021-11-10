@@ -1,0 +1,41 @@
+---
+permalink: volumes/manage-inline-data-compaction-aff-task.html 
+sidebar: sidebar 
+keywords: manage, inline, data, compaction, aff, systems 
+summary: 您可以使用 volume efficiency modify 命令在卷级别控制 AFF 系统上的实时数据缩减。默认情况下， AFF 系统上的所有卷都会启用数据缩减。 
+---
+= 管理 AFF 系统的实时数据缩减
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume efficiency modify` 命令在卷级别控制 AFF 系统上的实时数据缩减。默认情况下， AFF 系统上的所有卷都会启用数据缩减。
+
+数据缩减要求将卷空间保证设置为 `none` 。这是 AFF 系统的默认设置。
+
+[NOTE]
+====
+非 AFF 数据保护卷上的默认空间保证设置为 none 。
+
+====
+.步骤
+. 验证卷的空间保证设置：
++
+`volume show -vserver vserver_name -volume volume_name – fields space-guarantee`
+
+. 启用数据缩减：
++
+`volume efficiency modify -vserver vserver_name -volume volume_name -data-compression true`
+
+. 禁用数据缩减：
++
+`volume efficiency modify -vserver vserver_name -volume volume_name -data-c缩减 false`
+
+. 要显示数据缩减状态，请执行以下操作：
++
+`volume efficiency show -instance`
+
+
+
+`cluster1 ：：： > volume efficiency modify -vserver vs1 -volume vol1 -data-compression true` `cluster1 ：： > volume efficiency modify -vserver vs1 -volume vol1 -data-compression false`

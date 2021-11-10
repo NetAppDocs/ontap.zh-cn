@@ -1,0 +1,70 @@
+---
+permalink: data-protection/restore-svm-root-volume-promote-mirror-task.html 
+sidebar: sidebar 
+keywords: promote, load-sharing, mirror 
+summary: 如果根卷永久不可用，您可以提升负载共享镜像（ LSM ）卷，以提供对根卷数据的写入访问。 
+---
+= 提升负载共享镜像
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果根卷永久不可用，您可以提升负载共享镜像（ LSM ）卷，以提供对根卷数据的写入访问。
+
+您必须对此任务使用高级权限级别命令。
+
+.步骤
+. 更改为高级权限级别：
++
+`set -privilege advanced`
+
+. 提升 LSM 卷：
++
+`snapmirror promote -destination-path _svm ： volume_|_cluster ： //svm/volume_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将卷 `svm1_m2` 提升为新的 SVM 根卷：
+
++
+[listing]
+----
+cluster_src::*> snapmirror promote -destination-path svm1:svm1_m2
+
+Warning: Promote will delete the offline read-write volume
+         cluster_src://svm1/svm1_root and replace it with
+         cluster_src://svm1/svm1_m2. Because the volume is offline,
+         it is not possible to determine whether this promote will
+         affect other relationships associated with this source.
+Do you want to continue? {y|n}: y
+----
++
+输入 `y` 。ONTAP 会将 LSM 卷设为读 / 写卷，如果可以访问原始根卷，则会将其删除。
+
++
+[NOTE]
+====
+如果最近未进行上次更新，则提升的根卷可能不包含原始根卷中的所有数据。
+
+====
+. 返回到管理员权限级别：
++
+`set -privilege admin`
+
+. 按照根卷使用的命名约定重命名已提升的卷：
++
+`volume rename -vserver _svm_ -volume _volume_-newname _new_name_`
+
++
+以下示例将提升的卷 `svm1_m2` 重命名为 `svm1_root` ：
+
++
+[listing]
+----
+cluster_src::> volume rename -vserver svm11 -volume svm1_m2 -newname svm1_root
+----
+. 保护已重命名的根卷，如步骤中所述 link:create-load-sharing-mirror-task.html#steps["3."] 到步骤  在中 。
+

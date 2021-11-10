@@ -1,0 +1,52 @@
+---
+permalink: volumes/default-user-group-quotas-derived-concept.html 
+sidebar: sidebar 
+keywords: how, default, user, group quotas, create, derived, quotas 
+summary: 创建默认用户或组配额时，系统会自动为在同一级别拥有文件的每个用户或组创建相应的派生用户或组配额。 
+---
+= 默认用户配额和组配额如何创建派生配额
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+创建默认用户或组配额时，系统会自动为在同一级别拥有文件的每个用户或组创建相应的派生用户或组配额。
+
+派生用户配额和组配额可通过以下方式创建：
+
+* FlexVol 卷上的默认用户配额会为在卷上任何位置拥有文件的每个用户创建派生用户配额。
+* qtree 上的默认用户配额会为在 qtree 中拥有文件的每个用户创建派生用户配额。
+* FlexVol 卷上的默认组配额会为在卷上任何位置拥有文件的每个组创建派生组配额。
+* qtree 上的默认组配额会为在 qtree 中拥有文件的每个组创建派生组配额。
+
+
+如果用户或组在默认用户或组配额级别不拥有文件，则不会为该用户或组创建派生配额。例如，如果为 qtree proj1 创建了默认用户配额，而用户 jsmith 拥有其他 qtree 上的文件，则不会为 jsmith 创建派生用户配额。
+
+派生配额与默认配额具有相同的设置，包括限制和用户映射。例如，如果默认用户配额具有 50 MB 的磁盘限制并启用了用户映射，则生成的任何派生配额也会设置 50 MB 的磁盘限制并启用用户映射。
+
+但是，对于三个特殊用户和组，派生配额不存在任何限制。如果以下用户和组在默认用户或组配额级别拥有文件，则会使用与默认用户或组配额相同的用户映射设置创建派生配额，但它只是一个跟踪配额（无限制）：
+
+* UNIX root 用户（ UID 0 ）
+* UNIX 根组（ GID 0 ）
+* Windows BUILTIN\Administrators 组
++
+由于 Windows 组的配额作为用户配额进行跟踪，因此此组的派生配额是从默认用户配额派生的用户配额，而不是从默认组配额派生的。
+
+
+
+如果您的卷包含三个用户（ root ， jsmith 和 bob ）拥有的文件，并且您在该卷上创建了默认用户配额，则 ONTAP 会自动创建三个派生用户配额。因此，重新初始化卷上的配额后，配额报告中将显示四个新配额：
+
+[listing]
+----
+cluster1::> volume quota report
+  Vserver: vs1
+                                     ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1               user    *           0B   50MB       0       -   *
+vol1               user    root        5B      -       1       -
+vol1               user    jsmith     30B   50MB      10       -   *
+vol1               user    bob        40B   50MB      15       -   *
+4 entries were displayed.
+----
+第一个新行是您创建的默认用户配额，可通过星号（ * ）标识为 ID 。其他新行是派生用户配额。jsmith 和 bob 的派生配额与默认配额具有相同的 50 MB 磁盘限制。root 用户的派生配额是一个无限制的跟踪配额。

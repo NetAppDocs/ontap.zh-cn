@@ -1,0 +1,17 @@
+---
+permalink: tape-backup/blocking-factor-concept.html 
+sidebar: sidebar 
+keywords: blocking, factor, tape, backup, restore, read, write, operation 
+summary: 一个磁带块是 1 ， 024 字节的数据。在磁带备份或还原期间，您可以指定在每次读 / 写操作中传输的磁带块数。此数字称为分块系数。 
+---
+= 什么是分块系数
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+一个磁带块是 1 ， 024 字节的数据。在磁带备份或还原期间，您可以指定在每次读 / 写操作中传输的磁带块数。此数字称为 _blocking factor_ 。
+
+您可以使用 4 到 256 之间的分块系数。如果您计划将备份还原到执行备份的系统以外的系统，则还原系统必须支持您用于备份的分块系数。例如，如果使用的分块系数为 128 ，则还原该备份的系统必须支持的分块系数为 128 。
+
+在 NDMP 备份期间， MOVER_RECORD_SIZE 决定了分块系数。ONTAP 允许的 MOVER_RECORD_SIZE 最大值为 256 KB 。

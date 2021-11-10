@@ -1,0 +1,27 @@
+---
+permalink: concepts/compression-concept.html 
+sidebar: sidebar 
+keywords: compression 
+summary: 数据压缩通过将数据块组合到数据压缩组中来减少卷所需的物理存储量，每个数据块都存储为一个块。与传统压缩方法相比，压缩数据的读取速度更快，因为 ONTAP 仅解压缩包含所请求数据的压缩组，而不是解压缩整个文件或 LUN 。 
+---
+= 压缩
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+_compression_ 通过将数据块组合到 _compression groups_中 来减少卷所需的物理存储量，每个数据块都存储为一个块。与传统压缩方法相比，压缩数据的读取速度更快，因为 ONTAP 仅解压缩包含所请求数据的压缩组，而不是解压缩整个文件或 LUN 。
+
+您可以单独或组合执行实时或后处理压缩：
+
+* _Inline compression_ 在将数据写入磁盘之前压缩内存中的数据，从而显著减少卷的写入 I/O 量，但可能会降低写入性能。性能密集型操作将延迟到下一个后处理压缩操作（如果有）为止。
+* _postprocess compression_ 按照与重复数据删除相同的计划，在数据写入磁盘后对其进行压缩。
+
+
+|===
+
+
+ a| 
+*_Inline data 能力缩减 _* 小文件或填充零的 I/O 存储在 4 KB 块中，无论它们是否需要 4 KB 的物理存储。_Inline 数据缩减 _ 将通常占用多个 4 KB 块的数据块组合到磁盘上的一个 4 KB 块中。数据缩减是在数据仍位于内存中时进行的，因此最适合速度更快的控制器。
+
+|===

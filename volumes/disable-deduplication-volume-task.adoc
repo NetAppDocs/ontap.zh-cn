@@ -1,0 +1,41 @@
+---
+permalink: volumes/disable-deduplication-volume-task.html 
+sidebar: sidebar 
+keywords: disabling, deduplication, volume 
+summary: 您可以在卷上单独禁用后处理重复数据删除和实时重复数据删除。 
+---
+= 在卷上禁用重复数据删除
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在卷上单独禁用后处理重复数据删除和实时重复数据删除。
+
+停止卷上当前处于活动状态的任何卷效率操作： `volume efficiency stop`
+
+如果已在卷上启用数据压缩，则运行 `volume efficiency off` 命令将禁用数据压缩。
+
+.选项
+* 使用 `volume efficiency off` 命令禁用后处理重复数据删除和实时重复数据删除。
++
+以下命令会在卷 VolA 上同时禁用后处理重复数据删除和实时重复数据删除：
+
++
+`volume efficiency off -vserver vs1 -volume VolA`
+
+* 使用 `volume efficiency modify` 命令并将 ` -policy` 选项设置为 `inline only` 以禁用后处理重复数据删除，但实时重复数据删除仍保持启用状态。
++
+以下命令会禁用后处理重复数据删除，但卷 VolA 仍会启用实时重复数据删除：
+
++
+`volume efficiency modify -vserver vs1 -volume VolA -policy inline-only`
+
+* 使用 `volume efficiency modify` 命令并将 ` inline-deduplication` 选项设置为 `false` 以仅禁用实时重复数据删除。
++
+以下命令仅对卷 VolA 禁用实时重复数据删除：
+
++
+`volume efficiency modify -vserver vs1 -volume VolA -inline-deduplication false`
+
+

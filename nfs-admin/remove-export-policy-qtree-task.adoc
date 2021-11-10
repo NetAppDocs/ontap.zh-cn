@@ -1,0 +1,24 @@
+---
+permalink: nfs-admin/remove-export-policy-qtree-task.html 
+sidebar: sidebar 
+keywords: remove, export, policy, qtree 
+summary: 如果您决定不再需要将特定导出策略分配给 qtree ，则可以通过修改 qtree 以继承包含卷的导出策略来删除导出策略。为此，您可以使用带有 -export-policy 参数和空名称字符串的 volume qtree modify 命令。 
+---
+= 从 qtree 删除导出策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您决定不再需要将特定导出策略分配给 qtree ，则可以通过修改 qtree 以继承包含卷的导出策略来删除导出策略。为此，您可以使用带有 ` -export-policy` 参数和空名称字符串（ "" ）的 `volume qtree modify` 命令。
+
+.步骤
+. 要从 qtree 中删除导出策略，请输入以下命令：
++
+`volume qtree modify -vserver vserver_name -qtree-path /vol/volume_name/qtree_name -export-policy ""`
+
+. 验证是否已相应修改 qtree ：
++
+`volume qtree show -qtree qtree_name -fields export-policy`
+
+

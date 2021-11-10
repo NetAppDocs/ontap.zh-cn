@@ -1,0 +1,104 @@
+---
+permalink: system-admin/create-banner-task.html 
+sidebar: sidebar 
+keywords: create, banner, svm, access, cluster, ssh, session 
+summary: 您可以创建一个横幅，向尝试访问集群或 SVM 的用户显示一条消息。在提示用户进行身份验证之前，控制台会话（仅限集群访问）或 SSH 会话（适用于集群或 SVM 访问）会显示此横幅。 
+---
+= 创建横幅
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以创建一个横幅，向尝试访问集群或 SVM 的用户显示一条消息。在提示用户进行身份验证之前，控制台会话（仅限集群访问）或 SSH 会话（适用于集群或 SVM 访问）会显示此横幅。
+
+.步骤
+. 使用 `ssecurity login banner modify` 命令为集群或 SVM 创建横幅：
++
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+指定单行消息
+ a| 
+使用 ` 消息` "[.code]``text`` 参数指定文本。
+
+
+
+ a| 
+在消息中包括换行符（也称为行尾）
+ a| 
+使用不带 ` -message` 或 ` -uri` 参数的命令启动交互模式以编辑横幅。
+
+
+
+ a| 
+从某个位置上传要用于横幅的内容
+ a| 
+使用 ` -uri` 参数指定内容的 FTP 或 HTTP 位置。
+
+|===
++
+横幅的最大大小为 2 ， 048 字节，包括换行符。
+
++
+使用 ` -uri` 参数创建的横幅为静态横幅。它不会自动刷新以反映源内容的后续更改。
+
++
+为集群创建的横幅也会显示所有没有现有横幅的 SVM 。此后为 SVM 创建的任何横幅都会覆盖该 SVM 的集群级别横幅。为 SVM 指定 ` 消息` 参数并在双引号内添加连字符（` "-"` ），会将 SVM 重置为使用集群级别的横幅。
+
+. 使用 `ssecurity login banner show` 命令显示横幅，以验证是否已创建横幅。
++
+使用空字符串（` ""` ）指定 ` 消息` 参数可显示无内容的横幅。
+
++
+使用 ` "-"` 指定 ` 消息` 参数可显示未配置横幅的所有（管理或数据） SVM 。
+
+
+
+以下示例使用非交互模式为 "`cluster1` " 集群创建横幅：
+
+[listing]
+----
+cluster1::> security login banner modify -message "Authorized users only!"
+
+cluster1::>
+----
+以下示例使用交互模式为 `svm1` SVM 创建横幅：
+
+[listing]
+----
+cluster1::> security login banner modify -vserver svm1
+
+Enter the message of the day for Vserver "svm1".
+Max size: 2048. Enter a blank line to terminate input. Press Ctrl-C to abort.
+0        1         2         3         4         5         6         7         8
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+The svm1 SVM is reserved for authorized users only!
+
+
+cluster1::>
+----
+以下示例显示了已创建的横幅：
+
+[listing]
+----
+cluster1::> security login banner show
+Vserver: cluster1
+Message
+-----------------------------------------------------------------------------
+Authorized users only!
+
+Vserver: svm1
+Message
+-----------------------------------------------------------------------------
+The svm1 SVM is reserved for authorized users only!
+
+2 entries were displayed.
+
+cluster1::>
+----
+* 相关信息 *
+
+xref:manage-banner-reference.adoc[管理横幅]

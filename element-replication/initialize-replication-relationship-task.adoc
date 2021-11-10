@@ -1,0 +1,52 @@
+---
+permalink: element-replication/initialize-replication-relationship-task.html 
+sidebar: sidebar 
+keywords: initialize, replication, relationship 
+summary: 对于所有关系类型，初始化都会执行基线传输：它会创建源卷的 Snapshot 副本，然后将该副本及其引用的所有数据块传输到目标卷。 
+---
+= 初始化复制关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对于所有关系类型，初始化将执行 _baseline transfer_ ：它会为源卷创建 Snapshot 副本，然后将该副本及其引用的所有数据块传输到目标卷。
+
+.开始之前
+* 包含要复制的卷的 Element 节点必须可供 ONTAP 访问。
+* 必须已为 Element 卷启用 SnapMirror 复制。
+* 如果您使用的是 `mirror-vault` 策略类型，则必须已为要复制的 Element Snapshot 副本配置 SnapMirror 标签。
+
+
+您必须以 ` _hostip ： //lun/_name_` 的形式指定元素源路径，其中 "`lun` " 是实际字符串 "`lun` " ， ` 名称 _` 是 Element 卷的名称。
+
+初始化可能非常耗时。您可能希望在非高峰时段运行基线传输。
+
+[NOTE]
+====
+如果由于任何原因从 ONTAP 源到 Element 目标的关系初始化失败，则即使您已更正此问题（例如，无效的 LUN 名称），初始化也将继续失败。临时解决策如下所示：
+
+. 删除此关系。
+. 删除 Element 目标卷。
+. 创建新的 Element 目标卷。
+. 创建并初始化从 ONTAP 源到 Element 目标卷的新关系。
+
+
+====
+.步骤
+. 初始化复制关系：
++
+`snapmirror initialize -source-path _hostip ： //lun/_name_ -destination-path _sVM ： volume| cluster ： //svm/volume_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将初始化 IP 地址为 10.0.0.11 的源卷 `0005` 和目标卷 `vola_dst` on `svm_backup` 之间的关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror initialize -source-path 10.0.0.11:/lun/0005 -destination-path svm_backup:volA_dst
+----
+

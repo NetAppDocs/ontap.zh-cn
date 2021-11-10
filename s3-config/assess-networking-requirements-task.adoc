@@ -1,0 +1,70 @@
+---
+permalink: s3-config/assess-networking-requirements-task.html 
+sidebar: sidebar 
+keywords: assess, networking, requirements 
+summary: 在向客户端提供 S3 存储之前，您必须验证网络配置是否正确，以满足 S3 配置要求。 
+---
+= 评估网络连接要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在向客户端提供 S3 存储之前，您必须验证网络配置是否正确，以满足 S3 配置要求。
+
+必须配置以下集群网络对象：
+
+* 物理和逻辑端口
+* 广播域
+* 子网（如果需要）
+* IP 空间（除默认 IP 空间外，根据需要）
+* 故障转移组（根据需要，除每个广播域的默认故障转移组外）
+* 外部防火墙
+
+
+对于远程 FabricPool 容量（云）层和远程 S3 客户端，您必须使用数据 SVM 并配置数据 LIF 。对于 FabricPool 云层，您还必须配置集群间 LIF ；不需要集群对等。
+
+对于本地 FabricPool 容量层，您必须使用系统 SVM （称为 "`集群` " ），但 LIF 配置有两个选项：
+
+* 您可以使用集群 LIF 。
++
+在此选项中，无需进一步配置 LIF ，但集群 LIF 上的流量将会增加。此外，其他集群将无法访问此本地层。
+
+* 您可以使用数据和集群间 LIF 。
++
+此选项需要进行其他配置，包括为 S3 协议启用 LIF ，但本地层也可作为远程 FabricPool 云层供其他集群访问。
+
+
+
+.步骤
+. 显示可用的物理和虚拟端口：
++
+`network port show`
+
++
+** 如果可能，您应使用数据网络速度最快的端口。
+** 数据网络中的所有组件都必须具有相同的 MTU 设置，才能获得最佳性能。
+
+
+. 如果您计划使用子网名称为 LIF 分配 IP 地址和网络掩码值，请验证子网是否存在且具有足够的可用地址：
++
+`network subnet show`
+
++
+子网包含属于同一第 3 层子网的 IP 地址池。使用 `network subnet create` 命令创建子网。
+
+. 显示可用 IP 空间：
++
+`network IPspace show`
+
++
+您可以使用默认 IP 空间或自定义 IP 空间。
+
+. 如果要使用 IPv6 地址，请验证是否已在集群上启用 IPv6 ：
++
+`network options ipv6 show`
+
++
+如果需要，您可以使用 `network options ipv6 modify` 命令启用 IPv6 。
+
+

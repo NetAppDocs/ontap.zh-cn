@@ -1,0 +1,35 @@
+---
+permalink: system-admin/system-volumes-concept.html 
+sidebar: sidebar 
+keywords: system, volume, flexvol, metadata, file, services, audit, logs, account, storage, cluster 
+summary: 系统卷是指包含特殊元数据的 FlexVol 卷，例如文件服务审核日志的元数据。这些卷在集群中可见，因此您可以完全考虑集群中的存储使用情况。 
+---
+= 什么是系统卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+系统卷是指包含特殊元数据的 FlexVol 卷，例如文件服务审核日志的元数据。这些卷在集群中可见，因此您可以完全考虑集群中的存储使用情况。
+
+系统卷属于集群管理服务器（也称为管理 SVM ），在启用文件服务审核时，系统卷会自动创建。
+
+您可以使用 `volume show` 命令查看系统卷，但不允许执行大多数其他卷操作。例如，您不能使用 `volume modify` 命令修改系统卷。
+
+此示例显示了管理 SVM 上的四个系统卷，这些系统卷是在为集群中的数据 SVM 启用文件服务审核时自动创建的：
+
+[listing]
+----
+cluster1::> volume show -vserver cluster1
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+cluster1  MDV_aud_1d0131843d4811e296fc123478563412
+                       aggr0        online     RW          2GB     1.90GB    5%
+cluster1  MDV_aud_8be27f813d7311e296fc123478563412
+                       root_vs0     online     RW          2GB     1.90GB    5%
+cluster1  MDV_aud_9dc4ad503d7311e296fc123478563412
+                       aggr1        online     RW          2GB     1.90GB    5%
+cluster1  MDV_aud_a4b887ac3d7311e296fc123478563412
+                       aggr2        online     RW          2GB     1.90GB    5%
+4 entries were displayed.
+----

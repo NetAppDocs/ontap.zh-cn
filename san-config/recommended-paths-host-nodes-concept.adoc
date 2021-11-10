@@ -1,0 +1,30 @@
+---
+permalink: san-config/recommended-paths-host-nodes-concept.html 
+sidebar: sidebar 
+keywords: recommended, number, paths, host, nodes, cluster 
+summary: 从主机到集群中每个节点的路径不应超过八个，请注意主机操作系统可支持的路径总数以及主机上使用的多路径。 
+---
+= 从主机到集群中节点的建议路径数
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从主机到集群中每个节点的路径不应超过八个，请注意主机操作系统可支持的路径总数以及主机上使用的多路径。
+
+通过集群中 Storage Virtual Machine （ SVM ）正在使用的选择性 LUN 映射（ SLM ），每个 LUN 应至少有两个路径连接到每个报告节点。这样可以消除单点故障，并使系统能够承受组件故障。
+
+如果集群中有四个或更多节点，或者任何节点中的 SVM 正在使用四个以上的目标端口， 您可以使用以下方法限制可用于访问节点上 LUN 的路径数，以便不超过建议的最大路径数 8 个。
+
+* SLM
++
+SLM 会将从主机到 LUN 的路径数减少为仅包含 LUN 的节点及其 HA 配对节点上的路径。默认情况下， SLM 处于启用状态。
+
+* iSCSI 的端口集
+* 主机中的 FC igroup 映射
+* FC 交换机分区
+
+
+* 相关信息 *
+
+link:../san-admin/index.html["SAN 管理"]

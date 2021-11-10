@@ -1,0 +1,79 @@
+---
+permalink: flexgroup/reverse-snapmirror-relationship-task.html 
+sidebar: sidebar 
+keywords: reverse, snapmirror, relation, flexgroup, volume, disaster, recovery 
+summary: 如果灾难禁用了 SnapMirror 关系中的源 FlexGroup 卷，则可以在修复或替换源 FlexGroup 卷时使用目标 FlexGroup 卷提供数据。源 FlexGroup 卷联机后，您可以将原始源 FlexGroup 卷设为只读目标，并反转 SnapMirror 关系。 
+---
+= 在灾难恢复期间反转 FlexGroup 卷之间的 SnapMirror 关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果灾难禁用了 SnapMirror 关系中的源 FlexGroup 卷，则可以在修复或替换源 FlexGroup 卷时使用目标 FlexGroup 卷提供数据。源 FlexGroup 卷联机后，您可以将原始源 FlexGroup 卷设为只读目标，并反转 SnapMirror 关系。
+
+在执行重新同步之前，目标卷上的任何活动配额规则都将被停用，并且配额规则将被删除。
+
+重新同步操作完成后，您可以使用 `volume quota policy rule create` 和 `volume quota modify` 命令创建和重新激活配额规则。
+
+.步骤
+. 在初始目标 FlexGroup 卷上，删除源 FlexGroup 卷与目标 FlexGroup 卷之间的数据保护镜像关系： `snapmirror delete -destination-path svm_name ： volume_name`
++
+[listing]
+----
+cluster2::> snapmirror delete -destination-path vsd:dst
+----
+. 在原始源 FlexGroup 卷上，从源 FlexGroup 卷中删除关系信息： `snapmirror release -destination-path svm_name ： volume_name -relationship-info-only`
++
+删除 SnapMirror 关系后，必须先从源 FlexGroup 卷中删除关系信息，然后再尝试重新同步操作。
+
++
+[listing]
+----
+cluster1::> snapmirror release -destination-path vsd:dst -relationship-info-only true
+----
+. 在新的目标 FlexGroup 卷上，创建镜像关系： `snapmirror create -source-path src_svm_name ： volume_name -destination-path dst_svm_name ： volume_name -type XDP -policy MirrorAllSnapshots`
++
+[listing]
+----
+cluster1::> snapmirror create -source-path vsd:dst -destination-path vss:src -type XDP -policy MirrorAllSnapshots
+----
+. 在新的目标 FlexGroup 卷上，重新同步源 FlexGroup ： `snapmirror resync -source-path svm_name ： volume_name`
++
+[listing]
+----
+cluster1::> snapmirror resync -source-path vsd:dst
+----
+. 监控 SnapMirror 传输： `snapmirror show -expand`
++
+[listing]
+----
+cluster2::> snapmirror show -expand
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vsd:dst       XDP  vss:src        Snapmirrored
+                                      Idle           -         true    -
+vss:dst__0001 XDP  vss:src__0001  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0002 XDP  vss:src__0002  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0003 XDP  vss:src__0003  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0004 XDP  vss:src__0004  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0005 XDP  vss:src__0005  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0006 XDP  vss:src__0006  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0007 XDP  vss:src__0007  Snapmirrored
+                                      Idle           -         true    -
+vsd:dst__0008 XDP  vss:src__0008  Snapmirrored
+                                      Idle           -         true    -
+...
+----
++
+每个成分卷的 SnapMirror 关系状态显示为 `Snapmirrored` ，表示重新同步已成功。
+
+

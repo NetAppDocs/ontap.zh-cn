@@ -1,0 +1,75 @@
+---
+permalink: san-admin/move-luns-task.html 
+sidebar: sidebar 
+keywords: ontap 9.2, move, luns 
+summary: 您可以在 Storage Virtual Machine （ SVM ）中的卷之间移动 LUN ，但不能在 SVM 之间移动 LUN 。在 SVM 中跨卷移动的 LUN 会立即移动，而不会丢失连接。 
+---
+= 移动 LUN
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在 Storage Virtual Machine （ SVM ）中的卷之间移动 LUN ，但不能在 SVM 之间移动 LUN 。在 SVM 中跨卷移动的 LUN 会立即移动，而不会丢失连接。
+
+如果 LUN 使用选择性 LUN 映射（ SLM ），则必须已修改 SLM 报告节点，以包括目标节点及其 HA 配对节点。
+
+在移动 LUN 期间，重复数据删除，数据压缩和数据缩减等存储效率功能不会保留下来。在 LUN 移动完成后，必须重新应用它们。
+
+通过 Snapshot 副本进行的数据保护在卷级别进行。因此，移动 LUN 时，它属于目标卷的数据保护方案的范围。如果没有为目标卷创建 Snapshot 副本，则不会创建 LUN 的 Snapshot 副本。此外， LUN 的所有 Snapshot 副本都会保留在原始卷中，直到删除这些 Snapshot 副本为止。
+
+不能将 LUN 移动到以下卷：
+
+* SnapMirror 目标卷
+* SVM 根卷
+
+
+不能移动以下类型的 LUN ：
+
+* 已通过文件创建的 LUN
+* 处于 NVFail 状态的 LUN
+* 处于负载共享关系中的 LUN
+* 协议端点类 LUN
+
+
+[NOTE]
+====
+对于 1 TB 或更大的 Solaris OS_type LUN ，主机可能会在 LUN 移动期间发生超时。对于此 LUN 类型，您应先卸载此 LUN ，然后再启动移动。
+
+====
+
+
+== System Manager 操作步骤
+
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 在移动单个 LUN 时创建新卷。在 ONTAP 9.9 和 9.8 中，要将 LUN 移动到的卷必须存在，然后才能开始移动 LUN 。
+
+步骤
+
+. 在 ONTAP 系统管理器中，单击 * 存储 ">LUN* 。
+. 右键单击要移动的 LUN ，然后单击 image:icon_kabob.gif["kabob 图标"] 并选择 * 移动 LUN* 。
++
+在 ONTAP 9.10.1 中，选择将 LUN 移动到 * 现有卷 * 或 * 新卷 * 。
+
++
+如果选择创建新卷，请提供卷规格。
+
+. 单击 * 移动 * 。
+
+
+
+
+== 命令行界面操作步骤
+
+.步骤
+. 移动 LUN ： `lun move start` 。
++
+在很短的时间内， LUN 会同时显示在原始卷和目标卷上。这是预期行为，完成移动后即可解决。
+
+. 跟踪移动状态并验证是否成功完成： `lun move show` 。
+
+
+* 相关信息 *
+
+* xref:selective-lun-map-concept.adoc[选择性 LUN 映射]
+* xref:modify-slm-reporting-nodes-task.adoc[修改 SLM 报告节点列表]
+

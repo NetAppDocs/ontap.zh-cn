@@ -1,0 +1,37 @@
+---
+permalink: smb-admin/choosing-hash-store-location-concept.html 
+sidebar: sidebar 
+keywords: configuring, configure, branchcache, store, hash, size, guideline, cids-enabled, svm, guidelines for choosing the hash store location 
+summary: 在配置 BranchCache 时，您可以选择哈希的存储位置以及哈希存储的大小。了解选择哈希存储位置和大小的准则有助于您在启用了 CIFS 的 SVM 上规划 BranchCache 配置。 
+---
+= 选择哈希存储位置的准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在配置 BranchCache 时，您可以选择哈希的存储位置以及哈希存储的大小。了解选择哈希存储位置和大小的准则有助于您在启用了 CIFS 的 SVM 上规划 BranchCache 配置。
+
+* 您应在允许使用 atime 更新的卷上找到哈希存储。
++
+哈希文件的访问时间用于将经常访问的文件保留在哈希存储中。如果禁用了 atime 更新，则创建时间将用于此目的。最好使用 atime 来跟踪常用的文件。
+
+* 不能将哈希存储在只读文件系统上，例如 SnapMirror 目标和 SnapLock 卷。
+* 如果达到哈希存储的最大大小，则会刷新旧哈希，以便为新哈希留出空间。
++
+您可以增加哈希存储的最大大小，以减少从缓存中刷新的哈希数量。
+
+* 如果存储哈希的卷不可用或已满，或者存在具有集群内通信的问题描述，而 BranchCache 服务无法检索哈希信息，则 BranchCache 服务不可用。
++
+此卷可能不可用，因为它已脱机或存储管理员为哈希存储指定了一个新位置。
+
++
+这不会影响文件访问的发生原因问题。如果阻止访问哈希存储， ONTAP 会向客户端返回 Microsoft 定义的错误，从而导致客户端使用正常的 SMB 读取请求请求请求文件。
+
+
+
+* 相关信息 *
+
+xref:configure-branchcache-task.adoc[在 CIFS 服务器上配置 BranchCache]
+
+xref:manage-monitor-branchcache-config-concept.adoc[管理和监控 BranchCache 配置]

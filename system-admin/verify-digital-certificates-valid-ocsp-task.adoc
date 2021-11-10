@@ -1,0 +1,114 @@
+---
+permalink: system-admin/verify-digital-certificates-valid-ocsp-task.html 
+sidebar: sidebar 
+keywords: verfiy, digital, certificate, valid, ocsp, online, status, protocol, transport, layer, security, tls, enable, disable 
+summary: 从 ONTAP 9.2 开始，启用联机证书状态协议（ Online Certificate Status Protocol ， OCSP ）后，使用传输层安全（ Transport Layer Security ， TLS ）通信的 ONTAP 应用程序可以接收数字证书状态。您可以随时为特定应用程序启用或禁用 OCSP 证书状态检查。默认情况下， OCSP 证书状态检查处于禁用状态。 
+---
+= 使用 OCSP 验证数字证书是否有效
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.2 开始，启用联机证书状态协议（ Online Certificate Status Protocol ， OCSP ）后，使用传输层安全（ Transport Layer Security ， TLS ）通信的 ONTAP 应用程序可以接收数字证书状态。您可以随时为特定应用程序启用或禁用 OCSP 证书状态检查。默认情况下， OCSP 证书状态检查处于禁用状态。
+
+这些命令必须在高级权限级别执行。
+
+OCSP 支持以下应用程序：
+
+* AutoSupport
+* 事件管理系统（ EMS ）
+* 基于 TLS 的 LDAP
+* 密钥管理互操作性协议（ KMIP ）
+* 审核日志记录
+* FabricPool
+
+
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 要为特定 ONTAP 应用程序启用或禁用 OCSP 证书状态检查，请使用相应的命令。
++
+|===
+| 某些应用程序的 OCSP 证书状态检查 | 使用命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`s安全性配置 OCSP enable -app`
+
+`应用程序名称`
+
+
+
+ a| 
+已禁用
+ a| 
+`s安全性配置 OCSP disable -app`
+
+`应用程序名称`
+
+|===
++
+以下命令可为 AutoSupport 和 EMS 启用 OCSP 支持。
+
++
+[listing]
+----
+cluster::*> security config ocsp enable -app asup,ems
+----
++
+启用 OCSP 后，应用程序将收到以下响应之一：
+
++
+** 良好—证书有效，通信继续进行。
+** 已撤销—证书被其颁发证书颁发机构永久视为不可信，通信无法继续。
+** 未知 - 服务器没有任何有关证书的状态信息，通信无法继续。
+** 证书中缺少 OCSP 服务器信息—此服务器就像禁用了 OCSP 一样，并继续进行 TLS 通信，但不会进行状态检查。
+** OCSP 服务器无响应—应用程序无法继续。
+
+
+. 要对使用 TLS 通信的所有应用程序启用或禁用 OCSP 证书状态检查，请使用相应的命令。
++
+|===
+| 希望所有应用程序的 OCSP 证书状态检查为 ... | 使用命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`s安全配置 OCSP enable`
+
+` 应用所有`
+
+
+
+ a| 
+已禁用
+ a| 
+`s安全配置 OCSP disable`
+
+` 应用所有`
+
+|===
++
+启用后，所有应用程序都会收到签名响应，表示指定的证书正常，已撤销或未知。如果证书已被撤销，则应用程序将无法继续。如果应用程序无法从 OCSP 服务器收到响应，或者服务器无法访问，则应用程序将无法继续。
+
+. 使用 `security config OCSP show` 命令显示支持 OCSP 的所有应用程序及其支持状态。
++
+[listing]
+----
+cluster::*> security config ocsp show
+         Application                        OCSP Enabled?
+         --------------------               ---------------------
+         autosupport                        false
+         audit_log                          false
+         fabricpool                         false
+         ems                                false
+         kmip                               false
+         ldap_ad                            true
+         ldap_nis_namemap                   true
+
+         7 entries were displayed.
+----
+

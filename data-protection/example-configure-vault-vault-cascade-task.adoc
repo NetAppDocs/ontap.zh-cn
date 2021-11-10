@@ -1,0 +1,124 @@
+---
+permalink: data-protection/example-configure-vault-vault-cascade-task.html 
+sidebar: sidebar 
+keywords: example, configure, vault-vault, cascade 
+summary: '示例将具体说明如何一次一步配置复制关系。您可以使用示例中配置的存储 - 存储级联部署来保留 251 个以上标有 "my-weekly" 的 Snapshot 副本。' 
+---
+= 示例：配置存储 - 存储级联
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+示例将具体说明如何一次一步配置复制关系。您可以使用此示例中配置的存储 - 存储级联部署来保留超过 251 个标有 `my-weekly` 的 Snapshot 副本。
+
+.您需要什么？ #8217 ；将需要什么
+* 源和目标集群以及 SVM 必须建立对等关系。
+* 您必须运行 ONTAP 9.2 或更高版本。早期的 ONTAP 版本不支持存储 - 存储级联。
+
+
+此示例假设以下条件：
+
+* 您已在源集群上为 Snapshot 副本配置 SnapMirror 标签 `my-daily` ， `my-weekly` 和 `my-monthly` 。
+* 您已在二级和三级目标集群上配置名为 "`Vola` " 的目标卷。
+* 您已在二级和三级目标集群上配置名为 `my_SnapVault` 的复制作业计划。
+
+
+此示例显示了如何基于两个自定义策略创建复制关系：
+
+* " `snapvault_secondary` " 策略会在二级目标集群上保留 7 个每日 Snapshot 副本， 52 个每周 Snapshot 副本和 180 个每月 Snapshot 副本。
+* " `snapvault_tertiary policy` " 会在三级目标集群上保留 250 个每周 Snapshot 副本。
+
+
+.步骤
+. 在二级目标集群上，创建 `snapvault_secondary` 策略：
++
+`cluster_secondary ：：：： > snapmirror policy create -policy snapvault_secondary -type vault -comment " 二级存储到存储级联的策略 " -vserver svm_secondary`
+
+. 在二级目标集群上，为策略定义 `my-daily` 规则：
++
+`cluster_secondary ：：： > snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-daily -keep 7 -vserver svm_secondary`
+
+. 在二级目标集群上，为策略定义 `my-weekly` 规则：
++
+`cluster_secondary ：：：： > snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-weekly -keep 52 -vserver svm_secondary`
+
+. 在二级目标集群上，为策略定义 `my-monthly` 规则：
++
+`cluster_secondary ：：：： > snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-monthly -keep 180 -vserver svm_secondary`
+
+. 在二级目标集群上，验证策略：
++
+`cluster_secondary ：：： > snapmirror policy show snapvault_secondary -instance`
+
++
+[listing]
+----
+                     Vserver: svm_secondary
+      SnapMirror Policy Name: snapvault_secondary
+      SnapMirror Policy Type: vault
+                Policy Owner: cluster-admin
+                 Tries Limit: 8
+           Transfer Priority: normal
+   Ignore accesstime Enabled: false
+     Transfer Restartability: always
+ Network Compression Enabled: false
+             Create Snapshot: false
+                     Comment: Policy on secondary for vault to vault cascade
+       Total Number of Rules: 3
+                  Total Keep: 239
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              my-daily                7  false       0 -        -
+                              my-weekly              52  false       0 -        -
+                              my-monthly            180  false       0 -        -
+----
+. 在二级目标集群上，创建与源集群的关系：
++
+`cluster_secondary ：：： > snapmirror create -source-path svm_primary ： volA -destination-path svm_secondary ： volA -type XDP -schedule my_snapvault -policy snapvault_secondary`
+
+. 在二级目标集群上，初始化与源集群的关系：
++
+`cluster_secondary ：：： > snapmirror initialize -source-path svm_primary ： volA -destination-path svm_secondary ： volA`
+
+. 在三级目标集群上，创建 `snapvault_tertiary` 策略：
++
+`cluster_tertiary ：：： > snapmirror policy create -policy snapvault_tertiary -type vault -comment "Policy on tertiary for vault to vault caslate" -vserver svm_tertiary`
+
+. 在三级目标集群上，为策略定义 `my-weekly` 规则：
++
+`cluster_tertiary ：：： > snapmirror policy add-rule -policy snapvault_tertiary -snapmirror-label my-weekly -keep 250 -vserver svm_tertiary`
+
+. 在三级目标集群上，验证策略：
++
+`cluster_tertiary ：：： > snapmirror policy show snapvault_tertiary -instance`
+
++
+[listing]
+----
+                     Vserver: svm_tertiary
+      SnapMirror Policy Name: snapvault_tertiary
+      SnapMirror Policy Type: vault
+                Policy Owner: cluster-admin
+                 Tries Limit: 8
+           Transfer Priority: normal
+   Ignore accesstime Enabled: false
+     Transfer Restartability: always
+ Network Compression Enabled: false
+             Create Snapshot: false
+                     Comment: Policy on tertiary for vault to vault cascade
+       Total Number of Rules: 1
+                  Total Keep: 250
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              my-weekly             250  false       0 -        -
+----
+. 在三级目标集群上，创建与二级集群的关系：
++
+`cluster_tertiary ：：： > snapmirror create -source-path svm_secondary ： volA -destination-path svm_tertiary ： volA -type XDP -schedule my_snapvault -policy snapvault_tertiary`
+
+. 在三级目标集群上，初始化与二级集群的关系：
++
+`cluster_tertiary ：：： > snapmirror initialize -source-path svm_secondary ： volA -destination-path svm_tertiary ： volA`
+
+

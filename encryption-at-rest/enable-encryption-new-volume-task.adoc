@@ -1,0 +1,134 @@
+---
+permalink: encryption-at-rest/enable-encryption-new-volume-task.html 
+sidebar: sidebar 
+keywords: enabling, encryption, new, volume 
+summary: 您可以使用 volume create 命令对新卷启用加密。 
+---
+= 在新卷上启用加密
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume create` 命令对新卷启用加密。
+
+从 ONTAP 9.2 开始，您可以在 SnapLock 卷上启用加密。
+
+从 ONTAP 9.4 开始，如果在设置板载密钥管理器时启用 "`cc-mode` " ，则无论是否指定 ` -encrypt true` ，使用 `volume create` 命令创建的卷都会自动加密。
+
+从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要加密的卷的所属聚合分配密钥。默认情况下，您在聚合中创建的卷会进行加密。您可以在创建卷时使用 ` -encrypt` 选项覆盖默认值。
+
+从 ONTAP 9.7 开始，如果您拥有 NVE 许可证以及板载或外部密钥管理，则新创建的卷会默认加密。
+
+使用唯一密钥加密的卷称为 _NVE volume_ 。使用聚合级别密钥加密的卷称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
+
+.步骤
+. 创建新卷并指定是否在卷上启用加密：
++
+|===
+| 要创建 ... | 使用此命令 ... 
+
+
+ a| 
+ONTAP 9.7 或更高版本的 NAE 卷
+ a| 
+`volume create -vserver svm_name -volume volume_name -aggregate aggregate_name`
+
+
+
+ a| 
+ONTAP 9.6 NAE 卷（假设已启用聚合级别加密）
+ a| 
+`volume create -vserver svm_name -volume volume_name -aggregate aggregate_name`
+
+
+
+ a| 
+ONTAP 9.7 或更高版本的 NVE 卷
+ a| 
+`volume create -vserver svm_name -volume volume_name -aggregate aggregate_name`
+
+
+
+ a| 
+ONTAP 9.6 或更早版本的 NVE 卷
+ a| 
+`volume create -vserver svm_name -volume volume_name -aggregate aggregate_name -encrypt true`
+
+
+
+ a| 
+纯文本卷
+ a| 
+`volume create -vserver svm_name -volume volume_name -aggregate aggregate_name -encrypt false`
+
+|===
++
+有关完整的命令语法，请参见命令手册页。
+
++
+从 ONTAP 9.7 或更高版本开始，以下命令将在 `aggr1` 上创建一个名为 `vol1` 的 NAE 卷：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs1 -volume vol1 -aggregate aggr1
+----
++
+使用 ONTAP 9.6 ，假设已启用聚合级别加密，以下命令将在 `aggr1` 上创建名为 `vol1` 的 NAE 卷：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs1 -volume vol1 -aggregate aggr1
+----
++
+从 ONTAP 9.7 或更高版本开始，以下命令将在 `aggr1` 上创建一个名为 `vol2` 的 NVE 卷：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs1 -volume vol2 -aggregate aggr1
+----
++
+使用 ONTAP 9.6 或更早版本时，以下命令会在 `aggr1` 上创建一个名为 `vol2` 的 NVE 卷：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs1 -volume vol2 -aggregate aggr1 -encrypt true
+----
++
+以下命令将在 `aggr1` 上创建一个名为 `vol3` 的纯文本卷：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs1 -volume vol3 -aggregate aggr1 -encrypt false
+----
+. 验证是否已为卷启用加密：
++
+`volume show -is-encrypted true`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令将显示 `cluster2` 上的加密卷：
+
++
+[listing]
+----
+cluster2::> volume show -is-encrypted true
+
+Vserver  Volume  Aggregate  State  Type  Size  Available  Used
+-------  ------  ---------  -----  ----  -----  --------- ----
+vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
+----
+
+
+
+
+== 结果
+
+如果您使用 KMIP 服务器存储节点的加密密钥，则在对卷进行加密时， ONTAP 会自动 "`推送` " 加密密钥到服务器。

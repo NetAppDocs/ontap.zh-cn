@@ -1,0 +1,76 @@
+---
+permalink: encryption-at-rest/sanitize-fips-drive-sed-task.html 
+sidebar: sidebar 
+keywords: sanitizing, fips, drive, sed 
+summary: 如果要使 FIPS 驱动器或 SED 上的数据永久不可访问，并使用该驱动器存储新数据，则可以使用 storage encryption disk sanitize 命令对该驱动器进行清理。 
+---
+= 清理 FIPS 驱动器或 SED
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要使 FIPS 驱动器或 SED 上的数据永久不可访问，并使用该驱动器存储新数据，则可以使用 `storage encryption disk sanitize` 命令对该驱动器进行清理。
+
+您必须是集群管理员才能执行此任务。
+
+清理自加密驱动器时，系统会将磁盘加密密钥更改为新的随机值，将开机锁定状态重置为 false ，并将密钥 ID 设置为默认值，即制造商安全 ID 0x0 （ SAS 驱动器）或空密钥（ NVMe 驱动器）。这样做会使磁盘上的数据无法访问且无法检索。您可以将已清理的磁盘重复用作未置零的备用磁盘。
+
+.步骤
+. 将需要保留的所有数据迁移到另一个磁盘上的聚合。
+. 删除要清理的 FIPS 驱动器或 SED 上的聚合：
++
+`storage aggregate delete -aggregate aggregate_name`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[listing]
+----
+cluster1::> storage aggregate delete -aggregate aggr1
+----
+. 确定要清理的 FIPS 驱动器或 SED 的磁盘 ID ：
++
+`s存储加密磁盘 show`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[listing]
+----
+cluster1::> storage encryption disk show
+Disk    Mode Data Key ID
+-----   ---- ----------------------------------------------------------------
+0.0.0   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+0.0.1   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+1.10.2  data F1CB30AFF1CB30B00101000000000000CF0EFD81EA9F6324EA97B369351C56AC
+[...]
+----
+. 清理驱动器：
++
+`s存储加密磁盘清理 -disk disk_id`
+
++
+您只能使用此命令清理热备用磁盘或损坏的磁盘。要清理所有磁盘而不考虑类型，请使用 ` force-all-state` 选项。有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+系统将提示您输入确认短语，然后再继续。输入屏幕上所示的短语。
+
+====
++
+[listing]
+----
+cluster1::> storage encryption disk sanitize -disk 1.10.2
+
+Warning: This operation will cryptographically sanitize 1 spare or broken self-encrypting disk on 1 node.
+         To continue, enter sanitize disk: sanitize disk
+
+Info: Starting sanitize on 1 disk.
+      View the status of the operation using the
+      storage encryption disk show-status command.
+----
+

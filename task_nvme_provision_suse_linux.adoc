@@ -20,9 +20,9 @@ summary: 创建命名空间以使用 NVMe 协议为 SUSE Linux 服务器提供�
 [role="lead"]
 创建命名空间以使用 NVMe 协议为 SUSE Linux 服务器提供存储。命名空间在 Linux 中显示为 SCSI 磁盘设备。
 
-此操作步骤会在现有 Storage VM 上创建新的命名空间。必须为 Storage VM 配置 NVMe ，并且 FC 传输应已设置。
+此操作步骤会在现有 Storage VM 上创建新的命名空间。必须为 Storage VM 配置 NVMe ，并且应已设置 FC 或 TCP 传输。
 
-image:workflow_nvme_provision_suse_linux.gif["为 SUSE Linux 配置 NVMe 的工作流图"]
+image:workflow_nvme_provision_suse_linux_update.png["为 SUSE Linux 配置 NVMe 的工作流图"]
 
 
 NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
@@ -40,6 +40,6 @@ NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS �
 
 . 按 WWPN 对 FC 交换机进行分区。每个启动程序使用一个分区，并在每个分区中包含所有目标端口。
 . 在 Linux 服务器上，发现新的命名空间。
-. 初始化命名空间，并可选择使用文件系统对其进行格式化。
+. 初始化命名空间并使用文件系统对其进行格式化。
 . 验证 Linux 服务器是否可以在命名空间上写入和读取数据。
 

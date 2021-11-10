@@ -1,0 +1,56 @@
+---
+permalink: smb-admin/add-ntfs-dacl-entries-security-descriptor-task.html 
+sidebar: sidebar 
+keywords: add, dacl, discretionary, access, control, list, access, control, entries, aces, ntfs, security, descriptor, acls, add ntfs dacl access control entries to the ntfs security 
+summary: 向 NTFS 安全描述符添加 DACL （随机访问控制列表）访问控制条目（ ACE ）是配置 NTFS ACL 并将其应用于文件或文件夹的第二步。每个条目都标识允许或拒绝访问的对象，并定义对象可以或不能对 ACE 中定义的文件或文件夹执行的操作。 
+---
+= 将 NTFS DACL 访问控制条目添加到 NTFS 安全描述符
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+向 NTFS 安全描述符添加 DACL （随机访问控制列表）访问控制条目（ ACE ）是配置 NTFS ACL 并将其应用于文件或文件夹的第二步。每个条目都标识允许或拒绝访问的对象，并定义对象可以或不能对 ACE 中定义的文件或文件夹执行的操作。
+
+您可以将一个或多个 ACE 添加到安全描述符的 DACL 中。
+
+如果安全描述符包含具有现有 ACE 的 DACL ，则该命令会将新 ACE 添加到 DACL 中。如果安全描述符不包含 DACL ，则该命令将创建 DACL 并向其中添加新 ACE 。
+
+您也可以通过指定要为 ` 帐户` 参数中指定的帐户允许或拒绝的权限来自定义 DACL 条目。指定权限的方法有三种，这三种方法是互斥的：
+
+* 权限
+* 高级权限
+* 原始权限（高级权限）
+
+
+[NOTE]
+====
+如果未为 DACL 条目指定权限，则默认设置为 `Full Control` 。
+
+====
+您可以选择通过指定如何应用继承来自定义 DACL 条目。
+
+存储级别访问防护将忽略任何可选参数的值。有关详细信息，请参见手册页。
+
+.步骤
+. 将 DACL 条目添加到安全描述符： `vserver security file-directory ntfs dacl add -vserver vserver_name -ntfs-SD sd_name -access-type ｛ allow_deny ｝ -account name_or_SIDoptional_parameters`
++
+`vserver security file-directory ntfs dacl add -ntfs-SD sd1 -access-type deny -account domain\joe -rights full-control -apply-to sis-folder -vserver vs1`
+
+. 验证 DACL 条目是否正确： `vserver security file-directory ntfs dacl show -vserver vserver_name -ntfs-sd sd_name -access-type ｛ allow_deny ｝ -account name_or_SID`
++
+`vserver security file-directory ntfs dacl show -vserver vs1 -ntfs-sd1 -access-type deny -account domain\joe`
+
++
+[listing]
+----
+                       Vserver: vs1
+             Security Descriptor Name: sd1
+                        Allow or Deny: deny
+                  Account Name or SID: DOMAIN\joe
+                        Access Rights: full-control
+               Advanced Access Rights: -
+                             Apply To: this-folder
+                        Access Rights: full-control
+----
+

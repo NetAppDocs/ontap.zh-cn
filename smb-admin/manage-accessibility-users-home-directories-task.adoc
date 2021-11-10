@@ -1,0 +1,64 @@
+---
+permalink: smb-admin/manage-accessibility-users-home-directories-task.html 
+sidebar: sidebar 
+keywords: default, user, home, directory, access, dynamic, name, share, precede, enable, disable, windows, administrator, public, access, manage accessibility to users' home directories 
+summary: 默认情况下，用户的主目录只能由该用户访问。对于共享的动态名称前面带有颚化符（ ｛ tide ｝ ）的共享，您可以启用或禁用 Windows 管理员或任何其他用户对用户主目录的访问（公有访问）。 
+---
+= 管理用户主目录的可访问性
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+默认情况下，用户的主目录只能由该用户访问。对于共享的动态名称前面带有颚化符（ ｛ tide ｝ ）的共享，您可以启用或禁用 Windows 管理员或任何其他用户对用户主目录的访问（公有访问）。
+
+Storage Virtual Machine （ SVM ）上的主目录共享必须使用前面带有路径（ ｛ tide ｝ ）的动态共享名称进行配置。以下案例说明了共享命名要求：
+
+|===
+| 主目录共享名称 | 连接到共享的命令示例 
+
+
+ a| 
+｛ tiLde ｝ %d ｛ tiLde ｝ %w
+ a| 
+`net use * ｛ c反 斜杠 ｝ ｛ c反 斜杠 ｝ IP 地址 ｛ c反 斜杠 ｝ ｛ tide ｝ 域 ｛ tide ｝ 用户 /u ：凭据`
+
+
+
+ a| 
+｛ tiLde ｝ %w
+ a| 
+`net use * ｛ c反 斜杠 ｝ ｛ c反 斜杠 ｝ IP 地址 ｛ c反 斜杠 ｝ ｛ tide ｝ user/u ： credentials`
+
+
+
+ a| 
+｛ tide ｝ abc ｛ tide ｝ %w
+ a| 
+`net use * ｛ c反 斜杠 ｝ ｛ cabalern ｝ IP 地址 ｛ cabalern ｝ abc ｛ tide ｝ user_u ： credentials`
+
+|===
+.步骤
+. 执行相应的操作：
++
+|===
+| 如果要启用或禁用对用户主目录的访问 ... | 输入以下内容 ... 
+
+
+| Windows 管理员 | `vserver cifs home-directory modify -vserver _vserver_name_ -is-home-dirs-access-for-admin-enabled ｛ true ｛ vbar ｝ false ｝` 默认值为 `true` 。 
+
+
+| 任何用户（公有访问）  a| 
+.. 将权限级别设置为 advanced ： + `set -privilege advanced`
+.. 启用或禁用访问： `vserver cifs home-directory modify -vserver _vserver_name_ -is-home-dirs-access-for-public-enabled ｛ true_false ｝` + 默认值为 `false` 。
+.. 返回到管理权限级别： + `set -privilege admin`
+
+
+|===
+
+
+以下示例允许公有访问用户的主目录： + `set -privilege advanced` + `vserver cifs home-directory modify -vserver vs1 -is-home-dirs-access-for-public-enabled true` + `set -privilege admin`
+
+* 相关信息 *
+
+xref:display-user-home-directory-path-task.adoc[显示有关 SMB 用户主目录路径的信息]

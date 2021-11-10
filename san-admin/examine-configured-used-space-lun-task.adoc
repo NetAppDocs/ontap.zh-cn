@@ -1,0 +1,37 @@
+---
+permalink: san-admin/examine-configured-used-space-lun-task.html 
+sidebar: sidebar 
+keywords: examine, configured, used, space, lun 
+summary: 了解 LUN 的已配置空间和实际已用空间有助于确定执行空间回收时可回收的空间量，包含数据的预留空间量以及 LUN 的总已配置大小与实际使用的大小。 
+---
+= 检查 LUN 的已配置空间和已用空间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解 LUN 的已配置空间和实际已用空间有助于确定执行空间回收时可回收的空间量，包含数据的预留空间量以及 LUN 的总已配置大小与实际使用的大小。
+
+.步骤
+. 查看 LUN 的已配置空间与实际已用空间：
++
+`lun show`
+
++
+以下示例显示了 vs3 Storage Virtual Machine （ SVM ）中 LUN 的已配置空间与实际使用空间：
+
++
+`lun show -vserver vs3 -fields path ， size ， size-used ， space-reserve`
+
++
+[listing]
+----
+vserver path                    size    space-reserve size-used
+------- -----------------       ------- ------------- ---------
+vs3     /vol/vol0/lun1          50.01GB disabled      25.00GB
+vs3     /vol/vol0/lun1_backup   50.01GB disabled      32.15GB
+vs3     /vol/vol0/lun2          75.00GB disabled      0B
+vs3     /vol/volspace/lun0      5.00GB  enabled       4.50GB
+4 entries were displayed.
+----
+

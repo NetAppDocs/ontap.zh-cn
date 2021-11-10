@@ -1,0 +1,51 @@
+---
+permalink: system-admin/manage-web-services-concept.html 
+sidebar: sidebar 
+keywords: manage, web, services, svm, storage, virtual, machine, cluster, controler, user 
+summary: 您可以为集群或 Storage Virtual Machine （ SVM ）启用或禁用 Web 服务，显示 Web 服务的设置以及控制某个角色的用户是否可以访问 Web 服务。 
+---
+= 管理 Web 服务概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以为集群或 Storage Virtual Machine （ SVM ）启用或禁用 Web 服务，显示 Web 服务的设置以及控制某个角色的用户是否可以访问 Web 服务。
+
+您可以通过以下方式管理集群或 SVM 的 Web 服务：
+
+* 启用或禁用特定 Web 服务
+* 指定对 Web 服务的访问是否仅限于加密 HTTP （ SSL ）
+* 显示 Web 服务的可用性
+* 允许或禁止某个角色的用户访问 Web 服务
+* 显示允许访问 Web 服务的角色
+
+
+要使用户能够访问 Web 服务，必须满足以下所有条件：
+
+* 用户必须经过身份验证。
++
+例如， Web 服务可能会提示输入用户名和密码。用户的响应必须与有效帐户匹配。
+
+* 必须为用户设置正确的访问方法。
++
+只有对给定 Web 服务使用正确访问方法的用户，身份验证才会成功。对于 ONTAP API Web 服务（`ontapi` ），用户必须使用 `ontapi` 访问方法。对于所有其他 Web 服务，用户必须使用 `http` 访问方法。
+
++
+[NOTE]
+====
+您可以使用 `ssecurity login` 命令管理用户` 的访问方法和身份验证方法。
+
+====
+* 必须将 Web 服务配置为允许用户的访问控制角色。
++
+[NOTE]
+====
+您可以使用 `vserver services web access` 命令来控制某个角色对 Web 服务的访问。
+
+====
+
+
+如果启用了防火墙，则必须将用于 Web 服务的 LIF 的防火墙策略设置为允许 HTTP 或 HTTPS 。
+
+如果使用 HTTPS 访问 Web 服务，则还必须为提供 Web 服务的集群或 SVM 启用 SSL ，并且必须为集群或 SVM 提供数字证书。

@@ -1,0 +1,51 @@
+---
+permalink: san-admin/manage-portsets-task.html 
+sidebar: sidebar 
+keywords: san, portsets, create, creating, bind, binding, igroup 
+summary: 从 ONTAP 9.10.1 开始，您可以使用 System Manager 创建端口集并将其绑定到 igroup 。您还可以使用 System Manager 更改与端口集关联的网络接口并删除端口集。 
+---
+= 创建和管理端口集
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+此外 xref:selective-lun-map-concept.adoc[选择性 LUN 映射（ SLM ）]，您可以使用端口集进一步限制启动程序可使用哪些 LIF 访问 LUN 。
+
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 创建端口集并将其绑定到 igroup 。您还可以使用 System Manager 更改与端口集关联的网络接口并删除端口集。
+
+
+
+== 创建端口集并绑定到 igroup
+
+如果不将端口集绑定到 igroup ，则 igroup 中的所有启动程序都可以通过 LUN 所属节点及其 HA 配对节点上的所有 LIF 访问映射的 LUN 。
+
+如果需要在 9.10.1 之前的 ONTAP 版本中创建端口集并将其绑定到 igroup ，则必须使用 xref:create-port-sets-binding-igroups-task.adoc[ONTAP 命令行界面操作步骤]。
+
+. 在 ONTAP 系统管理器中，单击 * 网络 > 概述 > 端口集 * ，然后单击 * 添加 * 。
+. 输入新端口集的信息，然后单击 * 添加 * 。
+. 单击 * 主机 > SAN 启动程序组 * 。
+. 要将端口集绑定到新的 igroup ，请单击 * 添加 * 。
++
+要将端口集绑定到现有 igroup ，请选择此 igroup ，然后单击 image:icon_kabob.gif["kabob 图标"]，然后单击 * 编辑启动程序组 * 。
+
+
+
+
+
+== 更改与端口集关联的网络接口
+
+. 在 ONTAP 系统管理器中，单击 * 网络 > 概述 > 端口集 * 。
+. 选择要编辑的端口集，然后单击 image:icon_kabob.gif["kabob 图标"]，然后选择 * 编辑端口集 * 。
+
+
+
+
+== 删除端口集
+
+. 在 ONTAP 系统管理器中，单击 * 网络 > 概述 > 端口集 * 。
+. 要删除单个端口集，请选择此端口集，然后单击 image:icon_kabob.gif[""] 然后选择 * 删除端口集 * 。
++
+要删除多个端口集，请选择这些端口集，然后单击 * 删除 * 。
+
+

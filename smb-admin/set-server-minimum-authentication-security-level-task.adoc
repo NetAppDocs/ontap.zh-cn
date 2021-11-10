@@ -1,0 +1,61 @@
+---
+permalink: smb-admin/set-server-minimum-authentication-security-level-task.html 
+sidebar: sidebar 
+keywords: cifs, server, minimum, security, level, lmcompatibilitylevel, smb, token, set the cifs server minimum authentication security level 
+summary: 您可以在 CIFS 服务器上设置 CIFS 服务器最低安全级别（也称为 LMCompatibilityLevel ），以满足 SMB 访问的业务安全要求。最低安全级别是 CIFS 服务器从 SMB 客户端接受的最低安全令牌级别。 
+---
+= 设置 CIFS 服务器的最低身份验证安全级别
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在 CIFS 服务器上设置 CIFS 服务器最低安全级别，也称为 _LMCompatibilityLevel_ ，以满足 SMB 访问的业务安全要求。最低安全级别是 CIFS 服务器从 SMB 客户端接受的最低安全令牌级别。
+
+[NOTE]
+.关于此任务
+====
+工作组模式下的 CIFS 服务器仅支持 NTLM 身份验证。不支持 Kerberos 身份验证。
+
+====
+您可以将最低身份验证安全级别设置为四个受支持的安全级别之一。
+
+|===
+| 价值 | Description 
+
+
+ a| 
+`lm-ntlm-ntlmv2-krb` （默认）
+ a| 
+Storage Virtual Machine （ SVM ）接受 LM ， NTLM ， NTLMv2 和 Kerberos 身份验证安全性。
+
+
+
+ a| 
+`NLM-NTLMv2-KRB`
+ a| 
+SVM 接受 NTLM ， NTLMv2 和 Kerberos 身份验证安全性。SVM 拒绝 LM 身份验证。
+
+
+
+ a| 
+`NTLMv2-KRB`
+ a| 
+SVM 接受 NTLMv2 和 Kerberos 身份验证安全性。SVM 拒绝 LM 和 NTLM 身份验证。
+
+
+
+ a| 
+`KRB`
+ a| 
+SVM 仅接受 Kerberos 身份验证安全性。SVM 拒绝 LM ， NTLM 和 NTLMv2 身份验证。
+
+|===
+.步骤
+. 设置最低身份验证安全级别： `vserver cifs security modify -vserver _vserver_name_ -lm-compatiby-level ｛ lm-ntlm-ntLMv2-krb_ntlmv2-krb_ntLMv2-krb_krb_krb`
+. 验证身份验证安全级别是否设置为所需级别： `vserver cifs security show -vserver _vserver_name_`
+
+
+* 相关信息 *
+
+xref:enable-disable-aes-encryption-kerberos-task.adoc[为基于 Kerberos 的通信启用或禁用 AES 加密]

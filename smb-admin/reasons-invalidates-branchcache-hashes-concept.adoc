@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/reasons-invalidates-branchcache-hashes-concept.html 
+sidebar: sidebar 
+keywords: understand, ontap, invalidate, hash, branchcache, configuration, share, reasons ontap invalidates branchcache hashes 
+summary: 在规划 BranchCache 配置时，了解 ONTAP 使哈希失效的原因可能会很有帮助。它可以帮助您确定应配置的操作模式，并帮助您选择要启用 BranchCache 的共享。 
+---
+= ONTAP 使 BranchCache 哈希失效的原因
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在规划 BranchCache 配置时，了解 ONTAP 使哈希失效的原因可能会很有帮助。它可以帮助您确定应配置的操作模式，并帮助您选择要启用 BranchCache 的共享。
+
+ONTAP 必须管理 BranchCache 哈希，以确保哈希有效。如果哈希无效，则 ONTAP 会使哈希失效，并在下次请求该内容时计算新的哈希，前提是 BranchCache 仍处于启用状态。
+
+ONTAP 会使哈希失效，原因如下：
+
+* 服务器密钥已修改。
++
+如果修改了服务器密钥， ONTAP 将使哈希存储中的所有哈希失效。
+
+* 由于已达到 BranchCache 哈希存储的最大大小，因此会从缓存中刷新哈希。
++
+这是一个可调参数，可以根据您的业务需求进行修改。
+
+* 通过 SMB 或 NFS 访问修改文件。
+* 使用 `snap restore` 命令还原已计算哈希的文件。
+* 使用 `snap restore` 命令还原包含已启用 BranchCache 的 SMB 共享的卷。
+

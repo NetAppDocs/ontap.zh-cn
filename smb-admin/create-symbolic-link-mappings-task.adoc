@@ -1,0 +1,50 @@
+---
+permalink: smb-admin/create-symbolic-link-mappings-task.html 
+sidebar: sidebar 
+keywords: create, mapping, unix, symbolic, link, smb, share, relative, symbol, refer, file, folder, relative, parent, absolute, create symbolic link mappings for smb shares 
+summary: 您可以为 SMB 共享创建 UNIX 符号链接的映射。您可以创建相对符号链接，该链接引用与其父文件夹相对的文件或文件夹，也可以创建绝对符号链接，该链接使用绝对路径引用文件或文件夹。 
+---
+= 为 SMB 共享创建符号链接映射
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以为 SMB 共享创建 UNIX 符号链接的映射。您可以创建相对符号链接，该链接引用与其父文件夹相对的文件或文件夹，也可以创建绝对符号链接，该链接使用绝对路径引用文件或文件夹。
+
+如果使用 SMB 2.x ，则无法从 Mac OS X 客户端访问 Widelink当用户尝试从 Mac OS X 客户端使用 Widelink 连接到共享时，尝试将失败。但是，如果使用 SMB 1 ，则可以将 Widelink 与 Mac OS X 客户端结合使用。
+
+.步骤
+. 要为 SMB 共享创建符号链接映射，请执行以下操作： `vserver cifs symlink create -vserver virtual_server_name -unix-path -share-name share_name -cifs-path path （ -cifs-server server_name ） ] （ -locality ｛ local|free|widelink ｝ ） ] （ -home-directory ｛ true_false ｝ ） ]`
++
+` -vserver` `virtual_server_name` 指定 Storage Virtual Machine （ SVM ）名称。
+
++
+` -unix-path` `path` 指定 UNIX 路径。UNIX 路径必须以斜杠（` /` ）开头，并且必须以斜杠（` /` ）结尾。
+
++
+` -share-name` `share 名称` 指定要映射的 SMB 共享的名称。
+
++
+` -cifs-path` `path` 指定 CIFS 路径。CIFS 路径必须以斜杠（` /` ）开头，并且必须以斜杠（` /` ）结尾。
+
++
+` -cifs-server` `sserver_name` 指定 CIFS 服务器名称。CIFS 服务器名称可以指定为 DNS 名称（例如 mynetwork.cifs.server.com ）， IP 地址或 NetBIOS 名称。NetBIOS 名称可以使用 `vserver cifs show` 命令来确定。如果未指定此可选参数，则默认值为本地 CIFS 服务器的 NetBIOS 名称。
+
++
+` - 位置` ｛`local` ｝`free` ，`widelink` ｝ 指定是创建本地链接，自由链接还是宽符号链接。本地符号链接映射到本地 SMB 共享。可用符号链接可以映射到本地 SMB 服务器上的任意位置。宽符号链接映射到网络上的任何 SMB 共享。如果未指定此可选参数，则默认值为 `local` 。
+
++
+` 主目录` ｛`true` ｝`false` ｝ 指定目标共享是否为主目录。即使此参数是可选的，但如果目标共享配置为主目录，则必须将此参数设置为 `true` 。默认值为 `false` 。
+
+
+
+以下命令会在名为 vs1 的 SVM 上创建符号链接映射。它具有 UNIX 路径 ` /src/` ， SMB 共享名称 `SOURCE` ， CIFS 路径 ` /mycompany/source/cifs` 以及 CIFS 服务器 IP 地址 123.123.123.123 ，并且是一个 Widelink 。
+
+[listing]
+----
+cluster1::> vserver cifs symlink create -vserver vs1 -unix-path /src/ -share-name SOURCE -cifs-path "/mycompany/source/" -cifs-server 123.123.123.123 -locality widelink
+----
+* 相关信息 *
+
+xref:configure-unix-symbolic-link-support-shares-task.adoc[在 SMB 共享上配置 UNIX 符号链接支持]

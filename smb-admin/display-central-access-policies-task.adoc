@@ -1,0 +1,101 @@
+---
+permalink: smb-admin/display-central-access-policies-task.html 
+sidebar: sidebar 
+keywords: display, detail, information, central, access, policies, policy, define, active, directory, display, central, access, cifs, server, group, policy, objects, gpo, display information about central access policies 
+summary: 您可以显示有关 Active Directory 中定义的中央访问策略的详细信息。您还可以显示有关通过组策略对象（ GPO ）应用于 CIFS 服务器的中央访问策略的信息。 
+---
+= 显示有关中央访问策略的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关 Active Directory 中定义的中央访问策略的详细信息。您还可以显示有关通过组策略对象（ GPO ）应用于 CIFS 服务器的中央访问策略的信息。
+
+默认情况下，将显示以下信息：
+
+* SVM name
+* 中央访问策略的名称
+* SID
+* Description
+* 创建时间
+* 修改时间
+* 成员规则
+
+
+[NOTE]
+====
+工作组模式下的 CIFS 服务器不会显示，因为它们不支持 GPO 。
+
+====
+.步骤
+. 通过执行以下操作之一显示有关中央访问策略的信息：
++
+|===
+| 要显示有关所有中央访问策略的信息 ... | 输入命令 ... 
+
+
+ a| 
+在 Active Directory 中定义
+ a| 
+`vserver cifs group-policy central-access-policy show-defined -vserver _vserver_name_`
+
+
+
+ a| 
+应用于 CIFS 服务器
+ a| 
+`vserver cifs group-policy central-access-policy show-applied -vserver _vserver_name_`
+
+|===
+
+
+以下示例显示了 Active Directory 中定义的所有中央访问策略的信息：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy central-access-policy show-defined
+
+Vserver  Name                 SID
+-------- -------------------- -----------------------------------------------
+vs1      p1                   S-1-17-3386172923-1132988875-3044489393-3993546205
+       Description: policy #1
+     Creation Time: Tue Oct 22 09:34:13 2013
+ Modification Time: Wed Oct 23 08:59:15 2013
+      Member Rules: r1
+
+vs1      p2                   S-1-17-1885229282-1100162114-134354072-822349040
+       Description: policy #2
+     Creation Time: Tue Oct 22 10:28:20 2013
+ Modification Time: Thu Oct 31 10:25:32 2013
+      Member Rules: r1
+                    r2
+----
+以下示例显示了应用于集群上的 Storage Virtual Machine （ SVM ）的所有中央访问策略的信息：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy central-access-policy show-applied
+
+Vserver    Name                 SID
+-------- -------------------- -----------------------------------------------
+vs1      p1                   S-1-17-3386172923-1132988875-3044489393-3993546205
+       Description: policy #1
+     Creation Time: Tue Oct 22 09:34:13 2013
+ Modification Time: Wed Oct 23 08:59:15 2013
+      Member Rules: r1
+
+vs1      p2                   S-1-17-1885229282-1100162114-134354072-822349040
+       Description: policy #2
+     Creation Time: Tue Oct 22 10:28:20 2013
+ Modification Time: Thu Oct 31 10:25:32 2013
+      Member Rules: r1
+                    r2
+----
+* 相关信息 *
+
+xref:secure-file-access-dynamic-access-control-concept.adoc[使用动态访问控制（ DAC ）保护文件访问]
+
+xref:display-gpo-config-task.adoc[显示有关 GPO 配置的信息]
+
+xref:display-central-access-policy-rules-task.adoc[显示有关中央访问策略规则的信息]

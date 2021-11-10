@@ -1,0 +1,137 @@
+---
+permalink: san-admin/achieve-io-alignment-lun-os-types-concept.html 
+sidebar: sidebar 
+keywords: how to, achieve, i/o alignment, using, lun os types 
+summary: 要使用操作系统分区方案实现 I/O 对齐，应使用与您的操作系统最匹配的建议 ONTAP LUN ostype 值。 
+---
+= 使用 LUN 操作系统类型实现 I/O 对齐
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要使用操作系统分区方案实现 I/O 对齐，应使用与您的操作系统最匹配的建议 ONTAP LUN `ostype` 值。
+
+主机操作系统采用的分区方案是导致 I/O 错位的一个主要因素。某些 ONTAP LUN `ostype` 值使用称为 "`prefix` " 的特殊偏移，以使主机操作系统使用的默认分区方案保持对齐。
+
+[NOTE]
+====
+在某些情况下，可能需要使用自定义分区表来实现 I/O 对齐。但是，对于 "`prefix` " 值大于 `0` 的 `ostype` 值，自定义分区可能会创建错位的 I/O
+
+====
+应根据您的操作系统使用下表中的 lun `ostype` 值。
+
+[cols="4*"]
+|===
+| LUN `ostype` | 前缀（字节） | 前缀（扇区） | 操作系统 
+
+
+ a| 
+`窗口`
+ a| 
+32,256
+ a| 
+63.
+ a| 
+Windows 2000 ， 2003 （ MBR 格式）
+
+
+
+ a| 
+`windows_gpt`
+ a| 
+17,408
+ a| 
+34
+ a| 
+Windows 2003 （ GPT 格式）
+
+
+
+ a| 
+`windows_2008`
+ a| 
+0
+ a| 
+0
+ a| 
+Windows 2008 及更高版本
+
+
+
+ a| 
+`Linux`
+ a| 
+0
+ a| 
+0
+ a| 
+所有 Linux 分发版
+
+
+
+ a| 
+`Xen`
+ a| 
+0
+ a| 
+0
+ a| 
+Citrix XenServer
+
+
+
+ a| 
+`VMware`
+ a| 
+0
+ a| 
+0
+ a| 
+VMware ESX
+
+
+
+ a| 
+`solaris`
+ a| 
+1 MB
+ a| 
+2 ， 048
+ a| 
+Solaris
+
+
+
+ a| 
+`solaris_efi`
+ a| 
+17,408
+ a| 
+34
+ a| 
+Solaris
+
+
+
+ a| 
+`HPUX`
+ a| 
+0
+ a| 
+0
+ a| 
+HP-UX
+
+
+
+ a| 
+`AIX`
+ a| 
+0
+ a| 
+0
+ a| 
+AIX
+
+|===

@@ -1,0 +1,46 @@
+---
+permalink: smb-admin/enable-disable-export-policies-task.html 
+sidebar: sidebar 
+keywords: enable, disable, export, policies, policy, smb, access, storage, virtual, machine, svm, control, resource, enable or disable export policies for smb access 
+summary: 您可以在 Storage Virtual Machine （ SVM ）上启用或禁用 SMB 访问导出策略。可以选择使用导出策略控制 SMB 对资源的访问。 
+---
+= 启用或禁用 SMB 访问导出策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在 Storage Virtual Machine （ SVM ）上启用或禁用 SMB 访问导出策略。可以选择使用导出策略控制 SMB 对资源的访问。
+
+以下是为 SMB 启用导出策略的要求：
+
+* 在为客户端创建导出规则之前，客户端必须在 DNS 中具有 "`PTR` " 记录。
+* 如果 SVM 提供对 NFS 客户端的访问权限，并且要用于 NFS 访问的主机名与 CIFS 服务器名称不同，则需要为主机名另外设置一组 "`A` " 和 "`PTR` " 记录。
+
+
+默认情况下，在 SVM 上设置新的 CIFS 服务器时，不会使用导出策略进行 SMB 访问。如果要根据身份验证协议或客户端 IP 地址或主机名控制访问，则可以为 SMB 访问启用导出策略。您可以随时为 SMB 访问启用或禁用导出策略。
+
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 启用或禁用导出策略：
++
+** 启用导出策略： `vserver cifs options modify -vserver _vserver_name_ -is-exportpolicy-enabled true`
+** 禁用导出策略： `vserver cifs options modify -vserver _vserver_name_ -is-exportpolicy-enabled false`
+
+
+. 返回到管理权限级别： `set -privilege admin`
+
+
+以下示例支持使用导出策略控制 SMB 客户端对 SVM vs1 上资源的访问：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -is-exportpolicy-enabled true
+
+cluster1::*> set -privilege admin
+----

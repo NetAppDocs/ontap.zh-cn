@@ -1,0 +1,78 @@
+---
+permalink: nfs-admin/ldaps-concept.html 
+sidebar: sidebar 
+keywords: ldaps, concept 
+summary: 您必须了解有关 ONTAP 如何确保 LDAP 通信安全的某些术语和概念。ONTAP 可以使用启动 TLS 或 LDAPS 在 Active Directory 集成的 LDAP 服务器或基于 UNIX 的 LDAP 服务器之间设置经过身份验证的会话。 
+---
+= LDAPS 概念
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须了解有关 ONTAP 如何确保 LDAP 通信安全的某些术语和概念。ONTAP 可以使用启动 TLS 或 LDAPS 在 Active Directory 集成的 LDAP 服务器或基于 UNIX 的 LDAP 服务器之间设置经过身份验证的会话。
+
+
+
+== 术语
+
+有关 ONTAP 如何使用 LDAPS 保护 LDAP 通信，您应了解一些特定术语。
+
+* * LDAP *
++
+（轻型目录访问协议）一种用于访问和管理信息目录的协议。LDAP 用作存储用户，组和网络组等对象的信息目录。LDAP 还提供目录服务，用于管理这些对象并满足 LDAP 客户端的 LDAP 请求。
+
+* * ssl*
++
+（安全套接字层）一种专为通过 Internet 安全发送信息而开发的协议。为了支持 TLS ，此功能已弃用。ONTAP 9.09.4 不支持 SSL 。
+
+* * TLS *
++
+（传输层安全性）基于早期 SSL 规范的 IETF 标准跟踪协议。它是 SSL 的后继协议。
+
+* * LDAPS （基于 SSL 或 TLS 的 LDAP ） *
++
+一种使用 TLS 或 SSL 保护 LDAP 客户端与 LDAP 服务器之间通信安全的协议。术语 _ldap over ssl_ 和 _ldap over tls_ 有时可以互换使用； ONTAP 9 及更高版本支持 TLS ， ONTAP 9.5 及更高版本支持 SSL 。
+
++
+** 在 ONTAP 9.2-9.8 中，只能在端口 636 上启用 LDAPS 。要执行此操作，请将 ` -use-ldaps for-ad-ldap` 参数与 `vserver cifs security modify` 命令结合使用。
+** 从 ONTAP 9.1.1 开始，可以在任何端口上启用 LDAPS ，但端口 636 仍为默认端口。为此，请将 ` -ldaps 启用的` 参数设置为 `true` ，并指定所需的 ` -port` 参数。有关详细信息，请参见 `vserver services name-service ldap client create` 手册页
+
+
++
+[NOTE]
+====
+NetApp 最佳实践是使用 Start TLS ，而不是 LDAPS 。
+
+====
+* * 启动 TL*
++
+（也称为 _start_tls_ ， _STARTTLS _ 和 _Starttls_ ）一种使用 TLS 协议提供安全通信的机制。
+
++
+ONTAP 使用 STARTTLS 保护 LDAP 通信，并使用默认 LDAP 端口（ 389 ）与 LDAP 服务器进行通信。必须将 LDAP 服务器配置为允许通过 LDAP 端口 389 进行连接；否则，从 SVM 到 LDAP 服务器的 LDAP TLS 连接将失败。
+
+
+
+
+
+== ONTAP 如何使用 LDAPS
+
+ONTAP 支持 TLS 服务器身份验证，从而使 SVM LDAP 客户端能够在绑定操作期间确认 LDAP 服务器的身份。启用了 TLS 的 LDAP 客户端可以使用公共密钥加密的标准技术来检查服务器的证书和公有 ID 是否有效以及是否由客户端的可信 CA 列表中列出的证书颁发机构（ CA ）颁发。
+
+LDAP 支持 STARTTLS 使用 TLS 对通信进行加密。StartTLS 以标准 LDAP 端口（ 389 ）上的纯文本连接开头，然后该连接升级到 TLS 。
+
+ONTAP 支持以下功能：
+
+* LDAPS 用于 Active Directory 集成的 LDAP 服务器和 SVM 之间的 SMB 相关流量
+* LDAP 流量的 LDAPS ，用于名称映射和其他 UNIX 信息
++
+可以使用 Active Directory 集成的 LDAP 服务器或基于 UNIX 的 LDAP 服务器来存储 LDAP 名称映射的信息以及其他 UNIX 信息，例如用户，组和网络组。
+
+* 自签名根 CA 证书
++
+使用 Active Directory 集成的 LDAP 时，在域中安装 Windows Server 证书服务时会生成自签名根证书。使用基于 UNIX 的 LDAP 服务器进行 LDAP 名称映射时，系统会使用适用于该 LDAP 应用程序的方法生成并保存自签名根证书。
+
+
+
+默认情况下， LDAPS 处于禁用状态。

@@ -1,0 +1,32 @@
+---
+permalink: san-admin/remove-lif-from-portset-task.html 
+sidebar: sidebar 
+keywords: remove, san, lif, port, set 
+summary: 如果要删除或移动的 LIF 位于端口集中，则必须先从端口集中删除此 LIF ，然后才能删除或移动此 LIF 。 
+---
+= 从端口集中删除 SAN LIF
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要删除或移动的 LIF 位于端口集中，则必须先从端口集中删除此 LIF ，然后才能删除或移动此 LIF 。
+
+只有当端口集中有一个 LIF 时，才需要在以下操作步骤中执行步骤 1 。如果端口集绑定到启动程序组，则无法删除端口集中的最后一个 LIF 。否则，如果端口集中存在多个 LIF ，则可以从步骤 2 开始。
+
+.步骤
+. 如果端口集中只有一个 LIF ，请使用 `lun igroup unbind` 命令取消端口集与启动程序组的绑定。
++
+[NOTE]
+====
+取消启动程序组与端口集的绑定后，启动程序组中的所有启动程序都可以访问所有网络接口上映射到启动程序组的所有目标 LUN 。
+
+====
++
+`cluster1 ：：： >lun igroup unbind -vserver vs1 -igroup ig1`
+
+. 使用 `lun portset remove` 命令从端口集中删除 LIF 。
++
+`cluster1 ：：： > port set remove -vserver vs1 -portset ps1 -port-name lif1`
+
+

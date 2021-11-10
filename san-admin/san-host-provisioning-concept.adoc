@@ -1,0 +1,67 @@
+---
+permalink: san-admin/san-host-provisioning-concept.html 
+sidebar: sidebar 
+keywords: understand, san host, provisioning 
+summary: 在 SAN 环境中，存储系统是具有存储目标设备的目标。对于 iSCSI 和 FC ，存储目标设备称为 LUN （逻辑单元）。对于光纤通道上的非易失性内存快速（ NVMe ），存储目标设备称为命名空间。 
+---
+= 使用 iSCSI 进行 SAN 配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 SAN 环境中，存储系统是具有存储目标设备的目标。对于 iSCSI 和 FC ，存储目标设备称为 LUN （逻辑单元）。对于光纤通道上的非易失性内存快速（ NVMe ），存储目标设备称为命名空间。
+
+您可以通过为 iSCSI 和 FC 创建 LUN 或为 NVMe 创建命名空间来配置存储。然后，主机使用 Internet 小型计算机系统接口（ iSCSI ）或光纤通道（ FC ）协议网络访问 LUN 或命名空间。
+
+要连接到 iSCSI 网络，主机可以使用标准以太网网络适配器（ NIC ），带软件启动程序的 TCP 卸载引擎（ TOE ）卡，融合网络适配器（ CNA ）或专用 iSCSI 主机总线适配器（ HBA ）。
+
+要连接到 FC 网络，主机需要使用 FC HBA 或 CNA 。
+
+支持的 FC 协议包括：
+
+* FC
+* FCoE
+* NVMe
+
+
+
+
+== iSCSI 目标节点网络连接和名称
+
+iSCSI 目标节点可以通过多种方式连接到网络：
+
+* 使用集成到 ONTAP 中的软件通过以太网接口连接。
+* 通过多个系统接口，其中一个接口用于 iSCSI ，该接口还可以传输其他协议（例如 CIFS 和 NFS ）的流量。
+* 使用统一目标适配器（ UTA ）或融合网络适配器（ CNA ）。
+
+
+每个 iSCSI 节点都必须具有一个节点名称。
+
+iSCSI 节点名称的两种格式或类型指示符为 _iqn_ 和 _eui_ 。SVM iSCSI 目标始终使用 iqn 类型指示符。启动程序可以使用 iqn 类型或 eui 类型指示符。
+
+
+
+== 存储系统节点名称
+
+每个运行 iSCSI 的 SVM 都有一个基于反向域名和唯一编码编号的默认节点名称。
+
+节点名称将以以下格式显示：
+
+iqn.1992-08.com.netapp:sn.`_unique-encoding-number_`
+
+以下示例显示了具有唯一编码编号的存储系统的默认节点名称：
+
+iqn.1992-08.com.netapp:sn.812921059e6c11e097b3123478563412:vs.6
+
+
+
+== iSCSI 的 TCP 端口
+
+iSCSI 协议在 ONTAP 中配置为使用 TCP 端口号 3260 。
+
+ONTAP 不支持更改 iSCSI 的端口号。端口号 3260 已注册为 iSCSI 规范的一部分，不能由任何其他应用程序或服务使用。
+
+* 相关信息 *
+
+https://docs.netapp.com/us-en/ontap-sanhost/["NetApp 文档： ONTAP SAN 主机配置"]

@@ -1,0 +1,94 @@
+---
+permalink: fabricpool/replace-existing-object-store-mirror-task.html 
+sidebar: sidebar 
+keywords: replacing, existing, object, store, fabricpool, mirror 
+summary: 您可以使用 FabricPool 镜像技术将一个对象存储替换为另一个对象存储。新对象存储不必使用与原始对象存储相同的云提供程序。 
+---
+= 使用 FabricPool 镜像替换现有对象存储
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 FabricPool 镜像技术将一个对象存储替换为另一个对象存储。新对象存储不必使用与原始对象存储相同的云提供程序。
+
+您可以将原始对象存储替换为使用其他云提供商的对象存储。例如，原始对象存储可能使用 AWS 作为云提供程序，但您可以将其替换为使用 Azure 作为云提供程序的对象存储，反之亦然。但是，新对象存储必须保留与原始对象相同的对象大小。
+
+.步骤
+. 使用 `storage aggregate object-store mirror` 命令向现有 FabricPool 添加新对象存储以创建 FabricPool 镜像。
++
+[listing]
+----
+cluster1::> storage aggregate object-store mirror -aggregate aggr1 -name my-AZURE-store
+----
+. 使用 `storage aggregate object-store show-resync-status` 命令监控镜像重新同步状态。
++
+[listing]
+----
+cluster1::> storage aggregate object-store show-resync-status -aggregate aggr1
+----
++
+[listing]
+----
+                                                  Complete
+      Aggregate    Primary          Mirror        Percentage
+      ---------    -----------      ----------    ----------
+      aggr1        my-AWS-store     my-AZURE-store     40%
+----
+. 使用 `storage aggregate object-store> show -fields mirror-type ， is-mirror-degraded` 命令验证镜像是否同步。
++
+[listing]
+----
+cluster1::> storage aggregate object-store show -fields mirror-type,is-mirror-degraded
+----
++
+[listing]
+----
+aggregate      object-store-name mirror-type     is-mirror-degraded
+-------------- ----------------- ------------- ------------------
+aggr1          my-AWS-store        primary           -
+               my-AZURE-store      mirror          false
+----
+. 使用 `storage aggregate object-store modify` 命令将主对象存储与镜像对象存储交换。
++
+[listing]
+----
+cluster1::> storage aggregate object-store modify -aggregate aggr1 -name my-AZURE-store -mirror-type primary
+----
+. 使用 `storage aggregate object-store show -fields mirror-type ， is-mirror-degraded` 命令显示有关 FabricPool 镜像的详细信息。
++
+此示例显示有关 FabricPool 镜像的信息，包括镜像是否已降级（不同步）。
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store show -fields mirror-type, is-mirror-degraded
+----
++
+[listing]
+----
+aggregate      object-store-name mirror-type     is-mirror-degraded
+-------------- ----------------- ------------- ------------------
+aggr1          my-AZURE-store      primary           -
+               my-AWS-store        mirror          false
+----
+. 使用 `storage aggregate object-store unmirror` 命令删除 FabricPool 镜像。
++
+[listing]
+----
+cluster1::> storage aggregate object-store unmirror -aggregate aggr1
+----
+. 使用 `storage aggregate object-store show -fields mirror-type ， is-mirror-degraded` 命令验证 FabricPool 是否已恢复为单个对象存储配置。
++
+[listing]
+----
+cluster1::> storage aggregate object-store show -fields mirror-type,is-mirror-degraded
+----
++
+[listing]
+----
+aggregate      object-store-name mirror-type     is-mirror-degraded
+-------------- ----------------- ------------- ------------------
+aggr1          my-AZURE-store      primary           -
+----
+

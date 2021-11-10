@@ -1,0 +1,187 @@
+---
+permalink: nas-audit/plan-fpolicy-policy-config-concept.html 
+sidebar: sidebar 
+keywords: plan, fpolicy, policy, configuration 
+summary: 在配置 FPolicy 策略之前，您必须了解创建策略时需要哪些参数，以及为什么要配置某些可选参数。此信息可帮助您确定要为每个参数设置的值。 
+---
+= 规划 FPolicy 策略配置概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在配置 FPolicy 策略之前，您必须了解创建策略时需要哪些参数，以及为什么要配置某些可选参数。此信息可帮助您确定要为每个参数设置的值。
+
+创建 FPolicy 策略时，请将此策略与以下项相关联：
+
+* Storage Virtual Machine （ SVM ）
+* 一个或多个 FPolicy 事件
+* FPolicy 外部引擎
+
+
+您还可以配置多个可选策略设置。
+
+
+
+== FPolicy 策略配置包含哪些内容
+
+您可以使用以下可用的 FPolicy 必需策略和可选参数列表来帮助您规划配置：
+
+[cols="4*"]
+|===
+| 信息类型 | 选项 | Required | Default 
+
+
+ a| 
+_SVM 名称 _
+
+指定要在其中创建 FPolicy 策略的 SVM 的名称。
+ a| 
+` -vserver` `vserver_name`
+ a| 
+是的。
+ a| 
+无
+
+
+
+ a| 
+策略名称 _
+
+指定 FPolicy 策略的名称。
+
+此名称最长可为 256 个字符。
+
+[NOTE]
+====
+如果在 MetroCluster 或 SVM 灾难恢复配置中配置策略，则此名称的长度应最多为 200 个字符。
+
+====
+此名称可以包含以下 ASCII 范围字符的任意组合：
+
+* `a` 到 `z`
+* `A` 至 `Z`
+* `0` 到 `9`
+* "` _` " ， "` -` " 和 "` 。` "
+
+ a| 
+` 策略名称` `policy_name`
+ a| 
+是的。
+ a| 
+无
+
+
+
+ a| 
+事件名称 _
+
+指定要与 FPolicy 策略关联的事件的逗号分隔列表。
+
+* 您可以将多个事件关联到一个策略。
+* 事件是特定于协议的。
+* 您可以使用一个策略来监控多个协议的文件访问事件，方法是为要策略监控的每个协议创建一个事件，然后将事件与策略关联。
+* 事件必须已存在。
+
+ a| 
+` 事件` `event_name` ， ...
+ a| 
+是的。
+ a| 
+无
+
+
+
+ a| 
+外部引擎名称 _
+
+指定要与 FPolicy 策略关联的外部引擎的名称。
+
+* 外部引擎包含节点向 FPolicy 服务器发送通知所需的信息。
+* 您可以将 FPolicy 配置为使用 ONTAP 原生外部引擎进行简单文件阻止，或者使用配置为使用外部 FPolicy 服务器（ FPolicy 服务器）的外部引擎进行更复杂的文件阻止和文件管理。
+* 如果要使用原生外部引擎，则不能为此参数指定值，也可以指定 `原生` 作为值。
+* 如果要使用 FPolicy 服务器，外部引擎的配置必须已存在。
+
+ a| 
+` 引擎` `enginer_name`
+ a| 
+是（除非策略使用内部 ONTAP 原生引擎）
+ a| 
+`原生`
+
+
+
+ a| 
+_Is mandatory screening required_
+
+指定是否需要强制文件访问筛选。
+
+* 强制筛选设置用于确定在所有主服务器和二级服务器均已关闭或在给定超时期限内未从 FPolicy 服务器收到响应时对文件访问事件采取的操作。
+* 如果设置为 `true` ，则会拒绝文件访问事件。
+* 如果设置为 `false` ，则允许发生文件访问事件。
+
+ a| 
+` -is-mandatory` ｛`true` ｝`false` ｝
+ a| 
+否
+ a| 
+`true`
+
+
+
+ a| 
+_allow privileged access_
+
+指定是否希望 FPolicy 服务器通过使用有权限的数据连接对受监控的文件和文件夹具有访问权限。
+
+如果已配置，则 FPolicy 服务器可以使用特权数据连接从 SVM 的根目录访问包含受监控数据的文件。
+
+要进行有权限的数据访问，必须在集群上获得 CIFS 许可，并且必须将用于连接到 FPolicy 服务器的所有数据 LIF 配置为将 `CIFS` 作为允许的协议之一。
+
+如果要将策略配置为允许特权访问，则还必须为希望 FPolicy 服务器用于特权访问的帐户指定用户名。
+ a| 
+` -allow-privileged-access` ｛`yes` ｝`no` ｝
+ a| 
+否（除非启用直通读取）
+ a| 
+`否`
+
+
+
+ a| 
+特权用户名 _
+
+指定 FPolicy 服务器用于特权数据访问的帐户的用户名。
+
+* 此参数的值应采用 `domain\user name` 格式。
+* 如果将 ` -allow-privileged-access` 设置为 `no` ，则会忽略为此参数设置的任何值。
+
+ a| 
+` -privileged-user-name` `user_name`
+ a| 
+否（除非启用了特权访问）
+ a| 
+无
+
+
+
+ a| 
+_allow passthrough-read_
+
+指定 FPolicy 服务器是否可以为已由 FPolicy 服务器归档到二级存储（脱机文件）的文件提供直通读取服务：
+
+* 直通读取是一种在不将数据还原到主存储的情况下读取脱机文件数据的方法。
++
+直通读取可减少响应延迟，因为在响应读取请求之前，无需将文件重新调用回主存储。此外，直通读取还可以通过消除仅为满足读取请求而重新调用的文件占用主存储空间的需求来优化存储效率。
+
+* 启用后， FPolicy 服务器将通过专为直通读取打开的单独有权限的数据通道为文件提供数据。
+* 如果要配置直通读取，则还必须将策略配置为允许特权访问。
+
+ a| 
+` -is-passthrough-read-enabled` ｛`true` ｝`false` ｝
+ a| 
+否
+ a| 
+`false`
+
+|===

@@ -1,0 +1,37 @@
+---
+permalink: performance-admin/check-network-settings-task.html 
+sidebar: sidebar 
+keywords: check, mtu, network, setting, storage, system 
+summary: 如果存储系统上的网络设置与客户端或数据交换机上的网络设置不同，则可以更改这些设置。管理网络 MTU 设置为 1500 ，而数据网络 MTU 大小应为 9000 。 
+---
+= 检查存储系统上的 MTU 网络设置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果存储系统上的网络设置与客户端或数据交换机上的网络设置不同，则可以更改这些设置。管理网络 MTU 设置为 1500 ，而数据网络 MTU 大小应为 9000 。
+
+
+
+== 关于此任务
+
+广播域中的所有端口都具有相同的 MTU 大小，但处理管理流量的 e0M 端口除外。如果此端口属于广播域，请使用 `broadcast-domain modify` 命令更改修改后的广播域中所有端口的 MTU 。有关详细信息，以及要使用 System Manager 完成此任务，请参见 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.onc-sm-help-960/GUID-2AF31CD0-5D75-49D5-9F42-61FEA1C1C9F5.html["System Manager 文档"]。
+
+.步骤
+. 检查存储系统上的 MTU 端口设置：
++
+`network port show -instance`
+
+. 将 MTU 端口设置更改为 9000 ：
++
+`network port modify -node _nodename_ -port _port_ -mtu 9000`
+
+
+
+以下示例将 `e0a` 的 MTU 端口设置更改为 9000 ：
+
+[listing]
+----
+cluster1::*> network port modify -node node0 -port e0a -mtu 9000
+----

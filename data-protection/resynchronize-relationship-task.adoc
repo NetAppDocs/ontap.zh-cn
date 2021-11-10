@@ -1,0 +1,39 @@
+---
+permalink: data-protection/resynchronize-relationship-task.html 
+sidebar: sidebar 
+keywords: resynchronize, replication, relationship 
+summary: 在将目标卷设为可写之后，在因源卷和目标卷上不存在通用 Snapshot 副本而导致更新失败之后，或者如果要更改此关系的复制策略，则需要重新同步复制关系。 
+---
+= 重新同步复制关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在将目标卷设为可写之后，在因源卷和目标卷上不存在通用 Snapshot 副本而导致更新失败之后，或者如果要更改此关系的复制策略，则需要重新同步复制关系。
+
+虽然重新同步不需要基线传输，但它可能非常耗时。您可能希望在非高峰时段运行重新同步。
+
+.步骤
+. 重新同步源卷和目标卷：
++
+`snapmirror resync -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -type dp_xdp -schedule _schedule_ -policy _policy_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。
+
+====
++
+以下示例将重新同步源卷 `volA` on `svm1` 与目标卷 `vola_dst` on `svm_backup` 之间的关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+

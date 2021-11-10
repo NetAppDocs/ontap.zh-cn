@@ -1,0 +1,53 @@
+---
+permalink: volumes/commands-display-space-usage-reference.html 
+sidebar: sidebar 
+keywords: commands for, displaying, space, usage, information, display 
+summary: 您可以使用 storage aggregate 和 volume 命令查看聚合，卷及其 Snapshot 副本中的空间使用情况。 
+---
+= 用于显示空间使用情况信息的命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `storage aggregate` 和 `volume` 命令来查看聚合，卷及其 Snapshot 副本中的空间使用情况。
+
+[cols="2*"]
+|===
+| 要显示有关以下内容的信息 ... | 使用此命令 ... 
+
+
+ a| 
+聚合，包括有关已用空间百分比和可用空间百分比的详细信息， Snapshot 预留大小以及其他空间使用情况信息
+ a| 
+`storage aggregate show` `storage aggregate show-space -fields snap-size-total ， used-including-snapshot-reserve`
+
+
+
+ a| 
+磁盘和 RAID 组在聚合中的使用方式以及 RAID 状态
+ a| 
+`s存储聚合显示状态`
+
+
+
+ a| 
+删除特定 Snapshot 副本后将回收的磁盘空间量
+ a| 
+`volume snapshot compute-reclaimable` （高级）
+
+
+
+ a| 
+卷使用的空间量
+ a| 
+`volume show -fields size ， used ， available ， percent-used` `volume show-space`
+
+
+
+ a| 
+卷在所属聚合中使用的空间量
+ a| 
+`卷显示占用空间`
+
+|===

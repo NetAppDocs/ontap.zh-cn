@@ -1,0 +1,30 @@
+---
+permalink: nfs-config/set-export-rules-index-number-task.html 
+sidebar: sidebar 
+keywords: manage, processing, order, export rules 
+summary: 您可以使用 vserver export-policy rule setindex 命令手动设置现有导出规则的索引编号。这样，您可以指定 ONTAP 将导出规则应用于客户端请求的优先级。 
+---
+= 管理导出规则的处理顺序
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `vserver export-policy rule setindex` 命令手动设置现有导出规则的索引编号。这样，您可以指定 ONTAP 将导出规则应用于客户端请求的优先级。
+
+如果新索引编号已在使用中，则该命令会在指定位置插入规则并相应地对列表重新排序。
+
+.步骤
+. 修改指定导出规则的索引编号：
++
+`vserver export-policy rule setindex -vserver _virtual_server_name_ -policyname _policy_name_ -ruleindex _integ_ -newruleindex _integ_`
+
+
+
+以下命令会将 SVM vs1 上名为 RS1 的导出策略中索引编号为 3 的导出规则的索引编号更改为 2 ：
+
+[listing]
+----
+vs1::> vserver export-policy rule setindex -vserver vs1
+-policyname rs1 -ruleindex 3 -newruleindex 2
+----

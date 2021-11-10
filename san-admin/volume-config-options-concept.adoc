@@ -1,0 +1,50 @@
+---
+permalink: san-admin/volume-config-options-concept.html 
+sidebar: sidebar 
+keywords: san, volume, configuration, options 
+summary: 您必须在包含 LUN 的卷上设置各种选项。设置卷选项的方式决定了卷中 LUN 的可用空间量。 
+---
+= SAN 卷配置选项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须在包含 LUN 的卷上设置各种选项。设置卷选项的方式决定了卷中 LUN 的可用空间量。
+
+
+
+== 自动增长
+
+您可以启用或禁用自动增长。如果启用了自动增长，则 ONTAP 会自动将卷大小增加到您预先确定的最大大小。包含的聚合中必须有可用空间，才能支持卷的自动增长。因此，如果启用了自动增长，则必须监控所属聚合中的可用空间，并在需要时添加更多空间。
+
+无法触发自动增长来支持 Snapshot 创建。如果您尝试创建 Snapshot 副本，但卷上空间不足，则即使启用了自动增长， Snapshot 创建也会失败。
+
+如果禁用了自动增长，则卷的大小将保持不变。
+
+
+
+== 自动缩减
+
+您可以启用或禁用自动缩减。如果启用了自动缩减，则当卷中使用的空间量降低预定阈值时， ONTAP 可以自动减小卷的总大小。这可以通过触发卷自动释放未使用的可用空间来提高存储效率。
+
+
+
+== Snapshot 自动删除
+
+发生以下情况之一时， Snapshot 自动删除功能会自动删除 Snapshot 副本：
+
+* 卷接近全满。
+* Snapshot 预留空间接近全满。
+* 覆盖预留空间已满。
+
+
+您可以将 Snapshot 自动删除配置为从最旧到最新或从最新到最旧删除 Snapshot 副本。Snapshot 自动删除不会删除链接到克隆卷或 LUN 中 Snapshot 副本的 Snapshot 副本。
+
+如果卷需要更多空间，并且您同时启用了自动增长和 Snapshot 自动删除，则默认情况下， ONTAP 会尝试先触发自动增长来获取所需空间。如果无法通过自动增长获取足够的空间，则会触发 Snapshot 自动删除。
+
+
+
+== Snapshot 预留
+
+Snapshot 预留用于定义卷中为 Snapshot 副本预留的空间量。分配给 Snapshot 预留的空间不能用于任何其他目的。如果为 Snapshot 预留分配的所有空间均已使用，则 Snapshot 副本将开始占用卷上的额外空间。

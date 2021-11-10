@@ -1,0 +1,88 @@
+---
+permalink: san-admin/example-how-igroups-give-lun-access-reference.html 
+sidebar: sidebar 
+keywords: ontap 9.2, example, how, igroups, give, lun, access 
+summary: 您可以创建多个 igroup 来定义哪些 LUN 可供主机使用。例如，如果您有主机集群，则可以使用 igroup 来确保特定 LUN 仅对集群中的一个主机可见，或者对集群中的所有主机可见。 
+---
+= igroup 如何授予 LUN 访问权限的示例
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以创建多个 igroup 来定义哪些 LUN 可供主机使用。例如，如果您有主机集群，则可以使用 igroup 来确保特定 LUN 仅对集群中的一个主机可见，或者对集群中的所有主机可见。
+
+下表说明了四个 igroup 如何为访问存储系统的四个不同主机提供 LUN 访问权限。集群模式主机（ Host3 和 Host4 ）都是同一个 igroup （ group3 ）的成员，并且可以访问映射到此 igroup 的 LUN 。名为 group4 的 igroup 包含 Host4 的 WWPN ，用于存储其配对节点不希望看到的本地信息。
+
+[cols="4*"]
+|===
+| 具有 HBA WWPN ， IQN 或 EUI 的主机 | igroup | 已将 WWPN ， IQN ， EUI 添加到 igroup 中 | 映射到 igroup 的 LUN 
+
+
+ a| 
+host1 ，单路径（ iSCSI 软件启动程序）
+
+iqn.1991-05.com.microsoft:host1
+ a| 
+组 1
+ a| 
+iqn.1991-05.com.microsoft:host1
+ a| 
+` /vol/vol2/lun1`
+
+
+
+ a| 
+Host2 ，多路径（两个 HBA ）
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 6b ： 3c
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 02 ： 3c
+ a| 
+组 2
+ a| 
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 6b ： 3c
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 02 ： 3c
+ a| 
+` /vol/vol2/lun2`
+
+
+
+ a| 
+Host3 ，多路径，与主机 4 集群在一起
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 32 ： 1b
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 41 ： 02
+ a| 
+第 3 组
+ a| 
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 32 ： 1b
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 41 ： 02
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 51 ： 2c
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 47 ： A2
+ a| 
+` /vol/vol2/qtree1/lun3`
+
+
+
+ a| 
+Host4 ，多路径，集群模式（对于 Host3 不可见）
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 51 ： 2c
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 47 ： A2
+ a| 
+组 4
+ a| 
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 51 ： 2c
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 47 ： A2
+ a| 
+` /vol/vol2/qtre2/lun4` ` /vol/vol2/qtree1/lun5`
+
+|===

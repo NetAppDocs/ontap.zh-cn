@@ -1,0 +1,76 @@
+---
+permalink: smb-config/commands-manage-ntp-servers-reference.html 
+sidebar: sidebar 
+keywords: ontap, network, time, protocol, ntp, version, support, ntpv3, symmetric, authentication, sha, security, commands for managing symmetric authentication on ntp servers 
+summary: 从 ONTAP 9.5 开始，支持网络时间协议（ NTP ）版本 3 。NTPv3 包括使用 SHA-1 密钥的对称身份验证，可提高网络安全性。 
+---
+= 用于在 NTP 服务器上管理对称身份验证的命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.5 开始，支持网络时间协议（ NTP ）版本 3 。NTPv3 包括使用 SHA-1 密钥的对称身份验证，可提高网络安全性。
+
+|===
+| 要执行此操作 ... | 使用此命令 ... 
+
+
+ a| 
+配置不使用对称身份验证的 NTP 服务器
+ a| 
+`cluster time-service ntp server create` ` -server` `sserver_name`
+
+
+
+ a| 
+使用对称身份验证配置 NTP 服务器
+ a| 
+`cluster time-service ntp server create` ` -server` `sserver_ip_address` ` -key-id` `key_id`
+
+
+
+ a| 
+为现有 NTP 服务器启用对称身份验证可以通过添加所需的密钥 ID 来修改现有 NTP 服务器以启用身份验证。
+ a| 
+`cluster time-service ntp server modify` ` -server` `sserver_name` ` -key-id` `key_id`
+
+
+
+ a| 
+配置共享 NTP 密钥
+ a| 
+`cluster time-service ntp key create` ` -id` `shared_key_id` ` -type` `shared_key_type` ` -value` `shared_key_value`
+
+[NOTE]
+====
+共享密钥由 ID 引用。节点和 NTP 服务器上的 ID ，类型和值必须相同
+
+====
+
+
+ a| 
+使用未知密钥 ID 配置 NTP 服务器
+ a| 
+`cluster time-service ntp server create` ` -server` `sserver_name` ` -key-id` `key_id`
+
+
+
+ a| 
+使用未在 NTP 服务器上配置的密钥 ID 配置服务器。
+ a| 
+`cluster time-service ntp server create` ` -server` `sserver_name` ` -key-id` `key_id`
+
+[NOTE]
+====
+密钥 ID ，类型和值必须与 NTP 服务器上配置的密钥 ID ，类型和值相同。
+
+====
+
+
+ a| 
+禁用对称身份验证
+ a| 
+`cluster time-service ntp server modify` ` -server` `sserver_name` ` -authentication disabled`
+
+|===

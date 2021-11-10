@@ -1,0 +1,32 @@
+---
+permalink: flexcache/audit-flexcache-volumes-concept.html 
+sidebar: sidebar 
+keywords: considerations, auditing, flexcache, volumes 
+summary: 从 ONTAP 9.7 开始，您可以使用原生 ONTAP 审核以及通过 FPolicy 管理文件策略来审核 FlexCache 关系中的 NFS 文件访问事件。使用 CIFS 的 FlexCache 卷不支持 FPolicy 。原生审核和 FPolicy 使用与 FlexVol 卷相同的命令行界面命令进行配置和管理。但是， FlexCache 卷存在一些不同的行为。 
+---
+= 审核 FlexCache 卷的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.7 开始，您可以使用原生 ONTAP 审核以及通过 FPolicy 管理文件策略来审核 FlexCache 关系中的 NFS 文件访问事件。使用 CIFS 的 FlexCache 卷不支持 FPolicy 。原生审核和 FPolicy 使用与 FlexVol 卷相同的命令行界面命令进行配置和管理。但是， FlexCache 卷存在一些不同的行为。
+
+* * 原生审核 *
++
+** 您不能使用 FlexCache 卷作为审核日志的目标。
+** 如果要审核对 FlexCache 卷的读取和写入，则必须同时在缓存 SVM 和初始 SVM 上配置审核。
++
+这是因为文件系统操作会在处理位置进行审核。也就是说，读取会在缓存 SVM 上进行审核，而写入则会在原始 SVM 上进行审核。
+
+** 为了跟踪写入操作的起源， SVM UUID 和 MSID 会附加在审核日志中，以确定写入的源 FlexCache 卷。
+** 虽然可以使用 NFSv4 或 SMB 协议在文件上设置系统访问控制列表（ SACL ），但 FlexCache 卷仅支持 NFSv3 。因此，只能在原始卷上设置 SACL 。
+
+
+* * FPolicy*
++
+** 尽管对 FlexCache 卷的写入是在原始卷上提交的，但 FPolicy 配置会监控对缓存卷的写入。这一点与原生审核不同，在审核中，会对初始卷上的写入进行审核。
+** 虽然 ONTAP 不需要对缓存和初始 SVM 进行相同的 FPolicy 配置，但建议您部署两个类似的配置。为此，您可以为缓存创建一个新的 FPolicy 策略，该策略与原始 SVM 的策略配置相似，但新策略的范围仅限于缓存 SVM 。
+
+
+

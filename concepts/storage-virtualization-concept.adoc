@@ -1,0 +1,43 @@
+---
+permalink: concepts/storage-virtualization-concept.html 
+sidebar: sidebar 
+keywords: storage virtualization 
+summary: 您可以使用 Storage Virtual Machine （ SVM ）为客户端和主机提供数据。与虚拟机管理程序上运行的虚拟机一样， SVM 也是一个逻辑实体，用于抽象化物理资源。通过 SVM 访问的数据不会绑定到存储中的某个位置。对 SVM 的网络访问不会绑定到物理端口。 
+---
+= 存储虚拟化概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 _storage virtual machine （ SVM ） _ 向客户端和主机提供数据。与虚拟机管理程序上运行的虚拟机一样， SVM 也是一个逻辑实体，用于抽象化物理资源。通过 SVM 访问的数据不会绑定到存储中的某个位置。对 SVM 的网络访问不会绑定到物理端口。
+
+[NOTE]
+====
+SVM 以前称为 "`Vservers 。` " 您仍会在 ONTAP 命令行界面（ CLI ）中看到该术语。
+
+====
+SVM 通过一个或多个网络逻辑接口（ LIF ） _ 从一个或多个卷向客户端和主机提供数据。可以将卷分配给集群中的任何数据聚合。LIF 可以由任何物理或逻辑端口托管。无论您是执行硬件升级，添加节点，平衡性能还是优化聚合间的容量，都可以在不中断数据服务的情况下移动卷和 LIF 。
+
+同一 SVM 可以具有一个用于 NAS 流量的 LIF 和一个用于 SAN 流量的 LIF 。客户端和主机只需要 LIF 的地址（ NFS ， SMB 或 iSCSI 的 IP 地址； FC 的 WWPN ）即可访问 SVM 。LIF 会在移动时保留其地址。端口可以托管多个 LIF 。每个 SVM 都有自己的安全性，管理和命名空间。
+
+除了数据 SVM 之外， ONTAP 还部署了用于管理的特殊 SVM ：
+
+* 设置集群时会创建一个 _admin SVM_ 。
+* 当节点加入新的或现有的集群时，会创建 _node SVM_ 。
+* 系统会自动在 IP 空间中为集群级别的通信创建 _system SVM_ 。
+
+
+您不能使用这些 SVM 来提供数据。此外，集群内部和之间的流量以及集群和节点管理也有特殊的 LIF 。
+
+image::../media/volume-move.gif[卷移动]
+
+|===
+
+
+ a| 
+* 为什么 ONTAP 与中间件类似 _*
+
+ONTAP 用于存储管理任务的逻辑对象符合精心设计的中间件包的常见目标：保护管理员免受低级实施详细信息的影响，并使配置不受节点和端口等物理特性变化的影响。基本理念是，管理员应该能够轻松移动卷和 LIF ，重新配置几个字段，而不是整个存储基础架构。
+
+|===

@@ -1,0 +1,106 @@
+---
+permalink: system-admin/methods-specifying-queries-concept.html 
+sidebar: sidebar 
+keywords: method, use, query, operator, interface, management, unix, patterns, wildcards, command, parameter, argument 
+summary: 管理界面支持查询以及 UNIX 模式和通配符，可用于匹配命令参数中的多个值。 
+---
+= 使用查询运算符的方法
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+管理界面支持查询以及 UNIX 模式和通配符，可用于匹配命令参数中的多个值。
+
+下表介绍了支持的查询运算符：
+
+[cols="10,90"]
+|===
+| 运算符 | Description 
+
+
+ a| 
+*
+ a| 
+与所有条目匹配的通配符。
+
+例如，命令 `volume show -volume \* tmp*` 会显示名称包含字符串 `tmp` 的所有卷的列表。
+
+
+
+ a| 
+！
+ a| 
+非运算符。
+
+表示不匹配的值；例如， ` * ！ vs0*` 表示不匹配值 `vs0` 。
+
+
+
+ a| 
+我们可以为您提供
+ a| 
+或运算符。
+
+将要比较的两个值分隔开；例如， ` * vs0 | vs2*` 与 vs0 或 vs2 匹配。您可以指定多个或语句；例如， `a | b* | \* c*` 与条目 `a` ，以 `b` 开头的任何条目以及包含 `c` 的任何条目匹配。
+
+
+
+ a| 
+...
+ a| 
+范围运算符。
+
+例如， ` * 5..10*` 匹配 `5` 到 `10` 之间的任意值（包括在内）。
+
+
+
+ a| 
+<
+ a| 
+小于运算符。
+
+例如， ` * <20*` 匹配小于 `20` 的任何值。
+
+
+
+ a| 
+>
+ a| 
+大于运算符。
+
+例如， ` * >5*` 匹配大于 `5` 的任何值。
+
+
+
+ a| 
+>=
+ a| 
+小于或等于运算符。
+
+例如， ` * <=5*` 匹配小于或等于 `5` 的任何值。
+
+
+
+ a| 
+>=
+ a| 
+大于或等于运算符。
+
+例如， ` * >=5*` 匹配大于或等于 `5` 的任何值。
+
+
+
+ a| 
+｛`query` ｝
+ a| 
+扩展查询。
+
+扩展查询必须指定为命令名称后面的第一个参数，然后再指定任何其他参数。
+
+例如，命令 `volume modify ｛ -volume \* tmp* ｝ -state offline` 将名称包含字符串 `tmp` 的所有卷设置为脱机。
+
+|===
+如果要将查询字符解析为文字，必须将字符用双引号引起来（例如 "` ｛ caret ｝` " ， "` 。` " ， "` *` " 或 "` $` " ），才能返回正确的结果。
+
+您可以在一个命令行中使用多个查询运算符。例如，命令 `volume show -size >1GB -percent-used <50 -vserver ！ vs1` 显示大小大于 1 GB ，利用率小于 50% 且未位于名为 "`vs1` " 的 Storage Virtual Machine （ SVM ）中的所有卷。

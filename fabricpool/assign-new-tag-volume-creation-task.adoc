@@ -1,0 +1,42 @@
+---
+permalink: fabricpool/assign-new-tag-volume-creation-task.html 
+sidebar: sidebar 
+keywords: assigning, new tag, volume creation 
+summary: 如果要为从创建的新卷分层的新对象分配一个或多个标记，则可以创建新的对象标记。 
+---
+= 在创建卷期间分配新标记
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要为从创建的新卷分层的新对象分配一个或多个标记，则可以创建新的对象标记。
+
+.关于此任务
+* 每个卷最多允许 4 个标记
+* 每个对象标记都必须是一个键 - 值对，并以相等的符号（` ""` ）分隔
+* 多个标记必须以逗号（` ""` ）分隔
+* 每个标记值最多可包含 127 个字符
+* 每个标记键都必须以字母字符或下划线开头。
++
+密钥只能包含字母数字字符和下划线，允许的最大字符数为 127 。
+
+
+
+.步骤
+. 使用带有 ` -tiering-object-tags` 选项的 `volume create` 命令创建具有指定标记的新卷。您可以使用逗号分隔对指定多个标记：
++
+[listing]
+----
+volume create [ -vserver <vserver name> ] -volume <volume_name> -tiering-object-tags <key1=value1> [
+    ,<key2=value2>,<key3=value3>,<key4=value4> ]
+----
++
+以下示例将创建一个名为 fp_volume1 的卷，其中包含三个对象标记。
+
++
+[listing]
+----
+vol create -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=abc,content=data
+----
+

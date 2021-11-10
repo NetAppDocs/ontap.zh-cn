@@ -1,0 +1,80 @@
+---
+permalink: flexgroup/enable-svm-protection-task.html 
+sidebar: sidebar 
+keywords: enable, svm, protection, flexgroup, volume 
+summary: 如果 FlexGroup 卷上的 SVM DR 保护标志设置为 unprotected ，则可以将此标志设置为 protected 以启用 SVM DR 保护。 
+---
+= 在 FlexGroup 卷上启用 SVM 保护
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果 FlexGroup 卷上的 SVM DR 保护标志设置为 `unprotected` ，则可以将此标志设置为 `protected` 以启用 SVM DR 保护。
+
+.您需要什么？ #8217 ；将需要什么
+* 主节点和二级节点之间的 SVM DR 关系运行状况良好。
+* SVM DR 保护参数设置为 `unprotected` 。
+
+
+.步骤
+. 使用 `volume modify` 将 FlexGroup 卷的 `vserver-dr-protection` 参数更改为 `protected` ，以启用保护。
++
+[listing]
+----
+cluster2::> volume modify -vserver vs1 -volume fg_src -vserver-dr-protection protected
+[Job 5384] Job is queued: Modify fg_src.
+[Job 5384] Steps completed: 4 of 4.
+cluster2::>
+----
+. 更新二级站点的 SVM ： `snapmirror update -destination-path destination_svm_name -source-path source_svm_name`
++
+[listing]
+----
+snapmirror update -destination-path vs1_dst: -source-path vs1:
+----
+. 验证 SnapMirror 关系是否运行正常： `snapmirror show`
++
+[listing]
+----
+cluster2::> snapmirror show
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vs1:        XDP  vs1_dst:     Snapmirrored
+                                      Idle           -         true    -
+----
+. 验证 FlexGroup SnapMirror 关系是否运行正常： `snapmirror show -expand`
++
+[listing]
+----
+cluster2::> snapmirror show -expand
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vs1:        XDP  vs1_dst:     Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src  XDP  vs1_dst:fg_src
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0001
+            XDP  vs1_dst:fg_src__0001
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0002
+            XDP  vs1_dst:fg_src__0002
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0003
+            XDP  vs1_dst:fg_src__0003
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0004
+            XDP  vs1_dst:fg_src__0004
+                              Snapmirrored
+                                      Idle           -         true    -
+6 entries were displayed.
+----
+

@@ -1,0 +1,56 @@
+---
+permalink: nfs-admin/control-root-user-access-ntfs-security-data-task.html 
+sidebar: sidebar 
+keywords: control, root, user, access, ntfs, security, style, data 
+summary: 您可以将 ONTAP 配置为允许 NFS 客户端访问 NTFS 安全模式数据，并允许 NTFS 客户端访问 NFS 安全模式数据。在 NFS 数据存储上使用 NTFS 安全模式时，您必须确定如何处理 root 用户的访问并相应地配置 Storage Virtual Machine （ SVM ）。 
+---
+= 控制 root 用户对 NTFS 安全模式数据的访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将 ONTAP 配置为允许 NFS 客户端访问 NTFS 安全模式数据，并允许 NTFS 客户端访问 NFS 安全模式数据。在 NFS 数据存储上使用 NTFS 安全模式时，您必须确定如何处理 root 用户的访问并相应地配置 Storage Virtual Machine （ SVM ）。
+
+当 root 用户访问 NTFS 安全模式数据时，您有两种选择：
+
+* 像任何其他 NFS 用户一样将 root 用户映射到 Windows 用户，并根据 NTFS ACL 管理访问。
+* 忽略 NTFS ACL 并提供对 root 的完全访问权限。
+
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 执行所需的操作：
++
+[cols="2*"]
+|===
+| 如果希望 root 用户 ... | 输入命令 ... 
+
+
+ a| 
+映射到 Windows 用户
+ a| 
+`vserver nfs modify -vserver vserver_name -ignore-nt-acl-for-root disabled`
+
+
+
+ a| 
+绕过 NT ACL 检查
+ a| 
+`vserver nfs modify -vserver vserver_name -ignore-nt-acl-for-root enabled`
+
+|===
++
+默认情况下，此参数处于禁用状态。
+
++
+如果启用了此参数，但 root 用户没有名称映射，则 ONTAP 将使用默认的 SMB 管理员凭据进行审核。
+
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+

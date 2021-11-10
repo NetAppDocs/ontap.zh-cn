@@ -1,0 +1,53 @@
+---
+permalink: authentication/setup-ssh-multifactor-authentication-task.html 
+sidebar: sidebar 
+keywords: enable, ssh, multifactor authentication (mfa) 
+summary: 从 ONTAP 9.3 开始，您可以使用 security login create 命令来增强安全性，方法是要求管理员使用 SSH 公有密钥和用户密码登录到管理员或数据 SVM 。 
+---
+= 启用 SSH 多因素身份验证（ MFA ）
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，您可以使用 `ssecurity login create` 命令来增强安全性，方法是要求管理员使用 SSH 公有密钥和用户密码登录到管理员或数据 SVM 。
+
+您必须是集群管理员才能执行此任务。
+
+.关于此任务
+* 您必须先将公有密钥与帐户关联，然后帐户才能访问 SVM 。
++
+xref:manage-public-key-authentication-concept.adoc[将公有密钥与用户帐户关联]
+
++
+您可以在启用帐户访问之前或之后执行此任务。
+
+* 如果您不确定要分配给登录帐户的访问控制角色，可以稍后使用 `ssecurity login modify` 命令添加此角色。
++
+xref:modify-role-assigned-administrator-task.adoc[修改分配给管理员的角色]
+
+* 用户始终通过公有密钥身份验证进行身份验证，然后进行密码身份验证。
+
+
+.步骤
+. 需要本地管理员帐户才能使用 SSH MFA 访问 SVM ：
++
+`ssecurity login create -vserver SVM -user-or-group-name user_name -application ssh -authentication-method password_publickey -role admin -second-authentication-method password_publickey`
+
++
+以下命令要求具有预定义 `admin` 角色的 SVM 管理员帐户 `admin2` 使用 SSH 公有密钥和用户密码登录到 SVM``engData1`` ：
+
++
+[listing]
+----
+cluster-1::> security login create -vserver engData1 -user-or-group-name admin2 -application ssh -authentication-method publickey -role admin -second-authentication-method password
+
+Please enter a password for user 'admin2':
+Please enter it again:
+Warning: To use public-key authentication, you must create a public key for user "admin2".
+----
+
+
+如果您尚未将公有密钥与管理员帐户关联，则必须先将其关联，然后该帐户才能访问 SVM 。
+
+xref:manage-public-key-authentication-concept.adoc[将公有密钥与用户帐户关联]

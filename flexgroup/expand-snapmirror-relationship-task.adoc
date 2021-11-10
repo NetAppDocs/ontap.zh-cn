@@ -1,0 +1,28 @@
+---
+permalink: flexgroup/expand-snapmirror-relationship-task.html 
+sidebar: sidebar 
+keywords: expand, flexgroup, volume, snapmirror, relationship 
+summary: 从 ONTAP 9.3 开始，您可以通过向卷添加新成分卷来扩展 SnapMirror 关系中的源 FlexGroup 卷和目标 FlexGroup 卷。您可以手动或自动扩展目标卷。 
+---
+= 展开 SnapMirror 关系中的 FlexGroup 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，您可以通过向卷添加新成分卷来扩展 SnapMirror 关系中的源 FlexGroup 卷和目标 FlexGroup 卷。您可以手动或自动扩展目标卷。
+
+.关于此任务
+* 扩展后， SnapMirror 关系的源 FlexGroup 卷和目标 FlexGroup 卷中的成分卷数必须匹配。
++
+如果卷中的成分卷数不匹配， SnapMirror 传输将失败。
+
+* 在扩展过程中，不应执行任何 SnapMirror 操作。
+* 如果在扩展过程完成之前发生灾难，您必须中断 SnapMirror 关系并等待操作成功完成。
++
+[NOTE]
+====
+只有在发生灾难时，扩展过程才会进行，此时您才应断开 SnapMirror 关系。发生灾难时，中断操作可能需要一段时间才能完成。您应等待中断操作成功完成，然后再执行重新同步操作。如果中断操作失败，您必须重试此中断操作。如果中断操作失败，则在中断操作之后，某些新成分卷可能仍会保留在目标 FlexGroup 卷中。最好先手动删除这些成分卷，然后再继续操作。
+
+====
+

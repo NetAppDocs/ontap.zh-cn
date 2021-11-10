@@ -1,0 +1,38 @@
+---
+permalink: flexgroup/create-qtrees-task.html 
+sidebar: sidebar 
+keywords: create, qtrees, flexgroup, volume 
+summary: 从 ONTAP 9.3 开始，您可以使用 FlexGroup 卷创建 qtree 。通过 qtree ，您可以将 FlexGroup 卷分区为较小的区块，以便单独管理这些区块。 
+---
+= 使用 FlexGroup 卷创建 qtree
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，您可以使用 FlexGroup 卷创建 qtree 。通过 qtree ，您可以将 FlexGroup 卷分区为较小的区块，以便单独管理这些区块。
+
+.关于此任务
+* 如果要还原到 ONTAP 9.2 或更早版本，并且已在 FlexGroup 卷中创建一个或多个 qtree 或修改了默认 qtree 的属性（安全模式和 SMB 操作锁定）， 还原到 ONTAP 9.2 或更早版本之前，必须删除所有非默认 qtree ，然后在每个 FlexGroup 卷上禁用 qtree 功能。
++
+https://docs.netapp.com/us-en/ontap/revert/task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html["还原之前，请在 FlexGroup 卷中禁用 qtree 功能"]
+
+* 如果源 FlexGroup 卷具有 SnapMirror 关系中的 qtree ，则目标集群必须运行 ONTAP 9.3 或更高版本（支持 qtree 的 ONTAP 软件版本）。
+* 从 ONTAP 9.5 开始， FlexGroup 卷支持 qtree 统计信息。
+
+
+.步骤
+. 在 FlexGroup 卷中创建 qtree ： `volume qtree create -vserver vserver_name -volume volume_name -qtree qtree name`
++
+您可以选择为 qtree 指定安全模式， SMB 操作锁定， UNIX 权限和导出策略。
+
++
+[listing]
+----
+cluster1::> volume qtree create -vserver vs0 -volume fg1 -qtree qtree1 -security-style mixed
+----
+
+
+* 相关信息 *
+
+link:../volumes/index.html["逻辑存储管理"]

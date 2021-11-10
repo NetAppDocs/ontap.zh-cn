@@ -1,0 +1,50 @@
+---
+permalink: smb-admin/enable-disable-automatic-node-referrals-task.html 
+sidebar: sidebar 
+keywords: enable, smb, automatic, node, referral, client, access, performance, disable, ontap, enable or disable smb automatic node referrals 
+summary: 您可以启用 SMB 自动节点转介以提高 SMB 客户端访问性能。如果不希望 ONTAP 向 SMB 客户端进行转介，则可以禁用自动节点转介。 
+---
+= 启用或禁用 SMB 自动节点转介
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以启用 SMB 自动节点转介以提高 SMB 客户端访问性能。如果不希望 ONTAP 向 SMB 客户端进行转介，则可以禁用自动节点转介。
+
+必须在 Storage Virtual Machine （ SVM ）上配置并运行 CIFS 服务器。
+
+默认情况下， SMB 自动节点转介功能处于禁用状态。您可以根据需要在每个 SVM 上启用或禁用此功能。
+
+此选项可在高级权限级别下使用。
+
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 根据需要启用或禁用 SMB 自动节点转介：
++
+|===
+| SMB 自动节点转介的目标位置 | 输入以下命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver cifs options modify -vserver vserver_name -is-referral-enabled true`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver cifs options modify -vserver vserver_name -is-referral-enabled false`
+
+|===
++
+选项设置将对新的 SMB 会话生效。只有当现有缓存超时到期时，具有现有连接的客户端才能使用节点转介。
+
+. 切换到管理权限级别： `set -privilege admin`
+
+
+* 相关信息 *
+
+xref:server-options-reference.adoc[可用的 SMB 服务器选项]

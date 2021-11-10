@@ -1,0 +1,39 @@
+---
+permalink: volumes/ls-command-space-usage-concept.html 
+sidebar: sidebar 
+keywords: how, ls command, accounts, space, usage 
+summary: 使用 ls 命令查看 UNIX 客户端上挂载的 FlexVol 卷的内容时， 输出中显示的文件大小可能小于或大于卷的配额报告中显示的空间使用量，具体取决于文件的数据块类型。 
+---
+= ls 命令如何计算空间使用量
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 `ls` 命令查看 UNIX 客户端上挂载的 FlexVol 卷的内容时， 输出中显示的文件大小可能小于或大于卷的配额报告中显示的空间使用量，具体取决于文件的数据块类型。
+
+`ls` 命令的输出仅显示文件的大小，不包括文件使用的间接块。该文件的任何空块也会包含在命令的输出中。
+
+因此，如果文件不包含空块，则 `ls` 命令显示的大小可能小于配额报告指定的磁盘使用量，因为配额报告中包含间接块。相反，如果文件包含空块，则 `ls` 命令显示的大小可能大于配额报告指定的磁盘使用量。
+
+`ls` 命令的输出仅显示文件的大小，不包括文件使用的间接块。该文件的任何空块也会包含在命令的输出中。
+
+以下配额报告显示了 qtree q1 的 10 MB 限制：
+
+[listing]
+----
+
+                                      ----Disk----  ----Files-----   Quota
+  Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+  -------  --------  ------  -------  -----  -----  ------  ------   ---------
+  vol1     q1          tree    user1   10MB  10MB        1       -   q1
+
+...
+----
+从 UNIX 客户端使用 `ls` 命令查看时，同一 qtree 中的文件大小可能会超过配额限制，如以下示例所示：
+
+[listing]
+----
+[user1@lin-sys1 q1]$ ls -lh
+-rwxr-xr-x  1 user1 nfsuser  **27M** Apr 09  2013 file1
+----

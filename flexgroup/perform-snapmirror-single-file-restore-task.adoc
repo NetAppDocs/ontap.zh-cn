@@ -1,0 +1,116 @@
+---
+permalink: flexgroup/perform-snapmirror-single-file-restore-task.html 
+sidebar: sidebar 
+keywords: perform, snapmirror, single, file, restore, flexgroup, volume 
+summary: 从 ONTAP 9.8 开始，您可以从 FlexGroup SnapMirror 存储或 UDP 目标还原单个文件。 
+---
+= 从 FlexGroup 卷执行 SnapMirror 单个文件还原
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.8 开始，您可以从 FlexGroup SnapMirror 存储或 UDP 目标还原单个文件。
+
+.关于此任务
+* 您可以从任何几何结构的 FlexGroup 卷还原到任何几何结构的 FlexGroup 卷
+* 每个还原操作仅支持一个文件
+* 您可以还原到原始源 FlexGroup 卷或新的 FlexGroup 卷
+* 不支持远程隔离文件查找。
++
+如果源文件被隔离，则单个文件还原将失败。
+
+* 您可以重新启动或清理已中止的单个文件还原
+* 您应使用 `snapmirror restore` 命令的 `clean-up-failure` 选项来清理失败的单个文件还原传输
+* 当 FlexGroup 单个文件还原正在进行或处于中止状态时，支持扩展 FlexGroup 卷
+
+
+.步骤
+. 从 FlexGroup 卷还原文件：``snapmirror restore -destination-path destination_path -source-path source_path -file-list /F1 -throttle throttle -source-snapshot snapshot``
++
+以下是 FlexGroup 卷单个文件还原操作的示例。
+
++
+[listing]
+----
+vserverA::> snapmirror restore -destination-path vs0:fg2 -source-path vs0:fgd -file-list /f1 -throttle 5 -source-snapshot snapmirror.81072ce1-d57b-11e9-94c0-005056a7e422_2159190496.2019-09-19_062631
+[Job 135] Job is queued: snapmirror restore from source "vs0:fgd" for the snapshot snapmirror.81072ce1-d57b-11e9-94c0-005056a7e422_2159190496.2019-09-19_062631.
+vserverA::> snapmirror show
+                                                                                         Source              Destination Mirror   Relationship                   Total Last
+Path       Type   Path            State    Status           Progress Healthy Updated
+----------- ----      ------------     -------    ---------          ----- --------- ------- --------
+vs0:v1d RST    vs0:v2          -           Transferring Idle 83.12KB true 09/19 11:38:42
+
+vserverA::*> snapmirror show vs0:fg2
+
+Source Path: vs0:fgd
+Source Cluster: -
+Source Vserver: vs0
+Source Volume: fgd
+Destination Path: vs0:fg2
+Destination Cluster: -
+Destination Vserver: vs0
+Destination Volume: fg2
+Relationship Type: RST
+Relationship Group Type: none
+Managing Vserver: vs0
+SnapMirror Schedule: -
+SnapMirror Policy Type: -
+SnapMirror Policy: -
+Tries Limit: -
+Throttle (KB/sec): unlimited
+Current Transfer Throttle (KB/sec): 2
+Mirror State: -
+Relationship Status: Transferring
+File Restore File Count: 1
+File Restore File List: f1
+Transfer Snapshot: snapmirror.81072ce1-d57b-11e9-94c0-005056a7e422_2159190496.2019-09-19_062631
+Snapshot Progress: 2.87MB
+Total Progress: 2.87MB
+Network Compression Ratio: 1:1
+Snapshot Checkpoint: 2.97KB
+Newest Snapshot: -
+Newest Snapshot Timestamp: -
+Exported Snapshot: -
+Exported Snapshot Timestamp: -
+Healthy: true
+Physical Replica: -
+Relationship ID: e6081667-dacb-11e9-94c0-005056a7e422
+Source Vserver UUID: 81072ce1-d57b-11e9-94c0-005056a7e422
+Destination Vserver UUID: 81072ce1-d57b-11e9-94c0-005056a7e422
+Current Operation ID: 138f12e6-dacc-11e9-94c0-005056a7e422
+Transfer Type: cg_file_restore
+Transfer Error: -
+Last Transfer Type: -
+Last Transfer Error: -
+Last Transfer Error Codes: -
+Last Transfer Size: -
+Last Transfer Network Compression Ratio: -
+Last Transfer Duration: -
+Last Transfer From: -
+Last Transfer End Timestamp: -
+Unhealthy Reason: -
+Progress Last Updated: 09/19 07:07:36
+Relationship Capability: 8.2 and above
+Lag Time: -
+Current Transfer Priority: normal
+SMTape Operation: -
+Constituent Relationship: false
+Destination Volume Node Name: vserverA
+Identity Preserve Vserver DR: -
+Number of Successful Updates: 0
+Number of Failed Updates: 0
+Number of Successful Resyncs: 0
+Number of Failed Resyncs: 0
+Number of Successful Breaks: 0
+Number of Failed Breaks: 0
+Total Transfer Bytes: 0
+Total Transfer Time in Seconds: 0
+Source Volume MSIDs Preserved: -
+OpMask: ffffffffffffffff
+Is Auto Expand Enabled: -
+Source Endpoint UUID: -
+Destination Endpoint UUID: -
+Is Catalog Enabled: false
+----
+

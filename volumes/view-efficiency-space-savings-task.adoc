@@ -1,0 +1,38 @@
+---
+permalink: volumes/view-efficiency-space-savings-task.html 
+sidebar: sidebar 
+keywords: view space savings with deduplication, view space savings with data compression, view space savings 
+summary: 您可以使用 volume show 命令查看通过重复数据删除和数据压缩在卷上节省的空间量。 
+---
+= 查看效率节省的空间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume show` 命令查看通过重复数据删除和数据压缩在卷上节省的空间量。
+
+在计算卷上实现的空间节省时， Snapshot 副本中的空间节省不包括在内。使用重复数据删除不会影响卷配额。配额会在逻辑级别进行报告，并且保持不变。
+
+.步骤
+. 使用 `volume show` 命令查看通过重复数据删除和数据压缩在卷上实现的空间节省。
+
+
+以下命令可用于查看通过对卷 VolA 使用重复数据删除和数据压缩实现的空间节省： `volume show -vserver vs1 -volume VolA`
+
+[listing]
+----
+cluster1::> volume show -vserver vs1 -volume VolA
+
+                                 Vserver Name: vs1
+                                  Volume Name: VolA
+																											...
+            Space Saved by Storage Efficiency: 115812B
+       Percentage Saved by Storage Efficiency: 97%
+                 Space Saved by Deduplication: 13728B
+            Percentage Saved by Deduplication: 81%
+                Space Shared by Deduplication: 1028B
+                   Space Saved by Compression: 102084B
+        Percentage Space Saved by Compression: 97%
+																											...
+----

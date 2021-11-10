@@ -1,0 +1,60 @@
+---
+permalink: flexgroup/restore-snapvault-backup-task.html 
+sidebar: sidebar 
+keywords: restore, flexgroup, volume, snapvault, backup 
+summary: 您可以从 SnapVault 二级卷中的 Snapshot 副本对 FlexGroup 卷执行完整卷还原操作。您可以将 FlexGroup 卷还原到原始源卷或新的 FlexGroup 卷。 
+---
+= 从 SnapVault 备份还原 FlexGroup 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以从 SnapVault 二级卷中的 Snapshot 副本对 FlexGroup 卷执行完整卷还原操作。您可以将 FlexGroup 卷还原到原始源卷或新的 FlexGroup 卷。
+
+您必须了解还原 FlexGroup 卷的某些注意事项。
+
+xref:snapvault-restore-operations-concept.adoc[FlexGroup 卷的 SnapVault 还原操作注意事项]
+
+从 FlexGroup 卷的 SnapVault 备份还原时，您还必须了解某些注意事项。
+
+* 只支持从 SnapVault 备份执行部分 Snapshot 副本的基线还原。
++
+目标卷中的成分卷数量必须与创建 Snapshot 副本时源卷中的成分卷数量匹配。
+
+* 如果还原操作失败，则在还原操作完成之前不允许执行其他操作。
++
+您可以重试还原操作，也可以使用 `cleanup` 参数运行还原操作。
+
+* FlexGroup 卷只能是一个备份关系或还原关系的源卷。
++
+FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 SnapVault 关系和一个还原关系的源。
+
+* SnapVault 备份和还原操作不能并行运行。
++
+在执行基线还原操作或增量还原操作时，您应暂停备份操作。
+
+* 您必须中止从目标 FlexGroup 卷还原部分 Snapshot 副本的操作。
++
+您不能从源卷中止部分 Snapshot 副本的还原操作。
+
+* 如果中止还原操作，则必须使用与上次还原操作相同的 Snapshot 副本重新启动还原操作。
+
+
+在执行还原之前，目标 FlexGroup 卷上的任何活动配额规则都将被停用。
+
+还原操作完成后，您可以使用 `volume quota modify` 命令重新激活配额规则。
+
+.步骤
+. 还原 FlexGroup 卷： `snapmirror restore -source-path src_sVM ： src_flexgroup -destination-path dest_sVM ： dest_flexgroup -snapshot snapshot_name`
++
+`snapshot_name` 是要从源卷还原到目标卷的 Snapshot 副本。如果未指定 Snapshot 副本，则会从最新的 Snapshot 副本还原目标卷。
+
++
+[listing]
+----
+vserverA::> snapmirror restore -source-path vserverB:dstFG -destination-path vserverA:newFG -snapshot daily.2016-07-15_0010
+Warning: This is a disruptive operation and the volume vserverA:newFG will be read-only until the operation completes
+Do you want to continue? {y|n}: y
+----
+

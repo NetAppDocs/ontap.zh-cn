@@ -1,0 +1,359 @@
+---
+permalink: flexcache/supported-unsupported-features-concept.html 
+sidebar: sidebar 
+keywords: supported, unsupported, features, flexcache, volumes 
+summary: 您必须了解 FlexCache 卷及其原始卷支持的功能。 
+---
+= FlexCache 卷支持和不支持的功能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须了解 FlexCache 卷及其原始卷支持的功能。
+
+|===
+| 功能 | 是否在原始卷上受支持？ | 是否在 FlexCache 卷上受支持？ 
+
+
+ a| 
+防病毒
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持
+ a| 
+不适用
+
+
+
+ a| 
+审核
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持
+
+
+
+ a| 
+Cloud Volumes ONTAP
+ a| 
+是的。
+
+从 ONTAP 9.6 开始支持
+ a| 
+是的。
+
+从 ONTAP 9.6 开始支持
+
+
+
+ a| 
+数据缩减
+ a| 
+是的。
+
+从 ONTAP 9.6 开始支持
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持
+
+
+
+ a| 
+压缩
+ a| 
+是的。
+
+从 ONTAP 9.6 开始支持
+ a| 
+是的。
+
+从 ONTAP 9.6 开始支持
+
+
+
+ a| 
+重复数据删除
+ a| 
+是的。
+ a| 
+是的。
+
+从 ONTAP 9.6 开始， FlexCache 卷支持实时重复数据删除。从 ONTAP 9.7 开始， FlexCache 卷支持跨卷重复数据删除。
+
+
+
+ a| 
+FabricPool
+ a| 
+是的。
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持
+
+
+
+ a| 
+FlexCache 灾难恢复
+ a| 
+是的。
+ a| 
+是的。
+
+从 ONTAP 9.1.1 开始仅支持 NFSv3 协议。FlexCache 卷必须位于不同的 SVM 中或不同的集群中。
+
+
+
+ a| 
+FlexGroup 卷
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持
+ a| 
+是的。
+
+
+
+ a| 
+FlexVol 卷
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+fpolicy
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持 NFS
+
+
+
+ a| 
+MetroCluster 配置
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持
+
+
+
+ a| 
+NFSv3
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+NFSv4
+ a| 
+是的。
+ a| 
+是的。
+
+从 ONTAP 9.10.1 开始支持
+
+
+
+ a| 
+QoS
+ a| 
+是的。
+ a| 
+是的。
+
+[NOTE]
+====
+FlexCache 卷不支持文件级 QoS 。
+
+====
+
+
+ a| 
+qtree
+ a| 
+是的。
+
+从 ONTAP 9.6 开始支持
+ a| 
+否
+
+
+
+ a| 
+配额
+ a| 
+是的。
+ a| 
+否
+
+[NOTE]
+====
+从 ONTAP 9.6 开始， FlexCache 卷支持远程配额（ rquota ）。
+
+====
+
+
+ a| 
+SMB
+ a| 
+是的。
+ a| 
+是的。
+
+从 ONTAP 9.8 开始支持。
+
+
+
+ a| 
+SnapLock 卷
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SnapMirror 异步关系
+ a| 
+是的。
+ a| 
+否
+
+* SnapMirror 关系中的主卷或二级卷不能是 FlexCache 卷。
+* 只有 SnapMirror 关系的主卷可以是 FlexCache 原始卷。
++
+从 ONTAP 9.8 开始， SnapMirror 二级卷可以是 FlexCache 原始卷。
+
+* FlexCache 卷可以来自 SnapMirror 关系中的初始主卷，但不能来自二级卷。
+
+
+
+
+ a| 
+SnapMirror 同步关系
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SnapRestore
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+Snapshot 副本
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+SVM IP 配置
+ a| 
+是的。
+
+从 ONTAP 9.5 开始支持。SVM DR 关系的主 SVM 可以具有原始卷；但是，如果 SVM DR 关系中断，则必须使用新的原始卷重新创建 FlexCache 关系。
+ a| 
+否
+
+FlexCache 卷可以位于主 SVM 中，但不能位于辅 SVM 中。主 SVM 中的任何 FlexCache 卷不会作为 SVM DR 关系的一部分进行复制。
+
+
+
+ a| 
+存储级别访问防护（ SLAG ）
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+精简配置
+ a| 
+是的。
+ a| 
+是的。
+
+从 ONTAP 9.7 开始支持
+
+
+
+ a| 
+卷克隆
+ a| 
+是的。
+
+从 ONTAP 9.6 开始，支持克隆初始卷和初始卷中的文件。
+ a| 
+否
+
+
+
+ a| 
+卷粒度加密（ VGE ）
+ a| 
+是的。
+
+从 ONTAP 9.6 开始支持
+ a| 
+是的。
+
+从 ONTAP 9.6 开始支持
+
+
+
+ a| 
+卷移动
+ a| 
+是的。
+ a| 
+是（仅适用于卷成分卷）
+
+从 ONTAP 9.6 开始，支持移动 FlexCache 卷的卷成分卷。
+
+
+
+ a| 
+卷重新托管
+ a| 
+否
+ a| 
+否
+
+|===

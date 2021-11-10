@@ -1,0 +1,60 @@
+---
+permalink: fabricpool/create-mirror-task.html 
+sidebar: sidebar 
+keywords: creating, fabricpool, mirror 
+summary: 要创建 FabricPool 镜像，请将两个对象存储附加到一个 FabricPool 。您可以通过将另一个对象存储附加到现有的单对象存储 FabricPool 配置来创建 FabricPool 镜像，也可以创建一个新的单对象存储 FabricPool 配置，然后将另一个对象存储附加到该配置中。您还可以在 MetroCluster 配置上创建 FabricPool 镜像。 
+---
+= 创建 FabricPool 镜像
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要创建 FabricPool 镜像，请将两个对象存储附加到一个 FabricPool 。您可以通过将另一个对象存储附加到现有的单对象存储 FabricPool 配置来创建 FabricPool 镜像，也可以创建一个新的单对象存储 FabricPool 配置，然后将另一个对象存储附加到该配置中。您还可以在 MetroCluster 配置上创建 FabricPool 镜像。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须已使用 `storage aggregate object-store config` 命令创建这两个对象存储。
+* 如果要在 MetroCluster 配置上创建 FabricPool 镜像：
++
+** 您必须已设置和配置 MetroCluster
+** 您必须已在选定集群上创建对象存储配置。
++
+如果要在 MetroCluster 配置中的两个集群上创建 FabricPool 镜像，则必须已在两个集群上创建对象存储配置。
+
+** 如果您不在 MetroCluster 配置中使用内部对象存储，则应确保存在以下情形之一：
++
+*** 对象存储位于不同的可用性区域
+*** 对象存储配置为在多个可用性区域中保留对象副本
++
+link:setup-object-stores-mcc-task.html["在 MetroCluster 配置中为 FabricPool 设置对象存储"]
+
+
+
+
+
+
+
+用于 FabricPool 镜像的对象存储必须与主对象存储不同。
+
+用于创建 FabricPool 镜像的操作步骤对于 MetroCluster 和非 MetroCluster 配置是相同的。
+
+.步骤
+. 如果您不使用现有的 FabricPool 配置，请使用 `storage aggregate object-store attach` 命令将对象存储附加到聚合中来创建新的配置。
++
+此示例通过将对象存储附加到聚合来创建新的 FabricPool 。
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store attach -aggregate aggr1 -name my-store-1
+----
+. 使用 `storage aggregate object-store mirror` 命令将第二个对象存储附加到聚合。
++
+此示例将另一个对象存储附加到聚合以创建 FabricPool 镜像。
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store mirror -aggregate aggr1 -name my-store-2
+----
+

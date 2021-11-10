@@ -1,0 +1,56 @@
+---
+permalink: nfs-config/enable-ldap-svms-task.html 
+sidebar: sidebar 
+keywords: associate, ldap, client, configuration, svms 
+summary: 要在 SVM 上启用 LDAP ，必须使用 vserver services name-service ldap create 命令将 LDAP 客户端配置与 SVM 关联。 
+---
+= 将 LDAP 客户端配置与 SVM 关联
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要在 SVM 上启用 LDAP ，必须使用 `vserver services name-service ldap create` 命令将 LDAP 客户端配置与 SVM 关联。
+
+.您需要什么？ #8217 ；将需要什么
+* LDAP 域必须已存在于网络中，并且必须可供 SVM 所在的集群访问。
+* SVM 上必须存在 LDAP 客户端配置。
+
+
+.步骤
+. 在 SVM 上启用 LDAP ：
++
+`vserver services name-service ldap create -vserver _vserver_name_ -client-config _client_config_name_`
+
++
+[NOTE]
+====
+从 ONTAP 9.2 开始， `vserver services name-service ldap create` 命令将执行自动配置验证，如果 ONTAP 无法与名称服务器联系，则会报告错误消息。
+
+====
++
+以下命令将在 vs1" SVM 上启用 LDAP ，并将其配置为使用 "ldap1" LDAP 客户端配置：
+
++
+[listing]
+----
+cluster1::> vserver services name-service ldap create -vserver vs1 -client-config ldap1 -client-enabled true
+----
+. 使用 vserver services name-service ldap check 命令验证名称服务器的状态。
++
+以下命令将验证 SVM vs1. 上的 LDAP 服务器。
+
++
+[listing]
+----
+cluster1::> vserver services name-service ldap check -vserver vs1
+
+| Vserver: vs1                                                |
+| Client Configuration Name: c1                               |
+| LDAP Status: up                                             |
+| LDAP Status Details: Successfully connected to LDAP server "10.11.12.13".                                              |
+----
++
+从 ONTAP 9.2 开始，可以使用 name service check 命令。
+
+

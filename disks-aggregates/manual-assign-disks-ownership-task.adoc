@@ -1,0 +1,27 @@
+---
+permalink: disks-aggregates/manual-assign-disks-ownership-task.html 
+sidebar: sidebar 
+keywords: manual, assign, disk, ownership 
+summary: 磁盘必须归节点所有，然后才能在聚合中使用。如果集群未配置为使用自动磁盘所有权分配，则必须手动分配所有权。您不能重新分配聚合中正在使用的磁盘的所有权。 
+---
+= 手动分配磁盘所有权
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+磁盘必须归节点所有，然后才能在聚合中使用。如果集群未配置为使用自动磁盘所有权分配，则必须手动分配所有权。您不能重新分配聚合中正在使用的磁盘的所有权。
+
+.步骤
+. 显示所有未分配的磁盘：
++
+`storage disk show -container-type unassigned`
+
+. 分配每个磁盘：
++
+`s存储磁盘分配 -disk _disk_name_ -owner _owner_name_`
+
++
+You can use the wildcard character to assign more than one disk at once.如果要重新分配已归其他节点所有的备用磁盘，则必须使用 ` -force` 选项
+
+

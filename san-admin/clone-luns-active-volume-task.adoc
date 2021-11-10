@@ -1,0 +1,52 @@
+---
+permalink: san-admin/clone-luns-active-volume-task.html 
+sidebar: sidebar 
+keywords: clone, luns, active, volume 
+summary: 您可以通过克隆活动卷中的 LUN 来创建 LUN 的副本。这些 FlexClone LUN 是活动卷中原始 LUN 的可读写副本。 
+---
+= 从活动卷克隆 LUN
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过克隆活动卷中的 LUN 来创建 LUN 的副本。这些 FlexClone LUN 是活动卷中原始 LUN 的可读写副本。
+
+必须安装 FlexClone 许可证。
+
+预留了空间的 FlexClone LUN 所需的空间与预留了空间的父 LUN 所需的空间相同。如果 FlexClone LUN 未预留空间，则必须确保卷具有足够的空间来容纳对 FlexClone LUN 所做的更改。
+
+.步骤
+. 在创建克隆之前，您必须已确认 LUN 未映射到 igroup 或未写入到。
+. 使用 `lun show` 命令验证 LUN 是否存在。
++
+`lun show -vserver vs1`
+
++
+[listing]
+----
+Vserver  Path              State     Mapped    Type     Size
+-------- ----------------- --------- --------- -------- -------
+vs1      /vol/vol1/lun1    online   unmapped  windows  47.07MB
+----
+. 使用 `volume file clone create` 命令创建 FlexClone LUN 。
++
+`volume file clone create -vserver vs1 -volume vol1 -source-path lun1 -destination-path/lun1_clone`
+
++
+如果您需要 FlexClone LUN 可用于自动删除，请使用 ` -autodelete true` 。如果要在使用半厚配置的卷中创建此 FlexClone LUN ，则必须为所有 FlexClone LUN 启用自动删除。
+
+. 使用 `lun show` 命令确认您已创建 LUN 。
++
+`lun show -vserver vs1`
+
++
+[listing]
+----
+
+Vserver  Path                    State    Mapped   Type     Size
+-------- ----------------------- -------- -------- -------- ------
+vs1      /vol/volX/lun1          online   unmapped windows  47.07MB
+vs1      /vol/volX/lun1_clone    online   unmapped windows  47.07MB
+----
+

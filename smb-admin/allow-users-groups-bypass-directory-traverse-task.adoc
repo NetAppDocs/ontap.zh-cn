@@ -1,0 +1,44 @@
+---
+permalink: smb-admin/allow-users-groups-bypass-directory-traverse-task.html 
+sidebar: sidebar 
+keywords: traverse, directories, directory, path, file, permission, sechangenotifyprivilege, privilege, local, smb, user, svm, bypass, traverse, check, allow users or groups to bypass directory traverse checking 
+summary: 如果您希望用户能够遍历路径中的所有目录以访问某个文件，即使该用户对遍历的目录没有权限，您也可以将 SeChangeNotifyPrivilege 权限添加到 Storage Virtual Machine （ SVM ）上的本地 SMB 用户或组。默认情况下，用户可以绕过目录遍历检查。 
+---
+= 允许用户或组绕过目录遍历检查
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您希望用户能够遍历路径中的所有目录以访问某个文件，即使该用户对遍历的目录没有权限，您也可以将 `SeChangeNotifyPrivilege` 权限添加到 Storage Virtual Machine （ SVM ）上的本地 SMB 用户或组。默认情况下，用户可以绕过目录遍历检查。
+
+.开始之前
+* SVM 上必须存在 CIFS 服务器。
+* 必须启用本地用户和组 CIFS 服务器选项。
+* 要添加 `SeChangeNotifyPrivilege` 权限的本地或域用户或组必须已存在。
+
+
+在向域用户或组添加权限时， ONTAP 可能会通过联系域控制器来验证域用户或组。如果 ONTAP 无法与域控制器联系，则此命令可能会失败。
+
+.步骤
+. 通过将 `SeChangeNotifyPrivilege` 权限添加到本地或域用户或组来启用绕过遍历检查： `vserver cifs users-and-groups privilege add-privilege -vserver _vserver_name_ -user-or-group-name _name_ -privileges SeChangeNotifyPrivilege`
++
+` -user-or-group-name` 参数的值是本地用户或组，域用户或组。
+
+. 验证指定的用户或组是否已启用绕过遍历检查： `vserver cifs users-and-groups privilege show -vserver _vserver_name_ ‑user-or-group-name _name_`
+
+
+以下命令可使属于 "`example\eng` " 组的用户通过向组添加 `SeChangeNotifyPrivilege` 权限来绕过目录遍历检查：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups privilege add-privilege -vserver vs1 -user-or-group-name EXAMPLE\eng -privileges SeChangeNotifyPrivilege
+
+cluster1::> vserver cifs users-and-groups privilege show -vserver vs1
+Vserver   User or Group Name    Privileges
+--------- --------------------- ---------------
+vs1       EXAMPLE\eng           SeChangeNotifyPrivilege
+----
+* 相关信息 *
+
+xref:disallow-users-groups-bypass-directory-traverse-task.adoc[禁止用户或组绕过目录遍历检查]

@@ -1,0 +1,45 @@
+---
+permalink: data-protection/initialize-replication-relationship-task.html 
+sidebar: sidebar 
+keywords: initialize, replication, relationship 
+summary: 对于所有关系类型，初始化都会执行基线传输：它会创建源卷的 Snapshot 副本，然后将该副本及其引用的所有数据块传输到目标卷。否则，传输内容取决于策略。 
+---
+= 初始化复制关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对于所有关系类型，初始化将执行 _baseline transfer_ ：它会为源卷创建 Snapshot 副本，然后将该副本及其引用的所有数据块传输到目标卷。否则，传输内容取决于策略。
+
+源和目标集群以及 SVM 必须建立对等关系。
+
+link:../peering/index.html["集群和 SVM 对等"]
+
+初始化可能非常耗时。您可能希望在非高峰时段运行基线传输。
+
+从 ONTAP 9.5 开始，支持 SnapMirror 同步关系。
+
+.步骤
+. 初始化复制关系：
++
+`snapmirror initialize -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。
+
+====
++
+以下示例将初始化源卷 `volA` on `svm1` 与目标卷 `vola_dst` on `svm_backup` 之间的关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror initialize -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
+

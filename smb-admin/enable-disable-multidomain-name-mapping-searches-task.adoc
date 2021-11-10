@@ -1,0 +1,47 @@
+---
+permalink: smb-admin/enable-disable-multidomain-name-mapping-searches-task.html 
+sidebar: sidebar 
+keywords: multidomain, name, mapping, search, wild, card, domain, portion, windows, configure, configuring, unix, user, bidirectional, enable, disable, enable or disable multidomain name mapping searches 
+summary: 对于多域名称映射搜索，在配置 UNIX 用户到 Windows 用户名的映射时，您可以在 Windows 名称的域部分使用通配符（ * ）。通过在名称的域部分中使用通配符（ * ）， ONTAP 可以搜索与包含 CIFS 服务器计算机帐户的域具有双向信任的所有域。 
+---
+= 启用或禁用多域名称映射搜索
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对于多域名称映射搜索，在配置 UNIX 用户到 Windows 用户名的映射时，您可以在 Windows 名称的域部分使用通配符（ \* ）。通过在名称的域部分中使用通配符（ * ）， ONTAP 可以搜索与包含 CIFS 服务器计算机帐户的域具有双向信任的所有域。
+
+除了搜索所有双向受信任域之外，您还可以配置首选受信任域的列表。配置首选受信任域列表后， ONTAP 将使用首选受信任域列表而不是发现的双向受信任域来执行多域名称映射搜索。
+
+* 默认情况下，多域名称映射搜索处于启用状态。
+* 此选项可在高级权限级别下使用。
+
+
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 执行以下操作之一：
++
+|===
+| 多域名称映射搜索的目标位置 | 输入命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver cifs options modify -vserver _vserver_name_ -is-trusted-domain-enum-search-enabled true`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver cifs options modify -vserver _vserver_name_ -is-trusted-domain-enum-search-enabled false`
+
+|===
+. 返回到管理权限级别： `set -privilege admin`
+
+
+* 相关信息 *
+
+xref:server-options-reference.adoc[可用的 SMB 服务器选项]

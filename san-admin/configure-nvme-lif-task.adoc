@@ -1,0 +1,49 @@
+---
+permalink: san-admin/configure-nvme-lif-task.html 
+sidebar: sidebar 
+keywords: configure, nvme, lif 
+summary: 配置 NVMe LIF 时，必须满足某些要求。 
+---
+= 配置 NVMe LIF
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+配置 NVMe LIF 时，必须满足某些要求。
+
+创建 LIF 的 FC 适配器必须支持 NVMe 。支持的适配器列在 _Adapter_ Hardware Universe 中。
+
+https://hwu.netapp.com["NetApp Hardware Universe"]
+
+创建 NVMe LIF 时，应遵循以下规则：
+
+* NVMe 可以是数据 LIF 上的唯一数据协议。
+* 您应该为每个支持 SAN 的 SVM 配置一个管理 LIF 。
+* 对于 ONTAP 9.5 及更高版本：
++
+** 每个节点最多只能在四个节点上配置两个 NVMe LIF 。
+** 您必须在包含命名空间的节点和节点的 HA 配对节点上配置 NVMe LIF 。
+
+
+* 仅适用于 ONTAP 9.4 ：
++
+** NVMe LIF 和命名空间必须托管在同一节点上。
+** 每个 SVM 只能配置一个 NVMe 数据 LIF 。
+
+
+
+
+.步骤
+. 创建 LIF ：
++
+`network interface create -vserver _svm_name_ -lif _LIF_name_ -role _LIF_role_ -data-protocol fc-nvme -home-node _home_node_-home-port`
+
++
+` 主端口 _`
+
+. 验证是否已创建 LIF ：
++
+`network interface show -vserver _svm_name_`
+
+

@@ -1,0 +1,28 @@
+---
+permalink: smb-hyper-v-sql/odx-copy-offload-requirements-concept.html 
+sidebar: sidebar 
+keywords: odx, copy, offload, requirements, sql, server, hyper, v, smb, virtual 
+summary: 如果要迁移虚拟机文件或直接将数据库文件从源导出和导入目标存储位置，而无需通过应用程序服务器发送数据，则必须启用 ODX 副本卸载。对于将 ODX 副本卸载与 SQL Server 和基于 SMB 的 Hyper-V 解决方案结合使用，您必须了解一些特定要求。 
+---
+= 基于 SMB 的 SQL Server 和 Hyper-V 的 ODX 副本卸载要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要迁移虚拟机文件或直接将数据库文件从源导出和导入目标存储位置，而无需通过应用程序服务器发送数据，则必须启用 ODX 副本卸载。对于将 ODX 副本卸载与 SQL Server 和基于 SMB 的 Hyper-V 解决方案结合使用，您必须了解一些特定要求。
+
+使用 ODX 副本卸载可显著提高性能。默认情况下，此 CIFS 服务器选项处于启用状态。
+
+* 要使用 ODX 副本卸载，必须启用 SMB 3.0 。
+* 源卷必须至少为 1.25 GB 。
+* 必须在使用副本卸载的卷上启用重复数据删除。
+* 如果使用压缩卷，则压缩类型必须是自适应的，并且仅支持压缩组大小 8K 。
++
+不支持二级压缩类型
+
+* 要使用 ODX 副本卸载功能在磁盘内部和磁盘之间迁移 Hyper-V 子系统，必须将 Hyper-V 服务器配置为使用 SCSI 磁盘。
++
+默认情况下，配置 IDE 磁盘，但如果使用 IDE 磁盘创建磁盘，则迁移子系统时 ODX 副本卸载将不起作用。
+
+

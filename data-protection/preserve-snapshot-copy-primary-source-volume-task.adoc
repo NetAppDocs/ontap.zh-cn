@@ -1,0 +1,73 @@
+---
+permalink: data-protection/preserve-snapshot-copy-primary-source-volume-task.html 
+sidebar: sidebar 
+keywords: ensure, snapshot, copy, mirror-vault, deployment 
+summary: 您可以使用 snapmirror snapshot-owner create 命令在镜像 - 存储部署中的二级系统上保留带标签的 Snapshot 副本。这样可确保存在用于更新存储关系的通用 Snapshot 副本。 
+---
+= 确保在镜像 - 存储部署中使用通用 Snapshot 副本
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `snapmirror snapshot-owner create` 命令在镜像 - 存储部署中的二级系统上保留带标签的 Snapshot 副本。这样可确保存在用于更新存储关系的通用 Snapshot 副本。
+
+如果您使用组合镜像 - 存储扇出或级联部署，则应记住，如果源卷和目标卷上不存在通用 Snapshot 副本，则更新将失败。
+
+在镜像 - 存储扇出或级联部署中，这绝不是镜像关系的问题描述，因为 SnapMirror 始终会在执行更新之前创建源卷的 Snapshot 副本。
+
+但是，它可能是存储关系的问题描述，因为 SnapMirror 在更新存储关系时不会创建源卷的 Snapshot 副本。您需要使用 `snapmirror snapshot-owner create` 来确保存储关系的源和目标上至少有一个通用 Snapshot 副本。
+
+.步骤
+. 在源卷上，为要保留的带标签 Snapshot 副本分配一个所有者：
++
+`snapmirror snapshot-owner create -vserver _svm_ -volume _volume" -snapshot _snapshot_ -owner _owner_`
+
++
+以下示例将 `ApplicationA` 分配为 `snap1` Snapshot 副本的所有者：
+
++
+[listing]
+----
+clust1::> snapmirror snapshot-owner create -vserver vs1 -volume vol1
+-snapshot snap1 -owner ApplicationA
+----
+. 更新镜像关系，如中所述 link:update-replication-relationship-manual-task.html["手动更新复制关系"]。
++
+或者，您也可以等待按计划更新镜像关系。
+
+. 将带标签的 Snapshot 副本传输到存储目标：
++
+`snapmirror update -source-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -source-snapshot snapshot`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例传输 `snap1` Snapshot 副本::
++
+--
+[listing]
+----
+clust1::> snapmirror update -vserver vs1 -volume vol1
+-source-snapshot snap1
+----
+更新存储关系时，标记的 Snapshot 副本将保留下来。
+
+--
+
+
+. 在源卷上，从标记的 Snapshot 副本中删除所有者：
++
+`snapmirror snapshot-owner delete -vserver _svm_ -volume _volume" -snapshot _snapshot_ -owner _owner_`
+
++
+以下示例将删除 `sApplicationA` 作为` nap1 `Snapshot 副本的所有者：
+
++
+[listing]
+----
+clust1::> snapmirror snapshot-owner delete -vserver vs1 -volume vol1
+-snapshot snap1 -owner ApplicationA
+----
+

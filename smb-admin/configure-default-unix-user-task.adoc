@@ -1,0 +1,75 @@
+---
+permalink: smb-admin/configure-default-unix-user-task.html 
+sidebar: sidebar 
+keywords: configure, unix, user, map, fail, individual, windows, authentication, non-mapped, configure the default unix user 
+summary: 您可以配置默认 UNIX 用户，以便在用户的所有其他映射尝试均失败或不希望在 UNIX 和 Windows 之间映射单个用户时使用。或者，如果您希望对未映射用户的身份验证失败，则不应配置默认 UNIX 用户。 
+---
+= 配置默认 UNIX 用户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以配置默认 UNIX 用户，以便在用户的所有其他映射尝试均失败或不希望在 UNIX 和 Windows 之间映射单个用户时使用。或者，如果您希望对未映射用户的身份验证失败，则不应配置默认 UNIX 用户。
+
+默认情况下，默认 UNIX 用户名称为 "`pcuser` " ，这意味着默认情况下，系统会启用用户到默认 UNIX 用户的映射。您可以指定另一个名称以用作默认 UNIX 用户。您指定的名称必须存在于为 Storage Virtual Machine （ SVM ）配置的名称服务数据库中。如果此选项设置为空字符串，则任何人都无法以 UNIX 默认用户身份访问 CIFS 服务器。也就是说，每个用户都必须在密码数据库中有一个帐户，然后才能访问 CIFS 服务器。
+
+要使用户使用默认 UNIX 用户帐户连接到 CIFS 服务器，该用户必须满足以下前提条件：
+
+* 用户已通过身份验证。
+* 用户位于 CIFS 服务器的本地 Windows 用户数据库， CIFS 服务器的主域或受信任域中（如果在 CIFS 服务器上启用了多域名称映射搜索）。
+* 用户名未显式映射到空字符串。
+
+
+.步骤
+. 配置默认 UNIX 用户：
++
+|===
+| 如果您要 ... | 输入 ... 
+
+
+ a| 
+使用默认 UNIX 用户 "`pcuser` "
+ a| 
+`vserver cifs options modify -default-unix-user pcuser`
+
+
+
+ a| 
+使用另一个 UNIX 用户帐户作为默认用户
+ a| 
+`vserver cifs options modify -default-unix-user _user_name_`
+
+
+
+ a| 
+禁用默认 UNIX 用户
+ a| 
+`vserver cifs options modify -default-unix-user ""`
+
+|===
++
+`vserver cifs options modify -default-unix-user pcuser`
+
+. 验证是否已正确配置默认 UNIX 用户： `vserver cifs options show -vserver _vserver_name_`
++
+在以下示例中， SVM vs1 上的默认 UNIX 用户和子系统 UNIX 用户均配置为使用 UNIX 用户 "`pcuser` " ：
+
++
+`vserver cifs options show -vserver vs1`
+
++
+[listing]
+----
+
+Vserver: vs1
+
+  Client Session Timeout : 900
+  Default Unix Group     : -
+  Default Unix User      : pcuser
+  Guest Unix User        : pcuser
+  Read Grants Exec       : disabled
+  Read Only Delete       : disabled
+  WINS Servers           : -
+----
+

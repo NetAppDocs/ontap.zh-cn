@@ -1,0 +1,43 @@
+---
+permalink: smb-admin/commands-oplocks-volumes-qtrees-reference.html 
+sidebar: sidebar 
+keywords: oplock, client, lock, file, cache, performance, operation, qtree, command, enabling, enable, disabling, disable, volume, commands for enabling or disabling oplocks on volumes and qtrees 
+summary: 机会锁允许客户端在本地锁定文件和缓存内容，从而提高文件操作的性能。您需要了解用于在卷或 qtree 上启用或禁用机会锁的命令。此外，您还必须了解何时可以在卷和 qtree 上启用或禁用机会锁。 
+---
+= 用于在卷和 qtree 上启用或禁用机会锁的命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+机会锁允许客户端在本地锁定文件和缓存内容，从而提高文件操作的性能。您需要了解用于在卷或 qtree 上启用或禁用机会锁的命令。此外，您还必须了解何时可以在卷和 qtree 上启用或禁用机会锁。
+
+* 默认情况下，卷上已启用机会锁。
+* 创建卷时，您不能禁用机会锁。
+* 您可以随时在 SVM 的现有卷上启用或禁用机会锁。
+* 您可以在 SVM 的 qtree 上启用机会锁。
++
+机会锁模式设置是 qtree ID 0 的属性，这是所有卷的默认 qtree 。如果在创建 qtree 时未指定机会锁设置，则 qtree 会继承父卷的机会锁设置，该设置默认为启用状态。但是，如果您在新 qtree 上指定了机会锁设置，则该设置优先于卷上的机会锁设置。
+
+
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+在卷或 qtree 上启用机会锁
+ a| 
+`volume qtree oplocks` ，并将 ` -oplock-mode` 参数设置为 `enable`
+
+
+
+ a| 
+在卷或 qtree 上禁用机会锁
+ a| 
+`volume qtree oplocks` ，并将 ` -oplock-mode` 参数设置为 `disable`
+
+|===
+* 相关信息 *
+
+xref:monitor-oplock-status-task.adoc[监控机会锁状态]

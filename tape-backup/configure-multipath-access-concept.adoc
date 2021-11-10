@@ -1,0 +1,40 @@
+---
+permalink: tape-backup/configure-multipath-access-concept.html 
+sidebar: sidebar 
+keywords: considerations, configuring, multipath, tape, access 
+summary: 您可以从存储系统配置两个路径来访问磁带库中的磁带驱动器。如果一个路径出现故障，存储系统可以使用其他路径访问磁带驱动器，而无需立即修复故障路径。这样可以确保可以重新启动磁带操作。 
+---
+= 配置多路径磁带访问时的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以从存储系统配置两个路径来访问磁带库中的磁带驱动器。如果一个路径出现故障，存储系统可以使用其他路径访问磁带驱动器，而无需立即修复故障路径。这样可以确保可以重新启动磁带操作。
+
+从存储系统配置多路径磁带访问时，必须考虑以下事项：
+
+* 在支持 LUN 映射的磁带库中，要对 LUN 组进行多路径访问，每个路径上的 LUN 映射必须对称。
++
+磁带驱动器和介质更换器会分配给磁带库中的 LUN 组（一组共享相同启动程序路径集的 LUN ）。LUN 组中的所有磁带驱动器必须可用于所有多个路径上的备份和还原操作。
+
+* 最多可以从存储系统配置两个路径来访问磁带库中的磁带驱动器。
+* 多路径磁带访问支持负载平衡。默认情况下，负载平衡处于禁用状态。
+
+
+在以下示例中，存储系统通过两个启动程序路径 0B 和 0d 访问 LUN 组 0 。在这两个路径中， LUN 组具有相同的 LUN 编号 0 和 LUN 计数 5 。存储系统仅通过一个启动程序路径 3D 访问 LUN 组 1 。
+
+[listing]
+----
+
+STSW-3070-2_cluster::> storage tape library config show
+
+Node                    LUN Group   LUN Count  Library Name  Library Target Port  Initiator
+----------------------- ----------- ---------- ------------- -------------------- -----
+STSW-3070-2_cluster-01        0      5         IBM 3573-TL_1  510a09800000412d     0b
+                                                                                  	0d
+                              1      2         IBM 3573-TL_2  50050763124b4d6f     3d
+
+3 entries were displayed
+----
+有关详细信息，请参见手册页。

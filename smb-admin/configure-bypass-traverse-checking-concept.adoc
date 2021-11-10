@@ -1,0 +1,76 @@
+---
+permalink: smb-admin/configure-bypass-traverse-checking-concept.html 
+sidebar: sidebar 
+keywords: bypass, traverse, user, privilege, permission, directory, allow, check, configure, storage, virtual, machine, svm, configure bypass traverse checking 
+summary: 绕过遍历检查是一种用户权限（也称为权限），用于确定用户是否可以遍历路径中的所有目录以查找文件，即使用户对遍历的目录没有权限也是如此。您应了解允许或禁止绕过遍历检查时会发生什么情况，以及如何为 Storage Virtual Machine （ SVM ）上的用户配置绕过遍历检查。 
+---
+= 配置绕过遍历检查概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+绕过遍历检查是一种用户权限（也称为 _privilege _ ），用于确定用户是否可以遍历路径中的所有目录以访问某个文件，即使用户对遍历的目录没有权限也是如此。您应了解允许或禁止绕过遍历检查时会发生什么情况，以及如何为 Storage Virtual Machine （ SVM ）上的用户配置绕过遍历检查。
+
+
+
+== 允许或禁止绕过遍历检查时会发生什么情况
+
+* 如果允许，当用户尝试访问某个文件时， ONTAP 在确定是授予还是拒绝访问该文件时不会检查中间目录的遍历权限。
+* 如果不允许， ONTAP 将检查文件路径中所有目录的遍历（执行）权限。
++
+如果任何中间目录不具有 "`X` " （遍历权限），则 ONTAP 将拒绝访问此文件。
+
+
+
+
+
+== 配置绕过遍历检查
+
+您可以使用 ONTAP 命令行界面或使用此用户权限配置 Active Directory 组策略来配置绕过遍历检查。
+
+`SeChangeNotifyPrivilege` 权限控制是否允许用户绕过遍历检查。
+
+* 通过将其添加到 SVM 上的本地 SMB 用户或组或域用户或组，可以绕过遍历检查。
+* 从 SVM 上的本地 SMB 用户或组或域用户或组中删除该文件将禁止绕过遍历检查。
+
+
+默认情况下， SVM 上的以下 BUILTIN 组有权绕过遍历检查：
+
+* `BUILTIN\Administrators`
+* `BUILTIN\Power Users`
+* `BUILTIN\Backup Operators`
+* `BUILTIN\Users`
+* `每个人`
+
+
+如果您不希望允许其中一个组的成员绕过遍历检查，则必须从该组中删除此权限。
+
+在使用命令行界面为 SVM 上的本地 SMB 用户和组配置绕过遍历检查时，必须牢记以下几点：
+
+* 如果要允许自定义本地或域组的成员绕过遍历检查，则必须将 `SeChangeNotifyPrivilege` 权限添加到该组。
+* 如果要允许单个本地或域用户绕过遍历检查，并且该用户不是具有此权限的组的成员，则可以将 `SeChangeNotifyPrivilege` 权限添加到该用户帐户。
+* 您可以随时删除 `SeChangeNotifyPrivilege` 权限，从而为本地或域用户或组禁用绕过遍历检查。
++
+[NOTE]
+====
+要对指定的本地或域用户或组禁用绕过遍历检查，您还必须从 `Everyone` 组中删除 `SeChangeNotifyPrivilege` 权限。
+
+====
+
+
+* 相关信息 *
+
+xref:allow-users-groups-bypass-directory-traverse-task.adoc[允许用户或组绕过目录遍历检查]
+
+xref:disallow-users-groups-bypass-directory-traverse-task.adoc[禁止用户或组绕过目录遍历检查]
+
+xref:configure-character-mappings-file-name-translation-task.adoc[在卷上配置用于 SMB 文件名转换的字符映射]
+
+xref:secure-file-access-share-acls-concept.adoc[使用 SMB 共享 ACL 保护文件访问安全]
+
+xref:secure-file-access-file-permissions-concept.adoc[使用文件权限保护文件访问安全]
+
+xref:list-supported-privileges-reference.adoc[支持的权限列表]
+
+xref:manage-local-privileges-concept.adoc[管理本地权限]

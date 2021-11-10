@@ -1,0 +1,36 @@
+---
+permalink: san-config/set-queue-depths-solaris-hosts-task.html 
+sidebar: sidebar 
+keywords: set, queue, depths, solaris, hosts 
+summary: 您可以为 Solaris 主机设置 LUN 和 HBA 队列深度。 
+---
+= 设置 Solaris 主机上的队列深度
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以为 Solaris 主机设置 LUN 和 HBA 队列深度。
+
+.关于此任务
+* 对于 LUN 队列深度：主机上正在使用的 LUN 数乘以每个 LUN 的限制（ lun-queue-depth ）必须小于或等于主机上的 tgt-queue-depth 值。
+* 对于 Sun 堆栈中的队列深度：原生驱动程序不允许在 HBA 级别设置每个 LUN 或每个目标 `max_throttle` 。为原生驱动程序设置 `max_throttle` 值的建议方法是在每个设备类型（ VID_PID ）级别上的 ` /kernel/drv/sd.conf` 和 ` /kernel/drv/sfs.conf` 文件中。对于 MPxIO 配置， Host 实用程序会将此值设置为 64 ，对于 Veritas DMP 配置，则会将此值设置为 8 。
+
+
+.步骤
+. ` # cd/kernel/drv`
+. ` # vi lpfc.conf`
+. 搜索 ` /ttp-queue （ /tgt-queue ）`
++
+`tgt-queue-depth=32`
+
++
+[NOTE]
+====
+安装时，默认值设置为 32 。
+
+====
+. 根据您的环境配置设置所需的值。
+. 保存文件。
+. 使用 ` +sync ； sync ； sync ； reboot — -r+` 命令重新启动主机。
+

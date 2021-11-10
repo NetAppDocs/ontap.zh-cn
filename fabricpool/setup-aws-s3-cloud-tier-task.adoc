@@ -1,0 +1,48 @@
+---
+permalink: fabricpool/setup-aws-s3-cloud-tier-task.html 
+sidebar: sidebar 
+keywords: setting up, aws, s3, cloud tier 
+summary: 如果您运行的是 ONTAP 9.2 或更高版本，则可以将 AWS S3 设置为 FabricPool 的云层。如果您运行的是 ONTAP 9.5 或更高版本，则可以为 FabricPool 设置 AWS 商用云服务（ C2S ）。 
+---
+= 将 AWS S3 设置为云层
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您运行的是 ONTAP 9.2 或更高版本，则可以将 AWS S3 设置为 FabricPool 的云层。如果您运行的是 ONTAP 9.5 或更高版本，则可以为 FabricPool 设置 AWS 商用云服务（ C2S ）。
+
+.步骤
+. 使用 `storage aggregate object-store config create` 命令和 ` provider-type` `AWS_S3` 参数指定 AWS S3 配置信息。
++
+** 您可以使用 ` -auth-type` `cap` 参数获取 C2S 访问的凭据。
++
+使用 ` -auth-type` `cap` 参数时，必须使用 ` -cap-url` 参数指定完整 URL 以请求 C2S 访问的临时凭据。
+
+** 如果 ONTAP 无法使用提供的信息访问 AWS S3 ，则 `storage aggregate object-store config create` 命令将失败。
+** 您可以使用 ` -access-key` 参数指定用于授权 AWS S3 对象存储请求的访问密钥。
+** 您可以使用 ` -secret-password` 参数指定用于对 AWS S3 对象存储的请求进行身份验证的密码（机密访问密钥）。
+** 如果更改了 AWS S3 密码，则应立即更新存储在 ONTAP 中的相应密码。
++
+这样， ONTAP 就可以无中断地访问 AWS S3 中的数据。
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store config create
+-object-store-name my_aws_store -provider-type AWS_S3
+-server s3.amazonaws.com -container-name my-aws-bucket
+-access-key DXJRXHPXHYXA9X31X3JX
+----
++
+[listing]
+----
+cluster1::> storage aggregate object-store config create -object-store-name my_c2s_store -provider-type AWS_S3 -auth-type CAP -cap-url https://123.45.67.89/api/v1/credentials?agency=XYZ&mission=TESTACCT&role=S3FULLACCESS -server my-c2s-s3server-fqdn -container my-c2s-s3-bucket
+----
+
+
+. 使用 `storage aggregate object-store config show` 命令显示并验证 AWS S3 配置信息。
++
+使用 `storage aggregate object-store config modify` 命令可以修改 FabricPool 的 AWS S3 配置信息。
+
+

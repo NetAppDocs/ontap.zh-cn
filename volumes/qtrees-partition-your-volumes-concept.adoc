@@ -1,0 +1,21 @@
+---
+permalink: volumes/qtrees-partition-your-volumes-concept.html 
+sidebar: sidebar 
+keywords: use, qtrees, partition, flexvol volumes 
+summary: 通过 qtree ，您可以将 FlexVol 卷分区为较小的区块，以便单独管理这些区块。您可以使用 qtree 管理配额，安全模式和 CIFS 操作锁定。 
+---
+= 使用 qtree 对 FlexVol 卷进行分区概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过 qtree ，您可以将 FlexVol 卷分区为较小的区块，以便单独管理这些区块。您可以使用 qtree 管理配额，安全模式和 CIFS 操作锁定。
+
+ONTAP 会为每个卷创建一个名为 _qtree0_ 的默认 qtree 。如果不将数据放入 qtree ，则数据将驻留在 qtree0 中。
+
+qtree 名称不能超过 64 个字符。
+
+无法在 qtree 之间移动目录。只能在 qtree 之间移动文件。
+
+如果在同一个 FlexVol 或 SCVMM 池上创建 qtree 级别和卷级别的共享，则这些 qtree 将在 FlexVol 共享上显示为目录。因此，您需要注意不要意外删除它们。

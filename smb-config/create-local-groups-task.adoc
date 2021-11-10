@@ -1,0 +1,52 @@
+---
+permalink: smb-config/create-local-groups-task.html 
+sidebar: sidebar 
+keywords: create, local, group, authorize, authorizing, access, data, associate, svm, smb, connection, assign, privilege, define, right, capabilities, capability, member, create local groups 
+summary: 您可以创建本地组，用于授权通过 SMB 连接访问与 SVM 关联的数据。您还可以分配权限，以定义组成员的用户权限或功能。 
+---
+= 创建本地组
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以创建本地组，用于授权通过 SMB 连接访问与 SVM 关联的数据。您还可以分配权限，以定义组成员的用户权限或功能。
+
+创建 SVM 时，默认情况下会启用本地组功能。
+
+创建本地组时，必须为该组指定一个名称，并且必须指定要与该组关联的 SVM 。您可以指定包含或不包含本地域名的组名称，也可以选择为本地组指定问题描述。您不能将本地组添加到其他本地组。
+
+`vserver cifs users-and-groups local-group` 手册页包含有关可选参数和命名要求的详细信息。
+
+.步骤
+. 创建本地组： `vserver cifs users-and-groups local-group create -vserver vserver_name -group-name group_name`
++
+以下可选参数可能很有用：
+
++
+** ` 问题描述`
++
+本地组的问题描述。
+
+
+
+. 验证是否已成功创建组： `vserver cifs users-and-groups local-group show -vserver vserver_name`
+
+
+以下示例将创建一个与 SVM vs1 关联的本地组 `SMB_server01\engineering` ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group create -vserver vs1.example.com -group-name SMB_SERVER01\engineering
+
+cluster1::> vserver cifs users-and-groups local-group show -vserver vs1.example.com
+Vserver          Group Name                   Description
+---------------- ---------------------------- ----------------------------
+vs1.example.com  BUILTIN\Administrators       Built-in Administrators group
+vs1.example.com  BUILTIN\Backup Operators     Backup Operators group
+vs1.example.com  BUILTIN\Power Users          Restricted administrative privileges
+vs1.example.com  BUILTIN\Users                All users
+vs1.example.com  SMB_SERVER01\engineering
+vs1.example.com  SMB_SERVER01\sales
+----
+您必须向新组添加成员。

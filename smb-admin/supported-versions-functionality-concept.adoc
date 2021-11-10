@@ -1,0 +1,363 @@
+---
+permalink: smb-admin/supported-versions-functionality-concept.html 
+sidebar: sidebar 
+keywords: server, message, block, smb, remote, file-sharing, protocol, microsoft, windows, client, server, ontap, functionality, environment, supported smb versions and functionality 
+summary: 服务器消息块（ SMB ）是 Microsoft Windows 客户端和服务器使用的一种远程文件共享协议。在 ONTAP 9 中，支持所有 SMB 版本；但是，默认 SMB 1.0 支持取决于您的 ONTAP 版本。您应验证 ONTAP SMB 服务器是否支持环境中所需的客户端和功能。 
+---
+= 支持的 SMB 版本和功能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+服务器消息块（ SMB ）是 Microsoft Windows 客户端和服务器使用的一种远程文件共享协议。在 ONTAP 9 中，支持所有 SMB 版本；但是，默认 SMB 1.0 支持取决于您的 ONTAP 版本。您应验证 ONTAP SMB 服务器是否支持环境中所需的客户端和功能。
+
+有关 ONTAP 支持的 SMB 客户端和域控制器的最新信息，请参见 _Interoperability Matrix Tool_ 。
+
+默认情况下， ONTAP 9 SMB 服务器会启用 SMB 2.0 及更高版本，并且可以根据需要启用或禁用这些版本。下表显示了 SMB 1.0 支持和默认配置。
+
+|===
+| SMB 1.0 功能： 4+| 在以下 ONTAP 9 版本中： 
+
+
+ a| 
+ a| 
+9.0
+ a| 
+9.1
+ a| 
+9.2
+ a| 
+9.3 及更高版本
+
+
+
+ a| 
+默认情况下处于启用状态
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+可以启用或禁用
+ a| 
+否
+ a| 
+是 * 需要 9.1 P8 或更高版本。
+ a| 
+是的。
+ a| 
+是的。
+
+|===
+[NOTE]
+====
+与域控制器的 SMB 1.0 和 2.0 连接的默认设置也取决于 ONTAP 版本。有关详细信息，请参见 `vserver cifs security modify` 手册页。对于现有 CIFS 服务器运行 SMB 1.0 的环境，您应尽快迁移到更高的 SMB 版本，以便为增强安全性和合规性做好准备。有关详细信息，请联系您的 NetApp 代表。
+
+====
+下表显示了每个 SMB 版本支持的 SMB 功能。默认情况下，某些 SMB 功能处于启用状态，某些功能需要额外配置。
+
+|===
+| * 此功能： * | * 需要启用： * 5+| 对于以下 SMB 版本： * ， ONTAP 9 支持 * 
+
+
+ a| 
+ a| 
+ a| 
+1.0
+ a| 
+2.0
+ a| 
+2.1
+ a| 
+3.0
+ a| 
+3.1.1
+
+
+
+ a| 
+旧版 SMB 1.0 功能
+ a| 
+ a| 
+X
+ a| 
+X
+ a| 
+X
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+耐用手柄
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+复合操作
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+异步操作
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+读取和写入缓冲区大小增加
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+提高可扩展性
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+SMB 签名
+ a| 
+X
+ a| 
+X
+ a| 
+X
+ a| 
+X
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+大型 MTU （从 ONTAP 9.7 开始，默认情况下处于启用状态）
+ a| 
+X
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+租用机会锁
+ a| 
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+持续可用的共享
+ a| 
+X
+ a| 
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+持久句柄
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+见证
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+SMB 加密： AES-128-CCM
+ a| 
+X
+ a| 
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+横向扩展（ CA 共享需要）
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+透明故障转移
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+SMB 多通道（从 ONTAP 9.4 开始）
+ a| 
+X
+ a| 
+ a| 
+ a| 
+ a| 
+X
+ a| 
+X
+
+
+
+ a| 
+预身份验证完整性
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+X
+
+
+
+ a| 
+集群客户端故障转移 v.2 （ CCFv2 ）
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+X
+
+
+
+ a| 
+SMB 加密： AES-128-GCM （从 ONTAP 9.1 开始）
+ a| 
+X
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+X
+
+|===
+* 相关信息 *
+
+xref:signing-enhance-network-security-concept.adoc[使用 SMB 签名增强网络安全性]
+
+xref:set-server-minimum-authentication-security-level-task.adoc[设置 CIFS 服务器最低身份验证安全级别]
+
+xref:configure-required-encryption-concept.adoc[在 SMB 服务器上配置通过 SMB 传输数据所需的 SMB 加密]
+
+http://www.netapp.com/us/media/tr-4543.pdf["NetApp 技术报告 4543 ：《 SMB 协议最佳实践》"]
+
+https://mysupport.netapp.com/NOW/products/interoperability["NetApp 互操作性"]

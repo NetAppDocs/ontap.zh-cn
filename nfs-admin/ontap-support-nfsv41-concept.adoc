@@ -1,0 +1,21 @@
+---
+permalink: nfs-admin/ontap-support-nfsv41-concept.html 
+sidebar: sidebar 
+keywords: ontap, support, nfsv4.1 
+summary: 从 ONTAP 9.8 开始，如果启用了 NFSv4.1 ，则默认情况下可以使用 nconnect 功能。 
+---
+= ONTAP 支持 NFSv4.1
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.8 开始，如果启用了 NFSv4.1 ，则默认情况下可以使用 nconnect 功能。
+
+早期的 NFS 客户端实施仅使用挂载的单个 TCP 连接。在 ONTAP 中，单个 TCP 连接可能会随着 IOPS 的增加而成为瓶颈。但是，启用了 nconnect 的客户端可以具有多个与单个 NFS 挂载关联的 TCP 连接（最多 16 个）。此类 NFS 客户端会以轮循的方式将文件操作多路由到多个 TCP 连接上，从而从可用网络带宽中获得更高的吞吐量。建议仅对 NFSv3 和 NFSv4.1 挂载使用 nConnect 。
+
+请参见 NFS 客户端文档以确认您的客户端版本是否支持 nconnect 。
+
+默认情况下， ONTAP 9.9.1 及更高版本会启用 NFSv4.1 。在早期版本中，您可以在 Storage Virtual Machine （ SVM ）上创建 NFS 服务器时通过指定 ` -v4.1` 选项并将其设置为 `enabled` 来启用它。
+
+ONTAP 不支持 NFSv4.1 目录和文件级委派。

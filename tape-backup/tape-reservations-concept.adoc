@@ -1,0 +1,22 @@
+---
+permalink: tape-backup/tape-reservations-concept.html 
+sidebar: sidebar 
+keywords: tape, reservation, drive, medium, changer, bridge, libraries, scsi, persistent, reserve, release 
+summary: 多个存储系统可以共享对磁带驱动器，介质更换器，网桥或磁带库的访问。磁带预留通过为所有磁带驱动器，介质更换器，网桥和磁带库启用 SCSI 预留 / 释放机制或 SCSI 永久性预留，可确保在任何特定时间只有一个存储系统访问设备。 
+---
+= 什么是磁带预留
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+多个存储系统可以共享对磁带驱动器，介质更换器，网桥或磁带库的访问。磁带预留通过为所有磁带驱动器，介质更换器，网桥和磁带库启用 SCSI 预留 / 释放机制或 SCSI 永久性预留，可确保在任何特定时间只有一个存储系统访问设备。
+
+[NOTE]
+====
+共享库中设备的所有系统，无论是否涉及交换机，都必须使用相同的预留方法。
+
+====
+用于预留设备的 SCSI 预留 / 释放机制在正常情况下运行良好。但是，在接口错误恢复过程中，预留可能会丢失。如果发生这种情况，除预留所有者之外的启动程序可以访问此设备。
+
+使用 SCSI 永久性预留进行的预留不受环路重置或目标重置等错误恢复机制的影响；但是，并非所有设备都正确实施 SCSI 永久性预留。

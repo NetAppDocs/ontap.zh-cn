@@ -1,0 +1,29 @@
+---
+permalink: san-admin/automatic-host-side-space-management-concept.html 
+sidebar: sidebar 
+keywords: automatic, host-side, space, management, scsi, thinly, provisioned, luns 
+summary: 如果主机支持 SCSI 精简配置，则可以在 ONTAP 中启用 space-allocation 选项，以启用主机端自动空间管理。 
+---
+= 使用 SCSI 精简配置 LUN 自动管理主机端空间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果主机支持 SCSI 精简配置，则可以在 ONTAP 中启用 `spage-allocation` 选项，以启用主机端自动空间管理。
+
+启用 SCSI 精简配置后，您可以执行以下操作。
+
+* 主机端自动空间管理
++
+在支持 SCSI 精简配置的主机上删除数据时，主机端空间管理可识别主机文件系统上已删除数据的块，并自动发出一个或多个 `SCSI UNMAP` 命令以释放存储系统上的相应块。
+
+* 当 LUN 用尽空间时通知主机，同时保持 LUN 联机
++
+在不支持 SCSI 精简配置的主机上，如果包含 LUN 的卷用尽空间且无法自动增长，则 ONTAP 会使 LUN 脱机。但是，在支持 SCSI 精简配置的主机上， ONTAP 不会在 LUN 空间不足时使其脱机。LUN 在只读模式下保持联机，并且主机会收到 LUN 无法再接受写入的通知。
+
+
+
+* 相关信息 *
+
+https://docs.netapp.com/us-en/ontap-sanhost/index.html["ONTAP SAN 主机配置"]

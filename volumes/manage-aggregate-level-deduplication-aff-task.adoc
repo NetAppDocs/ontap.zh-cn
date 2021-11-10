@@ -1,0 +1,67 @@
+---
+permalink: volumes/manage-aggregate-level-deduplication-aff-task.html 
+sidebar: sidebar 
+keywords: manage, aggregate-level, inline, deduplication, aff systems 
+summary: 聚合级重复数据删除可消除属于同一聚合的卷之间的重复块。从 ONTAP 9.2 开始，您可以在 AFF 系统上实时执行聚合级重复数据删除。默认情况下，所有新创建的卷以及启用了卷实时重复数据删除的所有升级卷都会启用此功能。 
+---
+= 在 AFF 系统上管理聚合级实时重复数据删除
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+聚合级重复数据删除可消除属于同一聚合的卷之间的重复块。从 ONTAP 9.2 开始，您可以在 AFF 系统上实时执行聚合级重复数据删除。默认情况下，所有新创建的卷以及启用了卷实时重复数据删除的所有升级卷都会启用此功能。
+
+重复数据删除操作可在将数据写入磁盘之前消除重复的块。只有 `space guarantee` 设置为 `none` 的卷才能参与聚合级实时重复数据删除。这是 AFF 系统上的默认设置。
+
+[NOTE]
+====
+聚合级实时重复数据删除有时称为跨卷实时重复数据删除。
+
+====
+.步骤
+. 在 AFF 系统上管理聚合级实时重复数据删除：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+启用聚合级实时重复数据删除
+ a| 
+`volume efficiency modify -vserver vserver_name -volume vol_name -cross-volume-inline-dedupe true`
+
+
+
+ a| 
+禁用聚合级实时重复数据删除
+ a| 
+`volume efficiency modify -vserver vserver_name -volume vol_name -cross-volume-inline-dedupe false`
+
+
+
+ a| 
+显示聚合级实时重复数据删除状态
+ a| 
+`volume efficiency config -volume vol_name`
+
+|===
+
+
+以下命令显示聚合级实时重复数据删除状态：
+
+[listing]
+----
+
+wfit-8020-03-04::> volume efficiency config -volume choke0_wfit_8020_03_0
+Vserver:                                      vs0
+Volume:                                       choke0_wfit_8020_03_0
+Schedule:                                     -
+Policy:                                       choke_VE_policy
+Compression:                                  true
+Inline Compression:                           true
+Inline Dedupe:                                true
+Data Compaction:                              true
+Cross Volume Inline Deduplication:            false
+----

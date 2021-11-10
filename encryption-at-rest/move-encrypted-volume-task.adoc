@@ -1,0 +1,58 @@
+---
+permalink: encryption-at-rest/move-encrypted-volume-task.html 
+sidebar: sidebar 
+keywords: moving, encrypted, volume 
+summary: 您可以使用 volume move start 命令移动加密的卷。移动的卷可以位于同一聚合或不同聚合上。 
+---
+= 移动加密卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume move start` 命令移动加密的卷。移动的卷可以位于同一聚合或不同聚合上。
+
+要执行此任务，您必须是集群管理员，或者集群管理员已向其委派权限的 SVM 管理员。
+
+xref:delegate-volume-encryption-svm-administrator-task.adoc[委派权限以运行 volume move 命令]
+
+如果目标节点或目标卷不支持卷加密，则移动操作将失败。
+
+对于加密卷， `volume move start` 的 ` encrypt-destination` 选项默认为 true 。要求您明确指定不希望对目标卷进行加密，可确保您不会无意中对卷上的数据取消加密。
+
+.步骤
+. 移动现有加密卷并保持卷上的数据处于加密状态：
++
+`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令会将名为 `vol1` 的现有卷移动到目标聚合 `aggr3` ，并将卷上的数据保持加密状态：
+
++
+[listing]
+----
+cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate aggr3
+----
+. 验证卷是否已启用加密：
++
+`volume show -is-encrypted true`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令将显示 `cluster1` 上的加密卷：
+
++
+[listing]
+----
+cluster1::> volume show -is-encrypted true
+
+Vserver  Volume  Aggregate  State  Type  Size  Available  Used
+-------  ------  ---------  -----  ----  -----  --------- ----
+vs1      vol1    aggr3     online    RW  200GB    160.0GB  20%
+----
+

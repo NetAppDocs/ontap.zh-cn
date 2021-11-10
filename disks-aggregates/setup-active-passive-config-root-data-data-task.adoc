@@ -1,0 +1,109 @@
+---
+permalink: disks-aggregates/setup-active-passive-config-root-data-data-task.html 
+sidebar: sidebar 
+keywords: root-data-data, partitioning, disks, active-passive 
+summary: 如果在出厂时将 HA 对配置为使用根 - 数据 - 数据分区，则数据分区的所有权将在该对中的两个节点之间拆分，以便在主动 - 主动配置中使用。如果要在主动 - 被动配置中使用 HA 对，则必须在创建数据聚合之前更新分区所有权。 
+---
+= 使用根 - 数据 - 数据分区功能在节点上设置主动 - 被动配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在出厂时将 HA 对配置为使用根 - 数据 - 数据分区，则数据分区的所有权将在该对中的两个节点之间拆分，以便在主动 - 主动配置中使用。如果要在主动 - 被动配置中使用 HA 对，则必须在创建数据聚合之前更新分区所有权。
+
+.您需要什么？ #8217 ；将需要什么
+* 您应已确定哪个节点将成为主动节点，哪个节点将成为被动节点。
+* 必须在 HA 对上配置存储故障转移。
+
+
+此任务在节点 A 和节点 B 这两个节点上执行
+
+所有命令都在 clustershell 中输入。
+
+此操作步骤专为尚未从分区磁盘创建数据聚合的节点而设计。
+
+.步骤
+. 查看数据分区的当前所有权：
++
+`storage aggregate show-spare-disks -original-owner _passive_node_name_ -fields local-usable-data1-size ， local-usable-data2-size`
+
++
+您应看到，一半的数据分区属于一个节点，一半属于另一个节点。所有数据分区都应为备用分区。
+
+. 输入高级权限级别：
++
+`set advanced`
+
+. 对于将成为被动节点的节点所拥有的每个 data1 分区，将其分配给主动节点：
++
+`s存储磁盘 assign -force -data1 -owner _active_node_name_ -disk disk_name`
+
++
+您不需要将分区包含在磁盘名称中
+
+. 对于将成为被动节点的节点所拥有的每个 data2 分区，将其分配给主动节点：
++
+`s存储磁盘 assign -force -data2 -owner active_node_name -disk disk_name`
+
++
+您不需要将分区包含在磁盘名称中
+
+. 确认所有分区均已分配给活动节点：
++
+`s存储聚合 show-spare-disks`
+
++
+[listing]
+----
+cluster1::*> storage aggregate show-spare-disks
+
+Original Owner: cluster1-01
+ Pool0
+  Partitioned Spares
+                                                            Local    Local
+                                                             Data     Root Physical
+ Disk                        Type     RPM Checksum         Usable   Usable     Size
+ --------------------------- ----- ------ -------------- -------- -------- --------
+ 1.0.0                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.1                       BSAS    7200 block           753.8GB  73.89GB  828.0GB
+ 1.0.2                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.3                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.4                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.5                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.6                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.7                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.8                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.9                       BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.10                      BSAS    7200 block           753.8GB       0B  828.0GB
+ 1.0.11                      BSAS    7200 block           753.8GB       0B  828.0GB
+
+Original Owner: cluster1-02
+ Pool0
+  Partitioned Spares
+                                                            Local    Local
+                                                             Data     Root Physical
+ Disk                        Type     RPM Checksum         Usable   Usable     Size
+ --------------------------- ----- ------ -------------- -------- -------- --------
+ 1.0.8                       BSAS    7200 block                0B  73.89GB  828.0GB
+13 entries were displayed.
+----
++
+请注意， cluster1-02 仍拥有备用根分区。
+
+. 返回到管理权限：
++
+`set admin`
+
+. 创建数据聚合，至少保留一个数据分区作为备用分区：
++
+`s存储聚合 create _new_aggr_name_ -diskcount _number_of_partitions_ -node _active_node_name_`
+
++
+此时将创建数据聚合，并归活动节点所有。
+
+. 或者，您也可以使用 ONTAP 的建议聚合布局，其中包括 RAID 组布局和备用磁盘数的最佳实践：
++
+`s存储聚合自动配置`
+
+

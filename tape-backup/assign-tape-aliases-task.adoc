@@ -1,0 +1,45 @@
+---
+permalink: tape-backup/assign-tape-aliases-task.html 
+sidebar: sidebar 
+keywords: assign, tape, aliases, device, identification, drive, medium, changer, logical, names, backup 
+summary: 为了便于识别设备，您可以为磁带驱动器或介质更换器分配磁带别名。别名提供备份设备的逻辑名称与永久分配给磁带驱动器或介质更换器的名称之间的对应关系。 
+---
+= 分配磁带别名
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+为了便于识别设备，您可以为磁带驱动器或介质更换器分配磁带别名。别名提供备份设备的逻辑名称与永久分配给磁带驱动器或介质更换器的名称之间的对应关系。
+
+.步骤
+. 使用 `storage tape alias set` 命令为磁带驱动器或介质更换器分配别名。
++
+有关此命令的详细信息，请参见手册页。
+
++
+您可以使用 `ssystem node hardware tape drive show` 命令查看有关磁带驱动器的序列号（ SN ）信息，也可以使用 `ssystem node hardware tape library show` 命令查看有关磁带库的序列号信息。
+
++
+以下命令会将别名设置为序列号为 SN_123456 的磁带驱动器 L4 连接到节点 cluster1-01 ：
+
++
+[listing]
+----
+cluster-01::> storage tape alias set  -node cluster-01 -name st3 -mapping SN[123456]L4
+----
++
+以下命令将别名设置为序列号为 SN[6543] 且连接到节点 cluster1-01 的介质更换器：
+
++
+[listing]
+----
+cluster-01::> storage tape alias set  -node cluster-01 -name mc1 -mapping SN[65432]
+----
+
+
+* 相关信息 *
+
+xref:assign-tape-aliases-concept.adoc[什么是磁带别名]
+
+xref:remove-tape-aliases-task.adoc[正在删除磁带别名]

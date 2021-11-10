@@ -1,0 +1,63 @@
+---
+permalink: data-protection/restore-single-file-snapshot-task.html 
+sidebar: sidebar 
+keywords: restore, single file, snapshot copy 
+summary: 您可以使用 volume snapshot restore-file 命令从 Snapshot 副本还原单个文件或 LUN 。如果您不想替换现有文件，则可以将此文件还原到父读写卷中的其他位置。 
+---
+= 从 Snapshot 副本还原单个文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume snapshot restore-file` 命令从 Snapshot 副本还原单个文件或 LUN 。如果您不想替换现有文件，则可以将此文件还原到父读写卷中的其他位置。
+
+如果要还原现有 LUN ，则会创建一个 LUN 克隆，并以 Snapshot 副本的形式进行备份。在还原操作期间，您可以读取和写入 LUN 。
+
+默认情况下，包含流的文件会进行还原。
+
+.步骤
+. 列出卷中的 Snapshot 副本：
++
+`volume snapshot show -vserver _svm_ -volume _volum_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例显示了 `vol1` 中的 Snapshot 副本：
+
++
+[listing]
+----
+
+clus1::> volume snapshot show -vserver vs1 -volume vol1
+
+Vserver Volume Snapshot                State    Size  Total% Used%
+------- ------ ---------- ----------- ------   -----  ------ -----
+vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+               daily.2013-01-25_0010   valid   92KB      0%    0%
+               hourly.2013-01-25_0105  valid   228KB     0%    0%
+               hourly.2013-01-25_0205  valid   236KB     0%    0%
+               hourly.2013-01-25_0305  valid   244KB     0%    0%
+               hourly.2013-01-25_0405  valid   244KB     0%    0%
+               hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 从 Snapshot 副本还原文件：
++
+`volume snapshot restore-file -vserver _svm_ -volume _volume_-snapshot _snapshot_ -path _file_path_ -restore-path _destination_path_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将还原文件 `myfile.txt` ：
+
++
+[listing]
+----
+cluster1::> volume snapshot restore-file -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010 -path /myfile.txt
+----
+

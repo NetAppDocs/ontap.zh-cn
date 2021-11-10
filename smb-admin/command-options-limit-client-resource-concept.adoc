@@ -1,0 +1,39 @@
+---
+permalink: smb-admin/command-options-limit-client-resource-concept.html 
+sidebar: sidebar 
+keywords: option, vserver, cifs, modify, command, enable, control, resource, consumption, windows, client, bound, notify, request, command options to limit excessive windows client resource consumption 
+summary: vserver cifs options modify 命令的选项可用于控制 Windows 客户端的资源消耗。如果任何客户端超出资源消耗的正常范围，例如打开的文件，打开的会话或更改通知请求异常多，则此功能将非常有用。 
+---
+= 用于限制 Windows 客户端资源过度消耗的命令选项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 `vserver cifs options modify` 命令的选项，您可以控制 Windows 客户端的资源消耗。如果任何客户端超出资源消耗的正常范围，例如打开的文件，打开的会话或更改通知请求异常多，则此功能将非常有用。
+
+为` vserver cifs options modify `命令添加了以下选项，用于控制 Windows 客户端资源消耗。如果超过其中任何一个选项的最大值，则请求将被拒绝并发送 EMS 消息。当达到这些选项的已配置限制的 80% 时，也会发送 EMS 警告消息。
+
+* ` -max-reads-same-file-per-tree`
++
+每个 CIFS 树中同一文件的最大打开数
+
+* ` -max-same-user-sessions-per-connection`
++
+同一用户在每个连接中打开的最大会话数
+
+* ` -max-same-tree-connect-per-session`
++
+每个会话同一共享上的最大树连接数
+
+* ` -max-watchs-set-per-tree`
++
+为每个树建立的最大监视数（也称为 _change NOVES_ ）
+
+
+
+有关默认限制和显示当前配置的信息，请参见手册页。
+
+从 ONTAP 9.4 开始，运行 SMB 版本 2 或更高版本的服务器可以限制客户端可通过 SMB 连接发送到服务器的未处理请求（ _SMB 信用值 _ ）的数量。SMB 信用的管理由客户端启动，并由服务器控制。
+
+可在 SMB 连接上授予的最大未处理请求数由 ` -max-credits` 选项控制。此选项的默认值为 128 。

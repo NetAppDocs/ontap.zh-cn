@@ -1,0 +1,57 @@
+---
+permalink: system-admin/sp-bmc-network-config-concept.html 
+sidebar: sidebar 
+keywords: consideration, sp, bmc, network, configuration, cluster, level, disable, configuration 
+summary: 您可以为 SP 启用集群级别的自动网络配置（建议）。您还可以禁用 SP 自动网络配置（默认设置），并在节点级别手动管理 SP 网络配置。对于每种情况，都有一些注意事项。 
+---
+= SP/BMC 网络配置的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以为 SP 启用集群级别的自动网络配置（建议）。您还可以禁用 SP 自动网络配置（默认设置），并在节点级别手动管理 SP 网络配置。对于每种情况，都有一些注意事项。
+
+[NOTE]
+====
+本主题将同时对 SP 和 BMC 进行适用场景。
+
+====
+通过 SP 自动网络配置， SP 可以使用指定子网中的地址资源（包括 IP 地址，子网掩码和网关地址）来自动设置其网络。对于 SP 自动网络配置，您无需手动为每个节点的 SP 分配 IP 地址。默认情况下， SP 自动网络配置处于禁用状态；这是因为启用此配置要求首先在集群中定义用于此配置的子网。
+
+如果启用 SP 自动网络配置，则适用以下情形和注意事项：
+
+* 如果从未配置 SP ，则会根据为 SP 自动网络配置指定的子网自动配置 SP 网络。
+* 如果以前手动配置了 SP ，或者现有 SP 网络配置基于不同的子网，则会根据您在 SP 自动网络配置中指定的子网重新配置集群中所有节点的 SP 网络。
++
+重新配置可能会导致为 SP 分配不同的地址，这可能会影响 DNS 配置及其解析 SP 主机名的能力。因此，您可能需要更新 DNS 配置。
+
+* 加入集群的节点使用指定的子网自动配置其 SP 网络。
+* 使用 `ssystem service-processor network modify` 命令无法更改 SP IP 地址。
++
+启用 SP 自动网络配置后，命令仅允许启用或禁用 SP 网络接口。
+
++
+** 如果先前启用了 SP 自动网络配置，则禁用 SP 网络接口会导致分配的地址资源被释放并返回到子网。
+** 如果先禁用 SP 网络接口，然后重新启用，则可能会使用其他地址重新配置 SP 。
+
+
+
+
+如果 SP 自动网络配置处于禁用状态（默认设置），则适用以下情形和注意事项：
+
+* 如果从未配置 SP ， SP IPv4 网络配置默认使用 IPv4 DHCP ， IPv6 将被禁用。
++
+默认情况下，加入集群的节点还会使用 IPv4 DHCP 进行 SP 网络配置。
+
+* 使用 `ssystem service-processor network modify` 命令可以配置节点的 SP IP 地址。
++
+如果尝试使用分配给子网的地址手动配置 SP 网络，则会显示一条警告消息。忽略警告并继续手动分配地址可能会导致地址重复。
+
+
+
+如果在先前启用 SP 自动网络配置后禁用了此配置，则适用以下情形和注意事项：
+
+* 如果 SP 自动网络配置禁用了 IPv4 地址系列，则 SP IPv4 网络默认使用 DHCP ，并且使用 `ssystem service-processor network modify` 命令可以修改各个节点的 SP IPv4 配置。
+* 如果 SP 自动网络配置禁用了 IPv6 地址系列，则 SP IPv6 网络也会被禁用，您可以使用 `ssystem service-processor network modify` 命令为各个节点启用和修改 SP IPv6 配置。
+

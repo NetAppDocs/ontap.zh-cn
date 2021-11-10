@@ -1,0 +1,35 @@
+---
+permalink: antivirus/reset-status-scanned-files-task.html 
+sidebar: sidebar 
+keywords: reset, status, scanned files 
+summary: 有时，您可能需要使用 vserver vscan reset 命令丢弃缓存的文件信息，从而重置 SVM 上已成功扫描的文件的扫描状态。例如，如果扫描配置不当，您可能需要使用此命令重新启动病毒扫描处理。 
+---
+= 重置已扫描文件的状态
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+有时，您可能需要使用 `vserver vscan reset` 命令丢弃已成功扫描的文件的缓存信息，从而重置 SVM 上文件的扫描状态。例如，如果扫描配置不当，您可能需要使用此命令重新启动病毒扫描处理。
+
+运行 `vserver vscan reset` 命令后，所有符合条件的文件将在下次访问时进行扫描。
+
+[NOTE]
+====
+此命令可能会对性能产生不利影响，具体取决于要重新扫描的文件的数量和大小。
+
+====
+.步骤
+. 重置已扫描文件的状态：
++
+`vserver vscan reset -vserver data_sVM`
+
++
+以下命令将重置 ``vs1``SVM 上已扫描文件的状态：
+
++
+[listing]
+----
+cluster1::> vserver vscan reset -vserver vs1
+----
+

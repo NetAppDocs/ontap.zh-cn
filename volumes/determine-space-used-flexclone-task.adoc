@@ -1,0 +1,34 @@
+---
+permalink: volumes/determine-space-used-flexclone-task.html 
+sidebar: sidebar 
+keywords: determine, space, used by a flexclone volume 
+summary: 您可以根据 FlexClone 卷的标称大小及其与父 FlexVol 卷共享的空间量来确定 FlexClone 卷使用的空间。创建 FlexClone 卷时，它会与其父卷共享其所有数据。因此，尽管 FlexVol 卷的标称大小与其父卷的大小相同，但它使用聚合中的可用空间非常少。 
+---
+= 确定 FlexClone 卷使用的空间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以根据 FlexClone 卷的标称大小及其与父 FlexVol 卷共享的空间量来确定 FlexClone 卷使用的空间。创建 FlexClone 卷时，它会与其父卷共享其所有数据。因此，虽然 FlexVol 卷的标称大小与其父卷的大小相同，但它使用聚合中的可用空间非常少。
+
+新创建的 FlexClone 卷使用的可用空间大约为其标称大小的 0.5% 。此空间用于存储 FlexClone 卷的元数据。
+
+写入父卷或 FlexClone 卷的新数据不会在这些卷之间共享。写入到 FlexClone 卷的新数据量的增加会导致 FlexClone 卷从其所属聚合所需的空间增加。
+
+.步骤
+. 使用 `volume show` 命令确定 FlexClone 卷实际使用的物理空间。
++
+以下示例显示了 FlexClone 卷使用的总物理空间：
+
++
+[listing]
+----
+
+cluster1::> volume show -vserver vs01 -volume clone_vol1 -fields size,used,available,
+percent-used,physical-used,physical-used-percent
+vserver    volume     size  available  used   percent-used   physical-used     physical-used-percent
+-------   ----------  ----  ---------  -----  ------------    -------------   ---------------------
+vs01     clone_vol1   20MB   18.45MB   564KB       7%             196KB               1%
+----
+

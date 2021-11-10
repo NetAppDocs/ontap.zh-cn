@@ -1,0 +1,53 @@
+---
+permalink: system-admin/configure-discovery-cluster-management-switches-task.html 
+sidebar: sidebar 
+keywords: configuring, discovery, cluster, management, network, switches, cisco, discovery, protocol, cdp, switch, health 
+summary: 集群交换机运行状况监控器会自动尝试使用 Cisco 发现协议（ CDP ）发现集群和管理网络交换机。如果运行状况监控器无法自动发现交换机，或者您不想使用 CDP 进行自动发现，则必须对其进行配置。 
+---
+= 配置集群和管理网络交换机的发现
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+集群交换机运行状况监控器会自动尝试使用 Cisco 发现协议（ CDP ）发现集群和管理网络交换机。如果运行状况监控器无法自动发现交换机，或者您不想使用 CDP 进行自动发现，则必须对其进行配置。
+
+system cluster-switch show` 命令可列出运行状况监控器发现的交换机。 `s如果未在该列表中看到预期显示的交换机，则运行状况监控器将无法自动发现它。
+
+.步骤
+. 如果要使用 CDP 进行自动发现，请执行以下操作；否则，请转至步骤 <<STEP_E357491362A44CF782A64EFC6C7B2B09,2.>>：
++
+.. 确保已在交换机上启用 Cisco 发现协议（ CDP ）。
++
+有关说明，请参见交换机文档。
+
+.. 在集群中的每个节点上运行以下命令，以验证是否已启用 CDP ：
++
+` * 运行 -node _node_name_ -command options cdpd.enable*`
+
++
+如果启用了 CDP ，请转至步骤 d如果 CDP 已禁用，请转至步骤 C
+
+.. 运行以下命令以启用 CDP ：
++
+` * 运行 -node _node_name_ -command options cdpd.enable on*`
+
++
+请等待五分钟，然后再执行下一步。
+
+.. 使用 `ssystem cluster-switch show` 命令验证 ONTAP 现在是否可以自动发现交换机。
+
+
+. 如果运行状况监控器无法自动发现交换机，请使用 `ssystem cluster-switch create` 命令配置交换机发现：
++
+[listing]
+----
+cluster1::> system cluster-switch create -device switch1 -address 192.0.2.250 -snmp-version SNMPv2c -community cshm1! -model NX5020 -type cluster-network
+----
++
+请等待五分钟，然后再执行下一步。
+
+. 使用 `ssystem cluster-switch show` 命令验证 ONTAP 是否可以发现您为其添加了信息的交换机。
+
+
+验证运行状况监控器是否可以监控您的交换机。

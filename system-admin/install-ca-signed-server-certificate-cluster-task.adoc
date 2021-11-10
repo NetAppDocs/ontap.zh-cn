@@ -1,0 +1,44 @@
+---
+permalink: system-admin/install-ca-signed-server-certificate-cluster-task.html 
+sidebar: sidebar 
+keywords: install, ca, signed, server, certificate, cluster, ssl, svm, sotrage, virtual, machine, administrator 
+summary: 要使 SSL 服务器能够将集群或 Storage Virtual Machine （ SVM ）作为 SSL 客户端进行身份验证，您需要在集群或 SVM 上安装客户端类型的数字证书。然后，将 client-ca 证书提供给 SSL 服务器管理员，以便在服务器上安装。 
+---
+= 为集群安装 CA 签名的服务器证书
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要使 SSL 服务器能够将集群或 Storage Virtual Machine （ SVM ）作为 SSL 客户端进行身份验证，您需要在集群或 SVM 上安装客户端类型的数字证书。然后，将 client-ca 证书提供给 SSL 服务器管理员，以便在服务器上安装。
+
+您必须已在集群或 SVM 上安装类型为 `sserver-ca` 的 SSL 服务器根证书。
+
+.步骤
+. 要使用自签名数字证书进行客户端身份验证，请使用 `security certificate create` 命令和 `type client` 参数。
+. 要使用 CA 签名的数字证书进行客户端身份验证，请完成以下步骤：
++
+.. 使用 security certificate `generate-csr` 命令生成数字证书签名请求（ CSR ）。
++
+ONTAP 将显示 CSR 输出，其中包括证书请求和私钥，并提醒您将输出复制到文件中以供将来参考。
+
+.. 以电子形式（如电子邮件）将 CSR 输出中的证书请求发送到可信 CA 进行签名。
++
+您应保留一份私钥和 CA 签名证书的副本，以供日后参考。
+
++
+处理完您的请求后， CA 会向您发送已签名的数字证书。
+
+.. 使用带有 ` 类型客户端` 参数的 `security certificate install` 命令安装 CA 签名的证书。
+.. 出现提示时，输入证书和私钥，然后按 * 输入 * 。
+.. 出现提示时，输入任何其他根证书或中间证书，然后按 * 输入 * 。
++
+如果某个证书链从可信根 CA 开始，并以向您颁发的 SSL 证书结束，但缺少中间证书，则您需要在集群或 SVM 上安装中间证书。中间证书是由受信任根专门为问题描述最终实体服务器证书颁发的从属证书。结果是证书链，该证书链从可信根 CA 开始，经过中间证书，并以向您颁发的 SSL 证书结束。
+
+
+
+. 将集群或 SVM 的 `client-ca` 证书提供给 SSL 服务器的管理员，以便在服务器上安装。
++
+带有 ` -instance` 和 ` 类型 client-ca` 参数的 security certificate show 命令可显示 `client-ca` 证书信息。
+
+

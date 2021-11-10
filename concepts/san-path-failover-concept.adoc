@@ -1,0 +1,33 @@
+---
+permalink: concepts/san-path-failover-concept.html 
+sidebar: sidebar 
+keywords: san path failover 
+summary: 在链路出现故障后， SAN 主机使用 ALUA （非对称逻辑单元访问）和 MPIO （多路径 I/O ）将流量重新路由到运行正常的 LIF 。预定义的路径可确定 SVM 所提供的 LUN 的可能路由。 
+---
+= SAN 路径故障转移
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在链路出现故障后， SAN 主机使用 ALUA （非对称逻辑单元访问）和 MPIO （多路径 I/O ）将流量重新路由到运行正常的 LIF 。预定义的路径可确定 SVM 所提供的 LUN 的可能路由。
+
+在 SAN 环境中，主机被视为向 lun _targets 发出请求的 _initiator_ 。 _ MPIO 可启用从启动程序到目标的多个路径。ALUA 标识最直接的路径，称为 _optim优化 的路径。 _
+
+通常，您可以为 LUN 所属节点上的 LIF 配置多个优化路径，并为其 HA 配对节点上的 LIF 配置多个非优化路径。如果所属节点上的一个端口发生故障，则主机会将流量路由到运行正常的端口。如果所有端口都发生故障，主机将通过非优化路径路由流量。
+
+默认情况下， ONTAP 选择性 LUN 映射（ SLM ）会限制从主机到 LUN 的路径数。新创建的 LUN 只能通过 LUN 所属节点或其 HA 配对节点的路径进行访问。您还可以通过在 _port set_ 中为启动程序配置 LIF 来限制对 LUN 的访问。
+
+image::../media/san-host-rerouting.gif[SAN 主机重新路由]
+
+|===
+
+
+ a| 
+在 SAN 环境中移动卷 _*
+
+默认情况下， ONTAP 选择性 LUN 映射（ SLM ） _ 会限制从 SAN 主机到 LUN 的路径数。新创建的 LUN 只能通过 LUN 所属节点或其 HA 配对节点的路径访问，即 LUN 的 _reporting nodes_ 。
+
+这意味着，将卷移动到另一个 HA 对上的节点时，您需要将目标 HA 对的报告节点添加到 LUN 映射中。然后，您可以在 MPIO 设置中指定新路径。卷移动完成后，您可以从映射中删除源 HA 对的报告节点。
+
+|===

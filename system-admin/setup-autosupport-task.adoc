@@ -1,0 +1,162 @@
+---
+permalink: system-admin/setup-autosupport-task.html 
+sidebar: sidebar 
+keywords: set, up, autosupport, technical, support, organization, internal, configuration, test 
+summary: 您可以控制是否以及如何将 AutoSupport 信息发送给技术支持和您的内部支持组织，然后测试配置是否正确。 
+---
+= 设置 AutoSupport
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以控制是否以及如何将 AutoSupport 信息发送给技术支持和您的内部支持组织，然后测试配置是否正确。
+
+在 ONTAP 9.5 及更高版本中，您可以在集群的所有节点上同时启用 AutoSupport 并修改其配置。当新节点加入集群时，该节点会自动继承 AutoSupport 集群配置。您不必单独更新每个节点上的配置。
+
+[NOTE]
+====
+从 ONTAP 9.5 开始， `ssystem node AutoSupport modify` 命令的范围为集群范围。即使指定了 ` 节点` 选项，也会在集群中的所有节点上修改 AutoSupport 配置。此选项将被忽略，但它已保留以实现 CLI 向后兼容性。
+
+在 ONTAP 9.4 及更早版本中， system node AutoSupport modify 命令的作用域特定于节点。应在集群中的每个节点上修改 AutoSupport 配置。
+
+====
+默认情况下，每个节点都启用了 AutoSupport ，以便使用 HTTPS 传输协议向技术支持发送消息。
+
+.步骤
+. 使用以下命令确保已启用 AutoSupport ：
++
+[listing]
+----
+system node autosupport modify -state enable
+----
+. 如果您希望技术支持接收 AutoSupport 消息，请使用以下命令：
++
+[listing]
+----
+system node autosupport modify -support enable
+----
++
+如果要使 AutoSupport 能够与 AutoSupport OnDemand 配合使用，或者要将核心转储和性能归档文件等大型文件上传到技术支持或指定 URL ，则必须启用此选项。
+
+. 如果技术支持可以接收 AutoSupport 消息，请指定要用于消息的传输协议。
++
+您可以从以下选项中进行选择：
+
++
+|===
+| 如果您要 ... | 然后，为 `ssystem node AutoSupport modify` 命令设置以下参数 ... 
+
+
+ a| 
+使用默认 HTTPS 协议
+ a| 
+.. 将 ` -transport` 设置为 `https` 。
+.. 如果使用代理，请将 ` -proxy-url` 设置为代理的 URL 。此配置支持与 AutoSupport OnDemand 通信以及上传大型文件。
+
+
+
+
+ a| 
+使用优先于 SMTP 的 HTTP
+ a| 
+.. 将 ` -transport` 设置为 `http` 。
+.. 如果使用代理，请将 ` -proxy-url` 设置为代理的 URL 。此配置支持上传大型文件，但不支持 AutoSupport OnDemand 。
+
+
+
+
+ a| 
+使用 SMTP
+ a| 
+将 ` -transport` 设置为 `sMTP` 。
+
+此配置不支持 AutoSupport OnDemand 或上传大型文件。
+
+|===
+. 如果您希望内部支持组织或支持合作伙伴接收 AutoSupport 消息，请执行以下操作：
++
+.. 通过设置 `ssystem node AutoSupport modify` 命令的以下参数来确定组织中的收件人：
++
+|===
+| 设置此参数 ... | 目标位置 ... 
+
+
+ a| 
+` 到`
+ a| 
+您的内部支持组织中最多五个将接收关键 AutoSupport 消息的电子邮件地址或分发列表，以逗号分隔
+
+
+
+ a| 
+` - 节点至`
+ a| 
+您的内部支持组织中最多有五个以逗号分隔的单个电子邮件地址或分发列表，这些地址或分发列表将接收专为手机和其他移动设备设计的关键 AutoSupport 消息的简略版本
+
+
+
+ a| 
+` 合作伙伴地址`
+ a| 
+您的支持合作伙伴组织中最多五个以逗号分隔的单个电子邮件地址或分发列表，这些电子邮件地址或分发列表将接收所有 AutoSupport 消息
+
+|===
+.. 使用 `ssystem node AutoSupport destinations show` 命令列出目标，以检查地址配置是否正确。
+
+
+. 如果您要向内部支持组织发送消息，或者为发送给技术支持的消息选择了 SMTP 传输，请通过设置 `ssystem node AutoSupport modify` 命令的以下参数来配置 SMTP ：
++
+** 将 ` -mail-hosts` 设置为一个或多个邮件主机，以逗号分隔。
++
+最多可以设置五个。
+
++
+您可以通过在邮件主机名后面指定冒号和端口号来为每个邮件主机配置端口值：例如， `mymailhost.example.com:5678` ，其中 5678 是邮件主机的端口。
+
+** 将 ` -from` 设置为发送 AutoSupport 消息的电子邮件地址。
+
+
+. 配置 DNS 。
+. 可选：如果要更改特定设置，请添加命令选项：
++
+|===
+| 如果要执行此操作 ... | 然后，为 `ssystem node AutoSupport modify` 命令设置以下参数 ... 
+
+
+ a| 
+通过删除，屏蔽或对消息中的敏感数据进行编码来隐藏私有数据
+ a| 
+将 ` -remove-private-data` 设置为 `true` 。如果从 `false` 更改为 `true` ，则会删除所有 AutoSupport 历史记录和所有关联文件。
+
+
+
+ a| 
+停止在定期 AutoSupport 消息中发送性能数据
+ a| 
+将 ` -perf` 设置为 `false` 。
+
+|===
+. 使用带有 ` 节点` 参数的 `ssystem node AutoSupport show` 命令检查整体配置。
+. 使用 `ssystem node AutoSupport check show` 命令验证 AutoSupport 操作。
++
+如果报告了任何问题，请使用 `ssystem node AutoSupport check show-details` 命令查看详细信息。
+
+. 测试是否正在发送和接收 AutoSupport 消息：
++
+.. 使用 `ssystem node AutoSupport invoke` 命令，并将 ` -type` 参数设置为 `test` 。
++
+[listing]
+----
+cluster1::> system node autosupport invoke -type test -node node1
+----
+.. 确认 NetApp 正在接收您的 AutoSupport 消息：
++
+ system node autosupport history -node local
++
+对于所有适当的协议目标，最新传出 AutoSupport 消息的状态最终应更改为 `snt-successful` 。
+
+.. 可选：通过检查为 `ssystem node AutoSupport modify` 命令的 ` 到` ， ` 到` 或 ` 配对节点地址` 参数配置的任何地址的电子邮件，确认 AutoSupport 消息已发送到您的内部支持组织或您的支持合作伙伴。
+
+
+

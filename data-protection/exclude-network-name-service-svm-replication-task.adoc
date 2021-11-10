@@ -1,0 +1,119 @@
+---
+permalink: data-protection/exclude-network-name-service-svm-replication-task.html 
+sidebar: sidebar 
+keywords: exclude, network, name service, other settings, svm replication 
+summary: 您可以使用 snapmirror create 命令的 -identity-preserve false 选项仅复制 SVM 的卷和安全配置。此外，还会保留某些协议和名称服务设置。 
+---
+= 从 SVM 复制中排除网络，名称服务和其他设置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `snapmirror create` 命令的 ` -identity-preserve false` 选项仅复制 SVM 的卷和安全配置。此外，还会保留某些协议和名称服务设置。
+
+源和目标集群以及 SVM 必须建立对等关系。
+
+有关保留的协议和名称服务设置的列表，请参见 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在 SVM DR 关系中复制的配置"]。
+
+有关完整的命令语法，请参见手册页。
+
+.步骤
+. 创建目标 SVM ：
++
+`vserver create -vserver _svm_ -subtype dp-destination`
+
++
+SVM 名称在源集群和目标集群中必须是唯一的。
+
++
+以下示例将创建一个名为 `svm_backup` 的目标 SVM ：
+
++
+[listing]
+----
+cluster_dst:> vserver create -vserver svm_backup -subtype dp-destination
+----
+. 创建复制作业计划
++
+`job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
+
++
+对于 ` - 月` ， ` - 天 / 周` 和 ` - 小时` ，您可以指定 `所有` 来分别按每月，一周中的一天和每小时运行作业。
+
++
+以下示例将创建一个名为 `my_weekly` 的作业计划，该计划将在星期六凌晨 3 ： 00 运行：
+
++
+[listing]
+----
+cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
+----
+. 创建不包括网络，名称服务和其他配置设置的复制关系：
++
+`snapmirror create -source-path _svm_ ： -destination-path _svm_ ： -type dp_xDP -schedule schedule -policy -identity-preserve false`
+
++
+[NOTE]
+====
+您必须在 ` 源路径` 和 ` 目标路径` 选项中的 SVM 名称后面输入冒号（：）。请参见以下示例：您必须从目标 SVM 或目标集群运行此命令。
+
+====
++
+以下示例将使用默认的 `MirrorAllSnapshots` 策略创建 SnapMirror 灾难恢复关系。此关系将从 SVM 复制中排除网络，名称服务和其他配置设置：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy MirrorAllSnapshots -identity-preserve false
+----
++
+以下示例将使用默认的 `MirrorAndVault` 策略创建统一复制关系：此关系不包括网络，名称服务和其他配置设置：
+
++
+[listing]
+----
+cluster_dst:> snapmirror create svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy MirrorAndVault -identity-preserve false
+----
++
+假设您已创建策略类型为 `async-mirror` 的自定义策略，以下示例将创建 SnapMirror 灾难恢复关系。此关系将从 SVM 复制中排除网络，名称服务和其他配置设置：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy my_mirrored -identity-preserve false
+----
++
+假设您已创建策略类型为 `mirror-vault` 的自定义策略，以下示例将创建统一复制关系。此关系将从 SVM 复制中排除网络，名称服务和其他配置设置：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy my_unified -identity-preserve false
+----
+. 停止目标 SVM ：
++
+`SVM stop`
+
++
+` SVM 名称 _`
+
++
+以下示例将停止名为 dvs1 的目标 SVM ：
+
++
+[listing]
+----
+destination_cluster::> vserver stop -vserver dvs1
+----
+. 如果您使用的是 SMB ，则还必须配置 CIFS 服务器。
++
+请参见 link:create-smb-server-task.html["仅限 CIFS ：创建 CIFS 服务器"]。
+
+. 从目标 SVM 或目标集群初始化 SVM 复制关系：
++
+`snapmirror initialize -source-path _svm_name_ ： -destination-path _svm_name_ ：`
+
+
+
+您必须在目标 SVM 上配置网络和协议，以便在发生灾难时进行数据访问。

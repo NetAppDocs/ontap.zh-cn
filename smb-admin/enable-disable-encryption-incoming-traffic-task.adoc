@@ -1,0 +1,59 @@
+---
+permalink: smb-admin/enable-disable-encryption-incoming-traffic-task.html 
+sidebar: sidebar 
+keywords: require, smb, encryption, traffic, enable, cifs, server, share, level, default, enable or disable required smb encyrption for incoming smb traffic 
+summary: 如果您希望为传入的 SMB 流量要求 SMB 加密，可以在 CIFS 服务器或共享级别启用它。默认情况下，不需要 SMB 加密。 
+---
+= 为传入的 SMB 流量启用或禁用所需的 SMB 加密
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您希望为传入的 SMB 流量要求 SMB 加密，可以在 CIFS 服务器或共享级别启用它。默认情况下，不需要 SMB 加密。
+
+您可以在 CIFS 服务器上启用 SMB 加密，该服务器会对 CIFS 服务器上的所有共享进行适用场景。如果您不希望 CIFS 服务器上的所有共享都需要 SMB 加密，或者您希望为基于共享的传入 SMB 流量启用所需的 SMB 加密，则可以在 CIFS 服务器上禁用所需的 SMB 加密。
+
+设置 Storage Virtual Machine （ SVM ）灾难恢复关系时，您为 `snapmirror create` 命令的 ` -identity-preserve` 选项选择的值将确定复制到目标 SVM 中的配置详细信息。
+
+如果将 ` -identity-preserve` 选项设置为 `true` （ ID-preserve ），则 SMB 加密安全设置将复制到目标。
+
+如果将 ` -identity-preserve` 选项设置为 `false` （ non-ID-preserve ），则 SMB 加密安全设置不会复制到目标。在这种情况下，目标上的 CIFS 服务器安全设置将设置为默认值。如果已在源 SVM 上启用 SMB 加密，则必须在目标上手动启用 CIFS 服务器 SMB 加密。
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| CIFS 服务器上传入的 SMB 流量所需的 SMB 加密 | 输入命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver cifs security modify -vserver _vserver_name_ -is-smb-encryption-required true`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver cifs security modify -vserver _vserver_name_ -is-smb-encryption-required false`
+
+|===
+. 验证是否已根据需要在 CIFS 服务器上启用或禁用所需的 SMB 加密： `vserver cifs security show -vserver _vserver_name_ -fields is-smb-encryption-required`
++
+如果在 CIFS 服务器上启用了所需的 SMB 加密，则 `is-smb-encrypt-required` 字段将显示 `true` ；如果禁用了 SMB 加密，则显示 `false` 。
+
+
+
+以下示例将为 SVM vs1 上的 CIFS 服务器的传入 SMB 流量启用所需的 SMB 加密：
+
+[listing]
+----
+cluster1::> vserver cifs security modify -vserver vs1 -is-smb-encryption-required true
+
+cluster1::> vserver cifs security show -vserver vs1 -fields is-smb-encryption-required
+vserver  is-smb-encryption-required
+-------- -------------------------
+vs1      true
+----

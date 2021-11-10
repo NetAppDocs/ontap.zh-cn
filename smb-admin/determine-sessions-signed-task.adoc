@@ -1,0 +1,77 @@
+---
+permalink: smb-admin/determine-sessions-signed-task.html 
+sidebar: sidebar 
+keywords: display, information, connect, smb, session, cifs, server, sign, helpful, determining, determine, smb, client, security, setting, determine whether smb sessions are signed 
+summary: 您可以显示有关 CIFS 服务器上已连接的 SMB 会话的信息。您可以使用此信息确定 SMB 会话是否已签名。这有助于确定 SMB 客户端会话是否使用所需的安全设置进行连接。 
+---
+= 确定 SMB 会话是否已签名
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关 CIFS 服务器上已连接的 SMB 会话的信息。您可以使用此信息确定 SMB 会话是否已签名。这有助于确定 SMB 客户端会话是否使用所需的安全设置进行连接。
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 要显示的信息 | 输入命令 ... 
+
+
+ a| 
+指定 Storage Virtual Machine （ SVM ）上的所有已签名会话
+ a| 
+`vserver cifs session show -vserver _vserver_name_ -is-session-signed true`
+
+
+
+ a| 
+SVM 上具有特定会话 ID 的已签名会话的详细信息
+ a| 
+`vserver cifs session show -vserver _vserver_name_ -session-id integer -instance`
+
+|===
+
+
+以下命令显示 SVM vs1 上已签名会话的会话信息。默认摘要输出不会显示 "`Is Session Signed` " 输出字段：
+
+[listing]
+----
+cluster1::> vserver cifs session show -vserver vs1 -is-session-signed true
+Node:    node1
+Vserver: vs1
+Connection Session                                    Open         Idle
+ID          ID      Workstation      Windows User    Files         Time
+----------  ------- ---------------- ------------- ------- ------------
+3151272279  1       10.1.1.1         DOMAIN\joe          2          23s
+----
+以下命令显示会话 ID 为 2 的 SMB 会话的详细会话信息，包括会话是否已签名：
+
+[listing]
+----
+cluster1::> vserver cifs session show -vserver vs1 -session-id 2 -instance
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 2
+               Connection ID: 3151274158
+Incoming Data LIF IP Address: 10.2.1.1
+                 Workstation: 10.1.1.2
+    Authentication Mechanism: Kerberos
+                Windows User: DOMAIN\joe
+                   UNIX User: pcuser
+                 Open Shares: 1
+                  Open Files: 1
+                  Open Other: 0
+              Connected Time: 10m 43s
+                   Idle Time: 1m 19s
+            Protocol Version: SMB3
+      Continuously Available: No
+           Is Session Signed: true
+       User Authenticated as: domain-user
+                NetBIOS Name: CIFS_ALIAS1
+       SMB Encryption Status: Unencrypted
+----
+* 相关信息 *
+
+xref:monitor-signed-session-statistics-task.adoc[监控 SMB 签名会话统计信息]

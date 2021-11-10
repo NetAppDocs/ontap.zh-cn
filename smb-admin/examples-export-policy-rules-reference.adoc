@@ -1,0 +1,77 @@
+---
+permalink: smb-admin/examples-export-policy-rules-reference.html 
+sidebar: sidebar 
+keywords: create, export, policy, rule, restrict, allow, access, smb, svm, enable, examples of export policy rules that restrict or allow access over smb 
+summary: 这些示例显示了如何在启用了 SMB 访问导出策略的 SVM 上创建导出策略规则来限制或允许通过 SMB 进行访问。 
+---
+= 限制或允许通过 SMB 进行访问的导出策略规则示例
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+这些示例显示了如何在启用了 SMB 访问导出策略的 SVM 上创建导出策略规则来限制或允许通过 SMB 进行访问。
+
+默认情况下， SMB 访问的导出策略处于禁用状态。只有在为 SMB 访问启用了导出策略时，您才需要配置导出策略规则来限制或允许通过 SMB 进行访问。
+
+
+
+== 仅适用于 SMB 访问的导出规则
+
+以下命令会在名为 "`vs1` " 的 SVM 上创建一个导出规则，该规则具有以下配置：
+
+* 策略名称： cifs1
+* 索引号： 1
+* 客户端匹配：仅匹配 192.168.1.0/24 网络上的客户端
+* 协议：仅启用 SMB 访问
+* 只读访问：使用 NTLM 或 Kerberos 身份验证的客户端
+* 读写访问：使用 Kerberos 身份验证的客户端
+
+
+[listing]
+----
+cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifs1 ‑ruleindex 1 -protocol cifs -clientmatch 192.168.1.0/255.255.255.0 -rorule krb5,ntlm -rwrule krb5
+----
+
+
+== SMB 和 NFS 访问的导出规则
+
+以下命令会在名为 "` vs1` " 的 SVM 上创建一个导出规则，该规则具有以下配置：
+
+* 策略名称： cifsnfs1.
+* 索引号： 2
+* 客户端匹配：匹配所有客户端
+* 协议： SMB 和 NFS 访问
+* 只读访问：对所有客户端
+* 读写访问：使用 Kerberos （ NFS 和 SMB ）或 NTLM 身份验证（ SMB ）的客户端
+* 映射 UNIX 用户 ID 0 （零）：映射到用户 ID 65534 （通常映射到用户名 nobody ）
+* SUID 和 sgid 访问：允许
+
+
+[listing]
+----
+cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifsnfs1 ‑ruleindex 2 -protocol cifs,nfs -clientmatch 0.0.0.0/0 -rorule any -rwrule krb5,ntlm -anon 65534 -allow-suid true
+----
+
+
+== 仅使用 NTLM 进行 SMB 访问的导出规则
+
+以下命令会在名为 "`vs1` " 的 SVM 上创建一个导出规则，该规则具有以下配置：
+
+* 策略名称： ntlm1
+* 索引号： 1
+* 客户端匹配：匹配所有客户端
+* 协议：仅启用 SMB 访问
+* 只读访问：仅适用于使用 NTLM 的客户端
+* 读写访问：仅适用于使用 NTLM 的客户端
+
+
+[NOTE]
+====
+如果为仅限 NTLM 的访问配置只读选项或读写选项，则必须在客户端匹配选项中使用基于 IP 地址的条目。否则，您会收到 `access denied` 错误。这是因为 ONTAP 在使用主机名检查客户端的访问权限时使用 Kerberos 服务主体名称（ SPN ）。NTLM 身份验证不支持 SPN 名称。
+
+====
+[listing]
+----
+cluster1::> vserver export-policy rule create -vserver vs1 -policyname ntlm1 ‑ruleindex 1 -protocol cifs -clientmatch 0.0.0.0/0 -rorule ntlm -rwrule ntlm
+----

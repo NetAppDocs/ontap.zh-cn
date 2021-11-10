@@ -1,0 +1,27 @@
+---
+permalink: san-config/zoning-restrictions-cisco-fc-fcoe-switches-reference.html 
+sidebar: sidebar 
+keywords: zoning, restrictions, for cisco, fc, fcoe, switches 
+summary: 使用 Cisco FC 和 FCoE 交换机时，一个网络结构分区不能为同一物理端口包含多个目标 LIF 。如果同一端口上的多个 LIF 位于同一分区中，则 LIF 端口可能无法从连接丢失中恢复。 
+---
+= Cisco FC 和 FCoE 交换机的分区限制
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 Cisco FC 和 FCoE 交换机时，一个网络结构分区不能为同一物理端口包含多个目标 LIF 。如果同一端口上的多个 LIF 位于同一分区中，则 LIF 端口可能无法从连接丢失中恢复。
+
+常规 FC 交换机用于 FC-NVMe 协议的方式与用于 FC 协议的方式完全相同。
+
+* FC 和 FCoE 协议的多个 LIF 可以共享节点上的物理端口，只要它们位于不同的分区即可。
+* FC-NVMe 和 FCoE 不能共享同一物理端口。
+* FC 和 FC-NVMe 可以共享相同的 32 Gb 物理端口。
+* Cisco FC 和 FCoE 交换机要求给定端口上的每个 LIF 与该端口上的其他 LIF 位于一个单独的分区中。
+* 一个分区可以同时具有 FC 和 FCoE LIF 。分区可以包含集群中每个目标端口的 LIF ，但请注意不要超过主机的路径限制并验证 SLM 配置。
+* 不同物理端口上的 LIF 可以位于同一分区中。
+* Cisco 交换机要求分离 LIF 。
++
+虽然不是必需的，但建议对所有交换机使用不同的 LIF
+
+

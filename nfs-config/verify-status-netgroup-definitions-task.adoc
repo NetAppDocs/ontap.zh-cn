@@ -1,0 +1,52 @@
+---
+permalink: nfs-config/verify-status-netgroup-definitions-task.html 
+sidebar: sidebar 
+keywords: verify, status, netgroup, definitions 
+summary: 将网络组加载到 SVM 中后，您可以使用 vserver services name-service netgroup status 命令来验证网络组定义的状态。这样，您就可以确定支持 SVM 的所有节点上的网络组定义是否一致。 
+---
+= 验证网络组定义的状态
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+将网络组加载到 SVM 中后，您可以使用 `vserver services name-service netgroup status` 命令验证网络组定义的状态。这样，您就可以确定支持 SVM 的所有节点上的网络组定义是否一致。
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 验证网络组定义的状态：
++
+`vserver services name-service netgroup status`
+
++
+您可以在更详细的视图中显示追加信息。
+
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+
+
+设置权限级别后，以下命令将显示所有 SVM 的网络组状态：
+
+[listing]
+----
+vs1::> set -privilege advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when
+         directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+vs1::*> vserver services name-service netgroup status
+Virtual
+Server    Node            Load Time           Hash Value
+--------- --------------- ------------------- --------------------------------
+vs1
+          node1           9/20/2006 16:04:53  e6cb38ec1396a280c0d2b77e3a84eda2
+          node2           9/20/2006 16:06:26  e6cb38ec1396a280c0d2b77e3a84eda2
+          node3           9/20/2006 16:08:08  e6cb38ec1396a280c0d2b77e3a84eda2
+          node4           9/20/2006 16:11:33  e6cb38ec1396a280c0d2b77e3a84eda2
+----

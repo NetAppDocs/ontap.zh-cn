@@ -1,0 +1,80 @@
+---
+permalink: system-admin/ssh-login-security-concept.html 
+sidebar: sidebar 
+keywords: ssh, login, security, information, view, changes, privileges, unsuccessful, attempts, previous, successful, restrictions, considerations 
+summary: 从 ONTAP 9.5 开始，您可以查看有关先前登录，未成功登录尝试以及自上次成功登录以来权限更改的信息。 
+---
+= SSH 登录安全性
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.5 开始，您可以查看有关先前登录，未成功登录尝试以及自上次成功登录以来权限更改的信息。
+
+以 SSH 管理员用户身份成功登录后，系统将显示与安全相关的信息。系统会就以下情况向您发出警报：
+
+* 您的帐户名称上次登录的时间。
+* 自上次成功登录以来失败的登录尝试次数。
+* 角色自上次登录以来是否发生了更改（例如，如果管理员帐户的角色从 "admin" 更改为 "backup" 。）
+* 自上次登录以来是否修改了角色的添加，修改或删除功能。
+
+
+[NOTE]
+====
+如果显示的任何信息可疑，您应立即联系安全部门。
+
+====
+要在登录时获取此信息，必须满足以下前提条件：
+
+* 必须在 ONTAP 中配置 SSH 用户帐户。
+* 必须创建 SSH 安全登录。
+* 您的登录尝试必须成功。
+
+
+
+
+== 有关 SSH 登录安全性的限制和其他注意事项
+
+以下限制和注意事项适用于 SSH 登录安全信息：
+
+* 此信息仅适用于基于 SSH 的登录。
+* 对于基于组的管理员帐户，例如 LDAP/NIS 和 AD 帐户，如果用户所属的组在 ONTAP 中配置为管理员帐户，则用户可以查看 SSH 登录信息。
++
+但是，无法为这些用户显示有关用户帐户角色更改的警报。此外，属于已在 ONTAP 中配置为管理员帐户的 AD 组的用户无法查看自上次登录以来失败登录尝试的次数。
+
+* 从 ONTAP 中删除用户帐户后，为用户维护的信息将被删除。
+* 对于与 SSH 以外的应用程序的连接，不会显示此信息。
+
+
+
+
+== SSH 登录安全信息示例
+
+以下示例展示了登录后显示的信息类型。
+
+* 每次成功登录后，都会显示此消息：
++
+[listing]
+----
+
+Last Login : 7/19/2018 06:11:32
+----
+* 如果自上次成功登录以来尝试登录失败，则会显示以下消息：
++
+[listing]
+----
+
+Last Login : 4/12/2018 08:21:26
+Unsuccessful login attempts since last login – 5
+----
+* 如果自上次成功登录以来尝试登录失败，并且您的权限已被修改，则会显示以下消息：
++
+[listing]
+----
+
+Last Login : 8/22/2018 20:08:21
+Unsuccessful login attempts since last login – 3
+Your privileges have changed since last login
+----
+

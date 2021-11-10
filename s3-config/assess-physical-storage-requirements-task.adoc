@@ -1,0 +1,54 @@
+---
+permalink: s3-config/assess-physical-storage-requirements-task.html 
+sidebar: sidebar 
+keywords: assess, physical, storage, requirements 
+summary: 在为客户端配置 S3 存储之前，您必须确保现有聚合中有足够的空间用于新对象存储。如果没有，您可以向现有聚合添加磁盘或创建所需类型的新聚合。 
+---
+= 评估物理存储要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在为客户端配置 S3 存储之前，您必须确保现有聚合中有足够的空间用于新对象存储。如果没有，您可以向现有聚合添加磁盘或创建所需类型的新聚合。
+
+在启用了 S3 的 SVM 中创建 S3 存储分段时，系统会自动创建一个 FlexGroup 卷来支持存储分段。您可以让 ONTAP Select 自动对底层聚合和 FlexGroup 组件执行 FlexGroup （默认设置），也可以自行选择底层聚合和 组件。
+
+如果您决定指定聚合和 FlexGroup 组件，例如，如果您对底层磁盘有特定的性能要求，则应确保聚合配置符合配置 FlexGroup 卷的最佳实践准则。
+
+link:../flexgroup/index.html["FlexGroup 卷管理"]
+
+https://www.netapp.com/pdf.html?item=/media/17251-tr4571apdf.pdf["NetApp 技术报告 4571-A ：《 NetApp ONTAP FlexGroup 卷最佳实践》"]
+
+您可以使用 ONTAP S3 服务器创建本地 FabricPool 容量层，即与性能层位于同一集群中。例如，如果您将 SSD 磁盘连接到一个 HA 对，而您希望将 _c冷 _ 数据分层到另一个 HA 对中的 HDD 磁盘，则此功能可能很有用。因此，在本使用情形中， S3 服务器和包含本地容量层的存储分段应与性能层位于不同的 HA 对中。单节点和双节点集群不支持本地分层。
+
+.步骤
+. 显示现有聚合中的可用空间：
++
+`s存储聚合显示`
+
++
+如果聚合具有足够的空间，请记录其名称以用于 S3 配置。
+
++
+[listing]
+----
+cluster-1::> storage aggregate show
+Aggregate     Size Available Used% State   #Vols  Nodes  RAID Status
+--------- -------- --------- ----- ------- ------ ------ -----------
+aggr_0     239.0GB   11.13GB   95% online       1 node1  raid_dp,
+                                                         normal
+aggr_1     239.0GB   11.13GB   95% online       1 node1  raid_dp,
+                                                         normal
+aggr_2     239.0GB   11.13GB   95% online       1 node2  raid_dp,
+                                                         normal
+aggr_3     239.0GB   11.13GB   95% online       1 node2  raid_dp,
+                                                         normal
+aggr_4     239.0GB   238.9GB   95% online       5 node3  raid_dp,
+                                                         normal
+aggr_5     239.0GB   239.0GB   95% online       4 node4  raid_dp,
+                                                         normal
+6 entries were displayed.
+----
+. 如果没有具有足够空间的聚合，请使用 `storage aggregate add-disks` 命令向现有聚合添加磁盘，或者使用 `storage aggregate create` 命令创建新聚合。
+

@@ -1,0 +1,34 @@
+---
+permalink: disks-aggregates/fast-zeroing-drives-concept.html 
+sidebar: sidebar 
+keywords: fast, zero, drives 
+summary: 从 ONTAP 9.4 开始，您可以在配置之前自动快速将驱动器（ SSD 和 HDD ）置零，而无需等待很长时间。 
+---
+= 驱动器快速置零
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.4 开始，您可以在配置之前自动快速将驱动器（ SSD 和 HDD ）置零，而无需等待很长时间。
+
+对于全新安装了 ONTAP 9.4 或更高版本的系统或使用 ONTAP 9.4 或更高版本重新初始化的系统，驱动器将自动置零并在几秒钟内完成。
+
+如果需要手动将驱动器置零，可以使用以下方法之一：
+
+* 使用 `storage disk zerospares` 命令。
++
+要使用此命令，需要管理员权限。
+
+* 从启动菜单中选择以下选项之一：
++
+** ` （ 4 ）清理配置并初始化所有磁盘`
+** ` （ 9a ）取消对所有磁盘的分区并删除其所有权信息`
+** ` （ 9b ）清理配置并使用整个磁盘初始化节点`
+
+
+
+
+快速置零增强功能不支持从 ONTAP 9.4 之前的版本升级的系统。
+
+如果集群上的任何节点包含具有快速置零驱动器的聚合，则无法将集群还原到 ONTAP 9.2 或更早版本。

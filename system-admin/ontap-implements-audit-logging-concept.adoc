@@ -1,0 +1,39 @@
+---
+permalink: system-admin/ontap-implements-audit-logging-concept.html 
+sidebar: sidebar 
+keywords: ontap, implement, audit, logging, management, autosupport, ems, messages, log, cli, web, browser 
+summary: 审核日志中记录的管理活动包括在标准 AutoSupport 报告中，某些日志记录活动包括在 EMS 消息中。此外，您还可以将审核日志转发到指定的目标，并可使用命令行界面或 Web 浏览器显示审核日志文件。 
+---
+= ONTAP 如何实施审核日志记录
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+审核日志中记录的管理活动包括在标准 AutoSupport 报告中，某些日志记录活动包括在 EMS 消息中。此外，您还可以将审核日志转发到指定的目标，并可使用命令行界面或 Web 浏览器显示审核日志文件。
+
+ONTAP 会记录在集群上执行的管理活动，例如发出了什么请求，触发了该请求的用户，用户的访问方法以及发出请求的时间。
+
+管理活动可以是以下类型之一：
+
+* 设置请求，通常适用于非显示命令或操作
++
+** 例如，在运行 `create` ， `modify` 或 `delete` 命令时会发出这些请求。
+** 默认情况下，系统会记录设置请求。
+
+
+* 获取请求，用于检索信息并将其显示在管理界面中
++
+** 例如，在运行 `show` 命令时会发出这些请求。
+** 默认情况下，不会记录获取请求，但您可以使用 `ssecurityaudit modify` 命令控制是将从 ONTAP 命令行界面（` -cliget` ）或 ONTAP API （` -ontapiget` ）发送的获取请求记录在文件中。
+
+
+
+
+ONTAP 会在节点的 ` /mroot/etc/log/mlog/audit.log` 文件中记录管理活动。此处会记录三个 shell 中用于 CLI 命令的命令— clustershell ， nodeshell 和非交互式 systemshell （交互式 systemshell 命令不会记录）—以及 API 命令。审核日志包含时间戳，用于显示集群中的所有节点是否都进行了时间同步。
+
+AutoSupport 工具会将 `audit.log` 文件发送给指定的收件人。您还可以将内容安全地转发到指定的外部目标，例如 Splunk 或系统日志服务器。
+
+`audit.log` 文件会每天轮换一次。当大小达到 100 MB 时，也会进行轮换，并保留前 48 个副本（最多总共 49 个文件）。当审核文件执行每日轮换时，不会生成 EMS 消息。如果审核文件因超过其文件大小限制而发生轮换，则会生成一条 EMS 消息。
+
+您可以使用 `ssecurityaudit log show` 命令显示集群中单个节点或多个节点合并的审核条目。您还可以使用 Web 浏览器在单个节点上显示 ` /mroot/etc/log/mlog` 目录的内容。

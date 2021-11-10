@@ -1,0 +1,64 @@
+---
+permalink: encryption-at-rest/modify-external-key-server-96-later-task.html 
+sidebar: sidebar 
+keywords: modifying, external key management, server, properties 
+summary: 从 ONTAP 9.6 开始，您可以使用 security key-manager external modify-server 命令更改外部密钥管理服务器的 I/O 超时和用户名。 
+---
+= 修改外部密钥管理服务器属性
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.6 开始，您可以使用 `security key-manager external modify-server` 命令更改外部密钥管理服务器的 I/O 超时和用户名。
+
+.您需要什么？ #8217 ；将需要什么
+* 要执行此任务，您必须是集群或 SVM 管理员。
+* 此任务需要高级权限。
+
+
+.步骤
+. 在存储系统上，更改为高级权限级别：
++
+`set -privilege advanced`
+
+. 修改集群的外部密钥管理器服务器属性：
++
+`security key-manager external modify-server -vserver admin_sVM -key-server host_name_ip_address ： port ， ... -timeout 1...60 -username user_name`
+
++
+[NOTE]
+====
+超时值以秒为单位。如果您修改了用户名，系统将提示您输入新密码。如果在集群登录提示符处运行命令，则 ` _admin_svm_` 默认为当前集群的管理 SVM 。您必须是集群管理员才能修改外部密钥管理器服务器属性。
+
+====
++
+以下命令会将侦听默认端口 5696 的 `cluster1` 外部密钥管理服务器的超时值更改为 45 秒：
+
++
+[listing]
+----
+clusterl::> security key-manager external modify-server -vserver cluster1 -key-server ks1.local -timeout 45
+----
+. 修改 SVM 的外部密钥管理器服务器属性（仅限 NVE ）：
++
+`security key-manager external modify-server -vserver SVM -key-server host_name_IP_address ： port ， ... -timeout 1...60 -username user_name`
+
++
+[NOTE]
+====
+超时值以秒为单位。如果您修改了用户名，系统将提示您输入新密码。如果在 SVM 登录提示符处运行命令，则 ` SVM_` 默认为当前 SVM 。您必须是集群或 SVM 管理员才能修改外部密钥管理器服务器属性。
+
+====
++
+以下命令将更改侦听默认端口 5696 的 `svm1` 外部密钥管理服务器的用户名和密码：
+
++
+[listing]
+----
+svml::> security key-manager external modify-server -vserver svm11 -key-server ks1.local -username svm1user
+Enter the password:
+Reenter the password:
+----
+. 对任何其他 SVM 重复最后一步。
+

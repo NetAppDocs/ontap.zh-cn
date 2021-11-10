@@ -1,0 +1,54 @@
+---
+permalink: nfs-admin/support-vmware-vstorage-over-nfs-concept.html 
+sidebar: sidebar 
+keywords: support, vmware, vStorage, nfs 
+summary: ONTAP 支持 NFS 环境中的某些 VMware vStorage APIs for Array Integration （ VAAI ）功能。 
+---
+= 支持基于 NFS 的 VMware vStorage
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 支持 NFS 环境中的某些 VMware vStorage APIs for Array Integration （ VAAI ）功能。
+
+
+
+== 支持的功能
+
+支持以下功能：
+
+* 副本卸载
++
+使 ESXi 主机可以直接在源数据存储位置和目标数据存储位置之间复制虚拟机或虚拟机磁盘（ VMDK ），而无需主机参与。这样可以节省 ESXi 主机的 CPU 周期和网络带宽。如果源卷为稀疏卷，则副本卸载可保留空间效率。
+
+* 空间预留
++
+通过为 VMDK 文件预留空间来保证其存储空间。
+
+
+
+
+
+== 限制
+
+基于 NFS 的 VMware vStorage 具有以下限制：
+
+* 在以下情况下，副本卸载操作可能会失败：
++
+** 在源卷或目标卷上运行 wafliron 时，因为它会暂时使卷脱机
+** 移动源卷或目标卷时
+** 移动源或目标 LIF 时
+** 执行接管或交还操作时
+** 执行切换或切回操作时
+
+
+* 在以下情况下，由于文件句柄格式不同，服务器端复制可能会失败：
++
+您尝试将当前或先前已导出 qtree 的 SVM 中的数据复制到从未导出 qtree 的 SVM 。要解决此限制，您可以在目标 SVM 上至少导出一个 qtree 。
+
+
+
+* 相关信息 *
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_VAAI_offloaded_operations_are_supported_by_Data_ONTAP%3F["Data ONTAP 支持哪些 VAAI 卸载操作？"]

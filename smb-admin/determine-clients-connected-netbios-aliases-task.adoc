@@ -1,0 +1,68 @@
+---
+permalink: smb-admin/determine-clients-connected-netbios-aliases-task.html 
+sidebar: sidebar 
+keywords: determine, smb, client, connect, netbios, alias, connection, troubleshoot, issue, determine whether smb clients are connected using netbios aliases 
+summary: 您可以确定 SMB 客户端是否使用 NetBIOS 别名进行连接，如果是，还可以确定使用哪个 NetBIOS 别名进行连接。在对连接问题进行故障排除时，此功能非常有用。 
+---
+= 确定 SMB 客户端是否使用 NetBIOS 别名进行连接
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以确定 SMB 客户端是否使用 NetBIOS 别名进行连接，如果是，还可以确定使用哪个 NetBIOS 别名进行连接。在对连接问题进行故障排除时，此功能非常有用。
+
+您必须使用 ` -instance` 参数显示与 SMB 连接关联的 NetBIOS 别名（如果有）。如果使用 CIFS 服务器名称或 IP 地址建立 SMB 连接，则 `NetBIOS Name` 字段的输出为 ` -` （连字符）。
+
+.步骤
+. 执行所需的操作：
++
+|===
+| 要显示 NetBIOS 信息的对象 | 输入 ... 
+
+
+ a| 
+SMB 连接
+ a| 
+`vserver cifs session show -instance`
+
+
+
+ a| 
+使用指定 NetBIOS 别名的连接：
+ a| 
+`vserver cifs session show -instance -netbios-name _netbios_name_`
+
+|===
++
+以下示例显示了用于与会话 ID 1 建立 SMB 连接的 NetBIOS 别名的信息：
+
++
+`vserver cifs session show -session-id 1 -instance`
+
++
+[listing]
+----
+
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 1
+               Connection ID: 127834
+Incoming Data LIF IP Address: 10.1.1.25
+                 Workstation: 10.2.2.50
+    Authentication Mechanism: NTLMv2
+                Windows User: EXAMPLE\user1
+                   UNIX User: user1
+                 Open Shares: 2
+                  Open Files: 2
+                  Open Other: 0
+              Connected Time: 1d 1h 10m 5s
+                   Idle Time: 22s
+            Protocol Version: SMB3
+      Continuously Available: No
+           Is Session Signed: true
+       User Authenticated as: domain-user
+                NetBIOS Name: ALIAS1
+       SMB Encryption Status: Unencrypted
+----
+

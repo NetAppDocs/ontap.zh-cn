@@ -1,0 +1,49 @@
+---
+permalink: fabricpool/display-mirror-details-task.html 
+sidebar: sidebar 
+keywords: display, fabricpool, mirror, details 
+summary: 您可以显示有关 FabricPool 镜像的详细信息，以查看配置中的对象存储以及对象存储镜像是否与主对象存储同步。 
+---
+= 显示 FabricPool 镜像详细信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关 FabricPool 镜像的详细信息，以查看配置中的对象存储以及对象存储镜像是否与主对象存储同步。
+
+.步骤
+. 使用 `storage aggregate object-store show` 命令显示有关 FabricPool 镜像的信息。
++
+此示例显示有关 FabricPool 镜像中主对象存储和镜像对象存储的详细信息。
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store show
+----
++
+[listing]
+----
+Aggregate      Object Store Name Availability    Mirror Type
+-------------- ----------------- -------------   ----------
+aggr1          my-store-1        available       primary
+               my-store-2        available       mirror
+----
++
+此示例显示有关 FabricPool 镜像的详细信息，包括镜像是否因重新同步操作而降级。
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store show -fields mirror-type,is-mirror-degraded
+----
++
+[listing]
+----
+aggregate      object-store-name mirror-type     is-mirror-degraded
+-------------- ----------------- ------------- ------------------
+aggr1          my-store-1        primary           -
+               my-store-2        mirror          false
+----
+

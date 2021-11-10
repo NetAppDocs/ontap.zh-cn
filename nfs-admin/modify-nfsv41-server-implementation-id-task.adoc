@@ -1,0 +1,84 @@
+---
+permalink: nfs-admin/modify-nfsv41-server-implementation-id-task.html 
+sidebar: sidebar 
+keywords: modify, nfsv4.1, server, implementation 
+summary: NFSv4.1 协议包含一个服务器实施 ID ，用于记录服务器域，名称和日期。您可以修改服务器实施 ID 的默认值。更改默认值可能会很有用，例如，在收集使用情况统计信息或对互操作性问题进行故障排除时。有关详细信息，请参见 RFC 5661 。 
+---
+= 修改 NFSv4.1 服务器实施 ID
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFSv4.1 协议包含一个服务器实施 ID ，用于记录服务器域，名称和日期。您可以修改服务器实施 ID 的默认值。更改默认值可能会很有用，例如，在收集使用情况统计信息或对互操作性问题进行故障排除时。有关详细信息，请参见 RFC 5661 。
+
+这三个选项的默认值如下：
+
+[cols="3*"]
+|===
+| 选项 | 选项名称 | 默认值 
+
+
+ a| 
+NFSv4.1 实施 ID 域
+ a| 
+` -v4.1-implementation-domain`
+ a| 
+NetApp.com
+
+
+
+ a| 
+NFSv4.1 实施 ID 名称
+ a| 
+` -v4.1-implementation-name`
+ a| 
+集群版本名称
+
+
+
+ a| 
+NFSv4.1 实施 ID 日期
+ a| 
+` -v4.1-implementation-date`
+ a| 
+集群版本日期
+
+|===
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 执行以下操作之一：
++
+[cols="2*"]
+|===
+| 要修改 NFSv4.1 实施 ID 的项 | 输入命令 ... 
+
+
+ a| 
+domain
+ a| 
+`vserver nfs modify -v4.1-implementation-domain domain`
+
+
+
+ a| 
+Name
+ a| 
+`vserver nfs modify -v4.1-implementation-name`
+
+
+
+ a| 
+Date
+ a| 
+`vserver nfs modify -v4.1-implementation-date`
+
+|===
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+

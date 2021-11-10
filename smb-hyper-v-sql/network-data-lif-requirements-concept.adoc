@@ -1,0 +1,53 @@
+---
+permalink: smb-hyper-v-sql/network-data-lif-requirements-concept.html 
+sidebar: sidebar 
+keywords: network, data, lif, requirements, hyper, v, sql, server, protocol 
+summary: 在创建 SQL Server 或基于 SMB 的 Hyper-V 配置以实现无中断运行时，您需要了解特定的网络和数据 LIF 要求。 
+---
+= 网络和数据 LIF 要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在创建 SQL Server 或基于 SMB 的 Hyper-V 配置以实现无中断运行时，您需要了解特定的网络和数据 LIF 要求。
+
+
+
+== 网络协议要求
+
+* 支持 IPv4 和 IPv6 网络。
+* 需要 SMB 3.0 或更高版本。
++
+SMB 3.0 提供了创建持续可用的 SMB 连接所需的功能，以实现无中断运行。
+
+* DNS 服务器必须包含将 CIFS 服务器名称映射到为 Storage Virtual Machine （ SVM ）上的数据 LIF 分配的 IP 地址的条目。
++
+在访问虚拟机或数据库文件时， Hyper-V 或 SQL Server 应用程序服务器通常会通过多个数据 LIF 建立多个连接。为了正常运行，应用程序服务器必须使用 CIFS 服务器名称进行多个 SMB 连接，而不是与多个唯一 IP 地址建立多个连接。
+
++
+见证还需要使用 CIFS 服务器的 DNS 名称，而不是单个 LIF IP 地址。
+
++
+从 ONTAP 9.4 开始，您可以通过启用 SMB 多通道来提高基于 SMB 配置的 Hyper-V 和 SQL 服务器的吞吐量和容错能力。为此，您必须在集群和客户端上部署多个 1G ， 10G 或更大的 NIC 。
+
+
+
+
+
+== 数据 LIF 要求
+
+* 通过 SMB 解决方案托管应用程序服务器的 SVM 必须在集群中的每个节点上至少具有一个可运行的数据 LIF 。
++
+SVM 数据 LIF 可以故障转移到集群中的其他数据端口，包括当前未托管应用程序服务器访问的数据的节点。此外，由于见证节点始终是应用程序服务器所连接节点的 SFO 配对节点，因此集群中的每个节点都可能是见证节点。
+
+* 不能将数据 LIF 配置为自动还原。
++
+发生接管或交还事件后，您应手动将数据 LIF 还原到其主端口。
+
+* 所有数据 LIF IP 地址都必须在 DNS 中有一个条目，并且所有条目都必须解析为 CIFS 服务器名称。
++
+应用程序服务器必须使用 CIFS 服务器名称连接到 SMB 共享。您不能将应用程序服务器配置为使用 LIF IP 地址进行连接。
+
+* 如果 CIFS 服务器名称与 SVM 名称不同，则 DNS 条目必须解析为 CIFS 服务器名称。
+

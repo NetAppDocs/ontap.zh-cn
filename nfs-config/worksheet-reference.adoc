@@ -1,0 +1,1006 @@
+---
+permalink: nfs-config/worksheet-reference.html 
+sidebar: sidebar 
+keywords: worksheet, gathering, nfs, configuration, information, access, svm, name, service, information, add, storage, capacity 
+summary: 通过 NFS 配置工作表，您可以收集为客户端设置 NFS 访问所需的信息。 
+---
+= 用于收集 NFS 配置信息的工作表
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过 NFS 配置工作表，您可以收集为客户端设置 NFS 访问所需的信息。
+
+您应根据决定在何处配置存储来完成工作表的一个或两个部分：
+
+* 如果要配置对 SVM 的 NFS 访问，应完成这两个部分。
++
+link:worksheet-reference.html#configuring-nfs-access-to-an-svm["配置对 SVM 的 NFS 访问"]
+
++
+link:worksheet-reference.html#adding-storage-capacity-to-an-nfs-enabled-svm["向启用了 NFS 的 SVM 添加存储容量"]
+
+* 如果要向启用了 NFS 的 SVM 添加存储容量，则应仅完成第二部分。
++
+link:worksheet-reference.html#adding-storage-capacity-to-an-nfs-enabled-svm["向启用了 NFS 的 SVM 添加存储容量"]
+
+
+
+有关参数的详细信息，请参见命令手册页。
+
+
+
+== 配置对 SVM 的 NFS 访问
+
+* 用于创建 SVM* 的参数
+
+如果要创建新的 SVM ，请在 `vserver create` 命令中提供这些值。
+
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` -vserver`
+ a| 
+您为新 SVM 提供的名称，可以是完全限定域名（ FQDN ），也可以遵循在集群中强制实施唯一 SVM 名称的其他约定。
+ a| 
+
+
+
+ a| 
+` 聚合`
+ a| 
+集群中具有足够空间来容纳新 NFS 存储容量的聚合的名称。
+ a| 
+
+
+
+ a| 
+` -rootvolume`
+ a| 
+为 SVM 根卷提供的唯一名称。
+ a| 
+
+
+
+ a| 
+` -rootvolume-security-style`
+ a| 
+对 SVM 使用 UNIX 安全模式。
+ a| 
+`UNIX`
+
+
+
+ a| 
+` 语言`
+ a| 
+在此工作流中使用默认语言设置。
+ a| 
+`C.UTF-8`
+
+
+
+ a| 
+`IP 空间`
+ a| 
+IP 空间是 Storage Virtual Machine （ SVM ）所在的不同 IP 地址空间。
+ a| 
+
+|===
+* 用于创建 NFS 服务器的参数 *
+
+在创建新 NFS 服务器并指定支持的 NFS 版本时，您可以在 `vserver nfs create` 命令中提供这些值。
+
+如果要启用 NFSv4 或更高版本，则应使用 LDAP 来提高安全性。
+
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` -v3` ， ` -v4.0` ， ` -v4.1` ， ` -v4.1-pNFS`
+ a| 
+根据需要启用 NFS 版本。
+
+[NOTE]
+====
+启用 `v4.1` 后， ONTAP 9.8 及更高版本也支持 v4.2 。
+
+==== a| 
+
+
+
+ a| 
+` -v4-id-domain`
+ a| 
+ID 映射域名。
+ a| 
+
+
+
+ a| 
+` -v4-numeric-ids`
+ a| 
+支持数字所有者 ID （已启用或已禁用）。
+ a| 
+
+|===
+* 用于创建 LIF* 的参数
+
+在创建 LIF 时，您可以使用 `network interface create` 命令提供这些值。
+
+如果您使用的是 Kerberos ，则应在多个 LIF 上启用 Kerberos 。
+
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` - lif`
+ a| 
+为新 LIF 提供的名称。
+ a| 
+
+
+
+ a| 
+` - 角色`
+ a| 
+在此工作流中使用数据 LIF 角色。
+ a| 
+`data`
+
+
+
+ a| 
+` 数据协议`
+ a| 
+在此工作流中仅使用 NFS 协议。
+ a| 
+`NFS`
+
+
+
+ a| 
+` 主节点`
+ a| 
+在 LIF 上运行 `network interface revert` 命令时， LIF 返回到的节点。
+ a| 
+
+
+
+ a| 
+` 主端口`
+ a| 
+在 LIF 上运行 `network interface revert` 命令时， LIF 返回到的端口或接口组。
+ a| 
+
+
+
+ a| 
+` 地址`
+ a| 
+集群上要由新 LIF 用于数据访问的 IPv4 或 IPv6 地址。
+ a| 
+
+
+
+ a| 
+` 网络掩码`
+ a| 
+LIF 的网络掩码和网关。
+ a| 
+
+
+
+ a| 
+` 子网`
+ a| 
+IP 地址池。用于代替 ` 地址` 和 ` 网络掩码` 自动分配地址和网络掩码。
+ a| 
+
+
+
+ a| 
+` 防火墙策略`
+ a| 
+在此工作流中使用默认数据防火墙策略。
+ a| 
+`data`
+
+|===
+* 用于 DNS 主机名解析的参数 *
+
+在配置 DNS 时，您可以使用 `vserver services name-service dns create` 命令提供这些值。
+
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` 域`
+ a| 
+最多五个 DNS 域名。
+ a| 
+
+
+
+ a| 
+` 名称服务器`
+ a| 
+每个 DNS 名称服务器最多三个 IP 地址。
+ a| 
+
+|===
+
+
+== 名称服务信息
+
+* 用于创建本地用户的参数 *
+
+如果要创建本地用户，请使用 `vserver services name-service unix-user create` 命令提供这些值。如果要通过从统一资源标识符（ Uniform Resource Identifier ， URI ）加载包含 UNIX 用户的文件来配置本地用户，则无需手动指定这些值。
+
+|===
+|  | 用户名 ` （ -user ）` | 用户 ID ` （ -id ）` | 组 ID ` （ -primary-gid ）` | 全名 ` （ -full-name ）` 
+
+
+ a| 
+示例
+ a| 
+johnm
+ a| 
+123.
+ a| 
+100
+ a| 
+John Miller
+
+
+
+ a| 
+1.
+ a| 
+ a| 
+ a| 
+ a| 
+
+
+
+ a| 
+2.
+ a| 
+ a| 
+ a| 
+ a| 
+
+
+
+ a| 
+3.
+ a| 
+ a| 
+ a| 
+ a| 
+
+
+
+ a| 
+...
+ a| 
+ a| 
+ a| 
+ a| 
+
+
+
+ a| 
+不包括
+ a| 
+ a| 
+ a| 
+ a| 
+
+|===
+* 用于创建本地组的参数 *
+
+如果要创建本地组，请使用 `vserver services name-service unix-group create` 命令提供这些值。如果要通过从 URI 加载包含 UNIX 组的文件来配置本地组，则无需手动指定这些值。
+
+|===
+|  | 组名称（` -name` ） | 组 ID （` -id` ） 
+
+
+ a| 
+示例
+ a| 
+工程
+ a| 
+100
+
+
+
+ a| 
+1.
+ a| 
+ a| 
+
+
+
+ a| 
+2.
+ a| 
+ a| 
+
+
+
+ a| 
+3.
+ a| 
+ a| 
+
+
+
+ a| 
+...
+ a| 
+ a| 
+
+
+
+ a| 
+不包括
+ a| 
+ a| 
+
+|===
+* 用于 NIS* 的参数
+
+您可以使用 `vserver services name-service nis-domain create` 命令提供这些值。
+
+[NOTE]
+====
+从 ONTAP 9.2 开始，字段 ` -nis-servers` 将取代字段 ` -servers` 。此新字段可以使用 NIS 服务器的主机名或 IP 地址。
+
+====
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` 域`
+ a| 
+SVM 将用于名称查找的 NIS 域。
+ a| 
+
+
+
+ a| 
+` - 主动`
+ a| 
+活动的 NIS 域服务器。
+ a| 
+`true` 或 `false`
+
+
+
+ a| 
+` 服务器`
+ a| 
+ONTAP 9.0 和 9.1 ： NIS 域配置使用的一个或多个 NIS 服务器 IP 地址。
+ a| 
+
+
+
+ a| 
+` nis-servers`
+ a| 
+ONTAP 9.2 ：域配置所使用的 NIS 服务器的 IP 地址和主机名列表，以英文逗号分隔。
+ a| 
+
+|===
+LDAP 的 * 参数 *
+
+您可以在 `vserver services name-service ldap client create` 命令中提供这些值。
+
+您还需要一个自签名根 CA 证书 ` .pem` 文件。
+
+[NOTE]
+====
+从 ONTAP 9.2 开始，字段 ` -ldap-servers` 将取代字段 ` -servers` 。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
+
+====
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` -vserver`
+ a| 
+要为其创建 LDAP 客户端配置的 SVM 的名称。
+ a| 
+
+
+
+ a| 
+` 客户端配置`
+ a| 
+为新 LDAP 客户端配置分配的名称。
+ a| 
+
+
+
+ a| 
+` 服务器`
+ a| 
+ONTAP 9.0 和 9.1 ：一个或多个 LDAP 服务器，按 IP 地址列出，以逗号分隔。
+ a| 
+
+
+
+ a| 
+` LDAP 服务器`
+ a| 
+ONTAP 9.2 ： LDAP 服务器的 IP 地址和主机名列表，以英文逗号分隔。
+ a| 
+
+
+
+ a| 
+` 查询超时`
+ a| 
+对此工作流使用默认 `3` 秒。
+ a| 
+`3`
+
+
+
+ a| 
+` -min-bind-level`
+ a| 
+最小绑定身份验证级别。默认值为 `anonymous` 。如果配置了签名和密封，则必须将设置为 `sAsl` 。
+ a| 
+
+
+
+ a| 
+` 首选 AD 服务器`
+ a| 
+一个或多个首选 Active Directory 服务器，按 IP 地址列出，以逗号分隔。
+ a| 
+
+
+
+ a| 
+` -ad-domain`
+ a| 
+Active Directory 域。
+ a| 
+
+
+
+ a| 
+` 架构`
+ a| 
+要使用的模式模板。您可以使用默认模式或自定义模式。
+ a| 
+
+
+
+ a| 
+` 端口`
+ a| 
+在此工作流中使用默认 LDAP 服务器端口 `389` 。
+ a| 
+`389`
+
+
+
+ a| 
+` 绑定 DN`
+ a| 
+绑定用户可分辨名称。
+ a| 
+
+
+
+ a| 
+` 基础 DN`
+ a| 
+基本可分辨名称。默认值为 ` ""` （ root ）。
+ a| 
+
+
+
+ a| 
+` 基础范围`
+ a| 
+对此工作流使用默认基础搜索范围 `ssubnet` 。
+ a| 
+`ssubnet`
+
+
+
+ a| 
+` 会话安全性`
+ a| 
+启用 LDAP 签名或签名和签章。默认值为 `none` 。
+ a| 
+
+
+
+ a| 
+` -use-start-tls`
+ a| 
+启用基于 TLS 的 LDAP 。默认值为 `false` 。
+ a| 
+
+|===
+* 用于 Kerberos 身份验证的参数 *
+
+您可以在 `vserver nfs kerberos realm create` 命令中提供这些值。根据您使用 Microsoft Active Directory 作为密钥分发中心（ Key Distribution Center ， KDC ）服务器，还是使用 MIT 或其他 UNIX KDC 服务器，某些值会有所不同。
+
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` -vserver`
+ a| 
+要与 KDC 通信的 SVM 。
+ a| 
+
+
+
+ a| 
+` 域`
+ a| 
+Kerberos 域。
+ a| 
+
+
+
+ a| 
+` 时钟偏差`
+ a| 
+客户端和服务器之间允许的时钟偏差。
+ a| 
+
+
+
+ a| 
+` -kD-IP`
+ a| 
+KDC IP 地址。
+ a| 
+
+
+
+ a| 
+` -kdc 端口`
+ a| 
+KDC 端口号。
+ a| 
+
+
+
+ a| 
+` -AdServer-name`
+ a| 
+仅限 Microsoft KDC ： AD 服务器名称。
+ a| 
+
+
+
+ a| 
+` -AdServer-IP`
+ a| 
+仅限 Microsoft KDC ： AD 服务器 IP 地址。
+ a| 
+
+
+
+ a| 
+` -adminserver-IP`
+ a| 
+仅限 UNIX KDC ：管理服务器 IP 地址。
+ a| 
+
+
+
+ a| 
+` 管理服务器端口`
+ a| 
+仅限 UNIX KDC ：管理服务器端口号。
+ a| 
+
+
+
+ a| 
+` 密码服务器 -IP`
+ a| 
+仅限 UNIX KDC ：密码服务器 IP 地址。
+ a| 
+
+
+
+ a| 
+` 密码服务器端口`
+ a| 
+仅限 UNIX KDC ：密码服务器端口。
+ a| 
+
+
+
+ a| 
+` -kdc 供应商`
+ a| 
+KDC 供应商。
+ a| 
+｛ `Microsoft` | `其他` ｝
+
+
+
+ a| 
+` 注释`
+ a| 
+任何所需注释。
+ a| 
+
+|===
+您可以在 `vserver nfs kerberos interface enable` 命令中提供这些值。
+
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` -vserver`
+ a| 
+要为其创建 Kerberos 配置的 SVM 的名称。
+ a| 
+
+
+
+ a| 
+` - lif`
+ a| 
+要启用 Kerberos 的数据 LIF 。您可以在多个 LIF 上启用 Kerberos 。
+ a| 
+
+
+
+ a| 
+` -SPN`
+ a| 
+服务主体名称（ SPN ）
+ a| 
+
+
+
+ a| 
+` 允许的类型`
+ a| 
+基于 NFS 的 Kerberos 允许的加密类型； `AES-256` ，具体取决于客户端功能。
+ a| 
+
+
+
+ a| 
+` 管理员用户名`
+ a| 
+用于直接从 KDC 检索 SPN 机密密钥的 KDC 管理员凭据。密码为必填项
+ a| 
+
+
+
+ a| 
+` -keytab-uri`
+ a| 
+如果您没有 KDC 管理员凭据，则为 KDC 中包含 SPN 密钥的 keytab 文件。
+ a| 
+
+
+
+ a| 
+` -ou`
+ a| 
+使用域为 Microsoft KDC 启用 Kerberos 时，要在其中创建 Microsoft Active Directory 服务器帐户的组织单位（ OU ）。
+ a| 
+
+|===
+
+
+== 向启用了 NFS 的 SVM 添加存储容量
+
+* 用于创建导出策略和规则的参数 *
+
+您可以在 `vserver export-policy create` 命令中提供这些值。
+
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` -vserver`
+ a| 
+要托管新卷的 SVM 的名称。
+ a| 
+
+
+
+ a| 
+` 策略名称`
+ a| 
+为新导出策略提供的名称。
+ a| 
+
+|===
+您可以使用 `vserver export-policy rule create` 命令为每个规则提供这些值。
+
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` - 客户端匹配`
+ a| 
+客户端匹配规范。
+ a| 
+
+
+
+ a| 
+` 规则索引`
+ a| 
+导出规则在规则列表中的位置。
+ a| 
+
+
+
+ a| 
+` 协议`
+ a| 
+在此工作流中使用 NFS 。
+ a| 
+`NFS`
+
+
+
+ a| 
+`` - rorule
+ a| 
+只读访问的身份验证方法。
+ a| 
+
+
+
+ a| 
+` rwrule`
+ a| 
+读写访问的身份验证方法。
+ a| 
+
+
+
+ a| 
+` 超级用户`
+ a| 
+用于超级用户访问的身份验证方法。
+ a| 
+
+
+
+ a| 
+` - anon`
+ a| 
+匿名用户映射到的用户 ID 。
+ a| 
+
+|===
+您必须为每个导出策略创建一个或多个规则。
+
+|===
+| ` * —规则索引 *` | ` * - 客户端匹配 *` | ` * — rorule*` | ` * -rwrule*` | ` * - 超级用户 *` | ` * - anon*` 
+
+
+ a| 
+示例
+ a| 
+0.0.0.0/0 ，@rootaccess_netgroup
+ a| 
+任意
+ a| 
+krb5
+ a| 
+系统
+ a| 
+65534
+
+
+
+ a| 
+1.
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+
+
+
+ a| 
+2.
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+
+
+
+ a| 
+3.
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+
+
+
+ a| 
+...
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+
+
+
+ a| 
+不包括
+ a| 
+ a| 
+ a| 
+ a| 
+ a| 
+
+|===
+用于创建卷的 * 参数 *
+
+如果要创建卷而不是 qtree ，则可以在 `volume create` 命令中提供这些值。
+
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` -vserver`
+ a| 
+要托管新卷的新 SVM 或现有 SVM 的名称。
+ a| 
+
+
+
+ a| 
+` 卷`
+ a| 
+为新卷提供的唯一描述性名称。
+ a| 
+
+
+
+ a| 
+` 聚合`
+ a| 
+集群中具有足够空间来容纳新 NFS 卷的聚合的名称。
+ a| 
+
+
+
+ a| 
+` 大小`
+ a| 
+为新卷的大小提供的整数。
+ a| 
+
+
+
+ a| 
+` 用户`
+ a| 
+设置为卷根所有者的用户的名称或 ID 。
+ a| 
+
+
+
+ a| 
+` 组`
+ a| 
+设置为卷根所有者的组的名称或 ID 。
+ a| 
+
+
+
+ a| 
+` 安全模式`
+ a| 
+对此工作流使用 UNIX 安全模式。
+ a| 
+`UNIX`
+
+
+
+ a| 
+` 接合路径`
+ a| 
+根（ / ）下要挂载新卷的位置。
+ a| 
+
+
+
+ a| 
+` - 导出 - 策略`
+ a| 
+如果您计划使用现有导出策略，则可以在创建卷时输入其名称。
+ a| 
+
+|===
+用于创建 qtree* 的 * 参数
+
+如果要创建 qtree 而不是卷，则可以在 `volume qtree create` 命令中提供这些值。
+
+|===
+| 字段 | Description | 您的价值 
+
+
+ a| 
+` -vserver`
+ a| 
+包含 qtree 的卷所在 SVM 的名称。
+ a| 
+
+
+
+ a| 
+` 卷`
+ a| 
+要包含新 qtree 的卷的名称。
+ a| 
+
+
+
+ a| 
+` qtree`
+ a| 
+为新 qtree 提供的唯一描述性名称，不超过 64 个字符。
+ a| 
+
+
+
+ a| 
+` qtree-path`
+ a| 
+可以指定格式为 ` /vol/_volume_name/qtree_name_\>` 的 qtree 路径参数，而不是将卷和 qtree 指定为单独的参数。
+ a| 
+
+
+
+ a| 
+` -unix-permissions`
+ a| 
+可选： qtree 的 UNIX 权限。
+ a| 
+
+
+
+ a| 
+` - 导出 - 策略`
+ a| 
+如果您计划使用现有导出策略，则可以在创建 qtree 时输入其名称。
+ a| 
+
+|===

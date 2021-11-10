@@ -1,0 +1,63 @@
+---
+permalink: system-admin/forward-command-history-log-file-destination-task.html 
+sidebar: sidebar 
+keywords: forward, audit, log, destination, cluster, forwarding, splunk, create, command 
+summary: 使用 cluster log-forwarding create 命令最多可以将审核日志转发到指定的 10 个目标。例如，您可以将日志转发到 Splunk 或系统日志服务器，以便进行监控，分析或备份。 
+---
+= 将审核日志转发到目标
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 `cluster log-forwarding create` 命令，您最多可以将审核日志转发到指定的 10 个目标。例如，您可以将日志转发到 Splunk 或系统日志服务器，以便进行监控，分析或备份。
+
+如果 `cluster log-forwarding create` 命令无法对目标主机执行 ping 操作以验证连接，则此命令将失败并显示错误。尽管不建议这样做，但在命令中使用 ` -force` 参数可绕过连接验证。
+
+您可以在转发日志文件时配置传输安全选项：
+
+* 用于向目标发送消息的协议
++
+您可以选择以下 ` 协议` 值之一：
+
++
+** `udp-unencrypted` ：无安全性的用户数据报协议（默认）
+** `tcp-unencrypted` ：传输控制协议无安全性
+** `TCP 加密` ：传输层安全（ TLS ）传输控制协议
+
+
+* 验证目标服务器身份
++
+将 ` -verify-server` 参数设置为 `true` 时，日志转发目标的身份将通过验证其证书进行验证。只有在 ` -protocol` 字段中选择 `tcp-encrypted` 值时，才能将此值设置为 `true` 。
+
+
+
+.步骤
+. 对于要将审核日志转发到的每个目标，请指定目标 IP 地址或主机名以及任何安全选项。
++
+[listing]
+----
+cluster1::> cluster log-forwarding create -destination 192.168.123.96
+-port 514 -facility user
+
+cluster1::> cluster log-forwarding create -destination 192.168.123.98
+-port 514 -protocol tcp-encrypted -facility user
+----
+. 使用 `cluster log-forwarding show` 命令验证目标记录是否正确。
++
+[listing]
+----
+cluster1::> cluster log-forwarding show
+
+                                                 Verify Syslog
+Destination Host          Port   Protocol        Server Facility
+------------------------- ------ --------        ------ --------
+192.168.123.96            514    udp-unencrypted false  user
+192.168.123.98            514    tcp-encrypted   true   user
+2 entries were displayed.
+----
+
+
+* 相关信息 *
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"]

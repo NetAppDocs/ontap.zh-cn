@@ -1,0 +1,78 @@
+---
+permalink: smb-admin/list-supported-privileges-reference.html 
+sidebar: sidebar 
+keywords: ontap, predefined, support, privilege, local, group, add, user, exist, domain, list of supported privileges 
+summary: ONTAP 具有一组预定义的受支持权限。默认情况下，某些预定义的本地组已添加其中一些权限。此外，您还可以从预定义组添加或删除权限，或者创建新的本地用户或组，并向您创建的组或现有域用户和组添加权限。 
+---
+= 支持的权限列表
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 具有一组预定义的受支持权限。默认情况下，某些预定义的本地组已添加其中一些权限。此外，您还可以从预定义组添加或删除权限，或者创建新的本地用户或组，并向您创建的组或现有域用户和组添加权限。
+
+下表列出了 Storage Virtual Machine （ SVM ）上支持的权限，并列出了已分配权限的 BUILTIN 组：
+
+|===
+| 权限名称 | 默认安全设置 | Description 
+
+
+ a| 
+`seTcbPrivilege`
+ a| 
+无
+ a| 
+作为操作系统的一部分
+
+
+
+ a| 
+`seBackupPrivilege`
+ a| 
+`BUILTIN\Administrators` ， `BUILTIN\Backup Operators`
+ a| 
+备份文件和目录，覆盖所有 ACL
+
+
+
+ a| 
+`seRestorePrivilege`
+ a| 
+`BUILTIN\Administrators` ， `BUILTIN\Backup Operators`
+ a| 
+还原文件和目录，覆盖任何 ACL 会将任何有效的用户或组 SID 设置为文件所有者
+
+
+
+ a| 
+`seOwnershipPrivilege`
+ a| 
+`BUILTIN\Administrators`
+ a| 
+获取文件或其他对象的所有权
+
+
+
+ a| 
+`seSecurityPrivilege`
+ a| 
+`BUILTIN\Administrators`
+ a| 
+管理审核这包括查看，转储和清除安全日志。
+
+
+
+ a| 
+`seChangeNotifyPrivilege`
+ a| 
+`BUILTIN\Administrators` ， `BUILTIN\Backup Operators` ， `BUILTIN\Power Users` ， `BUILTIN\Users` ， `Everyone`
+ a| 
+绕过遍历检查具有此权限的用户无需具有遍历（ x ）权限即可遍历文件夹，符号链接或接合。
+
+|===
+* 相关信息 *
+
+xref:manage-local-privileges-concept.adoc[管理本地权限]
+
+xref:configure-bypass-traverse-checking-concept.adoc[配置绕过遍历检查]

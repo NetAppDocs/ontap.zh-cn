@@ -1,0 +1,79 @@
+---
+permalink: smb-admin/modify-branchcache-config-task.html 
+sidebar: sidebar 
+keywords: modify, configuration, branchcache, service, svm, store, directory, path, hash, maximum, size, operating, mode, version, modify branchcache configurations 
+summary: 您可以修改 SVM 上 BranchCache 服务的配置，包括更改哈希存储目录路径，哈希存储最大目录大小，操作模式以及支持的 BranchCache 版本。您还可以增加包含哈希存储的卷的大小。 
+---
+= 修改 BranchCache 配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以修改 SVM 上 BranchCache 服务的配置，包括更改哈希存储目录路径，哈希存储最大目录大小，操作模式以及支持的 BranchCache 版本。您还可以增加包含哈希存储的卷的大小。
+
+.步骤
+. 执行相应的操作：
++
+|===
+| 如果您要 ... | 输入以下内容 ... 
+
+
+ a| 
+修改哈希存储目录大小
+ a| 
+`vserver cifs branchcache modify -vserver vserver_name -hash-store-max-size ｛ integer ｛ KB_MB|GB_TB_PB] ｝`
+
+
+
+ a| 
+增加包含哈希存储的卷的大小
+ a| 
+`volume size -vserver vserver_name -volume volume_name -new-size new_size[k_m|g_t]` 如果包含哈希存储的卷已满，您可能可以增加卷的大小。您可以将新卷大小指定为一个数字，后跟一个单位名称。
+
+请参见 link:../volumes/index.html["逻辑存储管理"] 有关增加卷大小的详细信息，请参见。
+
+
+
+ a| 
+修改哈希存储目录路径
+ a| 
+`vserver cifs branchcache modify -vserver vserver_name -hash-store-path -flush-hashes ｛ true_false ｝` 如果 SVM 是 SVM 灾难恢复源，则哈希路径不能位于根卷上。这是因为根卷不会复制到灾难恢复目标。
+
+BranchCache 哈希路径可以包含空格和任何有效的文件名字符。
+
+如果修改哈希路径，则 ` -flush-hashes` 是一个必需参数，用于指定是否希望 ONTAP 从原始哈希存储位置刷新哈希。您可以为 ` -flush-hashes` 参数设置以下值：
+
+** 如果指定 `true` ，则 ONTAP 将删除原始位置的哈希，并在启用了 BranchCache 的客户端发出新请求时在新位置创建新哈希。
+** 如果指定 `false` ，则不会刷新哈希。
++
+在这种情况下，您可以选择稍后通过将哈希存储路径更改回原始位置来重复使用现有哈希。
+
+
+
+
+
+ a| 
+更改运行模式
+ a| 
+`vserver cifs BranchCache modify -vserver vserver_name -operating 模式 ｛ per-share_all-shares| disable ｝`
+
+[NOTE]
+====
+修改操作模式时，应注意以下事项： - 设置 SMB 会话后， ONTAP 会公布对共享的 BranchCache 支持。—启用 BranchCache 时已建立会话的客户端需要断开连接并重新连接，才能使用此共享的缓存内容。
+
+====
+
+
+ a| 
+更改 BranchCache 版本支持
+ a| 
+`vserver cifs BranchCache modify -vserver vserver_name -versions ｛ v1-enablesv2-enables- enable-all ｝`
+
+|===
+. 使用 `vserver cifs branchcache show` 命令验证配置更改。
+
+
+* 相关信息 *
+
+link:../volumes/index.html["《逻辑存储管理指南》"]

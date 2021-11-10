@@ -1,0 +1,48 @@
+---
+permalink: system-admin/upload-performance-archive-files-task.html 
+sidebar: sidebar 
+keywords: upload, performance, archive, files, autosupport, message, technical 
+summary: 您可以生成并发送包含性能归档的 AutoSupport 消息。默认情况下， NetApp 技术支持会收到 AutoSupport 消息，而性能归档会上传到 NetApp 支持站点。您可以为消息指定备用目标并上传。 
+---
+= 上传性能归档文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以生成并发送包含性能归档的 AutoSupport 消息。默认情况下， NetApp 技术支持会收到 AutoSupport 消息，而性能归档会上传到 NetApp 支持站点。您可以为消息指定备用目标并上传。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须已使用以下设置设置 AutoSupport ：
++
+** 已在节点上启用 AutoSupport 。
+** AutoSupport 已配置为向技术支持发送消息。
+** AutoSupport 已配置为使用 HTTP 或 HTTPS 传输协议。
++
+发送包含性能归档文件等大型文件的消息时，不支持 SMTP 传输协议。
+
+
+
+
+
+您必须指定要上传的性能归档数据的开始日期。大多数存储系统会将性能归档保留两周，使您可以指定最长两周前的开始日期。例如，如果今天是 1 月 15 日，则可以指定开始日期 1 月 2 日。如果您需要帮助确定要上传的性能归档的开始日期，请联系技术支持。
+
+.步骤
+. 使用 `ssystem node AutoSupport invoke-performance-archive` 命令生成 AutoSupport 消息并上传性能归档文件。
++
+在以下示例中，将从 2015 年 1 月 12 日起 4 小时的性能归档文件添加到 AutoSupport 消息中并上传到默认位置，即 NetApp 支持站点：
+
++
+[listing]
+----
+cluster1::> system node autosupport invoke-performance-archive -node local -start-date 1/12/2015 13:42:09 -duration 4h
+----
++
+在以下示例中，将从 2015 年 1 月 12 日起 4 小时的性能归档文件添加到 AutoSupport 消息中并上传到 URI 指定的位置：
+
++
+[listing]
+----
+cluster1::> system node autosupport invoke-performance-archive -node local -start-date 1/12/2015 13:42:09 -duration 4h -uri https://files.company.com
+----
+

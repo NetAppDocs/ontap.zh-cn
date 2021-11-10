@@ -1,0 +1,47 @@
+---
+permalink: nas-audit/node-fpolicy-server-communication-process-concept.html 
+sidebar: sidebar 
+keywords: node-to-external, fpolicy, server communication process 
+summary: 要正确规划 FPolicy 配置，您应了解节点到外部 FPolicy 服务器的通信过程是什么。 
+---
+= 什么是节点到外部 FPolicy 服务器通信过程
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要正确规划 FPolicy 配置，您应了解节点到外部 FPolicy 服务器的通信过程是什么。
+
+参与每个 Storage Virtual Machine （ SVM ）的每个节点都会使用 TCP/IP 启动与外部 FPolicy 服务器（ FPolicy 服务器）的连接。与 FPolicy 服务器的连接使用节点数据 LIF 进行设置；因此，只有当节点具有 SVM 的可操作数据 LIF 时，参与节点才能设置连接。
+
+启用此策略后，参与节点上的每个 FPolicy 进程都会尝试与 FPolicy 服务器建立连接。它使用策略配置中指定的 FPolicy 外部引擎的 IP 地址和端口。
+
+此连接将通过数据 LIF 从每个 SVM 上参与的每个节点建立一个控制通道，并连接到 FPolicy 服务器。此外，如果 IPv4 和 IPv6 数据 LIF 地址位于同一参与节点上，则 FPolicy 会尝试为 IPv4 和 IPv6 建立连接。因此，如果 SVM 扩展到多个节点，或者同时存在 IPv4 和 IPv6 地址，则在 SVM 上启用 FPolicy 策略后， FPolicy 服务器必须已准备好处理来自集群的多个控制通道设置请求。
+
+例如，如果集群有三个节点：节点 1 ，节点 2 和节点 3 ，并且 SVM 数据 LIF 仅分布在节点 2 和节点 3 上，则无论数据卷的分布如何，控制通道只会从节点 2 和节点 3 启动。假设 Node2 有两个属于 SVM 的数据 LIF - LIF1 和 LIF2 ，并且初始连接来自 LIF1 。如果 LIF1 发生故障， FPolicy 将尝试从 LIF2 建立控制通道。
+
+image::../media/what-node-to-fpolicy-server-communication-process-is.png[什么是节点到 fpolicy 服务器的通信过程]
+
+
+
+== FPolicy 如何在 LIF 迁移或故障转移期间管理外部通信
+
+数据 LIF 可以迁移到同一节点中的数据端口或远程节点上的数据端口。
+
+当数据 LIF 发生故障转移或迁移时，将与 FPolicy 服务器建立新的控制通道连接。然后， FPolicy 可以重试超时的 SMB 和 NFS 客户端请求，从而向外部 FPolicy 服务器发送新通知。节点拒绝 FPolicy 服务器对初始超时 SMB 和 NFS 请求的响应。
+
+
+
+== FPolicy 如何在节点故障转移期间管理外部通信
+
+如果托管用于 FPolicy 通信的数据端口的集群节点发生故障， ONTAP 将中断 FPolicy 服务器与节点之间的连接。
+
+可以通过配置 LIF 管理器将 FPolicy 通信中使用的数据端口迁移到另一个活动节点来缓解集群故障转移到 FPolicy 服务器的影响。迁移完成后，将使用新的数据端口建立新的连接。
+
+如果未将 LIF 管理器配置为迁移数据端口，则 FPolicy 服务器必须等待故障节点启动。节点启动后，将使用新会话 ID 从该节点启动新连接。
+
+[NOTE]
+====
+FPolicy 服务器检测到连接断开并显示 Keep-alive 协议消息。清除会话 ID 的超时时间是在配置 FPolicy 时确定的。默认的保活超时为 2 分钟。
+
+====

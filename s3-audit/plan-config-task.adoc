@@ -1,0 +1,98 @@
+---
+permalink: s3-audit/plan-config-task.html 
+sidebar: sidebar 
+keywords: s3, audit, create, configure s3 audit 
+summary: 此任务说明了 S3 审核中使用的参数。 
+---
+= 规划 S3 审核配置
+
+
+[role="lead"]
+您必须为 S3 审核配置指定多个参数或接受默认值。具体而言，您应考虑哪些日志轮换参数有助于确保有足够的可用空间。
+
+有关语法详细信息，请参见 * vserver object-store-server audit create-* 手册页。
+
+
+
+== 常规参数
+
+创建审核配置时，必须指定两个必需参数。此外，您还可以指定三个可选参数。
+
+[cols="4,2,1"]
+|===
+| 信息类型 | 选项 | Required 
+
+
+| SVM 名称 _ 要创建审核配置的 SVM 的名称。SVM 必须已存在并已为 S3 启用。 | ` -verserver _svm_name_` | 是的。 
+
+
+| _Log destination path_ 指定转换后的审核日志的存储位置。此路径必须已存在于 SVM 上。路径长度最多可包含 864 个字符，并且必须具有读写权限。如果路径无效，审核配置命令将失败。 | ` - 目标 _text_` | 是的。 
+
+
+| 要审核的事件类别 _ 可以审核以下事件类别： * data GetObject ， PutObject 和 DeleteObject Events * management PutBucket 和 DeleteBucket 事件默认仅审核数据事件。 | ` 事件 ｛ data ｛ vbar ｝ management ｝ ， ...` | 否 
+|===
+您可以输入以下参数之一来控制审核日志文件的数量。如果未输入任何值，则会保留所有日志文件。
+
+[cols="4,2,1"]
+|===
+| 信息类型 | 选项 | Required 
+
+
+| _Log files rotation limit_ 确定在将最旧的日志文件转出之前要保留的审核日志文件数。例如，如果输入值 5 ，则会保留最后五个日志文件。值为 0 表示所有日志文件均已保留。默认值为 0. 。 | ` -rotate-limit _intege_` | 否 
+
+
+| _Log files duration limit_ 确定日志文件在被删除之前可以保留多长时间。例如，如果输入值 5d0h0m ，超过 5 天的日志将被删除。值为 0 表示所有日志文件均已保留。默认值为 0. 。 | ` 保留持续时间 _integer _time_` | 否 
+|===
+
+
+== 用于审核日志轮换的参数
+
+您可以根据大小或计划轮换审核日志。默认情况下，会根据大小轮换审核日志。
+
+
+
+=== 根据日志大小轮换日志
+
+如果要使用默认日志轮换方法和默认日志大小，则无需为日志轮换配置任何特定参数。默认日志大小为 100 MB 。
+
+如果不想使用默认日志大小，可以配置 ` -rotate-size` 参数以指定自定义日志大小。
+
+如果要单独根据日志大小重置轮换，请使用以下命令取消设置 ` rotate-schedule-minute` 参数：
+
+`vserver audit modify -vserver _svm_name_ -destination / -rotate-schedule-minute -`
+
+
+
+=== 根据计划轮换日志
+
+如果您选择根据计划轮换审核日志，则可以通过使用基于时间的轮换参数的任意组合来计划日志轮换。
+
+* 如果使用基于时间的轮换，则必须使用 ` -rotate-schedule-minute` 参数。
+* 所有其他基于时间的轮换参数均为可选参数。
++
+** ` - 轮换 - 计划 - 月`
+** ` 轮换 - 计划 - 星期`
+** ` - 轮换 - 计划 - 天`
+** ` - 轮换 - 计划 - 小时`
+
+
+* 轮换计划使用所有与时间相关的值进行计算。例如，如果仅指定 ` -rotate-schedule-minute` 参数，则会根据一周中所有几天指定的分钟数在一年中所有月份的所有时间内轮换审核日志文件。
+* 如果仅指定一个或两个基于时间的轮换参数（例如， ` rotate-schedule-month` 和 ` -rotate-schedule-minutes` ），则日志文件将根据您在一周中的所有日期，所有时间内指定的分钟值进行轮换，但仅限于指定的月份。
++
+例如，您可以指定在 1 月， 3 月和 8 月期间，在所有星期一，星期三和星期六的上午 10 ： 30 轮换审核日志
+
+* 如果为 ` -rotate-schedule-dayofweek` 和 ` -rotate-schedule-day` 指定值，则会将其单独考虑。
++
+例如，如果将 ` rotate-schedule-dayofweek` 指定为星期五，将 ` -rotate-schedule-day` 指定为 13 ，则审核日志将在指定月份的每个星期五和 13 日轮换，而不仅仅是在第 13 个星期五轮换。
+
+* 如果要单独根据计划重置轮换，请使用以下命令取消设置 ` -rotate-size 参数` ：
++
+`vserver audit modify -vserver _svm_name_ -destination / -rotate-size -`
+
+
+
+
+
+=== 根据日志大小和计划轮换日志
+
+您可以选择通过任意组合设置 -rotate-size 参数和基于时间的轮换参数来根据日志大小和计划轮换日志文件。例如：如果将 ` -rotate-size` 设置为 10 MB ，将 ` -rotate-schedule-minute` 设置为 15 ，则日志文件会在日志文件大小达到 10 MB 时或每小时的 15 分钟（以先发生的事件为准）轮换。

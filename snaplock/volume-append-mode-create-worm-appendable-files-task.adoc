@@ -1,0 +1,49 @@
+---
+permalink: snaplock/volume-append-mode-create-worm-appendable-files-task.html 
+sidebar: sidebar 
+keywords: volume, append, mode, create, worm, file, vam, rentention, period, data 
+summary: 从 ONTAP 9.3 开始，默认情况下，您可以使用 SnapLock 卷附加模式（ VAM ）功能创建 WORM 可附加文件。WORM 可附加文件会保留以增量方式写入的数据，如日志条目。数据以 256 KB 区块的形式附加到文件中。写入每个区块时，上一个区块将受 WORM 保护。在保留期限结束之前，您无法删除此文件。 
+---
+= 使用卷附加模式创建 WORM 可附加文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，默认情况下，您可以使用 WORM _volume append mode" （ SnapLock 卷附加模式）（ VAM ）功能创建可附加文件。WORM 可附加文件会保留以增量方式写入的数据，如日志条目。数据以 256 KB 区块的形式附加到文件中。写入每个区块时，上一个区块将受 WORM 保护。在保留期限结束之前，您无法删除此文件。
+
+.您需要什么？ #8217 ；将需要什么
+* WORM 可附加文件必须驻留在 SnapLock 卷上。
+* SnapLock 卷必须已卸载，并且 Snapshot 副本和用户创建的文件均为空。
+
+
+数据不必按顺序写入活动的 256 KB 区块。将数据写入文件的字节 n×256 KB+1 时，先前的 256 KB 区块将受 WORM 保护。
+
+如果为卷指定了自动提交期限，则在超过自动提交期限的时间段内未修改的 WORM 可附加文件将提交到 WORM 。
+
+[NOTE]
+====
+SnapLock 审核日志卷不支持 VAM 。
+
+====
+.步骤
+. 启用 VAM ：
++
+` * volume SnapLock modify -vserver _svm_name_ -volume _volume_name_ -is-volume-apping-mode-enabled true*`
+
++
+有关完整的选项列表，请参见命令手册页。
+
++
+以下命令将在 SVM``vs1`` 的卷 `vol1` 上启用 VAM ：
+
++
+[listing]
+----
+cluster1::>volume snaplock modify -vserver vs1 -volume vol1 -is-volume-append-mode-enabled true
+----
+. 使用合适的命令或程序创建具有写入权限的文件。
++
+默认情况下，这些文件可附加 WORM 。
+
+

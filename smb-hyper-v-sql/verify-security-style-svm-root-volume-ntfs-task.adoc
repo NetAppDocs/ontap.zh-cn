@@ -1,0 +1,50 @@
+---
+permalink: smb-hyper-v-sql/verify-security-style-svm-root-volume-ntfs-task.html 
+sidebar: sidebar 
+keywords: verify, security, style, svm, root, volume, ntfs, storage, virtual, machine 
+summary: 要确保通过 SMB 成功执行 Hyper-V 和 SQL Server 无中断操作，必须使用 NTFS 安全模式创建卷。由于根卷的安全模式默认应用于在 Storage Virtual Machine （ SVM ）上创建的卷，因此根卷的安全模式应设置为 NTFS 。 
+---
+= 验证 SVM 根卷的安全模式是否设置为 NTFS
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要确保通过 SMB 成功执行 Hyper-V 和 SQL Server 无中断操作，必须使用 NTFS 安全模式创建卷。由于根卷的安全模式默认应用于在 Storage Virtual Machine （ SVM ）上创建的卷，因此根卷的安全模式应设置为 NTFS 。
+
+.关于此任务
+* 您可以在创建 SVM 时指定根卷的安全模式。
+* 如果创建 SVM 时根卷未设置为 NTFS 安全模式，则可以稍后使用 `volume modify` 命令更改安全模式。
+
+
+.步骤
+. 确定 SVM 根卷的当前安全模式：
++
+` * volume show -vserver _vserver_name_ -fields vserver ， volume ， security-style*`
+
+. 如果根卷不是 NTFS 安全模式卷，请将安全模式更改为 NTFS ：
++
+` * volume modify -vserver _vserver_name_ -volume root_volume_name -security-style ntf*`
+
+. 验证 SVM 根卷是否设置为 NTFS 安全模式：
++
+` * volume show -vserver _vserver_name_ -fields vserver ， volume ， security-style*`
+
+
+
+以下命令验证 SVM vs1 上的根卷安全模式是否为 NTFS ：
+
+[listing]
+----
+cluster1::> volume show -vserver vs1 -fields vserver,volume,security-style
+vserver  volume     security-style
+-------- ---------- --------------
+vs1      vs1_root   unix
+
+cluster1::> volume modify -vserver vs1 -volume vs1_root -security-style ntfs
+
+cluster1::> volume show -vserver vs1 -fields vserver,volume,security-style
+vserver  volume     security-style
+-------- ---------- --------------
+vs1      vs1_root   ntfs
+----

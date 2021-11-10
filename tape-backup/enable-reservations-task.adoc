@@ -1,0 +1,35 @@
+---
+permalink: tape-backup/enable-reservations-task.html 
+sidebar: sidebar 
+keywords: enable, disable, tape, reservation, turn, on 
+summary: 您可以使用 tape.reservations 选项控制 ONTAP 管理磁带设备预留的方式。默认情况下，磁带预留处于关闭状态。 
+---
+= 启用或禁用磁带预留
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `tape.reservations` 选项控制 ONTAP 管理磁带设备预留的方式。默认情况下，磁带预留处于关闭状态。
+
+如果磁带驱动器，介质更换器，网桥或库无法正常工作，启用磁带预留选项可能会出现发生原因问题。如果磁带命令报告在没有其他存储系统使用设备时预留了设备，则应禁用此选项。
+
+.步骤
+. 要使用 SCSI 预留 / 释放机制或 SCSI 永久性预留或禁用磁带预留，请在 clustershell 中输入以下命令：
++
+` * options -option-name tape.reservations -option-value ｛ scsi` persistent | off ｝ *
+
++
+`sCSI` 选择 SCSI 预留 / 释放机制。
+
++
+`Persistent` 选择 SCSI 永久性预留。
+
++
+`off` 禁用磁带预留。
+
+
+
+* 相关信息 *
+
+xref:tape-reservations-concept.adoc[什么是磁带预留]

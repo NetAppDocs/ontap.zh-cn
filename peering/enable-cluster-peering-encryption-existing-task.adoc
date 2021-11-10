@@ -1,0 +1,28 @@
+---
+permalink: peering/enable-cluster-peering-encryption-existing-task.html 
+sidebar: sidebar 
+keywords: enable, cluster, peering, encryption, existing, peer, relationship 
+summary: 从 ONTAP 9.6 开始，默认情况下，所有新创建的集群对等关系都会启用集群对等加密。集群对等加密使用预共享密钥（ PSk ）和传输安全层（ TLS ）来保护跨集群对等通信的安全。这样可以在对等集群之间增加一个额外的安全层。 
+---
+= 对现有对等关系启用集群对等加密
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.6 开始，默认情况下，所有新创建的集群对等关系都会启用集群对等加密。集群对等加密使用预共享密钥（ PSk ）和传输安全层（ TLS ）来保护跨集群对等通信的安全。这样可以在对等集群之间增加一个额外的安全层。
+
+升级到 ONTAP 9.6 之前创建的对等关系必须手动启用集群对等加密。集群对等加密不适用于运行 ONTAP 9.5 或更早版本的集群。因此，对等关系中的两个集群都必须运行 ONTAP 9.6 才能启用集群对等加密。
+
+.步骤
+. 在目标集群上，为与源集群的通信启用加密：
++
+`cluster peer modify _source_cluster_ -auth-status-admin use-authentication -encryption tls-psk`
+
+. 出现提示时，输入密码短语。
+. 在数据保护源集群上，为与数据保护目标集群的通信启用加密：
++
+`cluster peer modify _data_protection_destination_cluster_ -auth-status-admin use-authentication -encryption tls-psk`
+
+. 出现提示时，输入在目标集群上输入的同一密码短语。
+

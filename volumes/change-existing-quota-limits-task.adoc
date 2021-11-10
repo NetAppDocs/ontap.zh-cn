@@ -1,0 +1,44 @@
+---
+permalink: volumes/change-existing-quota-limits-task.html 
+sidebar: sidebar 
+keywords: modify, resize, quota limits 
+summary: 更改现有配额的大小时，您可以调整所有受影响卷上的配额大小，这比重新初始化这些卷上的配额快。 
+---
+= 修改（或调整大小）配额限制
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+更改现有配额的大小时，您可以调整所有受影响卷上的配额大小，这比重新初始化这些卷上的配额快。
+
+您的 Storage Virtual Machine （ SVM ，以前称为 Vserver ）具有强制实施的配额，您希望更改现有配额的大小限制，或者为已具有派生配额的目标添加或删除配额。
+
+.步骤
+. 使用带有 ` -instance` 参数的 `vserver show` 命令确定当前分配给 SVM 的策略的名称。
+. 通过执行以下任一操作来修改配额规则：
++
+** 使用 `volume quota policy rule modify` 命令修改现有配额规则的磁盘或文件限制。
+** 使用 `volume quota policy rule create` 命令为当前具有派生配额的目标（用户，组或 qtree ）创建显式配额规则。
+** 使用 `volume quota policy rule delete` 命令删除同时具有默认配额的目标（用户，组或 qtree ）的显式配额规则。
+
+
+. 使用 `volume quota policy rule show` 命令检查是否已正确配置配额规则。
+. 在更改了配额的每个卷上使用 `volume quota resize` 命令，以激活每个卷上的更改。
++
+您可以通过以下任一方式监控调整大小过程：
+
++
+** 使用 `volume quota resize` 命令时，您可以添加 ` -foreground` 参数以在前台运行调整大小作业。（默认情况下，作业在后台运行。）
++
+当作业在后台运行时，您可以使用 `job show` 命令监控其进度。
+
+** 您可以使用 `volume quota show` 命令监控调整大小状态。
+
+
+. 使用 `volume quota show -instance` 命令检查是否存在调整大小错误，例如无法调整大小的配额规则。
++
+特别是，请检查 "`new definition` " 错误，如果在为尚未具有派生配额的目标添加显式配额后调整配额大小，则会发生此错误。
+
+. 使用 `volume quota report` 命令显示配额报告，以确保强制实施的配额符合您的要求。
+

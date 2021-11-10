@@ -1,0 +1,67 @@
+---
+permalink: antivirus/create-scanner-pool-single-cluster-task.html 
+sidebar: sidebar 
+keywords: create, scanner pool, single cluster 
+summary: 扫描程序池用于定义可连接到 SVM 的 Vscan 服务器和有权限的用户。您可以为单个 SVM 或集群中的所有 SVM 创建扫描程序池。 
+---
+= 在单个集群上创建扫描程序池
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+扫描程序池用于定义可连接到 SVM 的 Vscan 服务器和有权限的用户。您可以为单个 SVM 或集群中的所有 SVM 创建扫描程序池。
+
+.您需要什么？ #8217 ；将需要什么
+* SVM 和 Vscan 服务器必须位于同一域或受信任域中。
+* 对于为单个 SVM 定义的扫描程序池，您必须已为 ONTAP 防病毒连接器配置 SVM 管理 LIF 或 SVM 数据 LIF 。
+* 对于为集群中的所有 SVM 定义的扫描程序池，您必须已为 ONTAP 防病毒连接器配置了集群管理 LIF 。
+
+
+有权限的用户列表必须包含 Vscan 服务器用于连接到 SVM 的域用户帐户。
+
+.步骤
+. 创建扫描程序池：
++
+`vserver vscan scanner-pool create -vserver data_svm_cluster_admin_sVM -scanner-pool scanner_pool -hostnames vsc_server_hostnames -privileged-users privileged_users`
+
++
+** 为为为单个 SVM 定义的池指定数据 SVM ，并为为为集群中的所有 SVM 定义的池指定集群管理员 SVM 。
+** 为每个 Vscan 服务器主机名指定 IP 地址或 FQDN 。
+** 为每个有权限的用户指定域和用户名。有关完整的选项列表，请参见命令手册页。
+
+
++
+以下命令会在 ``vs1``SVM 上创建一个名为 `SP` 的扫描程序池：
+
++
+[listing]
+----
+cluster1::> vserver vscan scanner-pool create -vserver vs1 -scanner-pool SP -hostnames 1.1.1.1,vmwin204-27.fsct.nb -privileged-users cifs\u1,cifs\u2
+----
+. 验证是否已创建扫描程序池： `vserver vscan scanner-pool show -vserver data_svm_cluster_admin_svm -scanner-pool scanner_pool`
++
+有关完整的选项列表，请参见命令手册页。
+
++
+以下命令显示 `SP` 扫描程序池的详细信息：
+
++
+[listing]
+----
+cluster1::> vserver vscan scanner-pool show -vserver vs1 -scanner-pool SP
+
+                                    Vserver: vs1
+                               Scanner Pool: SP
+                             Applied Policy: idle
+                             Current Status: off
+         Cluster on Which Policy Is Applied: -
+                  Scanner Pool Config Owner: vserver
+       List of IPs of Allowed Vscan Servers: 1.1.1.1, 10.72.204.27
+List of Host Names of Allowed Vscan Servers: 1.1.1.1, vmwin204-27.fsct.nb
+                   List of Privileged Users: cifs\u1, cifs\u2
+----
++
+您也可以使用 `vserver vscan scanner-pool show` 命令查看 SVM 上的所有扫描程序池。有关完整的命令语法，请参见命令手册页。
+
+

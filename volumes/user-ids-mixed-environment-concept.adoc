@@ -1,0 +1,49 @@
+---
+permalink: volumes/user-ids-mixed-environment-concept.html 
+sidebar: sidebar 
+keywords: how, ontap, determines, user ids, in mixed environment 
+summary: 如果用户同时从 Windows 和 UNIX 客户端访问 ONTAP 存储，则会同时使用 Windows 和 UNIX 安全性来确定文件所有权。多个因素决定了 ONTAP 在应用用户配额时是使用 UNIX 还是 Windows ID 。 
+---
+= ONTAP 如何在混合环境中确定用户 ID
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果用户同时从 Windows 和 UNIX 客户端访问 ONTAP 存储，则会同时使用 Windows 和 UNIX 安全性来确定文件所有权。多个因素决定了 ONTAP 在应用用户配额时是使用 UNIX 还是 Windows ID 。
+
+如果包含文件的 qtree 或 FlexVol 卷的安全模式仅为 NTFS 或 UNIX ，则此安全模式将确定应用用户配额时使用的 ID 类型。对于采用混合安全模式的 qtree ，使用的 ID 类型取决于文件是否具有 ACL 。
+
+下表总结了所使用的 ID 类型：
+
+[cols="3*"]
+|===
+| 安全风格 | ACL | 无 ACL 
+
+
+ a| 
+"unix"
+ a| 
+UNIX ID
+ a| 
+UNIX ID
+
+
+
+ a| 
+混合
+ a| 
+Windows ID
+ a| 
+UNIX ID
+
+
+
+ a| 
+NTFS
+ a| 
+Windows ID
+ a| 
+Windows ID
+
+|===

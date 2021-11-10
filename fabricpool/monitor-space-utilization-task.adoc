@@ -1,0 +1,139 @@
+---
+permalink: fabricpool/monitor-space-utilization-task.html 
+sidebar: sidebar 
+keywords: monitoring, space, utilization, fabricpool 
+summary: 您需要了解 FabricPool 的性能和云层中存储的数据量。此信息有助于您确定是否需要更改卷的分层策略，增加 FabricPool 许可的使用量限制或增加云层的存储空间。 
+---
+= 监控 FabricPool 的空间利用率
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您需要了解 FabricPool 的性能和云层中存储的数据量。此信息有助于您确定是否需要更改卷的分层策略，增加 FabricPool 许可的使用量限制或增加云层的存储空间。
+
+.步骤
+. 使用以下命令之一显示相关信息，以监控启用了 FabricPool 的聚合的空间利用率：
++
+|===
+| 要显示的内容 | 然后使用此命令 ... 
+
+
+ a| 
+聚合中云层的已用大小
+ a| 
+`storage aggregate show` with the ` -instance` parameter
+
+
+
+ a| 
+聚合中的空间利用率详细信息，包括对象存储的引用容量
+ a| 
+`storage aggregate show-space` 带有 ` -instance` 参数
+
+
+
+ a| 
+附加到聚合的对象存储的空间利用率，包括正在使用的许可证空间量
+ a| 
+`s存储聚合对象存储 show-space`
+
+
+
+ a| 
+聚合中的卷及其数据和元数据占用空间的列表
+ a| 
+`卷显示占用空间`
+
+|===
++
+除了使用命令行界面命令之外，您还可以使用 Active IQ Unified Manager （以前称为 OnCommand 统一管理器）以及 ONTAP 9.4 及更高版本集群支持的 FabricPool Advisor ，或者使用 ONTAP 系统管理器来监控空间利用率。
+
++
+以下示例显示了显示 FabricPool 空间利用率和相关信息的方法：
+
++
+[listing]
+----
+cluster1::> storage aggregate show-space -instance
+
+                                  Aggregate: MyFabricPool
+                                         ...
+                     Aggregate Display Name: MyFabricPool
+                                         ...
+Object Store Referenced Capacity Percentage: -
+                      Object Store Metadata: -
+              Object Store Metadata Percent: -
+                    Total Unreclaimed Space: -
+  Object Store Unreclaimed Space Percentage: -
+                          Object Store Size: -
+----
++
+[listing]
+----
+cluster1::> storage aggregate show -instance
+
+                           Aggregate: MyFabricPool
+                           ...
+                           Composite: true
+                           Capacity Tier Used Size:
+                           ...
+----
++
+[listing]
+----
+cluster1::> volume show-footprint
+
+Vserver : vs1
+Volume : rootvol
+
+Feature                          Used       Used%
+-------------------------------- ---------- -----
+Volume Footprint                 KB          %
+Volume Guarantee                 MB          %
+Flexible Volume Metadata         KB          %
+Delayed Frees                    KB          %
+Total Footprint                  MB          %
+
+Vserver : vs1
+Volume : vol
+
+Feature                          Used       Used%
+-------------------------------- ---------- -----
+Volume Footprint                 KB          %
+Footprint in Performance Tier    KB          %
+Footprint in Amazon01            KB          %
+Flexible Volume Metadata         MB          %
+Delayed Frees                    KB          %
+Total Footprint                  MB          %
+...
+----
+. 根据需要执行以下操作之一：
++
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+更改卷的分层策略
+ a| 
+按照中的操作步骤进行操作 link:modify-tiering-policy-cooling-period-task.html["通过修改卷的分层策略或分层最小冷却期来管理存储分层"]。
+
+
+
+ a| 
+提高 FabricPool 许可的使用量限制
+ a| 
+请联系您的 NetApp 或合作伙伴销售代表。
+
+https://mysupport.netapp.com/site/global/dashboard["NetApp 支持"]
+
+
+
+ a| 
+增加云层的存储空间
+ a| 
+请联系您用于云层的对象存储的提供商。
+
+|===
+

@@ -1,0 +1,29 @@
+---
+permalink: san-admin/using-chap-authentication-concept.html 
+sidebar: sidebar 
+keywords: guidelines, use, chap, authentication 
+summary: 使用 CHAP 身份验证时，应遵循特定准则。 
+---
+= 使用 CHAP 身份验证的准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 CHAP 身份验证时，应遵循特定准则。
+
+* 如果您在存储系统上定义了入站用户名和密码，则必须对启动程序上的出站 CHAP 设置使用相同的用户名和密码。如果您还在存储系统上定义了出站用户名和密码以启用双向身份验证，则必须对启动程序上的入站 CHAP 设置使用相同的用户名和密码。
+* 存储系统上的入站和出站设置不能使用相同的用户名和密码。
+* CHAP 用户名可以是 1 到 128 个字节。
++
+不允许使用空用户名。
+
+* CHAP 密码（密码）可以是 1 到 512 字节。
++
+密码可以是十六进制值或字符串。对于十六进制值，应输入前缀为 "`0x` " 或 "`0x` " 的值。不允许使用空密码。
+
+* 有关其他限制，请参见启动程序的文档。
++
+例如，如果未使用 IPsec 加密， Microsoft iSCSI 软件启动程序要求启动程序和目标 CHAP 密码至少为 12 字节。无论是否使用 IPsec ，最大密码长度均为 16 字节。
+
+

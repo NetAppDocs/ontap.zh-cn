@@ -1,0 +1,66 @@
+---
+permalink: volumes/rehost-san-task.html 
+sidebar: sidebar 
+keywords: rehost, san volumes 
+summary: 您可以重新托管已映射 LUN 的卷。在目标 SVM 中重新创建启动程序组（ igroup ）后，卷重新托管功能可以自动重新映射同一 SVM 上的卷。 
+---
+= 重新托管 SAN 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以重新托管已映射 LUN 的卷。在目标 SVM 中重新创建启动程序组（ igroup ）后，卷重新托管功能可以自动重新映射同一 SVM 上的卷。
+
+.您需要什么？ #8217 ；将需要什么
+* 卷必须处于联机状态。
+* 不得运行卷移动或 LUN 移动等卷管理操作。
+* 卷或 LUN 上不得存在活动 I/O 。
+* 您必须已验证目标 SVM 不具有名称相同但启动程序不同的 igroup 。
++
+如果 igroup 的名称相同，则必须已在其中一个 SVM （源或目标）中重命名 igroup 。
+
+* 您必须已启用 `force-unmap-luns` 选项。
++
+** `force-unmap-luns` 选项的默认值为 `false` 。
+** 将 `force-unmap-luns` 选项设置为 `true` 时，不会显示任何警告或确认消息。
+
+
+
+
+.关于此任务
+* 重新托管会造成系统中断。
+* 如果重新托管操作失败，您可能需要在源卷上重新配置卷策略和关联规则。
+* 重新托管操作后，源卷中的以下卷策略，策略规则和配置将丢失，必须在重新托管的卷上手动重新配置：
++
+** 防病毒策略
+** 卷效率策略
+** 服务质量（ QoS ）策略
+** Snapshot 策略
+** NS-switch 和名称服务配置导出策略和规则
+** 用户和组 ID
+
+
+
+
+.步骤
+. 记录目标卷上的 LUN 映射信息：
++
+`lun mapping show –要重新托管的卷 vserver 源 vserver`
+
++
+此预防步骤可避免在卷重新托管失败时丢失有关 LUN 映射的信息。
+
+. 删除与目标卷关联的 igroup 。
+. 将目标卷重新托管到目标 SVM ：
++
+`volume rehost -vserver source_sVM -volume vol_name -destination-vserver destination_sVM`
+
+. 将目标卷上的 LUN 映射到相应的 igroup 。
++
+** 卷重新托管会保留目标卷上的 LUN ；但是， LUN 仍保持未映射状态。
+** 在映射 LUN 时，请使用目标 SVM 端口集。
+** 如果将 `auto-remap-luns` 选项设置为 `true` ，则 LUN 会在重新托管后自动映射。
+
+
+

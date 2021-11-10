@@ -1,0 +1,53 @@
+---
+permalink: smb-hyper-v-sql/create-ntfs-data-volumes-task.html 
+sidebar: sidebar 
+keywords: create, ntfs, data, volume, storage, virutal, machine, svm, smb, application, server, volume, configuration 
+summary: 您必须先在 Storage Virtual Machine （ SVM ）上创建 NTFS 数据卷，然后才能配置持续可用的共享，以便通过 SMB 应用程序服务器与 Hyper-V 或 SQL Server 结合使用。使用卷配置工作表创建数据卷。 
+---
+= 创建 NTFS 数据卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须先在 Storage Virtual Machine （ SVM ）上创建 NTFS 数据卷，然后才能配置持续可用的共享，以便通过 SMB 应用程序服务器与 Hyper-V 或 SQL Server 结合使用。使用卷配置工作表创建数据卷。
+
+您可以使用可选参数自定义数据卷。有关自定义卷的详细信息，请参见 link:link:../volumes/index.html["逻辑存储管理"]。
+
+创建数据卷时，不应在包含以下内容的卷中创建接合点：
+
+* ONTAP 为其创建卷影副本的 Hyper-V 文件
+* 使用 SQL Server 备份的 SQL Server 数据库文件
+
+
+[NOTE]
+====
+如果无意中创建了使用混合安全模式或 UNIX 安全模式的卷，则无法将此卷更改为 NTFS 安全模式卷，然后直接使用此卷创建持续可用的共享以实现无中断运行。除非将配置中使用的卷创建为 NTFS 安全模式卷，否则基于 SMB 的 Hyper-V 和 SQL Server 的无中断操作无法正常运行。您必须删除卷并使用 NTFS 安全模式重新创建卷， 或者，您也可以在 Windows 主机上映射卷，并应用卷顶部的 ACL ，然后将 ACL 传播到卷中的所有文件和文件夹。
+
+====
+.步骤
+. 输入相应的命令以创建数据卷：
++
+[cols="1, 4"]
+|===
+| 如果要在根卷安全模式为 ... 的 SVM 中创建卷 | 输入命令 ... 
+
+
+ a| 
+NTFS
+ a| 
+` * volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size integer KB ｛ vbar ｝ MB ｛ vbar ｝ GB ｛ vbar ｝ TB ｛ vbar ｝ pb] -junction-path _path_*`
+
+
+
+ a| 
+非 NTFS
+ a| 
+` * volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size integer KB ｛ vbar ｝ MB ｛ vbar ｝ GB ｛ vbar ｝ TB ｛ vbar ｝ pb]-security-style ntfs -junction-path path*`
+
+|===
+. 验证卷配置是否正确：
++
+` * volume show -vserver _vserver_name_ -volume _volume_name_*`
+
+

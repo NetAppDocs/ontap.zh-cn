@@ -1,0 +1,110 @@
+---
+permalink: data-protection/create-custom-replication-policy-concept.html 
+sidebar: sidebar 
+keywords: create, custom, replication, policy 
+summary: 如果关系的默认策略不适用，您可以创建自定义复制策略。例如，您可能希望在网络传输中压缩数据，或者修改 SnapMirror 尝试传输 Snapshot 副本的次数。 
+---
+= 创建自定义复制策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果关系的默认策略不适用，您可以创建自定义复制策略。例如，您可能希望在网络传输中压缩数据，或者修改 SnapMirror 尝试传输 Snapshot 副本的次数。
+
+您可以在创建复制关系时使用默认策略或自定义策略。对于自定义归档（以前称为 SnapVault ）或统一复制策略，您必须定义一个或多个 _rules_ 来确定初始化和更新期间传输的 Snapshot 副本。您可能还需要定义一个计划，以便在目标上创建本地 Snapshot 副本。
+
+复制策略的 _policy type_ 决定了它支持的关系类型。下表显示了可用的策略类型。
+
+[cols="2*"]
+|===
+| Policy type | 关系类型 
+
+
+ a| 
+异步镜像
+ a| 
+SnapMirror 灾难恢复
+
+
+
+ a| 
+存储
+ a| 
+SnapVault
+
+
+
+ a| 
+镜像存储
+ a| 
+统一复制
+
+
+
+ a| 
+strict-sync-mirror
+ a| 
+StrictSync 模式下的 SnapMirror 同步（从 ONTAP 9.5 开始受支持）
+
+
+
+ a| 
+sync-mirror
+ a| 
+同步模式下的 SnapMirror 同步（从 ONTAP 9.5 开始受支持）
+
+|===
+[TIP]
+====
+创建自定义复制策略时，最好在默认策略之后对策略进行建模。
+
+====
+.步骤
+. 创建自定义复制策略：
++
+`snapmirror policy create -vserver _svm_ -policy _policy_ -type async-mirror_vault_mirror_strict-sync-mirror_sync-mirror -comment _comtion_ -tr尝试 _transfer_try_-transfer-priority low_normal -is-network-compression-enabled true_false`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+从 ONTAP 9.5 开始，您可以使用 ` -common-snapshot-schedule` 参数指定为 SnapMirror 同步关系创建通用 Snapshot 副本计划的计划。默认情况下， SnapMirror 同步关系的通用 Snapshot 副本计划为一小时。您可以为 SnapMirror 同步关系的 Snapshot 副本计划指定一个介于 30 分钟到两小时之间的值。
+
++
+以下示例将为 SnapMirror 灾难恢复创建一个自定义复制策略，以便为数据传输启用网络压缩：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy create -vserver svm1 -policy DR_compressed -type async-mirror -comment “DR with network compression enabled” -is-network-compression-enabled true
+----
++
+以下示例将为 SnapVault 创建自定义复制策略：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy create -vserver svm1 -policy my_snapvault -type vault
+----
++
+以下示例将为统一复制创建自定义复制策略：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy create -vserver svm1 -policy my_unified -type mirror-vault
+----
++
+以下示例将在 StrictSync 模式下为 SnapMirror 同步关系创建自定义复制策略：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy create -vserver svm1 -policy my_strictsync -type strict-sync-mirror -common-snapshot-schedule my_sync_schedule
+----
+
+
+对于 "`vault` " 和 " `mirror-vault` " 策略类型，您必须定义规则来确定初始化和更新期间传输的 Snapshot 副本。
+
+使用 `snapmirror policy show` 命令验证是否已创建 SnapMirror 策略。有关完整的命令语法，请参见手册页。

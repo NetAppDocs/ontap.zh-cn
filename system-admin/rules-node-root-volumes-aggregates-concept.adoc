@@ -1,0 +1,36 @@
+---
+permalink: system-admin/rules-node-root-volumes-aggregates-concept.html 
+sidebar: sidebar 
+keywords: node, governing, root, volume, aggregate, riles, special, directories 
+summary: 节点的根卷包含该节点的特殊目录和文件。根聚合包含根卷。节点的根卷和根聚合需要遵循一些规则。 
+---
+= 节点根卷和根聚合的规则概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+节点的根卷包含该节点的特殊目录和文件。根聚合包含根卷。节点的根卷和根聚合需要遵循一些规则。
+
+节点的根卷是指出厂时或由设置软件安装的 FlexVol 卷。它是为系统文件，日志文件和核心文件预留的。目录名称为 ` /mroot` ，该目录只能由技术支持通过 systemshell 进行访问。节点根卷的最小大小取决于平台型号。
+
+* 以下规则用于控制节点的根卷：
++
+** 除非技术支持指示您这样做，否则请勿修改根卷的配置或内容。
+** 请勿将用户数据存储在根卷中。
++
+将用户数据存储在根卷中会增加 HA 对中节点之间的存储交还时间。
+
+** 您可以将根卷移动到另一个聚合。
++
+xref:relocate-root-volumes-new-aggregates-task.adoc[将根卷重新定位到新聚合]
+
+
+
+* 根聚合仅专用于节点的根卷。
++
+ONTAP 会阻止您在根聚合中创建其他卷。
+
+
+
+https://hwu.netapp.com["NetApp Hardware Universe"]

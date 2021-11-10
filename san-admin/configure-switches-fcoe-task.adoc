@@ -1,0 +1,53 @@
+---
+permalink: san-admin/configure-switches-fcoe-task.html 
+sidebar: sidebar 
+keywords: configure, switches, fcoe 
+summary: 您必须先为交换机配置 FCoE ，然后才能在现有以太网基础架构上运行 FC 服务。 
+---
+= 为 FCoE 配置交换机
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须先为交换机配置 FCoE ，然后才能在现有以太网基础架构上运行 FC 服务。
+
+.您需要什么？ #8217 ；将需要什么
+* 您的 SAN 配置必须受支持。
++
+有关受支持配置的详细信息，请参见互操作性表。
+
+* 存储系统上必须安装统一目标适配器（ UTA ）。
++
+如果您使用的是 UTA2 ，则必须将其设置为 `CNA` 模式。
+
+* 主机上必须安装融合网络适配器（ CNA ）。
+
+
+.步骤
+. 使用交换机文档为交换机配置 FCoE 。
+. 使用 `dcb show` 命令验证是否已正确配置集群中每个节点的 DCB 设置。
++
+`run -node node1 -command dcb show`
+
++
+在交换机上配置 DCB 设置。如果设置不正确，请参见交换机文档。
+
+. 使用 `fcp adapter show` 命令验证 FC 目标端口联机状态为 `true` 时 FCoE 登录是否正常。
++
+`cluster1 ：：：： > fcp adapter show -fields node ， adapter ， status ， state ， speed ， fabric-established ， physical-protocol`
+
++
+如果 FC 目标端口联机状态为 `false` ，请查阅交换机文档。
+
+
+
+* 相关信息 *
+
+https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"]
+
+http://www.netapp.com/us/media/tr-3800.pdf["NetApp 技术报告 3800 ：《以太网光纤通道（ FCoE ）端到端部署指南》"]
+
+http://www.cisco.com/en/US/products/ps5989/products_installation_and_configuration_guides_list.html["《 Cisco MDS 9000 NX-OS 和 SAN-OS 软件配置指南》"]
+
+http://www.brocade.com/products/all/index.page["Brocade 产品"]

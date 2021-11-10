@@ -1,0 +1,42 @@
+---
+permalink: smb-config/create-share-task.html 
+sidebar: sidebar 
+keywords: create, smb, share, data, server, client, properties, home, directory, designate, designating, customize, configure, configuring, optional, setting, create an smb share 
+summary: 您必须先创建 SMB 共享，然后才能与 SMB 客户端共享 SMB 服务器中的数据。创建共享时，您可以设置共享属性，例如将共享指定为主目录。您也可以通过配置可选设置来自定义共享。 
+---
+= 创建 SMB 共享
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须先创建 SMB 共享，然后才能与 SMB 客户端共享 SMB 服务器中的数据。创建共享时，您可以设置共享属性，例如将共享指定为主目录。您也可以通过配置可选设置来自定义共享。
+
+在创建共享之前，卷或 qtree 的目录路径必须位于 SVM 命名空间中。
+
+创建共享时，默认共享 ACL （默认共享权限）为 `Everyone / Full Control` 。测试对共享的访问后，您应删除默认共享 ACL 并将其替换为更安全的替代 ACL 。
+
+.步骤
+. 如有必要，为共享创建目录路径结构。
++
+`vserver cifs share create` 命令会在创建共享期间检查 ` 路径` 选项中指定的路径。如果指定路径不存在，则命令将失败。
+
+. 创建与指定 SVM 关联的 SMB 共享： ` +vserver cifs share create -vserver vserver_name -share-name share_name -path path -share-properties share_properties ， ...] 其他属性【注释文本】 +`
+. 验证是否已创建共享：``vserver cifs share show -share-name share_name``
+
+
+以下命令会在 SVM `vs1.example.com` 上创建名为 `SHARE1` 的 SMB 共享。其目录路径为 ` /users` ，它是使用默认属性创建的。
+
+[listing]
+----
+cluster1::> vserver cifs share create -vserver vs1.example.com -share-name SHARE1 -path /users
+
+cluster1::> vserver cifs share show -share-name SHARE1
+
+Vserver          Share    Path     Properties Comment  ACL
+---------------  -------- -------- ---------- -------- -----------
+vs1.example.com  SHARE1   /users   oplocks    -        Everyone / Full Control
+                                   browsable
+                                   changenotify
+                                   show-previous-versions
+----

@@ -1,0 +1,44 @@
+---
+permalink: san-admin/resolve-iscsi-error-messages-reference.html 
+sidebar: sidebar 
+keywords: resolve, iscsi, error messages, storage system 
+summary: 您可以使用 event log show 命令查看许多常见的 iSCSI 相关错误消息。您需要了解这些消息的含义以及如何解决它们所发现的问题。 
+---
+= 解决存储系统上的 iSCSI 错误消息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `event log show` 命令查看许多常见的 iSCSI 相关错误消息。您需要了解这些消息的含义以及如何解决它们所发现的问题。
+
+下表包含最常见的错误消息以及解决这些错误消息的说明：
+
+[cols="3*"]
+|===
+| message | 说明 | 操作： 
+
+
+ a| 
+`iSCSI ：已禁用网络接口标识符以供使用；已丢弃传入连接`
+ a| 
+未在此接口上启用 iSCSI 服务。
+ a| 
+您可以使用 `iscsi interface enable` 命令在此接口上启用 iSCSI 服务。例如：
+
+`iscsi interface enable -vserver vs1 -lif lif1`
+
+
+
+ a| 
+`iSCSI ：启动程序 nodename` 的身份验证失败
+ a| 
+未为指定启动程序正确配置 CHAP 。
+ a| 
+您应检查 CHAP 设置；存储系统上的入站和出站设置不能使用相同的用户名和密码：
+
+* 存储系统上的入站凭据必须与启动程序上的出站凭据匹配。
+* 存储系统上的出站凭据必须与启动程序上的入站凭据匹配。
+
+
+|===

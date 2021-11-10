@@ -1,0 +1,37 @@
+---
+permalink: data-protection/extended-queries-many-snapmirror-relationships-task.html 
+sidebar: sidebar 
+keywords: extend, query, act, snapmirror, relationships 
+summary: 您可以使用扩展查询同时对多个 SnapMirror 关系执行 SnapMirror 操作。例如，您可能希望使用一个命令初始化多个未初始化的 SnapMirror 关系。 
+---
+= 使用扩展查询对多个 SnapMirror 关系执行操作
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 _Extended Queries_ 一次对多个 SnapMirror 关系执行 SnapMirror 操作。例如，您可能希望使用一个命令初始化多个未初始化的 SnapMirror 关系。
+
+您可以将扩展查询应用于以下 SnapMirror 操作：
+
+* 正在初始化未初始化的关系
+* 恢复已暂停的关系
+* 重新同步已中断的关系
+* 正在更新空闲关系
+* 中止关系数据传输
+
+
+.步骤
+. 对多个关系执行 SnapMirror 操作：
++
+` _snapmirror command_ ｛ -state ｝ *`
+
++
+以下命令会初始化处于 `Uninitialized` 状态的 SnapMirror 关系：
+
++
+[listing]
+----
+vs1::> snapmirror initialize {-state Uninitialized} *
+----
+

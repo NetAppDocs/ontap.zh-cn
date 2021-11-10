@@ -1,0 +1,29 @@
+---
+permalink: concepts/nas-path-failover-concept.html 
+sidebar: sidebar 
+keywords: nas path failover 
+summary: 在 NAS LIF 的当前端口出现链路故障后，该 LIF 会自动迁移到正常运行的网络端口。LIF 迁移到的端口必须是 LIF 故障转移组的成员。故障转移组策略可将数据 LIF 的故障转移目标缩小至数据所属节点及其 HA 配对节点上的端口。 
+---
+= NAS 路径故障转移
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 NAS LIF 的当前端口出现链路故障后，该 LIF 会自动迁移到正常运行的网络端口。LIF 迁移到的端口必须是 LIF 的 _failover group_ 的成员。故障转移组策略 _ 可将数据 LIF 的故障转移目标缩小至数据所属节点及其 HA 配对节点上的端口。
+
+为了便于管理， ONTAP 会为网络架构中的每个 _broadcast domain_ 创建一个故障转移组。广播域对属于同一第 2 层网络的端口进行分组。例如，如果您使用 VLAN 按部门（工程，营销，财务等）隔离流量，则每个 VLAN 都会定义一个单独的广播域。每次添加或删除广播域端口时，与广播域关联的故障转移组都会自动更新。
+
+几乎始终最好使用广播域定义故障转移组，以确保故障转移组保持最新。但是，有时可能需要定义与广播域不关联的故障转移组。例如，您可能希望 LIF 仅故障转移到广播域中定义的部分端口中的端口。
+
+image::../media/nas-lif-migration.gif[NAS LIF 迁移]
+
+|===
+
+
+ a| 
+* 子网 _*
+
+_subnet_ 会在广播域中保留一个 IP 地址块。这些地址属于同一个第 3 层网络，并在创建 LIF 时分配给广播域中的端口。与指定 IP 地址和网络掩码相比，在定义 LIF 地址时指定子网名称通常更简单，更不容易出错。
+
+|===

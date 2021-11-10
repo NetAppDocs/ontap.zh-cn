@@ -1,0 +1,103 @@
+---
+permalink: data-protection/make-svm-destination-volumes-writeable-task.html 
+sidebar: sidebar 
+keywords: make, svm, destination, volume, writable 
+summary: 您需要先使 SVM 目标卷可写，然后才能向客户端提供数据。在卷复制方面，操作步骤与操作步骤大致相同，但有一个例外。如果在创建 SVM 复制关系时设置 -identity-preserve true ，则必须先停止源 SVM ，然后再激活目标 SVM 。 
+---
+= 使 SVM 目标卷可写
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您需要先使 SVM 目标卷可写，然后才能向客户端提供数据。在卷复制方面，操作步骤与操作步骤大致相同，但有一个例外。如果在创建 SVM 复制关系时设置了 ` -identity-preserve true` ，则必须先停止源 SVM ，然后再激活目标 SVM 。
+
+有关完整的命令语法，请参见手册页。
+
+[NOTE]
+====
+在灾难恢复场景中，您无法从源 SVM 向灾难恢复目标 SVM 执行 SnapMirror 更新，因为源 SVM 及其数据将无法访问，并且自上次重新同步以来的更新可能已损坏。
+
+====
+.步骤
+. 从目标 SVM 或目标集群停止向目标进行的计划传输：
++
+`snapmirror quiesce -source-path _svm_ ： -destination-path _svm_ ：`
+
++
+[NOTE]
+====
+您必须在 ` 源路径` 和 ` 目标路径` 选项中的 SVM 名称后面输入冒号（：）。请参见以下示例。
+
+====
++
+以下示例将停止源 SVM `svm1` 和目标 SVM `svm_backup` 之间的计划传输：
+
++
+[listing]
+----
+cluster_dst::> snapmirror quiesce -source-path svm1: -destination-path svm_backup:
+----
+. 从目标 SVM 或目标集群停止正在向目标进行的传输：
++
+`snapmirror abort -source-path _svm_ ： -destination-path _svm_ ：`
+
++
+[NOTE]
+====
+您必须在 ` 源路径` 和 ` 目标路径` 选项中的 SVM 名称后面输入冒号（：）。请参见以下示例。
+
+====
++
+以下示例将停止源 SVM `svm1` 和目标 SVM `svm_backup` 之间的当前传输：
+
++
+[listing]
+----
+cluster_dst::> snapmirror abort -source-path svm1: -destination-path svm_backup:
+----
+. 从目标 SVM 或目标集群中断复制关系：
++
+`snapmirror break -source-path _svm_ ： -destination-path _svm_ ：`
+
++
+[NOTE]
+====
+您必须在 ` 源路径` 和 ` 目标路径` 选项中的 SVM 名称后面输入冒号（：）。请参见以下示例。
+
+====
++
+以下示例将中断源 SVM `svm1` 与目标 SVM `svm_backup` 之间的关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror break -source-path svm1: -destination-path svm_backup:
+----
+. 如果在创建 SVM 复制关系时设置了 ` -identity-preserve true` ，请停止源 SVM ：
++
+`vserver stop -vserver _svm_`
+
++
+以下示例将停止源 SVM `svm1` ：
+
++
+[listing]
+----
+cluster_src::> vserver stop svm1
+----
+. 启动目标 SVM ：
++
+`vserver start -vserver _svm_`
+
++
+以下示例将启动目标 SVM `sVM_backup` ：
+
++
+[listing]
+----
+cluster_dst::> vserver start svm_backup
+----
+
+
+配置用于数据访问的 SVM 目标卷，如中所述 link:configure-destination-volume-data-access-concept.html["配置用于数据访问的目标卷"]。

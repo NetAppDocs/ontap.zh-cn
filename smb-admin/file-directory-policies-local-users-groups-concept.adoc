@@ -1,0 +1,99 @@
+---
+permalink: smb-admin/file-directory-policies-local-users-groups-concept.html 
+sidebar: sidebar 
+keywords: guideline, mind, apply, file-directory, policies, policy, storage, virtual, machine, svm, disaster, recovery, destination, id, discard, configuration, local, user, dacl, sacl, entries, entry, guidelines for applying file-directory policies that use local users of groups on the svm disaster recovery destination 
+summary: 如果文件目录策略配置在安全描述符或 DACL 或 SACL 条目中使用本地用户或组，则在 ID 丢弃配置中对 Storage Virtual Machine （ SVM ）灾难恢复目标应用文件目录策略之前，必须牢记一些特定准则。 
+---
+= 在 SVM 灾难恢复目标上应用使用本地用户或组的文件目录策略的准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果文件目录策略配置在安全描述符或 DACL 或 SACL 条目中使用本地用户或组，则在 ID 丢弃配置中对 Storage Virtual Machine （ SVM ）灾难恢复目标应用文件目录策略之前，必须牢记一些特定准则。
+
+您可以为 SVM 配置灾难恢复配置，以便源集群上的源 SVM 将数据和配置从源 SVM 复制到目标集群上的目标 SVM 。
+
+您可以设置以下两种类型的 SVM 灾难恢复之一：
+
+* 身份保留
++
+在此配置中， SVM 和 CIFS 服务器的标识将保留下来。
+
+* 已丢弃身份
++
+在此配置中，不会保留 SVM 和 CIFS 服务器的身份。在这种情况下，目标 SVM 上的 SVM 和 CIFS 服务器名称与源 SVM 上的 SVM 和 CIFS 服务器名称不同。
+
+
+
+
+
+== 身份丢弃配置准则
+
+在身份丢弃配置中，对于包含本地用户，组和权限配置的 SVM 源，必须更改本地域的名称（本地 CIFS 服务器名称），使其与 SVM 目标上的 CIFS 服务器名称匹配。例如，如果源 SVM 名称为 "`vs1` " ， CIFS 服务器名称为 "`CIFS1` " ，而目标 SVM 名称为 "`vs1_dst` " ， CIFS 服务器名称为 "`CIFS1_dst` " ，则本地用户的本地域名 "`CIFS1\user1` " 会自动更改为` " 目标 SIFS1\DST1`" ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user show -vserver vs1_dst
+
+Vserver      User Name                Full Name      Description
+------------ ------------------------ -------------- -------------
+vs1          CIFS1\Administrator                     Built-in administrator account
+vs1          CIFS1\user1              -              -
+
+cluster1dst::> vserver cifs users-and-groups local-user show -vserver vs1_dst
+
+Vserver      User Name                Full Name      Description
+------------ ------------------------ -------------- -------------
+vs1_dst      CIFS1_DST\Administrator                 Built-in administrator account
+vs1_dst      CIFS1_DST\user1          -              -
+----
+即使本地用户和组名称在本地用户和组数据库中自动更改，本地用户或组名称也不会在文件目录策略配置（使用 `vserver security file-directory` 命令系列在命令行界面上配置的策略）中自动更改。
+
+例如，对于 "`vs1` " ，如果您配置了一个 DACL 条目，其中 ` 帐户` 参数设置为 "`CIFS1\user1` " ，则不会自动更改目标 SVM 上的设置以反映目标的 CIFS 服务器名称。
+
+[listing]
+----
+cluster1::> vserver security file-directory ntfs dacl show -vserver vs1
+
+Vserver: vs1
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access             Apply To
+                     Type     Rights
+    --------------   -------  -------            -----------
+    CIFS1\user1      allow    full-control      this-folder
+
+cluster1::> vserver security file-directory ntfs dacl show -vserver vs1_dst
+
+Vserver: vs1_dst
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access             Apply To
+                     Type     Rights
+    --------------   -------  -------            -----------
+    **CIFS1**\user1          allow    full-control      this-folder
+----
+您必须使用 `vserver security file-directory modify` 命令手动将 CIFS 服务器名称更改为目标 CIFS 服务器名称。
+
+
+
+== 包含帐户参数的文件目录策略配置组件
+
+有三个文件目录策略配置组件可以使用可包含本地用户或组的参数设置：
+
+* 安全描述符
++
+您可以选择指定安全描述符的所有者以及安全描述符所有者的主组。如果安全描述符对所有者和主组条目使用本地用户或组，则必须修改安全描述符，以便在帐户名称中使用目标 SVM 。您可以使用 `vserver security file-directory ntfs modify` 命令对帐户名称进行任何必要的更改。
+
+* DACL 条目
++
+每个 DACL 条目都必须与一个帐户相关联。您必须修改任何使用本地用户或组帐户的 DACL ，才能使用目标 SVM 名称。由于您无法修改现有 DACL 条目的帐户名称，因此必须从安全描述符中删除任何具有本地用户或组的 DACL 条目，使用更正后的目标帐户名称创建新的 DACL 条目，并将这些新的 DACL 条目与相应的安全描述符关联。
+
+* SACL 条目
++
+每个 SACL 条目都必须与一个帐户相关联。您必须修改任何使用本地用户或组帐户的 SACL ，以使用目标 SVM 名称。由于您无法修改现有 SACL 条目的帐户名称，因此必须从安全描述符中删除任何具有本地用户或组的 SACL 条目，使用更正后的目标帐户名称创建新的 SACL 条目，并将这些新的 SACL 条目与相应的安全描述符相关联。
+
+
+
+在应用此策略之前，您必须对文件目录策略配置中使用的本地用户或组进行任何必要的更改；否则，应用作业将失败。

@@ -1,0 +1,51 @@
+---
+permalink: smb-admin/offline-files-allow-caching-concept.html 
+sidebar: sidebar 
+keywords: ontap, support, microsoft, offline, file, feature, client-side, caching, cache, file, local, host, offline, disconnect, network, use offline files to allow caching of files for offline use 
+summary: ONTAP 支持 Microsoft 脱机文件功能或客户端缓存，可将文件缓存在本地主机上以供脱机使用。即使与网络断开连接，用户也可以使用脱机文件功能继续处理文件。 
+---
+= 使用脱机文件允许缓存文件以供脱机使用概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 支持 Microsoft 脱机文件功能或 _client-side cacheration_、 该功能允许将文件缓存在本地主机上以供脱机使用。即使与网络断开连接，用户也可以使用脱机文件功能继续处理文件。
+
+您可以指定 Windows 用户文档和程序是否自动缓存在共享上，或者是否必须手动选择文件进行缓存。默认情况下，新共享会启用手动缓存。脱机可用的文件将同步到 Windows 客户端的本地磁盘。恢复与特定存储系统共享的网络连接时，将发生同步。
+
+由于脱机文件和文件夹保留的访问权限与保存在 CIFS 服务器上的文件和文件夹版本相同，因此用户必须对保存在 CIFS 服务器上的文件和文件夹拥有足够的权限，才能对脱机文件和文件夹执行操作。
+
+当用户和网络上的其他人更改同一文件时，用户可以将该文件的本地版本保存到网络，保留另一个版本或同时保存这两者。如果用户同时保留这两个版本，则包含本地用户所做更改的新文件将保存在本地，缓存的文件将被保存在 CIFS 服务器上的文件版本所做的更改覆盖。
+
+您可以使用共享配置设置基于共享配置脱机文件。在创建或修改共享时，您可以从四种脱机文件夹配置中选择一种：
+
+* 无缓存
++
+禁用共享的客户端缓存。文件和文件夹不会自动缓存在客户端本地，用户也无法选择在本地缓存文件或文件夹。
+
+* 手动缓存
++
+允许手动选择要缓存在共享上的文件。这是默认设置。默认情况下，不会在本地客户端上缓存任何文件或文件夹。用户可以选择要在本地缓存哪些文件和文件夹以供脱机使用。
+
+* 自动文档缓存
++
+允许用户文档自动缓存在共享上。只有被访问的文件和文件夹才会在本地缓存。
+
+* 自动程序缓存
++
+允许程序和用户文档自动缓存在共享上。只有被访问的文件，文件夹和程序才会在本地缓存。此外，即使连接到网络，此设置也允许客户端运行本地缓存的可执行文件。
+
+
+
+有关在 Windows 服务器和客户端上配置脱机文件的详细信息，请参阅 Microsoft TechNet 库。
+
+* 相关信息 *
+
+xref:roaming-profiles-store-user-profiles-concept.adoc[使用漫游配置文件将用户配置文件集中存储在与 SVM 关联的 CIFS 服务器上]
+
+xref:folder-redirection-store-data-concept.adoc[使用文件夹重定向将数据存储在 CIFS 服务器上]
+
+xref:branchcache-cache-share-content-branch-office-concept.adoc[使用 BranchCache 在分支机构缓存 SMB 共享内容]
+
+http://technet.microsoft.com/en-us/library/["Microsoft TechNet 库： technet.microsoft.com/en-us/library/"]

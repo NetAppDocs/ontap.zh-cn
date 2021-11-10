@@ -1,0 +1,140 @@
+---
+permalink: smb-admin/configure-unix-symbolic-link-support-shares-task.html 
+sidebar: sidebar 
+keywords: configure, unix, symbol, link, support, smb, share, share-property, setting, create, modify, exist, configure unix symbolic link support, on smb shares 
+summary: 您可以通过在创建 SMB 共享时指定符号链接共享属性设置来配置 SMB 共享上的 UNIX 符号链接支持，也可以随时修改现有 SMB 共享来配置 UNIX 符号链接支持。默认情况下， UNIX 符号链接支持处于启用状态。您还可以在共享上禁用 UNIX 符号链接支持。 
+---
+= 在 SMB 共享上配置 UNIX 符号链接支持
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过在创建 SMB 共享时指定符号链接共享属性设置来配置 SMB 共享上的 UNIX 符号链接支持，也可以随时修改现有 SMB 共享来配置 UNIX 符号链接支持。默认情况下， UNIX 符号链接支持处于启用状态。您还可以在共享上禁用 UNIX 符号链接支持。
+
+在为 SMB 共享配置 UNIX 符号链接支持时，您可以选择以下设置之一：
+
+|===
+| 正在设置 ... | Description 
+
+
+ a| 
+`enable` （已弃用 * ）
+ a| 
+指定为读写访问启用符号链接。
+
+
+
+ a| 
+`reAD_ONonly` （已弃用 * ）
+ a| 
+指定为只读访问启用符号链接。此设置不适用于 Widelink 。Widelink 访问始终为读写访问。
+
+
+
+ a| 
+`隐藏` （已弃用 * ）
+ a| 
+指定阻止 SMB 客户端查看符号链接。
+
+
+
+ a| 
+`no-strict-security`
+ a| 
+指定客户端遵循共享边界以外的符号链接。
+
+
+
+ a| 
+`symlinks`
+ a| 
+指定在本地为读写访问启用符号链接。即使 CIFS 选项 `is-advertise-dfs-enabled` 设置为 `true` ，也不会生成 DFS 公告。这是默认设置。
+
+
+
+ a| 
+`symlinks-and-widelink`
+ a| 
+指定本地符号链接和 Widelink 进行读写访问。即使 CIFS 选项 `is-advertise-dfs-enabled` 设置为 `false` ，也会为本地符号链接和 Widelink 生成 DFS 公告。
+
+
+
+ a| 
+`d可`
+ a| 
+指定禁用符号链接和 Widelink 。即使 CIFS 选项 `is-advertise-dfs-enabled` 设置为 `true` ，也不会生成 DFS 公告。
+
+
+
+ a| 
+` ""` （空，未设置）
+ a| 
+禁用共享上的符号链接。
+
+
+
+ a| 
+` -` （未设置）
+ a| 
+禁用共享上的符号链接。
+
+|===
+[NOTE]
+====
+* _enable_ ， _hide_ 和 _read-onter_ 参数已弃用，可能会在未来版本的 ONTAP 中删除。
+
+====
+.步骤
+. 配置或禁用符号链接支持：
++
+|===
+| 如果 ... | 输入 ... 
+
+
+ a| 
+新的 SMB 共享
+ a| 
+` +vserver cifs share create -vserver vserver_name -share-name share_name -path -symlink-properties ｛ enable_hide| read-only" -|symlinks- and-widelinks | disable ｝ ， ...]+`
+
+
+
+ a| 
+现有 SMB 共享
+ a| 
+` +vserver cifs share modify -vserver vserver_name -share-name share_name -symlink-properties ｛ enable_hide| read-only" -|symlinkssymlinks-and-widelinks| disable ｝ ， ...]+`
+
+|===
+. 验证 SMB 共享配置是否正确： `vserver cifs share show -vserver vserver_name -share-name share_name -instance`
+
+
+以下命令将创建名为 `data1` 的 SMB 共享，并将 UNIX 符号链接配置设置为 `enable` ：
+
+[listing]
+----
+cluster1::> vserver cifs share create -vserver vs1 -share-name data1 -path /data1 -symlink-properties enable
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data1 -instance
+
+                          Vserver: vs1
+                            Share: data1
+         CIFS Server NetBIOS Name: VS1
+                             Path: /data1
+                 Share Properties: oplocks
+                                   browsable
+                                   changenotify
+               Symlink Properties: enable
+          File Mode Creation Mask: -
+     Directory Mode Creation Mask: -
+                    Share Comment: -
+                        Share ACL: Everyone / Full Control
+    File Attribute Cache Lifetime: -
+                      Volume Name: -
+                    Offline Files: manual
+    Vscan File-Operations Profile: standard
+Maximum Tree Connections on Share: 4294967295
+       UNIX Group for File Create: -
+----
+* 相关信息 *
+
+xref:create-symbolic-link-mappings-task.adoc[为 SMB 共享创建符号链接映射]

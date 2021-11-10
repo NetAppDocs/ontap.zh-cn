@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: task_admin_update_firmware.html 
-keywords: netapp, ontap, upgrade, nondisruptive, nondisruptively, firmware, update, disks, disk, shelves, qualification, package, service, processor, baseboard, management, controller, dqp, sp, bmc 
+keywords: system manager, netapp, ontap, upgrade, nondisruptive, nondisruptively, firmware, update, disks, disk, shelves, qualification, package, service, processor, baseboard, management, controller, dqp, sp, bmc, fix firmware, update firmware, automatic, update, firmware, software patch, upgrade, recommendation, recommended, storage firmware, storage devices, disks, shelves, service processors, modules 
 summary: 您可以将更新后的固件应用于集群中支持的设备，例如磁盘，磁盘架，磁盘认证包（ DQP ），服务处理器（ SP ）或基板管理控制器（ BMC ）。 
 ---
 = 更新固件
@@ -18,7 +18,17 @@ summary: 您可以将更新后的固件应用于集群中支持的设备，例�
 
 
 [role="lead"]
-您可以将固件更新应用于集群中支持的设备，例如磁盘，磁盘架，磁盘认证包（ DQP ），服务处理器（ SP ）或基板管理控制器（ BMC ）。
+使用 System Manager ，您可以将固件更新应用于集群中支持的设备，例如磁盘，磁盘架，磁盘认证包（ DQP ），服务处理器（ SP ）或基板管理控制器（ BMC ）。
+
+您可以手动或自动应用固件更新。选择操作步骤：
+
+* <<update-firmware-manually>>
+* <<update-firmware-automatically>>
+
+
+
+
+== 手动更新固件
 
 从 ONTAP 9.1.1 开始，您可以从 Active IQ 收到警报，通知您集群上的固件更新处于待定状态。然后，您可以使用 System Manager 下载并上传固件映像。
 
@@ -28,7 +38,7 @@ image:workflow_admin_update_firmware.gif["更新固件任务的工作流图"]
 
 == 从 Active IQ 查看固件更新警报
 
-从 ONTAP 9.1.1 开始，您可以从 Active IQ Unified Manager 收到警报，通知您集群上的固件更新处于待定状态。
+从 ONTAP 9.1.1 开始，您可以从 Active IQ Unified Manager 在 System Manager 中收到警报，通知您集群上的固件更新处于待定状态。
 
 
 NOTE: 使用 ONTAP 9.1.1 时，要接收有关固件更新的警报，必须向 Active IQ Unified Manager 注册。请参见 link:https://netapp.com/support-and-training/documentation/active-iq-unified-manager["Active IQ Unified Manager 文档资源"]。
@@ -46,18 +56,19 @@ NOTE: 使用 ONTAP 9.1.1 时，要接收有关固件更新的警报，必须向 
 
 
 
-== 下载集群固件
+=== 下载集群固件
 
 
 NOTE: 对于 ONTAP 9.8 ，您必须导航到 NetApp 支持站点以下载更新后的固件映像包。
 
-从 ONTAP 9.1.1 开始，您可以在查看固件警报时从 * 更新 * 页面下载固件更新（请参见 <<View firmware update alerts from Active IQ>>）。
+从 ONTAP 9.1.1 开始，您可以在查看固件警报时使用 System Manager 从 * 更新 * 页面下载固件更新（请参见 <<View firmware update alerts from Active IQ>>）。
 
 执行适用于集群上安装的 ONTAP 版本的操作步骤。
 
-[cols="40,60"]
 |===
-| 对于 ONTAP 9.8 和 ONTAP 9.1.1 ，如果未向 Active IQ Unified Manager 注册，请执行以下步骤 ... | 从 ONTAP 9.1.1 开始，如果您已向 Active IQ Unified Manager 注册，请执行以下步骤 ... 
+
+
+| 对于 ONTAP 9.8 和 ONTAP 9.1.1 ，如果未向 Active IQ 注册，请执行以下步骤 ... | 从 ONTAP 9.1.1 开始，如果您已向 Active IQ 注册，请执行以下步骤 ... 
 
 
  a| 
@@ -79,14 +90,197 @@ NOTE: 对于 ONTAP 9.8 ，您必须导航到 NetApp 支持站点以下载更新�
 |===
 
 
-== 更新集群固件
+=== 更新集群固件
 
 下载固件包文件后，您可以更新集群固件。
 
 .步骤
 . 在 ONTAP 系统管理器中，单击 * 集群 > 概述 * 。
-. 在 * 概述 * 窗格的右角，单击 image:icon_kabob.gif["菜单图标"] 并选择 * ONTAP Update* 。
-. 单击 * 固件更新 * ，选择 * 从服务器 * 或 * 本地客户端 * ，并提供服务器 URL 或文件位置。
+. 在 * 概述 * 窗格的右角，单击 * 更多 * image:icon_kabob.gif["菜单图标"] 并选择 * ONTAP Update* 。
+. 单击 * 固件更新 * 选项卡，然后根据所使用的 ONTAP 版本执行以下过程之一：
 
 
-您可以在 * 固件更新摘要 * 下监控或验证更新。
+[cols="25,75"]
+|===
+
+
+| ONTAP 版本 | 操作步骤 
+
+
+ a| 
+ONTAP 9.10.0 或更早版本
+ a| 
+. 选择 * 从服务器 * 或 * 本地客户端 *
+. 提供服务器 URL 或文件位置。
+
+
+
+
+ a| 
+ONTAP 9.10.1
+ a| 
+* 注： * 要计划自动执行修复和更新并接收有关更新的建议，请参见 <<update-firmware-automatically>>。
+
+. 在建议的更新列表中，选择 * 操作 * 按钮以执行以下任务：
++
+--
+** * 更新 * ：安装更新。
+** * 计划 * ：设置更新安装计划。
+** * 取消 * ：从列表中删除建议通知。
+
+
+--
++
+如果已计划更新，则 * 操作 * 按钮的选项为：
+
++
+--
+** * 更新 * ：立即安装更新。
+** * 编辑计划 * ：更改更新的计划日期。
+** * 取消计划 * ：取消计划的更新日期。
+
+
+--
+. 如果要手动更新，请选择 * 更新固件 * 按钮。
+
+
+|===
+
+NOTE: 您可以在 * 固件更新摘要 * 下监控或验证更新。
+
+
+
+== 自动更新固件
+
+从 ONTAP 9.10.1 开始，您可以启用 System Manager 的 " 自动更新 " 功能，以使 ONTAP 能够自动下载和安装 NetApp 提供的建议软件修补程序，升级和更新（默认行为）。
+
+更新包括以下类别的固件修补程序，升级和更新：
+
+* * 存储固件 * ：存储设备，磁盘和磁盘架
+* * SP/BMC 固件 * ：服务处理器和 SP/BMC 模块
+
+
+在 System Manager 中，您可以更改每个类别的默认行为，以便从 Active IQ 数字顾问处收到固件修复和更新建议，从而可以确定要安装的固件，并在需要安装时设置计划。您也可以关闭此功能。
+
+要计划自动执行修复和更新以及接收有关更新的建议，请执行以下工作流任务：
+
+image:../media/sm-firmware-auto-update.gif["自动更新工作流"]
+
+要在 System Manager 中接收有关固件更新的警报，您必须向 Active IQ 数字顾问注册。请参见 https://docs.netapp.com/us-en/active-iq/index.html["Active IQ 数字顾问文档"]。
+
+* <<Ensure Automatic Update feature is enabled>>
+* <<Specify default actions for update recommendations>>
+* <<Manage automatic fixes and update recommendations>>
+
+
+
+
+== 确保已启用自动更新功能
+
+要启用 System Manager 的自动更新功能，您必须接受 NetApp 指定的条款和条件。
+
+自动更新功能要求启用 AutoSupport 并使用 HTTPS 协议。
+
+.步骤
+. 在 System Manager 中，单击 * 事件 * 。
+. 在 * 概述 * 部分的 * 建议操作 * 下，单击 * 启用自动更新 * 旁边的 * 操作 * 。
+. 单击 * 启用 * 。
++
+此时将显示有关自动更新功能的信息。它介绍了默认行为（自动下载和安装更新），并通知您可以修改默认行为。此外，此信息还包含您要使用此功能必须同意的条款和条件。
+
+. 要接受条款和条件并启用此功能，请单击复选框，然后单击 * 保存 * 。
+
+
+
+
+== 指定更新建议的默认操作
+
+您可以设置要对存储固件更新和 SP/BMC 固件更新执行的默认操作。
+
+.步骤
+. 在 System Manager 中，单击 * 集群 > 设置 * 。
+. 在 * 自动更新 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"] 可查看操作列表。
+. 单击 * 编辑自动更新设置 * 。
+. 为这两种类型的通知选择默认操作。
+
+
+
+
+== 管理自动修复和更新建议
+
+在 System Manager 中，您可以查看 Active IQ 提供的建议列表，并一次性对每个建议或所有建议执行操作。
+
+.步骤
+. 使用任一方法查看建议列表：
++
+--
+|===
+
+
+| 从概述页面查看 | 从设置页面查看 
+
+
+ a| 
+.. 单击 * 集群 > 概述 * 。
+.. 在 * 概述 * 部分中，单击 * 更多 * image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * ONTAP Update* 。
+.. 选择 * 固件更新 * 选项卡。
+.. 在 * 固件更新 * 选项卡上，单击 * 更多 * image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 查看所有自动更新 * 。
+
+ a| 
+.. 单击 * 集群 > 设置 * 。
+.. 在 * 自动更新 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 查看所有自动更新 * 。
+
+
+|===
+--
++
+自动更新日志会显示每个更新日志的建议和详细信息，包括问题描述，类别，计划的安装时间，状态以及任何错误。
+
+. 单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"] 单击问题描述旁边的可查看可对建议执行的操作列表。
++
+根据建议的状态，您可以执行以下操作之一：
+
++
+[cols="35,65"]
+|===
+
+
+| 如果更新处于此状态 ... | 您可以执行 ... 
+
+
+ a| 
+尚未计划
+ a| 
+* 更新 * ：启动更新过程。
+
+* 计划 * ：用于设置开始更新过程的日期。
+
+* 取消 * ：从列表中删除此建议。
+
+
+
+ a| 
+已计划
+ a| 
+* 更新 * ：启动更新过程。
+
+* 编辑计划 * ：用于修改开始更新过程的计划日期。
+
+* 取消计划 * ：取消计划日期。
+
+
+
+ a| 
+已被解除
+ a| 
+* 取消取消 * ：将建议返回到列表中。
+
+
+
+ a| 
+已应用或正在下载
+ a| 
+* 取消 * ：取消更新。
+
+|===
+

@@ -1,0 +1,19 @@
+---
+permalink: nfs-admin/nfs-client-authentication-concept.html 
+sidebar: sidebar 
+keywords: ontap, nfs, client, authentication 
+summary: NFS 客户端必须经过适当的身份验证，才能访问 SVM 上的数据。ONTAP 会根据您配置的名称服务检查客户端的 UNIX 凭据，从而对客户端进行身份验证。 
+---
+= ONTAP 如何处理 NFS 客户端身份验证概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFS 客户端必须经过适当的身份验证，才能访问 SVM 上的数据。ONTAP 会根据您配置的名称服务检查客户端的 UNIX 凭据，从而对客户端进行身份验证。
+
+当 NFS 客户端连接到 SVM 时， ONTAP 会根据 SVM 的名称服务配置检查不同的名称服务来获取用户的 UNIX 凭据。ONTAP 可以检查本地 UNIX 帐户， NIS 域和 LDAP 域的凭据。必须至少配置其中一个， ONTAP 才能成功对用户进行身份验证。您可以指定多个名称服务以及 ONTAP 搜索这些服务的顺序。
+
+在采用 UNIX 卷安全模式的纯 NFS 环境中，此配置足以对从 NFS 客户端连接的用户进行身份验证并提供正确的文件访问权限。
+
+如果您使用的是混合， NTFS 或统一卷安全模式，则 ONTAP 必须获取 UNIX 用户的 CIFS 用户名，以便通过 Windows 域控制器进行身份验证。这种情况可以通过使用本地 UNIX 帐户或 LDAP 域映射各个用户来实现，也可以改用默认 CIFS 用户来实现。您可以指定 ONTAP 按何种顺序搜索哪些名称服务，也可以指定默认 CIFS 用户。

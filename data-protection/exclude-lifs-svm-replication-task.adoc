@@ -1,0 +1,133 @@
+---
+permalink: data-protection/exclude-lifs-svm-replication-task.html 
+sidebar: sidebar 
+keywords: lifs, network, settings, svm, replication 
+summary: 如果源 SVM 和目标 SVM 位于不同子网中，则可以使用 snapmirror policy create 命令的 -discard-configs network 选项从 SVM 复制中排除 LIF 和相关网络设置。 
+---
+= 从 SVM 复制中排除 LIF 和相关网络设置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果源和目标 SVM 位于不同子网中，您可以使用 `snapmirror policy create` 命令的 ` -discard-configs network` 选项从 SVM 复制中排除 LIF 和相关网络设置。
+
+源和目标集群以及 SVM 必须建立对等关系。
+
+创建 SVM 复制关系时，必须将 `snapmirror create` 命令的 ` -identity-preserve` 选项设置为 `true` 。
+
+有关完整的命令语法，请参见手册页。
+
+.步骤
+. 创建目标 SVM ：
++
+`vserver create -vserver _svm_ -subtype dp-destination`
+
++
+SVM 名称在源集群和目标集群中必须是唯一的。
+
++
+以下示例将创建一个名为 `svm_backup` 的目标 SVM ：
+
++
+[listing]
+----
+cluster_dst:> vserver create -vserver svm_backup -subtype dp-destination
+----
+. 创建作业计划：
++
+`job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
+
++
+对于 ` - 月` ， ` - 天 / 周` 和 ` - 小时` ，您可以指定 `所有` 来分别按每月，一周中的一天和每小时运行作业。
+
++
+以下示例将创建一个名为 `my_weekly` 的作业计划，该计划将在星期六凌晨 3 ： 00 运行：
+
++
+[listing]
+----
+cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
+----
+. 创建自定义复制策略：
++
+`snapmirror policy create -vserver _svm_ -policy _policy_-type async-mirror_vault_mirror_vault -comment _comtion_ -tr尝试 transfer_tr尝试 -transfer-priority low_normal -is-network-compression-enabled true_false -discard-configs network`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将为 SnapMirror 灾难恢复创建一个自定义复制策略，该策略会排除 LIF ：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy create -vserver svm1 -policy DR_exclude_LIFs -type async-mirror -discard-configs network
+----
++
+以下示例将为统一复制创建一个自定义复制策略，该策略会排除 LIF ：
+
++
+[listing]
+----
+cluster_dst::> snapmirror policy create -vserver svm1 -policy unified_exclude_LIFs -type mirror-vault -discard-configs network
+----
+. 从目标 SVM 或目标集群运行以下命令以创建复制关系：
++
+`snapmirror create -source-path _svm_ ： -destination-path _svm_ ： -type dp_xDP -schedule _schedule_ -policy _policy_ -identity-preserve true_false`
+
++
+[NOTE]
+====
+您必须在 ` 源路径` 和 ` 目标路径` 选项中的 SVM 名称后面输入冒号（：）。请参见以下示例：
+
+====
++
+以下示例将创建一个 SnapMirror 灾难恢复关系，此关系会排除 LIF ：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy DR_exclude_LIFs -identity-preserve true
+----
++
+以下示例将创建一个 SnapMirror 统一复制关系，此关系会排除 LIF ：
+
++
+[listing]
+----
+cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy unified_exclude_LIFs -identity-preserve true
+----
+. 停止目标 SVM ：
++
+`SVM stop`
+
++
+` SVM 名称 _`
+
++
+以下示例将停止名为 dvs1 的目标 SVM ：
+
++
+[listing]
+----
+cluster_dst::> vserver stop -vserver dvs1
+----
+. 从目标 SVM 或目标集群初始化复制关系：
++
+`snapmirror initialize -source-path _svm_ ： -destination-path _svm_ ：`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将初始化源 `svm1` 和目标 `svm_backup` 之间的关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_backup:
+----
+
+
+您必须在目标 SVM 上配置网络和协议，以便在发生灾难时进行数据访问。

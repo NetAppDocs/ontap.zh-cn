@@ -1,0 +1,31 @@
+---
+permalink: smb-admin/configure-branchcache-enabled-shares-concept.html 
+sidebar: sidebar 
+keywords: configure, branchcache, smb server, office, enable, smb, share, content, client, configure branchache-enabled smb shares 
+summary: 在 SMB 服务器和分支机构上配置 BranchCache 后，您可以在包含要允许分支机构客户端缓存的内容的 SMB 共享上启用 BranchCache 。 
+---
+= 配置已启用 BranchCache 的 SMB 共享概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 SMB 服务器和分支机构上配置 BranchCache 后，您可以在包含要允许分支机构客户端缓存的内容的 SMB 共享上启用 BranchCache 。
+
+可以在 SMB 服务器上的所有 SMB 共享上启用 BranchCache 缓存，也可以在共享基础上启用 BranchCache 缓存。
+
+* 如果在逐个共享的基础上启用 BranchCache ，则可以在创建共享时或通过修改现有共享来启用 BranchCache 。
++
+如果在现有 SMB 共享上启用缓存，则一旦在该共享上启用 BranchCache ， ONTAP 就会开始计算哈希并向请求内容的客户端发送元数据。
+
+* 如果随后在某个共享上启用了 BranchCache ，则与某个共享具有现有 SMB 连接的任何客户端都不会获得 BranchCache 支持。
++
+在设置 SMB 会话时， ONTAP 会公布 BranchCache 对共享的支持。启用 BranchCache 后，已建立会话的客户端需要断开连接并重新连接，才能使用此共享的缓存内容。
+
+
+
+[NOTE]
+====
+如果随后禁用 SMB 共享上的 BranchCache ，则 ONTAP 将停止向请求客户端发送元数据。需要数据的客户端直接从内容服务器（ SMB 服务器）检索数据。
+
+====

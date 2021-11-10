@@ -1,0 +1,62 @@
+---
+permalink: smb-admin/display-group-memberships-local-users-task.html 
+sidebar: sidebar 
+keywords: display, information, local, group, user, belong, folder, determine, access, file, useful, troubleshoot, display information about group memberships for local users 
+summary: 您可以显示有关本地用户所属的本地组的信息。您可以使用此信息来确定用户对文件和文件夹应具有的访问权限。此信息有助于确定用户应拥有哪些文件和文件夹访问权限，或者解决文件访问问题。 
+---
+= 显示有关本地用户的组成员资格的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关本地用户所属的本地组的信息。您可以使用此信息来确定用户对文件和文件夹应具有的访问权限。此信息有助于确定用户应拥有哪些文件和文件夹访问权限，或者解决文件访问问题。
+
+您可以自定义命令，使其仅显示要查看的信息。
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 如果您要 ... | 输入命令 ... 
+
+
+ a| 
+显示指定本地用户的本地用户成员资格信息
+ a| 
+`Vserver cifs users-and-groups local-user show-membership -user-name _user_name_`
+
+
+
+ a| 
+显示此本地用户所属本地组的本地用户成员资格信息
+ a| 
+`Vserver cifs users-and-groups local-user show-membership -membership _group_name_`
+
+
+
+ a| 
+显示与指定 Storage Virtual Machine （ SVM ）关联的本地用户的用户成员资格信息
+ a| 
+`vserver cifs users-and-groups local-user show-membership -vserver _vserver_name_`
+
+
+
+ a| 
+显示指定 SVM 上所有本地用户的详细信息
+ a| 
+`vserver cifs users-and-groups local-user show-membership -instance ‑vserver _vserver_name_`
+
+|===
+
+
+以下示例显示 SVM vs1 上所有本地用户的成员资格信息；用户 "`CIFS_SERVER\Administrator` " 是 "`BUILTIN\Administrators` " 组的成员， "`CIFS_SERVER\sue` " 是 "`CIFS_SERVER\G1` " 组的成员：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user show-membership -vserver vs1
+Vserver    User Name                    Membership
+---------- ---------------------------- ------------------------
+vs1        CIFS_SERVER\Administrator    BUILTIN\Administrators
+           CIFS_SERVER\sue              CIFS_SERVER\g1
+----

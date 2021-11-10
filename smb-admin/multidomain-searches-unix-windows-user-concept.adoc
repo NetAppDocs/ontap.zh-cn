@@ -1,0 +1,93 @@
+---
+permalink: smb-admin/multidomain-searches-unix-windows-user-concept.html 
+sidebar: sidebar 
+keywords: ontap, support, multidomain, search, map, unix, user, windows, discover, trust, domain, match, replacement, alternative, replacement, prefer, multidomain searches for unix user to windows user name mappings 
+summary: 在将 UNIX 用户映射到 Windows 用户时， ONTAP 支持多域搜索。系统将搜索所有已发现的受信任域以查找与替换模式匹配的匹配项，直到返回匹配结果为止。或者，您也可以配置首选受信任域列表，该列表将代替发现的受信任域列表使用，并按顺序进行搜索，直到返回匹配结果为止。 
+---
+= 多域搜索 UNIX 用户到 Windows 用户名映射
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在将 UNIX 用户映射到 Windows 用户时， ONTAP 支持多域搜索。系统将搜索所有已发现的受信任域以查找与替换模式匹配的匹配项，直到返回匹配结果为止。或者，您也可以配置首选受信任域列表，该列表将代替发现的受信任域列表使用，并按顺序进行搜索，直到返回匹配结果为止。
+
+
+
+== 域信任如何影响 UNIX 用户到 Windows 用户名称映射搜索
+
+要了解多域用户名映射的工作原理，您必须了解域信任如何与 ONTAP 配合使用。与 CIFS 服务器主域的 Active Directory 信任关系可以是双向信任，也可以是两种类型的单向信任之一，即入站信任或出站信任。主域是 SVM 上的 CIFS 服务器所属的域。
+
+* _ 双向信任 _
++
+通过双向信任，两个域相互信任。如果 CIFS 服务器的主域与另一个域具有双向信任，则主域可以对属于受信任域的用户进行身份验证和授权，反之亦然。
+
++
+UNIX 用户到 Windows 用户名映射搜索只能在主域和另一个域之间具有双向信任的域上执行。
+
+* 出站信任 _
++
+对于出站信任，主域信任另一个域。在这种情况下，主域可以对属于出站受信任域的用户进行身份验证和授权。
+
++
+执行 UNIX 用户到 Windows 用户名映射搜索时，系统会搜索与主域具有出站信任的域。
+
+* _Inbound trust_
++
+对于入站信任，另一个域信任 CIFS 服务器的主域。在这种情况下，主域无法对属于入站受信任域的用户进行身份验证或授权。
+
++
+在执行 UNIX 用户到 Windows 用户名映射搜索时，系统会搜索与主域具有入站信任的域。
+
+
+
+
+
+== 如何使用通配符（ * ）配置名称映射的多域搜索
+
+在 Windows 用户名的域部分使用通配符有助于进行多域名称映射搜索。下表说明了如何在名称映射条目的域部分使用通配符来启用多域搜索：
+
+|===
+| Pattern | 更换 | 结果 
+
+
+ a| 
+root
+ a| 
+* 。 \\ 管理员
+ a| 
+UNIX 用户 "`root` " 将映射到名为 "`administrator` " 的用户。系统会按顺序搜索所有受信任域，直到找到第一个名为 "`administrator` " 的匹配用户为止。
+
+
+
+ a| 
+*
+ a| 
+\*\*
+ a| 
+有效的 UNIX 用户将映射到相应的 Windows 用户。系统将按顺序搜索所有受信任域，直到找到具有该名称的第一个匹配用户为止。
+
+[NOTE]
+====
+模式 \*\* 仅适用于从 UNIX 到 Windows 的名称映射，而不是相反。
+
+====
+|===
+
+
+== 如何执行多域名搜索
+
+您可以选择以下两种方法之一来确定用于多域名搜索的受信任域列表：
+
+* 使用由 ONTAP 编译的自动发现的双向信任列表
+* 使用您编译的首选受信任域列表
+
+
+如果将 UNIX 用户映射到使用通配符用于用户名的域部分的 Windows 用户，则会在所有受信任域中查找此 Windows 用户，如下所示：
+
+* 如果配置了首选受信任域列表，则只会在此搜索列表中按顺序查找映射的 Windows 用户。
+* 如果未配置首选受信任域列表，则会在主域的所有双向受信任域中查找 Windows 用户。
+* 如果主域没有双向受信任的域，则会在主域中查找用户。
+
+
+如果 UNIX 用户映射到用户名中没有域部分的 Windows 用户，则会在主域中查找此 Windows 用户。

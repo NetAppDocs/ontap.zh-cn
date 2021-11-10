@@ -1,0 +1,67 @@
+---
+permalink: antivirus/create-on-access-policy-task.html 
+sidebar: sidebar 
+keywords: create, on-access, policy 
+summary: 实时策略用于定义实时扫描的范围。您可以指定要扫描的文件的最大大小，要包含在扫描中的文件的扩展名以及要从扫描中排除的文件的扩展名和路径。您可以为单个 SVM 或集群中的所有 SVM 创建实时策略。 
+---
+= 创建实时策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+实时策略用于定义实时扫描的范围。您可以指定要扫描的文件的最大大小，要包含在扫描中的文件的扩展名以及要从扫描中排除的文件的扩展名和路径。您可以为单个 SVM 或集群中的所有 SVM 创建实时策略。
+
+默认情况下， ONTAP 会创建一个名为 `default_cifs` 的实时策略，并为集群中的所有 SVM 启用该策略。
+
+您可以将 `scan -mandatory` 选项设置为 off ，以指定在没有可用于病毒扫描的 Vscan 服务器时允许文件访问。请注意，即使将 `sanno-mandatory` 选项设置为 on ，也不会考虑根据 `paths-to-exclude` ， `file-ext-to-exclude` 或 `max-file-size` 参数确定扫描排除条件的任何文件。
+
+[NOTE]
+====
+有关与 `san-mandatory` 选项相关的潜在问题，请参见 xref:vscan-server-connection-concept.adoc[与 scan-mandatory 选项相关的潜在连接问题]。
+
+====
+默认情况下，仅扫描读写卷。您可以指定允许扫描只读卷或将扫描限制为使用执行访问打开的文件的筛选器。
+
+.步骤
+. 创建实时策略：
++
+`vserver vscan on-access-policy create -vserver data_svm_cluster_admin_svm -policy-name policy_name -protocol cifs -max-file-size max_size_of_files_to_scan – filters [scan-ro-ro-volume ， ]-file-ext-to-include extensions_f_for_files_for_write_write_write_exclude -to-exclude -file_to-exclude -for_filesn_to-exclude -un-un-un-un-un-un-un-un-exclude -un-un-files_for_write_write_write_write_write_to-exclude -filesn_to-exclude -exclude -`
+
++
+** 为为为单个 SVM 定义的策略指定数据 SVM ，为为集群中的所有 SVM 定义的策略指定集群管理员 SVM 。
+** ` -file-ext-to-exclude` 设置会覆盖 ` -file-ext-to-include` 设置。
+** 将 ` -scan-file-with -no-ext` 设置为 true 可扫描不带扩展名的文件。以下命令会在 ``vs1``SVM 上创建名为 `Policy1` 的实时策略：
+
+
++
+[listing]
+----
+cluster1::> vserver vscan on-access-policy create -vserver vs1 -policy-name Policy1 -protocol CIFS -filters scan-ro-volume -max-file-size 3GB -file-ext-to-include “mp*”,"tx*" -file-ext-to-exclude "mp3","txt" -scan-files-with-no-ext false -paths-to-exclude "\vol\a b\","\vol\a,b\"
+----
+. 验证是否已创建实时策略： `vserver vscan on-access-policy show -instance data_svm_cluster_admin_sVM -policy-name policy_name`
++
+有关完整的选项列表，请参见命令手册页。
+
++
+以下命令显示 `Policy1` 策略的详细信息：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-access-policy show -instance vs1 -policy-name Policy1
+
+                           Vserver: vs1
+                            Policy: Policy1
+                     Policy Status: off
+               Policy Config Owner: vserver
+              File-Access Protocol: CIFS
+                           Filters: scan-ro-volume
+                    Mandatory Scan: on
+Max File Size Allowed for Scanning: 3GB
+            File Paths Not to Scan: \vol\a b\, \vol\a,b\
+       File Extensions Not to Scan: mp3, txt
+           File Extensions to Scan: mp*, tx*
+      Scan Files with No Extension: false
+----
+

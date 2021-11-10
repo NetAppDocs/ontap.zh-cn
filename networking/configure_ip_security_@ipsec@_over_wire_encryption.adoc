@@ -13,19 +13,21 @@ summary: 为了确保数据持续安全和加密，即使在传输期间， ONTA
 
 
 [role="lead"]
-从 ONTAP 9.8 开始， ONTAP 在传输模式下使用 IPsec 协议来确保数据持续安全和加密，即使在传输过程中也是如此。IPsec 为所有 IP 流量提供数据加密，包括 NFS ， iSCSI 和 SMB/CIFS 协议。IPsec 为 iSCSI 流量提供了唯一的传输加密选项。
+从 ONTAP 9.8 开始， ONTAP 在传输模式下使用 IPsec 协议，以确保数据持续安全和加密，即使在传输过程中也是如此。IPsec 为所有 IP 流量提供数据加密，包括 NFS ， iSCSI 和 SMB 协议。IPsec 为 iSCSI 流量提供了唯一的传输加密选项。
 
-在集群上启用 IPsec 功能时，网络需要在客户端上提供安全策略数据库（ SPD ）条目和预先共享的机密密钥，才能使流量流动。
+从 ONTAP 9.10.1 开始，您可以使用预共享密钥（ PSK ）或证书通过 IPsec 进行身份验证。以前， IPsec 仅支持 PSK 。
 
 配置 IPsec 后，客户端和 ONTAP 之间的网络流量将通过预防措施得到保护，以防止重放和中间人（ MIM ）攻击。
 
-对于 NetApp SnapMirror 和集群对等流量加密，仍然建议使用基于 IPsec 的集群对等加密（ Cluster peering encryption ， CPE ），以便通过线缆安全地进行传输。这是因为 CPe 的性能优于 IPsec 。您不需要 IPsec 许可证，也不存在任何导入或导出限制。
+对于 NetApp SnapMirror 和集群对等流量加密，仍然建议使用集群对等加密（ Cluster peering encryption ， CPE ）和传输层安全（ Transport Layer Security ， TLS ）而不是通过 IPsec 进行，以便通过线缆进行安全传输。这是因为 TLS 的性能优于 IPsec 。
+
+在集群上启用了 IPsec 功能时，网络需要使用安全策略数据库（ SPD ）条目来匹配要保护的流量，并指定保护详细信息（例如密码套件和身份验证方法），然后才能使流量流动。每个客户端上也需要相应的 SPD 条目。对于 PSK 和认证身份验证方法，都需要 SPD 要求。
 
 
 
 == 在集群上启用 IPsec
 
-您可以在集群上启用 Internet 协议安全性（ Internet Protocol Security ， IPsec ），以确保数据持续安全和加密，即使在传输期间也是如此。
+您可以在集群上启用 IPsec ，以确保数据持续安全和加密，即使在传输期间也是如此。
 
 .步骤
 . 发现是否已启用 IPsec ：
@@ -50,9 +52,32 @@ summary: 为了确保数据持续安全和加密，即使在传输期间， ONTA
 
 
 
+== 准备通过证书身份验证创建 IPsec 策略
+
+如果您仅使用预共享密钥 PSK 进行身份验证，而不使用证书身份验证，则可以跳过此步骤。
+
+在创建使用证书进行身份验证的 IPsec 策略之前，必须确保满足以下前提条件：
+
+* ONTAP 和客户端都必须安装另一方的 CA 证书，以便最终实体（ ONTAP 或客户端）证书可由双方进行验证
+* 系统会为参与此策略的 ONTAP LIF 安装证书
+
+
+
+NOTE: ONTAP LIF 可以共享证书。不需要在证书和 LIF 之间进行一对一映射。
+
+.步骤
+. 您必须将相互身份验证期间使用的所有 CA 证书（包括 ONTAP 端和客户端 CA ）安装到 ONTAP 证书管理中，除非已安装此证书（如 ONTAP 自签名根 CA ）。* 示例命令 * `cluster ：： > security certificate install -vserver svm_name -type server-ca -cert -name my_ca_cert`
+. 要确保在身份验证期间安装的 CA 位于 ONTAP CA 搜索路径中，请使用 "security IPsec ca-certificate add" 命令将 证书管理 CA 添加到 IPsec 模块中。* 示例命令 * `cluster ：： > security ipsec ca-certificate add -vserver svm_name -ca-certs my_ca_cert`
+. 创建并安装一个证书以供 ONTAP LIF 使用。此证书的颁发者 CA 必须已安装到 ONTAP 并添加到 IPsec 中。* 示例命令 * `cluster ：： > security certificate install -vserver svm_name -type server -cert-name my_nfs_server_cert`
+
+
+有关 ONTAP 中证书的详细信息，请参见 ONTAP 9 文档中的 security certificate 命令。
+
+
+
 == 定义安全策略数据库（ SPD ）
 
-在允许流量在网络上流动之前， IPsec 需要 SPD 条目。
+在允许流量在网络上流动之前， IPsec 需要 SPD 条目。无论您使用的是 PSk 还是证书进行身份验证，都是如此。
 
 .步骤
 . 使用 `security ipsec policy create` 命令执行以下操作：
@@ -63,11 +88,16 @@ summary: 为了确保数据持续安全和加密，即使在传输期间， ONTA
 
 NOTE: 客户端必须使用预共享密钥（ psk ）支持 Internet 密钥交换版本 2 （ IKEv2 ）。
 
-.. 可选选择要保护的上层协议（ UDP ， TCP ， ICMP 等），本地端口号和远程端口号。相应的参数分别为 `protocols` ， `local-ports` 和 `remote-ports` 。
+.. 可选。选择要保护的上层协议（ UDP ， TCP ， ICMP 等），本地端口号和远程端口号。相应的参数分别为 `protocols` ， `local-ports` 和 `remote-ports` 。
 +
 跳过此步骤可保护 ONTAP IP 地址和客户端 IP 地址之间的所有流量。默认情况下，保护所有流量。
 
-.. 输入要在客户端和 ONTAP 之间使用的预共享密钥。
+.. 为所需的身份验证方法输入 `auth-method` 参数的 psk 或 pki 。
++
+... 如果输入了一个 psk ，则在完成所有其他可选参数后，按 <ENTER> 以提示输入并验证预共享密钥。
+... 如果输入 PKI ，则还需要输入 `cert-name` ， `local-identity` ， `remot-identity` 参数。如果远程端证书的身份未知或需要多个客户端身份，请输入特殊词 `anything` 。
+
+
 
 
 
@@ -76,18 +106,20 @@ NOTE: 客户端必须使用预共享密钥（ psk ）支持 Internet 密钥交�
 security ipsec policy create -vserver <vs1> -name <test34> -local-ip-subnets <192.168.134.34/32> -remote-ip-subnets <192.168.134.44/32>
 Enter the preshared key for IPsec Policy _test34_ on Vserver _vs1_:
 ....
-
-NOTE: 在 IPsec 客户端上设置客户端预共享密钥之前， IP 流量无法在客户端和服务器之间流动。
+....
+security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168.134.34/32 -remote-ip-subnets 192.168.134.44/32 -local-ports 2049 -protocols tcp -auth-method PKI -cert-name my_nfs_server_cert -local-identity CN=netapp.ipsec.lif1.vs0 -remote-identity ANYTHING
+....
+只有在 ONTAP 和客户端设置了匹配的 IPsec 策略，并且两端都具有身份验证凭据（ PSk 或证书）之后， IP 流量才能在客户端和服务器之间流动。有关详细信息，请参见客户端的 IPsec 配置。
 
 
 
 == 使用 IPsec 身份
 
-某些 IPsec 客户端（如 LibresWAN ）除了需要使用预共享密钥之外，还需要使用身份来对 IPsec 连接进行身份验证。
+对于预共享密钥身份验证方法，除非 IPsec 客户端（如 LibresWAN ）需要，否则身份是可选的。对于 PKI/ 证书身份验证方法，本地和远程身份都是必需的。这些标识用于指定在每一方的证书中认证的身份以及在验证过程中使用的身份。如果远程身份未知或可能具有多种不同的身份，请使用特殊身份 `anything` 。
 
 在 ONTAP 中，标识是通过修改 SPD 条目或在创建 SPD 策略期间指定的。SPD 可以是 IP 地址或字符串格式的标识名称。
 
-要向现有 SPD 添加标识，请使用以下命令：
+要修改现有 SPD 的身份设置，请使用以下命令：
 
 `sIPsec 安全策略修改`
 
@@ -108,14 +140,14 @@ ONTAP 支持将多个网络中的多个客户端连接到启用了 IPsec 的单�
 
 
 
-NOTE: 在子网配置中使用单个策略条目时，该子网中的 IPsec 客户端将共享 IPsec 身份和预共享密钥（ PSk ）。
+NOTE: 在子网配置中使用单个策略条目时，该子网中的 IPsec 客户端将共享 IPsec 身份和预共享密钥（ PSk ）。但是，对于证书身份验证，情况并非如此。使用证书时，每个客户端都可以使用自己的唯一证书或共享证书进行身份验证。ONTAP IPsec 会根据安装在其本地信任存储上的 CA 检查证书的有效性。ONTAP 还支持证书撤消列表（ Certificate Revocation List ， CRL ）检查。
 
 * * 允许所有客户端配置 *
 +
 要允许任何客户端（无论其源 IP 地址如何）连接到启用了 SVM IPsec 的 IP 地址，请在指定 `remote-ip-subnets` 字段时使用 `0.0.0.0/0` 通配符。
 
 +
-此外，您还必须使用正确的客户端标识指定 `remot-identity` 字段。
+此外，您还必须使用正确的客户端标识指定 `remot-identity` 字段。对于证书身份验证，您可以输入 `anything` 。
 
 +
 此外，如果使用 `0.0.0.0/0` 通配符，则必须配置要使用的特定本地或远程端口号。例如， `NFS 端口 2049` 。
@@ -156,6 +188,27 @@ IKESA 命令示例：
 
 `sIPsec Security show-ikesasa -node _hosting node_name_for_SVM_IP_`
 
-IPsec SA 命令示例：
+IPsec SA 命令和输出示例：
 
 `sipsec ecurity show-ipsecsa -node _hosting node_name_for_SVM_IP_`
+
+....
+cluster1::> security ipsec show-ikesa -node cluster1-node1
+            Policy Local           Remote
+Vserver     Name   Address         Address         Initator-SPI     State
+----------- ------ --------------- --------------- ---------------- -----------
+vs1         test34
+                   192.168.134.34  192.168.134.44  c764f9ee020cec69 ESTABLISHED
+....
+IPsec SA 命令和输出示例：
+
+....
+security ipsec show-ipsecsa -node hosting_node_name_for_svm_ip
+
+cluster1::> security ipsec show-ipsecsa -node cluster1-node1
+            Policy  Local           Remote          Inbound  Outbound
+Vserver     Name    Address         Address         SPI      SPI      State
+----------- ------- --------------- --------------- -------- -------- ---------
+vs1         test34
+                    192.168.134.34  192.168.134.44  c4c5b3d6 c2515559 INSTALLED
+....

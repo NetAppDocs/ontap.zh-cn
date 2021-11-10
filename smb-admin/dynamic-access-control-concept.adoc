@@ -1,0 +1,29 @@
+---
+permalink: smb-admin/dynamic-access-control-concept.html 
+sidebar: sidebar 
+keywords: consideration, dynamic, access, control, dac, central, policies, policy, secure, file, folder, cifs, server, consideration when using dynamic access control and central access policies with cifs servers 
+summary: 在使用动态访问控制（ DAC ）和中央访问策略保护 CIFS 服务器上的文件和文件夹时，必须牢记一些注意事项。 
+---
+= 对 CIFS 服务器使用动态访问控制和中央访问策略时的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用动态访问控制（ DAC ）和中央访问策略保护 CIFS 服务器上的文件和文件夹时，必须牢记一些注意事项。
+
+
+
+== 如果策略规则为适用场景 domain\administrator user ，则可以拒绝对 root 的 NFS 访问
+
+在某些情况下，如果对 root 用户尝试访问的数据应用中央访问策略安全性，则可能会拒绝 NFS 对 root 的访问。如果中央访问策略包含应用于域 \ 管理员且根帐户映射到域 \ 管理员帐户的规则，则会发生问题描述。
+
+您应将规则应用于具有管理权限的组，例如 domain\administrator 组，而不是将规则应用于 domain\administrator 用户。通过这种方式，您可以将 root 映射到域 \ 管理员帐户，而不会使 root 受到此问题描述的影响。
+
+
+
+== 如果在 Active Directory 中找不到应用的中央访问策略，则 CIFS 服务器的 BUILTIN\Administrators 组可以访问资源
+
+CIFS 服务器中包含的资源可能已应用中央访问策略，但当 CIFS 服务器使用中央访问策略的 SID 尝试从 Active Directory 检索信息时， SID 与 Active Directory 中的任何现有中央访问策略 SID 不匹配。在这些情况下， CIFS 服务器会对该资源应用本地默认恢复策略。
+
+本地默认恢复策略允许 CIFS 服务器的 BUILTIN\Administrators 组访问该资源。

@@ -1,0 +1,35 @@
+---
+permalink: smb-admin/user-access-tokens-are-constructed-concept.html 
+sidebar: sidebar 
+keywords: user, map, share, authenticate, smb, session, establish, user, access, token, construct, contain, information, cumulative, privilege, map, unix, user, how user access tokens are constructed 
+summary: 当用户映射共享时，将建立经过身份验证的 SMB 会话，并构建用户访问令牌，其中包含有关用户，用户的组成员资格和累积权限以及映射的 UNIX 用户的信息。 
+---
+= 如何构建用户访问令牌
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当用户映射共享时，将建立经过身份验证的 SMB 会话，并构建用户访问令牌，其中包含有关用户，用户的组成员资格和累积权限以及映射的 UNIX 用户的信息。
+
+除非禁用此功能，否则本地用户和组信息也会添加到用户访问令牌中。构建访问令牌的方式取决于登录用户是本地用户还是 Active Directory 域用户：
+
+* 本地用户登录
++
+尽管本地用户可以是不同本地组的成员，但本地组不能是其他本地组的成员。本地用户访问令牌由分配给特定本地用户所属组的所有权限组成。
+
+* 域用户登录
++
+域用户登录时， ONTAP 会获取一个用户访问令牌，该令牌包含用户所属的所有域组的用户 SID 和 SID 。ONTAP 使用域用户访问令牌与用户域组的本地成员资格（如果有）提供的访问令牌以及分配给域用户或其任何域组成员资格的任何直接权限进行联合。
+
+
+
+对于本地和域用户登录，还会为用户访问令牌设置主组 RID 。默认 RID 为 `Domain users` （ RID 513 ）。您不能更改默认值。
+
+Windows 到 UNIX 和 UNIX 到 Windows 名称映射过程会对本地帐户和域帐户遵循相同的规则。
+
+[NOTE]
+====
+从 UNIX 用户到本地帐户没有隐含的自动映射。如果需要，必须使用现有名称映射命令指定显式映射规则。
+
+====

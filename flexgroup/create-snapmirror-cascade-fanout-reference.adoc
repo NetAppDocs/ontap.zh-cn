@@ -1,0 +1,51 @@
+---
+permalink: flexgroup/create-snapmirror-cascade-fanout-reference.html 
+sidebar: sidebar 
+keywords: consider, create, snapmirror, cascade, fanout, relationship, flexgroup 
+summary: 在为 FlexGroup 卷创建 SnapMirror 级联和扇出关系时，应牢记一些支持注意事项和限制。 
+---
+= 为 FlexGroup 创建 SnapMirror 级联和扇出关系的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在为 FlexGroup 卷创建 SnapMirror 级联和扇出关系时，应牢记一些支持注意事项和限制。
+
+
+
+== 创建级联关系的注意事项
+
+* 每个关系可以是集群间关系，也可以是集群内关系。
+* 这两种关系均支持所有异步策略类型，包括 async-mirror ， mirror-vault 和 vault 。
+* 仅支持 "MirrorAllSnapshots" ，而不支持 "MirrorLatest" async-mirror 策略。
+* 支持并发更新级联 XDP 关系。
+* 支持删除 A 到 B 和 B 到 C ，并重新同步 A 到 C 或重新同步 C 到 A
+* 如果所有节点都运行 ONTAP 9.9.1 或更高版本，则 A 和 B FlexGroup 卷也支持扇出。
+* 支持从 B 或 C FlexGroup 卷执行还原操作。
+* 如果目标是还原关系的源，则不支持 FlexGroup 关系上的传输。
+* FlexGroup 还原的目标不能是任何其他 FlexGroup 关系的目标。
+* FlexGroup 文件还原操作与常规 FlexGroup 还原操作具有相同的限制。
+* B 和 C FlexGroup 卷所在集群中的所有节点都必须运行 ONTAP 9.9 或更高版本。
+* 支持所有扩展和自动扩展功能。
+* 在 A 到 B 到 C 等级联配置中，如果 A 到 B 和 B 到 C 具有不同数量的成分卷 SnapMirror 关系，则 B 到 C SnapMirror 关系不支持从源中止操作。
+* System Manager 在 ONTAP 9.1.1 中不支持级联关系。
+* 将 FlexVol 关系的 A 到 B 到 C 集转换为 FlexGroup 关系时，必须先将 B 到 C 跃点转换。
+* 对于具有 REST 支持的策略类型的关系，所有 FlexGroup 级联配置也受级联 FlexGroup 配置中的 REST API 支持。
+* 与 FlexVol 关系一样， `snapmirror protect` 命令也不支持 FlexGroup 级联。
+
+
+
+
+== 创建扇出关系的注意事项
+
+* 支持两个或更多 FlexGroup 扇出关系；例如， A 到 B ， A 到 C ，最多 8 个扇出支架。
+* 每个关系可以是集群间关系，也可以是集群内关系。
+* 这两个关系支持并发更新。
+* 支持所有扩展和自动扩展功能。
+* 如果关系的扇出分支具有不同数量的成分卷 SnapMirror 关系，则 A 到 B 和 A 到 C 关系不支持从源执行中止操作。
+* 源和目标 FlexGroup 所在的集群中的所有节点都必须运行 ONTAP 9.9 或更高版本。
+* 扇出关系支持 FlexGroup SnapMirror 当前支持的所有异步策略类型。
+* 您可以从 B 到 C FlexGroup 执行还原操作。
+* FlexGroup 扇出配置中的 REST API 也支持所有策略类型为 REST 的扇出配置。
+

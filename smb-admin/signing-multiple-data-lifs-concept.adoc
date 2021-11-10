@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/signing-multiple-data-lifs-concept.html 
+sidebar: sidebar 
+keywords: enable, disable, require, smb, sign, server, guideline, lifs, configuration, svm, guidelines for smb signing when multiple data lifs are configured 
+summary: 如果在 SMB 服务器上启用或禁用所需的 SMB 签名，则应了解 SVM 的多个数据 LIF 配置的准则。 
+---
+= 配置多个数据 LIF 时的 SMB 签名准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在 SMB 服务器上启用或禁用所需的 SMB 签名，则应了解 SVM 的多个数据 LIF 配置的准则。
+
+配置 SMB 服务器时，可能会配置多个数据 LIF 。如果是，则 DNS 服务器包含 CIFS 服务器的多个 `A` 记录条目，所有条目都使用相同的 SMB 服务器主机名，但每个条目都具有唯一的 IP 地址。例如，配置了两个数据 LIF 的 SMB 服务器可能具有以下 DNS `A` 记录条目：
+
+[listing]
+----
+10.1.1.128 A VS1.IEPUB.LOCAL VS1
+10.1.1.129 A VS1.IEPUB.LOCAL VS1
+----
+正常情况下，更改所需的 SMB 签名设置后，只有来自客户端的新连接才会受到 SMB 签名设置更改的影响。但是，此行为存在例外情况。在某些情况下，客户端已与共享建立连接，并且客户端会在更改此设置后创建与同一共享的新连接，同时保持原始连接。在这种情况下，新的和现有的 SMB 连接都采用新的 SMB 签名要求。
+
+请考虑以下示例：
+
+. 客户端 1 使用路径 `O ： \` 连接到不需要 SMB 签名的共享。
+. 存储管理员将 SMB 服务器配置修改为需要 SMB 签名。
+. 客户端 1 使用路径 `s ： \` 连接到具有所需 SMB 签名的同一共享（同时使用路径 `O ： \` 保持连接）。
+. 这样，在通过 `O ： \` 和 `s ： \` 驱动器访问数据时，将使用 SMB 签名。
+

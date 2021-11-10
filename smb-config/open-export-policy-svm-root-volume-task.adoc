@@ -1,0 +1,49 @@
+---
+permalink: smb-config/open-export-policy-svm-root-volume-task.html 
+sidebar: sidebar 
+keywords: default, export, policy, svm, root, volume, rule, client, smb, rule, open the export policy of the svm root volume 
+summary: SVM 根卷的默认导出策略必须包含一条规则，允许所有客户端通过 SMB 进行开放访问。如果没有此规则，则会拒绝所有 SMB 客户端访问 SVM 及其卷。 
+---
+= 打开 SVM 根卷的导出策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SVM 根卷的默认导出策略必须包含一条规则，允许所有客户端通过 SMB 进行开放访问。如果没有此规则，则会拒绝所有 SMB 客户端访问 SVM 及其卷。
+
+创建新的 SVM 时，系统会自动为 SVM 的根卷创建默认导出策略（称为 default ）。您必须为默认导出策略创建一个或多个规则，客户端才能访问 SVM 上的数据。
+
+您应验证是否已在默认导出策略中打开所有 SMB 访问，然后通过为单个卷或 qtree 创建自定义导出策略来限制对单个卷的访问。
+
+.步骤
+. 如果您使用的是现有 SVM ，请检查默认根卷导出策略： `vserver export-policy rule show`
++
+命令输出应类似于以下内容：
+
++
+[listing]
+----
+
+cluster::> vserver export-policy rule show -vserver vs1.example.com -policyname default -instance
+
+                                    Vserver: vs1.example.com
+                                Policy Name: default
+                                 Rule Index: 1
+                            Access Protocol: cifs
+Client Match Hostname, IP Address, Netgroup, or Domain: 0.0.0.0/0
+                             RO Access Rule: any
+                             RW Access Rule: any
+User ID To Which Anonymous Users Are Mapped: 65534
+                   Superuser Security Types: any
+               Honor SetUID Bits in SETATTR: true
+                  Allow Creation of Devices: true
+----
++
+如果存在允许开放访问的规则，则此任务将完成。如果没有，请继续执行下一步。
+
+. 为 SVM 根卷创建导出规则： `vserver export-policy rule create -vserver vserver_name -policyname default -ruleindex 1 -protocol cifs -clientmatch 0.0.0.0/0 -rorule any -rwrule any -superuser any`
+. 使用 `vserver export-policy rule show` 命令验证规则创建。
+
+
+现在，任何 SMB 客户端都可以访问在 SVM 上创建的任何卷或 qtree 。

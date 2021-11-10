@@ -1,0 +1,24 @@
+---
+permalink: nas-audit/configure-auditing-unix-security-files-directories-task.html 
+sidebar: sidebar 
+keywords: configure, audit, unix security style files, directories 
+summary: 您可以通过向 NFSv4.x ACL 添加审核 ACE 来配置 UNIX 安全模式文件和目录的审核。这样，您就可以出于安全目的监控某些 NFS 文件和目录访问事件。 
+---
+= 配置 UNIX 安全模式文件和目录的审核
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过向 NFSv4.x ACL 添加审核 ACE 来配置 UNIX 安全模式文件和目录的审核。这样，您就可以出于安全目的监控某些 NFS 文件和目录访问事件。
+
+对于 NFSv4.x ，随机 ACE 和系统 ACE 都存储在同一 ACL 中。它们不会存储在单独的 DACL 和 SACL 中。因此，在向现有 ACL 添加审核 ACE 时必须谨慎，以避免覆盖和丢失现有 ACL 。将审核 ACE 添加到现有 ACL 的顺序无关紧要。
+
+.步骤
+. 使用 `nfs4_getfacl` 或等效命令检索文件或目录的现有 ACL 。
++
+有关操作 ACL 的详细信息，请参见 NFS 客户端的手册页。
+
+. 附加所需的审核 ACE 。
+. 使用 `nfs4_setfacl` 或等效命令将更新后的 ACL 应用于文件或目录。
+

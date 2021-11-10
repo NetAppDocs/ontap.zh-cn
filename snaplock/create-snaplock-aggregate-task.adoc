@@ -1,0 +1,52 @@
+---
+permalink: snaplock/create-snaplock-aggregate-task.html 
+sidebar: sidebar 
+keywords: create, snaplock, aggregate, compliance, enterprise, mode, volumes 
+summary: '您可以使用卷 ` -SnapLock-type` 选项指定 Compliance 或 Enterprise SnapLock 卷类型。对于 ONTAP 9.10.1 之前的版本，必须创建单独的 SnapLock 聚合。从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。' 
+---
+= 创建 SnapLock 聚合
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用卷 ` -SnapLock-type` 选项指定 Compliance 或 Enterprise SnapLock 卷类型。对于 ONTAP 9.10.1 之前的版本，必须创建单独的 SnapLock 聚合。从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须是集群管理员才能执行此任务。
+* 节点上必须安装 SnapLock 许可证。
+* 必须初始化节点上的 ComplianceClock 。
+* 如果已将磁盘分区为 "`root` " ， " `data1` " 和 " `data2` " ，则必须确保备用磁盘可用。
+
+
+如果需要还原到 9.10.1 之前的 ONTAP 版本，则必须将所有 SnapLock Compliance ， SnapLock Enterprise 和 SnapLock 卷移动到其自己的 SnapLock 聚合。
+
+.关于此任务
+* 您不能为 FlexArray LUN 创建合规性聚合，但 FlexArray LUN 支持 SnapLock 合规性聚合。
+* 您不能使用 SyncMirror 选项创建合规性聚合。
+* 只有当 MetroCluster 配置中的镜像合规性聚合用于托管 SnapLock 审核日志卷时，才能在该聚合中创建。
++
+[NOTE]
+====
+在 MetroCluster 配置中，镜像聚合和未镜像聚合支持 SnapLock Enterprise 。只有未镜像聚合才支持 SnapLock 合规性。
+
+====
+
+
+.步骤
+. 创建 SnapLock 聚合：
++
+` * 存储聚合 create -aggregate _aggregate_name_ -node _node_name_ -diskcount _number_of_disks_-SnapLock-type compliance*`
+
++
+命令的手册页包含完整的选项列表。
+
++
+以下命令将创建一个名为 `aggr1` 的 SnapLock `Compliance` 聚合，其中三个磁盘位于 `node1` 上：
+
++
+[listing]
+----
+cluster1::> storage aggregate create -aggregate aggr1 -node node1 -diskcount 3 -snaplock-type compliance
+----
+

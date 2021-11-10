@@ -1,0 +1,138 @@
+---
+permalink: s3-config/create-install-ca-certificate-svm-task.html 
+sidebar: sidebar 
+keywords: create, install, ca certificate, svm 
+summary: 要启用从 S3 客户端到启用了 S3 的 SVM 的 HTTPS 流量，需要证书颁发机构（ CA ）证书。 
+---
+= 在 SVM 上创建并安装 CA 证书
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要启用从 S3 客户端到启用了 S3 的 SVM 的 HTTPS 流量，需要证书颁发机构（ CA ）证书。
+
+虽然可以将 S3 服务器配置为仅使用 HTTP ，并且可以在不要求 CA 证书的情况下配置客户端，但最佳做法是使用 CA 证书保护发送到 ONTAP S3 服务器的 HTTPS 流量。
+
+在本地分层使用情形中， IP 流量仅通过集群 LIF 时，不需要 CA 证书。
+
+此操作步骤中的说明将创建并安装 ONTAP 自签名证书。此外，还支持来自第三方供应商的 CA 证书；有关详细信息，请参见管理员身份验证文档。
+
+link:../authentication/index.html["管理员身份验证和 RBAC"]
+
+有关其他配置选项，请参见 `s安全性证书` 手册页。
+
+.步骤
+. 创建自签名数字证书：
++
+`security certificate create -vserver svm_name -type root-ca -common-name ca_ct_name`
+
++
+` 类型 root-ca` 选项可创建并安装自签名数字证书，以便通过充当证书颁发机构（ CA ）对其他证书进行签名。
+
++
+` -common-name` 选项将创建 SVM 的证书颁发机构（ Certificate Authority ， CA ）名称，并在生成证书的完整名称时使用该名称。
+
++
+默认证书大小为 2048 位。
+
++
+示例
+
++
+[listing]
+----
+cluster-1::> security certificate create -vserver svm1.example.com -type root-ca -common-name svm1_ca
+
+The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
+----
++
+显示证书的生成名称时，请务必保存此证书，以供此操作步骤中稍后的步骤使用。
+
+. 生成证书签名请求：
++
+`s安全证书 generate-csr -common-name s3_server_name [Additional _options]`
+
++
+签名请求的 ` -common-name` 参数必须为 S3 服务器名称（ FQDN ）。
+
++
+如果需要，您可以提供 SVM 的位置和其他详细信息。
+
++
+系统会提示您保留证书请求和私钥的副本，以供日后参考。
+
+. 使用 SVM_CA 对 CSR 签名以生成 S3 服务器的证书：
++
+`s安全证书符号 -vserver svm_name -ca ca_ct_name -ca-serial ca_ct_serial _number [additional _options]`
+
++
+输入您在先前步骤中使用的命令选项：
+
++
+** ` -ca` —您在步骤 1 中输入的 CA 的公用名。
+** ` -ca-serial` —步骤 1 中的 CA 序列号。例如，如果 CA 证书名称为 svm1_ca_159D1587CE21E9D4_svm1_ca ，则序列号为 159D1587CE21E9d4 。
+
+
++
+默认情况下，签名证书将在 365 天后过期。您可以选择其他值并指定其他签名详细信息。
+
++
+出现提示时，复制并输入您在步骤 2 中保存的证书请求字符串。
+
++
+此时将显示一个签名证书；请保存此证书以供日后使用。
+
+. 在启用了 S3 的 SVM 上安装签名证书：
++
+`security certificate install -type server -vserver svm_name`
+
++
+出现提示时，输入证书和专用密钥。
+
++
+如果需要证书链，您可以选择输入中间证书。
+
++
+显示私钥和 CA 签名的数字证书时，请保存它们以供将来参考。
+
+. 获取公有密钥证书：
++
+`security certificate show -vserver svm_name -common-name ca_ct_name -type root-ca -instance`
+
++
+保存公有密钥证书以供稍后的客户端配置使用。
+
++
+示例
+
++
+[listing]
+----
+cluster-1::> security certificate show -vserver svm1.example.com -common-name svm1_ca -type root-ca  -instance
+
+                      Name of Vserver: svm1.example.com
+           FQDN or Custom Common Name: svm1_ca
+         Serial Number of Certificate: 159D1587CE21E9D4
+                Certificate Authority: svm1_ca
+                  Type of Certificate: root-ca
+     (DEPRECATED)-Certificate Subtype: -
+              Unique Certificate Name: svm1_ca_159D1587CE21E9D4_svm1_ca
+Size of Requested Certificate in Bits: 2048
+               Certificate Start Date: Thu May 09 10:58:39 2020
+          Certificate Expiration Date: Fri May 08 10:58:39 2021
+               Public Key Certificate: -----BEGIN CERTIFICATE-----
+MIIDZ ...==
+-----END CERTIFICATE-----
+                         Country Name: US
+               State or Province Name:
+                        Locality Name:
+                    Organization Name:
+                    Organization Unit:
+Contact Administrator's Email Address:
+                             Protocol: SSL
+                     Hashing Function: SHA256
+              Self-Signed Certificate: true
+       Is System Internal Certificate: false
+----
+

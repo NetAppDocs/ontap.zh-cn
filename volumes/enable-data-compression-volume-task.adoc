@@ -1,0 +1,98 @@
+---
+permalink: volumes/enable-data-compression-volume-task.html 
+sidebar: sidebar 
+keywords: enable, data, compression, on a volume 
+summary: 您可以使用 volume efficiency modify 命令在卷上启用数据压缩以节省空间。您可以使用 volume efficiency modify 命令在 FlexVol 卷上启用数据压缩以节省空间。如果您不希望使用默认压缩类型，也可以为卷分配压缩类型。 
+---
+= 在卷上启用数据压缩
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume efficiency modify` 命令在卷上启用数据压缩以节省空间。您可以使用 `volume efficiency modify` 命令在 FlexVol 卷上启用数据压缩以节省空间。如果您不希望使用默认压缩类型，也可以为卷分配压缩类型。
+
+您必须已在卷上启用重复数据删除。
+
+[NOTE]
+====
+* 只需要启用重复数据删除，而不需要在卷上运行重复数据删除。
+* 必须使用压缩扫描程序压缩 AFF 平台中卷上的现有数据。
+
+
+====
+link:enable-deduplication-volume-task.html["在卷上启用重复数据删除"]
+
+.关于此任务
+* 在 HDD 聚合和 Flash Pool 聚合中，您可以在卷上同时启用实时压缩和后处理压缩，也可以仅启用后处理压缩。
++
+如果要同时启用这两者，则必须先在卷上启用后处理压缩，然后再启用实时压缩。
+
+* 在 AFF 平台中，仅支持实时压缩。
++
+启用实时压缩之前，必须在卷上启用后处理压缩。但是，由于 AFF 平台不支持后处理压缩，因此不会对这些卷执行后处理压缩，并且会生成一条 EMS 消息，告知您已跳过后处理压缩。
+
+* ONTAP 9.8 引入了对温度敏感的存储效率。通过此功能，可以根据数据是热数据还是冷数据来应用存储效率。对于冷数据，较大的数据块会进行压缩；对于较频繁覆盖的热数据，较小的数据块会进行压缩，从而提高流程的效率。新创建的精简配置 AFF 卷会自动启用温度敏感型存储效率。
+* 系统会根据聚合的平台自动分配压缩类型：
++
+[cols="2*"]
+|===
+| 平台 / 聚合 | 压缩类型 
+
+
+ a| 
+AFF
+ a| 
+自适应数据压缩
+
+
+
+ a| 
+Flash Pool 聚合
+ a| 
+自适应数据压缩
+
+
+
+ a| 
+HDD 聚合
+ a| 
+二级压缩
+
+|===
+
+
+.选项
+* 使用 `volume efficiency modify` 命令启用默认压缩类型的数据压缩。
++
+以下命令会对 SVM vs1 的卷 VolA 启用后处理压缩：
+
++
+`volume efficiency modify -vserver vs1 -volume VolA -compression true`
+
++
+以下命令会对 SVM vs1 的卷 VolA 同时启用后处理压缩和实时压缩：
+
++
+`volume efficiency modify -vserver vs1 -volume VolA -compression true -inline-compression true`
+
+* 在高级权限级别使用 `volume efficiency modify` 命令以启用具有特定压缩类型的数据压缩。
++
+.. 使用 `set -privilege advanced` 命令将权限级别更改为高级。
+.. 使用 `volume efficiency modify` 命令为卷分配压缩类型。
++
+以下命令将启用后处理压缩并为 SVM vs1 的卷 VolA 分配自适应压缩类型：
+
++
+`volume efficiency modify -vserver vs1 -volume VolA -compression true -compression-type adaptive`
+
++
+以下命令将同时启用后处理压缩和实时压缩，并为 SVM vs1 的卷 VolA 分配自适应压缩类型：
+
++
+`volume efficiency modify -vserver vs1 -volume VolA -compression true -compression-type adaptive -inline-compression true`
+
+.. 使用 `set -privilege admin` 命令将权限级别更改为 admin 。
+
+
+

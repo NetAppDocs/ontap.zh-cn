@@ -1,0 +1,35 @@
+---
+permalink: nas-audit/configure-fpolicy-ssl-connections-concept.html 
+sidebar: sidebar 
+keywords: additional information, configure, fpolicy, external engines, ssl authenticated, connections 
+summary: 如果要将 FPolicy 外部引擎配置为在连接到 FPolicy 服务器时使用 SSL ，则需要了解一些追加信息。 
+---
+= 追加信息关于配置 FPolicy 外部引擎以使用经过 SSL 身份验证的连接的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要将 FPolicy 外部引擎配置为在连接到 FPolicy 服务器时使用 SSL ，则需要了解一些追加信息。
+
+
+
+== SSL 服务器身份验证
+
+如果选择为 SSL 服务器身份验证配置 FPolicy 外部引擎，则在创建外部引擎之前，必须安装对 FPolicy 服务器证书签名的证书颁发机构（ CA ）的公有证书。
+
+
+
+== 相互身份验证
+
+如果您将 FPolicy 外部引擎配置为在将 Storage Virtual Machine （ SVM ）数据 LIF 连接到外部 FPolicy 服务器时使用 SSL 相互身份验证，则在创建外部引擎之前， 您必须安装对 FPolicy 服务器证书签名的 CA 的公有证书以及公有证书和密钥文件，以便对 SVM 进行身份验证。当任何 FPolicy 策略使用已安装的证书时，不能删除此证书。
+
+如果在连接到外部 FPolicy 服务器时 FPolicy 使用该证书进行相互身份验证时删除了该证书，则无法重新启用使用该证书的已禁用 FPolicy 策略。在这种情况下，即使在 SVM 上创建并安装了具有相同设置的新证书，也无法重新启用 FPolicy 策略。
+
+如果证书已删除，则需要安装新证书，创建使用新证书的新 FPolicy 外部引擎，并通过修改 FPolicy 策略将新外部引擎与要重新启用的 FPolicy 策略相关联。
+
+
+
+== 安装 SSL 证书
+
+用于签署 FPolicy 服务器证书的 CA 的公有证书可使用 `security certificate install` 命令进行安装，并将 ` -type` 参数设置为 `client_ca` 。使用 `security certificate install` 命令并将 ` -type` 参数设置为 `server` 来安装 SVM 身份验证所需的私钥和公有证书。

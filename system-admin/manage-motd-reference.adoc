@@ -1,0 +1,169 @@
+---
+permalink: system-admin/manage-motd-reference.html 
+sidebar: sidebar 
+keywords: manage, motd, message, day, cluster, svm, administrator 
+summary: 您可以在集群或 SVM 级别管理每日消息（ Message Of The Day ， MOTD ）。默认情况下，为集群配置的 MOTD 也会对所有 SVM 启用。此外，还可以为每个 SVM 配置 SVM 级别的 MOTD 。集群管理员可以为每个 SVM 启用或禁用集群级别的 MOTD 。 
+---
+= 管理 MOTD
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在集群或 SVM 级别管理每日消息（ Message Of The Day ， MOTD ）。默认情况下，为集群配置的 MOTD 也会对所有 SVM 启用。此外，还可以为每个 SVM 配置 SVM 级别的 MOTD 。集群管理员可以为每个 SVM 启用或禁用集群级别的 MOTD 。
+
+.选项
+* 在集群级别管理 MOTD ：
++
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+如果没有现有 MOTD ，请为所有登录创建 MOTD
+ a| 
+设置集群级别的 MOTD ：
+
+` * security login motd modify -vserver _cluster_name_ ｛ "-message "_text_"] | "-uri _ftp_or_http_addr_] ｝ *`
+
+
+
+ a| 
+如果未配置任何 SVM 级别的 MOTD ，请更改所有登录的 MOTD
+ a| 
+修改集群级别的 MOTD ：
+
+` * security login motd modify -vserver _cluster_name_ ｛ "-message "_text_"] ｝ _ _` -uri ftp_or_http_addr] ｝ *
+
+
+
+ a| 
+如果未配置任何 SVM 级别的 MOTD ，请删除所有登录的 MOTD
+ a| 
+将集群级别的 MOTD 设置为空字符串（` ""` ）：
+
+` * 安全登录 motd modify -vserver _cluster_name_ -message "*`
+
+
+
+ a| 
+让每个 SVM 显示集群级别的 MOTD ，而不是使用 SVM 级别的 MOTD
+ a| 
+设置集群级别的 MOTD ，然后将所有 SVM 级别的 MOTD 设置为空字符串并启用集群级别的 MOTD ：
+
+.. ` * security login motd modify -vserver _cluster_name_ ｛ "-message "_text_"] | "-uri _ftp_or_http_addr_] ｝ *`
+.. ` * 安全登录 motd modify ｛ -vserver ！ "_cluster_name_" ｝ -message "" -is-cluster-message-enabled true*`
+
+
+
+
+ a| 
+仅为选定 SVM 显示 MOTD ，而不使用集群级别的 MOTD
+ a| 
+将集群级别的 MOTD 设置为空字符串，然后为选定 SVM 设置 SVM 级别的 MOTD ：
+
+.. ` * 安全登录 motd modify -vserver _cluster_name_ -message "*`
+.. ` * security login motd modify -vserver _svm_name_ ｛ "-message "_text_"] | "-uri _ftp_or_http_addr_] ｝ *`
++
+您可以根据需要对每个 SVM 重复此步骤。
+
+
+
+
+
+ a| 
+对所有（数据和管理） SVM 使用相同的 SVM 级别 MOTD
+ a| 
+将集群和所有 SVM 设置为使用相同的 MOTD ：
+
+` * 安全登录 motd modify _-vserver_* ｛ "-message "_text_"] | "-uri _ftp_or_http_addr_] ｝ *`
+
+[NOTE]
+====
+如果使用交互模式，则 CLI 会提示您分别为集群和每个 SVM 输入 MOTD 。系统提示时，您可以将同一个 MOTD 粘贴到每个实例中。
+
+====
+
+
+ a| 
+让所有 SVM 都可以选择使用集群级别的 MOTD ，但不希望在集群登录时显示 MOTD
+ a| 
+设置集群级别的 MOTD ，但禁止在集群中显示它：
+
+` * security login motd modify -vserver _cluster_name_ ｛ "-message "_text_"] | "-uri _ftp_or_http_addr_] ｝ -is-cluster-message-enabled false*`
+
+
+
+ a| 
+如果只有部分 SVM 同时具有集群级别和 SVM 级别的 MOTD ，请删除集群和 SVM 级别的所有 MOTD
+ a| 
+将集群和所有 SVM 设置为对 MOTD 使用空字符串：
+
+` * 安全登录 motd modify -vserver * -message "*`
+
+
+
+ a| 
+仅当其他 SVM 使用空字符串以及在集群级别使用不同的 MOTD 时，才为具有非空字符串的 SVM 修改 MOTD
+ a| 
+使用扩展查询有选择地修改 MOTD ：
+
+` * 安全登录 motd modify ｛ -vserver ！ "_cluster_name_" -message ！ "" ｝ ｛ <-message "_text_"] | <-uri _ftp_or_http_addr_] ｝ *`
+
+
+
+ a| 
+在单行或多行消息中的任意位置显示包含特定文本（例如， "`January` " 后跟 "`2015` " ）的所有 MOTD ，即使文本拆分为不同的行也是如此
+ a| 
+使用查询显示 MOTD ：
+
+` * security login motd show -message *"January"\"2015"*`
+
+
+
+ a| 
+以交互方式创建包含多个连续换行符（也称为行尾或 EOLS ）的 MOTD
+ a| 
+在交互模式下，按空格键，然后按 Enter 键，在不终止 MOTD 输入的情况下创建一个空行。
+
+|===
+* 在 SVM 级别管理 MOTD ：
++
+在 SVM 环境中不需要指定 ` -vserver _svm_name_` 。
+
++
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+如果 SVM 已有 SVM 级别的 MOTD ，请使用其他 SVM 级别的 MOTD
+ a| 
+修改 SVM 级别的 MOTD ：
+
+` * security login motd modify -vserver _svm_name_ ｛ "-message "_text_"] | "-uri _ftp_or_http_addr_] ｝ *`
+
+
+
+ a| 
+如果 SVM 已具有 SVM 级别的 MOTD ，则仅对 SVM 使用集群级别的 MOTD
+ a| 
+将 SVM 级别的 MOTD 设置为空字符串，然后让集群管理员为此 SVM 启用集群级别的 MOTD ：
+
+.. ` * 安全登录 motd modify -vserver _svm_name_ -message "*`
+.. （对于集群管理员） ` * security login motd modify -vserver _svm_name_ -is-cluster-message-enabled true*`
+
+
+
+
+ a| 
+如果 SVM 当前同时显示集群级别和 SVM 级别的 MOTD ，则 SVM 不会显示任何 MOTD
+ a| 
+将 SVM 级别的 MOTD 设置为空字符串，然后让集群管理员为此 SVM 禁用集群级别的 MOTD ：
+
+.. ` * 安全登录 motd modify -vserver _svm_name_ -message "*`
+.. （对于集群管理员） ` * security login motd modify -vserver _svm_name_ -is-cluster-message-enabled false*`
+
+
+|===
+

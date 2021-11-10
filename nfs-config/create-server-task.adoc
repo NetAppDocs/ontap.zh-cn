@@ -1,0 +1,96 @@
+---
+permalink: nfs-config/create-server-task.html 
+sidebar: sidebar 
+keywords: create, nfs, server 
+summary: 验证集群上是否已获得 NFS 许可后，您可以使用 vserver nfs create 命令在 SVM 上创建 NFS 服务器并指定其支持的 NFS 版本。 
+---
+= 创建 NFS 服务器
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+验证集群上是否已获得 NFS 许可后，您可以使用 `vserver nfs create` 命令在 SVM 上创建 NFS 服务器并指定其支持的 NFS 版本。
+
+必须已将 SVM 配置为允许 NFS 协议。
+
+可以将 SVM 配置为支持一个或多个 NFS 版本。如果您支持 NFSv4 或更高版本：
+
+* NFSv4 用户 ID 映射域名在 NFSv4 服务器和目标客户端上必须相同。
++
+只要 NFSv4 服务器和客户端使用相同的名称，它不一定需要与 LDAP 或 NIS 域名相同。
+
+* 目标客户端必须支持 NFSv4 数字 ID 设置。
+* 出于安全原因，您应在 NFSv4 部署中使用 LDAP 提供名称服务。
+
+
+.步骤
+. 验证 NFS 是否已在集群上获得许可：
++
+`ssystem license show -package nfs`
+
++
+如果不是，请联系您的销售代表。
+
+. 创建 NFS 服务器：
++
+`vserver nfs create -vserver _vserver_name_ -v3 ｛ enabled| disabled ｝ -v4.0 ｛ enabled| disabled ｝ -v4-id-domain _NFSv4_id_domain_ -v4-numeric-id ｛ enabled| disabled ｝ -v4.1 ｛ enabled| disabled ｝ -v4.1-pNFS ｛ enabled| disabled ｝`
+
++
+您可以选择启用 NFS 版本的任意组合。如果要支持 pNFS ，则必须同时启用 ` -v4.1` 和 ` -v4.1-pNFS` 选项。
+
++
+如果启用 v4 或更高版本，还应确保正确设置以下选项：
+
++
+** ` -v4-id-domain`
++
+此可选参数用于指定 NFSv4 协议定义的用户名和组名称字符串形式的域部分。默认情况下，如果设置了 NIS 域，则 ONTAP 将使用 NIS 域；否则，将使用 DNS 域。您必须提供一个与目标客户端使用的域名匹配的值。
+
+** ` -v4-numeric-ids`
++
+此可选参数用于指定是否在 NFSv4 所有者属性中启用对数字字符串标识符的支持。默认设置为 enabled ，但您应验证目标客户端是否支持该设置。
+
+
+
++
+您可以稍后使用 `vserver nfs modify` 命令启用其他 NFS 功能。
+
+. 验证 NFS 是否正在运行：
++
+`vserver nfs status -vserver _vserver_name_`
+
+. 验证是否已根据需要配置 NFS ：
++
+`vserver nfs show -vserver _vserver_name_`
+
+
+
+以下命令会在 SVM vs1 上创建一个 NFS 服务器，并启用 NFSv3 和 NFSv4.0 ：
+
+[listing]
+----
+vs1::> vserver nfs create -vserver vs1 -v3 enabled -v4.0 enabled -v4-id-domain my_domain.com
+----
+以下命令用于验证名为 vs1 的新 NFS 服务器的状态和配置值：
+
+[listing]
+----
+vs1::> vserver nfs status -vserver vs1
+The NFS server is running on Vserver "vs1".
+
+vs1::> vserver nfs show -vserver vs1
+
+                            Vserver: vs1
+                 General NFS Access: true
+                             NFS v3: enabled
+                           NFS v4.0: enabled
+                       UDP Protocol: enabled
+                       TCP Protocol: enabled
+               Default Windows User: -
+                NFSv4.0 ACL Support: disabled
+    NFSv4.0 Read Delegation Support: disabled
+   NFSv4.0 Write Delegation Support: disabled
+            NFSv4 ID Mapping Domain: my_domain.com
+...
+----

@@ -1,0 +1,89 @@
+---
+permalink: nas-audit/audit-alternate-ntfs-data-streams-concept.html 
+sidebar: sidebar 
+keywords: considerations, audit, alternate, ntfs data streams 
+summary: 在使用 NTFS 备用数据流审核文件时，必须牢记某些注意事项。 
+---
+= 审核备用 NTFS 数据流时的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用 NTFS 备用数据流审核文件时，必须牢记某些注意事项。
+
+要审核的对象的位置会使用两个标记记录在事件记录中，即 `ObjectName` 标记（路径）和 `HandleID` 标记（句柄）。要正确识别正在记录的流请求，您必须了解 NTFS 备用数据流的以下字段中的 ONTAP 记录：
+
+* evtx ID ： 4656 个事件（打开和创建审核事件）
++
+** 备用数据流的路径记录在 `ObjectName` 标记中。
+** 备用数据流的句柄会记录在 `HandleID` 标记中。
+
+
+* evtx ID ： 4663 个事件（所有其他审核事件，例如读取，写入， getattr 等）
++
+** 基本文件的路径，而不是备用数据流，会记录在 `ObjectName` 标记中。
+** 备用数据流的句柄会记录在 `HandleID` 标记中。
+
+
+
+
+以下示例说明了如何使用 `HandleID` 标记确定备用数据流的 evtx ID ： 4663 个事件。即使读取审核事件中记录的 `ObjectName` 标记（路径）指向基本文件路径，也可以使用 `HandleID` 标记将事件标识为备用数据流的审核记录。
+
+流文件名称的格式为 `BASE_FILE_name ： STREM_NAME` 。在此示例中， `dIR1` 目录包含一个基础文件，其中包含一个备用数据流，其路径如下：
+
+[listing]
+----
+
+/dir1/file1.txt
+/dir1/file1.txt:stream1
+----
+[NOTE]
+====
+以下事件示例中的输出将被截断，如图所示；输出不会显示事件的所有可用输出标记。
+
+====
+对于 evtx ID 4656 （ OPEN audit event ），备用数据流的审核记录输出会在 `ObjectName` 标记中记录备用数据流名称：
+
+[listing]
+----
+
+- <Event>
+- <System>
+  <Provider Name="Netapp-Security-Auditing" />
+  <EventID>4656</EventID>
+  <EventName>Open Object</EventName>
+  [...]
+  </System>
+- <EventData>
+  [...]
+  **<Data Name="ObjectType"\>Stream</Data\>
+  <Data Name="HandleID"\>00000000000401;00;000001e4;00176767</Data\>
+  <Data Name="ObjectName"\>\(data1\);/dir1/file1.txt:stream1</Data\>          **
+  [...]
+  </EventData>
+  </Event>
+- <Event>
+----
+对于 evtx ID 4663 （读取审核事件），同一备用数据流的审核记录输出会在 `ObjectName` 标记中记录基本文件名； 但是， `HandleID` 标记中的句柄是备用数据流的句柄，可用于将此事件与备用数据流相关联：
+
+[listing]
+----
+
+- <Event>
+- <System>
+  <Provider Name="Netapp-Security-Auditing" />
+  <EventID>4663</EventID>
+  <EventName>Read Object</EventName>
+  [...]
+  </System>
+- <EventData>
+  [...]
+  **<Data Name="ObjectType"\>Stream</Data\>
+  <Data Name="HandleID"\>00000000000401;00;000001e4;00176767</Data\>
+  <Data Name="ObjectName"\>\(data1\);/dir1/file1.txt</Data\> **
+  [...]
+  </EventData>
+  </Event>
+- <Event>
+----

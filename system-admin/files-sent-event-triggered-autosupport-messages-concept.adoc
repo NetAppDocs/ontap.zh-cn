@@ -1,0 +1,29 @@
+---
+permalink: system-admin/files-sent-event-triggered-autosupport-messages-concept.html 
+sidebar: sidebar 
+keywords: files, event, triggered, autosupport, message, troubleshoot, subsystem, problem 
+summary: 事件触发的 AutoSupport 消息仅包含与导致 AutoSupport 生成消息的事件相关的子系统的基本信息和故障排除信息。具体数据有助于 NetApp 支持和支持合作伙伴解决问题。 
+---
+= 在事件触发的 AutoSupport 消息中发送的文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+事件触发的 AutoSupport 消息仅包含与导致 AutoSupport 生成消息的事件相关的子系统的基本信息和故障排除信息。具体数据有助于 NetApp 支持和支持合作伙伴解决问题。
+
+AutoSupport 使用以下标准控制事件触发的 AutoSupport 消息中的内容：
+
+* 包括哪些子系统
++
+数据分为多个子系统，包括日志文件等通用子系统和 RAID 等特定子系统。每个事件都会触发一条仅包含特定子系统数据的消息。
+
+* 所包含的每个子系统的详细信息级别
++
+所包含的每个子系统的数据都是在基本级别或故障排除级别提供的。
+
+
+
+您可以使用带有 ` -instance` 参数的 `ssystem node AutoSupport trigger show` 命令查看所有可能的事件并确定有关每个事件的消息中包含哪些子系统。
+
+除了每个事件默认包含的子系统之外，您还可以使用 `ssystem node AutoSupport trigger modify` 命令在基本或故障排除级别添加其他子系统。

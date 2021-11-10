@@ -1,0 +1,57 @@
+---
+permalink: nfs-admin/control-nfs-access-over-tcp-udp-task.html 
+sidebar: sidebar 
+keywords: control, nfs, access, tcp, udp 
+summary: 您可以通过分别修改 -tcp 和 -udp 参数来启用或禁用通过 TCP 和 UDP 对 Storage Virtual Machine （ SVM ）的 NFS 访问。这样，您可以控制 NFS 客户端是否可以在环境中通过 TCP 或 UDP 访问数据。 
+---
+= 通过 TCP 和 UDP 控制 NFS 访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过分别修改 ` -TCP` 和 ` -UDP` 参数来启用或禁用通过 TCP 和 UDP 对 Storage Virtual Machine （ SVM ）的 NFS 访问。这样，您可以控制 NFS 客户端是否可以在环境中通过 TCP 或 UDP 访问数据。
+
+这些参数仅适用于 NFS 。它们不会影响辅助协议。例如，如果禁用基于 TCP 的 NFS ，则通过 TCP 的挂载操作仍会成功。要完全阻止 TCP 或 UDP 流量，您可以使用导出策略规则。
+
+[NOTE]
+====
+在为 NFS 禁用 TCP 之前，必须关闭 SnapDiff RPC 服务器，以避免出现命令失败错误。您可以使用命令 `vserver snapdiff-rpc-server off -vserver vserver name` 来禁用 TCP 。
+
+====
+.步骤
+. 执行以下操作之一：
++
+[cols="2*"]
+|===
+| 如果您希望 NFS 访问 ... | 输入命令 ... 
+
+
+ a| 
+已通过 TCP 启用
+ a| 
+`vserver nfs modify -vserver vserver_name -tcp enabled`
+
+
+
+ a| 
+已通过 TCP 禁用
+ a| 
+`vserver nfs modify -vserver vserver_name -tcp disabled`
+
+
+
+ a| 
+通过 UDP 启用
+ a| 
+`vserver nfs modify -vserver vserver_name -udp enabled`
+
+
+
+ a| 
+已通过 UDP 禁用
+ a| 
+`vserver nfs modify -vserver vserver_name -udp disabled`
+
+|===
+

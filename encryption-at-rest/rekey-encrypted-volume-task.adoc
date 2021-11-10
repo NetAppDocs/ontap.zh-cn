@@ -1,0 +1,75 @@
+---
+permalink: encryption-at-rest/rekey-encrypted-volume-task.html 
+sidebar: sidebar 
+keywords: changing, encryption key, volume encryption rekey start, command 
+summary: 安全最佳做法是定期更改卷的加密密钥。从 ONTAP 9.3 开始，您可以使用 volume encryption rekey start 命令更改加密密钥。 
+---
+= 使用 volume encryption rekey start 命令更改卷的加密密钥
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安全最佳做法是定期更改卷的加密密钥。从 ONTAP 9.3 开始，您可以使用 `volume encryption rekey start` 命令更改加密密钥。
+
+启动重新设置密钥操作后，该操作必须完成。不会返回到旧密钥。如果在此操作期间遇到性能问题描述，您可以运行 `volume encryption rekey pause` 命令暂停此操作，并运行 `volume encryption rekey resume` 命令恢复此操作。
+
+在重新设置密钥操作完成之前，卷将具有两个密钥。新写入及其相应读取将使用新密钥。否则，读取将使用旧密钥。
+
+[NOTE]
+====
+您不能使用 `volume encryption rekey start` 重新为 SnapLock 卷设置密钥。
+
+====
+.步骤
+. 更改加密密钥：
++
+`volume encryption rekey start -vserver svm_name -volume volume_name`
+
++
+以下命令将更改 SVM``vs1`` 上的 `vol1` 的加密密钥：
+
++
+[listing]
+----
+cluster1::> volume encryption rekey start -vserver vs1 -volume vol1
+----
+. 验证重新设置密钥操作的状态：
++
+`volume encryption rekey show`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令显示重新设置密钥操作的状态：
+
++
+[listing]
+----
+cluster1::> volume encryption rekey show
+
+Vserver   Volume   Start Time           Status
+-------   ------   ------------------   ---------------------------
+vs1       vol1     9/18/2017 17:51:41   Phase 2 of 2 is in progress.
+----
+. 重新设置密钥操作完成后，验证卷是否已启用加密：
++
+`volume show -is-encrypted true`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令将显示 `cluster1` 上的加密卷：
+
++
+[listing]
+----
+cluster1::> volume show -is-encrypted true
+
+Vserver  Volume  Aggregate  State  Type  Size  Available  Used
+-------  ------  ---------  -----  ----  -----  --------- ----
+vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
+----
+

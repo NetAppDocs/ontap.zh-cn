@@ -1,0 +1,59 @@
+---
+permalink: smb-hyper-v-sql/enable-disable-vss-shadow-copies-backups-task.html 
+sidebar: sidebar 
+keywords: enable, disable, vss, aware, backup, hyper, v, virtual, machine, files, smb, shares, shadow, copy 
+summary: 如果使用 VSS 感知型备份应用程序备份存储在 SMB 共享上的 Hyper-V 虚拟机文件，则必须启用 VSS 卷影复制。如果您不使用 VSS 感知型备份应用程序，则可以禁用 VSS 卷影复制。默认情况下，启用 VSS 卷影复制。 
+---
+= 为基于 SMB 的 Hyper-V 备份启用或禁用 VSS 卷影副本
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果使用 VSS 感知型备份应用程序备份存储在 SMB 共享上的 Hyper-V 虚拟机文件，则必须启用 VSS 卷影复制。如果您不使用 VSS 感知型备份应用程序，则可以禁用 VSS 卷影复制。默认情况下，启用 VSS 卷影复制。
+
+您可以随时启用或禁用 VSS 卷影副本。
+
+.步骤
+. 将权限级别设置为高级：
++
+` * 设置 -privilege advanced*`
+
+. 执行以下操作之一：
++
+|===
+| VSS 卷影副本的目标位置 | 输入命令 ... 
+
+
+ a| 
+enabled
+ a| 
+` * vserver cifs options modify -vserver _vserver_name_ -ShadowCopy-enabled true*`
+
+
+
+ a| 
+已禁用
+ a| 
+` * vserver cifs options modify -vserver _vserver_name_ -ShadowCopy-enabled false*`
+
+|===
+. 返回到管理权限级别：
++
+` * 设置 -privilege admin*`
+
+
+
+以下命令可在 SVM vs1 上启用 VSS 卷影副本：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -shadowcopy-enabled true
+
+cluster1::*> set -privilege admin
+----

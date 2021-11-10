@@ -1,0 +1,30 @@
+---
+permalink: nfs-admin/specify-nfsv4-locking-grace-period-task.html 
+sidebar: sidebar 
+keywords: specify, nfsv4, lock, grace, period 
+summary: 要指定 NFSv4 锁定宽限期（即客户端在服务器恢复期间尝试从 ONTAP 回收其锁定状态的时间段），您可以修改 -v4-grace-seconds 选项。 
+---
+= 指定 NFSv4 锁定宽限期
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要指定 NFSv4 锁定宽限期（即，客户端在服务器恢复期间尝试从 ONTAP 回收其锁定状态的时间段），您可以修改 ` -v4-grace-seconds` 选项。
+
+默认情况下，此选项设置为 `45` 。
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 输入以下命令：
++
+`vserver nfs modify -vserver vserver_name -v4-grace-seconds _number_of_seconds_`
+
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+

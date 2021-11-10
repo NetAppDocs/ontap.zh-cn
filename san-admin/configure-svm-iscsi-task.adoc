@@ -1,0 +1,35 @@
+---
+permalink: san-admin/configure-svm-iscsi-task.html 
+sidebar: sidebar 
+keywords: configure, svm, iscsi 
+summary: 要为 iSCSI 配置 Storage Virtual Machine （ SVM ），必须为 SVM 创建 LIF 并将 iSCSI 协议分配给这些 LIF 。 
+---
+= 为 iSCSI 配置 SVM
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要为 iSCSI 配置 Storage Virtual Machine （ SVM ），必须为 SVM 创建 LIF 并将 iSCSI 协议分配给这些 LIF 。
+
+对于使用 iSCSI 协议提供数据的每个 SVM ，每个节点至少需要一个 iSCSI LIF 。为了实现冗余，每个节点应至少创建两个 LIF 。
+
+.步骤
+. 启用 SVM 以侦听 iSCSI 流量：
++
+`vserver iscsi create -vserver _vserver_name_ -target-alias _vserver_name_`
+
+. 在每个节点上为 SVM 创建一个 LIF 以用于 iSCSI ：
++
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol iscsi -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask netmask`
+
+. 验证是否已正确设置 LIF ：
++
+`network interface show -vserver _vserver_name_`
+
+. 验证 iSCSI 是否已启动且正在运行，以及该 SVM 的目标 IQN ：
++
+`vserver iscsi show – vserver _vserver_name_`
+
+. 从主机创建与 LIF 的 iSCSI 会话。
+

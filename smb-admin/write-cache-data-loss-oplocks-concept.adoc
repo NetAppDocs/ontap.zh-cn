@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/write-cache-data-loss-oplocks-concept.html 
+sidebar: sidebar 
+keywords: circumstance, process, exclusive, oplock, file, flush, cache, data, write, lock, relinquish, network, failure, write cache data-loss considerations when using oplocks 
+summary: 在某些情况下，如果某个进程对某个文件具有独占机会锁，而另一个进程尝试打开该文件，则第一个进程必须使缓存的数据失效，并刷新写入和锁定。然后，客户端必须放弃机会锁并访问文件。如果在此刷新期间出现网络故障，缓存的写入数据可能会丢失。 
+---
+= 使用机会锁时的写入缓存数据丢失注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在某些情况下，如果某个进程对某个文件具有独占机会锁，而另一个进程尝试打开该文件，则第一个进程必须使缓存的数据失效，并刷新写入和锁定。然后，客户端必须放弃机会锁并访问文件。如果在此刷新期间出现网络故障，缓存的写入数据可能会丢失。
+
+* 数据丢失的可能性
++
+在以下情况下，任何具有写入缓存数据的应用程序都可能丢失该数据：
+
++
+** 此连接使用 SMB 1.0 建立。
+** 此文件具有独占机会锁。
+** 系统会指示中断该机会锁或关闭文件。
+** 在刷新写入缓存的过程中，网络或目标系统会生成错误。
+
+
+* 处理和写入完成时出错
++
+缓存本身没有任何错误处理—应用程序确实如此。应用程序向缓存写入数据时，写入操作始终完成。如果缓存进而通过网络向目标系统写入数据，则必须假定写入已完成，因为如果不完成写入，则数据将丢失。
+
+

@@ -1,0 +1,69 @@
+---
+permalink: encryption-at-rest/enable-exernal-key-management-95-earlier-hw-task.html 
+sidebar: sidebar 
+keywords: enabling, external key management, ontap 9.5, earlier 
+summary: 您可以使用一个或多个 KMIP 服务器来保护集群用于访问加密数据的密钥。最多可以将四个 KMIP 服务器连接到一个节点。建议至少使用两台服务器来实现冗余和灾难恢复。 
+---
+= 在 ONTAP 9.5 及更早版本中启用外部密钥管理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用一个或多个 KMIP 服务器来保护集群用于访问加密数据的密钥。最多可以将四个 KMIP 服务器连接到一个节点。建议至少使用两台服务器来实现冗余和灾难恢复。
+
+.您需要什么？ #8217 ；将需要什么
+* 必须已安装 KMIP SSL 客户端和服务器证书。
+* 您必须是集群管理员才能执行此任务。
+* 在启用加密之前，您必须配置 MetroCluster 环境。
+
+
+ONTAP 为集群中的所有节点配置 KMIP 服务器连接。
+
+.步骤
+. 为集群节点配置密钥管理器连接：
++
+`s安全密钥管理器设置`
+
++
+此时将打开密钥管理器设置向导。
+
+. 在每个提示符处输入相应的响应。
+. 添加 KMIP 服务器：
++
+`security key-manager add -address key_management_server_ipaddress`
+
++
+[listing]
+----
+clusterl::> security key-manager add -address 20.1.1.1
+----
+. 添加额外的 KMIP 服务器以实现冗余：
++
+`security key-manager add -address key_management_server_ipaddress`
+
++
+[listing]
+----
+clusterl::> security key-manager add -address 20.1.1.2
+----
+. 验证所有已配置的 KMIP 服务器是否均已连接：
++
+`security key-manager show -status`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[listing]
+----
+cluster1::> security key-manager show -status
+
+Node            Port      Registered Key Manager  Status
+--------------  ----      ----------------------  ---------------
+cluster1-01     5696      20.1.1.1                available
+cluster1-01     5696      20.1.1.2                available
+cluster1-02     5696      20.1.1.1                available
+cluster1-02     5696      20.1.1.2                available
+----
+

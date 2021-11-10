@@ -1,0 +1,51 @@
+---
+permalink: smb-admin/display-privilege-overrides-task.html 
+sidebar: sidebar 
+keywords: display, information, custom, privilege, assign, domain, local, user, account, group, desire, right, applied, apply, display information about privilege overrides 
+summary: 您可以显示有关分配给域或本地用户帐户或组的自定义权限的信息。此信息有助于确定是否应用了所需的用户权限。 
+---
+= 显示有关权限覆盖的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关分配给域或本地用户帐户或组的自定义权限的信息。此信息有助于确定是否应用了所需的用户权限。
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 要显示的信息 | 输入此命令 ... 
+
+
+ a| 
+Storage Virtual Machine （ SVM ）上所有域和本地用户及组的自定义权限
+ a| 
+`vserver cifs users-and-groups privilege show -vserver _vserver_name_`
+
+
+
+ a| 
+SVM 上特定域或本地用户和组的自定义权限
+ a| 
+`vserver cifs users-and-groups privilege show -vserver _vserver_name_ -user-or-group-name _name_`
+
+|===
++
+运行此命令时，您还可以选择其他可选参数。有关详细信息，请参见手册页。
+
+
+
+以下命令显示与 SVM vs1 的本地或域用户和组明确关联的所有权限：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups privilege show -vserver vs1
+Vserver    User or Group Name     Privileges
+--------- ---------------------   ---------------
+vs1       BUILTIN\Administrators  SeTakeOwnershipPrivilege
+                                  SeRestorePrivilege
+vs1       CIFS_SERVER\sue         SeTcbPrivilege
+                                  SeTakeOwnershipPrivilege
+----

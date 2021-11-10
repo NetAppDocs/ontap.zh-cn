@@ -1,0 +1,32 @@
+---
+permalink: data-protection/configure-destination-volume-data-access-concept.html 
+sidebar: sidebar 
+keywords: configure, destination, volume, data, access 
+summary: 在使目标卷可写后，您必须为该卷配置数据访问。NAS 客户端， NVMe 子系统和 SAN 主机可以从目标卷访问数据，直到源卷重新激活为止。 
+---
+= 配置用于数据访问的目标卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使目标卷可写后，您必须为该卷配置数据访问。NAS 客户端， NVMe 子系统和 SAN 主机可以从目标卷访问数据，直到源卷重新激活为止。
+
+NAS 环境：
+
+. 使用与源 SVM 中的源卷挂载到的相同接合路径将 NAS 卷挂载到命名空间。
+. 将相应的 ACL 应用于目标卷上的 CIFS 共享。
+. 将 NFS 导出策略分配给目标卷。
+. 将配额规则应用于目标卷。
+. 将客户端重定向到目标卷。
+. 在客户端上重新挂载 NFS 和 CIFS 共享。
+
+
+SAN 环境：
+
+. 将卷中的 LUN 映射到相应的启动程序组。
+. 对于 iSCSI ，创建从 SAN 主机启动程序到 SAN LIF 的 iSCSI 会话。
+. 在 SAN 客户端上，执行存储重新扫描以检测已连接的 LUN 。
+
+
+有关 NVMe 环境的信息，请参见 link:../san-admin/index.html["SAN 管理"]。

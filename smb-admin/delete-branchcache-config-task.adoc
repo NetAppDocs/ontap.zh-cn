@@ -1,0 +1,42 @@
+---
+permalink: smb-admin/delete-branchcache-config-task.html 
+sidebar: sidebar 
+keywords: command, deleting, delete, branchcache, service, storage, virtual, machine, svm, exist, hash, delete the branchcache configuration 
+summary: 用于删除 Storage Virtual Machine （ SVM ）上的 BranchCache 服务的命令会有所不同，具体取决于您是要删除还是保留现有哈希。 
+---
+= 删除 BranchCache 配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+用于删除 Storage Virtual Machine （ SVM ）上的 BranchCache 服务的命令会有所不同，具体取决于您是要删除还是保留现有哈希。
+
+.步骤
+. 运行相应的命令：
++
+|===
+| 如果您要 ... | 然后输入以下内容 ... 
+
+
+ a| 
+删除 BranchCache 配置并删除现有哈希
+ a| 
+`vserver cifs BranchCache delete -vserver _vserver_name_ -flush-hashes true`
+
+
+
+ a| 
+删除 BranchCache 配置，但保留现有哈希
+ a| 
+`vserver cifs BranchCache delete -vserver _vserver_name_ -flush-hashes false`
+
+|===
+
+
+以下示例将删除 SVM vs1 上的 BranchCache 配置并删除所有现有哈希：
+
+[listing]
+----
+cluster1::> vserver cifs branchcache delete -vserver vs1 -flush-hashes true
+----

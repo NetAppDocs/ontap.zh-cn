@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: networking/network_features_by_release.html 
-keywords: auto-port placement, auto port placement, IPsec, VIP expansion, switch CLI simplification, IPv6 variable length, portmap, cache search, CUBIC, NTPv3, SSH alerts, LIF service policies, multipath routing, SSH MFA, SAML authentication, certifications, fastpath, SNMPv3 traphosts, IPv6, LIF management, LLDP, UC with DSCP, SHA-2, FIPS 140-2, network features by release, new features, analyze the impact of network features available with each ontap 9 release, cluster resiliency, vip lif enhancements, 
+keywords: auto-port placement, auto port placement, IPsec, VIP expansion, switch CLI simplification, IPv6 variable length, portmap, cache search, CUBIC, NTPv3, SSH alerts, LIF service policies, multipath routing, SSH MFA, SAML authentication, certifications, fastpath, SNMPv3 traphosts, IPv6, LIF management, LLDP, UC with DSCP, SHA-2, FIPS 140-2, network features by release, new features, analyze the impact of network features available with each ontap 9 release, cluster resiliency, vip lif enhancements, ipsec certificate authentication, automatic detection and recommendations for wiring issues 
 summary: 分析每个 ONTAP 9 版本提供的网络功能的影响 
 ---
 = 按版本查看网络功能
@@ -17,7 +17,59 @@ summary: 分析每个 ONTAP 9 版本提供的网络功能的影响
 
 [cols="15,25,60"]
 |===
-| 可从一开始使用 | 功能 | 说明 
+| 可从一开始使用 | 功能 | Description 
+
+
+ a| 
+ONTAP 9.10.1
+ a| 
+针对网络布线问题的自动检测和修复建议
+ a| 
+ONTAP 可以根据广播域成分卷（以太网端口）的第 2 层可访问性自动检测网络布线问题并提出更正建议。
+
+检测到端口可访问性问题描述后， ONTAP 系统管理器建议执行修复操作以解决此问题描述。
+
+link:auto-detect-wiring-issues-task.html["针对网络布线问题的自动检测和修复建议"]
+
+
+
+ a| 
+ONTAP 9.10.1
+ a| 
+Internet 协议安全（ Internet Protocol Security ， IPsec ）证书身份验证
+ a| 
+现在， IPsec 策略支持使用预共享密钥（ PSK ）和证书进行身份验证。
+
+* 使用 PSK 配置的策略要求在策略中的所有客户端之间共享密钥。
+* 使用证书配置的策略不需要在客户端之间共享密钥，因为每个客户端都可以拥有自己的唯一证书来进行身份验证。
+
+
+link:configure_ip_security_@ipsec@_over_wire_encryption.html["通过线缆加密配置 IP 安全性（ IP security ， IPsec ）"]
+
+
+
+ a| 
+ONTAP 9.10.1
+ a| 
+LIF 服务
+ a| 
+防火墙策略已弃用，并完全替换为 LIF 服务策略。
+
+通过新的 NTP LIF 服务，可以更好地控制哪些 LIF 用于出站 NTP 请求。
+
+link:lifs_and_service_policies96.html["ONTAP 9.6 及更高版本中的 LIF 和服务策略"]
+
+
+
+ a| 
+ONTAP 9.10.1
+ a| 
+基于 RDMA 的 NFS
+ a| 
+ONTAP 支持基于 RDMA 的 NFS ，这为采用 NVIDIA GDX 生态系统的客户实现了更高的 NFSv4.0 性能。利用 RDMA 适配器，可以将内存直接从存储复制到 GPU ，从而避免 CPU 开销。
+
+link:../nfs-rdma/index.html["基于 RDMA 的 NFS"]
+
 
 
  a| 
@@ -102,7 +154,7 @@ ONTAP 9.8
  a| 
 基于线缆加密的 Internet 协议安全性（ Internet Protocol Security ， IPsec ）
  a| 
-为了确保数据持续安全和加密，即使在传输期间， ONTAP 也会在传输模式下使用 IPsec 协议。IPsec 为所有 IP 流量提供数据加密，包括 NFS ， iSCSI 和 SMB/CIFS 协议。IPsec 为 iSCSI 流量提供了唯一的传输加密选项。
+为了确保数据持续安全和加密，即使在传输期间， ONTAP 也会在传输模式下使用 IPsec 协议。IPsec 为所有 IP 流量提供数据加密，包括 NFS ， iSCSI 和 SMB 协议。IPsec 为 iSCSI 流量提供了唯一的传输加密选项。
 
 配置 IPsec 后，客户端和 ONTAP 之间的网络流量将通过预防措施得到保护，以防止重放和中间人（ MIM ）攻击。
 
@@ -204,7 +256,7 @@ link:https://docs.netapp.com/us-en/ontap/networking/lifs_and_service_policies96.
  a| 
 ONTAP 9.5
  a| 
-NTPv3 支持
+支持 NTPv3
  a| 
 网络时间协议（ NTP ）版本 3 包括使用 SHA-1 密钥的对称身份验证，可提高网络安全性。
 

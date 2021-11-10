@@ -1,0 +1,19 @@
+---
+permalink: nas-audit/process-when-reverting-concept.html 
+sidebar: sidebar 
+keywords: process, revert 
+summary: 如果您计划还原集群，则应注意，当集群中存在启用了审核的 Storage Virtual Machine （ SVM ）时， ONTAP 会遵循以下还原过程。还原之前，必须执行某些操作。 
+---
+= 还原过程是什么
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您计划还原集群，则应注意，当集群中存在启用了审核的 Storage Virtual Machine （ SVM ）时， ONTAP 会遵循以下还原过程。还原之前，必须执行某些操作。
+
+
+
+== 还原到不支持审核 CIFS 登录和注销事件以及中央访问策略暂存事件的 ONTAP 版本
+
+从集群模式 Data ONTAP 8.3 开始，支持审核 CIFS 登录和注销事件以及中央访问策略暂存事件。如果要还原到不支持这些事件类型的 ONTAP 版本，并且您的审核配置监控这些事件类型，则必须在还原之前更改已启用审核的 SVM 的审核配置。您必须修改配置，以便仅审核文件操作事件。

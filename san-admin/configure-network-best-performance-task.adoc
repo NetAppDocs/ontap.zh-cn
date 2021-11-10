@@ -1,0 +1,35 @@
+---
+permalink: san-admin/configure-network-best-performance-task.html 
+sidebar: sidebar 
+keywords: configure, your, network, best, performance 
+summary: 以太网网络的性能差别很大。您可以通过选择特定的配置值来最大限度地提高用于 iSCSI 的网络的性能。 
+---
+= 配置网络以获得最佳性能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+以太网网络的性能差别很大。您可以通过选择特定的配置值来最大限度地提高用于 iSCSI 的网络的性能。
+
+.步骤
+. 将主机和存储端口连接到同一网络。
++
+最好连接到相同的交换机。切勿使用路由。
+
+. 选择可用的最高速度端口，并将其专用于 iSCSI 。
++
+最好使用 10 GbE 端口。至少需要 1 个 GbE 端口。
+
+. 对所有端口禁用以太网流量控制。
++
+有关 ONTAP 使用命令行界面配置以太网端口流量控制的信息，请参见 _CLI 9 网络管理指南。
+
++
+link:../networking/index.html["网络管理"]
+
+. 启用巨型帧（ MTU 通常为 9000 ）。
++
+数据路径中的所有设备，包括启动程序，目标和交换机，都必须支持巨型帧。否则，启用巨型帧实际上会显著降低网络性能。
+
+

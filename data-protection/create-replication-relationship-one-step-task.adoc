@@ -1,0 +1,100 @@
+---
+permalink: data-protection/create-replication-relationship-one-step-task.html 
+sidebar: sidebar 
+keywords: configure, replication, relationship, one step 
+summary: 从 ONTAP 9.3 开始，您可以使用 snapmirror protect 命令一步配置数据保护关系。您可以指定要复制的卷列表，目标集群上的 SVM ，作业计划和 SnapMirror 策略。SnapMirror Protect 可实现其余功能。 
+---
+= 一步配置复制关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，您可以使用 `snapmirror protect` 命令一步配置数据保护关系。您可以指定要复制的卷列表，目标集群上的 SVM ，作业计划和 SnapMirror 策略。`snapmirror protect` 执行其余操作。
+
+.您需要什么？ #8217 ；将需要什么
+* 源和目标集群以及 SVM 必须建立对等关系。
++
+https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM 对等"]
+
+* 目标卷上的语言必须与源卷上的语言相同。
+
+
+`snapmirror protect` 命令可选择与指定 SVM 关联的聚合。如果没有与 SVM 关联的聚合，则它会从集群中的所有聚合中进行选择。根据聚合上的可用空间量和卷数选择聚合。
+
+然后， `snapmirror protect` 命令将执行以下步骤：
+
+* 为要复制的卷列表中的每个卷创建一个具有适当类型和预留空间量的目标卷。
+* 配置适合您指定策略的复制关系。
+* 初始化关系。
+
+
+目标卷的名称格式为 ` _source_volume_name_dst_` 。如果与现有名称发生冲突，此命令会在卷名称后附加一个数字。您可以在命令选项中指定前缀和 / 或后缀。后缀将替换系统提供的 `dst` 后缀。
+
+在 ONTAP 9.3 及更早版本中，目标卷最多可包含 251 个 Snapshot 副本。在 ONTAP 9.4 及更高版本中，目标卷最多可以包含 1019 个 Snapshot 副本。
+
+[NOTE]
+====
+初始化可能非常耗时。`snapmirror protect` does not wait for initialization to complete before the job completes.因此，您应使用 `snapmirror show` 命令而不是 `job show` 命令来确定初始化完成的时间。
+
+====
+从 ONTAP 9.5 开始，可以使用 `snapmirror protect` 命令创建 SnapMirror 同步关系。
+
+.步骤
+. 一步创建并初始化复制关系：
++
+`snapmirror protect -path-list _svm ： volume_|_cluster ： //svm/volume_ ， ... -destination-vserver _destination_svm_ -policy _policy_-schedule _schedule_ -auto-initialize true_false -destination-volume-prefix _prefix_ -destination-volume-suffix _suffix_`
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。` -auto-initialize` 选项默认为 "`true` " 。
+
+====
++
+以下示例将使用默认的 `MirrorAllSnapshots` 策略创建并初始化 SnapMirror 灾难恢复关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_backup -policy MirrorAllSnapshots -schedule replication_daily
+----
++
+[NOTE]
+====
+如果愿意，您可以使用自定义策略。有关详细信息，请参见 link:create-custom-replication-policy-concept.html["创建自定义复制策略"]。
+
+====
++
+以下示例将使用默认 `XDPDefault` 策略创建并初始化 SnapVault 关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_backup -policy XDPDefault -schedule replication_daily
+----
++
+以下示例将使用默认 `MirrorAndVault` 策略创建并初始化统一复制关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_backup -policy MirrorAndVault
+----
++
+以下示例将使用默认的 `Sync` 策略创建并初始化 SnapMirror 同步关系：
+
++
+[listing]
+----
+cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_sync -policy Sync
+----
++
+[NOTE]
+====
+对于 SnapVault 和统一复制策略，您可能会发现，定义一个计划来为目标上最后一次传输的 Snapshot 副本创建副本会很有用。有关详细信息，请参见 link:define-schedule-create-local-copy-destination-task.html["定义在目标上创建本地副本的计划"]。
+
+====
+
+
+使用 `snapmirror show` 命令验证是否已创建 SnapMirror 关系。有关完整的命令语法，请参见手册页。

@@ -1,0 +1,118 @@
+---
+permalink: encryption-at-rest/enable-external-key-management-96-later-nve-task.html 
+sidebar: sidebar 
+keywords: enabling, external key management, ontap 9.6, later, nve 
+summary: 您可以使用一个或多个 KMIP 服务器来保护集群用于访问加密数据的密钥。从 ONTAP 9.6 开始，您可以使用一个或多个 KMIP 服务器来保护给定 SVM 用于访问加密数据的密钥。 
+---
+= 在 ONTAP 9.6 及更高版本（ NVE ）中启用外部密钥管理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用一个或多个 KMIP 服务器来保护集群用于访问加密数据的密钥。从 ONTAP 9.6 开始，您可以使用一个或多个 KMIP 服务器来保护给定 SVM 用于访问加密数据的密钥。
+
+.您需要什么？ #8217 ；将需要什么
+* 必须已安装 KMIP SSL 客户端和服务器证书。
+* 要执行此任务，您必须是集群或 SVM 管理员。
+* 在启用加密之前，您必须配置 MetroCluster 环境。
+
+
+您最多可以将四个 KMIP 服务器连接到一个集群或 SVM 。建议至少使用两台服务器来实现冗余和灾难恢复。
+
+外部密钥管理的范围决定了密钥管理服务器是保护集群中的所有 SVM 还是仅保护选定 SVM ：
+
+* 您可以使用 _cluster scopter_ 为集群中的所有 SVM 配置外部密钥管理。集群管理员可以访问存储在服务器上的每个密钥。
+* 从 ONTAP 9.6 开始，您可以使用 _SVM scopter_ 为集群中的指定 SVM 配置外部密钥管理。这最适合多租户环境，其中每个租户都使用不同的 SVM （或一组 SVM ）来提供数据。只有给定租户的 SVM 管理员才能访问该租户的密钥。
+* 对于多租户环境，请使用以下命令为 _MT_EK_MGMT_ 安装许可证：
++
+`ssystem license add -license-code <MT_EK_Mgmt license code>`
+
++
+有关完整的命令语法，请参见命令手册页。
+
+
+
+您可以在同一集群中使用这两个范围。如果为 SVM 配置了密钥管理服务器，则 ONTAP 仅使用这些服务器来保护密钥。否则， ONTAP 将使用为集群配置的密钥管理服务器来保护密钥。
+
+您可以在集群范围配置板载密钥管理，并在 SVM 范围配置外部密钥管理。您可以使用 `security key-manager key migrate` 命令将密钥从集群范围内的板载密钥管理迁移到 SVM 范围内的外部密钥管理器。
+
+.步骤
+. 配置集群的密钥管理器连接：
++
+`security key-manager external enable -vserver admin_svm -key-servers host_name_ip_address ： port ， ... -client-cert client_certificate -server-ca-cert server_CA_certificates`
+
++
+[NOTE]
+====
+使用 `security key-manager external enable` 命令可替代 `security key-manager setup` 命令。如果在集群登录提示符处运行命令，则 ` _admin_svm_` 默认为当前集群的管理 SVM 。您必须是集群管理员才能配置集群范围。您可以运行 `security key-manager external modify` 命令来更改外部密钥管理配置。
+
+====
++
+以下命令可通过三个外部密钥服务器为 `cluster1` 启用外部密钥管理。第一个密钥服务器使用其主机名和端口指定，第二个密钥服务器使用 IP 地址和默认端口指定，第三个密钥服务器使用 IPv6 地址和端口指定：
+
++
+[listing]
+----
+clusterl::> security key-manager external enable -vserver cluster1 -key-servers ks1.local:15696,10.0.0.10,[fd20:8b1e:b255:814e:32bd:f35c:832c:5a09]:1234 -client-cert AdminVserverClientCert -server-ca-certs AdminVserverServerCaCert
+----
+. 配置 SVM 的密钥管理器连接：
++
+`security key-manager external enable -vserver SVM -key-servers host_name_ip_address ： port ， ... -client-cert client_certificate -server-ca-cert server_CA_certificates`
+
++
+[NOTE]
+====
+如果在 SVM 登录提示符处运行命令，则 `SVM` 默认为当前 SVM 。您必须是集群或 SVM 管理员才能配置 SVM 范围。您可以运行 `security key-manager external modify` 命令来更改外部密钥管理配置。
+
+====
++
+以下命令将在单个密钥服务器侦听默认端口 5696 的情况下为 `svm1` 启用外部密钥管理：
+
++
+[listing]
+----
+svm1l::> security key-manager external enable -vserver svm1 -key-servers keyserver.svm1.com -client-cert SVM1ClientCert -server-ca-certs SVM1ServerCaCert
+----
+. 对任何其他 SVM 重复最后一步。
++
+[NOTE]
+====
+您也可以使用 `security key-manager external add servers` 命令配置其他 SVM 。使用 `security key-manager external add servers` 命令可替换 `security key-manager add` 命令。有关完整的命令语法，请参见手册页。
+
+====
+. 验证所有已配置的 KMIP 服务器是否均已连接：
++
+`security key-manager external show-status -node node_name`
+
++
+[NOTE]
+====
+使用 `security key-manager external show-status` 命令可替换 `security key-manager show -status` 命令。有关完整的命令语法，请参见手册页。
+
+====
++
+[listing]
+----
+cluster1::> security key-manager external show-status
+
+Node  Vserver  Key Server                                     Status
+----  -------  ---------------------------------------        -------------
+node1
+      svm1
+               keyserver.svm1.com:5696                        available
+      cluster1
+               10.0.0.10:5696                                 available
+               fd20:8b1e:b255:814e:32bd:f35c:832c:5a09:1234   available
+               ks1.local:15696                                available
+node2
+      svm1
+               keyserver.svm1.com:5696                        available
+      cluster1
+               10.0.0.10:5696                                 available
+               fd20:8b1e:b255:814e:32bd:f35c:832c:5a09:1234   available
+               ks1.local:15696                                available
+
+8 entries were displayed.
+----
+

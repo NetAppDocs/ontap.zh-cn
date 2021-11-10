@@ -1,0 +1,35 @@
+---
+permalink: encryption-at-rest/enable-onboard-key-management-new-nodes-concept.html 
+sidebar: sidebar 
+keywords: onboard key management, onboard new nodes 
+summary: 您可以使用板载密钥管理器保护集群用于访问加密数据的密钥。您必须在访问加密卷或自加密磁盘的每个集群上启用板载密钥管理器。 
+---
+= 在新添加的节点中启用板载密钥管理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用板载密钥管理器保护集群用于访问加密数据的密钥。您必须在访问加密卷或自加密磁盘的每个集群上启用板载密钥管理器。
+
+[NOTE]
+====
+每次向集群添加节点时，您都必须运行 `security key-manager setup` 命令。如果要将节点添加到配置了板载密钥管理的集群中，您将运行此命令刷新缺少的密钥。
+
+====
+如果您使用的是 MetroCluster 配置，请查看以下准则：
+
+* 从 ONTAP 9.6 开始，您必须先在本地集群上运行 `security key-manager 板载 enable` ，然后在远程集群上运行 `security key-manager 板载同步` ，并在每个集群上使用相同的密码短语。
+* 在 ONTAP 9.5 中，您必须在本地集群上运行 `security key-manager setup` ，并在远程集群上运行 `security key-manager setup -sync-metrocluster-config yes` ，每个都使用相同的密码短语。
+* 在 ONTAP 9.5 之前的版本中，您必须在本地集群上运行 `sSecurity key-manager setup` ，等待大约 20 秒，然后在远程集群上运行 `sSecurity key-manager setup` ，并在每个集群上使用相同的密码短语。
+
+
+默认情况下，重新启动节点时不需要输入密钥管理器密码短语。从 ONTAP 9.4 开始，您可以使用 ` -enable-cc-mode yes` 选项要求用户在重新启动后输入密码短语。
+
+对于 NVE ，如果设置 ` -enable-cc-mode yes` ，则使用 `volume create` 和 `volume move start` 命令创建的卷会自动加密。对于 `volume create` ，不需要指定 ` -encrypt true` 。对于 `volume move start` ，您不需要指定 ` -encrypt-destination true` 。
+
+[NOTE]
+====
+密码短语尝试失败后，必须重新启动节点。
+
+====

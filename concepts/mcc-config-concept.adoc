@@ -1,0 +1,40 @@
+---
+permalink: concepts/mcc-config-concept.html 
+sidebar: sidebar 
+keywords: metrocluster continuous availability 
+summary: MetroCluster 配置通过实施两个物理上独立的镜像集群来保护数据。每个集群会同步复制另一个集群的数据和 SVM 配置。如果某个站点发生灾难，管理员可以激活镜像的 SVM 并开始从正常运行的站点提供数据。 
+---
+= MetroCluster 持续可用性
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+MetroCluster 配置通过实施两个物理上独立的镜像集群来保护数据。每个集群会同步复制另一个集群的数据和 SVM 配置。如果某个站点发生灾难，管理员可以激活镜像的 SVM 并开始从正常运行的站点提供数据。
+
+* 光纤连接的 MetroCluster 配置支持城域范围的集群。
+* 延伸型 MetroCluster 配置支持校园范围的集群。
+
+
+无论哪种情况，集群都必须建立对等关系。
+
+MetroCluster 使用名为 _plex_ 的 ONTAP 功能 SyncMirror 在副本或另一集群存储中同步镜像每个集群的聚合数据。如果发生切换，则正常运行的集群上的远程丛会联机，并且二级 SVM 会开始提供数据。
+
+image::../media/metrocluster.gif[MetroCluster]
+
+|===
+
+
+ a| 
+* 在非 MetroCluster 实施中使用 SyncMirror ； * 如果出现故障的磁盘数超过 RAID 类型所能保护的磁盘数，或者与 RAID 组磁盘的连接断开，您可以选择在非 MetroCluster 实施中使用 SyncMirror 来防止数据丢失。此功能仅适用于 HA 对。
+
+聚合数据镜像到存储在不同磁盘架上的丛中。如果其中一个磁盘架不可用，则在修复故障发生原因期间，不受影响的丛将继续提供数据。
+
+请注意，使用 SyncMirror 镜像的聚合所需的存储容量是未镜像聚合的两倍。每个丛所需的磁盘数与其镜像的丛所需的磁盘数相同。例如，要镜像 1 ， 440 GB 的聚合，需要 2 ， 880 GB 的磁盘空间，每个丛需要 1 ， 440 GB 。
+
+[NOTE]
+====
+SyncMirror 也可用于 FlexArray 虚拟化实施。
+
+====
+|===

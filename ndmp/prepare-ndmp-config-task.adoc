@@ -1,0 +1,101 @@
+---
+permalink: ndmp/prepare-ndmp-config-task.html 
+sidebar: sidebar 
+keywords: prepare, ndmp, configuration 
+summary: 在通过网络数据管理协议（ NDMP ）配置磁带备份访问之前，您必须验证计划的配置是否受支持，验证磁带驱动器是否在每个节点上列为合格驱动器，验证所有节点是否都具有集群间 LIF ， 并确定备份应用程序是否支持集群感知备份（ Cluster Aware Backup ， CAB ）扩展。 
+---
+= 准备 NDMP 配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在通过网络数据管理协议（ NDMP ）配置磁带备份访问之前，您必须验证计划的配置是否受支持，验证磁带驱动器是否在每个节点上列为合格驱动器，验证所有节点是否都具有集群间 LIF ， 并确定备份应用程序是否支持集群感知备份（ Cluster Aware Backup ， CAB ）扩展。
+
+.步骤
+. 使用互操作性表（ IMT ）验证计划的配置是否受支持。
++
+https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"]
+
++
+您应验证以下组件是否兼容：
+
++
+** 集群上运行的 ONTAP 9 版本。
+** 备份应用程序供应商和应用程序版本：例如， Symantec NetBackup 7.6 或 Commvault Simpana 10 SP8 。
+** 磁带设备的详细信息，例如磁带驱动器的制造商，型号和接口：例如， IBM Ultrium — TD4 FC 或 HP Ultrium — 5 SAS 。
+** 集群中节点的平台：例如 FAS3260 或 FAS6280 。
+
+
+. 验证磁带驱动器是否在每个节点的内置磁带配置文件中列为合格驱动器：
++
+.. 在命令行界面上，使用 `storage tape show-supported-status` 命令查看内置磁带配置文件。
++
+[listing]
+----
+cluster1::> storage tape show-supported-status
+
+Node: cluster1-1
+                                Is
+Tape Drives                     Supported  Support Status
+------------------------------  ---------  -------------------------------
+Certance Ultrium 2              true       Dynamically Qualified
+Certance Ultrium 3              true       Dynamically Qualified
+Digital DLT2000                 true       Qualified
+....
+----
+.. 将磁带驱动器与输出中的合格驱动器列表进行比较。
++
+[NOTE]
+====
+输出中磁带设备的名称可能与设备标签或互操作性表中的名称略有不同。例如， Digital DLT2000 也称为 DLT2k 。您可以忽略这些细微的命名差异。
+
+====
+.. 如果设备未在输出中列为合格设备，即使该设备已根据互操作性表进行了资格认定，请按照 NetApp 支持站点上的说明下载并安装该设备的更新配置文件。
++
+http://mysupport.netapp.com/NOW/download/tools/tape_config["NetApp 下载：磁带设备配置文件"]
+
++
+如果在交付节点后合格的磁带设备，则该设备可能不会列在内置磁带配置文件中。
+
+
+
+. 验证集群中的每个节点是否都具有集群间 LIF ：
++
+.. 使用 `network interface show -role intercluster` 命令查看节点上的集群间 LIF 。
++
+[listing]
+----
+cluster1::> network interface show -role intercluster
+
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+cluster1    IC1        up/up      192.0.2.65/24      cluster1-1    e0a     true
+----
+.. 如果任何节点上都不存在集群间 LIF ，请使用 `network interface create` 命令创建集群间 LIF 。
++
+[listing]
+----
+cluster1::> network interface create -vserver cluster1 -lif IC2 -role intercluster
+-home-node cluster1-2 -home-port e0b -address 192.0.2.68 -netmask 255.255.255.0
+-status-admin up -failover-policy local-only -firewall-policy intercluster
+
+cluster1::> network interface show -role intercluster
+
+            Logical    Status     Network            Current       Current Is
+Vserver     Interface  Admin/Oper Address/Mask       Node          Port    Home
+----------- ---------- ---------- ------------------ ------------- ------- ----
+cluster1    IC1        up/up      192.0.2.65/24      cluster1-1    e0a     true
+cluster1    IC2        up/up      192.0.2.68/24      cluster1-2    e0b     true
+----
++
+link:../networking/index.html["网络管理"]
+
+
+
+. 使用备份应用程序随附的文档确定备份应用程序是否支持集群感知备份（ Cluster Aware Backup ， CAB ）。
++
+在确定可执行的备份类型时， CAB 支持是一个关键因素。
+
+

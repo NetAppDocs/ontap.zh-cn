@@ -28,7 +28,7 @@ image:workflow_san_provision_linux.gif["为 Linux 配置 SAN 存储的工作流�
 NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
 
 .步骤
-. 在 Linux 服务器上，安装 link:https://mysupport.netapp.com/NOW/download/software/sanhost_linux/Linux/["NetApp Linux Host Utilities"] 软件包。
+. 在 Linux 服务器上，安装 link:https://docs.netapp.com/us-en/ontap-sanhost/hu_luhu_71.html#installing-linux-unified-host-utilities["NetApp Linux Host Utilities"] 软件包。
 . 在 ONTAP 系统管理器中，单击 * 存储 > LUN* ，然后单击 * 添加 * 。
 +
 .. 输入创建 LUN 所需的信息。
@@ -36,7 +36,19 @@ NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS �
 +
 [cols="2"]
 |===
-| 选项 | 可在中使用 
+| 选项 | 从开始提供 
+
+
+ a| 
+将 QoS 策略分配给 LUN ，而不是父卷
+
+*** * 更多选项 > 存储和优化 *
+*** 选择 * 性能服务级别 * 。
+*** 要将 QoS 策略应用于单个 LUN 而不是整个卷，请选择 * 将这些性能限制实施应用于每个 LUN* 。
++
+ By default, performance limits are applied at the volume level.
+
+| ONTAP 9.10.1 
 
 
  a| 
@@ -81,7 +93,7 @@ NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS �
 * 注 * ：在 ONTAP 9.9.1 及更高版本中，如果选择自定义 QoS 策略，则还可以选择手动放置在指定的本地层上。
 
 
-| ONTAP 9.8 或更高版本 
+| ONTAP 9.8 
 |===
 
 

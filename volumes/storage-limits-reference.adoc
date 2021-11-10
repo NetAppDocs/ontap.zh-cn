@@ -1,0 +1,305 @@
+---
+permalink: volumes/storage-limits-reference.html 
+sidebar: sidebar 
+keywords: storage limits 
+summary: 在规划和管理存储架构时，应考虑存储对象的限制。 
+---
+= 存储限制
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在规划和管理存储架构时，应考虑存储对象的限制。
+
+以下各节列出了限制：
+
+* 卷限制
+* FlexClone 文件和 FlexClone LUN 限制
+
+
+Cloud Volumes ONTAP 的存储限制在 _Storage Cloud Volumes ONTAP 发行说明中进行了说明。
+
+
+
+== 卷限制
+
+[cols="5*"]
+|===
+| 存储对象 | limit | 原生存储 | 存储阵列 | Data ONTAP Edge 
+
+
+ a| 
+* 阵列 LUN*
+ a| 
+根卷的最小大小^1^
+ a| 
+不适用
+ a| 
+取决于型号
+ a| 
+不适用
+
+
+
+ a| 
+* 文件 *
+ a| 
+最大大小
+ a| 
+16 TB
+ a| 
+16 TB
+ a| 
+16 TB
+
+
+
+ a| 
+每个卷的最大值^3^
+ a| 
+取决于卷大小，最多 20 亿个
+ a| 
+取决于卷大小，最多 20 亿个
+ a| 
+取决于卷大小，最多 20 亿个
+
+
+
+ a| 
+* FlexClone 卷 *
+ a| 
+分层克隆深度^4^
+ a| 
+499
+ a| 
+499
+ a| 
+499
+
+
+
+ a| 
+* FlexVol 卷 *
+ a| 
+每个节点的最大值^1^
+ a| 
+取决于型号
+ a| 
+取决于型号
+ a| 
+200
+
+
+
+ a| 
+每个 SVM 每个节点的最大值^5^
+ a| 
+取决于型号
+ a| 
+取决于型号
+ a| 
+200
+
+
+
+ a| 
+最小大小
+ a| 
+20 MB
+ a| 
+20 MB
+ a| 
+20 MB
+
+
+
+ a| 
+最大大小^1^
+ a| 
+取决于型号
+ a| 
+取决于型号
+ a| 
+取决于型号
+
+
+
+ a| 
+* 用于主工作负载的 FlexVol 卷 *
+ a| 
+每个节点的最大值^2^
+ a| 
+取决于型号
+ a| 
+取决于型号
+ a| 
+取决于型号
+
+
+
+ a| 
+* FlexVol 根卷 *
+ a| 
+最小大小^1^
+ a| 
+取决于型号
+ a| 
+取决于型号
+ a| 
+取决于型号
+
+
+
+ a| 
+* LUN *
+ a| 
+每个节点的最大值^5^
+ a| 
+取决于型号
+ a| 
+取决于型号
+ a| 
+1,024
+
+
+
+ a| 
+每个集群的最大值^5^
+ a| 
+取决于型号
+ a| 
+取决于型号
+ a| 
+1,024
+
+
+
+ a| 
+每个卷的最大值^5^
+ a| 
+取决于型号
+ a| 
+取决于型号
+ a| 
+512
+
+
+
+ a| 
+最大大小
+ a| 
+16 TB
+ a| 
+16 TB
+ a| 
+16 TB
+
+
+
+ a| 
+* qtree*
+ a| 
+每个 FlexVol 卷的上限
+ a| 
+4,995
+ a| 
+4,995
+ a| 
+4,995
+
+
+
+ a| 
+* Snapshot 副本 *
+ a| 
+每个卷的最大值^6^
+ a| 
+255/1023
+ a| 
+255/1023
+ a| 
+255/1023
+
+
+
+ a| 
+* 卷 *
+ a| 
+NAS 的每个集群的上限
+ a| 
+12,000
+ a| 
+12,000
+ a| 
+200
+
+
+
+ a| 
+配置了 SAN 协议的每个集群的上限
+ a| 
+取决于型号
+ a| 
+取决于型号
+ a| 
+200
+
+|===
+* 注： *
+
+. 在 ONTAP 9.3 及更早版本中，一个卷最多可包含 255 个 Snapshot 副本。在 ONTAP 9.4 及更高版本中，一个卷最多可以包含 1023 个 Snapshot 副本。
+. 从 ONTAP 9.7 开始，至少具有 128 GB 内存的 AFF 平台上支持的最大 FlexVol 卷数已增加到每个节点 2 ， 500 个 FlexVol 卷；但是，每个节点一次只能有 1 ， 000 个活动卷（主工作负载）。
++
+有关平台专用信息和最新支持详细信息，请参见 https://hwu.netapp.com/["Hardware Universe"]。
+
+. 20 亿 = 2 × 10 到 9 次。
+. 可从单个 FlexVol 卷创建的 FlexClone 卷嵌套层次结构的最大深度。
+. 此限制仅适用于 SAN 环境。
++
+link:../san-config/index.html["SAN 配置"]
+
+. 您可以使用 SnapMirror 级联部署来增加此限制。
+
+
+
+
+== FlexClone 文件和 FlexClone LUN 限制
+
+[cols="4*"]
+|===
+| limit | 原生存储 | 存储阵列 | Data ONTAP Edge 
+
+
+ a| 
+* 每个文件或 LUN 的最大值^1^ *
+ a| 
+32,767
+ a| 
+32,767
+ a| 
+32,767
+
+
+
+ a| 
+* 每个 FlexVol 卷的最大共享数据总数 *
+ a| 
+640 TB
+ a| 
+640 TB
+ a| 
+100 TB
+
+|===
+* 注： *
+
+. 如果您尝试创建 32 ， 767 个以上的克隆， ONTAP 会自动为父文件或父 LUN 创建一个新的物理副本。
++
+对于使用重复数据删除的 FlexVol 卷，此限制可能更低。
+
+
+
+* 相关信息 *
+
+https://www.netapp.com/cloud-services/cloud-manager/documentation/["查找适用于您的 Cloud Volumes ONTAP 版本的发行说明"]

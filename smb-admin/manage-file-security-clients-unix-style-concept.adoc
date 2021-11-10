@@ -1,0 +1,41 @@
+---
+permalink: smb-admin/manage-file-security-clients-unix-style-concept.html 
+sidebar: sidebar 
+keywords: present, file, security, smb, client, unix, security-style, data, disabling, disable, presentation, ntfs, acl, client, advantage, setting, business, requirement, manage how file security is presented to smb clients for unix security-style data 
+summary: 您可以通过启用或禁用向 SMB 客户端提供 NTFS ACL 来选择如何为 UNIX 安全模式数据的 SMB 客户端提供文件安全性。每个设置都有一些优势，您应了解这些优势，才能选择最适合您业务需求的设置。 
+---
+= 管理如何向 SMB 客户端提供文件安全性以了解 UNIX 安全模式数据概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过启用或禁用向 SMB 客户端提供 NTFS ACL 来选择如何为 UNIX 安全模式数据的 SMB 客户端提供文件安全性。每个设置都有一些优势，您应了解这些优势，才能选择最适合您业务需求的设置。
+
+默认情况下， ONTAP 会将 UNIX 安全模式卷上的 UNIX 权限作为 NTFS ACL 提供给 SMB 客户端。在某些情况下，这种做法是可取的，其中包括以下情形：
+
+* 要查看和编辑 UNIX 权限，请使用 Windows 属性框中的 * 安全性 * 选项卡。
++
+如果 UNIX 系统不允许修改 Windows 客户端的权限，则不能修改此操作。例如，您不能更改不拥有的文件的所有权，因为 UNIX 系统不允许执行此操作。此限制可防止 SMB 客户端绕过对文件和文件夹设置的 UNIX 权限。
+
+* 用户正在使用某些 Windows 应用程序编辑和保存 UNIX 安全模式卷上的文件，例如 Microsoft Office ，在这些应用程序中， ONTAP 必须在保存操作期间保留 UNIX 权限。
+* 您的环境中有一些 Windows 应用程序希望对其使用的文件读取 NTFS ACL 。
+
+
+在某些情况下，您可能需要禁用将 UNIX 权限作为 NTFS ACL 呈现。如果禁用此功能，则 ONTAP 会将 UNIX 安全模式卷作为 FAT 卷提供给 SMB 客户端。您可能希望将 UNIX 安全模式卷作为 FAT 卷提供给 SMB 客户端的具体原因如下：
+
+* 您只能通过在 UNIX 客户端上使用挂载来更改 UNIX 权限。
++
+在 SMB 客户端上映射 UNIX 安全模式卷时， " 安全 " 选项卡不可用。映射的驱动器似乎已使用 FAT 文件系统进行格式化，该文件系统没有文件权限。
+
+* 您正在通过 SMB 使用应用程序，这些应用程序会对访问的文件和文件夹设置 NTFS ACL ，如果数据驻留在 UNIX 安全模式卷上，则这些应用程序可能会失败。
++
+如果 ONTAP 将卷报告为 FAT ，则应用程序不会尝试更改 ACL 。
+
+
+
+* 相关信息 *
+
+xref:configure-security-styles-task.adoc[在 FlexVol 卷上配置安全模式]
+
+xref:configure-security-styles-qtrees-task.adoc[在 qtree 上配置安全模式]

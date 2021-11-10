@@ -1,0 +1,36 @@
+---
+permalink: flexgroup/shrink-flexgroup-volume-task.html 
+sidebar: sidebar 
+keywords: reduce, size, flexgroup, volume 
+summary: 从 ONTAP 9.6 开始，您可以将 FlexGroup 卷的大小调整为低于其当前大小的值，以释放卷中未使用的空间。减小 FlexGroup 卷的大小后， ONTAP 会自动调整所有 FlexGroup 成分卷的大小。 
+---
+= 减小 FlexGroup 卷的大小
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.6 开始，您可以将 FlexGroup 卷的大小调整为低于其当前大小的值，以释放卷中未使用的空间。减小 FlexGroup 卷的大小后， ONTAP 会自动调整所有 FlexGroup 成分卷的大小。
+
+.步骤
+. 减小 FlexGroup 卷的大小： `volume size -vserver vserver_name -volume fg_name -size new_size`
++
+`new_size` 是 FlexGroup 卷的大小。您可以指定低于当前大小的值，也可以指定减小 FlexGroup 卷当前大小的负值。
+
++
+[NOTE]
+====
+如果为卷启用了自动缩减（`volume autosize` 命令），则最小自动大小将设置为卷的新大小。
+
+====
++
+[listing]
+----
+cluster1::> volume size -vserver svm1 -volume volX -size 10TB
+----
++
+[listing]
+----
+cluster1::> volume size -vserver svm1 -volume volX -size -5TB
+----
+

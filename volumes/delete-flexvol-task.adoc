@@ -1,0 +1,42 @@
+---
+permalink: volumes/delete-flexvol-task.html 
+sidebar: sidebar 
+keywords: delete, flexvol volume 
+summary: 您可以删除不再需要的或包含损坏数据的 FlexVol 卷。 
+---
+= 删除 FlexVol 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以删除不再需要的或包含损坏数据的 FlexVol 卷。
+
+任何应用程序都不能访问要删除的卷中的数据。
+
+[NOTE]
+====
+如果您意外删除了某个卷，请联系技术支持以获得帮助。
+
+====
+.步骤
+. 如果卷已挂载，请将其卸载：
++
+`volume unmount -vserver vserver_name -volume volume_name`
+
+. 如果卷是 SnapMirror 关系的一部分，请使用 `snapmirror delete` 命令删除此关系。
+. 如果卷处于联机状态，请使卷脱机：
++
+`volume offline -vserver vserver_name volume_name`
+
+. 删除卷：
++
+`volume delete -vserver vserver_name volume_name`
+
+
+
+
+
+== 结果
+
+此时将删除此卷以及任何关联的配额策略和 qtree 。

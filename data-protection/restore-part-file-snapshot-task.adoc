@@ -1,0 +1,59 @@
+---
+permalink: data-protection/restore-part-file-snapshot-task.html 
+sidebar: sidebar 
+keywords: restore, part, file, snapshot copy 
+summary: 您可以使用 volume snapshot partial-restore-file 命令将一系列数据从 Snapshot 副本还原到 LUN 或 NFS 或 CIFS 容器文件，前提是您知道数据的起始字节偏移量和字节计数。您可以使用此命令还原在同一 LUN 中存储多个数据库的主机上的一个数据库。 
+---
+= 从 Snapshot 副本还原文件的部分内容
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume snapshot partial-restore-file` 命令将一系列数据从 Snapshot 副本还原到 LUN 或 NFS 或 CIFS 容器文件，前提是您知道数据的起始字节偏移量和字节计数。您可以使用此命令还原在同一 LUN 中存储多个数据库的主机上的一个数据库。
+
+.步骤
+. 列出卷中的 Snapshot 副本：
++
+`volume snapshot show -vserver _svm_ -volume _volum_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例显示了 `vol1` 中的 Snapshot 副本：
+
++
+[listing]
+----
+
+clus1::> volume snapshot show -vserver vs1 -volume vol1
+
+Vserver Volume Snapshot                State    Size  Total% Used%
+------- ------ ---------- ----------- ------   -----  ------ -----
+vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+               daily.2013-01-25_0010   valid   92KB      0%    0%
+               hourly.2013-01-25_0105  valid   228KB     0%    0%
+               hourly.2013-01-25_0205  valid   236KB     0%    0%
+               hourly.2013-01-25_0305  valid   244KB     0%    0%
+               hourly.2013-01-25_0405  valid   244KB     0%    0%
+               hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 从 Snapshot 副本还原文件的部分内容：
++
+`volume snapshot partial-restore-file -vserver _svm_ -volume _volume_-snapshot _snapshot_ -path _file_path_ -start-byte _staring_byte_ -byte-count _byte_count_count`
+
++
+起始字节偏移和字节计数必须是 4 ， 096 的倍数。
+
++
+以下示例将还原文件 `myfile.txt` 的前 4 ， 096 个字节：
+
++
+[listing]
+----
+cluster1::> volume snapshot partial-restore-file -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010 -path /myfile.txt -start-byte 0 -byte-count 4096
+----
+

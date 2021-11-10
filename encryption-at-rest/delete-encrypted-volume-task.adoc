@@ -1,0 +1,54 @@
+---
+permalink: encryption-at-rest/delete-encrypted-volume-task.html 
+sidebar: sidebar 
+keywords: deleting, encrypted, volume 
+summary: 您可以使用 volume delete 命令删除加密的卷。 
+---
+= 删除加密卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume delete` 命令删除加密的卷。
+
+.您需要什么？ #8217 ；将需要什么
+* 要执行此任务，您必须是集群管理员，或者集群管理员已向其委派权限的 SVM 管理员。
++
+xref:delegate-volume-encryption-svm-administrator-task.adoc[委派权限以运行 volume move 命令]
+
+* 卷必须处于脱机状态。
+
+
+.步骤
+. 删除加密卷：
++
+`volume delete -vserver svm_name -volume volume_name`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令将删除名为 `vol1` 的加密卷：
+
++
+[listing]
+----
+cluster1::> volume delete -vserver vs1 -volume vol1
+----
++
+当系统提示您确认删除时，输入 `yes` 。
+
++
+系统将在 24 小时后删除卷的加密密钥。
+
++
+使用 `volume delete` 和 ` -force true` 选项删除卷并立即销毁相应的加密密钥。有关详细信息，请参见手册页。
+
+
+
+在发出 `volume delete` 命令后，您可以使用 `volume recovery-queue` 命令在保留期限内恢复已删除的卷：
+
+`volume recovery-queue svm_name -volume volume_name`
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_use_the_Volume_Recovery_Queue["如何使用卷恢复功能"]

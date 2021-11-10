@@ -1,0 +1,27 @@
+---
+permalink: tape-backup/affinity-concept.html 
+sidebar: sidebar 
+keywords: affinity, information, cab, aware, ndmp, application, volumes, backup, local, three, way 
+summary: 由于备份应用程序支持 CAB ，因此 NDMP 服务器可提供有关卷和磁带设备的唯一位置信息。使用此相关性信息，如果卷和磁带设备共享同一相关性，则备份应用程序可以执行本地备份，而不是三向备份。 
+---
+= 什么是关联信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+由于备份应用程序支持 CAB ，因此 NDMP 服务器可提供有关卷和磁带设备的唯一位置信息。使用此相关性信息，如果卷和磁带设备共享同一相关性，则备份应用程序可以执行本地备份，而不是三向备份。
+
+如果在节点管理 LIF ，集群管理 LIF 上建立了 NDMP 控制连接， 或者集群间 LIF ，备份应用程序可以使用相关性信息来确定卷和磁带设备是否位于同一节点上，然后执行本地或三向备份或还原操作。如果在数据 LIF 上建立了 NDMP 控制连接，则备份应用程序将始终执行三向备份。
+
+
+
+== 本地 NDMP 备份和三向 NDMP 备份
+
+image::../media/local_and_three-way_backup_in_vserver_aware_ndmp_mode.png[本地和三向备份图]
+
+使用有关卷和磁带设备的相关性信息， DMA （备份应用程序）会对位于集群中节点 1 上的卷和磁带设备执行本地 NDMP 备份。如果卷从节点 1 移至节点 2 ，则有关卷和磁带设备的相关性信息将发生更改。因此，对于后续备份， DMA 将执行三向 NDMP 备份操作。这样可以确保卷的备份策略的连续性，而不管卷移动到哪个节点。
+
+* 相关信息 *
+
+xref:cluster-aware-backup-extension-concept.adoc[集群感知型备份扩展的功能]

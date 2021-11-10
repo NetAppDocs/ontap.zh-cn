@@ -1,0 +1,117 @@
+---
+permalink: flexgroup/create-task.html 
+sidebar: sidebar 
+keywords: create, flexgroup, volume 
+summary: 您可以通过手动选择必须创建 FlexGroup 卷的聚合，然后指定每个聚合上的成分卷数来创建 FlexGroup 卷。 
+---
+= 创建 FlexGroup 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过手动选择必须创建 FlexGroup 卷的聚合，然后指定每个聚合上的成分卷数来创建 FlexGroup 卷。
+
+您必须了解聚合中创建 FlexGroup 卷所需的空间。
+
+xref:aggregate-space-requirements-concept.adoc[配置 FlexGroup 卷时的聚合空间准则]
+
+此外，您还应了解在选择聚合以配置 FlexGroup 卷时的注意事项和要求。
+
+创建 FlexGroup 卷时，要获得使用 FlexGroup 卷的最佳性能结果，必须考虑以下准则：
+
+* FlexGroup 卷只能跨越相同硬件系统上的聚合。
++
+使用相同的硬件系统有助于在 FlexGroup 卷中提供可预测的性能。
+
+* FlexGroup 卷应跨越具有相同磁盘类型和 RAID 组配置的聚合。
++
+为了获得一致的性能，您必须确保所有聚合都由所有 SSD ，所有 HDD 或所有混合聚合组成。此外，聚合应在 FlexGroup 卷中具有相同数量的驱动器和 RAID 组。
+
+* FlexGroup 卷可以跨越集群的一部分。
++
+不必将 FlexGroup 卷配置为跨越整个集群，但这样做可以更好地利用可用的硬件资源。
+
+* 创建 FlexGroup 卷时，部署 FlexGroup 卷的聚合最好具有以下特征：
++
+** 多个聚合应具有大致相同的可用空间量，尤其是在使用精简配置时。
+** 创建 FlexGroup 卷后，应为聚合元数据预留大约 3% 的可用空间。
+
+
+* 对于 FAS 系统，每个节点最好有两个聚合；对于 AFF 系统， FlexGroup 卷每个节点必须有一个聚合。
+* 对于每个 FlexGroup 卷，应至少创建八个成分卷，这些成分卷分布在 FAS 系统上的两个或更多聚合上，以及 AFF 系统上的一个或多个聚合上。
+
+
+.步骤
+. 创建 FlexGroup 卷： `volume create -vserver svm_name -volume flexgroup_name -aggr-list aggr1 ， aggr2 ， ...-aggr-list-multiplier constituents_per_aggr -size fg_size [ – encrypt true" （ -qos-policy-group qos_policy_group_name ）`
++
+** ` -aggr-list` 参数指定要用于 FlexGroup 卷成分卷的聚合列表。
++
+列表中的每个条目都会在指定聚合上创建一个成分卷。您可以多次指定一个聚合，以便在该聚合上创建多个成分卷。
+
++
+为了在整个 FlexGroup 卷中保持性能一致，所有聚合都必须使用相同的磁盘类型和 RAID 组配置。
+
+** ` -aggr-list-multiplier` 参数指定在创建 FlexGroup 卷时使用 ` -aggr-list` 参数在列出的聚合上迭代的次数。
++
+` -aggr-list-multiplier` 参数的默认值为 4 。
+
+** `size` 参数指定 FlexGroup 卷的大小，以 KB ， MB ， GB ， TB 或 PB 为单位。
+** 从 ONTAP 9.5 开始，您可以为 FabricPool 创建 FlexGroup 卷，此卷仅使用所有 SSD 聚合。
++
+要为 FabricPool 创建 FlexGroup 卷，使用 ` -aggr-list` 参数指定的所有聚合都必须为 FabricPool 。对于 FabricPool ，卷保证必须始终设置为 `none` 。您还可以为 FlexGroup 卷指定分层策略和分层最小冷却期。
+
++
+xref:../disks-aggregates/index.html[磁盘和聚合管理]
+
+** 从 ONTAP 9.4 开始，您可以为 FlexGroup 卷指定吞吐量下限（ QoS 最小值）和自适应 QoS 。
++
+link:../performance-admin/index.html["性能管理"]
+
+** 从 ONTAP 9.3 开始，您可以为 FlexGroup 卷指定吞吐量上限（ QoS 最大值），从而限制 FlexGroup 卷可以使用的性能资源。
+** 从 ONTAP 9.2 开始，如果要在 FlexGroup 卷上启用加密，则可以将 ` -encrypt` 参数设置为 `true` 。
++
+要创建加密卷，必须已安装卷加密许可证和密钥管理器。
+
++
+[NOTE]
+====
+您必须在创建 FlexGroup 卷时对其启用加密。您不能对现有 FlexGroup 卷启用加密。
+
+====
++
+link:../encryption-at-rest/index.html["空闲数据加密"]
+
+
+
++
+[listing]
+----
+cluster-1::> volume create -vserver vs0 -volume fg2 -aggr-list aggr1,aggr2,aggr3,aggr1 -aggr-list-multiplier 2 -size 500TB
+
+Warning: A FlexGroup "fg2" will be created with the following number of constituents of size 62.50TB: 8.
+Do you want to continue? {y|n}: y
+
+[Job 43] Job succeeded: Successful
+----
+
+
+在上一示例中，如果要为 FabricPool 创建 FlexGroup 卷，则所有聚合（ aggr1 ， aggr2 和 aggr3 ）都必须是 FabricPool 中的聚合。。使用接合路径挂载 FlexGroup 卷： `volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
+
+[listing]
+----
+cluster1::> volume mount -vserver vs0 -volume fg2 -junction-path /fg
+----
+您应从客户端挂载 FlexGroup 卷。
+
+如果您运行的是 ONTAP 9.6 或更早版本，并且 Storage Virtual Machine （ SVM ）同时配置了 NFSv3 和 NFSv4 ，则从客户端挂载 FlexGroup 卷可能会失败。在这种情况下，您必须在从客户端挂载 FlexGroup 卷时明确指定 NFS 版本。
+
+[listing]
+----
+# mount -t nfs -o vers=3 192.53.19.64:/fg /mnt/fg2
+# ls /mnt/fg2
+file1  file2
+----
+* 相关信息 *
+
+http://www.netapp.com/us/media/tr-4571.pdf["NetApp 技术报告 4571 ：《 NetApp FlexGroup 最佳实践和实施指南》"]

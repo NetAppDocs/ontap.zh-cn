@@ -1,0 +1,137 @@
+---
+permalink: smb-hyper-v-sql/smb-share-config-worksheet-reference.html 
+sidebar: sidebar 
+keywords: complete, smb, share, configuration, worksheet, information, settings 
+summary: 使用此工作表可记录在为 SQL Server 和基于 SMB 的 Hyper-V 配置创建持续可用的 SMB 共享时所需的值。 
+---
+= 填写 SMB 共享配置工作表
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用此工作表可记录在为 SQL Server 和基于 SMB 的 Hyper-V 配置创建持续可用的 SMB 共享时所需的值。
+
+
+
+== 有关 SMB 共享属性和配置设置的信息
+
+对于每个共享，必须指定以下信息：
+
+* Storage Virtual Machine （ SVM ）名称
++
+所有共享的 SVM 名称都相同
+
+* Share name
+* 路径
+* 共享属性
++
+您必须配置以下两个共享属性：
+
++
+** `机会锁`
+** `持续可用`
+
+
+
+
+不能设置以下共享属性：
+
+* `主目录属性缓存`
+* `BranchCache`
+* `基于访问的枚举`
++
+[NOTE]
+====
+禁用更改通知后， Windows 2012 Server 不会刷新资源管理器窗口，从而导致目录内容视图不一致。
+
+====
++
+** 必须禁用符号链接（ ` -symlink-properties` 参数的值必须为空 ["] ）。
+
+
+
+
+
+
+== 有关共享路径的信息
+
+如果您使用远程 VSS 备份 Hyper-V 文件，则在从 Hyper-V 服务器到存储虚拟机文件的存储位置建立 SMB 连接时，选择要使用的共享路径非常重要。虽然可以在命名空间中的任意位置创建共享，但 Hyper-V 服务器使用的共享路径不应包含接合卷。不能对包含接合点的共享路径执行卷影复制操作。
+
+在创建数据库目录结构时， SQL Server 无法跨越接合。您不应为包含接合点的 SQL Server 创建共享路径。
+
+例如，根据所示的命名空间，如果要将虚拟机文件或数据库文件存储在卷 "`vol1` " ， "`vol2` " ， "`vol3` " 和 "`vol4` " 上，则应在以下路径为应用程序服务器创建共享： ` /data1/vol1` ， ` /data1/vol2` ， vol2 ` /vol2`` 和 vol4 ` 。
+
+[listing]
+----
+
+                     Junction                       Junction
+Vserver Volume       Active   Junction Path         Path Source
+------- ------------ -------- -------------------   -----------
+vs1     data1         true     /data1               RW_volume
+vs1     vol1          true     /data1/vol1          RW_volume
+vs1     vol2          true     /data1/vol2          RW_volume
+vs1     data2         true     /data2               RW_volume
+vs1     vol3          true     /data2/vol3          RW_volume
+vs1     vol4          true     /data2/vol4          RW_volume
+----
+[NOTE]
+====
+尽管您可以在 ` /data1` 和 ` /data2` 路径上创建共享以进行管理管理，但您不能将应用程序服务器配置为使用这些共享来存储数据。
+
+====
+
+
+== 规划工作表
+
+|===
+| 信息类型 | 值 
+
+
+ a| 
+_Volume 1 ： SMB 共享名称和路径 _
+ a| 
+
+
+
+ a| 
+_Volume 2 ： SMB 共享名称和路径 _
+ a| 
+
+
+
+ a| 
+_Volume 3 ： SMB 共享名称和路径 _
+ a| 
+
+
+
+ a| 
+_Volume 4 ： SMB 共享名称和路径 _
+ a| 
+
+
+
+ a| 
+_Volume 5 ： SMB 共享名称和路径 _
+ a| 
+
+
+
+ a| 
+_Volume 6 ： SMB 共享名称和路径 _
+ a| 
+
+
+
+ a| 
+_Volume 7 ： SMB 共享名称和路径 _
+ a| 
+
+
+
+ a| 
+_Additional volumes ： SMB 共享名称和路径 _
+ a| 
+
+|===

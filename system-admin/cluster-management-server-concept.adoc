@@ -1,0 +1,23 @@
+---
+permalink: system-admin/cluster-management-server-concept.html 
+sidebar: sidebar 
+keywords: cluster, management, server, adminsvm, svm, single, entity 
+summary: 集群管理服务器（也称为 adminSVM ）是一种专用的 Storage Virtual Machine （ SVM ）实施，可将集群呈现为一个可管理的实体。除了充当最高级别的管理域之外，集群管理服务器还拥有逻辑上不属于数据 SVM 的资源。 
+---
+= 什么是集群管理服务器
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+集群管理服务器（也称为 _admin__SVM ）是一种专用的 Storage Virtual Machine （ SVM ）实施，可将集群呈现为一个可管理的实体。除了充当最高级别的管理域之外，集群管理服务器还拥有逻辑上不属于数据 SVM 的资源。
+
+集群管理服务器在集群上始终可用。您可以通过控制台或集群管理 LIF 访问集群管理服务器。
+
+主网络端口发生故障时，集群管理 LIF 会自动故障转移到集群中的另一个节点。根据所使用管理协议的连接特征，您可能会注意到故障转移，也可能不会察觉到故障转移。如果您使用的是无连接协议（例如 SNMP ）或连接受限（例如 HTTP ），则不太可能会注意到故障转移。但是，如果您使用的是长期连接（例如 SSH ），则必须在故障转移后重新连接到集群管理服务器。
+
+创建集群时，系统会配置集群管理 LIF 的所有特征，包括其 IP 地址，网络掩码，网关和端口。
+
+与数据 SVM 或节点 SVM 不同，集群管理服务器没有根卷或托管用户卷（尽管它可以托管系统卷）。此外，集群管理服务器只能具有集群管理类型的 LIF 。
+
+如果运行 `vserver show` 命令，则集群管理服务器将显示在该命令的输出列表中。

@@ -1,0 +1,51 @@
+---
+permalink: nfs-admin/enable-ldap-rfc2307bis-support-task.html 
+sidebar: sidebar 
+keywords: enable, ldap, rfc2307bis, support 
+summary: 如果您要使用 LDAP 并需要使用嵌套组成员资格的附加功能，则可以将 ONTAP 配置为启用 LDAP RFC2307bis 支持。 
+---
+= 启用 LDAP RFC2307bis 支持
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您要使用 LDAP 并需要使用嵌套组成员资格的附加功能，则可以将 ONTAP 配置为启用 LDAP RFC2307bis 支持。
+
+您必须已为要使用的一个默认 LDAP 客户端模式创建一个副本。
+
+在 LDAP 客户端模式中，组对象使用 memberUid 属性。此属性可以包含多个值，并列出属于该组的用户的名称。在启用了 RFC2307bis 的 LDAP 客户端模式中，组对象使用 uniqueMember 属性。此属性可以包含 LDAP 目录中另一个对象的完整可分辨名称（ DN ）。这样，您就可以使用嵌套组，因为组可以将其他组作为成员。
+
+用户所属的组不应超过 256 个，包括嵌套组。ONTAP 会忽略超过 256 组限制的任何组。
+
+默认情况下， RFC2307bis 支持处于禁用状态。
+
+[NOTE]
+====
+使用 MS-AD-BIS 模式创建 LDAP 客户端时， ONTAP 会自动启用 RFC2307bis 支持。
+
+====
+对于追加信息，请参见 https://www.netapp.com/pdf.html?item=/media/19423-tr-4835.pdf["NetApp 技术报告 4835 ：《如何在 ONTAP 中配置 LDAP 》"]。
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 修改复制的 RFC2307 LDAP 客户端模式以启用 RFC2307bis 支持：
++
+`vserver services name-service ldap client schema modify -vserver vserver_name -schema schema-name -enable-rfc2307bis true`
+
+. 修改模式以匹配 LDAP 服务器中支持的对象类：
++
+`vserver services name-service ldap client schema modify -vserver vserver-name -schema schema_name -group-for-unique-name-object-class object_class`
+
+. 修改模式以匹配 LDAP 服务器中支持的属性名称：
++
+`vserver services name-service ldap client schema modify -vserver vserver-name -schema schema_name -unique-member-attribute attribute_name`
+
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+

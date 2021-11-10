@@ -1,0 +1,61 @@
+---
+permalink: disks-aggregates/determine-space-usage-aggregate-concept.html 
+sidebar: sidebar 
+keywords: determine, space, usage, aggregate 
+summary: 您可以使用 aggregate show-space 命令查看一个或多个聚合中所有卷的空间使用量。这有助于您查看哪些卷在其所属聚合中占用的空间最多，以便您可以采取措施释放更多空间。 
+---
+= 确定聚合中的空间使用量
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `aggregate show-space` 命令查看一个或多个聚合中所有卷的空间使用量。这有助于您查看哪些卷在其所属聚合中占用的空间最多，以便您可以采取措施释放更多空间。
+
+聚合中的已用空间直接受其包含的 FlexVol 卷中使用的空间影响。用于增加卷空间的措施也会影响聚合中的空间。
+
+以下行包括在 `aggregate show-space` 命令输出中：
+
+* `卷脚本`
++
+聚合中所有卷占用空间的总数。它包括由所属聚合中所有卷的所有数据和元数据使用或预留的所有空间。
+
+* `聚合元数据`
++
+聚合所需的总文件系统元数据，例如分配位图和索引节点文件。
+
+* `sSnapshot 预留`
++
+根据卷大小为聚合 Snapshot 副本预留的空间量。它被视为已用空间，不可用于卷或聚合数据或元数据。
+
+* `sSnapshot 预留不可用`
++
+最初为聚合 Snapshot 预留分配的空间量，由于聚合 Snapshot 副本正在由与聚合关联的卷使用而无法用于聚合 Snapshot 副本。仅适用于具有非零聚合 Snapshot 预留的聚合。
+
+* `已用总容量`
++
+聚合中卷，元数据或 Snapshot 副本已用或预留的所有空间之和
+
+* `总物理使用量`
++
+当前用于数据的空间量 （而不是保留供将来使用）包括聚合 Snapshot 副本使用的空间
+
+
+
+以下示例显示了 Snapshot 预留为 5% 的聚合的 `aggregate show-space` 命令输出。如果 Snapshot 预留为 0 ，则不会显示该行。
+
+[listing]
+----
+cluster1::> storage aggregate show-space
+
+						Aggregate : wqa_gx106_aggr1
+
+      Feature                                   Used      Used%
+      --------------------------------    ----------     ------
+      Volume Footprints                      101.0MB         0%
+      Aggregate Metadata                       300KB         0%
+      Snapshot Reserve                        5.98GB         5%
+
+      Total Used                              6.07GB         5%
+      Total Physical Used                    34.82KB         0%
+----

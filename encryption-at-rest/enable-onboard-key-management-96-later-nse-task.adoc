@@ -1,0 +1,123 @@
+---
+permalink: encryption-at-rest/enable-onboard-key-management-96-later-nse-task.html 
+sidebar: sidebar 
+keywords: enabling, onboard key management, ontap 9.6, later 
+summary: 您可以使用板载密钥管理器保护集群用于访问加密数据的密钥。您必须在访问加密卷或自加密磁盘的每个集群上启用板载密钥管理器。 
+---
+= 在 ONTAP 9.6 及更高版本中启用板载密钥管理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用板载密钥管理器向 FIPS 驱动器或 SED 验证集群节点的身份。板载密钥管理器是一个内置工具，可从与数据相同的存储系统为节点提供身份验证密钥。板载密钥管理器符合 FIPS-140-2 1 级标准。
+
+您可以使用板载密钥管理器保护集群用于访问加密数据的密钥。您必须在访问加密卷或自加密磁盘的每个集群上启用板载密钥管理器。
+
+.您需要什么？ #8217 ；将需要什么
+* 如果将 NSE 与外部密钥管理（ KMIP ）服务器结合使用，则必须已删除外部密钥管理器数据库。
++
+xref:delete-key-management-database-task.adoc[从外部密钥管理过渡到板载密钥管理]
+
+* 您必须是集群管理员才能执行此任务。
+* 在配置板载密钥管理器之前，您必须先配置 MetroCluster 环境。
+
+
+每次向集群添加节点时，您都必须运行 `security key-manager on板 载 enable` 命令。在 MetroCluster 配置中，您必须先在本地集群上运行 `security key-manager 板载 enable` ，然后在远程集群上运行 `security key-manager 板载同步` ，并在每个集群上使用相同的密码短语。
+
+默认情况下，重新启动节点时不需要输入密钥管理器密码短语。除 MetroCluster 之外，您可以使用 `cc-mode-enabled" 选项` 要求用户在重新启动后输入密码短语。
+
+[NOTE]
+====
+在通用标准模式（`cc-mode-enabled"` ）下启用板载密钥管理器后，系统行为将通过以下方式进行更改：
+
+* 在通用标准模式下运行时，系统会监控连续失败的集群密码短语尝试。
++
+如果启用了 NetApp 存储加密（ NSE ），但在启动时未输入正确的集群密码短语，则系统将无法向其驱动器进行身份验证并自动重新启动。要更正此问题，您必须在启动提示符处输入正确的集群密码短语。启动后，对于需要使用集群密码短语作为参数的任何命令，系统最多允许连续 5 次尝试在 24 小时内正确输入集群密码短语。如果已达到限制（例如，您连续 5 次未正确输入集群密码短语），则必须等待 24 小时超时期限过后，或者重新启动节点，才能重置此限制。
+
+* 系统映像更新使用 NetApp RSA-3072 代码签名证书以及 SHA-384 代码签名摘要来检查映像完整性，而不是使用通常的 NetApp RSA-2048 代码签名证书和 SHA-256 代码签名摘要。
++
+upgrade 命令可通过检查各种数字签名来验证映像内容是否未被更改或损坏。如果验证成功，映像更新过程将继续执行下一步；否则，映像更新将失败。有关系统更新的信息，请参见 "`cluster image` " 手册页。
+
+
+
+====
+[NOTE]
+====
+板载密钥管理器将密钥存储在易失性内存中。系统重新启动或暂停后，易失性内存内容将被清除。在正常运行条件下，系统暂停后，易失性内存内容将在 30 秒内清除。
+
+====
+.步骤
+. 启动密钥管理器设置命令：
++
+`security key-manager on板 载 enable -cc-mode-enabled yes|no`
+
++
+[NOTE]
+====
+将 `cc-mode-enabled"` 设置为要求用户在重新启动后输入密钥管理器密码短语。MetroCluster 配置不支持 ` - cc-mode-enabled` 选项。`security key-manager on板 载 enable` 命令可替代 `security key-manager setup` 命令。
+
+====
++
+以下示例将在 cluster1 上启动密钥管理器设置命令，而无需在每次重新启动后输入密码短语：
+
++
+[listing]
+----
+cluster1::> security key-manager onboard enable
+
+Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
+Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
+----
+. 在密码短语提示符处，输入 32 到 256 个字符的密码短语，或者对于 "`cc-mode` " ，输入 64 到 256 个字符的密码短语。
++
+[NOTE]
+====
+如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置向导再次显示密码短语提示之前会有五秒的延迟。
+
+====
+. 在密码短语确认提示符处，重新输入密码短语。
+. 验证是否已创建身份验证密钥：
++
+`sSecurity key-manager key query -node node`
+
++
+[NOTE]
+====
+使用 `security key-manager key query` 命令可替换 `security key-manager query key` 命令。有关完整的命令语法，请参见手册页。
+
+====
++
+以下示例验证是否已为 `cluster1` 创建身份验证密钥：
+
++
+[listing]
+----
+cluster1::> security key-manager key query
+       Vserver: cluster1
+   Key Manager: onboard
+          Node: node1
+
+Key Tag                               Key Type  Restored
+------------------------------------  --------  --------
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001000c11b3863f78c2273343d7ec5a67762e0000000000000000
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001006f4e2513353a674305872a4c9f3bf7970000000000000000
+
+       Vserver: cluster1
+   Key Manager: onboard
+          Node: node2
+
+Key Tag                               Key Type  Restored
+------------------------------------  --------  --------
+node1                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001000c11b3863f78c2273343d7ec5a67762e0000000000000000
+node2                                 NSE-AK    yes
+    Key ID: 000000000000000002000000000001006f4e2513353a674305872a4c9f3bf7970000000000000000
+----
+
+
+将密码短语复制到存储系统以外的安全位置，以供将来使用。
+
+所有密钥管理信息都会自动备份到集群的复制数据库（ RDB ）。您还应手动备份此信息，以便在发生灾难时使用。

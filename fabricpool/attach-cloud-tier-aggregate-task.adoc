@@ -1,0 +1,50 @@
+---
+permalink: fabricpool/attach-cloud-tier-aggregate-task.html 
+sidebar: sidebar 
+keywords: attaching, cloud, tier, aggregate 
+summary: 将对象存储设置为云层后，您可以通过将其附加到 FabricPool 来指定要使用的聚合。在 ONTAP 9.5 及更高版本中，您还可以附加包含合格 FlexGroup 卷成分卷的聚合。 
+---
+= 将云层附加到聚合。
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+将对象存储设置为云层后，您可以通过将其附加到 FabricPool 来指定要使用的聚合。在 ONTAP 9.5 及更高版本中，您还可以附加包含合格 FlexGroup 卷成分卷的聚合。
+
+使用 ONTAP 命令行界面为 FabricPool 设置聚合时，该聚合必须已存在。
+
+[NOTE]
+====
+使用 ONTAP 系统管理器为 FabricPool 设置聚合时，您可以创建聚合并将其设置为同时用于 FabricPool 。
+
+====
+.步骤
+. * 可选 * ：要查看卷中处于非活动状态的数据量，请按照中的步骤进行操作 link:determine-data-inactive-reporting-task.html["使用非活动数据报告确定卷中处于非活动状态的数据量"]。
++
+查看卷中处于非活动状态的数据量有助于确定要用于 FabricPool 的聚合。
+
+. 使用 `storage aggregate object-store attach` 命令将对象存储附加到聚合。
++
+如果此聚合从未与 FabricPool 结合使用，并且它包含现有卷，则会为这些卷分配默认的 `snapshot-only` 分层策略。
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store attach -aggregate myaggr
+-object-store-name Amazon01B1
+----
++
+您可以使用 `allow-flexgroup` `true` 选项附加包含 FlexGroup 卷成分卷的聚合。
+
+. 使用 `storage aggregate object-store show` 命令显示对象存储信息并验证附加的对象存储是否可用。
++
+[listing]
+----
+cluster1::> storage aggregate object-store show
+
+Aggregate    Object Store Name    Availability State
+---------    -----------------    ------------------
+myaggr       Amazon01B1           available
+----
+

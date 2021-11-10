@@ -1,0 +1,19 @@
+---
+permalink: data-protection/manage-snapmirror-root-volume-replication-concept.html 
+sidebar: sidebar 
+keywords: manage, snapmirror, root volume , replication 
+summary: NAS 环境中的每个 SVM 都有一个唯一的命名空间。包含操作系统和相关信息的 SVM 根卷是命名空间层次结构的入口点。为了确保在节点中断或故障转移时客户端仍可访问数据，您应为 SVM 根卷创建一个负载共享镜像副本。 
+---
+= 管理 SnapMirror 根卷复制概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NAS 环境中的每个 SVM 都有一个唯一的命名空间。包含操作系统和相关信息的 SVM 根卷 _ 是命名空间层次结构的入口点。为了确保在节点中断或故障转移时客户端仍可访问数据，您应为 SVM 根卷创建一个负载共享镜像副本。
+
+SVM 根卷的负载共享镜像不再用于负载共享，而是用于灾难恢复。
+
+* 如果根卷暂时不可用，则负载共享镜像会自动提供对根卷数据的只读访问权限。
+* 如果根卷永久不可用，您可以提升其中一个负载共享卷，以提供对根卷数据的写入访问。
+

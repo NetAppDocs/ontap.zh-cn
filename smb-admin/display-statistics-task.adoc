@@ -1,0 +1,91 @@
+---
+permalink: smb-admin/display-statistics-task.html 
+sidebar: sidebar 
+keywords: display, various, statistic, cifs, smb, audit, branchcache, has, monitor, performance, diagnose, issue 
+summary: 您可以显示各种统计信息，包括有关 CIFS 和 SMB ，审核和 BranchCache 哈希的统计信息，以监控性能并诊断问题。 
+---
+= 显示统计信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示各种统计信息，包括有关 CIFS 和 SMB ，审核和 BranchCache 哈希的统计信息，以监控性能并诊断问题。
+
+您必须先使用 `satictics start` 和 `satictics stop` 命令收集数据样本，然后才能显示有关对象的信息。
+
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 执行以下操作之一：
++
+|===
+| 要显示统计信息的对象 | 输入 ... 
+
+
+ a| 
+SMB 的所有版本
+ a| 
+`satictics show -object cifs`
+
+
+
+ a| 
+SMB 1.0
+ a| 
+`satictics show -object smb1`
+
+
+
+ a| 
+SMB 2.x 和 SMB 3.0
+ a| 
+`satictics show -object smb2`
+
+
+
+ a| 
+节点的 CIFS 子系统
+ a| 
+`satictics show -object nblade_cifs`
+
+
+
+ a| 
+多协议审核
+ a| 
+`satictics show -object audit_ng`
+
+
+
+ a| 
+BranchCache 哈希服务
+ a| 
+`satictics show -object hashd`
+
+
+
+ a| 
+动态 DNS
+ a| 
+`satictics show -object ddddds_update`
+
+|===
++
+有关详细信息，请参见每个命令的手册页。
+
+. 返回到管理权限级别： `set -privilege admin`
+
+
+* 相关信息 *
+
+xref:determine-statistics-objects-counters-available-task.adoc[确定可用的统计信息对象和计数器]
+
+xref:monitor-signed-session-statistics-task.adoc[监控 SMB 签名会话统计信息]
+
+xref:display-branchcache-statistics-task.adoc[显示 BranchCache 统计信息]
+
+xref:statistics-monitor-automatic-node-referral-task.adoc[使用统计信息监控自动节点转介活动]
+
+link:../smb-hyper-v-sql/index.html["Microsoft Hyper-V 和 SQL Server 的 SMB 配置"]
+
+link:../performance-config/index.html["性能监控设置"]

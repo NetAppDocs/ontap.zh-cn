@@ -1,0 +1,50 @@
+---
+permalink: smb-admin/create-name-mapping-task.html 
+sidebar: sidebar 
+keywords: vserver, name-mapping, create, command, name, map, windows, enable, user, access, unix, security, style, volume, reverse, create a name mapping 
+summary: 您可以使用 vserver name-mapping create 命令创建名称映射。您可以使用名称映射使 Windows 用户能够访问 UNIX 安全模式卷，反之亦然。 
+---
+= 创建名称映射
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `vserver name-mapping create` 命令创建名称映射。您可以使用名称映射使 Windows 用户能够访问 UNIX 安全模式卷，反之亦然。
+
+对于每个 SVM ， ONTAP 支持每个方向最多 12 ， 500 个名称映射。
+
+.步骤
+. 创建名称映射： `vserver name-mapping create -vserver _vserver_name_ -Direction ｛ krB-UNIX_win-unix_unix-win ｝ -position _integer _ -pattern text -replacement _text_`
++
+[NOTE]
+====
+可以将 ` 模式` 和 ` 替换` 语句表达为正则表达式。您也可以使用 ` replacement` 语句通过使用空替换字符串 ` " "` （空格字符）明确拒绝映射到用户。有关详细信息，请参见 `vserver name-mapping create` 手册页。
+
+====
++
+创建 Windows 到 UNIX 映射时，在创建新映射时与 ONTAP 系统建立了打开连接的任何 SMB 客户端都必须注销并重新登录才能查看新映射。
+
+
+
+以下命令将在名为 vs1 的 SVM 上创建名称映射。此映射是指优先级列表中位置 1 处从 UNIX 到 Windows 的映射。映射会将 UNIX 用户 johnd 映射到 Windows 用户 ENG\JohnDoe 。
+
+[listing]
+----
+vs1::> vserver name-mapping create -vserver vs1 -direction unix-win -position 1 -pattern johnd
+-replacement "ENG\\JohnDoe"
+----
+以下命令会在名为 vs1 的 SVM 上创建另一个名称映射。此映射是指优先级列表中位置 1 处从 Windows 到 UNIX 的映射。此处的模式和替换项包括正则表达式。此映射会将域 ENG 中的每个 CIFS 用户映射到与 SVM 关联的 LDAP 域中的用户。
+
+[listing]
+----
+vs1::> vserver name-mapping create -vserver vs1 -direction win-unix -position 1 -pattern "ENG\\(.+)"
+-replacement "\1"
+----
+以下命令会在名为 vs1 的 SVM 上创建另一个名称映射。此处的模式将 "` $` " 作为必须转义的 Windows 用户名中的一个元素。映射会将 Windows 用户 ENG\ john$ops 映射到 UNIX 用户 john_ops 。
+
+[listing]
+----
+vs1::> vserver name-mapping create -direction win-unix -position 1 -pattern ENG\\john\$ops
+-replacement john_ops
+----

@@ -1,0 +1,36 @@
+---
+permalink: tape-backup/remove-tape-aliases-task.html 
+sidebar: sidebar 
+keywords: remove, tape, aliases, clear, command, drive, medium, changer 
+summary: 当磁带驱动器或介质更换器不再需要永久性别名时，您可以使用 storage tape alias clear 命令删除别名。 
+---
+= 删除磁带别名
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当磁带驱动器或介质更换器不再需要永久性别名时，您可以使用 `storage tape alias clear` 命令删除别名。
+
+.步骤
+. 使用 `storage tape alias clear` 命令从磁带驱动器或介质更换器中删除别名。
++
+有关此命令的详细信息，请参见手册页。
+
++
+以下命令将别名清除操作的范围指定为 `tape` ，从而删除所有磁带驱动器的别名：
+
++
+[listing]
+----
+cluster-01::>storage tape alias clear -node cluster-01 -clear-scope tape
+----
+
+
+如果使用 NDMP 执行磁带备份或还原操作，则在从磁带驱动器或介质更换器中删除别名后，必须为磁带驱动器或介质更换器分配一个新的别名，才能继续访问磁带设备。
+
+* 相关信息 *
+
+xref:assign-tape-aliases-concept.adoc[什么是磁带别名]
+
+xref:assign-tape-aliases-task.adoc[分配磁带别名]

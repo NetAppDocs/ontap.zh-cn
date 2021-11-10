@@ -1,0 +1,41 @@
+---
+permalink: smb-config/assess-physical-storage-requirements-task.html 
+sidebar: sidebar 
+keywords: provision, smb, storage, client, ensure, sufficient, space, exist, aggregate, volume, disk, desire, requirement, assess physical storage requirements 
+summary: 在为客户端配置 SMB 存储之前，您必须确保现有聚合中有足够的空间来容纳新卷。如果没有，您可以向现有聚合添加磁盘或创建所需类型的新聚合。 
+---
+= 评估物理存储要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在为客户端配置 SMB 存储之前，您必须确保现有聚合中有足够的空间来容纳新卷。如果没有，您可以向现有聚合添加磁盘或创建所需类型的新聚合。
+
+.步骤
+. 显示现有聚合中的可用空间： `storage aggregate show`
++
+如果聚合具有足够的空间，请在工作表中记录其名称。
+
++
+[listing]
+----
+cluster::> storage aggregate show
+Aggregate     Size Available Used% State   #Vols  Nodes  RAID Status
+--------- -------- --------- ----- ------- ------ ------ -----------
+aggr_0     239.0GB   11.13GB   95% online       1 node1  raid_dp,
+                                                         normal
+aggr_1     239.0GB   11.13GB   95% online       1 node1  raid_dp,
+                                                         normal
+aggr_2     239.0GB   11.13GB   95% online       1 node2  raid_dp,
+                                                         normal
+aggr_3     239.0GB   11.13GB   95% online       1 node2  raid_dp,
+                                                         normal
+aggr_4     239.0GB   238.9GB   95% online       5 node3  raid_dp,
+                                                         normal
+aggr_5     239.0GB   239.0GB   95% online       4 node4  raid_dp,
+                                                         normal
+6 entries were displayed.
+----
+. 如果没有具有足够空间的聚合，请使用 `storage aggregate add-disks` 命令向现有聚合添加磁盘，或者使用 `storage aggregate create` 命令创建新聚合。
+

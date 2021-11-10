@@ -1,0 +1,49 @@
+---
+permalink: nas-audit/delete-security-trace-records-task.html 
+sidebar: sidebar 
+keywords: delete, security trace records 
+summary: 在使用筛选器跟踪记录验证文件访问安全性或对 SMB 或 NFS 客户端访问问题进行故障排除后，您可以从安全跟踪日志中删除此安全跟踪记录。 
+---
+= 删除安全跟踪记录
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用筛选器跟踪记录验证文件访问安全性或对 SMB 或 NFS 客户端访问问题进行故障排除后，您可以从安全跟踪日志中删除此安全跟踪记录。
+
+在删除安全跟踪记录之前，您必须知道该记录的序列号。
+
+[NOTE]
+====
+每个 Storage Virtual Machine （ SVM ）最多可存储 128 条跟踪记录。如果 SVM 上达到最大值，则添加新跟踪记录时，最早的跟踪记录将自动删除。如果您不想手动删除此 SVM 上的跟踪记录，可以让 ONTAP 在达到最大值后自动删除最旧的跟踪结果，以便为新结果腾出空间。
+
+====
+.步骤
+. 确定要删除的记录的序列号：
++
+`vserver security trace trace-result show -vserver vserver_name -instance`
+
+. 删除安全跟踪记录：
++
+`vserver security trace trace-result delete -node node_name -vserver vserver_name -seqnum integer`
+
++
+`vserver security trace trace-result delete -vserver vs1 -node node1 -seqnum 999`
+
++
+** ` 节点` `node_name` 是发生权限跟踪事件的集群节点的名称。
++
+这是必需的参数。
+
+** ` -vserver` `vserver_name` 是发生要删除的权限跟踪事件的 SVM 的名称。
++
+这是必需的参数。
+
+** ` -seqnum` `integer` 是要删除的日志事件的序列号。
++
+这是必需的参数。
+
+
+
+

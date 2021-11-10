@@ -1,0 +1,54 @@
+---
+permalink: nfs-rdma/configure-nics-task.html 
+sidebar: sidebar 
+keywords: networking, NICs, NFS over RDMA, NVIDIA, NFS 
+summary: 本文介绍客户端系统和存储平台配置如何处理 NIC 在 ONTAP 中通过 RDMA 使用 NFS 的要求。 
+---
+= 为基于 RDMA 的 NFS 配置 NIC
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+基于 RDMA 的 NFS 需要为客户端系统和存储平台配置 NIC 。
+
+
+
+== 存储平台配置
+
+需要在服务器上安装 CX-5 或 CX-6 RDMA 适配器。如果您使用的是 HA 配置，则故障转移配对节点上必须具有相应的 CX-5 或 CX-6 适配器，以便 RDMA 服务可以在故障转移期间继续运行。NIC 必须支持 ROCE 。
+
+从 ONTAP 9.10.1 开始，您可以使用以下命令查看 RDMA 卸载协议列表： `network port show -rdma-protocols roce`
+
+
+
+== 客户端系统配置
+
+需要在客户端上安装 CX-5 适配器。尽管客户端和服务器可以直接连接，但由于交换机的故障转移性能有所提高，因此建议使用交换机。
+
+客户端，服务器和任何交换机以及交换机上的所有端口都必须使用巨型帧进行配置。此外，还应确保优先级流量控制在任何交换机上有效。
+
+确认此配置后，您可以挂载 NFS 。
+
+.步骤
+. 使用命令检查 NFS 服务器上是否启用了 RDMA 访问：
++
+`vserver nfs show-vserver _vserver_name_`
+
++
+默认情况下，应启用 ` RDMA` 。如果不是，请在 NFS 服务器上启用 RDMA 访问：
+
++
+`vserver nfs modify -vserver _vserver_name_ -RDMA enabled`
+
+. 通过 NFSv4.0 通过 RDMA 挂载客户端：
++
+.. proto 参数的输入取决于服务器 IP 协议版本。如果为 v4 ，请使用 `proto=RDMA` 。如果为 v6 ，请使用 `proto=rdma6` 。
+.. 将 NFS 目标端口指定为 `port=20049` ，而不是标准端口 2049 ：
++
+`mount -o vers=4 ， minorVersion=0 ， proto=RDMA ， port=20049 _Server_IP_address_ ： //_volume_path_ _mount_point_`
+
+
+
+. * 可选 * ：如果需要卸载客户端，请运行命令 `unmount _mount_path_`
+

@@ -1,0 +1,35 @@
+---
+permalink: volumes/resume-efficiency-operation-checkpoint-task.html 
+sidebar: sidebar 
+keywords: resume, halted, efficiency, operation 
+summary: 如果效率操作因系统暂停，系统中断或重新启动而暂停，则可以使用带有检查点选项的 volume efficiency start 命令从同一时间点恢复效率操作。这样，无需从头开始重新启动效率操作，有助于节省时间和资源。 
+---
+= 恢复暂停的效率操作
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果效率操作因系统暂停，系统中断或重新启动而暂停，则可以使用带有检查点选项的 `volume efficiency start` 命令从同一时间点恢复效率操作。这样，无需从头开始重新启动效率操作，有助于节省时间和资源。
+
+如果在卷上仅启用了重复数据删除，则会对数据运行重复数据删除。如果在卷上同时启用了重复数据删除和数据压缩，则先运行数据压缩，然后运行重复数据删除。
+
+您可以使用 `volume efficiency show` 命令查看卷的检查点详细信息。
+
+默认情况下，效率操作会从检查点恢复。但是，如果与先前效率操作（运行 `volume efficiency start`` -scan-old-data` 命令的阶段）对应的检查点超过 24 小时，则此效率操作不会自动从上一个检查点恢复。在这种情况下，效率操作将从头开始。但是，如果您知道自上次扫描以来卷未发生重大更改，则可以使用 ` -use-checkpoint` 选项强制从上一个检查点继续运行。
+
+.步骤
+. 使用带有 ` -use-checkpoint` 选项的 `volume efficiency start` 命令恢复效率操作。
++
+使用以下命令可以对卷 VolA 上的新数据恢复效率操作：
+
++
+`volume efficiency start -vserver vs1 -volume VolA -use-checkpoint true`
+
++
+使用以下命令可以对卷 VolA 上的现有数据恢复效率操作：
+
++
+`volume efficiency start -vserver vs1 -volume VolA -scan-old-data true -use-checkpoint true`
+
+

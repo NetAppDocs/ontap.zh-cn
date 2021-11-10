@@ -1,0 +1,23 @@
+---
+permalink: smb-admin/metadata-caching-concept.html 
+sidebar: sidebar 
+keywords: enable, smb, metadata, cache, store, path, file, attribute, data, performance, client, workload, how smb metadata caching works 
+summary: 启用后， SMB 元数据缓存会将路径和文件属性数据存储一段有限的时间。这样可以提高具有常见工作负载的 SMB 1.0 客户端的 SMB 性能。 
+---
+= SMB 元数据缓存的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过元数据缓存， SMB 1.0 客户端上的文件属性缓存可以更快地访问文件和文件夹属性。您可以基于每个共享启用或禁用属性缓存。如果启用了元数据缓存，您还可以为缓存条目配置生存时间。如果客户端通过 SMB 2.x 或 SMB 3.0 连接到共享，则无需配置元数据缓存。
+
+启用后， SMB 元数据缓存会将路径和文件属性数据存储一段有限的时间。这样可以提高具有常见工作负载的 SMB 1.0 客户端的 SMB 性能。
+
+对于某些任务， SMB 会创建大量流量，其中可能包括对路径和文件元数据的多个相同查询。您可以改用 SMB 元数据缓存从缓存中提取信息，从而减少冗余查询的数量并提高 SMB 1.0 客户端的性能。
+
+[NOTE]
+====
+元数据缓存虽然不太可能为 SMB 1.0 客户端提供过时的信息。如果您的环境无法承担此风险，则不应启用此功能。
+
+====

@@ -1,0 +1,121 @@
+---
+permalink: s3-config/create-data-lifs-task.html 
+sidebar: sidebar 
+keywords: create, data, lifs 
+summary: 如果创建了新的 SVM ，则为 S3 访问创建的专用 LIF 应为数据 LIF 。 
+---
+= 创建数据 LIF ：
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果创建了新的 SVM ，则为 S3 访问创建的专用 LIF 应为数据 LIF 。
+
+.您需要什么？ #8217 ；将需要什么
+* 底层物理或逻辑网络端口必须已配置为管理 `up` 状态。
+* 如果您计划使用子网名称为 LIF 分配 IP 地址和网络掩码值，则此子网必须已存在。
++
+子网包含属于同一第 3 层子网的 IP 地址池。可以使用 `network subnet create` 命令创建这些子网。
+
+* LIF 服务策略必须已存在。
+
+
+.关于此任务
+* 您可以在同一网络端口上创建 IPv4 和 IPv6 LIF 。
+* 如果集群中有大量 LIF ，您可以使用 `network interface capacity show` 命令验证集群上支持的 LIF 容量，并使用 `network interface capacity details show` 命令验证每个节点上支持的 LIF 容量 （在高级权限级别）。
+* 如果要启用远程 FabricPool 容量（云）分层，则还必须配置集群间 LIF 。
+
+
+.步骤
+. 创建 LIF ：
++
+`network interface create -vserver svm_name -lif lif_name -service-policy service_policy_names -home-node node_name -home-port port_name ｛ -address ip_address -netmask ip_address | -subnet-name subnet_name ｝ -firewall-policy data -auto-revert ｛ true_false ｝`
+
++
+** ` -home-node` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的节点。
++
+您还可以使用 ` -auto-revert` 选项指定 LIF 是否应自动还原到主节点和主端口。
+
+** ` 主端口` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的物理或逻辑端口。
+** 您可以使用 ` 地址` 和 ` 网络掩码` 选项指定 IP 地址，也可以使用 ` -subnet_name` 选项从子网进行分配。
+** 使用子网提供 IP 地址和网络掩码时，如果使用网关定义了子网，则在使用该子网创建 LIF 时，系统会自动向 SVM 添加指向该网关的默认路由。
+** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。`network route create` 手册页包含有关在 SVM 中创建静态路由的信息。
+** 对于 ` -firewall-policy` 选项，请使用与 LIF 角色相同的默认值 `data` 。
++
+如果需要，您可以稍后创建和添加自定义防火墙策略。
+
+** 使用 ` -auto-revert` 可以指定在启动，更改管理数据库状态或建立网络连接等情况下数据 LIF 是否自动还原到其主节点。默认设置为 `false` ，但您可以根据环境中的网络管理策略将其设置为 `false` 。
+** ` -service-policy` 选项可指定您创建的数据和管理服务策略以及所需的任何其他策略。
+
+
+. 如果要在 ` 地址` 选项中分配 IPv6 地址：
++
+.. 使用 `network ndp prefix show` 命令查看在各种接口上获取的 RA 前缀列表。
++
+可以在高级权限级别使用 `network ndp prefix show` 命令。
+
+.. 使用格式 `prefix ：： id` 手动构建 IPv6 地址。
++
+`prefix` 是在各种接口上获取的前缀。
+
++
+要派生 `id` ，请选择一个 64 位随机十六进制数。
+
+
+
+. 使用 `network interface show` 命令验证是否已成功创建 LIF 。
+. 验证配置的 IP 地址是否可访问：
++
+[cols="2*"]
+|===
+| 要验证 ... | 使用 ... 
+
+
+ a| 
+IPv4 地址
+ a| 
+`网络 ping`
+
+
+
+ a| 
+IPv6 地址
+ a| 
+`network ping6`
+
+|===
+
+
+以下命令显示如何创建使用 `my-s3-policy` 服务策略分配的 S3 数据 LIF ：
+
+[listing]
+----
+network interface create -vserver svm1.example.com -lif lif2 -home-node node2 -homeport e0d -service-policy my-S3-policy -subnet-name ipspace1
+----
+以下命令显示 cluster-1 中的所有 LIF 。数据 LIF datalif1 和 datalif3 配置了 IPv4 地址，而 datalif4 配置了 IPv6 地址：
+
+[listing]
+----
+cluster-1::> network interface show
+
+            Logical    Status     Network          Current      Current Is
+Vserver     Interface  Admin/Oper Address/Mask     Node         Port    Home
+----------- ---------- ---------- ---------------- ------------ ------- ----
+cluster-1
+            cluster_mgmt up/up    192.0.2.3/24     node-1       e1a     true
+node-1
+            clus1        up/up    192.0.2.12/24    node-1       e0a     true
+            clus2        up/up    192.0.2.13/24    node-1       e0b     true
+            mgmt1        up/up    192.0.2.68/24    node-1       e1a     true
+node-2
+            clus1        up/up    192.0.2.14/24    node-2       e0a     true
+            clus2        up/up    192.0.2.15/24    node-2       e0b     true
+            mgmt1        up/up    192.0.2.69/24    node-2       e1a     true
+vs1.example.com
+            datalif1     up/down  192.0.2.145/30   node-1       e1c     true
+vs3.example.com
+            datalif3     up/up    192.0.2.146/30   node-2       e0c     true
+            datalif4     up/up    2001::2/64       node-2       e0c     true
+5 entries were displayed.
+----

@@ -1,0 +1,72 @@
+---
+permalink: disks-aggregates/add-disks-node-task.html 
+sidebar: sidebar 
+keywords: add, drives, node, shelf 
+summary: 您可以向节点或磁盘架添加驱动器，以增加热备用磁盘数量或为聚合添加空间。 
+---
+= 向节点或磁盘架添加驱动器
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以向节点或磁盘架添加驱动器，以增加热备用磁盘数量或为聚合添加空间。
+
+您的平台必须支持要添加的驱动器。
+
+https://hwu.netapp.com/["NetApp Hardware Universe"]
+
+应在一个操作步骤中添加的最小驱动器数为 6 个。添加单个驱动器可能会降低性能。
+
+.步骤
+. 请查看 NetApp 支持站点以获取较新的驱动器和磁盘架固件以及磁盘认证包文件。
++
+如果您的节点或磁盘架没有最新版本，请在安装新驱动器之前对其进行更新。
+
++
+在没有最新固件版本的新驱动器上，驱动器固件会自动更新（无中断）。
+
+. 正确接地。
+. Gently remove the bezel from the front of the platform.
+. 确定新驱动器的正确插槽。
++
+[NOTE]
+====
+用于添加驱动器的正确插槽因平台型号和 ONTAP 版本而异。在某些情况下，您需要按顺序向特定插槽添加驱动器。例如，在 AFF A800 中，您可以按特定间隔添加驱动器，而集群中的插槽为空。而在 AFF A220 中，您可以向从外向磁盘架中间运行的下一个空插槽添加新驱动器。
+
+====
++
+请参见 https://hwu.netapp.com/["NetApp Hardware Universe"] 确定适合您的配置的正确插槽。
+
+. 插入新驱动器：
++
+.. 在凸轮把手处于打开位置时，用双手插入新驱动器。
+.. Push until the drive stops.
+.. Close the cam handle so that the drive is fully seated into the mid plane and the handle clicks into place.Be sure to close the cam handle slowly so that it aligns correctly with the face of the drive.
+
+
+. 验证驱动器的活动 LED （绿色）是否亮起。
++
+When the drive's activity LED is solid, it means that the drive has power.When the drive's activity LED is blinking, it means that the drive has power and I/O is in progress.If the drive firmware is automatically updating, the LED blinks.
+
+. 要添加另一个驱动器，请重复步骤 4 到 6 。
++
+只有在将新驱动器分配给节点后，才会识别这些驱动器。您可以手动分配新驱动器，也可以等待 ONTAP 在节点遵循驱动器自动分配规则的情况下自动分配新驱动器。
+
+. 识别完所有新驱动器后，验证其添加情况及其所有权信息：
++
+`s存储聚合 show-spare-disks`
+
++
+您应看到新驱动器，它们属于正确的节点。
+
+. 将新添加的驱动器置零：
++
+`s存储磁盘置零`
+
++
+必须先将先前在 ONTAP 聚合中使用的驱动器置零，然后才能将其添加到其他聚合。现在，将驱动器置零可以防止在需要快速增加聚合大小时出现延迟。drive zeroing 命令在后台运行，可能需要数小时才能完成，具体取决于节点中未置零的驱动器的大小。
+
+
+
+新驱动器已准备好添加到聚合，放置在热备用磁盘列表中，或者您也可以创建新聚合。

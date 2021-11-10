@@ -1,0 +1,99 @@
+---
+permalink: smb-admin/requirements-automatic-node-referrals-concept.html 
+sidebar: sidebar 
+keywords: smb, automatic, node, referral, autolocation, aware, requirement, version, ontap, feature, support, guideline, requirement, requirements and guidelines for using automatic node referrals 
+summary: 在使用 SMB 自动节点转介（也称为自动定位）之前，您需要了解某些要求，包括支持此功能的 ONTAP 版本。您还需要了解支持的 SMB 协议版本以及某些其他特殊准则。 
+---
+= 使用自动节点转介的要求和准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用 SMB 自动节点转介（也称为 _autolocation_） 之前，您需要了解某些要求，包括支持此功能的 ONTAP 版本。您还需要了解支持的 SMB 协议版本以及某些其他特殊准则。
+
+
+
+== ONTAP 版本和许可证要求
+
+* 集群中的所有节点都必须运行支持自动节点转介的 ONTAP 版本。
+* 要使用自动定位，必须在 SMB 共享上启用 Widelink 。
+* CIFS 必须获得许可， SVM 上必须存在 SMB 服务器。
+
+
+
+
+== SMB 协议版本要求
+
+* 对于 SVM ， ONTAP 在所有 SMB 版本上均支持自动节点转介。
+
+
+
+
+== SMB 客户端要求
+
+ONTAP 支持的所有 Microsoft 客户端均支持 SMB 自动节点转介。
+
+互操作性表包含有关 ONTAP 支持的 Windows 客户端的最新信息。
+
+http://mysupport.netapp.com/matrix["mysupport.netapp.com/matrix"]
+
+
+
+== 数据 LIF 要求
+
+如果要使用数据 LIF 作为 SMB 客户端的潜在转介，则必须创建同时启用了 NFS 和 CIFS 的数据 LIF 。
+
+如果目标节点包含仅为 NFS 协议启用或仅为 SMB 协议启用的数据 LIF ，则自动节点转介可能无法正常工作。
+
+如果不满足此要求，则数据访问不受影响。SMB 客户端使用客户端用于连接到 SVM 的原始 LIF 映射共享。
+
+
+
+== 建立转介 SMB 连接时的 NTLM 身份验证要求
+
+必须允许在包含 CIFS 服务器的域和包含要使用自动节点转介的客户端的域上进行 NTLM 身份验证。
+
+转介时， SMB 服务器会将 IP 地址转介给 Windows 客户端。由于在使用 IP 地址建立连接时使用 NTLM 身份验证，因此不会对转介连接执行 Kerberos 身份验证。
+
+这是因为 Windows 客户端无法创建 Kerberos 使用的服务主体名称（格式为 `sservice/NetBIOS name` 和 `sservice/FQDN` ），这意味着客户端无法向该服务请求 Kerberos 票证。
+
+
+
+== 将自动节点转介与主目录功能结合使用的准则
+
+如果在配置共享时启用了主目录共享属性，则可以为主目录配置配置一个或多个主目录搜索路径。搜索路径可以指向包含 SVM 卷的每个节点上包含的卷。客户端会收到转介，如果有活动的本地数据 LIF 可用，则通过主用户主目录本地的转介 LIF 进行连接。
+
+SMB 1.0 客户端在启用了自动节点转介的情况下访问动态主目录时，应遵循一些准则。这是因为 SMB 1.0 客户端在进行身份验证之前需要自动节点转介，而 SMB 服务器尚未拥有用户名。但是，如果满足以下条件，则 SMB 1.0 客户端可以正确访问 SMB 主目录：
+
+* SMB 主目录配置为使用简单名称，例如 "` %w` " （ Windows 用户名）或 "` %u` " （映射的 UNIX 用户名），而不是域名模式名称，例如 "` %d\%w ` " （ domain-name\user-name ）。
+* 创建主目录共享时， CIFS 主目录共享名称会使用变量（ "` %w` " 或 "` %u` " ）进行配置，而不是使用静态名称进行配置，例如 "`home` " 。
+
+
+对于 SMB 2.x 和 SMB 3.0 客户端，使用自动节点转介访问主目录时，没有任何特殊准则。
+
+
+
+== 在具有现有转介连接的 CIFS 服务器上禁用自动节点转介的准则
+
+如果在启用此选项后禁用自动节点转介，则当前连接到转介 LIF 的客户端将保留此转介连接。由于 ONTAP 使用 DFS 转介作为 SMB 自动节点转介的机制，因此，在禁用此选项后，客户端甚至可以重新连接到转介的 LIF ，直到客户端缓存的转介转介转介给转介连接超时为止。即使还原到不支持自动节点转介的 ONTAP 版本，也是如此。客户端将继续使用转介，直到客户端缓存中的 DFS 转介超时为止。
+
+自动定位通过 SMB 自动节点转介将客户端转介到拥有 SVM 数据卷的节点上的 LIF 来提高 SMB 客户端性能。当 SMB 客户端连接到 SVM 上托管的 SMB 共享时，它可能会在不拥有所请求数据的节点上使用 LIF 进行连接，并使用集群互连网络来检索数据。如果 SMB 连接使用位于包含所请求数据的节点上的 LIF ，则客户端的响应速度会更快。
+
+ONTAP 通过使用 Microsoft 分布式文件系统（ DFS ）转介来提供此功能，以通知 SMB 客户端命名空间中请求的文件或文件夹托管在其他位置。当节点确定包含数据的节点上存在 SVM LIF 时，它会进行转介。转介是根据客户端所连接的共享的根位置进行的。
+
+转介发生在 SMB 协商期间。在建立连接之前进行转介。在 ONTAP 将 SMB 客户端转介到目标节点后，将建立连接，并且客户端将从该点通过转介的 LIF 路径访问数据。这样，客户端可以更快地访问数据，并避免额外的集群通信。
+
+
+
+== 在 Mac OS 客户端中使用自动节点转介的准则
+
+Mac OS X 客户端不支持 SMB 自动节点转介，即使 Mac OS 支持 Microsoft 的分布式文件系统（ DFS ）也是如此。在连接到 SMB 共享之前， Windows 客户端会发出 DFS 转介请求。ONTAP 可转介到托管所请求数据的同一节点上的数据 LIF ，从而缩短客户端响应时间。尽管 Mac OS 支持 DFS ，但 Mac OS 客户端在这方面的行为与 Windows 客户端不完全相同。
+
+* 相关信息 *
+
+xref:manage-home-directories-concept.adoc[管理主目录]
+
+link:../networking/index.html["网络管理"]
+
+https://mysupport.netapp.com/NOW/products/interoperability["NetApp 互操作性"]

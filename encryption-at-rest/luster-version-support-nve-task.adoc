@@ -1,0 +1,37 @@
+---
+permalink: encryption-at-rest/luster-version-support-nve-task.html 
+sidebar: sidebar 
+keywords: determining, whether, cluster, version, supports, nve 
+summary: 在安装许可证之前，您应确定集群版本是否支持 NVE 。您可以使用 version 命令确定集群版本。 
+---
+= 确定您的集群版本是否支持 NVE
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在安装许可证之前，您应确定集群版本是否支持 NVE 。您可以使用 `version` 命令确定集群版本。
+
+集群版本是集群中任何节点上运行的最低 ONTAP 版本。
+
+.步骤
+. 确定您的集群版本是否支持 NVE ：
++
+`version -v`
+
++
+如果命令输出显示文本 "`1Ono-dare` " （对于 "`no Data at Rest Encryption` " ），或者您使用的平台未在中列出，则不支持 NVE link:configure-netapp-volume-encryption-concept.html#support-details["支持详细信息"]。
+
++
+以下命令可确定 `cluster1` 是否支持 NVE 。
+
++
+[listing]
+----
+cluster1::> version -v
+NetApp Release 9.1.0: Tue May 10 19:30:23 UTC 2016 <1Ono-DARE>
+----
++
+命令输出中的文本 "`1Ono-dare` " 表示您的集群版本不支持 NVE 。
+
+

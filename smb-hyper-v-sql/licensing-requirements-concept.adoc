@@ -1,0 +1,47 @@
+---
+permalink: smb-hyper-v-sql/licensing-requirements-concept.html 
+sidebar: sidebar 
+keywords: ontap, license, requirement, nondisruptive, hyper, v, smb, sql, server 
+summary: 在 SVM 上创建 SQL Server 或基于 SMB 的 Hyper-V 解决方案以实现无中断运行时，您需要了解某些 ONTAP 和许可要求。 
+---
+= ONTAP 和许可要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 SVM 上创建 SQL Server 或基于 SMB 的 Hyper-V 解决方案以实现无中断运行时，您需要了解某些 ONTAP 和许可要求。
+
+
+
+== ONTAP 版本要求
+
+* 基于 SMB 的 Hyper-V
++
+对于在 Windows 2012 或更高版本上运行的 Hyper-V ， ONTAP 支持通过 SMB 共享进行无中断操作。
+
+* 基于 SMB 的 SQL Server
++
+对于在 Windows 2012 或更高版本上运行的 SQL Server 2012 或更高版本， ONTAP 支持通过 SMB 共享进行无中断操作。
+
+
+
+有关通过 SMB 共享实现无中断操作所支持的 ONTAP ， Windows Server 和 SQL Server 版本的最新信息，请参见互操作性表。
+
+https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"]
+
+
+
+== 许可要求
+
+需要以下许可证：
+
+* CIFS
+* FlexClone （仅适用于基于 SMB 的 Hyper-V ）
++
+如果使用远程 VSS 进行备份，则需要此许可证。卷影复制服务使用 FlexClone 为文件创建时间点副本，然后在创建备份时使用这些副本。
+
++
+如果您使用的备份方法不使用远程 VSS ，则 FlexClone 许可证是可选的。
+
+

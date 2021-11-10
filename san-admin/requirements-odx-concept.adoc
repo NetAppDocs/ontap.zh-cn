@@ -1,0 +1,59 @@
+---
+permalink: san-admin/requirements-odx-concept.html 
+sidebar: sidebar 
+keywords: microsoft Offloaded Data Transfer, using, odx 
+summary: 如果您计划使用 ODX 进行副本卸载，则需要熟悉卷支持注意事项，系统要求和软件功能要求。 
+---
+= 使用 ODX 的要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您计划使用 ODX 进行副本卸载，则需要熟悉卷支持注意事项，系统要求和软件功能要求。
+
+要使用 ODX ，您的系统必须具备以下条件：
+
+* ONTAP
++
+ODX 会在支持的 ONTAP 版本中自动启用。
+
+* 源卷最小为 2 GB
++
+为了获得最佳性能，源卷应大于 260 GB 。
+
+* 重复数据删除
++
+ODX 会在复制过程中使用重复数据删除。如果不希望在 SVM 上执行重复数据删除，则应在该 SVM 上禁用 ODX 。
+
+* Windows 客户端上的 ODX 支持
++
+Windows Server 2012 或更高版本以及 Windows 8 或更高版本均支持 ODX 。互操作性表包含有关受支持的 Windows 客户端的最新信息。
+
++
+https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"]
+
+* ODX 的复制应用程序支持
++
+执行数据传输的应用程序必须支持 ODX 。支持 ODX 的应用程序操作包括：
+
++
+** Hyper-V 管理操作，例如创建和转换虚拟硬盘（ VHD ），管理 Snapshot 副本以及在虚拟机之间复制文件
+** Windows 资源管理器操作
+** Windows PowerShell copy 命令
+** Windows 命令提示符复制命令 Microsoft TechNet 库包含有关 Windows 服务器和客户端上支持的 ODX 应用程序的详细信息。
+
+
+* 如果使用的是压缩卷，则压缩组大小必须为 8K 。
++
+不支持 32 K 压缩组大小。
+
+
+
+ODX 不适用于以下卷类型：
+
+* 容量小于 2 GB 的源卷
+* 稀疏卷
+* 只读卷
+* 半厚配置卷
+

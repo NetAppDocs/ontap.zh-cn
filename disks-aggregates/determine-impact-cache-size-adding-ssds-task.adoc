@@ -1,0 +1,33 @@
+---
+permalink: disks-aggregates/determine-impact-cache-size-adding-ssds-task.html 
+sidebar: sidebar 
+keywords: determine, impact, cache, size, ssds, storage pool 
+summary: 如果向存储池添加 SSD 导致超出平台型号的缓存限制，则 ONTAP 不会将新添加的容量分配给任何 Flash Pool 聚合。这可能会导致新添加的部分或全部容量不可用。 
+---
+= 确定向 SSD 存储池添加 SSD 对缓存大小的影响
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果向存储池添加 SSD 导致超出平台型号的缓存限制，则 ONTAP 不会将新添加的容量分配给任何 Flash Pool 聚合。这可能会导致新添加的部分或全部容量不可用。
+
+将 SSD 添加到已将分配单元分配给 Flash Pool 聚合的 SSD 存储池时，您可以增加每个聚合的缓存大小以及系统上的总缓存。如果尚未分配存储池的任何分配单元，则在向缓存分配一个或多个分配单元之前，向该存储池添加 SSD 不会影响 SSD 缓存大小。
+
+.步骤
+. 确定要添加到存储池的 SSD 的可用大小：
++
+`storage disk show _disk_name_ -fields usable-size`
+
+. 确定存储池中未分配的分配单元的数量：
++
+`s存储池 show-available-capacity _sp_name_`
+
++
+此时将显示存储池中所有未分配的分配单元。
+
+. 通过应用以下公式计算要添加的缓存量：
++
+（ 4 —未分配的分配单元数） × 25% × 可用大小 × SSD 数量
+
+

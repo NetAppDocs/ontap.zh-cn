@@ -1,0 +1,222 @@
+---
+permalink: nas-audit/plan-fpolicy-event-config-concept.html 
+sidebar: sidebar 
+keywords: plan, fpolicy event configuration 
+summary: 在配置 FPolicy 事件之前，您必须了解创建 FPolicy 事件的含义。您必须确定要监控事件的协议，要监控的事件以及要使用的事件筛选器。此信息有助于您规划要设置的值。 
+---
+= 规划 FPolicy 事件配置概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在配置 FPolicy 事件之前，您必须了解创建 FPolicy 事件的含义。您必须确定要监控事件的协议，要监控的事件以及要使用的事件筛选器。此信息有助于您规划要设置的值。
+
+
+
+== 创建 FPolicy 事件的含义
+
+创建 FPolicy 事件意味着定义 FPolicy 进程需要用于确定要监控的文件访问操作以及应将哪些受监控事件通知发送到外部 FPolicy 服务器的信息。FPolicy 事件配置定义了以下配置信息：
+
+* Storage Virtual Machine （ SVM ）名称
+* 事件名称
+* 要监控的协议
++
+FPolicy 可以监控 SMB ， NFSv3 和 NFSv4 文件访问操作。
+
+* 要监控的文件操作
++
+并非所有文件操作对每个协议都有效。
+
+* 要配置的文件筛选器
++
+只有某些文件操作和筛选器组合有效。每个协议都有自己一组支持的组合。
+
+* 是否监控卷挂载和卸载操作
+
+
+[NOTE]
+====
+其中三个参数（` -protocol` ， ` -file-operations` ， ` -file-file-filters` ）相互依赖。以下组合适用于这三个参数：
+
+* 您可以指定 ` -protocol` 和 ` -file-operations` 参数。
+* 您可以指定所有三个参数。
+* 您不能指定任何参数。
+
+
+====
+
+
+== FPolicy 事件配置包含的内容
+
+您可以使用以下可用 FPolicy 事件配置参数列表来帮助您规划配置：
+
+[cols="70,30"]
+|===
+| 信息类型 | 选项 
+
+
+ a| 
+_SVM_
+
+指定要与此 FPolicy 事件关联的 SVM 名称。
+
+每个 FPolicy 配置都在一个 SVM 中定义。为创建 FPolicy 策略配置而组合在一起的外部引擎，策略事件，策略范围和策略都必须与同一 SVM 相关联。
+ a| 
+` -vserver` `vserver_name`
+
+
+
+ a| 
+事件名称 _
+
+指定要分配给 FPolicy 事件的名称。创建 FPolicy 策略时，您可以使用事件名称将 FPolicy 事件与策略相关联。
+
+此名称最长可为 256 个字符。
+
+[NOTE]
+====
+如果在 MetroCluster 或 SVM 灾难恢复配置中配置事件，则此名称的长度应最多为 200 个字符。
+
+====
+此名称可以包含以下 ASCII 范围字符的任意组合：
+
+* `a` 到 `z`
+* `A` 至 `Z`
+* `0` 到 `9`
+* " ` _` " ， "` -` " 和 "` 。` "
+
+ a| 
+` 事件名称` `event_name`
+
+
+
+ a| 
+_ 协议 _
+
+指定要为 FPolicy 事件配置的协议。` 协议` 的列表可以包含以下值之一：
+
+* `CIFS`
+* `NFSv3`
+* `NFSv4`
+
+
+[NOTE]
+====
+如果指定 ` -protocol` ，则必须在 ` -file-operations` 参数中指定有效值。协议版本发生变化时，有效值可能会发生变化。
+
+==== a| 
+` 协议` `协议`
+
+
+
+ a| 
+_File operations_
+
+指定 FPolicy 事件的文件操作列表。
+
+此事件会使用 ` -protocol` 参数中指定的协议从所有客户端请求中检查此列表中指定的操作。您可以使用逗号分隔列表列出一个或多个文件操作。` file-operations` 的列表可以包含以下一个或多个值：
+
+* `close` 用于文件关闭操作
+* `create` 用于文件创建操作
+* `create-dir` 用于目录创建操作
+* `delete` 用于文件删除操作
+* `delete_dir` 用于目录删除操作
+* `getattr` 用于获取属性操作
+* `link` 表示链路操作
+* `lookup` 用于查找操作
+* `OPEN` 用于文件打开操作
+* `read` 用于文件读取操作
+* `write` 用于文件写入操作
+* `rename` 用于文件重命名操作
+* `rename_dir` 用于目录重命名操作
+* `setattr` 用于设置属性操作
+* `symlink` 表示符号链接操作
+
+
+[NOTE]
+====
+如果指定 ` -file-operations` ，则必须在 ` -protocol` 参数中指定有效协议。
+
+==== a| 
+` 文件操作` `file_operations` ， ...
+
+
+
+ a| 
+_Filters_
+
+指定指定协议的给定文件操作的筛选器列表。` -filters` 参数中的值用于筛选客户端请求。此列表可以包括以下一项或多项：
+
+[NOTE]
+====
+如果指定 ` -filters` 参数，则还必须为 ` -file-operations` 和 ` -protocol` 参数指定有效值。
+
+====
+* `monitor-ADS` 选项，用于筛选客户端对备用数据流的请求。
+* `close-with modification` 选项，用于筛选客户端请求，以便在修改后关闭。
+* `close-without modification` 选项，用于筛选客户端关闭请求而不进行修改。
+* `first-read` 选项，用于筛选客户端请求以进行首次读取。
+* `first-write` 选项，用于筛选客户端首次写入请求。
+* `offline-bit` 选项，用于筛选客户端请求以设置脱机位。
++
+设置此筛选器会使 FPolicy 服务器仅在访问脱机文件时收到通知。
+
+* `open-for-delete-intent` 选项，用于筛选客户端请求以删除意图打开。
++
+设置此筛选器后，只有在尝试打开要删除的文件时， FPolicy 服务器才会收到通知。指定 `file_delete_on_close` 标志时，文件系统会使用此参数。
+
+* `open-wan-write-intent` 用于筛选客户端请求以写入意图打开。
++
+设置此筛选器后，只有在尝试打开文件并在其中写入内容时， FPolicy 服务器才会收到通知。
+
+* `write-write-write-size-change` 选项，用于筛选客户端的写入请求并更改大小。
+
+ a| 
+` 筛选器` `筛选器` ， ...
+
+
+
+ a| 
+_Filters_continued
+
+* `setattr-for-owner-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录的所有者。
+* `setattr-for-group-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录的组。
+* `setattr-for-sacl -change` 选项，用于筛选客户端 setattr 请求以更改文件或目录上的 SACL 。
++
+此筛选器仅适用于 CIFS 和 NFSv4 协议。
+
+* `setattr-for-dacl-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录上的 DACL 。
++
+此筛选器仅适用于 CIFS 和 NFSv4 协议。
+
+* `setattr-for-modify-time-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录的修改时间。
+* `setattr-for-access-time-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录的访问时间。
+* `setattr-for-creation-time-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录的创建时间。
++
+此选项仅适用于 CIFS 协议。
+
+* `setattr-for-mode-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录上的模式位。
+* 用于筛选客户端 setattr 请求以更改文件大小的 `setattr-with -size-change` 选项。
+* `setattr-for-allocation-size-change` 选项，用于筛选客户端 setattr 请求以更改文件的分配大小。
++
+此选项仅适用于 CIFS 协议。
+
+* `exclude-directory` 选项，用于筛选客户端对目录操作的请求。
++
+指定此筛选器后，不会监控目录操作。
+
+
+ a| 
+` 筛选器` `筛选器` ， ...
+
+
+
+ a| 
+是否需要执行卷操作 _
+
+指定卷挂载和卸载操作是否需要监控。默认值为 `false` 。
+ a| 
+` -volume-operation` ｛`true` ｝`false` ｝
+
+|===

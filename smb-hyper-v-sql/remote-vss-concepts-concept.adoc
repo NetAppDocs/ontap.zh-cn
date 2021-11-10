@@ -1,0 +1,53 @@
+---
+permalink: smb-hyper-v-sql/remote-vss-concepts-concept.html 
+sidebar: sidebar 
+keywords: remove, vss, concepts, volume, shadow, copy, service, hyper, v, smb, configuration 
+summary: 您应了解一些必要的概念，以了解备份服务如何使用基于 SMB 的 Hyper-V 配置的远程 VSS （卷影复制服务）。 
+---
+= 远程 VSS 概念
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应了解一些必要的概念，以了解备份服务如何使用基于 SMB 的 Hyper-V 配置的远程 VSS （卷影复制服务）。
+
+* * VSS （卷影复制服务） *
++
+一种 Microsoft 技术，用于在特定时间点为特定卷上的数据创建备份副本或快照。VSS 可在数据服务器，备份应用程序和存储管理软件之间进行协调，以支持创建和管理一致的备份。
+
+* * 远程 VSS （远程卷影复制服务） *
++
+一项 Microsoft 技术，用于为在通过 SMB 3.0 共享访问数据的特定时间点处于数据一致状态的数据创建基于共享的备份副本。也称为 _Volume Shadow Copy Service_ 。
+
+* * 卷影复制 *
++
+共享中包含的一组重复数据，在定义明确的即时状态下运行。卷影副本用于为数据创建一致的时间点备份，从而使系统或应用程序能够继续更新原始卷上的数据。
+
+* * 卷影复制集 *
++
+一个或多个卷影副本的集合，其中每个卷影副本对应于一个共享。卷影副本集中的卷影副本表示必须在同一操作中备份的所有共享。启用了 VSS 的应用程序上的 VSS 客户端可确定要包含在卷影集中的卷影副本。
+
+* * 卷影复制设置自动恢复 *
++
+启用了 VSS 的远程备份应用程序的备份过程的一部分，其中包含卷影副本的副本目录在时间点上保持一致。备份开始时，应用程序上的 VSS 客户端会触发应用程序对计划备份的数据（ Hyper-V 中的虚拟机文件）进行软件检查。然后， VSS 客户端允许应用程序继续运行。创建卷影副本集后，远程 VSS 会使卷影副本集可写，并将可写副本公开给应用程序。应用程序使用先前的软件检查点执行自动恢复，从而准备卷影副本集以进行备份。自动恢复会撤消自创建检查点以来对文件和目录所做的更改，从而使卷影副本处于一致状态。对于启用了 VSS 的备份，自动恢复是一个可选步骤。
+
+* * 卷影复制 ID*
++
+用于唯一标识卷影副本的 GUID 。
+
+* * 卷影复制集 ID*
++
+一个 GUID ，用于唯一标识一组卷影复制 ID 到同一服务器。
+
+* * 适用于 Hyper-V 的 SnapManager *
++
+一款可自动执行和简化 Microsoft Windows Server 2012 Hyper-V 备份和还原操作的软件SnapManager for Hyper-V 使用具有自动恢复功能的远程 VSS 通过 SMB 共享备份 Hyper-V 文件。
+
+
+
+* 相关信息 *
+
+xref:nondisruptive-operations-glossary-concept.adoc[有关基于 SMB 的 Hyper-V 和 SQL Server 无中断运行的关键概念]
+
+xref:share-based-backups-remote-vss-concept.adoc[使用远程 VSS 进行基于共享的备份]

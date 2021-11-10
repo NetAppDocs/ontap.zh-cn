@@ -1,0 +1,92 @@
+---
+permalink: system-admin/manage-banner-motd-concept.html 
+sidebar: sidebar 
+keywords: manage, banner, motd, clu, user, svm, storage, virtual, machine, cluster 
+summary: 通过 ONTAP ，您可以配置登录横幅或每日消息（ Message Of The Day ， MOTD ），以便向集群或 Storage Virtual Machine （ SVM ）的命令行界面用户传达管理信息。 
+---
+= 管理横幅和 MOTD 概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过 ONTAP ，您可以配置登录横幅或每日消息（ Message Of The Day ， MOTD ），以便向集群或 Storage Virtual Machine （ SVM ）的命令行界面用户传达管理信息。
+
+在提示用户进行身份验证（例如密码）之前，控制台会话（仅限集群访问）或 SSH 会话（适用于集群或 SVM 访问）中会显示一个横幅。例如，您可以使用横幅向尝试登录到系统的用户显示如下警告消息：
+
+[listing]
+----
+$ ssh admin@cluster1-01
+
+This system is for authorized users only. Your IP Address has been logged.
+
+Password:
+
+----
+用户通过身份验证后，在显示 clustershell 提示符之前，控制台会话（仅适用于集群访问）或 SSH 会话（适用于集群或 SVM 访问）会显示 MOTD 。例如，您可以使用 MOTD 显示欢迎消息或信息性消息，例如，只有经过身份验证的用户才能看到以下消息：
+
+[listing]
+----
+$ ssh admin@cluster1-01
+
+Password:
+
+Greetings. This system is running ONTAP 9.0.
+Your user name is 'admin'. Your last login was Wed Apr 08 16:46:53 2015 from 10.72.137.28.
+
+----
+您可以通过以下方式分别使用 `ssecurity login banner modify` 或 `ssecurity login motd modify` 命令创建或修改横幅或 MOTD 的内容：
+
+* 您可以使用命令行界面以交互方式或非交互方式指定用于横幅或 MOTD 的文本。
++
+如果在不使用 ` -message` 或 ` -uri` 参数的情况下使用命令，则会启动交互模式，以便可以在消息中使用换行符（也称为行尾）。
+
++
+非交互模式使用 ` -message` 参数指定消息字符串，不支持换行符。
+
+* 您可以从 FTP 或 HTTP 位置上传要用于横幅或 MOTD 的内容。
+* 您可以将 MOTD 配置为显示动态内容。
++
+可以将 MOTD 配置为动态显示的内容示例如下：
+
++
+** 集群名称，节点名称或 SVM 名称
+** 集群日期和时间
+** 登录用户的名称
+** 用户最后一次登录到集群中的任何节点
+** 登录设备名称或 IP 地址
+** 操作系统名称
+** 软件版本
+** 有效集群版本字符串 `ssecurity login motd modify` 手册页介绍了可用于使 MOTD 显示动态生成的内容的转义序列。
+
+
++
+横幅不支持动态内容。
+
+
+
+您可以在集群或 SVM 级别管理横幅和 MOTD ：
+
+* 以下信息适用于横幅：
++
+** 为集群配置的横幅也会用于未定义横幅消息的所有 SVM 。
+** 可以为每个 SVM 配置 SVM 级别的横幅。
++
+如果配置了集群级别的横幅，则此横幅将被给定 SVM 的 SVM 级别横幅覆盖。
+
+
+
+* 以下事实适用于 MOTD ：
++
+** 默认情况下，为集群配置的 MOTD 也会对所有 SVM 启用。
+** 此外，还可以为每个 SVM 配置 SVM 级别的 MOTD 。
++
+在这种情况下，登录到 SVM 的用户将看到两个 MOTD ，一个是在集群级别定义的，另一个是在 SVM 级别定义的。
+
+** 集群管理员可以按 SVM 启用或禁用集群级别的 MOTD 。
++
+如果集群管理员为 SVM 禁用了集群级别的 MOTD ，则登录到 SVM 的用户将看不到集群级别的 MOTD 。
+
+
+
+

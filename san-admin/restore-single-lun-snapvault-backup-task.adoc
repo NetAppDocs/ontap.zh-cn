@@ -1,0 +1,103 @@
+---
+permalink: san-admin/restore-single-lun-snapvault-backup-task.html 
+sidebar: sidebar 
+keywords: ontap 9.2, restore, single, lun, snapvault backup 
+summary: 您可以将单个 LUN 还原到新位置或原始位置。您可以从 SnapVault 二级卷中的任何 Snapshot 副本进行还原。要将 LUN 还原到原始位置，请先将其还原到新位置，然后再复制它。 
+---
+= 从 SnapVault 备份还原单个 LUN
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将单个 LUN 还原到新位置或原始位置。您可以从 SnapVault 二级卷中的任何 Snapshot 副本进行还原。要将 LUN 还原到原始位置，请先将其还原到新位置，然后再复制它。
+
+.您需要什么？ #8217 ；将需要什么
+* 必须初始化 SnapVault 关系，并且 SnapVault 二级卷必须包含要还原的相应 Snapshot 副本。
+* 包含 SnapVault 二级卷的 Storage Virtual Machine （ SVM ）必须具有一个或多个具有所需 SAN 协议的 LIF ，此 LIF 可从用于访问 LUN 副本的主机访问。
+* igroup 必须已存在于 SnapVault SVM 上。
+
+
+此过程包括从 SnapVault 二级卷中的 Snapshot 副本创建读写卷克隆。您可以直接从克隆使用 LUN ，也可以选择将 LUN 内容复制回原始 LUN 位置。
+
+克隆中的 LUN 与原始 LUN 具有不同的路径和序列号。不会保留持久预留。
+
+.步骤
+. 运行 `snapmirror show` 命令验证包含 SnapVault 备份的二级卷。
++
+[listing]
+----
+cluster::> snapmirror show
+
+Source         Dest     Mirror  Relation  Total             Last
+Path     Type  Path     State   Status    Progress  Healthy Updated
+-------- ---- --------- ------- --------- --------- ------- -------
+vserverA:srcvolA
+         XDP  vserverB:dstvolB
+                        Snapmirrored
+                                Idle       -         true    -
+----
+. 运行 `volume snapshot show` 命令以确定要从中还原 LUN 的 Snapshot 副本。
++
+[listing]
+----
+cluster::> volume snapshot show
+
+Vserver  Volume  Snapshot               State Size   Total% Used%
+-------- ------- ---------------------- ----- ------ ------ -----
+vserverB
+         dstvolB
+                 snap2.2013-02-10_0010  valid  124KB     0%    0%
+                 snap1.2013-02-10_0015 valid  112KB     0%    0%
+                 snap2.2013-02-11_0010  valid  164KB     0%    0%
+----
+. 运行 `volume clone create` 命令，从所需的 Snapshot 副本创建读写克隆。
++
+卷克隆将在与 SnapVault 备份相同的聚合中创建。聚合中必须有足够的空间来存储克隆。
+
++
+[listing]
+----
+cluster::> volume clone create -vserver vserverB
+  -flexclone dstvolB_clone -type RW -parent-volume dstvolB
+  -parent-snapshot daily.2013-02-10_0010
+[Job 108] Job succeeded: Successful
+----
+. 运行 `lun show` 命令列出卷克隆中的 LUN 。
++
+[listing]
+----
+cluster::> lun show -vserver vserverB -volume dstvolB_clone
+
+Vserver   Path                      State   Mapped   Type
+--------- ------------------------  ------- -------- --------
+vserverB  /vol/dstvolB_clone/lun_A  online  unmapped windows
+vserverB  /vol/dstvolB_clone/lun_B  online  unmapped windows
+vserverB  /vol/dstvolB_clone/lun_C  online  unmapped windows
+
+3 entries were displayed.
+----
+. 如果包含 SnapVault 备份的 SVM 上尚不存在所需主机的 igroup ，请运行 `igroup create` 命令创建一个 igroup 。
++
+以下示例将为使用 iSCSI 协议的 Windows 主机创建一个 igroup ：
+
++
+[listing]
+----
+cluster::> igroup create -vserver vserverB -igroup temp_igroup
+  -protocol iscsi -ostype windows
+  -initiator iqn.1991-05.com.microsoft:hostA
+----
+. 运行 `lun mapping create` 命令将所需的 LUN 副本映射到 igroup 。
++
+[listing]
+----
+cluster::> lun mapping create -vserver vserverB
+  -path /vol/dstvolB_clone/lun_C -igroup temp_igroup
+----
+. 将主机连接到 LUN ，并根据需要访问 LUN 的内容。
++
+此 LUN 为读写 LUN ，可用于替代原始 LUN 。由于 LUN 序列号不同，因此主机会将其视为与原始 LUN 不同的 LUN 。
+
+. 使用主机上的复制程序将 LUN 内容复制回原始 LUN 。
+

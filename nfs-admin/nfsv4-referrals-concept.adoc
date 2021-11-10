@@ -1,0 +1,15 @@
+---
+permalink: nfs-admin/nfsv4-referrals-concept.html 
+sidebar: sidebar 
+keywords: nfsv4, referral, work 
+summary: '启用 NFSv4 转介时， ONTAP 会为 NFSv4 客户端提供 " SVM 内 " 转介。SVM 内转介是指收到 NFSv4 请求的集群节点将 NFSv4 客户端转介到 Storage Virtual Machine （ SVM ）上的另一个逻辑接口（ LIF ）。' 
+---
+= NFSv4 转介的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+启用 NFSv4 转介时， ONTAP 会为 NFSv4 客户端提供 "`SVM 内` " 转介。SVM 内转介是指收到 NFSv4 请求的集群节点将 NFSv4 客户端转介到 Storage Virtual Machine （ SVM ）上的另一个逻辑接口（ LIF ）。
+
+从那时起， NFSv4 客户端应访问在目标 LIF 上收到转介的路径。如果原始集群节点确定 SVM 中存在驻留在数据卷所在集群节点上的 LIF ，则会提供此类转介，从而使客户端能够更快地访问数据并避免额外的集群通信。

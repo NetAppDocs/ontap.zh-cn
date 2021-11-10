@@ -1,0 +1,46 @@
+---
+permalink: nfs-config/kerberos-nfs-strong-security-concept.html 
+sidebar: sidebar 
+keywords: use, kerberos, nfs, strong, security 
+summary: 如果在您的环境中使用 Kerberos 进行强身份验证，则需要与 Kerberos 管理员一起确定要求和适当的存储系统配置，然后将 SVM 作为 Kerberos 客户端启用。 
+---
+= 将 Kerberos 与 NFS 结合使用以增强安全性的概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在您的环境中使用 Kerberos 进行强身份验证，则需要与 Kerberos 管理员一起确定要求和适当的存储系统配置，然后将 SVM 作为 Kerberos 客户端启用。
+
+您的环境应符合以下准则：
+
+* 在为 ONTAP 配置 Kerberos 之前，您的站点部署应遵循 Kerberos 服务器和客户端配置的最佳实践。
+* 如果需要 Kerberos 身份验证，请尽可能使用 NFSv4 或更高版本。
++
+NFSv3 可与 Kerberos 结合使用。但是，只有在 NFSv4 或更高版本的 ONTAP 部署中，才会充分发挥 Kerberos 的全部安全优势。
+
+* 要提高冗余服务器访问能力，应在使用同一 SPN 的集群中多个节点上的多个数据 LIF 上启用 Kerberos 。
+* 在 SVM 上启用 Kerberos 时，必须根据 NFS 客户端配置在卷或 qtree 的导出规则中指定以下安全方法之一。
++
+** `krb5` （ Kerberos v5 协议）
+** `krb5i` （使用校验和进行完整性检查的 Kerberos v5 协议）
+** `krb5p` （具有隐私服务的 Kerberos v5 协议）
+
+
+
+
+除了 Kerberos 服务器和客户端之外，还必须为 ONTAP 配置以下外部服务以支持 Kerberos ：
+
+* 目录服务
++
+您应在环境中使用安全目录服务，例如 Active Directory 或 OpenLDAP ，该服务配置为使用基于 SSL/TLS 的 LDAP 。请勿使用 NIS ，因为其请求会以明文形式发送，因此不安全。
+
+* NTP
++
+您必须有一个运行 NTP 的工作时间服务器。为了防止因时间偏差而导致 Kerberos 身份验证失败，必须执行此操作。
+
+* 域名解析（ DNS ）
++
+每个 UNIX 客户端和每个 SVM LIF 都必须在正向和反向查找区域下向 KDC 注册正确的服务记录（ SRV ）。所有参与者都必须可通过 DNS 正确解析。
+
+

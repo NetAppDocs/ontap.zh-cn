@@ -1,0 +1,57 @@
+---
+permalink: encryption-at-rest/return-seds-unprotected-mode-task.html 
+sidebar: sidebar 
+keywords: returning, fips, drive, unprotected, mode 
+summary: 只有当节点的身份验证密钥 ID 设置为非默认值时， FIPS 驱动器或 SED 才会受到保护，防止未经授权的访问。您可以使用 storage encryption disk modify 命令将密钥 ID 设置为默认值，从而将 FIPS 驱动器或 SED 返回到未受保护的模式。 
+---
+= 将 FIPS 驱动器或 SED 恢复到未受保护的模式
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+只有当节点的身份验证密钥 ID 设置为非默认值时， FIPS 驱动器或 SED 才会受到保护，防止未经授权的访问。您可以使用 `storage encryption disk modify` 命令将密钥 ID 设置为默认值，将 FIPS 驱动器或 SED 返回到未受保护的模式。
+
+您必须是集群管理员才能执行此任务。
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 如果 FIPS 驱动器以 FIPS 兼容模式运行，请将节点的 FIPS 身份验证密钥 ID 设置回默认 MSID 0x0 ：
++
+`storage encryption disk modify -disk disk_id -fips-key-id 0x0`
+
++
+您可以使用 `security key-manager query` 命令查看密钥 ID 。
+
++
+[listing]
+----
+cluster1::> storage encryption disk modify -disk 2.10.11 -fips-key-id 0x0
+
+Info: Starting modify on 14 disks.
+      View the status of the operation by using the
+      storage encryption disk show-status command.
+----
+. 将节点的数据身份验证密钥 ID 重新设置为默认 MSID 0x0 ：
++
+`storage encryption disk modify -disk disk_id -data-key-id 0x0`
+
++
+无论您将 SAS 或 NVMe 驱动器返回到未受保护的模式， ` data-key-id` 的值都应设置为 0x0 。
+
++
+您可以使用 `security key-manager query` 命令查看密钥 ID 。
+
++
+[listing]
+----
+cluster1::> storage encryption disk modify -disk 2.10.11 -data-key-id 0x0
+
+Info: Starting modify on 14 disks.
+      View the status of the operation by using the
+      storage encryption disk show-status command.
+----
+

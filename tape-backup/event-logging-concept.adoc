@@ -1,0 +1,22 @@
+---
+permalink: tape-backup/event-logging-concept.html 
+sidebar: sidebar 
+keywords: monitor, tape, backup, restore, operations, flexvol, volumes 
+summary: 您可以查看事件日志文件以监控磁带备份和还原操作。ONTAP 会自动将重要的备份和还原事件及其发生时间记录在控制器 /etc/log/ 目录中名为 backup 的日志文件中。默认情况下，事件日志记录设置为 on 。 
+---
+= 监控 FlexVol 卷的磁带备份和还原操作概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以查看事件日志文件以监控磁带备份和还原操作。ONTAP 会自动将重要的备份和还原事件及其发生时间记录在控制器的 ` /etc/log/` 目录中名为 `backup` 的日志文件中。默认情况下，事件日志记录设置为 `on` 。
+
+您可能需要查看事件日志文件的原因如下：
+
+* 检查夜间备份是否成功
+* 收集有关备份操作的统计信息
+* 使用过去事件日志文件中的信息帮助诊断备份和还原操作的问题
+
+
+事件日志文件每周轮换一次。` /etc/log/backup` 文件重命名为 ` /etc/log/backup.0` ， ` /etc/log/backup.0` 文件重命名为 ` /etc/log/backup.1` ，依此类推。系统会将日志文件保存长达六周；因此，您最多可以有七个消息文件（` /etc/log/backup.[0-5]` 和当前的 ` /etc/log/backup` 文件）。

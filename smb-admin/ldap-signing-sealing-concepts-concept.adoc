@@ -1,0 +1,17 @@
+---
+permalink: smb-admin/ldap-signing-sealing-concepts-concept.html 
+sidebar: sidebar 
+keywords: ontap, configure, sign, seal, enable, ldap, session, security, active, directory, ad, server, cifs, setting, storage, virtual, machine, svm, ldap signing and sealing concepts 
+summary: 从 ONTAP 9 开始，您可以配置签名和签章，以便对 Active Directory （ AD ）服务器的查询启用 LDAP 会话安全性。您必须在 Storage Virtual Machine （ SVM ）上配置 CIFS 服务器安全设置，使其与 LDAP 服务器上的设置相对应。 
+---
+= LDAP 签名和签章概念
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9 开始，您可以配置签名和签章，以便对 Active Directory （ AD ）服务器的查询启用 LDAP 会话安全性。您必须在 Storage Virtual Machine （ SVM ）上配置 CIFS 服务器安全设置，使其与 LDAP 服务器上的设置相对应。
+
+签名可使用密钥技术确认 LDAP 有效负载数据的完整性。密封功能对 LDAP 有效负载数据进行加密，以避免以明文形式传输敏感信息。"_LDAP 安全级别 _ " 选项指示 LDAP 流量是需要签名，签名和签章，还是两者都不需要。默认值为 `none` 。测试
+
+使用 `vserver cifs security modify` 命令的 ` -session-security-for-ad-ldap` 选项，可在 SVM 上启用 CIFS 流量的 LDAP 签名和密封。

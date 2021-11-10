@@ -1,0 +1,147 @@
+---
+permalink: smb-admin/display-file-security-mixed-style-volumes-task.html 
+sidebar: sidebar 
+keywords: display, information, file, directory, security, mix, security-style, volume, style, unix, owner, group, result, troubleshoot, display information about file security, on mixed security-style volumes 
+summary: 您可以显示混合安全模式卷上的文件和目录安全性信息，包括安全模式和有效安全模式是什么，应用了哪些权限以及有关 UNIX 所有者和组的信息。您可以使用结果验证安全配置或对文件访问问题进行故障排除。 
+---
+= 显示混合安全模式卷上的文件安全性信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示混合安全模式卷上的文件和目录安全性信息，包括安全模式和有效安全模式是什么，应用了哪些权限以及有关 UNIX 所有者和组的信息。您可以使用结果验证安全配置或对文件访问问题进行故障排除。
+
+您必须提供 Storage Virtual Machine （ SVM ）的名称以及要显示其文件或文件夹安全信息的数据的路径。您可以摘要形式或详细列表形式显示输出。
+
+* 混合安全模式卷和 qtree 可以包含一些使用 UNIX 文件权限的文件和文件夹，模式位或 NFSv4 ACL ，以及一些使用 NTFS 文件权限的文件和目录。
+* 混合安全模式卷的顶层可以具有 UNIX 或 NTFS 有效安全性。
+* 只有采用 NTFS 或 NFSv4 安全模式的文件和文件夹才会显示 ACL 输出。
++
+对于使用 UNIX 安全性且仅应用模式位权限（无 NFSv4 ACL ）的文件和目录，此字段为空。
+
+* ACL 输出中的所有者和组输出字段仅适用于 NTFS 安全描述符。
+* 由于即使卷根或 qtree 的有效安全模式为 UNIX ，也可以在混合安全模式卷或 qtree 上配置存储级别访问防护安全性， 配置了存储级别访问防护的卷或 qtree 路径的输出可能会同时显示 UNIX 文件权限和存储级别访问防护 ACL 。
+* 如果在命令中输入的路径指向具有 NTFS 有效安全性的数据，则如果为给定文件或目录路径配置了动态访问控制，则输出还会显示有关动态访问控制 ACE 的信息。
+
+
+.步骤
+. 使用所需的详细信息级别显示文件和目录安全设置：
++
+|===
+| 要显示信息的项 | 输入以下命令 ... 
+
+
+ a| 
+摘要形式
+ a| 
+`vserver security file-directory show -vserver vserver_name -path path`
+
+
+
+ a| 
+扩展了详细信息
+ a| 
+`vserver security file-directory show -vserver vserver_name -path path -expand-mask true`
+
+|===
+
+
+以下示例以扩展掩码形式显示 SVM vs1 中路径 ` /projects` 的安全信息。此混合安全模式路径具有 UNIX 有效安全性。
+
+[listing]
+----
+cluster1::> vserver security file-directory show -vserver vs1 -path /projects -expand-mask true
+
+                Vserver: vs1
+              File Path: /projects
+      File Inode Number: 78
+         Security Style: mixed
+        Effective Style: unix
+         DOS Attributes: 10
+ DOS Attributes in Text: ----D---
+Expanded Dos Attributes: 0x10
+     ...0 .... .... .... = Offline
+     .... ..0. .... .... = Sparse
+     .... .... 0... .... = Normal
+     .... .... ..0. .... = Archive
+     .... .... ...1 .... = Directory
+     .... .... .... .0.. = System
+     .... .... .... ..0. = Hidden
+     .... .... .... ...0 = Read Only
+           Unix User Id: 0
+          Unix Group Id: 1
+         Unix Mode Bits: 700
+ Unix Mode Bits in Text: rwx------
+                   ACLs: -
+----
+以下示例显示了 SVM vs1 中路径 ` /data` 的安全信息。此混合安全模式路径具有 NTFS 有效安全性。
+
+[listing]
+----
+cluster1::> vserver security file-directory show -vserver vs1 -path /data
+
+                                 Vserver: vs1
+                               File Path: /data
+                       File Inode Number: 544
+                          Security Style: mixed
+                         Effective Style: ntfs
+                          DOS Attributes: 10
+                  DOS Attributes in Text: ----D---
+                 Expanded Dos Attributes: -
+                            Unix User Id: 0
+                           Unix Group Id: 0
+                          Unix Mode Bits: 777
+                  Unix Mode Bits in Text: rwxrwxrwx
+                                    ACLs: NTFS Security Descriptor
+                                          Control:0x8004
+                                          Owner:BUILTIN\Administrators
+                                          Group:BUILTIN\Administrators
+                                          DACL - ACEs
+                                            ALLOW-Everyone-0x1f01ff
+                                            ALLOW-Everyone-0x10000000-OI|CI|IO
+----
+以下示例显示了 SVM vs1 中路径 ` /datavol5` 处的卷的安全信息。此混合安全模式卷的顶层具有 UNIX 有效安全性。此卷具有存储级别访问防护安全性。
+
+[listing]
+----
+cluster1::> vserver security file-directory show -vserver vs1 -path /datavol5
+                Vserver: vs1
+              File Path: /datavol5
+      File Inode Number: 3374
+         Security Style: mixed
+        Effective Style: unix
+         DOS Attributes: 10
+ DOS Attributes in Text: ----D---
+Expanded Dos Attributes: -
+           Unix User Id: 0
+          Unix Group Id: 0
+         Unix Mode Bits: 755
+ Unix Mode Bits in Text: rwxr-xr-x
+                   ACLs: Storage-Level Access Guard security
+                         SACL (Applies to Directories):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                           AUDIT-EXAMPLE\market-0x1f01ff-SA
+                         DACL (Applies to Directories):
+                           ALLOW-BUILTIN\Administrators-0x1f01ff
+                           ALLOW-CREATOR OWNER-0x1f01ff
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-EXAMPLE\market-0x1f01ff
+                         SACL (Applies to Files):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                           AUDIT-EXAMPLE\market-0x1f01ff-SA
+                         DACL (Applies to Files):
+                           ALLOW-BUILTIN\Administrators-0x1f01ff
+                           ALLOW-CREATOR OWNER-0x1f01ff
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-EXAMPLE\market-0x1f01ff
+----
+* 相关信息 *
+
+xref:display-file-security-ntfs-style-volumes-task.adoc[显示 NTFS 安全模式卷上的文件安全性信息]
+
+xref:display-file-security-unix-style-volumes-task.adoc[显示 UNIX 安全模式卷上的文件安全性信息]

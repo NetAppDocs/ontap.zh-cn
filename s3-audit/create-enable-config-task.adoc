@@ -1,0 +1,59 @@
+---
+permalink: s3-audit/create-enable-config-task.html 
+sidebar: sidebar 
+keywords: consistency groups, consistency group, application protection, parent, child, configure 
+summary: 要实施 S3 审核，首先要在启用了 S3 的 SVM 上创建永久性对象存储审核配置，然后启用此配置。 
+---
+= 创建并启用 S3 审核配置
+
+
+[role="lead"]
+要实施 S3 审核，首先要在启用了 S3 的 SVM 上创建永久性对象存储审核配置，然后启用此配置。
+
+.您需要什么？ #8217 ；将需要什么
+* 启用了 S3 的 SVM 。
+* 为聚合中的暂存卷提供足够的空间。
+
+
+对于包含要审核的 S3 分段的每个 SVM ，需要进行审核配置。您可以在新的或现有的 S3 服务器上启用 S3 审核。审核配置会保留在 S3 环境中，直到被 * vserver object-store-server audit delete* 命令删除为止。
+
+S3 审核配置适用场景您选择进行审核的 SVM 中的所有存储分段。启用了审核的 SVM 可以包含已审核和未审核的分段。
+
+建议您根据日志大小或计划为自动日志轮换配置 S3 审核。如果不配置自动日志轮换，则默认情况下会保留所有日志文件。您还可以使用 * vserver object-store-server audit rotate-log* 命令手动轮换 S3 日志文件。
+
+如果 SVM 是 SVM 灾难恢复源，则目标路径不能位于根卷上。
+
+.操作步骤
+. 创建审核配置以根据日志大小或计划轮换审核日志。
++
+[cols="2,4"]
+|===
+| 审核日志轮换方式 | 输入 ... 
+
+
+| 日志大小 | `vserver object-store-server audit create -vserver _svm_name_ -destination _path_ [-events] ｛ data ｛ vbar ｝ management ｝ ， ...] ｛ ｛ -rotate-limit _intege_] ｛ vbar ｝ ｛ -retention-duration [_intege_d] [_intege_h] [_intege_m][_integent_]] ｝ ｛ -rotate-size ｛ _intege_KB ｛ vbar ｝ MB ｛ vbar ｝ GB ｛ vbar ｝ TB ｛ vbar ｝ pb] ｝ ｝ ｝ ]` 
+
+
+| 计划  a| 
+`vserver object-store-server audit create -vserver _svm_name_ -destination path [-events] ｛ data ｛ vbar ｝ management ｝ ， ...] ｛ <-rotate-limit _intege_] ｛ vbar ｝ ｛ -retention-duration [_integerd_][_integem_][_integem____integers_]] ｝ ｛ -rotate-schedule-month _chron_month_] ｛ -rotate-schedule-dayofweek _week_] ｝ ｛ -schedule_rotate-schedule_day_hour_hour_un_schedule_un_schedule_un_schedule_hour_un_un_schedule_un_schedule_un_schedule_un_schedule_hour_un_schedule_un_un_schedule_un`
+
+如果要配置基于时间的审核日志轮换，则需要 ` rotate-schedule-minute` 参数。
+
+|===
+. 启用 S3 审核：
++
+`vserver object-store-server audit enable -vserver _svm_name_`
+
+
+
+以下示例将创建一个审核配置，该配置使用基于大小的轮换来审核所有 S3 事件（默认值）。日志存储在 /audit_log 目录中。日志文件大小限制为 200 MB 。日志大小达到 200 MB 时会进行轮换。
+
+`cluster1 ：：： > vserver audit create -vserver vs1 -destination /audit_log -rotate-size 200 MB`
+
+以下示例将创建一个审核配置，该配置使用基于大小的轮换来审核所有 S3 事件（默认值）。日志文件大小限制为 100 MB （默认值），日志会保留 5 天，然后才会被删除。
+
+`cluster1 ：：： > vserver audit create -vserver vs1 -destination /audit_log -retention-duration 5d0h0m`
+
+以下示例将创建一个审核配置，用于审核 S3 管理事件以及使用基于时间的轮换的中央访问策略暂存事件。审核日志每月在中午 12 ： 30 轮换一次在一周的所有日期。日志轮换限制为 5 。
+
+`cluster1 ：：： > vserver audit create -vserver vs1 -destination /audit_log -events management -rotate-schedule-month all -rotate-schedule-dayofweek all -rotate-schedule-hour 12 -rotate-schedule-minute 30 -rotate-limit 5`

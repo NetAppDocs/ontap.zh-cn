@@ -1,0 +1,45 @@
+---
+permalink: san-config/set-queue-depths-windows-hosts-task.html 
+sidebar: sidebar 
+keywords: set, queue, depths, windows, hosts 
+summary: 在 Windows 主机上，您可以使用 LPUTILNT 实用程序更新 Emulex HBA 的队列深度，并使用 SANsurfer HBA 管理器实用程序更新 Qlogic HBA 的队列深度。 
+---
+= 设置 Windows 主机上的队列深度
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 Windows 主机上，您可以使用 `LPUTILNT` 实用程序更新 Emulex HBA 的队列深度，并使用 `SAnsurfer` HBA 管理器实用程序更新 Qlogic HBA 的队列深度。
+
+
+
+== 更新 Emulex HBA 队列深度
+
+.步骤
+. 运行 `C ： \WINNT\system32` 目录中的 `LPUTILNT` 实用程序。
+. 从右侧菜单中选择 * 驱动器参数 * 。
+. 向下滚动并双击 * 队列深度 * 。
++
+[NOTE]
+====
+如果要将 * 队列深度 * 设置为大于 150 ，则还需要相应地增加以下 Windows 注册表值：
+
+`HKEY_LOCAL_MACHINE \System\CurrentControlSet\Services\lpxnds\Parameters\Device\NumberOfRequests`
+
+====
+
+
+
+
+== 更新 Qlogic HBA 队列深度
+
+
+
+== 步骤
+
+. 运行 `SAnsurfer` HBA 管理器实用程序。
+. 单击 * HBA port* > * 设置 * 。
+. 单击列表框中的 * 高级 HBA 端口设置 * 。
+. 更新 `Execution Throttle` 参数。
+

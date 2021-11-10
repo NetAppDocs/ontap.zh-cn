@@ -1,0 +1,40 @@
+---
+permalink: smb-hyper-v-sql/configure-vss-shadow-copy-directory-depth-task.html 
+sidebar: sidebar 
+keywords: configure, vss, shadow, copy, directory, depth, hyper, v, smb, share 
+summary: 您也可以在 SMB 共享中配置用于创建卷影副本的目录的最大深度。如果要手动控制 ONTAP 应在其上创建卷影副本的子目录的最大级别，此参数非常有用。 
+---
+= 配置 VSS 卷影复制目录深度（对于基于 SMB 共享的 Hyper-V ）
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您也可以在 SMB 共享中配置用于创建卷影副本的目录的最大深度。如果要手动控制 ONTAP 应在其上创建卷影副本的子目录的最大级别，此参数非常有用。
+
+必须启用 VSS 卷影复制功能。
+
+默认情况下，最多为五个子目录创建卷影副本。如果此值设置为 `0` ，则 ONTAP 会为所有子目录创建卷影副本。
+
+[NOTE]
+====
+尽管您可以指定卷影副本集目录深度包含五个以上的子目录或所有子目录，但 Microsoft 要求必须在 60 秒内完成卷影副本集创建。如果无法在此时间内完成卷影副本集创建，则会失败。您选择的卷影复制目录深度不能使创建时间发生原因超过时间限制。
+
+====
+.步骤
+. 将权限级别设置为高级：
++
+` * 设置 -privilege advanced*`
+
+. 将 VSS 卷影复制目录深度设置为所需级别：
++
+` * vserver cifs options modify -vserver _vserver_name_ -ShadowCopy-dir-depth intege*`
+
++
+` * vserver cifs options modify -vserver vs1 -ShadowCopy-dir-depth 6*`
+
+. 返回到管理权限级别：
++
+` * 设置 -privilege admin*`
+
+

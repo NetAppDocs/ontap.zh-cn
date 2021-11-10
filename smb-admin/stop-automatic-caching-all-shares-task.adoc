@@ -1,0 +1,36 @@
+---
+permalink: smb-admin/stop-automatic-caching-all-shares-task.html 
+sidebar: sidebar 
+keywords: branchcache, configuration, automatic, enable, caching, cache, smb, share, storage, virtual, machine, svm, modify, stop automatic caching on all smb shares 
+summary: 如果 BranchCache 配置自动对每个 Storage Virtual Machine （ SVM ）上的所有 SMB 共享启用缓存，则可以修改 BranchCache 配置以停止自动缓存所有 SMB 共享的内容。 
+---
+= 停止对所有 SMB 共享的自动缓存
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果 BranchCache 配置自动对每个 Storage Virtual Machine （ SVM ）上的所有 SMB 共享启用缓存，则可以修改 BranchCache 配置以停止自动缓存所有 SMB 共享的内容。
+
+要停止所有 SMB 共享上的自动缓存，请将 BranchCache 操作模式更改为每共享缓存。
+
+.步骤
+. 将 BranchCache 配置为停止所有 SMB 共享上的自动缓存： `vserver cifs branchcache modify -vserver vserver_name -operating 模式 per-share`
+. 验证 BranchCache 配置是否正确： `vserver cifs branchcache show -vserver vserver_name`
+
+
+以下命令将更改 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 上的 BranchCache 配置，以停止对所有 SMB 共享的自动缓存：
+
+[listing]
+----
+cluster1::> vserver cifs branchcache modify -vserver vs1 -operating-mode per-share
+
+cluster1::> vserver cifs branchcache show -vserver vs1
+
+                                 Vserver: vs1
+          Supported BranchCache Versions: enable_all
+                      Path to Hash Store: /hash_data
+          Maximum Size of the Hash Store: 20GB
+Encryption Key Used to Secure the Hashes: -
+        CIFS BranchCache Operating Modes: per_share
+----

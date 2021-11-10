@@ -1,0 +1,73 @@
+---
+permalink: authentication/grant-access-nis-ldap-user-accounts-task.html 
+sidebar: sidebar 
+keywords: enable, ldap, nis, account access 
+summary: 您可以使用 security login create 命令使 LDAP 或 NIS 用户帐户能够访问管理员或数据 SVM 。如果尚未配置对 SVM 的 LDAP 或 NIS 服务器访问，则必须先配置此访问权限，然后帐户才能访问此 SVM 。 
+---
+= 启用 LDAP 或 NIS 帐户访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `ssecurity login create` 命令启用 LDAP 或 NIS 用户帐户以访问管理员或数据 SVM 。如果尚未配置对 SVM 的 LDAP 或 NIS 服务器访问，则必须先配置此访问权限，然后帐户才能访问此 SVM 。
+
+您必须是集群管理员才能执行此任务。
+
+.关于此任务
+* 不支持组帐户。
+* 您必须先配置对 SVM 的 LDAP 或 NIS 服务器访问，然后帐户才能访问 SVM 。
++
+xref:enable-nis-ldap-users-access-cluster-task.adoc[配置 LDAP 或 NIS 服务器访问]
+
++
+您可以在启用帐户访问之前或之后执行此任务。
+
+* 如果您不确定要分配给登录帐户的访问控制角色，可以稍后使用 `ssecurity login modify` 命令添加此角色。
++
+xref:modify-role-assigned-administrator-task.adoc[修改分配给管理员的角色]
+
+* 从 ONTAP 9.4 开始，远程用户可通过 LDAP 或 NIS 服务器支持多因素身份验证（ Multifactor Authentication ， MFA ）。
+* 由于 LDAP 问题描述已知，您不应在 LDAP 用户帐户信息的任何字段（例如， `gecos` ， `userPassword` 等）中使用 ` ' ： '` （冒号）字符。否则，该用户的查找操作将失败。
+
+
+.步骤
+. 启用 LDAP 或 NIS 用户或组帐户以访问 SVM ：
++
+`ssecurity login create -vserver svm_name -user-or-group-name user_name -application application -authmethod nsswitch -role -comment -is-ns-switch-group yes_no`
+
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+link:config-worksheets-reference.html["创建或修改登录帐户"]
+
++
+以下命令将使用预定义的 `backup` 角色启用 LDAP 或 NIS 集群管理员帐户 `guest2` 以访问管理 SVM``engCluster`` 。
+
++
+[listing]
+----
+cluster1::>security login create -vserver engCluster -user-or-group-name guest2 -application ssh -authmethod nsswitch -role backup
+----
+. 为 LDAP 或 NIS 用户启用 MFA 登录：
++
+``ssecurity login modify -user-or-group-name rem_USR1 -application ssh -authentication-method nsswitch -role admin -is-ns-switch-group no -second-authentication-method publickey``
+
++
+身份验证方法可以指定为 `publickey` ，第二种身份验证方法可指定为 `nsswitch` 。
+
++
+以下示例显示了正在启用的 MFA 身份验证：
+
++
+[listing]
+----
+cluster-1::*> security login modify -user-or-group-name rem_usr2 -application ssh -authentication-method nsswitch -vserver
+cluster-1 -second-authentication-method publickey"
+----
+
+
+如果尚未配置对 SVM 的 LDAP 或 NIS 服务器访问，则必须先配置此访问权限，然后帐户才能访问此 SVM 。
+
+xref:enable-nis-ldap-users-access-cluster-task.adoc[配置 LDAP 或 NIS 服务器访问]

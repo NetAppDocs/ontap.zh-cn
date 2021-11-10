@@ -1,0 +1,45 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/enable-default-task.html 
+keywords: Enable anti-ransomware by default in new volumes, configure storage volumes, enable anti-ransomware in system manager, modify a new SVM to enable anti-ransomware, create a new SVM with anti-ransomware enabled 
+summary: 您可以对 Storage VM 进行配置，使新卷在学习模式下默认启用反勒索软件。 
+---
+= 默认情况下，在新卷中启用反勒索软件
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+您可以对 Storage VM 进行配置，使新卷在学习模式下默认启用反勒索软件。
+
+.您将需要什么
+* 从安全和合规性包安装的多租户加密密钥管理（ MT_EK_Mgmt ）许可证。
+
+
+默认情况下，系统会在禁用模式下使用反勒索软件创建新卷，但您可以在 System Manager 和 CLI 中更改此设置。默认情况下，在学习模式下，启用的卷会设置为反勒索软件。
+
+
+
+== System Manager 操作步骤
+
+. 单击 * 存储 > 存储 VM* ，然后选择用于默认防病毒的 Storage VM 。
+. 在 * 设置 * 选项卡中的 * 安全性 * 部分中，单击 image:icon_pencil.gif["笔图标"] 在 * 反勒索软件 * 框中，选中此框可为 NAS 卷启用反勒索软件。
+
+
+
+
+== 命令行界面操作步骤
+
+. 修改现有 SVM 以在新卷中默认启用反勒索软件： `vserver modify -vserver _svm_name_ -anti-ranswere-default-volume-state dry-run`
++
+在 CLI 中，您还可以创建一个新的 SVM ，并为新卷默认启用反勒索软件。`vserver create -vserver svm_name -anti-ransweron-default-volume-state dry-run [_other parameters as needed_]`
+
+

@@ -1,0 +1,29 @@
+---
+permalink: smb-admin/enable-ldap-signing-sealing-task.html 
+sidebar: sidebar 
+keywords: cifs, server, sign, seal, secure, communication, active, directory, ldap, modify, security, setting, sign, seal, enable, enable ldap signing and sealing on the cifs server 
+summary: 在 CIFS 服务器使用签名和签章与 Active Directory LDAP 服务器进行安全通信之前，您必须修改 CIFS 服务器安全设置以启用 LDAP 签名和签章。 
+---
+= 在 CIFS 服务器上启用 LDAP 签名和签章
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 CIFS 服务器使用签名和签章与 Active Directory LDAP 服务器进行安全通信之前，您必须修改 CIFS 服务器安全设置以启用 LDAP 签名和签章。
+
+您必须咨询 AD 服务器管理员以确定适当的安全配置值。
+
+.步骤
+. 配置 CIFS 服务器安全设置以启用与 Active Directory LDAP 服务器之间的已签名和已签章流量： `vserver cifs security modify -vserver _vserver_name_ -session-security-for-ad-ldap ｛ none|sign_seal ｝`
++
+您可以启用签名（ `sign` ，数据完整性），签名和密封（ `seal` ，数据完整性和加密）或两者均不启用（`none` ，无签名或密封）。默认值为 `none` 。
+
+. 验证是否已正确设置 LDAP 签名和签章安全设置： `vserver cifs security show -vserver _vserver_name_`
++
+[NOTE]
+====
+如果 SVM 使用同一个 LDAP 服务器来查询名称映射或其他 UNIX 信息，例如用户，组和网络组，则必须使用 `vserver services name-service ldap client modify` 命令的 ` session-security` 选项启用相应的设置。
+
+====
+

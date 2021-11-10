@@ -1,0 +1,35 @@
+---
+permalink: nas-audit/manage-audit-policy-change-event-concept.html 
+sidebar: sidebar 
+keywords: manage, audit-policy-change, event 
+summary: 为 Storage Virtual Machine （ SVM ）配置审核策略更改事件并启用审核后，将生成审核事件。使用与 Vserver audit 相关的命令修改审核策略时，将生成 audit-policy-change 事件。 
+---
+= 管理审核策略更改事件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+为 Storage Virtual Machine （ SVM ）配置审核策略更改事件并启用审核后，将生成审核事件。使用 `vserver audit` related 命令修改审核策略时，将生成 audit-policy-change 事件。
+
+无论何时禁用，启用或修改审核策略，都会生成事件 ID 为 4719 的审核策略更改事件，此事件有助于确定用户何时尝试禁用审核以覆盖这些跟踪。默认情况下，它已配置，需要诊断权限才能禁用。
+
+以下示例显示了禁用审核时生成的审核策略更改事件， ID 为 4719 ：
+
+[listing]
+----
+netapp-clus1::*> vserver audit disable -vserver vserver_1
+- System
+  - Provider
+   [ Name]  NetApp-Security-Auditing
+   [ Guid]  {3CB2A168-FE19-4A4E-BDAD-DCF422F13473}
+   EventID 4719
+   EventName Audit Disabled
+   ...
+   ...
+  SubjectUserName admin
+  SubjectUserSid 65533-1001
+  SubjectDomainName ~
+  SubjectIP console
+  SubjectPort
+----

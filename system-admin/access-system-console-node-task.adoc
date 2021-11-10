@@ -1,0 +1,91 @@
+---
+permalink: system-admin/access-system-console-node-task.html 
+sidebar: sidebar 
+keywords: access, system, console, node, serial, ssh, sp, boot 
+summary: 如果某个节点在启动菜单或启动环境提示符处挂起，则只能通过系统控制台（也称为串行控制台）访问它。您可以通过与节点的 SP 或集群的 SSH 连接访问节点的系统控制台。 
+---
+= 访问节点的系统控制台
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果某个节点在启动菜单或启动环境提示符处挂起，则只能通过系统控制台（也称为 _serial console ）访问它。您可以通过与节点 SP 或集群的 SSH 连接访问节点的系统控制台。
+
+SP 和 ONTAP 都提供了用于访问系统控制台的命令。但是，从 SP 只能访问其自身节点的系统控制台。从集群中，您可以访问集群中任何节点的系统控制台。
+
+.步骤
+. 访问节点的系统控制台：
++
+|===
+| 如果您位于 ... | 输入此命令 ... 
+
+
+ a| 
+节点的 SP CLI
+ a| 
+`s系统控制台`
+
+
+
+ a| 
+ONTAP 命令行界面
+ a| 
+`ssystem node run-console`
+
+|===
+. 按照提示登录到系统控制台。
+. 要退出系统控制台，请按 Ctrl-D
+
+
+以下示例显示了在 `SP node2` 提示符处输入 `ssystem console` 命令的结果。系统控制台指示 node2 正在启动环境提示符处挂起。在控制台中输入 `boot_ontap` 命令，将节点启动到 ONTAP 。然后，按 Ctrl-D 退出控制台并返回到 SP 。
+
+[listing]
+----
+SP node2> system console
+Type Ctrl-D to exit.
+
+LOADER>
+LOADER> boot_ontap
+...
+*******************************
+*                             *
+* Press Ctrl-C for Boot Menu. *
+*                             *
+*******************************
+...
+----
+（按 Ctrl-D 退出系统控制台。）
+
+[listing]
+----
+
+Connection to 123.12.123.12 closed.
+SP node2>
+----
+以下示例显示了在 ONTAP 中输入 `ssystem node run-console` 命令以访问 node2 的系统控制台的结果， node2 正在启动环境提示符处挂起。在控制台中输入 `boot_ontap` 命令，将 node2 启动到 ONTAP 。然后，按 Ctrl-D 退出控制台并返回到 ONTAP 。
+
+[listing]
+----
+cluster1::> system node run-console -node node2
+Pressing Ctrl-D will end this session and any further sessions you might open on top of this session.
+Type Ctrl-D to exit.
+
+LOADER>
+LOADER> boot_ontap
+...
+*******************************
+*                             *
+* Press Ctrl-C for Boot Menu. *
+*                             *
+*******************************
+...
+----
+（按 Ctrl-D 退出系统控制台。）
+
+[listing]
+----
+
+Connection to 123.12.123.12 closed.
+cluster1::>
+----

@@ -1,0 +1,80 @@
+---
+permalink: san-config/set-queue-depths-vmware-hosts-task.html 
+sidebar: sidebar 
+keywords: set, queue, depths, vmware, hosts 
+summary: 使用 esxcfg-module 命令更改 HBA 超时设置。不建议手动更新 esx.conf 文件。 
+---
+= 设置 VMware 主机上的队列深度
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 `esxcfg-module` 命令更改 HBA 超时设置。不建议手动更新 `esx.conf` 文件。
+
+
+
+== 设置 QLogic HBA 的最大队列深度
+
+.步骤
+. 以 root 用户身份登录到服务控制台。
+. 使用 ` #vmkload_mod -l` 命令验证当前已加载的 Qlogic HBA 模块。
+. 对于 Qlogic HBA 的单个实例，运行以下命令：
++
+` #esxcfg-module -s ql2xmaxqdepth=64 qla2300_707`
+
++
+[NOTE]
+====
+此示例使用 qla2300_707 模块。根据 `vmkload_mod -l` 的输出使用相应的模块。
+
+====
+. 使用以下命令保存所做的更改：
++
+` #/usr/sbin/esxcfg-boot -b`
+
+. 使用以下命令重新启动服务器：
++
+` # 重新启动`
+
+. 使用以下命令确认更改：
++
+.. ` #esxcfg-module -g qla2300_707`
+.. `qla2300_707 enabled = 1 个选项 = "ql2xmaxqdepth=64"`
+
+
+
+
+
+
+== 更改 Emulex HBA 的队列深度
+
+.步骤
+. 以 root 用户身份登录到服务控制台。
+. 使用 ` #vmkload_mod -l grep lpfcdd` 命令验证当前已加载的 Emulex HBA 。
+. 对于 Emulex HBA 的单个实例，输入以下命令：
++
+` #esxcfg-module -s lpfc0_lun_queue_depth=16 lpfcdd_7xx`
+
++
+[NOTE]
+====
+根据 HBA 的型号，此模块可以是 lpfcdd_7xx 或 lpfcdd_732 。上述命令使用 lpfcdd_7xx 模块。您应根据 `vmkload_mod -l` 的结果使用相应的模块。
+
+====
++
+运行此命令会将 lpfc0 表示的 HBA 的 LUN 队列深度设置为 16 。
+
+. 对于 Emulex HBA 的多个实例，运行以下命令：
++
+`esxcfg-module -s "lpfc0_lun_queue_depth=16 lpfc1_lun_queue_depth=16" lpfcdd_7xx`
+
++
+lpfc0 的 LUN 队列深度和 lpfc1 的 LUN 队列深度均设置为 16 。
+
+. 输入以下命令：
++
+` #esxcfg-boot -b`
+
+. 使用 ` # reboot` 重新启动。
+

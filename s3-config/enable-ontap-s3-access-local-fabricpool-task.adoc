@@ -1,0 +1,76 @@
+---
+permalink: s3-config/enable-ontap-s3-access-local-fabricpool-task.html 
+sidebar: sidebar 
+keywords: enable, ontap, s3 access, local, fabricpool, tiering 
+summary: 要将 ONTAP S3 用作本地 FabricPool 容量层，您必须根据创建的存储分段定义对象存储，然后将对象存储附加到性能层聚合以创建 FabricPool 。 
+---
+= 为本地 FabricPool 分层启用 ONTAP S3 访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要将 ONTAP S3 用作本地 FabricPool 容量层，您必须根据创建的存储分段定义对象存储，然后将对象存储附加到性能层聚合以创建 FabricPool 。
+
+您必须具有 ONTAP S3 服务器名称和存储分段名称，并且 S3 服务器必须已使用集群 LIF （带有 ` -vserver Cluster` 参数）创建。
+
+对象存储配置包含有关本地容量层的信息，包括 S3 服务器和存储分段名称以及身份验证要求。
+
+创建对象存储配置后，不能与其他对象存储或存储分段重新关联。您可以为本地层创建多个存储分段，但不能在一个存储分段中创建多个对象存储。
+
+本地容量层不需要 FabricPool 许可证。
+
+.步骤
+. 为本地容量层创建对象存储：
++
+`storage aggregate object-store config create -object-store-name store_name -ispace cluster -provider-type ontap_s3 -server s3_server_name -container-name bucket_name -access-key access_key -secret-password password password`
+
++
+** ` 容器名称` 是您创建的 S3 存储分段。
+** ` -access-key` 参数用于授权对 ONTAP S3 服务器的请求。
+** ` -secret-password` 参数（机密访问密钥）用于对 ONTAP S3 服务器的请求进行身份验证。
+** 您可以将 ` is-certificate-validation-enabled` 参数设置为 `false` 以禁用 ONTAP S3 的证书检查。
+
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store config create
+-object-store-name MyLocalObjStore -ispace Cluster -provider-type ONTAP_S3 -server s3.example.com
+-container-name bucket1 -access-key myS3key -secret-password myS3pass
+----
+. 显示并验证对象存储配置信息：
++
+`storage aggregate object-store config show`
+
+. 可选：要查看卷中处于非活动状态的数据量，请按照中的步骤进行操作 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mgng-stor-tier-fp/GUID-78C09B0C-9508-4CEC-96FE-7ED73F7F5120.html["使用非活动数据报告确定卷中处于非活动状态的数据量"]。
++
+查看卷中处于非活动状态的数据量有助于确定要用于 FabricPool 本地分层的聚合。
+
+. 将对象存储附加到聚合：
++
+`storage aggregate object-store attach -aggregate aggr_name -object-store-name store_name`
+
++
+您可以使用 `allow-flexgroup` ` * true*` 选项附加包含 FlexGroup 卷成分卷的聚合。
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store attach
+-aggregate aggr1 -object-store-name MyLocalObjStore
+----
+. 显示对象存储信息并验证连接的对象存储是否可用：
++
+`storage aggregate object-store show`
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store show
+
+Aggregate    Object Store Name    Availability State
+---------    -----------------    ------------------
+aggr1        MyLocalObjStore      available
+----
+

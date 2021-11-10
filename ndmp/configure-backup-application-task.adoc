@@ -1,0 +1,43 @@
+---
+permalink: ndmp/configure-backup-application-task.html 
+sidebar: sidebar 
+keywords: configure, backup, application 
+summary: 在为集群配置 NDMP 访问后，您必须从集群配置中收集信息，然后在备份应用程序中配置其余的备份过程。 
+---
+= 配置备份应用程序
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在为集群配置 NDMP 访问后，您必须从集群配置中收集信息，然后在备份应用程序中配置其余的备份过程。
+
+.步骤
+. 收集先前在 ONTAP 中配置的以下信息：
++
+** 备份应用程序创建 NDMP 连接所需的用户名和密码
+** 备份应用程序连接到集群所需的集群间 LIF 的 IP 地址
+
+
+. 在 ONTAP 中，使用 `storage tape alias show` 命令显示 ONTAP 分配给每个设备的别名。
++
+别名通常在配置备份应用程序时很有用。
+
++
+[listing]
+----
+cluster1::> storage tape show -alias
+
+  Device ID: 2a.0
+Device Type: tape drive
+Description: Hewlett-Packard LTO-5
+
+Node                        Alias     Mapping
+--------------------------- --------- ------------------------------
+stsw-3220-4a-4b-02          st2       SN[HU19497WVR]
+...
+----
+. 在备份应用程序中，使用备份应用程序的文档配置其余备份过程。
+
+
+如果发生数据移动事件，例如卷移动或 LIF 迁移，您必须准备好重新初始化任何中断的备份操作。

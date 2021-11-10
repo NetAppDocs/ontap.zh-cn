@@ -1,0 +1,45 @@
+---
+permalink: volumes/enable-logical-space-reporting-enforcement-task.html 
+sidebar: sidebar 
+keywords: enable, logical, space, reporting, enforcement 
+summary: 从 ONTAP 9.4 开始，您可以启用逻辑空间报告。从 9.5 开始，您可以同时启用逻辑空间强制实施，也可以同时启用报告和强制实施。 
+---
+= 启用逻辑空间报告和强制实施
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.4 开始，您可以启用逻辑空间报告。从 9.5 开始，您可以同时启用逻辑空间强制实施，也可以同时启用报告和强制实施。
+
+除了在单个卷级别启用逻辑空间报告和强制实施之外，您还可以在 SVM 级别为支持此功能的每个卷启用这些功能。如果为整个 SVM 启用逻辑空间功能，则还可以为各个卷禁用这些功能。
+
+从 9.8 开始，如果在 SnapMirror 源卷上启用逻辑空间报告，则在传输后，该功能会在目标卷上自动启用。
+
+[NOTE]
+====
+如果在 SnapMirror 源卷上启用了强制实施选项，则强制设置将传输到目标卷。但是，由于目标卷不支持强制实施，因此目标将报告逻辑空间占用情况，但不支持强制实施。
+
+====
+.选项
+* 为卷启用逻辑空间报告：
++
+`volume modify -vserver svm-name -volume volume-name -size volume-size -is-space-reporting-logical true`
+
+* 为卷启用逻辑空间强制：
++
+`volume modify -vserver svm-name -volume volume-name -size volume-size -is-space-Enforcement-logical true`
+
+* 同时为卷启用逻辑空间报告和强制实施：
++
+`volume modify -vserver svm-name -volume volume-name -size volume-size -is-space-reporting-logical true -is-space-Enforcement-logical true`
+
+* 为新 SVM 启用逻辑空间报告或强制实施：
++
+` +vserver create -vserver svm-name -rootvolume root-volume-name -rootvolume-security-style unix -data-services ｛ desireed-data-services ｝ [-is-space-reporting-logical true" （ -is-space-Enforcement-logical true ） +`
+
+* 为现有 SVM 启用逻辑空间报告或强制实施：
++
+` +vserver modify -vserver svm-name ｛ desired data-services ｝ （ -is-space-reporting-logical true ）（ -is-space-Enforcement-logical true ） +`
+
+

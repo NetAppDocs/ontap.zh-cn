@@ -1,0 +1,36 @@
+---
+permalink: nfs-admin/view-nfs-exports-svms-concept.html 
+sidebar: sidebar 
+keywords: enable, display, nfs, export, client 
+summary: NFS 客户端可以使用 showmount -e 命令查看可从 ONTAP NFS 服务器导出的列表。这有助于用户确定要挂载的文件系统。 
+---
+= 在 NFS 客户端上启用 NFS 导出显示
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFS 客户端可以使用 `showmount -e` 命令查看可从 ONTAP NFS 服务器导出的列表。这有助于用户确定要挂载的文件系统。
+
+从 ONTAP 9.2 开始，默认情况下， ONTAP 允许 NFS 客户端查看导出列表。在早期版本中，必须显式启用 `vserver nfs modify` 命令的 `showmount` 选项。要查看导出列表，应在 SVM 上启用 NFSv3 。
+
+以下命令显示了名为 vs1 的 SVM 上的 showmount 功能：
+
+[listing]
+----
+clusterl : : > vserver nfs show -vserver vs1 -fields showmount
+vserver showmount
+------- ---------
+vs1    enabled
+----
+在 NFS 客户端上执行的以下命令显示 IP 地址为 10.63.21.9 的 NFS 服务器上的导出列表：
+
+[listing]
+----
+showmount -e 10.63.21.9
+Export list for 10.63.21.9:
+/unix        (everyone)
+/unix/unixl  (everyone)
+/unix/unix2  (everyone)
+/            (everyone)
+----

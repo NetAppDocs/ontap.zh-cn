@@ -1,0 +1,80 @@
+---
+permalink: data-protection/snapmirror-global-throttling-concept.html 
+sidebar: sidebar 
+keywords: using snapmirror, global, throttling 
+summary: 全局网络限制可用于每个节点级别的所有 SnapMirror 和 SnapVault 传输。 
+---
+= 使用 SnapMirror 全局限制
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+全局网络限制可用于每个节点级别的所有 SnapMirror 和 SnapVault 传输。
+
+SnapMirror 全局限制用于限制传入和 / 或传出 SnapMirror 和 SnapVault 传输所使用的带宽。此限制会在集群范围内对集群中的所有节点强制实施。
+
+例如，如果传出限制设置为 100 Mbps ，则集群中的每个节点的传出带宽都将设置为 100 Mbps 。如果禁用了全局限制，则会在所有节点上禁用它。
+
+[NOTE]
+====
+此限制不会影响 `volume move` transfers 或负载共享镜像传输。尽管数据传输速率通常以每秒位数（ bps ）表示，但必须以千字节 / 秒（ KBps ）为单位输入限制值。
+
+====
+全局限制与 SnapMirror 和 SnapVault 传输的每个关系限制功能结合使用。系统将强制实施每个关系限制，直到每个关系传输的总带宽超过全局限制的值为止，之后将强制实施全局限制。限制值 `0` 表示全局限制已禁用。
+
+[NOTE]
+====
+SnapMirror 全局限制对同步的 SnapMirror 同步关系没有影响。但是，在 SnapMirror 同步关系执行异步传输阶段（例如初始化操作）或发生 " 不同步 " 事件后，此限制会影响这些关系。因此，建议不要对 SnapMirror 同步关系启用全局限制。
+
+====
+.步骤
+. 启用全局限制：
++
+`options -option-name replication.throttle.enable on|off`
+
++
+以下示例显示了如何在 `cluster_dst` 上启用 SnapMirror 全局限制：
+
++
+[listing]
+----
+cluster_dst::> options -option-name replication.throttle.enable on
+----
+. 指定传入传输使用的最大总带宽：
++
+`options -option-name replication.throttle.incoming.max_kbs _kbbs_`
+
++
+建议的最小限制带宽为 4 KBps ，最大限制为 2 Tbps 。此选项的默认值为 `unlimited` ，表示已用总带宽无限制。
+
++
+以下示例显示了如何将传入传输使用的最大总带宽设置为 100 Mbps ：
+
++
+[listing]
+----
+cluster_dst::> options -option-name replication.throttle.incoming.max_kbs 12500
+----
++
+[NOTE]
+====
+100 Mbps = 12500 KBps
+
+====
+. 指定传出传输使用的最大总带宽：
++
+`options -option-name replication.throttle.outporting_max_kbs _kbbk_`
+
++
+KBps 是最大传输速率，以 KB/ 秒为单位。有效传输速率值为 1 到 125000 。此选项的默认值为 `unlimited` ，表示已用总带宽无限制。
+
++
+以下示例显示了如何将传出传输使用的最大总带宽设置为 100 Mbps ：
+
++
+[listing]
+----
+cluster_dst::> options -option-name replication.throttle.outgoing.max_kbs 12500
+----
+

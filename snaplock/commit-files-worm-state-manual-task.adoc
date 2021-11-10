@@ -1,0 +1,40 @@
+---
+permalink: snaplock/commit-files-worm-state-manual-task.html 
+sidebar: sidebar 
+keywords: commit, file, worm, manually, nfs, cifs, read, only 
+summary: 您可以通过将文件设为只读来手动将文件提交到 WORM 。您可以通过 NFS 或 CIFS 使用任何合适的命令或程序将文件的读写属性更改为只读。 
+---
+= 手动将文件提交到 WORM
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过将文件设为只读来手动将文件提交到 WORM 。您可以通过 NFS 或 CIFS 使用任何合适的命令或程序将文件的读写属性更改为只读。
+
+.您需要什么？ #8217 ；将需要什么
+* 要提交的文件必须驻留在 SnapLock 卷上。
+* 此文件必须可写。
+
+
+执行命令或程序时，卷 ComplianceClock 时间将写入文件的 `ctime` 字段。ComplianceClock 时间用于确定何时达到文件的保留时间。
+
+.步骤
+. 使用合适的命令或程序将文件的读写属性更改为只读。
++
+在 UNIX Shell 中，使用以下命令将名为 `document.txt` 的文件设置为只读：
+
++
+[listing]
+----
+chmod -w document.txt
+----
++
+在 Windows Shell 中，使用以下命令将名为 `document.txt` 的文件设置为只读：
+
++
+[listing]
+----
+attrib +r document.txt
+----
+

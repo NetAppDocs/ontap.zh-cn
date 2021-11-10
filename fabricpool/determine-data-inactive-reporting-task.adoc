@@ -1,0 +1,83 @@
+---
+permalink: fabricpool/determine-data-inactive-reporting-task.html 
+sidebar: sidebar 
+keywords: determining, how, much, data, volume, inactive, using, data reporting, fabricpool 
+summary: 通过查看卷中处于非活动状态的数据量，您可以充分利用存储层。非活动数据报告中的信息可帮助您确定要用于 FabricPool 的聚合，是将卷移入还是移出 FabricPool ，还是修改卷的分层策略。 
+---
+= 使用非活动数据报告确定卷中处于非活动状态的数据量
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过查看卷中处于非活动状态的数据量，您可以充分利用存储层。非活动数据报告中的信息可帮助您确定要用于 FabricPool 的聚合，是将卷移入还是移出 FabricPool ，还是修改卷的分层策略。
+
+要使用非活动数据报告功能，您必须运行 ONTAP 9.4 或更高版本。
+
+.关于此任务
+* 某些聚合不支持非活动数据报告。
++
+如果无法启用 FabricPool ，则无法启用非活动数据报告，包括以下实例：
+
++
+** 根聚合
+** 运行 ONTAP 9.7 之前版本的 MetroCluster 聚合
+** Flash Pool （混合聚合或 SnapLock 聚合）
+
+
+* 默认情况下， ONTAP 9.6 中的所有 SSD 聚合都会启用非活动数据报告。
+* 在 ONTAP 9.4 和 ONTAP 9.5 中， FabricPool 聚合默认启用非活动数据报告。
+* 从 ONTAP 9.6 开始，您可以使用 ONTAP 命令行界面对非 FabricPool 聚合启用非活动数据报告，包括 HDD 聚合。
+
+
+.步骤
+. 如果您要查看其非活动数据报告的聚合未在 FabricPool 中使用，请使用 `storage aggregate modify` 命令和 ` is-inactive-data-reporting-enabled` `true` 参数为聚合启用非活动数据报告。
++
+[listing]
+----
+cluster1::> storage aggregate modify -aggregate aggr1 -is-inactive-data-reporting-enabled true
+----
++
+您需要在未用于 FabricPool 的聚合上显式启用非活动数据报告功能。
+
++
+您不能也不需要在启用了 FabricPool 的聚合上启用非活动数据报告，因为该聚合已附带非活动数据报告。` -is-inactive-data-reporting-enabled` 参数在启用了 FabricPool 的聚合上不起作用。
+
++
+`storage aggregate show` 命令的 ` 字段 is-inactive-data-reporting-enabled` 参数可显示是否已在聚合上启用非活动数据报告。
+
+. 要显示卷上有多少数据处于非活动状态，请使用 `volume show` 命令和 ` 字段 performance-tier-inactive-user-data ， performance-tier-inactive-user-data-percent` 参数。
++
+[listing]
+----
+cluster1::> volume show -fields performance-tier-inactive-user-data,performance-tier-inactive-user-data-percent
+
+vserver volume performance-tier-inactive-user-data performance-tier-inactive-user-data-percent
+------- ------ ----------------------------------- -------------------------------------------
+vsim1   vol0   0B                                  0%
+vs1     vs1rv1 0B                                  0%
+vs1     vv1    10.34MB                             0%
+vs1     vv2    10.38MB                             0%
+4 entries were displayed.
+----
++
+** `performance-tier-inactive-user-data` 字段可显示聚合中存储的非活动用户数据量。
+** `performance-tier-inactive-user-data-percent` 字段显示活动文件系统和 Snapshot 副本中处于非活动状态的数据百分比。
+** 对于未用于 FabricPool 的聚合，在为 ONTAP 启用非活动数据报告之后需要 31 天才能显示整个卷的非活动数据，而不管是否已设置分层策略或分层策略是什么。
++
+在达到此时间段之前，输出将显示非活动数据量 "` -` " ，而不是值。
+
+** 在属于 FabricPool 的卷上， ONTAP 报告为非活动的内容取决于在卷上设置的分层策略。
++
+*** 对于 `auto` tiering 策略， ONTAP 会在 `volume create` 或 `volume modify` 命令的高级权限级别中报告由 ` tiering-minimum-cooling-days` 参数指定的时间段内整个卷的非活动量。
++
+如果未为 ` -tiering-minimum-cooling-days` 设置任何值，则 ONTAP 将使用默认值（ 31 天）。
+
+*** 对于 `snapshot-only` 分层策略， ONTAP 会报告至少 31 天处于非活动状态的活动文件系统数量。
+*** 对于 `none` 分层策略， ONTAP 会报告至少 31 天处于非活动状态的整个卷的数量。
+*** 对于 `所有` 分层策略，不支持非活动数据报告。
+
+
+
+
+

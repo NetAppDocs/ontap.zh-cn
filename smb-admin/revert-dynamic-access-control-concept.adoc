@@ -1,0 +1,38 @@
+---
+permalink: smb-admin/revert-dynamic-access-control-concept.html 
+sidebar: sidebar 
+keywords: aware, revert, version, ontap, support, dynamic, access, control, dac, revert considerations for dynamic access control 
+summary: 您应了解还原到不支持动态访问控制（ DAC ）的 ONTAP 版本时会发生什么情况，以及还原前后必须执行哪些操作。 
+---
+= 动态访问控制的还原注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应了解还原到不支持动态访问控制（ DAC ）的 ONTAP 版本时会发生什么情况，以及还原前后必须执行哪些操作。
+
+如果要将集群还原到不支持动态访问控制的 ONTAP 版本，并且在一个或多个 Storage Virtual Machine （ SVM ）上启用了动态访问控制，则必须在还原之前执行以下操作：
+
+* 您必须在集群上启用动态访问控制的所有 SVM 上禁用动态访问控制。
+* 您必须修改集群上包含 `cap-staging` 事件类型的任何审核配置，以便仅使用 `file-op` 事件类型。
+
+
+对于具有动态访问控制 ACE 的文件和文件夹，您必须了解一些重要的还原注意事项并采取相应措施：
+
+* 如果还原集群，则不会删除现有动态访问控制 ACE ；但是，在文件访问检查中将忽略这些 ACE 。
+* 由于还原后将忽略动态访问控制 ACE ，因此使用动态访问控制 ACE 的文件将更改对文件的访问。
++
+这样，用户就可以访问以前无法访问的文件，或者无法访问以前可以访问的文件。
+
+* 您应将非动态访问控制 ACE 应用于受影响的文件，以还原其先前的安全级别。
++
+可以在还原之前或还原完成后立即执行此操作。
+
+
+
+[NOTE]
+====
+由于还原后会忽略动态访问控制 ACE ，因此在将非动态访问控制 ACE 应用于受影响的文件时，您无需删除它们。但是，如果需要，您可以手动将其删除。
+
+====

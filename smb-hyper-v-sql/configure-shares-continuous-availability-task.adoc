@@ -1,0 +1,128 @@
+---
+permalink: smb-hyper-v-sql/configure-shares-continuous-availability-task.html 
+sidebar: sidebar 
+keywords: configure, shares, continuous, availability, hyper, v, sql, server, virutal, machine, database, file 
+summary: 您可以修改现有共享，使其成为持续可用的共享， Hyper-V 和 SQL Server 应用程序服务器可使用这些共享无中断地访问 Hyper-V 虚拟机和配置文件以及 SQL Server 数据库文件。 
+---
+= 配置现有共享以实现持续可用性
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以修改现有共享，使其成为持续可用的共享， Hyper-V 和 SQL Server 应用程序服务器可使用这些共享无中断地访问 Hyper-V 虚拟机和配置文件以及 SQL Server 数据库文件。
+
+如果现有共享具有以下特征，则不能使用该共享作为持续可用的共享，以便通过 SMB 与应用程序服务器进行无中断操作：
+
+* 如果在该共享上设置了 `homedirectory` share 属性
+* 如果共享包含已启用的符号链接或 Widelink
+* 如果共享包含位于共享根目录下的接合卷
+
+
+您必须验证以下两个共享参数是否设置正确：
+
+* ` -offline-files` 参数设置为 `manual` （默认值）或 `none` 。
+* 必须禁用符号链接。
+
+
+必须配置以下共享属性：
+
+* `持续可用`
+* `机会锁`
+
+
+不得设置以下共享属性。如果它们位于当前共享属性列表中，则需要从持续可用的共享中删除它们：
+
+* `attribtecache`
+* `BranchCache`
+* `基于访问的枚举`
+
+
+.步骤
+. 显示当前共享参数设置和当前已配置共享属性列表：
++
+` * vserver cifs share show -vserver _vserver_name_ -share-name _share_name_*`
+
+. 如有必要，请使用 `vserver cifs share properties modify` 命令修改共享参数以禁用符号链接并将脱机文件设置为手动。
++
+您可以通过将 ` -symlink` 参数的值设置为 ` ""` 来禁用符号链接。
+
++
+** 您可以通过将 ` -symlink` 参数的值设置为 ` ""` 来禁用符号链接。
+** 您可以通过指定 `manual` 将 ` offline-files` 参数设置为正确的设置。
+
+
+. 添加 `continuously-available` share 属性，如果需要，还可以添加 `oplocks` share 属性：
++
+` * vserver cifs share properties add -vserver _vserver_name_ -share-name _share_name_ -share-properties continuously-available[ ， oplock]*`
+
++
+如果尚未设置 `oplocks` share 属性，则必须将其与 `continuously-available` share 属性一起添加。
+
+. 删除持续可用的共享不支持的任何共享属性：
++
+` * vserver cifs share properties remove -vserver _vserver_name_ -share-name _share_name_ -share-properties properties[ ， ...]*`
+
++
+您可以通过使用逗号分隔列表指定共享属性来删除一个或多个共享属性。
+
+. 验证是否已正确设置 ` 符号链接` 和 ` 脱机文件` 参数：
++
+` * vserver cifs share show -vserver _vserver_name_ -share-name _share_name_ -fields symlink-properties ， offline-files*`
+
+. 验证已配置的共享属性列表是否正确：
++
+` * vserver cifs shares properties show -vserver _vserver_name_ -share-name share_name*`
+
+
+
+以下示例说明如何在 Storage Virtual Machine （ SVM ） vs1 上为 NDOS 配置一个名为 `share1` 的现有共享，并使用 SMB 上的应用程序服务器：
+
+* 通过将 ` -symlink` 参数设置为 "" ，可以在共享上禁用符号链接。
+* 将 ` -offline-file` 参数修改为 `manual` 。
+* 此时， `continuously-available` share 属性将添加到共享中。
+* `oplocks` share 属性已在共享属性列表中，因此不需要添加。
+* 此时将从共享中删除 `attributeache` share 属性。
+* 对于通过 SMB 与应用程序服务器共享的 NDOS 持续可用共享， `browable` share 属性是可选的，并保留为共享属性之一。
+
+
+[listing]
+----
+cluster1::> vserver cifs share show -vserver vs1 -share-name share1
+
+                      Vserver: vs1
+                        Share: share1
+     CIFS Server NetBIOS Name: vs1
+                         Path: /data
+             Share Properties: oplocks
+                               browsable
+                               attributecache
+           Symlink Properties: enable
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: 10s
+                  Volume Name: data
+                Offline Files: documents
+Vscan File-Operations Profile: standard
+
+cluster1::> vserver cifs share modify -vserver vs1 -share-name share1 -offline-file manual -symlink ""
+
+cluster1::> vserver cifs share properties add -vserver vs1 -share-name share1 -share-properties continuously-available
+
+cluster1::> vserver cifs share properties remove -vserver vs1 -share-name share1 -share-properties attributecache
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name share1 -fields symlink-properties,offline-files
+vserver  share-name symlink-properties offline-files
+-------- ---------- ------------------ -------------
+vs1      share1    -                  manual
+
+cluster1::> vserver cifs share properties show -vserver vs1 -share-name share1
+
+         Vserver: vs1
+           Share: share1
+Share Properties: oplocks
+                  browsable
+                  continuously-available
+----

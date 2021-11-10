@@ -1,0 +1,62 @@
+---
+permalink: fabricpool/install-license-aws-azure-ibm-task.html 
+sidebar: sidebar 
+keywords: installing, fabricpool, license 
+summary: 新订购的 AFF 系统附带了一个基于期限的 10 TB 免费容量许可证，用于在 FabricPool 中使用非 NetApp 对象存储（ AWS S3 ， Azure Blob Storage ， IBM 云对象存储， Alibaba 云对象存储或 Google 云存储）。如果您需要在 AFF 系统上增加容量，计划在非 AFF 系统上使用非 NetApp 对象存储或从现有集群升级，则需要 FabricPool 许可证。 
+---
+= 安装 FabricPool 许可证。
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+新订购的 AFF 系统附带了一个基于期限的 10 TB 免费容量许可证，用于在 FabricPool 中使用非 NetApp 对象存储（ AWS S3 ， Azure Blob Storage ， IBM 云对象存储， Alibaba 云对象存储或 Google 云存储）。如果您需要在 AFF 系统上增加容量，计划在非 AFF 系统上使用非 NetApp 对象存储或从现有集群升级，则需要 FabricPool 许可证。
+
+FabricPool 许可证是一种集群范围的许可证。它包括您为与集群中的 FabricPool 关联的 AWS S3 ， Azure Blob Storage ， IBM 云对象存储， Alibaba 云对象存储或 Google 云存储云层购买的授权使用限制。整个集群的使用量不得超过授权使用量限制的容量。如果需要提高许可证的使用量限制，应联系您的销售代表。
+
+FabricPool 许可证以永久或基于期限，一年或三年的格式提供。
+
+首次为现有集群订购 FabricPool 时，可以使用具有 10 TB 可用容量的基于期限的 FabricPool 许可证。永久许可证不提供可用容量。
+
+如果对云层使用 NetApp StorageGRID 或 ONTAP S3 ，则不需要许可证。无论您使用的是哪个提供商， Cloud Volumes ONTAP 都不需要 FabricPool 许可证。
+
+只有使用 ONTAP 系统管理器将许可证文件上传到集群，才支持此任务。
+
+.步骤
+. 从 NetApp 支持站点下载 FabricPool 许可证的 NetApp 许可证文件（ NLF ）。
++
+https://mysupport.netapp.com/site/global/dashboard["NetApp 支持"]
+
+. 使用 ONTAP 系统管理器将 FabricPool 许可证上传到集群：
++
+.. 根据存储系统上运行的 ONTAP 版本，执行以下操作：
++
+|===
+| 如果您正在运行 ... | 执行以下操作 ... 
+
+
+ a| 
+ONTAP 9.4 或更早版本
+ a| 
+单击 * 配置 * > * 许可证 * 。
+
+
+
+ a| 
+ONTAP 9.5 或更高版本
+ a| 
+单击 * 配置 * > * 集群 * > * 许可证 * 。
+
+|===
+.. 在 * 集群设置 * 窗格中，单击 * 许可证 * 。
+.. 在 * 软件包 * 窗口中，单击 * 添加 * 。
+.. 在 * 添加许可证包 * 对话框中，单击 * 选择文件 * 以选择下载的 NLF ，然后单击 * 添加 * 将文件上传到集群。
+
+
+
+
+* 相关信息 *
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/ONTAP_FabricPool_(FP)_Licensing_Overview["ONTAP FabricPool （ FP ）许可概述"]
+
+http://mysupport.netapp.com/licenses["NetApp 软件许可证搜索"]

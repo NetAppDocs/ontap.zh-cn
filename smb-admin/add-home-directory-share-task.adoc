@@ -1,0 +1,74 @@
+---
+permalink: smb-admin/add-home-directory-share-task.html 
+sidebar: sidebar 
+keywords: smb, home, directory, feature, add, property, share, properties, property, add a home directory share 
+summary: 如果要使用 SMB 主目录功能，则必须至少添加一个共享，并将主目录属性包含在共享属性中。 
+---
+= 添加主目录共享
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要使用 SMB 主目录功能，则必须至少添加一个共享，并将主目录属性包含在共享属性中。
+
+您可以在创建共享时使用 `vserver cifs share create` 命令创建主目录共享，也可以随时使用 `vserver cifs share modify` 命令将现有共享更改为主目录共享。
+
+要创建主目录共享，在创建或修改共享时，必须在 ` -share-properties` 选项中包含 `homedirectory` 值。您可以使用变量指定共享名称和共享路径，这些变量在用户连接到其主目录时会动态扩展。可在路径中使用的可用变量为 ` %w` ， ` %d` 和 ` %u` ，分别对应于 Windows 用户名，域和映射的 UNIX 用户名。
+
+.步骤
+. 添加主目录共享： + `vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path _path_ -share-properties homedirectory[ ， ...]`
++
+` -vserver` `vserver` 指定要添加搜索路径的已启用 CIFS 的 Storage Virtual Machine （ SVM ）。
+
++
+` -share-name _share-name_` 指定主目录共享名称。
+
++
+除了包含所需的变量之一之外，如果共享名称包含文字字符串 ` %w` ， ` %u` 或 ` %d` 之一，则必须在文字字符串前面加上 % （百分比）字符，以防止 ONTAP 将文字字符串视为变量（例如， ` %%w` ）。
+
++
+** 共享名称必须包含 ` %w` 或 ` %u` 变量。
+** 此外，共享名称还可以包含 ` %d` 变量（例如， ` %d` /` %w` ）或共享名称中的静态部分（例如 home1_`` %w`` ）。
+** 如果管理员使用共享连接到其他用户的主目录或允许用户连接到其他用户的主目录，则动态共享名称模式前面必须有一个颚化符（~ ）。
++
+使用 `vserver cifs home-directory modify` 可以启用此访问，方法是将 ` is-home-dirs-access-for-admin-enabled` 选项设置为 `true` ）或将高级选项 ` is-home-dirs-access-for-public-enabled` 设置为 `true` 。
+
+
+
++
+` 路径` `path` 指定主目录的相对路径。
+
+
+
+` -share-properties homedirectory[ ， ...]` 指定该共享的共享属性。您必须指定 `homedirectory` 值。您可以使用逗号分隔列表指定其他共享属性。
+
+. 使用 `vserver cifs share show` 命令验证是否已成功添加主目录共享。
+
+
+以下命令将创建一个名为 ` %w` 的主目录共享。除了设置 `homedirectory` share 属性之外，还会设置 `oplocks` ， `browable` 和 `changenotify` share 属性。
+
+[NOTE]
+====
+此示例不会显示 SVM 上所有共享的输出。输出被截断。
+
+====
+[listing]
+----
+cluster1::> vserver cifs share create -vserver vs1 -share-name %w -path %w -share-properties oplocks,browsable,changenotify,homedirectory
+
+vs1::> vserver cifs share show -vserver vs1
+Vserver    Share    Path         Properties     Comment  ACL
+---------- -------- ------------ -------------- -------- -----------
+vs1        %w       %w           oplocks        -        Everyone / Full Control
+                                 browsable
+                                 changenotify
+                                 homedirectory
+----
+* 相关信息 *
+
+xref:add-home-directory-search-path-task.adoc[正在添加主目录搜索路径]
+
+xref:requirements-automatic-node-referrals-concept.adoc[使用自动节点转介的要求和准则]
+
+xref:manage-accessibility-users-home-directories-task.adoc[管理用户主目录的可访问性]

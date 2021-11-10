@@ -1,0 +1,33 @@
+---
+permalink: flexcache/synchronize-properties-origin-volume-task.html 
+sidebar: sidebar 
+keywords: synchronizing, properties, flexcache, volume, origin 
+summary: FlexCache 卷的某些卷属性必须始终与原始卷的属性保持同步。如果在原始卷上修改属性后 FlexCache 卷的卷属性无法自动同步，则可以手动同步这些属性。 
+---
+= 从原始卷同步 FlexCache 卷的属性
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FlexCache 卷的某些卷属性必须始终与原始卷的属性保持同步。如果在原始卷上修改属性后 FlexCache 卷的卷属性无法自动同步，则可以手动同步这些属性。
+
+FlexCache 卷的以下卷属性必须始终与原始卷的属性同步：
+
+* 安全模式（` 安全模式` ）
+* 卷名称（` -volume-name` ）
+* 最大目录大小（` -maxdir-size` ）
+* 最小预读（` -min-readahead` ）
+
+
+.步骤
+. 在 FlexCache 卷中，同步卷属性：
++
+`volume FlexCache sync-properties -vserver svm_name -volume FlexCache_volume`
+
++
+[listing]
+----
+cluster1::> volume flexcache sync-properties -vserver vs1 -volume fc1
+----
+

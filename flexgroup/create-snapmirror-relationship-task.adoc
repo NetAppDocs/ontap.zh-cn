@@ -1,0 +1,132 @@
+---
+permalink: flexgroup/create-snapmirror-relationship-task.html 
+sidebar: sidebar 
+keywords: create, snapmirror, relationship, flexgroup, volume 
+summary: 您可以在对等 SVM 上的源 FlexGroup 卷和目标 FlexGroup 卷之间创建 SnapMirror 关系，以便复制数据以进行灾难恢复。发生灾难时，您可以使用 FlexGroup 卷的镜像副本恢复数据。 
+---
+= 为 FlexGroup 卷创建 SnapMirror 关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在对等 SVM 上的源 FlexGroup 卷和目标 FlexGroup 卷之间创建 SnapMirror 关系，以便复制数据以进行灾难恢复。发生灾难时，您可以使用 FlexGroup 卷的镜像副本恢复数据。
+
+您必须已创建集群对等关系和 SVM 对等关系。
+
+link:../peering/index.html["集群和 SVM 对等"]
+
+.关于此任务
+* 您可以为 FlexGroup 卷创建集群间 SnapMirror 关系和集群内 SnapMirror 关系。
+* 从 ONTAP 9.3 开始，您可以扩展 SnapMirror 关系中的 FlexGroup 卷。
++
+如果您使用的 ONTAP 版本早于 ONTAP 9.3 ，则在建立 SnapMirror 关系后，不得扩展 FlexGroup 卷；但是，您可以在建立 SnapMirror 关系后增加 FlexGroup 卷的容量。如果在 ONTAP 9.3 之前的版本中中断 SnapMirror 关系后扩展源 FlexGroup 卷，则必须向目标 FlexGroup 卷执行基线传输。
+
+
+
+.步骤
+. 创建类型为 `DP` 的目标 FlexGroup 卷，该卷的成分卷数与源 FlexGroup 卷的成分卷数相同：
++
+.. 从源集群中，确定源 FlexGroup 卷中的成分卷数： `volume show -volume volume_name* -is-constituent true`
++
+[listing]
+----
+cluster1::> volume show  -volume srcFG* -is-constituent true
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vss       srcFG          -            online     RW         400TB   172.86GB  56%
+vss       srcFG__0001    Aggr_cmode   online     RW         25GB    10.86TB   56%
+vss       srcFG__0002    aggr1        online     RW         25TB    10.86TB   56%
+vss       srcFG__0003    Aggr_cmode   online     RW         25TB    10.72TB   57%
+vss       srcFG__0004    aggr1        online     RW         25TB    10.73TB   57%
+vss       srcFG__0005    Aggr_cmode   online     RW         25TB    10.67TB   57%
+vss       srcFG__0006    aggr1        online     RW         25TB    10.64TB   57%
+vss       srcFG__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
+...
+----
+.. 从目标集群中，创建类型为 `DP` 的目标 FlexGroup 卷，其成分卷数与源 FlexGroup 卷的成分卷数相同。
++
+[listing]
+----
+cluster2::> volume create -vserver vsd -aggr-list aggr1,aggr2 -aggr-list-multiplier 8 -size 400TB -type DP dstFG
+
+Warning: The FlexGroup volume "dstFG" will be created with the following number of constituents of size 25TB: 16.
+Do you want to continue? {y|n}: y
+[Job 766] Job succeeded: Successful
+----
+.. 从目标集群中，验证目标 FlexGroup 卷中的成分卷数： `volume show -volume volume_name* -is-constituent true`
++
+[listing]
+----
+cluster2::> volume show  -volume dstFG* -is-constituent true
+Vserver   Volume        Aggregate    State      Type       Size  Available  Used%
+--------- ------------  ------------ ---------- ---- ----------  ---------- -----
+vsd       dstFG          -            online     DP         400TB   172.86GB  56%
+vsd       dstFG__0001    Aggr_cmode   online     DP         25GB    10.86TB   56%
+vsd       dstFG__0002    aggr1        online     DP         25TB    10.86TB   56%
+vsd       dstFG__0003    Aggr_cmode   online     DP         25TB    10.72TB   57%
+vsd       dstFG__0004    aggr1        online     DP         25TB    10.73TB   57%
+vsd       dstFG__0005    Aggr_cmode   online     DP         25TB    10.67TB   57%
+vsd       dstFG__0006    aggr1        online     DP         25TB    10.64TB   57%
+vsd       dstFG__0007    Aggr_cmode   online     DP         25TB    10.63TB   57%
+...
+----
+
+
+. 创建作业计划： `job schedule cron create -name job_name -month month -dayofweek day_of_week -day day_of_month -hour -minute minute`
++
+对于 ` - 月` ， ` - 天 / 周` 和 ` - 小时` 选项，您可以指定 `所有` 分别每月，一周中的每一天和每小时运行作业。
+
++
+以下示例将创建一个名为 `my_weekly` 的作业计划，该计划将在星期六凌晨 3 ： 00 运行：
+
++
+[listing]
+----
+cluster1::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
+----
+. 为 SnapMirror 关系创建类型为 `async-mirror` 的自定义策略： `snapmirror policy create -vserver SVM -policy snapmirror_policy -type async-mirror`
++
+如果不创建自定义策略，则应为 SnapMirror 关系指定 `MirrorAllSnapshots` 策略。
+
+. 从目标集群中，在源 FlexGroup 卷和目标 FlexGroup 卷之间创建 SnapMirror 关系： `snapmirror create -source-path src_sVM ： src_flexgroup -destination-path dest_sVM ： dest_flexgroup -type XDP -policy snapmirror_policy -schedule sched_name`
++
+FlexGroup 卷的 SnapMirror 关系的类型必须为 `XDP` 。
+
++
+如果为 FlexGroup 卷的 SnapMirror 关系指定限制值，则每个成分卷使用相同的限制值。限制值不会在成分卷之间划分。
+
++
+[NOTE]
+====
+不能对 FlexGroup 卷使用 Snapshot 副本的 SnapMirror 标签。
+
+====
++
+在 ONTAP 9.4 及更早版本中，如果未使用 `snapmirror create` 命令指定策略，则默认使用 `MirrorAllSnapshots` 策略。在 ONTAP 9.5 中，如果未使用 `snapmirror create` 命令指定策略，则默认使用 `MirrorAndVault` 策略。
+
++
+[listing]
+----
+cluster2::> snapmirror create -source-path vss:srcFG -destination-path vsd:dstFG -type XDP -policy MirrorAllSnapshots -schedule hourly
+Operation succeeded: snapmirror create for the relationship with destination "vsd:dstFG".
+----
+. 从目标集群中，通过执行基线传输来初始化 SnapMirror 关系： `snapmirror initialize -destination-path dest_sVM ： dest_flexgroup`
++
+基线传输完成后，目标 FlexGroup 卷将根据 SnapMirror 关系的计划定期更新。
+
++
+[listing]
+----
+cluster2::> snapmirror initialize -destination-path vsd:dstFG
+Operation is queued: snapmirror initialize of destination "vsd:dstFG".
+----
++
+[NOTE]
+====
+如果在源集群运行 ONTAP 9.3 和目标集群运行 ONTAP 9.2 或更早版本的 FlexGroup 卷之间创建了任何 SnapMirror 关系，并且在源 FlexGroup 卷中创建了任何 qtree ，则 SnapMirror 更新将失败。要从这种情况中恢复，您必须删除 FlexGroup 卷中的所有非默认 qtree ，在 FlexGroup 卷上禁用 qtree 功能，然后删除通过 qtree 功能启用的所有 Snapshot 副本。如果在 FlexGroup 卷上启用了 qtree 功能，则在从 ONTAP 9.3 还原到 ONTAP 的早期版本之前，还必须执行这些步骤。  https://docs.netapp.com/us-en/ontap/revert/task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html["还原之前，请在 FlexGroup 卷中禁用 qtree 功能"]
+
+====
+
+
+您应通过设置 LIF 和导出策略等所需配置来设置目标 SVM 以进行数据访问。

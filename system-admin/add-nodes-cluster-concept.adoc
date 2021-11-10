@@ -1,0 +1,114 @@
+---
+permalink: system-admin/add-nodes-cluster-concept.html 
+sidebar: sidebar 
+keywords: add, node, cluster, create, expand 
+summary: 创建集群后，您可以通过向其添加节点来对其进行扩展。一次只能添加一个节点。 
+---
+= 向集群添加节点
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+创建集群后，您可以通过向其添加节点来对其进行扩展。一次只能添加一个节点。
+
+.您需要什么？ #8217 ；将需要什么
+* 如果要向多节点集群添加节点，则集群中一半以上的现有节点必须运行状况良好（由 `cluster show` 指示）。
+* 如果要向双节点无交换机集群添加节点，则必须先安装并配置集群管理和互连交换机，然后再添加其他节点。
++
+只有双节点集群才支持无交换机集群功能。
+
++
+如果集群包含或扩展到两个以上的节点，则不需要集群 HA ，并且会自动禁用集群 HA 。
+
+* 如果要向单节点集群添加第二个节点，则必须已安装第二个节点，并且已配置集群网络。
+* 如果集群启用了 SP 自动配置，则为 SP 指定的要使用的子网必须具有用于加入节点的可用资源。
++
+加入集群的节点使用指定的子网为 SP 执行自动配置。
+
+* 您必须已为新节点的节点管理 LIF 收集以下信息：
++
+** Port
+** IP 地址
+** 网络掩码
+** 默认网关
+
+
+
+
+节点的数量必须为偶数，才能形成 HA 对。开始向集群添加节点后，必须完成此过程。节点必须是集群的一部分，然后才能开始添加另一个节点。
+
+.步骤
+. 打开要添加到集群中的节点的电源。
++
+节点将启动，节点设置向导将在控制台上启动。
+
++
+[listing]
+----
+Welcome to node setup.
+
+You can enter the following commands at any time:
+  "help" or "?" - if you want to have a question clarified,
+  "back" - if you want to change previously answered questions, and
+  "exit" or "quit" - if you want to quit the setup wizard.
+     Any changes you made before quitting will be saved.
+
+To accept a default or omit a question, do not enter a value.
+
+Enter the node management interface port [e0c]:
+----
+. 退出节点设置向导： `exit`
++
+节点设置向导将退出，并显示登录提示，警告您尚未完成设置任务。
+
+. 使用 `admin` 用户名登录到 admin 帐户。
+. 启动集群设置向导：
++
+` * 集群设置 *`
+
++
+[listing]
+----
+::> cluster setup
+
+Welcome to the cluster setup wizard.
+
+You can enter the following commands at any time:
+ "help" or "?" - if you want to have a question clarified,
+ "back" - if you want to change previously answered questions, and
+ "exit" or "quit" - if you want to quit the cluster setup wizard.
+ Any changes you made before quitting will be saved.
+
+You can return to cluster setup at any time by typing "cluster setup".
+To accept a default or omit a question, do not enter a value....
+
+Use your web browser to complete cluster setup by accessing
+https://10.63.11.29
+
+Otherwise, press Enter to complete cluster setup using the
+command line interface:
+----
++
+[NOTE]
+====
+有关使用设置 GUI 设置集群的详细信息，请参见 link:https://docs.netapp.com/us-en/ontap/task_admin_add_nodes_to_cluster.html["ONTAP 系统管理器"] 联机帮助。
+
+====
+. 按 Enter 键以使用命令行界面完成此任务。当系统提示您创建新集群或加入现有集群时，输入 ` * 加入 *` 。
++
+[listing]
+----
+Do you want to create a new cluster or join an existing cluster? {create, join}:
+join
+----
+. 按照提示设置节点并将其加入集群：
++
+** 要接受提示的默认值，请按 Enter 键。
+** 要为提示输入您自己的值，请输入相应值，然后按 Enter 键。
+
+
+. 对要添加的每个其他节点重复上述步骤。
+
+
+向集群添加节点后，您应为每个 HA 对启用存储故障转移。

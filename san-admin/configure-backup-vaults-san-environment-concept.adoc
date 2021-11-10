@@ -1,0 +1,43 @@
+---
+permalink: san-admin/configure-backup-vaults-san-environment-concept.html 
+sidebar: sidebar 
+keywords: configure, using, snapvault, backups, san, environment 
+summary: 在 SAN 环境中配置和使用 SnapVault 与在 NAS 环境中配置和使用非常相似，但在 SAN 环境中还原 LUN 需要执行一些特殊过程。 
+---
+= 在 SAN 环境概述中配置和使用 SnapVault 备份
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 SAN 环境中配置和使用 SnapVault 与在 NAS 环境中配置和使用非常相似，但在 SAN 环境中还原 LUN 需要执行一些特殊过程。
+
+SnapVault 备份包含一组源卷的只读副本。在 SAN 环境中，始终将整个卷备份到 SnapVault 二级卷，而不是单个 LUN 。
+
+用于在包含 LUN 的主卷与用作 SnapVault 备份的二级卷之间创建和初始化 SnapVault 关系的操作步骤与用于文件协议的 FlexVol 卷所使用的操作步骤相同。有关此操作步骤的详细信息，请参见 link:../data-protection/index.html["数据保护"]。
+
+link:../data-protection/index.html["数据保护"]
+
+在创建 Snapshot 副本并将其复制到 SnapVault 二级卷之前，请务必确保正在备份的 LUN 处于一致状态。使用适用于 Microsoft SQL Server 的 SnapManager 等产品自动创建 Snapshot 副本，可确保备份的 LUN 完整且可供原始应用程序使用。
+
+从 SnapVault 二级卷还原 LUN 有三个基本选项：
+
+* 您可以直接从 SnapVault 二级卷映射 LUN ，并将主机连接到 LUN 以访问 LUN 的内容。
++
+LUN 为只读，您只能从 SnapVault 备份中的最新 Snapshot 副本进行映射。永久性预留和其他 LUN 元数据丢失。如果需要，您可以使用主机上的复制程序将 LUN 内容复制回原始 LUN （如果仍可访问）。
+
++
+此 LUN 的序列号与源 LUN 不同。
+
+* 您可以将 SnapVault 二级卷中的任何 Snapshot 副本克隆到新的读写卷。
++
+然后，您可以映射卷中的任何 LUN ，并将主机连接到 LUN 以访问 LUN 的内容。如果需要，您可以使用主机上的复制程序将 LUN 内容复制回原始 LUN （如果仍可访问）。
+
+* 您可以从 SnapVault 二级卷中的任何 Snapshot 副本还原包含 LUN 的整个卷。
++
+还原整个卷将替换卷中的所有 LUN 以及任何文件。自创建 Snapshot 副本以来创建的任何新 LUN 都会丢失。
+
++
+LUN 会保留其映射，序列号， UUID 和永久性预留。
+
+

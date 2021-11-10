@@ -1,0 +1,62 @@
+---
+permalink: smb-admin/default-administrative-shares-concept.html 
+sidebar: sidebar 
+keywords: create, cifs, server, storage, virtual, machine, svm, default, administrative, share, automatic, what the default administrative shares are 
+summary: 在 Storage Virtual Machine （ SVM ）上创建 CIFS 服务器时，系统会自动创建三个默认管理共享。您应了解这些默认共享是什么以及如何使用它们。 
+---
+= 什么是默认管理共享
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 Storage Virtual Machine （ SVM ）上创建 CIFS 服务器时，系统会自动创建三个默认管理共享。您应了解这些默认共享是什么以及如何使用它们。
+
+在创建 CIFS 服务器时， ONTAP 会创建以下默认管理共享：
+
+* ipc$
+* 管理 $
+* C$
+
+
+由于以 $ 字符结尾的共享是隐藏共享，因此默认管理共享在 " 我的电脑 " 中不可见，但您可以使用共享文件夹查看它们。
+
+
+
+== 如何使用 ipc$ 和 admin$ 默认共享
+
+ipc$ 和 admin$ 共享由 ONTAP 使用， Windows 管理员无法使用这些共享访问驻留在 SVM 上的数据。
+
+* ipc$ 共享
++
+ipc$ 共享是一种共享命名管道的资源，这些管道对于程序之间的通信至关重要。ipc$ 共享用于远程管理计算机和查看计算机的共享资源。您不能更改 ipc$ 共享的共享设置，共享属性或 ACL 。您也不能重命名或删除 ipc$ 共享。
+
+* admin$ 共享
++
+admin$ 共享用于远程管理 SVM 。此资源的路径始终是 SVM 根的路径。您不能更改 admin$ 共享的共享设置，共享属性或 ACL 。您也不能重命名或删除 admin$ 共享。
+
+
+
+
+
+== 如何使用 c$ 默认共享
+
+c$ 共享是一个管理共享，集群或 SVM 管理员可以使用它来访问和管理 SVM 根卷。
+
+以下是 c$ 共享的特征：
+
+* 此共享的路径始终是 SVM 根卷的路径，无法修改。
+* c$ 共享的默认 ACL 为管理员 / 完全控制。
++
+此用户为 BUILTIN\administrator 。默认情况下， BUILTIN\administrator 可以映射到共享，并查看，创建，修改或删除映射的根目录中的文件和文件夹。管理此目录中的文件和文件夹时，应谨慎。
+
+* 您可以更改 c$ 共享的 ACL 。
+* 您可以更改 c$ 共享设置和共享属性。
+* 您不能删除 c$ 共享。
+* SVM 管理员可以通过跨越命名空间接合从映射的 c$ 共享访问 SVM 命名空间的其余部分。
+* 可以使用 Microsoft 管理控制台访问 c$ 共享。
+
+
+* 相关信息 *
+
+xref:configure-ntfs-windows-security-tab-task.adoc[使用 Windows 安全性选项卡配置高级 NTFS 文件权限]

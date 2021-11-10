@@ -1,0 +1,108 @@
+---
+permalink: san-admin/change-uta2-port-cna-mode-fc-task.html 
+sidebar: sidebar 
+keywords: change, uta2, port, cna mode, fc mode 
+summary: 您应将 UTA2 端口从融合网络适配器（ Converged Network Adapter ， CNA ）模式更改为光纤通道（ Fibre Channel ， FC ）模式，以支持 FC 启动程序和 FC 目标模式。如果需要更改将端口连接到其网络的物理介质，则应将特性从 CNA 模式更改为 FC 模式。 
+---
+= 将 UTA2 端口从 CNA 模式更改为 FC 模式
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应将 UTA2 端口从融合网络适配器（ Converged Network Adapter ， CNA ）模式更改为光纤通道（ Fibre Channel ， FC ）模式，以支持 FC 启动程序和 FC 目标模式。如果需要更改将端口连接到其网络的物理介质，则应将特性从 CNA 模式更改为 FC 模式。
+
+.步骤
+. 使适配器脱机：
++
+`network fcp adapter modify -node _node_name_ -adapter _adapter_name_ -status-admin down`
+
+. 更改端口模式：
++
+`ucadmin modify -node _node_name_ -adapter _adapter_name_ -mode fcp`
+
+. 重新启动节点，然后使适配器联机：
++
+`network fcp adapter modify -node _node_name_ -adapter _adapter_name_ -status-admin up`
+
+. 通知管理员或 VIF 管理器删除或删除此端口（如果适用）：
++
+** 如果此端口用作 LIF 的主端口，接口组（ ifgrp ）的成员或托管 VLAN ，则管理员应执行以下操作：
++
+... 分别移动 LIF ，从 ifgrp 中删除端口或删除 VLAN 。
+... 运行 `network port delete` 命令手动删除端口。
++
+如果 `network port delete` 命令失败，管理员应解决这些错误，然后再次运行该命令。
+
+
+
+** 如果此端口未用作 LIF 的主端口，不是 ifgrp 的成员且未托管 VLAN ，则 VIF 管理器应在重新启动时从其记录中删除此端口。
++
+如果 VIF 管理器未删除此端口，则管理员必须在重新启动后使用 `network port delete` 命令手动删除此端口。
+
+
+
++
+[listing]
+----
+net-f8040-34::> network port show
+
+    Node: net-f8040-34-01
+                                                      Speed(Mbps) Health
+    Port      IPspace      Broadcast Domain Link MTU  Admin/Oper  Status
+    --------- ------------ ---------------- ---- ---- ----------- --------
+    ...
+    e0i       Default      Default          down 1500  auto/10    -
+    e0f       Default      Default          down 1500  auto/10    -
+    ...
+
+    net-f8040-34::> ucadmin show
+                              Current  Current    Pending  Pending    Admin
+    Node            Adapter   Mode     Type       Mode     Type       Status
+    ------------    -------   -------  ---------  -------  ---------  -----------
+    net-f8040-34-01   0e       cna      target     -        -          offline
+    net-f8040-34-01   0f       cna      target     -        -          offline
+    ...
+
+    net-f8040-34::> network interface create -vs net-f8040-34 -lif m -role
+node-mgmt-home-node net-f8040-34-01 -home-port e0e -address 10.1.1.1
+-netmask 255.255.255.0
+
+
+    net-f8040-34::> network interface show -fields home-port, curr-port
+
+    vserver lif                   home-port curr-port
+    ------- --------------------- --------- ---------
+    Cluster net-f8040-34-01_clus1 e0a       e0a
+    Cluster net-f8040-34-01_clus2 e0b       e0b
+    Cluster net-f8040-34-01_clus3 e0c       e0c
+    Cluster net-f8040-34-01_clus4 e0d       e0d
+    net-f8040-34
+            cluster_mgmt          e0M       e0M
+    net-f8040-34
+            m                     e0e       e0i
+    net-f8040-34
+            net-f8040-34-01_mgmt1 e0M       e0M
+    7 entries were displayed.
+
+    net-f8040-34::> ucadmin modify local 0e fc
+
+    Warning: Mode on adapter 0e and also adapter 0f will be changed to fc.
+    Do you want to continue? {y|n}: y
+    Any changes will take effect after rebooting the system. Use the
+"system node reboot" command to reboot.
+
+    net-f8040-34::> reboot local
+      (system node reboot)
+
+    Warning: Are you sure you want to reboot node "net-f8040-34-01"?
+    {y|n}: y
+----
+. 验证是否已安装正确的 SFP+ ：
++
+`network fcp adapter show -instance -node -adapter`
+
++
+对于 CNA ，您应使用 10 Gb 以太网 SFP 。对于 FC ，在更改节点上的配置之前，您应使用 8 Gb SFP 或 16 Gb SFP 。
+
+

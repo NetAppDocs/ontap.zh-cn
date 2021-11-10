@@ -1,0 +1,104 @@
+---
+permalink: data-protection/snapmirror-disaster-recovery-concept.html 
+sidebar: sidebar 
+keywords: asynchronous, snapmirror, disaster, recovery basics 
+summary: SnapMirror 是一种灾难恢复技术，用于从主存储故障转移到地理位置偏远的站点上的二级存储。顾名思义， SnapMirror 会在二级存储中为您的工作数据创建一个副本或镜像，当主站点发生灾难时，您可以从该副本或镜像继续提供数据。 
+---
+= 异步 SnapMirror 灾难恢复基础知识
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+_snapmirror_ 是一种灾难恢复技术，用于从主存储故障转移到地理位置偏远的站点上的二级存储。顾名思义， SnapMirror 会在二级存储中为您的工作数据创建一个副本（或 _mirror ） _ ，当主站点发生灾难时，您可以从该副本继续提供数据。
+
+如果主站点仍可提供数据，您只需将任何所需数据传输回主站点，而不是从镜像为客户端提供服务即可。如故障转移使用情形所示，二级系统上的控制器应与主系统上的控制器等效或接近等效，以便从镜像存储高效地提供数据。
+
+
+
+== 数据保护关系
+
+数据在卷级别进行镜像。主存储中的源卷与二级存储中的目标卷之间的关系称为 _data 保护关系。 _ 卷所在的集群以及从这些卷提供数据的 SVM 必须为 _peered 。 _ 对等关系可使集群和 SVM 进行交换 数据安全。
+
+https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM 对等"]
+
+下图说明了 SnapMirror 数据保护关系。
+
+image::../media/snapmirror-for-dp-pg.gif[DP 的 SnapMirror 页]
+
+
+
+== 数据保护关系的范围
+
+您可以直接在卷之间或卷所属 SVM 之间创建数据保护关系。在 _SVM 数据保护关系中， _ 将复制从 NFS 导出和 SMB 共享到 RBAC 的全部或部分 SVM 配置以及 SVM 所拥有的卷中的数据。
+
+您还可以将 SnapMirror 用于两种特殊的数据保护应用程序：
+
+* SVM 根卷的 _load-sharing mirror_ 副本可确保在节点中断或故障转移时仍可访问数据。
+* 通过 _WORM 卷 _ 之间的数据保护关系，您可以将 SnapLock 文件复制到二级存储。
++
+link:../snaplock/index.html["使用 SnapLock 技术实现归档和合规性"]
+
+
+
+
+
+== 如何初始化 SnapMirror 数据保护关系
+
+首次调用 SnapMirror 时，它会执行从源卷到目标卷的 _baseline transfer_ 。此关系的 _snapmirror policy_ 用于定义基线内容以及任何更新。
+
+默认 SnapMirror 策略 `MirrorAllSnapshots` 下的基线传输涉及以下步骤：
+
+* 为源卷创建 Snapshot 副本。
+* 将 Snapshot 副本及其引用的所有数据块传输到目标卷。
+* 将源卷上剩余的较晚 Snapshot 副本传输到目标卷，以便在 "`active` " 镜像损坏时使用。
+
+
+
+
+== 如何更新 SnapMirror 数据保护关系
+
+更新是异步的，遵循您配置的计划。保留会镜像源上的 Snapshot 策略。
+
+在 `MirrorAllSnapshots` 策略进行的每次更新中， SnapMirror 都会为源卷创建一个 Snapshot 副本，并传输该 Snapshot 副本以及自上次更新以来创建的任何 Snapshot 副本。在 `MirrorAllSnapshots` 策略的 `snapmirror policy show` 命令的以下输出中，请注意以下几点：
+
+* `Create Snapshot` 为 "`true` " ，表示 `MirrorAllSnapshots` 会在 SnapMirror 更新关系时创建 Snapshot 副本。
+* `mirrorAllSnapshots` 具有规则 " `sm_created` " 和 "`all_source_snapshots` " ，表示 SnapMirror 创建的 Snapshot 副本以及自上次更新以来创建的任何 Snapshot 副本都会在 SnapMirror 更新关系时传输。
+
+
+[listing]
+----
+cluster_dst::> snapmirror policy show -policy MirrorAllSnapshots -instance
+
+                     Vserver: vs0
+      SnapMirror Policy Name: MirrorAllSnapshots
+      SnapMirror Policy Type: async-mirror
+                Policy Owner: cluster-admin
+                 Tries Limit: 8
+           Transfer Priority: normal
+   Ignore accesstime Enabled: false
+     Transfer Restartability: always
+ Network Compression Enabled: false
+             Create Snapshot: true
+                     Comment: Asynchronous SnapMirror policy for mirroring all snapshots
+                              and the latest active file system.
+       Total Number of Rules: 2
+                  Total Keep: 2
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              sm_created              1  false       0 -        -
+                              all_source_snapshots    1  false       0 -        -
+----
+
+
+== MirrorLatest 策略
+
+预配置的 `MirrorLatest` 策略的工作方式与 `MirrorAllSnapshots` 完全相同，只是在初始化和更新时仅传输 SnapMirror 创建的 Snapshot 副本。
+
+[listing]
+----
+
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              sm_created              1  false       0 -        -
+----

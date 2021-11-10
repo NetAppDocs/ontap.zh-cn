@@ -1,0 +1,75 @@
+---
+permalink: smb-admin/enable-disable-aes-encryption-kerberos-task.html 
+sidebar: sidebar 
+keywords: advantage, security, kerberos-based, communication, aes-256, aes-128, aes, encryption, active, directory, ad, kdc, cifs, disable, enable or disable aes encryption for kerberos-based communication 
+summary: 要利用基于 Kerberos 的通信的最强安全性，您可以在 CIFS 服务器上启用 AES-256 和 AES-128 加密。如果您不希望 CIFS 服务器为与 Active Directory （ AD ） KDC 进行基于 Kerberos 的通信选择 AES 加密类型，则可以禁用 AES 加密。默认情况下， AES 加密处于禁用状态。 
+---
+= 为基于 Kerberos 的通信启用或禁用 AES 加密
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要利用基于 Kerberos 的通信的最强安全性，您可以在 CIFS 服务器上启用 AES-256 和 AES-128 加密。如果您不希望 CIFS 服务器为与 Active Directory （ AD ） KDC 进行基于 Kerberos 的通信选择 AES 加密类型，则可以禁用 AES 加密。默认情况下， AES 加密处于禁用状态。
+
+为了增强安全性， Storage Virtual Machine （ SVM ）会在每次修改 AES 安全选项时更改 AD 中的计算机帐户密码。更改密码可能需要包含计算机帐户的组织单位（ OU ）的管理 AD 凭据。
+
+如果将某个 SVM 配置为未保留身份的灾难恢复目标（在 SnapMirror 配置中， ` -identity-preserve` 选项设置为 `false` ），则不会将非默认 CIFS 服务器安全设置复制到目标。如果已在源 SVM 上启用 AES 加密，则必须在目标变为读写（ SnapMirror 关系中断后）后在目标 SVM 上手动启用它。
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| Kerberos 通信的 AES 加密类型 | 输入命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver cifs security modify -vserver vserver_name -is-aes-encryption-enabled true`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver cifs security modify -vserver vserver_name -is-aes-encryption-enabled false`
+
+|===
+. 验证是否已根据需要启用或禁用 AES 加密： `vserver cifs security show -vserver vserver_name -fields is-aes-encryption-enabled`
++
+如果已启用 AES 加密，则 `is-AES-encrypt-enabled` 字段将显示 `true` ；如果已禁用 AES 加密，则显示 `false` 。
+
+
+
+以下示例将为 SVM vs1 上的 CIFS 服务器启用 AES 加密类型：
+
+[listing]
+----
+cluster1::> vserver cifs security modify -vserver vs1 -is-aes-encryption-enabled true
+
+cluster1::> vserver cifs security show -vserver vs1 -fields is-aes-encryption-enabled
+vserver  is-aes-encryption-enabled
+-------- -------------------------
+vs1      true
+----
+以下示例将为 SVM vs2 上的 CIFS 服务器启用 AES 加密类型。系统会提示管理员输入包含 CIFS 服务器的 OU 的管理 AD 凭据。
+
+[listing]
+----
+cluster1::> vserver cifs security modify -vserver vs2 -is-aes-encryption-enabled true
+
+Info: In order to enable CIFS AES encryption, the password for the CIFS server
+machine account must be reset. Enter the username and password for the
+CIFS domain "EXAMPLE.COM".
+
+Enter your user ID: administrator
+
+Enter your password:
+
+
+cluster1::> vserver cifs security show -vserver vs2 -fields is-aes-encryption-enabled
+vserver  is-aes-encryption-enabled
+-------- -------------------------
+vs2      true
+----

@@ -1,0 +1,44 @@
+---
+permalink: system-admin/autosupport-creates-sends-event-messages-concept.html 
+sidebar: sidebar 
+keywords: autosupport, event, triggered, messages, ems, data, example 
+summary: AutoSupport 会在 EMS 处理触发事件时创建事件触发的 AutoSupport 消息。事件触发的 AutoSupport 消息会提醒收件人需要采取更正操作的问题，并且仅包含与问题相关的信息。您可以自定义要包含的内容以及接收消息的人员。 
+---
+= AutoSupport 如何创建和发送事件触发的消息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AutoSupport 会在 EMS 处理触发事件时创建事件触发的 AutoSupport 消息。事件触发的 AutoSupport 消息会提醒收件人需要采取更正操作的问题，并且仅包含与问题相关的信息。您可以自定义要包含的内容以及接收消息的人员。
+
+AutoSupport 使用以下过程创建和发送事件触发的 AutoSupport 消息：
+
+. 当 EMS 处理触发事件时， EMS 会向 AutoSupport 发送一个请求。
++
+触发事件是指具有 AutoSupport 目标且名称以 `CallHome.` 前缀开头的 EMS 事件。
+
+. AutoSupport 会创建事件触发的 AutoSupport 消息。
++
+AutoSupport 从与触发器关联的子系统收集基本信息和故障排除信息，以创建一条仅包含与触发器事件相关信息的消息。
+
++
+每个触发器都会关联一组默认子系统。但是，您可以使用 `ssystem node AutoSupport trigger modify` 命令选择将其他子系统与触发器关联。
+
+. AutoSupport 会将事件触发的 AutoSupport 消息发送给 `ssystem node AutoSupport modify` 命令定义的收件人，其中包含 ` 到` ， ` -noteto` ， ` -partner-address` 和 ` -support` 参数。
++
+您可以使用 `ssystem node AutoSupport trigger modify` 命令和 ` -to` 和 ` -noteto` 参数来启用和禁用特定触发器的 AutoSupport 消息传送。
+
+
+
+`s存储架 PSU 故障` EMS 事件触发一条消息，其中包含来自 " 强制 " ， " 日志文件 " ， " 存储 " ， "RAID" ， "HA" ， 平台和网络子系统以及来自强制子系统，日志文件子系统和存储子系统的故障排除数据。
+
+您 `s希望在为响应未来的` 存储架 PSU 故障 事件而发送的任何 AutoSupport 消息中包含有关 NFS 的数据。您可以输入以下命令为 `CallHome.shlf.ps.fault` 事件的 NFS 启用故障排除级别的数据：
+
+[listing]
+----
+
+        cluster1::\>
+        system node autosupport trigger modify -node node1 -autosupport-message shlf.ps.fault -troubleshooting-additional nfs
+----
+请注意，在使用 `ssystem node AutoSupport trigger` 命令时，或者在命令行界面中由 AutoSupport 和 EMS 事件引用时， `CallHome.shlf.ps.fault` 事件会删除 `CallHome.` 前缀。

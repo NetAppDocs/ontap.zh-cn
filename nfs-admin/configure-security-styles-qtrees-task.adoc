@@ -1,0 +1,46 @@
+---
+permalink: nfs-admin/configure-security-styles-qtrees-task.html 
+sidebar: sidebar 
+keywords: configure, security, style, qtree 
+summary: 您可以配置 qtree 卷安全模式，以确定 qtree 上的数据所使用的权限类型。 
+---
+= 在 qtree 上配置安全模式
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以配置 qtree 卷安全模式，以确定 qtree 上的数据所使用的权限类型。
+
+.步骤
+. 执行以下操作之一：
++
+[cols="2*"]
+|===
+| 如果 qtree... | 使用命令 ... 
+
+
+ a| 
+尚不存在
+ a| 
+`volume qtree create` 并包含 ` -security-style` 参数以指定安全模式。
+
+
+
+ a| 
+已存在
+ a| 
+`volume qtree modify` 并包含 ` -security-style` 参数以指定安全模式。
+
+|===
++
+qtree 安全模式的可能选项为 `UNIX` ， `NTFS` 或 `mixed` 。
+
++
+如果在创建 qtree 时未指定安全模式，则默认安全模式为 `mixed` 。
+
++
+有关 `volume qtree create` 或 `volume qtree modify` 命令的详细信息，请参见 link:../volumes/index.html["逻辑存储管理"]。
+
+. 要显示配置，包括您创建的 qtree 的安全模式，请输入以下命令： `volume qtree show -qtree _qtree_name_ -instance`
+

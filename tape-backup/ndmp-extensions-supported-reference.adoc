@@ -1,0 +1,37 @@
+---
+permalink: tape-backup/ndmp-extensions-supported-reference.html 
+sidebar: sidebar 
+keywords: ndmp, extensions, supported, ontap, v4, protocols, core, modify, extension 
+summary: NDMP v4 提供了一种在不修改核心 NDMP v4 协议的情况下创建 NDMP v4 协议扩展的机制。您应了解 ONTAP 支持的 NDMP v4 扩展。 
+---
+= ONTAP 支持的 NDMP 扩展
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NDMP v4 提供了一种在不修改核心 NDMP v4 协议的情况下创建 NDMP v4 协议扩展的机制。您应了解 ONTAP 支持的 NDMP v4 扩展。
+
+ONTAP 支持以下 NDMP v4 扩展：
+
+* 集群感知型备份（ CAB ）
++
+[NOTE]
+====
+只有 SVM 范围的 NDMP 模式才支持此扩展。
+
+====
+* 连接地址扩展（ CAE ）以支持 IPv6
+* 扩展类 0x2050
++
+此扩展支持可重新启动的备份操作和 Snapshot 管理扩展。
+
++
+[NOTE]
+====
+Snapshot 管理扩展中的 `NDMP_SNAP_RECOVER` 消息用于启动恢复操作，并将已恢复的数据从本地 Snapshot 副本传输到本地文件系统位置。在 ONTAP 中，此消息仅允许恢复卷和常规文件。
+
+您可以通过 `NDMP_SNAP_DIR_LIST` 消息浏览卷的 Snapshot 副本。如果在执行浏览操作期间发生无中断操作，则备份应用程序必须重新启动浏览操作。
+
+====
+

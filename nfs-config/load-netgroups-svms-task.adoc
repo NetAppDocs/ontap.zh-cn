@@ -1,0 +1,55 @@
+---
+permalink: nfs-config/load-netgroups-svms-task.html 
+sidebar: sidebar 
+keywords: load, netgroups, svms 
+summary: 在导出策略规则中匹配客户端的方法之一是使用网络组中列出的主机。您可以将网络组从统一资源标识符（ Uniform Resource Identifier ， URI ）加载到 SVM 中，以替代使用存储在外部名称服务器中的网络组（ Vserver services name-service netgroup load ）。 
+---
+= 将网络组加载到 SVM 中
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在导出策略规则中匹配客户端的方法之一是使用网络组中列出的主机。您可以将网络组从统一资源标识符（ Uniform Resource Identifier ， URI ）加载到 SVM 中，以替代使用存储在外部名称服务器中的网络组（`vserver services name-service netgroup load` ）。
+
+在加载到 SVM 之前，网络组文件必须满足以下要求：
+
+* 该文件必须使用用于填充 NIS 的正确网络组文本文件格式。
++
+ONTAP 会在加载网络组文本文件格式之前对其进行检查。如果文件包含错误，则不会加载该文件，并且会显示一条消息，指示您必须在该文件中执行的更正。更正错误后，您可以将网络组文件重新加载到指定的 SVM 中。
+
+* 网络组文件中主机名中的任何字母字符都应小写。
+* 支持的最大文件大小为 5 MB 。
+* 支持的嵌套网络组的最大级别为 1000 。
+* 在网络组文件中定义主机名时，只能使用主 DNS 主机名。
++
+为了避免导出访问问题，不应使用 DNS CNAME 或轮循记录定义主机名。
+
+* 网络组文件中三个组的用户和域部分应保留为空，因为 ONTAP 不支持它们。
++
+仅支持主机 /IP 部分。
+
+
+
+ONTAP 支持按主机搜索本地网络组文件。加载网络组文件后， ONTAP 会自动创建 netgroup.byHost 映射以启用按主机搜索网络组。在处理导出策略规则以评估客户端访问时，这可以显著加快本地网络组搜索的速度。
+
+.步骤
+. 从 URI 将网络组加载到 SVM ：
++
+`vserver services name-service netgroup load -vserver _vserver_name_ -source ｛ ftp_http_FTPS_https ｝ ： //_uri_`
+
++
+加载网络组文件并构建 netgroup.byHost 映射可能需要几分钟的时间。
+
++
+如果要更新网络组，您可以编辑该文件并将更新后的网络组文件加载到 SVM 中。
+
+
+
+以下命令会从 HTTP URL ` +http://intranet/downloads/corp-netgroup+`: 将网络组定义加载到名为 vs1 的 SVM 中
+
+[listing]
+----
+vs1::> vserver services name-service netgroup load -vserver vs1
+-source http://intranet/downloads/corp-netgroup
+----

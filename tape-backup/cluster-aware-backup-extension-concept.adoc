@@ -1,0 +1,17 @@
+---
+permalink: tape-backup/cluster-aware-backup-extension-concept.html 
+sidebar: sidebar 
+keywords: cluster, aware, backup, extension, ndmp, v4, protocol, cab 
+summary: CAB （集群感知型备份）是一个 NDMP v4 协议扩展。通过此扩展， NDMP 服务器可以在拥有卷的节点上建立数据连接。这样，备份应用程序还可以确定卷和磁带设备是否位于集群中的同一节点上。 
+---
+= 集群感知型备份扩展的功能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+CAB （集群感知型备份）是一个 NDMP v4 协议扩展。通过此扩展， NDMP 服务器可以在拥有卷的节点上建立数据连接。这样，备份应用程序还可以确定卷和磁带设备是否位于集群中的同一节点上。
+
+要使 NDMP 服务器能够识别拥有卷的节点并在此类节点上建立数据连接，备份应用程序必须支持 CAB 扩展。CAB 扩展要求备份应用程序在建立数据连接之前向 NDMP 服务器通知要备份或还原的卷。这样， NDMP 服务器就可以确定托管卷的节点，并正确建立数据连接。
+
+借助备份应用程序支持的 CAB 扩展， NDMP 服务器可提供有关卷和磁带设备的相关性信息。使用此相关性信息，如果卷和磁带设备位于集群中的同一节点上，则备份应用程序可以执行本地备份，而不是三向备份。

@@ -1,0 +1,60 @@
+---
+permalink: smb-admin/enable-disable-local-user-authentication-task.html 
+sidebar: sidebar 
+keywords: enable, disable, local, user, authentication, smb, access, storage, virtual, machine, svm, domain, controller, domain-level, level, enable or disable local user authentication 
+summary: 您可以为 Storage Virtual Machine （ SVM ）上的 SMB 访问启用或禁用本地用户身份验证。默认设置为允许本地用户身份验证，当 SVM 无法联系域控制器或您选择不使用域级别访问控制时，此功能非常有用。 
+---
+= 启用或禁用本地用户身份验证
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以为 Storage Virtual Machine （ SVM ）上的 SMB 访问启用或禁用本地用户身份验证。默认设置为允许本地用户身份验证，当 SVM 无法联系域控制器或您选择不使用域级别访问控制时，此功能非常有用。
+
+必须在 CIFS 服务器上启用本地用户和组功能。
+
+您可以随时启用或禁用本地用户身份验证。如果要在创建 SMB 连接时使用本地用户进行身份验证，则还必须启用 CIFS 服务器的本地用户和组选项。
+
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 执行以下操作之一：
++
+|===
+| 本地身份验证的目标位置 | 输入命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver cifs options modify -vserver _vserver_name_ -is-local-auth-enabled true`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver cifs options modify -vserver _vserver_name_ -is-local-auth-enabled false`
+
+|===
+. 返回到管理权限级别： `set -privilege admin`
+
+
+以下示例将在 SVM vs1 上启用本地用户身份验证：
+
+[listing]
+----
+cluster1::>set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -is-local-auth-enabled true
+
+cluster1::*> set -privilege admin
+----
+* 相关信息 *
+
+xref:local-user-authentication-concept.adoc[本地用户身份验证的工作原理]
+
+xref:enable-disable-local-users-groups-task.adoc[启用或禁用本地用户和组]

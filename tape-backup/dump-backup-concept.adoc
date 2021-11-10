@@ -1,0 +1,66 @@
+---
+permalink: tape-backup/dump-backup-concept.html 
+sidebar: sidebar 
+keywords: dump, backup, qtree, file, system, data 
+summary: 转储备份会使用预定义的过程将文件系统数据从磁盘写入磁带。您可以备份既不是整个卷也不是整个 qtree 的卷， qtree 或子树。 
+---
+= 转储备份的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+转储备份会使用预定义的过程将文件系统数据从磁盘写入磁带。您可以备份既不是整个卷也不是整个 qtree 的卷， qtree 或子树。
+
+下表介绍了 ONTAP 用于备份转储路径指示的对象的过程：
+
+[cols="1,4"]
+|===
+| 阶段 | Action 
+
+
+ a| 
+1.
+ a| 
+对于容量不足或容量不足的 qtree 备份， ONTAP 会遍历目录以确定要备份的文件。如果要备份整个卷或 qtree ， ONTAP 会将此阶段与阶段 2 结合使用。
+
+
+
+ a| 
+2.
+ a| 
+对于完整卷或完整 qtree 备份， ONTAP 会标识要备份的卷或 qtree 中的目录。
+
+
+
+ a| 
+3.
+ a| 
+ONTAP 会将目录写入磁带。
+
+
+
+ a| 
+4.
+ a| 
+ONTAP 会将这些文件写入磁带。
+
+
+
+ a| 
+5.
+ a| 
+ONTAP 会将 ACL 信息（如果适用）写入磁带。
+
+|===
+转储备份使用数据的 Snapshot 副本进行备份。因此，您不必在启动备份之前将卷脱机。
+
+转储备份会将其创建的每个 Snapshot 副本命名为 `snapshot_for_backup.n` ，其中 `n` 是一个从 0 开始的整数。每次创建 Snapshot 副本时，转储备份都会将整数增加 1 。重新启动存储系统后，此整数将重置为 0 。备份操作完成后，转储引擎将删除此 Snapshot 副本。
+
+当 ONTAP 同时执行多个转储备份时，转储引擎会创建多个 Snapshot 副本。例如，如果 ONTAP 同时运行两个转储备份，您会在要备份数据的卷中发现以下 Snapshot 副本： `snapshot_for_backup.0` 和 `snapshot_for_backup.1` 。
+
+[NOTE]
+====
+从 Snapshot 副本进行备份时，转储引擎不会创建额外的 Snapshot 副本。
+
+====

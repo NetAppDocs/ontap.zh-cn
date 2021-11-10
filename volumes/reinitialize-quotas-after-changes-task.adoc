@@ -1,0 +1,74 @@
+---
+permalink: volumes/reinitialize-quotas-after-changes-task.html 
+sidebar: sidebar 
+keywords: reinitialize, quotas, after making, extensive, changes 
+summary: 对现有配额进行大量更改时，例如，通过为没有强制实施的配额的目标添加或删除配额，您必须在所有受影响的卷上进行更改并重新初始化配额。 
+---
+= 进行大量更改后重新初始化配额
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对现有配额进行大量更改时；例如，通过为没有强制实施的配额的目标添加或删除配额，您必须在所有受影响的卷上进行更改并重新初始化配额。
+
+您有一个具有强制实施的配额的 Storage Virtual Machine （ SVM ），并且您希望进行更改，以要求完全重新初始化配额。
+
+.步骤
+. 使用带有 ` -instance` 参数的 `vserver show` 命令确定当前分配给 SVM 的策略的名称。
+. 通过执行以下任一操作来修改配额规则：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+创建新的配额规则
+ a| 
+使用 `volume quota policy rule create` 命令
+
+
+
+ a| 
+修改现有配额规则的设置
+ a| 
+使用 `volume quota policy rule modify` 命令
+
+
+
+ a| 
+删除现有配额规则
+ a| 
+使用 `volume quota policy rule delete` 命令
+
+|===
+. 使用 `volume quota policy rule show` 命令检查是否已正确配置配额规则。
+. 通过关闭配额并为更改了配额的每个卷启用配额，重新初始化这些卷上的配额。
++
+.. 在每个受影响的卷上使用 `volume quota off` 命令停用该卷上的配额。
+.. 在每个受影响的卷上使用 `volume quota on` 命令激活该卷上的配额。
++
+[NOTE]
+====
+在每个受影响的卷上重新激活配额之前，您必须确保等待大约五分钟，因为在运行 `volume quota off` 命令后尝试立即激活这些配额可能会导致出现错误。
+
+或者，您也可以运行命令，从包含特定卷的节点重新初始化卷的配额。
+
+====
++
+您可以通过以下任一方式监控初始化过程：
+
++
+*** 使用 `volume quota on` 命令时，您可以添加 ` -foreground` 参数以在前台运行 quota on 作业。（默认情况下，作业在后台运行。）
++
+当作业在后台运行时，您可以使用 `job show` 命令监控其进度。
+
+*** 您可以使用 `volume quota show` 命令监控配额初始化的状态。
+
+
+
+
+. 使用 `volume quota show -instance` 命令检查初始化错误，例如无法初始化的配额规则。
+. 使用 `volume quota report` 命令显示配额报告，以确保强制实施的配额符合您的预期。
+

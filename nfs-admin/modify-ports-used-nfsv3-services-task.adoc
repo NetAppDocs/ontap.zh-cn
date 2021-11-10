@@ -1,0 +1,118 @@
+---
+permalink: nfs-admin/modify-ports-used-nfsv3-services-task.html 
+sidebar: sidebar 
+keywords: modify, port, nfsv3, service 
+summary: 存储系统上的 NFS 服务器使用挂载守护进程和网络锁定管理器等服务通过特定的默认网络端口与 NFS 客户端进行通信。在大多数 NFS 环境中，默认端口可以正常工作且不需要修改，但如果要在 NFSv3 环境中使用不同的 NFS 网络端口，则可以这样做。 
+---
+= 修改用于 NFSv3 服务的端口
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+存储系统上的 NFS 服务器使用挂载守护进程和网络锁定管理器等服务通过特定的默认网络端口与 NFS 客户端进行通信。在大多数 NFS 环境中，默认端口可以正常工作且不需要修改，但如果要在 NFSv3 环境中使用不同的 NFS 网络端口，则可以这样做。
+
+更改存储系统上的 NFS 端口要求所有 NFS 客户端都重新连接到系统，因此您应在进行更改之前将此信息传达给用户。
+
+您可以为每个 Storage Virtual Machine （ SVM ）设置 NFS 挂载守护进程，网络锁定管理器，网络状态监控器和 NFS 配额守护进程服务使用的端口。端口号更改会影响通过 TCP 和 UDP 访问数据的 NFS 客户端。
+
+无法更改 NFSv4 和 NFSv4.1 的端口。
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 禁用对 NFS 的访问：
++
+`vserver nfs modify -vserver vserver_name -access false`
+
+. 为特定 NFS 服务设置 NFS 端口：
++
+`vserver nfs modify -vserver vserver_namenfs_port_parameterport_number`
+
++
+[cols="3*"]
+|===
+| NFS 端口参数 | Description | 默认端口 
+
+
+ a| 
+` mountd 端口`
+ a| 
+NFS 挂载守护进程
+ a| 
+635
+
+
+
+ a| 
+` -nl-port`
+ a| 
+网络锁定管理器
+ a| 
+4045
+
+
+
+ a| 
+` -NSM-port`
+ a| 
+网络状态监控器
+ a| 
+4046
+
+
+
+ a| 
+` -rquotad-port`
+ a| 
+NFS 配额守护进程
+ a| 
+4049.
+
+|===
++
+除了默认端口之外，允许的端口号范围为 1024 到 65535 。每个 NFS 服务都必须使用唯一的端口。
+
+. 启用对 NFS 的访问：
++
+`vserver nfs modify -vserver vserver_name -access true`
+
+. 使用 `network connections listening show` 命令验证端口号的更改。
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+
+
+以下命令会将名为 vs1 的 SVM 上的 NFS 挂载守护进程端口设置为 1113 ：
+
+[listing]
+----
+vs1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use
+         them only when directed to do so by NetApp personnel.
+Do you want to continue? {y|n}: y
+
+vs1::*> vserver nfs modify -vserver vs1 -access false
+
+vs1::*> vserver nfs modify -vserver vs1 -mountd-port 1113
+
+vs1::*> vserver nfs modify -vserver vs1 -access true
+
+vs1::*> network connections listening show
+Vserver Name     Interface Name:Local Port        Protocol/Service
+---------------- -------------------------------  ----------------
+Node: cluster1-01
+Cluster          cluster1-01_clus_1:7700          TCP/ctlopcp
+vs1              data1:4046                       TCP/sm
+vs1              data1:4046                       UDP/sm
+vs1              data1:4045                       TCP/nlm-v4
+vs1              data1:4045                       UDP/nlm-v4
+vs1              data1:1113                       TCP/mount
+vs1              data1:1113                       UDP/mount
+....
+
+vs1::*> set -privilege admin
+----

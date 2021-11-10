@@ -1,0 +1,82 @@
+---
+permalink: encryption-at-rest/replace-self-encrypting-disk-task.html 
+sidebar: sidebar 
+keywords: replacing, fips drive, sed 
+summary: 您可以像替换普通磁盘一样更换 FIPS 驱动器或 SED 。确保为替代驱动器分配新的数据身份验证密钥。对于 FIPS 驱动器，您可能还需要分配新的 FIPS 140-2 身份验证密钥。 
+---
+= 更换 FIPS 驱动器或 SED
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以像替换普通磁盘一样更换 FIPS 驱动器或 SED 。确保为替代驱动器分配新的数据身份验证密钥。对于 FIPS 驱动器，您可能还需要分配新的 FIPS 140-2 身份验证密钥。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须知道驱动器使用的身份验证密钥的密钥 ID 。
+* 您必须是集群管理员才能执行此任务。
+
+
+.步骤
+. 确保磁盘已标记为故障：
++
+`storage disk show -broken`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[listing]
+----
+cluster1::> storage disk show -broken
+Original Owner: cluster1-01
+  Checksum Compatibility: block
+                                                                 Usable Physical
+    Disk   Outage Reason HA Shelf Bay Chan   Pool  Type    RPM     Size     Size
+    ------ ---- ------------ ---- --- ---- ------ -----  -----  -------  -------
+    0.0.0  admin  failed  0b    1   0    A  Pool0  FCAL  10000  132.8GB  133.9GB
+    0.0.7  admin  removed 0b    2   6    A  Pool1  FCAL  10000  132.8GB  134.2GB
+[...]
+----
+. 按照适用于您的磁盘架型号的硬件指南中的说明，删除故障磁盘并将其更换为新的 FIPS 驱动器或 SED 。
+. 分配新更换磁盘的所有权：
++
+`s存储磁盘分配 -disk disk_name -owner node`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[listing]
+----
+cluster1::> storage disk assign -disk 2.1.1 -owner cluster1-01
+----
+. 确认已分配新磁盘：
++
+`s存储加密磁盘 show`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[listing]
+----
+cluster1::> storage encryption disk show
+Disk    Mode Data Key ID
+-----   ---- ----------------------------------------------------------------
+0.0.0   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+0.0.1   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+1.10.0  data F1CB30AFF1CB30B00101000000000000CF0EFD81EA9F6324EA97B369351C56AC
+1.10.1  data F1CB30AFF1CB30B00101000000000000CF0EFD81EA9F6324EA97B369351C56AC
+2.1.1   open 0x0
+[...]
+----
+. 将数据身份验证密钥分配给 FIPS 驱动器或 SED 。
++
+xref:assign-authentication-keys-seds-external-task.adoc[将数据身份验证密钥分配给 FIPS 驱动器或 SED （外部密钥管理）]
+
+. 如有必要，请为 FIPS 驱动器分配 FIPS 140-2 身份验证密钥。
++
+xref:assign-fips-140-2-authentication-key-task.adoc[将 FIPS 140-2 身份验证密钥分配给 FIPS 驱动器]
+
+

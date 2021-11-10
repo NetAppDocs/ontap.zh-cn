@@ -1,0 +1,94 @@
+---
+permalink: system-admin/types-autosupport-messages-reference.html 
+sidebar: sidebar 
+keywords: active, iq, autosupport, messages, content, support, subsystems 
+summary: AutoSupport 消息包含有关受支持子系统的状态信息。了解 AutoSupport 消息包含哪些内容有助于您解读或响应通过电子邮件接收的消息或在 Active IQ （以前称为 My AutoSupport ）网站上查看的消息。 
+---
+= AutoSupport 消息的类型及其内容
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AutoSupport 消息包含有关受支持子系统的状态信息。了解 AutoSupport 消息包含哪些内容有助于您解读或响应通过电子邮件接收的消息或在 Active IQ （以前称为 My AutoSupport ）网站上查看的消息。
+
+|===
+| 消息类型 | 消息包含的数据类型 
+
+
+ a| 
+事件触发
+ a| 
+包含有关发生事件的特定子系统的上下文相关数据的文件
+
+
+
+ a| 
+每天
+ a| 
+日志文件
+
+
+
+ a| 
+性能
+ a| 
+在过去 24 小时内采样的性能数据
+
+
+
+ a| 
+每周
+ a| 
+配置和状态数据
+
+
+
+ a| 
+由 `ssystem node AutoSupport invoke` 命令触发
+ a| 
+取决于在 ` -type` 参数中指定的值：
+
+* `test` 发送用户触发的消息，其中包含一些基本数据。
++
+此消息还会使用 ` 到` 选项触发从技术支持到任何指定电子邮件地址的自动电子邮件响应，以便您确认收到 AutoSupport 消息。
+
+* `性能` 发送性能数据。
+* `所有` 发送一条用户触发的消息，其中包含一组类似于每周消息的完整数据，包括来自每个子系统的故障排除数据。
++
+技术支持通常会请求此消息。
+
+
+
+
+
+ a| 
+由 `ssystem node AutoSupport invoke-core-upload` 命令触发
+ a| 
+节点的核心转储文件
+
+
+
+ a| 
+由 `ssystem node AutoSupport invoke-performance-archive` 命令触发
+ a| 
+指定时间段内的性能归档文件
+
+
+
+ a| 
+由 AutoSupport OnDemand 触发
+ a| 
+AutoSupport OnDemand 可以请求新消息或过去的消息：
+
+* 根据 AutoSupport 收集的类型，新消息可以是 `test` ， `all` 或 `performance` 。
+* 过去的消息取决于重新发送的消息类型。
+
+
+AutoSupport OnDemand 可以请求新消息，以便将以下文件上传到 NetApp 支持站点： http://mysupport.netapp.com/["mysupport.netapp.com"]：
+
+* 核心转储
+* 性能归档
+
+
+|===

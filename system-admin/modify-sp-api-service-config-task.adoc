@@ -1,0 +1,77 @@
+---
+permalink: system-admin/modify-sp-api-service-config-task.html 
+sidebar: sidebar 
+keywords: modify, sp, api, service, configuration, network 
+summary: SP API 是一种安全网络 API ，可使 ONTAP 通过网络与 SP 进行通信。您可以更改 SP API 服务使用的端口，续订此服务用于内部通信的证书或完全禁用此服务。只有在极少数情况下才需要修改配置。 
+---
+= 修改 SP API 服务配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SP API 是一种安全网络 API ，可使 ONTAP 通过网络与 SP 进行通信。您可以更改 SP API 服务使用的端口，续订此服务用于内部通信的证书或完全禁用此服务。只有在极少数情况下才需要修改配置。
+
+.关于此任务
+* 默认情况下， SP API 服务使用端口 `50000` 。
++
+例如，如果您使用端口 `50000` 进行其他网络应用程序通信，或者您希望区分来自其他应用程序的流量和由 SP API 服务生成的流量，则可以更改端口值。
+
+* SP API 服务使用的 SSL 和 SSH 证书位于集群内部，不会分发到外部。
++
+如果证书不太可能受到影响，您可以续订这些证书。
+
+* 默认情况下， SP API 服务处于启用状态。
++
+您只需要在极少数情况下禁用 SP API 服务，例如，在未配置或使用 SP 且您希望禁用此服务的专用 LAN 中。
+
++
+如果 SP API 服务已禁用，则 API 不接受任何传入连接。此外，基于网络的 SP 固件更新和基于网络的 SP " `d自有系统` " 日志收集等功能将不可用。系统将切换到使用串行接口。
+
+
+
+.步骤
+. 使用 `set -privilege advanced` 命令切换到高级权限级别。
+. 修改 SP API 服务配置：
++
+|===
+| 如果您要 ... | 使用以下命令 ... 
+
+
+ a| 
+更改 SP API 服务使用的端口
+ a| 
+`sservice-processor api-service modify` 和 ` -port` ｛`49152` ..`65535` ｝ 参数
+
+
+
+ a| 
+续订 SP API 服务用于内部通信的 SSL 和 SSH 证书
+ a| 
+** 对于 ONTAP 9.5 或更高版本，请使用 `ssystem service-processor api-service renew-internal-certificate`
+** 适用于 ONTAP 9.4 及更早版本
+** `ssystem service-processor api-service renew-certificates`
++
+如果未指定任何参数，则仅续订主机证书（包括客户端和服务器证书）。
+
++
+如果指定了 ` -renew-all true` 参数，则会同时续订主机证书和根 CA 证书。
+
+
+
+
+
+ a| 
+通信
+ a| 
+
+
+
+ a| 
+禁用或重新启用 SP API 服务
+ a| 
+`ssystem service-processor api-service modify` with the ` -is-enabled` ｛`true` ……`false` ｝ 参数
+
+|===
+. 使用 `ssystem service-processor api-service show` 命令显示 SP API 服务配置。
+

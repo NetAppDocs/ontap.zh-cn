@@ -1,0 +1,82 @@
+---
+permalink: volumes/rehost-snapmirror-relationship-task.html 
+sidebar: sidebar 
+keywords: rehost, volumes, snapmirror, relationship 
+summary: 您可以重新托管 SnapMirror 关系中的卷。 
+---
+= 重新托管 SnapMirror 关系中的卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以重新托管 SnapMirror 关系中的卷。
+
+.您需要什么？ #8217 ；将需要什么
+* 卷必须处于联机状态。
+* 不得运行卷移动或 LUN 移动等卷管理操作。
+* 必须停止对要重新托管的卷的数据访问。
+* 必须配置目标 SVM 的 ns-switch 和名称服务配置，以支持重新托管卷的数据访问。
+* 卷的用户 ID 和组 ID 必须在目标 SVM 中可用或在托管卷上更改。
+
+
+.关于此任务
+* 重新托管会造成系统中断。
+* 如果重新托管操作失败，您可能需要在源卷上重新配置卷策略和关联规则。
+* 重新托管操作后，源卷中的以下卷策略，策略规则和配置将丢失，必须在重新托管的卷上手动重新配置：
++
+** 卷和 qtree 导出策略
+** 防病毒策略
+** 卷效率策略
+** 服务质量（ QoS ）策略
+** Snapshot 策略
+** 配额规则
+** NS-switch 和名称服务配置导出策略和规则
+** 用户和组 ID
+
+
+
+
+.步骤
+. 记录 SnapMirror 关系类型：
++
+`snapmirror show`
+
++
+此预防步骤可避免在卷重新托管失败时丢失有关 SnapMirror 关系类型的信息。
+
+. 从目标集群中，删除 SnapMirror 关系：
++
+`snapmirror delete`
+
++
+您不得中断 SnapMirror 关系；否则，目标卷的数据保护功能将丢失，并且在重新托管操作后无法重新建立此关系。
+
+. 从源集群中，删除 SnapMirror 关系信息：
++
+`snapmirror release relationship-info-only true`
+
++
+将 `relationship-info-only` 参数设置为 `true` 将删除源关系信息，而不删除 Snapshot 副本。
+
+. 切换到高级权限级别：
++
+`set -privilege advanced`
+
+. 在目标 SVM 上重新托管卷：
++
+`volume rehost -vserver source_sVM -volume vol_name -destination-vserver destination_sVM`
+
+. 如果不存在 SVM 对等关系，请在源 SVM 和目标 SVM 之间创建 SVM 对等关系：
++
+`vserver peer create`
+
+. 在源卷和目标卷之间创建 SnapMirror 关系：
++
+`snapmirror create`
+
++
+您必须从托管 DP 卷的 SVM 运行 `snapmirror create` 命令。重新托管的卷可以是 SnapMirror 关系的源或目标。
+
+. 重新同步 SnapMirror 关系。
+

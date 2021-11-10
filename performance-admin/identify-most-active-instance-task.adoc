@@ -1,0 +1,80 @@
+---
+permalink: performance-admin/identify-most-active-instance-task.html 
+sidebar: sidebar 
+keywords: identify, high-traffic, clients files 
+summary: '您可以使用 ONTAP 活动对象技术来确定造成集群流量过大的客户端或文件。确定这些 " 排名前 " 的客户端或文件后，您可以重新平衡集群工作负载或采取其他步骤来解决问题描述。' 
+---
+= 确定高流量客户端或文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 ONTAP 活动对象技术来确定造成集群流量过大的客户端或文件。确定这些 " 排名前 " 的客户端或文件后，您可以重新平衡集群工作负载或执行其他步骤来解决问题描述。
+
+您必须是集群管理员才能执行此任务。
+
+.步骤
+. 查看访问集群的前几个客户端：
++
+`satictics top client show -node _node_name_ -sort-key _sort_column_ -interval _seconds_between _updates_-迭 代 _迭 代 _ -max _number_of_instances_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下命令显示访问 `cluster1` 的前几个客户端：
+
++
+[listing]
+----
+cluster1::> statistics top client show
+
+cluster1 : 3/23/2016 17:59:10
+
+
+                                               *Total
+        Client Vserver           Node Protocol    Ops
+-------------- ------- -------------- -------- ------
+172.17.180.170     vs4 siderop1-vsim4      nfs    668
+172.17.180.169     vs3 siderop1-vsim3      nfs    337
+172.17.180.171     vs3 siderop1-vsim3      nfs    142
+172.17.180.170     vs3 siderop1-vsim3      nfs    137
+172.17.180.123     vs3 siderop1-vsim3      nfs    137
+172.17.180.171     vs4 siderop1-vsim4      nfs     95
+172.17.180.169     vs4 siderop1-vsim4      nfs     92
+172.17.180.123     vs4 siderop1-vsim4      nfs     92
+172.17.180.153     vs3 siderop1-vsim3      nfs      0
+----
+. 查看在集群上访问的前几个文件：
++
+`satictics top file show -node _node_name_ -sort-key _sort_column_ -interval _seconds_between _updates_ -迭 代 _迭 代 _ -max _number_of_instances_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下命令显示在 `cluster1` 上访问的前几个文件：
+
++
+[listing]
+----
+cluster1::> statistics top file show
+
+cluster1 : 3/23/2016 17:59:10
+
+					              *Total
+                    File Volume Vserver          Node    Ops
+------------------------ ------ ------- -------------- ------
+/vol/vol1/vm170-read.dat   vol1     vs4 siderop1-vsim4     22
+/vol/vol1/vm69-write.dat   vol1     vs3 siderop1-vsim3      6
+     /vol/vol2/vm171.dat   vol2     vs3 siderop1-vsim3      2
+     /vol/vol2/vm169.dat   vol2     vs3 siderop1-vsim3      2
+      /vol/vol2/p123.dat   vol2     vs4 siderop1-vsim4      2
+      /vol/vol2/p123.dat   vol2     vs3 siderop1-vsim3      2
+     /vol/vol1/vm171.dat   vol1     vs4 siderop1-vsim4      2
+     /vol/vol1/vm169.dat   vol1     vs4 siderop1-vsim4      2
+     /vol/vol1/vm169.dat   vol1     vs4 siderop1-vsim3      2
+      /vol/vol1/p123.dat   vol1     vs4 siderop1-vsim4      2
+----
+

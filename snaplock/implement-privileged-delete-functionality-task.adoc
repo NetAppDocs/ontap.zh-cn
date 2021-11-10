@@ -1,0 +1,35 @@
+---
+permalink: snaplock/implement-privileged-delete-functionality-task.html 
+sidebar: sidebar 
+keywords: delete, worm, file, priveleged, delete, enterprise, mode, retention, period 
+summary: 您可以使用特权删除功能在保留期限内删除企业模式 WORM 文件。 
+---
+= 使用特权删除功能删除 WORM 文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用特权删除功能在保留期限内删除企业模式 WORM 文件。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须是 SnapLock 管理员才能执行此任务。
+* 您必须已在企业卷上创建 SnapLock 审核日志并启用特权删除功能。
+
+
+您不能使用特权删除操作删除已过期的 WORM 文件。您可以使用 `volume file retention show` 命令查看要删除的 WORM 文件的保留时间。有关详细信息，请参见命令的手册页。
+
+.步骤
+. 删除企业卷上的 WORM 文件：
++
+` * 卷文件 privileged-delete -vserver _svm_name_ -file _file_path_*`
+
++
+以下命令会删除 SVM``SVM1`` 上的文件 ` /vol/dataVol/F1` ：
+
++
+[listing]
+----
+SVM1::> volume file privileged-delete -file /vol/dataVol/f1
+----
+

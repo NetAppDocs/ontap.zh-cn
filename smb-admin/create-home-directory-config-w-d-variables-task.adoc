@@ -1,0 +1,101 @@
+---
+permalink: smb-admin/create-home-directory-config-w-d-variables-task.html 
+sidebar: sidebar 
+keywords: 'create, home, directory, configuration, variable, user, connect, share, dynamic, create, share, %w, %d, create a home directory configuration using the %w and %d variables' 
+summary: '您可以使用 %w 和 %d 变量创建主目录配置。然后，用户可以使用动态创建的共享连接到其主共享。' 
+---
+= 使用 %w 和 %d 变量创建主目录配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 ` %w` 和 ` %d` 变量创建主目录配置。然后，用户可以使用动态创建的共享连接到其主共享。
+
+.步骤
+. 创建一个 qtree 以包含用户的主目录： `volume qtree create -vserver vserver_name -qtree-path qtree_path`
+. 验证 qtree 是否使用正确的安全模式： `volume qtree show`
+. 如果 qtree 未使用所需的安全模式，请使用 `volume qtree security` 命令更改此安全模式。
+. 添加主目录共享： ` +vserver cifs share create -vserver vserver -share-name %w -path %d/%w -share-properties homedirector\[ ， ...]+`
++
+` -vserver` `vserver` 指定要添加搜索路径的已启用 CIFS 的 Storage Virtual Machine （ SVM ）。
+
++
+` 共享名称` ` %w` 指定主目录共享名称。当每个用户连接到其主目录时， ONTAP 会动态创建共享名称。共享名称的格式为 _windows_user_name_ 。
+
++
+` 路径` ` %d/%w` 指定主目录的相对路径。当每个用户连接到其主目录时，系统会动态创建相对路径，其格式为 _domain/windows_user_name_ 。
+
++
+` -share-properties homedirectory[ ， ...]+` 指定该共享的共享属性。您必须指定 `homedirectory` 值。您可以使用逗号分隔列表指定其他共享属性。
+
+. 使用 `vserver cifs share show` 命令验证共享是否具有所需的配置。
+. 添加主目录搜索路径： `vserver cifs home-directory search-path add -vserver vserver -path path`
++
+` -vserver _vserver-name_` 指定要添加搜索路径的已启用 CIFS 的 SVM 。
+
++
+` -path _path_` 指定搜索路径的绝对目录路径。
+
+. 使用 `vserver cifs home-directory search-path show` 命令验证是否已成功添加搜索路径。
+. 对于具有主目录的用户，请在指定用于包含主目录的 qtree 或卷中创建相应的目录。
++
+例如，如果您创建的 qtree 的路径为 ` /vol/vol1/users` ，并且要创建其目录的用户名为 mydomain\user1 ，则应使用以下路径创建目录： ` /vol/vol1/users/mydomain/user1` 。
+
++
+如果您创建了一个名为 "`home1` " 的卷，该卷挂载在 ` /home1` 上，则应使用以下路径创建目录： ` /home1/mydomain/user1` 。
+
+. 通过映射驱动器或使用 UNC 路径进行连接，验证用户是否可以成功连接到主共享。
++
+例如，如果用户 mydomain\user1 要连接到在步骤 8 中创建的位于 SVM vs1 上的目录，则 user1 将使用 UNC 路径 ` \\vs1\user1` 进行连接。
+
+
+
+以下示例中的命令使用以下设置创建主目录配置：
+
+* 共享名称为 %w
+* 相对主目录路径为 %d/%w
+* 用于包含主目录 ` /home1` 的搜索路径是配置了 NTFS 安全模式的卷。
+* 此时将在 SVM vs1 上创建配置。
+
+
+当用户从 Windows 主机访问其主目录时，您可以使用此类主目录配置。如果用户从 Windows 和 UNIX 主机访问其主目录，而文件系统管理员使用基于 Windows 的用户和组来控制对文件系统的访问，则也可以使用此类配置。
+
+[listing]
+----
+cluster::> vserver cifs share create -vserver vs1 -share-name %w -path %d/%w -share-properties oplocks,browsable,changenotify,homedirectory
+
+cluster::> vserver cifs share show -vserver vs1 -share-name %w
+
+                      Vserver: vs1
+                        Share: %w
+     CIFS Server NetBIOS Name: VS1
+                         Path: %d/%w
+             Share Properties: oplocks
+                               browsable
+                               changenotify
+                               homedirectory
+           Symlink Properties: enable
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: -
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+
+cluster::> vserver cifs home-directory search-path add -vserver vs1 ‑path /home1
+
+cluster::> vserver cifs home-directory search-path show
+Vserver     Position Path
+----------- -------- -----------------
+vs1         1        /home1
+----
+* 相关信息 *
+
+xref:configure-home-directories-u-variable-task.adoc[使用 %u 变量配置主目录]
+
+xref:home-directory-config-concept.adoc[其他主目录配置]
+
+xref:display-user-home-directory-path-task.adoc[显示有关 SMB 用户主目录路径的信息]

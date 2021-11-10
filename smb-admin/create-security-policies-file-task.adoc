@@ -1,0 +1,32 @@
+---
+permalink: smb-admin/create-security-policies-file-task.html 
+sidebar: sidebar 
+keywords: create, creating, file, security, policy, svm, configuring, configure, apply, acl, folder, act, container, entry, applied, create security policies 
+summary: 为 SVM 创建文件安全策略是配置 ACL 并将其应用于文件或文件夹的第三步。策略充当各种任务的容器，其中每个任务都是一个条目，可应用于文件或文件夹。您可以稍后将任务添加到安全策略中。 
+---
+= 创建安全策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+为 SVM 创建文件安全策略是配置 ACL 并将其应用于文件或文件夹的第三步。策略充当各种任务的容器，其中每个任务都是一个条目，可应用于文件或文件夹。您可以稍后将任务添加到安全策略中。
+
+添加到安全策略的任务包含 NTFS 安全描述符与文件或文件夹路径之间的关联。因此，您应将安全策略与每个 SVM （包含 NTFS 安全模式卷或混合安全模式卷）相关联。
+
+.步骤
+. 创建安全策略： `vserver security file-directory policy create -vserver vserver_name -policy-name policy_name`
++
+`vserver security file-directory policy create -policy-name policy1 -vserver vs1`
+
+. 验证安全策略： `vserver security file-directory policy show`
++
+[listing]
+----
+
+            vserver security file-directory policy show
+               Vserver          Policy Name
+             ------------     --------------
+                 vs1              policy1
+----
+

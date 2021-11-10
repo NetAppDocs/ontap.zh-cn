@@ -1,0 +1,65 @@
+---
+permalink: smb-admin/display-types-users-connected-task.html 
+sidebar: sidebar 
+keywords: display, information, type, connect, smb, session, appropriate, type, storage, virtual, machine, svm 
+summary: 您可以显示有关通过 SMB 会话连接的用户类型的信息。这有助于确保只有适当类型的用户通过 Storage Virtual Machine （ SVM ）上的 SMB 会话进行连接。 
+---
+= 显示有关通过 SMB 会话连接的用户类型的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关通过 SMB 会话连接的用户类型的信息。这有助于确保只有适当类型的用户通过 Storage Virtual Machine （ SVM ）上的 SMB 会话进行连接。
+
+以下类型的用户可以通过 SMB 会话进行连接：
+
+* `本地用户`
++
+以本地 CIFS 用户身份进行身份验证
+
+* `domain-user`
++
+以域用户身份进行身份验证（从 CIFS 服务器的主域或受信任域）
+
+* `来宾用户`
++
+以来宾用户身份进行身份验证
+
+* `匿名用户`
++
+以匿名或空用户身份进行身份验证
+
+
+
+.步骤
+. 确定通过 SMB 会话连接的用户类型： `vserver cifs session show -vserver _vserver_name_ -windows-user _windows_user_name_ -fields windows-user ， address ， lif-address ， user-type`
++
+|===
+| 要显示已建立会话的用户类型信息 ... | 输入以下命令 ... 
+
+
+ a| 
+具有指定用户类型的所有会话
+ a| 
+`vserver cifs session show -vserver _vserver_name_ -user-type ｛ local-user| domain-user| guest-user| anonymous -user ｝`
+
+
+
+ a| 
+用于特定用户
+ a| 
+`vserver cifs session show -vserver _vserver_name_ -windows-user _windows_user_name_ -fields windows-user ， address ， lif-address ， user-type`
+
+|===
+
+
+以下命令显示由用户 "` iepubs\user1` " 在 SVM vs1 上建立的会话的用户类型的会话信息：
+
+[listing]
+----
+cluster1::> vserver cifs session show -vserver pub1 -windows-user iepubs\user1 -fields windows-user,address,lif-address,user-type
+node      vserver session-id connection-id lif-address  address       windows-user         user-type
+--------- ------- ---------- ------------- ------------ ------------- -------------------- -----------
+pub1node1 pub1    1          3439441860    10.0.0.1     10.1.1.1      IEPUBS\user1         domain-user
+----

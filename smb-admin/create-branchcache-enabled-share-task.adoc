@@ -1,0 +1,61 @@
+---
+permalink: smb-admin/create-branchcache-enabled-share-task.html 
+sidebar: sidebar 
+keywords: enable, branchcache, smb, create, share, setting, property, create a bracnhcache-enabled smb share 
+summary: 通过设置 BranchCache 共享属性，您可以在创建共享时在 SMB 共享上启用 BranchCache 。 
+---
+= 创建启用了 BranchCache 的 SMB 共享
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过设置 `BranchCache` share 属性，您可以在创建共享时在 SMB 共享上启用 BranchCache 。
+
+.关于此任务
+* 如果在 SMB 共享上启用了 BranchCache ，则该共享必须将脱机文件配置设置为手动缓存。
++
+这是创建共享时的默认设置。
+
+* 您还可以在创建启用了 BranchCache 的共享时指定其他可选共享参数。
+* 即使未在 Storage Virtual Machine （ SVM ）上配置和启用 BranchCache ，也可以在共享上设置 `BranchCache` 属性。
++
+但是，如果您希望共享提供缓存的内容，则必须在 SVM 上配置并启用 BranchCache 。
+
+* 由于在使用 ` -share-properties` 参数时没有应用于共享的默认共享属性，因此除了使用逗号分隔列表指定 `BranchCache` share 属性之外，还必须指定要应用于共享的所有其他共享属性。
+* 有关详细信息，请参见 `vserver cifs share create` 命令的手册页。
+
+
+.步骤
+. 创建启用了 BranchCache 的 SMB 共享： + `vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path _path_ -share-properties BranchCache[ ， ...]`
+. 使用 `vserver cifs share show` 命令验证是否已在 SMB 共享上设置 BranchCache 共享属性。
+
+
+以下命令会在 SVM vs1 上创建一个名为 `data` 的已启用 BranchCache 的 SMB 共享，路径为 ` /data` 。默认情况下，脱机文件设置为 `manual` ：
+
+[listing]
+----
+cluster1::> vserver cifs share create -vserver vs1 -share-name data -path /data -share-properties branchcache,oplocks,browsable,changenotify
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data
+                      Vserver: vs1
+                        Share: data
+     CIFS Server NetBIOS Name: VS1
+                         Path: /data
+             Share Properties: branchcache
+                               oplocks
+                               browsable
+                               changenotify
+           Symlink Properties: enable
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: -
+                  Volume Name: data
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+----
+* 相关信息 *
+
+xref:disable-branchcache-single-share-task.adoc[在单个 SMB 共享上禁用 BranchCache]

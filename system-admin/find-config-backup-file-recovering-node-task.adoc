@@ -1,0 +1,42 @@
+---
+permalink: system-admin/find-config-backup-file-recovering-node-task.html 
+sidebar: sidebar 
+keywords: configuration, backup, file, recovering, node, remote, url, cluster 
+summary: 您可以使用位于远程 URL 或集群中节点上的配置备份文件来恢复节点配置。 
+---
+= 查找用于恢复节点的配置备份文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用位于远程 URL 或集群中节点上的配置备份文件来恢复节点配置。
+
+您可以使用集群或节点配置备份文件来还原节点配置。
+
+.步骤
+. 将配置备份文件提供给需要还原配置的节点。
++
+|===
+| 如果配置备份文件位于 ... | 那么 ... 
+
+
+ a| 
+位于远程 URL
+ a| 
+在高级权限级别使用 `ssystem configuration backup download` 命令将其下载到恢复节点。
+
+
+
+ a| 
+在集群中的节点上
+ a| 
+.. 在高级权限级别使用 `ssystem configuration backup show` 命令查看包含恢复节点配置的集群中可用的配置备份文件列表。
+.. 如果您确定的配置备份文件不在恢复节点上，请使用 `ssystem configuration backup copy` 命令将其复制到恢复节点。
+
+
+|===
++
+如果您先前重新创建了集群，则应选择在集群重新创建后创建的配置备份文件。如果您必须使用在集群重新创建之前创建的配置备份文件，则在恢复节点后，必须重新创建集群。
+
+

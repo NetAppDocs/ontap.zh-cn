@@ -1,0 +1,33 @@
+---
+permalink: nfs-admin/nfsv4-acls-concept.html 
+sidebar: sidebar 
+keywords: nfsv4, acls, work 
+summary: 使用 NFSv4 ACL 的客户端可以对系统上的文件和目录设置和查看 ACL 。在具有 ACL 的目录中创建新文件或子目录时，新文件或子目录会继承 ACL 中已标记有相应继承标志的所有 ACL 条目（ ACE ）。 
+---
+= NFSv4 ACL 的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 NFSv4 ACL 的客户端可以对系统上的文件和目录设置和查看 ACL 。在具有 ACL 的目录中创建新文件或子目录时，新文件或子目录会继承 ACL 中已标记有相应继承标志的所有 ACL 条目（ ACE ）。
+
+在根据 NFSv4 请求创建文件或目录时，生成的文件或目录上的 ACL 取决于文件创建请求是包含 ACL 还是仅包含标准 UNIX 文件访问权限，以及父目录是否具有 ACL ：
+
+* 如果请求包含 ACL ，则会使用该 ACL 。
+* 如果此请求仅包含标准 UNIX 文件访问权限，但父目录具有 ACL ，则只要父目录的 ACL 中的 ACE 已使用适当的继承标志进行标记，新文件或目录就会继承这些 ACE 。
++
+[NOTE]
+====
+即使将 ` -v4.0-acl` 设置为 `off` ，也会继承父 ACL 。
+
+====
+* 如果此请求仅包含标准 UNIX 文件访问权限，并且父目录没有 ACL ，则会使用客户端文件模式设置标准 UNIX 文件访问权限。
+* 如果此请求仅包含标准 UNIX 文件访问权限，并且父目录具有不可继承的 ACL ，则只会使用模式位创建新对象。
+
+
+[NOTE]
+====
+如果使用 `vserver nfs` 或 `vserver export-policy rule` 系列中的命令将 ` chown-mode` 参数设置为 `restricted` ，则文件所有权只能由超级用户更改，即使使用 NFSv4 ACL 设置的磁盘权限允许非 root 用户更改文件所有权也是如此。有关详细信息，请参见相关手册页。
+
+====

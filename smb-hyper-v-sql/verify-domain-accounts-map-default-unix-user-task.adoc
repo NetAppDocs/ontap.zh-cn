@@ -1,0 +1,106 @@
+---
+permalink: smb-hyper-v-sql/verify-domain-accounts-map-default-unix-user-task.html 
+sidebar: sidebar 
+keywords: verfiy, domain, account, default, unix, server, smb, share, user 
+summary: Hyper-V 和 SQL Server 使用域帐户创建与持续可用共享的 SMB 连接。要成功创建连接，计算机帐户必须成功映射到 UNIX 用户。为此，最方便的方法是将计算机帐户映射到默认 UNIX 用户。 
+---
+= 验证域帐户是否映射到默认 UNIX 用户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Hyper-V 和 SQL Server 使用域帐户创建与持续可用共享的 SMB 连接。要成功创建连接，计算机帐户必须成功映射到 UNIX 用户。为此，最方便的方法是将计算机帐户映射到默认 UNIX 用户。
+
+Hyper-V 和 SQL Server 使用域计算机帐户创建 SMB 连接。此外， SQL Server 还使用域用户帐户作为服务帐户，该帐户还会建立 SMB 连接。
+
+创建 Storage Virtual Machine （ SVM ）时， ONTAP 会自动创建名为 "`pcuser` " （ UID 为 `65534` ）的默认用户和名为 "`pcuser` " 的组（ GID 为 `65534` ），并将默认用户添加到 "`pcuser` " 组。如果要在将集群升级到 Data ONTAP 8.2 之前存在的 SVM 上配置基于 SMB 解决方案的 Hyper-V ，则默认用户和组可能不存在。否则，必须先创建它们，然后再配置 CIFS 服务器的默认 UNIX 用户。
+
+.步骤
+. 确定是否存在默认 UNIX 用户：
++
+` * vserver cifs options show -vserver _vserver_name_*`
+
+. 如果未设置默认用户选项，请确定是否存在可指定为默认 UNIX 用户的 UNIX 用户：
++
+` * vserver services unix-user show -vserver _vserver_name_*`
+
+. 如果未设置默认用户选项，并且没有可指定为默认 UNIX 用户的 UNIX 用户，请创建默认 UNIX 用户和默认组，然后将默认用户添加到组中。
++
+通常，系统会为默认用户指定用户名 "`pcuser` " ，并且必须为其分配 UID `65534` 。默认组通常被指定为组名称 "`pcuser` " 。分配给组的 GID 必须为 `65534` 。
+
++
+.. 创建默认组： + ` * vserver services unix-group create -vserver _vserver_name_ -name pcuser -id 65534*`
+.. 创建默认用户并将默认用户添加到默认组： + ` * vserver services unix-user create -vserver _vserver_name_ -user pcuser -id 65534 -primary-gid 65534*`
+.. 验证是否已正确配置默认用户和默认组： + ` * vserver services unix-user show -vserver _vserver_name_*` + ` * vserver services unix-group show -vserver _vserver_name_ -membs*`
+
+
+. 如果未配置 CIFS 服务器的默认用户，请执行以下操作：
++
+.. 配置默认用户：
++
+` * vserver cifs options modify -vserver * vserver_name* -default-unix-user pcuser*`
+
+.. 验证是否已正确配置默认 UNIX 用户：
++
+` * vserver cifs options show -vserver _vserver_name_*`
+
+
+
+. 要验证应用程序服务器的计算机帐户是否正确映射到默认用户，请使用 `vserver cifs session show` 命令将驱动器映射到 SVM 上的共享，并确认 Windows 用户到 UNIX 用户的映射。
++
+有关使用此命令的详细信息，请参见手册页。
+
+
+
+以下命令确定未设置 CIFS 服务器的默认用户，但确定 "`pcuser` " 用户和 "`pcuser` " 组存在。在 SVM vs1 上，将 "`pcuser` " 用户分配为 CIFS 服务器的默认用户。
+
+[listing]
+----
+cluster1::> vserver cifs options show
+
+Vserver: vs1
+
+  Client Session Timeout : 900
+  Default Unix Group     : -
+  Default Unix User      : -
+  Guest Unix User        : -
+  Read Grants Exec       : disabled
+  Read Only Delete       : disabled
+  WINS Servers           : -
+
+
+
+cluster1::> vserver services unix-user show
+          User            User   Group  Full
+Vserver   Name            ID     ID     Name
+--------- --------------- ------ ------ ----------------
+vs1       nobody          65535  65535  -
+vs1       pcuser          65534  65534  -
+vs1       root            0      1      -
+
+cluster1::> vserver services unix-group show -members
+Vserver        Name                ID
+vs1            daemon              1
+       Users: -
+vs1            nobody              65535
+       Users: -
+vs1            pcuser              65534
+       Users: -
+vs1            root                0
+       Users: -
+
+cluster1::> vserver cifs options modify -vserver vs1 -default-unix-user pcuser
+
+cluster1::> vserver cifs options show
+
+Vserver: vs1
+
+  Client Session Timeout : 900
+  Default Unix Group     : -
+  Default Unix User      : pcuser
+  Guest Unix User        : -
+  Read Grants Exec       : disabled
+  Read Only Delete       : disabled
+  WINS Servers           : -
+----

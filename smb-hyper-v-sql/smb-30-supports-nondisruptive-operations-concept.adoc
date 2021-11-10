@@ -1,0 +1,19 @@
+---
+permalink: smb-hyper-v-sql/smb-30-supports-nondisruptive-operations-concept.html 
+sidebar: sidebar 
+keywords: smb, functionality, support, nondisruptive, operations, shares, clients, hyper, v, sql, server 
+summary: SMB 3.0 提供了关键功能，支持通过 SMB 共享对 Hyper-V 和 SQL Server 执行无中断操作。这包括持续可用的共享属性和一种称为永久性句柄的文件句柄，此类句柄允许 SMB 客户端回收文件打开状态并透明地重新建立 SMB 连接。 
+---
+= SMB 3.0 功能如何支持通过 SMB 共享进行无中断操作
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SMB 3.0 提供了关键功能，支持通过 SMB 共享对 Hyper-V 和 SQL Server 执行无中断操作。这包括 `持续可用` 共享属性和一种称为 _persistent handlow_ 的文件句柄，可使 SMB 客户端回收文件打开状态并透明地重新建立 SMB 连接。
+
+对于连接到具有持续可用共享属性集的共享的支持 SMB 3.0 的客户端，可以将永久性句柄授予这些客户端。如果 SMB 会话已断开连接，则 CIFS 服务器会保留有关永久性句柄状态的信息。在允许客户端重新连接的 60 秒期间， CIFS 服务器会阻止其他客户端请求，从而允许具有永久性句柄的客户端在网络断开连接后回收句柄。具有永久性句柄的客户端可以使用 Storage Virtual Machine （ SVM ）上的一个数据 LIF 进行重新连接，方法是通过同一个 LIF 或不同的 LIF 进行重新连接。
+
+聚合重新定位，接管和交还都发生在 SFO 对之间。为了无缝管理具有永久性句柄的文件的会话断开连接和重新连接，配对节点会维护一份所有永久性句柄锁定信息的副本。无论是计划内事件还是计划外事件， SFO 配对节点都可以无中断地管理永久性句柄重新连接。利用这一新功能，与 CIFS 服务器的 SMB 3.0 连接可以透明，无中断地故障转移到传统中断事件中分配给 SVM 的另一个数据 LIF 。
+
+尽管使用永久性句柄可以使 CIFS 服务器透明地对 SMB 3.0 连接进行故障转移，但如果故障导致 Hyper-V 应用程序故障转移到 Windows Server 集群中的另一个节点，则客户端无法回收这些已断开的句柄的文件句柄。在这种情况下，如果 Hyper-V 应用程序在其他节点上重新启动，处于 Disconnected 状态的文件句柄可能会阻止其访问。"`故障转移集群` " 是 SMB 3.0 的一部分，可通过提供一种机制来使陈旧的冲突句柄失效来解决此情形。通过这种机制， Hyper-V 集群可以在 Hyper-V 集群节点出现故障时快速恢复。

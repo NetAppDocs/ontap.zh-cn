@@ -1,0 +1,23 @@
+---
+permalink: smb-admin/server-security-settings-svm-disaster-recovery-concept.html 
+sidebar: sidebar 
+keywords: create, creating, svm, configure, disaster, recovery, destination, identity, preserve, snapmirror, configuration, smb, guideline, guidelines for smb server security settings in an svm disaster recovery configuration 
+summary: 在创建配置为不保留身份的灾难恢复目标的 SVM （在 SnapMirror 配置中， -identity-preserve 选项设置为 false ）之前，您应了解如何在目标 SVM 上管理 SMB 服务器安全设置。 
+---
+= SVM 灾难恢复配置中的 SMB 服务器安全设置准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在创建配置为不保留身份的灾难恢复目标的 SVM （在 SnapMirror 配置中， ` -identity-preserve` 选项设置为 `false` ）之前，您应了解如何在目标 SVM 上管理 SMB 服务器安全设置。
+
+* 非默认 SMB 服务器安全设置不会复制到目标。
++
+在目标 SVM 上创建 SMB 服务器时，所有 SMB 服务器安全设置均设置为默认值。初始化，更新或重新同步 SVM 灾难恢复目标时，源上的 SMB 服务器安全设置不会复制到目标。
+
+* 您必须手动配置非默认 SMB 服务器安全设置。
++
+如果在源 SVM 上配置了非默认 SMB 服务器安全设置，则在目标变为读写（ SnapMirror 关系中断）后，必须在目标 SVM 上手动配置这些相同的设置。
+
+

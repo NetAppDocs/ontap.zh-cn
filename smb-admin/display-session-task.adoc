@@ -1,0 +1,184 @@
+---
+permalink: smb-admin/display-session-task.html 
+sidebar: sidebar 
+keywords: display, information, establish, smb, session, connection, session, id, ip, address, workstation, protection, level, nondisruptive, operation, display smb session information 
+summary: 您可以显示有关已建立的 SMB 会话的信息，包括 SMB 连接和会话 ID 以及使用会话的工作站的 IP 地址。您可以显示有关会话的 SMB 协议版本和持续可用保护级别的信息，这有助于确定会话是否支持无中断操作。 
+---
+= 显示 SMB 会话信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关已建立的 SMB 会话的信息，包括 SMB 连接和会话 ID 以及使用会话的工作站的 IP 地址。您可以显示有关会话的 SMB 协议版本和持续可用保护级别的信息，这有助于确定会话是否支持无中断操作。
+
+您可以摘要形式显示 SVM 上所有会话的信息。但是，在许多情况下，返回的输出量很大。您可以通过指定可选参数来自定义输出中显示的信息：
+
+* 您可以使用可选的 ` 字段` 参数显示有关所选字段的输出。
++
+您可以输入 ` 字段？` 以确定可以使用的字段。
+
+* 您可以使用 ` -instance` 参数显示有关已建立的 SMB 会话的详细信息。
+* 您可以单独使用 ` 字段` 参数或 ` 实例` 参数，也可以与其他可选参数结合使用。
+
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 要显示 SMB 会话信息的项 | 输入以下命令 ... 
+
+
+ a| 
+SVM 上的所有会话的摘要形式
+ a| 
+`vserver cifs session show -vserver vserver_name`
+
+
+
+ a| 
+指定的连接 ID
+ a| 
+`vserver cifs session show -vserver vserver_name -connection-id integer`
+
+
+
+ a| 
+指定的工作站 IP 地址
+ a| 
+`vserver cifs session show -vserver vserver_name -address workstation_ip_address`
+
+
+
+ a| 
+指定的 LIF IP 地址
+ a| 
+`vserver cifs session show -vserver vserver_name -lif-address LIF_IP_address`
+
+
+
+ a| 
+在指定节点上
+ a| 
+`vserver cifs session show -vserver vserver_name -node ｛ node_name_local ｝`
+
+
+
+ a| 
+指定的 Windows 用户
+ a| 
+`vserver cifs session show -vserver vserver_name -windows-user domain_name\\user_name`
+
+
+
+ a| 
+使用指定的身份验证机制
+ a| 
+`vserver cifs session show -vserver vserver_name -auth-mechanism ｛ NTLMv1_NTLMv2|kerberos_Anonymous ｝`
+
+
+
+ a| 
+使用指定的协议版本
+ a| 
+`vserver cifs session show -vserver vserver_name -protocol-version ｛ smb1|smb2_1|smb3_1 ｝`
+
+[NOTE]
+====
+持续可用的保护和 SMB 多通道仅适用于 SMB 3.0 及更高版本的会话。要在所有符合条件的会话中查看其状态，您应指定此参数，并将值设置为 `SMB3` 或更高版本。
+
+====
+
+
+ a| 
+具有指定级别的持续可用保护
+ a| 
+`vserver cifs session show -vserver vserver_name -continuous-available ｛ No_Yes| Partial ｝`
+
+[NOTE]
+====
+如果持续可用状态为 `Partial` ，则表示会话至少包含一个打开的持续可用文件，但会话中的某些文件未打开且具有持续可用的保护。您可以使用 `vserver cifs sessions file show` 命令来确定已建立会话中的哪些文件未通过持续可用的保护打开。
+
+====
+
+
+ a| 
+具有指定的 SMB 签名会话状态
+ a| 
+`vserver cifs session show -vserver vserver_name -is-session-signed ｛ true_false ｝`
+
+|===
+
+
+以下命令显示 SVM vs1 上从 IP 地址为 10.1.1.1 的工作站建立的会话的会话信息：
+
+[listing]
+----
+cluster1::> vserver cifs session show -address 10.1.1.1
+Node:    node1
+Vserver: vs1
+Connection Session                                    Open         Idle
+ID          ID      Workstation      Windows User    Files         Time
+----------  ------- ---------------- ------------- ------- ------------
+3151272279,
+3151272280,
+3151272281  1       10.1.1.1         DOMAIN\joe          2          23s
+----
+以下命令显示 SVM vs1 上具有持续可用保护的会话的详细会话信息。此连接是使用域帐户建立的。
+
+[listing]
+----
+cluster1::> vserver cifs session show -instance -continuously-available Yes
+
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 1
+               Connection ID: 3151274158
+Incoming Data LIF IP Address: 10.2.1.1
+      Workstation IP address: 10.1.1.2
+    Authentication Mechanism: Kerberos
+                Windows User: DOMAIN\SERVER1$
+                   UNIX User: pcuser
+                 Open Shares: 1
+                  Open Files: 1
+                  Open Other: 0
+              Connected Time: 10m 43s
+                   Idle Time: 1m 19s
+            Protocol Version: SMB3
+      Continuously Available: Yes
+           Is Session Signed: false
+       User Authenticated as: domain-user
+                NetBIOS Name: -
+       SMB Encryption Status: Unencrypted
+----
+以下命令显示 SVM vs1 上使用 SMB 3.0 和 SMB 多通道的会话的会话信息。在此示例中，用户使用 LIF IP 地址从支持 SMB 3.0 的客户端连接到此共享；因此，身份验证机制默认为 NTLMv2 。必须使用 Kerberos 身份验证进行连接，以获得持续可用的保护。
+
+[listing]
+----
+cluster1::> vserver cifs session show -instance -protocol-version SMB3
+
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 1
+              **Connection IDs: 3151272607,31512726078,3151272609
+            Connection Count: 3**
+Incoming Data LIF IP Address: 10.2.1.2
+      Workstation IP address: 10.1.1.3
+    Authentication Mechanism: NTLMv2
+                Windows User: DOMAIN\administrator
+                   UNIX User: pcuser
+                 Open Shares: 1
+                  Open Files: 0
+                  Open Other: 0
+              Connected Time: 6m 22s
+                   Idle Time: 5m 42s
+            Protocol Version: SMB3
+      Continuously Available: No
+           Is Session Signed: false
+       User Authenticated as: domain-user
+                NetBIOS Name: -
+       SMB Encryption Status: Unencrypted
+----
+* 相关信息 *
+
+xref:display-open-files-task.adoc[显示有关打开的 SMB 文件的信息]

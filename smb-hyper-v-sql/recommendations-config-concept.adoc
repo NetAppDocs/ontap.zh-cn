@@ -1,0 +1,29 @@
+---
+permalink: smb-hyper-v-sql/recommendations-config-concept.html 
+sidebar: sidebar 
+keywords: recommendations, sql, server, hyper, v, smb, configuration 
+summary: 要确保 SQL Server 和基于 SMB 的 Hyper-V 配置稳健且正常运行，您需要熟悉配置解决方案时建议的最佳实践。 
+---
+= 针对 SQL Server 和基于 SMB 的 Hyper-V 配置的建议
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要确保 SQL Server 和基于 SMB 的 Hyper-V 配置稳健且正常运行，您需要熟悉配置解决方案时建议的最佳实践。
+
+
+
+== 一般建议
+
+* 将应用程序服务器文件与常规用户数据分开。
++
+如果可能，请将整个 Storage Virtual Machine （ SVM ）及其存储专用于应用程序服务器的数据。
+
+* 为了获得最佳性能，请勿在用于存储应用程序服务器数据的 SVM 上启用 SMB 签名。
+* 为了获得最佳性能并提高容错能力，请启用 SMB 多通道，以便在一个 SMB 会话中提供 ONTAP 与客户端之间的多个连接。
+* 请勿在 Hyper-V 或基于 SMB 的 SQL Server 配置中使用的共享以外的任何共享上创建持续可用的共享。
+* 对用于持续可用性的共享禁用更改通知。
+* 请勿与聚合重新定位（ Aggregate Relocation ， ARL ）同时执行卷移动，因为 ARL 具有暂停某些操作的阶段。
+* 对于基于 SMB 的 Hyper-V 解决方案，请在创建集群模式虚拟机时使用来宾 iSCSI 驱动器。在 ONTAP SMB 共享中，基于 SMB 的 Hyper-V 不支持共享的 ` 。 vhdx` 文件。
+

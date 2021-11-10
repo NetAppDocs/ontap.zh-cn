@@ -1,0 +1,102 @@
+---
+permalink: tape-backup/availability-volumes-tapes-backup-restore-lif-reference.html 
+sidebar: sidebar 
+keywords: lif, availability, volumes, tape, devices, backup, restore, types, cab, extension, application 
+summary: 您可以配置备份应用程序，以便在集群中的任何 LIF 类型上建立 NDMP 控制连接。在 Storage Virtual Machine （ SVM ）范围的 NDMP 模式下，您可以根据这些 LIF 类型以及 CAB 扩展的状态确定卷和磁带设备用于备份和还原操作的可用性。 
+---
+= 可在不同 LIF 类型上使用卷和磁带设备进行备份和还原
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以配置备份应用程序，以便在集群中的任何 LIF 类型上建立 NDMP 控制连接。在 Storage Virtual Machine （ SVM ）范围的 NDMP 模式下，您可以根据这些 LIF 类型以及 CAB 扩展的状态确定卷和磁带设备用于备份和还原操作的可用性。
+
+下表显示了 NDMP 控制连接 LIF 类型的卷和磁带设备可用性以及 CAB 扩展的状态：
+
+
+
+== 备份应用程序不支持 CAB 扩展时卷和磁带设备的可用性
+
+|===
+| NDMP 控制连接 LIF 类型 | 可用于备份或还原的卷 | 可用于备份或还原的磁带设备 
+
+
+ a| 
+节点管理 LIF
+ a| 
+节点托管的所有卷
+ a| 
+连接到托管节点管理 LIF 的节点的磁带设备
+
+
+
+ a| 
+数据 LIF
+ a| 
+仅限属于由托管数据 LIF 的节点托管的 SVM 的卷
+ a| 
+无
+
+
+
+ a| 
+集群管理 LIF
+ a| 
+由托管集群管理 LIF 的节点托管的所有卷
+ a| 
+无
+
+
+
+ a| 
+集群间 LIF
+ a| 
+由托管集群间 LIF 的节点托管的所有卷
+ a| 
+连接到托管集群间 LIF 的节点的磁带设备
+
+|===
+
+
+== 备份应用程序支持 CAB 扩展时卷和磁带设备的可用性
+
+|===
+| NDMP 控制连接 LIF 类型 | 可用于备份或还原的卷 | 可用于备份或还原的磁带设备 
+
+
+ a| 
+节点管理 LIF
+ a| 
+节点托管的所有卷
+ a| 
+连接到托管节点管理 LIF 的节点的磁带设备
+
+
+
+ a| 
+数据 LIF
+ a| 
+属于托管数据 LIF 的 SVM 的所有卷
+ a| 
+无
+
+
+
+ a| 
+集群管理 LIF
+ a| 
+集群中的所有卷
+ a| 
+集群中的所有磁带设备
+
+
+
+ a| 
+集群间 LIF
+ a| 
+集群中的所有卷
+ a| 
+集群中的所有磁带设备
+
+|===

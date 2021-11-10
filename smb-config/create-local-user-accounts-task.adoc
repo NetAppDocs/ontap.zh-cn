@@ -1,0 +1,62 @@
+---
+permalink: smb-config/create-local-user-accounts-task.html 
+sidebar: sidebar 
+keywords: create, local, user, account, authorize, access, data, contain, svm, sb, connection, local, user, authentication, create local user accounts 
+summary: 您可以创建本地用户帐户，该帐户可用于授权通过 SMB 连接访问 SVM 中包含的数据。创建 SMB 会话时，您还可以使用本地用户帐户进行身份验证。 
+---
+= 创建本地用户帐户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以创建本地用户帐户，该帐户可用于授权通过 SMB 连接访问 SVM 中包含的数据。创建 SMB 会话时，您还可以使用本地用户帐户进行身份验证。
+
+默认情况下，创建 SVM 时会启用本地用户功能。
+
+创建本地用户帐户时，必须指定用户名，并且必须指定要与该帐户关联的 SVM 。
+
+`vserver cifs users-and-groups local-user` 手册页包含有关可选参数和命名要求的详细信息。
+
+.步骤
+. 创建本地用户： `vserver cifs users-and-groups local-user create -vserver vserver_name user-name user_name optional_parameters`
++
+以下可选参数可能有用：
+
++
+** ` 全名`
++
+用户的全名。
+
+** ` 问题描述`
++
+本地用户的问题描述。
+
+** 已禁用 ` is-account-disabled ｛ true|false ｝`
++
+指定用户帐户是启用还是禁用。如果未指定此参数，则默认为启用用户帐户。
+
+
+
++
+命令将提示输入本地用户的密码。
+
+. 输入本地用户的密码，然后确认该密码。
+. 验证是否已成功创建此用户： `vserver cifs users-and-groups local-user show -vserver vserver_name`
+
+
+以下示例将创建一个与 SVM vs1.example.com 关联的本地用户 " `SMB_server01\sue` " ，其全名为 " `Sue Chang` " ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user create -vserver vs1.example.com ‑user-name SMB_SERVER01\sue -full-name "Sue Chang"
+
+Enter the password:
+Confirm the password:
+
+cluster1::> vserver cifs users-and-groups local-user show
+Vserver  User Name                  Full Name  Description
+-------- -------------------------- ---------- -------------
+vs1      SMB_SERVER01\Administrator            Built-in administrator account
+vs1      SMB_SERVER01\sue            Sue Chang
+----

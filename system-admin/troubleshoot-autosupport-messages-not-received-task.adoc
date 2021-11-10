@@ -1,0 +1,112 @@
+---
+permalink: system-admin/troubleshoot-autosupport-messages-not-received-task.html 
+sidebar: sidebar 
+keywords: troubleshoot, autosupport, messagem receive, deliver, generate 
+summary: 如果系统未发送 AutoSupport 消息，您可以确定这是因为 AutoSupport 无法生成消息还是无法传送消息。 
+---
+= 在未收到消息时对 AutoSupport 进行故障排除
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果系统未发送 AutoSupport 消息，您可以确定这是因为 AutoSupport 无法生成消息还是无法传送消息。
+
+.步骤
+. 使用 `ssystem node AutoSupport history show` 命令检查消息的传送状态。
+. 读取状态。
++
+[cols="25,75"]
+|===
+| 此状态 | 表示 
+
+
+ a| 
+正在初始化
+ a| 
+收集过程正在启动。如果此状态为临时状态，则一切正常。但是，如果此状态仍然存在，则会显示问题描述。
+
+
+
+ a| 
+收集失败
+ a| 
+AutoSupport 无法在 spool 目录中创建 AutoSupport 内容。您可以输入 `ssystem node AutoSupport history show -detail` 命令来查看 AutoSupport 尝试收集的内容。
+
+
+
+ a| 
+正在收集
+ a| 
+AutoSupport 正在收集 AutoSupport 内容。您可以输入 `ssystem node AutoSupport manifest show` 命令来查看 AutoSupport 正在收集的内容。
+
+
+
+ a| 
+已排队
+ a| 
+AutoSupport 消息已排队等待传送，但尚未传送。
+
+
+
+ a| 
+正在传输
+ a| 
+AutoSupport 当前正在传送消息。
+
+
+
+ a| 
+已成功发送
+ a| 
+AutoSupport 已成功传送消息。您可以输入 `ssystem node AutoSupport history show -delivery` 命令来了解 AutoSupport 在何处传送消息。
+
+
+
+ a| 
+忽略
+ a| 
+AutoSupport 没有消息的目标。您可以输入 `ssystem node AutoSupport history show -delivery` 命令来查看传送详细信息。
+
+
+
+ a| 
+已重新排队
+ a| 
+AutoSupport 尝试传送消息，但尝试失败。因此， AutoSupport 会将消息重新置于传送队列中，以便再次尝试发送。您可以输入 `ssystem node AutoSupport history show` 命令来查看此错误。
+
+
+
+ a| 
+传输失败
+ a| 
+AutoSupport 无法传送消息达到指定次数，并停止尝试传送消息。您可以输入 `ssystem node AutoSupport history show` 命令来查看此错误。
+
+
+
+ a| 
+OnDemand —忽略
+ a| 
+已成功处理此 AutoSupport 消息，但 AutoSupport OnDemand 服务选择忽略此消息。
+
+|===
+. 执行以下操作之一：
++
+|===
+| 的状态 | 执行此操作 ... 
+
+
+ a| 
+初始化或收集失败
+ a| 
+请联系技术支持，因为 AutoSupport 无法生成消息。
+
+
+
+ a| 
+忽略，重新排队或传输失败
+ a| 
+检查是否已为目标正确配置 SMTP ， HTTP 或 HTTPS ，因为 AutoSupport 无法传送消息。
+
+|===
+

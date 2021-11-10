@@ -1,0 +1,138 @@
+---
+permalink: smb-admin/configure-home-directories-u-variable-task.html 
+sidebar: sidebar 
+keywords: 'create, home, directory, configuration, designate, share, name, variable, user, windows, dynamic, configure, configure home directories using the %u variable' 
+summary: '您可以创建主目录配置，其中使用 %w 变量指定共享名称，但使用 %u 变量指定主目录共享的相对路径。然后，用户可以使用使用其 Windows 用户名动态创建的共享连接到其主目录共享，而无需知道主目录的实际名称或路径。' 
+---
+= 使用 %u 变量配置主目录
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以创建主目录配置，其中使用 ` %w` 变量指定共享名称，但使用 ` %u` 变量指定主目录共享的相对路径。然后，用户可以使用使用其 Windows 用户名动态创建的共享连接到其主目录共享，而无需知道主目录的实际名称或路径。
+
+.步骤
+. 创建一个 qtree 以包含用户的主目录： `volume qtree create -vserver vserver_name -qtree-path qtree_path`
+. 验证 qtree 是否使用正确的安全模式： `volume qtree show`
+. 如果 qtree 未使用所需的安全模式，请使用 `volume qtree security` 命令更改此安全模式。
+. 添加主目录共享： ` +vserver cifs share create -vserver vserver -share-name %w -path %u -share-properties homedirectory ， ...]+`
++
+` -vserver` `vserver` 指定要添加搜索路径的已启用 CIFS 的 Storage Virtual Machine （ SVM ）。
+
++
+` 共享名称` ` %w` 指定主目录共享名称。当每个用户连接到其主目录时，系统会动态创建共享名称，其格式为 _windows_user_name_ 。
+
++
+[NOTE]
+====
+您也可以对 ` -share-name` 选项使用 ` %u` 变量。这样将创建一个相对共享路径，该路径使用映射的 UNIX 用户名。
+
+====
++
+` 路径` ` %u` 指定主目录的相对路径。当每个用户连接到其主目录时，系统会动态创建相对路径，其格式为 _mapped_unix_user_name_ 。
+
++
+[NOTE]
+====
+此选项的值也可以包含静态元素。例如， `eng/%u` 。
+
+====
++
+` -share-properties` ` +HomeDirectory\[ ， ...]+` 指定该共享的共享属性。您必须指定 `homedirectory` 值。您可以使用逗号分隔列表指定其他共享属性。
+
+. 使用 `vserver cifs share show` 命令验证共享是否具有所需的配置。
+. 添加主目录搜索路径： `vserver cifs home-directory search-path add -vserver vserver -path path`
++
+` -vserver` `vserver` 指定要添加搜索路径的已启用 CIFS 的 SVM 。
+
++
+` 路径` `path` 指定搜索路径的绝对目录路径。
+
+. 使用 `vserver cifs home-directory search-path show` 命令验证是否已成功添加搜索路径。
+. 如果 UNIX 用户不存在，请使用 `vserver services unix-user create` 命令创建 UNIX 用户。
++
+[NOTE]
+====
+在映射 Windows 用户名之前，必须存在要将其映射到的 UNIX 用户名。
+
+====
+. 使用以下命令为 Windows 用户创建与 UNIX 用户的名称映射： `vserver name-mapping create -vserver vserver_name -Direction win-unix -priority integer -pattern windows_user_name -replacement unix_user_name`
++
+[NOTE]
+====
+如果已存在将 Windows 用户映射到 UNIX 用户的名称映射，则无需执行映射步骤。
+
+====
++
+Windows 用户名将映射到相应的 UNIX 用户名。当 Windows 用户连接到其主目录共享时，他们会使用与其 Windows 用户名对应的共享名称连接到动态创建的主目录，而无需知道该目录名与 UNIX 用户名对应。
+
+. 对于具有主目录的用户，请在指定用于包含主目录的 qtree 或卷中创建相应的目录。
++
+例如，如果您创建的 qtree 的路径为 ` /vol/vol1/users` ，并且要创建其目录的用户的映射 UNIX 用户名为 "`unixuser1` " ，则您将使用以下路径创建目录： ` /vol/vol1/users/unixuser1` 。
+
++
+如果您创建了一个名为 "`home1` " 的卷，该卷挂载在 ` /home1` 上，则应使用以下路径创建目录： ` /home1/unixuser1` 。
+
+. 通过映射驱动器或使用 UNC 路径进行连接，验证用户是否可以成功连接到主共享。
++
+例如，如果用户 mydomain\user1 映射到 UNIX 用户 unixuser1 并希望连接到在步骤 10 中创建的位于 SVM vs1 上的目录，则 user1 将使用 UNC 路径 ` \\vs1\user1` 进行连接。
+
+
+
+以下示例中的命令使用以下设置创建主目录配置：
+
+* 共享名称为 %w
+* 相对主目录路径为 %u
+* 用于包含主目录 ` /home1` 的搜索路径是配置了 UNIX 安全模式的卷。
+* 此时将在 SVM vs1 上创建配置。
+
+
+如果用户同时从 Windows 主机或 Windows 和 UNIX 主机访问其主目录，并且文件系统管理员使用基于 UNIX 的用户和组来控制对文件系统的访问，则可以使用此类主目录配置。
+
+[listing]
+----
+cluster::> vserver cifs share create -vserver vs1 -share-name %w -path %u ‑share-properties oplocks,browsable,changenotify,homedirectory
+
+cluster::> vserver cifs share show -vserver vs1 -share-name %u
+
+                      Vserver: vs1
+                        Share: %w
+     CIFS Server NetBIOS Name: VS1
+                         Path: %u
+             Share Properties: oplocks
+                               browsable
+                               changenotify
+                               homedirectory
+           Symlink Properties: enable
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: -
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+
+cluster::> vserver cifs home-directory search-path add -vserver vs1 ‑path /home1
+
+cluster::> vserver cifs home-directory search-path show -vserver vs1
+Vserver     Position Path
+----------- -------- -----------------
+vs1         1        /home1
+
+cluster::> vserver name-mapping create -vserver vs1 -direction win-unix ‑position 5 -pattern user1 -replacement unixuser1
+
+cluster::> vserver name-mapping show -pattern user1
+Vserver        Direction Position
+-------------- --------- --------
+vs1            win-unix  5        Pattern: user1
+                              Replacement: unixuser1
+----
+* 相关信息 *
+
+xref:create-home-directory-config-w-d-variables-task.adoc[使用 %w 和 %d 变量创建主目录配置]
+
+xref:home-directory-config-concept.adoc[其他主目录配置]
+
+xref:display-user-home-directory-path-task.adoc[显示有关 SMB 用户主目录路径的信息]

@@ -1,0 +1,19 @@
+---
+permalink: volumes/delete-qtree-affects-tree-quotas-concept.html 
+sidebar: sidebar 
+keywords: how, deleting, qtree, affects, tree quotas 
+summary: 删除 qtree 时， ONTAP 将不再应用适用于该 qtree 的所有配额，无论是显式配额还是派生配额。 
+---
+= 删除 qtree 如何影响树配额
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+删除 qtree 时， ONTAP 将不再应用适用于该 qtree 的所有配额，无论是显式配额还是派生配额。
+
+配额规则是否持久取决于您删除 qtree 的位置：
+
+* 如果使用 ONTAP 删除 qtree ，则该 qtree 的配额规则将自动删除，包括树配额规则以及为该 qtree 配置的任何用户和组配额规则。
+* 如果使用 CIFS 或 NFS 客户端删除 qtree ，则必须删除该 qtree 的任何配额规则，以避免在重新初始化配额时出错。如果创建的新 qtree 与删除的 qtree 同名，则在重新初始化配额之前，现有配额规则不会应用于新 qtree 。
+

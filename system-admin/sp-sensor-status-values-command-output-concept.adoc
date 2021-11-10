@@ -1,0 +1,267 @@
+---
+permalink: system-admin/sp-sensor-status-values-command-output-concept.html 
+sidebar: sidebar 
+keywords: understand, discrete, sp, sensor, status, values, command, output, cli, hexedecimal, format 
+summary: 离散传感器没有阈值。其读数显示在 SP CLI system sensors 命令输出的 Current 列下，不具有实际含义，因此 SP 会忽略这些读数。system sensors 命令输出中的 Status 列以十六进制格式显示离散传感器的状态值。 
+---
+= 关于 system sensors 命令输出的离散 SP 传感器状态值
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+离散传感器没有阈值。其读数显示在 SP CLI `ssystem sensors` 命令输出的 `current` 列下，不具有实际含义，因此 SP 会忽略这些读数。`ssystem sensors` 命令输出中的 `Ststatus` 列以十六进制格式显示离散传感器的状态值。
+
+离散传感器的示例包括风扇传感器，电源设备（ PSU ）故障传感器和系统故障传感器。离散传感器的具体列表取决于平台。
+
+您可以使用 SP CLI `ssystem sensors get` `sensor_name` 命令帮助解释大多数离散传感器的状态值。以下示例显示了为离散传感器 CPU0_Error 和 IO_Slot1_Present 输入 `ssystem sensors get` `sensor_name` 的结果：
+
+[listing]
+----
+SP node1> system sensors get CPU0_Error
+Locating sensor record...
+Sensor ID              : CPU0_Error (0x67)
+ Entity ID             : 7.97
+ Sensor Type (Discrete): Temperature
+ States Asserted       : Digital State
+                         [State Deasserted]
+----
+[listing]
+----
+SP node1> system sensors get IO_Slot1_Present
+Locating sensor record...
+Sensor ID              : IO_Slot1_Present (0x74)
+ Entity ID             : 11.97
+ Sensor Type (Discrete): Add-in Card
+ States Asserted       : Availability State
+                        [Device Present]
+----
+尽管 `ssystem sensors get` `sensor_name` 命令可显示大多数离散传感器的状态信息，但它不会提供 System_FW_Status ， System_Watchdog ， PSU1_Input_Type 和 PSU2_Input_Type 离散传感器的状态信息。您可以使用以下信息来解释这些传感器的状态值。
+
+
+
+== System_FW_Status
+
+System_FW_Status 传感器的状态显示为 `0xAABB` 。您可以将 `AA` 和 `BB` 的信息组合在一起来确定传感器的状况。
+
+`AA` 可以具有以下值之一：
+
+|===
+| 值 | 传感器的状况 
+
+
+ a| 
+01
+ a| 
+系统固件错误
+
+
+
+ a| 
+02
+ a| 
+系统固件挂起
+
+
+
+ a| 
+04
+ a| 
+系统固件进度
+
+|===
+`BB` 可以具有以下值之一：
+
+|===
+| 值 | 传感器的状况 
+
+
+ a| 
+00
+ a| 
+系统软件已正确关闭
+
+
+
+ a| 
+01
+ a| 
+正在初始化内存
+
+
+
+ a| 
+02
+ a| 
+NVMEM 正在初始化（存在 NVMEM 时）
+
+
+
+ a| 
+04
+ a| 
+还原内存控制器中心（ MCH ）值（如果存在 NVMEM ）
+
+
+
+ a| 
+05
+ a| 
+用户已进入设置程序
+
+
+
+ a| 
+13
+ a| 
+启动操作系统或加载程序
+
+
+
+ a| 
+1F
+ a| 
+BIOS 正在启动
+
+
+
+ a| 
+20
+ a| 
+LOADER 正在运行
+
+
+
+ a| 
+21
+ a| 
+LOADER 正在对主 BIOS 固件进行编程。您不能关闭系统。
+
+
+
+ a| 
+22.
+ a| 
+LOADER 正在对备用 BIOS 固件进行编程。您不能关闭系统。
+
+
+
+ a| 
+2F
+ a| 
+ONTAP 正在运行
+
+
+
+ a| 
+60
+ a| 
+SP 已关闭系统
+
+
+
+ a| 
+61.
+ a| 
+SP 已启动系统
+
+
+
+ a| 
+62.
+ a| 
+SP 已重置系统
+
+
+
+ a| 
+63.
+ a| 
+SP watchdog 重新启动
+
+
+
+ a| 
+64
+ a| 
+SP watchdog 冷重置
+
+|===
+例如， System_FW_Status 传感器状态 0x042F 表示 " 系统固件运行中（ 04 ）， ONTAP 正在运行（ 2F ） " 。
+
+
+
+== system_watchdog
+
+System_Watchdog 传感器可能具有以下条件之一：
+
+* * 0x0080*
++
+此传感器的状态未更改
+
+
+
+|===
+| 值 | 传感器的状况 
+
+
+ a| 
+0x0081
+ a| 
+计时器中断
+
+
+
+ a| 
+0x0180
+ a| 
+计时器已过期
+
+
+
+ a| 
+0x0280
+ a| 
+硬重置
+
+
+
+ a| 
+0x0480
+ a| 
+关闭电源
+
+
+
+ a| 
+0x0880
+ a| 
+重新启动
+
+|===
+例如， System_Watchdog 传感器状态 0x0880 表示发生 watchdog 超时并导致系统重新启动。
+
+
+
+== PSU1_Input_Type 和 PSU2_Input_Type
+
+对于直流（ DC ）电源， PSU1_Input_Type 和 PSU2_Input_Type 传感器不适用。对于交流（ AC ）电源，传感器状态可以为以下值之一：
+
+|===
+| 值 | 传感器的状况 
+
+
+ a| 
+0x01 xx
+ a| 
+220V PSU 类型
+
+
+
+ a| 
+0x02 xx
+ a| 
+110V PSU 类型
+
+|===
+例如， PSU1_Input_Type 传感器状态 0x0280 表示传感器报告 PSU 类型为 110V 。

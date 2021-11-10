@@ -1,0 +1,84 @@
+---
+permalink: system-admin/requirements-autosupport-reference.html 
+sidebar: sidebar 
+keywords: requirements, autosupport, messages, http, smtp, https, configuration, support, protocols 
+summary: 您应使用 HTTPS 传送 AutoSupport 消息，以提供最佳安全性并支持所有最新的 AutoSupport 功能。虽然 AutoSupport 支持使用 HTTP 和 SMTP 传送 AutoSupport 消息，但建议使用 HTTPS 。 
+---
+= 使用 AutoSupport 的要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应使用 HTTPS 传送 AutoSupport 消息，以提供最佳安全性并支持所有最新的 AutoSupport 功能。虽然 AutoSupport 支持使用 HTTP 和 SMTP 传送 AutoSupport 消息，但建议使用 HTTPS 。
+
+
+
+== 支持的协议
+
+所有这些协议都基于名称解析到的地址系列在 IPv4 或 IPv6 上运行。
+
+|===
+| 协议和端口 | Description 
+
+
+ a| 
+HTTPS 位于端口 443 上
+ a| 
+这是默认协议。应尽可能使用此方法。
+
+此协议支持 AutoSupport OnDemand 和上传大型文件。
+
+远程服务器的证书将根据根证书进行验证，除非您禁用验证。
+
+交付使用 HTTP PUT 请求。使用 PUT ，如果请求在传输期间失败，则请求将从停止位置重新启动。如果接收请求的服务器不支持 PUT ，则交付将使用 HTTP POST 请求。
+
+
+
+ a| 
+HTTP 端口 80
+ a| 
+此协议优先于 SMTP 。
+
+此协议支持上传大型文件，但不支持 AutoSupport OnDemand 。
+
+交付使用 HTTP PUT 请求。使用 PUT ，如果请求在传输期间失败，则请求将从停止位置重新启动。如果接收请求的服务器不支持 PUT ，则交付将使用 HTTP POST 请求。
+
+
+
+ a| 
+SMTP 位于端口 25 或其他端口上
+ a| 
+只有当网络连接不允许 HTTPS 或 HTTP 时，才应使用此协议。
+
+默认端口值为 25 ，但您可以将 AutoSupport 配置为使用其他端口。
+
+使用 SMTP 时，请记住以下限制：
+
+* 不支持 AutoSupport OnDemand 和上传大型文件。
+* 数据未加密。
++
+SMTP 以明文形式发送数据，使 AutoSupport 消息中的文本易于截获和读取。
+
+* 可以对消息长度和行长度进行限制。
+
+
+|===
+如果您为 AutoSupport 配置了内部支持组织或支持合作伙伴组织的特定电子邮件地址，则这些消息始终通过 SMTP 发送。
+
+例如，如果您使用建议的协议向技术支持发送消息，并且还希望向内部支持组织发送消息，则您的消息将分别使用 HTTPS 和 SMTP 进行传输。
+
+AutoSupport 会限制每个协议的最大文件大小。HTTP 和 HTTPS 传输的默认设置为 25 MB 。SMTP 传输的默认设置为 5 MB 。如果 AutoSupport 消息的大小超过配置的限制， AutoSupport 将尽可能多地传送该消息。您可以通过修改 AutoSupport 配置来编辑最大大小。有关详细信息，请参见 `ssystem node AutoSupport modify` 手册页。
+
+[NOTE]
+====
+当您生成并发送 AutoSupport 消息将核心转储或性能归档文件上传到 NetApp 支持站点或指定 URI 时， AutoSupport 会自动覆盖 HTTPS 和 HTTP 协议的最大文件大小限制。只有在使用 `ssystem node AutoSupport invoke-core-upload` 或 `ssystem node AutoSupport invoke-performance-archive` 命令上传文件时，自动覆盖才适用。
+
+====
+
+
+== 配置要求
+
+根据您的网络配置，使用 HTTP 或 HTTPS 协议可能需要对代理 URL 进行额外配置。如果您使用 HTTP 或 HTTPS 向技术支持发送 AutoSupport 消息，并且您有一个代理，则必须确定该代理的 URL 。如果代理使用的端口不是默认端口 3128 ，则可以为此代理指定端口。您还可以指定用于代理身份验证的用户名和密码。
+
+如果使用 SMTP 向内部支持组织或技术支持发送 AutoSupport 消息，则必须配置外部邮件服务器。存储系统不能用作邮件服务器；它需要您站点上的外部邮件服务器才能发送邮件。邮件服务器必须是侦听 SMTP 端口（ 25 ）或其他端口的主机，并且必须将其配置为发送和接收 8 位多用途 Internet 邮件扩展（ MIME ）编码。示例邮件主机包括运行 sendmail 程序等 SMTP 服务器的 UNIX 主机和运行 Microsoft Exchange 服务器的 Windows 服务器。您可以拥有一个或多个邮件主机。

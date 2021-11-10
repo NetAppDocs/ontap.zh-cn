@@ -1,0 +1,173 @@
+---
+permalink: smb-admin/configure-branchcache-task.html 
+sidebar: sidebar 
+keywords: configure, branchcache, service, per-share, basis, smb, share, configure branchcache on the cifs server 
+summary: 您可以将 BranchCache 配置为按共享提供 BranchCache 服务。或者，您也可以将 BranchCache 配置为在所有 SMB 共享上自动启用缓存。 
+---
+= 在 CIFS 服务器上配置 BranchCache
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将 BranchCache 配置为按共享提供 BranchCache 服务。或者，您也可以将 BranchCache 配置为在所有 SMB 共享上自动启用缓存。
+
+您可以在 SVM 上配置 BranchCache 。
+
+* 如果要为 CIFS 服务器上所有 SMB 共享中的所有内容提供缓存服务，则可以创建纯共享 BranchCache 配置。
+* 如果要为 CIFS 服务器上选定 SMB 共享中的内容提供缓存服务，则可以创建每个共享 BranchCache 配置。
+
+
+配置 BranchCache 时，必须指定以下参数：
+
+|===
+| 所需参数 | Description 
+
+
+ a| 
+_SVM 名称 _
+ a| 
+BranchCache 按 SVM 进行配置。您必须指定要在哪个启用了 CIFS 的 SVM 上配置 BranchCache 服务。
+
+
+
+ a| 
+哈希存储的路径 _
+ a| 
+BranchCache 哈希存储在 SVM 卷上的常规文件中。您必须指定希望 ONTAP 存储哈希数据的现有目录的路径。 BranchCache 哈希路径必须为可读写路径。不允许使用只读路径，例如 Snapshot 目录。您可以将哈希数据存储在包含其他数据的卷中，也可以创建单独的卷来存储哈希数据。
+
+如果 SVM 是 SVM 灾难恢复源，则哈希路径不能位于根卷上。这是因为根卷不会复制到灾难恢复目标。
+
+哈希路径可以包含空格和任何有效的文件名字符。
+
+|===
+您也可以指定以下参数：
+
+|===
+| 可选参数 | Description 
+
+
+ a| 
+_ 支持的版本 _
+ a| 
+ONTAP 支持 BranchCache 1 和 2 。您可以启用版本 1 ，版本 2 或这两个版本。默认情况下会同时启用这两个版本。
+
+
+
+ a| 
+哈希存储的最大大小 _
+ a| 
+您可以指定用于哈希数据存储的大小。如果哈希数据超过此值， ONTAP 将删除旧哈希，以便为新哈希腾出空间。哈希存储的默认大小为 1 GB 。如果不以过于激进的方式丢弃哈希， BranchCache 的性能将会更高效。如果由于哈希存储已满而确定经常丢弃哈希，则可以通过修改 BranchCache 配置来增加哈希存储大小。
+
+
+
+ a| 
+服务器密钥 _
+ a| 
+您可以指定 BranchCache 服务用来防止客户端模拟 BranchCache 服务器的服务器密钥。如果未指定服务器密钥，则在创建 BranchCache 配置时会随机生成一个密钥。您可以将服务器密钥设置为特定值，以便在多个服务器为相同文件提供 BranchCache 数据时，客户端可以使用使用使用同一服务器密钥的任何服务器的哈希。如果服务器密钥包含任何空格，则必须将服务器密钥用引号引起来。
+
+
+
+ a| 
+操作模式 _
+ a| 
+默认情况下，每个共享启用 BranchCache 。
+
+* 要创建在每个共享上启用 BranchCache 的 BranchCache 配置，您可以不指定此可选参数，也可以指定 `per-share` 。
+* 要在所有共享上自动启用 BranchCache ，必须将操作模式设置为 `all-shares` 。
+
+
+|===
+.步骤
+. 根据需要启用 SMB 2.1 和 3.0 ：
++
+.. 将权限级别设置为 advanced ： `set -privilege advanced`
+.. 检查已配置的 SVM SMB 设置以确定是否已启用所有所需的 SMB 版本： `vserver cifs options show -vserver vserver_name`
+.. 如有必要，请启用 SMB 2.1 ： `vserver cifs options modify -vserver vserver_name -smb2-enabled true`
++
+命令将同时启用 SMB 2.0 和 SMB 2.1 。
+
+.. 如有必要，请启用 SMB 3.0 ： `vserver cifs options modify -vserver vserver_name -smb3-enabled true`
+.. 返回到管理权限级别： `set -privilege admin`
+
+
+. 配置 BranchCache ： `vserver cifs branchcache create -vserver vserver_name -hash-store-path path "-hash-store-max-size ｛ integer ｛ KB|MB|GB_TB_PB] ｝ ] （ -versions ｛ v1-enable_v2-enable_enable-all] ）【服务器密钥文本】 -operating 模式 ｛ per-share ｝`
++
+指定的哈希存储路径必须存在，并且必须驻留在 SVM 管理的卷上。此路径还必须位于可读写卷上。如果路径为只读或不存在，则此命令将失败。
+
++
+如果要对其他 SVM BranchCache 配置使用相同的服务器密钥，请记录为服务器密钥输入的值。显示有关 BranchCache 配置的信息时，不会显示服务器密钥。
+
+. 验证 BranchCache 配置是否正确： `vserver cifs branchcache show -vserver vserver_name`
+
+
+以下命令验证是否已启用 SMB 2.1 和 3.0 ，并将 BranchCache 配置为在 SVM vs1 上的所有 SMB 共享上自动启用缓存：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options show -vserver vs1 -fields smb2-enabled,smb3-enabled
+vserver smb2-enabled smb3-enabled
+------- ------------ ------------
+vs1     true         true
+
+
+cluster1::*> set -privilege admin
+
+cluster1::> vserver cifs branchcache create -vserver vs1 -hash-store-path /hash_data -hash-store-max-size 20GB -versions enable-all -server-key "my server key" -operating-mode all-shares
+
+cluster1::> vserver cifs branchcache show -vserver vs1
+
+                                 Vserver: vs1
+          Supported BranchCache Versions: enable_all
+                      Path to Hash Store: /hash_data
+          Maximum Size of the Hash Store: 20GB
+Encryption Key Used to Secure the Hashes: -
+        CIFS BranchCache Operating Modes: all_shares
+----
+以下命令验证是否已启用 SMB 2.1 和 3.0 ，将 BranchCache 配置为在 SVM vs1 上启用每个共享的缓存，并验证 BranchCache 配置：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options show -vserver vs1 -fields smb2-enabled,smb3-enabled
+vserver smb2-enabled smb3-enabled
+------- ------------ ------------
+vs1     true         true
+
+cluster1::*> set -privilege admin
+
+cluster1::> vserver cifs branchcache create -vserver vs1 -hash-store-path /hash_data -hash-store-max-size 20GB -versions enable-all -server-key "my server key"
+
+cluster1::> vserver cifs branchcache show -vserver vs1
+
+                                 Vserver: vs1
+          Supported BranchCache Versions: enable_all
+                      Path to Hash Store: /hash_data
+          Maximum Size of the Hash Store: 20GB
+Encryption Key Used to Secure the Hashes: -
+        CIFS BranchCache Operating Modes: per_share
+----
+* 相关信息 *
+
+xref:requirements-guidelines-concept.adoc[要求和准则]
+
+xref:configure-branchcache-remote-office-concept.adoc[从何处查找有关在远程办公室配置 BranchCache 的信息]
+
+xref:create-branchcache-enabled-share-task.adoc[创建启用了 BranchCache 的 SMB 共享]
+
+xref:enable-branchcache-existing-share-task.adoc[在现有 SMB 共享上启用 BranchCache]
+
+xref:manage-monitor-branchcache-config-concept.adoc[管理和监控 BranchCache 配置]
+
+xref:disable-enable-branchcache-svm-concept.adoc[在 SVM 上禁用或启用 BranchCache]
+
+xref:delete-branchcache-config-svms-concept.adoc[删除 SVM 上的 BranchCache 配置]

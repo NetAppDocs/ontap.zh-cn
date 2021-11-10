@@ -1,0 +1,52 @@
+---
+permalink: system-admin/access-cluster-system-manager-browser-task.html 
+sidebar: sidebar 
+keywords: access, cluster, ontap, system, manager, graphic, interface, browser, cli 
+summary: 如果您希望使用图形界面而不是命令行界面（ CLI ）来访问和管理集群，则可以使用 ONTAP System Manager 来实现此目的，该服务作为 Web 服务随 ONTAP 提供，默认情况下处于启用状态，并可通过浏览器进行访问。 
+---
+= 使用 ONTAP 系统管理器访问集群
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您希望使用图形界面而不是命令行界面（ CLI ）来访问和管理集群，则可以使用 ONTAP System Manager 来实现此目的，该服务作为 Web 服务随 ONTAP 提供，默认情况下处于启用状态，并可通过浏览器进行访问。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须拥有一个配置了 `admin` 角色和 `http` ， `ontapi` 和 `console` 应用程序类型的集群用户帐户。
+* 您必须已在浏览器中启用 Cookie 和站点数据。
+
+
+您可以使用集群管理 LIF 或节点管理 LIF 访问 ONTAP 系统管理器。要无中断访问 ONTAP System Manager ，您应使用集群管理 LIF 。
+
+.步骤
+. 将 Web 浏览器指向集群管理 LIF 的 IP 地址：
++
+** 如果使用的是 IPv4 ： ` * https://__cluster-mgmt-LIF__*`
+** 如果使用的是 IPv6 ： ` * https://[_cluster-mgmt-LIF_]*`
++
+
+NOTE: ONTAP 系统管理器的浏览器访问仅支持 HTTPS 。
+
+
+
++
+如果集群使用自签名数字证书，浏览器可能会显示一条警告，指示此证书不可信。您可以确认继续访问的风险，也可以在集群上安装证书颁发机构（ CA ）签名的数字证书以进行服务器身份验证。
+
+. * 可选： * 如果已使用命令行界面配置访问横幅，请阅读 * 警告 * 对话框中显示的消息，然后选择所需选项以继续操作。
++
+启用了安全断言标记语言（ SAML ）身份验证的系统不支持此选项。
+
++
+** 如果不想继续，请单击 * 取消 * 并关闭浏览器。
+** 如果要继续，请单击 * 确定 * 以导航到 ONTAP 系统管理器登录页面。
+
+
+. 使用集群管理员凭据登录到 ONTAP 系统管理器。
+
+
+* 相关信息 *
+
+xref:manage-access-web-services-concept.adoc[管理对 Web 服务的访问]
+
+xref:accessg-node-log-core-dump-mib-files-task.adoc[使用 Web 浏览器访问节点的日志，核心转储和 MIB 文件]

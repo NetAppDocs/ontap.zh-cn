@@ -1,0 +1,92 @@
+---
+permalink: smb-admin/enable-branchcache-existing-share-task.html 
+sidebar: sidebar 
+keywords: enable, branchcache, exist, smb, share, add, share, property, exist, list, enable branchcache on an existing smb share 
+summary: 您可以通过将 BranchCache 共享属性添加到现有共享属性列表来在现有 SMB 共享上启用 BranchCache 。 
+---
+= 在现有 SMB 共享上启用 BranchCache
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过将 `BranchCache` share 属性添加到现有共享属性列表来在现有 SMB 共享上启用 BranchCache 。
+
+.关于此任务
+* 如果在 SMB 共享上启用了 BranchCache ，则该共享必须将脱机文件配置设置为手动缓存。
++
+如果现有共享的脱机文件设置未设置为手动缓存，则必须通过修改共享对其进行配置。
+
+* 即使未在 Storage Virtual Machine （ SVM ）上配置和启用 BranchCache ，也可以在共享上设置 `BranchCache` 属性。
++
+但是，如果您希望共享提供缓存的内容，则必须在 SVM 上配置并启用 BranchCache 。
+
+* 将 `BranchCache` share 属性添加到共享时，现有共享设置和共享属性将保留下来。
++
+BranchCache 共享属性将添加到现有共享属性列表中。有关使用 `vserver cifs share properties add` 命令的详细信息，请参见手册页。
+
+
+
+.步骤
+. 如有必要，请配置脱机文件共享设置以进行手动缓存：
++
+.. 使用 `vserver cifs share show` 命令确定脱机文件共享设置。
+.. 如果脱机文件共享设置未设置为 manual ，请将其更改为所需的值： `vserver cifs share modify -vserver vserver_name -share-name share_name -offline-files manual`
+
+
+. 在现有 SMB 共享上启用 BranchCache ： `vserver cifs share properties add -vserver vserver_name -share-name share_name -share-properties BranchCache`
+. 验证是否已在 SMB 共享上设置 BranchCache 共享属性： `vserver cifs share show -vserver vserver_name -share-name share_name`
+
+
+以下命令会在 SVM vs1 上路径为 ` /data2` 的名为 `data2` 的现有 SMB 共享上启用 BranchCache ：
+
+[listing]
+----
+cluster1::> vserver cifs share show -vserver vs1 -share-name data2
+
+                      Vserver: vs1
+                        Share: data2
+     CIFS Server NetBIOS Name: VS1
+                         Path: /data2
+             Share Properties: oplocks
+                               browsable
+                               changenotify
+                               showsnapshot
+           Symlink Properties: -
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: 10s
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+
+cluster1::> vserver cifs share properties add  -vserver vs1 -share-name data2 -share-properties branchcache
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data2
+
+                      Vserver: vs1
+                        Share: data2
+     CIFS Server NetBIOS Name: VS1
+                         Path: /data2
+             Share Properties: oplocks
+                               browsable
+                               showsnapshot
+                               changenotify
+                               branchcache
+           Symlink Properties: -
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: 10s
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+----
+* 相关信息 *
+
+xref:add-remove-share-properties-eexisting-share-task.adoc[在现有 SMB 共享上添加或删除共享属性]
+
+xref:disable-branchcache-single-share-task.adoc[在单个 SMB 共享上禁用 BranchCache]

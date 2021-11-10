@@ -1,0 +1,122 @@
+---
+permalink: san-admin/san-volumes-concept.html 
+sidebar: sidebar 
+keywords: understand, san volumes 
+summary: ONTAP 提供了三个基本卷配置选项：厚配置，精简配置和半厚配置。每个选项都使用不同的方式来管理卷空间以及 ONTAP 块共享技术的空间要求。了解这些选项的工作原理后，您可以为您的环境选择最佳选项。 
+---
+= 关于 SAN 卷概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 提供了三个基本卷配置选项：厚配置，精简配置和半厚配置。每个选项都使用不同的方式来管理卷空间以及 ONTAP 块共享技术的空间要求。了解这些选项的工作原理后，您可以为您的环境选择最佳选项。
+
+[NOTE]
+====
+建议不要将 SAN LUN 和 NAS 共享放在同一个 FlexVol 卷中。您应专门为 SAN LUN 配置单独的 FlexVol 卷，并应专门为 NAS 共享配置单独的 FlexVol 卷。这样可以简化管理和复制部署，并与 Active IQ Unified Manager （以前称为 OnCommand Unified Manager ）中支持 FlexVol 卷的方式类似。
+
+====
+
+
+== 卷的精简配置
+
+创建精简配置卷时， ONTAP 不会在创建卷时预留任何额外空间。在将数据写入卷时，卷会从聚合请求所需的存储，以满足写入操作的要求。通过使用精简配置卷，您可以过量使用聚合，这样，当聚合用尽可用空间时，卷可能无法保护所需的空间。
+
+您可以通过将精简配置的 FlexVol 卷的 ` space-guarantee` 选项设置为 `none` 来创建此卷。
+
+
+
+== 卷厚配置
+
+创建厚配置卷时， ONTAP 会从聚合中留出足够的存储空间，以确保可以随时写入卷中的任何块。在将卷配置为使用厚配置时，您可以使用任何 ONTAP 存储效率功能，例如数据压缩和重复数据删除，以抵消更大的前期存储需求。
+
+要创建厚配置 FlexVol 卷，请将其 ` -space-slo` （服务级别目标）选项设置为 `thick` 。
+
+
+
+== 卷的半厚配置
+
+创建使用半厚配置的卷时， ONTAP 会从聚合中留出存储空间，以考虑卷大小。如果由于块共享技术正在使用块而导致卷用尽可用空间，则 ONTAP 会尽力删除保护数据对象（ Snapshot 副本以及 FlexClone 文件和 LUN ），以释放其所保留的空间。只要 ONTAP 能够足够快地删除保护数据对象，以跟上覆盖所需的空间，写入操作就会继续成功。这称为 "`尽力服务` " 写入保证。
+
+[NOTE]
+====
+您不能在使用半厚配置的卷上使用重复数据删除，数据压缩和数据缩减等存储效率技术。
+
+====
+要创建半厚配置 FlexVol 卷，请将其 ` -space-slo` （服务级别目标）选项设置为 `sEMI-thick` 。
+
+
+
+== 用于预留了空间的文件和 LUN
+
+预留空间的文件或 LUN 是指在创建时分配存储的文件或 LUN 。过去， NetApp 一直使用术语 "`精简配置 LUN` " 来表示已禁用空间预留的 LUN （非空间预留 LUN ）。
+
+[NOTE]
+====
+非空间预留文件通常不称为 "`精简配置文件` " 。
+
+====
+下表总结了在将这三个卷配置选项用于预留空间的文件和 LUN 时的主要区别：
+
+[cols="5*"]
+|===
+| 卷配置 | LUN/file 空间预留 | 覆盖 | 保护数据^2^ | 存储效率^3^ 
+
+
+ a| 
+厚
+ a| 
+supported
+ a| 
+保证^1^
+ a| 
+有保障
+ a| 
+supported
+
+
+
+ a| 
+精简
+ a| 
+无影响
+ a| 
+无
+ a| 
+有保障
+ a| 
+supported
+
+
+
+ a| 
+半厚
+ a| 
+supported
+ a| 
+尽力服务^1^
+ a| 
+尽力而为
+ a| 
+不支持
+
+|===
+* 注释 *
+
+. 要保证覆盖或提供尽力而为的覆盖保证，需要在 LUN 或文件上启用空间预留。
+. 保护数据包括 Snapshot 副本以及标记为自动删除的 FlexClone 文件和 LUN （备份克隆）。
+. 存储效率包括重复数据删除，数据压缩，任何未标记为自动删除的 FlexClone 文件和 LUN （活动克隆）以及 FlexClone 子文件（用于副本卸载）。
+
+
+
+
+== 支持 SCSI 精简配置 LUN
+
+ONTAP 支持 T10 SCSI 精简配置 LUN 以及 NetApp 精简配置 LUN 。通过 T10 SCSI 精简配置，主机应用程序可以支持 SCSI 功能，包括适用于块环境的 LUN 空间回收和 LUN 空间监控功能。SCSI 主机软件必须支持 T10 SCSI 精简配置。
+
+您可以使用 ONTAP `spage-allocation` 设置来启用 / 禁用对 LUN 上 T10 精简配置的支持。您可以使用 ONTAP `spage-allocation enable` 设置在 LUN 上启用 T10 SCSI 精简配置。
+
+ONTAP 命令参考手册中的 ` 命令（ -space-allocation ｛ enabled" ）` 提供了有关在 LUN 上启用 / 禁用 T10 精简配置支持以及启用 T10 SCSI 精简配置的详细信息。
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"]

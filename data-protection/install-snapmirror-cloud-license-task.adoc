@@ -1,0 +1,40 @@
+---
+permalink: data-protection/install-snapmirror-cloud-license-task.html 
+sidebar: sidebar 
+keywords: install, snapmirror, cloud license 
+summary: 从 ONTAP 9.8 开始， SnapMirror Cloud 可提供从 ONTAP 到对象存储端点的异步快照复制。SnapMirror 云关系只能使用经过预先认证的第三方备份应用程序进行配置。要将 ONTAP 配置为对象存储复制，配置为复制到对象存储端点的 ONTAP 源集群需要 SnapMirror 和 SnapMirror 云许可证。 
+---
+= 安装 SnapMirror Cloud 许可证
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.8 开始， SnapMirror Cloud 可提供从 ONTAP 到对象存储端点的异步快照复制。SnapMirror 云关系只能使用经过预先认证的第三方备份应用程序进行配置。要将 ONTAP 配置为对象存储复制，配置为复制到对象存储端点的 ONTAP 源集群需要 SnapMirror 和 SnapMirror 云许可证。
+
+SnapMirror Cloud 许可证是一个单实例集群范围许可证，不需要在集群中的每个节点上安装。它是一种基于期限的许可证，可强制实施期限和备份容量。除了此最终用户许可证之外， SnapMirror 云还需要经过授权和批准的备份应用程序来配置和调用 ONTAP API 以进行复制。要使用 SnapMirror Cloud 复制，必须同时拥有 SnapMirror Cloud 最终用户许可证和授权应用程序。
+
+SnapMirror Cloud 许可证是通过购买混合云捆绑包获得的，该捆绑包可以按 1 TB 或 3 年的增量购买。混合云捆绑包包括两个许可证：一个用于 FabricPool 的许可证和一个用于 SnapMirror 云的单独许可证。每个许可证都有一个唯一的序列号。混合云捆绑包的购买基于容量，在此容量中，混合云捆绑包的购买容量将同时应用于 FabricPool 和 SnapMirror 云许可证。
+
+混合云捆绑包可为首次订购提供 10 TB 的可用容量。购买混合云捆绑包时， FabricPool 和 SnapMirror 云许可证均提供 10 TB 的可用容量。后续附加容量订单不会包含 10 TB 的可用容量。
+
+可以使用 ONTAP 命令行或 ONTAP 系统管理器在集群上安装 SnapMirror 云许可证。
+
+.步骤
+. 混合云捆绑包包含两个许可证。从 NetApp 支持站点下载两个 NetApp 许可证文件（ NLF ），一个用于 FabricPool 许可证，另一个用于 SnapMirror Cloud 的 NLF 。
++
+https://mysupport.netapp.com/site/global/dashboard["NetApp 支持"]
+
+. 使用 ONTAP 系统管理器将 FabricPool 和 SnapMirror 云 NLF 文件上传到集群：
++
+.. 单击 * 配置 * > * 许可证 * 。
+.. 在 * 集群设置 * 窗格中，单击 * 许可证 * 。
+.. 在 * 软件包 * 窗口中，单击 * 添加 * 。
+.. 在 * 添加许可证包 * 对话框中，单击 * 选择文件 * 以选择下载的 NLF ，然后单击 * 添加 * 将文件上传到集群。
+
+
+
+
+* 相关信息 *
+
+http://mysupport.netapp.com/licenses["NetApp 软件许可证搜索"]

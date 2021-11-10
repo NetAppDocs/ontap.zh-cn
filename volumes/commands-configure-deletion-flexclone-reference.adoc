@@ -1,0 +1,51 @@
+---
+permalink: volumes/commands-configure-deletion-flexclone-reference.html 
+sidebar: sidebar 
+keywords: commands for, configuring, deletion of, flexclone files, configure 
+summary: 当客户端在不使用 NetApp 易管理性 SDK 的情况下删除 FlexClone 文件时，您可以使用 volume file clone deletion 命令更快地从 FlexVol 卷中删除 FlexClone 文件。FlexClone 文件的扩展名和最小大小用于加快删除速度。 
+---
+= 用于配置 FlexClone 文件删除的命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当客户端在不使用 NetApp 易管理性 SDK 的情况下删除 FlexClone 文件时，您可以使用 `volume file clone deletion` 命令更快地从 FlexVol 卷中删除 FlexClone 文件。FlexClone 文件的扩展名和最小大小用于加快删除速度。
+
+您可以使用 `volume file clone deletion` 命令为卷中的 FlexClone 文件指定支持的扩展名列表和最小大小要求。速度较快的删除方法仅用于满足要求的 FlexClone 文件。对于不符合要求的 FlexClone 文件，将使用较慢的删除方法。
+
+当客户端使用 NetApp 易管理性 SDK 从卷中删除 FlexClone 文件和 FlexClone LUN 时，扩展和大小要求不适用，因为始终使用速度较快的删除方法。
+
+[cols="2*"]
+|===
+| 至 ... | 使用此命令 ... 
+
+
+ a| 
+向卷支持的扩展名列表添加扩展名
+ a| 
+`volume file clone deletion add-extension`
+
+
+
+ a| 
+使用速度更快的删除方法更改可从卷中删除的 FlexClone 文件的最小大小
+ a| 
+`卷文件克隆删除修改`
+
+
+
+ a| 
+从卷支持的扩展名列表中删除扩展名
+ a| 
+`volume file clone deletion remove-extension`
+
+
+
+ a| 
+查看支持的扩展名列表以及客户端可以使用速度更快的删除方法从卷中删除的 FlexClone 文件的最小大小
+ a| 
+`volume file clone deletion show`
+
+|===
+有关这些命令的详细信息，请参见相应的手册页。

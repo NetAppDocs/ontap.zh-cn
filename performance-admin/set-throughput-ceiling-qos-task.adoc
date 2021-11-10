@@ -1,0 +1,158 @@
+---
+permalink: performance-admin/set-throughput-ceiling-qos-task.html 
+sidebar: sidebar 
+keywords: setting, throughput, ceiling, qos 
+summary: 您可以使用策略组的 max-throughput 字段为存储对象工作负载定义吞吐量上限（ QoS 最大值）。您可以在创建或修改存储对象时应用策略组。 
+---
+= 使用 QoS 设置吞吐量上限
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用策略组的 `max-throughput` 字段为存储对象工作负载定义吞吐量上限（ QoS 最大值）。您可以在创建或修改存储对象时应用策略组。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须是集群管理员才能创建策略组。
+* 要将策略组应用于 SVM ，您必须是集群管理员。
+
+
+.关于此任务
+* 从 ONTAP 9.4 开始，您可以使用 _non-shared_ QoS 策略组来指定定义的吞吐量上限适用场景每个成员工作负载。否则，策略组为 _shared ： _ 分配给策略组的工作负载的总吞吐量不能超过指定的上限。
++
+为 `qos policy-group create` 命令设置 ` -is-shared=false` 以指定非共享策略组。
+
+* 您可以指定 IOPS ， MB/ 秒或 IOPS ， MB/ 秒上限的吞吐量限制如果同时指定 IOPS 和 MB/ 秒，则会强制执行首先达到的限制。
++
+[NOTE]
+====
+如果为同一工作负载设置了上限和下限，则只能以 IOPS 为单位指定上限的吞吐量限制。
+
+====
+* 受 QoS 限制的存储对象必须包含在策略组所属的 SVM 中。多个策略组可以属于同一个 SVM 。
+* 如果某个存储对象的包含对象或子对象属于某个策略组，则不能将该存储对象分配给该策略组。
+* QoS 最佳实践是将策略组应用于相同类型的存储对象。
+
+
+.步骤
+. 创建策略组。
++
+`qos policy-group create -policy-group _policy_group_ -vserver _svm_ -max-throughput _number_of_IOPS_|MB/S_IOPS ， MB/s -is-shared true_false`
+
++
+有关完整的命令语法，请参见手册页。您可以使用 `qos policy-group modify` 命令调整吞吐量上限。
+
++
+以下命令将创建最大吞吐量为 5 ， 000 IOPS 的共享策略组 `pg-vs1` ：
+
++
+[listing]
+----
+cluster1::> qos policy-group create -policy-group pg-vs1 -vserver vs1 -max-throughput 5000iops -is-shared true
+----
++
+以下命令将创建非共享策略组 `pg-vs3` ，最大吞吐量为 100 IOPS 和 400 KB/S ：
+
++
+[listing]
+----
+cluster1::> qos policy-group create -policy-group pg-vs3 -vserver vs3 -max-throughput 100iops,400KB/s -is-shared false
+----
++
+以下命令将创建非共享策略组 `pg-vs4` 而不设置吞吐量限制：
+
++
+[listing]
+----
+cluster1::> qos policy-group create -policy-group pg-vs4 -vserver vs4 -is-shared false
+----
+. 将策略组应用于 SVM ，文件，卷或 LUN ：
++
+` _storage_object_create -vserver _svm_ -qos-policy-group _policy_group_`
+
++
+有关完整的命令语法，请参见手册页。您可以使用 ` _storage_object_modify` 命令将其他策略组应用于存储对象。
+
++
+以下命令会将策略组 `pg-vs1` 应用于 SVM `vs1` ：
+
++
+[listing]
+----
+cluster1::> vserver create -vserver vs1 -qos-policy-group pg-vs1
+----
++
+以下命令会将策略组 `pg-app` 应用于卷 `app1` 和 `App2` ：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs2 -volume app1 -aggregate aggr1 -qos-policy-group pg-app
+----
++
+[listing]
+----
+cluster1::> volume create -vserver vs2 -volume app2 -aggregate aggr1 -qos-policy-group pg-app
+----
+. 监控策略组性能：
++
+`QoS 统计信息性能显示`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+从集群监控性能。请勿使用主机上的工具监控性能。
+
+====
++
+以下命令显示策略组性能：
+
++
+[listing]
+----
+cluster1::> qos statistics performance show
+Policy Group           IOPS      Throughput   Latency
+-------------------- -------- --------------- ----------
+-total-                 12316       47.76MB/s  1264.00us
+pg_vs1                   5008       19.56MB/s     2.45ms
+_System-Best-Effort        62       13.36KB/s     4.13ms
+_System-Background         30           0KB/s        0ms
+----
+. 监控工作负载性能：
++
+`QoS 统计信息工作负载性能显示`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+从集群监控性能。请勿使用主机上的工具监控性能。
+
+====
++
+以下命令显示工作负载性能：
+
++
+[listing]
+----
+cluster1::> qos statistics workload performance show
+Workload          ID     IOPS      Throughput    Latency
+--------------- ------ -------- ---------------- ----------
+-total-              -    12320        47.84MB/s  1215.00us
+app1-wid7967      7967     7219        28.20MB/s   319.00us
+vs1-wid12279     12279     5026        19.63MB/s     2.52ms
+_USERSPACE_APPS     14       55        10.92KB/s   236.00us
+_Scan_Backgro..   5688       20            0KB/s        0ms
+----
++
+[NOTE]
+====
+您可以使用 `qos statistics workload latency show` 命令查看 QoS 工作负载的详细延迟统计信息。
+
+====
+

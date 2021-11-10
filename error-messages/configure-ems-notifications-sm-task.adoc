@@ -1,0 +1,213 @@
+---
+permalink: error-messages/configure-ems-notifications-sm-task.html 
+sidebar: sidebar 
+keywords: system manager, ems, event, notifications, email, syslog, webhook, destination, filters, configure, add, edit, delete, rest api, snmp traphost, trap host 
+summary: 您可以使用 System Manager 配置事件管理系统（ Event Management System ， EMS ）发送事件通知的方式，以便在出现需要及时关注的系统问题时收到通知。 
+---
+= 使用 System Manager 配置 EMS 事件通知和筛选器
+
+
+[role="lead"]
+您可以使用 System Manager 配置事件管理系统（ Event Management System ， EMS ）发送事件通知的方式，以便在出现需要及时关注的系统问题时收到通知。
+
+[cols="35,65"]
+|===
+
+
+| ONTAP 版本 | 借助 ONTAP System Manager ，您可以 ... 
+
+
+ a| 
+ONTAP 9.10.1
+ a| 
+配置电子邮件地址，系统日志服务器和 REST API 客户端（ webhooks ）以及 SNMP 陷阱主机。
+
+
+
+ a| 
+ONTAP 9.7 到 9.10.0
+ a| 
+仅配置 SNMP 陷阱主机。您可以使用 ONTAP 命令行界面配置其他 EMS 目标。请参见 link:index.html["EMS 配置概述"]。
+
+|===
+您可以执行以下过程：
+
+* <<add-ems-destination>>
+* <<create-ems-filter>>
+* <<edit-ems-destination>>
+* <<edit-ems-filter>>
+* <<delete-ems-destination>>
+* <<delete-ems-filter>>
+
+
+.相关信息
+* https://library.netapp.com/ecm/ecm_get_file/ECMLP2876977["EMS 事件目录"]
+* link:configure-snmp-traphosts-event-notifications-task.html["使用 CLI 配置 SNMP 陷阱主机以接收事件通知"]
+
+
+
+
+== 添加 EMS 事件通知目标
+
+您可以使用 System Manager 指定 EMS 消息要发送到的位置。
+
+.步骤
+. 单击 * 集群 > 设置 * 。
+. 在 * 通知管理 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 查看事件目标 * 。
+. 在 * 通知管理 * 页面上，选择 * 事件目标 * 选项卡。
+. 单击 image:../media/icon_add.gif["添加图标"]。
+. 指定名称， EMS 目标类型和筛选器。
++
+
+NOTE: 如果需要，您可以添加新筛选器。单击 * 添加新事件筛选器 * 。
+
+. 根据您选择的 EMS 目标类型，指定以下内容：
+
+
+[cols="40,60"]
+|===
+
+
+| 配置… | 指定或选择… 
+
+
+ a| 
+SNMP 陷阱主机
+ a| 
+* TrapHost 名称
+
+
+
+
+ a| 
+email
+
+（从 9.10.1 开始）
+ a| 
+* 目标电子邮件地址
+* 邮件服务器
+* 发件人电子邮件地址
+
+
+
+
+ a| 
+系统日志服务器
+
+（从 9.10.1 开始）
+ a| 
+* 服务器的主机名或 IP 地址
+
+
+
+
+ a| 
+网络钩
+
+（从 9.10.1 开始）
+ a| 
+* webhook URL
+* 客户端身份验证（选择此选项可指定客户端证书）
+
+
+|===
+
+
+== 创建新的 EMS 事件通知筛选器
+
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 定义新的自定义筛选器，以指定处理 EMS 通知的规则。
+
+.步骤
+. 单击 * 集群 > 设置 * 。
+. 在 * 通知管理 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 查看事件目标 * 。
+. 在 * 通知管理 * 页面上，选择 * 事件筛选器 * 选项卡。
+. 单击 image:../media/icon_add.gif["添加图标"]。
+. 指定一个名称，然后选择是要从现有事件筛选器复制规则还是添加新规则。
+. 根据您的选择，执行以下步骤：
+
+
+[cols="40,60"]
+|===
+
+
+| 如果选择… 。 | 然后，执行以下步骤… 
+
+
+ a| 
+* 从现有事件筛选器复制规则 *
+ a| 
+. 选择现有事件筛选器。
+. 修改现有规则。
+. 如果需要，可单击添加其他规则 image:../media/icon_add.gif["添加图标"]。
+
+
+
+
+ a| 
+* 添加新规则 *
+ a| 
+为每个新规则指定类型，名称模式，严重性和 SNMP 陷阱类型。
+
+|===
+
+
+== 编辑 EMS 事件通知目标
+
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 更改事件通知目标信息。
+
+.步骤
+. 单击 * 集群 > 设置 * 。
+. 在 * 通知管理 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 查看事件目标 * 。
+. 在 * 通知管理 * 页面上，选择 * 事件目标 * 选项卡。
+. 在事件目标名称旁边，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 编辑 * 。
+. 修改事件目标信息，然后单击 * 保存 * 。
+
+
+
+
+== 编辑 EMS 事件通知筛选器
+
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 修改自定义筛选器以更改事件通知的处理方式。
+
+
+NOTE: 您不能修改系统定义的筛选器。
+
+.步骤
+. 单击 * 集群 > 设置 * 。
+. 在 * 通知管理 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 查看事件目标 * 。
+. 在 * 通知管理 * 页面上，选择 * 事件筛选器 * 选项卡。
+. 单击事件筛选器名称旁边的 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 编辑 * 。
+. 修改事件筛选器信息，然后单击 * 保存 * 。
+
+
+
+
+== 删除 EMS 事件通知目标
+
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 删除 EMS 事件通知目标。
+
+
+NOTE: 您不能删除 SNMP 目标。
+
+.步骤
+. 单击 * 集群 > 设置 * 。
+. 在 * 通知管理 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 查看事件目标 * 。
+. 在 * 通知管理 * 页面上，选择 * 事件目标 * 选项卡。
+. 在事件目标名称旁边，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 删除 * 。
+
+
+
+
+== 删除 EMS 事件通知筛选器
+
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 删除自定义筛选器。
+
+
+NOTE: 您不能删除系统定义的筛选器。
+
+.步骤
+. 单击 * 集群 > 设置 * 。
+. 在 * 通知管理 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 查看事件目标 * 。
+. 在 * 通知管理 * 页面上，选择 * 事件筛选器 * 选项卡。
+. 单击事件筛选器名称旁边的 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 删除 * 。
+

@@ -1,0 +1,31 @@
+---
+permalink: fabricpool/check-object-tagging-status-task.html 
+sidebar: sidebar 
+keywords: checking, object, tagging, status, fabricpool, volumes 
+summary: 您可以检查一个或多个 FabricPool 卷上的标记是否已完成。 
+---
+= 检查 FabricPool 卷上的对象标记状态
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以检查一个或多个 FabricPool 卷上的标记是否已完成。
+
+.步骤
+. 使用 `vol show` 命令和 ` -fieldsneeds-object-reagging` 选项，查看是否正在进行标记，是否已完成标记或未设置标记。
++
+[listing]
+----
+vol show -fields needs-object-retagging  [ -instance | -volume <volume name>]
+----
++
+此时将显示以下值之一：
+
++
+** `true` —对象标记扫描程序尚未运行或需要为此卷重新运行
+** `false` —对象标记扫描程序已完成此卷的标记
+** ` +<->+` —对象标记扫描程序不适用于此卷。对于不驻留在 FabricPool 上的卷，会发生这种情况。
+
+
+

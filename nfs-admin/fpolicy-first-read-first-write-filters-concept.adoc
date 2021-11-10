@@ -1,0 +1,43 @@
+---
+permalink: nfs-admin/fpolicy-first-read-first-write-filters-concept.html 
+sidebar: sidebar 
+keywords: fpolicy, first, read, write, filter, work, nfs 
+summary: 如果使用将读 / 写操作作为受监控事件的外部 FPolicy 服务器启用了 FPolicy ，则 NFS 客户端在读取 / 写入请求的高流量期间会遇到较长的响应时间。对于 NFS 客户端，在 FPolicy 中使用首次读取和首次写入筛选器可减少 FPolicy 通知的数量并提高性能。 
+---
+= FPolicy 首次读取和首次写入筛选器如何与 NFS 配合使用
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果使用将读 / 写操作作为受监控事件的外部 FPolicy 服务器启用了 FPolicy ，则 NFS 客户端在读取 / 写入请求的高流量期间会遇到较长的响应时间。对于 NFS 客户端，在 FPolicy 中使用首次读取和首次写入筛选器可减少 FPolicy 通知的数量并提高性能。
+
+在 NFS 中，客户端通过提取文件句柄对文件执行 I/O 。此句柄可能在服务器和客户端重新启动后仍然有效。因此，客户端可以在不重新检索句柄的情况下缓存句柄并在其上发送请求。在常规会话中，会向文件服务器发送大量读 / 写请求。如果为所有这些请求生成通知，可能会导致以下问题：
+
+* 由于额外的通知处理和较长的响应时间，负载会增加。
+* 向 FPolicy 服务器发送大量通知，即使该服务器不受所有通知的影响。
+
+
+从客户端收到特定文件的第一个读 / 写请求后，将创建一个缓存条目，并增加读 / 写计数。此请求将标记为首次读取 / 写入操作，并生成 FPolicy 事件。在为 NFS 客户端规划和创建 FPolicy 筛选器之前，您应了解 FPolicy 筛选器工作原理的基础知识。
+
+* 首次读取：筛选客户端读取请求以进行首次读取。
++
+如果将此筛选器用于 NFS 事件，则 ` file-session-io-grouping-count` 和 ` file-session-io-grouping-duration` 设置将确定要处理 FPolicy 的首次读取请求。
+
+* 首次写入：筛选客户端写入请求以进行首次写入。
++
+如果将此筛选器用于 NFS 事件，则 ` file-session-io-grouping-count` 和 ` file-session-io-grouping-duration` 设置将确定为其处理 FPolicy 的首次写入请求。
+
+
+
+NFS 服务器数据库中添加了以下选项。
+
+[listing]
+----
+
+
+file-session-io-grouping-count: Number of I/O Ops on a File to Be Clubbed and Considered as One Session
+for Event Generation
+file-session-io-grouping-duration: Duration for Which I/O Ops on a File to Be Clubbed and Considered as
+One Session for Event Generation
+----

@@ -1,0 +1,83 @@
+---
+permalink: system-admin/manage-banner-reference.html 
+sidebar: sidebar 
+keywords: manage, banner, svm, cluster, configure 
+summary: 您可以在集群或 SVM 级别管理横幅。为集群配置的横幅也会用于未定义横幅消息的所有 SVM 。随后为 SVM 创建的横幅将覆盖该 SVM 的集群横幅。 
+---
+= 管理横幅
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在集群或 SVM 级别管理横幅。为集群配置的横幅也会用于未定义横幅消息的所有 SVM 。随后为 SVM 创建的横幅将覆盖该 SVM 的集群横幅。
+
+.选项
+* 在集群级别管理横幅：
++
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+创建一个横幅，以便为所有 CLI 登录会话显示
+ a| 
+设置集群级别的横幅：
+
+` * security login banner modify -vserver _cluster_name_ ｛ "-message "text"] | [_-uri ftp_or_http_addr_] ｝ *`
+
+
+
+ a| 
+删除所有（集群和 SVM ）登录的横幅
+ a| 
+将横幅设置为空字符串（` ""` ）：
+
+` * 安全登录横幅修改 -vserver * -message ""*`
+
+
+
+ a| 
+覆盖 SVM 管理员创建的横幅
+ a| 
+修改 SVM 横幅消息：
+
+` * security login banner modify -vserver _svm_name_ ｛ "-message "_text_"] | "-uri _ftp_or_http_addr_] ｝ *`
+
+|===
+* 在 SVM 级别管理横幅：
++
+在 SVM 环境中不需要指定 ` -vserver _svm_name_` 。
+
++
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+使用 SVM 的其他横幅覆盖集群管理员提供的横幅
+ a| 
+为 SVM 创建横幅：
+
+` * security login banner modify -vserver _svm_name_ ｛ "-message "text"] | "-uri ftp_or_http_addr] ｝ *`
+
+
+
+ a| 
+禁止显示集群管理员提供的横幅，以便不显示 SVM 的横幅
+ a| 
+将 SVM 的 SVM 横幅设置为空字符串：
+
+` * 安全登录横幅修改 -vserver _svm_name_ -message "*`
+
+
+
+ a| 
+当 SVM 当前使用 SVM 级别的横幅时，请使用集群级别的横幅
+ a| 
+将 SVM 横幅设置为 ` "-"` ：
+
+` * 安全登录横幅修改 -vserver _svm_name_ -message "-"*`
+
+|===
+

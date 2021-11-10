@@ -1,0 +1,153 @@
+---
+permalink: nfs-config/create-lif-task.html 
+sidebar: sidebar 
+keywords: create, lif 
+summary: LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障，则 LIF 可以故障转移到或迁移到其他物理端口，从而继续与网络通信。 
+---
+= 创建 LIF
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障，则 LIF 可以故障转移到或迁移到其他物理端口，从而继续与网络通信。
+
+.您需要什么？ #8217 ；将需要什么
+* 底层物理或逻辑网络端口必须已配置为管理 `up` 状态。
+* 如果您计划使用子网名称为 LIF 分配 IP 地址和网络掩码值，则此子网必须已存在。
++
+子网包含属于同一第 3 层子网的 IP 地址池。可以使用 `network subnet create` 命令创建这些子网。
+
+* 用于指定 LIF 处理的流量类型的机制已发生更改。对于 ONTAP 9.5 及更早版本， LIF 使用角色指定要处理的流量类型。从 ONTAP 9.6 开始， LIF 使用服务策略指定要处理的流量类型。
+
+
+.关于此任务
+* 您可以在同一网络端口上创建 IPv4 和 IPv6 LIF 。
+* 如果您使用的是 Kerberos 身份验证，请在多个 LIF 上启用 Kerberos 。
+* 如果集群中有大量 LIF ，您可以使用 `network interface capacity show` 命令验证集群上支持的 LIF 容量，并使用 `network interface capacity details show` 命令验证每个节点上支持的 LIF 容量 （在高级权限级别）。
+* 从 ONTAP 9.7 开始，如果同一子网中已存在 SVM 的其他 LIF ，则无需指定 LIF 的主端口。ONTAP 会自动在与已在同一子网中配置的其他 LIF 位于同一广播域的指定主节点上选择一个随机端口。
+
+
+从 ONTAP 9.4 开始，支持 FC-NVMe 。如果要创建 FC-NVMe LIF ，应注意以下事项：
+
+* 创建 LIF 的 FC 适配器必须支持 NVMe 协议。
+* FC-NVMe 可以是数据 LIF 上的唯一数据协议。
+* 必须为支持 SAN 的每个 Storage Virtual Machine （ SVM ）配置一个 LIF 处理管理流量。
+* NVMe LIF 和命名空间必须托管在同一节点上。
+* 每个 SVM 只能配置一个处理数据流量的 NVMe LIF 。
+
+
+.步骤
+. 创建 LIF ：
++
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ ｛ -address _ip_address_ -netmask _ip_address_ _ _ _ _ _ _ _ _ - subnet-name _subnet_subnet_name_ ｝ -firewall-policy data -auto-true ｛ revert ｝`
+
++
+|===
+| 选项 | Description 
+
+
+ a| 
+* ONTAP 9.5 及更早版本 *
+ a| 
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ ｛ -address _ip_address_ -netmask _ip_address_ _ _ _ _ _ _ _ _ - subnet-name _subnet_subnet_name_ ｝ -firewall-policy data -auto-true ｛ revert ｝`
+
+
+
+ a| 
+* ONTAP 9.6 及更高版本 *
+ a| 
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ ｛ -address _ip_address_ -netmask _ip_address_ _ _ _ _ _ _ _ _ - subnet-name _subnet_subnet_name_ ｝ -firewall-policy data -auto-true ｛ revert ｝`
+
+|===
++
+** 使用服务策略创建 LIF 时，不需要 ` -role` 参数（从 ONTAP 9.6 开始）。
+** 必须在创建 LIF 时指定 ` -data-protocol` 参数，如果稍后不销毁并重新创建数据 LIF ，则无法修改此参数。
++
+使用服务策略创建 LIF 时，不需要 ` -data-protocol` 参数（从 ONTAP 9.6 开始）。
+
+** ` -home-node` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的节点。
++
+您还可以使用 ` -auto-revert` 选项指定 LIF 是否应自动还原到主节点和主端口。
+
+** ` 主端口` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的物理或逻辑端口。
+** 您可以使用 ` 地址` 和 ` 网络掩码` 选项指定 IP 地址，也可以使用 ` -subnet_name` 选项从子网进行分配。
+** 使用子网提供 IP 地址和网络掩码时，如果使用网关定义了子网，则在使用该子网创建 LIF 时，系统会自动向 SVM 添加指向该网关的默认路由。
+** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。`network route create` 手册页包含有关在 SVM 中创建静态路由的信息。
+** 对于 ` -firewall-policy` 选项，请使用与 LIF 角色相同的默认值 `data` 。
++
+如果需要，您可以稍后创建和添加自定义防火墙策略。
+
+** 使用 ` -auto-revert` 可以指定在启动，更改管理数据库状态或建立网络连接等情况下数据 LIF 是否自动还原到其主节点。默认设置为 `false` ，但您可以根据环境中的网络管理策略将其设置为 `false` 。
+
+
+. 使用 `network interface show` 命令验证是否已成功创建 LIF 。
+. 验证配置的 IP 地址是否可访问：
++
+|===
+| 要验证 ... | 使用 ... 
+
+
+ a| 
+IPv4 地址
+ a| 
+`网络 ping`
+
+
+
+ a| 
+IPv6 地址
+ a| 
+`network ping6`
+
+|===
+. 如果使用的是 Kerberos ，请重复步骤 1 到 3 以创建其他 LIF 。
++
+必须在每个 LIF 上单独启用 Kerberos 。
+
+
+
+以下命令将创建一个 LIF ，并使用 ` 地址` 和 ` 网络掩码` 参数指定 IP 地址和网络掩码值：
+
+[listing]
+----
+network interface create -vserver vs1.example.com -lif datalif1 -role data -data-protocol nfs -home-node node-4 -home-port e1c -address 192.0.2.145 -netmask 255.255.255.0 -firewall-policy data -auto-revert true
+----
+以下命令将创建一个 LIF ，并从指定子网（名为 client1_sub ）分配 IP 地址和网络掩码值：
+
+[listing]
+----
+network interface create -vserver vs3.example.com -lif datalif3 -role data -data-protocol nfs -home-node node-3 -home-port e1c -subnet-name client1_sub -firewall-policy data -auto-revert true
+----
+以下命令显示 cluster-1 中的所有 LIF 。数据 LIF datalif1 和 datalif3 配置了 IPv4 地址，而 datalif4 配置了 IPv6 地址：
+
+[listing]
+----
+network interface show
+
+            Logical    Status     Network          Current      Current Is
+Vserver     Interface  Admin/Oper Address/Mask     Node         Port    Home
+----------- ---------- ---------- ---------------- ------------ ------- ----
+cluster-1
+            cluster_mgmt up/up    192.0.2.3/24     node-1       e1a     true
+node-1
+            clus1        up/up    192.0.2.12/24    node-1       e0a     true
+            clus2        up/up    192.0.2.13/24    node-1       e0b     true
+            mgmt1        up/up    192.0.2.68/24    node-1       e1a     true
+node-2
+            clus1        up/up    192.0.2.14/24    node-2       e0a     true
+            clus2        up/up    192.0.2.15/24    node-2       e0b     true
+            mgmt1        up/up    192.0.2.69/24    node-2       e1a     true
+vs1.example.com
+            datalif1     up/down  192.0.2.145/30   node-1       e1c     true
+vs3.example.com
+            datalif3     up/up    192.0.2.146/30   node-2       e0c     true
+            datalif4     up/up    2001::2/64       node-2       e0c     true
+5 entries were displayed.
+----
+以下命令显示如何创建使用 `default-data-files` 服务策略分配的 NAS 数据 LIF ：
+
+[listing]
+----
+network interface create -vserver vs1 -lif lif2 -home-node node2 -homeport e0d -service-policy default-data-files -subnet-name ipspace1
+----

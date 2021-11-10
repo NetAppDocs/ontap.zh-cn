@@ -1,0 +1,104 @@
+---
+permalink: nas-audit/supported-file-operation-filter-fpolicy-smb-concept.html 
+sidebar: sidebar 
+keywords: list, supported file operation, filter combinations, fpolicy, monitor, smb 
+summary: 在配置 FPolicy 事件时，您需要注意的是，监控 SMB 文件访问操作仅支持特定的文件操作和筛选器组合。 
+---
+= FPolicy 可监控 SMB 的受支持文件操作和筛选器组合列表
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在配置 FPolicy 事件时，您需要注意的是，监控 SMB 文件访问操作仅支持特定的文件操作和筛选器组合。
+
+下表列出了用于监控 SMB 文件访问事件的 FPolicy 支持的文件操作和筛选器组合：
+
+[cols="2*"]
+|===
+| 支持的文件操作 | 支持的筛选器 
+
+
+ a| 
+关闭
+ a| 
+监控器广告，脱机位，修改后接近，修改后关闭，读取后关闭， 排除目录
+
+
+
+ a| 
+创建
+ a| 
+监控器广告，脱机位
+
+
+
+ a| 
+create_dir
+ a| 
+目前，此文件操作不支持任何筛选器。
+
+
+
+ a| 
+删除
+ a| 
+监控器广告，脱机位
+
+
+
+ a| 
+delete_dir
+ a| 
+目前，此文件操作不支持任何筛选器。
+
+
+
+ a| 
+getattr
+ a| 
+offline-bit ， exclude-dir
+
+
+
+ a| 
+打开
+ a| 
+monitor-ad ， offline-bit ， open-wan-delete-intent ， open-write-intent ， exclude-dir
+
+
+
+ a| 
+读取
+ a| 
+监控器广告，脱机位，首次读取
+
+
+
+ a| 
+写入
+ a| 
+monitor-ad ， offline-bit ， first-write ， write-write-wing-write-size-change
+
+
+
+ a| 
+重命名
+ a| 
+监控器广告，脱机位
+
+
+
+ a| 
+rename_dir
+ a| 
+目前，此文件操作不支持任何筛选器。
+
+
+
+ a| 
+SETATTR
+ a| 
+monitor-ad ， offline-bit ， setattr_and_owner_change ， setattr_and_group_change ， setattr_and_mode_change ， setattr_for_sacl_change ， setattr_for_dacl_change ， setattr_for_modify_time_change ， setattr_for_access_time_change ， setattr_for_creation_time_change ， setattr_and_size_change ， setattr_and_allocation_size_change ， exclude_directory
+
+|===

@@ -1,0 +1,77 @@
+---
+permalink: system-admin/troubleshoot-autosupport-http-https-task.html 
+sidebar: sidebar 
+keywords: troubleshoot, autosupport, message, delivery, http, https, chekc, settings, resolve, problem 
+summary: 如果系统未发送预期的 AutoSupport 消息，并且您使用的是 HTTP 或 HTTPS ，则可以检查多项设置来解决此问题。 
+---
+= 对通过 HTTP 或 HTTPS 传送 AutoSupport 消息进行故障排除
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果系统未发送预期的 AutoSupport 消息，并且您使用的是 HTTP 或 HTTPS ，则可以检查多项设置来解决此问题。
+
+您应已确认基本网络连接和 DNS 查找：
+
+* 您的节点管理 LIF 必须处于运行和管理状态。
+* 您必须能够从集群管理 LIF （而不是任何节点上的 LIF ）对同一子网上运行正常的主机执行 ping 操作。
+* 您必须能够从集群管理 LIF 对子网以外正在运行的主机执行 ping 操作。
+* 您必须能够使用主机的名称（而不是 IP 地址）从集群管理 LIF 对子网外正常运行的主机执行 ping 操作。
+
+
+如果您已确定 AutoSupport 可以生成消息，但无法通过 HTTP 或 HTTPS 传送消息，请执行以下步骤。
+
+如果您遇到错误或无法完成此操作步骤中的某个步骤，请先确定并解决此问题，然后再继续执行下一步。
+
+.步骤
+. 运行 `ssystem node AutoSupport check show-details` 命令以显示 AutoSupport 子系统的详细状态。其中包括通过发送测试消息来验证与 AutoSupport 目标的连接，并提供 AutoSupport 配置设置中可能出现的错误列表。
+. 验证节点管理 LIF 的状态：
++
+` * 网络接口 show -home-node local -role node-mgmt -fields vserver ， lif ， status-oper ， status-admin ， address ， role*`
+
++
+`ststatus-oper` 和 `ststatus-admin` 字段应返回 `up` 。
+
+. 记录 SVM 名称， LIF 名称和 LIF IP 地址，以供日后使用。
+. 确保已启用并正确配置 DNS ：
++
+` * vserver services name-service dns show*`
+
+. 解决 AutoSupport 消息返回的任何错误：
++
+` * 系统节点 AutoSupport history show -node * -fields node ， seq-num ， destination ， last-update ， status ， error*`
+
++
+如果此错误涉及数字证书的问题，请联系技术支持。
+
+. 确认集群可以成功访问所需的服务器和 Internet ：
++
+.. ` * 网络 traceroute -lif node-management_LIF -destination DNS server*`
+.. ` * 网络 traceroute -lif node_management_LIF -destination support.netapp.com*`
++
+[NOTE]
+====
+地址 `support.netapp.com` 本身不会对 ping 或 traceroute 做出响应，但每跃点信息很有价值。
+
+====
+.. ` * 系统节点 AutoSupport show -fields proxy-url*`
+.. ` * 网络 traceroute -node node_management_LIF -destination proxy_URL*`
+
+
++
+如果其中任何一条路由无法正常运行，请尝试使用大多数第三方网络客户端上的 "`traceroute` " 或 "`tracert` " 实用程序从与集群位于同一子网上且正常运行的主机执行相同的路由。这有助于您确定问题描述是位于网络配置还是集群配置中。
+
+. 如果您对 AutoSupport 传输协议使用 HTTPS ，请确保 HTTPS 流量可以退出您的网络：
++
+.. 在与集群管理 LIF 相同的子网上配置 Web 客户端。
++
+确保所有配置参数的值与 AutoSupport 配置的值相同，包括使用相同的代理服务器，用户名，密码和端口。
+
+.. 使用 Web 客户端访问 ` + https://support.netapp.com+` 。
+
+
++
+访问应成功。如果没有，请确保已正确配置所有防火墙以允许 HTTPS 和 DNS 流量，并且已正确配置代理服务器。有关为 support.netapp.com 配置静态名称解析的详细信息，请参见文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_would_a_HOST_entry_be_added_in_ONTAP_for_support.netapp.com%3F["如何在 ONTAP for support.netapp.com? 中添加主机条目"]。
+
+

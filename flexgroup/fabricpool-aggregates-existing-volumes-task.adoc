@@ -1,0 +1,74 @@
+---
+permalink: flexgroup/fabricpool-aggregates-existing-volumes-task.html 
+sidebar: sidebar 
+keywords: aggregate, fabricpool, flexgroup, volume 
+summary: 从 ONTAP 9.5 开始， FlexGroup 卷支持 FabricPool 。如果要对现有 FlexGroup 卷使用 FabricPool 中的聚合，可以将 FlexGroup 卷所在的聚合转换为 FabricPool 中的聚合，也可以将 FlexGroup 卷成分卷迁移到 FabricPool 中的聚合。 
+---
+= 在 FabricPool 中对现有 FlexGroup 卷使用聚合
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.5 开始， FlexGroup 卷支持 FabricPool 。如果要对现有 FlexGroup 卷使用 FabricPool 中的聚合，可以将 FlexGroup 卷所在的聚合转换为 FabricPool 中的聚合，也可以将 FlexGroup 卷成分卷迁移到 FabricPool 中的聚合。
+
+.您需要什么？ #8217 ；将需要什么
+* FlexGroup 卷必须将 space-guarantee 设置为 `none` 。
+* 如果要将 FlexGroup 卷所在的聚合转换为 FabricPool 中的聚合，则这些聚合必须使用所有 SSD 磁盘。
+
+
+如果现有 FlexGroup 卷位于非 SSD 聚合上，则必须将 FlexGroup 卷成分卷迁移到 FabricPool 中的聚合。
+
+.选项
+* 要将 FlexGroup 卷所在的聚合转换为 FabricPool 中的聚合，请执行以下步骤：
++
+.. 在现有 FlexGroup 卷上设置分层策略： `volume modify -volume flexgroup_name -tiering-policy [auto_snapshot_none_backup]`
++
+[listing]
+----
+cluster-2::> volume modify -volume fg1 -tiering-policy auto
+----
+.. 确定 FlexGroup 卷所在的聚合： `volume show -volume flexgroup_name -fields aggr-list`
++
+[listing]
+----
+cluster-2::> volume show -volume fg1 -fields aggr-list
+vserver volume aggr-list
+------- ------ -----------
+vs1     fg1    aggr1,aggr3
+----
+.. 将对象存储附加到聚合列表中列出的每个聚合： `storage aggregate object-store attach -aggregate aggregate name -name object-store-name -allow-flexgroup true`
++
+您必须将所有聚合附加到对象存储。
+
+
+
++
+[listing]
+----
+cluster-2::> storage aggregate object-store attach -aggregate aggr1 -object-store-name Amazon01B1
+----
+* 要将 FlexGroup 卷成分卷迁移到 FabricPool 中的聚合，请执行以下步骤：
++
+.. 在现有 FlexGroup 卷上设置分层策略： `volume modify -volume flexgroup_name -tiering-policy [auto_snapshot_none_backup]`
++
+[listing]
+----
+cluster-2::> volume modify -volume fg1 -tiering-policy auto
+----
+.. 将 FlexGroup 卷的每个成分卷移动到同一集群中 FabricPool 中的聚合： `volume move start -volume constituent-volume -destination-aggregate FabricPool aggregate -allow-mixed-aggr-types true`
++
+您必须将所有 FlexGroup 卷成分卷移动到 FabricPool 中的聚合（如果 FlexGroup 卷成分卷位于混合聚合类型上），并确保所有成分卷在集群中的节点之间保持平衡。
+
++
+[listing]
+----
+cluster-2::> volume move start -volume fg1_001 -destination-aggregate FP_aggr1 -allow-mixed-aggr-types true
+----
+
+
+
+
+* 相关信息 *
+
+link:../disks-aggregates/index.html["磁盘和聚合管理"]

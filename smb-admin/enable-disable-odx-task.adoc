@@ -1,0 +1,58 @@
+---
+permalink: smb-admin/enable-disable-odx-task.html 
+sidebar: sidebar 
+keywords: enable, disable, odx, storage, virtual, machine, svm, default, support, copy, offload, smb, enable, enable or disable odx 
+summary: 您可以在 Storage Virtual Machine （ SVM ）上启用或禁用 ODX 。默认情况下，如果同时启用了 SMB 3.0 ，则会启用对 ODX 副本卸载的支持。 
+---
+= 启用或禁用 ODX
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在 Storage Virtual Machine （ SVM ）上启用或禁用 ODX 。默认情况下，如果同时启用了 SMB 3.0 ，则会启用对 ODX 副本卸载的支持。
+
+必须启用 SMB 3.0 。
+
+如果禁用 SMB 3.0 ，则 ONTAP 还会禁用 SMB ODX 。如果重新启用 SMB 3.0 ，则必须手动重新启用 SMB ODX 。
+
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 执行以下操作之一：
++
+|===
+| ODX 副本卸载的目标位置 | 输入命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver cifs options modify -vserver vserver_name -copy-ofover-enabled true`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver cifs options modify -vserver vserver_name -copy-ofover-enabled false`
+
+|===
+. 返回到管理权限级别： `set -privilege admin`
+
+
+以下示例将在 SVM vs1 上启用 ODX 副本卸载：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -copy-offload-enabled true
+
+cluster1::*> set -privilege admin
+----
+* 相关信息 *
+
+xref:server-options-reference.adoc[可用的 SMB 服务器选项]

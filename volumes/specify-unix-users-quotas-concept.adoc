@@ -1,0 +1,34 @@
+---
+permalink: volumes/specify-unix-users-quotas-concept.html 
+sidebar: sidebar 
+keywords: how to, specify, unix users, for quotas 
+summary: 您可以使用以下三种格式之一为配额指定 UNIX 用户：用户名， UID 或用户拥有的文件或目录。 
+---
+= 如何为配额指定 UNIX 用户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用以下三种格式之一为配额指定 UNIX 用户：用户名， UID 或用户拥有的文件或目录。
+
+要为配额指定 UNIX 用户，可以使用以下格式之一：
+
+* 用户名，例如 jsmith 。
++
+[NOTE]
+====
+如果 UNIX 用户名包含反斜杠（ \ ）或 @ 符号，则不能使用该用户名来指定配额。这是因为 ONTAP 会将包含这些字符的名称视为 Windows 名称。
+
+====
+* UID ，例如 20 。
+* 该用户所拥有的文件或目录的路径，以使该文件的 UID 与该用户匹配。
++
+[NOTE]
+====
+如果指定文件或目录名称，则必须选择一个文件或目录，只要用户帐户仍在系统上，该文件或目录就会持续。
+
+为 UID 指定文件或目录名称不会通过发生原因 ONTAP 将配额应用于该文件或目录。
+
+====
+

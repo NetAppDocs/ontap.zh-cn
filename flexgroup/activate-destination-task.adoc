@@ -1,0 +1,75 @@
+---
+permalink: flexgroup/activate-destination-task.html 
+sidebar: sidebar 
+keywords: activate, destination, flexgroup, volume 
+summary: 如果源 FlexGroup 卷由于数据损坏，意外删除或脱机状态等事件而无法提供数据，则必须激活目标 FlexGroup 卷以提供数据访问，直到恢复源 FlexGroup 卷上的数据为止。激活涉及停止未来的 SnapMirror 数据传输并中断 SnapMirror 关系。 
+---
+= 激活目标 FlexGroup 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果源 FlexGroup 卷由于数据损坏，意外删除或脱机状态等事件而无法提供数据，则必须激活目标 FlexGroup 卷以提供数据访问，直到恢复源 FlexGroup 卷上的数据为止。激活涉及停止未来的 SnapMirror 数据传输并中断 SnapMirror 关系。
+
+您必须从目标集群执行此任务。
+
+.步骤
+. 禁用 FlexGroup 卷 SnapMirror 关系的未来传输： `snapmirror quiesce dest_sVM ： dest_flexgroup`
++
+[listing]
+----
+cluster2::> snapmirror quiesce -destination-path vsd:dst
+----
+. 断开 FlexGroup 卷 SnapMirror 关系： `snapmirror break dest_sVM ： dest_flexgroup`
++
+[listing]
+----
+cluster2::> snapmirror break -destination-path vsd:dst
+----
+. 查看 SnapMirror 关系的状态： `snapmirror show -expand`
++
+[listing]
+----
+cluster2::> snapmirror show -expand
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vss:s       XDP  vsd:dst        Broken-off
+                                      Idle           -         true    -
+vss:s__0001 XDP  vsd:dst__0001  Broken-off
+                                      Idle           -         true    -
+vss:s__0002 XDP  vsd:dst__0002  Broken-off
+                                      Idle           -         true    -
+vss:s__0003 XDP  vsd:dst__0003  Broken-off
+                                      Idle           -         true    -
+vss:s__0004 XDP  vsd:dst__0004  Broken-off
+                                      Idle           -         true    -
+vss:s__0005 XDP  vsd:dst__0005  Broken-off
+                                      Idle           -         true    -
+vss:s__0006 XDP  vsd:dst__0006  Broken-off
+                                      Idle           -         true    -
+vss:s__0007 XDP  vsd:dst__0007  Broken-off
+                                      Idle           -         true    -
+vss:s__0008 XDP  vsd:dst__0008  Broken-off
+                                      Idle           -         true    -
+...
+----
++
+每个成分卷的 SnapMirror 关系状态为 `broken-off` 。
+
+. 验证目标 FlexGroup 卷是否为读 / 写卷： `volume show -vserver svm_name`
++
+[listing]
+----
+cluster2::> volume show -vserver vsd
+Vserver   Volume       Aggregate    State      Type       Size  Available Used%
+--------- ------------ ------------ ---------- ---- ---------- ---------- -----
+vsd       dst          -            online     **RW**          2GB     1.54GB   22%
+vsd       d2           -            online     DP          2GB     1.55GB   22%
+vsd       root_vs0     aggr1        online     RW        100MB    94.02MB    5%
+3 entries were displayed.
+----
+. 将客户端重定向到目标 FlexGroup 卷。
+

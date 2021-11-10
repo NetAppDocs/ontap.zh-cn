@@ -1,0 +1,47 @@
+---
+permalink: san-admin/delete-lif-san-environment-task.html 
+sidebar: sidebar 
+keywords: delete, lif, san, environment 
+summary: 删除 LIF 之前，应确保连接到 LIF 的主机可以通过其他路径访问 LUN 。 
+---
+= 删除 SAN 环境中的 LIF
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+删除 LIF 之前，应确保连接到 LIF 的主机可以通过其他路径访问 LUN 。
+
+如果要删除的 LIF 是端口集的成员，则必须先从端口集中删除此 LIF ，然后才能删除此 LIF 。
+
+.步骤
+. 验证要删除的 LIF 和当前端口的名称：
++
+`network interface show – vserver _vserver_name_`
+
+. 删除 LIF ：
++
+`网络接口删除`
+
++
+`network interface delete -vserver vs1 -lif lif1`
+
+. 验证是否已删除 LIF ：
++
+`network interface show`
+
++
+`network interface show -vserver vs1`
+
++
+[listing]
+----
+
+Logical Status     Network                     Current   Current Is
+Vserver Interface  Admin/Oper Address/Mask     Node      Port    Home
+------- ---------- ---------- ---------------- --------- ------- ----
+vs1
+        lif2       up/up      192.168.2.72/24  node-01   e0b     true
+        lif3       up/up      192.168.2.73/24  node-01   e0b     true
+----
+

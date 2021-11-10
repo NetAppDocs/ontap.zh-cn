@@ -1,0 +1,80 @@
+---
+permalink: disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html 
+sidebar: sidebar 
+keywords: create, flash pool, aggregate, ssd, storage pool, allocation units 
+summary: 您可以通过将 SSD 存储池中的一个或多个分配单元添加到现有 HDD 聚合来配置 Flash Pool 聚合。 
+---
+= 使用 SSD 存储池分配单元创建 Flash Pool 聚合
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过将 SSD 存储池中的一个或多个分配单元添加到现有 HDD 聚合来配置 Flash Pool 聚合。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须已确定一个由 HDD 组成的有效聚合，以转换为 Flash Pool 聚合。
+* 您必须已确定与聚合关联的卷的写入缓存资格，并已完成解决资格问题所需的所有步骤。
+* 您必须已创建 SSD 存储池，才能为此 Flash Pool 聚合提供 SSD 缓存。
++
+存储池中要使用的任何分配单元都必须归拥有 Flash Pool 聚合的同一节点所有。
+
+* 您必须已确定要添加到聚合的缓存容量。
++
+您可以按分配单元向聚合添加缓存。如果有空间，您可以稍后通过向存储池添加 SSD 来增加分配单元的大小。
+
+* 您必须已确定要用于 SSD 缓存的 RAID 类型。
++
+从 SSD 存储池向聚合添加缓存后，您将无法更改缓存 RAID 组的 RAID 类型。
+
+* 您必须已确定系统的最大缓存大小，并确定向聚合添加 SSD 缓存不会导致发生原因超出此限制。
++
+您可以使用 `storage pool show` 命令查看要添加到缓存总大小的缓存量。
+
+* 您必须已熟悉 Flash Pool 聚合的配置要求。
+
+
+如果希望缓存的 RAID 类型与 HDD RAID 组的 RAID 类型不同，则必须在添加 SSD 容量时指定缓存 RAID 类型。向聚合添加 SSD 容量后，您将无法再更改缓存的 RAID 类型。
+
+将 SSD 缓存添加到聚合以创建 Flash Pool 聚合后，您无法删除 SSD 缓存以将聚合转换回其原始配置。
+
+.步骤
+. 将聚合标记为有资格成为 Flash Pool 聚合：
++
+`storage aggregate modify -aggregate _aggr_name_ -hybrid-enabled true`
+
++
+如果此步骤未成功，请确定目标聚合的写入缓存资格。
+
+. 显示可用的 SSD 存储池分配单元：
++
+`s存储池 show-available-capacity`
+
+. 将 SSD 容量添加到聚合：
++
+`storage aggregate add _aggr_name_ -storage-pool _sp_name_ -allocation-units _number_of_units_`
+
++
+如果希望缓存的 RAID 类型与 HDD RAID 组的 RAID 类型不同，则必须在输入此命令时使用 `raidtype` 参数进行更改。
+
++
+您无需指定新的 RAID 组； ONTAP 会自动将 SSD 缓存置于与 HDD RAID 组不同的 RAID 组中。
+
++
+您不能设置缓存的 RAID 组大小；它由存储池中的 SSD 数量决定。
+
++
+此时，缓存将添加到聚合中，而聚合现在是 Flash Pool 聚合。添加到聚合中的每个分配单元都将成为其自己的 RAID 组。
+
+. 确认 SSD 缓存是否存在及其大小：
++
+`storage aggregate show _aggr_name_`
+
++
+缓存大小列在 `Total Hybrid Cache Size` 下。
+
+
+
+* 相关信息 *
+
+http://www.netapp.com/us/media/tr-4070.pdf["NetApp 技术报告 4070 ：《 Flash Pool 设计和实施指南》"]

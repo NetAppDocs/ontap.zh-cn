@@ -1,0 +1,52 @@
+---
+permalink: antivirus/enable-virus-scan-svm-task.html 
+sidebar: sidebar 
+keywords: enable, virus scan, svm 
+summary: 必须先在 SVM 上启用病毒扫描，然后才能运行实时或按需扫描。Vscan 配置必须存在。 
+---
+= 在 SVM 上启用病毒扫描
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须先在 SVM 上启用病毒扫描，然后才能运行实时或按需扫描。Vscan 配置必须存在。
+
+.步骤
+. 在 SVM 上启用病毒扫描：
++
+`vserver vscan enable -vserver data_sVM`
+
++
+[NOTE]
+====
+如有必要，您可以使用 `vserver vscan disable` 命令禁用病毒扫描。
+
+====
++
+以下命令将在 ``vs1``SVM 上启用病毒扫描：
+
++
+[listing]
+----
+cluster1::> vserver vscan enable -vserver vs1
+----
+. 验证是否已在 SVM 上启用病毒扫描：
++
+`vserver vscan show -vserver data_svm`
+
++
+有关完整的选项列表，请参见命令手册页。
+
++
+以下命令显示 ``vs1``SVM 的 Vscan 状态：
+
++
+[listing]
+----
+cluster1::> vserver vscan show -vserver vs1
+
+                           Vserver: vs1
+                      Vscan Status: on
+----
+

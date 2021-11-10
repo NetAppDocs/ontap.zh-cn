@@ -1,0 +1,74 @@
+---
+permalink: smb-config/create-server-workgroup-task.html 
+sidebar: sidebar 
+keywords: vserver, cifs, create, command, smb, server, workgroup, create an smb server in a workgroup 
+summary: 您可以使用 vserver cifs create 命令在 SVM 上创建 SMB 服务器并指定其所属的工作组。 
+---
+= 在工作组中创建 SMB 服务器
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `vserver cifs create` 命令在 SVM 上创建 SMB 服务器并指定其所属的工作组。
+
+您用于提供数据的 SVM 和 LIF 必须已配置为允许 SMB 协议。LIF 必须能够连接到 SVM 上配置的 DNS 服务器。
+
+工作组模式下的 SMB 服务器不支持以下 SMB 功能：
+
+* SMB3 见证协议
+* SMB3 CA 共享
+* 基于 SMB 的 SQL
+* 文件夹重定向
+* 漫游配置文件
+* 组策略对象（ GPO ）
+* 卷快照服务（ VSS ）
+
+
+`vserver cifs` 手册页包含其他可选配置参数和命名要求。
+
+.步骤
+. 验证您的集群上是否已获得 SMB 许可： `ssystem license show -package cifs`
++
+如果不是，请联系您的销售代表。
+
++
+如果 SMB 服务器仅用于身份验证，则不需要 CIFS 许可证。
+
+. 在工作组中创建 SMB 服务器： `vserver cifs create -vserver vserver_name -cifs-server cifs_server_name -workgroup workstorage_name [-comment text]`
++
+以下命令会在工作组 "`workgroup01` " 中创建 SMB 服务器 " `sMB_server01` " ：
+
++
+[listing]
+----
+cluster1::> vserver cifs create -vserver vs1.example.com -cifs-server SMB_SERVER01 -workgroup workgroup01
+----
+. 使用 `vserver cifs show` 命令验证 SMB 服务器配置。
++
+在以下示例中，命令输出显示已在工作组 "`workgroup01` " 的 SVM vs1.example.com 上创建名为 `sMB_server01` 的 SMB 服务器：
+
++
+[listing]
+----
+cluster1::> vserver cifs show -vserver vs0
+
+                                          Vserver: vs1.example.com
+                         CIFS Server NetBIOS Name: SMB_SERVER01
+                    NetBIOS Domain/Workgroup Name: workgroup01
+                      Fully Qualified Domain Name: -
+                              Organizational Unit: -
+Default Site Used by LIFs Without Site Membership: -
+                                   Workgroup Name: workgroup01
+                             Authentication Style: workgroup
+                CIFS Server Administrative Status: up
+                          CIFS Server Description:
+                          List of NetBIOS Aliases: -
+----
+
+
+对于工作组中的 CIFS 服务器，您必须在 SVM 上创建本地用户以及可选的本地组。
+
+* 相关信息 *
+
+link:../smb-admin/index.html["SMB 管理"]

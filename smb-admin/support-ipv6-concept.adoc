@@ -1,0 +1,68 @@
+---
+permalink: smb-admin/support-ipv6-concept.html 
+sidebar: sidebar 
+keywords: ipv6, cifs, server, ontap, smb, network, communication, service, support for ipv6 with smb access and cifs services 
+summary: 如果要在 CIFS 服务器上使用 IPv6 ，则需要了解 ONTAP 如何支持 IPv6 用于 SMB 访问以及 CIFS 服务的网络通信。 
+---
+= 支持使用 SMB 访问和 CIFS 服务的 IPv6
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要在 CIFS 服务器上使用 IPv6 ，则需要了解 ONTAP 如何支持 IPv6 用于 SMB 访问以及 CIFS 服务的网络通信。
+
+
+
+== Windows 客户端和服务器支持
+
+ONTAP 支持支持 IPv6 的 Windows 服务器和客户端。下面介绍了 Microsoft Windows 客户端和服务器 IPv6 支持：
+
+* Windows XP 和 Windows 2003 支持使用 IPv6 进行 SMB 文件共享。
++
+这些版本对 IPv6 的支持有限。
+
+* Windows 7 ， Windows 8 ， Windows Server 2008 ， Windows Server 2012 及更高版本支持对 SMB 文件共享和 Active Directory 服务使用 IPv6 ，包括 DNS ， LDAP ， CLDAP 和 Kerberos 服务。
++
+如果配置了 IPv6 地址，则 Windows 7 和 Windows Server 2008 及更高版本默认对 Active Directory 服务使用 IPv6 。支持通过 IPv6 连接进行 NTLM 和 Kerberos 身份验证。
+
++
+ONTAP 支持的所有 Windows 客户端均可使用 IPv6 地址连接到 SMB 共享。
+
+
+
+有关 ONTAP 支持的 Windows 客户端的最新信息，请参见互操作性表。
+
+互操作性表
+
+[NOTE]
+====
+IPv6 不支持 NT 域。
+
+====
+
+
+== 其他 CIFS 服务支持
+
+除了对 SMB 文件共享和 Active Directory 服务的 IPv6 支持之外， ONTAP 还为以下各项提供 IPv6 支持：
+
+* 客户端服务，包括脱机文件夹，漫游配置文件，文件夹重定向以及先前版本
+* 服务器端服务，包括动态主目录（主目录功能），符号链接和 Widelink ， BranchCache ， ODX 副本卸载，自动节点转介， 和先前版本
+* 文件访问管理服务，包括使用 Windows 本地用户和组进行访问控制和权限管理，使用 CLI 设置文件权限和审核策略，安全跟踪，文件锁定管理以及监控 SMB 活动
+* NAS 多协议审核
+* fpolicy
+* 持续可用的共享，见证协议和远程 VSS （与基于 SMB 的 Hyper-V 配置结合使用）
+
+
+
+
+== 名称服务和身份验证服务支持
+
+IPv6 支持与以下名称服务进行通信：
+
+* 域控制器
+* DNS 服务器
+* LDAP 服务器
+* KDC 服务器
+* NIS 服务器
+

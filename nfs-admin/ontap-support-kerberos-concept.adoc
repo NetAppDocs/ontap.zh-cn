@@ -1,0 +1,33 @@
+---
+permalink: nfs-admin/ontap-support-kerberos-concept.html 
+sidebar: sidebar 
+keywords: ontap, support, kerberos 
+summary: Kerberos 可为客户端 / 服务器应用程序提供强大的安全身份验证。身份验证用于向服务器验证用户和进程身份。在 ONTAP 环境中， Kerberos 在 Storage Virtual Machine （ SVM ）和 NFS 客户端之间提供身份验证。 
+---
+= ONTAP 支持 Kerberos
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Kerberos 可为客户端 / 服务器应用程序提供强大的安全身份验证。身份验证用于向服务器验证用户和进程身份。在 ONTAP 环境中， Kerberos 在 Storage Virtual Machine （ SVM ）和 NFS 客户端之间提供身份验证。
+
+在 ONTAP 9 中，支持以下 Kerberos 功能：
+
+* Kerberos 5 身份验证与完整性检查（ krb5i ）
++
+Krb5i 使用校验和验证在客户端和服务器之间传输的每个 NFS 消息的完整性。出于安全原因（例如，确保数据未被篡改）和数据完整性原因（例如，在不可靠的网络上使用 NFS 时，防止数据损坏），这一点非常有用。
+
+* Kerberos 5 身份验证与隐私检查（ krb5p ）
++
+Krb5p 使用校验和对客户端和服务器之间的所有流量进行加密。这种方法更安全，并且会产生更多负载。
+
+* 128 位和 256 位 AES 加密
++
+高级加密标准（ Advanced Encryption Standard ， AES ）是一种用于保护电子数据安全的加密算法。为了增强安全性， ONTAP 现在支持对 Kerberos 使用 128 位密钥 AES （ AES-128 ）和 256 位密钥 AES （ AES-256 ）加密。
+
+* SVM 级别的 Kerberos 域配置
++
+现在， SVM 管理员可以在 SVM 级别创建 Kerberos 域配置。这意味着 SVM 管理员无需再依赖集群管理员来配置 Kerberos 域，并且可以在多租户环境中创建单独的 Kerberos 域配置。
+
+

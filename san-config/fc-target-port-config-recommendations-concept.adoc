@@ -1,0 +1,135 @@
+---
+permalink: san-config/fc-target-port-config-recommendations-concept.html 
+sidebar: sidebar 
+keywords: fc, target, port, configuration, recommendations 
+summary: 为了获得最佳性能和最高可用性，您应使用建议的 FC 目标端口配置。 
+---
+= FC 目标端口配置建议
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+为了获得最佳性能和最高可用性，您应使用建议的 FC 目标端口配置。
+
+下表显示了板载 FC 和 FC-NVMe 目标端口的首选端口使用顺序。对于扩展适配器， FC 端口应进行分布，以使其不使用同一 ASIC 进行连接。控制 Hardware Universe 器使用的 ONTAP 软件版本的 _SIL_ 中列出了首选插槽顺序。
+
+以下型号支持 FC-NVMe ：
+
+* AFF A300
++
+[NOTE]
+====
+AFF A300 板载端口不支持 FC-NVMe 。
+
+====
+* AFF A700
+* AFF A700s
+* AFF A800
+
+
+[NOTE]
+====
+FAS22xx 和 FAS2520 系统没有板载 FC 端口，并且不支持附加适配器。
+
+====
+[cols="3*"]
+|===
+| 控制器 | 具有共享 ASIC 的端口对 | 目标端口数：首选端口 
+
+
+ a| 
+FAS9000 ， AFF A700 ， AFF A700s 和 AFF A800
+ a| 
+无
+ a| 
+所有数据端口均位于扩展适配器上。有关 Hardware Universe 详细信息，请参见 _SIL_ 。
+
+
+
+ a| 
+8080 ， 8060 和 8040
+ a| 
+0E+0f
+
+0g+0h
+ a| 
+1 ： 0E
+
+2 ： 0E ， 0g
+
+3 ： 0E ， 0g ， 0h
+
+4 ： 0E ， 0g ， 0f ， 0h
+
+
+
+ a| 
+FAS8200 和 AFF A300
+ a| 
+0g+0h
+ a| 
+1 ： 0g
+
+2 ： 0g ， 0h
+
+
+
+ a| 
+8020
+ a| 
+0C+0d
+ a| 
+1 ： 0C
+
+2 ： 0C ， 0d
+
+
+
+ a| 
+62xx
+ a| 
+0a+0b
+
+0C+0d
+ a| 
+1 ： 0a
+
+2 ： 0a ， 0c
+
+3 ： 0a ， 0c ， 0b
+
+4 ： 0a ， 0c ， 0b ， 0d
+
+
+
+ a| 
+32xx
+ a| 
+0C+0d
+ a| 
+1 ： 0C
+
+2 ： 0C ， 0d
+
+
+
+ a| 
+FAS2554 ， FAS2552 ， FAS2600 系列， FAS2720 ， FAS2750 ， AFF A200 和 AFF A220
+ a| 
+0C+0d
+
+0E+0f
+ a| 
+1 ： 0C
+
+2 ： 0C ， 0e
+
+3 ： 0C ， 0e ， 0d
+
+4 ： 0C ， 0e ， 0d ， 0f
+
+|===
+* 相关信息 *
+
+https://hwu.netapp.com["NetApp Hardware Universe"]

@@ -1,0 +1,42 @@
+---
+permalink: smb-admin/reset-rediscovering-servers-task.html 
+sidebar: sidebar 
+keywords: reset, discover, rediscover, server, cifs, server, discard, store, information, ldap, domain, controller, information, external, respond, reset and rediscover servers 
+summary: 通过重置和重新发现 CIFS 服务器上的服务器， CIFS 服务器可以丢弃有关 LDAP 服务器和域控制器的存储信息。丢弃服务器信息后， CIFS 服务器将重新获取这些外部服务器的当前信息。如果连接的服务器未正确响应，则此功能非常有用。 
+---
+= 重置和重新发现服务器
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过重置和重新发现 CIFS 服务器上的服务器， CIFS 服务器可以丢弃有关 LDAP 服务器和域控制器的存储信息。丢弃服务器信息后， CIFS 服务器将重新获取这些外部服务器的当前信息。如果连接的服务器未正确响应，则此功能非常有用。
+
+.步骤
+. 输入以下命令： `vserver cifs domain discovered-servers reset-servers -vserver _vserver_name_`
+. 显示有关新重新发现的服务器的信息： `vserver cifs domain discovered-servers show -vserver _vserver_name_`
+
+
+以下示例将重置和重新发现 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 的服务器：
+
+[listing]
+----
+cluster1::> vserver cifs domain discovered-servers reset-servers -vserver vs1
+
+cluster1::> vserver cifs domain discovered-servers show
+
+Node: node1
+Vserver: vs1
+
+Domain Name     Type     Preference DC-Name     DC-Address    Status
+--------------- -------- ---------- ----------- ------------- -------
+example.com     MS-LDAP  adequate   DC-1        1.1.3.4       OK
+example.com     MS-LDAP  adequate   DC-2        1.1.3.5       OK
+example.com     MS-DC    adequate   DC-1        1.1.3.4       OK
+example.com     MS-DC    adequate   DC-2        1.1.3.5       OK
+----
+* 相关信息 *
+
+xref:display-discovered-servers-task.adoc[显示有关已发现服务器的信息]
+
+xref:stop-start-server-task.adoc[停止或启动 CIFS 服务器]

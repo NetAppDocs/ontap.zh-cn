@@ -1,0 +1,98 @@
+---
+permalink: smb-admin/precompute-branchcache-hashes-specified-paths-task.html 
+sidebar: sidebar 
+keywords: configure, branchcache, service, pre-compute, hash, file, directory, structure, compute, branchcache-enabled share non-peak hours, pre-compute branchcache hashes on specified paths 
+summary: 您可以将 BranchCache 服务配置为为为单个文件，目录或目录结构中的所有文件预先计算哈希。如果您希望在非高峰时段对启用了 BranchCache 的共享中的数据计算哈希，这将非常有用。 
+---
+= 预先计算指定路径上的 BranchCache 哈希
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将 BranchCache 服务配置为为为单个文件，目录或目录结构中的所有文件预先计算哈希。如果您希望在非高峰时段对启用了 BranchCache 的共享中的数据计算哈希，这将非常有用。
+
+如果要在显示哈希统计信息之前收集数据样本，则必须使用 `satisttics start` 和可选的 `satisttics stop` 命令。
+
+* 您必须指定要预先计算哈希的 Storage Virtual Machine （ SVM ）和路径。
+* 您还必须指定是否要以递归方式计算哈希。
+* 如果要以递归方式计算哈希， BranchCache 服务将遍历指定路径下的整个目录树，并为每个符合条件的对象计算哈希。
+
+
+.步骤
+. 根据需要预计算哈希：
++
+|===
+| 如果要预先计算哈希 ... | 输入命令 ... 
+
+
+ a| 
+单个文件或目录
+ a| 
+`vserver cifs branchcache hash-create -vserver vserver_name -path path -recurse false`
+
+
+
+ a| 
+在目录结构中的所有文件上以递归方式执行
+ a| 
+`vserver cifs BranchCache hash-create -vserver vserver_name -path abreal_path -recurse true`
+
+|===
+. 使用 `statitics` 命令验证是否正在计算哈希：
++
+.. 显示所需 SVM 实例上 `hashd` 对象的统计信息： `statitics show -object hashd -instance vserver_name`
+.. 重复执行此命令，以验证创建的哈希数量是否正在增加。
+
+
+
+
+以下示例将在路径 ` /data` 以及 SVM vs1 上包含的所有文件和子目录上创建哈希：
+
+[listing]
+----
+cluster1::> vserver cifs branchcache hash-create -vserver vs1 -path /data -recurse true
+
+cluster1::> statistics show -object hashd -instance vs1
+Object: hashd
+Instance: vs1
+Start-time: 9/6/2012 19:09:54
+End-time: 9/6/2012 19:11:15
+Cluster: cluster1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    branchcache_hash_created                                       85
+    branchcache_hash_files_replaced                                 0
+    branchcache_hash_rejected                                       0
+    branchcache_hash_store_bytes                                    0
+    branchcache_hash_store_size                                     0
+    instance_name                                                vs1
+    node_name                                                  node1
+    node_uuid
+                                11111111-1111-1111-1111-111111111111
+    process_name                                                   -
+
+cluster1::> statistics show -object hashd -instance vs1
+Object: hashd
+Instance: vs1
+Start-time: 9/6/2012 19:09:54
+End-time: 9/6/2012 19:11:15
+Cluster: cluster1
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    branchcache_hash_created                                       92
+    branchcache_hash_files_replaced                                 0
+    branchcache_hash_rejected                                       0
+    branchcache_hash_store_bytes                                    0
+    branchcache_hash_store_size                                     0
+    instance_name                                                vs1
+    node_name                                                  node1
+    node_uuid
+                                11111111-1111-1111-1111-111111111111
+    process_name                                                   -
+----
+* 相关信息 *
+
+link:../performance-config/index.html["性能监控设置"]

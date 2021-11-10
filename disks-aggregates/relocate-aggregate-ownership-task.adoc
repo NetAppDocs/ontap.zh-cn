@@ -1,0 +1,108 @@
+---
+permalink: disks-aggregates/relocate-aggregate-ownership-task.html 
+sidebar: sidebar 
+keywords: relocate, aggregate, ownership 
+summary: 您只能在 HA 对中的节点之间更改聚合的所有权。 
+---
+= 重新定位聚合所有权
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以更改 HA 对中节点之间聚合的所有权，而不会中断聚合的服务。
+
+HA 对中的两个节点都以物理方式连接到彼此的磁盘或阵列 LUN 。每个磁盘或阵列 LUN 均归其中一个节点所有。尽管在发生接管时磁盘所有权会暂时发生变化，但聚合重新定位操作可能是永久的（例如，为负载平衡而执行的操作），也可能是临时的（例如，在接管过程中执行的操作） 将聚合中所有磁盘或阵列 LUN 的所有权从一个节点更改为另一个节点。所有权更改无需执行任何数据复制过程，也无需物理移动磁盘或阵列 LUN 。
+
+.关于此任务
+* 由于在聚合重新定位操作期间会以编程方式验证卷计数限制，因此无需手动检查此限制。
++
+如果卷数超过支持的限制，则聚合重新定位操作将失败，并显示相关的错误消息。
+
+* 在源节点或目标节点上正在执行系统级操作时，不应启动聚合重新定位；同样，也不应在聚合重新定位期间启动这些操作。
++
+这些操作可以包括以下内容：
+
++
+** 接管
+** 交还
+** 关闭
+** 另一个聚合重新定位操作
+** 磁盘所有权更改
+** 聚合或卷配置操作
+** 存储控制器更换
+** ONTAP 升级
+** ONTAP 还原
+
+
+* 如果您使用的是 MetroCluster 配置，则不应在执行灾难恢复操作（ _switchover_ ， _healing _ 或 _switchback_ ）时启动聚合重新定位。
+* 如果您拥有 MetroCluster 配置并在已切换的聚合上启动聚合重新定位，则此操作可能会失败，因为它超过 DR 配对节点的卷限制计数。
+* 您不应对已损坏或正在进行维护的聚合启动聚合重新定位。
+* 在启动聚合重新定位之前，应保存源节点和目标节点上的所有核心转储。
+
+
+.步骤
+. 查看节点上的聚合以确认要移动的聚合，并确保它们处于联机状态良好：
++
+`storage aggregate show -node _source-nod_`
+
++
+以下命令显示了集群中四个节点上的六个聚合。所有聚合均已联机。Node1 和 Node3 形成一个 HA 对， Node2 和 Node4 形成一个 HA 对。
+
++
+[listing]
+----
+cluster::> storage aggregate show
+Aggregate     Size Available Used% State   #Vols  Nodes  RAID Status
+--------- -------- --------- ----- ------- ------ ------ -----------
+aggr_0     239.0GB   11.13GB   95% online       1 node1  raid_dp,
+                                                         normal
+aggr_1     239.0GB   11.13GB   95% online       1 node1  raid_dp,
+                                                         normal
+aggr_2     239.0GB   11.13GB   95% online       1 node2  raid_dp,
+                                                         normal
+aggr_3     239.0GB   11.13GB   95% online       1 node2  raid_dp,
+                                                         normal
+aggr_4     239.0GB   238.9GB    0% online       5 node3  raid_dp,
+                                                         normal
+aggr_5     239.0GB   239.0GB    0% online       4 node4  raid_dp,
+                                                         normal
+6 entries were displayed.
+----
+. 使用问题描述命令启动聚合重新定位：
++
+`s存储聚合重新定位 start -aggregate-list _aggregate-1_ ， _aggregate-2_ … -node source-node -destination _destination-nod_`
+
++
+以下命令将聚合 aggr_1 和 aggr_2 从 Node1 移动到 Node3 。Node3 是 Node1 的 HA 配对节点。聚合只能在 HA 对中移动。
+
++
+[listing]
+----
+cluster::> storage aggregate relocation start -aggregate-list aggr_1, aggr_2 -node node1 -destination node3
+Run the storage aggregate relocation show command to check relocation status.
+node1::storage aggregate>
+----
+. 使用 `storage aggregate relocation show` 命令监控聚合重新定位的进度：
++
+`storage aggregate relocation show -node _source-nod_`
+
++
+以下命令显示要移动到 node3 的聚合的进度：
+
++
+[listing]
+----
+cluster::> storage aggregate relocation show -node node1
+Source Aggregate   Destination    Relocation Status
+------ ----------- -------------  ------------------------
+node1
+       aggr_1      node3          In progress, module: wafl
+       aggr_2      node3          Not attempted yet
+2 entries were displayed.
+node1::storage aggregate>
+----
++
+重新定位完成后，此命令的输出将显示每个聚合的重新定位状态为 `Done` 。
+
+

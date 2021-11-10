@@ -1,0 +1,45 @@
+---
+permalink: system-admin/rules-specifying-values-concept.html 
+sidebar: sidebar 
+keywords: rules, specifying, values, cli, parameters, required, optional 
+summary: 大多数命令都包含一个或多个必需或可选参数。许多参数都要求您为其指定一个值。在命令行界面中指定值时，需要遵循一些规则。 
+---
+= 在 CLI 中指定值的规则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+大多数命令都包含一个或多个必需或可选参数。许多参数都要求您为其指定一个值。在命令行界面中指定值时，需要遵循一些规则。
+
+* 值可以是数字，布尔说明符，从预定义值枚举列表中选择的值或文本字符串。
++
+某些参数可以接受由两个或更多值组成的逗号分隔列表。逗号分隔的值列表无需使用引号（ "" ）。指定文本，空格或查询字符（不是以小于或大于号开头的查询或文本）时，必须用引号将实体括起来。
+
+* 命令行界面会解释问号（ "` ？` " ） 用于显示特定命令的帮助信息的命令。
+* 在命令行界面中输入的某些文本（例如命令名称，参数和某些值）不区分大小写。
++
+例如，当您为 `vserver cifs` 命令输入参数值时，将忽略大小写。但是，大多数参数值（例如节点， Storage Virtual Machine （ SVM ），聚合，卷和逻辑接口的名称）都区分大小写。
+
+* 如果要清除采用字符串或列表的参数的值，请指定一组空的引号（ "-" ）或短划线（ "-" ）。
+* 哈希符号（ "` #` " ）也称为井号，表示命令行输入的注释；如果使用，则应显示在命令行中最后一个参数之后。
++
+CLI 会忽略 "` #` " 与行尾之间的文本。
+
+
+
+在以下示例中，创建了一个带有文本注释的 SVM 。然后，将修改 SVM 以删除注释：
+
+[listing]
+----
+cluster1::> vserver create -vserver vs0 -subtype default -rootvolume root_vs0
+-aggregate aggr1 -rootvolume-security-style unix -language C.UTF-8 -is-repository false -ipspace ipspaceA -comment "My SVM"
+cluster1::> vserver modify -vserver vs0 -comment ""
+----
+在以下示例中，使用 "` #` " 符号的命令行注释表示此命令的作用。
+
+[listing]
+----
+cluster1::> security login create -vserver vs0 -user-or-group-name new-admin
+-application ssh -authmethod password #This command creates a new user account
+----

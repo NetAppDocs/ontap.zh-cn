@@ -1,0 +1,111 @@
+---
+permalink: s3-config/create-bucket-task.html 
+sidebar: sidebar 
+keywords: create, bucket 
+summary: S3 对象保留在存储分段中，它们不会嵌套为其他目录内某个目录内的文件。 
+---
+= 创建存储分段
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+S3 对象保留在 _bages_ 中—它们不嵌套为其他目录内某个目录内的文件。
+
+包含 S3 服务器的 SVM 必须已存在。
+
+创建存储分段时，您有两个配置选项：
+
+* Let ONTAP Select the underlying aggregates and FlexGroup components （默认）
++
+** ONTAP 会通过自动选择聚合来为第一个存储分段创建和配置 FlexGroup 卷。它将自动选择可用于您的平台的最高服务级别，或者您也可以指定存储服务级别。稍后在 SVM 中添加的任何其他分段都将具有相同的底层 FlexGroup 卷。
+** 或者，您也可以指定存储分层是否会使用存储分段，在这种情况下， ONTAP 会尝试选择低成本介质，以便为分层数据提供最佳性能。
+
+
+* 您可以选择底层聚合和 FlexGroup 组件（需要高级权限命令选项）
++
+** 您可以选择手动选择必须在其中创建存储分段和包含的 FlexGroup 卷的聚合，然后指定每个聚合上的成分卷数。添加其他分段时：
++
+*** 如果为新存储分段指定聚合和成分卷，则会为新存储分段创建新的 FlexGroup 。
+*** 如果不为新存储分段指定聚合和成分卷，则新存储分段将添加到现有 FlexGroup 中。有关详细信息，请参见 FlexGroup 文档。
+
+
++
+link:../flexgroup/index.html["FlexGroup 卷管理"]
+
+
+
++
+在创建存储分段时指定聚合和成分卷时，不会应用任何 QoS 策略组，默认或自定义。您可以稍后使用 `vserver object-store-server bucket modify` 命令执行此操作。
+
+
+
+存储服务级别是预定义的自适应服务质量（ QoS ）策略组，具有 _value_ ， _performage_ 和 _Extreme 默认级别。您还可以定义自定义 QoS 策略组并将其应用于存储分段，而不是默认存储服务级别之一。
+
+link:storage-service-definitions-reference.html["存储服务定义"]
+
+如果要配置本地容量分层，请在数据 SVM 中创建分段和用户，而不是在 S3 服务器所在的系统 SVM 中创建。
+
+link:../performance-admin/index.html["性能管理"]
+
+有关其他配置和显示选项，请参见 `vserver object-store-server bucket` 手册页。
+
+.步骤
+. 如果您计划自行选择聚合和 FlexGroup 组件，请将权限级别设置为高级（否则，管理权限级别就足够了）： `set -privilege advanced`
+. 创建存储分段：
++
+`vserver object-store-server bucket create -vserver svm_name -bucket bucket_name -size integer [KB_MB|GB_TB_PB]] [-comment text] [Additional _options]`
+
++
+如果要配置本地分层， SVM 名称可以是数据 SVM 或 `Cluster` （系统 SVM 名称）。
+
++
+如果未指定任何选项，则 ONTAP 将创建一个 5 GB 的存储分段，并将服务级别设置为系统可用的最高级别。
+
++
+如果您希望 ONTAP 根据性能或使用情况创建存储分段，请使用以下选项之一：
+
++
+** 服务级别
++
+使用以下值之一包括 ` -storage-service-level` 选项： `value` ， `performance` 或 `至高` 。
+
+** 分层
++
+包括 ` used-as capacity-tier true` 选项。
+
+
+
++
+如果要指定用于创建底层 FlexGroup 卷的聚合，请使用以下选项：
+
++
+** ` -aggr-list` 参数指定要用于 FlexGroup 卷成分卷的聚合列表。
++
+列表中的每个条目都会在指定聚合上创建一个成分卷。您可以多次指定一个聚合，以便在该聚合上创建多个成分卷。
+
++
+为了在整个 FlexGroup 卷中保持性能一致，所有聚合都必须使用相同的磁盘类型和 RAID 组配置。
+
+** ` -aggr-list-multiplier` 参数指定在创建 FlexGroup 卷时使用 ` -aggr-list` 参数在列出的聚合上迭代的次数。
++
+` -aggr-list-multiplier` 参数的默认值为 4 。
+
+
+
+. 根据需要添加 QoS 策略组：
++
+`vserver object-store-server bucket modify -bucket bucket_name -qos-policy-group qos_policy_group`
+
+. 验证存储分段创建：
++
+`vserver object-store-server bucket show [-instance]`
+
+
+
+以下示例将为大小为 1 TB 的 SVM vs1 创建一个分段并指定聚合：
+
+[listing]
+----
+cluster-1::*> vserver object-store-server bucket create -vserver svm1.example.com -bucket testbucket -aggr-list aggr1 -size 1TB
+----

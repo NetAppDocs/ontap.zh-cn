@@ -1,0 +1,45 @@
+---
+permalink: encryption-at-rest/replace-ssl-certificates-task.html 
+sidebar: sidebar 
+keywords: replacing, ssl, certificates 
+summary: 所有 SSL 证书都具有到期日期。您必须在证书到期之前对其进行更新，以防止对身份验证密钥的访问丢失。 
+---
+= 替换 SSL 证书
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+所有 SSL 证书都具有到期日期。您必须在证书到期之前对其进行更新，以防止对身份验证密钥的访问丢失。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须已获取集群的替代公有和专用证书。
+* 您必须已获取 KMIP 服务器的替代公有证书。
+* 要执行此任务，您必须是集群或 SVM 管理员。
+
+
+[NOTE]
+====
+在集群上安装证书之前或之后，您可以在 KMIP 服务器上安装替代客户端和服务器证书。
+
+====
+.步骤
+. 安装新的 KMIP server-ca 证书：
++
+`security certificate install -type server-ca -vserver <>``
+
+. 安装新的 KMIP 客户端证书：
++
+`security certificate install -type client -vserver <>`
+
+. 更新密钥管理器配置以使用新安装的证书：
++
+`security key-manager external modify -vserver <> -client-cert <> -server-ca-certs <>`
+
++
+[NOTE]
+====
+如果新客户端证书的公共 / 专用密钥与先前配置的密钥不同，则更新密钥管理器配置以使用新安装的证书将返回错误。有关如何覆盖此错误的说明，请联系 NetApp 支持部门。
+
+====
+

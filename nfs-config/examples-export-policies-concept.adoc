@@ -1,0 +1,223 @@
+---
+permalink: nfs-config/examples-export-policies-concept.html 
+sidebar: sidebar 
+keywords: examples, ontap, export, policies, implementation, 7-mode 
+summary: 您可以查看导出策略示例，以更好地了解导出策略在 ONTAP 中的工作原理。 
+---
+= ONTAP 导出策略示例
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以查看导出策略示例，以更好地了解导出策略在 ONTAP 中的工作原理。
+
+
+
+== 7- 模式导出的 ONTAP 实施示例
+
+以下示例显示了在 ` /etc/export` 文件中显示的 7- 模式导出：
+
+[listing]
+----
+/vol/vol1 -sec=sys,ro=@readonly_netgroup,rw=@readwrite_netgroup1:
+@readwrite_netgroup2:@rootaccess_netgroup,root=@rootaccess_netgroup
+----
+要将此导出复制为集群模式导出策略，您必须创建一个包含三个导出规则的导出策略，然后将此导出策略分配给卷 vol1 。
+
+|===
+| 规则 | Element | 价值 
+
+
+ a| 
+规则 1.
+ a| 
+` - 客户端匹配` （客户端规范）
+ a| 
+`@readonly_netgroup`
+
+
+
+ a| 
+` 规则索引` （导出规则在规则列表中的位置）
+ a| 
+`1`
+
+
+
+ a| 
+` 协议`
+ a| 
+`NFS`
+
+
+
+ a| 
+` -rorule` （允许只读访问）
+ a| 
+`sys` （客户端使用 AUTH_SYS 进行身份验证）
+
+
+
+ a| 
+` -rwrule` （允许读写访问）
+ a| 
+`从不`
+
+
+
+ a| 
+` 超级用户` （允许超级用户访问）
+ a| 
+`无` （ root _squash_ 到 anon ）
+
+
+
+ a| 
+规则 2.
+ a| 
+` - 客户端匹配`
+ a| 
+`@rootaccess_netgroup`
+
+
+
+ a| 
+` 规则索引`
+ a| 
+`2`
+
+
+
+ a| 
+` 协议`
+ a| 
+`NFS`
+
+
+
+ a| 
+`` - rorule
+ a| 
+`sys`
+
+
+
+ a| 
+` rwrule`
+ a| 
+`sys`
+
+
+
+ a| 
+` 超级用户`
+ a| 
+`sys`
+
+
+
+ a| 
+规则 3.
+ a| 
+` - 客户端匹配`
+ a| 
+`@readwrite_netgroup1 ，@readwrite_netgroup2`
+
+
+
+ a| 
+` 规则索引`
+ a| 
+`3`
+
+
+
+ a| 
+` 协议`
+ a| 
+`NFS`
+
+
+
+ a| 
+`` - rorule
+ a| 
+`sys`
+
+
+
+ a| 
+` rwrule`
+ a| 
+`sys`
+
+
+
+ a| 
+` 超级用户`
+ a| 
+`无`
+
+|===
+. 创建名为 exp_vol1 的导出策略：
++
+`vserver export-policy create -vserver NewSVM -policyname exp_vol1`
+
+. 在基本命令中使用以下参数创建三个规则：
++
+** 基本命令： + `vserver export-policy rule create -vserver NewSVM -policyname exp_vol1`
+** 规则参数： + ` -clientmatch @readonly_netgroup -ruleindex 1 -protocol nfs -rorule sys -rwrule never -superuser none` + ` -clientmatch @rootaccess_netgroup -ruleindex 2 -protocol nfs -rorgroupsys -rwrule -superuser sys` + ` -clientmatch @@sys write_net1 ， -protocol -user -sys -rwrule nfs -rwr`
+
+
+. 将此策略分配给卷 vol1 ：
++
+`volume modify -vserver NewSVM -volume vol1 -policy exp_vol1`
+
+
+
+
+
+== 7- 模式导出的整合示例
+
+以下示例显示了一个 7- 模式 ` /etc/export` 文件，其中 10 个 qtree 中的每个 qtree 都包含一行：
+
+[listing]
+----
+
+/vol/vol1/q_1472 -sec=sys,rw=host1519s,root=host1519s
+/vol/vol1/q_1471 -sec=sys,rw=host1519s,root=host1519s
+/vol/vol1/q_1473 -sec=sys,rw=host1519s,root=host1519s
+/vol/vol1/q_1570 -sec=sys,rw=host1519s,root=host1519s
+/vol/vol1/q_1571 -sec=sys,rw=host1519s,root=host1519s
+/vol/vol1/q_2237 -sec=sys,rw=host2057s,root=host2057s
+/vol/vol1/q_2238 -sec=sys,rw=host2057s,root=host2057s
+/vol/vol1/q_2239 -sec=sys,rw=host2057s,root=host2057s
+/vol/vol1/q_2240 -sec=sys,rw=host2057s,root=host2057s
+/vol/vol1/q_2241 -sec=sys,rw=host2057s,root=host2057s
+----
+在 ONTAP 中，每个 qtree 需要以下两个策略之一：一个策略包含 ` 客户端匹配 host1519s` 规则，另一个策略包含 ` 客户端匹配 host2057s` 规则。
+
+. 创建两个名为 exp_vol1q1 和 exp_vol1q2 的导出策略：
++
+** `vserver export-policy create -vserver NewSVM -policyname exp_vol1q1`
+** `vserver export-policy create -vserver NewSVM -policyname exp_vol1q2`
+
+
+. 为每个策略创建一个规则：
++
+** `vserver export-policy rule create -vserver NewSVM -policyname exp_vol1q1 -clientmatch host1519s -rwrule sys -superuser sys`
+** `vserver export-policy rule create -vserver NewSVM -policyname exp_vol1q2 -clientmatch host1519s -rwrule sys -superuser sys`
+
+
+. 将策略应用于 qtree ：
++
+** `volume qtree modify -vserver NewSVM -qtree-path /vol/vol1/q_1472 -export-policy exp_vol1q1`
+** [ 接下来的 4 个 qtree...]
+** `volume qtree modify -vserver NewSVM -qtree-path /vol/vol1/q_2237 -export-policy exp_vol1q2`
+** [ 接下来的 4 个 qtree...]
+
+
+
+
+如果稍后需要为这些主机添加其他 qtree ，则可以使用相同的导出策略。

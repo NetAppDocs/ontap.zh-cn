@@ -1,0 +1,56 @@
+---
+permalink: smb-admin/delete-local-group-task.html 
+sidebar: sidebar 
+keywords: delete, local, group, storage, virtual, machine, svm, determine, determining, access, right, data, associate, assign, user, privilege, member, delete a local group 
+summary: 如果不再需要本地组来确定与该 SVM 关联的数据的访问权限，或者不再需要将 SVM 用户权限（特权）分配给组成员，则可以从 Storage Virtual Machine （ SVM ）中删除该本地组。 
+---
+= 删除本地组
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果不再需要本地组来确定与该 SVM 关联的数据的访问权限，或者不再需要将 SVM 用户权限（特权）分配给组成员，则可以从 Storage Virtual Machine （ SVM ）中删除该本地组。
+
+删除本地组时，请记住以下几点：
+
+* 文件系统未更改。
++
+不会调整引用此组的文件和目录上的 Windows 安全描述符。
+
+* 如果该组不存在，则会返回错误。
+* 不能删除特殊的 _Everyone 组。
+* 无法删除 _BUILTIN\Administrators _ _BUILTIN\Users_ 等内置组。
+
+
+.步骤
+. 通过显示 SVM 上的本地组列表来确定要删除的本地组的名称： `vserver cifs users-and-groups local-group show -vserver vserver_name`
+. 删除本地组： `vserver cifs users-and-groups local-group delete -vserver _vserver_name_ ‑group-name _group_name_`
+. 验证是否已删除此组： `vserver cifs users-and-groups local-user show -vserver _vserver_name_`
+
+
+以下示例将删除与 SVM vs1 关联的本地组 "`CIFS_SERVER\sales` " ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group show -vserver vs1
+Vserver   Group Name                   Description
+--------- ---------------------------- ----------------------------
+vs1       BUILTIN\Administrators       Built-in Administrators group
+vs1       BUILTIN\Backup Operators     Backup Operators group
+vs1       BUILTIN\Power Users          Restricted administrative privileges
+vs1       BUILTIN\Users                All users
+vs1       CIFS_SERVER\engineering
+vs1       CIFS_SERVER\sales
+
+cluster1::> vserver cifs users-and-groups local-group delete -vserver vs1 -group-name CIFS_SERVER\sales
+
+cluster1::> vserver cifs users-and-groups local-group show -vserver vs1
+Vserver   Group Name                   Description
+--------- ---------------------------- ----------------------------
+vs1       BUILTIN\Administrators       Built-in Administrators group
+vs1       BUILTIN\Backup Operators     Backup Operators group
+vs1       BUILTIN\Power Users          Restricted administrative privileges
+vs1       BUILTIN\Users                All users
+vs1       CIFS_SERVER\engineering
+----

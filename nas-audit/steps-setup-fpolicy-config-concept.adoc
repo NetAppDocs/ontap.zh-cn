@@ -1,0 +1,55 @@
+---
+permalink: nas-audit/steps-setup-fpolicy-config-concept.html 
+sidebar: sidebar 
+keywords: steps, setting, fpolicy configuration 
+summary: 要监控文件访问，必须先在需要 FPolicy 服务的 Storage Virtual Machine （ SVM ）上创建并启用 FPolicy 配置。 
+---
+= 设置 FPolicy 配置的步骤是什么
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要监控文件访问，必须先在需要 FPolicy 服务的 Storage Virtual Machine （ SVM ）上创建并启用 FPolicy 配置。
+
+在 SVM 上设置和启用 FPolicy 配置的步骤如下：
+
+. 创建 FPolicy 外部引擎。
++
+FPolicy 外部引擎可识别与特定 FPolicy 配置关联的外部 FPolicy 服务器（ FPolicy 服务器）。如果使用内部 "`FPolicy` " 原生引擎创建原生文件阻止配置，则无需创建 FPolicy 外部引擎。
+
+. 创建 FPolicy 事件。
++
+FPolicy 事件描述了 FPolicy 策略应监控的内容。事件由要监控的协议和文件操作组成，并且可以包含筛选器列表。事件使用筛选器缩小 FPolicy 外部引擎必须发送通知的受监控事件的列表范围。事件还指定策略是否监控卷操作。
+
+. 创建 FPolicy 策略。
++
+FPolicy 策略负责将需要监控的一组事件与相应的范围关联起来，以及必须将哪些受监控事件通知发送到指定的 FPolicy 服务器（如果未配置任何 FPolicy 服务器，则还必须发送到原生引擎）。该策略还定义是否允许 FPolicy 服务器对其接收通知的数据进行特权访问。如果 FPolicy 服务器需要访问数据，则需要进行特权访问。需要特权访问的典型使用情形包括文件阻止，配额管理和分层存储管理。您可以在此策略中指定此策略的配置是使用 FPolicy 服务器还是使用内部 "`原生` FPolicy 服务器。
+
++
+策略指定是否必须进行筛选。如果必须进行筛选，并且所有 FPolicy 服务器均已关闭，或者在定义的超时期限内未从 FPolicy 服务器收到任何响应，则会拒绝文件访问。
+
++
+策略的边界为 SVM 。一个策略不能应用于多个 SVM 。但是，一个特定 SVM 可以具有多个 FPolicy 策略，每个策略的范围，事件和外部服务器配置组合相同或不同。
+
+. 配置策略范围。
++
+FPolicy 范围用于确定该策略对哪些卷，共享或导出策略执行操作或排除在监控范围之外。范围还决定了应在 FPolicy 监控中包括或排除哪些文件扩展名。
+
++
+[NOTE]
+====
+排除列表优先于包括列表。
+
+====
+. 启用 FPolicy 策略。
++
+启用此策略后，控制通道以及（可选）有权限的数据通道将连接起来。SVM 参与的节点上的 FPolicy 进程开始监控文件和文件夹访问，对于符合已配置标准的事件，会向 FPolicy 服务器（如果未配置任何 FPolicy 服务器，则向原生引擎发送通知）。
+
+
+
+[NOTE]
+====
+如果此策略使用原生文件阻止，则不会配置外部引擎或将其与此策略关联。
+
+====

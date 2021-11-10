@@ -1,0 +1,39 @@
+---
+permalink: nfs-config/create-export-policy-task.html 
+sidebar: sidebar 
+keywords: create, export, policy 
+summary: 在创建导出规则之前，您必须创建一个导出策略来存放这些规则。您可以使用 vserver export-policy create 命令创建导出策略。 
+---
+= 创建导出策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在创建导出规则之前，您必须创建一个导出策略来存放这些规则。您可以使用 `vserver export-policy create` 命令创建导出策略。
+
+.步骤
+. 创建导出策略
++
+`vserver export-policy create -vserver _vserver_name_ -policyname _policy_name_`
+
++
+策略名称最长可为 256 个字符。
+
+. 验证是否已创建导出策略：
++
+`vserver export-policy show -policyname _policy_name_`
+
+
+
+以下命令将在名为 vs1 的 SVM 上创建并验证是否已创建名为 exp1 的导出策略：
+
+[listing]
+----
+vs1::> vserver export-policy create -vserver vs1 -policyname exp1
+
+vs1::> vserver export-policy show -policyname exp1
+Vserver          Policy Name
+---------------  -------------------
+vs1              exp1
+----

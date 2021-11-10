@@ -1,0 +1,47 @@
+---
+permalink: smb-admin/remove-privileges-local-domain-users-groups-task.html 
+sidebar: sidebar 
+keywords: manage, user, right, local, domain, group, removing, remove, privilege, enhance, security, allow, customize, maximum, remove privileges from local or domain users or groups 
+summary: 您可以通过删除权限来管理本地或域用户或组的用户权限。这样可以自定义用户和组的最大权限，从而增强安全性。 
+---
+= 从本地或域用户或组中删除权限
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过删除权限来管理本地或域用户或组的用户权限。这样可以自定义用户和组的最大权限，从而增强安全性。
+
+要从中删除权限的本地或域用户或组必须已存在。
+
+从本地或域用户或组删除权限时，必须牢记以下几点：
+
+* 您可以删除一个或多个权限。
+* 从域用户或组中删除权限时， ONTAP 可能会通过联系域控制器来验证域用户或组。
++
+如果 ONTAP 无法与域控制器联系，则命令可能会失败。
+
+
+
+.步骤
+. 从本地或域用户或组中删除一个或多个权限： ` +vserver cifs users-and-groups privilege remove-privilege -vserver _vserver_name_ -user-or-group-name _name_ -privileges_privilege _ ， ... ） +`
+. 验证所需权限是否已从对象中删除： `vserver cifs users-and-groups privilege show -vserver _vserver_name_ ‑user-or-group-name _name_`
+
+
+以下示例将从 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 上的用户 "`cifs_server\sue` " 中删除特权 `SeTcbPrivilege` 和 `SeTakeOwnershipPrivilege` ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups privilege show -vserver vs1
+Vserver   User or Group Name    Privileges
+--------- --------------------- ---------------
+vs1       CIFS_SERVER\sue       SeTcbPrivilege
+                                SeTakeOwnershipPrivilege
+
+cluster1::> vserver cifs users-and-groups privilege remove-privilege -vserver vs1 -user-or-group-name CIFS_SERVER\sue -privileges SeTcbPrivilege,SeTakeOwnershipPrivilege
+
+cluster1::> vserver cifs users-and-groups privilege show -vserver vs1
+Vserver   User or Group Name    Privileges
+--------- --------------------- -------------------
+vs1       CIFS_SERVER\sue       -
+----

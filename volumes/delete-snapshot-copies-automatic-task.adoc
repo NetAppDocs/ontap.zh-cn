@@ -1,0 +1,49 @@
+---
+permalink: volumes/delete-snapshot-copies-automatic-task.html 
+sidebar: sidebar 
+keywords: delete, snapshot, copies, automatically, flexclone luns 
+summary: 您可以定义并启用用于自动删除 Snapshot 副本和 FlexClone LUN 的策略。自动删除 Snapshot 副本和 FlexClone LUN 有助于管理空间利用率。 
+---
+= 自动删除 Snapshot 副本
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以定义并启用用于自动删除 Snapshot 副本和 FlexClone LUN 的策略。自动删除 Snapshot 副本和 FlexClone LUN 有助于管理空间利用率。
+
+您可以自动从读写卷中删除 Snapshot 副本，并从读写父卷中删除 FlexClone LUN 。您不能设置从只读卷自动删除 Snapshot 副本，例如 SnapMirror 目标卷。
+
+.步骤
+. 使用 `volume snapshot autodelete modify` 命令定义并启用用于自动删除 Snapshot 副本的策略。
++
+有关可与此命令结合使用来定义满足需要的策略的参数的信息，请参见 `volume snapshot autodelete modify` 手册页。
+
++
+以下命令会自动删除 Snapshot 副本，并将 vol3 卷的触发器设置为 `snap_reserve` ，该卷是 vs0.example.com Storage Virtual Machine （ SVM ）的一部分：
+
++
+[listing]
+----
+cluster1::> volume snapshot autodelete modify -vserver vs0.example.com
+-volume vol3 -enabled true -trigger snap_reserve
+----
++
+以下命令可自动删除 vs0.example.com Storage Virtual Machine （ SVM ）中的卷 vol3 的 Snapshot 副本和标记为自动删除的 FlexClone LUN ：
+
++
+[listing]
+----
+cluster1::> volume snapshot autodelete modify -vserver vs0.example.com
+-volume vol3 -enabled true -trigger volume -commitment try -delete-order
+oldest_first -destroy-list lun_clone,file_clone
+----
++
+[NOTE]
+====
+聚合级 Snapshot 副本的工作方式与卷级 Snapshot 副本不同，并由 ONTAP 自动管理。删除聚合 Snapshot 副本的选项始终处于启用状态，有助于管理空间利用率。
+
+如果聚合的 trigger 参数设置为 `snap_reserve` ，则会保留 Snapshot 副本，直到预留的空间超过阈值容量为止。因此，即使 trigger 参数未设置为 `snap_reserve` ，命令中 Snapshot 副本使用的空间也将列为 `0` ，因为这些 Snapshot 副本会自动删除。此外， Snapshot 副本在聚合中使用的空间会被视为可用空间，并包含在命令的可用空间参数中。
+
+====
+

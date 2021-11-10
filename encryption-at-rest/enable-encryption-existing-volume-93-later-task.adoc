@@ -1,0 +1,85 @@
+---
+permalink: encryption-at-rest/enable-encryption-existing-volume-93-later-task.html 
+sidebar: sidebar 
+keywords: enabling, encryption, existing, volume encryption conversion start, command 
+summary: '从 ONTAP 9.3 开始，您可以使用 volume encryption conversion start 命令对现有卷启用 " 原位 " 加密，而无需将卷移动到其他位置。' 
+---
+= 使用 volume encryption conversion start 命令在现有卷上启用加密
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，您可以使用 `volume encryption conversion start` 命令对现有卷启用 " 原位 " 加密，而无需将卷移动到其他位置。
+
+启动转换操作后，该操作必须完成。如果在此操作期间遇到性能问题描述，您可以运行 `volume encryption conversion pause` 命令暂停此操作，并运行 `volume encryption conversion resume` 命令恢复此操作。
+
+[NOTE]
+====
+您不能使用 `volume encryption convertion start` 来转换 SnapLock 卷。
+
+====
+.步骤
+. 在现有卷上启用加密：
++
+`volume encryption conversion start -vserver svm_name -volume volume_name`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令会对现有卷 `vol1` 启用加密：
+
++
+[listing]
+----
+cluster1::> volume encryption conversion start -vserver vs1 -volume vol1
+----
++
+系统会为卷创建加密密钥。卷上的数据已加密。
+
+. 验证转换操作的状态：
++
+`卷加密转换显示`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令显示转换操作的状态：
+
++
+[listing]
+----
+cluster1::> volume encryption conversion show
+
+Vserver   Volume   Start Time           Status
+-------   ------   ------------------   ---------------------------
+vs1       vol1     9/18/2017 17:51:41   Phase 2 of 2 is in progress.
+----
+. 转换操作完成后，验证卷是否已启用加密：
++
+`volume show -is-encrypted true`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令将显示 `cluster1` 上的加密卷：
+
++
+[listing]
+----
+cluster1::> volume show -is-encrypted true
+
+Vserver  Volume  Aggregate  State  Type  Size  Available  Used
+-------  ------  ---------  -----  ----  -----  --------- ----
+vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
+----
+
+
+
+
+== 结果
+
+如果您使用 KMIP 服务器存储节点的加密密钥，则在对卷进行加密时， ONTAP 会自动 "`推送` " 加密密钥到服务器。

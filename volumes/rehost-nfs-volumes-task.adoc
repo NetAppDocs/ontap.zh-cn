@@ -1,0 +1,79 @@
+---
+permalink: volumes/rehost-nfs-volumes-task.html 
+sidebar: sidebar 
+keywords: rehost, nfs, volumes 
+summary: 您可以重新托管通过 NFS 协议提供数据的卷。重新托管 NFS 卷后，要继续通过 NFS 协议访问数据，必须将此卷与托管 SVM 的导出策略关联，并手动配置策略和关联规则。 
+---
+= 重新托管 NFS 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以重新托管通过 NFS 协议提供数据的卷。重新托管 NFS 卷后，要继续通过 NFS 协议访问数据，必须将此卷与托管 SVM 的导出策略关联，并手动配置策略和关联规则。
+
+.您需要什么？ #8217 ；将需要什么
+* 卷必须处于联机状态。
+* 不得运行卷移动或 LUN 移动等卷管理操作。
+* 必须停止对要重新托管的卷的数据访问。
+* 必须配置目标 SVM 的 ns-switch 和名称服务配置，以支持重新托管卷的数据访问。
+* 卷的用户 ID 和组 ID 必须在目标 SVM 中可用或在托管卷上更改。
+
+
+.关于此任务
+* 重新托管会造成系统中断。
+* 如果重新托管操作失败，您可能需要在源卷上重新配置卷策略和关联规则。
+* 重新托管操作后，源卷中的以下卷策略，策略规则和配置将丢失，必须在重新托管的卷上手动重新配置：
++
+** 卷和 qtree 导出策略
+** 防病毒策略
+** 卷效率策略
+** 服务质量（ QoS ）策略
+** Snapshot 策略
+** 配额规则
+** NS-switch 和名称服务配置导出策略和规则
+** 用户和组 ID
+
+
+
+
+.步骤
+. 记录有关 NFS 导出策略的信息，以避免在卷重新托管操作失败时丢失有关 NFS 策略的信息。
+. 从父卷卸载此卷：
++
+`卷卸载`
+
+. 切换到高级权限级别：
++
+`set -privilege advanced`
+
+. 在目标 SVM 上重新托管卷：
++
+`volume rehost -vserver source_sVM -volume vol_name -destination-vserver destination_sVM`
+
++
+目标 SVM 的默认导出策略将应用于重新托管的卷。
+
+. 创建导出策略：
++
+`vserver export-policy create`
+
+. 将重新托管的卷的导出策略更新为用户定义的导出策略：
++
+`volume modify`
+
+. 在目标 SVM 中的相应接合路径下挂载卷：
++
+`卷挂载`
+
+. 验证 NFS 服务是否正在目标 SVM 上运行。
+. 恢复对重新托管的卷的 NFS 访问。
+. 更新 NFS 客户端凭据和 LIF 配置以反映目标 SVM LIF 。
++
+这是因为卷访问路径（ LIF 和接合路径）已发生更改。
+
+
+
+您必须手动重新配置重新托管的卷上的策略和关联规则。
+
+https://docs.netapp.com/us-en/ontap-sm-classic/nfs-config/index.html["NFS 配置"]

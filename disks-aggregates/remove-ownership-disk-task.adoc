@@ -1,0 +1,62 @@
+---
+permalink: disks-aggregates/remove-ownership-disk-task.html 
+sidebar: sidebar 
+keywords: remove, ownership, disk 
+summary: ONTAP 会将磁盘所有权信息写入磁盘。在从节点中删除备用磁盘或其磁盘架之前，您应删除其所有权信息，以便将其正确集成到另一节点中。 
+---
+= 从磁盘中删除所有权
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 会将磁盘所有权信息写入磁盘。在从节点中删除备用磁盘或其磁盘架之前，您应删除其所有权信息，以便将其正确集成到另一节点中。
+
+要从中删除所有权的磁盘必须满足以下要求：
+
+* 它必须是备用磁盘。
++
+您不能从聚合中正在使用的磁盘中删除所有权。
+
+* 它不能位于维护中心。
+* 无法对其进行清理。
+* 它不能失败。
++
+不必从故障磁盘中删除所有权。
+
+
+
+如果启用了自动磁盘分配，则 ONTAP 可以在从节点中删除磁盘之前自动重新分配所有权。因此，您可以禁用自动所有权分配，直到磁盘被删除，然后重新启用它。
+
+.步骤
+. 如果磁盘所有权自动分配已启用，请将其关闭：
++
+`s存储磁盘选项 modify -node _node_name_ -autosassign off`
+
+. 如果需要，对节点的 HA 配对节点重复上述步骤。
+. 从磁盘中删除软件所有权信息：
++
+`s存储磁盘 removeowner _disk_name_`
+
++
+要从多个磁盘中删除所有权信息，请使用逗号分隔列表：
+
++
+存储磁盘删除器所有者 sys1 ： 0a.23 ， sys1 ： 0a.24 ， sys1 ： 0a.25
+
+. 如果磁盘已进行分区以进行根数据分区，请输入以下两个命令以从分区中删除所有权：
++
+`s存储磁盘 removeowner -disk _disk_name_ -root true`
+
++
+`s存储磁盘 removeowner -disk _disk_name_ -data true`
+
++
+这两个分区不再归任何节点所有。
+
+. 如果您先前已关闭磁盘所有权自动分配，请在删除或重新分配磁盘后将其打开：
++
+`s存储磁盘选项 modify -node _node_name_ -autodassign on`
+
+. 如果需要，对节点的 HA 配对节点重复上述步骤。
+

@@ -1,0 +1,43 @@
+---
+permalink: smb-admin/create-volumes-without-specifying-junction-task.html 
+sidebar: sidebar 
+keywords: create, data, volume, junction, point, resultant, automatic, mount, nas, access, configure, smb, share, nfs, create data volumes without specifying junction points 
+summary: 您可以在不指定接合点的情况下创建数据卷。生成的卷不会自动挂载，也不可配置用于 NAS 访问。您必须先挂载卷，然后才能为该卷配置 SMB 共享或 NFS 导出。 
+---
+= 创建数据卷而不指定接合点
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在不指定接合点的情况下创建数据卷。生成的卷不会自动挂载，也不可配置用于 NAS 访问。您必须先挂载卷，然后才能为该卷配置 SMB 共享或 NFS 导出。
+
+要创建卷的聚合必须已存在。
+
+.步骤
+. 使用以下命令创建没有接合点的卷： `volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size ｛ integer ｛ KB_MB|GB_TB_PB] ｝ -security-style ｛ ntfs|unix_mixed ｝`
++
+指定卷安全模式是可选的。如果未指定安全模式，则 ONTAP 将使用应用于 Storage Virtual Machine （ SVM ）根卷的相同安全模式创建卷。但是，根卷的安全模式可能不是要应用于数据卷的安全模式。建议您在创建卷时指定安全模式，以最大程度地减少难以解决的文件访问问题。
+
++
+您可以使用许多可选参数自定义数据卷。要了解有关这些命令的详细信息，请参见 `volume create` 命令的手册页。
+
+. 验证是否在创建卷时没有接合点： `volume show -vserver _vserver_name_ -volume _volume_name_ -junction`
+
+
+以下示例将在 SVM vs1 上创建一个名为 `sales` 的卷，该卷未挂载在接合点：
+
+[listing]
+----
+cluster1::> volume create -vserver vs1 -volume sales -aggregate aggr3 -size 20GB
+[Job 3406] Job succeeded: Successful
+
+cluster1::> volume show -vserver vs1 -junction
+                     Junction                 Junction
+Vserver   Volume     Active   Junction Path   Path Source
+--------- ---------- -------- --------------- -----------
+vs1       data       true     /data           RW_volume
+vs1       home4      true     /eng/home       RW_volume
+vs1       vs1_root   -        /               -
+vs1       sales      -        -               -
+----

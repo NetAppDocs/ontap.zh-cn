@@ -1,0 +1,75 @@
+---
+permalink: nfs-admin/display-volume-mount-junction-point-task.html 
+sidebar: sidebar 
+keywords: display, volume, mount, junction, point, information 
+summary: 您可以显示有关 Storage Virtual Machine （ SVM ）的已挂载卷以及卷挂载到的接合点的信息。您还可以确定哪些卷未挂载到接合点。您可以使用此信息了解和管理 SVM 命名空间。 
+---
+= 显示卷挂载和接合点信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关 Storage Virtual Machine （ SVM ）的已挂载卷以及卷挂载到的接合点的信息。您还可以确定哪些卷未挂载到接合点。您可以使用此信息了解和管理 SVM 命名空间。
+
+.步骤
+. 执行所需的操作：
++
+[cols="2*"]
+|===
+| 要显示的内容 | 输入命令 ... 
+
+
+ a| 
+有关 SVM 上已挂载和已卸载卷的摘要信息
+ a| 
+`volume show -vserver _vserver_name_ -junction`
+
+
+
+ a| 
+有关 SVM 上已挂载和已卸载卷的详细信息
+ a| 
+`volume show -vserver _vserver_name_ -volume _volume_name_ -instance`
+
+
+
+ a| 
+有关 SVM 上已挂载和已卸载卷的特定信息
+ a| 
+.. 如有必要，您可以使用以下命令显示 ` 字段` 参数的有效字段： `volume show -fields ？`
+.. 使用 ` 字段` 参数显示所需信息： `volume show -vserver _vserver_name_ -fields _fieldname_ ， ...`
+
+
+|===
+
+
+以下示例显示了 SVM vs1 上已挂载和已卸载的卷的摘要：
+
+[listing]
+----
+cluster1::> volume show -vserver vs1 -junction
+                     Junction                 Junction
+Vserver   Volume     Active   Junction Path   Path Source
+--------- ---------- -------- --------------- -----------
+vs1       data       true     /data           RW_volume
+vs1       home4      true     /eng/home       RW_volume
+vs1       vs1_root   -        /               -
+vs1       sales      true     /sales          RW_volume
+----
+以下示例显示了有关 SVM vs2 上卷的指定字段的信息：
+
+[listing]
+----
+cluster1::> volume show -vserver vs2 -fields vserver,volume,aggregate,size,state,type,security-style,junction-path,junction-parent,node
+vserver volume   aggregate size state  type security-style junction-path junction-parent node
+------- ------   --------- ---- ------ ---- -------------- ------------- --------------- -----
+vs2     data1    aggr3     2GB  online RW   unix           -             -               node3
+vs2     data2    aggr3     1GB  online RW   ntfs           /data2        vs2_root        node3
+vs2     data2_1  aggr3     8GB  online RW   ntfs           /data2/d2_1   data2           node3
+vs2     data2_2  aggr3     8GB  online RW   ntfs           /data2/d2_2   data2           node3
+vs2     pubs     aggr1     1GB  online RW   unix           /publications vs2_root        node1
+vs2     images   aggr3     2TB  online RW   ntfs           /images       vs2_root        node3
+vs2     logs     aggr1     1GB  online RW   unix           /logs         vs2_root        node1
+vs2     vs2_root aggr3     1GB  online RW   ntfs           /             -               node3
+----

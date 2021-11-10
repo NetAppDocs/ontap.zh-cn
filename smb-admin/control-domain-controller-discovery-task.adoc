@@ -1,0 +1,50 @@
+---
+permalink: smb-admin/control-domain-controller-discovery-task.html 
+sidebar: sidebar 
+keywords: ontap, modify, default, process, domain, controller, dc, enable, limit, site, pool, performance, improvement, environment, manage, manage domain controller discovery 
+summary: 从 ONTAP 9.3 开始，您可以修改发现域控制器（ DC ）的默认过程。这样，您就可以将发现限制为您的站点或首选 DC 池，从而根据环境的不同提高性能。 
+---
+= 管理域控制器发现
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，您可以修改发现域控制器（ DC ）的默认过程。这样，您就可以将发现限制为您的站点或首选 DC 池，从而根据环境的不同提高性能。
+
+默认情况下，动态发现过程会发现所有可用的 DC ，包括任何首选 DC ，本地站点中的所有 DC 以及所有远程 DC 。此配置可能会导致在某些环境中进行身份验证和访问共享时出现延迟。如果您已确定要使用的 DC 池，或者远程 DC 不足或无法访问，则可以更改发现方法。
+
+在 ONTAP 9.3 及更高版本中，使用 `cifs domain discovered-servers` 命令的 `discovery-mode` 参数可以选择以下发现选项之一：
+
+* 发现域中的所有 DC 。
+* 仅发现本地站点中的 DC 。
++
+要使用此模式，必须定义 SMB 服务器的 `default-site` 参数。
+
+* 不执行服务器发现， SMB 服务器配置仅取决于首选 DC 。
++
+要使用此模式，必须先为 SMB 服务器定义首选 DC 。
+
+
+
+.步骤
+. 指定所需的发现选项： `vserver cifs domain discovered-servers discovery-mode modify -vserver _vserver_name_ -mode ｛ all_site_none ｝`
++
+`mode` 参数的选项：
+
++
+** `全部`
++
+发现所有可用的 DC （默认）。
+
+** `site`
++
+仅限您的站点进行 DC 发现。
+
+** `无`
++
+仅使用首选 DC ，而不执行发现。
+
+
+
+

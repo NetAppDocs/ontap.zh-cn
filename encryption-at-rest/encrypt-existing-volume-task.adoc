@@ -1,0 +1,158 @@
+---
+permalink: encryption-at-rest/encrypt-existing-volume-task.html 
+sidebar: sidebar 
+keywords: enabling, encryption, existing, volume, volume move start, command 
+summary: 您可以使用 volume move start 命令通过移动现有卷来启用加密。必须在 ONTAP 9.2 及更早版本中使用 volume move start 。您可以使用同一个聚合或不同的聚合。 
+---
+= 使用 volume move start 命令在现有卷上启用加密
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume move start` 命令通过移动现有卷来启用加密。在 ONTAP 9.2 及更早版本中，必须使用 `volume move start` 。您可以使用同一个聚合或不同的聚合。
+
+要执行此任务，您必须是集群管理员，或者集群管理员已向其委派权限的 SVM 管理员。
+
+xref:delegate-volume-encryption-svm-administrator-task.adoc[委派权限以运行 volume move 命令]
+
+您不能使用 `volume move start` 在 SnapLock 或 FlexGroup 卷上启用加密。
+
+从 ONTAP 9.4 开始，如果在设置板载密钥管理器时启用 "`cc-mode` " ，则使用 `volume move start` 命令创建的卷会自动加密。您不需要指定 ` -encrypt-destination true` 。
+
+从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要移动的卷的所属聚合分配密钥。使用唯一密钥加密的卷称为 _NVE volume_ 。使用聚合级别密钥加密的卷称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
+
+.步骤
+. 移动现有卷并指定是否在卷上启用加密：
++
+|===
+| 要转换 ... | 使用此命令 ... 
+
+
+ a| 
+纯文本卷到 NVE 卷
+ a| 
+`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination true`
+
+
+
+ a| 
+将 NVE 或纯文本卷连接到 NAE 卷（假设目标上启用了聚合级别加密）
+ a| 
+`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-wing-aggr-key true`
+
+
+
+ a| 
+NAE 卷到 NVE 卷
+ a| 
+`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-wing-aggr-key false`
+
+
+
+ a| 
+NAE 卷到纯文本卷
+ a| 
+`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false -encrypt-wing-aggr-key false`
+
+
+
+ a| 
+NVE 卷到纯文本卷
+ a| 
+`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false`
+
+|===
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令会将名为 `vol1` 的纯文本卷转换为 NVE 卷：
+
++
+[listing]
+----
+cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate aggr2 -encrypt-destination true
+----
++
+假设目标上启用了聚合级别加密，以下命令会将名为 `vol1` 的 NVE 或纯文本卷转换为 NAE 卷：
+
++
+[listing]
+----
+cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate aggr2 -encrypt-with-aggr-key true
+----
++
+以下命令会将名为 `vol2` 的 NAE 卷转换为 NVE 卷：
+
++
+[listing]
+----
+cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate aggr2 -encrypt-with-aggr-key false
+----
++
+以下命令会将名为 `vol2` 的 NAE 卷转换为纯文本卷：
+
++
+[listing]
+----
+cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate aggr2 -encrypt-destination false -encrypt-with-aggr-key false
+----
++
+以下命令会将名为 `vol2` 的 NVE 卷转换为纯文本卷：
+
++
+[listing]
+----
+cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate aggr2 -encrypt-destination false
+----
+. 查看集群卷的加密类型：
++
+`volume show -fields encryption-type none|volume| aggregate`
+
++
+ONTAP 9.6 及更高版本提供了 `encrypt-type` 字段。
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令显示 `cluster2` 中的卷加密类型：
+
++
+[listing]
+----
+cluster2::> volume show -fields encryption-type
+
+vserver  volume  encryption-type
+-------  ------  ---------------
+vs1      vol1    none
+vs2      vol2    volume
+vs3      vol3    aggregate
+----
+. 验证是否已为卷启用加密：
++
+`volume show -is-encrypted true`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令将显示 `cluster2` 上的加密卷：
+
++
+[listing]
+----
+cluster2::> volume show -is-encrypted true
+
+Vserver  Volume  Aggregate  State  Type  Size  Available  Used
+-------  ------  ---------  -----  ----  -----  --------- ----
+vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
+----
+
+
+
+
+== 结果
+
+如果您使用 KMIP 服务器存储节点的加密密钥，则在对卷进行加密时， ONTAP 会自动 "`推送` " 加密密钥到服务器。

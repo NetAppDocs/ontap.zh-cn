@@ -1,0 +1,92 @@
+---
+permalink: data-protection/restore-volume-snapvault-backup-task.html 
+sidebar: sidebar 
+keywords: restore, content, volume, snapmirror, destination 
+summary: 您可以从 SnapMirror 目标卷中的 Snapshot 副本还原整个卷的内容。您可以将卷的内容还原到原始源卷或其他卷。 
+---
+= 从 SnapMirror 目标还原卷的内容
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以从 SnapMirror 目标卷中的 Snapshot 副本还原整个卷的内容。您可以将卷的内容还原到原始源卷或其他卷。
+
+要从 SnapMirror 同步目标（从 ONTAP 9.5 开始受支持）还原卷，必须先删除并释放此关系。
+
+还原操作的目标卷必须为以下卷之一：
+
+* 读写卷，在这种情况下，如果源卷和目标卷具有通用 Snapshot 副本（通常情况下，还原到原始源卷时）， SnapMirror 将执行 _incremental restore" 。
++
+[NOTE]
+====
+如果没有通用 Snapshot 副本，则此命令将失败。您不能将卷的内容还原到空的读写卷。
+
+====
+* 空数据保护卷，在这种情况下， SnapMirror 会执行 _baseline restore" ，其中指定的 Snapshot 副本及其引用的所有数据块都会传输到源卷。
+
+
+还原卷的内容会造成系统中断。还原操作正在运行时， SnapVault 主卷上不得运行 CIFS 流量。
+
+如果还原操作的目标卷已启用数据压缩，而源卷未启用数据压缩，请在目标卷上禁用数据压缩。还原操作完成后，您需要重新启用数据压缩。
+
+在执行还原之前，为目标卷定义的任何配额规则都将被停用。还原操作完成后，您可以使用 `volume quota modify` 命令重新激活配额规则。
+
+.步骤
+. 列出目标卷中的 Snapshot 副本：
++
+`volume snapshot show -vserver _svm_ -volume _volum_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例显示了 `vserverB ： secondary1` 目标上的 Snapshot 副本：
+
++
+[listing]
+----
+
+cluster_dst::> volume snapshot show -vserver vserverB -volume secondary1
+
+Vserver     Volume      Snapshot                State    Size  Total% Used%
+-------     ------      ---------- ----------- ------   -----  ------ -----
+vserverB    secondary1  hourly.2013-01-25_0005  valid   224KB     0%    0%
+                        daily.2013-01-25_0010   valid   92KB      0%    0%
+                        hourly.2013-01-25_0105  valid   228KB     0%    0%
+                        hourly.2013-01-25_0205  valid   236KB     0%    0%
+                        hourly.2013-01-25_0305  valid   244KB     0%    0%
+                        hourly.2013-01-25_0405  valid   244KB     0%    0%
+                        hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 从 SnapMirror 目标卷中的 Snapshot 副本还原卷的内容：
++
+`snapmirror restore -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -source-snapshot _snapshot_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。
+
+====
++
+以下命令将从原始目标卷 `secondary1` 中的 Snapshot 副本 `daily.2013-01-25_0010` 还原原始源卷 `primary1` 的内容：
+
++
+[listing]
+----
+cluster_dst::> snapmirror restore -source-path vserverB:secondary1 -destination-path vserverA:primary1 -source-snapshot daily.2013-01-25_0010
+
+Warning: All data newer than Snapshot copy daily.2013-01-25_0010 on volume vserverA:primary1 will be deleted.
+
+Do you want to continue? {y|n}: y
+
+[Job 34] Job is queued: snapmirror restore from source vserverB:secondary1 for the snapshot daily.2013-01-25_0010.
+----
+. 重新挂载已还原的卷并重新启动使用该卷的所有应用程序。
+

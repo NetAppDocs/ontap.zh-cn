@@ -1,0 +1,66 @@
+---
+permalink: san-admin/access-read-only-lun-copy-backup-vault-task.html 
+sidebar: sidebar 
+keywords: access, read-only, lun, copy, snapvault, backup 
+summary: 您可以从 SnapVault 备份中的最新 Snapshot 副本访问 LUN 的只读副本。LUN ID ，路径和序列号与源 LUN 不同，必须先映射。永久性预留， LUN 映射和 igroup 不会复制到 SnapVault 二级卷。 
+---
+= 从 SnapVault 备份访问只读 LUN 副本
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以从 SnapVault 备份中的最新 Snapshot 副本访问 LUN 的只读副本。LUN ID ，路径和序列号与源 LUN 不同，必须先映射。永久性预留， LUN 映射和 igroup 不会复制到 SnapVault 二级卷。
+
+.您需要什么？ #8217 ；将需要什么
+* 必须初始化 SnapVault 关系，并且 SnapVault 二级卷中的最新 Snapshot 副本必须包含所需的 LUN 。
+* 包含 SnapVault 备份的 Storage Virtual Machine （ SVM ）必须具有一个或多个具有所需 SAN 协议的 LIF ，此 LIF 可从用于访问 LUN 副本的主机访问。
+* 如果您计划直接从 SnapVault 二级卷访问 LUN 副本，则必须事先在 SnapVault SVM 上创建 igroup 。
++
+您可以直接从 SnapVault 二级卷访问 LUN ，而无需先还原或克隆包含该 LUN 的卷。
+
+
+
+如果在从先前的 Snapshot 副本映射 LUN 的情况下向 SnapVault 二级卷添加了新的 Snapshot 副本，则映射的 LUN 的内容会发生更改。LUN 仍使用相同的标识符进行映射，但数据取自新的 Snapshot 副本。如果 LUN 大小发生变化，则某些主机会自动检测到大小变化； Windows 主机需要重新扫描磁盘才能检测到任何大小变化。
+
+.步骤
+. 运行 `lun show` 命令列出 SnapVault 二级卷中的可用 LUN 。
++
+在此示例中，您可以看到主卷 srcvolA 中的原始 LUN 以及 SnapVault 二级卷 dstvolB 中的副本：
+
++
+[listing]
+----
+cluster::> lun show
+
+Vserver   Path                State   Mapped   Type          Size
+--------  ------------------  ------  -------  --------      -------
+vserverA  /vol/srcvolA/lun_A  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_B  online  mapped   windows  300.0GB
+vserverA  /vol/srcvolA/lun_C  online  mapped   windows  300.0GB
+vserverB  /vol/dstvolB/lun_A  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_B  online  unmapped windows  300.0GB
+vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
+
+6 entries were displayed.
+----
+. 如果所需主机的 igroup 在包含 SnapVault 二级卷的 SVM 上尚不存在，请运行 `igroup create` 命令创建一个 igroup 。
++
+此命令将为使用 iSCSI 协议的 Windows 主机创建一个 igroup ：
+
++
+[listing]
+----
+cluster::> igroup create -vserver vserverB -igroup temp_igroup
+  -protocol iscsi -ostype windows
+  -initiator iqn.1991-05.com.microsoft:hostA
+----
+. 运行 `lun mapping create` 命令将所需的 LUN 副本映射到 igroup 。
++
+[listing]
+----
+cluster::> lun mapping create -vserver vserverB -path /vol/dstvolB/lun_A
+  -igroup temp_igroup
+----
+. 将主机连接到 LUN ，并根据需要访问 LUN 的内容。
+

@@ -15,15 +15,21 @@ summary: 为 LIF 分配服务策略以指定支持的流量
 [role="lead"]
 您可以为 LIF 分配服务策略（而不是 LIF 角色），以确定 LIF 支持的流量类型。服务策略定义 LIF 支持的一组网络服务。ONTAP 提供了一组可与 LIF 关联的内置服务策略。
 
+您可以使用以下命令显示服务策略及其详细信息： `network interface service-policy show`
+
 
 
 == 系统 SVM 的服务策略
 
-管理 SVM 和任何系统 SVM 都包含可用于该 SVM 中 LIF 的服务策略，包括管理和集群间 LIF 。创建 IP 空间时，系统会自动创建这些策略。下表列出了系统 SVM 中 LIF 的内置策略：
+管理 SVM 和任何系统 SVM 都包含可用于该 SVM 中 LIF 的服务策略，包括管理和集群间 LIF 。创建 IP 空间时，系统会自动创建这些策略。
+
+下表列出了 ONTAP 9.10.1 中系统 SVMsas 中 LIF 的内置策略。对于其他版本，使用以下命令显示服务策略及其详细信息：
+
+`network interface service-policy show`
 
 [cols="4*"]
 |===
-| 策略 | 包括的服务 | 等效角色 | 说明 
+| 策略 | 包括的服务 | 等效角色 | Description 
 
 
  a| 
@@ -51,18 +57,18 @@ default-route-announce
  a| 
 default-management
  a| 
-management-core ， management-EMS ， management-ssh ， management-https ， management-autosupport
+management-core ， management-https ， management-http ， management-ssh management-autosupport ， management-EMS ， management-ntp-client ， management-snmp-server ， management-ntp-server ， backup-ndmp-control
  a| 
 node-mgmt 或 cluster-mgmt
  a| 
-由处理管理请求的 LIF 使用。management-EMS 控制哪些 LIF 可以发布 EMS 内容。
+由处理系统范围管理请求的 LIF 使用。management-EMS 控制哪些 LIF 可以发布 EMS 内容。系统范围的管理策略用于创建系统 SVM 所拥有的节点范围的管理 LIF 和集群范围的管理 LIF 。这些 LIF 可用于与 NTP 或 DNS 服务器的出站连接，以及一些额外连接，以支持代表整个系统运行的应用程序。
 
 |===
-下表列出了可在系统 SVM 上使用的服务以及每个服务对 LIF 的故障转移策略施加的任何限制：
+下表列出了从 ONTAP 9.10.1 开始 LIF 可在系统 SVM 上使用的服务：
 
 [cols="3*"]
 |===
-| 服务 | 故障转移限制 | 说明 
+| 服务 | 故障转移限制 | Description 
 
 
  a| 
@@ -93,6 +99,15 @@ management-ssh
 
 
  a| 
+management-http
+ a| 
+-
+ a| 
+用于 HTTP 管理访问的服务
+
+
+
+ a| 
 management-https
  a| 
 -
@@ -117,26 +132,102 @@ management-autosupport
  a| 
 与 BGP 对等交互相关的服务
 
+
+
+ a| 
+backup-ndmp-control
+ a| 
+-
+ a| 
+NDMP 备份控制服务
+
+
+
+ a| 
+管理 EMS
+ a| 
+-
+ a| 
+用于管理消息访问的服务
+
+
+
+ a| 
+management-ntp-client
+ a| 
+-
+ a| 
+用于 NTP 客户端访问的服务。
+
+
+
+ a| 
+management-ntp-server
+ a| 
+仅限系统
+ a| 
+用于 NTP 服务器管理访问的服务
+
+
+
+ a| 
+management-portmap
+ a| 
+-
+ a| 
+端口映射管理服务
+
+
+
+ a| 
+management-rsh-server
+ a| 
+仅限系统
+ a| 
+用于 RSH 服务器管理的服务
+
+
+
+ a| 
+management-snmp-server
+ a| 
+-
+ a| 
+SNMP 服务器管理服务
+
+
+
+ a| 
+management-telnet-server
+ a| 
+仅限系统
+ a| 
+用于 telnet 服务器管理的服务
+
 |===
 
 
 == 数据 SVM 的服务策略
 
-所有数据 SVM 都包含可由该 SVM 中的 LIF 使用的服务策略。下表列出了数据 SVM 中 LIF 的内置策略：
+所有数据 SVM 都包含可由该 SVM 中的 LIF 使用的服务策略。
+
+下表列出了自 ONTAP 9.10.1 开始数据 SVM 中 LIF 的内置策略。对于其他版本，使用以下命令显示服务策略及其详细信息：
+
+`network interface service-policy show`
 
 [cols="4*"]
 |===
-| 策略 | 包括的服务 | 等效数据协议 | 说明 
+| 策略 | 包括的服务 | 等效数据协议 | Description 
 
 
  a| 
 default-management
  a| 
-数据核心， management-ssh ， management-https
+data-core ， management-ssh ， management-https ， data-ds-server ， management-http ， backup-ndmp-control ， management-snmp-server
  a| 
 无
  a| 
-由处理管理请求的 LIF 使用
+由处理 SVM 范围的管理的 LIF 使用，创建数据 SVM 所拥有的 SVM 管理 LIF 。这些 LIF 可用于为 SVM 管理员提供 SSH 或 HTTPS 访问权限。
 
 
 
@@ -158,20 +249,18 @@ data-core ， data-nfs ， data-cifs ， data-FlexCache ， data-fpolicy-client
  a| 
 NFS ， CIFS ， fcache
  a| 
-由传输面向文件的 NAS 数据流量的 LIF 使用。
+使用 default-data-files 策略创建支持基于文件的数据协议的 NAS LIF 。
 
 |===
-下表列出了可在数据 SVM 上使用的服务以及每个服务对 LIF 的故障转移策略施加的任何限制：
+下表列出了可在数据 SVM 上使用的服务以及每个服务自 ONTAP 9.10.1 开始对 LIF 的故障转移策略施加的任何限制：
 
-[cols="4*"]
+[cols="3*"]
 |===
-| 策略 | 包括的服务 | 等效数据协议 | 说明 
+| 服务 | 故障转移限制 | Description 
 
 
  a| 
 management-ssh
- a| 
--
  a| 
 -
  a| 
@@ -180,9 +269,16 @@ management-ssh
 
 
  a| 
-management-https
+management-http
  a| 
 -
+ a| 
+用于 HTTP 管理访问的服务
+
+
+
+ a| 
+management-https
  a| 
 -
  a| 
@@ -191,11 +287,27 @@ management-https
 
 
  a| 
-数据核心
+management-portmap
  a| 
 -
  a| 
-纯数据
+用于 portmap 管理访问的服务
+
+
+
+ a| 
+management-snmp-server
+ a| 
+-
+ a| 
+用于 SNMP 服务器管理访问的服务
+
+
+
+ a| 
+数据核心
+ a| 
+-
  a| 
 核心数据服务
 
@@ -206,9 +318,7 @@ management-https
  a| 
 -
  a| 
-纯数据
- a| 
-与 NFS 数据服务相关的协议
+NFS 数据服务
 
 
 
@@ -217,9 +327,7 @@ management-https
  a| 
 -
  a| 
-纯数据
- a| 
-与 CIFS 数据服务相关的协议
+CIFS 数据服务
 
 
 
@@ -228,9 +336,7 @@ management-https
  a| 
 -
  a| 
-纯数据
- a| 
-与 FlexCache 数据服务相关的协议
+FlexCache 数据服务
 
 
 
@@ -239,9 +345,52 @@ management-https
  a| 
 仅主端口
  a| 
-纯数据
+iSCSI 数据服务
+
+
+
  a| 
-与 iSCSI 数据服务相关的协议
+backup-ndmp-control
+ a| 
+-
+ a| 
+备份 NDMP 控制数据服务
+
+
+
+ a| 
+data-ds-server
+ a| 
+-
+ a| 
+DNS 服务器数据服务
+
+
+
+ a| 
+data-fpolicy-client
+ a| 
+-
+ a| 
+文件筛选策略数据服务
+
+
+
+ a| 
+data-NVMe-tcp
+ a| 
+仅主端口
+ a| 
+NVMe TCP 数据服务
+
+
+
+ a| 
+data-s3-server
+ a| 
+-
+ a| 
+简单存储服务（ S3 ）服务器数据服务
 
 |===
 您应了解如何将服务策略分配给数据 SVM 中的 LIF ：
@@ -273,3 +422,35 @@ management-https
 
 
 策略中应包含数据核心服务，以确保使用 LIF 的所有应用程序均按预期运行，但如果需要，可以删除其他三项服务。
+
+
+
+== 客户端 LIF 服务
+
+从 ONTAP 9.10.1 开始， ONTAP 为多个应用程序提供客户端 LIF 服务。这些服务可代表每个应用程序控制用于出站连接的 LIF 。
+
+以下新服务可使管理员控制哪些 LIF 用作某些应用程序的源地址。
+
+[cols="3*"]
+|===
+| 服务 | SVM 限制 | Description 
+
+
+ a| 
+management-ntp-client
+ a| 
+仅限系统
+ a| 
+从 ONTAP 9.10.1 开始， ONTAP 为与外部 NTP 服务器的出站连接提供 NTP 客户端服务。
+
+
+
+ a| 
+data-fpolicy-client
+ a| 
+纯数据
+ a| 
+从 ONTAP 9.8 开始， ONTAP 为出站 FPolicy 连接提供客户端服务。
+
+|===
+每个新服务都会自动包含在某些内置服务策略中，但管理员可以从内置策略中删除这些服务，或者将其添加到自定义策略中，以代表每个应用程序控制用于出站连接的 LIF 。

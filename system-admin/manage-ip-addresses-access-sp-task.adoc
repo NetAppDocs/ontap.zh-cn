@@ -1,0 +1,62 @@
+---
+permalink: system-admin/manage-ip-addresses-access-sp-task.html 
+sidebar: sidebar 
+keywords: manage, ip, addresses, access, sp, ssh, connection, node, cluster 
+summary: 默认情况下， SP 接受来自任何 IP 地址的管理主机的 SSH 连接请求。您可以将 SP 配置为仅接受来自具有指定 IP 地址的管理主机的 SSH 连接请求。所做的更改将应用于对集群中任何节点的 SP 的 SSH 访问。 
+---
+= 管理可访问 SP 的 IP 地址
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+默认情况下， SP 接受来自任何 IP 地址的管理主机的 SSH 连接请求。您可以将 SP 配置为仅接受来自具有指定 IP 地址的管理主机的 SSH 连接请求。所做的更改将应用于对集群中任何节点的 SP 的 SSH 访问。
+
+.步骤
+. 使用带有 ` allowed-addresses` 参数的 `ssystem service-processor ssh add-allowed-addresses` 命令将 SP 访问权限仅授予您指定的 IP 地址。
++
+** 必须以 `address` /`netmask` 的格式指定 ` allowed-addresses` 参数的值，并且多个 `address` /`netmask` 对必须用逗号分隔，例如， `10.98.150.10/24 ， FD20 ： 8b1e ： b255 ： c09b ：：：：： /64` 。
++
+将 ` allowed-addresses` 参数设置为 `0.0.0.0/0 ，：：： /0` 可使所有 IP 地址都能访问 SP （默认值）。
+
+** 如果通过仅允许您指定的 IP 地址访问 SP 来更改默认值，则 ONTAP 会提示您确认是否希望指定的 IP 地址替换 "`allow all` " 默认设置（`0.0.0.0/0 ，：：：： /0` ）。
+** system service-processor ssh show` 命令可显示可访问 SP 的 IP 地址。 `s
+
+
+. 如果要阻止指定的 IP 地址访问 SP ，请使用带有 ` allowed-addresses` 参数的 `ssystem service-processor ssh remove-allowed-addresses` 命令。
++
+如果您阻止所有 IP 地址访问 SP ，则无法从任何管理主机访问 SP 。
+
+
+
+以下示例显示了对 SP 进行 SSH 访问的默认设置，通过仅允许指定 IP 地址访问 SP 来更改默认设置，从访问列表中删除指定的 IP 地址，然后还原所有 IP 地址的 SP 访问：
+
+[listing]
+----
+cluster1::> system service-processor ssh show
+  Allowed Addresses: 0.0.0.0/0, ::/0
+
+cluster1::> system service-processor ssh add-allowed-addresses -allowed-addresses 192.168.1.202/24, 192.168.10.201/24
+
+Warning: The default "allow all" setting (0.0.0.0/0, ::/0) will be replaced
+         with your changes. Do you want to continue? {y|n}: y
+
+cluster1::> system service-processor ssh show
+  Allowed Addresses: 192.168.1.202/24, 192.168.10.201/24
+
+cluster1::> system service-processor ssh remove-allowed-addresses -allowed-addresses 192.168.1.202/24, 192.168.10.201/24
+
+Warning: If all IP addresses are removed from the allowed address list, all IP
+         addresses will be denied access. To restore the "allow all" default,
+         use the "system service-processor ssh add-allowed-addresses
+         -allowed-addresses 0.0.0.0/0, ::/0" command. Do you want to continue?
+          {y|n}: y
+
+cluster1::> system service-processor ssh show
+  Allowed Addresses: -
+
+cluster1::> system service-processor ssh add-allowed-addresses -allowed-addresses 0.0.0.0/0, ::/0
+
+cluster1::> system service-processor ssh show
+  Allowed Addresses: 0.0.0.0/0, ::/0
+----

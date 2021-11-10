@@ -1,0 +1,33 @@
+---
+permalink: nfs-admin/enable-nfsv42-security-labels-task.html 
+sidebar: sidebar 
+keywords: enable, nfs, v4.2, security, label 
+summary: 从 ONTAP 9.1.1 开始，可以启用 NFS 安全标签。默认情况下，它们处于禁用状态。 
+---
+= 启用 NFS v4.2 安全标签
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.1.1 开始，可以启用 NFS 安全标签。默认情况下，它们处于禁用状态。
+
+对于 NFS v4.2 安全标签， ONTAP NFS 服务器可识别强制访问控制（ MAC ），存储和检索客户端发送的 sec_label 属性。
+
+有关详细信息，请参见 https://tools.ietf.org/html/rfc7204["RFC7240"]
+
+[NOTE]
+====
+NDMP 转储操作当前不支持 NFS v4.2 安全标签。如果文件或目录上遇到安全标签，则转储将失败。
+
+====
+.步骤
+. 将权限设置更改为高级：
++
+``set -privilege advanced``
+
+. 启用安全标签：
++
+``vserver nfs modify -vserver svm_name -v4.2-seclabel enabled``
+
+

@@ -1,0 +1,54 @@
+---
+permalink: smb-hyper-v-sql/continuously-available-share-sql-concept.html 
+sidebar: sidebar 
+keywords: continuously, share, requirements, considerations, sql, server, smb, nondisuptive 
+summary: 在为支持无中断运行的基于 SMB 的 SQL Server 配置配置配置持续可用的共享时，您需要了解某些要求和注意事项。 
+---
+= 基于 SMB 的 SQL Server 的持续可用共享要求和注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在为支持无中断运行的基于 SMB 的 SQL Server 配置配置配置持续可用的共享时，您需要了解某些要求和注意事项。
+
+
+
+== 共享要求
+
+* 用于存储虚拟机文件的卷必须创建为 NTFS 安全模式卷。
++
+要使用持续可用的 SMB 连接为应用程序服务器提供无中断运行，包含共享的卷必须为 NTFS 卷。此外，它必须始终是 NTFS 卷。您不能将混合安全模式卷或 UNIX 安全模式卷更改为 NTFS 安全模式卷，也不能直接使用该卷通过 SMB 共享执行无中断操作。如果将混合安全模式卷更改为 NTFS 安全模式卷，并打算使用该卷通过 SMB 共享执行无中断操作，则必须手动将 ACL 放置在卷顶部，并将该 ACL 传播到所有包含的文件和文件夹。否则，如果源卷或目标卷最初创建为混合卷或 UNIX 安全模式卷，然后更改为 NTFS 安全模式，则将文件移至另一个卷的虚拟机迁移或数据库文件导出和导入可能会失败。
+
+* 应用程序服务器使用的共享必须配置为具有持续可用属性集。
++
+连接到持续可用共享的应用程序服务器会收到永久性句柄，使其能够无中断地重新连接到 SMB 共享，并在发生接管，交还和聚合重新定位等中断事件后回收文件锁定。
+
+* 尽管包含数据库文件的卷可以包含接合，但在创建数据库目录结构时， SQL Server 不会跨越接合。
+* 要成功执行 SnapManager for Microsoft SQL Server 备份操作，卷上必须具有足够的可用空间。
++
+SQL Server 数据库文件所在的卷必须足够大，才能容纳数据库目录结构以及驻留在共享中的所有包含的文件。
+
+* 不得在应用程序服务器使用的持续可用共享上设置以下共享属性：
++
+** 主目录
+** 属性缓存
+** BranchCache
+** 基于访问的枚举
+
+
+
+
+
+
+== 分享注意事项
+
+* 持续可用的共享支持配额。
+* 基于 SMB 的 SQL Server 配置不支持以下功能：
++
+** 审核
+** fpolicy
+
+
+* 不会对设置了 `continuous-availability` share 属性的 SMB 共享执行病毒扫描。
+

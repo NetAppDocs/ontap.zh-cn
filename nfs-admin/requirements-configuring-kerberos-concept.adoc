@@ -1,0 +1,275 @@
+---
+permalink: nfs-admin/requirements-configuring-kerberos-concept.html 
+sidebar: sidebar 
+keywords: requirement, configure, kerberos, nfs 
+summary: 在系统上使用 NFS 配置 Kerberos 之前，您必须验证网络和存储环境中的某些项是否已正确配置。 
+---
+= 使用 NFS 配置 Kerberos 的要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在系统上使用 NFS 配置 Kerberos 之前，您必须验证网络和存储环境中的某些项是否已正确配置。
+
+[NOTE]
+====
+配置环境的步骤取决于您使用的客户端操作系统，域控制器， Kerberos ， DNS 等的版本和类型。本文档不会介绍如何记录所有这些变量。有关详细信息，请参见每个组件的相应文档。
+
+有关如何在使用 Windows Server 2008 R2 Active Directory 和 Linux 主机的环境中为 NFSv3 和 NFSv4 设置 ONTAP 和 Kerberos 5 的详细示例，请参见技术报告 4073 。
+
+====
+应首先配置以下项：
+
+
+
+== 网络环境要求
+
+* Kerberos
++
+您必须使用密钥分发中心（ KDC ）设置有效的 Kerberos ，例如基于 Windows Active Directory 的 Kerberos 或 MIT Kerberos 。
+
++
+NFS 服务器必须使用 `NFS` 作为其计算机主体的主要组件。
+
+* 目录服务
++
+您必须在环境中使用安全目录服务，例如 Active Directory 或 OpenLDAP ，该服务配置为使用基于 SSL/TLS 的 LDAP 。
+
+* NTP
++
+您必须有一个运行 NTP 的工作时间服务器。为了防止因时间偏差而导致 Kerberos 身份验证失败，必须执行此操作。
+
+* 域名解析（ DNS ）
++
+每个 UNIX 客户端和每个 SVM LIF 都必须在正向和反向查找区域下向 KDC 注册正确的服务记录（ SRV ）。所有参与者都必须可通过 DNS 正确解析。
+
+* 用户帐户
++
+每个客户端在 Kerberos 域中都必须有一个用户帐户。NFS 服务器必须使用 "`NFS` " 作为其计算机主体的主要组件。
+
+
+
+
+
+== NFS 客户端要求
+
+* NFS
++
+必须正确配置每个客户端，以便使用 NFSv3 或 NFSv4 通过网络进行通信。
+
++
+客户端必须支持 RFC1964 和 RFC2203 。
+
+* Kerberos
++
+必须正确配置每个客户端以使用 Kerberos 身份验证，其中包括以下详细信息：
+
++
+** 已启用 TGS 通信加密。
++
+AES-256 可提供最强大的安全性。
+
+** 启用 TGT 通信最安全的加密类型。
+** 已正确配置 Kerberos 域。
+** 已启用 GSS 。
++
+使用计算机凭据时：
+
+** 请勿使用 ` -n` 参数运行 `GSSD` 。
+** 请勿以 root 用户身份运行 `kinit` 。
+
+
+* 每个客户端都必须使用最新且更新的操作系统版本。
++
+这样可以为使用 Kerberos 进行 AES 加密提供最佳兼容性和可靠性。
+
+* DNS
++
+必须正确配置每个客户端，以使用 DNS 进行正确的名称解析。
+
+* NTP
++
+每个客户端都必须与 NTP 服务器同步。
+
+* 主机和域信息
++
+每个客户端的 ` /etc/hosts` 和 ` /etc/resolv.conf` 文件必须分别包含正确的主机名和 DNS 信息。
+
+* keytab 文件
++
+每个客户端都必须具有 KDC 中的 keytab 文件。域必须为大写字母。加密类型必须为 AES-256 ，以获得最高安全性。
+
+* 可选：为了获得最佳性能，客户端至少可以使用两个网络接口：一个用于与局域网通信，一个用于与存储网络通信。
+
+
+
+
+== 存储系统要求
+
+* NFS 许可证
++
+存储系统必须安装有效的 NFS 许可证。
+
+* CIFS 许可证
++
+CIFS 许可证是可选的。只有在使用多协议名称映射时检查 Windows 凭据才需要此功能。在严格的纯 UNIX 环境中不需要此功能。
+
+* SVM
++
+您必须在系统上至少配置一个 SVM 。
+
+* SVM 上的 DNS
++
+您必须已在每个 SVM 上配置 DNS 。
+
+* NFS 服务器
++
+您必须已在 SVM 上配置 NFS 。
+
+* AES 加密
++
+为了获得最强的安全性，您必须将 NFS 服务器配置为仅允许对 Kerberos 进行 AES-256 加密。
+
+* CIFS 服务器
++
+如果您运行的是多协议环境，则必须已在 SVM 上配置 CIFS 。多协议名称映射需要 CIFS 服务器。
+
+* Volumes
++
+您必须具有一个根卷和至少一个数据卷，以供 SVM 使用。
+
+* 根卷
++
+SVM 的根卷必须具有以下配置：
+
++
+[cols="2*"]
+|===
+| Name | 正在设置 ... 
+
+
+ a| 
+安全风格
+ a| 
+"unix"
+
+
+
+ a| 
+UID
+ a| 
+root 或 ID 0
+
+
+
+ a| 
+GID
+ a| 
+root 或 ID 0
+
+
+
+ a| 
+UNIX 权限
+ a| 
+777.
+
+|===
++
+与根卷不同，数据卷可以采用任一安全模式。
+
+* UNIX 组
++
+SVM 必须配置以下 UNIX 组：
+
++
+[cols="2*"]
+|===
+| 组名称 | 组 ID 
+
+
+ a| 
+守护进程
+ a| 
+1.
+
+
+
+ a| 
+root
+ a| 
+0
+
+
+
+ a| 
+pcuser
+ a| 
+65534 （在创建 SVM 时由 ONTAP 自动创建）
+
+|===
+* UNIX 用户
++
+SVM 必须配置以下 UNIX 用户：
+
++
+[cols="4*"]
+|===
+| 用户名 | 用户 ID | 主组 ID | comment 
+
+
+ a| 
+NFS
+ a| 
+500
+ a| 
+0
+ a| 
+GSS 初始化阶段需要使用 NFS 客户端用户 SPN 的第一个组件作为用户。
+
+
+
+ a| 
+pcuser
+ a| 
+65534
+ a| 
+65534
+ a| 
+要使用 NFS 和 CIFS 多协议，必须使用此参数。创建 SVM 时， ONTAP 会自动创建此文件并将其添加到 pcuser 组中。
+
+
+
+ a| 
+root
+ a| 
+0
+ a| 
+0
+ a| 
+挂载时需要
+
+|===
++
+如果 NFS 客户端用户的 SPN 存在 Kerberos-UNIX 名称映射，则不需要 NFS 用户。
+
+* 导出策略和规则
++
+您必须已为导出策略配置根卷和数据卷以及 qtree 所需的导出规则。如果通过 Kerberos 访问 SVM 的所有卷，则可以将根卷的导出规则选项 ` -rorule` ， ` -rwrule` 和 ` -superuser` 设置为 `krb5` ， `krb5i` 或 `krb5p` 。
+
+* Kerberos-UNIX 名称映射
++
+如果您希望 NFS 客户端用户 SPN 标识的用户具有 root 权限，则必须创建一个映射到 root 的名称。
+
+
+
+* 相关信息 *
+
+http://www.netapp.com/us/media/tr-4073.pdf["NetApp 技术报告 4073 ：《安全统一身份验证》"]
+
+https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"]
+
+link:../system-admin/index.html["系统管理"]
+
+link:../volumes/index.html["逻辑存储管理"]

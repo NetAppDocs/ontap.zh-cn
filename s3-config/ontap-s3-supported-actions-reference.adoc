@@ -1,0 +1,86 @@
+---
+permalink: s3-config/ontap-s3-supported-actions-reference.html 
+sidebar: sidebar 
+keywords: ontap s3, supported, actions 
+summary: ONTAP S3 支持的操作。 
+---
+= ONTAP S3 支持的操作
+:icons: font
+:imagesdir: ../media/
+
+
+
+
+== 存储分段操作
+
+标有星号的操作受 ONTAP 支持，而不是 S3 REST API 支持
+
+* DeleteBucket*
+* DeleteBucketPolicy*
+* GetBucketAcl
+* HeadBucket
+* List桶
+* PutBucket*
+
+
+
+
+== 对象操作
+
+从 ONTAP 9.1.1 开始， ONTAP S3 支持对象元数据和标记。
+
+* 现在， PutObject 和 CreateMultipartUpload 包含使用 `x-AMZ-meta-<key> 的键值对。`
++
+例如： `x-AMZ-ma-project ： ontap_S3` 。
+
+* GetObject 。现在， HeadObject 将返回用户定义的元数据。
+* 与元数据不同，可以使用以下命令独立于对象读取标记：
++
+** PutObjectTagging
+** GetObjectTagging
+** DeleteObjectTagging
+
+
+
+
+支持的对象操作：
+
+* PutObject
+* PutObjectTagging （从 ONTAP 9.1.1 开始）
+* GetObject
+* GetObjectAcl
+* GetObjectTagging （从 ONTAP 9.1.1 开始）
+* DeleteObject
+* DeleteObjectTagging （从 ONTAP 9.1.1 开始）
+* HeadObject
+* ListObjects
+* ListObjectsV2
+* ListParts
+* 上传部件
+* AbortMultipartUpload
+* CompleteMultipartUpload
+* CreateMultipartUpload
+* ListMultipartUpload
+
+
+
+
+== 组策略
+
+这些操作并不特定于 S3 ，通常与身份和管理（ IAM ）流程相关。ONTAP 支持这些命令，但不使用 IAM REST API 。
+
+* 创建策略
+* AttachGroup 策略
+
+
+
+
+== 用户管理
+
+这些操作并不特定于 S3 ，通常与 IAM 流程相关。
+
+* CreateUser
+* deleteuser
+* CreateGroup
+* DeleteGroup
+

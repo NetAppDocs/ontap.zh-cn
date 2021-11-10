@@ -1,0 +1,83 @@
+---
+permalink: system-admin/positional-parameters-concept.html 
+sidebar: sidebar 
+keywords: understand, positional, parameters, cli, command, input, query 
+summary: 您可以利用 ONTAP 命令行界面的定位参数功能来提高命令输入的效率。您可以查询命令以确定该命令的定位参数。 
+---
+= 关于定位参数
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以利用 ONTAP 命令行界面的定位参数功能来提高命令输入的效率。您可以查询命令以确定该命令的定位参数。
+
+
+
+== 什么是定位参数
+
+* 定位参数是一个参数，不需要在指定参数值之前指定参数名称。
+* 只要定位参数与同一命令中的其他定位参数保持相对顺序，就可以在命令输入中将其与非定位参数穿插在一起，如 ` * 命令名称？ _*` 输出中所示。
+* 定位参数可以是命令的必需或可选参数。
+* 一个参数可以是一个命令的定位参数，而不是另一个命令的定位参数。
+
+
+[NOTE]
+====
+建议不要在脚本中使用定位参数功能，尤其是当定位参数是命令的可选参数或在其前面列出了可选参数时。
+
+====
+
+
+== 确定定位参数
+
+您可以在 ` * _command_name ？ _*` 命令输出中确定一个定位参数。定位参数的参数名称包含方括号，格式如下：
+
+* `` _-parameter_name_ ` ]` 参数值 _ 显示一个必需的定位参数。
+* `` _-parameter_name_ ` ]` 参数值 _ ）显示了一个可选的定位参数。
+
+
+例如，如果在 ` * _command_name ？ _*` 输出中显示为以下内容，则参数是显示在中的命令的定位参数：
+
+* ` ，` ， -lif ， <lif-name>
+* `` [-lif] <lif-name>]
+
+
+但是，如果显示为以下内容，则该参数是其所在命令的非定位参数：
+
+* ` -lif <lif-name>`
+* ` ，` ， -lif ， <lif-name>>
+
+
+
+
+== 使用定位参数的示例
+
+在以下示例中， ` * 卷 create ？ _*` 输出显示了命令的三个定位参数： ` 卷` ， ` 聚合` 和 ` 大小` 。
+
+[listing]
+----
+cluster1::> volume create ?
+   -vserver <vserver name>                Vserver Name
+   [-volume] <volume name>                Volume Name
+   [-aggregate] <aggregate name>          Aggregate Name
+  [[-size] {<integer>[KB|MB|GB|TB|PB]}]   Volume Size
+  [ -state {online|restricted|offline|force-online|force-offline|mixed} ]
+                                          Volume State (default: online)
+  [ -type {RW|DP|DC} ]                    Volume Type (default: RW)
+  [ -policy <text> ]                      Export Policy
+  [ -user <user name> ]                   User ID
+  ...
+  [ -space-guarantee|-s {none|volume} ]   Space Guarantee Style (default: volume)
+  [ -percent-snapshot-space <percent> ]   Space Reserved for Snapshot Copies
+  ...
+----
+在以下示例中，指定 `volume create` 命令时不会利用定位参数功能：
+
+`cluster1 ：：： > volume create -vserver svm1 -volume vol1 -aggregate * aggr1 -size 1g* -percent-snapshot-space 0`
+
+以下示例使用定位参数功能来提高命令输入的效率。在 `volume create` 命令中，定位参数与非定位参数穿插在一起，并且指定的定位参数值不带参数名称。定位参数的指定顺序与 ` * volume create ？ *` 输出所指示的顺序相同。也就是说， ` 卷` 的值在 ` 聚合` 之前指定，而在 ` 大小` 之前指定。
+
+`cluster1 ：：： > volume create * vol2 * * aggr1 * * * 1g* -vserver svm1 -percent-snapshot-space 0`
+
+`cluster1 ：：： > volume create -vserver svm1 * vol3* -snapshot-policy default * aggr1* -nvfail off * 1 g* -space-guarantee none`

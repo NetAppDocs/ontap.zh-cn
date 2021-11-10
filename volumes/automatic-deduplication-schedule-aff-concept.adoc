@@ -1,0 +1,21 @@
+---
+permalink: volumes/automatic-deduplication-schedule-aff-concept.html 
+sidebar: sidebar 
+keywords: manage, automatic, volume-level, background, deduplication, aff systems 
+summary: 从 ONTAP 9.3 开始，可以使用预定义的 autosaff 策略管理卷级后台重复数据删除以自动运行。无需手动配置计划。auto 策略会在后台执行连续重复数据删除。 
+---
+= 在 AFF 系统上管理自动卷级后台重复数据删除
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.3 开始，可以使用预定义的 `auto` AFF 策略对卷级后台重复数据删除进行管理，使其自动运行。无需手动配置计划。`auto` 策略会在后台执行连续重复数据删除。
+
+对于所有新创建的卷以及尚未手动配置后台重复数据删除的所有已升级卷，都会设置 `auto` 策略。您可以将此策略更改为 `default` 或任何其他策略以禁用此功能。
+
+如果卷从非 AFF 系统移至 AFF 系统，则默认情况下，目标节点上会启用 `auto` 策略。如果卷从 AFF 节点移至非 AFF 节点，则默认情况下，目标节点上的 `auto` 策略将替换为 `inline-only` 策略。
+
+在 AFF 上，系统会监控具有 `auto` 策略的所有卷，并取消节省较少或覆盖频繁的卷的优先级。已取消优先级的卷不再参与自动后台重复数据删除。已禁用已取消优先级的卷上的更改日志记录，并且卷上的元数据将被截断。
+
+用户可以使用高级权限级别提供的 `volume efficiency promote` 命令提升已取消优先级的卷，以重新参与自动后台重复数据删除。

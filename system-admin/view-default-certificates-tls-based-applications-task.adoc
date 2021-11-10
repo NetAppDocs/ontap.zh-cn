@@ -1,0 +1,43 @@
+---
+permalink: system-admin/view-default-certificates-tls-based-applications-task.html 
+sidebar: sidebar 
+keywords: view, default, certificates, tls, applications, transport 
+summary: 从 ONTAP 9.2 开始， ONTAP 为使用传输层安全（ Transport Layer Security ， TLS ）的 ONTAP 应用程序提供了一组默认的可信根证书。 
+---
+= 查看基于 TLS 的应用程序的默认证书
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.2 开始， ONTAP 为使用传输层安全（ Transport Layer Security ， TLS ）的 ONTAP 应用程序提供了一组默认的可信根证书。
+
+只有在创建管理 SVM 期间或在升级到 ONTAP 9.2 期间，才会安装默认证书。
+
+当前用作客户端并需要证书验证的应用程序包括 AutoSupport ， EMS ， LDAP ，审核日志记录， FabricPool ， 和 KMIP 。
+
+证书过期后，系统会调用一条 EMS 消息，请求用户删除证书。只能在高级权限级别删除默认证书。
+
+[NOTE]
+====
+删除默认证书可能会导致某些 ONTAP 应用程序无法按预期运行（例如， AutoSupport 和审核日志记录）。
+
+====
+.步骤
+. 您可以使用 security certificate show 命令查看管理员 SVM 上安装的默认证书：
++
+` * 安全证书 show -vserver – type server-c*`
+
++
+[listing]
+----
+
+fas2552-2n-abc-3::*> security certificate show -vserver fas2552-2n-abc-3 -type server-ca
+Vserver    Serial Number   Common Name                            Type
+---------- --------------- -------------------------------------- ------------
+fas2552-2n-abc-3
+           01              AAACertificateServices                 server-ca
+    Certificate Authority: AAA Certificate Services
+          Expiration Date: Sun Dec 31 18:59:59 2028
+----
+

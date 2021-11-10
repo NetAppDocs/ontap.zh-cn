@@ -1,0 +1,61 @@
+---
+permalink: volumes/set-efficiency-mode-task.html 
+sidebar: sidebar 
+keywords: enable, temperature, sensitive, storage, efficiency, mode, performance mode, efficient mode, set, System Manager, higher efficiency 
+summary: '从 ONTAP 9.10.1 开始，您可以在创建新 AFF 卷时设置存储效率模式。使用参数 ` -storage-efficiency-mode` ，您可以指定卷是使用效率模式还是默认性能模式。非 AFF 卷或数据保护卷不支持 ` -storage-efficiency-mode` 参数。' 
+---
+= 在创建卷期间设置存储效率模式
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.10.1 开始，您可以在创建新 AFF 卷时设置存储效率模式。使用参数 ` -storage-efficiency-mode` ，您可以指定卷是使用效率模式还是默认性能模式。非 AFF 卷或数据保护卷不支持 ` -storage-efficiency-mode` 参数。
+
+
+
+== 使用效率模式创建新卷
+
+要在启用存储效率时设置效率模式，您可以使用 ` -storage-efficiency-mode` 参数，其值为 `efficiency` 。
+
+.步骤
+. 创建启用了效率模式的新卷：
++
+` * volume create -vserver <vserver name> -volume <volume name> -aggregate <aggregate name> -size <volume size> -storage-efficiency-mode efficiency*`
+
++
+[listing]
+----
+volume create -vserver vs1 -volume aff_vol1 -aggregate aff_aggr1 -storage-efficiency-mode efficient -size 10g
+----
+
+
+
+
+== 使用性能模式创建新卷
+
+默认情况下，在创建具有温度敏感型存储效率的新 AFF 卷时会设置性能模式。您也可以将 `default` 值与 ` -storage-efficiency-mode` 参数结合使用。
+
+.步骤
+. 创建启用了效率模式的新卷：
++
+` * volume create -vserver <vserver name> -volume <volume name> -aggregate <aggregate name> -size <volume size> -storage-efficiency-mode default-*`
+
++
+[listing]
+----
+volume create -vserver vs1 -volume aff_vol1 -aggregate aff_aggr1 -storage-efficiency-mode default -size 10g
+----
+
+
+
+
+== System Manager 操作步骤
+
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 通过对温度敏感的存储效率功能提高存储效率。默认情况下，基于性能的存储效率处于启用状态。
+
+. 单击 * 存储 > 卷 * 。
+. 找到要启用或禁用存储效率的卷，然后单击 image:icon_kabob.gif["菜单选项图标"]。
+. 单击 * 编辑 * 并滚动到 * 存储效率 * 。
+. 选择 * 启用更高的存储效率 * 。
+

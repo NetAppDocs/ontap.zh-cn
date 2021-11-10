@@ -1,0 +1,51 @@
+---
+permalink: system-admin/structure-autosupport-messages-sent-email-concept.html 
+sidebar: sidebar 
+keywords: structure, autosupport, messages, sent, email, subject, standard, brief, body, large, attachment, 7z, file, data 
+summary: 通过电子邮件发送 AutoSupport 消息时，该消息具有一个标准主题，一个简短的正文以及一个 7z 文件格式的大附件，其中包含数据。 
+---
+= 通过电子邮件发送的 AutoSupport 消息的结构
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过电子邮件发送 AutoSupport 消息时，该消息具有一个标准主题，一个简短的正文以及一个 7z 文件格式的大附件，其中包含数据。
+
+[NOTE]
+====
+如果将 AutoSupport 配置为隐藏私有数据，则某些信息（例如主机名）会在标题，主题，正文和附件中被省略或屏蔽。
+
+====
+
+
+== 主题
+
+AutoSupport 机制发送的消息的主题行包含一个文本字符串，用于标识通知的原因。主题行的格式如下：
+
+来自 _System_Name_ （ _Message_ ） _Severity_ 的 HA 组通知
+
+* _System_Name_ 是主机名或系统 ID ，具体取决于 AutoSupport 配置
+
+
+
+
+== body
+
+AutoSupport 消息的正文包含以下信息：
+
+* 消息的日期和时间戳
+* 生成消息的节点上的 ONTAP 版本
+* 生成消息的节点的系统 ID ，序列号和主机名
+* AutoSupport 序列号
+* SNMP 联系人姓名和位置（如果指定）
+* HA 配对节点的系统 ID 和主机名
+
+
+
+
+== 附加文件
+
+AutoSupport 消息中的关键信息包含在压缩为名为 `body 7z` 的 7z 文件并附加到消息中的文件中。
+
+附件中包含的文件特定于 AutoSupport 消息的类型。

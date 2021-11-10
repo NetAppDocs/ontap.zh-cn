@@ -1,0 +1,51 @@
+---
+permalink: ndmp/enable-svm-scoped-ndmp-cluster-task.html 
+sidebar: sidebar 
+keywords: enable, svm, scope, ndmp, cluster 
+summary: 您可以通过在集群上启用 SVM 范围的 NDMP 模式和 NDMP 服务（管理 SVM ）来在集群上配置 SVM 范围的 NDMP 。 
+---
+= 在集群上启用 SVM 范围的 NDMP
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过在集群上启用 SVM 范围的 NDMP 模式和 NDMP 服务（管理 SVM ）来在集群上配置 SVM 范围的 NDMP 。
+
+关闭节点范围的 NDMP 模式将在集群上启用 SVM 范围的 NDMP 模式。
+
+.步骤
+. 使用带有 `node-scope-mode` 参数的 `ssystem services ndmp` 命令启用 SVM 范围的 NDMP 模式。
++
+[listing]
+----
+cluster1::> system services ndmp node-scope-mode off
+NDMP node-scope-mode is disabled.
+----
+. 使用 `vserver services ndmp on` 命令在管理 SVM 上启用 NDMP 服务。
++
+[listing]
+----
+cluster1::> vserver services ndmp on -vserver cluster1
+----
++
+默认情况下，身份验证类型设置为 `质询` ，纯文本身份验证处于禁用状态。
+
++
+[NOTE]
+====
+要实现安全通信，您应禁用纯文本身份验证。
+
+====
+. 使用 `vserver services ndmp show` 命令验证是否已启用 NDMP 服务。
++
+[listing]
+----
+cluster1::> vserver services ndmp show
+
+Vserver       Enabled   Authentication type
+------------- --------- -------------------
+cluster1      true      challenge
+vs1           false     challenge
+----
+

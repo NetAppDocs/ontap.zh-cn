@@ -1,0 +1,21 @@
+---
+permalink: system-admin/accounts-access-sp-concept.html 
+sidebar: sidebar 
+keywords: account, access, sp, cluster, user, cli, node 
+summary: 尝试访问 SP 时，系统会提示您提供凭据。使用 service-processor 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。 
+---
+= 可访问 SP 的帐户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+尝试访问 SP 时，系统会提示您提供凭据。使用 `sservice-processor` 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。
+
+用于访问 SP 的用户帐户通过 ONTAP 而不是 SP 命令行界面进行管理。如果在创建 SP 时将 `ssecurity login create` 命令的 ` 应用程序` 参数设置为 `sservice-processor` 且将 ` -authmethod` 参数设置为 `password` ，则任何角色的集群用户帐户均可访问 SP 。SP 仅支持密码身份验证。
+
+默认情况下，名为 "`admin` " 的集群用户帐户包含 `sservice-processor` 应用程序类型，并可访问 SP 。
+
+ONTAP 会阻止您使用为系统预留的名称（例如 "`root` " 和 "`naroot` " ）创建用户帐户。您不能使用系统预留名称来访问集群或 SP 。
+
+您可以使用 `ssecurity login show` 命令的 ` -application service-processor` 参数来显示当前 SP 用户帐户。

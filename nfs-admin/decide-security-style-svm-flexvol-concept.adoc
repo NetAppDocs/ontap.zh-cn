@@ -1,0 +1,47 @@
+---
+permalink: nfs-admin/decide-security-style-svm-flexvol-concept.html 
+sidebar: sidebar 
+keywords: decide, security, style, svm 
+summary: 为了帮助您确定要在卷上使用的安全模式，您应考虑两个因素。主要因素是管理文件系统的管理员类型。二级因素是访问卷上数据的用户或服务的类型。 
+---
+= 确定要在 SVM 上使用的安全模式
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+为了帮助您确定要在卷上使用的安全模式，您应考虑两个因素。主要因素是管理文件系统的管理员类型。二级因素是访问卷上数据的用户或服务的类型。
+
+在卷上配置安全模式时，应考虑环境的需求，以确保选择最佳安全模式并避免管理权限时出现问题。以下注意事项有助于您做出决定：
+
+[cols="2*"]
+|===
+| 安全风格 | 选择条件 
+
+
+ a| 
+"unix"
+ a| 
+* 文件系统由 UNIX 管理员管理。
+* 大多数用户都是 NFS 客户端。
+* 访问数据的应用程序使用 UNIX 用户作为服务帐户。
+
+
+
+
+ a| 
+NTFS
+ a| 
+* 文件系统由 Windows 管理员管理。
+* 大多数用户都是 SMB 客户端。
+* 访问数据的应用程序使用 Windows 用户作为服务帐户。
+
+
+
+
+ a| 
+混合
+ a| 
+文件系统由 UNIX 和 Windows 管理员管理，用户由 NFS 和 SMB 客户端组成。
+
+|===

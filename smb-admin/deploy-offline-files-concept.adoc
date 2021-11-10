@@ -1,0 +1,33 @@
+---
+permalink: smb-admin/deploy-offline-files-concept.html 
+sidebar: sidebar 
+keywords: important, guideline, understand, deploy, offline, file, home, directory, share, showsnapshot, property, set, home, directories, directory, guidelines for deploying offline files 
+summary: 在主目录上设置了 showsnapshot 共享属性的主目录共享上部署脱机文件时，您需要了解一些重要准则。 
+---
+= 部署脱机文件的准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在主目录上设置了 `showsnapshot` share 属性的主目录共享上部署脱机文件时，您需要了解一些重要准则。
+
+如果在已配置脱机文件的主目录共享上设置了 `showsnapshot` share 属性，则 Windows 客户端会将所有 Snapshot 副本缓存到用户主目录中的 `~snapshot` 文件夹下。
+
+如果满足以下条件之一，则 Windows 客户端会将所有 Snapshot 副本缓存到主目录下：
+
+* 用户使主目录可从客户端脱机使用。
++
+主目录中的 `~snapshot` 文件夹的内容将包括在内，并使其脱机可用。
+
+* 用户将文件夹重定向配置为将 `My documents` 等文件夹重定向到 CIFS 服务器共享上主目录的根目录。
++
+某些 Windows 客户端可能会自动使重定向的文件夹脱机可用。如果将此文件夹重定向到主目录的根目录，则 `~snapshot` 文件夹将包含在缓存的脱机内容中。
+
+
+
+[NOTE]
+====
+应避免脱机文件部署，即脱机文件中包含 `~snapshot` 文件夹。`~snapshot` 文件夹中的 Snapshot 副本包含 ONTAP 创建 Snapshot 副本时卷上的所有数据。因此，为 `~snapshot` 文件夹创建脱机副本会占用客户端上的大量本地存储，在脱机文件同步期间会占用网络带宽，并会增加同步脱机文件所需的时间。
+
+====

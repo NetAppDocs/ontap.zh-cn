@@ -1,0 +1,28 @@
+---
+permalink: nfs-admin/ontap-name-services-concept.html 
+sidebar: sidebar 
+keywords: ontap, name, service 
+summary: ONTAP 使用名称服务获取有关用户和客户端的信息。ONTAP 使用此信息对访问存储系统上的数据或管理存储系统的用户进行身份验证，并在混合环境中映射用户凭据。 
+---
+= ONTAP 如何使用名称服务
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 使用名称服务获取有关用户和客户端的信息。ONTAP 使用此信息对访问存储系统上的数据或管理存储系统的用户进行身份验证，并在混合环境中映射用户凭据。
+
+配置存储系统时，必须指定希望 ONTAP 用于获取用户凭据进行身份验证的名称服务。ONTAP 支持以下名称服务：
+
+* 本地用户（文件）
+* 外部 NIS 域（ NIS ）
+* 外部 LDAP 域（ LDAP ）
+
+
+您可以使用 `vserver services name-service ns-switch` 命令系列为 SVM 配置搜索网络信息的源以及搜索顺序。这些命令提供了与 UNIX 系统上的 ` /etc/nsswitch.conf` 文件等效的功能。
+
+当 NFS 客户端连接到 SVM 时， ONTAP 会检查指定的名称服务以获取用户的 UNIX 凭据。如果名称服务配置正确，并且 ONTAP 可以获取 UNIX 凭据，则 ONTAP 将成功对用户进行身份验证。
+
+在具有混合安全模式的环境中， ONTAP 可能必须映射用户凭据。您必须为您的环境正确配置名称服务，以使 ONTAP 能够正确映射用户凭据。
+
+ONTAP 还使用名称服务对 SVM 管理员帐户进行身份验证。在配置或修改名称服务切换时，必须牢记这一点，以免意外禁用 SVM 管理员帐户的身份验证。有关 SVM 管理用户的详细信息，请参见链接： ../authentication/index.html 。

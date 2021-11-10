@@ -1,0 +1,35 @@
+---
+permalink: data-protection/example-snapshot-copies-exceed-reserve-concept.html 
+sidebar: sidebar 
+keywords: delete, protected, files, less file space 
+summary: 即使您删除了使用该块的文件， Snapshot 副本也会指向该块。这说明了用尽 Snapshot 副本预留空间可能会导致反向直观的结果，即删除整个文件系统会导致可用空间少于文件系统占用的空间。 
+---
+= 删除受保护的文件会导致文件空间比预期少
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+即使您删除了使用该块的文件， Snapshot 副本也会指向该块。这说明了用尽 Snapshot 副本预留空间可能会导致反向直观的结果，即删除整个文件系统会导致可用空间少于文件系统占用的空间。
+
+请考虑以下示例。删除任何文件之前， `df` 命令输出如下所示：
+
+[listing]
+----
+
+Filesystem          kbytes  used    avail  capacity
+/vol/vol0/          3000000 3000000 0       100%
+/vol/vol0/.snapshot 1000000 500000  500000   50%
+----
+删除整个文件系统并为卷创建 Snapshot 副本后， `df` 命令将生成以下输出：
+
+[listing]
+----
+
+Filesystem          kbytes  used    avail  capacity
+/vol/vol0/          3000000 2500000 500000   83%
+/vol/vol0/.snapshot 1000000 3500000 0       350%
+----
+如输出所示，除了删除前使用的 0.5 GB 外， Snapshot 副本现在还会使用活动文件系统先前使用的整个 3 GB 空间。
+
+由于 Snapshot 副本使用的磁盘空间现在已超过 Snapshot 副本预留空间，因此会将 2.5 GB 的 " `s药片` " 溢出到为活动文件预留的空间中，从而为文件留出 0.5 GB 的可用空间，而您在合理的情况下，这些文件可能需要 3 GB 的空间。

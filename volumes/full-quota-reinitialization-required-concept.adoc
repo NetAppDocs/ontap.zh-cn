@@ -1,0 +1,31 @@
+---
+permalink: volumes/full-quota-reinitialization-required-concept.html 
+sidebar: sidebar 
+keywords: when, full, quota, reinitialization, required 
+summary: 虽然调整配额大小的速度较快，但如果对配额进行了某些小的或广泛的更改，则必须执行完整配额重新初始化。 
+---
+= 需要完全配额重新初始化时
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+虽然调整配额大小的速度较快，但如果对配额进行了某些小的或广泛的更改，则必须执行完整配额重新初始化。
+
+在以下情况下，需要重新初始化完整配额：
+
+* 您可以为以前没有配额的目标创建配额。
+* 您可以在 `usermap.cfg` 文件中更改用户映射，并在配额文件中使用 quota_perform_user_mapping 条目。
+* 将 qtree 的安全模式从 UNIX 更改为混合或 NTFS 。
+* 将 qtree 的安全模式从混合或 NTFS 更改为 UNIX 。
+* 您可以从包含多个用户的配额目标中删除用户，或者将用户添加到已包含多个用户的目标中。
+* 您对配额进行了大量更改。
+
+
+假设您的卷包含三个 qtree ，并且该卷中的唯一配额是三个树配额。您决定进行以下更改：
+
+* 添加新的 qtree 并为其创建新的树配额。
+* 为卷添加默认用户配额。
+
+
+这两项更改都需要完全配额初始化。调整大小不会使配额生效。

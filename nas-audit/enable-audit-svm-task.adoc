@@ -1,0 +1,27 @@
+---
+permalink: nas-audit/enable-audit-svm-task.html 
+sidebar: sidebar 
+keywords: enable, audit, svm 
+summary: 设置完审核配置后，必须在 Storage Virtual Machine \ （ SVM\ ）上启用审核。 
+---
+= 在 SVM 上启用审核
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+设置完审核配置后，必须在 Storage Virtual Machine （ SVM ）上启用审核。
+
+SVM 审核配置必须已存在。
+
+首次启动 SVM 灾难恢复 ID 丢弃配置（在 SnapMirror 初始化完成后）且 SVM 具有审核配置时， ONTAP 会自动禁用审核配置。在只读 SVM 上禁用审核，以防止暂存卷填满。只有在 SnapMirror 关系中断且 SVM 为读写状态后，才能启用审核。
+
+.步骤
+. 在 SVM 上启用审核：
++
+`vserver audit enable -vserver vserver_name`
+
++
+`vserver audit enable -vserver vs1`
+
+

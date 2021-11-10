@@ -1,0 +1,65 @@
+---
+permalink: system-admin/upload-core-dump-files-task.html 
+sidebar: sidebar 
+keywords: upload, core, dump, file, autosupport, device, send, messages, email 
+summary: 保存核心转储文件时，系统会生成一条事件消息。如果 AutoSupport 服务已启用并配置为向 NetApp 支持发送消息，则会传输 AutoSupport 消息，并自动向您发送电子邮件确认。 
+---
+= 上传核心转储文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+保存核心转储文件时，系统会生成一条事件消息。如果 AutoSupport 服务已启用并配置为向 NetApp 支持发送消息，则会传输 AutoSupport 消息，并自动向您发送电子邮件确认。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须已使用以下设置设置 AutoSupport ：
++
+** 已在节点上启用 AutoSupport 。
+** AutoSupport 已配置为向技术支持发送消息。
+** AutoSupport 已配置为使用 HTTP 或 HTTPS 传输协议。
++
+发送包含核心转储文件等大型文件的消息时，不支持 SMTP 传输协议。
+
+
+
+
+
+如果 NetApp 支持部门要求，您也可以使用 `ssystem node AutoSupport invoke-core-upload` 命令通过 AutoSupport 服务通过 HTTPS 上传核心转储文件。
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Miscellaneous/How_to_upload_a_file_to_NetApp["如何将文件上传到 NetApp"]
+
+.步骤
+. 使用 `ssystem node coredump show` 命令查看节点的核心转储文件。
++
+在以下示例中，将显示本地节点的核心转储文件：
+
++
+[listing]
+----
+cluster1::> system node coredump show -node local
+Node:Type Core Name Saved Panic Time
+--------- ------------------------------------------- ----- -----------------
+node:kernel
+core.4073000068.2013-09-11.15_05_01.nz true 9/11/2013 15:05:01
+----
+. 使用 `ssystem node AutoSupport invoke-core-upload` 命令生成 AutoSupport 消息并上传核心转储文件。
++
+在以下示例中，系统会生成一条 AutoSupport 消息并将其发送到默认位置（即技术支持），并且核心转储文件会上传到默认位置（即 NetApp 支持站点）：
+
++
+[listing]
+----
+cluster1::> system node autosupport invoke-core-upload -core-filename
+core.4073000068.2013-09-11.15_05_01.nz -node local
+----
++
+在以下示例中，将生成一条 AutoSupport 消息并发送到 URI 中指定的位置，并且核心转储文件将上传到 URI ：
+
++
+[listing]
+----
+cluster1::> system node autosupport invoke-core-upload -uri https//files.company.com -core-filename
+core.4073000068.2013-09-11.15_05_01.nz -node local
+----
+

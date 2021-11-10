@@ -1,0 +1,132 @@
+---
+permalink: performance-admin/set-throughput-floor-qos-task.html 
+sidebar: sidebar 
+keywords: setting, throughput, floor, qos 
+summary: 您可以使用策略组的 min-throughput 字段为存储对象工作负载定义吞吐量下限（ QoS 最小值）。您可以在创建或修改存储对象时应用策略组。从 ONTAP 9.8 开始，您可以以 IOPS 或 MBps 或 IOPS 和 MBps 为单位指定吞吐量下限。 
+---
+= 使用 QoS 设置吞吐量下限
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用策略组的 `min-throughput` 字段为存储对象工作负载定义吞吐量下限（ QoS 最小值）。您可以在创建或修改存储对象时应用策略组。从 ONTAP 9.8 开始，您可以以 IOPS 或 MBps 或 IOPS 和 MBps 为单位指定吞吐量下限。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须运行 ONTAP 9.2 或更高版本。从 ONTAP 9.2 开始，吞吐量下限可用。
+* 您必须是集群管理员才能创建策略组。
+
+
+.关于此任务
+* 从 ONTAP 9.4 开始，您可以使用 _non-shared_ QoS 策略组来指定将定义的吞吐量下限分别应用于每个成员工作负载。只有在这种情况下，吞吐量下限的策略组才能应用于多个工作负载。
++
+为 `qos policy-group create` 命令设置 ` -is-shared=false` 以指定非共享策略组。
+
+* 如果节点或聚合上的性能容量（余量）不足，则工作负载的吞吐量可能会低于指定的下限。
+* 受 QoS 限制的存储对象必须包含在策略组所属的 SVM 中。多个策略组可以属于同一个 SVM 。
+* QoS 最佳实践是将策略组应用于相同类型的存储对象。
+* 定义吞吐量下限的策略组不能应用于 SVM 。
+
+
+.步骤
+. 检查节点或聚合上是否具有足够的性能容量，如中所述 xref:identify-remaining-performance-capacity-task.adoc[确定剩余性能容量]。
+. 创建策略组。
++
+`qos policy-group create -policy group _policy_group_ -vserver _svm_ -min-throughput _qos_target_ -is-shared true_false`
+
++
+有关完整的命令语法，请参见适用于您的 ONTAP 版本的手册页。您可以使用 `qos policy-group modify` 命令调整吞吐量下限。
+
++
+以下命令将创建最小吞吐量为 1 ， 000 IOPS 的共享策略组 `pg-vs2` ：
+
++
+[listing]
+----
+cluster1::> qos policy-group create -policy group pg-vs2 -vserver vs2 -min-throughput 1000iops -is-shared true
+----
++
+以下命令将创建非共享策略组 `pg-vs4` 而不设置吞吐量限制：
+
++
+[listing]
+----
+cluster1::> qos policy-group create -policy group pg-vs4 -vserver vs4 -is-shared false
+----
+. 将策略组应用于卷或 LUN ：
++
+` _storage_object_create -vserver _svm_ -qos-policy-group _policy_group_`
+
++
+有关完整的命令语法，请参见手册页。您可以使用 ` _storage_object_modify` 命令将其他策略组应用于存储对象。
+
++
+以下命令会将策略组 `pg-app2` 应用于卷 `App2` ：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs2 -volume app2 -aggregate aggr1 -qos-policy-group pg-app2
+----
+. 监控策略组性能：
++
+`QoS 统计信息性能显示`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+从集群监控性能。请勿使用主机上的工具监控性能。
+
+====
++
+以下命令显示策略组性能：
+
++
+[listing]
+----
+cluster1::> qos statistics performance show
+Policy Group           IOPS      Throughput   Latency
+-------------------- -------- --------------- ----------
+-total-                 12316       47.76MB/s  1264.00us
+pg_app2                  7216       28.19MB/s   420.00us
+_System-Best-Effort        62       13.36KB/s     4.13ms
+_System-Background         30           0KB/s        0ms
+----
+. 监控工作负载性能：
++
+`QoS 统计信息工作负载性能显示`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+从集群监控性能。请勿使用主机上的工具监控性能。
+
+====
++
+以下命令显示工作负载性能：
+
++
+[listing]
+----
+cluster1::> qos statistics workload performance show
+Workload          ID     IOPS      Throughput    Latency
+--------------- ------ -------- ---------------- ----------
+-total-              -    12320        47.84MB/s  1215.00us
+app2-wid7967      7967     7219        28.20MB/s   319.00us
+vs1-wid12279     12279     5026        19.63MB/s     2.52ms
+_USERSPACE_APPS     14       55        10.92KB/s   236.00us
+_Scan_Backgro..   5688       20            0KB/s        0ms
+----
++
+[NOTE]
+====
+您可以使用 `qos statistics workload latency show` 命令查看 QoS 工作负载的详细延迟统计信息。
+
+====
+

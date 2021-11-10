@@ -1,0 +1,180 @@
+---
+permalink: nfs-admin/ontap-name-service-switch-config-concept.html 
+sidebar: sidebar 
+keywords: ontap, name, service, switch, configuration, work 
+summary: ONTAP 将名称服务配置信息存储在一个表中，该表相当于 UNIX 系统上的 /etc/nsswitch.conf 文件。您必须了解该表的功能以及 ONTAP 如何使用它，以便可以根据您的环境对其进行适当配置。 
+---
+= ONTAP 名称服务交换机配置的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 将名称服务配置信息存储在一个表中，该表相当于 UNIX 系统上的 ` /etc/nsswitch.conf` 文件。您必须了解该表的功能以及 ONTAP 如何使用它，以便可以根据您的环境对其进行适当配置。
+
+ONTAP 名称服务切换表可确定 ONTAP 为检索特定类型的名称服务信息而查询的名称服务源。ONTAP 会为每个 SVM 维护一个单独的名称服务切换表。
+
+
+
+== 数据库类型
+
+该表为以下每种数据库类型存储一个单独的名称服务列表：
+
+[cols="3*"]
+|===
+| 数据库类型 | 定义名称服务源 ... | 有效源为 ... 
+
+
+ a| 
+主机
+ a| 
+将主机名转换为 IP 地址
+ a| 
+文件， DNS
+
+
+
+ a| 
+组
+ a| 
+查找用户组信息
+ a| 
+文件， nis ， ldap
+
+
+
+ a| 
+密码
+ a| 
+查找用户信息
+ a| 
+文件， nis ， ldap
+
+
+
+ a| 
+网络组
+ a| 
+正在查找网络组信息
+ a| 
+文件， nis ， ldap
+
+
+
+ a| 
+命名映射
+ a| 
+正在映射用户名
+ a| 
+文件， LDAP
+
+|===
+
+
+== 源类型
+
+源用于指定用于检索相应信息的名称服务源。
+
+[cols="3*"]
+|===
+| 指定源类型 ... | 查找信息的位置 | 由命令系列管理 ... 
+
+
+ a| 
+文件
+ a| 
+本地源文件
+ a| 
+`vserver services name-service unix-user` `vserver services name-service unix-group`
+
+`vserver services name-service netgroup`
+
+`vserver services name-service dns hosts`
+
+
+
+ a| 
+NIS
+ a| 
+在 SVM 的 NIS 域配置中指定的外部 NIS 服务器
+ a| 
+`vserver services name-service nis-domain`
+
+
+
+ a| 
+ldap
+ a| 
+在 SVM 的 LDAP 客户端配置中指定的外部 LDAP 服务器
+ a| 
+`Vserver services name-service ldap`
+
+
+
+ a| 
+DNS
+ a| 
+在 SVM 的 DNS 配置中指定的外部 DNS 服务器
+ a| 
+`Vserver services name-service dns`
+
+|===
+即使您计划使用 NIS 或 LDAP 进行数据访问和 SVM 管理身份验证，您仍应包括 `files` 并将本地用户配置为回退，以防 NIS 或 LDAP 身份验证失败。
+
+
+
+== 用于访问外部源的协议
+
+要访问外部源的服务器， ONTAP 使用以下协议：
+
+[cols="2*"]
+|===
+| 外部名称服务源 | 用于访问的协议 
+
+
+ a| 
+NIS
+ a| 
+UDP
+
+
+
+ a| 
+DNS
+ a| 
+UDP
+
+
+
+ a| 
+LDAP
+ a| 
+TCP
+
+|===
+以下示例显示了 SVM SVM_1 的名称服务开关配置：
+
+[listing]
+----
+cluster1::*> vserver services name-service ns-switch show -vserver svm_1
+                               Source
+Vserver         Database       Order
+--------------- ------------   ---------
+svm_1           hosts          files,
+                               dns
+svm_1           group          files
+svm_1           passwd         files
+svm_1           netgroup       nis,
+                               files
+----
+要查找主机的 IP 地址， ONTAP 首先会查找本地源文件。如果查询未返回任何结果，则接下来会检查 DNS 服务器。
+
+要查找用户或组信息， ONTAP 仅会查找本地源文件。如果查询未返回任何结果，则查找将失败。
+
+要查找网络组信息， ONTAP 首先会查找外部 NIS 服务器。如果查询未返回任何结果，则接下来会检查本地网络组文件。
+
+SVM SVM_1 的表中没有用于名称映射的名称服务条目。因此，默认情况下， ONTAP 仅会查找本地源文件。
+
+* 相关信息 *
+
+https://www.netapp.com/pdf.html?item=/media/16328-tr-4668pdf.pdf["NetApp 技术报告 4668 ：《名称服务最佳实践指南》"]

@@ -1,0 +1,52 @@
+---
+permalink: volumes/enable-deduplication-volume-task.html 
+sidebar: sidebar 
+keywords: enable, deduplication, volume 
+summary: 您可以在 FlexVol 卷上启用重复数据删除以提高存储效率。您可以在所有卷上启用后处理重复数据删除，并在 AFF 或 Flash Pool 聚合上的卷上启用实时重复数据删除。如果要在其他类型的卷上启用实时重复数据删除，必须联系技术支持。 
+---
+= 在卷上启用重复数据删除
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在 FlexVol 卷上启用重复数据删除以提高存储效率。您可以在所有卷上启用后处理重复数据删除，并在 AFF 或 Flash Pool 聚合上的卷上启用实时重复数据删除。如果要在其他类型的卷上启用实时重复数据删除，必须联系技术支持。
+
+对于 FlexVol 卷，您必须已验证卷和聚合中是否存在足够的可用空间来容纳重复数据删除元数据。重复数据删除元数据需要聚合中的最小可用空间量。此数量等于聚合中所有经过重复数据删除的 FlexVol 卷或数据成分卷的物理数据量总量的 3% 。每个 FlexVol 卷或数据成分卷应拥有相当于物理数据总可用空间量的 4% ，总可用空间为 7% 。
+
+[NOTE]
+====
+从 ONTAP 9.2 开始，默认情况下， AFF 系统会启用实时重复数据删除。
+
+====
+.选项
+* 使用 `volume efficiency on` 命令启用后处理重复数据删除。
++
+以下命令将在卷 VolA 上启用后处理重复数据删除：
+
++
+`-vserver vs1 -volume VolA 上的卷效率`
+
+* 使用 `volume efficiency on` 命令，然后使用 `volume efficiency modify` 命令，并将 ` inline-deduplication` 选项设置为 `true` ，以启用后处理重复数据删除和实时重复数据删除。
++
+以下命令会在卷 VolA 上同时启用后处理重复数据删除和实时重复数据删除：
+
++
+`-vserver vs1 -volume VolA 上的卷效率`
+
++
+`volume efficiency modify -vserver vs1 -volume VolA -inline-dedupe true`
+
+* 使用 `volume efficiency on` 命令，然后使用 `volume efficiency modify` 命令，并将 ` inline-deduplication` 选项设置为 `true` ，将 ` -policy` 选项设置为 `inline-only` ，以便仅启用实时重复数据删除。
++
+以下命令仅对卷 VolA 启用实时重复数据删除：
+
++
+`-vserver vs1 -volume VolA 上的卷效率`
+
++
+`volume efficiency modify -vserver vs1 -volume VolA -policy inline-only -inline-dedupe true`
+
+
+
+查看卷效率设置以验证此设置是否已更改： `volume efficiency show -instance`

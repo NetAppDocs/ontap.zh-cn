@@ -1,0 +1,170 @@
+---
+permalink: smb-admin/display-open-files-task.html 
+sidebar: sidebar 
+keywords: display, information, smb, file, connection, session, if, list, volume, share, name, contiuous, available, protection, level, helpful, nondisruptive, operation, display information about open smb files 
+summary: 您可以显示有关打开的 SMB 文件的信息，包括 SMB 连接和会话 ID ，托管卷，共享名称和共享路径。您可以显示有关文件的持续可用保护级别的信息，这有助于确定打开的文件是否处于支持无中断操作的状态。 
+---
+= 显示有关打开的 SMB 文件的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关打开的 SMB 文件的信息，包括 SMB 连接和会话 ID ，托管卷，共享名称和共享路径。您可以显示有关文件的持续可用保护级别的信息，这有助于确定打开的文件是否处于支持无中断操作的状态。
+
+您可以显示有关已建立的 SMB 会话上打开的文件的信息。如果需要确定 SMB 会话中特定文件的 SMB 会话信息，则显示的信息非常有用。
+
+例如，如果您有一个 SMB 会话，其中一些打开的文件在持续可用的保护下打开，而另一些文件在持续可用的保护下未打开（ `vserver cifs session show` command output 中的 ` continuous-available` 字段值为 `Partial` ）， 您可以使用此命令确定哪些文件不持续可用。
+
+您可以使用不带任何可选参数的 `vserver cifs session file show` 命令以摘要形式显示 Storage Virtual Machine （ SVM ）上已建立的 SMB 会话中所有打开文件的信息。
+
+但是，在许多情况下，返回的输出量很大。您可以通过指定可选参数来自定义输出中显示的信息。如果您只想查看一小部分打开文件的信息，这将非常有用。
+
+* 您可以使用可选的 ` 字段` 参数显示所选字段的输出。
++
+您可以单独使用此参数，也可以与其他可选参数结合使用。
+
+* 您可以使用 ` -instance` 参数显示有关打开的 SMB 文件的详细信息。
++
+您可以单独使用此参数，也可以与其他可选参数结合使用。
+
+
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 如果要显示打开的 SMB 文件 ... | 输入以下命令 ... 
+
+
+ a| 
+以摘要形式显示在 SVM 上
+ a| 
+`vserver cifs session file show -vserver vserver_name`
+
+
+
+ a| 
+在指定节点上
+ a| 
+`vserver cifs session file show -vserver vserver_name -node ｛ node_name_local ｝`
+
+
+
+ a| 
+指定的文件 ID
+ a| 
+`vserver cifs session file show -vserver vserver_name -file-id integer`
+
+
+
+ a| 
+指定的 SMB 连接 ID
+ a| 
+`vserver cifs session file show -vserver vserver_name -connection-id integer`
+
+
+
+ a| 
+指定的 SMB 会话 ID
+ a| 
+`vserver cifs session file show -vserver vserver_name -session-id integer`
+
+
+
+ a| 
+在指定的托管聚合上
+ a| 
+`vserver cifs session file show -vserver vserver_name -hosing-aggregate aggregate_name`
+
+
+
+ a| 
+在指定卷上
+ a| 
+`vserver cifs session file show -vserver vserver_name -hosing-volume volume_name`
+
+
+
+ a| 
+指定的 SMB 共享上
+ a| 
+`vserver cifs session file show -vserver vserver_name -share share_name`
+
+
+
+ a| 
+指定的 SMB 路径上
+ a| 
+`vserver cifs session file show -vserver vserver_name -path path`
+
+
+
+ a| 
+具有指定级别的持续可用保护
+ a| 
+`vserver cifs session file show -vserver vserver_name -continuous-available ｛ No_Yes ｝`
+
+[NOTE]
+====
+如果持续可用状态为 `No` ，则表示这些打开的文件无法从接管和交还中无中断地恢复。它们也无法从高可用性关系中的合作伙伴之间的常规聚合重新定位中恢复。
+
+====
+
+
+ a| 
+具有指定的重新连接状态
+ a| 
+`vserver cifs session file show -vserver vserver_name -reCONNECTED ｛ No_Yes ｝`
+
+[NOTE]
+====
+如果重新连接状态为 `No` ，则在断开连接事件后，未重新连接打开的文件。这可能意味着文件从未断开连接，或者文件已断开连接且未成功重新连接。如果重新连接状态为 `Yes` ，则表示打开的文件在断开连接事件后成功重新连接。
+
+====
+|===
++
+您可以使用其他可选参数来细化输出结果。有关详细信息，请参见手册页。
+
+
+
+以下示例显示了有关 SVM vs1 上打开的文件的信息：
+
+[listing]
+----
+cluster1::> vserver cifs session file show -vserver vs1
+Node:       node1
+Vserver:    vs1
+Connection: 3151274158
+Session:    1
+File    File      Open Hosting               Continuously
+ID      Type      Mode Volume    Share       Available
+------- --------- ---- --------- ----------- ------------
+41      Regular   r    data      data        Yes
+Path: \mytest.rtf
+----
+以下示例显示了有关 SVM vs1 上文件 ID 82 的已打开 SMB 文件的详细信息：
+
+[listing]
+----
+cluster1::> vserver cifs session file show -vserver vs1 -file-id 82 -instance
+
+                  Node: node1
+               Vserver: vs1
+               File ID: 82
+         Connection ID: 104617
+            Session ID: 1
+             File Type: Regular
+             Open Mode: rw
+Aggregate Hosting File: aggr1
+   Volume Hosting File: data1
+            CIFS Share: data1
+  Path from CIFS Share: windows\win8\test\test.txt
+            Share Mode: rw
+           Range Locks: 1
+Continuously Available: Yes
+           Reconnected: No
+----
+* 相关信息 *
+
+xref:display-session-task.adoc[显示 SMB 会话信息]

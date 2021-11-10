@@ -1,0 +1,45 @@
+---
+permalink: performance-admin/check-fc-adapter-port-speed-task.html 
+sidebar: sidebar 
+keywords: check, fc, adapter, port, speed 
+summary: 适配器目标端口速度应与所连接设备的速度匹配，以优化性能。如果端口设置为自动协商，则在接管和交还或其他中断后，重新连接可能需要较长时间。 
+---
+= 检查 FC 适配器端口速度
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+适配器目标端口速度应与所连接设备的速度匹配，以优化性能。如果端口设置为自动协商，则在接管和交还或其他中断后，重新连接可能需要较长时间。
+
+使用此适配器作为主端口的所有 LIF 都必须脱机。
+
+.步骤
+. 使适配器脱机：
++
+`network fcp adapter modify -node _nodename_ -adapter _adapter_ -state _down_`
+
+. 检查端口适配器的最大速度：
++
+`fcp adapter show -instance`
+
+. 根据需要更改端口速度：
++
+`network fcp adapter modify -node _nodename_ -adapter _adapter_ -speed ｛ 1|2|4|8_10_16_auto ｝`
+
+. 使适配器联机：
++
+`network fcp adapter modify -node _nodename_ -adapter _adapter_ -state up`
+
+. 使适配器上的所有 LIF 联机：
++
+`network interface modify -vserver * -lif * ｛ -home-node node1 -home-port e0c ｝ -status-admin up`
+
+
+
+以下示例将适配器 `0d` on `node1` 的端口速度更改为 2 Gbps ：
+
+[listing]
+----
+cluster1::> network fcp adapter modify -node node1 -adapter 0d -speed 2
+----

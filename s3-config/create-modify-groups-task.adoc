@@ -1,0 +1,40 @@
+---
+permalink: s3-config/create-modify-groups-task.html 
+sidebar: sidebar 
+keywords: create, modify s3 groups 
+summary: 您可以通过创建具有适当访问授权的用户组来简化存储分段访问。 
+---
+= 创建或修改 S3 组
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过创建具有适当访问授权的用户组来简化存储分段访问。
+
+启用了 S3 的 SVM 中的 S3 用户必须已存在。
+
+可以为 S3 组中的用户授予对 SVM 中任何存储分段的访问权限，但不能在多个 SVM 中进行访问。可以通过两种方式配置组访问权限：
+
+* 在存储分段级别
++
+创建一组 S3 用户后，您可以在存储分段策略语句中指定组权限，这些权限仅适用于该存储分段。
+
+* 在 SVM 级别
++
+创建一组 S3 用户后，您可以在组定义中指定对象服务器策略名称。这些策略决定了组成员的分段和访问权限。
+
+
+
+.步骤
+. 创建 S3 组：
++
+`vserver object-store-server group create -vserver svm_name -name group_name -users user_name\ （ s\ ） [-policies policy_name] [-comment text\]`
+
++
+在对象存储中只有一个存储分段的配置中，可以省略 ` 策略` 选项；可以将组名称添加到存储分段策略中。
+
++
+创建对象存储服务器策略后，可以使用 `vserver object-store-server group modify` 命令添加 ` 策略` 选项。
+
+

@@ -1,0 +1,25 @@
+---
+permalink: smb-config/map-dns-server-task.html 
+sidebar: sidebar 
+keywords: site, dns, server, entry, point, smb, name, netbios, alias, ip, address, lif, windows, map the smb server on the dns server 
+summary: 您站点的 DNS 服务器必须具有一个条目，用于将 SMB 服务器名称和任何 NetBIOS 别名指向数据 LIF 的 IP 地址，以便 Windows 用户可以将驱动器映射到 SMB 服务器名称。 
+---
+= 在 DNS 服务器上映射 SMB 服务器
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您站点的 DNS 服务器必须具有一个条目，用于将 SMB 服务器名称和任何 NetBIOS 别名指向数据 LIF 的 IP 地址，以便 Windows 用户可以将驱动器映射到 SMB 服务器名称。
+
+您必须对站点的 DNS 服务器具有管理访问权限。如果您没有管理访问权限，则必须要求 DNS 管理员执行此任务。
+
+如果您对 SMB 服务器名称使用 NetBIOS 别名，则最好为每个别名创建 DNS 服务器入口点。
+
+.步骤
+. 登录到 DNS 服务器。
+. 创建正向（ A - 地址记录）和反向（ PTR - 指针记录）查找条目，将 SMB 服务器名称映射到数据 LIF 的 IP 地址。
+. 如果使用 NetBIOS 别名，请创建一个别名规范名称（ CNAME 资源记录）查找条目，以便将每个别名映射到 SMB 服务器的数据 LIF 的 IP 地址。
+
+
+映射在网络中传播之后， Windows 用户可以将驱动器映射到 SMB 服务器名称或其 NetBIOS 别名。

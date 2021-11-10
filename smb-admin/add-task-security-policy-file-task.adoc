@@ -1,0 +1,86 @@
+---
+permalink: smb-admin/add-task-security-policy-file-task.html 
+sidebar: sidebar 
+keywords: creating, create, add, policy, task, security, policy, configuring, configure, apply, acl, associate, task, entries, add a task to the security policy 
+summary: 创建策略任务并将其添加到安全策略是配置 ACL 并将其应用于 SVM 中的文件或文件夹的第四步。创建策略任务时，您需要将此任务与安全策略相关联。您可以将一个或多个任务条目添加到安全策略中。 
+---
+= 将任务添加到安全策略中
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+创建策略任务并将其添加到安全策略是配置 ACL 并将其应用于 SVM 中的文件或文件夹的第四步。创建策略任务时，您需要将此任务与安全策略相关联。您可以将一个或多个任务条目添加到安全策略中。
+
+安全策略是任务的容器。任务是指可通过安全策略对具有 NTFS 或混合安全模式的文件或文件夹（如果配置存储级别访问防护，则也可以对卷对象）执行的单个操作。
+
+任务类型有两种：
+
+* 文件和目录任务
++
+用于指定将安全描述符应用于指定文件和文件夹的任务。通过文件和目录任务应用的 ACL 可以通过 SMB 客户端或 ONTAP 命令行界面进行管理。
+
+* 存储级别访问防护任务
++
+用于指定将存储级别访问防护安全描述符应用于指定卷的任务。通过存储级别访问防护任务应用的 ACL 只能通过 ONTAP 命令行界面进行管理。
+
+
+
+任务包含文件（或文件夹）或一组文件（或文件夹）的安全配置定义。策略中的每个任务都由路径唯一标识。一个策略中的每个路径只能有一个任务。策略不能包含重复的任务条目。
+
+将任务添加到策略的准则：
+
+* 每个策略最多可以包含 10 ， 000 个任务条目。
+* 一个策略可以包含一个或多个任务。
++
+即使策略可以包含多个任务，您也无法将策略配置为同时包含文件目录和存储级别访问防护任务。策略必须包含所有存储级别访问防护任务或所有文件目录任务。
+
+* 存储级别访问防护用于限制权限。
++
+它不会提供额外的访问权限。
+
+
+
+向安全策略添加任务时，必须指定以下四个必需参数：
+
+* SVM name
+* Policy name
+* 路径
+* 要与路径关联的安全描述符
+
+
+您可以使用以下可选参数自定义安全描述符配置：
+
+* 安全类型
+* 传播模式
+* 索引位置
+* 访问控制类型
+
+
+存储级别访问防护将忽略任何可选参数的值。有关详细信息，请参见手册页。
+
+.步骤
+. 将具有关联安全描述符的任务添加到安全策略： `vserver security file-directory policy task add -vserver vserver_name -policy-name policy_name -path -ntfs-sd sd_name optional_parameters`
++
+`file-directory` 是 ` access-control` 参数的默认值。在配置文件和目录访问任务时指定访问控制类型是可选的。
+
++
+`vserver security file-directory policy task add -vserver vs1 -policy-name policy1 -path /home/dir1 -securation-type ntfs -ntfs-mode propagate -ntfs-sd2 -index-num 1 -access-control file-directory`
+
+. 验证策略任务配置： `vserver security file-directory policy task show -vserver vserver_name -policy-name policy_name -path`
++
+`vserver security file-directory policy task show`
+
++
+[listing]
+----
+
+Vserver: vs1
+Policy: policy1
+
+Index    File/Folder    Access           Security   NTFS       NTFS Security
+         Path           Control          Type       Mode       Descriptor Name
+-----    --------       -----------      --------   ------     ----------------
+1        /home/dir1     file-directory   ntfs       propagate  sd2
+----
+

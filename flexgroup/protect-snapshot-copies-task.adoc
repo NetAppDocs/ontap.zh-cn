@@ -1,0 +1,80 @@
+---
+permalink: flexgroup/protect-snapshot-copies-task.html 
+sidebar: sidebar 
+keywords: protect, flexgroup, volume, snapshot, copy 
+summary: 您可以创建 Snapshot 策略来自动管理 Snapshot 副本的创建，也可以手动为 FlexGroup 卷创建 Snapshot 副本。只有在 ONTAP 能够为 FlexGroup 卷的每个成分卷成功创建 Snapshot 副本之后，才会为 FlexGroup 卷创建有效的 Snapshot 副本。 
+---
+= 使用 Snapshot 副本保护 FlexGroup 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以创建 Snapshot 策略来自动管理 Snapshot 副本的创建，也可以手动为 FlexGroup 卷创建 Snapshot 副本。只有在 ONTAP 能够为 FlexGroup 卷的每个成分卷成功创建 Snapshot 副本之后，才会为 FlexGroup 卷创建有效的 Snapshot 副本。
+
+如果有多个 FlexGroup 卷与一个 Snapshot 策略关联，则应确保 FlexGroup 卷计划不会重叠。从 ONTAP 9.8 开始， FlexGroup 卷支持的最大 Snapshot 副本数为 1023 。
+
+.步骤
+. 创建 Snapshot 策略或手动创建 Snapshot 副本：
++
+[cols="2*"]
+|===
+| 如果要创建 ... | 输入此命令 ... 
+
+
+ a| 
+快照策略
+ a| 
+`volume snapshot policy create`
+
+[NOTE]
+====
+与 FlexGroup 卷的 Snapshot 策略关联的计划的间隔必须大于 30 分钟。
+
+====
+创建 FlexGroup 卷时， `default` Snapshot 策略将应用于 FlexGroup 卷。
+
+
+
+ a| 
+手动创建 Snapshot 副本
+ a| 
+`volume snapshot create`
+
+[NOTE]
+====
+为 FlexGroup 卷创建 Snapshot 副本后，您将无法修改 Snapshot 副本的属性。如果要修改属性，必须先删除 Snapshot 副本，然后再重新创建该副本。
+
+====
+|===
++
+创建 Snapshot 副本时，客户端对 FlexGroup 卷的访问会暂时暂停。
+
+. 验证是否为 FlexGroup 卷创建了有效的 Snapshot 副本： `volume snapshot show -volume volume_name -fields state`
++
+[listing]
+----
+cluster1::> volume snapshot show -volume fg -fields state
+vserver volume snapshot               state
+------- ------ ---------------------- -----
+fg_vs   fg     hourly.2016-08-23_0505 valid
+----
+. 查看 FlexGroup 卷成分卷的 Snapshot 副本： `volume snapshot show -is-constituent true`
++
+[listing]
+----
+cluster1::> volume snapshot show -is-constituent true
+                                                                 ---Blocks---
+Vserver  Volume   Snapshot                                  Size Total% Used%
+-------- -------- ------------------------------------- -------- ------ -----
+fg_vs    fg__0001
+                  hourly.2016-08-23_0505                    72MB     0%   27%
+         fg__0002
+                  hourly.2016-08-23_0505                    72MB     0%   27%
+         fg__0003
+                  hourly.2016-08-23_0505                    72MB     0%   27%
+...
+         fg__0016
+                  hourly.2016-08-23_0505                    72MB     0%   27%
+----
+

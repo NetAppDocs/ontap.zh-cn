@@ -1,0 +1,61 @@
+---
+permalink: smb-admin/security-descriptors-apply-file-folder-security-concept.html 
+sidebar: sidebar 
+keywords: security, descriptor, contain, access, control, list, file, folder, audit, user, how security descriptors are used to apply file and folder security 
+summary: 安全描述符包含访问控制列表，用于确定用户可以对文件和文件夹执行的操作以及在用户访问文件和文件夹时审核的内容。 
+---
+= 如何使用安全描述符应用文件和文件夹安全性
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安全描述符包含访问控制列表，用于确定用户可以对文件和文件夹执行的操作以及在用户访问文件和文件夹时审核的内容。
+
+* * 权限 *
++
+权限由对象的所有者允许或拒绝，并确定对象（用户，组或计算机对象）可以对指定文件或文件夹执行的操作。
+
+* * 安全描述符 *
++
+安全描述符是指包含安全信息的数据结构，用于定义与文件或文件夹关联的权限。
+
+* * 访问控制列表（ ACL ） *
++
+访问控制列表是安全描述符中包含的列表，其中包含有关用户，组或计算机对象可以对应用了安全描述符的文件或文件夹执行的操作的信息。安全描述符可以包含以下两种类型的 ACL ：
+
++
+** 随机访问控制列表（ DACL ）
+** 系统访问控制列表（ SACL ）
+
+
+* * 随机访问控制列表（ DACL ） *
++
+DACL 包含允许或拒绝对文件或文件夹执行操作的用户，组和计算机对象的 SID 列表。DACL 包含零个或多个访问控制条目（ ACE ）。
+
+* * 系统访问控制列表（ SACL ） *
++
+SACL 包含记录成功或失败审核事件的用户，组和计算机对象的 SID 列表。SACL 包含零个或多个访问控制条目（ ACE ）。
+
+* * 访问控制条目（ ACE ） *
++
+ACE 是 DACL 或 SACL 中的各个条目：
+
++
+** DACL 访问控制条目指定允许或拒绝特定用户，组或计算机对象的访问权限。
+** SACL 访问控制条目指定审核特定用户，组或计算机对象执行的指定操作时要记录的成功或失败事件。
+
+
+* * 权限继承 *
++
+权限继承介绍如何将安全描述符中定义的权限从父对象传播到对象。子对象仅继承可继承的权限。在设置父对象的权限时，您可以使用 "`Apply to `this-folder` ， `sUB-folders` 和 `files`` " 来确定文件夹，子文件夹和文件是否可以继承它们。
+
+
+
+* 相关信息 *
+
+xref:configure-apply-file-security-ntfs-files-folders-task.adoc[使用命令行界面在 NTFS 文件和文件夹上配置和应用文件安全性]
+
+link:../nas-audit/index.html["SMB 和 NFS 审核和安全跟踪"]
+
+xref:configure-apply-audit-policies-ntfs-files-folders-task.adoc[使用命令行界面配置审核策略并将其应用于 NTFS 文件和文件夹]

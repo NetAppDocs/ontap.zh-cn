@@ -1,0 +1,223 @@
+---
+permalink: flexgroup/supported-unsupported-config-concept.html 
+sidebar: sidebar 
+keywords: support, unsupported, configuration, flexgroup, volumes 
+summary: 您应了解 ONTAP 9 中的 FlexGroup 卷支持和不支持的 ONTAP 功能。 
+---
+= 支持和不支持 FlexGroup 卷的配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应了解 ONTAP 9 中的 FlexGroup 卷支持和不支持的 ONTAP 功能。
+
+
+
+== 从 ONTAP 9.10.1 开始支持的功能
+
+* 将 FlexVol 卷转换为 SVM-DR 源中的 FlexGroup 卷
+* 从现有 FlexGroup 卷创建 FlexClone 卷
++
+xref:../volumes/create-flexclone-task.adoc[了解有关创建 FlexClone 卷的更多信息。]
+
+
+
+
+
+== 从 ONTAP 9.9.1 开始支持的功能
+
+* SVM 灾难恢复
+* SnapMirror 扇出关系为 2 个或更多（ A 到 B ， A 到 C ），最多具有 8 个扇出支架。
++
+xref:create-snapmirror-cascade-fanout-reference.adoc[为 FlexGroup 创建 SnapMirror 级联和扇出关系的注意事项]
+
+* SnapMirror 级联关系，最多两个级别（ A 到 B 到 C ）
++
+xref:create-snapmirror-cascade-fanout-reference.adoc[为 FlexGroup 创建 SnapMirror 级联和扇出关系的注意事项]
+
+
+
+
+
+== 从 ONTAP 9.8 开始支持的功能
+
+* 从 FlexGroup SnapMirror 存储或 UDP 目标还原单个文件
++
+** 可以从任何几何结构的 FlexGroup 卷还原到任何几何结构的 FlexGroup 卷
+** 每个还原操作仅支持一个文件
+
+
+* 将从 7- 模式系统过渡的卷转换为 FlexGroup 卷
++
+要将过渡后的卷转换为 FlexGroup 卷，需要使用 diag 模式，并且只能在 NetApp 支持部门的监督下执行。强烈建议您在继续进行转换过程之前联系 NetApp 支持部门。
+
+* NFSv4.2
+* 异步删除文件和目录
+* 文件系统分析（ FSA ）
+* FlexGroup 作为 VMware vSphere 数据存储库
+* 将 " 预转换 " Snapshot 副本还原到 FlexGroup 卷
++
+预转换 Snapshot 副本是指在 FlexVol 卷转换为 FlexGroup 卷之前在该卷上创建的 Snapshot 副本。
+
+* 支持使用 NDMP 进行磁带备份和还原，包括以下功能：
++
+** NDMP 可重新启动备份扩展（ RBE ）和 Snapshot 管理扩展（ ssme ）
+** 环境变量 EXCLUDE 和 MULT_SUBTE_NAMES 支持 FlexGroup 备份
+** 为 FlexGroup 备份引入 ignore_CTIME_Mtime 环境变量
+** 使用 NDMP_SNAP_RECOVER 消息（属于 0x2050 扩展的一部分）在 FlexGroup 中恢复单个文件在升级或还原期间中止转储和还原会话。
+
+
+
+
+
+
+== 从 ONTAP 9.7 开始支持的功能
+
+* FlexClone 卷
+* NFSv4 和 NFSv4.1
+* pNFS
+* 使用 NDMP 进行磁带备份和还原
++
+要在 FlexGroup 卷上支持 NDMP ，您必须了解以下几点：
+
++
+** 扩展类 0x2050 中的 NDMP_SNAP_RECOVER 消息只能用于恢复整个 FlexGroup 卷。
++
+无法恢复 FlexGroup 卷中的单个文件。
+
+** FlexGroup 卷不支持 NDMP 可重新启动备份扩展（ RBE ）。
+** FlexGroup 卷不支持环境变量 EXCLUDE 和 MULT_SUBTE_NAMES 。
+** 支持使用 `ndmpcopy` 命令在 FlexVol 和 FlexGroup 卷之间传输数据。
++
+如果从 Data ONTAP 9.7 还原到早期版本，则不会保留先前传输的增量传输信息，因此，还原后必须执行基线复制。
+
+
+
+* 适用于阵列集成的 VMware vStorage API （ VAAI ）
+* 将 FlexVol 卷转换为 FlexGroup 卷
+* FlexGroup 卷作为 FlexCache 原始卷
+
+
+
+
+== 从 ONTAP 9.6 开始支持的功能
+
+* 持续可用的 SMB 共享
+* MetroCluster 配置
+* 重命名 FlexGroup 卷（`volume rename` 命令）
+* 缩减或减小 FlexGroup 卷的大小（`volume size` command ）
+* 弹性规模估算
+* NetApp 聚合加密（ NAE ）
+* Cloud Volumes ONTAP
+
+
+
+
+== 从 ONTAP 9.5 开始支持的功能
+
+* ODX 副本卸载
+* 存储级别访问防护
+* SMB 共享更改通知的增强功能
++
+如果对设置了 `changenotify` 属性的父目录进行了更改，并且对该父目录中的所有子目录进行了更改，则会发送更改通知。
+
+* FabricPool
+* 配额强制实施
+* qtree 统计信息
+* FlexGroup 卷中文件的自适应 QoS
+* FlexCache （仅缓存； ONTAP 作为 FlexGroup 9.7 中支持的原始服务器）
+
+
+
+
+== 从 ONTAP 9.4 开始支持的功能
+
+* fpolicy
+* 文件审核
+* FlexGroup 卷的吞吐量下限（ QoS 最小值）和自适应 QoS
+* FlexGroup 卷中文件的吞吐量上限（ QoS 最大值）和吞吐量下限（ QoS 最小值）
++
+您可以使用 `volume file modify` 命令管理与文件关联的 QoS 策略组。
+
+* 已放宽 SnapMirror 限制
+* SMB 3.x 多通道
+
+
+
+
+== 从 ONTAP 9.3 开始支持的功能
+
+* 防病毒配置
+* SMB 共享的更改通知
++
+只有在对设置了 `changenotify` 属性的父目录进行更改时，才会发送通知。对于父目录中的子目录更改，不会发送更改通知。
+
+* qtree
+* 吞吐量上限（ QoS 最大值）
+* 展开 SnapMirror 关系中的源 FlexGroup 卷和目标 FlexGroup 卷
+* SnapVault 备份和还原
+* 统一的数据保护关系
+* 自动增长选项和自动缩减选项
+* 载入时会考虑索引节点数
+
+
+
+
+== 从 ONTAP 9.2 开始支持的功能
+
+* 卷加密
+* 聚合实时重复数据删除（跨卷重复数据删除）
+* NetApp 卷加密（ NVE ）
+
+
+
+
+== 从 ONTAP 9.1 开始支持的功能
+
+FlexGroup 卷是在 ONTAP 9.1 中推出的，支持多种 ONTAP 功能。
+
+* SnapMirror 技术
+* Snapshot 副本
+* Active IQ
+* 实时自适应数据压缩
+* 实时重复数据删除
+* 实时数据缩减
+* AFF
+* 配额报告
+* NetApp Snapshot 技术
+* SnapRestore 软件（ FlexGroup 级别）
+* 混合聚合
+* 成分卷或成员卷移动
+* 后处理重复数据删除
+* NetApp RAID-TEC 技术
+* 每个聚合的一致点
+* 与同一 SVM 中的 FlexVol 卷共享 FlexGroup
+
+
+
+
+== ONTAP 9 中不支持的配置
+
+[cols="3*"]
+|===
+| 不支持的协议 | 不支持的数据保护功能 | 其他不受支持的 ONTAP 功能 
+
+
+ a| 
+* pNFS （ ONTAP 9.0 到 9.6 ）
+* SMB 1.0
+* SMB 透明故障转移（ ONTAP 9.0 到 9.5 ）
+* SAN
+
+ a| 
+* SnapLock 卷
+* SMTape
+
+ a| 
+远程卷影复制服务（ VSS ）
+
+|===
+* 相关信息 *
+
+https://docs.netapp.com/ontap-9/index.jsp["ONTAP 9 文档中心"]

@@ -1,0 +1,75 @@
+---
+permalink: nfs-config/test-access-client-systems-task.html 
+sidebar: sidebar 
+keywords: testing, nfs, access, client, systems 
+summary: 在验证对新存储对象的 NFS 访问之后，您应登录到 NFS 管理主机并从 SVM 读取数据并向 SVM 写入数据来测试配置。然后，您应在客户端系统上以非 root 用户身份重复此过程。 
+---
+= 测试客户端系统的 NFS 访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在验证对新存储对象的 NFS 访问之后，您应登录到 NFS 管理主机并从 SVM 读取数据并向 SVM 写入数据来测试配置。然后，您应在客户端系统上以非 root 用户身份重复此过程。
+
+.您需要什么？ #8217 ；将需要什么
+* 客户端系统必须具有先前指定的导出规则允许的 IP 地址。
+* 您必须具有 root 用户的登录信息。
+
+
+.步骤
+. 在集群上，验证托管新卷的 LIF 的 IP 地址：
++
+`network interface show – vserver _svm_name_`
+
+. 以 root 用户身份登录到管理主机客户端系统。
+. 将目录更改为挂载文件夹：
++
+`cd /mnt/`
+
+. 使用 SVM 的 IP 地址创建并挂载新文件夹：
++
+.. 创建新文件夹： + `mkdir /mnt/_folder_`
+.. 将新卷挂载到此新目录： + `mount -t nfs -o hard _ipAddress_ ： /_volume_name_ /mnt/_folder_`
+.. 将目录更改为新文件夹： + `cd _folder_`
++
+以下命令将创建一个名为 test1 的文件夹，并在 test1 挂载文件夹的 192.0.2.130 IP 地址处挂载 vol1 卷，然后更改为新的 test1 目录：
+
++
+[listing]
+----
+host# mkdir /mnt/test1
+host# mount -t nfs -o hard 192.0.2.130:/vol1 /mnt/test1
+host# cd /mnt/test1
+----
+
+
+. 创建一个新文件，验证该文件是否存在并向其写入文本：
++
+.. 创建测试文件： + `touch _filename_`
+.. 验证文件是否存在： + `ls -l _filename_`
+.. 输入： + `cat >_filename_`
++
+键入一些文本，然后按 Ctrl+D 将文本写入测试文件。
+
+.. 显示测试文件的内容。+ `cat _filename_`
+.. 删除测试文件： + `rm _filename_`
+.. 返回父目录： + `cd ..`
++
+[listing]
+----
+host# touch myfile1
+host# ls -l myfile1
+-rw-r--r-- 1 root root 0 Sep 18 15:58 myfile1
+host# cat >myfile1
+This text inside the first file
+host# cat myfile1
+This text inside the first file
+host# rm -r myfile1
+host# cd ..
+----
+
+
+. 以 root 用户身份，在挂载的卷上设置所需的任何 UNIX 所有权和权限。
+. 在导出规则中标识的 UNIX 客户端系统上，以现在有权访问新卷的授权用户之一身份登录，然后重复步骤 3 至 5 中的过程，以验证是否可以挂载卷并创建文件。
+

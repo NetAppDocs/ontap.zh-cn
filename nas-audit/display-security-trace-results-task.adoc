@@ -1,0 +1,150 @@
+---
+permalink: nas-audit/display-security-trace-results-task.html 
+sidebar: sidebar 
+keywords: display, security trace results 
+summary: 您可以显示为与安全跟踪筛选器匹配的文件操作生成的安全跟踪结果。您可以使用结果验证文件访问安全配置，或者对 SMB 和 NFS 文件访问问题进行故障排除。 
+---
+= 显示安全跟踪结果
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示为与安全跟踪筛选器匹配的文件操作生成的安全跟踪结果。您可以使用结果验证文件访问安全配置，或者对 SMB 和 NFS 文件访问问题进行故障排除。
+
+必须存在已启用的安全跟踪筛选器，并且必须已从与安全跟踪筛选器匹配的 SMB 或 NFS 客户端执行操作，才能生成安全跟踪结果。
+
+您可以显示所有安全跟踪结果的摘要，也可以通过指定可选参数来自定义输出中显示的信息。如果安全跟踪结果包含大量记录，则此操作可能会很有用。
+
+如果未指定任何可选参数，则会显示以下内容：
+
+* Storage Virtual Machine （ SVM ）名称
+* Node name
+* 安全跟踪索引编号
+* 安全风格
+* 路径
+* reason
+* 用户名
++
+显示的用户名取决于跟踪筛选器的配置方式：
+
++
+[cols="2*"]
+|===
+| 如果筛选器已配置 ... | 那么 ... 
+
+
+ a| 
+使用 UNIX 用户名
+ a| 
+安全跟踪结果将显示 UNIX 用户名。
+
+
+
+ a| 
+使用 Windows 用户名
+ a| 
+安全跟踪结果将显示 Windows 用户名。
+
+
+
+ a| 
+没有用户名
+ a| 
+安全跟踪结果将显示 Windows 用户名。
+
+|===
+
+
+您可以使用可选参数自定义输出。可用于缩小命令输出中返回的结果范围的一些可选参数包括：
+
+[cols="2*"]
+|===
+| 可选参数 | Description 
+
+
+ a| 
+` 字段` `field_name` ， ...
+ a| 
+显示所选字段的输出。您可以单独使用此参数，也可以与其他可选参数结合使用。
+
+
+
+ a| 
+` 实例`
+ a| 
+显示有关安全跟踪事件的详细信息。将此参数与其他可选参数结合使用可显示有关特定筛选器结果的详细信息。
+
+
+
+ a| 
+` 节点` `node_name`
+ a| 
+仅显示有关指定节点上的事件的信息。
+
+
+
+ a| 
+` -vserver` `vserver_name`
+ a| 
+仅显示有关指定 SVM 上的事件的信息。
+
+
+
+ a| 
+` 索引` `整型`
+ a| 
+显示有关因与指定索引编号对应的筛选器而发生的事件的信息。
+
+
+
+ a| 
+` 客户端 IP` `IP_address`
+ a| 
+显示有关从指定客户端 IP 地址访问文件而发生的事件的信息。
+
+
+
+ a| 
+` 路径` `路径`
+ a| 
+显示有关通过文件访问指定路径而发生的事件的信息。
+
+
+
+ a| 
+` 用户名` `user_name`
+ a| 
+显示有关指定 Windows 或 UNIX 用户访问文件时发生的事件的信息。
+
+
+
+ a| 
+` 安全模式` `security_style`
+ a| 
+显示有关使用指定安全模式的文件系统上发生的事件的信息。
+
+|===
+有关可与命令结合使用的其他可选参数的信息，请参见手册页。
+
+.步骤
+. 使用 `vserver security trace trace-result show` 命令显示安全跟踪筛选器结果。
++
+`vserver security trace trace-result show -user-name domain\user`
+
++
+[listing]
+----
+Vserver: vs1
+
+     Node     Index   Filter Details          Reason
+     -------- ------- ---------------------   -----------------------------
+     node1    3       User:domain\user        Access denied by explicit ACE
+                      Security Style:mixed
+                      Path:/dir1/dir2/
+
+     node1    5       User:domain\user        Access denied by explicit ACE
+                      Security Style:unix
+                      Path:/dir1/
+----
+

@@ -1,0 +1,59 @@
+---
+permalink: encryption-at-rest/assign-authentication-keys-seds-onboard-task.html 
+sidebar: sidebar 
+keywords: assign, data, authentication, key, fips, drive, sed, onboard, key, management 
+summary: 您可以使用 storage encryption disk modify 命令将数据身份验证密钥分配给 FIPS 驱动器或 SED 。集群节点使用此密钥访问驱动器上的数据。 
+---
+= 将数据身份验证密钥分配给 FIPS 驱动器或 SED （板载密钥管理）
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `storage encryption disk modify` 命令将数据身份验证密钥分配给 FIPS 驱动器或 SED 。集群节点使用此密钥访问驱动器上的数据。
+
+您必须是集群管理员才能执行此任务。
+
+只有当自加密驱动器的身份验证密钥 ID 设置为非默认值时，才会保护其免遭未经授权的访问。密钥 ID 为 0x0 的制造商安全 ID （ MSID ）是 SAS 驱动器的标准默认值。对于 NVMe 驱动器，标准默认值为空密钥，表示为空密钥 ID 。分配自加密驱动器的密钥 ID 时，系统会将其身份验证密钥 ID 更改为非默认值。
+
+.步骤
+. 将数据身份验证密钥分配给 FIPS 驱动器或 SED ：
++
+`storage encryption disk modify -disk disk_ID -data-key-id key_ID`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+[NOTE]
+====
+您可以使用 `security key-manager query -key-type NSE-AK` 命令查看密钥 ID 。
+
+====
++
+[listing]
+----
+cluster1::> storage encryption disk modify -disk 0.10.* -data-key-id F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+
+Info: Starting modify on 14 disks.
+      View the status of the operation by using the
+      storage encryption disk show-status command.
+----
+. 验证是否已分配身份验证密钥：
++
+`s存储加密磁盘 show`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[listing]
+----
+cluster1::> storage encryption disk show
+Disk    Mode Data Key ID
+-----   ---- ----------------------------------------------------------------
+0.0.0   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+0.0.1   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+[...]
+----
+

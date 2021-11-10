@@ -1,0 +1,100 @@
+---
+permalink: encryption-at-rest/enable-aggregate-level-encryption-nve-license-task.html 
+sidebar: sidebar 
+keywords: enabling, aggregate-level, encryption, nve, license 
+summary: 从 ONTAP 9.7 开始，如果您拥有 NVE 许可证以及板载或外部密钥管理，则新创建的聚合和卷会默认加密。从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要加密的卷的所属聚合分配密钥。默认情况下，您在聚合中创建的卷会进行加密。对卷进行加密时，您可以覆盖默认值。 
+---
+= 使用 NVE 许可证启用聚合级别加密
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.7 开始，如果您拥有 NVE 许可证以及板载或外部密钥管理，则新创建的聚合和卷会默认加密。从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要加密的卷的所属聚合分配密钥。默认情况下，您在聚合中创建的卷会进行加密。对卷进行加密时，您可以覆盖默认值。
+
+您必须是集群管理员才能执行此任务。
+
+如果计划执行实时或后台聚合级重复数据删除，则必须使用聚合级加密。否则， NVE 不支持聚合级重复数据删除。
+
+启用聚合级别加密的聚合称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
+
+.步骤
+. 启用或禁用聚合级别加密：
++
+|===
+| 至 ... | 使用此命令 ... 
+
+
+ a| 
+使用 ONTAP 9.7 或更高版本创建 NAE 聚合
+ a| 
+`storage aggregate create -aggregate aggregate_name -node node_name`
+
+
+
+ a| 
+使用 ONTAP 9.6 创建 NAE 聚合
+ a| 
+`storage aggregate create -aggregate aggregate_name -node node_name -encrypt-wing-aggr-key true`
+
+
+
+ a| 
+将非 NAE 聚合转换为 NAE 聚合
+ a| 
+`storage aggregate modify -aggregate aggregate_name -node node_name -encrypt-wing-aggr-key true`
+
+
+
+ a| 
+将 NAE 聚合转换为非 NAE 聚合
+ a| 
+`storage aggregate modify -aggregate aggregate_name -node node_name -encrypt-wing-aggr-key false`
+
+|===
++
+有关完整的命令语法，请参见手册页。
+
++
+以下命令会对 `aggr1` 启用聚合级别加密：
+
++
+** ONTAP 9.7 或更高版本
++
+[listing]
+----
+cluster1::> storage aggregate create -aggregate aggr1
+----
+** ONTAP 9.6 或更早版本：
++
+[listing]
+----
+cluster1::> storage aggregate create -aggregate aggr1 -encrypt-with-aggr-key true
+----
+
+
+. 验证是否已为聚合启用加密：
++
+`storage aggregate show -fields encrypt-with aggr-key`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下命令验证是否已为 `aggr1` 启用加密：
+
++
+[listing]
+----
+cluster1::> storage aggregate show -fields encrypt-with-aggr-key
+aggregate            encrypt-aggr-key
+-------------------- ----------------
+aggr0_vsim4          false
+aggr1                true
+2 entries were displayed.
+----
+
+
+运行 `volume create` 命令创建加密卷。
+
+如果您使用 KMIP 服务器存储节点的加密密钥，则在对卷进行加密时， ONTAP 会自动 "`推送` " 加密密钥到服务器。

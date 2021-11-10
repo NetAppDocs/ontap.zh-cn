@@ -1,0 +1,99 @@
+---
+permalink: system-admin/create-motd-task.html 
+sidebar: sidebar 
+keywords: create, motd, cli, user, clustershell, ssh, session, cluster, access, message, day 
+summary: 您可以创建每日消息（ MOTD ），以便向经过身份验证的命令行界面用户传达信息。用户通过身份验证后，在显示 clustershell 提示符之前， MOTD 将显示在控制台会话（仅限集群访问）或 SSH 会话（适用于集群或 SVM 访问）中。 
+---
+= 创建 MOTD ：
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以创建每日消息（ MOTD ），以便向经过身份验证的命令行界面用户传达信息。用户通过身份验证后，在显示 clustershell 提示符之前， MOTD 将显示在控制台会话（仅限集群访问）或 SSH 会话（适用于集群或 SVM 访问）中。
+
+.步骤
+. 使用 `ssecurity login motd modify` 命令为集群或 SVM 创建 MOTD ：
++
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+指定单行消息
+ a| 
+使用 ` 消息` "[.code]``text`` 参数指定文本。
+
+
+
+ a| 
+包括换行符（也称为行尾）
+ a| 
+使用不带 ` -message` 或 ` -uri` 参数的命令启动交互模式以编辑 MOTD 。
+
+
+
+ a| 
+从某个位置上传要用于 MOTD 的内容
+ a| 
+使用 ` -uri` 参数指定内容的 FTP 或 HTTP 位置。
+
+|===
++
+MOTD 的最大大小为 2 ， 048 字节，包括换行符。
+
++
+`ssecurity login motd modify` 手册页介绍了可用于使 MOTD 显示动态生成的内容的转义序列。
+
++
+使用 ` -uri` 参数创建的 MOTD 为静态 MOTD 。它不会自动刷新以反映源内容的后续更改。
+
++
+默认情况下，为集群创建的 MOTD 也会显示在所有 SVM 登录中，此外，您还可以为给定 SVM 单独创建 SVM 级别的 MOTD 。如果将 SVM 的 ` is-cluster-message-enabled` 参数设置为 `false` ，则会阻止为该 SVM 显示集群级别的 MOTD 。
+
+. 使用 `ssecurity login motd show` 命令显示 MOTD ，以验证是否已创建 MOTD 。
++
+使用空字符串（` "` ）指定 ` 消息` 参数可显示未配置或无内容的 MOTD 。
+
++
+请参见 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr-980/security%5F%5Flogin%5F%5Fmotd%5F%5Fmodify.html["security login motd modify"] 命令手册页，用于列出可用于使 MOTD 显示动态生成的内容的参数。请务必查看特定于您的 ONTAP 版本的手册页。
+
+
+
+以下示例使用非交互模式为 "`cluster1` " 集群创建 MOTD ：
+
+[listing]
+----
+cluster1::> security login motd modify -message "Greetings!"
+----
+以下示例使用交互模式为 `svm1` SVM 创建 MOTD ，该 MOTD 使用转义序列显示动态生成的内容：
+
+[listing]
+----
+cluster1::> security login motd modify -vserver svm1
+
+Enter the message of the day for Vserver "svm1".
+Max size: 2048. Enter a blank line to terminate input. Press Ctrl-C to abort.
+0        1         2         3         4         5         6         7         8
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+Welcome to the \n SVM.  Your user ID is '\N'. Your last successful login was \L.
+----
+以下示例显示了已创建的 MOTD ：
+
+[listing]
+----
+cluster1::> security login motd show
+Vserver: cluster1
+Is the Cluster MOTD Displayed?: true
+Message
+-----------------------------------------------------------------------------
+Greetings!
+
+Vserver: svm1
+Is the Cluster MOTD Displayed?: true
+Message
+-----------------------------------------------------------------------------
+Welcome to the \n SVM.  Your user ID is '\N'. Your last successful login was \L.
+
+2 entries were displayed.
+----

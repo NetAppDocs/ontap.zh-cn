@@ -1,0 +1,78 @@
+---
+permalink: smb-hyper-v-sql/verify-smb-server-options-task.html 
+sidebar: sidebar 
+keywords: verify, cifs, server, option, configured, hyper, v, sql, server, smb 
+summary: 您必须验证是否已根据 Hyper-V 和 SQL Server 通过 SMB 无中断运行的要求启用和配置所需的 CIFS 服务器选项。 
+---
+= 验证是否已配置所需的 CIFS 服务器选项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须验证是否已根据 Hyper-V 和 SQL Server 通过 SMB 无中断运行的要求启用和配置所需的 CIFS 服务器选项。
+
+.关于此任务
+* 必须启用 SMB 2.x 和 SMB 3.0 。
+* 要使用性能增强型副本卸载，必须启用 ODX 副本卸载。
+* 如果基于 SMB 的 Hyper-V 解决方案使用启用了 VSS 的远程备份服务（仅限 Hyper-V ），则必须启用 VSS 卷影复制服务。
+
+
+.步骤
+. 验证是否已在 Storage Virtual Machine （ SVM ）上启用所需的 CIFS 服务器选项：
++
+.. 将权限级别设置为高级：
++
+` * 设置 -privilege advanced*`
+
+.. 输入以下命令：
++
+` * vserver cifs options show -vserver _vserver_name_*`
+
++
+以下选项应设置为 `true` ：
+
++
+*** ` -smb2-enabled`
+*** ` -SMB3-enabled`
+*** 已启用 ` -copy-of负载`
+*** ` -ShadowCopy-enabled` （仅限 Hyper-V ）
+
+
+
+
+. 如果任何选项未设置为 `true` ，请执行以下操作：
++
+.. 使用 `vserver cifs options modify` 命令将其设置为 `true` 。
+.. 使用 `vserver cifs options show` 命令验证选项是否设置为 `true` 。
+
+
+. 返回到管理权限级别：
++
+` * 设置 -privilege admin*`
+
+
+
+以下命令验证是否已在 SVM vs1 上启用基于 SMB 的 Hyper-V 配置所需的选项。在此示例中，必须启用 ODX 副本卸载才能满足选项要求。
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options show -vserver vs1 -fields smb2-enabled,smb3-enabled,copy-offload-enabled,shadowcopy-enabled
+vserver smb2-enabled smb3-enabled copy-offload-enabled shadowcopy-enabled
+------- ------------ ------------ -------------------- ------------------
+vs1     true         true         false                true
+
+cluster-1::*> vserver cifs options modify -vserver vs1 -copy-offload-enabled true
+
+cluster-1::*> vserver cifs options show -vserver vs1 -fields copy-offload-enabled
+vserver  copy-offload-enabled
+-------- --------------------
+vs1      true
+
+cluster1::*> set -privilege admin
+----

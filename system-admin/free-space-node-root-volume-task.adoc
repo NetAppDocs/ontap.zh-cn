@@ -1,0 +1,76 @@
+---
+permalink: system-admin/free-space-node-root-volume-task.html 
+sidebar: sidebar 
+keywords: free, space, node, root, volume, full, delete, file, core, dump 
+summary: 当节点的根卷已满或接近已满时，将显示一条警告消息。当节点的根卷已满时，节点无法正常运行。您可以通过删除核心转储文件，数据包跟踪文件和根卷 Snapshot 副本来释放节点根卷上的空间。 
+---
+= 释放节点根卷上的空间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当节点的根卷已满或接近已满时，将显示一条警告消息。当节点的根卷已满时，节点无法正常运行。您可以通过删除核心转储文件，数据包跟踪文件和根卷 Snapshot 副本来释放节点根卷上的空间。
+
+.步骤
+. 使用 `ssystem node coredump show` 命令显示节点的核心转储文件及其名称。
+. 使用 `ssystem node coredump delete` 命令从节点中删除不需要的核心转储文件。
+. 访问 nodeshell ：
++
+` * 系统节点 run -node _nodename_*`
+
++
+` nodename_` 是要释放其根卷空间的节点的名称。
+
+. 从 nodeshell 切换到 nodeshell 高级权限级别：
++
+` * priv set advanced*`
+
+. 通过 nodeshell 显示和删除节点的数据包跟踪文件：
++
+.. 显示节点根卷中的所有文件：
++
+` * 1 /etc/etc*`
+
+.. 如果节点根卷中存在任何数据包跟踪文件（` * 。 TRC` ），请分别删除它们：
++
+` * rm /etc/log/package_traces/_file_name.TRC_*`
+
+
+
+. 通过 nodeshell 确定并删除节点的根卷 Snapshot 副本：
++
+.. 确定根卷名称：
++
+` * 卷状态 *`
+
++
+`vol status` 命令输出的 "`Options` " 列中的 "` root `" 一词表示根卷。
+
++
+在以下示例中，根卷为 `vol0` ：
+
++
+[listing]
+----
+node1*> vol status
+
+         Volume State           Status            Options
+           vol0 online          raid_dp, flex     root, nvfail=on
+                                64-bit
+----
+.. 显示根卷 Snapshot 副本：
++
+` * 快照列表 root_vol_name*`
+
+.. 删除不需要的根卷 Snapshot 副本：
++
+` * snap delete root_vol_namesnapshot_name*`
+
+
+
+. 退出 nodeshell 并返回到 clustershell ：
++
+` * 退出 *`
+
+

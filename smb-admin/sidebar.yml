@@ -1,0 +1,785 @@
+---
+section: smb-admin
+title: 使用命令行界面管理 SMB
+entries:
+- title: 概述
+  url: "/smb-admin/index.html"
+- title: SMB 服务器支持
+  entries:
+  - title: 概述
+    url: "/smb-admin/server-support-concept.html"
+  - title: 支持的 SMB 版本和功能
+    url: "/smb-admin/supported-versions-functionality-concept.html"
+  - title: 不支持的 Windows 功能
+    url: "/smb-admin/unsupported-windows-features-reference.html"
+  - title: 在 SVM 上配置 NIS 或 LDAP 名称服务
+    url: "/smb-admin/configure-nis-ldap-name-services-svm-task.html"
+  - title: ONTAP 名称服务交换机配置的工作原理
+    url: "/smb-admin/name-service-switch-config-concept.html"
+- title: 管理 SMB 服务器
+  entries:
+  - title: 修改 SMB 服务器
+    url: "/smb-admin/modify-servers-task.html"
+  - title: 使用选项自定义 CIFS 服务器
+    entries:
+    - title: 可用的 SMB 服务器选项
+      url: "/smb-admin/server-options-reference.html"
+    - title: 配置 CIFS 服务器选项
+      url: "/smb-admin/configure-server-options-task.html"
+    - title: 配置向 CIFS 用户授予 UNIX 组权限
+      url: "/smb-admin/configure-grant-unix-group-permission-users-task.html"
+    - title: 配置匿名用户的访问限制
+      url: "/smb-admin/configure-access-restrictions-anonymous-users-task.html"
+    - title: 管理如何为 UNIX 安全模式数据的 SMB 客户端提供文件安全性
+      entries:
+      - title: 概述
+        url: "/smb-admin/manage-file-security-clients-unix-style-concept.html"
+      - title: 启用或禁用为 UNIX 安全模式数据提供 NTFS ACL
+        url: "/smb-admin/enable-disable-ntfs-acls-unix-security-task.html"
+      - title: ONTAP 如何保留 UNIX 权限
+        url: "/smb-admin/how-ontap-preserves-unix-permissions-concept.html"
+      - title: 使用 Windows 安全性选项卡管理 UNIX 权限
+        url: "/smb-admin/unix-permissions-windows-security-tab-concept.html"
+  - title: 管理 SMB 服务器安全设置
+    entries:
+    - title: ONTAP 如何处理 SMB 客户端身份验证
+      url: "/smb-admin/authentication-access-security-concept.html"
+    - title: SVM 灾难恢复配置中的 SMB 服务器安全设置准则
+      url: "/smb-admin/server-security-settings-svm-disaster-recovery-concept.html"
+    - title: 显示有关 CIFS 服务器安全设置的信息
+      url: "/smb-admin/display-server-security-settings-task.html"
+    - title: 为本地 SMB 用户启用或禁用所需的密码复杂度
+      url: "/smb-admin/enable-disable-password-complexity-local-users-task.html"
+    - title: 修改 CIFS 服务器 Kerberos 安全设置
+      url: "/smb-admin/modify-server-kerberos-security-settings-task.html"
+    - title: 设置 CIFS 服务器的最低身份验证安全级别
+      url: "/smb-admin/set-server-minimum-authentication-security-level-task.html"
+    - title: 使用 AES 加密为基于 Kerberos 的通信配置强大的安全性
+      url: "/smb-admin/configure-kerberos-aes-encryption-concept.html"
+    - title: 为基于 Kerberos 的通信启用或禁用 AES 加密
+      url: "/smb-admin/enable-disable-aes-encryption-kerberos-task.html"
+    - title: 使用 SMB 签名增强网络安全性
+      entries:
+      - title: 概述
+        url: "/smb-admin/signing-enhance-network-security-concept.html"
+      - title: SMB 签名策略如何影响与 CIFS 服务器的通信
+        url: "/smb-admin/client-signing-policies-communication-concept.html"
+      - title: SMB 签名的性能影响
+        url: "/smb-admin/performance-impact-signing-concept.html"
+      - title: 配置 SMB 签名的建议
+        url: "/smb-admin/recommendations-configure-signing-concept.html"
+      - title: 配置多个数据 LIF 时的 SMB 签名准则
+        url: "/smb-admin/signing-multiple-data-lifs-concept.html"
+      - title: 为传入的 SMB 流量启用或禁用所需的 SMB 签名
+        url: "/smb-admin/enable-disable-required-signing-incoming-traffic-task.html"
+      - title: 确定 SMB 会话是否已签名
+        url: "/smb-admin/determine-sessions-signed-task.html"
+      - title: 监控 SMB 签名会话统计信息
+        url: "/smb-admin/monitor-signed-session-statistics-task.html"
+    - title: 在 SMB 服务器上配置通过 SMB 传输数据所需的 SMB 加密
+      entries:
+      - title: 概述
+        url: "/smb-admin/configure-required-encryption-concept.html"
+      - title: SMB 加密对性能的影响
+        url: "/smb-admin/performance-impact-encryption-concept.html"
+      - title: 为传入的 SMB 流量启用或禁用所需的 SMB 加密
+        url: "/smb-admin/enable-disable-encryption-incoming-traffic-task.html"
+      - title: 确定客户端是否使用加密的 SMB 会话进行连接
+        url: "/smb-admin/determine-clients-connected-encrypted-task.html"
+      - title: 监控 SMB 加密统计信息
+        url: "/smb-admin/monitor-encryption-statistics-task.html"
+    - title: 安全 LDAP 会话通信
+      entries:
+      - title: LDAP 签名和签章概念
+        url: "/smb-admin/ldap-signing-sealing-concepts-concept.html"
+      - title: 在 CIFS 服务器上启用 LDAP 签名和签章
+        url: "/smb-admin/enable-ldap-signing-sealing-task.html"
+      - title: 配置基于 TLS 的 LDAP
+        entries:
+        - title: 导出自签名根 CA 证书的副本
+          url: "/smb-admin/export-copy-self-signed-root-ca-certificate-task.html"
+        - title: 在 SVM 上安装自签名根 CA 证书
+          url: "/smb-admin/install-self-signed-root-ca-certificate-svm-task.html"
+        - title: 在 CIFS 服务器上启用基于 TLS 的 LDAP
+          url: "/smb-admin/enable-ldap-over-ssl-tls-task.html"
+  - title: 为 SMB 多通道配置性能和冗余
+    url: "/smb-admin/configure-multichannel-performance-task.html"
+  - title: 在 SMB 服务器上配置默认 Windows 用户到 UNIX 用户映射
+    entries:
+    - title: 配置默认 UNIX 用户
+      url: "/smb-admin/configure-default-unix-user-task.html"
+    - title: 配置子系统 UNIX 用户
+      url: "/smb-admin/configure-guest-unix-user-task.html"
+    - title: 将管理员组映射到 root
+      url: "/smb-admin/map-administrators-group-root-task.html"
+  - title: 显示有关通过 SMB 会话连接的用户类型的信息
+    url: "/smb-admin/display-types-users-connected-task.html"
+  - title: 用于限制 Windows 客户端资源过度消耗的命令选项
+    url: "/smb-admin/command-options-limit-client-resource-concept.html"
+  - title: 使用传统机会锁和租用机会锁提高客户端性能
+    entries:
+    - title: 概述
+      url: "/smb-admin/client-performance-traditional-lease-oplocks-concept.html"
+    - title: 使用机会锁时的写入缓存数据丢失注意事项
+      url: "/smb-admin/write-cache-data-loss-oplocks-concept.html"
+    - title: 创建 SMB 共享时启用或禁用机会锁
+      url: "/smb-admin/enable-disable-oplocks-when-creating-shares-task.html"
+    - title: 用于在卷和 qtree 上启用或禁用机会锁的命令
+      url: "/smb-admin/commands-oplocks-volumes-qtrees-reference.html"
+    - title: 在现有 SMB 共享上启用或禁用机会锁
+      url: "/smb-admin/enable-disable-oplocks-existing-shares-task.html"
+    - title: 监控机会锁状态
+      url: "/smb-admin/monitor-oplock-status-task.html"
+  - title: 将组策略对象应用于 SMB 服务器
+    entries:
+    - title: 概述
+      url: "/smb-admin/applying-group-policy-objects-concept.html"
+    - title: 支持的 GPO
+      url: "/smb-admin/supported-gpos-concept.html"
+    - title: 对 CIFS 服务器使用 GPO 的要求
+      url: "/smb-admin/requirements-gpos-concept.html"
+    - title: 在 SMB 服务器上启用或禁用 GPO 支持
+      url: "/smb-admin/enable-disable-gpo-support-task.html"
+    - title: 如何在 SMB 服务器上更新 GPO
+      entries:
+      - title: 概述
+        url: "/smb-admin/gpos-updated-server-concept.html"
+      - title: GPO 更新失败时应执行的操作
+        url: "/smb-admin/gpo-updates-failing-reference.html"
+    - title: 手动更新 CIFS 服务器上的 GPO 设置
+      url: "/smb-admin/manual-update-gpo-settings-task.html"
+    - title: 显示有关 GPO 配置的信息
+      url: "/smb-admin/display-gpo-config-task.html"
+    - title: 显示有关受限组 GPO 的详细信息
+      url: "/smb-admin/display-restricted-group-gpos-task.html"
+    - title: 显示有关中央访问策略的信息
+      url: "/smb-admin/display-central-access-policies-task.html"
+    - title: 显示有关中央访问策略规则的信息
+      url: "/smb-admin/display-central-access-policy-rules-task.html"
+  - title: 用于管理 CIFS 服务器计算机帐户密码的命令
+    url: "/smb-admin/commands-manage-computer-account-passwords-concept.html"
+  - title: 管理域控制器连接
+    entries:
+    - title: 显示有关已发现服务器的信息
+      url: "/smb-admin/display-discovered-servers-task.html"
+    - title: 重置和重新发现服务器
+      url: "/smb-admin/reset-rediscovering-servers-task.html"
+    - title: 管理域控制器发现
+      url: "/smb-admin/control-domain-controller-discovery-task.html"
+    - title: 添加首选域控制器
+      url: "/smb-admin/add-preferred-domain-controllers-task.html"
+    - title: 用于管理首选域控制器的命令
+      url: "/smb-admin/commands-manage-preferred-domain-controllers-reference.html"
+    - title: 启用与域控制器的 SMB2 连接
+      url: "/smb-admin/enable-smb2-connections-domain-controllers-task.html"
+    - title: 启用与域控制器的加密连接
+      url: "/smb-admin/enable-encrypted-connections-domain-controllers-task.html"
+  - title: 使用空会话访问非 Kerberos 环境中的存储
+    entries:
+    - title: 概述
+      url: "/smb-admin/null-session-access-non-kerberos-environments-task.html"
+    - title: 存储系统如何提供空会话访问
+      url: "/smb-admin/storage-system-provides-null-session-access-concept.html"
+    - title: 授予空用户对文件系统共享的访问权限
+      url: "/smb-admin/grant-null-users-access-file-system-shares-task.html"
+  - title: 管理 SMB 服务器的 NetBIOS 别名
+    entries:
+    - title: 概述
+      url: "/smb-admin/manage-netbios-aliases-concept.html"
+    - title: 向 CIFS 服务器添加 NetBIOS 别名列表
+      url: "/smb-admin/add-list-netbios-aliases-server-task.html"
+    - title: 从 NetBIOS 别名列表中删除 NetBIOS 别名
+      url: "/smb-admin/remove-netbios-aliases-from-list-task.html"
+    - title: 显示 CIFS 服务器上的 NetBIOS 别名列表
+      url: "/smb-admin/display-list-netbios-aliases-task.html"
+    - title: 确定 SMB 客户端是否使用 NetBIOS 别名进行连接
+      url: "/smb-admin/determine-clients-connected-netbios-aliases-task.html"
+  - title: 管理其他 SMB 服务器任务
+    entries:
+    - title: 停止或启动 CIFS 服务器
+      url: "/smb-admin/stop-start-server-task.html"
+    - title: 将 CIFS 服务器移动到不同的 OU
+      url: "/smb-admin/move-servers-different-ous-task.html"
+    - title: 移动 SMB 服务器之前，请修改 SVM 上的动态 DNS 域
+      url: "/smb-admin/modify-dynamic-dns-domain-before-moving-server-task.html"
+    - title: 将 SVM 加入 Active Directory 域
+      url: "/smb-admin/join-svm-active-directory-domain-task.html"
+    - title: 显示有关基于 TCP 连接的 NetBIOS 的信息
+      url: "/smb-admin/display-netbios-over-tcp-connections-task.html"
+    - title: 用于管理 CIFS 服务器的命令
+      url: "/smb-admin/commands-manage-servers-reference.html"
+    - title: 启用 NetBIOS 名称服务
+      url: "/smb-admin/enable-netbios-name-service-task.html"
+  - title: 对 SMB 访问和 SMB 服务使用 IPv6
+    entries:
+    - title: 使用 IPv6 的要求
+      url: "/smb-admin/requirements-ipv6-concept.html"
+    - title: 支持使用 SMB 访问和 CIFS 服务的 IPv6
+      url: "/smb-admin/support-ipv6-concept.html"
+    - title: CIFS 服务器如何使用 IPv6 连接到外部服务器
+      url: "/smb-admin/ipv6-connect-external-servers-concept.html"
+    - title: 为 SMB 启用 IPv6 （仅限集群管理员）
+      url: "/smb-admin/enable-ipv6-task.html"
+    - title: 为 SMB 禁用 IPv6
+      url: "/smb-admin/disable-ipv6-smb-concept.html"
+    - title: 监控和显示有关 IPv6 SMB 会话的信息
+      url: "/smb-admin/monitor-display-ipv6-sessions-task.html"
+- title: 使用 SMB 设置文件访问
+  entries:
+  - title: 配置安全模式
+    entries:
+    - title: 安全模式如何影响数据访问
+      entries:
+      - title: 安全模式及其影响是什么
+        url: "/smb-admin/security-styles-their-effects-concept.html"
+      - title: 设置安全模式的位置和时间
+        url: "/smb-admin/set-security-styles-concept.html"
+      - title: 确定要在 SVM 上使用的安全模式
+        url: "/smb-admin/decide-security-style-svm-flexvol-concept.html"
+      - title: 安全模式继承的工作原理
+        url: "/smb-admin/security-style-inheritance-concept.html"
+      - title: ONTAP 如何保留 UNIX 权限
+        url: "/smb-admin/how-ontap-preserves-unix-permissions-concept.html"
+      - title: 使用 Windows 安全性选项卡管理 UNIX 权限
+        url: "/smb-admin/unix-permissions-windows-security-tab-concept.html"
+    - title: 在 SVM 根卷上配置安全模式
+      url: "/smb-admin/configure-security-styles-svm-root-volumes-task.html"
+    - title: 在 FlexVol 卷上配置安全模式
+      url: "/smb-admin/configure-security-styles-task.html"
+    - title: 在 qtree 上配置安全模式
+      url: "/smb-admin/configure-security-styles-qtrees-task.html"
+  - title: 在 NAS 命名空间中创建和管理数据卷
+    entries:
+    - title: 概述
+      url: "/smb-admin/create-manage-data-volumes-nas-namespaces-concept.html"
+    - title: 创建具有指定接合点的数据卷
+      url: "/smb-admin/create-volumes-specified-junction-task.html"
+    - title: 创建数据卷而不指定接合点
+      url: "/smb-admin/create-volumes-without-specifying-junction-task.html"
+    - title: 挂载或卸载 NAS 命名空间中的现有卷
+      url: "/smb-admin/mount-unmount-existing-volumes-nas-namespace-task.html"
+    - title: 显示卷挂载和接合点信息
+      url: "/smb-admin/display-volume-mount-junction-point-task.html"
+  - title: 配置名称映射
+    entries:
+    - title: 概述
+      url: "/smb-admin/how-name-mappings-are-used-concept.html"
+    - title: 名称映射的工作原理
+      url: "/smb-admin/name-mapping-concept.html"
+    - title: 多域搜索 UNIX 用户到 Windows 用户名映射
+      url: "/smb-admin/multidomain-searches-unix-windows-user-concept.html"
+    - title: 名称映射转换规则
+      url: "/smb-admin/name-mapping-conversion-rules-concept.html"
+    - title: 创建名称映射
+      url: "/smb-admin/create-name-mapping-task.html"
+    - title: 配置默认用户：
+      url: "/smb-admin/configure-default-user-task.html"
+    - title: 用于管理名称映射的命令
+      url: "/smb-admin/commands-manage-name-mappings-reference.html"
+  - title: 配置多域名称映射搜索
+    entries:
+    - title: 启用或禁用多域名称映射搜索
+      url: "/smb-admin/enable-disable-multidomain-name-mapping-searches-task.html"
+    - title: 重置和重新发现受信任域
+      url: "/smb-admin/reset-rediscover-trusted-domains-task.html"
+    - title: 显示有关已发现的受信任域的信息
+      url: "/smb-admin/display-discovered-trusted-domains-task.html"
+    - title: 在首选受信任域列表中添加，删除或替换受信任域
+      url: "/smb-admin/add-remove-replace-trusted-domains-preferred-lists-task.html"
+    - title: 显示有关首选受信任域列表的信息
+      url: "/smb-admin/display-preferred-trusted-domain-list-task.html"
+  - title: 创建和配置 SMB 共享
+    entries:
+    - title: 概述
+      url: "/smb-admin/create-configure-shares-concept.html"
+    - title: 什么是默认管理共享
+      url: "/smb-admin/default-administrative-shares-concept.html"
+    - title: SMB 共享命名要求
+      url: "/smb-admin/share-naming-requirements-concept.html"
+    - title: 在多协议环境中创建共享时的目录区分大小写要求
+      url: "/smb-admin/directory-case-sensitivity-share-multiprotocol-concept.html"
+    - title: 使用 SMB 共享属性
+      entries:
+      - tile: Overview
+        url: "/smb-admin/share-properties-concept.html"
+      - title: 在现有 SMB 共享上添加或删除共享属性
+        url: "/smb-admin/add-remove-share-properties-eexisting-share-task.html"
+    - title: 使用强制组共享设置优化 SMB 用户访问
+      url: "/smb-admin/optimize-user-access-force-group-share-concept.html"
+    - title: 使用 force-group 共享设置创建 SMB 共享
+      url: "/smb-admin/create-share-force-group-setting-task.html"
+    - title: 使用 MMC 查看有关 SMB 共享的信息
+      url: "/smb-admin/view-shares-mmc-task.html"
+    - title: 用于管理 SMB 共享的命令
+      url: "/smb-admin/commands-manage-shares-reference.html"
+  - title: 使用 SMB 共享 ACL 确保文件访问安全
+    entries:
+    - title: 管理 SMB 共享级 ACL 的准则
+      url: "/smb-admin/manage-smb-level-acls-concept.html"
+    - title: 创建 SMB 共享访问控制列表
+      url: "/smb-admin/create-share-access-control-lists-task.html"
+    - title: 用于管理 SMB 共享访问控制列表的命令
+      url: "/smb-admin/commands-manage-share-acls-reference.html"
+  - title: 使用文件权限确保文件访问安全
+    entries:
+    - title: 使用 Windows 安全性选项卡配置高级 NTFS 文件权限
+      url: "/smb-admin/configure-ntfs-windows-security-tab-task.html"
+    - title: 使用 ONTAP 命令行界面配置 NTFS 文件权限
+      url: "/smb-admin/configure-ntfs-file-permissions-concept.html"
+    - title: 通过 SMB 访问文件时， UNIX 文件权限如何提供访问控制
+      url: "/smb-admin/unix-file-permissions-provide-access-control-concept.html"
+  - title: 使用动态访问控制（ DAC ）确保文件访问安全
+    entries:
+    - title: 概述
+      url: "/smb-admin/secure-file-access-dynamic-access-control-concept.html"
+    - title: 支持的动态访问控制功能
+      url: "/smb-admin/supported-dynamic-access-control-reference.html"
+    - title: 对 CIFS 服务器使用动态访问控制和中央访问策略时的注意事项
+      url: "/smb-admin/dynamic-access-control-concept.html"
+    - title: 启用或禁用动态访问控制
+      url: "/smb-admin/enable-disable-dynamic-access-control-task.html"
+    - title: 禁用动态访问控制时，管理包含动态访问控制 ACE 的 ACL
+      url: "/smb-admin/manage-acls-dynamic-access-control-aces-task.html"
+    - title: 配置中央访问策略以保护 CIFS 服务器上的数据安全
+      url: "/smb-admin/configure-central-access-policies-secure-data-task.html"
+    - title: 显示有关动态访问控制安全性的信息
+      url: "/smb-admin/display-dynamic-access-control-security-task.html"
+    - title: 动态访问控制的还原注意事项
+      url: "/smb-admin/revert-dynamic-access-control-concept.html"
+    - title: 从何处查找有关配置和使用动态访问控制和中央访问策略的追加信息
+      url: "/smb-admin/additional-information-concept.html"
+  - title: 使用导出策略确保 SMB 访问安全
+    entries:
+    - title: 如何在 SMB 访问中使用导出策略
+      url: "/smb-admin/export-policies-access-concept.html"
+    - title: 导出规则的工作原理
+      url: "/smb-admin/export-rules-concept.html"
+    - title: 限制或允许通过 SMB 进行访问的导出策略规则示例
+      url: "/smb-admin/examples-export-policy-rules-reference.html"
+    - title: 启用或禁用 SMB 访问导出策略
+      url: "/smb-admin/enable-disable-export-policies-task.html"
+  - title: 使用存储级别访问防护确保文件访问安全
+    entries:
+    - title: 概述
+      url: "/smb-admin/secure-file-access-storage-level-access-guard-concept.html"
+    - title: 使用存储级别访问防护的用例
+      url: "/smb-admin/use-cases-storage-level-access-guard-concept.html"
+    - title: 用于配置存储级别访问防护的工作流
+      url: "/smb-admin/workflow-config-storage-level-access-guard-concept.html"
+    - title: 配置存储级别访问防护
+      url: "/smb-admin/configure-storage-level-access-guard-task.html"
+    - title: 有效的 SLAG 列表
+      url: "/smb-admin/effective-slag-matrix-reference.html"
+    - title: 显示有关存储级别访问防护的信息
+      url: "/smb-admin/display-storage-level-access-guard-task.html"
+    - title: 删除存储级别访问防护
+      url: "/smb-admin/remove-storage-level-access-guard-task.html"
+- title: 使用 SMB 管理文件访问
+  entries:
+  - title: 使用本地用户和组进行身份验证和授权
+    entries:
+    - title: ONTAP 如何使用本地用户和组
+      entries:
+      - title: 本地用户和组概念
+        url: "/smb-admin/local-users-groups-concepts-concept.html"
+      - title: 创建本地用户和本地组的原因
+        url: "/smb-admin/reasons-creating-local-users-groups-concept.html"
+      - title: 本地用户身份验证的工作原理
+        url: "/smb-admin/local-user-authentication-concept.html"
+      - title: 如何构建用户访问令牌
+        url: "/smb-admin/user-access-tokens-are-constructed-concept.html"
+      - title: 在包含本地组的 SVM 上使用 SnapMirror 的准则
+        url: "/smb-admin/snapmirror-svms-local-groups-concept.html"
+      - title: 删除 CIFS 服务器时本地用户和组会发生什么情况
+        url: "/smb-admin/local-users-groups-when-deleting-servers-concept.html"
+      - title: 如何对本地用户和组使用 Microsoft 管理控制台
+        url: "/smb-admin/microsoft-management-console-local-users-groups-concept.html"
+      - title: 还原准则
+        url: "/smb-admin/guidelines-reverting-local-users-groups-concept.html"
+    - title: 什么是本地权限
+      entries:
+      - title: 支持的权限列表
+        url: "/smb-admin/list-supported-privileges-reference.html"
+      - title: 分配权限
+        url: "/smb-admin/assign-privileges-concept.html"
+    - title: 使用 BUILTIN 组和本地管理员帐户的准则
+      url: "/smb-admin/builtin-groups-local-administrator-account-concept.html"
+    - title: 本地用户密码的要求
+      url: "/smb-admin/requirements-local-user-passwords-concept.html"
+    - title: 预定义的 BUILTIN 组和默认权限
+      url: "/smb-admin/builtin-groups-default-privileges-reference.html"
+    - title: 启用或禁用本地用户和组功能
+      entries:
+      - title: 概述
+        url: "/smb-admin/enable-disable-local-users-groups-concept.html"
+      - title: 启用或禁用本地用户和组
+        url: "/smb-admin/enable-disable-local-users-groups-task.html"
+      - title: 启用或禁用本地用户身份验证
+        url: "/smb-admin/enable-disable-local-user-authentication-task.html"
+    - title: 管理本地用户帐户
+      entries:
+      - title: 修改本地用户帐户
+        url: "/smb-admin/modify-local-user-accounts-reference.html"
+      - title: 启用或禁用本地用户帐户
+        url: "/smb-admin/enable-disable-local-user-accounts-task.html"
+      - title: 更改本地用户帐户密码
+        url: "/smb-admin/change-local-user-account-passwords-task.html"
+      - title: 显示有关本地用户的信息
+        url: "/smb-admin/display-local-users-task.html"
+      - title: 显示有关本地用户的组成员资格的信息
+        url: "/smb-admin/display-group-memberships-local-users-task.html"
+      - title: 删除本地用户帐户
+        url: "/smb-admin/delete-local-user-accounts-task.html"
+    - title: 管理本地组
+      entries:
+      - title: 修改本地组
+        url: "/smb-admin/modify-local-groups-reference.html"
+      - title: 显示有关本地组的信息
+        url: "/smb-admin/display-local-groups-task.html"
+      - title: 管理本地组成员资格
+        url: "/smb-admin/manage-local-group-membership-task.html"
+      - title: 显示有关本地组成员的信息
+        url: "/smb-admin/display-members-local-groups-task.html"
+      - title: 删除本地组
+        url: "/smb-admin/delete-local-group-task.html"
+      - title: 更新本地数据库中的域用户和组名称
+        url: "/smb-admin/update-domain-user-group-names-local-databases-task.html"
+    - title: 管理本地权限
+      entries:
+      - title: 向本地或域用户或组添加权限
+        url: "/smb-admin/add-privileges-local-domain-users-groups-task.html"
+      - title: 从本地或域用户或组中删除权限
+        url: "/smb-admin/remove-privileges-local-domain-users-groups-task.html"
+      - title: 重置本地或域用户和组的权限
+        url: "/smb-admin/reset-privileges-local-domain-users-groups-task.html"
+      - title: 显示有关权限覆盖的信息
+        url: "/smb-admin/display-privilege-overrides-task.html"
+  - title: 配置绕过遍历检查
+    entries:
+    - title: 概述
+      url: "/smb-admin/configure-bypass-traverse-checking-concept.html"
+    - title: 允许用户或组绕过目录遍历检查
+      url: "/smb-admin/allow-users-groups-bypass-directory-traverse-task.html"
+    - title: 禁止用户或组绕过目录遍历检查
+      url: "/smb-admin/disallow-users-groups-bypass-directory-traverse-task.html"
+  - title: 显示有关文件安全性和审核策略的信息
+    entries:
+    - title: 概述
+      url: "/smb-admin/display-file-security-audit-policies-concept.html"
+    - title: 显示 NTFS 安全模式卷上的文件安全性信息
+      url: "/smb-admin/display-file-security-ntfs-style-volumes-task.html"
+    - title: 显示混合安全模式卷上的文件安全性信息
+      url: "/smb-admin/display-file-security-mixed-style-volumes-task.html"
+    - title: 显示有关 UNIX 安全模式卷上的文件安全性的信息
+      url: "/smb-admin/display-file-security-unix-style-volumes-task.html"
+    - title: 使用命令行界面显示有关 FlexVol 卷上 NTFS 审核策略的信息
+      url: "/smb-admin/display-ntfs-audit-policies-task.html"
+    - title: 使用命令行界面显示有关 FlexVol 卷上 NFSv4 审核策略的信息
+      url: "/smb-admin/display-nfsv4-audit-policies-flexvol-volumes-task.html"
+    - title: 显示有关文件安全性和审核策略信息的方式
+      url: "/smb-admin/wildcards-display-security-policies-concept.html"
+  - title: 使用命令行界面管理 SVM 上的 NTFS 文件安全性， NTFS 审核策略和存储级别访问防护
+    entries:
+    - title: 概述
+      url: "/smb-admin/manage-ntfs-security-audit-policies-slag-concept.html"
+    - title: 使用命令行界面设置文件和文件夹安全性的用例
+      url: "/smb-admin/use-cases-cli-set-file-folder-security-concept.html"
+    - title: 使用命令行界面设置文件和文件夹安全性的限制
+      url: "/smb-admin/limits-when-cli-set-file-folder-security-concept.html"
+    - title: 如何使用安全描述符应用文件和文件夹安全性
+      url: "/smb-admin/security-descriptors-apply-file-folder-security-concept.html"
+    - title: 在 SVM 灾难恢复目标上应用使用本地用户或组的文件目录策略的准则
+      url: "/smb-admin/file-directory-policies-local-users-groups-concept.html"
+    - title: 使用命令行界面在 NTFS 文件和文件夹上配置和应用文件安全性
+      entries:
+      - title: 创建 NTFS 安全描述符
+        url: "/smb-admin/create-ntfs-security-descriptor-file-task.html"
+      - title: 将 NTFS DACL 访问控制条目添加到 NTFS 安全描述符
+        url: "/smb-admin/add-ntfs-dacl-entries-security-descriptor-task.html"
+      - title: 创建安全策略
+        url: "/smb-admin/create-security-policies-file-task.html"
+      - title: 将任务添加到安全策略中
+        url: "/smb-admin/add-task-security-policy-file-task.html"
+      - title: 应用安全策略
+        url: "/smb-admin/apply-security-policies-file-task.html"
+      - title: 监控安全策略作业
+        url: "/smb-admin/monitor-security-policy-job-task.html"
+      - title: 验证应用的文件安全性
+        url: "/smb-admin/verify-applied-file-security-task.html"
+    - title: 使用命令行界面配置审核策略并将其应用于 NTFS 文件和文件夹
+      url: "/smb-admin/configure-apply-audit-policies-ntfs-files-folders-task.html"
+      entries:
+      - title: 创建 NTFS 安全描述符
+        url: "/smb-admin/create-ntfs-security-descriptor-audit-task.html"
+      - title: 将 NTFS SACL 访问控制条目添加到 NTFS 安全描述符
+        url: "/smb-admin/add-ntfs-sacl-entries-security-descriptor-task.html"
+      - title: 创建安全策略
+        url: "/smb-admin/create-security-policies-audit-task.html"
+      - title: 将任务添加到安全策略中
+        url: "/smb-admin/add-task-security-policy-audit-task.html"
+      - title: 应用安全策略
+        url: "/smb-admin/apply-security-policies-audit-task.html"
+      - title: 监控安全策略作业
+        url: "/smb-admin/monitor-security-policy-job-task.html"
+      - title: 验证应用的审核策略
+        url: "/smb-admin/verify-applied-audit-policy-task.html"
+    - title: 管理安全策略作业时的注意事项
+      url: "/smb-admin/manage-security-policy-jobs-concept.html"
+    - title: 用于管理 NTFS 安全描述符的命令
+      url: "/smb-admin/commands-manage-ntfs-security-descriptors-reference.html"
+    - title: 用于管理 NTFS DACL 访问控制条目的命令
+      url: "/smb-admin/commands-manage-ntfs-dacl-reference.html"
+    - title: 用于管理 NTFS SACL 访问控制条目的命令
+      url: "/smb-admin/commands-manage-ntfs-sacl-reference.html"
+    - title: 用于管理安全策略的命令
+      url: "/smb-admin/commands-manage-security-policies-reference.html"
+    - title: 用于管理安全策略任务的命令
+      url: "/smb-admin/commands-manage-security-policy-tasks-reference.html"
+    - title: 用于管理安全策略作业的命令
+      url: "/smb-admin/commands-manage-security-policy-jobs-reference.html"
+  - title: 为 SMB 共享配置元数据缓存
+    entries:
+    - title: SMB 元数据缓存的工作原理
+      url: "/smb-admin/metadata-caching-concept.html"
+    - title: 启用 SMB 元数据缓存
+      url: "/smb-admin/enable-metadata-cache-task.html"
+    - title: 配置 SMB 元数据缓存条目的生命周期
+      url: "/smb-admin/configure-lifetime-metadata-cache-entries-task.html"
+  - title: 管理文件锁定
+    entries:
+    - title: 关于协议之间的文件锁定
+      url: "/smb-admin/file-locking-between-protocols-concept.html"
+    - title: ONTAP 如何处理只读位
+      url: "/smb-admin/ontap-treats-read-only-bits-concept.html"
+    - title: 在处理共享路径组件上的锁定时， ONTAP 与 Windows 有何不同
+      url: "/smb-admin/ontap-differs-windows-locks-share-path-concept.html"
+    - title: 显示有关锁定的信息
+      url: "/smb-admin/display-locks-task.html"
+    - title: 正在中断锁定
+      url: "/smb-admin/break-locks-task.html"
+  - title: 监控 SMB 活动
+    entries:
+    - title: 显示 SMB 会话信息
+      url: "/smb-admin/display-session-task.html"
+    - title: 显示有关打开的 SMB 文件的信息
+      url: "/smb-admin/display-open-files-task.html"
+    - title: 确定可用的统计信息对象和计数器
+      url: "/smb-admin/determine-statistics-objects-counters-available-task.html"
+    - title: 显示统计信息
+      url: "/smb-admin/display-statistics-task.html"
+- title: 部署基于 SMB 客户端的服务
+  entries:
+  - title: 使用脱机文件可以缓存文件以供脱机使用
+    entries:
+    - title: 概述
+      url: "/smb-admin/offline-files-allow-caching-concept.html"
+    - title: 使用脱机文件的要求
+      url: "/smb-admin/requirements-offline-files-concept.html"
+    - title: 部署脱机文件的准则
+      url: "/smb-admin/deploy-offline-files-concept.html"
+    - title: 使用命令行界面在 SMB 共享上配置脱机文件支持
+      url: "/smb-admin/configure-offline-files-support-task.html"
+    - title: 使用计算机管理 MMC 在 SMB 共享上配置脱机文件支持
+      url: "/smb-admin/configure-offline-files-computer-management-mmc-task.html"
+  - title: 使用漫游配置文件将用户配置文件集中存储在与 SVM 关联的 SMB 服务器上
+    entries:
+    - title: 概述
+      url: "/smb-admin/roaming-profiles-store-user-profiles-concept.html"
+    - title: 使用漫游配置文件的要求
+      url: "/smb-admin/requirements-roaming-profiles-concept.html"
+    - title: 配置漫游配置文件
+      url: "/smb-admin/configure-roaming-profiles-task.html"
+  - title: 使用文件夹重定向将数据存储在 SMB 服务器上
+    entries:
+    - title: 概述
+      url: "/smb-admin/folder-redirection-store-data-concept.html"
+    - title: 使用文件夹重定向的要求
+      url: "/smb-admin/requirements-folder-redirection-concept.html"
+    - title: 配置文件夹重定向
+      url: "/smb-admin/configure-folder-redirection-task.html"
+  - title: 使用 SMB 2.x 从 Windows 客户端访问 ~Snapshot 目录
+    url: "/smb-admin/access-snapshot-directories-clients-smb2-concept.html"
+  - title: 使用先前版本恢复文件和文件夹
+    entries:
+    - title: 概述
+      url: "/smb-admin/recover-files-folders-previous-versions-concept.html"
+    - title: 使用 Microsoft 先前版本的要求
+      url: "/smb-admin/requirements-microsoft-previous-versions-concept.html"
+    - title: 使用先前版本选项卡查看和管理 Snapshot 副本数据
+      url: "/smb-admin/previous-versions-view-manage-snapshot-data-task.html"
+    - title: 确定先前版本是否可以使用 Snapshot 副本
+      url: "/smb-admin/determine-snapshot-copies-available-task.html"
+    - title: 创建 Snapshot 配置以启用先前版本的访问
+      url: "/smb-admin/create-snapshot-config-previous-versions-access-task.html"
+    - title: 还原包含接合的目录的准则
+      url: "/smb-admin/restore-directories-that-contain-junctions-concept.html"
+- title: 部署基于 SMB 服务器的服务
+  entries:
+  - title: 管理主目录
+    entries:
+    - title: ONTAP 如何启用动态主目录
+      url: "/smb-admin/dynamic-home-directories-concept.html"
+    - title: 主目录共享
+      entries:
+      - title: 添加主目录共享
+        url: "/smb-admin/add-home-directory-share-task.html"
+      - title: 主目录共享需要唯一的用户名
+        url: "/smb-admin/home-directory-shares-unique-user-names-concept.html"
+      - title: 升级后静态主目录共享名称会发生什么情况
+        url: "/smb-admin/static-home-directory-share-names-upgrading-concept.html"
+    - title: 添加主目录搜索路径
+      url: "/smb-admin/add-home-directory-search-path-task.html"
+    - title: 使用 %w 和 %d 变量创建主目录配置
+      url: "/smb-admin/create-home-directory-config-w-d-variables-task.html"
+    - title: 使用 %u 变量配置主目录
+      url: "/smb-admin/configure-home-directories-u-variable-task.html"
+    - title: 其他主目录配置
+      url: "/smb-admin/home-directory-config-concept.html"
+    - title: 用于管理搜索路径的命令
+      url: "/smb-admin/commands-manage-search-paths-reference.html"
+    - title: 显示有关 SMB 用户的信息和主目录路径
+      url: "/smb-admin/display-user-home-directory-path-task.html"
+    - title: 管理用户主目录的可访问性
+      url: "/smb-admin/manage-accessibility-users-home-directories-task.html"
+  - title: 配置 SMB 客户端对 UNIX 符号链接的访问
+    entries:
+    - title: 如何使用 ONTAP 为 SMB 客户端提供对 UNIX 符号链接的访问权限
+      url: "/smb-admin/enable-client-access-unix-symbolic-links-concept.html"
+    - title: 为 SMB 访问配置 UNIX 符号链接时的限制
+      url: "/smb-admin/limits-configuring-unix-symbolic-links-concept.html"
+    - title: 使用 CIFS 服务器选项在 ONTAP 中控制自动 DFS 公告
+      url: "/smb-admin/control-automatic-dfs-advertisements-concept.html"
+    - title: 在 SMB 共享上配置 UNIX 符号链接支持
+      url: "/smb-admin/configure-unix-symbolic-link-support-shares-task.html"
+    - title: 为 SMB 共享创建符号链接映射
+      url: "/smb-admin/create-symbolic-link-mappings-task.html"
+    - title: 用于管理符号链接映射的命令
+      url: "/smb-admin/commands-manage-symbolic-link-mappings-reference.html"
+  - title: 使用 BranchCache 在分支机构缓存 SMB 共享内容
+    entries:
+    - Overview: 
+      url: "/smb-admin/branchcache-cache-share-content-branch-office-concept.html"
+    - title: 要求和准则
+      entries:
+      - title: BranchCache 版本支持
+        url: "/smb-admin/branchcache-version-support-concept.html"
+      - title: 网络协议支持要求
+        url: "/smb-admin/network-protocol-support-requirements-concept.html"
+      - title: ONTAP 和 Windows 主机版本要求
+        url: "/smb-admin/windows-hosts-version-requirements-concept.html"
+      - title: ONTAP 使 BranchCache 哈希失效的原因
+        url: "/smb-admin/reasons-invalidates-branchcache-hashes-concept.html"
+      - title: 选择哈希存储位置的准则
+        url: "/smb-admin/choosing-hash-store-location-concept.html"
+      - title: BranchCache 建议
+        url: "/smb-admin/branchcache-recommendations-concept.html"
+    - title: 配置 BranchCache
+      entries:
+      - title: 概述
+        url: "/smb-admin/configure-branchcache-concept.html"
+      - title: 配置 BranchCache 的要求
+        url: "/smb-admin/requirements-configuring-branchcache-concept.html"
+      - title: 在 CIFS 服务器上配置 BranchCache
+        url: "/smb-admin/configure-branchcache-task.html"
+      - title: 从何处查找有关在远程办公室配置 BranchCache 的信息
+        url: "/smb-admin/configure-branchcache-remote-office-concept.html"
+    - title: 配置已启用 BranchCache 的 SMB 共享
+      entries:
+      - title: 概述
+        url: "/smb-admin/configure-branchcache-enabled-shares-concept.html"
+      - title: 创建启用了 BranchCache 的 SMB 共享
+        url: "/smb-admin/create-branchcache-enabled-share-task.html"
+      - title: 在现有 SMB 共享上启用 BranchCache
+        url: "/smb-admin/enable-branchcache-existing-share-task.html"
+    - title: 管理和监控 BranchCache 配置
+      entries:
+      - title: 修改 BranchCache 配置
+        url: "/smb-admin/modify-branchcache-config-task.html"
+      - title: 显示有关 BranchCache 配置的信息
+        url: "/smb-admin/display-branchcache-config-task.html"
+      - title: 更改 BranchCache 服务器密钥
+        url: "/smb-admin/change-branchcache-server-key-task.html"
+      - title: 预先计算指定路径上的 BranchCache 哈希
+        url: "/smb-admin/precompute-branchcache-hashes-specified-paths-task.html"
+      - title: 从 SVM BranchCache 哈希存储刷新哈希
+        url: "/smb-admin/flush-hashes-svm-branchcache-task.html"
+      - title: 显示 BranchCache 统计信息
+        url: "/smb-admin/display-branchcache-statistics-task.html"
+      - title: 支持 BranchCache 组策略对象
+        url: "/smb-admin/support-branchcache-group-policy-objects-concept.html"
+      - title: 显示有关 BranchCache 组策略对象的信息
+        url: "/smb-admin/display-branchcache-group-policy-objects-task.html"
+    - title: 在 SMB 共享上禁用 BranchCache
+      entries:
+      - title: 概述
+        url: "/smb-admin/disable-branchcache-shares-concept.html"
+      - title: 在单个 SMB 共享上禁用 BranchCache
+        url: "/smb-admin/disable-branchcache-single-share-task.html"
+      - title: 停止对所有 SMB 共享的自动缓存
+        url: "/smb-admin/stop-automatic-caching-all-shares-task.html"
+    - title: 在 SVM 上禁用或启用 BranchCache
+      entries:
+      - title: 在 CIFS 服务器上禁用或重新启用 BranchCache 时会发生什么情况
+        url: "/smb-admin/disable-reenable-branchcache-server-concept.html"
+      - title: 禁用或启用 BranchCache
+        url: "/smb-admin/disable-enable-branchcache-task.html"
+    - title: 删除 SVM 上的 BranchCache 配置
+      entries:
+      - title: 删除 BranchCache 配置时会发生什么情况
+        url: "/smb-admin/delete-branchcache-config-concept.html"
+      - title: 删除 BranchCache 配置
+        url: "/smb-admin/delete-branchcache-config-task.html"
+    - title: 还原时 BranchCache 会发生什么情况
+      url: "/smb-admin/branchcache-when-reverting-concept.html"
+  - title: 提高 Microsoft 远程复制性能
+    entries:
+    - title: 概述
+      url: "/smb-admin/improve-microsoft-remote-copy-performance-concept.html"
+    - title: ODX 的工作原理
+      url: "/smb-admin/odx-concept.html"
+    - title: 使用 ODX 的要求
+      url: "/smb-admin/requirements-odx-concept.html"
+    - title: 使用 ODX 的准则
+      url: "/smb-admin/using-odx-concept.html"
+    - title: ODX 的用例
+      url: "/smb-admin/use-cases-odx-concept.html"
+    - title: 启用或禁用 ODX
+      url: "/smb-admin/enable-disable-odx-task.html"
+  - title: 通过使用自动位置提供 SMB 自动节点转介来缩短客户端响应时间
+    entries:
+    - title: 概述
+      url: "/smb-admin/improve-client-response-node-referrals-concept.html"
+    - title: 使用自动节点转介的要求和准则
+      url: "/smb-admin/requirements-automatic-node-referrals-concept.html"
+    - title: 支持 SMB 自动节点转介
+      url: "/smb-admin/support-automatic-node-referrals-concept.html"
+    - title: 启用或禁用 SMB 自动节点转介
+      url: "/smb-admin/enable-disable-automatic-node-referrals-task.html"
+    - title: 使用统计信息监控自动节点转介活动
+      url: "/smb-admin/statistics-monitor-automatic-node-referral-task.html"
+    - title: 使用 Windows 客户端监控客户端 SMB 自动节点转介信息
+      url: "/smb-admin/automatic-node-referrals-client-concept.html"
+  - title: 使用基于访问的枚举为共享提供文件夹安全性
+    entries:
+    - title: 概述
+      url: "/smb-admin/provide-security-access-based-enumeration-task.html"
+    - title: 在 SMB 共享上启用或禁用基于访问的枚举
+      url: "/smb-admin/enable-disable-access-based-enumeration-task.html"
+    - title: 从 Windows 客户端启用或禁用基于访问的枚举
+      url: "/smb-admin/enable-disable-access-based-enumeration-client-task.html"
+- title: NFS 和 SMB 文件和目录命名依赖关系
+  entries:
+  - title: 概述
+    url: "/smb-admin/nfs-smb-file-directory-naming-concept.html"
+  - title: 文件或目录名称可以使用的字符
+    url: "/smb-admin/characters-file-directory-name-can-use-concept.html"
+  - title: 在多协议环境中，文件和目录名称区分大小写
+    url: "/smb-admin/case-sensitivity-file-directory-multiprotocol-concept.html"
+  - title: ONTAP 如何创建文件和目录名称
+    url: "/smb-admin/how-ontap-creates-file-directory-names-concept.html"
+  - title: ONTAP 如何处理多字节文件，目录和 qtree 名称
+    url: "/smb-admin/multi-byte-file-directory-qtree-names-concept.html"
+  - title: 在卷上配置用于 SMB 文件名转换的字符映射
+    url: "/smb-admin/configure-character-mappings-file-name-translation-task.html"
+  - title: 用于管理用于 SMB 文件名转换的字符映射的命令
+    url: "/smb-admin/commands-manage-character-mappings-file-name-reference.html"

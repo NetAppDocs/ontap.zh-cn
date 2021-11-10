@@ -1,0 +1,56 @@
+---
+permalink: system-admin/restore-node-config-backup-file-task.html 
+sidebar: sidebar 
+keywords: restore, node, configuration, backup, file, recovering 
+summary: 您可以使用已确定并可供恢复节点使用的配置备份文件还原节点配置。 
+---
+= 使用配置备份文件还原节点配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用已确定并可供恢复节点使用的配置备份文件还原节点配置。
+
+您只能执行此任务来从导致节点本地配置文件丢失的灾难中恢复。
+
+.步骤
+. 如果节点运行状况良好，则在其他节点的高级权限级别下，使用 `cluster modify` 命令以及 ` 节点` 和 ` 资格` 参数将其标记为不符合条件并将其与集群隔离。
++
+如果节点运行不正常，则应跳过此步骤。
+
++
+以下示例将 node2 修改为不符合加入集群的条件，以便可以还原其配置：
+
++
+[listing]
+----
+cluster1::*> cluster modify -node node2 -eligibility false
+----
+. 在高级权限级别使用 `ssystem configuration recovery node restore` 命令从配置备份文件还原节点的配置。
++
+如果节点丢失了其标识（包括名称），则应使用 ` -nodename-in-backup` 参数在配置备份文件中指定节点名称。
+
++
+以下示例将使用存储在节点上的一个配置备份文件还原节点的配置：
+
++
+[listing]
+----
+cluster1::*> system configuration recovery node restore -backup cluster1.8hour.2011-02-22.18_15_00.7z
+
+Warning: This command overwrites local configuration files with
+         files contained in the specified backup file. Use this
+         command only to recover from a disaster that resulted
+         in the loss of the local configuration files.
+         The node will reboot after restoring the local configuration.
+Do you want to continue? {y|n}: y
+----
++
+配置将还原，节点将重新启动。
+
+. 如果将此节点标记为不符合条件，请使用 `ssystem configuration recovery cluster sync` 命令将此节点标记为符合条件并将其与集群同步。
+. 如果您在 SAN 环境中运行，请使用 `ssystem node reboot` 命令重新启动节点并重新建立 SAN 仲裁。
+
+
+如果您之前重新创建了集群，并且要使用在重新创建集群之前创建的配置备份文件还原节点配置，则必须重新创建集群。

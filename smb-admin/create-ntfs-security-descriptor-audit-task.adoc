@@ -1,0 +1,95 @@
+---
+permalink: smb-admin/create-ntfs-security-descriptor-audit-task.html 
+sidebar: sidebar 
+keywords: create, creating, ntfs, security, descriptor, audit, policy, configure, configuring, apply, access, control, list, acl, file, residing, reside, svm, associate, folder, policy, task, create an ntfs security descriptor 
+summary: 创建 NTFS 安全描述符审核策略是配置 NTFS 访问控制列表（ ACL ）并将其应用于 SVM 中的文件和文件夹的第一步。您将在策略任务中将安全描述符与文件或文件夹路径相关联。 
+---
+= 创建 NTFS 安全描述符
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+创建 NTFS 安全描述符审核策略是配置 NTFS 访问控制列表（ ACL ）并将其应用于 SVM 中的文件和文件夹的第一步。您将在策略任务中将安全描述符与文件或文件夹路径相关联。
+
+您可以为 NTFS 安全模式卷中的文件和文件夹或混合安全模式卷上的文件和文件夹创建 NTFS 安全描述符。
+
+默认情况下，在创建安全描述符时，会向该安全描述符添加四个随机访问控制列表（ DACL ）访问控制条目（ ACE ）。四个默认 ACE 如下所示：
+
+|===
+| 对象 | 访问类型 | 访问权限 | 应用权限的位置 
+
+
+ a| 
+BUILTIN\Administrators
+ a| 
+允许
+ a| 
+完全控制
+ a| 
+此文件夹，子文件夹，文件
+
+
+
+ a| 
+BUILTIN\Users
+ a| 
+允许
+ a| 
+完全控制
+ a| 
+此文件夹，子文件夹，文件
+
+
+
+ a| 
+Creator 所有者
+ a| 
+允许
+ a| 
+完全控制
+ a| 
+此文件夹，子文件夹，文件
+
+
+
+ a| 
+NT AUTHORITIC\SYSTEM
+ a| 
+允许
+ a| 
+完全控制
+ a| 
+此文件夹，子文件夹，文件
+
+|===
+您可以使用以下可选参数自定义安全描述符配置：
+
+* 安全描述符的所有者
+* 所有者的主组
+* 原始控制标志
+
+
+存储级别访问防护将忽略任何可选参数的值。有关详细信息，请参见手册页。
+
+.步骤
+. 如果要使用高级参数，请将权限级别设置为 advanced ： `set -privilege advanced`
+. 创建安全描述符： `vserver security file-directory ntfs create -vserver vserver_name -ntfs-sd sd_name optional_parameters`
++
+`vserver security file-directory ntfs create -ntfs-sd1 -vserver vs1 -owner domain\joe`
+
+. 验证安全描述符配置是否正确： `vserver security file-directory ntfs show -vserver vserver_name -ntfs-sd_name`
++
+[listing]
+----
+vserver security file-directory ntfs show -vserver vs1 -ntfs-sd sd1
+----
++
+[listing]
+----
+                                     Vserver: vs1
+                           Security Descriptor Name: sd1
+                   Owner of the Security Descriptor: DOMAIN\joe
+----
+. 如果您处于高级权限级别，请返回到管理员权限级别： `set -privilege admin`
+

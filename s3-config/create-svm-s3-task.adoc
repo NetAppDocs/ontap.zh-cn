@@ -1,0 +1,81 @@
+---
+permalink: s3-config/create-svm-s3-task.html 
+sidebar: sidebar 
+keywords: create, svm, s3 
+summary: 虽然 S3 可以与其他协议共存于 SVM 中，但您可能需要创建一个新的 SVM 来隔离命名空间和工作负载。 
+---
+= 为 S3 创建 SVM
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+虽然 S3 可以与其他协议共存于 SVM 中，但您可能需要创建一个新的 SVM 来隔离命名空间和工作负载。
+
+如果您仅从此 SVM 提供 S3 对象存储，则 S3 服务器不需要任何 DNS 配置。但是，如果使用其他协议，则可能需要在 SVM 上配置 DNS 。
+
+.步骤
+. 验证 S3 是否已在集群上获得许可：
++
+`ssystem license show -package S3`
+
++
+如果不是，请联系您的销售代表。
+
+. 创建 SVM ：
++
+`vserver create -vserver svm_name -rootvolume root_volume_name -aggregate aggregate_name -rootvolume-security-style UNIX -language C.UTF-8 -IPSpace IPspace_name`
+
++
+** 对 ` -rootvolume-security-style` 选项使用 UNIX 设置。
+** 使用默认 C.UTF-8 ` -language` 选项。
+** `IPSpace` 设置为可选设置。
+
+
+. 验证新创建的 SVM 的配置和状态：
++
+`vserver show -vserversvm_name`
+
++
+`vserver Operational State` 字段必须显示 `running` state 。如果显示 `initializing` 状态，则表示某些中间操作（例如创建根卷）失败，您必须删除 SVM 并重新创建它。
+
+
+
+以下命令将在 IP 空间 ipspaceA 中创建用于数据访问的 SVM ：
+
+[listing]
+----
+cluster-1::> vserver create -vserver svm1.example.com -rootvolume root_svm1 -aggregate aggr1 -rootvolume-security-style unix -language C.UTF-8 -ipspace ipspaceA
+
+[Job 2059] Job succeeded:
+Vserver creation completed
+----
+以下命令显示创建的 SVM 的根卷为 1 GB ，并且已自动启动且处于 `running` 状态。根卷具有一个默认导出策略，该策略不包含任何规则，因此根卷在创建时不会导出。默认情况下，系统会创建 vsadmin 用户帐户，并且该帐户处于 `locked` 状态。vsadmin 角色将分配给默认 vsadmin 用户帐户。
+
+[listing]
+----
+cluster-1::> vserver show -vserver svm1.example.com
+                                    Vserver: svm1.example.com
+                               Vserver Type: data
+                            Vserver Subtype: default
+                               Vserver UUID: b8375669-19b0-11e5-b9d1-00a0983d9736
+                                Root Volume: root_svm1
+                                  Aggregate: aggr1
+                                 NIS Domain: -
+                 Root Volume Security Style: unix
+                                LDAP Client: -
+               Default Volume Language Code: C.UTF-8
+                            Snapshot Policy: default
+                                    Comment:
+                               Quota Policy: default
+                List of Aggregates Assigned: -
+ Limit on Maximum Number of Volumes allowed: unlimited
+                        Vserver Admin State: running
+                  Vserver Operational State: running
+   Vserver Operational State Stopped Reason: -
+                          Allowed Protocols: nfs, cifs
+                       Disallowed Protocols: -
+                           QoS Policy Group: -
+                                Config Lock: false
+                               IPspace Name: ipspaceA
+----

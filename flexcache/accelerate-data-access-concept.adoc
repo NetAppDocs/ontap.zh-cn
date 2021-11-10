@@ -1,0 +1,32 @@
+---
+permalink: flexcache/accelerate-data-access-concept.html 
+sidebar: sidebar 
+keywords: using, flexcache, volumes, accelerate, data, access 
+summary: FlexCache 卷是一个稀疏填充的卷，由原始卷提供支持。FlexCache 卷可以与原始卷位于同一集群中，也可以位于与原始卷不同的集群中。通过 FlexCache 卷可以访问原始卷中的数据，而无需将所有数据都放在 FlexCache 卷中。 
+---
+= 使用 FlexCache 卷加快数据访问概述速度
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FlexCache 卷是一个稀疏填充的卷，由原始卷提供支持。FlexCache 卷可以与原始卷位于同一集群中，也可以位于与原始卷不同的集群中。通过 FlexCache 卷可以访问原始卷中的数据，而无需将所有数据都放在 FlexCache 卷中。
+
+在 ONTAP 9.5 中，原始卷是 FlexVol 卷，而 FlexCache 卷是 FlexGroup 卷。原始卷支持 NFSv3 ， NFSv4 和 SMB 协议。在 ONTAP 9.5 中， FlexCache 卷仅支持 NFSv3 协议。从 ONTAP 9.8 开始， FlexCache 卷还支持 SMB 协议。从 ONTAP 9.10.1 开始， FlexCache 卷支持 NFSv4 协议。有关 FlexCache 卷中支持的功能的表摘要，请参见 xref:supported-unsupported-features-concept.adoc[FlexCache 卷支持和不支持的功能]。
+
+从 ONTAP 9.7 开始，还支持将 FlexGroup 卷作为源卷。
+
+[NOTE]
+====
+在 ONTAP 9 9.5 之前的版本中，原始 FlexVol 卷只能为在运行 7- 模式 Data ONTAP 8.2.x 的系统上创建的 FlexCache 卷提供数据。从 ONTAP 9.5 开始，原始 FlexVol 卷还可以为 ONTAP 9 系统上的 FlexCache 卷提供数据。有关从 7- 模式 FlexCache 迁移到 ONTAP 9 FlexCache 的信息， link:http://www.netapp.com/us/media/tr-4743.pdf["NetApp 技术报告 4743 ：《 NetApp ONTAP 中的 FlexCache 卷》"]。
+
+====
+如果 FlexCache 卷包含客户端请求的数据，则该卷将直接处理读取请求。否则， FlexCache 卷将从原始卷请求数据，并在提供客户端请求之前存储这些数据。然后，对数据的后续读取请求将直接从 FlexCache 卷提供。这可以提高重复访问相同数据时的性能，因为在第一次请求后，数据不再需要通过网络传输或从过载的系统提供服务。
+
+从 ONTAP 9.1.1 开始， FlexCache 卷会缓存一个目录列表，列出在原始卷上不再存在文件时发生的 " 未找到文件 " 错误。这样，当客户端搜索不存在的文件时，就无需向源发送多个调用，从而有助于减少网络流量。
+
+从 ONTAP 9.10.1 开始，可以在 FlexCache 卷之间启用全局文件锁定，以实现一致性，从而确保对原始卷的修改同时分发到 FlexCache 卷。只能从 CLI 启用全局文件锁定。
+
+您可以使用 FlexCache 卷加快数据访问速度，或者从访问量较多的卷卸载流量。FlexCache 卷有助于提高性能，尤其是在客户端需要重复访问相同数据时，因为可以直接提供数据，而无需访问原始卷。因此，您可以使用 FlexCache 卷处理读取密集型系统工作负载。
+
+任何写入操作都会应用于原始卷。

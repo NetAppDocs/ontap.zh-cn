@@ -1,0 +1,43 @@
+---
+permalink: nfs-rdma/configure-lifs-task.html 
+sidebar: sidebar 
+keywords: networking, LIF, NFS over RDMA, NVIDIA, NFS, RDMA, ROCE 
+summary: 本文介绍如何将 LIF 配置为支持 RDMA 。 
+---
+= 通过 RDMA 为 NFS 配置 LIF
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要使用基于 RDMA 的 NFS ，必须将 LIF 配置为与 RDMA 兼容。LIF 及其故障转移对都必须支持 RDMA 。
+
+从 ONTAP 9.10.1 开始，网络接口命令中有一个新的 RDMA_protocols 参数，您可以在该参数中配置支持以及设置适当的服务策略。
+
+.操作步骤以创建新的 LIF
+. 创建 LIF ：
++
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port _port_name_ ｛ -address _ip_address_ -netmask _netmask_value_ _ _ - subnet-name _subnet_name_ ｝ -firewall-policy _rma_policy_name_ ｛ auto-name_ -ma_auto-name_ ｝ -netma_auto-policy_modma_sma__-netmask_sma_`
+
++
+.. 服务策略必须为 default-data-files 或包含 data-nfs 网络接口服务的自定义策略。
+.. ` -rdma-protocols` 参数接受列表，默认为空。将 `` 值添加为值时，只能在支持 RoCE 卸载的端口上配置 LIF ，从而影响机器人 LIF 迁移和故障转移。
+
+
+
+
+.操作步骤以修改 LIF
+. 您可以使用 `network interface show` 命令检查 LIF 的状态。服务策略必须包含 data-nfs 网络接口服务。` RDMA-protocols` 列表应包含 `roce` 。如果上述任一条件不正确，请修改 LIF 。
+. 要修改 LIF ，请运行：
++
+`network interface modify vserver _vserver_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port _port_name_ ｛ -address _ip_address_ -netmask _netmask_value_ _ _ - -subnet-name _subnet_name_ ｝ -firewall-policy _policy_roce_name_` ｛ auto-name_
+
+
+
+如果 LIF 当前未分配给支持该协议的端口，则修改 LIF 以要求使用特定的卸载协议会出错。
+
+* 更多信息 *
+
+xref:../networking/create_a_lif.adoc[创建 LIF]
+
+xref:../networking/what_lifs_are.html[什么是 LIF]

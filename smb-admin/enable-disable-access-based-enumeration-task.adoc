@@ -1,0 +1,86 @@
+---
+permalink: smb-admin/enable-disable-access-based-enumeration-task.html 
+sidebar: sidebar 
+keywords: enable, disable, access-based, enumeration, abe, smb, allow, prevent, user, permission, access, enable or disable access-based enumeration on smb shares 
+summary: 您可以在 SMB 共享上启用或禁用基于访问的枚举（ ABE ），以允许或阻止用户查看其无权访问的共享资源。 
+---
+= 在 SMB 共享上启用或禁用基于访问的枚举
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在 SMB 共享上启用或禁用基于访问的枚举（ ABE ），以允许或阻止用户查看其无权访问的共享资源。
+
+默认情况下， ABE 处于禁用状态。
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 如果您要 ... | 输入命令 ... 
+
+
+ a| 
+在新共享上启用 ABE
+ a| 
+`vserver cifs share create -vserver vserver_name -share-name share_name -path path -share-properties access-based-enumeration` 您可以在创建 SMB 共享时指定其他可选共享设置和其他共享属性。有关详细信息，请参见 `vserver cifs share create` 命令的手册页。
+
+
+
+ a| 
+在现有共享上启用 ABE
+ a| 
+`vserver cifs share properties add -vserver vserver_name -share-name share_name -share-properties access-based-enumeration` 保留现有共享属性。ABE 共享属性将添加到现有共享属性列表中。
+
+
+
+ a| 
+在现有共享上禁用 ABE
+ a| 
+`vserver cifs share properties remove -vserver vserver_name -share-name share_name -share-properties access-based-enumeration` 保留其他共享属性。只会从共享属性列表中删除 ABE 共享属性。
+
+|===
+. 使用 `vserver cifs share show` 命令验证共享配置是否正确。
+
+
+以下示例将在 SVM vs1 上创建一个名为 `sales` 的 ABE SMB 共享，路径为 ` /sales` 。创建的共享将使用 `access-based-enumeration` 作为共享属性：
+
+[listing]
+----
+cluster1::> vserver cifs share create -vserver vs1 -share-name sales -path /sales  -share-properties access-based-enumeration,oplocks,browsable,changenotify
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name sales
+
+                      Vserver: vs1
+                        Share: sales
+     CIFS Server NetBIOS Name: VS1
+                         Path: /sales
+             Share Properties: access-based-enumeration
+                               oplocks
+                               browsable
+                               changenotify
+           Symlink Properties: enable
+      File Mode Creation Mask: -
+ Directory Mode Creation Mask: -
+                Share Comment: -
+                    Share ACL: Everyone / Full Control
+File Attribute Cache Lifetime: -
+                  Volume Name: -
+                Offline Files: manual
+Vscan File-Operations Profile: standard
+----
+以下示例将 `access-based-enumeration` share 属性添加到名为 `data2` 的 SMB 共享：
+
+[listing]
+----
+cluster1::> vserver cifs share properties add -vserver vs1 -share-name data2 -share-properties access-based-enumeration
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data2 -fields share-name,share-properties
+server  share-name share-properties
+------- ---------- -------------------------------------------------------
+vs1     data2      oplocks,browsable,changenotify,access-based-enumeration
+----
+* 相关信息 *
+
+xref:add-remove-share-properties-eexisting-share-task.adoc[在现有 SMB 共享上添加或删除共享属性]

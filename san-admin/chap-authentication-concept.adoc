@@ -1,0 +1,37 @@
+---
+permalink: san-admin/chap-authentication-concept.html 
+sidebar: sidebar 
+keywords: what, chap, authentication, challenge handshake authentication protocol 
+summary: 使用质询握手身份验证协议（ CHAP ）可以在 iSCSI 启动程序和目标之间进行经过身份验证的通信。使用 CHAP 身份验证时，您可以在启动程序和存储系统上定义 CHAP 用户名和密码。 
+---
+= 什么是 CHAP 身份验证
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用质询握手身份验证协议（ CHAP ）可以在 iSCSI 启动程序和目标之间进行经过身份验证的通信。使用 CHAP 身份验证时，您可以在启动程序和存储系统上定义 CHAP 用户名和密码。
+
+在 iSCSI 会话的初始阶段，启动程序会向存储系统发送登录请求以启动会话。登录请求包括启动程序的 CHAP 用户名和 CHAP 算法。存储系统会响应 CHAP 质询。启动程序提供 CHAP 响应。存储系统会验证响应并对启动程序进行身份验证。CHAP 密码用于计算响应。
+
+
+
+== 使用 CHAP 身份验证的准则
+
+使用 CHAP 身份验证时，应遵循特定准则。
+
+* 如果您在存储系统上定义了入站用户名和密码，则必须对启动程序上的出站 CHAP 设置使用相同的用户名和密码。如果您还在存储系统上定义了出站用户名和密码以启用双向身份验证，则必须对启动程序上的入站 CHAP 设置使用相同的用户名和密码。
+* 存储系统上的入站和出站设置不能使用相同的用户名和密码。
+* CHAP 用户名可以是 1 到 128 个字节。
++
+不允许使用空用户名。
+
+* CHAP 密码（密码）可以是 1 到 512 字节。
++
+密码可以是十六进制值或字符串。对于十六进制值，应输入前缀为 "`0x` " 或 "`0x` " 的值。不允许使用空密码。
+
+* 有关其他限制，请参见启动程序的文档。
++
+例如，如果未使用 IPsec 加密， Microsoft iSCSI 软件启动程序要求启动程序和目标 CHAP 密码至少为 12 字节。无论是否使用 IPsec ，最大密码长度均为 16 字节。
+
+

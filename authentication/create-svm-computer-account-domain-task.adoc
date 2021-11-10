@@ -1,0 +1,41 @@
+---
+permalink: authentication/create-svm-computer-account-domain-task.html 
+sidebar: sidebar 
+keywords: create, svm, computer, account, domain 
+summary: 如果尚未为数据 SVM 配置 CIFS 服务器，则可以使用 vserver active-directory create 命令在域上为 SVM 创建计算机帐户。 
+---
+= 在域上创建 SVM 计算机帐户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果尚未为数据 SVM 配置 CIFS 服务器，则可以使用 `vserver active-directory create` 命令在域上为 SVM 创建计算机帐户。
+
+要执行此任务，您必须是集群或 SVM 管理员。
+
+输入 `vserver active-directory create` 命令后，系统会提示您提供具有足够权限的 AD 用户帐户的凭据，以便将计算机添加到域中的指定组织单位。帐户的密码不能为空。
+
+.步骤
+. 在 AD 域上为 SVM 创建计算机帐户：
++
+`vserver active-directory create -vserver svm_name -account-name netbios_account_name -domain domain -ou Organization_unit`
+
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+以下命令会在域 `example.com` 上为 SVM `engData` 创建一个名为 `ADSERVER1` 的计算机帐户。输入命令后，系统将提示您输入 AD 用户帐户凭据。
+
++
+[listing]
+----
+cluster1::>vserver active-directory create -vserver engData -account-name ADSERVER1 -domain example.com
+
+In order to create an Active Directory machine account, you must supply the name and password of a Windows account with sufficient privileges to add computers to the "CN=Computers" container within the "example.com" domain.
+
+Enter the user name: Administrator
+
+Enter the password:
+----
+

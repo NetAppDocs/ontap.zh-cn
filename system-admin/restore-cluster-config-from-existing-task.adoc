@@ -1,0 +1,138 @@
+---
+permalink: system-admin/restore-cluster-config-from-existing-task.html 
+sidebar: sidebar 
+keywords: restore, cluster, configuration, existing, configuration, failure, recovering, node, rejoin, cluster 
+summary: 要在集群发生故障后从现有配置中还原集群配置，请使用您选择并可供恢复节点使用的集群配置重新创建集群，然后将每个附加节点重新加入新集群。 
+---
+= 从现有配置还原集群配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要在集群发生故障后从现有配置中还原集群配置，请使用您选择并可供恢复节点使用的集群配置重新创建集群，然后将每个附加节点重新加入新集群。
+
+您只能通过执行此任务从导致集群配置丢失的灾难中恢复。
+
+[NOTE]
+====
+如果您要从配置备份文件重新创建集群，则必须联系技术支持以解决配置备份文件与集群中存在的配置之间的任何差异。
+
+====
+.步骤
+. 为每个 HA 对禁用存储故障转移：
++
+` * 存储故障转移修改 -node _node_name_ -enabled false*`
+
++
+对于每个 HA 对，只需禁用一次存储故障转移。如果对某个节点禁用存储故障转移，则该节点的配对节点上也会禁用存储故障转移。
+
+. 暂停除恢复节点以外的每个节点：
++
+` * 系统节点暂停 -node _node_name_ -reason "text"*`
+
++
+[listing]
+----
+cluster1::*> system node halt -node node0 -reason "recovering cluster"
+
+Warning: Are you sure you want to halt the node? {y|n}: y
+----
+. 将权限级别设置为高级：
++
+` * 设置 -privilege advanced*`
+
+. 在恢复节点上，使用 ` * system configuration recovery cluster recreate *` 命令重新创建集群。
++
+以下示例将使用恢复节点上存储的配置信息重新创建集群：
+
++
+[listing]
+----
+cluster1::*> configuration recovery cluster recreate -from node
+
+Warning: This command will destroy your existing cluster. It will
+         rebuild a new single-node cluster consisting of this node
+         and its current configuration. This feature should only be
+         used to recover from a disaster. Do not perform any other
+         recovery operations while this operation is in progress.
+Do you want to continue? {y|n}: y
+----
++
+此时将在恢复节点上创建一个新集群。
+
+. 如果要从配置备份文件重新创建集群，请验证集群恢复是否仍在进行中：
++
+` * 系统配置恢复集群显示 *`
+
++
+如果要从运行状况良好的节点重新创建集群，则无需验证集群恢复状态。
+
++
+[listing]
+----
+cluster1::*> system configuration recovery cluster show
+ Recovery Status: in-progress
+ Is Recovery Status Persisted: false
+----
+. 启动需要重新加入重新创建的集群的每个节点。
++
+您必须一次重新启动一个节点。
+
+. 对于需要加入重新创建的集群的每个节点，请执行以下操作：
++
+.. 从重新创建的集群上运行状况良好的节点中，重新加入目标节点：
++
+` * 系统配置恢复集群重新加入 -node _node_name_*`
+
++
+此示例将 "`node2` " 目标节点重新加入重新创建的集群：
+
++
+[listing]
+----
+cluster1::*> system configuration recovery cluster rejoin -node node2
+
+Warning: This command will rejoin node "node2" into the local
+         cluster, potentially overwriting critical cluster
+         configuration files. This command should only be used
+         to recover from a disaster. Do not perform any other
+         recovery operations while this operation is in progress.
+         This command will cause node "node2" to reboot.
+Do you want to continue? {y|n}: y
+----
++
+目标节点将重新启动，然后加入集群。
+
+.. 验证目标节点是否运行正常并已与集群中的其余节点形成仲裁：
++
+` * cluster show -eligibility true*`
+
++
+目标节点必须重新加入重新创建的集群，然后才能重新加入其他节点。
+
++
+[listing]
+----
+cluster1::*> cluster show -eligibility true
+Node                 Health  Eligibility   Epsilon
+-------------------- ------- ------------  ------------
+node0                true    true          false
+node1                true    true          false
+2 entries were displayed.
+----
+
+
+. 如果从配置备份文件重新创建集群，请将恢复状态设置为已完成：
++
+` * 系统配置恢复集群 modify -recovery-status complete*`
+
+. 返回到管理权限级别：
++
+` * 设置 -privilege admin*`
+
+. 如果集群仅包含两个节点，请使用 ` * cluster ha modify*` 命令重新启用集群 HA 。
+. 使用 ` * storage failover modify*` 命令为每个 HA 对重新启用存储故障转移。
+
+
+如果集群具有 SnapMirror 对等关系，则还需要重新创建这些关系。有关详细信息，请参见 link:../data-protection/index.html["数据保护"]。

@@ -1,0 +1,26 @@
+---
+permalink: volumes/quotas-applied-concept.html 
+sidebar: sidebar 
+keywords: how quotas are applied, configure, quotas 
+summary: 通过了解配额的应用方式，您可以配置配额并设置预期限制。 
+---
+= 如何应用配额
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过了解配额的应用方式，您可以配置配额并设置预期限制。
+
+每当尝试在启用了配额的 FlexVol 卷中创建文件或向文件写入数据时，系统都会先检查配额限制，然后再继续执行此操作。如果操作超过磁盘限制或文件限制，则会阻止此操作。
+
+系统将按以下顺序检查配额限制：
+
+. 该 qtree 的树配额（如果正在创建文件或将文件写入 qtree0 ，则此检查不相关。）
+. 拥有卷上的文件的用户的用户配额
+. 拥有卷上的文件的组的组配额
+. 拥有 qtree 上文件的用户的用户配额（如果正在创建文件或将文件写入 qtree0 ，则此检查不相关。）
+. 拥有 qtree 上的文件的组的组配额（如果正在创建文件或将文件写入 qtree0 ，则此检查不相关。）
+
+
+限制最小的配额可能不是首先超过的配额。例如，如果卷 vol1 的用户配额为 100 GB ， 卷 vol1 中 qtree q2 的用户配额为 20 GB ，如果该用户已在卷 vol1 中写入超过 80 GB 的数据（但在 qtree q2 之外），则可以首先达到卷限制。

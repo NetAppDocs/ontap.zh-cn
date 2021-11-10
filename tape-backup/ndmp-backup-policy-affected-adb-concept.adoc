@@ -1,0 +1,21 @@
+---
+permalink: tape-backup/ndmp-backup-policy-affected-adb-concept.html 
+sidebar: sidebar 
+keywords: ndmp, backup, policy, adb, aggregate, balancer, analysis, user, statistics, usage, percentage 
+summary: 启用自动数据平衡器（ ADB ）后，该平衡器将分析聚合的使用情况统计信息，以确定已超过配置的高阈值使用百分比的聚合。 
+---
+= 在 ADB 期间 NDMP 备份策略会受到什么影响
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+启用自动数据平衡器（ ADB ）后，该平衡器将分析聚合的使用情况统计信息，以确定已超过配置的高阈值使用百分比的聚合。
+
+在确定已超过阈值的聚合后，此平衡器将确定可移动到集群中另一节点中的聚合的卷，并尝试移动该卷。这种情况会影响为此卷配置的备份策略，因为如果数据管理应用程序（ DMA ）不支持 CAB ，则用户必须重新配置备份策略并运行基线备份操作。
+
+[NOTE]
+====
+如果 DMA 支持 CAB ，并且备份策略已使用特定接口配置，则 ADB 不会受到影响。
+
+====

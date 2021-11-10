@@ -1,0 +1,31 @@
+---
+permalink: san-admin/lun-access-virtualized-environment-concept.html 
+sidebar: sidebar 
+keywords: how, lun, access, works, virtualized, environment, single, svm, cluster, active or optimized path, multiple 
+summary: 在虚拟化环境中， LIF 使主机（客户端）能够通过优化和非优化路径访问 LUN 。 
+---
+= LUN 访问在虚拟化环境中的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在虚拟化环境中， LIF 使主机（客户端）能够通过优化和非优化路径访问 LUN 。
+
+LIF 是一个逻辑接口，用于将 SVM 连接到物理端口。尽管多个 SVM 可以在同一端口上具有多个 LIF ，但一个 LIF 属于一个 SVM 。您可以通过 SVM LIF 访问 LUN 。
+
+在以下示例中，主机 1 连接到 SVM-1 中的 LIF1.1 和 LIF1.2 以访问 LUN1 。LIF1.1 使用物理端口 node1 ： 0c ， LIF1.2 使用 node2 ： 0c 。LIF1.1 和 LIF1.2 仅属于 SVM-1 。如果在节点 1 或节点 2 上为 SVM-1 创建了新的 LUN ，则它可以使用这些相同的 LIF 。如果创建了新的 SVM ，则可以使用两个节点上的物理端口 0c 或 0d 创建新的 LIF 。
+
+image::../media/bsag-c-mode-1-lif-belongs-1-vs.gif[对 LUN1 的 SVM 访问]
+
+一个物理端口可以支持多个为不同 SVM 提供服务的 LIF 。由于 LIF 与特定 SVM 关联，因此集群节点可以将传入数据流量发送到正确的 SVM 。在以下示例中， 1 到 4 之间的每个节点都具有一个 SVM-2 LIF ，并使用每个节点上的物理端口 0c 。主机 1 连接到 SVM-1 中的 LIF1.1 和 LIF1.2 以访问 LUN1 。主机 2 连接到 SVM-2 中的 LIF2-1 和 LIF2-2 以访问 LUN2 。两个 SVM 共享节点 1 和 2 上的物理端口 0c 。SVM-2 具有其他 LIF ，主机 2 使用这些 LIF 访问 LUN 3 和 4 。这些 LIF 正在节点 3 和 4 上使用物理端口 0c 。多个 SVM 可以共享节点上的物理端口。
+
+image::../media/bsag-c-mode-multiple-lifs-vservers.gif[node2 上有 2 个 LIF ，用于 2 个 SVM]
+
+在活动路径或优化路径中，数据流量不会通过集群网络传输，而是通过最直接的路由传输到 LUN 。到 LUN1 的活动或优化路径通过 node1 中的 LIF1.1 ，并使用物理端口 0c 。主机 2 有两个活动路径或优化路径，一个路径指向节点 1 LIF2.1 ，该节点共享物理端口 0c ，另一个路径指向节点 4 LIF2.4 ，该节点使用物理端口 0c 。
+
+image::../media/bsag-c-mode-unoptimized-path.gif[优化路径示例]
+
+在主动或非优化路径（间接）路径中，数据流量通过集群网络传输。只有当主机中的所有活动或优化路径均不可用于处理流量时，才会发生此问题描述。如果从主机 2 到 SVM-2 LIF2.4 的路径丢失，则对 LUN3 和 LUN4 的访问将遍历集群网络。从主机 2 访问时，会在节点 3 上使用 LIF2.3 。然后，流量将进入集群网络交换机并备份到 node4 以访问 LUN3 和 LUN4 。然后，它会通过集群网络交换机返回，然后通过 LIF2.3 返回到主机 2 。在节点 4 上的另一个物理端口上为 SVM-2 还原 LIF2.4 路径或建立新的 LIF 之前，系统将使用此活动路径或非优化路径。
+
+image::../media/bsag-c-mode-optimized-path.gif[非优化路径示例]

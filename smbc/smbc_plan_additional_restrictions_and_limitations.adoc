@@ -19,23 +19,17 @@ summary: 使用 SnapMirror Business Continuity 解决方案时，还存在一些
 
 === 一致性组
 
-一个集群中的最大 SnapMirror 同步一致性组关系数为五个，这一限制与平台无关。如果达到或尝试超过此限制，则会显示以下消息：
+从 ONTAP 9.8 到 9.1.1 ，集群中的最大 SnapMirror 同步一致性组关系数为 5 ，这一限制与平台无关。从 ONTAP 9.10.1 开始，一个集群中的最大 SnapMirror 同步一致性组关系数为 20 。如果达到或尝试超过此限制，则会显示一条错误消息。
 
-....
-The number of SnapMirror Synchronous consistency group relationships in a cluster cannot exceed 5
-....
 
 
 === 每个一致性组的卷数
 
-每个 SnapMirror 同步一致性组关系支持的最大卷数为 12 个，这一限制与平台无关。如果达到或尝试超过此限制，则会显示以下消息：
-
-....
-The number of volumes in a SnapMirror Synchronous Consistency Group cannot exceed 12
-....
+从 ONTAP 9.8 到 9.1.1 ，每个 SnapMirror 同步一致性组关系支持的最大卷数为 12 个，这一限制与平台无关。从 ONTAP 9.10.1 开始，每个 SnapMirror 同步关系支持的最大卷数为 16 。如果达到或尝试超过此限制，则会显示一条错误消息。
 
 
-=== 卷
+
+=== Volumes
 
 
 NOTE: 限制是端点数量，而不是关系数量。包含 12 个卷的一致性组会在源和目标上提供 12 个端点。与同一 HA 对上的源卷和目标卷建立的 SnapMirror 同步关系会提供 2 个端点。
@@ -43,13 +37,16 @@ NOTE: 限制是端点数量，而不是关系数量。包含 12 个卷的一致�
 下表列出了每个平台的最大端点数量。
 
 |===
-| S否 | 平台 | SM-BC 的每个 HA 端点 | 每个 HA 的整体同步端点和 SM-BC 端点 
+| S否 | 平台 2+| SM-BC 的每个 HA 端点 2+| 每个 HA 的整体同步端点和 SM-BC 端点 
 
 
-| 1. | AFF | 60 | 80 
+|  |  | ONTAP 9.8-9.9 | ONTAP 9.10.1 | ONTAP 9.8-9.9 | ONTAP 9.10.1 
 
 
-| 2. | ASA | 60 | 80 
+| 1. | AFF | 60 | 200 | 80 | 200 
+
+
+| 2. | ASA | 60 | 200 | 80 | 200 
 |===
 
 

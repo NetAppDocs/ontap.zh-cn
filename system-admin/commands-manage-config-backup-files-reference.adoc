@@ -1,0 +1,82 @@
+---
+permalink: system-admin/commands-manage-config-backup-files-reference.html 
+sidebar: sidebar 
+keywords: command, manage, configuration, backup, file 
+summary: 您可以使用 system configuration backup 命令管理集群和节点配置备份文件。 
+---
+= 用于管理配置备份文件的命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `ssystem configuration backup` 命令管理集群和节点配置备份文件。
+
+这些命令可在高级权限级别下使用。
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+创建新的节点或集群配置备份文件
+ a| 
+`s系统配置备份创建`
+
+
+
+ a| 
+将配置备份文件从一个节点复制到集群中的另一个节点
+ a| 
+`s系统配置备份副本`
+
+
+
+ a| 
+将配置备份文件从集群中的节点上传到远程 URL （ FTP ， HTTP ， HTTPS ， TFTP 或 FTPS ）
+ a| 
+`s系统配置备份上传`
+
+在远程 URL 中使用 HTTPS 时，请使用 ` -validate-certificate` 选项启用或禁用数字证书验证。默认情况下，证书验证处于禁用状态。
+
+[NOTE]
+====
+要将配置备份文件上传到的 Web 服务器必须已为 HTTP 启用了操作，并为 HTTPS 启用了 POST 操作。某些 Web 服务器可能需要安装一个附加模块。有关详细信息，请参见 Web 服务器的文档。支持的 URL 格式因 ONTAP 版本而异。请参见适用于您的 ONTAP 版本的命令行帮助。
+
+====
+
+
+ a| 
+将配置备份文件从远程 URL 下载到集群中的某个节点，如果指定了此备份文件，请验证此数字证书
+ a| 
+`s系统配置备份下载`
+
+在远程 URL 中使用 HTTPS 时，请使用 ` -validate-certificate` 选项启用或禁用数字证书验证。默认情况下，证书验证处于禁用状态。
+
+
+
+ a| 
+重命名集群中某个节点上的配置备份文件
+ a| 
+`s系统配置备份重命名`
+
+
+
+ a| 
+查看集群中一个或多个节点的节点和集群配置备份文件
+ a| 
+`s系统配置备份显示`
+
+
+
+ a| 
+删除节点上的配置备份文件
+ a| 
+`s系统配置备份删除`
+
+[NOTE]
+====
+此命令仅删除指定节点上的配置备份文件。如果配置备份文件也位于集群中的其他节点上，则该文件仍保留在这些节点上。
+
+====
+|===

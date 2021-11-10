@@ -1,0 +1,35 @@
+---
+permalink: nfs-admin/ontap-secures-file-directory-access-concept.html 
+sidebar: sidebar 
+keywords: file, restriction 
+summary: ONTAP 会评估三个安全级别，以确定实体是否有权对 SVM 上的文件和目录执行请求的操作。在评估三个安全级别后，访问权限由有效权限决定。 
+---
+= 基于文件的限制
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 会评估三个安全级别，以确定实体是否有权对 SVM 上的文件和目录执行请求的操作。在评估三个安全级别后，访问权限由有效权限决定。
+
+任何存储对象最多可包含三种类型的安全层：
+
+* 导出（ NFS ）和共享（ SMB ）安全性
++
+导出并共享对给定 NFS 导出或 SMB 共享的安全适用场景客户端访问。具有管理权限的用户可以管理 SMB 和 NFS 客户端的导出和共享级别安全性。
+
+* 存储级别访问防护文件和目录安全性
++
+存储级别访问防护安全性适用场景 SMB 和 NFS 客户端对 SVM 卷的访问。仅支持 NTFS 访问权限。要使 ONTAP 对 UNIX 用户执行安全检查，以访问应用了存储级别访问防护的卷上的数据， UNIX 用户必须映射到拥有该卷的 SVM 上的 Windows 用户。
+
++
+[NOTE]
+====
+如果您从 NFS 或 SMB 客户端查看文件或目录的安全设置，则不会看到存储级别访问防护安全性。即使是系统（ Windows 或 UNIX ）管理员也无法从客户端撤消存储级别访问防护安全性。
+
+====
+* NTFS ， UNIX 和 NFSv4 原生文件级安全性
++
+表示存储对象的文件或目录具有原生文件级安全性。您可以从客户端设置文件级安全性。无论使用 SMB 还是 NFS 访问数据，文件权限都是有效的。
+
+

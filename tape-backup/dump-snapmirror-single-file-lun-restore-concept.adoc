@@ -1,0 +1,17 @@
+---
+permalink: tape-backup/dump-snapmirror-single-file-lun-restore-concept.html 
+sidebar: sidebar 
+keywords: dump, works, snapmirror, single, file, lun, restore, operation 
+summary: 在使用 SnapMirror 技术将单个文件或 LUN 还原到的卷上执行转储备份或还原操作之前，您必须了解转储操作如何处理单个文件或 LUN 还原操作。 
+---
+= 转储如何与 SnapMirror 单个文件或 LUN 还原配合使用
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用 SnapMirror 技术将单个文件或 LUN 还原到的卷上执行转储备份或还原操作之前，您必须了解转储操作如何处理单个文件或 LUN 还原操作。
+
+在 SnapMirror 单个文件或 LUN 还原操作期间，会限制要还原的文件或 LUN 的客户端 I/O 。单个文件或 LUN 还原操作完成后，文件或 LUN 上的 I/O 限制将被删除。如果对将单个文件或 LUN 还原到的卷执行转储备份，则具有客户端 I/O 限制的文件或 LUN 不会包含在转储备份中。在后续备份操作中，删除 I/O 限制后，此文件或 LUN 将备份到磁带。
+
+您不能在同一个卷上同时执行转储还原和 SnapMirror 单个文件或 LUN 还原操作。

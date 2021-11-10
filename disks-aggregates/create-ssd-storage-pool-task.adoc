@@ -1,0 +1,41 @@
+---
+permalink: disks-aggregates/create-ssd-storage-pool-task.html 
+sidebar: sidebar 
+keywords: create, ssd storage pool 
+summary: 您可以创建固态驱动器（ SSD ）存储池，以便为两到四个 Flash Pool 聚合提供 SSD 缓存。 
+---
+= 创建 SSD 存储池
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以创建固态驱动器（ SSD ）存储池，以便为两到四个 Flash Pool 聚合提供 SSD 缓存。
+
+.关于此任务
+* 在创建磁盘或向存储池添加磁盘时，必须提供磁盘列表。
++
+存储池不支持 `diskcount` 参数。
+
+* 存储池中使用的 SSD 大小应相同。
+
+
+.步骤
+. 确定可用备用 SSD 的名称：
++
+`storage aggregate show-spare-disks -disk-type SSD`
+
++
+存储池中使用的 SSD 可以归 HA 对中的任一节点所有。
+
+. 创建存储池：
++
+`s存储池 create -storage-pool _sp_name_ -disk-list _disk1_ ， _disk2_ ， ...`
+
+. * 可选： * 验证新创建的存储池：
++
+`storage pool show -storage-pool _sp_name_`
+
+
+
+将 SSD 放入存储池后，它们将不再显示为集群上的备用磁盘，即使存储池提供的存储尚未分配给任何 Flash Pool 缓存。您不能将 SSD 作为离散驱动器添加到 RAID 组；其存储只能使用其所属存储池的分配单元进行配置。

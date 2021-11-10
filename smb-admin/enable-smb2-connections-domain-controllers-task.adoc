@@ -1,0 +1,50 @@
+---
+permalink: smb-admin/enable-smb2-connections-domain-controllers-task.html 
+sidebar: sidebar 
+keywords: ontap, enable, smb, version, connect, domain, controller, default, smb2, enable smb2 connections to domain controllers 
+summary: 从 ONTAP 9.1 开始，您可以启用 SMB 版本 2.0 以连接到域控制器。如果已在域控制器上禁用 SMB 1.0 ，则必须执行此操作。从 ONTAP 9.2 开始， SMB2 默认处于启用状态。 
+---
+= 启用与域控制器的 SMB2 连接
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.1 开始，您可以启用 SMB 版本 2.0 以连接到域控制器。如果已在域控制器上禁用 SMB 1.0 ，则必须执行此操作。从 ONTAP 9.2 开始， SMB2 默认处于启用状态。
+
+`sMB2-enableed-for-dc-connections` 命令选项可为您正在使用的 ONTAP 版本启用系统默认设置。对于 SMB 1.0 ， ONTAP 9.1 的系统默认设置为已启用，而对于 SMB 2.0 ，系统默认设置为已禁用。对于 SMB 1.0 ，系统默认启用 ONTAP 9.2 ，对于 SMB 2.0 ，系统默认启用 SMB 9.2 。如果域控制器最初无法协商 SMB 2.0 ，则会使用 SMB 1.0 。
+
+可以从 ONTAP 到域控制器禁用 SMB 1.0 。在 ONTAP 9.1 中，如果已禁用 SMB 1.0 ，则必须启用 SMB 2.0 才能与域控制器进行通信。
+
+[NOTE]
+====
+如果将 ` -smb1-enabled-for-dc-connections` 设置为 `false` 而将 ` -smb1-enabled` 设置为 `true` ，则 ONTAP 会拒绝 SMB 1.0 连接作为客户端，但仍会接受入站 SMB 1.0 连接作为服务器。请参见本指南中的 _enabling and disabling SMB versions _ 主题。
+
+====
+.步骤
+. 在更改 SMB 安全设置之前，请确认已启用哪些 SMB 版本： `vserver cifs security show`
+. 向下滚动列表以查看 SMB 版本。
+. 使用 `sMB2-enabled-for-dc-connections` 选项执行相应的命令。
++
+|===
+| SMB2 的目标位置 | 输入命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver cifs security modify -vserver _vserver_name_ -smb2-enableed-for-dc-connections true`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver cifs security modify -vserver _vserver_name_ -smb2-enableed-for-dc-connections false`
+
+|===
+
+
+* 相关信息 *
+
+xref:supported-versions-functionality-concept.adoc[支持的 SMB 版本和功能]

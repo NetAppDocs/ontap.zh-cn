@@ -1,0 +1,89 @@
+---
+permalink: smb-admin/share-properties-concept.html 
+sidebar: sidebar 
+keywords: customize, properties, property, smb, share, how to use smb share properties 
+summary: 您可以自定义 SMB 共享的属性。 
+---
+= 使用 SMB 共享属性概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以自定义 SMB 共享的属性。
+
+可用的共享属性如下：
+
+|===
+| 共享属性 | Description 
+
+
+ a| 
+`机会锁`
+ a| 
+此属性指定共享使用机会锁，也称为客户端缓存。
+
+
+
+ a| 
+`可浏览`
+ a| 
+此属性允许 Windows 客户端浏览共享。
+
+
+
+ a| 
+`showsnapshot`
+ a| 
+此属性指定客户端可以查看和遍历 Snapshot 副本。
+
+
+
+ a| 
+`更改认证`
+ a| 
+此属性指定共享支持更改通知请求。对于 SVM 上的共享，这是默认的初始属性。
+
+
+
+ a| 
+`attribtecache`
+ a| 
+通过此属性，可以在 SMB 共享上缓存文件属性，从而加快属性访问速度。默认情况下，禁用属性缓存。只有当有客户端通过 SMB 1.0 连接到共享时，才应启用此属性。如果客户端通过 SMB 2.x 或 SMB 3.0 连接到共享，则此共享属性不适用。
+
+
+
+ a| 
+`持续可用`
+ a| 
+此属性允许支持它的 SMB 客户端以持久方式打开文件。以这种方式打开的文件不会受到故障转移和交还等中断事件的影响。
+
+
+
+ a| 
+`BranchCache`
+ a| 
+此属性指定共享允许客户端对此共享中的文件请求 BranchCache 哈希。只有在 CIFS BranchCache 配置中将 "`per-share` " 指定为操作模式时，此选项才有用。
+
+
+
+ a| 
+`基于访问的枚举`
+ a| 
+此属性指定已在此共享上启用 _Access Based 枚举 _ （ ABE ）。用户可以根据用户的访问权限查看 ABE 筛选的共享文件夹，从而防止显示用户无权访问的文件夹或其他共享资源。
+
+
+
+ a| 
+`命名空间缓存`
+ a| 
+此属性指定连接到此共享的 SMB 客户端可以缓存 CIFS 服务器返回的目录枚举结果，从而提高性能。默认情况下， SMB 1 客户端不会缓存目录枚举结果。由于默认情况下 SMB 2 和 SMB 3 客户端会缓存目录枚举结果，因此指定此共享属性仅会为 SMB 1 客户端连接提供性能优势。
+
+
+
+ a| 
+`encrypt-data`
+ a| 
+此属性指定访问此共享时必须使用 SMB 加密。访问 SMB 数据时不支持加密的 SMB 客户端将无法访问此共享。
+
+|===

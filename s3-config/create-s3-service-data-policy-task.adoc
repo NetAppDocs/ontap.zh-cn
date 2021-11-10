@@ -1,0 +1,33 @@
+---
+permalink: s3-config/create-s3-service-data-policy-task.html 
+sidebar: sidebar 
+keywords: create, s3, service, data, policy 
+summary: 您可以为 S3 数据和管理服务创建服务策略。要在 LIF 上启用 S3 数据流量，需要使用 S3 服务数据策略。 
+---
+= 创建 S3 服务数据策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以为 S3 数据和管理服务创建服务策略。要在 LIF 上启用 S3 数据流量，需要使用 S3 服务数据策略。
+
+如果使用的是数据 LIF 和集群间 LIF ，则需要使用 S3 服务数据策略。如果在本地分层使用情形中使用集群 LIF ，则不需要此功能。
+
+为 LIF 指定服务策略时，将使用该策略为 LIF 构建默认角色，故障转移策略和数据协议列表。
+
+虽然可以为 SVM 和 LIF 配置多个协议，但最好将 S3 作为提供对象数据的唯一协议。
+
+.步骤
+. 将权限设置更改为高级：
++
+`set -privilege advanced`
+
+. 创建服务数据策略：
++
+`network interface service-policy create -vserver svm_name -policy policy_name -services data-core ， data-s3-server`
+
++
+要启用 ONTAP S3 ，只需要使用 `data-core` 和 `data-s3-server` 服务，但也可以根据需要提供其他服务。
+
+

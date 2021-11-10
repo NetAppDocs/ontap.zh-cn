@@ -1,0 +1,56 @@
+---
+permalink: smb-config/manage-local-group-membership-task.html 
+sidebar: sidebar 
+keywords: manage, local, group, membership, add, remove, removing, local, domain, user, privilege, manage local group membership 
+summary: 您可以通过添加和删除本地或域用户，或者添加和删除域组来管理本地组成员资格。如果您希望根据对组的访问控制来控制对数据的访问，或者您希望用户拥有与该组关联的权限，则此功能非常有用。 
+---
+= 管理本地组成员资格
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过添加和删除本地或域用户，或者添加和删除域组来管理本地组成员资格。如果您希望根据对组的访问控制来控制对数据的访问，或者您希望用户拥有与该组关联的权限，则此功能非常有用。
+
+如果您不再希望本地用户，域用户或域组具有基于组成员资格的访问权限，则可以从组中删除此成员。
+
+向本地组添加成员时，必须牢记以下几点：
+
+* 您不能将用户添加到特殊的 _Everyone 组。
+* 您不能将本地组添加到其他本地组。
+* 要将域用户或组添加到本地组， ONTAP 必须能够将此名称解析为 SID 。
+
+
+从本地组中删除成员时，必须牢记以下几点：
+
+* 您不能从特殊的 _Everyone _ 组中删除成员。
+* 要从本地组中删除成员， ONTAP 必须能够将其名称解析为 SID 。
+
+
+.步骤
+. 向组添加成员或从组中删除成员。
++
+** 添加成员： ` +vserver cifs users-and-groups local-group add-members ‑vserver vserver_name -group-name group_name ‑member-names name[ ， ...]+`
++
+您可以指定要添加到指定本地组的本地用户，域用户或域组的逗号分隔列表。
+
+** 删除成员： ` +vserver cifs users-and-groups local-group remove-members -vserver vserver_name -group-name group_name ‑member-names name[ ， ...]+`
++
+您可以指定要从指定本地组中删除的本地用户，域用户或域组的逗号分隔列表。
+
+
+
+
+
+以下示例将本地用户 `SMB_server01\sue` 添加到 SVM vs1.example.com 上的本地组 `SMB_server01\engineering` ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group add-members -vserver vs1.example.com -group-name SMB_SERVER01\engineering -member-names SMB_SERVER01\sue
+----
+以下示例将从 SVM vs1.example.com 上的本地组 `Smb_server01\engineering` 中删除本地用户 `Smb_server01\sue` 和 `Smb_server01\james` ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-group remove-members -vserver vs1.example.com -group-name SMB_SERVER\engineering -member-names SMB_SERVER\sue,SMB_SERVER\james
+----

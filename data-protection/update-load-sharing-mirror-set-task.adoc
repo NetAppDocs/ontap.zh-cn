@@ -1,0 +1,28 @@
+---
+permalink: data-protection/update-load-sharing-mirror-set-task.html 
+sidebar: sidebar 
+keywords: update, loaad-sharing, mirror, relationship 
+summary: 如果您希望在下次计划更新之前显示根卷上的更改，则应手动更新负载共享镜像（ LSM ）关系。例如，在 SVM 的根卷上挂载新卷时，您应更新 LSM 关系。 
+---
+= 更新负载共享镜像关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您希望在下次计划更新之前显示根卷上的更改，则应手动更新负载共享镜像（ LSM ）关系。例如，在 SVM 的根卷上挂载新卷时，您应更新 LSM 关系。
+
+.步骤
+. 手动更新负载共享镜像关系：
++
+`snapmirror update-ls-set -source-path _svm ： volume_|_cluster ： //svm/volume_s`
+
++
+以下示例更新了根卷 `svm1_root` 的负载共享镜像关系：
+
++
+[listing]
+----
+cluster_src::> snapmirror update-ls-set -source-path svm1:svm1_root
+----
+

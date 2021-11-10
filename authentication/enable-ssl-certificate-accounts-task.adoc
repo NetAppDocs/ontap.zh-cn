@@ -1,0 +1,56 @@
+---
+permalink: authentication/enable-ssl-certificate-accounts-task.html 
+sidebar: sidebar 
+keywords: enable, ssl certificate, accounts 
+summary: 您可以使用 security login create 命令使管理员帐户能够使用 SSL 证书访问管理员或数据 SVM 。 
+---
+= 启用 SSL 证书帐户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `ssecurity login create` 命令使管理员帐户能够使用 SSL 证书访问管理员或数据 SVM 。
+
+您必须是集群管理员才能执行此任务。
+
+.关于此任务
+* 您必须先安装 CA 签名的服务器数字证书，帐户才能访问 SVM 。
++
+xref:install-server-certificate-cluster-svm-ssl-server-task.adoc[生成并安装 CA 签名的服务器证书]
+
++
+您可以在启用帐户访问之前或之后执行此任务。
+
+* 如果您不确定要分配给登录帐户的访问控制角色，可以稍后使用 `ssecurity login modify` 命令添加该角色。
++
+xref:modify-role-assigned-administrator-task.adoc[修改分配给管理员的角色]
+
+
+
+[NOTE]
+====
+对于集群管理员帐户，只有 `http` 和 `ontapi` 应用程序才支持证书身份验证。对于 SVM 管理员帐户，只有 `ontapi` 应用程序才支持证书身份验证。
+
+====
+.步骤
+. 允许本地管理员帐户使用 SSL 证书访问 SVM ：
++
+`ssecurity login create -vserver svm_name -user-or-group-name user_or_group_name -application application -authmethod authentication_method -role role -comment comment`
+
++
+有关完整的命令语法，请参见 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["按版本显示 ONTAP 手册页"]。
+
++
+以下命令可使默认为 `vsadmin` role 的 SVM 管理员帐户 `svmadmin2` 使用 SSL 数字证书访问 SVM``engData2`` 。
+
++
+[listing]
+----
+cluster1::>security login create -vserver engData2 -user-or-group-name svmadmin2 -application ontapi -authmethod cert
+----
+
+
+如果您尚未安装 CA 签名的服务器数字证书，则必须先安装此证书，然后帐户才能访问 SVM 。
+
+xref:install-server-certificate-cluster-svm-ssl-server-task.adoc[生成并安装 CA 签名的服务器证书]

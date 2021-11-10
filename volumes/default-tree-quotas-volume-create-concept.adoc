@@ -1,0 +1,46 @@
+---
+permalink: volumes/default-tree-quotas-volume-create-concept.html 
+sidebar: sidebar 
+keywords: how, default, tree quotas, flexvol volume, create, derived tree quotas 
+summary: 在 FlexVol 卷上创建默认树配额时，系统会自动为该卷中的每个 qtree 创建相应的派生树配额。 
+---
+= FlexVol 卷上的默认树配额如何创建派生树配额
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 FlexVol 卷上创建默认树配额时，系统会自动为该卷中的每个 qtree 创建相应的派生树配额。
+
+这些派生树配额与默认树配额具有相同的限制。如果不存在其他配额，这些限制将产生以下影响：
+
+* 用户可以使用为整个卷分配的 qtree 空间（前提是他们不会通过使用根或另一个 qtree 中的空间超过卷的限制）。
+* 每个 qtree 都可以增长以占用整个卷。
+
+
+卷上存在默认树配额仍会影响添加到卷中的所有新 qtree 。每次创建新 qtree 时，还会创建派生树配额。
+
+与所有派生配额一样，派生树配额也会显示以下行为：
+
+* 仅当目标尚未具有显式配额时才会创建。
+* 显示在配额报告中，但在使用 `volume quota policy rule show` 命令显示配额规则时不会显示。
+
+
+您的卷包含三个 qtree （ proj1 ， proj2 和 proj3 ），唯一的树配额是 proj1 qtree 上的显式配额，该配额将磁盘大小限制为 10 GB 。如果在卷上创建默认树配额并重新初始化卷上的配额，则配额报告现在包含四个树配额：
+
+[listing]
+----
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1     proj1     tree    1           0B   10GB       1       -   proj1
+vol1               tree    *           0B   20GB       0       -   *
+vol1     proj2     tree    2           0B   20GB       1       -   proj2
+vol1     proj3     tree    3           0B   20GB       1       -   proj3
+...
+----
+第一行显示了 proj1 qtree 上的原始显式配额。此配额保持不变。
+
+第二行显示了卷上的新默认树配额。星号（ * ）配额说明符表示此配额为默认配额。此配额是您创建的配额规则的结果。
+
+最后两行显示了 proj2 和 proj3 qtree 的新派生树配额。ONTAP 会根据卷上的默认树配额自动创建这些配额。这些派生树配额与卷上的默认树配额具有相同的 20 GB 磁盘限制。ONTAP 未为 proj1 qtree 创建派生树配额，因为 proj1 qtree 已具有显式配额。

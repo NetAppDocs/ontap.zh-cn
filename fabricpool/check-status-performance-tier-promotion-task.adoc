@@ -1,0 +1,48 @@
+---
+permalink: fabricpool/check-status-performance-tier-promotion-task.html 
+sidebar: sidebar 
+keywords: checking, status, performance, tier, promotion 
+summary: 您可以检查性能层提升的状态以确定操作何时完成。 
+---
+= 检查性能层促销的状态
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以检查性能层提升的状态以确定操作何时完成。
+
+.步骤
+. 使用带有 `分层` 选项的 volume `object-store` 命令检查性能层提升的状态。
++
+[listing]
+----
+volume object-store tiering show [ -instance | -fields <fieldname>, ... ] [ -vserver <vserver name> ] *Vserver
+[[-volume] <volume name>] *Volume [ -node <nodename> ] *Node Name [ -vol-dsid <integer> ] *Volume DSID
+[ -aggregate <aggregate name> ] *Aggregate Name
+----
++
+[listing]
+----
+volume object-store tiering show v1 -instance
+
+                                  Vserver: vs1
+                                   Volume: v1
+                                Node Name: node1
+                              Volume DSID: 1023
+                           Aggregate Name: a1
+                                    State: ready
+                      Previous Run Status: completed
+                 Aborted Exception Status: -
+               Time Scanner Last Finished: Mon Jan 13 20:27:30 2020
+                 Scanner Percent Complete: -
+                      Scanner Current VBN: -
+                         Scanner Max VBNs: -
+      Time Waiting Scan will be scheduled: -
+                           Tiering Policy: snapshot-only
+     Estimated Space Needed for Promotion: -
+                        Time Scan Started: -
+  Estimated Time Remaining for scan to complete: -
+                    Cloud Retrieve Policy: promote
+----
+

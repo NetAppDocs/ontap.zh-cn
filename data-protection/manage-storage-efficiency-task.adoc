@@ -1,0 +1,74 @@
+---
+permalink: data-protection/manage-storage-efficiency-task.html 
+sidebar: sidebar 
+keywords: manage, storage, efficiency 
+summary: SnapMirror 可保留源卷和目标卷上的存储效率，但在目标上启用后处理数据压缩时除外。在这种情况下，目标上的所有存储效率都将丢失。要更正此问题描述，您需要在目标上禁用后处理压缩，手动更新关系并重新启用存储效率。 
+---
+= 管理存储效率
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror 可保留源卷和目标卷上的存储效率，但在目标上启用后处理数据压缩时除外。在这种情况下，目标上的所有存储效率都将丢失。要更正此问题描述，您需要在目标上禁用后处理压缩，手动更新关系并重新启用存储效率。
+
+.您需要什么？ #8217 ；将需要什么
+* 源和目标集群以及 SVM 必须建立对等关系。
++
+https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM 对等"]
+
+* 必须在目标上禁用后处理压缩。
+
+
+您可以使用 `volume efficiency show` 命令确定是否已在卷上启用效率。有关详细信息，请参见手册页。
+
+您可以通过查看 SnapMirror 审核日志并找到传输问题描述来检查 SnapMirror 是否保持存储效率。如果传输问题描述显示 `transfer_desc=Logical Transfer` ，则 SnapMirror 不会保持存储效率。如果传输问题描述显示 `transfer_desc=Logical Transfer with Storage Efficiency` ，则 SnapMirror 将保持存储效率。例如：
+
+[listing]
+----
+Fri May 22 02:13:02 CDT 2020 ScheduledUpdate[May 22 02:12:00]:cc0fbc29-b665-11e5-a626-00a09860c273 Operation-Uuid=39fbcf48-550a-4282-a906-df35632c73a1 Group=none Operation-Cookie=0 action=End source=<sourcepath> destination=<destpath> status=Success bytes_transferred=117080571 network_compression_ratio=1.0:1 transfer_desc=Logical Transfer - Optimized Directory Mode
+----
+使用存储进行逻辑传输
+
+从 ONTAP 9.3 开始，不再需要手动更新即可重新启用存储效率。如果 SnapMirror 检测到已禁用后处理压缩，则会在下次计划更新时自动重新启用存储效率。源和目标都必须运行 ONTAP 9.3 。
+
+从 ONTAP 9.3 开始，在将目标卷设为可写后， AFF 系统对存储效率设置的管理方式与 FAS 系统不同：
+
+* 使用 `snapmirror break` 命令使目标卷可写后，卷上的缓存策略会自动设置为 "`auto` " （默认值）。
++
+[NOTE]
+====
+此行为仅适用于 FlexVol 卷，不适用于 FlexGroup 卷。
+
+====
+* 重新同步时，缓存策略会自动设置为 "`none` " ，并且无论您的原始设置如何，重复数据删除和实时压缩都会自动禁用。您必须根据需要手动修改这些设置。
+
+
+[NOTE]
+====
+启用存储效率后手动更新可能会非常耗时。您可能希望在非高峰时段运行此操作。
+
+====
+.步骤
+. 更新复制关系并重新启用存储效率：
++
+`snapmirror update -source-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -enable-storage-efficiency true`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 `snapmirror initialize` 重新初始化此关系。
+
+====
++
+以下示例更新了源卷 `volA` on `svm1` 与目标卷 `vola_dst` on `svm_backup` 之间的关系，并重新启用存储效率：
+
++
+[listing]
+----
+cluster_dst::> snapmirror update -source-path svm1:volA -destination-path svm_backup:volA_dst -enable-storage-efficiency true
+----
+

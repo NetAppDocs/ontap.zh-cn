@@ -1,0 +1,64 @@
+---
+permalink: nfs-admin/enable-disable-nfsv4-read-file-delegations-task.html 
+sidebar: sidebar 
+keywords: enable, disable, nfsv4, read, file, delegation 
+summary: 要启用或禁用 NFSv4 读取文件委派，您可以修改 -v4.0-read-delegation 或 -v4.1-read-delegation 选项。通过启用读取文件委派，您可以消除与打开和关闭文件相关的大量消息开销。 
+---
+= 启用或禁用 NFSv4 读取文件委派
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要启用或禁用 NFSv4 读取文件委派，您可以修改 `` -v4.0-read-delegation``或 ` -v4.1-read-delegation` 选项。通过启用读取文件委派，您可以消除与打开和关闭文件相关的大量消息开销。
+
+默认情况下，读取文件委派处于禁用状态。
+
+启用读取文件委派的缺点是，服务器及其客户端必须在服务器重新启动，客户端重新启动或发生网络分区后恢复委派。
+
+.步骤
+. 执行以下操作之一：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+启用 NFSv4 读取文件委派
+ a| 
+输入以下命令：
+
+`vserver nfs modify -vserver vserver_name -v4.0-read-delegation enabled`
+
+
+
+ a| 
+启用 NFSv4.1 读取文件委派
+ a| 
+输入以下命令：
+
++ `vserver nfs modify -vserver vserver_name -v4.1-read-delegation enabled`
+
+
+
+ a| 
+禁用 NFSv4 读取文件委派
+ a| 
+输入以下命令：
+
+`vserver nfs modify -vserver vserver_name -v4.0-read-delegation disabled`
+
+
+
+ a| 
+禁用 NFSv4.1 读取文件委派
+ a| 
+输入以下命令：
+
+`vserver nfs modify -vserver vserver_name -v4.1-read-delegation disabled`
+
+|===
+
+
+文件委派选项一经更改即会生效。无需重新启动或重新启动 NFS 。

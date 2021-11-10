@@ -1,0 +1,22 @@
+---
+permalink: smb-admin/guidelines-reverting-local-users-groups-concept.html 
+sidebar: sidebar 
+keywords: plan, revert, cluster, ontap, release, support, local, user, group, manage, consideration, guidelines for reverting 
+summary: 如果您计划将集群还原到不支持本地用户和组的 ONTAP 版本，并且正在使用本地用户和组管理文件访问或用户权限，则必须了解某些注意事项。 
+---
+= 还原准则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您计划将集群还原到不支持本地用户和组的 ONTAP 版本，并且正在使用本地用户和组管理文件访问或用户权限，则必须了解某些注意事项。
+
+* 由于安全原因，在将 ONTAP 还原到不支持本地用户和组功能的版本时，不会删除有关已配置的本地用户，组和权限的信息。
+* 还原到 ONTAP 的先前主要版本后， ONTAP 在身份验证和凭据创建期间不会使用本地用户和组。
+* 不会从文件和文件夹 ACL 中删除本地用户和组。
+* 如果文件访问请求取决于因向本地用户或组授予权限而授予的访问权限，则这些请求将被拒绝。
++
+要允许访问，您必须重新配置文件权限，以允许基于域对象而不是本地用户和组对象进行访问。
+
+

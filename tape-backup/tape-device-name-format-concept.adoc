@@ -1,0 +1,102 @@
+---
+permalink: tape-backup/tape-device-name-format-concept.html 
+sidebar: sidebar 
+keywords: tape, device, name, format, rewind, type, alias, compression 
+summary: 每个磁带设备都有一个关联的名称，该名称以定义的格式显示。此格式包括有关设备类型，倒带类型，别名和压缩类型的信息。 
+---
+= 磁带设备名称格式
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+每个磁带设备都有一个关联的名称，该名称以定义的格式显示。此格式包括有关设备类型，倒带类型，别名和压缩类型的信息。
+
+磁带设备名称的格式如下：
+
+`rewind_type` `st` `alias_number` `compression_type`
+
+`rewind_type` 是倒带类型。
+
+以下列表介绍了各种倒带类型值：
+
+* * R*
++
+ONTAP 在完成磁带文件的写入后将卷倒。
+
+* * nr*
++
+ONTAP 在写入磁带文件后不会倒带。如果要在同一磁带上写入多个磁带文件，则必须使用此倒带类型。
+
+* * 您 *
++
+这是卸载 / 重新加载倒带类型。使用此倒带类型时，磁带库会在磁带文件末尾时卸载磁带，然后加载下一个磁带（如果有）。
+
++
+只有在以下情况下才必须使用此倒带类型：
+
++
+** 与此设备关联的磁带驱动器位于磁带库或处于库模式的介质更换器中。
+** 与此设备关联的磁带驱动器已连接到存储系统。
+** 在为此磁带驱动器定义的库磁带序列中，有足够的磁带可用于您正在执行的操作。
+
+
+
+
+[NOTE]
+====
+如果您使用无倒带设备录制磁带，则必须先倒带，然后再读取。
+
+====
+`st` 是磁带驱动器的标准命名。
+
+`alias_number` 是 ONTAP 分配给磁带驱动器的别名。当 ONTAP 检测到新的磁带驱动器时， ONTAP 会为该磁带驱动器分配一个别名。
+
+`compression_type` 是特定于驱动器的代码，用于表示磁带上的数据密度和压缩类型。
+
+以下列表介绍了 `compression_type` 的各种值：
+
+* * 答 *
++
+最高压缩率
+
+* * 高 *
++
+高压缩率
+
+* * 月 * 日
++
+中等压缩
+
+* * 升 *
++
+压缩率低
+
+
+
+`nrst0a` 指定磁带驱动器 0 上使用最高压缩的无倒带设备。
+
+以下示例显示了与 HP Ultrium 2-SCSI 关联的磁带设备：
+
+[listing]
+----
+
+           Tape drive (fc202_6:2.126L1)  HP      Ultrium 2-SCSI
+    rst0l  -  rewind device,        format is: HP (200GB)
+    nrst0l -  no rewind device,     format is: HP (200GB)
+    urst0l -  unload/reload device, format is: HP (200GB)
+    rst0m  -  rewind device,        format is: HP (200GB)
+    nrst0m -  no rewind device,     format is: HP (200GB)
+    urst0m -  unload/reload device, format is: HP (200GB)
+    rst0h  -  rewind device,        format is: HP (200GB)
+    nrst0h -  no rewind device,     format is: HP (200GB)
+    urst0h -  unload/reload device, format is: HP (200GB)
+    rst0a  -  rewind device,        format is: HP (400GB w/comp)
+    nrst0a -  no rewind device,     format is: HP (400GB w/comp)
+    urst0a -  unload/reload device, format is: HP (400GB w/comp)
+----
+以下列表介绍了上述示例中的缩写词：
+
+* GB-GB ；这是磁带的容量。
+* w/comp —包含数据压缩；这显示了采用数据压缩的磁带容量。
+

@@ -1,0 +1,76 @@
+---
+permalink: s3-config/create-modifyi-object-store-server-policy-task.html 
+sidebar: sidebar 
+keywords: create, modify, object, store, server, policy 
+summary: 您可以创建可应用于对象存储中的一个或多个分段的策略。可以将对象存储服务器策略附加到用户组，从而简化跨多个存储分段的资源访问管理。 
+---
+= 创建或修改对象存储服务器策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以创建可应用于对象存储中的一个或多个分段的策略。可以将对象存储服务器策略附加到用户组，从而简化跨多个存储分段的资源访问管理。
+
+包含 S3 服务器和存储分段且已启用 S3 的 SVM 必须已存在。
+
+您可以通过在对象存储服务器组中指定默认或自定义策略来在 SVM 级别启用访问策略。只有在组定义中指定策略后，这些策略才会生效。
+
+[NOTE]
+====
+使用对象存储服务器策略时，您可以在组定义中指定主体（即用户和组），而不是在策略本身中指定主体。
+
+====
+访问 ONTAP S3 资源有三种只读默认策略：
+
+* 完全访问
+* NoS3 访问
+* 只读访问
+
+
+您也可以创建新的自定义策略，然后为新用户和组添加新语句，或者修改现有语句的属性。有关更多选项，请参见 `vserver object-store-server policy` 手册页。
+
+.步骤
+. 创建对象存储服务器策略：
++
+`vserver object-store-server policy create -vserver svm_name -policy policy_name [-comment text]`
+
+. 为策略创建语句：
++
+`vserver object-store-server policy statement create -vserver svm_name] -policy policy_name -effect ｛ allow_deny ｝ -action object_store_actions -resource object_store_resources [-SID text]`
+
++
+以下参数用于定义访问权限：
+
++
+[cols="2*"]
+|===
+
+
+ a| 
+` 效果`
+ a| 
+该语句可能允许或拒绝访问
+
+
+
+ a| 
+` 操作`
+ a| 
+您可以指定 ` *` 表示所有操作，也可以指定包含以下一项或多项操作的列表： `GetObject ， PutObject ， DeleteObject ， ListBucket ， GetBucketAcl ， GetObjectAcl ， ListAllMyBucketMultipartu上传 ，` 和 `ListMultipartu上传 部件` 。
+
+
+
+ a| 
+` 资源`
+ a| 
+分段及其包含的任何对象。通配符 ` *` 和 ` ？` 可用于形成用于指定资源的正则表达式。
+
+|===
++
+您也可以使用 ` -SID` 选项指定文本字符串作为注释。
+
++
+默认情况下，新的语句将添加到语句列表的末尾，并按顺序进行处理。稍后添加或修改语句时，您可以选择修改语句的 ` 索引` 设置以更改处理顺序。
+
+

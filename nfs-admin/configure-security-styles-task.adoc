@@ -1,0 +1,49 @@
+---
+permalink: nfs-admin/configure-security-styles-task.html 
+sidebar: sidebar 
+keywords: configure, security, style, flexvol, volume 
+summary: 您可以配置 FlexVol 卷安全模式，以确定 Storage Virtual Machine （ SVM ）的 FlexVol 卷上的数据所使用的权限类型。 
+---
+= 在 FlexVol 卷上配置安全模式
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以配置 FlexVol 卷安全模式，以确定 Storage Virtual Machine （ SVM ）的 FlexVol 卷上的数据所使用的权限类型。
+
+.步骤
+. 执行以下操作之一：
++
+[cols="2*"]
+|===
+| 如果 FlexVol 卷 ... | 使用命令 ... 
+
+
+ a| 
+尚不存在
+ a| 
+`volume create` 并包含 ` -security-style` 参数以指定安全模式。
+
+
+
+ a| 
+已存在
+ a| 
+`volume modify` 并包含 ` -security-style` 参数以指定安全模式。
+
+|===
++
+FlexVol 卷安全模式的可能选项为 `UNIX` ， `NTFS` 或 `mixed` 。
+
++
+如果在创建 FlexVol 卷时未指定安全模式，则此卷将继承根卷的安全模式。
+
++
+有关 `volume create` 或 `volume modify` 命令的详细信息，请参见 link:../volumes/index.html["逻辑存储管理"]。
+
+. 要显示配置，包括您创建的 FlexVol 卷的安全模式，请输入以下命令：
++
+`volume show -volume volume_name -instance`
+
+

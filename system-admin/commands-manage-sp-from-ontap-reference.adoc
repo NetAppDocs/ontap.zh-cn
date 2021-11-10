@@ -1,0 +1,246 @@
+---
+permalink: system-admin/commands-manage-sp-from-ontap-reference.html 
+sidebar: sidebar 
+keywords: command, manage, sp, ontap, network, configuration, firmware, image, ssh 
+summary: ONTAP 提供了用于管理 SP 的命令，包括 SP 网络配置， SP 固件映像，对 SP 的 SSH 访问以及常规 SP 管理。 
+---
+= 用于从 ONTAP 管理 SP 的命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 提供了用于管理 SP 的命令，包括 SP 网络配置， SP 固件映像，对 SP 的 SSH 访问以及常规 SP 管理。
+
+
+
+== 用于管理 SP 网络配置的命令
+
+|===
+| 如果您要 ... | 运行此 ONTAP 命令 ... 
+
+
+ a| 
+为 SP 启用 SP 自动网络配置以使用指定子网的 IPv4 或 IPv6 地址系列
+ a| 
+`ssystem service-processor network auto-configuration enable`
+
+
+
+ a| 
+为 SP 指定的子网的 IPv4 或 IPv6 地址系列禁用 SP 自动网络配置
+ a| 
+`ssystem service-processor network auto-configuration disable`
+
+
+
+ a| 
+显示 SP 自动网络配置
+ a| 
+`ssystem service-processor network auto-configuration show`
+
+
+
+ a| 
+手动为节点配置 SP 网络，包括以下内容：
+
+* IP 地址系列（ IPv4 或 IPv6 ）
+* 是否应启用指定 IP 地址系列的网络接口
+* 如果您使用的是 IPv4 ，则是使用 DHCP 服务器的网络配置还是使用您指定的网络地址
+* SP 的公有 IP 地址
+* SP 的网络掩码（如果使用 IPv4 ）
+* SP 子网掩码的网络前缀长度（如果使用 IPv6 ）
+* SP 的网关 IP 地址
+
+ a| 
+`ssystem service-processor network modify`
+
+
+
+ a| 
+显示 SP 网络配置，包括以下内容：
+
+* 已配置的地址系列（ IPv4 或 IPv6 ）及其是否已启用
+* 远程管理设备类型
+* 当前 SP 状态和链路状态
+* 网络配置，例如 IP 地址， MAC 地址，网络掩码，子网掩码的前缀长度，路由器分配的 IP 地址，链路本地 IP 地址和网关 IP 地址
+* 上次更新 SP 的时间
+* 用于 SP 自动配置的子网的名称
+* 是否启用 IPv6 路由器分配的 IP 地址
+* SP 网络设置状态
+* SP 网络设置失败的原因
+
+ a| 
+`ssystem service-processor network show`
+
+要显示完整的 SP 网络详细信息，需要使用 ` -instance` 参数。
+
+
+
+ a| 
+修改 SP API 服务配置，包括以下内容：
+
+* 更改 SP API 服务使用的端口
+* 启用或禁用 SP API 服务
+
+ a| 
+`ssystem service-processor api-service modify`
+
+（高级权限级别）
+
+
+
+ a| 
+显示 SP API 服务配置
+ a| 
+`ssystem service-processor api-service show`
+
+（高级权限级别）
+
+
+
+ a| 
+续订 SP API 服务用于内部通信的 SSL 和 SSH 证书
+ a| 
+* 对于 ONTAP 9.5 或更高版本： `ssystem service-processor api-service renew-internal-certificates`
+* 对于 ONTAP 9.4 或更早版本： `ssystem service-processor api-service renew-certificates`
++
+（高级权限级别）
+
+
+
+|===
+
+
+== 用于管理 SP 固件映像的命令
+
+|===
+| 如果您要 ... | 运行此 ONTAP 命令 ... 
+
+
+ a| 
+显示当前安装的 SP 固件映像的详细信息，包括以下内容：
+
+* 远程管理设备类型
+* 启动 SP 所使用的映像（主映像或备份映像），其状态和固件版本
+* 固件自动更新是否已启用以及上次更新状态
+
+ a| 
+`ssystem service-processor image show`
+
+` -is-current` 参数表示当前启动 SP 的映像（主映像或备份映像），如果安装的固件版本为最新版本，则不会指示此映像。
+
+
+
+ a| 
+启用或禁用 SP 自动固件更新
+ a| 
+`ssystem service-processor image modify`
+
+默认情况下，更新 ONTAP 或手动下载新版本的 SP 固件时， SP 固件会自动更新。建议不要禁用自动更新，因为这样做可能会导致 ONTAP 映像和 SP 固件映像之间的组合不理想或不符合要求。
+
+
+
+ a| 
+在节点上手动下载 SP 固件映像
+ a| 
+`s系统节点映像获取`
+
+[NOTE]
+====
+在运行 `ssystem node image` 命令之前，您必须将权限级别设置为 advanced （ `set -privilege advanced` ），并在系统提示您继续时输入 * y* 。
+
+====
+SP 固件映像随 ONTAP 一起打包。您无需手动下载 SP 固件，除非您要使用与 ONTAP 附带的 SP 固件版本不同的 SP 固件版本。
+
+
+
+ a| 
+显示从 ONTAP 触发的最新 SP 固件更新的状态，包括以下信息：
+
+* 最新 SP 固件更新的开始和结束时间
+* 是否正在进行更新以及完成百分比
+
+ a| 
+`ssystem service-processor image update-progress show`
+
+|===
+
+
+== 用于管理对 SP 的 SSH 访问的命令
+
+|===
+| 如果您要 ... | 运行此 ONTAP 命令 ... 
+
+
+ a| 
+仅向指定的 IP 地址授予 SP 访问权限
+ a| 
+`ssystem service-processor ssh add-allowed-addresses`
+
+
+
+ a| 
+阻止指定的 IP 地址访问 SP
+ a| 
+`ssystem service-processor ssh remove-allowed-addresses`
+
+
+
+ a| 
+显示可访问 SP 的 IP 地址
+ a| 
+`ssystem service-processor ssh show`
+
+|===
+
+
+== 用于常规 SP 管理的命令
+
+|===
+| 如果您要 ... | 运行此 ONTAP 命令 ... 
+
+
+ a| 
+显示常规 SP 信息，包括以下信息：
+
+* 远程管理设备类型
+* 当前 SP 状态
+* 是否配置了 SP 网络
+* 网络信息，例如公有 IP 地址和 MAC 地址
+* SP 固件版本和智能平台管理接口（ Intelligent Platform Management Interface ， IPMI ）版本
+* 是否启用 SP 固件自动更新
+
+ a| 
+`ssystem service-processor show` 要显示完整的 SP 信息，需要使用 ` -instance` 参数。
+
+
+
+ a| 
+重新启动节点上的 SP ，并可选择指定要使用的 SP 固件映像（主映像或备份映像）
+ a| 
+`ssystem service-processor reboot-sp`
+
+[NOTE]
+====
+您应避免从备份映像启动 SP 。从备份映像启动仅供故障排除和恢复使用。可能需要禁用 SP 自动固件更新，这不是建议的设置。在尝试从备份映像启动 SP 之前，您应联系技术支持。
+
+====
+
+
+ a| 
+生成并发送一条 AutoSupport 消息，其中包含从指定节点收集的 SP 日志文件
+ a| 
+`s系统节点 AutoSupport invoke-splog`
+
+
+
+ a| 
+显示集群中收集的 SP 日志文件的分配映射，包括驻留在每个收集节点中的 SP 日志文件的序列号
+ a| 
+`ssystem service-processor log show-allocations`
+
+|===
+* 相关信息 *
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"]

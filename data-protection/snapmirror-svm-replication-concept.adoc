@@ -1,0 +1,818 @@
+---
+permalink: data-protection/snapmirror-svm-replication-concept.html 
+sidebar: sidebar 
+keywords: understand, snapmirror, svm, replication 
+summary: 您可以使用 SnapMirror 在 SVM 之间创建数据保护关系。在这种类型的数据保护关系中，系统会复制 SVM 的全部或部分配置，从 NFS 导出和 SMB 共享到 RBAC ，以及 SVM 所拥有的卷中的数据。 
+---
+= 关于 SnapMirror SVM 复制
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 SnapMirror 在 SVM 之间创建数据保护关系。在这种类型的数据保护关系中，系统会复制 SVM 的全部或部分配置，从 NFS 导出和 SMB 共享到 RBAC ，以及 SVM 所拥有的卷中的数据。
+
+
+
+== 支持的关系类型
+
+只能复制提供数据的 SVM 。支持以下数据保护关系类型：
+
+* _snapmirror DR_ ，其中目标通常仅包含源上当前的 Snapshot 副本。
++
+从 ONTAP 9.1.1 开始，在使用镜像存储策略时，此行为会发生变化。从 ONTAP 9.1.1 开始，您可以在源和目标上创建不同的 Snapshot 策略，并且目标上的 Snapshot 副本不会被源上的 Snapshot 副本覆盖：
+
++
+** 在正常计划的操作，更新和重新同步期间，源到目标之间不会覆盖这些卷
+** 在中断操作期间不会删除这些文件。
+** 在执行翻转重新同步操作期间，不会删除这些文件。在使用 ONTAP 9.9.1 及更高版本的镜像存储策略配置 SVM DR 关系时，此策略的行为如下：
+** 源上用户定义的 Snapshot 副本策略不会复制到目标。
+** 系统定义的 Snapshot 副本策略不会复制到目标。
+** 与用户和系统定义的 Snapshot 策略的卷关联不会复制到目标。+ SVM 。
+
+
+* 从 ONTAP 9.2 _snapmirror unified replication 开始， _ 在该版本中，目标已配置为进行灾难恢复和长期保留。
+
+
+有关这些关系类型的详细信息，请参见： link:snapmirror-replication-concept.html["了解 SnapMirror 卷复制"]。
+
+复制策略的 _policy type_ 决定了它支持的关系类型。下表显示了可用的策略类型。
+
+[cols="2*"]
+|===
+| Policy type | 关系类型 
+
+
+ a| 
+异步镜像
+ a| 
+SnapMirror 灾难恢复
+
+
+
+ a| 
+镜像存储
+ a| 
+统一复制
+
+|===
+
+
+== XDP 取代 DP 作为 ONTAP 9.4 中的 SVM 复制默认值
+
+从 ONTAP 9.4 开始， SVM 数据保护关系默认为 XDP 模式。在 ONTAP 9.3 及更早版本中， SVM 数据保护关系仍默认为 DP 模式。
+
+现有关系不受新默认值的影响。如果某个关系的类型已经是 DP ，则它将继续为 DP 类型。下表显示了您可能会遇到的行为。
+
+[cols="3*"]
+|===
+| 指定项 | 类型为 ... | 默认策略（如果未指定策略）为 ... 
+
+
+ a| 
+数据
+ a| 
+XDP
+ a| 
+MirrorAllSnapshots （ SnapMirror 灾难恢复）
+
+
+
+ a| 
+无
+ a| 
+XDP
+ a| 
+MirrorAllSnapshots （ SnapMirror 灾难恢复）
+
+
+
+ a| 
+XDP
+ a| 
+XDP
+ a| 
+MirrorAndVault （统一复制）
+
+|===
+有关默认更改的详细信息，请参见： link:version-flexible-snapmirror-default-concept.html["XDP 取代 DP 作为 SnapMirror 默认设置"]。
+
+[NOTE]
+====
+SVM 复制不支持与版本无关的功能。
+
+====
+link:compatible-ontap-versions-snapmirror-concept.html["SnapMirror 关系的兼容 ONTAP 版本"]
+
+
+
+== 如何复制 SVM 配置
+
+SVM 复制关系的内容取决于以下字段的交互：
+
+* `snapmirror create` 命令的 ` -identity-preserve true` 选项可复制整个 SVM 配置。
++
+` -identity-preserve false` 选项仅复制 SVM 的卷，身份验证和授权配置以及中列出的协议和名称服务设置 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在 SVM DR 关系中复制的配置"]。
+
+* `snapmirror policy create` 命令的 ` -discard-configs network` 选项可从 SVM 复制中排除 LIF 和相关网络设置，以便在源和目标 SVM 位于不同子网的情况下使用。
+* `volume modify` 命令的 ` -vserver-dr-protection unprotected` 选项可从 SVM 复制中排除指定的卷。
+
+
+否则， SVM 复制与卷复制几乎相同。SVM 复制工作流与卷复制工作流几乎相同。
+
+
+
+== 支持详细信息
+
+下表显示了 SnapMirror SVM 复制的支持详细信息。
+
+[cols="2*"]
+|===
+| 资源或功能 | 支持详细信息 
+
+
+ a| 
+关系类型
+ a| 
+* SnapMirror 灾难恢复
+* 从 ONTAP 9.2 开始，支持 SnapMirror 统一复制
+
+
+
+
+ a| 
+复制范围
+ a| 
+仅限集群间。您不能在同一集群中复制 SVM 。
+
+
+
+ a| 
+不受版本限制
+ a| 
+不支持
+
+
+
+ a| 
+部署类型
+ a| 
+* 单个源到单个目标
+* 从 ONTAP 9.4 开始，扇出。您只能扇出到两个目标。
++
+默认情况下，每个源 SVM 仅允许一个 -identity-preserve true 关系。
+
+
+
+
+
+ a| 
+卷加密
+ a| 
+* 源上的加密卷会在目标上进行加密。
+* 必须在目标上配置板载密钥管理器或 KMIP 服务器。
+* 在目标上生成新的加密密钥。
+* 如果目标不包含支持卷 .encryption 的节点，则复制会成功，但目标卷不会加密。
+
+
+
+
+ a| 
+FabricPool
+ a| 
+从 ONTAP 9.6 开始， FabricPool 支持 SnapMirror SVM 复制。
+
+
+
+ a| 
+MetroCluster
+ a| 
+从 ONTAP 9.5 开始， MetroCluster 配置支持 SnapMirror SVM 复制。
+
+* MetroCluster 配置不能是 SVM DR 关系的目标。
+* 只有 MetroCluster 配置中的活动 SVM 才能成为 SVM DR 关系的源。
++
+源可以是切换前的 sync-source SVM ，也可以是切换后的 sync-destination SVM 。
+
+* 当 MetroCluster 配置处于稳定状态时， MetroCluster sync-destination SVM 不能作为 SVM DR 关系的源，因为卷未联机。
+* 如果 sync-source SVM 是 SVM DR 关系的源，则源 SVM DR 关系信息将复制到 MetroCluster 配对节点。
+* 在切换和切回过程中，复制到 SVM DR 目标可能会失败。
++
+但是，切换或切回过程完成后，下一次 SVM DR 计划更新将成功。
+
+
+
+
+
+ a| 
+SnapMirror 同步
+ a| 
+SVM DR 不支持。
+
+|===
+
+
+== 在 SVM DR 关系中复制的配置
+
+下表显示了 `snapmirror create ` -identity-preserve` 选项和 `snapmirror policy create` -discard-configs network` 选项的交互：
+
+[cols="5*"]
+|===
+2+| 已复制配置 2+| ` *‑identity‑preserve true*` | ` *‑identity‑preserve false*` 
+
+
+ a| 
+|  | * 不带 ` 丢弃 -configs network` set* 的策略 | * 使用 ` -discard-configs network` set* 的策略 |  
+
+
+ a| 
+网络
+ a| 
+NAS LIF
+ a| 
+是的。
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+LIF Kerberos 配置
+ a| 
+是的。
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SAN LIF
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+防火墙策略
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+路由
+ a| 
+是的。
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+广播域
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+Subnet
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+IP 空间
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+CIFS
+ a| 
+CIFS 服务器
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+本地组和本地用户
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+权限
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+卷影副本
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+BranchCache
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+服务器选项
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+服务器安全性
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+主目录，共享
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+符号链接
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+Fpolicy 策略， Fsecurity 策略和 Fsecurity NTFS
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+名称映射和组映射
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+审核信息
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+NFS
+ a| 
+导出策略
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+导出策略规则
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+NFS 服务器
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+RBAC
+ a| 
+安全证书
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+登录用户，公有密钥，角色和角色配置
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+SSL
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+名称服务
+ a| 
+DNS 和 DNS 主机
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+UNIX 用户和 UNIX 组
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+Kerberos 域和 Kerberos 密钥块
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+LDAP 和 LDAP 客户端
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+网络组
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+NIS
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+Web 和 Web 访问
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+Volume
+ a| 
+对象
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+Snapshot 副本， Snapshot 策略和自动删除策略
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+效率策略
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+配额策略和配额策略规则
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+恢复队列
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+根卷
+ a| 
+命名空间
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+用户数据
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+qtree
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+配额
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+文件级 QoS
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+属性：根卷的状态，空间保证，大小，自动调整大小和文件总数
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+存储 QoS
+ a| 
+QoS 策略组
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+光纤通道（ FC ）
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+iSCSI
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+LUN
+ a| 
+对象
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+igroup
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+端口集
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+序列号
+ a| 
+否
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SNMP
+ a| 
+v3 用户
+ a| 
+是的。
+ a| 
+是的。
+ a| 
+否
+
+|===

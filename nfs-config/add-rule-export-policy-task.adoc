@@ -1,0 +1,306 @@
+---
+permalink: nfs-config/add-rule-export-policy-task.html 
+sidebar: sidebar 
+keywords: add, rule, export, policy 
+summary: 如果没有规则，导出策略将无法提供客户端对数据的访问。要创建新的导出规则，您必须标识客户端并选择客户端匹配格式，选择访问和安全类型，指定匿名用户 ID 映射，选择规则索引编号，然后选择访问协议。然后，您可以使用 vserver export-policy rule create 命令将新规则添加到导出策略中。 
+---
+= 向导出策略添加规则
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果没有规则，导出策略将无法提供客户端对数据的访问。要创建新的导出规则，您必须标识客户端并选择客户端匹配格式，选择访问和安全类型，指定匿名用户 ID 映射，选择规则索引编号，然后选择访问协议。然后，您可以使用 `vserver export-policy rule create` 命令将新规则添加到导出策略中。
+
+.您需要什么？ #8217 ；将需要什么
+* 要添加导出规则的导出策略必须已存在。
+* 必须在数据 SVM 上正确配置 DNS ，并且 DNS 服务器必须具有适用于 NFS 客户端的正确条目。
++
+这是因为 ONTAP 使用数据 SVM 的 DNS 配置对某些客户端匹配格式执行 DNS 查找，如果导出策略规则匹配失败，则可能会阻止客户端数据访问。
+
+* 如果您要使用 Kerberos 进行身份验证，则必须已确定 NFS 客户端使用以下哪种安全方法：
++
+** `krb5` （ Kerberos V5 协议）
+** `krb5i` （使用校验和进行完整性检查的 Kerberos V5 协议）
+** `krb5p` （具有隐私服务的 Kerberos V5 协议）
+
+
+
+
+如果导出策略中的现有规则满足客户端匹配和访问要求，则无需创建新规则。
+
+如果您要使用 Kerberos 进行身份验证，并且通过 Kerberos 访问 SVM 的所有卷，则可以将根卷的导出规则选项 ` -rorule` ， ` -rwrule` 和 ` -superuser` 设置为 `krb5` ， `krb5i` 或 `krb5p` 。
+
+.步骤
+. 确定新规则的客户端和客户端匹配格式。
++
+` -clientmatch` 选项指定此规则所适用的客户端。可以指定一个或多个客户端匹配值；多个值的规范必须用逗号分隔。您可以使用以下任意格式指定匹配项：
+
++
+|===
+| 客户端匹配格式 | 示例 
+
+
+ a| 
+域名前面带有 "." 字符
+ a| 
+`.example.com` 或 ` + .example.com,.example.net,...+`
+
+
+
+ a| 
+主机名
+ a| 
+`host1` 或 ` +host1 ， host2 ， ...+`
+
+
+
+ a| 
+IPv4 地址
+ a| 
+`10.1.12.24` 或 ` +10.1.12.24 ， 10.1.12.25 ， ...+`
+
+
+
+ a| 
+IPv4 地址，子网掩码以位数表示
+ a| 
+`10.1.12.10/4` 或 ` +10.1.12.10/4 ， 10.1.12.11/4 ， ...+`
+
+
+
+ a| 
+带有网络掩码的 IPv4 地址
+ a| 
+`10.1.16.0/255.255.255.0` 或 ` +10.1.16.0/255.255.255.0 ， 10.1.17.0/255.255.255.0 ， ...+`
+
+
+
+ a| 
+点格式的 IPv6 地址
+ a| 
+` ：： 1.2.3.4` 或 ` + ：： 1.2.3.4 ，： 1.2.3.5 ， ...+`
+
+
+
+ a| 
+IPv6 地址，子网掩码以位数表示
+ a| 
+`ff ：： 00/32` 或 ` + ff ： 00/32 ， ff ：： 01/32 ， ...+`
+
+
+
+ a| 
+一个网络组，其网络组名称前面带有 @ 字符
+ a| 
+`@netgroup1` 或 ` +@netgroup1 ，@netgroup2 ， ...+`
+
+|===
++
+您还可以组合客户端定义的类型；例如， `.example.com,@netgroup1` 。
+
++
+指定 IP 地址时，请注意以下事项：
+
++
+** 不允许输入 IP 地址范围，例如 10.1.12.10-10.1.12.70 。
++
+此格式的条目将被解释为文本字符串，并被视为主机名。
+
+** 在导出规则中指定单个 IP 地址以精细管理客户端访问时，请勿指定动态分配（例如 DHCP ）或临时分配（例如 IPv6 ）的 IP 地址。
++
+否则，当客户端的 IP 地址发生更改时，客户端将失去访问权限。
+
+** 不允许输入带有网络掩码的 IPv6 地址，例如 ff ： 12/ff ：： 00 。
+
+
+. 为客户端匹配选择访问和安全类型。
++
+您可以为使用指定安全类型进行身份验证的客户端指定以下一种或多种访问模式：
+
++
+** ` -rorule` （只读访问）
+** ` -rwrule` （读写访问）
+** ` 超级用户` （ root 访问）
++
+[NOTE]
+====
+只有当导出规则也允许对特定安全类型进行只读访问时，客户端才能获得该安全类型的读写访问权限。如果只读参数对于安全类型的限制性比读写参数更强，则客户端可能无法获得读写访问权限。超级用户访问也是如此。
+
+====
++
+您可以为一个规则指定多种安全类型的逗号分隔列表。如果将安全类型指定为 `any` 或 `never` ，请勿指定任何其他安全类型。从以下有效安全类型中进行选择：
+
++
+|===
+| 当安全类型设置为 ... | 匹配的客户端可以访问导出的数据 ... 
+
+
+ a| 
+`任意`
+ a| 
+始终，无论传入的安全类型如何。
+
+
+
+ a| 
+`无`
+ a| 
+如果单独列出，则具有任何安全类型的客户端将被授予匿名访问权限。如果与其他安全类型一起列出，则具有指定安全类型的客户端将被授予访问权限，而具有任何其他安全类型的客户端将被授予匿名访问权限。
+
+
+
+ a| 
+`从不`
+ a| 
+从不，无论传入的安全类型如何。
+
+
+
+ a| 
+`krb5`
+ a| 
+如果通过 Kerberos 5 进行身份验证。仅身份验证：每个请求和响应的标头都已签名。
+
+
+
+ a| 
+`krb5i`
+ a| 
+如果通过 Kerberos 5i 进行身份验证。身份验证和完整性：每个请求和响应的标头和正文均已签名。
+
+
+
+ a| 
+`krb5p`
+ a| 
+如果通过 Kerberos 5p 进行身份验证。身份验证，完整性和隐私：对每个请求和响应的标题和正文进行签名，并对 NFS 数据有效负载进行加密。
+
+
+
+ a| 
+`NTLM`
+ a| 
+如果通过 CIFS NTLM 进行身份验证。
+
+
+
+ a| 
+`sys`
+ a| 
+如果通过 NFS AUTH_SYS 进行身份验证。
+
+|===
++
+建议的安全类型为 `sys` ，或者如果使用 Kerberos ，则为 `krb5` ， `krb5i` 或 `krb5p` 。
+
+
+
++
+如果将 Kerberos 与 NFSv3 结合使用，则导出策略规则必须允许 ` -rorule` 和 ` -rwrule` 访问 `sys` 以及 `krb5` 。这是因为需要允许 Network Lock Manager （ NLM ）访问导出。
+
+. 指定匿名用户 ID 映射。
++
+` -anon` 选项指定映射到用户 ID 为 0 （零）的客户端请求的 UNIX 用户 ID 或用户名，该用户 ID 或用户名通常与用户名 root 关联。默认值为 `65534` 。NFS 客户端通常会将用户 ID 65534 与用户名 nobody 相关联（也称为 _root squash_ ）。在 ONTAP 中，此用户 ID 与用户 pcuser 关联。要禁止用户 ID 为 0 的任何客户端访问，请指定值 `65535` 。
+
+. 选择规则索引顺序。
++
+` -ruleindex` 选项指定规则的索引编号。规则将根据其在索引编号列表中的顺序进行评估；索引编号较低的规则将首先进行评估。例如，索引编号为 1 的规则会在索引编号为 2 的规则之前进行评估。
+
++
+|===
+| 如果要添加 ... | 那么 ... 
+
+
+ a| 
+导出策略的第一个规则
+ a| 
+输入 `1` 。
+
+
+
+ a| 
+导出策略的其他规则
+ a| 
+.. 显示策略中的现有规则： + `vserver export-policy rule show -instance -policyname _yy_policy_`
+.. 根据新规则的评估顺序为其选择索引编号。
+
+
+|===
+. 选择适用的 NFS 访问值： ｛`nfs` ｝`nfs3` |`nfs4` ｝ 。
++
+`nfs` 匹配任何版本， `nfs3` 和 `nfs4` 仅匹配这些特定版本。
+
+. 创建导出规则并将其添加到现有导出策略：
++
+`vserver export-policy rule create -vserver _vserver_name_ -policyname _policy_name_ -ruleindex _intege_ -protocol ｛ nfs|nfs3_nfs4 ｝ -clientmatch ｛ text _ "text ， text ， ..."... ｝ -rorule security_type_ -rwrule _security_type_ -superuser _id_security_type_ -user _users_`
+
+. 显示导出策略的规则以验证新规则是否存在：
++
+`vserver export-policy rule show -policyname _policy_name_`
+
++
+命令将显示该导出策略的摘要，包括应用于该策略的规则列表。ONTAP 会为每个规则分配一个规则索引编号。知道规则索引编号后，您可以使用它显示有关指定导出规则的详细信息。
+
+. 验证是否已正确配置应用于导出策略的规则：
++
+`vserver export-policy rule show -policyname _policy_name_ -vserver _vserver_name_ -ruleindex _intege_`
+
+
+
+以下命令将在名为 RS1 的导出策略中的 SVM vs1 上创建导出规则并验证此创建过程。此规则的索引编号为 1 。此规则与域 eng.company.com 和 netgroup @netgroup1 中的任何客户端匹配。此规则将启用所有 NFS 访问。它允许使用 AUTH_SYS 进行身份验证的用户进行只读和读写访问。除非使用 Kerberos 进行身份验证，否则使用 UNIX 用户 ID 0 （零）的客户端将被匿名化。
+
+[listing]
+----
+vs1::> vserver export-policy rule create -vserver vs1 -policyname exp1 -ruleindex 1 -protocol nfs
+-clientmatch eng.company.com,@netgoup1 -rorule sys -rwrule sys -anon 65534 -superuser krb5
+
+vs1::> vserver export-policy rule show -policyname nfs_policy
+Virtual      Policy         Rule    Access    Client           RO
+Server       Name           Index   Protocol  Match            Rule
+------------ -------------- ------  --------  ---------------- ------
+vs1          exp1           1       nfs       eng.company.com, sys
+                                              @netgroup1
+
+vs1::> vserver export-policy rule show -policyname exp1 -vserver vs1 -ruleindex 1
+
+                                    Vserver: vs1
+                                Policy Name: exp1
+                                 Rule Index: 1
+                            Access Protocol: nfs
+Client Match Hostname, IP Address, Netgroup, or Domain: eng.company.com,@netgroup1
+                             RO Access Rule: sys
+                             RW Access Rule: sys
+User ID To Which Anonymous Users Are Mapped: 65534
+                   Superuser Security Types: krb5
+               Honor SetUID Bits in SETATTR: true
+                  Allow Creation of Devices: true
+----
+以下命令将在名为 expol2 的导出策略中的 SVM vs2 上创建导出规则并验证此创建过程。此规则的索引编号为 21 。此规则会将客户端与网络组 dev_netgroup_main 中的成员匹配。此规则将启用所有 NFS 访问。它允许使用 AUTH_SYS 进行身份验证的用户进行只读访问，并要求对读写和 root 访问进行 Kerberos 身份验证。除非使用 Kerberos 进行身份验证，否则使用 UNIX 用户 ID 0 （零）的客户端将被拒绝进行 root 访问。
+
+[listing]
+----
+vs2::> vserver export-policy rule create -vserver vs2 -policyname expol2 -ruleindex 21 -protocol nfs
+-clientmatch @dev_netgroup_main -rorule sys -rwrule krb5 -anon 65535 -superuser krb5
+
+vs2::> vserver export-policy rule show -policyname nfs_policy
+Virtual  Policy       Rule    Access    Client              RO
+Server   Name         Index   Protocol  Match               Rule
+-------- ------------ ------  --------  ------------------  ------
+vs2      expol2       21       nfs      @dev_netgroup_main  sys
+
+vs2::> vserver export-policy rule show -policyname expol2 -vserver vs1 -ruleindex 21
+
+                                    Vserver: vs2
+                                Policy Name: expol2
+                                 Rule Index: 21
+                            Access Protocol: nfs
+Client Match Hostname, IP Address, Netgroup, or Domain:
+                                             @dev_netgroup_main
+                             RO Access Rule: sys
+                             RW Access Rule: krb5
+User ID To Which Anonymous Users Are Mapped: 65535
+                   Superuser Security Types: krb5
+               Honor SetUID Bits in SETATTR: true
+                  Allow Creation of Devices: true
+----

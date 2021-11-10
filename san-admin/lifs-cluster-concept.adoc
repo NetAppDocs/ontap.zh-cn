@@ -1,0 +1,24 @@
+---
+permalink: san-admin/lifs-cluster-concept.html 
+sidebar: sidebar 
+keywords: considerations, lifs, cluster, san environments 
+summary: 您必须了解 SAN 环境中的某些 LIF 注意事项。 
+---
+= 集群 SAN 环境中 LIF 的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须了解 SAN 环境中的某些 LIF 注意事项。
+
+* 对于 SAN iSCSI 或 FC 环境中的集群，启动程序必须使用多路径 I/O （ MPIO ）和非对称逻辑单元访问（ ALUA ）来实现故障转移功能，因为 SAN 不支持 LIF 的自动故障转移。
+* 必须在托管映射 LUN 的每个节点及其 HA 配对节点上至少配置一个使用相应协议的 SAN LIF 。
++
+您可以为每个节点配置两个 LIF ，每个 LIF 用于与 FC 一起使用的每个网络结构，并为 iSCSI 分隔以太网网络。
+
+* 某些选项不适用于 iSCSI 或 FC 。
++
+例如，不能将 IP 地址与 FC 结合使用。
+
+

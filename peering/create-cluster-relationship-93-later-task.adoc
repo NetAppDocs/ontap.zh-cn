@@ -1,0 +1,155 @@
+---
+permalink: peering/create-cluster-relationship-93-later-task.html 
+sidebar: sidebar 
+keywords: create, cluster, peer, relationship 
+summary: 您可以使用 cluster peer create 命令在本地和远程集群之间创建对等关系。创建对等关系后，您可以在远程集群上运行 cluster peer create ，以便向本地集群进行身份验证。 
+---
+= 创建集群对等关系（ ONTAP 9.3 及更高版本）
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `cluster peer create` 命令在本地和远程集群之间创建对等关系。创建对等关系后，您可以在远程集群上运行 `cluster peer create` ，以便向本地集群进行身份验证。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须已在要建立对等关系的集群中的每个节点上创建集群间 LIF 。
+* 集群必须运行 ONTAP 9.3 。
+
+
+.步骤
+. 在目标集群上，创建与源集群的对等关系：
++
+`cluster peer create -generate-passphrase -offer-expiration _MM/DD/YYYY HH ： MM ： SS_|1...7days_1...168 小时 -peer-addrs _peer_LIF_IP_ -initial-allowed-vserver-peers _SVM_name_ ， ..._* -IPSpace _IPSpace_`
+
++
+如果同时指定 ` generate-passphrase` 和 ` -peer-addrs` ，则只有在 ` -peer-addrs` 中指定了集群间 LIF 的集群才能使用生成的密码。
+
++
+如果您不使用自定义 IP 空间，则可以忽略 ` -ipspace` 选项。有关完整的命令语法，请参见手册页。
+
++
+如果您要在 ONTAP 9.6 或更高版本中创建对等关系，并且不希望对跨集群对等通信进行加密，则必须使用 ` encrypt-protocol-proposed none` 选项禁用加密。
+
++
+以下示例将创建与未指定远程集群的集群对等关系，并预先授权与本地集群上的 SVM `vs1` 和 `vs2` 的对等关系：
+
++
+[listing]
+----
+cluster02::> cluster peer create -generate-passphrase -offer-expiration 2days -initial-allowed-vserver-peers vs1,vs2
+
+                     Passphrase: UCa+6lRVICXeL/gq1WrK7ShR
+                Expiration Time: 6/7/2017 08:16:10 EST
+  Initial Allowed Vserver Peers: vs1,vs2
+            Intercluster LIF IP: 192.140.112.101
+              Peer Cluster Name: Clus_7ShR (temporary generated)
+
+Warning: make a note of the passphrase - it cannot be displayed again.
+----
++
+以下示例将与集群间 LIF IP 地址为 192.140.112.103 和 192.140.112.104 的远程集群创建集群对等关系，并预先授权与本地集群上的任何 SVM 的对等关系：
+
++
+[listing]
+----
+cluster02::> cluster peer create -generate-passphrase -peer-addrs 192.140.112.103,192.140.112.104 -offer-expiration 2days -initial-allowed-vserver-peers *
+
+                     Passphrase: UCa+6lRVICXeL/gq1WrK7ShR
+                Expiration Time: 6/7/2017 08:16:10 EST
+  Initial Allowed Vserver Peers: vs1,vs2
+            Intercluster LIF IP: 192.140.112.101,192.140.112.102
+              Peer Cluster Name: Clus_7ShR (temporary generated)
+
+Warning: make a note of the passphrase - it cannot be displayed again.
+----
++
+以下示例将创建与未指定远程集群的集群对等关系，并预先授权与本地集群上的 SVM``vs1`` 和 `vs2` 的对等关系：
+
++
+[listing]
+----
+cluster02::> cluster peer create -generate-passphrase -offer-expiration 2days -initial-allowed-vserver-peers vs1,vs2
+
+                     Passphrase: UCa+6lRVICXeL/gq1WrK7ShR
+                Expiration Time: 6/7/2017 08:16:10 EST
+  Initial Allowed Vserver Peers: vs1,vs2
+            Intercluster LIF IP: 192.140.112.101
+              Peer Cluster Name: Clus_7ShR (temporary generated)
+
+Warning: make a note of the passphrase - it cannot be displayed again.
+----
+. 在源集群上，将源集群身份验证到目标集群：
++
+`cluster peer create -peer-addrs _peer_LIF_IPs_ -IP 空间 IP 空间`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将本地集群通过集群间 LIF IP 地址 192.140.112.101 和 192.140.112.102 向远程集群进行身份验证：
+
++
+[listing]
+----
+cluster01::> cluster peer create -peer-addrs 192.140.112.101,192.140.112.102
+
+Notice: Use a generated passphrase or choose a passphrase of 8 or more characters.
+        To ensure the authenticity of the peering relationship, use a phrase or sequence of characters that would be hard to guess.
+
+Enter the passphrase:
+Confirm the passphrase:
+
+Clusters cluster02 and cluster01 are peered.
+----
++
+出现提示时，输入对等关系的密码短语。
+
+. 验证是否已创建集群对等关系：
++
+`cluster peer show -instance`
+
++
+[listing]
+----
+cluster01::> cluster peer show -instance
+
+                               Peer Cluster Name: cluster02
+                   Remote Intercluster Addresses: 192.140.112.101, 192.140.112.102
+              Availability of the Remote Cluster: Available
+                             Remote Cluster Name: cluster2
+                             Active IP Addresses: 192.140.112.101, 192.140.112.102
+                           Cluster Serial Number: 1-80-123456
+                  Address Family of Relationship: ipv4
+            Authentication Status Administrative: no-authentication
+               Authentication Status Operational: absent
+                                Last Update Time: 02/05 21:05:41
+                    IPspace for the Relationship: Default
+----
+. 检查对等关系中节点的连接和状态：
++
+`集群对等运行状况显示`
+
++
+[listing]
+----
+cluster01::> cluster peer health show
+Node       cluster-Name                Node-Name
+             Ping-Status               RDB-Health Cluster-Health  Avail…
+---------- --------------------------- ---------  --------------- --------
+cluster01-01
+           cluster02                   cluster02-01
+             Data: interface_reachable
+             ICMP: interface_reachable true       true            true
+                                       cluster02-02
+             Data: interface_reachable
+             ICMP: interface_reachable true       true            true
+cluster01-02
+           cluster02                   cluster02-01
+             Data: interface_reachable
+             ICMP: interface_reachable true       true            true
+                                       cluster02-02
+             Data: interface_reachable
+             ICMP: interface_reachable true       true            true
+----
+

@@ -1,0 +1,32 @@
+---
+permalink: smb-admin/directory-case-sensitivity-share-multiprotocol-concept.html 
+sidebar: sidebar 
+keywords: create, share, svm, naming, name, scheme, distinguish, directory, difference, share, path, ensure, client, connect, desire, directory, path, directory case-sensitivity requirements when creating shares in a multiprotocol environment 
+summary: 如果您在 SVM 中创建共享，并使用 8.3 命名方案来区分名称之间只有大小写差异的目录名称，则必须在共享路径中使用 8.3 名称，以确保客户端连接到所需的目录路径。 
+---
+= 在多协议环境中创建共享时的目录区分大小写要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您在 SVM 中创建共享，并使用 8.3 命名方案来区分名称之间只有大小写差异的目录名称，则必须在共享路径中使用 8.3 名称，以确保客户端连接到所需的目录路径。
+
+在以下示例中，在 Linux 客户端上创建了两个名为 "`testdir` " 和 "`testdir` " 的目录。包含目录的卷的接合路径为 ` /home` 。第一个输出来自 Linux 客户端，第二个输出来自 SMB 客户端。
+
+[listing]
+----
+ ls -l
+drwxrwxr-x 2 user1 group1   4096 Apr 17 11:23 testdir
+drwxrwxr-x 2 user1 group1   4096 Apr 17 11:24 TESTDIR
+----
+[listing]
+----
+dir
+
+ Directory of Z:\
+
+04/17/2015  11:23 AM    <DIR>          testdir
+04/17/2015  11:24 AM    <DIR>          TESTDI~1
+----
+在向第二个目录创建共享时，必须在共享路径中使用 8.3 名称。在此示例中，第一个目录的共享路径为 ` /home/testdir` ，第二个目录的共享路径为 ` /home/TESTDI~1` 。

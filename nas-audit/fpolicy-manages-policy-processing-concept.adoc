@@ -1,0 +1,27 @@
+---
+permalink: nas-audit/fpolicy-manages-policy-processing-concept.html 
+sidebar: sidebar 
+keywords: fpolicy, manages, policy process 
+summary: 可能会为 Storage Virtual Machine （ SVM ）分配多个 FPolicy 策略；每个策略的优先级各不相同。要在 SVM 上创建适当的 FPolicy 配置，请务必了解 FPolicy 如何管理策略处理。 
+---
+= FPolicy 如何管理策略处理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+可能会为 Storage Virtual Machine （ SVM ）分配多个 FPolicy 策略；每个策略的优先级各不相同。要在 SVM 上创建适当的 FPolicy 配置，请务必了解 FPolicy 如何管理策略处理。
+
+系统会对每个文件访问请求进行初始评估，以确定哪些策略正在监控此事件。如果是受监控事件，则有关受监控事件的信息以及相关策略将传递到 FPolicy ，并在其中对其进行评估。系统将按分配的优先级顺序评估每个策略。
+
+配置策略时，应考虑以下建议：
+
+* 如果您希望某个策略始终在评估其他策略之前进行评估，请为该策略配置较高的优先级。
+* 如果对受监控事件成功执行请求的文件访问操作是根据另一策略评估文件请求的前提条件，请为控制第一个文件操作成功或失败的策略指定较高的优先级。
++
+例如，如果一个策略管理 FPolicy 文件归档和还原功能，而另一个策略管理联机文件的文件访问操作， 管理文件还原的策略必须具有较高的优先级，以便在允许第二个策略管理的操作之前还原文件。
+
+* 如果要评估可能应用于文件访问操作的所有策略，请为同步策略指定较低的优先级。
+
+
+您可以通过修改策略序列号对现有策略的策略优先级重新排序。但是，要让 FPolicy 根据修改后的优先级顺序评估策略，您必须禁用并重新启用此策略并使用修改后的序列号。

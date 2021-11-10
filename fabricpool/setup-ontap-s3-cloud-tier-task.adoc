@@ -1,0 +1,69 @@
+---
+permalink: fabricpool/setup-ontap-s3-cloud-tier-task.html 
+sidebar: sidebar 
+keywords: setting up, ontap s3, cloud tier 
+summary: 如果您运行的是 ONTAP 9.8 或更高版本，则可以将 ONTAP S3 设置为 FabricPool 的云层。 
+---
+= 将 ONTAP S3 设置为云层
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您运行的是 ONTAP 9.8 或更高版本，则可以将 ONTAP S3 设置为 FabricPool 的云层。
+
+您必须在远程集群上拥有 ONTAP S3 服务器名称及其关联 LIF 的 IP 地址。
+
+本地和远程集群上都必须存在集群间 LIF 。
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-s3-cg/GUID-47BBD9BF-7C3A-4902-8E41-88E54A0FDB44.html["为远程 FabricPool 分层创建集群间 LIF"]
+
+在 ONTAP 9.8 及更高版本中，已为 ONTAP S3 服务器启用负载平衡。当服务器的主机名解析为多个 IP 地址时， ONTAP 将使用返回的所有 IP 地址（最多 16 个 IP 地址）建立客户端连接。建立连接后， IP 地址将以轮循方式进行选取。
+
+.步骤
+. 将 S3 服务器和 LIF 的条目添加到 DNS 服务器。
++
+|===
+| 选项 | Description 
+
+
+ a| 
+* 如果使用外部 DNS 服务器 *
+ a| 
+将 S3 服务器名称和 IP 地址提供给 DNS 服务器管理员。
+
+
+
+ a| 
+* 如果使用本地系统的 DNS 主机表 *
+ a| 
+输入以下命令：
+
+`dns host create -vserver svm_name -address ip_address -hostname s3_server_name`
+
+|===
+. 使用 `storage aggregate object-store config create` 命令和 ` provider-type` `ontap_S3` 参数指定 ONTAP S3 配置信息。
++
+** 如果本地 ONTAP 系统无法使用提供的信息访问 ONTAP S3 服务器，则 `storage aggregate object-store config create` 命令将失败。
+** 您可以使用 ` -access-key` 参数指定用于向 ONTAP S3 服务器授权请求的访问密钥。
+** 您可以使用 ` -secret-password` 参数指定用于对 ONTAP S3 服务器的请求进行身份验证的密码（机密访问密钥）。
+** 如果更改了 ONTAP S3 服务器密码，则应立即更新本地 ONTAP 系统中存储的相应密码。
++
+这样可以无中断地访问 ONTAP S3 对象存储中的数据。
+
+** 将 ` -is-certificate-validation-enabled` 参数设置为 `false` 会禁用 ONTAP S3 的证书检查。
+
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store config create
+-object-store-name myS3 -provider-type ONTAP_S3 -server myS3server
+-container-name myS3container -access-key myS3key
+-secret-password myS3pass
+----
+. 使用 `storage aggregate object-store config show` 命令显示并验证 ontap_S3 配置信息。
++
+使用 `storage aggregate object-store config modify` 命令可以修改 FabricPool 的 `ontap_S3` 配置信息。
+
+

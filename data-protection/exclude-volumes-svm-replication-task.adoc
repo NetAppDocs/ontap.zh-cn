@@ -1,0 +1,46 @@
+---
+permalink: data-protection/exclude-volumes-svm-replication-task.html 
+sidebar: sidebar 
+keywords: exclude, volumes, svm replication 
+summary: 默认情况下，会复制源 SVM 的所有 RW 数据卷。如果您不想保护源 SVM 上的所有卷，可以使用 volume modify 命令的 -vserver-dr-protection unprotected 选项从 SVM 复制中排除卷。 
+---
+= 从 SVM 复制中排除卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+默认情况下，会复制源 SVM 的所有 RW 数据卷。如果您不想保护源 SVM 上的所有卷，可以使用 `volume modify` 命令的 ` -vserver-dr-protection unprotected` 选项从 SVM 复制中排除卷。
+
+.步骤
+. 从 SVM 复制中排除卷：
++
+`volume modify -vserver _svm_ -volume _volume" -vserver-dr-protection unprotected`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将卷 `vola_src` 从 SVM 复制中排除：
+
++
+[listing]
+----
+cluster_src::> volume modify -vserver SVM1 -volume volA_src -vserver-dr-protection unprotected
+----
++
+如果稍后要在最初排除的 SVM 复制中包含卷，请运行以下命令：
+
++
+`volume modify -vserver _svm_ -volume _volume" -vserver-dr-protection protected`
+
++
+以下示例包括 SVM 复制中的卷 `vola_src` ：
+
++
+[listing]
+----
+cluster_src::> volume modify -vserver SVM1 -volume volA_src -vserver-dr-protection protected
+----
+. 创建并初始化 SVM 复制关系，如中所述 link:replicate-entire-svm-config-task.html["复制整个 SVM 配置"]，
+

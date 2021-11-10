@@ -1,0 +1,81 @@
+---
+permalink: volumes/quota-targets-types-concept.html 
+sidebar: sidebar 
+keywords: quota, targets, types 
+summary: 配额的类型可以是用户，组或树。配额目标指定应用配额限制的用户，组或 qtree 。 
+---
+= 配额目标和类型
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+配额的类型可以是用户，组或树。配额目标指定应用配额限制的用户，组或 qtree 。
+
+下表列出了配额目标的类型，每个配额目标关联的配额类型以及每个配额目标的表示方式：
+
+[cols="15,15,35,35"]
+|===
+| 配额目标 | 配额类型 | 目标的表示方式 | 注释： 
+
+
+ a| 
+用户
+ a| 
+用户配额
+ a| 
+UNIX 用户名 UNIX UID
+
+UID 与用户匹配的文件或目录
+
+Windows 2000 之前格式的 Windows 用户名
+
+Windows SID
+
+包含用户 SID 所拥有的 ACL 的文件或目录
+ a| 
+可以为特定卷或 qtree 应用用户配额。
+
+
+
+ a| 
+组
+ a| 
+组配额
+ a| 
+UNIX 组名称 UNIX GID
+
+GID 与组匹配的文件或目录
+ a| 
+可以对特定卷或 qtree 应用组配额。
+
+[NOTE]
+====
+ONTAP 不会根据 Windows ID 应用组配额。
+
+====
+
+
+ a| 
+qtree
+ a| 
+树配额
+ a| 
+qtree 名称
+ a| 
+树配额应用于特定卷，不会影响其他卷中的 qtree 。
+
+
+
+ a| 
+""
+ a| 
+用户 quotagroup 配额
+
+树配额
+ a| 
+双引号（ "" ）
+ a| 
+配额目标 "" 表示 _default 配额 _ 。对于默认配额，配额类型由类型字段的值决定。
+
+|===

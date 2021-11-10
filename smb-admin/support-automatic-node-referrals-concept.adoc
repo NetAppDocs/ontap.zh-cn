@@ -1,0 +1,29 @@
+---
+permalink: smb-admin/support-automatic-node-referrals-concept.html 
+sidebar: sidebar 
+keywords: enable, smb, automatic, node, referral, aware, ontap, functionality, support, support for smb automatic node referrals 
+summary: 在启用 SMB 自动节点转介之前，您应了解某些 ONTAP 功能不支持转介。 
+---
+= 支持 SMB 自动节点转介
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在启用 SMB 自动节点转介之前，您应了解某些 ONTAP 功能不支持转介。
+
+* 以下类型的卷不支持 SMB 自动节点转介：
++
+** 负载共享镜像的只读成员
+** 数据保护镜像的目标卷
+
+
+* 节点转介不会随 LIF 移动而移动。
++
+如果客户端正在使用通过 SMB 2.x 或 SMB 3.0 连接的转介连接，并且数据 LIF 无中断移动，则即使 LIF 不再是数据的本地连接，客户端也会继续使用相同的转介连接。
+
+* 节点转介不会随卷移动而移动。
++
+如果客户端正在通过任何 SMB 连接使用转介连接，并且发生卷移动，则即使卷不再与数据 LIF 位于同一节点上，客户端仍会使用相同的转介连接。
+
+

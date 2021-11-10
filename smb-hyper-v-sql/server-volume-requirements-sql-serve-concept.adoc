@@ -1,0 +1,57 @@
+---
+permalink: smb-hyper-v-sql/server-volume-requirements-sql-serve-concept.html 
+sidebar: sidebar 
+keywords: smb, cifs, server, volume, requirement, sql, nondisruptive, operation 
+summary: 在创建基于 SMB 的 SQL Server 配置以实现无中断运行时，您需要了解特定的 SMB 服务器和卷要求。 
+---
+= 基于 SMB 的 SQL Server 的 SMB 服务器和卷要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在创建基于 SMB 的 SQL Server 配置以实现无中断运行时，您需要了解特定的 SMB 服务器和卷要求。
+
+
+
+== SMB 服务器要求
+
+* 必须启用 SMB 3.0 。
++
+默认情况下，此选项处于启用状态。
+
+* 必须使用有效的 UNIX 用户帐户配置默认 UNIX 用户 CIFS 服务器选项。
++
+应用程序服务器在创建 SMB 连接时使用计算机帐户。由于所有 SMB 访问都要求 Windows 用户成功映射到 UNIX 用户帐户或默认 UNIX 用户帐户，因此 ONTAP 必须能够将应用程序服务器的计算机帐户映射到默认 UNIX 用户帐户。
+
++
+此外， SQL Server 还使用域用户作为 SQL Server 服务帐户。服务帐户还必须映射到默认 UNIX 用户。
+
+* 必须禁用自动节点转介（默认情况下，此功能处于禁用状态）。
++
+如果要使用自动节点转介来访问 SQL Server 数据库文件以外的数据，则必须为该数据创建一个单独的 SVM 。
+
+* 必须为用于在 ONTAP 上安装 SQL Server 的 Windows 用户帐户分配 SeSecurityPrivilege 权限。
++
+此权限将分配给 SMB 服务器本地 BUILTIN\Administrators 组。
+
+
+
+
+
+== 卷要求：
+
+* 用于存储虚拟机文件的卷必须创建为 NTFS 安全模式卷。
++
+要使用持续可用的 SMB 连接为应用程序服务器提供 NDOS ，包含共享的卷必须为 NTFS 卷。此外，它必须始终是 NTFS 卷。您不能将混合安全模式卷或 UNIX 安全模式卷更改为 NTFS 安全模式卷，也不能通过 SMB 共享将其直接用于 NDOS 。如果您将混合安全模式卷更改为 NTFS 安全模式卷，并打算通过 SMB 共享将其用于 NDOS ，则必须手动将 ACL 放置在卷顶部，并将该 ACL 传播到包含的所有文件和文件夹。否则，如果源卷或目标卷最初创建为混合卷或 UNIX 安全模式卷，然后更改为 NTFS 安全模式，则将文件移至另一个卷的虚拟机迁移或数据库文件导出和导入可能会失败。
+
+* 尽管包含数据库文件的卷可以包含接合，但在创建数据库目录结构时， SQL Server 不会跨越接合。
+* 要成功执行 SnapManager for Microsoft SQL Server 备份操作，卷上必须具有足够的可用空间。
++
+SQL Server 数据库文件所在的卷必须足够大，才能容纳数据库目录结构以及驻留在共享中的所有包含的文件。
+
+
+
+* 相关信息 *
+
+http://technet.microsoft.com/en-us/library/["Microsoft TechNet 库： technet.microsoft.com/en-us/library/"]

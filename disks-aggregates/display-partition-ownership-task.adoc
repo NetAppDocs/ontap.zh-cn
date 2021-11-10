@@ -1,0 +1,43 @@
+---
+permalink: disks-aggregates/display-partition-ownership-task.html 
+sidebar: sidebar 
+keywords: display, disk, partition, ownership 
+summary: 您可以查看磁盘所有权以确定哪个节点控制存储。您还可以查看使用共享磁盘的系统上的分区所有权。 
+---
+= 显示磁盘和分区所有权
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以查看磁盘所有权以确定哪个节点控制存储。您还可以查看使用共享磁盘的系统上的分区所有权。
+
+.步骤
+. 使用 `storage disk show -ownership` 命令显示物理磁盘的所有权：
++
+[listing]
+----
+cluster::> storage disk show -ownership
+Disk     Aggregate Home     Owner    DR Home  Home ID     Owner ID   DR Home ID  Reserver    Pool
+-------- --------- -------- -------- -------- ---------- ----------- ----------- ----------- ------
+1.0.0    aggr0_2   node2    node2    -        2014941509 2014941509  -           2014941509  Pool0
+1.0.1    aggr0_2   node2    node2    -        2014941509 2014941509  -           2014941509  Pool0
+1.0.2    aggr0_1   node1    node1    -        2014941219 2014941219  -           2014941219  Pool0
+1.0.3    -         node1    node1    -        2014941219 2014941219  -           2014941219  Pool0
+...
+----
+. 如果您的系统使用共享磁盘，请使用 `storage disk show -partition-ownership` 命令显示分区所有权：
++
+[listing]
+----
+cluster::> storage disk show -partition-ownership
+                               Root                    Data        Container  Container
+Disk     Aggregate Root Owner  Owner ID    Data Owner  Owner ID    Owner      Owner ID
+-------- --------- ----------- ----------- ----------- ----------- ---------- -----------
+1.0.0    -         node1       1886742616  node1       1886742616  node1      1886742616
+1.0.1    -         node1       1886742616  node1       1886742616  node1      1886742616
+1.0.2    -         node2       1886742657  node2       1886742657  node2      1886742657
+1.0.3    -         node2       1886742657  node2       1886742657  node2      1886742657
+...
+----
+

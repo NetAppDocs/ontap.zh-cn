@@ -1,0 +1,75 @@
+---
+permalink: smb-hyper-v-sql/verify-kerberos-ntlmv2-authentication-task.html 
+sidebar: sidebar 
+keywords: nondisruptive, operation, hyper, v, verify, kerberos, ntlmv2, authentication, cifs, server, svm, data 
+summary: 基于 SMB 的 Hyper-V 无中断运行要求数据 SVM 上的 CIFS 服务器和 Hyper-V 服务器同时允许 Kerberos 和 NTLMv2 身份验证。您必须验证 CIFS 服务器和 Hyper-V 服务器上用于控制允许使用的身份验证方法的设置。 
+---
+= 验证是否允许 Kerberos 和 NTLMv2 身份验证（基于 SMB 共享的 Hyper-V ）
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+基于 SMB 的 Hyper-V 无中断运行要求数据 SVM 上的 CIFS 服务器和 Hyper-V 服务器同时允许 Kerberos 和 NTLMv2 身份验证。您必须验证 CIFS 服务器和 Hyper-V 服务器上用于控制允许使用的身份验证方法的设置。
+
+建立持续可用的共享连接时，需要进行 Kerberos 身份验证。远程 VSS 进程的一部分使用 NTLMv2 身份验证。因此，基于 SMB 的 Hyper-V 配置必须支持使用这两种身份验证方法的连接。
+
+必须将以下设置配置为允许 Kerberos 和 NTLMv2 身份验证：
+
+* 必须在 Storage Virtual Machine （ SVM ）上禁用 SMB 的导出策略。
+
+
+SVM 上始终启用 Kerberos 和 NTLMv2 身份验证，但导出策略可用于根据身份验证方法限制访问。
+
+SMB 的导出策略是可选的，默认情况下处于禁用状态。如果禁用了导出策略，则默认情况下， CIFS 服务器上允许使用 Kerberos 和 NTLMv2 身份验证。
+
+* CIFS 服务器和 Hyper-V 服务器所属的域必须同时允许 Kerberos 和 NTLMv2 身份验证。
+
+
+默认情况下， Active Directory 域启用 Kerberos 身份验证。但是，可以使用安全策略设置或组策略禁止 NTLMv2 身份验证。
+
+.步骤
+. 执行以下操作，验证是否已在 SVM 上禁用导出策略：
++
+.. 将权限级别设置为高级：
++
+` * 设置 -privilege advanced*`
+
+.. 验证 ` -is-exportpolicy-enabled` CIFS server 选项是否设置为 `false` ：
++
+` * vserver cifs options show -vserver _vserver_name_ -fields vserver ， is-exportpolicy-enabled*`
+
+.. 返回到管理权限级别：
++
+` * 设置 -privilege admin*`
+
+
+
+. 如果 SMB 的导出策略未禁用，请禁用它们：
++
+` * vserver cifs options modify -vserver _vserver_name_ -is-exportpolicy-enabled false*`
+
+. 验证域中是否允许 NTLMv2 和 Kerberos 身份验证。
++
+有关确定域中允许使用的身份验证方法的信息，请参见 Microsoft TechNet 库。
+
+. 如果域不允许进行 NTMLv2 身份验证，请使用 Microsoft 文档中所述的方法之一启用 NTLMv2 身份验证。
+
+
+以下命令验证是否已在 SVM vs1 上禁用 SMB 的导出策略：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options show -vserver vs1 -fields vserver,is-exportpolicy-enabled
+
+vserver  is-exportpolicy-enabled
+-------- -----------------------
+vs1      false
+
+cluster1::*> set -privilege admin
+----

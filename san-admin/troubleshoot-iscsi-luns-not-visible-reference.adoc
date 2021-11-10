@@ -1,0 +1,98 @@
+---
+permalink: san-admin/troubleshoot-iscsi-luns-not-visible-reference.html 
+sidebar: sidebar 
+keywords: troubleshoot, iscsi luns, not visible, host 
+summary: iSCSI LUN 在主机中显示为本地磁盘。如果存储系统 LUN 不能用作主机上的磁盘，则应验证配置设置。 
+---
+= 对主机上不可见的 iSCSI LUN 进行故障排除
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+iSCSI LUN 在主机中显示为本地磁盘。如果存储系统 LUN 不能用作主机上的磁盘，则应验证配置设置。
+
+[cols="1, 3"]
+|===
+| 配置设置 | 操作： 
+
+
+ a| 
+Cabling
+ a| 
+确认主机和存储系统之间的缆线已正确连接。
+
+
+
+ a| 
+网络连接
+ a| 
+验证主机和存储系统之间是否存在 TCP/IP 连接。
+
+* 在存储系统命令行中，对用于 iSCSI 的主机接口执行 Ping 操作：
++
+`ping – node _node_name_ -destination _host_ip_address_for_iscsi_`
+
+* 在主机命令行中，对用于 iSCSI 的存储系统接口执行 Ping 操作：
++
+`ping – node _node_name_ -destination _host_ip_address_for_iscsi_`
+
+
+
+
+
+ a| 
+系统要求
+ a| 
+验证配置中的组件是否符合要求。此外，请验证您是否具有正确的主机操作系统（ OS ） Service Pack 级别，启动程序版本， ONTAP 版本以及其他系统要求。互操作性表包含最新的系统要求。
+
+
+
+ a| 
+巨型帧
+ a| 
+如果您在配置中使用巨型帧，请验证是否已在网络路径中的所有设备上启用巨型帧：主机以太网 NIC ，存储系统和任何交换机。
+
+
+
+ a| 
+iSCSI 服务状态
+ a| 
+验证 iSCSI 服务是否已在存储系统上获得许可并已启动。
+
+
+
+ a| 
+启动程序登录
+ a| 
+验证启动程序是否已登录到存储系统。如果 `iscsi initiator show` 命令输出显示未登录任何启动程序，请检查主机上的启动程序配置。另请验证存储系统是否已配置为启动程序的目标。
+
+
+
+ a| 
+iSCSI 节点名称（ IQN ）
+ a| 
+验证您在 igroup 配置中使用的启动程序节点名称是否正确。在主机上，您可以使用启动程序工具和命令显示启动程序节点名称。在 igroup 和主机上配置的启动程序节点名称必须匹配。
+
+
+
+ a| 
+LUN 映射
+ a| 
+验证 LUN 是否已映射到 igroup 。在存储系统控制台上，您可以使用以下命令之一：
+
+* `lun mapping show` 显示所有 LUN 及其映射到的 igroup 。
+* `lun mapping show -igroup` 显示映射到特定 igroup 的 LUN 。
+
+
+
+
+ a| 
+iSCSI LIF 启用
+ a| 
+验证是否已启用 iSCSI 逻辑接口。
+
+|===
+* 相关信息 *
+
+https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"]

@@ -1,0 +1,54 @@
+---
+permalink: nvme/resize-namespace-task.html 
+sidebar: sidebar 
+keywords: nvme, increase, decrease, resize, namespace, resizing, increasing, decreasing 
+summary: 从 ONTAP 9.10.1 开始，您可以使用 ONTAP 命令行界面增加或减小 NVMe 命名空间的大小。您可以使用 System Manager 增加 NVMe 命名空间的大小。 
+---
+= 调整命名空间大小
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.10.1 开始，您可以使用 ONTAP 命令行界面增加或减小 NVMe 命名空间的大小。您可以使用 System Manager 增加 NVMe 命名空间的大小。
+
+
+
+== 增加命名空间的大小
+
+[cols="2*"]
+|===
+
+
+ a| 
+ a| 
+执行以下操作…
+
+
+
+ a| 
+使用 System Manager
+ a| 
+. 单击 * 存储 >NVMe 命名空间 * 。
+. 在要增加的命名空间上，单击 image:icon_kabob.gif["\"Kaboob \" 图标"]，然后单击 * 编辑 * 。
+. 在 * 容量 * 下，更改命名空间的大小。
+
+
+
+
+ a| 
+使用命令行界面
+ a| 
+. 输入以下命令： `vserver nvme namespace modify -vserver smv_name -path path – size new_size_of_namespace`
+
+
+|===
+
+
+== 减小命名空间的大小
+
+您必须使用 ONTAP 命令行界面减小 NVMe 命名空间的大小。
+
+. 将权限设置更改为高级： `set – privilege advanced`
+. 减小命名空间的大小： `vserver nvme namespace modify -vserver smv_name -path namespace_path -size new_size_of_namespace`
+

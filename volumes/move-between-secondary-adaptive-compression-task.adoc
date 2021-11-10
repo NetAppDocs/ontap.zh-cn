@@ -1,0 +1,92 @@
+---
+permalink: volumes/move-between-secondary-adaptive-compression-task.html 
+sidebar: sidebar 
+keywords: move, secondary compression, adaptive compression 
+summary: 您可以根据数据读取量在二级压缩和自适应压缩之间切换。如果系统上的随机读取量较高且需要更高的性能，则首选使用自适应数据压缩。如果数据按顺序写入，并且需要节省更多的压缩空间，则首选二级压缩。 
+---
+= 在二级压缩和自适应压缩之间切换
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以根据数据读取量在二级压缩和自适应压缩之间切换。如果系统上的随机读取量较高且需要更高的性能，则首选使用自适应数据压缩。如果数据按顺序写入，并且需要节省更多的压缩空间，则首选二级压缩。
+
+系统将根据您的聚合和平台选择默认压缩类型。
+
+.步骤
+. 在卷上禁用数据压缩：
++
+`卷效率修改`
+
++
+以下命令会对卷 vol1 禁用数据压缩：
+
++
+`volume efficiency modify -compression false -inline-compression false -volume vol1`
+
+. 更改为高级权限级别：
++
+`set -privilege advanced`
+
+. 解压缩压缩的数据：
++
+`卷效率撤消`
+
++
+以下命令将解压缩卷 vol1 上的压缩数据：
+
++
+`volume efficiency undo -vserver vs1 -volume vol1 -compression true`
+
++
+[NOTE]
+====
+您必须验证卷中是否有足够的空间来容纳解压缩的数据。
+
+====
+. 验证操作状态是否为闲置：
++
+`卷效率显示`
+
++
+以下命令显示卷 vol1 上的效率操作的状态：
+
++
+`volume efficiency show -vserver vs1 -volume vol1`
+
+. 启用数据压缩，然后设置压缩类型：
++
+`卷效率修改`
+
++
+以下命令将在卷 vol1 上启用数据压缩并将压缩类型设置为二级压缩：
+
++
+`volume efficiency modify -vserver vs1 -volume vol1 -compression true -compression-type secondary`
+
++
+[NOTE]
+====
+此步骤仅在卷上启用二级数据压缩；卷上的数据不会进行压缩。
+
+** 要压缩 AFF 系统上的现有数据，必须运行后台压缩扫描程序。
+** 要压缩 Flash Pool 聚合或 HDD 聚合上的现有数据，必须运行后台数据压缩。
+
+
+====
+. 更改为管理权限级别：
++
+`set -privilege admin`
+
+. 可选：启用实时压缩：
++
+`卷效率修改`
+
++
+以下命令将对卷 vol1 启用实时压缩：
+
++
+`volume efficiency modify -vserver vs1 -volume vol1 -inline-compression true`
+
+

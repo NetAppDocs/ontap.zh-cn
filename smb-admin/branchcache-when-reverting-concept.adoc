@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/branchcache-when-reverting-concept.html 
+sidebar: sidebar 
+keywords: revert, ontap, release, support, branchcache, what happens to branchcache when reverting 
+summary: 请务必了解将 ONTAP 还原到不支持 BranchCache 的版本时会发生什么情况。 
+---
+= 还原时 BranchCache 会发生什么情况
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+请务必了解将 ONTAP 还原到不支持 BranchCache 的版本时会发生什么情况。
+
+* 还原到不支持 BranchCache 的 ONTAP 版本时， SMB 共享不会向已启用 BranchCache 的客户端公布 BranchCache 功能；因此，客户端不会请求哈希信息。
++
+而是使用正常的 SMB 读取请求来请求实际内容。在响应内容请求时， CIFS 服务器会发送存储在 Storage Virtual Machine （ SVM ）上的实际内容。
+
+* 当托管哈希存储的节点还原到不支持 BranchCache 的版本时，存储管理员需要使用在还原期间输出的命令手动还原 BranchCache 配置。
++
+此命令将删除 BranchCache 配置和哈希。
+
++
+还原完成后，存储管理员可以根据需要手动删除包含哈希存储的目录。
+
+
+
+* 相关信息 *
+
+xref:delete-branchcache-config-svms-concept.adoc[删除 SVM 上的 BranchCache 配置]

@@ -1,0 +1,27 @@
+---
+permalink: peering/peering-basics-concept.html 
+sidebar: sidebar 
+keywords: peer, basics 
+summary: '对等关系中的集群和 SVM 使用集群间逻辑接口（ LIF ）通过集群间网络进行通信。集群间 LIF 是一种支持 " 集群间核心 " 网络接口服务的 LIF ，通常使用 " 默认集群间 " 网络接口服务策略创建。您必须在要建立对等关系的集群中的每个节点上创建集群间 LIF 。' 
+---
+= 对等基础知识
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须先在源集群和目标集群之间以及源 SVM 和目标 SVM 之间创建 _peer relationships_ ，然后才能使用 SnapMirror 复制 Snapshot 副本。对等关系用于定义网络连接，使集群和 SVM 能够安全地交换数据。
+
+对等关系中的集群和 SVM 使用集群间逻辑接口（ LIF ）通过集群间网络进行通信。 _ 集群间 LIF 是一种 LIF ，支持 " 集群间核心 " 网络接口服务，通常使用 " 默认集群间 " 网络接口服务策略来创建。您必须在要建立对等关系的集群中的每个节点上创建集群间 LIF 。
+
+集群间 LIF 使用属于其所分配到的系统 SVM 的路由。ONTAP 会自动创建一个系统 SVM ，以便在 IP 空间内进行集群级别的通信。
+
+扇出拓扑和级联拓扑均受支持。在级联拓扑中，您只需要在主集群和二级集群之间以及二级集群和三级集群之间创建集群间网络。您无需在主集群和三级集群之间创建集群间网络。
+
+[NOTE]
+====
+管理员可以（但不建议）从默认集群间服务策略中删除集群间核心服务。如果发生这种情况，使用 "default-intercluster" 创建的 LIF 实际上不会是集群间 LIF 。要确认 default-intercluster 服务策略包含集群间核心服务，请使用以下命令：
+
+`network interface service-policy show -policy default-intercluster`
+
+====

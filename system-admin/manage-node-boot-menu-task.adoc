@@ -1,0 +1,139 @@
+---
+permalink: system-admin/manage-node-boot-menu-task.html 
+sidebar: sidebar 
+keywords: system, manager, manage, node, boot, menu, configuration, problems, password, reset, initialize, disks, restore, device 
+summary: 您可以使用启动菜单来更正节点上的配置问题，重置管理员密码，初始化磁盘，重置节点配置以及将节点配置信息还原回启动设备。 
+---
+= 使用启动菜单管理节点
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用启动菜单来更正节点上的配置问题，重置管理员密码，初始化磁盘，重置节点配置以及将节点配置信息还原回启动设备。
+
+.步骤
+. 在系统提示符处使用 `ssystem node reboot` 命令重新启动节点以访问启动菜单。
++
+节点将开始重新启动过程。
+
+. 在重新启动过程中，当系统提示时，按 Ctrl-C 显示启动菜单。
++
+此节点将显示启动菜单的以下选项：
+
++
+[listing]
+----
+(1) Normal Boot.
+(2) Boot without /etc/rc.
+(3) Change password.
+(4) Clean configuration and initialize all disks.
+(5) Maintenance mode boot.
+(6) Update flash from backup config.
+(7) Install new software first.
+(8) Reboot node.
+(9) Configure Advanced Drive Partitioning
+Selection (1-9)?
+----
++
+[NOTE]
+====
+启动菜单选项（ 2 ） Boot without /etc/rc 已废弃，不会对系统生效。
+
+====
+. 输入相应的数字，选择以下选项之一：
++
+[cols="35,65"]
+|===
+| 至 ... | 选择 ... 
+
+
+ a| 
+继续在正常模式下启动节点
+ a| 
+1 ）正常启动
+
+
+
+ a| 
+更改节点的密码，也是 "`admin` " 帐户密码
+ a| 
+3 ）更改密码
+
+
+
+ a| 
+初始化节点的磁盘并为此节点创建根卷
+ a| 
+4 ）清理配置并初始化所有磁盘
+
+[NOTE]
+====
+此菜单选项将擦除节点磁盘上的所有数据，并将节点配置重置为出厂默认设置。
+
+====
+只有在节点已从集群中删除（未加入）且未加入其他集群后，才能选择此菜单项。
+
+对于具有内部或外部磁盘架的节点，将初始化内部磁盘上的根卷。如果没有内部磁盘架，则会初始化外部磁盘上的根卷。
+
+对于使用内部或外部磁盘架运行 FlexArray 虚拟化的系统，阵列 LUN 不会初始化。内部或外部磁盘架上的任何原生磁盘均会初始化。
+
+对于仅使用阵列 LUN 且没有内部或外部磁盘架的运行 FlexArray 虚拟化的系统，存储阵列 LUN 上的根卷会进行初始化，请参见 link:https://docs.netapp.com/us-en/ontap-flexarray/pdfs/sidebar/Installing_FlexArray.pdf["安装 FlexArray"]。
+
+如果要初始化的节点包含已分区用于根数据分区的磁盘，则必须先取消分区这些磁盘，然后才能初始化此节点，请参见 * 。 9 ）配置高级驱动器分区 * 和 link:../disks-aggregates/index.html["磁盘和聚合管理"]。
+
+
+
+ a| 
+执行聚合和磁盘维护操作，并获取详细的聚合和磁盘信息。
+ a| 
+5 ）维护模式启动
+
+您可以使用 `halt` 命令退出维护模式。
+
+
+
+ a| 
+将配置信息从节点的根卷还原到启动设备，例如 PC CompactFlash 卡
+ a| 
+6 ）从备份配置更新闪存
+
+ONTAP 会将某些节点配置信息存储在启动设备上。当节点重新启动时，启动设备上的信息会自动备份到节点的根卷上。如果启动设备损坏或需要更换，您必须使用此菜单选项将配置信息从节点的根卷还原到启动设备。
+
+
+
+ a| 
+在节点上安装新软件
+ a| 
+7 ）首先安装新软件
+
+如果启动设备上的 ONTAP 软件不支持要用于根卷的存储阵列，您可以使用此菜单选项获取支持存储阵列的软件版本并将其安装在节点上。
+
+此菜单选项仅适用于在未安装根卷的节点上安装较新版本的 ONTAP 软件。Do _not_ 使用此菜单选项升级 ONTAP 。
+
+
+
+ a| 
+重新启动节点。
+ a| 
+8 ）重新启动节点
+
+
+
+ a| 
+取消对所有磁盘的分区并删除其所有权信息，或者清理配置并使用整个磁盘或分区磁盘初始化系统
+ a| 
+9 ）配置高级驱动器分区
+
+从 ONTAP 9.2 开始，高级驱动器分区选项可为配置了根数据分区或根数据数据分区的磁盘提供其他管理功能。启动选项 9 提供了以下选项：
+
+[listing]
+----
+(9a) Unpartition all disks and remove their ownership information.
+(9b) Clean configuration and initialize system with partitioned disks.
+(9c) Clean configuration and initialize system with whole disks.
+(9d) Reboot the node.
+(9e) Return to main boot menu.
+----
+|===
+

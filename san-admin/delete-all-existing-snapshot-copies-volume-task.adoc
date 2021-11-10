@@ -1,0 +1,46 @@
+---
+permalink: san-admin/delete-all-existing-snapshot-copies-volume-task.html 
+sidebar: sidebar 
+keywords: ontap 9.2, delete, one, more, existing, snapshot, copies, from, volume 
+summary: 您可以手动从卷中删除一个或多个现有 Snapshot 副本。如果您需要在卷上添加更多空间，则可能需要执行此操作。 
+---
+= 从卷中删除一个或多个现有 Snapshot 副本
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以手动从卷中删除一个或多个现有 Snapshot 副本。如果您需要在卷上添加更多空间，则可能需要执行此操作。
+
+.步骤
+. 使用 `volume snapshot show` 命令验证要删除的 Snapshot 副本。
++
+[listing]
+----
+cluster::> volume snapshot show -vserver vs3 -volume vol3
+
+                                                ---Blocks---
+Vserver  Volume  Snapshot                Size   Total% Used%
+-------- ------- ----------------------- -----  ------ -----
+vs3      vol3
+                 snap1.2013-05-01_0015   100KB   0%    38%
+                 snap1.2013-05-08_0015   76KB   0%    32%
+                 snap2.2013-05-09_0010   76KB   0%    32%
+                 snap2.2013-05-10_0010   76KB   0%    32%
+                 snap3.2013-05-10_1005   72KB   0%    31%
+                 snap3.2013-05-10_1105   72KB   0%    31%
+                 snap3.2013-05-10_1205   72KB   0%    31%
+                 snap3.2013-05-10_1305   72KB   0%    31%
+                 snap3.2013-05-10_1405   72KB   0%    31%
+                 snap3.2013-05-10_1505   72KB   0%    31%
+10 entries were displayed.
+----
+. 使用 `volume snapshot delete` 命令删除所有 Snapshot 副本。
++
+[listing]
+----
+cluster::> volume snapshot delete -vserver vs3 -volume vol3 *
+
+10 entries were acted on.
+----
+

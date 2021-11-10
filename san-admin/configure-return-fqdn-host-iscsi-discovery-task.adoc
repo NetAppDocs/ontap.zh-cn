@@ -1,0 +1,57 @@
+---
+permalink: san-admin/configure-return-fqdn-host-iscsi-discovery-task.html 
+sidebar: sidebar 
+keywords: configure, iscsi, lifs, return, fqdn, host, sendtargets discovery operation 
+summary: 从 ONTAP 9 开始，可以将 iSCSI LIF 配置为在主机操作系统发送 iSCSI SendTargets 发现操作时返回完全限定域名（ FQDN ）。如果主机操作系统和存储服务之间存在网络地址转换（ Network Address Translation ， NAT ）设备，则返回 FQDN 非常有用。 
+---
+= 配置 iSCSI LIF 以返回 FQDN 以托管 iSCSI SendTargets 发现操作
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9 开始，可以将 iSCSI LIF 配置为在主机操作系统发送 iSCSI SendTargets 发现操作时返回完全限定域名（ FQDN ）。如果主机操作系统和存储服务之间存在网络地址转换（ Network Address Translation ， NAT ）设备，则返回 FQDN 非常有用。
+
+NAT 设备一端的 IP 地址在另一端无意义，但 FQDN 在这两端都有意义。
+
+[NOTE]
+====
+在所有主机操作系统上， FQDN 值互操作性限制为 128 个字符。
+
+====
+.步骤
+. 将权限设置更改为高级：
++
+`set -privilege advanced`
+
+. 配置 iSCSI LIF 以返回 FQDN ：
++
+`vserver iscsi interface modify -vserver _svm_name_ -lif _iscsi_LIF_name_ -sendtargets_FQDN FQDN`
+
++
+在以下示例中， iSCSI LIF 配置为返回 storagehost-005.example.com 作为 FQDN 。
+
++
+`vserver iscsi interface modify -vserver vs1 -lif vs1_iscsi1 -sendtargets-fqdn storagehost-005.example.com`
+
+. 验证 sendtargets 是否为 FQDN ：
++
+`vserver iscsi interface show -vserver _svm_name_ -fields sendtargets-fqdn`
+
++
+在此示例中， sendtargets-fqdn 输出字段中显示 storagehost-005.example.com 。
+
++
+[listing]
+----
+cluster::vserver*> vserver iscsi interface show -vserver vs1 -fields sendtargets-fqdn
+vserver lif        sendtargets-fqdn
+------- ---------- ---------------------------
+vs1     vs1_iscsi1 storagehost-005.example.com
+vs1     vs1_iscsi2 storagehost-006.example.com
+----
+
+
+* 相关信息 *
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"]

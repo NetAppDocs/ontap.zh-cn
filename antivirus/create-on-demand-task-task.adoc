@@ -1,0 +1,71 @@
+---
+permalink: antivirus/create-on-demand-task-task.html 
+sidebar: sidebar 
+keywords: create, on-demand, task 
+summary: 按需任务定义了按需扫描的范围。您可以指定要扫描的文件的最大大小，要包含在扫描中的文件的扩展名和路径，以及要从扫描中排除的文件的扩展名和路径。默认情况下会扫描子目录中的文件。 
+---
+= 创建按需任务
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+按需任务定义了按需扫描的范围。您可以指定要扫描的文件的最大大小，要包含在扫描中的文件的扩展名和路径，以及要从扫描中排除的文件的扩展名和路径。默认情况下会扫描子目录中的文件。
+
+.步骤
+. 创建按需任务：
++
+`vserver vscan on-demand-task create -vserver data_sVM -task-name task_name -scan-paths__of_files_to_scan -report-directory report_directory_path -expiry-time expiration_time_for_report -schedule cron_schedule -max-file-size max_size_fs_to_exclude -file_extensions_to-file_to-ext_to-file_to-ext_extensions -file_to-ext_ext_to-file_to-ext_to-filesn_ext_ext_to-filesn_ext_ext_ext_to-filesn_ext_ext_ext_to-files_ext_ext_to-filesn_ext_ext_to-filesn_ext_ext_ext_ext_ext_to-filesn_ext_`
+
++
+** ` -file-ext-to-exclude` 设置会覆盖 ` -file-ext-to-include` 设置。
+** 将 ` -scan-file-with -no-ext` 设置为 true 可扫描不带扩展名的文件。有关完整的选项列表，请参见命令手册页。
+
+
++
+以下命令会在 ``vs1``SVM 上创建名为 `Task1` 的实时任务：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-demand-task create -vserver vs1 -task-name Task1 -scan-paths "/vol1/","/vol2/cifs/" -report-directory "/report" -schedule daily -max-file-size 5GB -paths-to-exclude "/vol1/cold-files/" -file-ext-to-include "vmdk?","mp*" -file-ext-to-exclude "mp3","mp4" -scan-files-with-no-ext false
+[Job 126]: Vscan On-Demand job is queued. Use the "job show -id 126" command to view the status.
+----
++
+[NOTE]
+====
+您可以使用 `job show` 命令查看作业状态。您可以使用 `job pause` 和 `job resume` 命令暂停并重新启动作业，或者使用 `job stop` 命令结束作业。
+
+====
+. 确认已创建按需任务： `vserver vscan on-demand-task show -instance data_sVM -task-name task_name`
++
+有关完整的选项列表，请参见命令手册页。
+
++
+以下命令显示 `Task1` 任务的详细信息：
+
++
+[listing]
+----
+cluster1::> vserver vscan on-demand-task show -instance vs1 -task-name Task1
+
+                           Vserver: vs1
+                         Task Name: Task1
+                List of Scan Paths: /vol1/, /vol2/cifs/
+             Report Directory Path: /report
+                      Job Schedule: daily
+Max File Size Allowed for Scanning: 5GB
+            File Paths Not to Scan: /vol1/cold-files/
+       File Extensions Not to Scan: mp3, mp4
+           File Extensions to Scan: vmdk?, mp*
+      Scan Files with No Extension: false
+           Request Service Timeout: 5m
+                    Cross Junction: true
+               Directory Recursion: true
+                     Scan Priority: low
+                  Report Log Level: info
+        Expiration Time for Report: -
+----
+
+
+在计划运行任务之前，必须在 SVM 上启用扫描。

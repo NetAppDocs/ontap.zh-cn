@@ -1,0 +1,36 @@
+---
+permalink: system-admin/modify-node-attributes-task.html 
+sidebar: sidebar 
+keywords: modify, node, attributes, owner, information, location, asset, tag, eligibility, cluster 
+summary: 您可以根据需要修改节点的属性。您可以修改的属性包括节点的所有者信息，位置信息，资产标记以及加入集群的资格。 
+---
+= 修改节点属性
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以根据需要修改节点的属性。您可以修改的属性包括节点的所有者信息，位置信息，资产标记以及加入集群的资格。
+
+可以使用 `ssystem node modify` 或 `cluster modify` 命令的 ` – eligibility` 参数在高级权限级别修改节点加入集群的资格。如果将节点的资格设置为 `false` ，则此节点将在集群中变为非活动状态。
+
+[NOTE]
+====
+您不能在本地修改节点资格。必须从其他节点修改。使用集群 HA 配置也无法修改节点的合格性。
+
+====
+[NOTE]
+====
+您应避免将节点的资格设置为 `false` ，但还原节点配置或延长节点维护时间等情况除外。如果节点不符合条件，则对该节点的 SAN 和 NAS 数据访问可能会受到影响。
+
+====
+.步骤
+. 使用 `ssystem node modify` 命令修改节点的属性。
+
+
+以下命令会修改 "`node1` " 节点的属性。节点的所有者设置为 "`Joe Smith` " ，其资产标签设置为 "`js1234` " ：
+
+[listing]
+----
+cluster1::> system node modify -node node1 -owner "Joe Smith" -assettag js1234
+----

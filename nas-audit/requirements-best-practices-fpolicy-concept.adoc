@@ -1,0 +1,85 @@
+---
+permalink: nas-audit/requirements-best-practices-fpolicy-concept.html 
+sidebar: sidebar 
+keywords: requirements, considerations, best practices, configure, fpolicy 
+summary: 在 Storage Virtual Machine （ SVM ）上创建和配置 FPolicy 配置之前，您需要了解配置 FPolicy 的某些要求，注意事项和最佳实践。 
+---
+= 配置 FPolicy 的要求，注意事项和最佳实践
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 Storage Virtual Machine （ SVM ）上创建和配置 FPolicy 配置之前，您需要了解配置 FPolicy 的某些要求，注意事项和最佳实践。
+
+
+
+== 配置 FPolicy 的方式
+
+FPolicy 功能可通过命令行界面（ CLI ）或 API 进行配置。本指南使用命令行界面在集群上创建，管理和监控 FPolicy 配置。
+
+
+
+== 设置 FPolicy 的要求
+
+在 Storage Virtual Machine （ SVM ）上配置和启用 FPolicy 之前，您需要了解某些要求。
+
+* 集群中的所有节点都必须运行支持 FPolicy 的 ONTAP 版本。
+* 如果您不使用 ONTAP 原生 FPolicy 引擎，则必须安装外部 FPolicy 服务器（ FPolicy 服务器）。
+* FPolicy 服务器必须安装在可从启用了 FPolicy 策略的 SVM 的数据 LIF 访问的服务器上。
+* 必须在 FPolicy 策略外部引擎配置中将 FPolicy 服务器的 IP 地址配置为主服务器或二级服务器。
+* 如果 FPolicy 服务器通过有权限的数据通道访问数据，则必须满足以下附加要求：
++
+** CIFS 必须在集群上获得许可。
++
+通过 SMB 连接实现有权限的数据访问。
+
+** 必须配置用户凭据才能通过有权限的数据通道访问文件。
+** FPolicy 服务器必须在 FPolicy 配置中配置的凭据下运行。
+** 必须将用于与 FPolicy 服务器通信的所有数据 LIF 配置为使用 `CIFS` 作为允许的协议之一。
++
+这包括用于直通读取连接的 LIF 。
+
+
+
+
+
+
+
+== 设置 FPolicy 时的最佳实践和建议
+
+在 Storage Virtual Machine （ SVM ）上设置 FPolicy 时，您需要熟悉配置最佳实践和建议，以确保您的 FPolicy 配置能够提供稳定可靠的监控性能和结果，从而满足您的要求。
+
+* 外部 FPolicy 服务器（ FPolicy 服务器）应放置在具有高带宽连接的集群附近，以提供最低延迟和高带宽连接。
+* FPolicy 外部引擎应配置多个 FPolicy 服务器，以提供 FPolicy 服务器通知处理的故障恢复能力和高可用性，尤其是在为同步筛选配置策略时。
+* 建议在进行任何配置更改之前禁用 FPolicy 策略。
++
+例如，如果要在为已启用策略配置的 FPolicy 外部引擎中添加或修改 IP 地址，则应先禁用此策略。
+
+* 应优化集群节点与 FPolicy 服务器比率，以确保 FPolicy 服务器不会过载，这可能会在 SVM 响应客户端请求时导致延迟。
++
+最佳比率取决于使用 FPolicy 服务器的应用程序。
+
+
+
+
+
+== 直通读取升级和还原注意事项
+
+在升级到支持直通读取的 ONTAP 版本之前或还原到不支持直通读取的版本之前，您必须了解某些升级和还原注意事项。
+
+
+
+=== 升级
+
+在将所有节点升级到支持 FPolicy 直通读取的 ONTAP 版本后，集群可以使用直通读取功能；但是，在现有 FPolicy 配置中，直通读取默认处于禁用状态。要对现有 FPolicy 配置使用直通读取，必须禁用 FPolicy 策略并修改配置，然后重新启用配置。
+
+
+
+=== 还原
+
+还原到不支持 FPolicy 直通读取的 ONTAP 版本之前，必须满足以下条件：
+
+* 必须禁用所有使用直通读取的策略，然后必须修改受影响的配置，使其不使用直通读取。
+* 必须通过禁用集群上的每个 FPolicy 策略来禁用集群上的 FPolicy 功能。
+

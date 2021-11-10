@@ -1,0 +1,468 @@
+---
+permalink: flexgroup/quota-reporting-task.html 
+sidebar: sidebar 
+keywords: quota, flexgroup, volume 
+summary: 在 ONTAP 9.4 及更早版本中，只能出于报告目的而对 FlexGroup 卷应用配额规则，但不能用于强制实施配额限制。从 ONTAP 9.5 开始，您可以对应用于 FlexGroup 卷的配额规则实施限制。 
+---
+= 对 FlexGroup 卷使用配额
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 ONTAP 9.4 及更早版本中，只能出于报告目的而对 FlexGroup 卷应用配额规则，但不能用于强制实施配额限制。从 ONTAP 9.5 开始，您可以对应用于 FlexGroup 卷的配额规则实施限制。
+
+.关于此任务
+* 从 ONTAP 9.5 开始，您可以为 FlexGroup 卷指定硬，软和阈值限制配额。
++
+您可以指定这些限制来限制空间量，特定用户，组或 qtree 可以创建的文件数或这两者。配额限制会在以下情况下生成警告消息：
+
++
+** 如果使用量超过配置的软限制， ONTAP 会发出警告消息，但仍允许更多流量。
++
+如果使用量稍后再次降至配置的软限制以下，则会发出一条纯色消息。
+
+** 如果使用量超过配置的阈值限制， ONTAP 将发出第二条警告消息。
++
+如果使用量稍后降至配置的阈值限制以下，则不会发出完全清除管理消息。
+
+** 如果使用量达到已配置的硬限制，则 ONTAP 会拒绝流量，以防止进一步消耗资源。
+
+
+* 在 ONTAP 9.5 中，无法在 SnapMirror 关系的目标 FlexGroup 卷上创建或激活配额规则。
+
+
+
+
+== 配额目标和类型
+
+配额的类型可以是用户，组或树。配额目标指定应用配额限制的用户，组或 qtree 。
+
+下表列出了配额目标的类型，每个配额目标关联的配额类型以及每个配额目标的表示方式：
+
+[cols="4*"]
+|===
+| 配额目标 | 配额类型 | 目标的表示方式 | 注释： 
+
+
+ a| 
+用户
+ a| 
+用户配额
+ a| 
+UNIX 用户名 UNIX UID
+
+Windows 2000 之前格式的 Windows 用户名
+
+Windows SID
+ a| 
+可以为特定卷或 qtree 应用用户配额。
+
+
+
+ a| 
+组
+ a| 
+组配额
+ a| 
+UNIX 组名称 UNIX GID
+ a| 
+可以对特定卷或 qtree 应用组配额。
+
+[NOTE]
+====
+ONTAP 不会根据 Windows ID 应用组配额。
+
+====
+
+
+ a| 
+qtree
+ a| 
+树配额
+ a| 
+qtree 名称
+ a| 
+树配额应用于特定卷，不会影响其他卷中的 qtree 。
+
+
+
+ a| 
+ a| 
+用户 quotagroup 配额
+
+树配额
+ a| 
+双引号（ "" ）
+ a| 
+配额目标 "" 表示 _default 配额 _ 。对于默认配额，配额类型由类型字段的值决定。
+
+|===
+
+
+== 超过配额限制时 FlexGroup 卷的行为
+
+从 ONTAP 9.5 开始， FlexGroup 卷支持配额限制。与 FlexVol 卷相比，在 FlexGroup 卷上强制实施配额限制的方式有所不同。
+
+超过配额限制时， FlexGroup 卷可能会显示以下行为：
+
+* 在通过拒绝更多流量强制实施配额限制之前， FlexGroup 卷中的空间和文件使用量可能会比配置的硬限制高出多达 5% 。
++
+为了提供最佳性能， ONTAP 可能会在开始强制实施配额之前允许空间消耗以较小的利润超出配置的硬限制。这种额外空间消耗不会超过所配置硬限制的 5% ，即 1 GB 或 65536 个文件，以较低者为准。
+
+* 达到配额限制后，如果用户或管理员删除了某些文件或目录，使配额使用量现在低于限制，则后续使用配额的文件操作可能会延迟恢复（可能需要长达 5 秒才能恢复）。
+* 如果 FlexGroup 卷的总空间和文件使用量超过配置的配额限制，则记录事件日志消息可能会有少许延迟。
+* 如果 FlexGroup 卷的某些成分卷已满，但未达到配额限制，则可能会出现 "`no space` " 错误。
+* 与 FlexVol 卷上的类似操作相比，对配置了配额硬限制的配额目标执行的操作（例如重命名文件或目录或在 qtree 之间移动文件）可能需要更长时间。
+
+
+[role="lead"]
+您可以使用这些示例了解如何在 ONTAP 9.5 及更高版本中配置具有限制的配额。
+
+.示例 1 ：强制实施具有磁盘限制的配额规则
+. 您应创建类型为 `user` 的配额策略规则，其中应包含可实现的软磁盘限制和硬盘限制。
++
+[listing]
+----
+cluster1::> volume quota policy rule create -vserver vs0 -policy-name default -volume FG -type user -target "" -qtree "" -disk-limit 1T -soft-disk-limit 800G
+----
+. 您可以查看配额策略规则：
++
+[listing]
+----
+cluster1::> volume quota policy rule show -vserver vs0 -policy-name default -volume FG
+
+Vserver: vs0               Policy: default           Volume: FG
+
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   ""        ""      off           1TB    800GB       -        -          -
+----
+. 要激活新配额规则，请初始化卷上的配额：
++
+[listing]
+----
+cluster1::> volume quota on -vserver vs0 -volume FG -foreground true
+[Job 49] Job succeeded: Successful
+----
+. 您可以使用配额报告查看 FlexGroup 卷的磁盘使用情况和文件使用情况信息。
++
+[listing]
+----
+cluster1::> volume quota report -vserver vs0 -volume FG
+Vserver: vs0
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+FG                 user    root      50GB      -       1       -
+FG                 user    *         800GB    1TB      0       -   *
+2 entries were displayed.
+----
+
+
+达到硬盘限制后，配额策略规则目标（在此情况下为 user ）将被阻止向文件写入更多数据。
+
+.示例 2 ：对多个用户强制实施配额规则
+. 您应创建类型为 `user` 的配额策略规则，其中在配额目标中指定了多个用户（ UNIX 用户， CIFS 用户或两者的组合），并且该规则同时具有可实现的软磁盘限制和硬盘限制。
++
+[listing]
+----
+cluster1::> quota policy rule create -vserver vs0 -policy-name default -volume FG -type user -target "rdavis,ABCCORP\RobertDavis" -qtree "" -disk-limit 1TB -soft-disk-limit  800GB
+----
+. 您可以查看配额策略规则：
++
+[listing]
+----
+cluster1::> quota policy rule show -vserver vs0 -policy-name default -volume FG
+
+Vserver: vs0               Policy: default           Volume: FG
+
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   "rdavis,ABCCORP\RobertDavis"  "" off  1TB  800GB  -  -
+----
+. 要激活新配额规则，请初始化卷上的配额：
++
+[listing]
+----
+cluster1::> volume quota on -vserver vs0 -volume FG -foreground true
+[Job 49] Job succeeded: Successful
+----
+. 您可以验证配额状态是否处于活动状态：
++
+[listing]
+----
+cluster1::> volume quota show -vserver vs0 -volume FG
+              Vserver Name: vs0
+               Volume Name: FG
+               Quota State: on
+               Scan Status: -
+          Logging Messages: on
+          Logging Interval: 1h
+          Sub Quota Status: none
+  Last Quota Error Message: -
+Collection of Quota Errors: -
+----
+. 您可以使用配额报告查看 FlexGroup 卷的磁盘使用情况和文件使用情况信息。
++
+[listing]
+----
+cluster1::> quota report -vserver vs0 -volume FG
+Vserver: vs0
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+FG                 user    rdavis,ABCCORP\RobertDavis  0B  1TB  0  -   rdavis,ABCCORP\RobertDavis
+----
++
+配额限制在配额目标中列出的所有用户之间共享。
+
+
+
+达到硬盘限制后，配额目标中列出的用户将被阻止向这些文件写入更多数据。
+
+.示例 3 ：在启用了用户映射的情况下强制实施配额
+. 您应创建类型为 `user` 的配额策略规则，指定一个 UNIX 用户或 Windows 用户作为配额目标，并将 `user-mapping` 设置为 `on` ，同时创建具有可实现的软磁盘限制和硬盘限制的规则。
++
+必须先使用 `vserver name-mapping create` 命令配置 UNIX 和 Windows 用户之间的映射。
+
++
+[listing]
+----
+cluster1::> quota policy rule create -vserver vs0 -policy-name default -volume FG -type user -target rdavis -qtree "" -disk-limit 1TB -soft-disk-limit  800GB -user-mapping on
+----
+. 您可以查看配额策略规则：
++
+[listing]
+----
+cluster1::> quota policy rule show -vserver vs0 -policy-name default -volume FG
+
+Vserver: vs0               Policy: default           Volume: FG
+
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   rdavis    ""      on           1TB    800GB       -        -          -
+----
+. 要激活新配额规则，请初始化卷上的配额：
++
+[listing]
+----
+cluster1::> volume quota on -vserver vs0 -volume FG -foreground true
+[Job 49] Job succeeded: Successful
+----
+. 您可以验证配额状态是否处于活动状态：
++
+[listing]
+----
+cluster1::> volume quota show -vserver vs0 -volume FG
+              Vserver Name: vs0
+               Volume Name: FG
+               Quota State: on
+               Scan Status: -
+          Logging Messages: on
+          Logging Interval: 1h
+          Sub Quota Status: none
+  Last Quota Error Message: -
+Collection of Quota Errors: -
+----
+. 您可以使用配额报告查看 FlexGroup 卷的磁盘使用情况和文件使用情况信息。
++
+[listing]
+----
+cluster1::> quota report -vserver vs0 -volume FG
+Vserver: vs0
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+FG                 user    rdavis,ABCCORP\RobertDavis  0B  1TB  0  -   rdavis
+----
++
+配额限制在配额目标中列出的用户与其对应的 Windows 或 UNIX 用户之间共享。
+
+
+
+达到硬盘限制后，配额目标中列出的用户及其相应的 Windows 或 UNIX 用户都将被阻止向文件写入更多数据。
+
+.示例 4 ：启用配额时验证 qtree 大小
+. 您应创建类型为 `tree` 的配额策略规则，该规则同时具有可实现的软磁盘限制和硬盘限制。
++
+[listing]
+----
+cluster1::> quota policy rule create -vserver vs0 -policy-name default -volume FG -type tree -target tree_4118314302 -qtree "" -disk-limit 48GB -soft-disk-limit 30GB
+----
+. 您可以查看配额策略规则：
++
+[listing]
+----
+cluster1::> quota policy rule show -vserver vs0
+
+Vserver: vs0               Policy: default           Volume: FG
+
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+tree   tree_4118314302  "" -          48GB        -      20        -
+----
+. 要激活新配额规则，请初始化卷上的配额：
++
+[listing]
+----
+cluster1::> volume quota on -vserver vs0 -volume FG -foreground true
+[Job 49] Job succeeded: Successful
+----
++
+.. 您可以使用配额报告查看 FlexGroup 卷的磁盘使用情况和文件使用情况信息。
++
+[listing]
+----
+cluster1::> quota report -vserver vs0
+Vserver: vs0
+----Disk---- ----Files----- Quota
+Volume Tree Type ID Used Limit Used Limit Specifier
+------- -------- ------ ------- ----- ----- ------ ------ ---------
+FG tree_4118314302 tree 1 30.35GB 48GB 14 20 tree_4118314302
+----
++
+配额限制在配额目标中列出的用户与其对应的 Windows 或 UNIX 用户之间共享。
+
+
+
+. 在 NFS 客户端中，使用 `df` 命令查看总空间使用量，可用空间和已用空间。
++
+[listing]
+----
+scsps0472342001# df -m /t/10.53.2.189/FG-3/tree_4118314302
+Filesystem 1M-blocks Used Available Use% Mounted on
+10.53.2.189/FG-3 49152 31078 18074 63% /t/10.53.2.189/FG-3
+----
++
+对于硬限制，空间使用量通过 NFS 客户端计算得出，如下所示：
+
++
+** 总空间使用量 = 树的硬限制
+** 可用空间 = 硬限制减去无硬限制的 qtree 空间使用量，空间使用量通过 NFS 客户端计算得出，如下所示：
+** 空间使用量 = 配额使用量
+** 总空间 = 卷中的配额使用量和物理可用空间之和
+
+
+. 在 SMB 共享中，使用 Windows 资源管理器查看总空间使用量，可用空间和已用空间。
++
+在 SMB 共享中，计算空间使用量时应注意以下注意事项：
+
++
+** 在计算总可用空间时，系统会考虑用户和组的用户配额硬限制。
+** 树配额规则，用户配额规则和组配额规则的可用空间之间的最小值将视为 SMB 共享的可用空间。
+** 对于 SMB ，总空间使用量是可变的，它取决于树，用户和组中最小可用空间对应的硬限制。
+
+
+
+
+
+
+== 在 FlexGroup 卷上应用规则和限制
+
+.步骤
+. 为目标创建配额规则： `volume quota policy rule create -vserver vs0 -policy-name quota_policy_limit_the_rule -volume flexgroup_vol -type ｛ tree_user_group ｝ -target target_for_rule -qtree qtree_name （ -disk-limit hard_disk_limit_size] ）【 -file-limit hard_soft_limit_file_limit_sy_limit_soft _reshold_file_limit_sy_reshold_file_limit_reshold_sfet_sfet_soft _res_reshold_reshold_reshold_file_reshold_file_limit_soft _sy_reshold_reshold_file_reshold_`
++
+** 在 ONTAP 9.2 和 ONTAP 9.1 中， FlexGroup 卷的配额目标类型只能为 `user` 或 `group` 。
++
+ONTAP 9.2 和 ONTAP 9.1 中的 FlexGroup 卷不支持树配额类型。
+
+** 在 ONTAP 9.3 及更高版本中， FlexGroup 卷的配额目标类型可以是 `user` ， `group` 或 `tree` 。
+** 为 FlexGroup 卷创建配额规则时，不支持将路径作为目标。
+** 从 ONTAP 9.5 开始，您可以为 FlexGroup 卷指定硬盘限制，硬文件限制，软磁盘限制，软文件限制和阈值限制配额。
++
+在 ONTAP 9.4 及更早版本中，在为 FlexGroup 卷创建配额规则时，不能指定磁盘限制，文件限制，磁盘限制阈值，软磁盘限制或软文件限制。
+
+
+
+
+
+以下示例显示了为用户目标类型创建的默认配额规则：
+
+[listing]
+----
+cluster1::> volume quota policy rule create -vserver vs0 -policy-name quota_policy_vs0_1 -volume fg1 -type user -target "" -qtree ""
+----
+以下示例显示了为名为 qtree1 的 qtree 创建的树配额规则：
+
+[listing]
+----
+cluster1::> volume quota policy rule create -policy-name default -vserver vs0 -volume fg1 -type tree -target "qtree1"
+----
+. 激活指定 FlexGroup 卷的配额： `volume quota on -vserver svm_name -volume flexgroup_vol -foreground true`
+
+
+[listing]
+----
+cluster1::> volume quota on -vserver vs0 -volume fg1 -foreground true
+----
+. 监控配额初始化的状态： `volume quota show -vserver svm_name`
+
+
+FlexGroup 卷可能会显示 `m已复制` 状态，这表示所有成分卷尚未处于相同状态。
+
+[listing]
+----
+cluster1::> volume quota show -vserver vs0
+                                          Scan
+Vserver    Volume        State            Status
+---------  ------------  ---------------  ------
+vs0        fg1           initializing         95%
+vs0        vol1          off                   -
+2 entries were displayed.
+----
+. 查看具有活动配额的 FlexGroup 卷的配额报告： `volume quota report -vserver svm_name -volume flexgroup_vol`
++
+您不能使用 `volume quota report` 命令为 FlexGroup 卷指定路径。
+
++
+以下示例显示了 FlexGroup 卷 fg1 的用户配额：
+
++
+[listing]
+----
+cluster1::> volume quota report -vserver vs0 -volume fg1
+  Vserver: vs0
+                                      ----Disk----  ----Files-----   Quota
+  Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+  -------  --------  ------  -------  -----  -----  ------  ------   ---------
+  fg1                user    *           0B      -       0       -   *
+  fg1                user    root       1GB      -       1       -   *
+  2 entries were displayed.
+----
++
+以下示例显示了 FlexGroup 卷 fg1 的树配额：
+
++
+[listing]
+----
+cluster1::> volume quota report -vserver vs0 -volume fg1
+Vserver: vs0
+
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+fg1      qtree1  tree      1         68KB      -      18       -   qtree1
+fg1              tree      *           0B      -       0       -   *
+2 entries were displayed.
+----
+
+
+配额规则和限制将应用于 FlexGroup 卷。
+
+在 ONTAP 拒绝更多流量来强制实施配额之前，使用量可能会比配置的硬限制高出多达 5% 。
+
+* 相关信息 *
+
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"]

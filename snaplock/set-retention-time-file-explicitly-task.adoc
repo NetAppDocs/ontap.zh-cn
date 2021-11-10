@@ -1,0 +1,38 @@
+---
+permalink: snaplock/set-retention-time-file-explicitly-task.html 
+sidebar: sidebar 
+keywords: snaplock, set, retention, time, file, explicitly, modify, last, access, time, nfs, cifs 
+summary: 您可以通过修改文件的上次访问时间来明确设置文件的保留时间。您可以通过 NFS 或 CIFS 使用任何合适的命令或程序来修改上次访问时间。 
+---
+= 明确设置文件的保留时间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过修改文件的上次访问时间来明确设置文件的保留时间。您可以通过 NFS 或 CIFS 使用任何合适的命令或程序来修改上次访问时间。
+
+将文件提交到 WORM 后，您可以延长但不能缩短保留时间。保留时间存储在文件的 `atime` 字段中。
+
+[NOTE]
+====
+您不能将文件的保留时间显式设置为 `无限` 。只有在使用默认保留期限计算保留时间时，此值才可用。
+
+====
+.步骤
+. 使用合适的命令或程序修改要设置保留时间的文件的上次访问时间。
++
+在 UNIX Shell 中，使用以下命令将保留时间设置为 2020 年 11 月 21 日早上 6 ： 00在名为 `document.txt` 的文件上：
+
++
+[listing]
+----
+touch -a -t 202011210600 document.txt
+----
++
+[NOTE]
+====
+您可以使用任何合适的命令或程序来修改 Windows 中的上次访问时间。
+
+====
+

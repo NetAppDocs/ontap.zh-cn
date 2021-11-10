@@ -1,0 +1,73 @@
+---
+permalink: san-admin/data-protection-methods-reference.html 
+sidebar: sidebar 
+keywords: data, protection, methods, san, environments, snapmirror business continuity, smbc, snapshot copy, mirror, update, flexclone luns, license required, snapvault, backups, snapdrive, windows, unix 
+summary: 您可以通过创建数据副本来保护数据，以便在发生意外删除，应用程序崩溃，数据损坏或灾难时可以还原数据。根据您的数据保护和备份需求， ONTAP 提供了多种方法来帮助您保护数据。 
+---
+= SAN 环境中的数据保护方法概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过创建数据副本来保护数据，以便在发生意外删除，应用程序崩溃，数据损坏或灾难时可以还原数据。根据您的数据保护和备份需求， ONTAP 提供了多种方法来帮助您保护数据。
+
+
+
+== SnapMirror 业务连续性（ SM-BC ）
+
+从 ONTAP 9.1.1 中的常规可用性开始，可提供零恢复时间目标（零 RTO ）或透明应用程序故障转移（ TAF ），以便在 SAN 环境中自动对业务关键型应用程序进行故障转移。SM-BC 要求在具有两个 AFF 集群或两个全 SAN 阵列（ ASA ）集群的配置中安装 ONTAP 调解器 1.2 。
+
+https://docs.netapp.com/us-en/ontap/smbc["NetApp 文档： SnapMirror 业务连续性"]
+
+
+
+== Snapshot 副本
+
+用于手动或自动创建，计划和维护 LUN 的多个备份。Snapshot 副本仅使用极少的额外卷空间，并且不会产生性能成本。如果意外修改或删除了 LUN 数据，则可以从最新的 Snapshot 副本之一轻松快速地还原这些数据。
+
+
+
+== FlexClone LUN （需要 FlexClone 许可证）
+
+为活动卷或 Snapshot 副本中的另一个 LUN 提供时间点可写副本。可以独立修改克隆及其父级，而不会彼此影响。
+
+
+
+== SnapRestore （需要许可证）
+
+用于从整个卷上的 Snapshot 副本快速执行节省空间的按需数据恢复。您可以使用 SnapRestore 将 LUN 还原到先前保留的状态，而无需重新启动存储系统。
+
+
+
+== 数据保护镜像副本（需要 SnapMirror 许可证）
+
+通过以下方式提供异步灾难恢复：定期在卷上创建数据的 Snapshot 副本；通过局域网或广域网将这些 Snapshot 副本复制到配对卷（通常位于另一个集群上）；以及保留这些 Snapshot 副本。如果源卷上的数据损坏或丢失，则配对卷上的镜像副本可以快速提供和还原自上次 Snapshot 副本以来的数据。
+
+
+
+== SnapVault 备份（需要 SnapMirror 许可证）
+
+提供高效存储和长期保留备份的功能。通过 SnapVault 关系，您可以将卷的选定 Snapshot 副本备份到目标卷并保留这些备份。
+
+如果您执行磁带备份和归档操作，则可以对 SnapVault 二级卷上已备份的数据执行这些操作。
+
+
+
+== SnapDrive for Windows 或 UNIX （需要 SnapDrive 许可证）
+
+直接从 Windows 或 UNIX 主机配置对 LUN 的访问，管理 LUN 以及管理存储系统 Snapshot 副本。
+
+
+
+== 原生磁带备份和恢复
+
+ONTAP 支持大多数现有磁带驱动器，并为磁带供应商提供了一种动态添加对新设备支持的方法。ONTAP 还支持远程磁带（ RMT ）协议，可以备份和恢复到任何具有功能的系统。
+
+* 相关信息 *
+
+http://mysupport.netapp.com/documentation/productlibrary/index.html?productID=30050["NetApp 文档： SnapDrive for UNIX"]
+
+http://mysupport.netapp.com/documentation/productlibrary/index.html?productID=30049["NetApp 文档： SnapDrive for Windows （当前版本）"]
+
+link:../tape-backup/index.html["使用磁带备份保护数据"]

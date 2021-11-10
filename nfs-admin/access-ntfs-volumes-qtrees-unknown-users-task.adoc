@@ -1,0 +1,58 @@
+---
+permalink: nfs-admin/access-ntfs-volumes-qtrees-unknown-users-task.html 
+sidebar: sidebar 
+keywords: handle, nfs, access, ntfs, volumes, qtrees, unknown, unix, users 
+summary: 如果 ONTAP 无法识别尝试使用 NTFS 安全模式连接到卷或 qtree 的 UNIX 用户，则无法将该用户显式映射到 Windows 用户。您可以将 ONTAP 配置为拒绝访问此类用户以提高安全性，或者将其映射到默认 Windows 用户以确保所有用户的最低访问级别。 
+---
+= 处理未知 UNIX 用户对 NTFS 卷或 qtree 的 NFS 访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果 ONTAP 无法识别尝试使用 NTFS 安全模式连接到卷或 qtree 的 UNIX 用户，则无法将该用户显式映射到 Windows 用户。您可以将 ONTAP 配置为拒绝访问此类用户以提高安全性，或者将其映射到默认 Windows 用户以确保所有用户的最低访问级别。
+
+如果要启用此选项，必须配置默认 Windows 用户。
+
+如果 UNIX 用户尝试访问采用 NTFS 安全模式的卷或 qtree ，则必须先将 UNIX 用户映射到 Windows 用户，以便 ONTAP 能够正确评估 NTFS 权限。但是，如果 ONTAP 无法在已配置的用户信息名称服务源中查找 UNIX 用户的名称，则无法将 UNIX 用户显式映射到特定的 Windows 用户。您可以通过以下方式决定如何处理此类未知 UNIX 用户：
+
+* 拒绝对未知 UNIX 用户的访问。
++
+这样就要求所有 UNIX 用户都显式映射才能访问 NTFS 卷或 qtree ，从而实现更严格的安全性。
+
+* 将未知 UNIX 用户映射到默认 Windows 用户。
++
+这样可以确保所有用户都通过默认 Windows 用户获得对 NTFS 卷或 qtree 的最低访问级别，从而降低安全性，但更方便。
+
+
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 执行以下操作之一：
++
+[cols="2*"]
+|===
+| 如果要为未知 UNIX 用户使用默认 Windows 用户 ... | 输入命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver nfs modify -vserver vserver_name -map-unknown-uid-to-default-windows-user enabled`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver nfs modify -vserver vserver_name -map-unknown-uid-to-default-windows-user disabled`
+
+|===
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+

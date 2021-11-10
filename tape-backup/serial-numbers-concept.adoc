@@ -1,0 +1,28 @@
+---
+permalink: tape-backup/serial-numbers-concept.html 
+sidebar: sidebar 
+keywords: serial, numbers, sn, tape, drive, medium, changer, wwn 
+summary: 序列号（ SN ）是磁带驱动器或介质更换器的唯一标识符。ONTAP 会根据 SN 而非 WWN 生成别名。 
+---
+= 什么是序列号
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+序列号（ SN ）是磁带驱动器或介质更换器的唯一标识符。ONTAP 会根据 SN 而非 WWN 生成别名。
+
+由于 SN 是磁带驱动器或介质更换器的唯一标识符，因此无论磁带驱动器或介质更换器的多个连接路径如何，别名都保持不变。这有助于存储系统在磁带库配置中跟踪同一个磁带驱动器或介质更换器。
+
+即使重命名了磁带驱动器或介质更换器所连接的光纤通道交换机，磁带驱动器或介质更换器的 SN 也不会更改。但是，在磁带库中，如果将现有磁带驱动器替换为新磁带驱动器，则 ONTAP 会生成新的别名，因为磁带驱动器的 SN 会发生更改。此外，如果将现有磁带驱动器移动到磁带库中的新插槽或重新映射磁带驱动器的 LUN ， ONTAP 将为此磁带驱动器生成一个新别名。
+
+[NOTE]
+====
+您必须使用新生成的别名更新备份应用程序。
+
+====
+磁带设备的 SN 采用以下格式： `sN[xxxxxxxxxx]L"X"`
+
+`x` 是字母数字字符， L``X`` 是磁带设备的 LUN 。如果 LUN 为 0 ，则不会显示字符串的 L``X`` 部分。
+
+每个 SN 最多包含 32 个字符； SN 的格式不区分大小写。

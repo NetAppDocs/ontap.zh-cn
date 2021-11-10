@@ -1,0 +1,68 @@
+---
+permalink: disks-aggregates/determine-flash-pool-candidacy-cache-size-task.html 
+sidebar: sidebar 
+keywords: determine, flash pool, candidacy, optimal cache size 
+summary: 在将现有聚合转换为 Flash Pool 聚合之前，您可以确定该聚合是否受 I/O 限制，以及最适合您的工作负载和预算的 Flash Pool 缓存大小。您还可以检查现有 Flash Pool 聚合的缓存大小是否正确。 
+---
+= 确定 Flash Pool 候选资格和最佳缓存大小
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在将现有聚合转换为 Flash Pool 聚合之前，您可以确定该聚合是否受 I/O 限制，以及最适合您的工作负载和预算的 Flash Pool 缓存大小。您还可以检查现有 Flash Pool 聚合的缓存大小是否正确。
+
+您应大致了解所分析的聚合何时会遇到峰值负载。
+
+.步骤
+. 进入高级模式：
++
+`set advanced`
+
+. 如果您需要确定现有聚合是否适合转换为 Flash Pool 聚合，请确定聚合中的磁盘在高峰负载期间的繁忙程度，以及这对延迟的影响：
++
+`satictics show-periodic -object disk ： raid_group -instance _raid_group_name_ -counter disk_busium_user_read_latency -interval 1 -迭 代 60`
+
++
+您可以确定通过添加 Flash Pool 缓存来减少延迟对于此聚合是否有意义。
+
++
+以下命令显示聚合 "`aggr1` " 中第一个 RAID 组的统计信息：
+
++
+`satictics show-periodic -object disk ： raid_group -instance /aggr1/plex0/rg0 -counter disk_busy ； user_read_latency -interval 1 -xiations 60`
+
+. 启动自动化工作负载分析器（ AWA ）：
++
+`storage automated-working-set-analyzer start -node _node_name_ -aggregate _aggr_name_`
+
++
+AWA 将开始收集与指定聚合关联的卷的工作负载数据。
+
+. 退出高级模式：
++
+`set admin`
+
++
+允许 AWA 运行，直到出现一个或多个高峰负载间隔。AWA 会收集与指定聚合关联的卷的工作负载统计信息，并分析持续时间内最长一周的数据。如果 AWA 运行一周以上，则仅会报告从最近一周收集的数据。缓存大小估计基于数据收集期间看到的最高负载；在整个数据收集期间，负载不必高。
+
+. 进入高级模式：
++
+`set advanced`
+
+. 显示工作负载分析：
++
+`storage automated-working-set-analyzer show -node _node_name_`
+
+. 停止 AWA ：
++
+`storage automated-working-set-analyzer stop _node_name_`
+
++
+所有工作负载数据都会被刷新，无法再进行分析。
+
+. 退出高级模式：
++
+`set admin`
+
+

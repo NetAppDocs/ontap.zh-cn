@@ -1,0 +1,42 @@
+---
+permalink: nfs-admin/enable-disable-pnfs-task.html 
+sidebar: sidebar 
+keywords: enable, disable, pnfs 
+summary: pNFS 允许 NFS 客户端直接并联对存储设备执行读 / 写操作，从而绕过 NFS 服务器作为潜在瓶颈，从而提高性能。要启用或禁用 pNFS （并行 NFS ），您可以修改 -v4.1-pNFS 选项。默认情况下， pNFS 处于启用状态。 
+---
+= 启用或禁用 pNFS
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+pNFS 允许 NFS 客户端直接并联对存储设备执行读 / 写操作，从而绕过 NFS 服务器作为潜在瓶颈，从而提高性能。要启用或禁用 pNFS （并行 NFS ），您可以修改 ` -v4.1-pNFS` 选项。默认情况下， pNFS 处于启用状态。
+
+要使用 pNFS ，需要 NFSv4.1 支持。
+
+如果要启用 pNFS ，必须先禁用 NFS 转介。它们不能同时启用。
+
+如果在 SVM 上将 pNFS 与 Kerberos 结合使用，则必须在 SVM 上的每个 LIF 上启用 Kerberos 。
+
+.步骤
+. 执行以下操作之一：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 输入命令 ... 
+
+
+ a| 
+启用 pNFS
+ a| 
+`vserver nfs modify -vserver vserver_name -v4.1-pnfs enabled`
+
+
+
+ a| 
+禁用 pNFS
+ a| 
+`vserver nfs modify -vserver vserver_name -v4.1-pnfs disabled`
+
+|===
+

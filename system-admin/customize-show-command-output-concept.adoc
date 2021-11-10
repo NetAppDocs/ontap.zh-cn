@@ -1,0 +1,54 @@
+---
+permalink: system-admin/customize-show-command-output-concept.html 
+sidebar: sidebar 
+keywords: method, customizing, show, command, output, fields 
+summary: 如果将– instance 参数与 show 命令结合使用来显示详细信息，则输出可能会很长，并且包含的信息可能比您所需的更多。使用 show 命令的– fields 参数，您可以仅显示指定的信息。 
+---
+= 使用字段自定义 show 命令输出的方法
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果将 ` – instance` 参数与 `show` 命令结合使用来显示详细信息，则输出可能会很长，并且包含超出您需要的更多信息。使用 `show` 命令的 ` – fields` 参数，您可以仅显示指定的信息。
+
+例如，运行 `volume show -instance` 可能会显示多个信息屏幕。您可以使用 `volume show – fields` ` _fieldname[ ， fieldname...]_` 自定义输出，使其仅包含指定字段（除了始终显示的默认字段之外）。 您可以使用 ` – fields ？` 显示 `show` 命令的有效字段。
+
+以下示例显示了 ` – instance` 参数与 ` – fields` 参数之间的输出差异：
+
+[listing]
+----
+cluster1::> volume show -instance
+
+                                   Vserver Name: cluster1-1
+                                    Volume Name: vol0
+                                 Aggregate Name: aggr0
+                                    Volume Size: 348.3GB
+                             Volume Data Set ID: -
+                      Volume Master Data Set ID: -
+                                   Volume State: online
+                                    Volume Type: RW
+                                   Volume Style: flex
+                                         ...
+                          Space Guarantee Style: volume
+                      Space Guarantee in Effect: true
+                                         ...
+Press <space> to page down, <return> for next line, or 'q' to quit...
+...
+cluster1::>
+
+cluster1::> volume show -fields space-guarantee,space-guarantee-enabled
+
+vserver  volume space-guarantee space-guarantee-enabled
+-------- ------ --------------- -----------------------
+cluster1-1 vol0   volume          true
+cluster1-2 vol0   volume          true
+vs1      root_vol
+                  volume          true
+vs2      new_vol
+                  volume          true
+vs2      root_vol
+                  volume          true
+...
+cluster1::>
+----

@@ -1,0 +1,59 @@
+---
+permalink: encryption-at-rest/change-encryption-key-volume-92-earlier-task.html 
+sidebar: sidebar 
+keywords: changing, encryption key, volume, volume move start, command 
+summary: 安全最佳做法是定期更改卷的加密密钥。您可以使用 volume move start 命令更改加密密钥。必须在 ONTAP 9.2 及更早版本中使用 volume move start 。移动的卷可以位于同一聚合或不同聚合上。 
+---
+= 使用 volume move start 命令更改卷的加密密钥
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安全最佳做法是定期更改卷的加密密钥。您可以使用 `volume move start` 命令更改加密密钥。在 ONTAP 9.2 及更早版本中，必须使用 `volume move start` 。移动的卷可以位于同一聚合或不同聚合上。
+
+要执行此任务，您必须是集群管理员，或者集群管理员已向其委派权限的 SVM 管理员。
+
+xref:delegate-volume-encryption-svm-administrator-task.adoc[委派权限以运行 volume move 命令]
+
+您不能使用 `volume move start` 重新为 SnapLock 或 FlexGroup 卷设置密钥。
+
+.步骤
+. 移动现有卷并更改加密密钥：
++
+`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -generate-destination-key true`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令会将名为 ` * vol1*` 的现有卷移动到目标聚合 ` * aggr2*` 并更改加密密钥：
+
++
+[listing]
+----
+cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate aggr2 -generate-destination-key true
+----
++
+此时将为此卷创建一个新的加密密钥。卷上的数据将保持加密状态。
+
+. 验证卷是否已启用加密：
++
+`volume show -is-encrypted true`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令将显示 `cluster1` 上的加密卷：
+
++
+[listing]
+----
+cluster1::> volume show -is-encrypted true
+
+Vserver  Volume  Aggregate  State  Type  Size  Available  Used
+-------  ------  ---------  -----  ----  -----  --------- ----
+vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
+----
+

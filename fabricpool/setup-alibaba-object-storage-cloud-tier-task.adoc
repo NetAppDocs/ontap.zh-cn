@@ -1,0 +1,37 @@
+---
+permalink: fabricpool/setup-alibaba-object-storage-cloud-tier-task.html 
+sidebar: sidebar 
+keywords: setting, up, alibaba cloud object, storage, cloud tier 
+summary: 如果您运行的是 ONTAP 9.6 或更高版本，则可以将阿里云对象存储设置为 FabricPool 的云层。 
+---
+= 将阿里云对象存储设置为云层
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您运行的是 ONTAP 9.6 或更高版本，则可以将阿里云对象存储设置为 FabricPool 的云层。
+
+.步骤
+. 使用 `storage aggregate object-store config create` 命令和 ` provider-type` `AliCloud` 参数指定 Alibaba Cloud Object Storage 配置信息。
++
+** 如果 ONTAP 无法使用提供的信息访问阿里云对象存储，则 `storage aggregate object-store config create` 命令将失败。
+** 您可以使用 ` -access-key` 参数指定访问密钥，用于授权对 Alibaba Cloud Object Storage 对象存储的请求。
+** 如果更改了 Alibaba 云对象存储密码，则应立即更新存储在 ONTAP 中的相应密码。
++
+这样， ONTAP 就可以无中断地访问阿里云对象存储中的数据。
+
+
+
++
+[listing]
+----
+storage aggregate object-store config create my_ali_oss_store_1
+-provider-type AliCloud -server oss-us-east-1.aliyuncs.com
+-container-name my-ali-oss-bucket -access-key DXJRXHPXHYXA9X31X3JX
+----
+. 使用 `storage aggregate object-store config show` 命令显示并验证 Alibaba Cloud Object Storage 配置信息。
++
+使用 `storage aggregate object-store config modify` 命令可以修改 FabricPool 的 Alibaba 云对象存储配置信息。
+
+

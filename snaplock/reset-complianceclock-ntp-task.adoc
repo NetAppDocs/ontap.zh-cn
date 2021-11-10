@@ -1,0 +1,54 @@
+---
+permalink: snaplock/reset-complianceclock-ntp-task.html 
+sidebar: sidebar 
+keywords: snaplock, reset, complianceclock, ntp, configured, system 
+summary: 当 SnapLock 安全时钟守护进程检测到偏差超过阈值时，系统将使用系统时间重置系统和卷 ComplianceClock 。 
+---
+= 重置已配置 NTP 的系统的 ComplianceClock
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当 SnapLock 安全时钟守护进程检测到偏差超过阈值时，系统将使用系统时间重置系统和卷 ComplianceClock 。
+
+.您需要什么？ #8217 ；将需要什么
+* 此功能仅在高级权限级别可用。
+* 您必须是集群管理员才能执行此任务。
+* 节点上必须安装 SnapLock 许可证。
+* 此功能仅适用于 Cloud Volumes ONTAP ， ONTAP Select 和 VSIM 平台。
+
+
+当 SnapLock 安全时钟守护进程检测到偏差超过阈值时，系统将使用系统时间重置系统和卷 ComplianceClock 。偏差阈值设置为 24 小时。这意味着，只有在偏差超过一天后，系统 ComplianceClock 才会与系统时钟同步。
+
+SnapLock 安全时钟守护进程会检测偏差并将 ComplianceClock 更改为系统时间。任何修改系统时间以强制 ComplianceClock 与系统时间同步的尝试都将失败，因为只有当系统时间与 NTP 时间同步时， ComplianceClock 才会与系统时间同步。
+
+.步骤
+. 配置 SnapLock 服务器后，启用 NTP ComplianceClock 时间同步功能：
++
+` * SnapLock 兼容时钟 ntp *`
+
++
+以下命令将启用系统 ComplianceClock 时间同步功能：
+
++
+[listing]
+----
+cluster1::*> snaplock compliance-clock ntp modify -is-sync-enabled true
+----
+. 出现提示时，确认已配置的 NTP 服务器是可信的，并且通信通道是安全的，以启用此功能：
+. 检查是否已启用此功能：
++
+` * SnapLock Compliance 时钟 ntp show*`
+
++
+以下命令将检查是否已启用系统 ComplianceClock 时间同步功能：
+
++
+[listing]
+----
+cluster1::*> snaplock compliance-clock ntp show
+
+Enable clock sync to NTP system time: true
+----
+

@@ -1,0 +1,56 @@
+---
+permalink: volumes/enable-storage-efficiency-visualization-concept.html 
+sidebar: sidebar 
+keywords: enable, storage, efficiency, visualization 
+summary: 使用 storage aggregate show-efficiency 命令可显示有关系统中所有聚合的存储效率的信息。 
+---
+= 启用存储效率可视化
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 `storage aggregate show-efficiency` 命令显示有关系统中所有聚合的存储效率的信息。
+
+`storage aggregate show-efficiency` 命令具有三个不同的视图，可通过传递命令选项来调用这些视图。
+
+
+
+== 默认视图
+
+默认视图显示每个聚合的总体比率。
+
+`cluster1 ：：： > storage aggregate show-efficiency`
+
+
+
+== 详细视图
+
+使用 ` -details` 命令选项调用详细视图。此视图显示以下内容：
+
+* 每个聚合的总体效率比率。
+* 不含 Snapshot 副本的总体比率。
+* 以下效率技术的拆分比率：卷重复数据删除，卷压缩， Snapshot 副本，克隆，数据缩减， 聚合实时重复数据删除。
+
+
+`cluster1 ：：： > storage aggregate show-efficiency -details`
+
+
+
+== 高级视图
+
+高级视图与详细视图类似，可显示已用逻辑和物理详细信息。此视图经过改进，现在可单独显示效率技术。
+
+您必须在高级权限级别运行此命令。使用 `set -privilege advanced` 命令切换到高级权限。
+
+命令提示符将更改为 `cluster ：： * >` 。
+
+`cluster1 ：：： > set -privilege advanced`
+
+使用 ` -advanced` 命令选项调用高级视图。
+
+`cluster1 ：：：： * > storage aggregate show-efficiency -advanced`
+
+要单独查看单个聚合的比率，请调用 ` -aggregate <name>` 命令。此命令既可以在管理员级别运行，也可以在高级权限级别运行。
+
+`cluster1 ：：： > storage aggregate show-efficiency -aggregate aggr1`

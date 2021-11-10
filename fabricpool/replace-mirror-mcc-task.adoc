@@ -1,0 +1,77 @@
+---
+permalink: fabricpool/replace-mirror-mcc-task.html 
+sidebar: sidebar 
+keywords: replacing, fabricpool, mirror, metrocluster, configuration 
+summary: 如果 FabricPool 镜像中的某个对象存储在 MetroCluster 配置上被销毁或永久不可用，则可以使该对象存储镜像（如果该对象尚未存储镜像），并从 FabricPool 镜像中删除损坏的对象存储。 然后向 FabricPool 添加新的对象存储镜像。 
+---
+= 更换 MetroCluster 配置上的 FabricPool 镜像
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果 FabricPool 镜像中的某个对象存储在 MetroCluster 配置上被销毁或永久不可用，则可以使该对象存储镜像（如果该对象尚未存储镜像），并从 FabricPool 镜像中删除损坏的对象存储。 然后向 FabricPool 添加新的对象存储镜像。
+
+.步骤
+. 如果损坏的对象存储不是镜像，请使用 `storage aggregate object-store modify` 命令使对象存储镜像。
++
+[listing]
+----
+storage aggregate object-store modify -aggregate -aggregate fp_aggr1_A01 -name mcc1_ostore1 -mirror-type mirror
+----
+. 使用 `storage aggregate object-store unmirror` 命令从 FabricPool 中删除对象存储镜像。
++
+[listing]
+----
+storage aggregate object-store unmirror -aggregate <aggregate name> -name mcc1_ostore1
+----
+. 删除镜像数据存储后，您可以使用 `storage aggregate object-store modify` 和 ` force-tiering-on-MetroCluster true` 选项强制恢复主数据存储上的分层。
++
+缺少镜像会影响 MetroCluster 配置的复制要求。
+
++
+[listing]
+----
+storage aggregate object-store modify -aggregate <aggregate name> -name mcc1_ostore1 -force-tiering-on-metrocluster true
+----
+. 使用 `storage aggregate object-store config create` 命令创建替换对象存储。
++
+[listing]
+----
+storage aggregate object-store config create -object-store-name mcc1_ostore3 -cluster clusterA -provider-type SGWS -server <SGWS-server-1> -container-name <SGWS-bucket-1> -access-key <key> -secret-password <password> -encrypt <true|false> -provider <provider-type> -is-ssl-enabled <true|false> ipspace <IPSpace>
+----
+. 使用 `storage aggregate object-store mirror` 命令将对象存储镜像添加到 FabricPool 镜像。
++
+[listing]
+----
+storage aggregate object-store mirror -aggregate aggr1 -name mcc1_ostore3-mc
+----
+. 使用 `storage aggregate object-store show` 命令显示对象存储信息。
++
+[listing]
+----
+storage aggregate object-store show -fields mirror-type,is-mirror-degraded
+----
++
+[listing]
+----
+aggregate      object-store-name mirror-type     is-mirror-degraded
+-------------- ----------------- ------------- ------------------
+aggr1          mcc1_ostore1-mc    primary           -
+               mcc1_ostore3-mc    mirror          true
+----
+. 使用 `storage aggregate object-store show-resync-status` 命令监控镜像重新同步状态。
++
+[listing]
+----
+storage aggregate object-store show-resync-status -aggregate aggr1
+----
++
+[listing]
+----
+                                                  Complete
+      Aggregate    Primary        Mirror          Percentage
+      ---------    -----------    ----------      ----------
+      aggr1        mcc1_ostore1-mc mcc1_ostore3-mc   40%
+----
+

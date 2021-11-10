@@ -1,0 +1,170 @@
+---
+permalink: nas-audit/plan-fpolicy-scope-config-concept.html 
+sidebar: sidebar 
+keywords: plan, fpolicy, scope, configuration 
+summary: 在配置 FPolicy 范围之前，您必须了解创建范围的含义。您必须了解范围配置的内容。您还需要了解优先级范围规则的含义。此信息可帮助您规划要设置的值。 
+---
+= 规划 FPolicy 范围配置概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在配置 FPolicy 范围之前，您必须了解创建范围的含义。您必须了解范围配置的内容。您还需要了解优先级范围规则的含义。此信息可帮助您规划要设置的值。
+
+
+
+== 创建 FPolicy 范围的含义
+
+创建 FPolicy 范围意味着定义适用 FPolicy 策略的边界。Storage Virtual Machine （ SVM ）是基本边界。在为 FPolicy 策略创建范围时，必须定义要应用此范围的 FPolicy 策略，并且必须指定要应用此范围的 SVM 。
+
+有许多参数进一步限制了指定 SVM 中的范围。您可以通过指定要包含在范围中的内容或指定要从范围中排除的内容来限制范围。将范围应用于已启用的策略后，策略事件检查将应用于此命令定义的范围。
+
+如果在 "`include` " 选项中找到匹配项，则会为文件访问事件生成通知。如果在 "`exclude` " 选项中找到匹配项，则不会为文件访问事件生成通知。
+
+FPolicy 范围配置定义了以下配置信息：
+
+* SVM name
+* Policy name
+* 要包括或排除受监控内容的共享
+* 要包括或排除受监控内容的导出策略
+* 要包括或排除受监控内容的卷
+* 要在受监控的内容中包含或排除的文件扩展名
+* 是否对目录对象执行文件扩展名检查
+
+
+[NOTE]
+====
+有关集群 FPolicy 策略的范围，需要特别注意一些事项。集群 FPolicy 策略是集群管理员为管理 SVM 创建的策略。如果集群管理员还为该集群 FPolicy 策略创建了范围，则 SVM 管理员不能为同一策略创建范围。但是，如果集群管理员未为集群 FPolicy 策略创建范围，则任何 SVM 管理员都可以为该集群策略创建范围。如果 SVM 管理员为该集群 FPolicy 策略创建了范围，则集群管理员随后无法为同一集群策略创建集群范围。这是因为集群管理员不能覆盖同一集群策略的范围。
+
+====
+
+
+== 什么是优先级范围规则
+
+以下优先级规则适用于范围配置：
+
+* 如果共享包含在 ` share-to-include` 参数中，并且共享的父卷包含在 ` volume-to-exclude` 参数中，则 ` volume-to-exclude` 的优先级高于 ` -shared-to-include` 。
+* 如果导出策略包含在 ` -export-policies-to-include` 参数中且导出策略的父卷包含在 ` volume-to-exclude` 参数中，则 ` volume-to-exclude` 的优先级高于 ` -export-policies-to-include` 。
+* 管理员可以同时指定 ` -file-extensions-to-include` 和 ` -file-extensions-to-exclude` 列表。
++
+在检查 ` -file-extensions-to-exclude` 参数之前，将检查 ` -file-extensions-to-include` 参数。
+
+
+
+
+
+== FPolicy 范围配置包含的内容
+
+您可以使用以下可用 FPolicy 范围配置参数列表来帮助您规划配置：
+
+[NOTE]
+====
+在配置要在范围中包括或排除的共享，导出策略，卷和文件扩展名时， include 和 exclude 参数可以包含正则表达式，并且可以包含元字符，例如 "` ？` " 和 "` *` " 。
+
+====
+[cols="70,30"]
+|===
+| 信息类型 | 选项 
+
+
+ a| 
+_SVM_
+
+指定要创建 FPolicy 范围的 SVM 名称。
+
+每个 FPolicy 配置都在一个 SVM 中定义。为创建 FPolicy 策略配置而组合在一起的外部引擎，策略事件，策略范围和策略都必须与同一 SVM 相关联。
+ a| 
+` -vserver` `vserver_name`
+
+
+
+ a| 
+策略名称 _
+
+指定要将范围附加到的 FPolicy 策略的名称。FPolicy 策略必须已存在。
+ a| 
+` 策略名称` `policy_name`
+
+
+
+ a| 
+要包含的共享 _
+
+指定要监控应用范围的 FPolicy 策略的共享列表，以逗号分隔。
+ a| 
+` -shares_to_include` `share 名称` ， ...
+
+
+
+ a| 
+要排除的共享 _
+
+指定要从对应用了范围的 FPolicy 策略的监控中排除的共享的逗号分隔列表。
+ a| 
+` -shares_to-exclude` `share 名称` ， ...
+
+
+
+ a| 
+要包含的卷 _ 指定要监控的卷列表，以确定应用了此范围的 FPolicy 策略。
+ a| 
+` -volume-to_include` `volume_name` ， ...
+
+
+
+ a| 
+要排除的卷 _
+
+指定要从应用范围的 FPolicy 策略的监控中排除的卷的逗号分隔列表。
+ a| 
+` -volume-to-exclude` `volume_name` ， ...
+
+
+
+ a| 
+导出要包含的策略 _
+
+指定一个以逗号分隔的导出策略列表，用于监控应用此范围的 FPolicy 策略。
+ a| 
+` -export-policies-to_include` `export_policy_name` ， ...
+
+
+
+ a| 
+导出要排除的策略 _
+
+指定要从对应用范围的 FPolicy 策略的监控中排除的导出策略的逗号分隔列表。
+ a| 
+` -export-policies-to-exclude` `export_policy_name` ， ...
+
+
+
+ a| 
+要包含的文件扩展名 _
+
+指定要监控应用范围的 FPolicy 策略的文件扩展名的逗号分隔列表。
+ a| 
+` -file-extensions-to_include` `file_extensions` ， ...
+
+
+
+ a| 
+要排除的文件扩展名 _
+
+指定要从对应用范围的 FPolicy 策略的监控中排除的文件扩展名的逗号分隔列表。
+ a| 
+` -file-extensions-to-exclude` `file_extensions` ， ...
+
+
+
+ a| 
+目录上的文件扩展名检查是否已启用 _
+
+指定文件扩展名检查是否也应用于目录对象。如果此参数设置为 `true` ，则目录对象将与常规文件一样进行扩展名检查。如果此参数设置为 `false` ，则扩展名的目录名称不匹配，即使名称扩展名不匹配，也会为目录发送通知。
+
+如果将范围分配到的 FPolicy 策略配置为使用原生引擎，则必须将此参数设置为 `true` 。
+ a| 
+` -is-file-extension-check-on-directories-enabled` ｛`true` ｝ `false` ｝
+
+|===

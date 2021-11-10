@@ -1,0 +1,38 @@
+---
+permalink: nfs-config/verify-client-access-from-cluster-task.html 
+sidebar: sidebar 
+keywords: verify, nfs, client, access, cluster 
+summary: 您可以通过在 UNIX 管理主机上设置 UNIX 文件权限来为选定客户端授予对共享的访问权限。您可以使用 vserver export-policy check-access 命令检查客户端访问，并根据需要调整导出规则。 
+---
+= 从集群验证 NFS 客户端访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过在 UNIX 管理主机上设置 UNIX 文件权限来为选定客户端授予对共享的访问权限。您可以使用 `vserver export-policy check-access` 命令检查客户端访问，并根据需要调整导出规则。
+
+.步骤
+. 在集群上，使用 `vserver export-policy check-access` 命令检查客户端对导出的访问。
++
+以下命令将检查 IP 地址为 1.2.3.4 的 NFSv3 客户端对卷 Home2 的读 / 写访问权限。命令输出显示此卷使用导出策略 `exp-home-dir` 且访问被拒绝。
+
++
+[listing]
+----
+cluster1::> vserver export-policy check-access -vserver vs1 -client-ip 1.2.3.4 -volume home2 -authentication-method sys -protocol nfs3 -access-type read-write
+                                      Policy    Policy     Rule
+Path                    Policy        Owner     Owner Type Index  Access
+----------------------- ------------- --------- ---------- ------ ----------
+/                       default       vs1_root  volume          1 read
+/eng                    default       vs1_root  volume          1 read
+/eng/home2              exp-home-dir  home2     volume          1 denied
+
+3 entries were displayed.
+----
+. 检查输出以确定导出策略是否按预期工作以及客户端访问是否按预期进行。
++
+具体而言，您应验证卷或 qtree 使用的导出策略以及客户端因此具有的访问类型。
+
+. 如有必要，请重新配置导出策略规则。
+

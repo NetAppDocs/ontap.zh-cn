@@ -1,0 +1,38 @@
+---
+permalink: system-admin/display-status-cluster-replication-rings-task.html 
+sidebar: sidebar 
+keywords: display, status, cluster, replication, ring, diagnose, problems, troubleshoot 
+summary: 您可以显示集群复制环的状态，以帮助诊断集群范围的问题。如果集群出现问题，支持人员可能会要求您执行此任务，以协助进行故障排除。 
+---
+= 显示集群复制环的状态
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示集群复制环的状态，以帮助诊断集群范围的问题。如果集群出现问题，支持人员可能会要求您执行此任务，以协助进行故障排除。
+
+.步骤
+. 要显示集群复制环的状态，请在高级权限级别使用 `cluster ring show` 命令。
+
+
+以下示例显示了名为 node0 的节点上的 VLDB 复制环的状态：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> cluster ring show -node node0 -unitname vldb
+          Node: node0
+     Unit Name: vldb
+        Status: master
+         Epoch: 5
+   Master Node: node0
+    Local Node: node0
+      DB Epoch: 5
+DB Transaction: 56
+ Number Online: 4
+      RDB UUID: e492d2c1-fc50-11e1-bae3-123478563412
+----

@@ -1,0 +1,25 @@
+---
+permalink: system-admin/changes-audit-logging-ontap-9-concept.html 
+sidebar: sidebar 
+keywords: audit, logging, ontap, 9, command, history, scripts, tool 
+summary: 从 ONTAP 9 开始， command-history.log 文件将替换为 audit.log ，而 mgwd.log 文件将不再包含审核信息。如果要升级到 ONTAP 9 ，则应查看引用旧文件及其内容的任何脚本或工具。 
+---
+= 对 ONTAP 9 中的审核日志记录进行的更改
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9 开始， `command-history.log` 文件将替换为 `audit.log` ，而 `mgwd.log` 文件将不再包含审核信息。如果要升级到 ONTAP 9 ，则应查看引用旧文件及其内容的任何脚本或工具。
+
+升级到 ONTAP 9 后，将保留现有的 `command-history.log` 文件。在轮换（创建）新的 `audit.log` 文件时，这些文件将被转出（删除）。
+
+检查 `command-history.log` 文件的工具和脚本可能仍会正常工作，因为升级时会创建从 `command-history.log` 到 `audit.log` 的软链接。但是，检查 `mgwd.log` 文件的工具和脚本将失败，因为该文件不再包含审核信息。
+
+此外， ONTAP 9 及更高版本中的审核日志不再包含以下条目，因为它们不会被视为有用，并且发生原因不必要的日志记录活动：
+
+* ONTAP 运行的内部命令（即 username=root ）
+* 命令别名（与其所指向的命令不同）
+
+
+从 ONTAP 9 开始，您可以使用 TCP 和 TLS 协议将审核日志安全地传输到外部目标。

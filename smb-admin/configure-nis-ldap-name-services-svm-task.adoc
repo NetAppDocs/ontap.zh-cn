@@ -1,0 +1,106 @@
+---
+permalink: smb-admin/configure-nis-ldap-name-services-svm-task.html 
+sidebar: sidebar 
+keywords: smb, access, map, unix, user, perform, data, ntfs, security-style, volume, windows, correspond, unix, information, nis, ldap, directory, store, name, configure nis or ldap name services on the svm 
+summary: 通过 SMB 访问，即使访问 NTFS 安全模式卷中的数据，也始终会执行用户到 UNIX 用户的映射。如果将 Windows 用户映射到信息存储在 NIS 或 LDAP 目录存储中的相应 UNIX 用户，或者使用 LDAP 进行名称映射，则应在 SMB 设置期间配置这些名称服务。 
+---
+= 在 SVM 上配置 NIS 或 LDAP 名称服务
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过 SMB 访问，即使访问 NTFS 安全模式卷中的数据，也始终会执行用户到 UNIX 用户的映射。如果将 Windows 用户映射到信息存储在 NIS 或 LDAP 目录存储中的相应 UNIX 用户，或者使用 LDAP 进行名称映射，则应在 SMB 设置期间配置这些名称服务。
+
+您必须已自定义名称服务数据库配置，以匹配名称服务基础架构。
+
+SVM 使用名称服务 ns-switch 数据库确定查找给定名称服务数据库源的顺序。ns-switch 源可以是 "`files` " ， "`nis` " 或 "`ldap` " 的任意组合。对于组数据库， ONTAP 会尝试从所有已配置的源获取组成员资格，然后使用整合的组成员资格信息进行访问检查。如果在获取 UNIX 组信息时其中一个源不可用，则 ONTAP 无法获取完整的 UNIX 凭据，后续访问检查可能会失败。因此，您必须始终检查 ns-switch 设置中是否为组数据库配置了所有 ns-switch 源。
+
+默认情况下， SMB 服务器会将所有 Windows 用户映射到本地 `passwd` 数据库中存储的默认 UNIX 用户。如果要使用默认配置，可选择配置 NIS 或 LDAP UNIX 用户和组名称服务或 LDAP 用户映射以进行 SMB 访问。
+
+.步骤
+. 如果 UNIX 用户，组和网络组信息由 NIS 名称服务管理，请配置 NIS 名称服务：
++
+.. 使用 `vserver services name-service ns-switch show` 命令确定名称服务的当前顺序。
++
+在此示例中，可以使用 `nis` 作为名称服务源的三个数据库（`group` ， `passwd` 和 `netgroup` ）仅使用 `files` 作为源。
+
++
+`vserver services name-service ns-switch show -vserver vs1`
+
++
+[listing]
+----
+
+                                               Source
+Vserver         Database       Enabled         Order
+--------------- ------------   ---------       ---------
+vs1             hosts          true            dns,
+                                               files
+vs1             group          true            files
+vs1             passwd         true            files
+vs1             netgroup       true            files
+vs1             namemap        true            files
+----
++
+您必须将 `nis` source 添加到 `group` 和 `passwd` databases 中，也可以添加到 `netgroup` database 中。
+
+.. 使用 `vserver services name-service ns-switch modify` 命令根据需要调整名称服务 ns-switch 数据库顺序。
++
+为了获得最佳性能，您不应向名称服务数据库添加名称服务，除非您计划在 SVM 上配置该名称服务。
+
++
+如果修改多个名称服务数据库的配置，则必须为要修改的每个名称服务数据库单独运行此命令。
+
++
+在此示例中，按该顺序将 `nis` 和 `files` 配置为 `组` 和 `passwd` 数据库的源。其余名称服务数据库保持不变。
+
++
+`vserver services name-service ns-switch modify -vserver vs1 -database group -sources nis ， files` `vserver services name-service ns-switch modify -vserver vs1 -database passwd -sources nis ， files`
+
+.. 使用 `vserver services name-service ns-switch show` 命令验证名称服务的顺序是否正确。
++
+`vserver services name-service ns-switch show -vserver vs1`
+
++
+[listing]
+----
+
+                                               Source
+Vserver         Database       Enabled         Order
+--------------- ------------   ---------       ---------
+vs1             hosts          true            dns,
+                                               files
+vs1             group          true            nis,
+                                               files
+vs1             passwd         true            nis,
+                                               files
+vs1             netgroup       true            files
+vs1             namemap        true            files
+----
+.. 创建 NIS 名称服务配置： + `vserver services name-service nis-domain create -vserver _vserver_name_ -domain _NIS_domain_name_ -servers _NIS_server_ipaddress_ ， ... -active true+`
++
+`vserver services name-service nis-domain create -vserver vs1 -domain example.com -servers 10.0.0.60 -active true`
+
++
+[NOTE]
+====
+从 ONTAP 9.2 开始，字段 ` -nis-servers` 将取代字段 ` -servers` 。此新字段可以使用 NIS 服务器的主机名或 IP 地址。
+
+====
+.. 验证 NIS 名称服务是否已正确配置且处于活动状态： `vserver services name-service nis-domain show vserver _vserver_name_`
++
+`vserver services name-service nis-domain show vserver vs1`
+
++
+[listing]
+----
+
+Vserver       Domain              Active Server
+------------- ------------------- ------ ---------------
+vs1           example.com         true   10.0.0.60
+----
+
+
+. 如果 UNIX 用户，组和网络组信息或名称映射由 LDAP 名称服务管理，请使用位于的信息配置 LDAP 名称服务 link:../nfs-admin/index.html["NFS 管理"]。
+

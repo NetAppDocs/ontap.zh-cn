@@ -1,0 +1,129 @@
+---
+permalink: smb-admin/configure-offline-files-support-task.html 
+sidebar: sidebar 
+keywords: configure, offline, file, support, ontap, cli, smb, modify, exist, smb, share, manual, default, setting, configure offline files support on smb shares using the cli 
+summary: 您可以使用 ONTAP 命令行界面配置脱机文件支持，方法是在创建 SMB 共享时指定四个脱机文件设置之一，或者随时修改现有 SMB 共享。默认设置为手动脱机文件支持。 
+---
+= 使用命令行界面在 SMB 共享上配置脱机文件支持
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 ONTAP 命令行界面配置脱机文件支持，方法是在创建 SMB 共享时指定四个脱机文件设置之一，或者随时修改现有 SMB 共享。默认设置为手动脱机文件支持。
+
+配置脱机文件支持时，您可以选择以下四种脱机文件设置之一：
+
+|===
+| 正在设置 ... | Description 
+
+
+ a| 
+`无`
+ a| 
+禁止 Windows 客户端缓存此共享上的任何文件。
+
+
+
+ a| 
+`m手动`
+ a| 
+允许 Windows 客户端上的用户手动选择要缓存的文件。
+
+
+
+ a| 
+`documents`
+ a| 
+允许 Windows 客户端缓存用户用于脱机访问的用户文档。
+
+
+
+ a| 
+`计划`
+ a| 
+允许 Windows 客户端缓存用户用于脱机访问的程序。即使共享可用，客户端也可以在脱机模式下使用缓存的程序文件。
+
+|===
+您只能选择一个脱机文件设置。如果修改现有 SMB 共享上的脱机文件设置，则新的脱机文件设置将替换原始设置。不会删除或替换其他现有 SMB 共享配置设置和共享属性。它们将一直有效，直到被明确删除或更改为止。
+
+.步骤
+. 执行相应的操作：
++
+|===
+| 要配置脱机文件的位置 | 输入命令 ... 
+
+
+ a| 
+新的 SMB 共享
+ a| 
+`vserver cifs share create -vserver vserver_name -share-name share_name -path path -offline-files ｛ none|manual_documents| 程序 ｝`
+
+
+
+ a| 
+现有 SMB 共享
+ a| 
+`vserver cifs share modify -vserver vserver_name -share-name share_name -offline-files ｛ none|manual_Documents|Programs ｝`
+
+|===
+. 验证 SMB 共享配置是否正确： `vserver cifs share show -vserver vserver_name -share-name share_name -instance`
+
+
+以下命令将创建一个名为 `data1` 的 SMB 共享，其中脱机文件设置为 `documents` ：
+
+[listing]
+----
+cluster1::> vserver cifs share create -vserver vs1 -share-name data1 -path /data1 -comment "Offline files" -offline-files documents
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data1 -instance
+
+                          Vserver: vs1
+                            Share: data1
+         CIFS Server NetBIOS Name: VS1
+                             Path: /data1
+                 Share Properties: oplocks
+                                   browsable
+                                   changenotify
+               Symlink Properties: enable
+          File Mode Creation Mask: -
+     Directory Mode Creation Mask: -
+                    Share Comment: Offline files
+                        Share ACL: Everyone / Full Control
+    File Attribute Cache Lifetime: -
+                      Volume Name: -
+                    Offline Files: documents
+    Vscan File-Operations Profile: standard
+Maximum Tree Connections on Share: 4294967295
+       UNIX Group for File Create: -
+----
+以下命令可通过将脱机文件设置更改为 `manual` 并为文件和目录模式创建掩码添加值来修改名为 `data1` 的现有 SMB 共享：
+
+[listing]
+----
+cluster1::> vserver cifs share modify -vserver vs1 -share-name data1 -offline-files manual -file-umask 644 -dir-umask 777
+
+cluster1::> vserver cifs share show -vserver vs1 -share-name data1 -instance
+
+                          Vserver: vs1
+                            Share: data1
+         CIFS Server NetBIOS Name: VS1
+                             Path: /data1
+                 Share Properties: oplocks
+                                   browsable
+                                   changenotify
+               Symlink Properties: enable
+          File Mode Creation Mask: 644
+     Directory Mode Creation Mask: 777
+                    Share Comment: Offline files
+                        Share ACL: Everyone / Full Control
+    File Attribute Cache Lifetime: -
+                      Volume Name: -
+                    Offline Files: manual
+    Vscan File-Operations Profile: standard
+Maximum Tree Connections on Share: 4294967295
+       UNIX Group for File Create: -
+----
+* 相关信息 *
+
+xref:add-remove-share-properties-eexisting-share-task.adoc[在现有 SMB 共享上添加或删除共享属性]

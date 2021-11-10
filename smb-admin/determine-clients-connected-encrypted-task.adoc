@@ -1,0 +1,78 @@
+---
+permalink: smb-admin/determine-clients-connected-encrypted-task.html 
+sidebar: sidebar 
+keywords: display, information, connect, smb, session, determine, client, encrypt, smb, connection, helpful, determining, session, desire, security, setting, determine whether client are connected using encrypted smb sessions 
+summary: 您可以显示有关已连接 SMB 会话的信息，以确定客户端是否正在使用加密的 SMB 连接。这有助于确定 SMB 客户端会话是否使用所需的安全设置进行连接。 
+---
+= 确定客户端是否使用加密的 SMB 会话进行连接
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关已连接 SMB 会话的信息，以确定客户端是否正在使用加密的 SMB 连接。这有助于确定 SMB 客户端会话是否使用所需的安全设置进行连接。
+
+SMB 客户端会话可以具有以下三种加密级别之一：
+
+* `未加密`
++
+SMB 会话未加密。未配置 Storage Virtual Machine （ SVM ）级别或共享级别的加密。
+
+* `部分加密`
++
+发生树连接时会启动加密。已配置共享级别加密。未启用 SVM 级别的加密。
+
+* `加密`
++
+SMB 会话已完全加密。已启用 SVM 级别的加密。可能已启用，也可能未启用共享级别加密。SVM 级别的加密设置将取代共享级别的加密设置。
+
+
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 要显示的信息 | 输入命令 ... 
+
+
+ a| 
+具有指定 SVM 上会话的指定加密设置的会话
+ a| 
+`vserver cifs session show -vserver _vserver_name_ ｛ unencrypted_partial-encrypted_encrypted ｝ -instance`
+
+
+
+ a| 
+指定 SVM 上特定会话 ID 的加密设置
+ a| 
+`vserver cifs session show -vserver _vserver_name_ -session-id _intege_ -instance`
+
+|===
+
+
+以下命令显示会话 ID 为 2 的 SMB 会话的详细会话信息，包括加密设置：
+
+[listing]
+----
+cluster1::> vserver cifs session show -vserver vs1 -session-id 2 -instance
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 2
+               Connection ID: 3151274158
+Incoming Data LIF IP Address: 10.2.1.1
+                 Workstation: 10.1.1.2
+    Authentication Mechanism: Kerberos
+                Windows User: DOMAIN\joe
+                   UNIX User: pcuser
+                 Open Shares: 1
+                  Open Files: 1
+                  Open Other: 0
+              Connected Time: 10m 43s
+                   Idle Time: 1m 19s
+            Protocol Version: SMB3
+      Continuously Available: No
+           Is Session Signed: true
+       User Authenticated as: domain-user
+                NetBIOS Name: CIFS_ALIAS1
+       SMB Encryption Status: Unencrypted
+----

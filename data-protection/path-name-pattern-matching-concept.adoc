@@ -1,0 +1,62 @@
+---
+permalink: data-protection/path-name-pattern-matching-concept.html 
+sidebar: sidebar 
+keywords: path, pattern, matching 
+summary: 您可以使用模式匹配在 SnapMirror 命令中指定源路径和目标路径。 
+---
+= 使用路径名称模式匹配
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用模式匹配在 `snapmirror` 命令中指定源路径和目标路径。
+
+`snapmirror` 命令使用以下格式的完全限定路径名称： `vserver ： volume` 。您可以通过不输入 SVM 名称来缩写路径名称。如果执行此操作，则 `snapmirror` 命令将采用用户的本地 SVM 上下文。
+
+假设 SVM 名为 "`vserver1` " ，卷名为 "`vol1` " ，则完全限定路径名称为 `vserver1 ： vol1` 。
+
+您可以在路径中使用星号（ * ）作为通配符来选择匹配的完全限定路径名称。下表提供了使用通配符选择卷范围的示例。
+
+[cols="2*"]
+|===
+
+
+ a| 
+` *`
+ a| 
+匹配所有路径。
+
+
+
+ a| 
+`对比 *`
+ a| 
+匹配 SVM 名称以 `vs` 开头的所有 SVM 和卷。
+
+
+
+ a| 
+` * ： * src*`
+ a| 
+与卷名称包含 `src` 文本的所有 SVM 匹配。
+
+
+
+ a| 
+` * ： vol*`
+ a| 
+与卷名称以 `vol` 开头的所有 SVM 匹配。
+
+|===
+[listing]
+----
+vs1::> snapmirror show -destination-path *:*dest*
+                                                                                Progress
+Source              Destination  Mirror        Relationship  Total              Last
+Path          Type  Path         State         Status        Progress   Healthy Updated
+------------- ---- ------------ ------------- -------------- ---------- ------- --------
+vs1:sm_src2
+              DP   vs2:sm_dest1
+                                Snapmirrored  Idle           -          true    -
+----

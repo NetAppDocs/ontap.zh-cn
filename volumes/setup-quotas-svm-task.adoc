@@ -1,0 +1,52 @@
+---
+permalink: volumes/setup-quotas-svm-task.html 
+sidebar: sidebar 
+keywords: set up, quotas on svm 
+summary: 要在新的 Storage Virtual Machine （ SVM ，以前称为 Vserver ）上设置配额，您必须创建配额策略，将配额策略规则添加到策略中，将策略分配给 SVM ，并在 SVM 上的每个 FlexVol 卷上初始化配额。 
+---
+= 在 SVM 上设置配额
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要在新的 Storage Virtual Machine （ SVM ，以前称为 Vserver ）上设置配额，您必须创建配额策略，将配额策略规则添加到策略中，将策略分配给 SVM ，并在 SVM 上的每个 FlexVol 卷上初始化配额。
+
+.步骤
+. 使用 `vserver show` 命令和 ` -instance` 选项可显示创建 SVM 时自动创建的默认配额策略的名称。
++
+如果在创建 SVM 时未指定名称，则此名称为 "default" 。您也可以使用 `vserver quota policy rename` 命令为默认策略指定一个名称。
+
++
+[NOTE]
+====
+您也可以使用 `volume quota policy create` 命令创建新策略。
+
+====
+. 使用 `volume quota policy rule create` 命令为 SVM 上的每个卷创建以下配额规则中的 _any_ ：
++
+** 所有用户的默认配额规则
+** 适用于特定用户的显式配额规则
+** 所有组的默认配额规则
+** 特定组的显式配额规则
+** 所有 qtree 的默认配额规则
+** 特定 qtree 的显式配额规则
+
+
+. 使用 `volume quota policy rule show` 命令检查是否已正确配置配额规则。
+. 如果要使用新策略，请使用 `vserver modify` 命令将新策略分配给 SVM 。
+. 使用 `volume quota on` 命令初始化 SVM 上每个卷上的配额。
++
+您可以通过以下方式监控初始化过程：
+
++
+** 使用 `volume quota on` 命令时，您可以添加 ` -foreground` 参数以在前台运行 quota on 作业。（默认情况下，作业在后台运行。）
++
+当作业在后台运行时，您可以使用 `job show` 命令监控其进度。
+
+** 您可以使用 `volume quota show` 命令监控配额初始化的状态。
+
+
+. 使用 `volume quota show -instance` 命令检查初始化错误，例如无法初始化的配额规则。
+. 使用 `volume quota report` 命令显示配额报告，以确保强制实施的配额符合您的预期。
+

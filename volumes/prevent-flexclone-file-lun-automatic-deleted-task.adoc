@@ -1,0 +1,49 @@
+---
+permalink: volumes/prevent-flexclone-file-lun-automatic-deleted-task.html 
+sidebar: sidebar 
+keywords: prevent, specific, flexclone, file, or flexclone, lun, from automatically, deleted 
+summary: 如果将 FlexVol 卷配置为自动删除 FlexClone 文件和 FlexClone LUN ，则符合指定条件的任何克隆都可能被删除。如果您要保留特定的 FlexClone 文件或 FlexClone LUN ，则可以将其从自动 FlexClone 删除过程中排除。 
+---
+= 防止自动删除特定的 FlexClone 文件或 FlexClone LUN
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果将 FlexVol 卷配置为自动删除 FlexClone 文件和 FlexClone LUN ，则符合指定条件的任何克隆都可能被删除。如果您要保留特定的 FlexClone 文件或 FlexClone LUN ，则可以将其从自动 FlexClone 删除过程中排除。
+
+必须安装 FlexClone 许可证。
+
+创建 FlexClone 文件或 FlexClone LUN 时，默认情况下会禁用克隆的自动删除设置。如果将 FlexVol 卷配置为自动删除克隆以回收卷上的空间，则禁用了自动删除的 FlexClone 文件和 FlexClone LUN 会保留下来。
+
+[NOTE]
+====
+如果将卷上的 `commitment` level 设置为 `try` 或 `disrupt` ，则可以通过对这些克隆禁用自动删除来单独保留特定的 FlexClone 文件或 FlexClone LUN 。但是，如果将卷上的 `commitment` level 设置为 `destroy` ，并且销毁列表包括 `lun_clone ， file_clone` ，则卷设置将覆盖克隆设置，并且无论克隆的自动删除设置如何，所有 FlexClone 文件和 FlexClone LUN 都可以被删除。
+
+====
+.步骤
+. 使用 `volume file clone autodelete` 命令防止自动删除特定的 FlexClone 文件或 FlexClone LUN 。
++
+以下示例显示了如何为 vol1 中包含的 FlexClone LUN lun1_clone 禁用自动删除：
+
++
+[listing]
+----
+cluster1::> volume file clone autodelete -vserver vs1 -volume vol1 -clone-path lun1_clone -enable false
+----
++
+无法自动删除已禁用自动删除的 FlexClone 文件或 FlexClone LUN 以回收卷上的空间。
+
+. 使用 `volume file clone show-autodelete` 命令验证是否已为 FlexClone 文件或 FlexClone LUN 禁用自动删除。
++
+以下示例显示了 FlexClone LUN lun1_clone 的自动删除为 false ：
+
++
+[listing]
+----
+cluster1::> volume file clone show-autodelete -vserver vs1 -clone-path vol/vol1/lun1_clone
+															Vserver Name: vs1
+															Clone Path: vol/vol1/lun1_clone
+															Autodelete Enabled: false
+----
+

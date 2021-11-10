@@ -1,0 +1,84 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/use-cases-restrictions-concept.html 
+keywords: anti-ransomware use cases and restrictions, anti-ransomware performance and frequency considerations, anti-ransomware workloads, anti-ransomware volume requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations 
+summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版本将支持其他环境。 
+---
+= 反勒索软件使用情形和限制
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+在当前版本中，勒索软件保护最适合 NAS 环境。未来版本将支持其他环境。
+
+合适的工作负载：
+
+* NFS 存储上的数据库
+* Windows 或 Linux 主目录
++
+由于用户可以使用在学习期间未检测到的扩展名创建文件，因此此工作负载很可能出现误报。
+
+* 图像和视频
++
+例如，医疗保健记录和电子设计自动化（ Electronic Design Automation ， EDA ）数据。
+
+
+
+不适合的工作负载：
+
+* 文件创建或删除频率较高的工作负载（几秒内就有数十万个文件；例如，测试 / 开发工作负载）
+* 反勒索软件功能取决于识别文件创建或删除活动异常激增的能力。如果应用程序本身是文件活动的源，则无法有效地将其与勒索软件活动区分开来
+* 应用程序或主机对数据进行加密的工作负载防勒索软件功能取决于将传入数据区分为加密或未加密。如果应用程序本身正在对数据进行加密，则此功能的有效性将会降低。但是，根据文件活动（创建，删除和覆盖）和文件类型，此功能仍可正常工作。
+
+
+不支持的系统配置：
+
+* SAN 环境
+* ONTAP S3 环境
+* NFS 上的 VMDK
+* Cloud Volumes ONTAP
+* 适用于 AWS 和 Google Cloud 的 Cloud Volume Services
+* Azure NetApp Files
+* 适用于 ONTAP 的 Amazon FSX
+
+
+卷要求：
+
+* 容量不足 100%
+* 接合路径必须处于活动状态
+
+
+不支持的卷类型：
+
+* 使卷脱机
+* 受限卷
+* SnapLock 卷
+* SnapLock 卷
+* FlexGroup 卷
+* FlexCache 卷
+* SAN-only volumes
+* 已停止 Storage VM 的卷
+* Storage VM 的根卷
+* 数据保护卷
+
+
+
+
+== 反勒索软件的性能和频率注意事项
+
+按吞吐量和峰值 IOPS 衡量，反勒索软件功能对系统性能的影响最小。反勒索软件功能的影响在很大程度上取决于卷工作负载。对于大多数典型或常见工作负载，建议使用以下配置限制：
+
+* 如果工作负载为读取密集型或数据可以压缩，则每个节点的卷数不超过 50 个。
+* 如果工作负载的写入密集型工作负载无法压缩数据，则每个节点的卷数不超过 20 个。
+
+
+由于反勒索软件分析按优先顺序运行，因此随着受保护卷数量的增加，对每个卷运行分析的频率也会降低。

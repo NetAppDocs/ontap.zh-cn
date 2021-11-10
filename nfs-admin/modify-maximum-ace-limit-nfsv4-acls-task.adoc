@@ -1,0 +1,36 @@
+---
+permalink: nfs-admin/modify-maximum-ace-limit-nfsv4-acls-task.html 
+sidebar: sidebar 
+keywords:  
+summary: 您可以通过修改参数 -v4-acl-max-aces 来修改每个 NFSv4 ACL 允许的最大 ACE 数。默认情况下，每个 ACL 的限制设置为 400 个 ACE 。增加此限制有助于确保使用包含 400 个以上 ACE 的 ACL 将数据成功迁移到运行 ONTAP 的存储系统。 
+---
+= 修改 NFSv4 ACL 的最大 ACE 限制
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过修改参数 ` -v4-acl-max-aces` 来修改每个 NFSv4 ACL 允许的最大 ACE 数。默认情况下，每个 ACL 的限制设置为 400 个 ACE 。增加此限制有助于确保使用包含 400 个以上 ACE 的 ACL 将数据成功迁移到运行 ONTAP 的存储系统。
+
+增加此限制可能会影响使用 NFSv4 ACL 访问文件的客户端的性能。
+
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 修改 NFSv4 ACL 的最大 ACE 限制：
++
+`vserver nfs modify -v4-acl-max-aces max_ace_limit`
+
++
+的有效范围
+
++
+`max_ace_limit` 为 `192` 到 `1024 。`
+
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+

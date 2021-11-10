@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/control-automatic-dfs-advertisements-concept.html 
+sidebar: sidebar 
+keywords: cifs, server, option, control, dfs, capabilities, advertise, smb, client, connect, share, ontap, dfs, referral, access, symbol, link, how to control automatic dfs advertisements in ontap with a cifs server option 
+summary: CIFS 服务器选项用于控制连接到共享时如何向 SMB 客户端公布 DFS 功能。由于 ONTAP 在客户端通过 SMB 访问符号链接时使用 DFS 转介，因此您应了解禁用或启用此选项会产生什么影响。 
+---
+= 使用 CIFS 服务器选项在 ONTAP 中控制自动 DFS 公告
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+CIFS 服务器选项用于控制连接到共享时如何向 SMB 客户端公布 DFS 功能。由于 ONTAP 在客户端通过 SMB 访问符号链接时使用 DFS 转介，因此您应了解禁用或启用此选项会产生什么影响。
+
+CIFS 服务器选项可确定 CIFS 服务器是否自动向 SMB 客户端公布支持 DFS 。默认情况下，此选项处于启用状态， CIFS 服务器始终向 SMB 客户端公布 DFS 功能（即使连接到已禁用符号链接访问的共享也是如此）。如果您希望 CIFS 服务器仅在客户端连接到启用了符号链接访问的共享时才向客户端公布 DFS 功能，则可以禁用此选项。
+
+您应了解禁用此选项时会发生什么情况：
+
+* 符号链接的共享配置保持不变。
+* 如果共享参数设置为允许符号链接访问（读写访问或只读访问），则 CIFS 服务器会向连接到该共享的客户端公布 DFS 功能。
++
+客户端连接和符号链接访问将继续进行，不会中断。
+
+* 如果共享参数设置为不允许符号链接访问（通过禁用访问或共享参数的值为空），则 CIFS 服务器不会向连接到该共享的客户端公布 DFS 功能。
++
+由于客户端已缓存 CIFS 服务器支持 DFS 的信息，并且不再公布此信息，因此，在禁用 CIFS 服务器选项后，连接到已禁用符号链接访问的共享的客户端可能无法访问这些共享。禁用此选项后，您可能需要重新启动连接到这些共享的客户端，从而清除缓存的信息。
+
+
+
+这些更改不适用于 SMB 1.0 连接。

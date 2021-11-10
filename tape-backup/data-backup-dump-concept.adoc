@@ -1,0 +1,30 @@
+---
+permalink: tape-backup/data-backup-dump-concept.html 
+sidebar: sidebar 
+keywords: dump, engine, flexvol, volumes, backup, recovery, snapshot, copy, tape, device 
+summary: 转储是 ONTAP 基于 Snapshot 副本的备份和恢复解决方案，可帮助您将文件和目录从 Snapshot 副本备份到磁带设备，并将备份的数据还原到存储系统。 
+---
+= 关于 FlexVol 卷的转储引擎
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+转储是 ONTAP 基于 Snapshot 副本的备份和恢复解决方案，可帮助您将文件和目录从 Snapshot 副本备份到磁带设备，并将备份的数据还原到存储系统。
+
+您可以使用转储备份将文件系统数据（例如目录，文件及其关联的安全设置）备份到磁带设备。您可以备份整个卷，整个 qtree 或既不是整个卷也不是整个 qtree 的子树。
+
+您可以使用符合 NDMP 的备份应用程序执行转储备份或还原。
+
+执行转储备份时，您可以指定要用于备份的 Snapshot 副本。如果未为备份指定 Snapshot 副本，转储引擎将为备份创建 Snapshot 副本。备份操作完成后，转储引擎将删除此 Snapshot 副本。
+
+您可以使用转储引擎对磁带执行级别 0 备份，增量备份或差异备份。
+
+[NOTE]
+====
+还原到 Data ONTAP 8.3 之前的版本后，必须先执行基线备份操作，然后再执行增量备份操作。
+
+====
+* 相关信息 *
+
+https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-ug-rdg/home.html["升级，还原或降级"]

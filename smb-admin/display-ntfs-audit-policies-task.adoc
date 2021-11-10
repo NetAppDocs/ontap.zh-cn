@@ -1,0 +1,131 @@
+---
+permalink: smb-admin/display-ntfs-audit-policies-task.html 
+sidebar: sidebar 
+keywords: display, information, ntfs, audit, policies, policy, flexvol, volume, security, style, effective, permission, applied, apply, result, validate, display information about ntfs audit policies on flexvol volumes using the cli 
+summary: 您可以显示有关 FlexVol 卷上的 NTFS 审核策略的信息，包括什么是安全模式和有效安全模式，应用了哪些权限以及有关系统访问控制列表的信息。您可以使用结果验证安全配置或对审核问题进行故障排除。 
+---
+= 使用命令行界面显示有关 FlexVol 卷上 NTFS 审核策略的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示有关 FlexVol 卷上的 NTFS 审核策略的信息，包括什么是安全模式和有效安全模式，应用了哪些权限以及有关系统访问控制列表的信息。您可以使用结果验证安全配置或对审核问题进行故障排除。
+
+您必须提供 Storage Virtual Machine （ SVM ）的名称以及要显示其审核信息的文件或文件夹的路径。您可以摘要形式或详细列表形式显示输出。
+
+* 对于审核策略， NTFS 安全模式卷和 qtree 仅使用 NTFS 系统访问控制列表（ SACL ）。
+* 具有 NTFS 有效安全性的混合安全模式卷中的文件和文件夹可以应用 NTFS 审核策略。
++
+混合安全模式卷和 qtree 可以包含一些使用 UNIX 文件权限的文件和目录，模式位或 NFSv4 ACL ，以及一些使用 NTFS 文件权限的文件和目录。
+
+* 混合安全模式卷的顶层可以具有 UNIX 或 NTFS 有效安全性，并且可能包含也可能不包含 NTFS SACL 。
+* 由于即使卷根或 qtree 的有效安全模式为 UNIX ，也可以在混合安全模式卷或 qtree 上配置存储级别访问防护安全性， 配置了存储级别访问防护的卷或 qtree 路径的输出可能会同时显示常规文件和文件夹 NFSv4 SACL 以及存储级别访问防护 NTFS SACL 。
+* 如果在命令中输入的路径指向采用 NTFS 有效安全模式的数据，则如果为给定文件或目录路径配置了动态访问控制，则输出还会显示有关动态访问控制 ACE 的信息。
+* 显示有关具有 NTFS 有效安全性的文件和文件夹的安全信息时，与 UNIX 相关的输出字段包含仅显示的 UNIX 文件权限信息。
++
+在确定文件访问权限时， NTFS 安全模式文件和文件夹仅使用 NTFS 文件权限以及 Windows 用户和组。
+
+* 只有采用 NTFS 或 NFSv4 安全模式的文件和文件夹才会显示 ACL 输出。
++
+对于使用 UNIX 安全性且仅应用模式位权限（无 NFSv4 ACL ）的文件和文件夹，此字段为空。
+
+* ACL 输出中的所有者和组输出字段仅适用于 NTFS 安全描述符。
+
+
+.步骤
+. 显示具有所需详细级别的文件和目录审核策略设置：
++
+|===
+| 要显示信息的项 | 输入以下命令 ... 
+
+
+ a| 
+摘要形式
+ a| 
+`vserver security file-directory show -vserver vserver_name -path path`
+
+
+
+ a| 
+作为详细列表
+ a| 
+`vserver security file-directory show -vserver vserver_name -path path -expand-mask true`
+
+|===
+
+
+以下示例显示了 SVM vs1 中路径 ` /corp` 的审核策略信息。此路径具有 NTFS 有效安全性。NTFS 安全描述符包含成功和成功 / 失败 SACL 条目。
+
+[listing]
+----
+cluster::> vserver security file-directory show -vserver vs1 -path /corp
+                Vserver: vs1
+              File Path: /corp
+      File Inode Number: 357
+         Security Style: ntfs
+        Effective Style: ntfs
+         DOS Attributes: 10
+ DOS Attributes in Text: ----D---
+Expanded Dos Attributes: -
+           Unix User Id: 0
+          Unix Group Id: 0
+         Unix Mode Bits: 777
+ Unix Mode Bits in Text: rwxrwxrwx
+                   ACLs: NTFS Security Descriptor
+                         Control:0x8014
+                         Owner:DOMAIN\Administrator
+                         Group:BUILTIN\Administrators
+                         SACL - ACEs
+                           ALL-DOMAIN\Administrator-0x100081-OI|CI|SA|FA
+                           SUCCESSFUL-DOMAIN\user1-0x100116-OI|CI|SA
+                         DACL - ACEs
+                           ALLOW-BUILTIN\Administrators-0x1f01ff-OI|CI
+                           ALLOW-BUILTIN\Users-0x1f01ff-OI|CI
+                           ALLOW-CREATOR OWNER-0x1f01ff-OI|CI
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff-OI|CI
+----
+以下示例显示了 SVM vs1 中路径 ` /datavol1` 的审核策略信息。此路径包含常规文件和文件夹 SACL 以及存储级别访问防护 SACL 。
+
+[listing]
+----
+cluster::> vserver security file-directory show -vserver vs1 -path /datavol1
+
+                Vserver: vs1
+              File Path: /datavol1
+        File Inode Number: 77
+         Security Style: ntfs
+        Effective Style: ntfs
+         DOS Attributes: 10
+ DOS Attributes in Text: ----D---
+Expanded Dos Attributes: -
+           Unix User Id: 0
+          Unix Group Id: 0
+         Unix Mode Bits: 777
+ Unix Mode Bits in Text: rwxrwxrwx
+                   ACLs: NTFS Security Descriptor
+                         Control:0xaa14
+                         Owner:BUILTIN\Administrators
+                         Group:BUILTIN\Administrators
+                         SACL - ACEs
+                           AUDIT-EXAMPLE\marketing-0xf01ff-OI|CI|FA
+                         DACL - ACEs
+                           ALLOW-EXAMPLE\Domain Admins-0x1f01ff-OI|CI
+                           ALLOW-EXAMPLE\marketing-0x1200a9-OI|CI
+
+                         Storage-Level Access Guard security
+                         SACL (Applies to Directories):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                         DACL (Applies to Directories):
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff
+                         SACL (Applies to Files):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                         DACL (Applies to Files):
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff
+----

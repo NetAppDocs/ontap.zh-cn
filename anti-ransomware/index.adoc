@@ -1,0 +1,79 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/index.html 
+keywords: anti-ransomware overview, ransomware, security, introduce, protection, detection, threat, attack, suspect, what ontap anti-ransomware detects, entropy, abnormal volume activity, extension conformity, how to recover data in after a ransomware attack, ransomware protection strategy 
+summary: 从 ONTAP 9.10.1 开始，反勒索软件功能使用 NAS （ NFS 和 SMB ）环境中的工作负载分析主动检测并警告可能指示勒索软件攻击的异常活动。 
+---
+= 反勒索软件概述
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+从 ONTAP 9.10.1 开始，反勒索软件功能使用 NAS （ NFS 和 SMB ）环境中的工作负载分析主动检测并警告可能指示勒索软件攻击的异常活动。
+
+如果怀疑发生攻击，除了从计划的 Snapshot 副本提供现有保护之外，反勒索软件还会创建新的 Snapshot 备份。
+
+防勒索软件功能需要多租户加密密钥管理（ MT_EK_MGMT ）许可证，此许可证可从安全与合规包中获得。
+
+
+
+== ONTAP 勒索软件保护策略
+
+有效的勒索软件检测策略应包括多个保护层。
+
+一个比喻是车辆的安全特性。您不希望依靠安全带等单一功能在意外事件中为您提供全面保护。安全袋，防抱死制动器和前向碰撞警告都是额外的安全功能，可以带来更好的结果。应以相同方式查看勒索软件保护。
+
+虽然 ONTAP 提供了 FPolicy ， Snapshot 副本， SnapLock 和 Active IQ 数字顾问等功能来帮助防止勒索软件，但此内容的重点是具有机器学习功能的 ONTAP 内置反勒索软件功能。
+
+要详细了解 ONTAP 的其他反勒索软件功能，请参见： https://www.netapp.com/media/7334-tr4572.pdf["TR-4572 ：《 NetApp 解决方案 for 勒索软件》。"^]
+
+
+
+== ONTAP 反勒索软件检测到的内容
+
+勒索软件攻击有两种：
+
+. 通过加密数据拒绝为文件提供服务。除非支付了勒索费用，否则攻击者将无法访问此数据。
+. 敏感专有数据被盗。攻击者威胁要将此数据释放到公有域，除非支付了勒索。
+
+
+ONTAP 勒索软件保护解决了第一种类型，它采用了一种基于以下内容的反勒索软件检测机制：
+
+. 将传入数据标识为加密或纯文本。
+. 分析，用于检测
++
+** high data _entropy （评估文件中数据的随机性）
+** 使用数据加密时异常卷活动激增
+** 不符合正常扩展类型的扩展
+
+
+
+
+
+NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索软件攻击的安全。虽然攻击可能会被检测不到，但如果防病毒软件无法检测到入侵， NetApp 勒索软件保护可作为一个重要的额外防御层。在对少量文件进行加密后，反勒索软件可以检测到大多数勒索软件攻击的蔓延，自动采取措施保护数据，并提醒您可疑攻击正在发生。
+
+
+
+== 如何在勒索软件攻击后在 ONTAP 中恢复数据
+
+如果怀疑发生攻击，系统将在该时间点创建卷 Snapshot 副本并锁定该副本。如果稍后确认此攻击，则可以将卷还原到此主动创建的快照，从而最大程度地减少数据丢失。
+
+无法正常删除已锁定的 Snapshot 副本。但是，如果您稍后决定将此攻击标记为误报，则锁定的副本将被删除。
+
+了解受影响的文件和攻击时间后，可以有选择地从各种 Snapshot 副本恢复受影响的文件，而不是简单地将整个卷还原到某个快照。
+
+因此，反勒索软件基于经验证的 ONTAP 数据保护和灾难恢复技术构建，可应对勒索软件攻击。有关恢复数据的详细信息，请参见以下主题。
+
+* link:../task_dp_recover_snapshot.html["从 Snapshot 副本恢复（ System Manager ）"]
+* link:../data-protection/restore-contents-volume-snapshot-task.html["从 Snapshot 副本还原文件（命令行界面）"]
+* link:https://www.netapp.com/blog/smart-ransomware-recovery["智能勒索软件恢复"^]
+

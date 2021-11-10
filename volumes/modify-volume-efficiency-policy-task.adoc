@@ -1,0 +1,25 @@
+---
+permalink: volumes/modify-volume-efficiency-policy-task.html 
+sidebar: sidebar 
+keywords: modify, volume, efficiency, policy 
+summary: 您可以使用 volume efficiency policy modify 命令修改卷效率策略，以便在不同的持续时间内运行重复数据删除和数据压缩，或者更改作业计划。 
+---
+= 修改卷效率策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume efficiency policy modify` 命令修改卷效率策略以在不同的持续时间内运行重复数据删除和数据压缩，或者更改作业计划。
+
+.步骤
+. 使用 `volume efficiency policy modify` 命令修改卷效率策略。
+
+
+以下命令会将名为 policy1 的卷效率策略修改为每小时运行一次：
+
+`volume efficiency policy modify -vserver vs1 -policy policy1 -schedule hourly`
+
+以下命令会将名为 pol2 的卷效率策略修改为阈值 30% ：
+
+`volume efficiency policy modify -vserver vs1 -policy pol1 -type threshold -start-threshold-percent 30%`

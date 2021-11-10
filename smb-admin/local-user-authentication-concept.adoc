@@ -1,0 +1,42 @@
+---
+permalink: smb-admin/local-user-authentication-concept.html 
+sidebar: sidebar 
+keywords: local, user, access, data, cifs, server, create, authenticate, session, how local user authentication works 
+summary: 本地用户必须先创建经过身份验证的会话，然后才能访问 CIFS 服务器上的数据。 
+---
+= 本地用户身份验证的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+本地用户必须先创建经过身份验证的会话，然后才能访问 CIFS 服务器上的数据。
+
+由于 SMB 基于会话，因此首次设置会话时，只需确定一次用户身份即可。CIFS 服务器在对本地用户进行身份验证时使用基于 NTLM 的身份验证。支持 NTLMv1 和 NTLMv2 。
+
+ONTAP 在三种使用情形下使用本地身份验证。每个用例取决于用户名的域部分（采用 domain\user 格式）是否与 CIFS 服务器的本地域名（ CIFS 服务器名称）匹配：
+
+* 域部分匹配
++
+请求访问数据时提供本地用户凭据的用户将在 CIFS 服务器上进行本地身份验证。
+
+* 域部分不匹配
++
+ONTAP 尝试对 CIFS 服务器所属域中的域控制器使用 NTLM 身份验证。如果身份验证成功，则登录完成。如果失败，接下来会发生什么情况取决于身份验证失败的原因。
+
++
+例如，如果用户位于 Active Directory 中，但密码无效或已过期，则 ONTAP 不会尝试使用 CIFS 服务器上的相应本地用户帐户。相反，身份验证将失败。在其他情况下， ONTAP 会使用 CIFS 服务器上的相应本地帐户（如果存在）进行身份验证，即使 NetBIOS 域名不匹配也是如此。例如，如果存在匹配的域帐户，但该帐户已禁用，则 ONTAP 会使用 CIFS 服务器上的相应本地帐户进行身份验证。
+
+* 未指定域部分
++
+ONTAP 首先尝试以本地用户身份进行身份验证。如果以本地用户身份进行身份验证失败，则 ONTAP 会使用 CIFS 服务器所属域中的域控制器对用户进行身份验证。
+
+
+
+成功完成本地或域用户身份验证后， ONTAP 将根据本地组成员资格和权限构建完整的用户访问令牌。
+
+有关本地用户的 NTLM 身份验证的详细信息，请参见 Microsoft Windows 文档。
+
+* 相关信息 *
+
+xref:enable-disable-local-user-authentication-task.adoc[启用或禁用本地用户身份验证]

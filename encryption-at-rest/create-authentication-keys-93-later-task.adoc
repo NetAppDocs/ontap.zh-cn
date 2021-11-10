@@ -1,0 +1,101 @@
+---
+permalink: encryption-at-rest/create-authentication-keys-93-later-task.html 
+sidebar: sidebar 
+keywords: creating, authentication keys, ontap 9.5, earlier 
+summary: 您可以使用 security key-manager create-key 命令为节点创建身份验证密钥并将其存储在已配置的 KMIP 服务器上。 
+---
+= 在 ONTAP 9.5 及更早版本中创建身份验证密钥
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `security key-manager create-key` 命令为节点创建身份验证密钥并将其存储在已配置的 KMIP 服务器上。
+
+您必须是集群管理员才能执行此任务。
+
+如果您的安全设置要求您使用不同的密钥进行数据身份验证和 FIPS 140-2 身份验证，则应为每个密钥创建一个单独的密钥。否则，您可以使用与数据访问相同的身份验证密钥来满足 FIPS 合规性要求。
+
+ONTAP 会为集群中的所有节点创建身份验证密钥。
+
+* 启用板载密钥管理后，不支持此命令。
+* 如果已配置的密钥管理服务器已存储超过 128 个身份验证密钥，则会收到警告。
++
+您可以使用密钥管理服务器软件删除任何未使用的密钥，然后再次运行命令。
+
+
+
+.步骤
+. 为集群节点创建身份验证密钥：
++
+`s安全密钥管理器 create-key`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+[NOTE]
+====
+输出中显示的密钥 ID 是用于引用身份验证密钥的标识符。它不是实际的身份验证密钥或数据加密密钥。
+
+====
++
+以下示例将为 `cluster1` 创建身份验证密钥：
+
++
+[listing]
+----
+cluster1::> security key-manager create-key
+   (security key-manager create-key)
+Verifying requirements...
+
+Node: cluster1-01
+Creating authentication key...
+Authentication key creation successful.
+Key ID: F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+
+Node: cluster1-01
+Key manager restore operation initialized.
+Successfully restored key information.
+
+Node: cluster1-02
+Key manager restore operation initialized.
+Successfully restored key information.
+----
+. 验证是否已创建身份验证密钥：
++
+`s安全密钥管理器查询`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例验证是否已为 `cluster1` 创建身份验证密钥：
+
++
+[listing]
+----
+cluster1::> security key-manager query
+
+  (security key-manager query)
+
+          Node: cluster1-01
+   Key Manager: 20.1.1.1
+ Server Status: available
+
+Key Tag        Key Type  Restored
+-------------  --------  --------
+cluster1-01    NSE-AK    yes
+       Key ID: F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+
+
+          Node: cluster1-02
+   Key Manager: 20.1.1.1
+ Server Status: available
+
+Key Tag        Key Type  Restored
+-------------  --------  --------
+cluster1-02    NSE-AK    yes
+       Key ID: F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+----
+

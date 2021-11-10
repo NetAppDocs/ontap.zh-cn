@@ -1,0 +1,65 @@
+---
+permalink: smb-admin/grant-null-users-access-file-system-shares-task.html 
+sidebar: sidebar 
+keywords: access, storage, system, resource, null, session, client, assign, group, ip, adress, null, session, grant, grant null users access to file system shares 
+summary: 您可以通过分配空会话客户端要使用的组并记录空会话客户端的 IP 地址以添加到允许使用空会话访问数据的客户端列表中来允许空会话客户端访问存储系统资源。 
+---
+= 授予空用户对文件系统共享的访问权限
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过分配空会话客户端要使用的组并记录空会话客户端的 IP 地址以添加到允许使用空会话访问数据的客户端列表，从而允许空会话客户端访问存储系统资源。
+
+.步骤
+. 使用 `vserver name-mapping create` 命令使用 IP 限定符将空用户映射到任何有效的 Windows 用户。
++
+以下命令使用有效主机名 google.com 将空用户映射到 user1 ：
+
++
+[listing]
+----
+vserver name-mapping create –direction win-unix  -position 1 –pattern “ANONYMOUS LOGON” –replacement user1 – hostname google.com
+----
++
+以下命令使用有效 IP 地址 10.238.2.54/32 将空用户映射到 user1 ：
+
++
+[listing]
+----
+vserver name-mapping create –direction win-unix  -position 2 –pattern “ANONYMOUS LOGON” –replacement user1 –address 10.238.2.54/32
+----
+. 使用 `vserver name-mapping show` 命令确认名称映射。
++
+[listing]
+----
+vserver name-mapping show
+
+Vserver:   vs1
+Direction: win-unix
+Position Hostname         IP Address/Mask
+-------- --------         ----------------
+1       -                 10.72.40.83/32      Pattern: anonymous logon
+                                          Replacement: user1
+----
+. 使用 `vserver cifs options modify – win-name-for-null-user` 命令将 Windows 成员资格分配给空用户。
++
+只有当空用户具有有效的名称映射时，此选项才适用。
+
++
+[listing]
+----
+vserver cifs options modify -win-name-for-null-user user1
+----
+. 使用 `vserver cifs options show` 命令确认将空用户映射到 Windows 用户或组。
++
+[listing]
+----
+vserver cifs options show
+
+Vserver :vs1
+
+Map Null User to Windows User of Group: user1
+----
+

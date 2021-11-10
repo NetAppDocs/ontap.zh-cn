@@ -1,0 +1,21 @@
+---
+permalink: smb-admin/client-performance-traditional-lease-oplocks-concept.html 
+sidebar: sidebar 
+keywords: traditional, oplocks, opportunistic, locks, lease, smb, client, client-side, read-ahead, file-sharing, write-behind, information, access, reducing, reduce, network, traffic, improve client performance with traditional and lease oplocks 
+summary: 在某些文件共享情形下， SMB 客户端可以通过传统机会锁（机会锁）和租用机会锁对预读，后写和锁定信息执行客户端缓存。然后，客户端可以对文件进行读取或写入，而无需定期提醒服务器它需要访问相关文件。这样可以通过减少网络流量来提高性能。 
+---
+= 通过传统机会锁和租用机会锁概述提高客户端性能
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在某些文件共享情形下， SMB 客户端可以通过传统机会锁（机会锁）和租用机会锁对预读，后写和锁定信息执行客户端缓存。然后，客户端可以对文件进行读取或写入，而无需定期提醒服务器它需要访问相关文件。这样可以通过减少网络流量来提高性能。
+
+租用机会锁是 SMB 2.1 协议及更高版本提供的一种增强型机会锁。租用机会锁允许客户端在来自自身的多个 SMB 打开之间获取和保留客户端缓存状态。
+
+可以通过两种方式控制机会锁：
+
+* 通过共享属性，在创建共享时使用 `vserver cifs share create` 命令，或者在创建后使用 `vserver share properties` 命令。
+* 通过 qtree 属性，在创建 qtree 时使用 `volume qtree create` 命令，或者在创建后使用 `volume qtree oplock` 命令。
+

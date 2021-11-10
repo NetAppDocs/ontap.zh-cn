@@ -1,0 +1,59 @@
+---
+permalink: nfs-config/load-local-unix-groups-uri-task.html 
+sidebar: sidebar 
+keywords: load, local, unix, groups, uri 
+summary: 除了手动创建单个本地 UNIX 组之外，您还可以使用 vserver services name-service unix-group load-from-uri 命令从统一资源标识符（ Uniform Resource Identifier ， URI ）将本地 UNIX 组列表加载到 SVM 中。 
+---
+= 从 URI 加载本地 UNIX 组
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+除了手动创建单个本地 UNIX 组之外，您还可以使用 `vserver services name-service unix-group load-from-uri` 命令从统一资源标识符（ Uniform Resource Identifier ， URI ）将本地 UNIX 组列表加载到 SVM 中。
+
+.步骤
+. 创建一个包含要加载的本地 UNIX 组列表的文件。
++
+此文件必须包含 UNIX ` /etc/group` 格式的组信息：
+
++
+` 组名称：密码： Group_ID ：逗号分隔列表用户 _`
+
++
+此命令会丢弃 ` _password_` 字段的值。
+
++
+支持的最大文件大小为 1 MB 。
+
++
+组文件中每行的最大长度为 32 ， 768 个字符。
+
+. 验证此列表是否不包含任何重复信息。
++
+此列表不得包含重复条目，否则加载此列表将失败。如果 SVM 中已存在条目，则必须将 ` -overwrite` 参数设置为 `true` 以使用新文件覆盖所有现有条目，或者确保新文件不包含与现有条目重复的任何条目。
+
+. 将文件复制到服务器。
++
+存储系统必须可通过 HTTP ， HTTPS ， FTP 或 FTPS 访问此服务器。
+
+. 确定文件的 URI 。
++
+此 URI 是您为存储系统提供的地址，用于指示文件的位置。
+
+. 从 URI 将包含本地 UNIX 组列表的文件加载到 SVM 中：
++
+`vserver services name-service unix-group load-from-uri -vserver _vserver_name_ -uri ｛ ftp_http_FTPS_https ｝ ： //_uri_ -overwrite ｛ true_false ｝`
+
++
+` 覆盖` ｛`true` ｝`false` ｝ 指定是否覆盖条目。默认值为 `false` 。如果将此参数指定为 `true` ，则 ONTAP 会将指定 SVM 的整个现有本地 UNIX 组数据库替换为您正在加载的文件中的条目。
+
+
+
+以下命令会将 URI ` +ftp://ftp.example.com/group+` 中的本地 UNIX 组列表加载到名为 vs1 的 SVM 中。SVM 上的现有组不会被 URI 中的信息覆盖。
+
+[listing]
+----
+vs1::> vserver services name-service unix-group load-from-uri -vserver vs1
+-uri ftp://ftp.example.com/group -overwrite false
+----

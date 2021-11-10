@@ -1,0 +1,42 @@
+---
+permalink: authentication/lock-unlock-user-account-task.html 
+sidebar: sidebar 
+keywords: lock, unlock, administrator account 
+summary: 您可以使用 security login lock 命令锁定管理员帐户，使用 security login unlock 命令解除帐户锁定。 
+---
+= 锁定和解锁管理员帐户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `ssecurity login lock` 命令锁定管理员帐户，使用 `ssecurity login unlock` 命令解除帐户锁定。
+
+您必须是集群管理员才能执行这些任务。
+
+.步骤
+. 锁定管理员帐户：
++
+`ssecurity login lock -vserver svm_name -username user_name`
+
++
+以下命令会锁定 SVM ``vs1.example.com``: 的管理员帐户 `admin1`
+
++
+[listing]
+----
+cluster1::>security login lock -vserver engData -username admin1
+----
+. 解锁管理员帐户：
++
+`ssecurity login unlock -vserver svm_name -username user_name`
+
++
+以下命令会为 SVM ``vs1.example.com``: 解锁管理员帐户 `admin1`
+
++
+[listing]
+----
+cluster1::>security login unlock -vserver engData -username admin1
+----
+

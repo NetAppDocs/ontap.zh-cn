@@ -1,0 +1,40 @@
+---
+permalink: smb-admin/configure-lifetime-metadata-cache-entries-task.html 
+sidebar: sidebar 
+keywords: configure, lifetime, smb, metadata, cache, entries, optimise, environment, configure the lifetime of smb metadata cache entries 
+summary: 您可以配置 SMB 元数据缓存条目的生命周期，以优化环境中的 SMB 元数据缓存性能。默认值为 10 秒。 
+---
+= 配置 SMB 元数据缓存条目的生命周期
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以配置 SMB 元数据缓存条目的生命周期，以优化环境中的 SMB 元数据缓存性能。默认值为 10 秒。
+
+您必须已启用 SMB 元数据缓存功能。如果未启用 SMB 元数据缓存，则不会使用 SMB 缓存 TTL 设置。
+
+.步骤
+. 执行所需的操作：
++
+|===
+| 如果要在以下情况下配置 SMB 元数据缓存条目的生命周期 ... | 输入命令 ... 
+
+
+ a| 
+创建共享
+ a| 
+`vserver cifs share -create -vserver _vserver_name_ -share-name _share_name_ -path _path_ -attribute-cache-tl [integerh] [integem]`
+
+
+
+ a| 
+修改现有共享
+ a| 
+`vserver cifs share -modify -vserver _vserver_name_ -share-name _share_name_ -attribute-cache-tl [integerh] [integem]`
+
+|===
++
+您可以在创建或修改共享时指定其他共享配置选项和属性。有关详细信息，请参见手册页。
+
+

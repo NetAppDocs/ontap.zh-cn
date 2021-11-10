@@ -1,0 +1,29 @@
+---
+permalink: smb-admin/authentication-access-security-concept.html 
+sidebar: sidebar 
+keywords: create, smb, connection, contain, svm, authenticate, domain, cifs, server, support, authentication, method, ntlm, ntlmv1, ntlmv2, kerberos, default, method, user, ontap, how ontap handles smb client authentication 
+summary: 用户必须先通过 CIFS 服务器所属的域进行身份验证，然后才能创建 SMB 连接以访问 SVM 上包含的数据。CIFS 服务器支持两种身份验证方法： Kerberos 和 NTLM （ NTLMv1 或 NTLMv2 ）。Kerberos 是用于对域用户进行身份验证的默认方法。 
+---
+= ONTAP 如何处理 SMB 客户端身份验证
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+用户必须先通过 CIFS 服务器所属的域进行身份验证，然后才能创建 SMB 连接以访问 SVM 上包含的数据。CIFS 服务器支持两种身份验证方法： Kerberos 和 NTLM （ NTLMv1 或 NTLMv2 ）。Kerberos 是用于对域用户进行身份验证的默认方法。
+
+
+
+== Kerberos 身份验证
+
+在创建经过身份验证的 SMB 会话时， ONTAP 支持 Kerberos 身份验证。
+
+Kerberos 是 Active Directory 的主身份验证服务。Kerberos 服务器或 Kerberos 密钥分发中心（ KDC ）服务可在 Active Directory 中存储和检索有关安全原则的信息。与 NTLM 模式不同，要与其他计算机（例如 CIFS 服务器）建立会话的 Active Directory 客户端会直接联系 KDC 以获取其会话凭据。
+
+
+
+== NTLM 身份验证
+
+NTLM 客户端身份验证可使用质询响应协议来完成，该协议基于密码共享用户特定的机密信息。
+
+如果用户使用本地 Windows 用户帐户创建 SMB 连接，则 CIFS 服务器会使用 NTLMv2 在本地完成身份验证。

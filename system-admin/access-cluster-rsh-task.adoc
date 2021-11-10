@@ -1,0 +1,72 @@
+---
+permalink: system-admin/access-cluster-rsh-task.html 
+sidebar: sidebar 
+keywords: access, cluster, rsh, cluster, administrative, task, secure, protocol 
+summary: 您可以通过问题描述向集群发送 RSH 请求来执行管理任务。RSH 不是安全协议，默认情况下处于禁用状态。 
+---
+= 使用 RSH 访问集群
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过问题描述向集群发送 RSH 请求来执行管理任务。RSH 不是安全协议，默认情况下处于禁用状态。
+
+在使用 RSH 访问集群之前，必须满足以下条件：
+
+* 您必须拥有一个集群本地用户帐户，该帐户必须配置为使用 RSH 作为访问方法。
++
+`ssecurity login` 命令的 ` 应用程序` 参数用于指定用户帐户的访问方法。有关详细信息，请参见 `ssecurity login` 手册页。
+
+* 集群或节点管理 LIF 使用的管理防火墙策略必须已启用 RSH ，以便 RSH 请求可以通过防火墙。
++
+默认情况下， RSH 处于禁用状态。带有 ` -service rsh` 参数的 `ssystem services firewall policy show` 命令可显示是否已在防火墙策略中启用 RSH 。有关详细信息，请参见 `ssystem services firewall policy` 手册页。
+
+* 如果使用 IPv6 连接，则必须已在集群上配置并启用 IPv6 ，并且防火墙策略必须已配置 IPv6 地址。
++
+`network options ipv6 show` 命令可显示是否已启用 IPv6 。`sservices firewall policy show` 命令可显示防火墙策略。
+
+
+
+.关于此任务
+* RSH 不是安全协议。
++
+您应考虑使用 SSH 访问集群。SSH 可提供安全的远程 shell 和交互式网络会话。
+
+* ONTAP 最多支持每个节点 50 个并发 RSH 会话。
++
+如果集群管理 LIF 驻留在节点上，则它与节点管理 LIF 共享此限制。
+
++
+如果传入连接的速率高于每秒 10 次，则此服务将暂时禁用 60 秒。
+
+
+
+.步骤
+. 在管理主机中，输入以下命令：
++
+` * rsh _hostname_or_IP_ -l _username ： passwordcommand_*`
+
++
+` hostname_or_IP_` 是集群管理 LIF 或节点管理 LIF 的主机名或 IP 地址。建议使用集群管理 LIF 。您可以使用 IPv4 或 IPv6 地址。
+
++
+` _command_` 是要通过 RSH 执行的命令。
+
+
+
+以下示例显示了已设置 RSH 访问权限的用户 "`Joe` " 如何通过问题描述处理 RSH 请求以运行 `cluster show` 命令：
+
+[listing]
+----
+
+admin_host$ rsh 10.72.137.28 -l joe:password cluster show
+
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node1                 true    true
+node2                 true    true
+2 entries were displayed.
+
+admin_host$
+----

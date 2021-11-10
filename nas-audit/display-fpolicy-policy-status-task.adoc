@@ -1,0 +1,86 @@
+---
+permalink: nas-audit/display-fpolicy-policy-status-task.html 
+sidebar: sidebar 
+keywords: display, information, fpolicy, policy status 
+summary: 您可以显示有关 FPolicy 策略状态的信息，以确定策略是否已启用，配置为使用的外部引擎，策略的序列号以及与 FPolicy 策略关联的 Storage Virtual Machine （ SVM ）。 
+---
+= 显示有关 FPolicy 策略状态的信息
+
+
+[role="lead"]
+您可以显示有关 FPolicy 策略状态的信息，以确定策略是否已启用，配置为使用的外部引擎，策略的序列号以及与 FPolicy 策略关联的 Storage Virtual Machine （ SVM ）。
+
+如果未指定任何参数，则此命令将显示以下信息：
+
+* SVM name
+* Policy name
+* 策略序列号
+* 策略状态
+
+
+除了显示集群或特定 SVM 上配置的 FPolicy 策略的策略状态信息之外，您还可以使用命令参数按其他条件筛选命令的输出。
+
+您可以指定 ` -instance` 参数以显示有关列出的策略的详细信息。或者，您也可以使用 ` 字段` 参数在命令输出中仅显示指示的字段，或者使用 ` 字段？` 以确定可以使用的字段。
+
+.步骤
+. 使用相应命令显示有关 FPolicy 策略状态的筛选信息：
++
+[cols="2*"]
+|===
+| 要显示有关策略的状态信息的信息 | 输入命令 ... 
+
+
+ a| 
+在集群上
+ a| 
+`vserver fpolicy show`
+
+
+
+ a| 
+具有指定状态的
+ a| 
+`vserver fpolicy show -status ｛ on|off ｝`
+
+
+
+ a| 
+在指定的 SVM 上
+ a| 
+`vserver fpolicy show -vserver vserver_name`
+
+
+
+ a| 
+使用指定的策略名称
+ a| 
+`vserver fpolicy show -policy-name policy_name`
+
+
+
+ a| 
+使用指定外部引擎的
+ a| 
+`vserver fpolicy show -engine enginer_name`
+
+|===
+
+
+以下示例显示了有关集群上 FPolicy 策略的信息：
+
+[listing]
+----
+
+cluster1::> vserver fpolicy show
+                                        Sequence
+Vserver             Policy Name           Number  Status      Engine
+------------------- ------------------- --------  ---------   ---------
+FPolicy             cserver_policy      -         off         eng1
+vs1.example.com     v1p1                -         off         eng2
+vs1.example.com     v1p2                -         off         native
+vs1.example.com     v1p3                -         off         native
+vs1.example.com     cserver_policy      -         off         eng1
+vs2.example.com     v1p1                3         on          native
+vs2.example.com     v1p2                1         on          eng3
+vs2.example.com     cserver_policy      2         on          eng1
+----

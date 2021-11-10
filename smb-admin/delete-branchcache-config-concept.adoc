@@ -1,0 +1,19 @@
+---
+permalink: smb-admin/delete-branchcache-config-concept.html 
+sidebar: sidebar 
+keywords: previous, configure, branchcache, storage, virtual, machine, svm, cache, content, configuration, server, what happens when you delete the branccache configuration 
+summary: 如果先前已配置 BranchCache ，但不希望 Storage Virtual Machine （ SVM ）继续提供缓存的内容，则可以删除 CIFS 服务器上的 BranchCache 配置。您必须了解删除配置时会发生什么情况。 
+---
+= 删除 BranchCache 配置时会发生什么情况
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果先前已配置 BranchCache ，但不希望 Storage Virtual Machine （ SVM ）继续提供缓存的内容，则可以删除 CIFS 服务器上的 BranchCache 配置。您必须了解删除配置时会发生什么情况。
+
+删除配置时， ONTAP 会从集群中删除该 SVM 的配置信息并停止 BranchCache 服务。您可以选择 ONTAP 是否应删除 SVM 上的哈希存储。
+
+删除 BranchCache 配置不会中断已启用 BranchCache 的客户端的访问。此后，当启用了 BranchCache 的客户端请求有关已缓存内容的现有 SMB 连接的元数据信息时， ONTAP 将做出响应并显示 Microsoft 定义的错误，这将导致客户端发送第二个请求，请求实际内容。在响应内容请求时， CIFS 服务器会发送存储在 SVM 上的实际内容
+
+删除 BranchCache 配置后， SMB 共享不会公布 BranchCache 功能。要访问以前未使用新 SMB 连接缓存的内容，客户端会发出正常的读取 SMB 请求。

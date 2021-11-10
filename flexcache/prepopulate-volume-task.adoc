@@ -1,0 +1,54 @@
+---
+permalink: flexcache/prepopulate-volume-task.html 
+sidebar: sidebar 
+keywords: prepopulating, flexcache, volume 
+summary: 您可以预先填充 FlexCache 卷，以缩短访问缓存数据所需的时间。 
+---
+= 预先填充 FlexCache 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以预先填充 FlexCache 卷，以缩短访问缓存数据所需的时间。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须是高级权限级别的集群管理员
+* 为预填充传递的路径必须有效，否则预填充操作将失败。
+
+
+.关于此任务
+* 仅预填充读取文件并遍历目录
+* is-recursion 标志适用场景传递给预填充的整个目录列表
+
+
+.步骤
+. 预先填充 FlexCache 卷：
++
+`volume FlexCache prepopulate -cache-vserver vserver_name -cache-volume -path-list path_list -is-recursion true_false`
+
++
+此示例包括一个用于预填充的目录路径：
+
++
+[listing]
+----
+cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list /dir1
+  (volume flexcache prepopulate start)
+[JobId 207]: FlexCache prepopulate job queued.
+----
++
+此示例包括预先填充的多个路径列表：
+
++
+[listing]
+----
+cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list /dir1,/dir2,/dir3,/dir4
+  (volume flexcache prepopulate start)
+[JobId 208]: FlexCache prepopulate job queued.
+----
+. 显示读取的文件数：
++
+`job show -id job_ID -ins`
+
+

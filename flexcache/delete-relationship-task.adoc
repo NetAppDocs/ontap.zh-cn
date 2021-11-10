@@ -1,0 +1,56 @@
+---
+permalink: flexcache/delete-relationship-task.html 
+sidebar: sidebar 
+keywords: deleting, flexcache, relationship 
+summary: 如果不再需要 FlexCache 卷，则可以删除 FlexCache 关系和 FlexCache 卷。 
+---
+= 删除 FlexCache 关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果不再需要 FlexCache 卷，则可以删除 FlexCache 关系和 FlexCache 卷。
+
+.步骤
+. 从包含 FlexCache 卷的集群中，使 FlexCache 卷脱机：
++
+`volume offline -vserver svm_name -volume volume_name`
+
+. 删除 FlexCache 卷：
++
+`volume FlexCache delete -vserver svm_name -volume volume_name`
+
++
+FlexCache 关系详细信息将从原始卷和 FlexCache 卷中删除。
+
++
+[NOTE]
+====
+如果 `volume FlexCache delete` 命令无法清理初始端配置，则系统会提示您运行 `volume FlexCache origin cleanup-cache-relationship` 命令。在此情景中，转至步骤 3 。
+
+====
+. 从初始集群中，从初始卷中清除 FlexCache 关系详细信息：
++
+`volume FlexCache origin cleanup-cache-relationship -original-volume original_volume -original-vserver original_sVM -cache-vserver FlexCache_SVM -cache-volume FlexCache_vol`
+
++
+[NOTE]
+====
+如果运行 `volume FlexCache origin cleanup-cache-relationship` 命令，则 FlexCache 关系将被删除，无法重新建立。
+
+====
++
+[listing]
+----
+cluster1::> volume flexcache origin cleanup-cache-relationship -origin-volume origin1 -origin-vserver vs34 -cache-vserver vs56 -cache-volume fc1
+
+Warning: This command only needs to be run if "volume flexcache delete" fails on
+         the FlexCache cluster and prompts you to run this command. The cache
+         configuration will be deleted and cannot be reestablished for the
+         cache relationship between origin of a FlexCache volume
+         "origin1" in Vserver "vs34" and FlexCache volume
+         "fc1" in Vserver "vs56".
+Do you want to continue? {y|n}: y
+----
+

@@ -1,0 +1,168 @@
+---
+permalink: smb-admin/configure-character-mappings-file-name-translation-task.html 
+sidebar: sidebar 
+keywords: nfs, client, create, file, name, character, valid, smb, windows, application, configure, map, translation, configure character mapping for smb file name translation on volumes 
+summary: NFS 客户端可以创建包含对 SMB 客户端和某些 Windows 应用程序无效的字符的文件名。您可以为卷上的文件名转换配置字符映射，以使 SMB 客户端能够访问具有 NFS 名称的文件，否则这些名称将无效。 
+---
+= 在卷上配置用于 SMB 文件名转换的字符映射
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFS 客户端可以创建包含对 SMB 客户端和某些 Windows 应用程序无效的字符的文件名。您可以为卷上的文件名转换配置字符映射，以使 SMB 客户端能够访问具有 NFS 名称的文件，否则这些名称将无效。
+
+当 SMB 客户端访问 NFS 客户端创建的文件时， ONTAP 将查看该文件的名称。如果此名称不是有效的 SMB 文件名（例如，如果其包含嵌入的冒号 "` ：` " 字符），则 ONTAP 将返回为每个文件维护的 8.3 文件名。但是，如果应用程序将重要信息编码为较长的文件名，则会出现此问题。
+
+因此，如果要在不同操作系统上的客户端之间共享文件，则应在文件名中使用在这两个操作系统中均有效的字符。
+
+但是，如果 NFS 客户端创建的文件名包含的字符对于 SMB 客户端无效，则可以定义一个映射，将无效的 NFS 字符转换为 SMB 和某些 Windows 应用程序均可接受的 Unicode 字符。例如，此功能支持 CATIA MCAD 和 Mathematica 应用程序以及具有此要求的其他应用程序。
+
+您可以逐个卷配置字符映射。
+
+在卷上配置字符映射时，必须牢记以下几点：
+
+* 字符映射不会跨接合点应用。
++
+您必须为每个接合卷显式配置字符映射。
+
+* 您必须确保用于表示无效或非法字符的 Unicode 字符通常不会显示在文件名中；否则，将发生不需要的映射。
++
+例如，如果您尝试将冒号（：）映射到连字符（ - ），但在文件名中正确使用了连字符（ - ），则尝试访问名为 "`a-b` " 的文件的 Windows 客户端会将其请求映射到 NFS 名称 "`a ： b` " （不是所需结果）。
+
+* 应用字符映射后，如果映射仍包含无效的 Windows 字符，则 ONTAP 会回退到 Windows 8.3 文件名。
+* 在 FPolicy 通知， NAS 审核日志和安全跟踪消息中，将显示映射的文件名。
+* 创建类型为 DP 的 SnapMirror 关系时，源卷的字符映射不会复制到目标 DP 卷上。
+* 区分大小写：由于映射的 Windows 名称转换为 NFS 名称，因此，名称的查找遵循 NFS 语义。这包括 NFS 查找区分大小写。这意味着，访问映射共享的应用程序不能依赖 Windows 不区分大小写的行为。但是， 8.3 名称是可用的，不区分大小写。
+* 部分映射或无效映射：映射要返回到执行目录枚举（ "dir" ）的客户端的名称后，系统将检查生成的 Unicode 名称是否有效。如果此名称中仍包含无效字符，或者对于 Windows 无效（例如，此名称以 "." 或空白结尾），则会返回 8.3 名称，而不是无效名称。
+
+
+.步骤
+. 配置字符映射： +
+
+
+`vserver cifs character-mapping create -vserver _vserver_name_ -volume _volume_name_ -mapping _mapping_text_ ， ...` +
+
+此映射由一个源 - 目标字符对列表组成，并以 "` ：` " 分隔。这些字符是使用十六进制数字输入的 Unicode 字符。例如： 3c ： E03C 。+
+
+以冒号分隔的每个 `maping_text` 对的第一个值是要转换的 NFS 字符的十六进制值，第二个值是 SMB 使用的 Unicode 值。映射对必须是唯一的（应存在一对一映射）。
+
+* 源映射 +
+
+
+下表显示了源映射允许的 Unicode 字符集：
+
++
+
+|===
+| Unicode 字符 | 打印字符 | Description 
+
+
+ a| 
+0x01-0x19
+ a| 
+不适用
+ a| 
+非打印控制字符
+
+
+
+ a| 
+0x5C
+ a| 
+ a| 
+反斜杠
+
+
+
+ a| 
+0x3a
+ a| 
+：
+ a| 
+冒号
+
+
+
+ a| 
+0x2A
+ a| 
+*
+ a| 
+星号
+
+
+
+ a| 
+0x3F
+ a| 
+？
+ a| 
+问号
+
+
+
+ a| 
+0x22
+ a| 
+"
+ a| 
+引号
+
+
+
+ a| 
+0x3C
+ a| 
+<
+ a| 
+小于
+
+
+
+ a| 
+0x3e
+ a| 
+>
+ a| 
+大于
+
+
+
+ a| 
+0x7C
+ a| 
+我们可以为您提供
+ a| 
+竖线
+
+
+
+ a| 
+0xB1
+ a| 
+±
+ a| 
+加减号
+
+|===
+* 目标映射
++
+您可以在 Unicode 的 "`私有使用区域` " 中指定以下范围内的目标字符： U+E0000...U+F8FF 。
+
+
+
+以下命令会为 Storage Virtual Machine （ SVM ） vs1 上名为 `data` 的卷创建字符映射：
+
+[listing]
+----
+cluster1::> vserver cifs character-mapping create -volume data -mapping 3c:e17c,3e:f17d,2a:f745
+cluster1::> vserver cifs character-mapping show
+
+Vserver         Volume Name  Character Mapping
+--------------  -----------  ------------------------------------------
+vs1             data         3c:e17c, 3e:f17d, 2a:f745
+----
+* 相关信息 *
+
+xref:create-manage-data-volumes-nas-namespaces-concept.adoc[在 NAS 命名空间中创建和管理数据卷]

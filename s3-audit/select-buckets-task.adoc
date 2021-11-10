@@ -1,0 +1,33 @@
+---
+permalink: s3-audit/select-buckets-task.html 
+sidebar: sidebar 
+keywords: s3 audit, select, buckets 
+summary: 您必须指定要在启用了审核的 SVM 中审核的分段。 
+---
+= 选择用于 S3 审核的存储分段
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须指定要在启用了审核的 SVM 中审核的分段。
+
+.您需要什么？ #8217 ；将需要什么
+* 为 S3 审核启用了 SVM 。
+
+
+S3 审核配置会按 SVM 启用，但您必须在 SVM 中选择已启用审核的分段。如果要将存储分段添加到 SVM 中并对新存储分段进行审核，则必须使用此操作步骤选择这些存储分段。您还可以在 SVM 中启用非审核分段以进行 S3 审核。
+
+在 `vserver object-store-server audit object-select delete` 命令删除之前，对存储分段的审核配置会一直保留。
+
+选择用于 S3 审核的存储分段：
+
+`vserver object-store-server audit event-selector create -vserver _svm_name_ -buck_bucket_name_ [-access] ｛ read-only_write-onires_all ｝ ]`
+
+* ` -access` - 指定要审核的事件访问类型： `read-only` ， `write-only` 或 `all` （默认值为 `all` ）。
+* ` 权限` - 指定要审核的事件权限类型： `allow-only` ， `deny-only` 或 `all` （默认值为 `all` ）。
+
+
+以下示例将创建一个存储分段审核配置，该配置仅记录允许的具有只读访问权限的事件：
+
+`cluster1 ：：：： > vserver object-store-server audit event-selector create -vserver vs1 -bucket test-bucket -access read-only -permission allow-only`

@@ -1,0 +1,33 @@
+---
+permalink: data-protection/autodelete-snapshot-copies-task.html 
+sidebar: sidebar 
+keywords: autodelete, snapshot, copies 
+summary: 您可以使用 volume snapshot autodelete modify 命令在超出 Snapshot 预留时触发 Snapshot 副本自动删除。默认情况下，首先删除最旧的 Snapshot 副本。 
+---
+= 自动删除 Snapshot 副本
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume snapshot autodelete modify` 命令在超出 Snapshot 预留时触发 Snapshot 副本自动删除。默认情况下，首先删除最旧的 Snapshot 副本。
+
+如果没有更多要删除的 Snapshot 副本，则会删除 LUN 和文件克隆。
+
+.步骤
+. 自动删除 Snapshot 副本：
++
+`volume snapshot autodelete modify -vserver _svm_ -volume _volume_-enabled true_false -trigger volume|snap_reserve`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将在 Snapshot 副本预留空间耗尽时自动删除 `vol1` 的 Snapshot 副本：
+
++
+[listing]
+----
+cluster1::> volume modify -vserver vs0 -volume vol1 -enabled true -trigger snap_reserve
+----
+

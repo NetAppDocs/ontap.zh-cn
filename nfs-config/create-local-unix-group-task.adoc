@@ -1,0 +1,33 @@
+---
+permalink: nfs-config/create-local-unix-group-task.html 
+sidebar: sidebar 
+keywords: create, local, unix, group 
+summary: 您可以使用 vserver services name-service unix-group create 命令创建 SVM 本地的 UNIX 组。本地 UNIX 组用于本地 UNIX 用户。 
+---
+= 创建本地 UNIX 组
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `vserver services name-service unix-group create` 命令创建 SVM 本地的 UNIX 组。本地 UNIX 组用于本地 UNIX 用户。
+
+.步骤
+. 创建本地 UNIX 组：
++
+`vserver services name-service unix-group create -vserver _vserver_name_ -name _group_name_ -id _intege_`
+
++
+` -name _group_name_` 指定组名称。组名称长度不能超过 64 个字符。
+
++
+` -id _intege_` 指定您分配的组 ID 。
+
+
+
+以下命令会在名为 vs1 的 SVM 上创建一个名为 eng 的本地组。此组的 ID 为 101 。
+
+[listing]
+----
+vs1::> vserver services name-service unix-group create -vserver vs1 -name eng -id 101
+----

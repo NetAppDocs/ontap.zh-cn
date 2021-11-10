@@ -1,0 +1,74 @@
+---
+permalink: san-admin/create-luns-mapping-igroups-task.html 
+sidebar: sidebar 
+keywords: create, luns, mapping, igroups 
+summary: 在配置 SAN 环境时，您必须创建 LUN ，创建启动程序组（ igroup ）并将 LUN 映射到 igroup 。 
+---
+= 创建 LUN 并映射到 igroup
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在配置 SAN 环境时，您必须创建 LUN ，创建启动程序组（ igroup ）并将 LUN 映射到 igroup 。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须已创建聚合，卷和 Storage Virtual Machine （ SVM ）。
+* 您必须已使用 FC 或 iSCSI 启用块访问。
+* 您必须已在集群中的所有节点上创建 SAN LIF 。
+
+
+创建 LUN 时，必须指定 LUN 操作系统类型。根据 LUN 的操作系统类型， LUN 的实际大小可能略有不同。创建 LUN 后，无法修改 LUN 操作系统类型。
+
+每个 LUN 的元数据在其所属聚合中大约需要 64 KB 的空间。创建 LUN 时，必须确保包含的聚合具有足够的空间来容纳 LUN 的元数据。如果聚合不包含足够的空间来容纳 LUN 的元数据，则某些主机可能无法访问 LUN 。
+
+如有必要，您可以将 LUN 增加到原始大小的 10 倍。例如，如果创建一个 100 GB 的 LUN ，则可以将该 LUN 增加到 1 ， 000 GB 。您不能超过 16 TB ，这是最大 LUN 大小。
+
+[NOTE]
+====
+LUN 的实际最大大小可能不完全为 16 TB 。ONTAP 会将限制取低一点。
+
+====
+在创建 LUN 期间，始终会启用非对称逻辑单元访问（ ALUA ）。您不能更改 ALUA 设置。
+
+.步骤
+. 创建 LUN ：
++
+`lun create -vserver vserver_name -volume _volume_name_ -lun _lun_name_ -size _lun_size_ -ostype _lun_osttype_ -space-reserve enabled| disabled`
+
++
+LUN 名称不能超过 255 个字符，并且不能包含空格。
+
++
+如果主机操作系统是 Windows 2008 或更高版本，请使用 `windows_2008` ostype 。默认情况下， `space -reserve` 选项处于启用状态。如果您要使用非空间预留 LUN ，则必须将 `space -reserve` 选项设置为 `d已标记` 。
+
++
+[NOTE]
+====
+在卷中创建 LUN 时， NVFAIL 选项会自动启用。
+
+====
+. 创建 igroup ：
++
+`igroup create -vserver _vserver_name_ -igroup _igroup_name_ -protocol fcp_iscsi_mixed -ostype _lun_osttype_ -initiator _initiator_name_`
+
++
+如果主机操作系统是 Windows 2008 或更高版本，请使用 `windows_2008` ostype 。
+
+. 将 LUN 映射到 igroup ：
++
+`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
+
+. 验证是否已正确配置 LUN ：
++
+`lun show -vserver _vserver_name_`
+
+
+
+* 相关信息 *
+
+link:../disks-aggregates/index.html["磁盘和聚合管理"]
+
+link:../volumes/index.html["逻辑存储管理"]
+
+link:../networking/index.html["网络管理"]

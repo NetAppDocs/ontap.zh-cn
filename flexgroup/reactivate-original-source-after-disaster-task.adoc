@@ -1,0 +1,53 @@
+---
+permalink: flexgroup/reactivate-original-source-after-disaster-task.html 
+sidebar: sidebar 
+keywords: reactivate, original, source, flexgroup, volume, disaster 
+summary: 当源 FlexGroup 卷变为可用时，您可以重新同步原始源 FlexGroup 卷和原始目标 卷。目标 FlexGroup 卷上的任何新数据将丢失。 
+---
+= 发生灾难后重新激活原始源 FlexGroup 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当源 FlexGroup 卷变为可用时，您可以重新同步原始源 FlexGroup 卷和原始目标 卷。目标 FlexGroup 卷上的任何新数据将丢失。
+
+在执行重新同步之前，目标卷上的任何活动配额规则都将被停用，并且配额规则将被删除。
+
+重新同步操作完成后，您可以使用 `volume quota policy rule create` 和 `volume quota modify` 命令创建和重新激活配额规则。
+
+.步骤
+. 从目标集群重新同步 FlexGroup 卷 SnapMirror 关系： `snapmirror resync -destination-path dst_sVM ： dest_flexgroup`
+. 查看 SnapMirror 关系的状态： `snapmirror show -expand`
++
+[listing]
+----
+cluster2::> snapmirror show -expand
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vss:s       XDP  vsd:dst        Snapmirrored
+                                      Idle           -         true    -
+vss:s__0001 XDP  vsd:dst__0001  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0002 XDP  vsd:dst__0002  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0003 XDP  vsd:dst__0003  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0004 XDP  vsd:dst__0004  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0005 XDP  vsd:dst__0005  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0006 XDP  vsd:dst__0006  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0007 XDP  vsd:dst__0007  Snapmirrored
+                                      Idle           -         true    -
+vss:s__0008 XDP  vsd:dst__0008  Snapmirrored
+                                      Idle           -         true    -
+...
+----
++
+每个成分卷的 SnapMirror 关系状态为 `Snapmirrored` 。
+
+

@@ -1,0 +1,39 @@
+---
+permalink: san-admin/map-nvme-namespace-subsystem-task.html 
+sidebar: sidebar 
+keywords: map, nvme, namespace, subsystem 
+summary: 使用 NVMe 时，必须将命名空间映射到子系统。 
+---
+= 将 NVMe 命名空间映射到子系统
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 NVMe 时，必须将命名空间映射到子系统。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须已为 NVMe 配置 SVM 。
+* 您必须已创建 NVMe 命名空间和子系统。
+
+
+一个命名空间只能映射到一个子系统。
+
+.步骤
+. 从主机获取 NQN 。
+. 将主机 NQN 添加到子系统：
++
+`vserver nvme subsystem host add -vserver _svm_name_ -subsystem _subsystem_name_ -host-nqn _Host_NQN_ ： subsystem._subsystem_name_`
+
+. 将命名空间映射到子系统：
++
+`vserver nvme subsystem map add -vserver _svm_name_ -subsystem _subsystem_name_ -path _path_`
+
+. 验证命名空间是否已映射到子系统：
++
+`vserver nvme namespace show -vserver _svm_name_ -instance`
+
++
+子系统应列为 `Attached subsystem` 。
+
+

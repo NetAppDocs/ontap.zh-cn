@@ -1,0 +1,25 @@
+---
+permalink: volumes/create-flexclone-snapmirror-concept.html 
+sidebar: sidebar 
+keywords: considerations, creating, flexclone volume, from snapmirror, source, destination, volume 
+summary: 您可以从现有卷 SnapMirror 关系中的源卷或目标卷创建 FlexClone 卷。但是，这样做可能会阻止未来的 SnapMirror 复制操作成功完成。 
+---
+= 从 SnapMirror 源卷或目标卷创建 FlexClone 卷的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以从现有卷 SnapMirror 关系中的源卷或目标卷创建 FlexClone 卷。但是，这样做可能会阻止未来的 SnapMirror 复制操作成功完成。
+
+复制可能不起作用，因为在创建 FlexClone 卷时，您可能会锁定 SnapMirror 使用的 Snapshot 副本。如果发生这种情况， SnapMirror 将停止复制到目标卷，直到 FlexClone 卷被销毁或从其父卷拆分为止。您可以通过两种方法来解决此问题描述：
+
+* 如果您临时需要 FlexClone 卷，并且可以临时停止 SnapMirror 复制，则可以创建 FlexClone 卷，并在可能的情况下将其删除或从其父卷中拆分。
++
+删除 FlexClone 卷或将其从父卷拆分后， SnapMirror 复制将继续正常进行。
+
+* 如果不允许临时停止 SnapMirror 复制，则可以在 SnapMirror 源卷中创建 Snapshot 副本，然后使用该 Snapshot 副本创建 FlexClone 卷。（如果要从目标卷创建 FlexClone 卷，则必须等待该 Snapshot 副本复制到 SnapMirror 目标卷。）
++
+通过这种在 SnapMirror 源卷中创建 Snapshot 副本的方法，您可以创建克隆，而无需锁定 SnapMirror 正在使用的 Snapshot 副本。
+
+

@@ -1,0 +1,23 @@
+---
+permalink: data-protection/snapmirror-replication-workflow-concept.html 
+sidebar: sidebar 
+keywords: snapmirror, replication, workflow 
+summary: 对于每种类型的 SnapMirror 数据保护关系，工作流都是相同的：创建目标卷，创建作业计划，指定策略，创建和初始化关系。 
+---
+= SnapMirror 复制工作流
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror 提供三种类型的数据保护关系： SnapMirror 灾难恢复，归档（以前称为 SnapVault ）和统一复制。您可以按照相同的基本工作流来配置每种类型的关系。
+
+从 ONTAP 9.1.1 中的常规可用性开始， SnapMirror 业务连续性（ SM-BC ）可提供零恢复时间目标（零 RTO ）或透明应用程序故障转移（ TAF ），以便在 SAN 环境中自动对业务关键型应用程序进行故障转移。由两个 AFF 集群或两个全 SAN 阵列（ ASA ）集群组成的配置支持 SM-BC 。
+
+https://docs.netapp.com/us-en/ontap/smbc["NetApp 文档： SnapMirror 业务连续性"]
+
+对于每种类型的 SnapMirror 数据保护关系，工作流都是相同的：创建目标卷，创建作业计划，指定策略，创建和初始化关系。
+
+从 ONTAP 9.3 开始，您可以使用 `snapmirror protect` 命令一步配置数据保护关系。即使使用 `snapmirror protect` ，您也需要了解工作流中的每个步骤。
+
+image::../media/data-protection-workflow.gif[数据保护工作流]

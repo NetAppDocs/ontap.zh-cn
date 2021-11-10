@@ -1,0 +1,117 @@
+---
+permalink: san-admin/commands-manage-fc-adapters-reference.html 
+sidebar: sidebar 
+keywords: commands, managing, fc, adapters 
+summary: 您可以使用 FC 命令管理存储控制器的 FC 目标适配器， FC 启动程序适配器和板载 FC 适配器。使用相同的命令管理 FC 协议和 FC-NVMe 协议的 FC 适配器。 
+---
+= 用于管理 FC 适配器的命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 FC 命令管理存储控制器的 FC 目标适配器， FC 启动程序适配器和板载 FC 适配器。使用相同的命令管理 FC 协议和 FC-NVMe 协议的 FC 适配器。
+
+FC 启动程序适配器命令仅在节点级别起作用。您必须先使用 `run -node _node_name_` 命令，然后才能使用 FC 启动程序适配器命令。
+
+
+
+== 用于管理 FC 目标适配器的命令
+
+[cols="2*"]
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+显示节点上的 FC 适配器信息
+ a| 
+`network fcp adapter show`
+
+
+
+ a| 
+修改 FC 目标适配器参数
+ a| 
+`network fcp adapter modify`
+
+
+
+ a| 
+显示 FC 协议流量信息
+ a| 
+`run -node _node_name_ sysstat -f`
+
+
+
+ a| 
+显示 FC 协议的运行时间
+ a| 
+`运行 -node _node_name_ uptime`
+
+
+
+ a| 
+显示适配器配置和状态
+ a| 
+`运行 -node _node_name_ sysconfig -v _adapter_`
+
+
+
+ a| 
+验证已安装哪些扩展卡以及是否存在任何配置错误
+ a| 
+`运行 -node _node_name_ sysconfig -ac`
+
+
+
+ a| 
+查看命令的手册页
+ a| 
+`man _command_name_`
+
+|===
+
+
+== 用于管理 FC 启动程序适配器的命令
+
+[cols="2*"]
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+显示节点中所有启动程序及其适配器的信息
+ a| 
+`运行 -node _node_name_ storage show adapter`
+
+
+
+ a| 
+显示适配器配置和状态
+ a| 
+`运行 -node _node_name_ sysconfig -v _adapter_`
+
+
+
+ a| 
+验证已安装哪些扩展卡以及是否存在任何配置错误
+ a| 
+`运行 -node _node_name_ sysconfig -ac`
+
+|===
+
+
+== 用于管理板载 FC 适配器的命令
+
+[cols="2*"]
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+显示板载 FC 端口的状态
+ a| 
+`run -node _node_name_ system hardware unified-connect show`
+
+|===

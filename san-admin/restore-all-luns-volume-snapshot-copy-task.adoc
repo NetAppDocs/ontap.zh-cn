@@ -1,0 +1,56 @@
+---
+permalink: san-admin/restore-all-luns-volume-snapshot-copy-task.html 
+sidebar: sidebar 
+keywords: restore, all, luns in a volume, from, snapshot copy 
+summary: 您可以使用 volume snapshot restore 命令从 Snapshot 副本还原指定卷中的所有 LUN 。 
+---
+= 从 Snapshot 副本还原卷中的所有 LUN
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume snapshot restore` 命令从 Snapshot 副本还原指定卷中的所有 LUN 。
+
+.步骤
+. 从主机停止对 LUN 的所有主机访问。
++
+如果在不停止对卷中 LUN 的所有主机访问的情况下使用 SnapRestore ，则可能会发生发生原因数据损坏和系统错误。
+
+. 卸载该主机上的 LUN ，使该主机无法访问这些 LUN 。
+. 取消映射 LUN ：
++
+`lun mapping delete -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
+
+. 确定要将卷还原到的 Snapshot 副本：
++
+`volume snapshot show -vserver _vserver_name_ -volume _volume_name_`
+
+. 将权限设置更改为高级：
++
+`set -privilege advanced`
+
+. 还原数据：
++
+`volume snapshot restore -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
+
+. 按照屏幕上的说明进行操作。
+. 重新映射 LUN ：
++
+`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
+
+. 验证 LUN 是否联机：
++
+`lun show -vserver _vserver_name_ -path _lun_path_ -fields state`
+
+. 如果 LUN 未联机，请将其联机：
++
+`lun modify -vserver _vserver_name_ -path _lun_path_ -state online`
+
+. 将权限设置更改为 admin ：
++
+`set -privilege admin`
+
+. 从主机重新挂载 LUN 。
+. 从主机重新启动对 LUN 的访问。
+

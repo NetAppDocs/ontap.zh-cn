@@ -1,0 +1,33 @@
+---
+permalink: san-config/determine-supported-hosts-iscsi-config-task.html 
+sidebar: sidebar 
+keywords: determine, supported, number, hosts, iscsi, configurations 
+summary: 在 iSCSI 配置中可以连接的最大 SAN 主机数因多个集群属性的特定组合而有很大不同，例如连接到每个集群节点的主机数，每个主机的启动程序数，每个主机的登录数以及集群中的节点数。 
+---
+= 确定 iSCSI 配置中支持的主机数
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 iSCSI 配置中可以连接的最大 SAN 主机数因多个集群属性的特定组合而有很大不同，例如连接到每个集群节点的主机数，每个主机的启动程序数，每个主机的登录数以及集群中的节点数。
+
+可以直接连接到节点或可通过一个或多个交换机连接的主机数量取决于可用以太网端口的数量。可用以太网端口的数量取决于控制器的型号以及控制器中安装的适配器的数量和类型。控制器和适配器支持的以太网端口数可从 _SIL_ Hardware Universe 获得。
+
+对于所有多节点集群配置，您必须确定每个节点的 iSCSI 会话数，以了解是否可以向集群添加更多主机。只要集群低于每个节点的最大 iSCSI 会话数，您就可以继续向集群添加主机。每个节点的最大 iSCSI 会话数因集群中控制器的类型而异。
+
+.步骤
+. 确定节点上的所有目标门户组。
+. 检查节点上每个目标门户组的 iSCSI 会话数：
++
+`iscsi session show -tpgroup _tpgroup_`
+
++
+命令输出底部显示的条目数表示该目标门户组的 iSCSI 会话数。
+
+. 记录为每个目标门户组显示的 iSCSI 会话数。
+. 添加节点上每个目标门户组的 iSCSI 会话数。
++
+总数表示节点上的 iSCSI 会话数。
+
+

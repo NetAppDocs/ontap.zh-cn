@@ -1,0 +1,64 @@
+---
+permalink: smb-hyper-v-sql/odx-copy-offload-concept.html 
+sidebar: sidebar 
+keywords: offload, data, transfer, odx, copy, application, server, copy, operation 
+summary: 卸载数据传输（ Offloaded Data Transfer ， ODX ）也称为副本卸载，可在兼容存储设备内部或之间直接传输数据，而无需通过主机计算机传输数据。通过 SMB 安装在应用程序服务器上执行复制操作时， ONTAP ODX 副本卸载功能可为您带来性能优势。 
+---
+= 如何通过 SMB 共享在 Hyper-V 和 SQL Server 中使用 ODX 副本卸载
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+卸载数据传输（ Offloaded Data Transfer ， ODX ）也称为 _copy ofload_ ，可在兼容存储设备内部或之间直接传输数据，而无需通过主机计算机传输数据。通过 SMB 安装在应用程序服务器上执行复制操作时， ONTAP ODX 副本卸载功能可为您带来性能优势。
+
+在非 ODX 文件传输中，将从源 CIFS 服务器读取数据，并通过网络传输到客户端计算机。客户端计算机通过网络将数据传输回目标 CIFS 服务器。总之，客户端计算机从源读取数据并将其写入目标。使用 ODX 文件传输时，数据会直接从源复制到目标。
+
+由于 ODX 卸载副本是直接在源存储和目标存储之间执行的，因此具有显著的性能优势。实现的性能优势包括：源和目标之间的复制时间更短，客户端上的资源利用率（ CPU ，内存）更低，网络 I/O 带宽利用率更低。
+
+此功能可在 Windows Server 2012 服务器上使用。ONTAP ODX 副本卸载在 SAN LUN 和 SMB 3.0 持续可用的连接上均受支持。
+
+以下使用情形支持使用 ODX 副本和移动：
+
+* 卷内
++
+源文件或 LUN 与目标文件或 LUN 位于同一个卷中。
+
+* 卷间，同一节点，同一 Storage Virtual Machine （ SVM ）
++
+源文件或 LUN 和目标文件或 LUN 位于同一节点上的不同卷上。数据属于同一个 SVM 。
+
+* 卷间，不同节点，相同 SVM
++
+源文件或 LUN 和目标文件或 LUN 位于不同节点上的不同卷上。数据属于同一个 SVM 。
+
+* SVM 间，同一节点
++
+源和目标文件或 LUN 位于同一节点上的不同卷上。数据属于不同的 SVM 。
+
+* SVM 间，不同节点
++
+源和目标文件或 LUN 位于不同节点上的不同卷上。数据属于不同的 SVM 。
+
+
+
+Hyper-V 解决方案中 ODX 副本卸载的具体使用情形包括：
+
+* 您可以使用 ODX 副本卸载直通与 Hyper-V 在虚拟硬盘（ VHD ）文件内部或之间复制数据，或者在同一集群中映射的 SMB 共享和连接的 iSCSI LUN 之间复制数据。
++
+这样，子操作系统中的副本就可以传递到底层存储。
+
+* 创建固定大小的 VHD 时， ODX 用于使用众所周知的置零令牌以零初始化磁盘。
+* 如果源存储和目标存储位于同一集群上，则使用 ODX 副本卸载进行虚拟机存储迁移。
+
+
+[NOTE]
+====
+要利用 Hyper-V ODX 副本卸载直通的使用情形，子操作系统必须支持 ODX ，而子操作系统的磁盘必须是 SCSI 磁盘，并由支持 ODX 的存储（ SMB 或 SAN ）提供支持。子操作系统上的 IDE 磁盘不支持 ODX 直通。
+
+====
+SQL Server 解决方案中 ODX 副本卸载的具体使用情形包括：
+
+* 您可以使用 ODX 副本卸载在映射的 SMB 共享之间或在同一集群中的 SMB 共享和连接的 iSCSI LUN 之间导出和导入 SQL Server 数据库。
+* 如果源存储和目标存储位于同一集群上，则 ODX 副本卸载用于数据库导出和导入。
+

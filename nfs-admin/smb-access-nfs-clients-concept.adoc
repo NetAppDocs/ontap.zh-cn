@@ -1,0 +1,17 @@
+---
+permalink: nfs-admin/smb-access-nfs-clients-concept.html 
+sidebar: sidebar 
+keywords: ontap, grant, smb, file, access, nfs, client 
+summary: ONTAP 使用 Windows NT 文件系统（ NTFS ）安全语义来确定 NFS 客户端上的 UNIX 用户是否有权访问具有 NTFS 权限的文件。 
+---
+= ONTAP 如何从 NFS 客户端授予 SMB 文件访问权限
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 使用 Windows NT 文件系统（ NTFS ）安全语义来确定 NFS 客户端上的 UNIX 用户是否有权访问具有 NTFS 权限的文件。
+
+为此， ONTAP 会将用户的 UNIX 用户 ID （ UID ）转换为 SMB 凭据，然后使用 SMB 凭据验证用户是否有权访问此文件。SMB 凭据由一个主安全标识符（ SID ）（通常是用户的 Windows 用户名）以及一个或多个与用户所属 Windows 组对应的组 SID 组成。
+
+ONTAP 将 UNIX UID 转换为 SMB 凭据所需的时间可能从数十毫秒到数百毫秒不等，因为此过程涉及到与域控制器联系。ONTAP 会将 UID 映射到 SMB 凭据，并在凭据缓存中输入映射，以缩短转换所导致的验证时间。

@@ -1,0 +1,29 @@
+---
+permalink: nfs-config/add-user-local-unix-group-task.html 
+sidebar: sidebar 
+keywords: add, user, local, unix group 
+summary: 您可以使用 vserver services name-service unix-group adduser 命令将用户添加到 SVM 本地的补充 UNIX 组。 
+---
+= 将用户添加到本地 UNIX 组
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `vserver services name-service unix-group adduser` 命令将用户添加到 SVM 本地的补充 UNIX 组中。
+
+.步骤
+. 将用户添加到本地 UNIX 组：
+
+
+`vserver services name-service unix-group adduser -vserver _vserver_name_ -name _group_name_ -username _user_name_`
+
+` 名称` ` group_name_` 指定要将用户添加到的 UNIX 组的名称以及该用户的主组的名称。
+
+以下命令会将名为 max 的用户添加到名为 vs1 的 SVM 上名为 eng 的本地 UNIX 组：
+
+[listing]
+----
+vs1::> vserver services name-service unix-group adduser -vserver vs1 -name eng
+-username max
+----

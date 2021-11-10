@@ -1,0 +1,41 @@
+---
+permalink: fabricpool/setup-azure-blob-storage-cloud-tier-task.html 
+sidebar: sidebar 
+keywords: setting up, azure blob storage, cloud, cloud tier 
+summary: 如果您运行的是 ONTAP 9.4 或更高版本，则可以将适用于云的 Azure Blob Storage 设置为 FabricPool 的云层。 
+---
+= 将适用于云的 Azure Blob Storage 设置为云层
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您运行的是 ONTAP 9.4 或更高版本，则可以将适用于云的 Azure Blob Storage 设置为 FabricPool 的云层。
+
+FabricPool 目前不支持 Azure 堆栈，它是内部 Azure 服务。
+
+.步骤
+. 使用 `storage aggregate object-store config create` 命令和 ` provider-type` `Azure_Cloud` 参数指定 Azure Blob Storage 配置信息。
++
+** 如果 ONTAP 无法使用提供的信息访问 Azure Blob Storage ，则 `storage aggregate object-store config create` 命令将失败。
+** 您可以使用 ` -azure-account` 参数指定 Azure Blob Storage 帐户。
+** 您可以使用 ` -azure-private-key` 参数指定用于对 Azure Blob Storage 的请求进行身份验证的访问密钥。
+** 如果更改了 Azure Blob Storage 密码，则应立即更新存储在 ONTAP 中的相应密码。
++
+这样， ONTAP 就可以无中断地访问 Azure Blob 存储中的数据。
+
+
+
++
+[listing]
+----
+cluster1::> storage aggregate object-store config create
+-object-store-name MyAzure -provider-type Azure_Cloud
+-server blob.core.windows.net -container-name myAzureContainer
+-azure-account myAzureAcct -azure-private-key myAzureKey
+----
+. 使用 `storage aggregate object-store config show` 命令显示并验证 Azure Blob Storage 配置信息。
++
+使用 `storage aggregate object-store config modify` 命令可以修改 FabricPool 的 Azure Blob 存储配置信息。
+
+

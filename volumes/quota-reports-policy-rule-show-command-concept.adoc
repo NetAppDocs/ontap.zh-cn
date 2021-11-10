@@ -1,0 +1,45 @@
+---
+permalink: volumes/quota-reports-policy-rule-show-command-concept.html 
+sidebar: sidebar 
+keywords: when to use, volume quota policy rule show, volume quota report, commands 
+summary: 虽然这两个命令都显示有关配额的信息，但 volume quota policy rule show 可快速显示已配置的配额规则，而 volume quota report 命令会占用更多时间和资源，并显示强制实施的配额和资源使用情况。 
+---
+= 何时使用 volume quota policy rule show 命令和 volume quota report 命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+虽然这两个命令都显示有关配额的信息，但 `volume quota policy rule show` 可以快速显示已配置的配额规则，而 `volume quota report` 命令会占用更多时间和资源，并显示强制实施的配额和资源使用情况。
+
+`volume quota policy rule show` 命令可用于以下用途：
+
+* 激活配额规则之前，请先检查其配置
++
+无论配额是否已初始化或调整大小，此命令都会显示所有已配置的配额规则。
+
+* 在不影响系统资源的情况下快速查看配额规则
++
+由于此命令不会显示磁盘和文件使用量，因此不像配额报告那样占用大量资源。
+
+* 显示未分配给 SVM 的配额策略中的配额规则。
+
+
+`volume quota report` 命令可用于以下用途：
+
+* 查看强制实施的配额，包括派生配额
+* 查看每个有效配额使用的磁盘空间和文件数，包括受派生配额影响的目标
++
+（对于默认配额，使用量显示为 "0" ，因为使用量是根据生成的派生配额进行跟踪的。）
+
+* 确定哪些配额限制会影响何时允许写入文件
++
+将 ` -path` 参数添加到 `volume quota report` 命令中。
+
+
+
+[NOTE]
+====
+配额报告是一种资源密集型操作。如果在集群中的许多 FlexVol 卷上运行此命令，可能需要很长时间才能完成。更高效的方法是查看 SVM 中特定卷的配额报告。
+
+====

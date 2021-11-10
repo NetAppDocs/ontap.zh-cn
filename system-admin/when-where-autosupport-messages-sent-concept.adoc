@@ -1,0 +1,155 @@
+---
+permalink: system-admin/when-where-autosupport-messages-sent-concept.html 
+sidebar: sidebar 
+keywords: active, iq, autosupport, messages, email, manual, scheduled, event, triggered 
+summary: AutoSupport 会根据消息类型将消息发送给不同的收件人。了解 AutoSupport 发送消息的时间和位置有助于您了解通过电子邮件接收的消息或在 Active IQ （以前称为 My AutoSupport ）网站上查看的消息。 
+---
+= AutoSupport 消息的发送时间和位置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+AutoSupport 会根据消息类型将消息发送给不同的收件人。了解 AutoSupport 发送消息的时间和位置有助于您了解通过电子邮件接收的消息或在 Active IQ （以前称为 My AutoSupport ）网站上查看的消息。
+
+除非另有说明，否则下表中的设置是 `ssystem node AutoSupport modify` 命令的参数。
+
+
+
+== 事件触发的消息
+
+当系统上发生需要采取更正操作的事件时， AutoSupport 会自动发送事件触发的消息。
+
+|===
+| 发送消息时 | 消息的发送位置 
+
+
+ a| 
+AutoSupport 对 EMS 中的触发事件做出响应
+ a| 
+在 ` 到` 和 ` 到` 中指定的地址。（仅发送影响服务的严重事件。）
+
+在 ` -partner-address` 中指定的地址
+
+技术支持，如果将 ` -support` 设置为 `enable`
+
+|===
+
+
+== 已计划消息
+
+AutoSupport 会定期自动发送多条消息。
+
+|===
+| 发送消息时 | 消息的发送位置 
+
+
+ a| 
+每天（默认情况下，在午夜 12 ： 00 之间发送和凌晨 1 ： 00作为日志消息）
+ a| 
+在 ` -partner-address` 中指定的地址
+
+技术支持，如果将 ` -support` 设置为 `enable`
+
+
+
+ a| 
+每天（默认情况下，在午夜 12 ： 00 之间发送和凌晨 1 ： 00如果将 ` perf` 参数设置为 `true` ，则显示性能消息
+ a| 
+在 -partner-address` 中指定的地址
+
+技术支持，如果将 ` -support` 设置为 `enable`
+
+
+
+ a| 
+每周（默认情况下，在星期日中午 12 ： 00 之间发送和凌晨 1 ： 00 ）
+ a| 
+在 ` -partner-address` 中指定的地址
+
+技术支持，如果将 ` -support` 设置为 `enable`
+
+|===
+
+
+== 手动触发的消息
+
+您可以手动启动或重新发送 AutoSupport 消息。
+
+|===
+| 发送消息时 | 消息的发送位置 
+
+
+ a| 
+您可以使用 `ssystem node AutoSupport invoke` 命令手动启动消息
+ a| 
+如果在 `ssystem node AutoSupport invoke` 命令中使用 ` -uri` 参数指定了 URI ，则会将消息发送到该 URI 。
+
+如果省略了 ` -uri` ，则会将消息发送到 ` -to` 和 ` -partner-address` 中指定的地址。如果将 ` -support` 设置为 `enable` ，则此消息也会发送给技术支持。
+
+
+
+ a| 
+您可以使用 `ssystem node AutoSupport invoke-core-upload` 命令手动启动消息
+ a| 
+如果在 `ssystem node AutoSupport invoke-core-upload` 命令中使用 ` -uri` 参数指定了 URI ，则会将消息发送到该 URI ，并将核心转储文件上传到该 URI 。
+
+如果在 `ssystem node AutoSupport invoke-core-upload` 命令中省略了 ` -uri` ，则会将消息发送给技术支持，并将核心转储文件上传到技术支持站点。
+
+这两种情况都要求将 ` -support` 设置为 `enable` ，将 ` -transport` 设置为 `https` 或 `http` 。
+
+由于核心转储文件非常大，因此不会将此消息发送到 ` 到` 和 ` 配对地址` 参数中指定的地址。
+
+
+
+ a| 
+您可以使用 `ssystem node AutoSupport invoke-performance-archive` 命令手动启动消息
+ a| 
+如果在 `ssystem node AutoSupport invoke-performance-archive` 命令中使用 ` -uri` 参数指定了 URI ，则会将消息发送到该 URI ，并将性能归档文件上传到该 URI 。
+
+如果在 `s节点 AutoSupport invoke-performance-archive` 中省略了 ` -uri` ，则会将消息发送给技术支持，并将性能归档文件上传到技术支持站点。
+
+这两种情况都要求将 ` -support` 设置为 `enable` ，将 ` -transport` 设置为 `https` 或 `http` 。
+
+由于性能归档文件非常大，因此不会将消息发送到 ` 到` 和 ` 配对地址` 参数中指定的地址。
+
+
+
+ a| 
+您可以使用 `ssystem node AutoSupport history retransmit` 命令手动重新发送过去的消息
+ a| 
+仅限在 `ssystem node AutoSupport history retransmit` 命令的 ` -uri` 参数中指定的 URI
+
+|===
+
+
+== 技术支持触发的消息
+
+技术支持可以使用 AutoSupport 按需功能从 AutoSupport 请求消息。
+
+|===
+| 发送消息时 | 消息的发送位置 
+
+
+ a| 
+AutoSupport 获取生成新 AutoSupport 消息的传送指令时
+ a| 
+在 ` -partner-address` 中指定的地址
+
+技术支持，前提是 ` -support` 设置为 `enable` ， ` -transport` 设置为 `https`
+
+
+
+ a| 
+AutoSupport 获取重新发送过去 AutoSupport 消息的传送指令时
+ a| 
+技术支持，前提是 ` -support` 设置为 `enable` ， ` -transport` 设置为 `https`
+
+
+
+ a| 
+当 AutoSupport 获取生成新 AutoSupport 消息以上传核心转储或性能归档文件的传送指令时
+ a| 
+技术支持，前提是 ` -support` 设置为 `enable` ， ` -transport` 设置为 `https` 。核心转储或性能归档文件将上传到技术支持站点。
+
+|===

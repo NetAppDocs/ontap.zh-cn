@@ -1,0 +1,58 @@
+---
+permalink: volumes/enable-disable-background-deduplication-aff-task.html 
+sidebar: sidebar 
+keywords: manage, aggregate-level, background, deduplication, aff systems 
+summary: 聚合级重复数据删除可消除属于同一聚合的卷之间的重复块。从 ONTAP 9.3 开始，您可以在后台对 AFF 系统执行聚合级重复数据删除。默认情况下，所有新创建的卷以及启用了卷后台重复数据删除的所有升级卷都会启用此功能。 
+---
+= 在 AFF 系统上管理聚合级后台重复数据删除
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+聚合级重复数据删除可消除属于同一聚合的卷之间的重复块。从 ONTAP 9.3 开始，您可以在后台对 AFF 系统执行聚合级重复数据删除。默认情况下，所有新创建的卷以及启用了卷后台重复数据删除的所有升级卷都会启用此功能。
+
+填充了足够多的更改日志后，系统会自动触发此操作。没有与此操作关联的计划或策略。
+
+从 ONTAP 9.4 开始， AFF 用户还可以运行聚合级重复数据删除扫描程序，以消除聚合中各个卷之间的现有数据重复。您可以使用带有 ` -scan-old-data=true` 选项的 `storage aggregate efficiency cross-volume-dedupe start` 命令启动扫描程序：
+
+[listing]
+----
+cluster-1::> storage aggregate efficiency cross-volume-dedupe start -aggregate aggr1 -scan-old-data true
+----
+重复数据删除扫描可能非常耗时。您可能希望在非高峰时段运行此操作。
+
+[NOTE]
+====
+聚合级后台重复数据删除有时称为跨卷后台重复数据删除。
+
+====
+.步骤
+. 在 AFF 系统上管理聚合级后台重复数据删除：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+启用聚合级后台重复数据删除
+ a| 
+`volume efficiency modify -vserver <vserver_name\> -volume <vol_name\> -cross-volume-background-dedupe true`
+
+
+
+ a| 
+禁用聚合级后台重复数据删除
+ a| 
+`volume efficiency modify -vserver <vserver_name\> -volume <vol_name\> -cross-volume-background-dedupe false`
+
+
+
+ a| 
+显示聚合级后台重复数据删除状态
+ a| 
+`聚合效率跨卷重复数据删除显示`
+
+|===
+

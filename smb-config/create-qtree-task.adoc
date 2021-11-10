@@ -1,0 +1,48 @@
+---
+permalink: smb-config/create-qtree-task.html 
+sidebar: sidebar 
+keywords: create, qtree, contain, data, specify, properties, property, volume, command, create a qtree 
+summary: 您可以使用 volume qtree create 命令创建包含数据的 qtree 并指定其属性。 
+---
+= 创建 qtree
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume qtree create` 命令创建包含数据的 qtree 并指定其属性。
+
+.开始之前
+* 要包含新 qtree 的 SVM 和卷必须已存在。
+* SVM 安全模式必须为 NTFS ，并且 SMB 应设置并运行。
+
+
+.步骤
+. 创建 qtree ： `volume qtree create -vserver vserver_name ｛ -volume volume_name -qtree qtree_name | -qtree-path qtree path ｝ -security-style ntfs`
++
+您可以将卷和 qtree 指定为单独的参数，也可以采用 ` /vol/volume_name/_qtree_name` 格式指定 qtree 路径参数。
+
+. 验证是否已使用所需的接合路径创建 qtree ： `volume qtree show -vserver vserver_name ｛ -volume volume_name -qtree qtree_name | -qtree-path qtree path ｝`
+
+
+以下示例将在 SVM vs1.example.com 上创建一个名为 qt01 的 qtree ，其接合路径为 ` /vol/data1` ：
+
+[listing]
+----
+cluster1::> volume qtree create -vserver vs1.example.com -qtree-path /vol/data1/qt01 -security-style ntfs
+[Job 1642] Job succeeded: Successful
+
+cluster1::> volume qtree show -vserver vs1.example.com -qtree-path /vol/data1/qt01
+
+                      Vserver Name: vs1.example.com
+                       Volume Name: data1
+                        Qtree Name: qt01
+  Actual (Non-Junction) Qtree Path: /vol/data1/qt01
+                    Security Style: ntfs
+                       Oplock Mode: enable
+                  Unix Permissions: ---rwxr-xr-x
+                          Qtree Id: 2
+                      Qtree Status: normal
+                     Export Policy: default
+        Is Export Policy Inherited: true
+----

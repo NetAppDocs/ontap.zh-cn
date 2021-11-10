@@ -1,0 +1,30 @@
+---
+permalink: flexgroup/snapvault-backup-concept.html 
+sidebar: sidebar 
+keywords: consider, create, snapvault, backup, relation, unified, data, protection, flexgroup, volume 
+summary: 您必须了解为 FlexGroup 卷创建 SnapVault 备份关系和统一数据保护关系的注意事项。 
+---
+= 为 FlexGroup 卷创建 SnapVault 备份关系和统一数据保护关系的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须了解为 FlexGroup 卷创建 SnapVault 备份关系和统一数据保护关系的注意事项。
+
+* 您可以使用 ` -preserve` 选项重新同步 SnapVault 备份关系和统一数据保护关系，以便在目标卷上保留比最新通用 Snapshot 副本更新的 Snapshot 副本。
+* FlexGroup 卷不支持长期保留。
++
+通过长期保留，可以直接在目标卷上创建 Snapshot 副本，而无需将 Snapshot 副本存储在源卷上。
+
+* 无法在 SnapVault 备份关系和统一数据保护关系的目标 FlexGroup 卷上配置存储效率。
+* 您不能重命名 FlexGroup 备份关系的 Snapshot 副本以及 SnapVault 卷的统一数据保护关系。
+* FlexGroup 卷只能是一个备份关系或还原关系的源卷。
++
+FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 SnapVault 备份关系和一个还原关系的源。
+
+* 如果删除源 FlexGroup 卷上的 Snapshot 副本并重新创建同名 Snapshot 副本，则如果目标卷具有同名 Snapshot 副本，则下次向目标 FlexGroup 卷进行更新传输将失败。
++
+这是因为无法为 FlexGroup 卷重命名 Snapshot 副本。
+
+

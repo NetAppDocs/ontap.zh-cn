@@ -1,0 +1,55 @@
+---
+permalink: smb-admin/enable-disable-oplocks-when-creating-shares-task.html 
+sidebar: sidebar 
+keywords: oplock, client, lock, file, cache, content, local, performance, operation, storage, virtual, machine, svm, circumstance, disable, share-by-share, basis, enable, disable, enable or disable oplocks when creating smb shares 
+summary: 机会锁允许客户端在本地锁定文件和缓存内容，从而提高文件操作的性能。在 Storage Virtual Machine （ SVM ）上的 SMB 共享上启用机会锁。在某些情况下，您可能需要禁用机会锁。您可以基于共享启用或禁用机会锁。 
+---
+= 创建 SMB 共享时启用或禁用机会锁
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+机会锁允许客户端在本地锁定文件和缓存内容，从而提高文件操作的性能。在 Storage Virtual Machine （ SVM ）上的 SMB 共享上启用机会锁。在某些情况下，您可能需要禁用机会锁。您可以基于共享启用或禁用机会锁。
+
+如果在包含共享的卷上启用了机会锁，但禁用了该共享的机会锁共享属性，则会为该共享禁用机会锁。在共享上禁用机会锁优先于卷机会锁设置。在共享上禁用机会锁会同时禁用机会锁和租用机会锁。
+
+除了使用逗号分隔列表指定 oplock 共享属性之外，您还可以指定其他共享属性。您还可以指定其他共享参数。
+
+.步骤
+. 执行适用的操作：
++
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+在共享创建期间在共享上启用机会锁
+ a| 
+输入以下命令： ` +vserver cifs share create -vserver _vserver_name_ -share-name share_name -path path_to_share -share-properties [oplocks ， ...]+`
+
+[NOTE]
+====
+如果您希望共享仅具有默认共享属性，即 `oplocks` ， `browable` 和 `changenotify` enabled ，则在创建 SMB 共享时无需指定 ` -share-properties` 参数。如果您希望使用除默认值以外的任何共享属性组合，则必须指定 ` -share-properties` 参数以及要用于该共享的共享属性列表。
+
+====
+
+
+ a| 
+在共享创建期间禁用共享上的机会锁
+ a| 
+输入以下命令： ` +vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path _path_to_share_ -share-properties [other_share_properties ， ...]+`
+
+[NOTE]
+====
+禁用 oplock 时，您必须在创建共享时指定共享属性列表，但不应指定 `oplocks` 属性。
+
+====
+|===
+
+
+* 相关信息 *
+
+xref:enable-disable-oplocks-existing-shares-task.adoc[在现有 SMB 共享上启用或禁用机会锁]
+
+xref:monitor-oplock-status-task.adoc[监控机会锁状态]

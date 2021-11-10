@@ -1,0 +1,56 @@
+---
+permalink: tape-backup/restart-dump-backup-concept.html 
+sidebar: sidebar 
+keywords: restart, dump, backup, internal, external, tape, write, errors, power, outages, accidental, user, interruptions, internal, inconsistency 
+summary: 转储备份有时无法完成，因为存在内部或外部错误，例如磁带写入错误，断电，意外用户中断或存储系统内部不一致。如果备份因上述原因之一失败，您可以重新启动它。 
+---
+= 何时重新启动转储备份
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+转储备份有时无法完成，因为存在内部或外部错误，例如磁带写入错误，断电，意外用户中断或存储系统内部不一致。如果备份因上述原因之一失败，您可以重新启动它。
+
+您可以选择中断并重新启动备份，以避免存储系统上的流量过大或避免对存储系统上其他有限资源（例如磁带驱动器）的竞争。如果较紧急的还原（或备份）需要相同的磁带驱动器，您可以中断较长的备份并稍后重新启动它。可重新启动的备份会在重新启动后持续存在。只有在满足以下条件时，才能重新启动中止的磁带备份：
+
+* 中止的备份处于第 IV 阶段
+* 转储命令锁定的所有关联 Snapshot 副本均可用。
+* 必须启用文件历史记录。
+
+
+中止此类转储操作并使其处于可重新启动状态时，关联的 Snapshot 副本将被锁定。这些 Snapshot 副本将在删除备份上下文后释放。您可以使用 `vserver services ndmp resttable backup show` 命令查看备份上下文列表。
+
+[listing]
+----
+cluster::> vserver services ndmpd restartable-backup show
+Vserver     Context Identifier                   Is Cleanup Pending?
+----------- ------------------------------------ -------------------
+vserver1 330e6739-0179-11e6-a299-005056bb4bc9 false
+vserver1 481025c1-0179-11e6-a299-005056bb4bc9 false
+vserver2 5cf10132-0179-11e6-a299-005056bb4bc9 false
+3 entries were displayed.
+
+cluster::> vserver services ndmpd restartable-backup show -vserver vserver1 -context-id 330e6739-0179-11e6-a299-005056bb4bc9
+
+                       Vserver: vserver1
+            Context Identifier: 330e6739-0179-11e6-a299-005056bb4bc9
+                   Volume Name: /vserver1/vol1
+           Is Cleanup Pending?: false
+            Backup Engine Type: dump
+Is Snapshot Copy Auto-created?: true
+                     Dump Path: /vol/vol1
+   Incremental Backup Level ID: 0
+                     Dump Name: /vserver1/vol1
+     Context Last Updated Time: 1460624875
+               Has Offset Map?: true
+                 Offset Verify: true
+       Is Context Restartable?: true
+              Is Context Busy?: false
+                  Restart Pass: 4
+              Status of Backup: 2
+            Snapshot Copy Name: snapshot_for_backup.1
+          State of the Context: 7
+
+cluster::>"
+----

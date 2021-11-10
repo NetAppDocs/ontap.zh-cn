@@ -1,0 +1,94 @@
+---
+permalink: snaplock/commit-snapshot-copies-worm-concept.html 
+sidebar: sidebar 
+keywords: snaplock, commit, snapshot, copy, worm, snapvault, protect, snapmirror 
+summary: 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot 副本进行 WORM 保护。您可以在 SnapVault 目标上执行所有基本 SnapLock 任务。目标卷会自动挂载为只读，因此无需明确将 Snapshot 副本提交到 WORM ；因此，不支持使用 SnapMirror 策略在目标卷上创建计划的 Snapshot 副本。 
+---
+= 将 Snapshot 副本提交到 WORM
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot 副本进行 WORM 保护。您可以在 SnapVault 目标上执行所有基本 SnapLock 任务。目标卷会自动挂载为只读，因此无需明确将 Snapshot 副本提交到 WORM ；因此，不支持使用 SnapMirror 策略在目标卷上创建计划的 Snapshot 副本。
+
+.您需要什么？ #8217 ；将需要什么
+* 源集群必须运行 ONTAP 8.2.2 或更高版本。
+* 源聚合和目标聚合必须为 64 位。
+* 源卷不能是 SnapLock 卷。
+* 必须在具有对等 SVM 的对等集群中创建源卷和目标卷。
++
+有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群对等"]。
+
+* 如果禁用了卷自动增长，则目标卷上的可用空间必须至少比源卷上的已用空间多 5% 。
+
+
+源卷可以使用 NetApp 或非 NetApp 存储。对于非 NetApp 存储，您必须使用 FlexArray 虚拟化。
+
+[NOTE]
+====
+您不能重命名提交到 WORM 状态的 Snapshot 副本。
+
+====
+您可以克隆 SnapLock 卷，但不能克隆 SnapLock 卷上的文件。
+
+[NOTE]
+====
+SnapLock 卷不支持 LUN 。虽然可以使用传统技术将 LUN 移动到 SnapLock 卷上，但这不是受支持的操作，也不是涉及 SnapLock 卷上 LUN 的任何其他操作。
+
+====
+对于 MetroCluster 配置，您应注意以下事项：
+
+* 您只能在 sync-source SVM 之间创建 SnapVault 关系，而不能在 sync-source SVM 与 sync-destination SVM 之间创建此关系。
+* 您可以创建从 sync-source SVM 上的卷到提供数据的 SVM 的 SnapVault 关系。
+* 您可以创建从提供数据的 SVM 上的卷到 sync-source SVM 上的 DP 卷的 SnapVault 关系。
+
+
+下图显示了用于初始化 SnapVault 关系的操作步骤：
+
+image::../media/snapvault-steps-clustered.gif[此图显示了用于初始化 SnapVault 关系的操作步骤：标识目标集群,creating a destination volume,creating a policy]
+
+.步骤
+. 确定目标集群。
+. 在目标集群上，安装 SnapLock 许可证，初始化 ComplianceClock 并创建 SnapLock 聚合，如中所述 xref:configure-snaplock-concept.adoc[配置 SnapLock]。
+. 在目标集群上，创建类型为 `DP` 的 SnapLock 目标卷，该卷的大小等于或大于源卷：
++
+` * volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -type DP -size _size_*`
+
++
+[NOTE]
+====
+SnapLock 模式 " 合规性 " 或 " 企业 " 是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。
+
+====
++
+以下命令会在聚合 `node01_aggr` 上创建一个名为 `dstvolB` in `SVM2` 的 2 GB SnapLock `Compliance` volume ：
+
++
+[listing]
+----
+cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -type DP -size 2GB
+----
+. 在目标集群上，设置默认保留期限，如中所述 xref:set-default-retention-period-task.adoc[设置默认保留期限]。
+. 在目标 SVM 上，初始化 SnapVault 关系：
++
+` * snapmirror initialize -destination-path _destination_path_*`
+
++
+初始化过程会向目标卷执行 _baseline transfer_ 。SnapMirror 为源卷创建 Snapshot 副本，然后将该副本及其引用的所有数据块传输到目标卷。
+
++
+以下命令将初始化源卷 `srcvolA` on `SVM1` 与目标卷 `dstvolB` on `SVM2` 之间的关系：
+
++
+[listing]
+----
+SVM2::> snapmirror initialize -destination-path SVM2:dstvolB
+----
+
+
+* 相关信息 *
+
+https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM 对等"]
+
+https://docs.netapp.com/us-en/ontap-sm-classic/volume-backup-snapvault/index.html["使用 SnapVault 进行卷备份"]

@@ -1,0 +1,48 @@
+---
+permalink: san-admin/create-flexclone-luns-snapshot-copy-volume-task.html 
+sidebar: sidebar 
+keywords: create, flexclone, luns, snapshot, copy, volume 
+summary: 您可以使用卷中的 Snapshot 副本为 LUN 创建 FlexClone 副本。LUN 的 FlexClone 副本既可读，也可写。 
+---
+= 从卷中的 Snapshot 副本创建 FlexClone LUN
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用卷中的 Snapshot 副本为 LUN 创建 FlexClone 副本。LUN 的 FlexClone 副本既可读，也可写。
+
+必须安装 FlexClone 许可证。
+
+FlexClone LUN 会继承父 LUN 的空间预留属性。预留了空间的 FlexClone LUN 所需的空间与预留了空间的父 LUN 所需的空间相同。如果 FlexClone LUN 未预留空间，则卷必须具有足够的空间来容纳对克隆所做的更改。
+
+.步骤
+. 验证 LUN 是否未映射或未写入。
+. 为包含 LUN 的卷创建 Snapshot 副本：
++
+`volume snapshot create -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
+
++
+您必须为要克隆的 LUN 创建 Snapshot 副本（备用 Snapshot 副本）。
+
+. 从 Snapshot 副本创建 FlexClone LUN ：
++
+`file clone create -vserver _vserver_name_ -volume _volume_name_ -source-path _source_path_ -snapshot-name _snapshot_name_ -destination-path _destination_path_`
+
++
+如果您需要 FlexClone LUN 可用于自动删除，请使用 ` -autodelete true` 。如果要在使用半厚配置的卷中创建此 FlexClone LUN ，则必须为所有 FlexClone LUN 启用自动删除。
+
+. 验证 FlexClone LUN 是否正确：
++
+`lun show -vserver _vserver_name_`
+
++
+[listing]
+----
+
+Vserver Path                      State    Mapped    Type     Size
+------- ----------------------    -------- --------- -------- -------
+vs1     /vol/vol1/lun1_clone      online   unmapped windows   47.07MB
+vs1     /vol/vol1/lun1_snap_clone online   unmapped windows   47.07MB
+----
+

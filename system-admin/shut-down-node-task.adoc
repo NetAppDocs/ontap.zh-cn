@@ -1,0 +1,70 @@
+---
+permalink: system-admin/shut-down-node-task.html 
+sidebar: sidebar 
+keywords: shut, down, node, unresponsive, support, personnel, direct, troubleshoot 
+summary: 如果节点无响应，或者支持人员指示您在进行故障排除时关闭节点，您可以关闭节点。 
+---
+= 关闭节点
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果节点无响应，或者支持人员指示您在进行故障排除时关闭节点，您可以关闭节点。
+
+.步骤
+. 如果集群包含四个或更多节点，请验证要关闭的节点是否未持有 epsilon ：
++
+.. 将权限级别设置为高级：
++
+` * 设置 -privilege advanced*`
+
+.. 确定哪个节点持有 epsilon ：
++
+` * 集群显示 *`
+
++
+以下示例显示 "`node1` " 持有 epsilon ：
+
++
+[listing]
+----
+cluster1::*> cluster show
+Node                 Health  Eligibility   Epsilon
+-------------------- ------- ------------  ------------
+node1                true    true          true
+node2                true    true          false
+node3                true    true          false
+node4                true    true          false
+4 entries were displayed.
+----
+.. 如果要关闭的节点持有 epsilon ，则从节点中删除 epsilon ：
++
+` * cluster modify -node _node_name_ -epsilon false*`
+
+.. 将 epsilon 分配给将保持正常运行的其他节点：
++
+` * cluster modify -node _node_name_ -epsilon true*`
+
+.. 返回到管理权限级别：
++
+` * 设置 -privilege admin*`
+
+
+
+. 使用 `ssystem node halt` 命令关闭节点。
++
+如果未指定 ` skip-lif-migration` 参数，则命令会尝试在关闭之前将数据和集群管理 LIF 同步迁移到另一个节点。如果 LIF 迁移失败或超时，则关闭过程将中止，而 ONTAP 将显示一个错误以指示 LIF 迁移失败。
+
++
+您可以使用 ` -dump` 参数在关闭时手动触发核心转储。
+
++
+以下示例将关闭名为 "`node1` " 的节点以进行硬件维护：
+
++
+[listing]
+----
+cluster1::> system node halt -node node1 -reason 'hardware maintenance'
+----
+

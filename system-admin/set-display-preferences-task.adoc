@@ -1,0 +1,46 @@
+---
+permalink: system-admin/set-display-preferences-task.html 
+sidebar: sidebar 
+keywords: set, display, preferences, cli, session, set, rows 
+summary: 您可以使用 set 命令和 rows 命令为命令行界面会话设置显示首选项。您设置的首选项仅适用于您所处的会话。它们不会在会话之间持久存在。 
+---
+= 在命令行界面中设置显示首选项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `set` 命令和 `rows` 命令为命令行界面会话设置显示首选项。您设置的首选项仅适用于您所处的会话。它们不会在会话之间持久存在。
+
+您可以设置以下命令行界面显示首选项：
+
+* 命令会话的权限级别
+* 是否对可能造成中断的命令发出确认
+* whether `show` 命令可显示所有字段
+* 要用作字段分隔符的一个或多个字符
+* 报告数据大小时的默认单位
+* 在接口暂停输出之前，屏幕在当前命令行界面会话中显示的行数
++
+如果未指定首选行数，则会根据终端的实际高度自动进行调整。如果未定义实际高度，则默认行数为 24 。
+
+* 默认 Storage Virtual Machine （ SVM ）或节点
+* 持续运行的命令在遇到错误时是否应停止
+
+
+.步骤
+. 要设置 CLI 显示首选项，请使用 `set` 命令。
++
+要设置屏幕在当前命令行界面会话中显示的行数，您还可以使用 `rows` 命令。
+
++
+有关详细信息，请参见 `set` 命令和 `rows` 命令的手册页。
+
+
+
+以下示例将逗号设置为字段分隔符，将 `GB` 设置为默认数据大小单位，并将行数设置为 50 ：
+
+[listing]
+----
+cluster1::> set -showseparator "," -units GB
+cluster1::> rows 50
+----

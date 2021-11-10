@@ -1,0 +1,42 @@
+---
+permalink: nfs-config/assign-export-policy-qtree-task.html 
+sidebar: sidebar 
+keywords: assign, export, policy, qtree 
+summary: 您还可以导出卷上的特定 qtree ，使其可供客户端直接访问，而不是导出整个卷。您可以通过为 qtree 分配导出策略来导出 qtree 。您可以在创建新 qtree 时分配导出策略，也可以通过修改现有 qtree 来分配导出策略。 
+---
+= 为 qtree 分配导出策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您还可以导出卷上的特定 qtree ，使其可供客户端直接访问，而不是导出整个卷。您可以通过为 qtree 分配导出策略来导出 qtree 。您可以在创建新 qtree 时分配导出策略，也可以通过修改现有 qtree 来分配导出策略。
+
+导出策略必须存在。
+
+默认情况下，如果在创建时未另行指定， qtree 将继承包含卷的父导出策略。
+
+您可以在创建 qtree 时或在创建 qtree 之后随时将导出策略与 qtree 相关联。您可以将一个导出策略与 qtree 关联，但一个策略可以与多个 qtree 关联。
+
+.步骤
+. 如果在创建 qtree 时未指定导出策略，请为此 qtree 分配一个导出策略：
++
+`volume qtree modify -vserver _vserver_name_ -qtree-path /vol/_volume_name/qtree_name_ -export-policy _export_policy_name_`
+
+. 验证是否已将此策略分配给 qtree ：
++
+`volume qtree show -qtree _qtree_name_ -fields export-policy`
+
+
+
+以下命令会将导出策略 nfs_policy 分配给 SVM vs1 上的 qtree qt1 并验证分配情况：
+
+[listing]
+----
+cluster::> volume modify -v1server vs1 -qtree-path /vol/vol1/qt1 -policy nfs_policy
+
+cluster::>volume qtree show -volume vol1 -fields export-policy
+vserver volume qtree export-policy
+------- ------ ----- -------------
+vs1     data1  qt01  nfs_policy
+----

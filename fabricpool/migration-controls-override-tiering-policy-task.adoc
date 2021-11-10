@@ -1,0 +1,36 @@
+---
+permalink: fabricpool/migration-controls-override-tiering-policy-task.html 
+sidebar: sidebar 
+keywords: cloud migration, controls, override, volume, default, tiering policy 
+summary: 您可以使用 ONTAP 9.8 中引入的 -cloud retry-policy 选项将用于控制用户数据从云层检索到性能层的卷的默认分层策略更改为性能层。 
+---
+= 使用云迁移控件覆盖卷的默认分层策略
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 ONTAP 9.8 中引入的 ` -cloud retry-policy` 选项将用于控制从云层到性能层的用户数据检索的卷默认分层策略更改为性能层。
+
+.您需要什么？ #8217 ；将需要什么
+* 使用 ` -cloud retr检 索策略` 选项修改卷需要 ONTAP 9.8 或更高版本。
+* 要执行此操作，您必须具有高级权限级别。
+* 您应了解使用 ` 云检索策略` 分层策略的行为。
++
+link:tiering-policies-concept.html#how-tiering-policies-work-with-cloud-migration["分层策略如何与云迁移配合使用"]
+
+
+
+.步骤
+. 使用 `volume modify` 命令和 ` -cloud retrover-policy` 选项修改现有卷的分层策略行为：
++
+[listing]
+----
+ volume create -volume <volume_name> -vserver <vserver_name> - tiering-policy <policy_name> -cloud-retrieval-policy
+----
++
+[listing]
+----
+vol modify -volume fp_volume4 -vserver vs0 -cloud-retrieval-policy promote
+----
+

@@ -1,0 +1,83 @@
+---
+permalink: data-protection/create-load-sharing-mirror-task.html 
+sidebar: sidebar 
+keywords: create, initialize, load-sharing, mirror, relationship 
+summary: 您应为集群中的每个根卷创建负载共享镜像（ LSM ）。您可以在包含根卷的节点以外的任何节点上创建 LSM ，例如 HA 对中的配对节点或其他 HA 对中的配对节点。对于双节点集群，您应在具有根卷的节点的配对节点上创建 LSM 。 
+---
+= 创建并初始化负载共享镜像关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应为集群中的每个根卷创建负载共享镜像（ LSM ）。您可以在包含根卷的节点以外的任何节点上创建 LSM ，例如 HA 对中的配对节点或其他 HA 对中的配对节点。对于双节点集群，您应在具有根卷的节点的配对节点上创建 LSM 。
+
+如果在同一节点上创建 LSM ，然后丢失 HA 对中的磁盘，则会出现单点故障，并且没有可用于恢复数据的第二个副本。但是，如果在包含根卷的节点以外的节点上创建 LSM ，或者在其他 HA 对上创建 LSM ，则在发生中断时仍可访问您的数据。
+
+例如，在根卷位于三个节点上的四节点集群中：
+
+* 对于 HA 1 节点 1 上的根卷，在 HA 2 节点 1 或 HA 2 节点 2 上创建 LSM 。
+* 对于 HA 1 节点 2 上的根卷，在 HA 2 节点 1 或 HA 2 节点 2 上创建 LSM 。
+* 对于 HA 2 节点 1 上的根卷，在 HA 1 节点 1 或 HA 1 节点 2 上创建 LSM 。
+
+
+.步骤
+. 为 LSM 创建目标卷：
++
+`volume create -vserver _svm_ -volume volume -aggregate _aggregate_ -type DP -size`
+
++
+目标卷的大小应等于或大于根卷。
+
++
+最佳做法是，使用后缀（例如 ` _root` 和 ` _m1` ）来命名根卷和目标卷。
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将在 `cluster_src` 中为根卷 `svm1_root` 创建一个负载共享镜像卷：
+
++
+[listing]
+----
+cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -size 1gb -state online -type DP
+----
+. 创建复制作业计划，如中所述 link:create-replication-job-schedule-task.html["创建复制作业计划"]。
+. 在 SVM 根卷和 LSM 的目标卷之间创建负载共享镜像关系：
++
+`snapmirror create -source-path _sVM ： volume___cluster ： //svm/volume_-destination-path _sVM ： volume___cluster ： //svm/volume_-type LS -schedule _schedule_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将在根卷 `svm1_root` 和负载共享镜像卷 `svm1_m1` 之间创建负载共享镜像关系：
+
++
+[listing]
+----
+cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path svm1:svm1_m1 -type LS -schedule hourly
+----
++
+负载共享镜像的类型属性将从 `DP` 更改为 `LS` 。
+
+. 初始化负载共享镜像：
++
+`snapmirror initialize-ls-set -source-path _svm ： volume_|_cluster ： //svm/volume_`
+
++
+初始化可能非常耗时。您可能希望在非高峰时段运行基线传输。
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将初始化根卷 `svm1_root` 的负载共享镜像：
+
++
+[listing]
+----
+cluster_src::> snapmirror initialize-ls-set -source-path svm1:svm1_root
+----
+

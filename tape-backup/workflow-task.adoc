@@ -1,0 +1,43 @@
+---
+permalink: tape-backup/workflow-task.html 
+sidebar: sidebar 
+keywords: perform, tape, backup, restore, flexvol, volume, ndmp, backup, application 
+summary: 您可以使用启用了 NDMP 的备份应用程序执行磁带备份和还原操作。 
+---
+= 磁带备份和还原工作流
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用启用了 NDMP 的备份应用程序执行磁带备份和还原操作。
+
+磁带备份和还原工作流概述了执行磁带备份和还原操作所涉及的任务。有关执行备份和还原操作的详细信息，请参见备份应用程序文档。
+
+.步骤
+. 通过选择支持 NDMP 的磁带拓扑来设置磁带库配置。
+. 在存储系统上启用 NDMP 服务。
++
+您可以在节点级别或 Storage Virtual Machine （ SVM ）级别启用 NDMP 服务。这取决于您选择执行磁带备份和还原操作的 NDMP 模式。
+
+. 使用 NDMP 选项管理存储系统上的 NDMP 。
++
+您可以在节点级别或 SVM 级别使用 NDMP 选项。这取决于您选择执行磁带备份和还原操作的 NDMP 模式。
+
++
+您可以使用 `ssystem services ndmp modify` 命令在节点级别修改 NDMP 选项，也可以使用 `vserver services ndmp modify` 命令在 SVM 级别修改 NDMP 选项。有关这些命令的详细信息，请参见手册页。
+
+. 使用启用了 NDMP 的备份应用程序执行磁带备份或还原操作。
++
+ONTAP 支持转储和 SMTape 引擎进行磁带备份和还原。
+
++
+有关使用备份应用程序（也称为 _Data Management Applications_ 或 _DMA_ ）执行备份或还原操作的详细信息，请参见备份应用程序文档。
+
+
+
+* 相关信息 *
+
+xref:common-ndmp-topologies-reference.adoc[常见 NDMP 磁带备份拓扑]
+
+xref:data-backup-dump-concept.adoc[了解 FlexVol 卷的转储引擎]

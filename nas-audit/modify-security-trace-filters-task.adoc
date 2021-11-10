@@ -1,0 +1,50 @@
+---
+permalink: nas-audit/modify-security-trace-filters-task.html 
+sidebar: sidebar 
+keywords: modify, security trace filters 
+summary: 如果要更改用于确定跟踪哪些访问事件的可选筛选器参数，可以修改现有的安全跟踪筛选器。 
+---
+= 修改安全跟踪筛选器
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要更改用于确定跟踪哪些访问事件的可选筛选器参数，可以修改现有的安全跟踪筛选器。
+
+您必须指定要修改的安全跟踪筛选器，方法是指定应用此筛选器的 Storage Virtual Machine （ SVM ）名称以及此筛选器的索引编号。您可以修改所有可选筛选器参数。
+
+.步骤
+. 修改安全跟踪筛选器：
++
+`vserver security trace filter modify -vserver vserver_name -index index_numberfilter_parameters`
+
++
+** `vserver_name` 是要应用安全跟踪筛选器的 SVM 的名称。
+** `index_number` 是要应用于筛选器的索引编号。此参数允许的值为 1 到 10 。
+** `filter_parameters` 是可选筛选器参数的列表。
+
+
+. 验证安全跟踪筛选器条目：
++
+`vserver security trace filter show -vserver vserver_name -index index_number`
+
+
+
+以下命令将使用索引编号 1 修改安全跟踪筛选器。此筛选器会从任何 IP 地址跟踪访问共享路径为 ` \\server\share1\dir1\dir2\file.txt` 的文件的任何用户的事件。此筛选器会为 ` -path` 选项使用一个完整路径。筛选器跟踪允许和拒绝事件：
+
+[listing]
+----
+cluster1::> vserver security trace filter modify -vserver vs1 -index 1 -path /dir1/dir2/file.txt -trace-allow yes
+
+cluster1::> vserver security trace filter show -vserver vs1 -index 1
+                                 Vserver: vs1
+                            Filter Index: 1
+              Client IP Address to Match: -
+                                    Path: /dir1/dir2/file.txt
+                       Windows User Name: -
+                          UNIX User Name: -
+                      Trace Allow Events: yes
+                          Filter Enabled: enabled
+               Minutes Filter is Enabled: 60
+----

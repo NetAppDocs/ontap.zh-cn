@@ -1,0 +1,83 @@
+---
+permalink: smb-admin/builtin-groups-default-privileges-reference.html 
+sidebar: sidebar 
+keywords: assign, membership, local, user, domain, predefined, builtin, ontap, predefined builtin groups and default privileges 
+summary: 您可以将本地用户或域用户的成员资格分配给 ONTAP 提供的一组预定义的 BUILTIN 组。预定义的组已分配预定义的权限。 
+---
+= 预定义的 BUILTIN 组和默认权限
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将本地用户或域用户的成员资格分配给 ONTAP 提供的一组预定义的 BUILTIN 组。预定义的组已分配预定义的权限。
+
+下表介绍了预定义的组：
+
+|===
+| 预定义的 BUILTIN 组 | 默认权限 
+
+
+ a| 
+``BUILTIN\Administrators``RID 544
+
+首次创建时， RID 为 500 的本地 `管理员` 帐户会自动成为此组的成员。将 Storage Virtual Machine （ SVM ）加入域后， `domain\Domain Admins` 组将添加到组中。如果 SVM 离开此域，则会从组中删除 `domain\Domain Admins` 组。
+ a| 
+* `seBackupPrivilege`
+* `seRestorePrivilege`
+* `seSecurityPrivilege`
+* `seOwnershipPrivilege`
+* `seChangeNotifyPrivilege`
+
+
+
+
+ a| 
+``BUILTIN\Power Users``RID 547
+
+首次创建时，此组没有任何成员。此组的成员具有以下特征：
+
+* 可以创建和管理本地用户和组。
+* 无法将自身或任何其他对象添加到 `BUILTIN\Administrators` 组。
+
+ a| 
+`seChangeNotifyPrivilege`
+
+
+
+ a| 
+``BUILTIN\Backup Operators``RID 551
+
+首次创建时，此组没有任何成员。如果出于备份目的打开文件或文件夹，则此组的成员可以覆盖对这些文件或文件夹的读写权限。
+ a| 
+* `seBackupPrivilege`
+* `seRestorePrivilege`
+* `seChangeNotifyPrivilege`
+
+
+
+
+ a| 
+``BUILTIN\Users``RID 545
+
+首次创建时，此组没有任何成员（除了隐含的 `Authenticated Users` 特殊组之外）。当 SVM 加入域时， `domain\Domain Users` 组将添加到此组。如果 SVM 离开此域，则会从此组中删除 `domain\Domain Users` 组。
+ a| 
+`seChangeNotifyPrivilege`
+
+
+
+ a| 
+``Everyone``SID S-1-1-0
+
+此组包括所有用户，包括来宾（但不包括匿名用户）。这是具有隐含成员资格的隐含组。
+ a| 
+`seChangeNotifyPrivilege`
+
+|===
+* 相关信息 *
+
+xref:builtin-groups-local-administrator-account-concept.adoc[使用 BUILTIN 组和本地管理员帐户的准则]
+
+xref:list-supported-privileges-reference.adoc[支持的权限列表]
+
+xref:configure-bypass-traverse-checking-concept.adoc[配置绕过遍历检查]

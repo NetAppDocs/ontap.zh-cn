@@ -1,0 +1,23 @@
+---
+permalink: nfs-admin/export-policies-client-access-volumes-concept.html 
+sidebar: sidebar 
+keywords: export, policies, control, client, access, volume, qtrees 
+summary: 导出策略包含一个或多个导出规则，用于处理每个客户端访问请求。此过程的结果将确定客户端是被拒绝还是被授予访问权限，以及访问级别。Storage Virtual Machine （ SVM ）上必须存在具有导出规则的导出策略，客户端才能访问数据。 
+---
+= 导出策略如何控制客户端对卷或 qtree 的访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+导出策略包含一个或多个 _export rules_ ，用于处理每个客户端访问请求。此过程的结果将确定客户端是被拒绝还是被授予访问权限，以及访问级别。Storage Virtual Machine （ SVM ）上必须存在具有导出规则的导出策略，客户端才能访问数据。
+
+您只需将一个导出策略与每个卷或 qtree 相关联，即可配置客户端对卷或 qtree 的访问。SVM 可以包含多个导出策略。这样，您可以对包含多个卷或 qtree 的 SVM 执行以下操作：
+
+* 为 SVM 的每个卷或 qtree 分配不同的导出策略，以控制单个客户端对 SVM 中每个卷或 qtree 的访问。
+* 为 SVM 的多个卷或 qtree 分配相同的导出策略，以实现相同的客户端访问控制，而无需为每个卷或 qtree 创建新的导出策略。
+
+
+如果客户端发出适用导出策略不允许的访问请求，则此请求将失败，并显示权限被拒绝的消息。如果客户端与导出策略中的任何规则不匹配，则会拒绝访问。如果导出策略为空，则会隐式拒绝所有访问。
+
+您可以在运行 ONTAP 的系统上动态修改导出策略。

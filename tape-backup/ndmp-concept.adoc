@@ -1,0 +1,59 @@
+---
+permalink: tape-backup/ndmp-concept.html 
+sidebar: sidebar 
+keywords: ncmp, considerations, using, service, storage, system 
+summary: 在存储系统上启动 NDMP 服务时，必须考虑许多注意事项。 
+---
+= 使用 NDMP 时的注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在存储系统上启动 NDMP 服务时，必须考虑许多注意事项。
+
+* 每个节点最多支持 16 个并发备份，恢复或使用连接的磁带驱动器组合这两者。
+* NDMP 服务可以根据 NDMP 备份应用程序的请求生成文件历史记录数据。
++
+备份应用程序可使用文件历史记录从备份映像优化恢复选定的数据子集。无论是存储系统还是备份应用程序，文件历史记录的生成和处理都可能需要大量时间和 CPU 资源。
+
++
+[NOTE]
+====
+SMTape 不支持文件历史记录。
+
+====
++
+如果您的数据保护配置为灾难恢复—整个备份映像将在灾难恢复中恢复—您可以禁用文件历史记录生成，以缩短备份时间。请参见备份应用程序文档以确定是否可以禁用 NDMP 文件历史记录生成。
+
+* 默认情况下，所有 LIF 类型都会启用 NDMP 的防火墙策略。
+* 在节点范围的 NDMP 模式下，备份 FlexVol 卷要求您使用备份应用程序在拥有该卷的节点上启动备份。
++
+但是，您无法备份节点根卷。
+
+* 您可以根据防火墙策略的允许从任何 LIF 执行 NDMP 备份。
++
+如果使用数据 LIF ，则必须选择未配置故障转移的 LIF 。如果在 NDMP 操作期间数据 LIF 发生故障转移， NDMP 操作将失败，必须重新运行。
+
+* 在节点范围的 NDMP 模式和 Storage Virtual Machine （ SVM ）范围的 NDMP 模式中，如果不支持 CAB 扩展，则 NDMP 数据连接将使用与 NDMP 控制连接相同的 LIF 。
+* 在 LIF 迁移期间，正在进行的备份和还原操作会中断。
++
+您必须在 LIF 迁移后启动备份和还原操作。
+
+* NDMP 备份路径的格式为 ` _/vserver_name/volume_name/path_name_` 。
++
+` path_name_` 是可选的，用于指定目录，文件或 Snapshot 副本的路径。
+
+* 使用转储引擎将 SnapMirror 目标备份到磁带时，只会备份卷中的数据。
++
+但是，如果使用 SMTape 将 SnapMirror 目标备份到磁带，则也会备份元数据。SnapMirror 关系和关联的元数据不会备份到磁带。因此，在还原期间，只会还原该卷上的数据，而不会还原关联的 SnapMirror 关系。
+
+
+
+* 相关信息 *
+
+xref:cluster-aware-backup-extension-concept.adoc[集群感知型备份扩展的功能]
+
+link:../concepts/index.html["ONTAP 概念"]
+
+link:../system-admin/index.html["系统管理"]

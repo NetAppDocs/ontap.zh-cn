@@ -1,0 +1,146 @@
+---
+permalink: smb-admin/monitor-signed-session-statistics-task.html 
+sidebar: sidebar 
+keywords: monitor, smb, session, statistic, establish, sign, monitor smb signed session statistics 
+summary: 您可以监控 SMB 会话统计信息，并确定哪些已建立的会话已签名，哪些未签名。 
+---
+= 监控 SMB 签名会话统计信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以监控 SMB 会话统计信息，并确定哪些已建立的会话已签名，哪些未签名。
+
+在高级权限级别使用 `statictics` 命令可提供 `smigned_sessions` 计数器，您可以使用该计数器监控已签名的 SMB 会话数。可以使用以下统计信息对象的 `scontrolled_sessions` 计数器：
+
+* 使用 `CIFS` 可以监控所有 SMB 会话的 SMB 签名。
+* 使用 `smb1` 可以监控 SMB 1.0 会话的 SMB 签名。
+* `sMB2` 可用于监控 SMB 2.x 和 SMB 3.0 会话的 SMB 签名。
++
+[NOTE]
+====
+SMB 3.0 统计信息包含在 `sMB2` 对象的输出中。
+
+====
+
+
+如果要将已签名会话数与会话总数进行比较，可以将 `signed_sessions` 计数器的输出与 `established_sessions` 计数器的输出进行比较。
+
+您必须先启动统计信息样本收集，然后才能查看生成的数据。如果不停止数据收集，您可以查看样本中的数据。停止数据收集可提供一个固定样本。如果不停止数据收集，则可以获取更新后的数据，以便与先前的查询进行比较。此比较可帮助您确定趋势。
+
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 开始数据收集： `satictics start -object ｛ cifs|smb1_smb2 ｝ -instance -sample-id _sample_ID_ [-node _node_name_]`
++
+如果未指定 ` -sample-id` 参数，则该命令将为您生成一个示例标识符，并将此示例定义为 CLI 会话的默认示例。` -sample-id` 的值为文本字符串。如果您在同一命令行界面会话期间运行此命令，但未指定 ` -sample-id` 参数，则此命令将覆盖先前的默认样本。
+
++
+您也可以指定要收集统计信息的节点。如果未指定节点，则此示例将收集集群中所有节点的统计信息。
+
+. 使用 `satictics stop` 命令停止收集样本数据。
+. 查看 SMB 签名统计信息：
++
+|===
+| 要查看的信息 | 输入 ... 
+
+
+ a| 
+已签名的会话
+ a| 
+`s如何使用 -sample-id sample_ID -counter signed_sessions|_node_name_ [-node _node_name_]`
+
+
+
+ a| 
+已签名的会话和已建立的会话
+ a| 
+`s如何使用 -sample-id _sample_ID_ -counter signed_sessions|established_sessions|_node_name_ [-node node_name]`
+
+|===
++
+如果要仅显示单个节点的信息，请指定可选的 ` 节点` 参数。
+
+. 返回到管理权限级别： `set -privilege admin`
+
+
+以下示例显示了如何监控 Storage Virtual Machine （ SVM ） vs1 上的 SMB 2.x 和 SMB 3.0 签名统计信息。
+
+以下命令将移至高级权限级别：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by support personnel.
+Do you want to continue? {y|n}: y
+----
+以下命令将开始收集新样本的数据：
+
+[listing]
+----
+cluster1::*> statistics start -object smb2 -sample-id smbsigning_sample -vserver vs1
+Statistics collection is being started for Sample-id: smbsigning_sample
+----
+以下命令将停止收集样本的数据：
+
+[listing]
+----
+cluster1::*> statistics stop -sample-id smbsigning_sample
+Statistics collection is being stopped for Sample-id: smbsigning_sample
+----
+以下命令按示例中的节点显示已签名的 SMB 会话和已建立的 SMB 会话：
+
+[listing]
+----
+cluster1::*> statistics show -sample-id smbsigning_sample -counter signed_sessions|established_sessions|node_name
+
+Object: smb2
+Instance: vs1
+Start-time: 2/6/2013 01:00:00
+End-time: 2/6/2013 01:03:04
+Cluster: cluster1
+
+    Counter                                              Value
+    -------------------------------- -------------------------
+    established_sessions                                     0
+    node_name                                           node1
+    signed_sessions                                          0
+    established_sessions                                     1
+    node_name                                           node2
+    signed_sessions                                          1
+    established_sessions                                     0
+    node_name                                           node3
+    signed_sessions                                          0
+    established_sessions                                     0
+    node_name                                           node4
+    signed_sessions                                          0
+----
+以下命令显示样本中 node2 的已签名 SMB 会话：
+
+[listing]
+----
+cluster1::*> statistics show -sample-id smbsigning_sample -counter signed_sessions|node_name -node node2
+
+Object: smb2
+Instance: vs1
+Start-time: 2/6/2013 01:00:00
+End-time: 2/6/2013 01:22:43
+Cluster: cluster1
+
+    Counter                                              Value
+    -------------------------------- -------------------------
+    node_name                                            node2
+    signed_sessions                                          1
+----
+以下命令将移回管理权限级别：
+
+[listing]
+----
+cluster1::*> set -privilege admin
+----
+* 相关信息 *
+
+xref:determine-sessions-signed-task.adoc[确定 SMB 会话是否已签名]
+
+link:../performance-config/index.html["性能监控快速设置"]

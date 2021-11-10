@@ -1,0 +1,35 @@
+---
+permalink: volumes/du-command-space-usage-concept.html 
+sidebar: sidebar 
+keywords: how, du command, accounts for, space usage 
+summary: 运行 du 命令检查 UNIX 客户端上挂载的 qtree 或 FlexVol 卷的磁盘空间使用量时，该使用量值可能高于该 qtree 或卷的配额报告显示的值。 
+---
+= du 命令如何计算空间使用量
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+运行 `du` 命令检查 UNIX 客户端上挂载的 qtree 或 FlexVol 卷的磁盘空间使用量时，该使用量值可能高于该 qtree 或卷的配额报告显示的值。
+
+`du` 命令的输出包含从发出命令的目录级别开始的目录树中所有文件的总空间使用量。由于 `du` 命令显示的使用量值也包括目录的数据块，因此该值高于配额报告显示的值。
+
+以下配额报告显示了 qtree q1 的 10 MB 限制：
+
+[listing]
+----
+
+                                      ----Disk----  ----Files-----   Quota
+  Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+  -------  --------  ------  -------  -----  -----  ------  ------   ---------
+  vol1     q1          tree    user1   10MB   10MB       1       -   q1
+
+...
+----
+在以下示例中， `du` 命令输出中的磁盘空间使用量显示的值高于配额限制：
+
+[listing]
+----
+[user1@lin-sys1 q1]$ du -sh
+**11M**     q1
+----

@@ -1,0 +1,68 @@
+---
+permalink: snaplock/create-audit-log-task.html 
+sidebar: sidebar 
+keywords: create, audit, log, snaplock, protected, administrator, accounts 
+summary: 在执行特权删除或 SnapLock 卷移动之前，必须创建受 SnapLock 保护的审核日志。审核日志记录 SnapLock 管理员帐户的创建和删除，对日志卷的修改，是否启用了特权删除，特权删除操作以及 SnapLock 卷移动操作。 
+---
+= 创建审核日志
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在执行特权删除或 SnapLock 卷移动之前，必须创建受 SnapLock 保护的审核日志。审核日志记录 SnapLock 管理员帐户的创建和删除，对日志卷的修改，是否启用了特权删除，特权删除操作以及 SnapLock 卷移动操作。
+
+您必须是集群管理员才能创建 SnapLock 聚合。
+
+只有在日志文件保留期限已过之后，才能删除审核日志。即使保留期限已过，您也无法修改审核日志。
+
+[NOTE]
+====
+在 ONTAP 9.4 及更早版本中，不能使用 SnapLock 企业卷进行审核日志记录。您必须使用 SnapLock Compliance 卷。在 ONTAP 9.5 及更高版本中，您可以使用 SnapLock 企业卷或 SnapLock 合规卷进行审核日志记录。在所有情况下，必须将审核日志卷挂载到接合路径 ` /SnapLock_audit_log` 。没有其他卷可以使用此接合路径。
+
+====
+您可以在审核日志卷根目录下的 ` /SnapLock_log` 目录中，以及名为 `privdel_log` （特权删除操作）和 `ssystem_log` （所有其他内容）的子目录中找到 SnapLock 审核日志。审核日志文件名包含第一个已记录操作的时间戳，便于按执行操作的大致时间搜索记录。
+
+* 您可以使用 `SnapLock log file show` 命令查看审核日志卷上的日志文件。
+* 您可以使用 `SnapLock log file archive` 命令归档当前日志文件并创建新的日志文件，这在需要将审核日志信息记录在单独文件中的情况下非常有用。
+
+
+有关详细信息，请参见命令的手册页。
+
+[NOTE]
+====
+数据保护卷不能用作 SnapLock 审核日志卷。
+
+====
+.步骤
+. 创建 SnapLock 聚合。
++
+xref:create-snaplock-aggregate-task.adoc[创建 SnapLock 聚合]
+
+. 在要配置审核日志记录的 SVM 上，创建 SnapLock 卷。
++
+xref:create-snaplock-volume-task.adoc[创建 SnapLock 卷]
+
+. 配置 SVM 以进行审核日志记录：
++
+` * SnapLock log create -vserver _svm_name_ -volume _SnapLock_volume_name_ -max-file-size _size_ -retention-period _default_retention_period_*`
+
++
+[NOTE]
+====
+审核日志文件的最小默认保留期限为六个月。如果受影响文件的保留期限超过审核日志的保留期限，则日志的保留期限将继承文件的保留期限。因此，如果使用特权删除功能删除的文件的保留期限为 10 个月，而审核日志的保留期限为 8 个月，则日志的保留期限将延长至 10 个月。
+
+====
++
+以下命令使用 SnapLock 卷 `logvol` 为审核日志记录配置 `SVM1` 。审核日志的最大大小为 20 GB ，并保留 8 个月。
+
++
+[listing]
+----
+SVM1::> snaplock log create -vserver SVM1 -volume logVol -max-file-size 20GB -retention-period 8months
+----
+. 在为审核日志记录配置的 SVM 上，将 SnapLock 卷挂载到接合路径 ` /SnapLock_audit_log` 。
++
+xref:mount-snaplock-volume-task.adoc[挂载 SnapLock 卷]
+
+

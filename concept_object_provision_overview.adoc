@@ -4,7 +4,7 @@ permalink: concept_object_provision_overview.html
 keywords: netapp, ontap, System Manager, StorageGRID, Amazon Simple Storage Service, S3, storage, object, object storage, object storage server, object provision, overview, on-premises, FabricPool, AFF, tier, tiering, bucket, remote, local, cluster, clusters, cloud tier, self-tiering, deployments, performance, throughput, capacity, latency, QoS 
 summary: 从 ONTAP 9.8 开始，您可以在 ONTAP 集群中启用 Amazon 简单存储服务（ S3 ）对象存储服务器。 
 ---
-= 配置对象存储
+= 使用 System Manager 概述 ONTAP S3 配置
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -18,17 +18,7 @@ summary: 从 ONTAP 9.8 开始，您可以在 ONTAP 集群中启用 Amazon 简单
 
 
 [role="lead"]
-本节中的主题介绍如何在 ONTAP 9.7 及更高版本中使用 ONTAP System Manager 配置和管理 S3 对象存储服务。
-
-如果您使用 ONTAP 命令行界面配置和管理 S3 对象存储服务，请参见以下内容：
-
-* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-s3-cg/home.html["《 S3 配置高级指南》"]
-* link:http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-mgng-stor-tier-fp/home.html["使用 FabricPool 管理存储层"]
-
-
-
-
-== System Manager 的 ONTAP S3 概述
+本节中的主题介绍如何在 ONTAP 9.8 及更高版本中使用 ONTAP System Manager 配置和管理 S3 对象存储服务。
 
 从 ONTAP 9.8 开始，您可以在 ONTAP 集群中启用 ONTAP 简单存储服务（ S3 ）对象存储服务器。
 
@@ -38,7 +28,7 @@ System Manager 支持在为 S3 对象存储提供服务时的两种内部使用�
 * S3 客户端应用程序访问本地集群或远程集群上的存储分段。
 
 
-有关分层的详细信息，请参见 link:concept_cloud_overview.html["云概述"]。
+有关 FabricPool 分层的详细信息，请参见 link:concept_cloud_overview.html["使用 System Manager 进行 FabricPool 层管理概述"]。
 
 
 NOTE: 如果您需要在现有集群上使用 S3 功能，而无需额外的硬件和管理，则 ONTAP S3 是合适的。对于 300 TB 以上的部署， NetApp StorageGRID 软件仍然是 NetApp 的旗舰级对象存储解决方案。有关详细信息，请参见 link:https://docs.netapp.com/sgws-114/index.jsp["StorageGRID 文档"]。
@@ -55,6 +45,6 @@ NOTE: 如果您需要在现有集群上使用 S3 功能，而无需额外的硬�
 
 如果选择 * 用于分层 * ，则不会选择任何性能服务级别，系统会尝试为分层数据选择具有最佳性能的低成本介质。
 
-另请参见： http://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-perf-mon/GUID-B144F39A-2E14-4048-91CA-D8080C50F70D.html["使用自适应 QoS 策略组"]。
+另请参见： link:../performance-admin/adaptive-qos-policy-groups-task.html["使用自适应 QoS 策略组"]。
 
-ONTAP 会尝试在磁盘最合适的本地层上配置此存储分段，以满足所选的服务级别。但是，如果需要指定要包含在存储分段中的磁盘，请考虑通过指定本地层（聚合）从 CLI 配置 S3 对象存储。如果您通过 CLI 配置 S3 服务器，则仍可根据需要使用 System Manager 对其进行管理。有关详细信息，请参见 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-s3-cg/home.html["《 S3 配置高级指南》"]。
+ONTAP 会尝试在磁盘最合适的本地层上配置此存储分段，以满足所选的服务级别。但是，如果需要指定要包含在存储分段中的磁盘，请考虑通过指定本地层（聚合）从 CLI 配置 S3 对象存储。如果您通过 CLI 配置 S3 服务器，则仍可根据需要使用 System Manager 对其进行管理。有关详细信息，请参见的文档 xref:s3-config/index.adoc[使用 CLI 配置 S3]。

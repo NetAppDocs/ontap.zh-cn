@@ -1,0 +1,167 @@
+---
+permalink: snaplock/set-default-retention-period-task.html 
+sidebar: sidebar 
+keywords: snaplock, volume, command, modify, retention, period, file, set, default 
+summary: 您可以使用 volume SnapLock modify 命令为 SnapLock 卷上的文件设置默认保留期限。 
+---
+= 设置默认保留期限
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume SnapLock modify` 命令为 SnapLock 卷上的文件设置默认保留期限。
+
+SnapLock 卷必须处于联机状态。
+
+下表显示了默认保留期限选项的可能值：
+
+[NOTE]
+====
+默认保留期限必须大于或等于（ >= ）最短保留期限，且小于或等于（ \<= ）最长保留期限。
+
+====
+|===
+| 价值 | Unit | 注释： 
+
+
+ a| 
+0 - 65535
+ a| 
+秒
+ a| 
+
+
+
+ a| 
+0 - 24
+ a| 
+hours
+ a| 
+
+
+
+ a| 
+0 - 365
+ a| 
+days
+ a| 
+
+
+
+ a| 
+0 - 12
+ a| 
+months
+ a| 
+
+
+
+ a| 
+0 - 70
+ a| 
+年
+ a| 
+
+
+
+ a| 
+最大
+ a| 
+-
+ a| 
+请使用最长保留期限。
+
+
+
+ a| 
+最小
+ a| 
+-
+ a| 
+请使用最短保留期限。
+
+
+
+ a| 
+无限
+ a| 
+-
+ a| 
+永久保留文件。
+
+
+
+ a| 
+未指定
+ a| 
+-
+ a| 
+保留这些文件，直到设置了绝对保留期限为止。
+
+|===
+最大和最小保留期限的值和范围是相同的，但 `max` 和` in `m除外，这两种情况不适用。有关此任务的详细信息，请参见 link:set-retention-period-task.html["设置保留时间概述"]。
+
+您可以使用 `volume SnapLock show` 命令查看卷的保留期限设置。有关详细信息，请参见命令的手册页。
+
+[NOTE]
+====
+将文件提交到 WORM 状态后，您可以延长但不能缩短保留期限。
+
+====
+.步骤
+. 为 SnapLock 卷上的文件设置默认保留期限：
++
+` * volume SnapLock modify -vserver _svm_name_ -volume _volume_name_ -default-retention-period _default_retention_period_ -minimal-retention-period _min_retention_period_ -max-retention-period _max_retention_period_*`
+
++
+有关完整的选项列表，请参见命令手册页。
+
++
+[NOTE]
+====
+以下示例假设先前未修改最短和最长保留期限。
+
+====
++
+以下命令会将 Compliance 或 Enterprise 卷的默认保留期限设置为 20 天：
+
++
+[listing]
+----
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -default-retention-period 20days
+----
++
+以下命令会将 Compliance 卷的默认保留期限设置为 70 年：
+
++
+[listing]
+----
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -maximum-retention-period 70years
+----
++
+以下命令会将 Enterprise 卷的默认保留期限设置为 10 年：
+
++
+[listing]
+----
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -default-retention-period max -maximum-retention-period 10years
+----
++
+以下命令会将 Enterprise 卷的默认保留期限设置为 10 天：
+
++
+[listing]
+----
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -minimum-retention-period 10days
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -default-retention-period min
+----
++
+以下命令会将 Compliance 卷的默认保留期限设置为无限：
+
++
+[listing]
+----
+cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -default-retention-period infinite -maximum-retention-period infinite
+----
+

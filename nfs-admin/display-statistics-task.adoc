@@ -1,0 +1,54 @@
+---
+permalink: nfs-admin/display-statistics-task.html 
+sidebar: sidebar 
+keywords: display, nfs, statistics 
+summary: 您可以显示存储系统上 Storage Virtual Machine （ SVM ）的 NFS 统计信息，以监控性能并诊断问题。 
+---
+= 显示 NFS 统计信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示存储系统上 Storage Virtual Machine （ SVM ）的 NFS 统计信息，以监控性能并诊断问题。
+
+.步骤
+. 使用 `satictics catalog object show` 命令确定可从中查看数据的 NFS 对象。
++
+`satictics catalog object show -object nfs*`
+
+. 使用 `satictics start` 和可选的 `satictics stop` 命令从一个或多个对象收集数据样本。
+. 使用 `statictics show` 命令查看样本数据。
+
+
+以下示例显示了 NFSv3 协议的性能数据。
+
+以下命令将开始收集新样本的数据：
+
+[listing]
+----
+vs1::> statistics start -object nfsv3 -sample-id nfs_sample
+----
+以下命令通过指定计数器来显示样本中的数据，这些计数器显示成功的读取和写入请求数与读取和写入请求总数：
+
+[listing]
+----
+
+vs1::> statistics show -sample-id nfs_sample -counter read_total|write_total|read_success|write_success
+
+Object: nfsv3
+Instance: vs1
+Start-time: 2/11/2013 15:38:29
+End-time: 2/11/2013 15:38:41
+Cluster: cluster1
+
+    Counter                                           Value
+    --------------------------- ---------------------------
+    read_success                                      40042
+    read_total                                        40042
+    write_success                                   1492052
+    write_total                                     1492052
+----
+* 相关信息 *
+
+link:../performance-config/index.html["性能监控设置"]

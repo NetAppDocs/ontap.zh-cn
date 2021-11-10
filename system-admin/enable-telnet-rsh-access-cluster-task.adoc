@@ -1,0 +1,43 @@
+---
+permalink: system-admin/enable-telnet-rsh-access-cluster-task.html 
+sidebar: sidebar 
+keywords: enable, telnet, rsh, access, cluster, mgmt, management, firewall, policy 
+summary: 作为安全最佳实践，在预定义的管理防火墙策略（ mgmt ）中禁用 Telnet 和 RSH 。要使集群能够接受 Telnet 或 RSH 请求，您必须创建一个已启用 Telnet 或 RSH 的新管理防火墙策略，然后将此新策略与集群管理 LIF 关联起来。 
+---
+= 启用对集群的 Telnet 或 RSH 访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+作为安全最佳实践，在预定义的管理防火墙策略（ `mGMT` ）中禁用 Telnet 和 RSH 。要使集群能够接受 Telnet 或 RSH 请求，您必须创建一个已启用 Telnet 或 RSH 的新管理防火墙策略，然后将此新策略与集群管理 LIF 关联起来。
+
+ONTAP 会阻止您更改预定义的防火墙策略，但您可以通过克隆预定义的 `mGMT` 管理防火墙策略，然后在新策略下启用 Telnet 或 RSH 来创建新策略。但是， Telnet 和 RSH 不是安全协议，因此您应考虑使用 SSH 访问集群。SSH 可提供安全的远程 shell 和交互式网络会话。
+
+要对集群启用 Telnet 或 RSH 访问，请执行以下步骤：
+
+.步骤
+. 进入高级权限模式：
++
+` * 设置高级 *`
+
+. 启用安全协议（ RSH 或 Telnet ）：
++
+` * 安全协议修改 -application _security_protocol_ -enabled true*`
+
+. 根据 `mGMT` 管理防火墙策略创建新的管理防火墙策略：
++
+` * 系统服务防火墙策略克隆 -policy mgmt -new-policy-name _policy-name_*`
+
+. 在新的管理防火墙策略中启用 Telnet 或 RSH ：
++
+` * 系统服务防火墙策略 create -policy _policy-name_ -service _security_protocol_ -action allow -ip-list _ip_address/netmask_*`
+
++
+要允许使用所有 IP 地址，应指定 ` -ip-list 0.0.0.0/0`
+
+. 将新策略与集群管理 LIF 关联：
++
+` * 网络接口修改 -vserver _cluster_management_LIF_ -lif cluster_mgmt -firewall-policy _policy-name_*`
+
+

@@ -1,0 +1,94 @@
+---
+permalink: smb-admin/display-central-access-policy-rules-task.html 
+sidebar: sidebar 
+keywords: display, detail, information, central, access, policy, rule, policies, define, active, directory, group, object, display information about central access policy rules 
+summary: 您可以显示与 Active Directory 中定义的中央访问策略关联的中央访问策略规则的详细信息。您还可以显示有关通过中央访问策略 GPO （组策略对象）应用于 CIFS 服务器的中央访问策略规则的信息。 
+---
+= 显示有关中央访问策略规则的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示与 Active Directory 中定义的中央访问策略关联的中央访问策略规则的详细信息。您还可以显示有关通过中央访问策略 GPO （组策略对象）应用于 CIFS 服务器的中央访问策略规则的信息。
+
+您可以显示有关已定义和应用的中央访问策略规则的详细信息。默认情况下，将显示以下信息：
+
+* Vserver name
+* 中央访问规则的名称
+* Description
+* 创建时间
+* 修改时间
+* 当前权限
+* 建议的权限
+* 目标资源
+
+
+|===
+| 要显示与中央访问策略关联的所有中央访问策略规则的信息 ... | 输入命令 ... 
+
+
+ a| 
+在 Active Directory 中定义
+ a| 
+`vserver cifs group-policy central-access-rule show-defined -vserver vserver_name`
+
+
+
+ a| 
+应用于 CIFS 服务器
+ a| 
+`vserver cifs group-policy central-access-rule show-applied -vserver vserver_name`
+
+|===
+以下示例显示了与 Active Directory 中定义的中央访问策略关联的所有中央访问策略规则的信息：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy central-access-rule show-defined
+
+Vserver    Name
+---------- --------------------
+vs1        r1
+           Description: rule #1
+         Creation Time: Tue Oct 22 09:33:48 2013
+     Modification Time: Tue Oct 22 09:33:48 2013
+   Current Permissions: O:SYG:SYD:AR(A;;FA;;;WD)
+  Proposed Permissions: O:SYG:SYD:(A;;FA;;;OW)(A;;FA;;;BA)(A;;FA;;;SY)
+
+vs1        r2
+           Description: rule #2
+         Creation Time: Tue Oct 22 10:27:57 2013
+     Modification Time: Tue Oct 22 10:27:57 2013
+   Current Permissions: O:SYG:SYD:AR(A;;FA;;;WD)
+  Proposed Permissions: O:SYG:SYD:(A;;FA;;;OW)(A;;FA;;;BA)(A;;FA;;;SY)
+----
+以下示例显示了与应用于集群上 Storage Virtual Machine （ SVM ）的中央访问策略关联的所有中央访问策略规则的信息：
+
+[listing]
+----
+cluster1::> vserver cifs group-policy central-access-rule show-applied
+
+Vserver    Name
+---------- --------------------
+vs1        r1
+           Description: rule #1
+         Creation Time: Tue Oct 22 09:33:48 2013
+     Modification Time: Tue Oct 22 09:33:48 2013
+   Current Permissions: O:SYG:SYD:AR(A;;FA;;;WD)
+  Proposed Permissions: O:SYG:SYD:(A;;FA;;;OW)(A;;FA;;;BA)(A;;FA;;;SY)
+
+vs1        r2
+           Description: rule #2
+         Creation Time: Tue Oct 22 10:27:57 2013
+     Modification Time: Tue Oct 22 10:27:57 2013
+   Current Permissions: O:SYG:SYD:AR(A;;FA;;;WD)
+  Proposed Permissions: O:SYG:SYD:(A;;FA;;;OW)(A;;FA;;;BA)(A;;FA;;;SY)
+----
+* 相关信息 *
+
+xref:secure-file-access-dynamic-access-control-concept.adoc[使用动态访问控制（ DAC ）保护文件访问]
+
+xref:display-gpo-config-task.adoc[显示有关 GPO 配置的信息]
+
+xref:display-central-access-policies-task.adoc[显示有关中央访问策略的信息]

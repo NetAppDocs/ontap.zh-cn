@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/configure-roaming-profiles-task.html 
+sidebar: sidebar 
+keywords: automatic, user, profile, available, log, computer, network, configure, roam, active, directory, mmc, snap-in, configuring, roam, windows, server, administration, center, configure roam profile 
+summary: 如果要在用户登录到网络上的任何计算机时自动使其配置文件可用，则可以通过 Active Directory 用户和计算机 MMC 管理单元配置漫游配置文件。如果要在 Windows Server 2012 上配置漫游配置文件，则可以使用 Active Directory 管理中心。 
+---
+= 配置漫游配置文件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要在用户登录到网络上的任何计算机时自动使其配置文件可用，则可以通过 Active Directory 用户和计算机 MMC 管理单元配置漫游配置文件。如果要在 Windows Server 2012 上配置漫游配置文件，则可以使用 Active Directory 管理中心。
+
+.步骤
+. 在 Windows 服务器上，打开 Active Directory 用户和计算机 MMC （或 Windows 2012 及更高版本服务器上的 Active Directory 管理中心）。
+. 找到要为其配置漫游配置文件的用户。
+. 右键单击该用户，然后单击 * 属性 * 。
+. 在 * 配置文件 * 选项卡上，输入要存储用户漫游配置文件的共享的配置文件路径，然后输入 ` %USERNAME%` 。
++
+例如，配置文件路径可能如下： ` \\vs1.example.com\profiles\%username%` 。用户首次登录时， ` %username%` 将替换为用户名。
+
++
+[NOTE]
+====
+在路径 ` \\vs1.example.com\profiles\%username%` 中， `profiles` 是 Storage Virtual Machine （ SVM ） vs1 上对 Everyone 具有完全控制权限的共享的共享名称。
+
+====
+. 单击 * 确定 * 。
+

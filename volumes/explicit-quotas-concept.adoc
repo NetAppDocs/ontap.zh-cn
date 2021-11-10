@@ -1,0 +1,48 @@
+---
+permalink: volumes/explicit-quotas-concept.html 
+sidebar: sidebar 
+keywords: how to, use, explicit, quotas 
+summary: 您可以使用显式配额为特定配额目标指定配额，或者覆盖特定目标的默认配额。 
+---
+= 如何使用显式配额
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用显式配额为特定配额目标指定配额，或者覆盖特定目标的默认配额。
+
+显式配额用于指定特定用户，组或 qtree 的限制。显式配额将替换同一目标的任何默认配额。
+
+为具有派生用户配额的用户添加显式用户配额时，必须使用与默认用户配额相同的用户映射设置。否则，在调整配额大小时，显式用户配额将被拒绝，因为它被视为新配额。
+
+显式配额只会影响同一级别（卷或 qtree ）的默认配额。例如， qtree 的显式用户配额不会影响包含该 qtree 的卷的默认用户配额。但是， qtree 的显式用户配额会覆盖（替换由定义的限制）该 qtree 的默认用户配额。
+
+以下配额文件包含一个默认用户配额，用于将 vol1 中的所有用户的空间限制为 50 MB 。但是，由于显式配额（以粗体显示），允许一个用户 jsmith 使用 80 MB 的空间：
+
+[listing]
+----
+#Quota target type            disk  files  thold  sdisk  sfile
+#-----------  ----            ----  -----  -----  -----  -----
+*             user@/vol/vol1  50M
+**jsmith      user@/vol/vol1  80M**
+----
+以下配额条目将指定用户（以四个 ID 表示）限制为 500 MB 磁盘空间和 10 ， 240 个文件（位于 vol1 卷中）：
+
+[listing]
+----
+jsmith,corp\jsmith,engineering\”john smith”,
+S-1-5-32-544   user@/vol/vol1         500M      10K
+----
+以下配额条目将 eng1 组的磁盘空间限制为 150 MB ，并且 /vol/vol2/proj1 qtree 中的文件数不限：
+
+[listing]
+----
+eng1        group@/vol/vol2/proj1  150M
+----
+以下配额条目将 vol2 卷中的 proj1 qtree 限制为 750 MB 磁盘空间和 76 ， 800 个文件：
+
+[listing]
+----
+/vol/vol2/proj1   tree                750M      75K
+----

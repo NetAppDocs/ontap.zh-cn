@@ -1,0 +1,56 @@
+---
+permalink: snaplock/index.html 
+sidebar: sidebar 
+keywords: decide, archive, compliance, snaplock, unmodified, file, worm, storage 
+summary: 本内容介绍如何使用 NetApp SnapLock 技术以未经修改的格式保留文件，以满足监管要求。 
+---
+= 归档和合规性概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+本内容介绍如何使用 NetApp SnapLock 技术以未经修改的格式保留文件，以满足监管要求。它将向您展示如何将文件和 Snapshot 副本提交到 "`一次写入，多次读取` " （ WORM ）存储，以及如何为受 WORM 保护的数据设置保留期限。
+
+如果要通过以下方式使用 SnapLock ，应使用此内容：
+
+* 您希望使用 ONTAP 命令行界面（ CLI ），而不是 ONTAP 系统管理器或自动脚本编写工具。
++
+System Manager 中提供了一组有限但重要的 SnapLock 技术。您可以安装 SnapLock 许可证，设置合规性时钟，创建 SnapLock 聚合和卷以及配置 SnapLock 卷。
+
+* 您希望创建合规性聚合或企业聚合以在 MetroCluster 配置上托管 SnapLock 审核日志卷，但有以下限制：
++
+** 镜像聚合和未镜像聚合支持 SnapLock Enterprise 。
+** 只有未镜像聚合才支持 SnapLock 合规性。
++
+所有 MetroCluster 配置均支持镜像聚合。请参见 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 发行说明》"] 确定 MetroCluster 配置是否支持未镜像聚合。
+
+
+
+* 您希望将 SnapLock 企业聚合与 FabricPool 结合使用。
++
+从 ONTAP 9.8 开始，支持 SnapLock 企业聚合 link:https://docs.netapp.com/us-en/ontap/fabricpool/index.html["FabricPool"]。
+
+* 您未使用 SAN LUN
++
+SnapLock 卷不支持 SAN LUN 。虽然可以使用传统技术将 SAN LUN 移动到 SnapLock 卷上，但这不是受支持的操作，也不是涉及 SnapLock 卷上的 SAN LUN 的任何其他操作。
+
+* 您未使用 SMTape 。
++
+SnapLock 不支持 SMTape 。
+
+* 您不是为阵列 LUN 创建合规性聚合。
++
+SnapLock 合规性聚合不支持阵列 LUN 。
+
+* 您不是使用 SyncMirror 选项创建合规性聚合。
++
+SnapLock 合规性聚合不支持 SyncMirror 丛。
+
+
+
+[NOTE]
+====
+从 ONTAP 9.1 开始， SnapLock 支持 SSD 和 Flash Pool 聚合。
+
+====

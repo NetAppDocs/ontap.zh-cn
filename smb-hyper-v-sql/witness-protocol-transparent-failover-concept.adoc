@@ -1,0 +1,29 @@
+---
+permalink: smb-hyper-v-sql/witness-protocol-transparent-failover-concept.html 
+sidebar: sidebar 
+keywords: witness, protocol, transparent, failover, lif, ca, share, client, smb, recovery 
+summary: 见证协议为 SMB 3.0 持续可用的共享（ CA 共享）提供增强的客户端故障转移功能。见证有助于加快故障转移速度，因为它会绕过 LIF 故障转移恢复期间。当节点不可用时，它会通知应用程序服务器，而无需等待 SMB 3.0 连接超时。 
+---
+= 见证协议如何增强透明故障转移
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+见证协议为 SMB 3.0 持续可用的共享（ CA 共享）提供增强的客户端故障转移功能。见证有助于加快故障转移速度，因为它会绕过 LIF 故障转移恢复期间。当节点不可用时，它会通知应用程序服务器，而无需等待 SMB 3.0 连接超时。
+
+故障转移是无缝的，客户端上运行的应用程序不会意识到发生了故障转移。如果见证不可用，则故障转移操作仍会成功执行，但无见证的故障转移效率较低。
+
+满足以下要求时，可以执行见证增强型故障转移：
+
+* 它只能用于启用了 SMB 3.0 的支持 SMB 3.0 的 CIFS 服务器。
+* 共享必须使用 SMB 3.0 并设置了持续可用性共享属性。
+* 应用程序服务器所连接节点的 SFO 配对节点必须至少为托管应用程序服务器数据的 Storage Virtual Machine （ SVM ）分配一个运行数据 LIF 。
++
+[NOTE]
+====
+见证协议在 SFO 对之间运行。由于 LIF 可以迁移到集群中的任何节点，因此任何节点都可能需要成为其 SFO 配对节点的见证。如果托管应用程序服务器数据的 SVM 在配对节点上没有活动数据 LIF ，则见证协议无法为给定节点上的 SMB 连接提供快速故障转移。因此，对于托管其中一种配置的每个 SVM ，集群中的每个节点必须至少具有一个数据 LIF 。
+
+====
+* 应用程序服务器必须使用存储在 DNS 中的 CIFS 服务器名称来连接到 CIFS 服务器，而不是使用单个 LIF IP 地址。
+

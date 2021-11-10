@@ -1,0 +1,79 @@
+---
+permalink: flexgroup/create-svm-disaster-recovery-relationship-task.html 
+sidebar: sidebar 
+keywords: create, svm, disaster, recovery, relationship, flexgroup, volumes 
+summary: 从 ONTAP 9.1.1 开始，您可以使用 FlexGroup 卷创建 SVM 灾难恢复（ SVM DR ）关系。SVM DR 关系可通过同步和复制 SVM 配置及其数据，提供冗余并在发生灾难时恢复 FlexGroup 。SVM DR 需要 SnapMirror 许可证。 
+---
+= 为 FlexGroup 卷创建 SVM 灾难恢复关系
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.1.1 开始，您可以使用 FlexGroup 卷创建 SVM 灾难恢复（ SVM DR ）关系。SVM DR 关系可通过同步和复制 SVM 配置及其数据，提供冗余并在发生灾难时恢复 FlexGroup 。SVM DR 需要 SnapMirror 许可证。
+
+您应了解无法创建 FlexGroup SVM DR 关系的情况。
+
+* 已存在 FlexClone FlexGroup 配置
+* FlexGroup 卷包含 FabricPool 配置
+* FlexGroup 卷属于扇出或级联关系
+
+
+.关于此任务
+* 两个集群中的所有节点都必须与添加了 SVM DR 支持的节点运行相同的 ONTAP 版本（ ONTAP 9.9.1 或更高版本）。
+* 主站点和二级站点之间的 SVM DR 关系应运行正常，并且在主 SVM 和二级 SVM 上都应有足够的空间来支持 FlexGroup 卷。
+
+
+有关创建 SVM DR 关系的信息，请参见 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-dap/GUID-C6D7E4F1-76F0-44E7-909E-04BA68AE77A8.html?cp=7_3_5["管理 SnapMirror SVM 复制"]。
+
+.步骤
+. 在主站点上使用所需数量的成分卷创建 FlexGroup 卷。
++
+xref:create-task.adoc[创建 FlexGroup 卷]。
+
+. 更新二级站点的 SVM ： `snapmirror update -destination-path destination_svm_name ： -source-path source_svm_name ：`
+. 在二级站点上，验证 SnapMirror 关系是否运行正常： `snapmirror show`
++
+[listing]
+----
+cluster2::> snapmirror show
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vs1:        XDP  vs1_dst:     Snapmirrored
+                                      Idle           -         true    -
+----
+. 从二级站点上，验证新的 FlexGroup 卷及其成分卷是否存在： `snapmirror show -expand`
++
+[listing]
+----
+cluster2::> snapmirror show -expand
+                                                                       Progress
+Source            Destination Mirror  Relationship   Total             Last
+Path        Type  Path        State   Status         Progress  Healthy Updated
+----------- ---- ------------ ------- -------------- --------- ------- --------
+vs1:        XDP  vs1_dst:     Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src  XDP  vs1_dst:fg_src
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0001
+            XDP  vs1_dst:fg_src__0001
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0002
+            XDP  vs1_dst:fg_src__0002
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0003
+            XDP  vs1_dst:fg_src__0003
+                              Snapmirrored
+                                      Idle           -         true    -
+vs1:fg_src__0004
+            XDP  vs1_dst:fg_src__0004
+                              Snapmirrored
+                                      Idle           -         true    -
+6 entries were displayed.
+----
+

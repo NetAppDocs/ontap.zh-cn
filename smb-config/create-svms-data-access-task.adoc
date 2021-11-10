@@ -1,0 +1,70 @@
+---
+permalink: smb-config/create-svms-data-access-task.html 
+sidebar: sidebar 
+keywords: svm, cluster, data, access, smb, client, create, create an svm 
+summary: 如果集群中尚未至少有一个 SVM 来为 SMB 客户端提供数据访问，则必须创建一个 SVM 。 
+---
+= 创建 SVM ：
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果集群中尚未至少有一个 SVM 来为 SMB 客户端提供数据访问，则必须创建一个 SVM 。
+
+.步骤
+. 创建 SVM ： `vserver create -vserver vserver_name -rootvolume root_volume_name -aggregate aggregate_name -rootvolume-security-style ntfs -language C.UTF-8 -IPSpace IPspace_name`
++
+** 对 ` -rootvolume-security-style` 选项使用 NTFS 设置。
+** 使用默认 C.UTF-8 ` -language` 选项。
+** `IPSpace` 设置为可选设置。
+
+
+. 验证新创建的 SVM 的配置和状态： `vserver show -vserver vserver_name`
++
+`允许的协议` 字段必须包含 CIFS 。您可以稍后编辑此列表。
+
++
+`vserver Operational State` 字段必须显示 `running` state 。如果显示 `initializing` 状态，则表示某些中间操作（例如创建根卷）失败，您必须删除 SVM 并重新创建它。
+
+
+
+以下命令将在 IP 空间 ipspaceA 中创建用于数据访问的 SVM ：
+
+[listing]
+----
+cluster1::> vserver create -vserver vs1.example.com -rootvolume root_vs1 -aggregate aggr1
+-rootvolume-security-style ntfs -language C.UTF-8 -ipspace ipspaceA
+
+[Job 2059] Job succeeded:
+Vserver creation completed
+----
+以下命令显示创建的 SVM 的根卷为 1 GB ，并且已自动启动且处于 `running` 状态。根卷具有一个默认导出策略，该策略不包含任何规则，因此根卷在创建时不会导出。
+
+[listing]
+----
+cluster1::> vserver show -vserver vs1.example.com
+                                    Vserver: vs1.example.com
+                               Vserver Type: data
+                            Vserver Subtype: default
+                               Vserver UUID: b8375669-19b0-11e5-b9d1-00a0983d9736
+                                Root Volume: root_vs1
+                                  Aggregate: aggr1
+                                 NIS Domain: -
+                 Root Volume Security Style: ntfs
+                                LDAP Client: -
+               Default Volume Language Code: C.UTF-8
+                            Snapshot Policy: default
+                                    Comment:
+                               Quota Policy: default
+                List of Aggregates Assigned: -
+ Limit on Maximum Number of Volumes allowed: unlimited
+                        Vserver Admin State: running
+                  Vserver Operational State: running
+   Vserver Operational State Stopped Reason: -
+                          Allowed Protocols: nfs, cifs, fcp, iscsi, ndmp
+                       Disallowed Protocols: -
+                           QoS Policy Group: -
+                                Config Lock: false
+                               IPspace Name: ipspaceA
+----

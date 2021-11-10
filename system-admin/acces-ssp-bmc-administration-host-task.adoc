@@ -1,0 +1,65 @@
+---
+permalink: system-admin/acces-ssp-bmc-administration-host-task.html 
+sidebar: sidebar 
+keywords: access, sp, bmc, administration, host, node, management 
+summary: 您可以从管理主机登录到节点的 SP 以远程执行节点管理任务。 
+---
+= 从管理主机访问 SP/BMC
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以从管理主机登录到节点的 SP 以远程执行节点管理任务。
+
+必须满足以下条件：
+
+* 用于访问 SP 的管理主机必须支持 SSHv2 。
+* 您必须已设置用于访问 SP 的用户帐户。
++
+要访问 SP ，您的用户帐户必须已在创建时将 `ssecurity login create` 命令的 ` -application` 参数设置为 `sservice-processor` ，并将 ` -authmethod` 参数设置为 `password` 。
+
+
+
+[NOTE]
+====
+此任务会同时对 SP 和 BMC 执行适用场景。
+
+====
+如果 SP 配置为使用 IPv4 或 IPv6 地址，并且在 10 分钟内从主机尝试 SSH 登录连续五次失败，则 SP 将拒绝 SSH 登录请求并暂停与主机 IP 地址的通信 15 分钟。通信将在 15 分钟后恢复，您可以尝试重新登录到 SP 。
+
+ONTAP 会阻止您创建或使用系统预留名称（例如 "`root` " 和 "`naroot` " ）来访问集群或 SP 。
+
+.步骤
+. 从管理主机登录到 SP ：
++
+` * ssh 用户名@SP_IP_address*`
+
+. 出现提示时，输入 `username` 的密码。
++
+此时将显示 SP 提示符，指示您有权访问 SP 命令行界面。
+
+
+
+以下示例显示了如何使用用户帐户 `joe` 登录到 SP ，该帐户已设置为访问 SP 。
+
+[listing]
+----
+[admin_host]$ ssh joe@192.168.123.98
+joe@192.168.123.98's password:
+SP>
+----
+以下示例显示了如何使用 IPv6 全局地址或 IPv6 路由器公布的地址在为 IPv6 设置了 SSH 且为 IPv6 配置了 SP 的节点上登录到 SP 。
+
+[listing]
+----
+[admin_host]$ ssh joe@fd22:8b1e:b255:202::1234
+joe@fd22:8b1e:b255:202::1234's password:
+SP>
+----
+[listing]
+----
+[admin_host]$ ssh joe@fd22:8b1e:b255:202:2a0:98ff:fe01:7d5b
+joe@fd22:8b1e:b255:202:2a0:98ff:fe01:7d5b's password:
+SP>
+----

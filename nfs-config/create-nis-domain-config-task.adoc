@@ -1,0 +1,51 @@
+---
+permalink: nfs-config/create-nis-domain-config-task.html 
+sidebar: sidebar 
+keywords: create, nis, domain, configuration 
+summary: 如果在您的环境中使用网络信息服务（ Network Information Service ， NIS ）提供名称服务，则必须使用 vserver services name-service nis-domain create 命令为 SVM 创建 NIS 域配置。 
+---
+= 创建 NIS 域配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在您的环境中使用网络信息服务（ Network Information Service ， NIS ）提供名称服务，则必须使用 `vserver services name-service nis-domain create` 命令为 SVM 创建 NIS 域配置。
+
+在 SVM 上配置 NIS 域之前，所有已配置的 NIS 服务器都必须可用且可访问。
+
+如果计划使用 NIS 进行目录搜索，则 NIS 服务器中的映射每个条目不能超过 1 ， 024 个字符。请勿指定不符合此限制的 NIS 服务器。否则，依赖于 NIS 条目的客户端访问可能会失败。
+
+您可以创建多个 NIS 域。但是，您只能使用设置为 `active` 的选项。
+
+如果 NIS 数据库包含 `netgroup.byHost` 映射，则 ONTAP 可以使用它加快搜索速度。目录中的 `netgroup.byHost` 和 `netgroup` 映射必须始终保持同步，以避免客户端访问问题。从 ONTAP 9.7 开始，可以使用 `vserver services name-service nis-domain netgroup-database` 命令缓存 NIS `netgroup.byHost` 条目。
+
+不支持使用 NIS 进行主机名解析。
+
+.步骤
+. 创建 NIS 域配置：
++
+`vserver services name-service nis-domain create -vserver vs1 -domain _domain_name_ -active true _-servers IP_Addresses_`
+
++
+最多可以指定 10 个 NIS 服务器。
+
++
+[NOTE]
+====
+从 ONTAP 9.2 开始，字段 ` -nis-servers` 将取代字段 ` -servers` 。此新字段可以使用 NIS 服务器的主机名或 IP 地址。
+
+====
+. 验证是否已创建域：
++
+`vserver services name-service nis-domain show`
+
+
+
+以下命令将在 SVM vs1 上为 NIS 域 nisdomain 创建 NIS 域配置并使其处于活动状态，并且 NIS 服务器的 IP 地址为 192.0.2.180 ：
+
+[listing]
+----
+vs1::> vserver services name-service nis-domain create -vserver vs1
+-domain nisdomain -active true -nis-servers 192.0.2.180
+----

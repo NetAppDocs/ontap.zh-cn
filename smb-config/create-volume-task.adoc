@@ -1,0 +1,66 @@
+---
+permalink: smb-config/create-volume-task.html 
+sidebar: sidebar 
+keywords: create, volume, junction, point, properties, property, command, create a volume 
+summary: 您可以使用 volume create 命令创建卷并指定其接合点和其他属性。 
+---
+= 创建卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `volume create` 命令创建卷并指定其接合点和其他属性。
+
+SVM 安全模式必须为 NTFS ，并且 SMB 应设置并运行。
+
+卷必须包含 _junction path_ ，才能使其数据可供客户端使用。您可以在创建新卷时指定接合路径。如果在创建卷时未指定接合路径，则必须使用 `volume mount` 命令在 SVM 命名空间中 _mount_ 卷。
+
+.步骤
+. 创建具有接合点的卷： `volume create -vserver vserver_name -volume volume_name -aggregate aggregate_name -size ｛ integer ｛ KB_MB|GB_TB_PB] ｝ -security-style ntfs -junction-path junction_path]`
++
+` junction-path` 选项如下：
+
++
+** 直接位于 root 用户下，例如 ` /new_vol`
++
+您可以创建一个新卷并指定将其直接挂载到 SVM 根卷。
+
+** 在现有目录下，例如， ` /existing_dir/new_vol`
++
+您可以创建一个新卷并指定将其挂载到现有层次结构中的现有卷，以目录的形式表示。
+
+
+
++
+如果要在新目录（在新卷下的新层次结构中）中创建卷，例如， ` /new_dir/new_vol` ，则必须先创建一个接合到 SVM 根卷的新父卷。然后，您将在新父卷的接合路径（新目录）中创建新的子卷。
+
+. 验证是否已使用所需的接合点创建卷： `volume show -vserver vserver_name -volume volume_name -junction`
+
+
+以下命令将在 SVM vs1.example.com 和聚合 aggr1 上创建一个名为 users1 的新卷。新卷可从 ` /users` 获得。此卷的大小为 750 GB ，其卷保证类型为 volume （默认值）。
+
+[listing]
+----
+cluster1::> volume create -vserver vs1.example.com -volume users -aggregate aggr1 -size 750g -junction-path /users
+[Job 1642] Job succeeded: Successful
+
+cluster1::> volume show -vserver vs1.example.com -volume users -junction
+                          Junction                 Junction
+Vserver           Volume  Active   Junction Path   Path Source
+----------------- ------- -------- --------------- -----------
+vs1.example.com   users1  true     /users          RW_volume
+----
+以下命令会在 SVM"`vs1.example.com`" 和聚合 "`aggr1` " 上创建一个名为 "`home4` " 的新卷。` SVM 的命名空间中已存在目录` /eng/ ` ，新卷可从` /eng/home ` 访问，该目录将成为` /eng/ 命名空间的主目录。此卷的大小为 750 GB ，其卷保证类型为 `volume` （默认为）。
+
+[listing]
+----
+cluster1::> volume create -vserver vs1.example.com -volume home4 -aggregate aggr1 -size 750g -junction-path /eng/home
+[Job 1642] Job succeeded: Successful
+
+cluster1::> volume show -vserver vs1.example.com -volume home4 -junction
+                         Junction                 Junction
+Vserver          Volume  Active   Junction Path   Path Source
+---------------- ------- -------- --------------- -----------
+vs1.example.com  home4   true     /eng/home       RW_volume
+----

@@ -1,0 +1,32 @@
+---
+permalink: volumes/specify-windows-users-quotas-concept.html 
+sidebar: sidebar 
+keywords: how to, specify, windows users, for quotas 
+summary: 您可以使用以下三种格式之一为配额指定 Windows 用户： Windows 2000 之前格式的 Windows 名称， SID 或用户 SID 所拥有的文件或目录。 
+---
+= 如何为配额指定 Windows 用户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用以下三种格式之一为配额指定 Windows 用户： Windows 2000 之前格式的 Windows 名称， SID 或用户 SID 所拥有的文件或目录。
+
+要为配额指定 Windows 用户，可以使用以下格式之一：
+
+* Windows 2000 之前格式的 Windows 名称。
+* Windows 以文本格式显示的安全 ID （ SID ），例如 S-1-5-32-544 。
+* 此用户的 SID 拥有 ACL 的文件或目录的名称。
++
+[NOTE]
+====
+如果指定文件或目录名称，则必须选择一个文件或目录，只要用户帐户仍在系统上，该文件或目录就会持续。
+
+要使 ONTAP 从 ACL 获取 SID ， ACL 必须有效。
+
+如果文件或目录位于 UNIX 模式的 qtree 中，或者存储系统使用 UNIX 模式进行用户身份验证，则 ONTAP 会将用户配额应用于其 * UID * 而非 SID 与文件或目录匹配的用户。
+
+为配额指定文件或目录名称以标识用户不会通过发生原因 ONTAP 将配额应用于该文件或目录。
+
+====
+

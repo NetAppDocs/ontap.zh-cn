@@ -1,0 +1,51 @@
+---
+permalink: system-admin/display-nodes-cluster-task.html 
+sidebar: sidebar 
+keywords: display, information, node, cluster, name, healthy, epsilon 
+summary: 您可以显示节点名称，节点是否运行状况良好以及它们是否有资格加入集群。在高级权限级别，您还可以显示节点是否持有 epsilon 。 
+---
+= 显示有关集群中节点的信息：
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以显示节点名称，节点是否运行状况良好以及它们是否有资格加入集群。在高级权限级别，您还可以显示节点是否持有 epsilon 。
+
+.步骤
+. 要显示有关集群中节点的信息，请使用 `cluster show` 命令。
++
+如果您希望输出显示某个节点是否持有 epsilon ，请在高级权限级别运行命令。
+
+
+
+以下示例显示了有关四节点集群中所有节点的信息：
+
+[listing]
+----
+
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+node1                 true    true
+node2                 true    true
+node3                 true    true
+node4                 true    true
+----
+以下示例显示了有关在高级权限级别名为 "`node1` " 的节点的详细信息：
+
+[listing]
+----
+
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by support personnel.
+Do you want to continue? {y|n}: y
+
+cluster1::*> cluster show -node node1
+
+       Node: node1
+  Node UUID: a67f9f34-9d8f-11da-b484-000423b6f094
+    Epsilon: false
+Eligibility: true
+     Health: true
+----

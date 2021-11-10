@@ -1,0 +1,35 @@
+---
+permalink: nas-audit/manage-authorization-policy-change-event-concept.html 
+sidebar: sidebar 
+keywords: manage, authorization-policy-change, event 
+summary: 如果为 Storage Virtual Machine （ SVM ）配置了 authorization-policy-change 事件并启用了审核，则会生成审核事件。 
+---
+= 管理 authorization-policy-change 事件
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果为 Storage Virtual Machine （ SVM ）配置了 authorization-policy-change 事件并启用了审核，则会生成审核事件。
+
+每当为 CIFS 用户和 CIFS 组授予或撤消授权权限时，都会生成事件 ID 为 4704 和 4705 的 authorization-policy-change 事件。使用 `vserver cifs users-and-groups privilege` related 命令分配或撤销授权权限时，将生成 authorization-policy-change 事件。
+
+以下示例显示了为 CIFS 用户组分配授权权限时生成的授权策略事件， ID 为 4704 ：
+
+[listing]
+----
+netapp-clus1::*> vserver cifs users-and-groups privilege add-privilege -user-or-group-name testcifslocalgroup -privileges *
+- System
+  - Provider
+   [ Name]  NetApp-Security-Auditing
+   [ Guid]  {3CB2A168-FE19-4A4E-BDAD-DCF422F13473}
+   EventID 4704
+   EventName User Right Assigned
+   ...
+   ...
+  TargetUserOrGroupName testcifslocalgroup
+  TargetUserOrGroupDomainName NETAPP-CLUS1
+  TargetUserOrGroupSid S-1-5-21-2447422786-1297661003-4197201688-1004;
+  PrivilegeList SeTcbPrivilege;SeBackupPrivilege;SeRestorePrivilege;SeTakeOwnershipPrivilege;SeSecurityPrivilege;SeChangeNotifyPrivilege;
+  TargetType CIFS
+----

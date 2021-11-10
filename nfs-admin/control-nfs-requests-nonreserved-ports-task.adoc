@@ -1,0 +1,56 @@
+---
+permalink: nfs-admin/control-nfs-requests-nonreserved-ports-task.html 
+sidebar: sidebar 
+keywords: control, nfs, request, nonreserved, port 
+summary: 您可以通过启用 -mount-rootonly 选项拒绝来自非预留端口的 NFS 挂载请求。要拒绝来自非保留端口的所有 NFS 请求，您可以启用 -nfs-rootonly 选项。 
+---
+= 控制来自非保留端口的 NFS 请求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过启用 ` -mount-rootonly` 选项来拒绝来自非预留端口的 NFS 挂载请求。要拒绝来自非预留端口的所有 NFS 请求，您可以启用 ` -nfs-rootonly` 选项。
+
+默认情况下，选项 ` -mount-rootonly` 为 `enabled` 。
+
+默认情况下，选项 ` -nfs-rootonly` 为 `d已标记` 。
+
+这些选项不适用于空操作步骤。
+
+.步骤
+. 执行以下操作之一：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 输入命令 ... 
+
+
+ a| 
+允许来自非保留端口的 NFS 挂载请求
+ a| 
+`vserver nfs modify -vserver vserver_name -mount-rootonly disabled`
+
+
+
+ a| 
+拒绝来自非保留端口的 NFS 挂载请求
+ a| 
+`vserver nfs modify -vserver vserver_name -mount-rootonly enabled`
+
+
+
+ a| 
+允许来自非保留端口的所有 NFS 请求
+ a| 
+`vserver nfs modify -vserver vserver_name -nfs-rootonly disabled`
+
+
+
+ a| 
+拒绝来自非保留端口的所有 NFS 请求
+ a| 
+`vserver nfs modify -vserver vserver_name -nfs-rootonly enabled`
+
+|===
+

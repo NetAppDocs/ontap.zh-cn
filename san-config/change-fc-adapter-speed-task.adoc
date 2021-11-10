@@ -1,0 +1,50 @@
+---
+permalink: san-config/change-fc-adapter-speed-task.html 
+sidebar: sidebar 
+keywords: change, fc adapter, speed 
+summary: 您应将适配器目标端口速度设置为与其连接的设备速度匹配，而不是使用自动协商。在接管 / 交还或其他中断后，设置为自动协商的端口可能需要较长时间才能重新连接。 
+---
+= 更改 FC 适配器速度
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应将适配器目标端口速度设置为与其连接的设备速度匹配，而不是使用自动协商。在接管 / 交还或其他中断后，设置为自动协商的端口可能需要较长时间才能重新连接。
+
+使用此适配器作为主端口的所有 LIF 都必须脱机。
+
+由于此任务包含集群中的所有 Storage Virtual Machine （ SVM ）和所有 LIF ，因此您必须使用 ` 主端口` 和 ` 主端口` 参数来限制此操作的范围。如果不使用这些参数，则操作适用场景 all LIF 将在集群中运行，这可能不是理想的做法。
+
+.步骤
+. 使此适配器上的所有 LIF 脱机：
++
+`network interface modify -vserver * -lif * ｛ -home-node node1 -home-port 0c ｝ -status-admin down`
+
+. 使适配器脱机：
++
+`network fcp adapter modify -node node1 -adapter 0c -state down`
+
++
+如果适配器未脱机，您也可以从系统上的相应适配器端口拔下缆线。
+
+. 确定端口适配器的最大速度：
++
+`fcp adapter show -instance`
+
++
+您不能将适配器速度修改为超过最大速度。
+
+. 更改适配器速度：
++
+`network fcp adapter modify -node node1 -adapter 0c -speed 16`
+
+. 使适配器联机：
++
+`network fcp adapter modify -node node1 -adapter 0c -state up`
+
+. 使适配器上的所有 LIF 联机：
++
+`network interface modify -vserver * -lif * ｛ -home-node node1 -home-port 0c ｝ -status-admin up`
+
+

@@ -1,0 +1,49 @@
+---
+permalink: data-protection/create-snapshot-job-schedule-task.html 
+sidebar: sidebar 
+keywords: create, snapshot, job, schedule 
+summary: Snapshot 策略至少需要一个 Snapshot 副本作业计划。您可以使用 job schedule cron create 命令创建作业计划。 
+---
+= 创建 Snapshot 作业计划
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+Snapshot 策略至少需要一个 Snapshot 副本作业计划。您可以使用 `job schedule cron create` 命令创建作业计划。
+
+默认情况下， ONTAP 通过在作业计划名称中附加时间戳来构成 Snapshot 副本的名称。
+
+如果您同时为月份中的日期和一周中的日期指定值，则会单独考虑这些值。例如，日期规范为 `星期五` 和日期规范为 `13` 的 cron 计划会在每个星期五和每个月的第 13 天运行，而不仅仅是在第 13 个星期五运行。
+
+.步骤
+. 创建作业计划：
++
+`job schedule cron create -name _job_name_ -month month -dayofweek _day_of_week_ -Day _day_of_month_ -hour _hour_ -minute _minute_`
+
++
+对于 ` - 月` ， ` - 天 / 周` 和 ` - 小时` ，您可以指定 `所有` 来分别按每月，一周中的一天和每小时运行作业。
+
++
+从 ONTAP 9.10.1 开始，您可以在作业计划中包含 Vserver ：
+
++
+`job schedule cron create -name _job_name_ -vserver _vserver_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
+
++
+以下示例将创建一个名为 `myweekly` 的作业计划，该计划将在星期六凌晨 3 ： 00 运行：
+
++
+[listing]
+----
+cluster1::> job schedule cron create -name myweekly -dayofweek "Saturday" -hour 3 -minute 0
+----
++
+以下示例将创建一个名为 `myweeklymulti` 的计划，该计划指定多个日期，小时和分钟：
+
++
+[listing]
+----
+job schedule cron create -name myweeklymulti -dayofweek "Monday,Wednesday,Sunday" -hour 3,9,12 -minute 0,20,50
+----
+

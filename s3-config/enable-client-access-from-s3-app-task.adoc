@@ -1,0 +1,51 @@
+---
+permalink: s3-config/enable-client-access-from-s3-app-task.html 
+sidebar: sidebar 
+keywords: enable, client, access, s3 app 
+summary: 要使 S3 客户端应用程序能够访问 ONTAP S3 服务器， ONTAP S3 管理员必须向 S3 用户提供配置信息。 
+---
+= 从 S3 应用程序启用客户端访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要使 S3 客户端应用程序能够访问 ONTAP S3 服务器， ONTAP S3 管理员必须向 S3 用户提供配置信息。
+
+S3 客户端应用程序必须能够使用 AWS 签名版本 4 与 ONTAP S3 服务器进行身份验证。ONTAP S3 不支持早期签名版本。
+
+ONTAP S3 管理员必须已在存储分段策略或对象服务器策略中创建 S3 用户并为其授予以个人用户或组成员身份进行访问的权限。
+
+S3 客户端应用程序必须能够解析 ONTAP S3 服务器名称，这要求 ONTAP S3 管理员为 S3 服务器的 LIF 提供 S3 服务器名称（ FQDN ）和 IP 地址。
+
+要访问 ONTAP S3 存储分段， S3 客户端应用程序上的用户将输入 ONTAP S3 管理员提供的信息。
+
+从 ONTAP 9.1.1 开始， ONTAP S3 服务器支持以下 AWS 客户端功能：
+
+* 用户定义的对象元数据
++
+使用 PUT （或 POST ）创建对象时，可以将一组键值对作为元数据分配给对象。对对象执行 GET 或 HEAD 操作时，将返回用户定义的元数据以及系统元数据。
+
+* 对象标记
++
+可以为对象分配一组单独的键值对作为标记。与元数据不同，标记是使用 REST API 独立于对象创建和读取的，它们是在创建对象时或之后的任何时间实施的。
+
++
+[NOTE]
+====
+要使客户端能够获取和放置标记信息，需要允许使用存储分段或组策略执行操作 `GetObjectTagging` ， `PutObjectTagging` 和 `DDeleteObjectTagging` 。
+
+====
+
+
+有关详细信息，请参见 AWS S3 文档。
+
+.步骤
+. 通过输入 S3 服务器名称和 CA 证书，使用 ONTAP S3 服务器对 S3 客户端应用程序进行身份验证。
+. 输入以下信息，在 S3 客户端应用程序上对用户进行身份验证：
++
+** S3 服务器名称（ FQDN ）和存储分段名称
+** 用户的访问密钥和机密密钥
+
+
+

@@ -1,0 +1,31 @@
+---
+permalink: data-protection/modify-snapshot-copy-reserve-task.html 
+sidebar: sidebar 
+keywords: modify, snapshot, copy, reserve 
+summary: 您可能需要配置较大的 Snapshot 副本预留，以防止 Snapshot 副本使用为活动文件系统预留的空间。当您不再需要为 Snapshot 副本留出那么多空间时，可以减少 Snapshot 副本预留。 
+---
+= 修改 Snapshot 副本预留
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可能需要配置较大的 Snapshot 副本预留，以防止 Snapshot 副本使用为活动文件系统预留的空间。当您不再需要为 Snapshot 副本留出那么多空间时，可以减少 Snapshot 副本预留。
+
+.步骤
+. 修改 Snapshot 副本预留：
++
+`volume modify -vserver _svm_ -volume _volume_-percent-snapshot-space _snap_reserve_s`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将 `vol1` 的 Snapshot 副本预留设置为 10% ：
+
++
+[listing]
+----
+cluster1::> volume modify -vserver vs0 -volume vol1 -percent-snapshot-space 10
+----
+

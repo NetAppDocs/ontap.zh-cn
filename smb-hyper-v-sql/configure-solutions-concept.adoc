@@ -1,0 +1,49 @@
+---
+permalink: smb-hyper-v-sql/configure-solutions-concept.html 
+sidebar: sidebar 
+keywords: configure, microsoft, hyper, v, sql, server, smb, solution, virtual, machine, gile 
+summary: 您可以使用持续可用的 SMB 3.0 及更高版本文件共享将 Hyper-V 虚拟机文件或 SQL Server 系统数据库和用户数据库存储在 SVM 中的卷上，同时为计划内和计划外事件提供无中断运行（ NDO ）。 
+---
+= 配置基于 SMB 的适用于 Microsoft Hyper-V 和 SQL Server 的 ONTAP 解决方案
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用持续可用的 SMB 3.0 及更高版本的文件共享将 Hyper-V 虚拟机文件或 SQL Server 系统数据库和用户数据库存储在 SVM 中的卷上，同时为计划内和计划外事件提供无中断运行（ NDO ）。
+
+
+
+== 基于 SMB 的 Microsoft Hyper-V
+
+要创建基于 SMB 解决方案的 Hyper-V ，必须先配置 ONTAP ，以便为 Microsoft Hyper-V 服务器提供存储服务。此外，您还必须配置 Microsoft 集群（如果使用集群配置）， Hyper-V 服务器，与 CIFS 服务器托管的共享的持续可用 SMB 3.0 连接以及备份服务（可选），以保护存储在 SVM 卷上的虚拟机文件。
+
+[NOTE]
+====
+Hyper-V 服务器必须在 Windows 2012 Server 或更高版本上进行配置。独立和集群 Hyper-V 服务器配置均受支持。
+
+====
+* 有关创建 Microsoft 集群和 Hyper-V 服务器的信息，请参见 Microsoft 网站。
+* SnapManager for Hyper-V 是一款基于主机的应用程序，可用于提供基于 Snapshot 副本的快速备份服务，旨在与基于 SMB 的 Hyper-V 配置集成。
++
+有关将 SnapManager 与基于 SMB 的 Hyper-V 配置结合使用的信息，请参见 _Hyper-V SnapManager 安装和管理指南 _ 。
+
+
+
+
+
+== 基于 SMB 的 Microsoft SQL Server
+
+要通过 SMB 解决方案创建 SQL Server ，必须先配置 ONTAP ，以便为 Microsoft SQL Server 应用程序提供存储服务。此外，您还必须配置 Microsoft 集群（如果使用的是集群配置）。然后，您可以在 Windows 服务器上安装和配置 SQL Server ，并创建持续可用的 SMB 3.0 连接以连接到 CIFS 服务器托管的共享。您可以选择配置备份服务来保护存储在 SVM 卷上的数据库文件。
+
+[NOTE]
+====
+必须在 Windows 2012 Server 或更高版本上安装和配置 SQL Server 。独立配置和集群配置均受支持。
+
+====
+* 有关创建 Microsoft 集群以及安装和配置 SQL Server 的信息，请参见 Microsoft 网站。
+* 适用于 Microsoft SQL Server 的 SnapManager 是一款基于主机的应用程序，它有助于提供基于 Snapshot 副本的快速备份服务，旨在通过 SMB 配置与 SQL Server 集成。
++
+有关使用适用于 Microsoft SQL Server 的 SnapManager 的信息，请参见 _SQL SnapManager for Microsoft SQL Server 安装和管理指南 _ 。
+
+

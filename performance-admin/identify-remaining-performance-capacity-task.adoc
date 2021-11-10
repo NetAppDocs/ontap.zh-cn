@@ -1,0 +1,95 @@
+---
+permalink: performance-admin/identify-remaining-performance-capacity-task.html 
+sidebar: sidebar 
+keywords: identify, remaining, performance, capacity 
+summary: 性能容量或余量用于衡量在资源上的工作负载性能开始受到延迟影响之前，您可以在节点或聚合上执行多少工作。了解集群上的可用性能容量有助于您配置和平衡工作负载。 
+---
+= 确定剩余性能容量
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+性能容量（或 _余 量 _ ）用于衡量在资源上的工作负载性能开始受到延迟影响之前，您可以在节点或聚合上执行多少工作。了解集群上的可用性能容量有助于您配置和平衡工作负载。
+
+此任务需要高级权限级别命令。
+
+您可以对 ` -object` 选项使用以下值来收集和显示性能余量统计信息：
+
+* 对于 CPU ，请 `resource_er余 量 _cpu` 。
+* 对于聚合，请 `resource_sc余 量 _aggr` 。
+
+
+您也可以使用 ONTAP System Manager 和 Active IQ Unified Manager 完成此任务。
+
+.步骤
+. 更改为高级权限级别：
++
+`set -privilege advanced`
+
+. 开始实时性能余量统计信息收集：
++
+`satictics start – object resource_e余 _cpu_aggr`
+
++
+有关完整的命令语法，请参见手册页。
+
+. 显示实时性能余量统计信息：
++
+`satictics show -object resource_sc余 _cpu_aggr`
+
++
+有关完整的命令语法，请参见手册页。
+
+. 返回到管理权限：
++
+`set -privilege admin`
+
+
+
+以下示例显示了集群节点的平均每小时性能余量统计信息。
+
+您可以通过从 `optimal_point_utilization` 计数器中减去 `current_utilization` 计数器来计算节点的可用性能容量。在此示例中， `CPU_sti2520-213` 的利用率容量为 -14% （ 72%-86% ），这表明 CPU 在过去一小时内平均已过度利用。
+
+您可以指定 `EMA_daily` ， `EMA_weekly` 或 `EMA_monthly` 来获取较长时间内的平均信息。
+
+[listing]
+----
+sti2520-2131454963690::*> statistics show -object resource_headroom_cpu -raw -counter ewma_hourly
+  (statistics show)
+
+Object: resource_headroom_cpu
+Instance: CPU_sti2520-213
+Start-time: 2/9/2016 16:06:27
+End-time: 2/9/2016 16:06:27
+Scope: sti2520-213
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    ewma_hourly                                                     -
+                         current_ops                             4376
+                     current_latency                            37719
+                 current_utilization                               86
+                   optimal_point_ops                             2573
+               optimal_point_latency                             3589
+           optimal_point_utilization                               72
+     optimal_point_confidence_factor                                1
+
+Object: resource_headroom_cpu
+Instance: CPU_sti2520-214
+Start-time: 2/9/2016 16:06:27
+End-time: 2/9/2016 16:06:27
+Scope: sti2520-214
+
+    Counter                                                     Value
+    -------------------------------- --------------------------------
+    ewma_hourly                                                     -
+                         current_ops                                0
+                     current_latency                                0
+                 current_utilization                                0
+                   optimal_point_ops                                0
+               optimal_point_latency                                0
+           optimal_point_utilization                               71
+     optimal_point_confidence_factor                                1
+2 entries were displayed.
+----

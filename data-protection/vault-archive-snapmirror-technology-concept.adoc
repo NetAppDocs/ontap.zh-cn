@@ -1,0 +1,63 @@
+---
+permalink: data-protection/vault-archive-snapmirror-technology-concept.html 
+sidebar: sidebar 
+keywords: vault, archiving, snapmirror, technology 
+summary: SnapMirror 存储策略取代了 ONTAP 9.3 及更高版本中的 SnapVault 技术。您可以使用 SnapMirror 存储策略进行磁盘到磁盘 Snapshot 副本复制，以满足标准合规性和其他监管相关目的。在 SnapMirror 关系中，目标通常仅包含源卷中当前的 Snapshot 副本，而存储目标则通常保留较长时间内创建的时间点 Snapshot 副本。 
+---
+= 使用 SnapMirror 技术进行存储归档
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror 存储策略取代了 ONTAP 9.3 及更高版本中的 SnapVault 技术。您可以使用 SnapMirror 存储策略进行磁盘到磁盘 Snapshot 副本复制，以满足标准合规性和其他监管相关目的。在 SnapMirror 关系中，目标通常仅包含源卷中当前的 Snapshot 副本，而存储目标则通常保留较长时间内创建的时间点 Snapshot 副本。
+
+您可能希望在 20 年的时间内保留数据的每月 Snapshot 副本，例如，为了符合政府对您企业的会计规定。由于无需从存储提供数据，因此您可以在目标系统上使用速度较慢，成本较低的磁盘。
+
+下图说明了 SnapMirror 存储数据保护关系。
+
+image::../media/snapvault-data-protection.gif[SnapVault 数据保护]
+
+
+
+== 如何初始化存储数据保护关系
+
+此关系的 SnapMirror 策略用于定义基线内容以及任何更新。
+
+默认存储策略 `XDPDefault` 下的基线传输会为源卷创建 Snapshot 副本，然后将该副本及其引用的数据块传输到目标卷。与 SnapMirror 关系不同，存储备份不会在基线中包含较早的 Snapshot 副本。
+
+
+
+== 如何更新存储数据保护关系
+
+更新是异步的，遵循您配置的计划。您在关系的策略中定义的规则可确定更新中要包含哪些新 Snapshot 副本以及要保留多少副本。在策略中定义的标签（ `m例如 " 每月，` " ）必须与源上 Snapshot 策略中定义的一个或多个标签匹配。否则，复制将失败。
+
+在 `XDPDefault` 策略下的每次更新时， SnapMirror 都会传输自上次更新以来创建的 Snapshot 副本，前提是这些副本的标签与策略规则中定义的标签匹配。在 `XDPDefault` 策略的 `snapmirror policy show` 命令的以下输出中，请注意以下几点：
+
+* `Create Snapshot` 为 "`false` " ，表示在 SnapMirror 更新关系时， `XDPDefault` 不会创建 Snapshot 副本。
+* `XDPDefault` 具有规则 " `daily` " 和 "`weekly` " ，表示在 SnapMirror 更新关系时传输源上具有匹配标签的所有 Snapshot 副本。
+
+
+[listing]
+----
+cluster_dst::> snapmirror policy show -policy XDPDefault -instance
+
+                     Vserver: vs0
+      SnapMirror Policy Name: XDPDefault
+      SnapMirror Policy Type: vault
+                Policy Owner: cluster-admin
+                 Tries Limit: 8
+           Transfer Priority: normal
+   Ignore accesstime Enabled: false
+     Transfer Restartability: always
+ Network Compression Enabled: false
+             Create Snapshot: false
+                     Comment: Default policy for XDP relationships with daily and weekly
+                              rules.
+       Total Number of Rules: 2
+                  Total Keep: 59
+                       Rules: SnapMirror Label     Keep  Preserve Warn Schedule Prefix
+                              ----------------     ----  -------- ---- -------- ------
+                              daily                   7  false       0 -        -
+                              weekly                 52  false       0 -        -
+----

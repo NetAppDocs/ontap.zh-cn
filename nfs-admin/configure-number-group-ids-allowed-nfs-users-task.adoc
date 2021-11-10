@@ -1,0 +1,124 @@
+---
+permalink: nfs-admin/configure-number-group-ids-allowed-nfs-users-task.html 
+sidebar: sidebar 
+keywords:  
+summary: 默认情况下，在使用 Kerberos \ （ RPCSEC_GSS ）身份验证处理 NFS 用户凭据时， ONTAP 最多支持 32 个组 ID 。使用 AUTH_SYS 身份验证时，默认的最大组 ID 数为 16 ，如 RFC 5531 中所定义。如果用户所属的组超过默认组数，则可以将最大值增加到 1 ， 024 。 
+---
+= 配置 NFS 用户允许的组 ID 数量
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+默认情况下，在使用 Kerberos （ RPCSEC_GSS ）身份验证处理 NFS 用户凭据时， ONTAP 最多支持 32 个组 ID 。使用 AUTH_SYS 身份验证时，默认的最大组 ID 数为 16 ，如 RFC 5531 中所定义。如果用户所属的组超过默认组数，则可以将最大值增加到 1 ， 024 。
+
+如果用户凭据中的组 ID 超过默认数量，则其余组 ID 将被截断，并且用户在尝试从存储系统访问文件时可能会收到错误。您应将每个 SVM 的最大组数设置为表示环境中最大组数的数字。
+
+下表显示了 `vserver nfs modify` 命令的两个参数，用于确定三种示例配置中的最大组 ID 数：
+
+[cols="3*"]
+|===
+| Parameters | 设置 | 生成的组 ID 限制 
+
+
+ a| 
+` 扩展组限制`
+
+` -auth-sys-extended-groups`
+ a| 
+`32`
+
+`d已标记`
+
+这些是默认设置。
+ a| 
+RPCSEC_GSS ： 32
+
+AUTH_SYS ： 16
+
+
+
+ a| 
+` 扩展组限制`
+
+` -auth-sys-extended-groups`
+ a| 
+`256`
+
+`d已标记`
+ a| 
+RPCSEC_GSS ： 256
+
+AUTH_SYS ： 16
+
+
+
+ a| 
+` 扩展组限制`
+
+` -auth-sys-extended-groups`
+ a| 
+`512`
+
+`已启用`
+ a| 
+RPCSEC_GSS ： 512
+
+AUTH_SYS ： 512
+
+|===
+[NOTE]
+====
+某些较早的 NFS 客户端可能与 AUTH_SYS 扩展组不兼容。
+
+====
+.步骤
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 执行所需的操作：
++
+[cols="2*"]
+|===
+| 如果要设置允许的最大辅助组数 ... | 输入命令 ... 
+
+
+ a| 
+仅适用于 RPCSEC_GSS ，并保持 AUTH_SYS 设置为默认值 16
+ a| 
+` +vserver nfs modify -vserver vserver_name -extended-groups-limit ｛ 32-1024 ｝ -auth-sys-extended-groups disabled+`
+
+
+
+ a| 
+适用于 RPCSEC_GSS 和 AUTH_SYS
+ a| 
+` +vserver nfs modify -vserver vserver_name -extended-groups-limit ｛ 32-1024 ｝ -auth-sys-extended-groups enabled+`
+
+|===
+. 验证 ` -extended-groups-limit` 值并验证 AUTH_SYS 是否正在使用扩展组： `vserver nfs show -vserver vserver_name -fields auth-sys-extended-groups ， extended-groups-limit`
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+
+
+以下示例将为 AUTH_SYS 身份验证启用扩展组，并将 AUTH_SYS 和 RPCSEC_GSS 身份验证的最大扩展组数设置为 512 。这些更改仅适用于访问名为 vs1 的 SVM 的客户端：
+
+[listing]
+----
+vs1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use
+         them only when directed to do so by NetApp personnel.
+Do you want to continue? {y|n}: y
+
+vs1::*> vserver nfs modify -vserver vs1 -auth-sys-extended-groups enabled -extended-groups-limit 512
+
+vs1::*> vserver nfs show -vserver vs1 -fields auth-sys-extended-groups,extended-groups-limit
+vserver auth-sys-extended-groups extended-groups-limit
+------- ------------------------ ---------------------
+vs1     enabled                  512
+
+vs1::*> set -privilege admin
+----

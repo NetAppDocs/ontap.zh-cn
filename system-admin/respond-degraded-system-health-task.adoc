@@ -1,0 +1,33 @@
+---
+permalink: system-admin/respond-degraded-system-health-task.html 
+sidebar: sidebar 
+keywords: respond, degraded, system, health, status, show, alerts, corrective, probable, cause 
+summary: 当系统的运行状况处于降级状态时，您可以显示警报，阅读可能的发生原因和更正操作，显示有关降级子系统的信息并解决问题。此外，还会显示禁止的警报，以便您可以修改这些警报并查看它们是否已确认。 
+---
+= 响应降级的系统运行状况
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当系统的运行状况处于降级状态时，您可以显示警报，阅读可能的发生原因和更正操作，显示有关降级子系统的信息并解决问题。此外，还会显示禁止的警报，以便您可以修改这些警报并查看它们是否已确认。
+
+您可以通过查看 AutoSupport 消息或 EMS 事件或使用 `ssystem health` 命令来发现已生成警报。
+
+.步骤
+. 使用 `ssystem health alert show` 命令查看影响系统运行状况的警报。
+. 阅读警报的可能发生原因，可能影响和更正操作，确定您是可以解决问题还是需要更多信息。
+. 如果您需要更多信息，请使用 `ssystem health alert show -instance` 命令查看可用于此警报的追加信息。
+. 使用带有 ` 确认` 参数的 `ssystem health alert modify` 命令指示您正在处理特定警报。
+. 按照警报中的 `Corrective Actions` 字段所述，采取更正措施解决问题。
++
+更正操作可能包括重新启动系统。
+
++
+解决问题后，系统将自动清除警报。如果子系统没有其他警报，则子系统的运行状况将更改为 `正常` 。如果所有子系统的运行状况均正常，则整体系统运行状况将更改为 `正常` 。
+
+. 使用 `ssystem health status show` 命令确认系统运行状况为 `OK` 。
++
+如果系统运行状况为 Not `OK` ，请重复此操作步骤。
+
+

@@ -1,0 +1,47 @@
+---
+permalink: smb-admin/home-directory-config-concept.html 
+sidebar: sidebar 
+keywords: create, additional, home, directory, configuration, variable, enable, customize, additional home directory configurations 
+summary: '您可以使用 %w ， %d 和 %u 变量创建其他主目录配置，从而可以自定义主目录配置以满足您的需求。' 
+---
+= 其他主目录配置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 ` %w` ， ` %d` 和 ` %u` 变量创建其他主目录配置，从而可以自定义主目录配置以满足您的需求。
+
+您可以在共享名称和搜索路径中组合使用变量和静态字符串来创建多个主目录配置。下表提供了一些示例，用于说明如何创建不同的主目录配置：
+
+|===
+| 当 ` /vol1/user` 包含主目录时创建的路径 ... | 共享命令 ... 
+
+
+ a| 
+要创建共享路径 ` \\vs1\~win_username` 以将用户定向到 ` /vol1/user/win_username`
+ a| 
+`vserver cifs share create -share-name ~ %w -path %w -share-properties oplocks ， browable ， changenotify ， homedirectory`
+
+
+
+ a| 
+要创建共享路径 ` \\vs1\win_username` 以将用户定向到 ` /vol1/user/domain/win_username`
+ a| 
+`vserver cifs share create -share-name %w -path %d/%w -share-properties oplocks ， browable ， changenotify ， homedirectory`
+
+
+
+ a| 
+要创建共享路径 ` \\vs1\win_username` 以将用户定向到 ` /vol1/user/unix_username` ，请执行以下操作
+ a| 
+`vserver cifs share create -share-name %w -path %u -share-properties oplocks ， browable ， changenotify ， homedirectory`
+
+
+
+ a| 
+创建共享路径 ` \\vs1\unix_username` ，以将用户定向到 ` /vol1/user/unix_username`
+ a| 
+`vserver cifs share create -share-name %u -path %u -share-properties oplocks ， browable ， changenotify ， homedirectory`
+
+|===

@@ -1,0 +1,38 @@
+---
+permalink: snaplock/mount-snaplock-volume-task.html 
+sidebar: sidebar 
+keywords: mount, snaplock, volume, junction, path, svm, nas, client, access 
+summary: 您可以将 SnapLock 卷挂载到 SVM 命名空间中的接合路径以供 NAS 客户端访问。 
+---
+= 挂载 SnapLock 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将 SnapLock 卷挂载到 SVM 命名空间中的接合路径以供 NAS 客户端访问。
+
+SnapLock 卷必须处于联机状态。
+
+.关于此任务
+* 您只能将 SnapLock 卷挂载到 SVM 的根目录下。
+* 不能将常规卷挂载到 SnapLock 卷下。
+
+
+.步骤
+. 挂载 SnapLock 卷：
++
+` * volume mount -vserver _svm_name_ -volume _volume_name_ -junction-path _path_*`
+
++
+有关完整的选项列表，请参见命令手册页。
+
++
+以下命令会将名为 `vol1` 的 SnapLock 卷挂载到 `vs1` 命名空间中的接合路径 ` /sales` ：
+
++
+[listing]
+----
+cluster1::> volume mount -vserver vs1 -volume vol1 -junction-path /sales
+----
+

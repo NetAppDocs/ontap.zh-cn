@@ -1,0 +1,40 @@
+---
+permalink: smb-admin/map-administrators-group-root-task.html 
+sidebar: sidebar 
+keywords: cifs, client, environment, storage, virtual, machine, svm, multiprotocol, storage, system, windows, account, root, privilege, svm, sufficient, user, right, map the administrators group to root 
+summary: 如果您的环境中只有 CIFS 客户端，并且您的 Storage Virtual Machine （ SVM ）设置为多协议存储系统，则必须至少有一个 Windows 帐户具有访问 SVM 上文件的 root 权限； 否则，您将无法管理 SVM ，因为您没有足够的用户权限。 
+---
+= 将管理员组映射到 root
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您的环境中只有 CIFS 客户端，并且您的 Storage Virtual Machine （ SVM ）设置为多协议存储系统，则必须至少有一个 Windows 帐户具有访问 SVM 上文件的 root 权限； 否则，您将无法管理 SVM ，因为您没有足够的用户权限。
+
+但是，如果您的存储系统设置为仅 NTFS ，则 ` /etc` 目录具有文件级 ACL ，可使管理员组访问 ONTAP 配置文件。
+
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 配置 CIFS 服务器选项，以便根据需要将管理员组映射到 root ：
++
+|===
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+将管理员组成员映射到 root
+ a| 
+`vserver cifs options modify -vserver _vserver_name_ -is-admin-users-mapped-to_root-enabled true` 管理员组中的所有帐户均视为 root ，即使您没有将帐户映射到 root 的 ` /etc/usermap.cfg` 条目也是如此。如果使用属于管理员组的帐户创建文件，则在从 UNIX 客户端查看文件时，该文件属于 root 用户。
+
+
+
+ a| 
+禁用将管理员组成员映射到 root
+ a| 
+`vserver cifs options modify -vserver _vserver_name_ -is-admin-users-mapped-to_root-enabled false` 管理员组中的帐户不再映射到 root 。您只能显式将单个用户映射到 root 。
+
+|===
+. 验证此选项是否设置为所需值： `vserver cifs options show -vserver _vserver_name_`
+. 返回到管理权限级别： `set -privilege admin`
+

@@ -1,0 +1,41 @@
+---
+permalink: ndmp/enable-tape-reservations-task.html 
+sidebar: sidebar 
+keywords: enable, tape, reservation 
+summary: 您必须确保为 NDMP 备份操作的备份应用程序预留了磁带驱动器。 
+---
+= 启用磁带预留
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须确保为 NDMP 备份操作的备份应用程序预留了磁带驱动器。
+
+预留设置因备份应用程序而异，这些设置必须与备份应用程序以及使用相同驱动器的节点或服务器匹配。有关正确的预留设置，请参见备份应用程序的供应商文档。
+
+.步骤
+. 使用 `options -option-name tape.reservations -option-value persistent` 命令启用预留。
++
+以下命令将启用具有 `persistent` 值的预留：
+
++
+[listing]
+----
+cluster1::> options -option-name tape.reservations -option-value persistent
+2 entries were modified.
+----
+. 使用 `options tape.reservations` 命令验证是否已在所有节点上启用预留，然后查看输出。
++
+[listing]
+----
+cluster1::> options tape.reservations
+
+cluster1-1
+    tape.reservations                 persistent
+
+cluster1-2
+    tape.reservations                 persistent
+2 entries were displayed.
+----
+

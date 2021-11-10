@@ -1,0 +1,27 @@
+---
+permalink: san-admin/flexvol-reclaim-free-space-autodelete-concept.html 
+sidebar: sidebar 
+keywords: how, flexvol, volume, reclaim, free, space, autodelete, setting 
+summary: 您可以启用 FlexVol 卷的自动删除设置，以自动删除 FlexClone 文件和 FlexClone LUN 。通过启用自动删除，您可以在卷接近全满时回收卷中的目标可用空间量。 
+---
+= FlexVol 卷如何使用自动删除设置回收可用空间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以启用 FlexVol 卷的自动删除设置，以自动删除 FlexClone 文件和 FlexClone LUN 。通过启用自动删除，您可以在卷接近全满时回收卷中的目标可用空间量。
+
+您可以将卷配置为在卷中的可用空间降至特定阈值以下时自动开始删除 FlexClone 文件和 FlexClone LUN ，并在回收卷中的目标可用空间量后自动停止删除克隆。尽管您无法指定用于自动删除克隆的阈值，但您可以指定克隆是否符合删除条件，并且可以指定卷的目标可用空间量。
+
+当卷中的可用空间降至特定阈值以下且同时满足以下要求时，卷会自动删除 FlexClone 文件和 FlexClone LUN ：
+
+* 包含 FlexClone 文件和 FlexClone LUN 的卷将启用自动删除功能。
++
+您可以使用 `volume snapshot autodelete modify` 命令为 FlexVol 卷启用自动删除功能。要自动删除 FlexClone 文件和 FlexClone LUN ，必须将卷的 ` trigger` 参数设置为 `volume` 或 `snap_reserve` 。
+
+* 已为 FlexClone 文件和 FlexClone LUN 启用自动删除功能。
++
+您可以使用带有 ` -autodelete` 参数的 `file clone create` 命令为 FlexClone 文件或 FlexClone LUN 启用自动删除。因此，您可以通过为克隆禁用自动删除并确保其他卷设置不会覆盖克隆设置来保留某些 FlexClone 文件和 FlexClone LUN 。
+
+

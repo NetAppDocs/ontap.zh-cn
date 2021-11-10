@@ -1,0 +1,17 @@
+---
+permalink: nfs-admin/ontap-preserves-unix-permissions-concept.html 
+sidebar: sidebar 
+keywords: ontap, preserve, unix, permission 
+summary: 当 Windows 应用程序编辑和保存 FlexVol 卷中当前具有 UNIX 权限的文件时， ONTAP 可以保留 UNIX 权限。 
+---
+= ONTAP 如何保留 UNIX 权限
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当 Windows 应用程序编辑和保存 FlexVol 卷中当前具有 UNIX 权限的文件时， ONTAP 可以保留 UNIX 权限。
+
+当 Windows 客户端上的应用程序编辑和保存文件时，它们会读取文件的安全属性，创建新的临时文件，将这些属性应用于临时文件，然后为临时文件提供原始文件名。
+
+当 Windows 客户端对安全属性执行查询时，它们会收到一个构建的 ACL ，该 ACL 准确表示 UNIX 权限。此构建 ACL 的唯一目的是，在 Windows 应用程序更新文件时保留文件的 UNIX 权限，以确保生成的文件具有相同的 UNIX 权限。ONTAP 不会使用构建的 ACL 设置任何 NTFS ACL 。

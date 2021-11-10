@@ -1,0 +1,30 @@
+---
+permalink: smb-admin/storage-system-provides-null-session-access-concept.html 
+sidebar: sidebar 
+keywords: null, session, share, require, authentication, client, ip, address, map, storage, system, how the storage system provides null session access 
+summary: 由于空会话共享不需要身份验证，因此需要空会话访问的客户端必须在存储系统上映射其 IP 地址。 
+---
+= 存储系统如何提供空会话访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+由于空会话共享不需要身份验证，因此需要空会话访问的客户端必须在存储系统上映射其 IP 地址。
+
+默认情况下，未映射的空会话客户端可以访问某些 ONTAP 系统服务，例如共享枚举，但会限制它们访问任何存储系统数据。
+
+[NOTE]
+====
+ONTAP 使用 ` – restrict-anonymous` 选项支持 Windows RestrictAnonymous 注册表设置值。这样，您可以控制未映射的空用户查看或访问系统资源的范围。例如，您可以禁用共享枚举和对 IPC$ 共享（隐藏的命名管道共享）的访问。`vserver cifs options modify` 和 `vserver cifs options show` 手册页提供了有关 ` – restrict-anonymous` 选项的详细信息。
+
+====
+除非另有配置，否则运行通过空会话请求存储系统访问的本地进程的客户端仅是非限制性组的成员，例如 "`everyone` " 。要限制对选定存储系统资源的空会话访问，您可能需要创建所有空会话客户端所属的组；通过创建此组，您可以限制存储系统访问并设置专门应用于空会话客户端的存储系统资源权限。
+
+ONTAP 在 `vserver name-mapping` 命令集中提供了映射语法，用于指定允许使用空用户会话访问存储系统资源的客户端的 IP 地址。为空用户创建组后，您可以指定存储系统资源的访问限制以及仅适用于空会话的资源权限。空用户标识为匿名登录。空用户无权访问任何主目录。
+
+从映射的 IP 地址访问存储系统的任何空用户都将获得映射的用户权限。请考虑适当的预防措施，以防止未经授权访问与空用户映射的存储系统。要获得最大保护，请将存储系统和所有需要空用户存储系统访问的客户端置于单独的网络上，以消除 IP 地址 `spoofing` 的可能性。
+
+* 相关信息 *
+
+xref:configure-access-restrictions-anonymous-users-task.adoc[配置匿名用户的访问限制]

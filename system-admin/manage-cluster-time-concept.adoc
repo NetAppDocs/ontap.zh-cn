@@ -1,0 +1,53 @@
+---
+permalink: system-admin/manage-cluster-time-concept.html 
+sidebar: sidebar 
+keywords: manage, cluster, time, administrator, ntp, network, time, protocol, zone 
+summary: 如果集群时间不准确，可能会出现问题。尽管您可以通过 ONTAP 手动设置集群上的时区，日期和时间，但您应配置网络时间协议（ NTP ）服务器以同步集群时间。 
+---
+= 管理集群时间（仅限集群管理员）
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果集群时间不准确，可能会出现问题。尽管您可以通过 ONTAP 手动设置集群上的时区，日期和时间，但您应配置网络时间协议（ NTP ）服务器以同步集群时间。
+
+从 ONTAP 9.5 开始，您可以为 NTP 服务器配置对称身份验证。
+
+NTP 始终处于启用状态。但是，要使集群与外部时间源同步，仍需要进行配置。使用 ONTAP ，您可以通过以下方式管理集群的 NTP 配置：
+
+* 您最多可以将 10 个外部 NTP 服务器与集群相关联（`cluster time-service ntp server create` ）。
++
+** 为了实现冗余和时间服务质量，应至少将三个外部 NTP 服务器与集群相关联。
+** 您可以使用 NTP 服务器的 IPv4 或 IPv6 地址或完全限定主机名来指定 NTP 服务器。
+** 您可以手动指定要使用的 NTP 版本（ v3 或 v4 ）。
++
+默认情况下， ONTAP 会自动选择给定外部 NTP 服务器支持的 NTP 版本。
+
++
+如果 NTP 服务器不支持您指定的 NTP 版本，则无法进行时间交换。
+
+** 在高级权限级别，您可以将与集群关联的外部 NTP 服务器指定为更正和调整集群时间的主要时间源。
+
+
+* 您可以显示与集群关联的 NTP 服务器（`cluster time-service ntp server show` ）。
+* 您可以修改集群的 NTP 配置（`cluster time-service ntp server modify` ）。
+* 您可以解除集群与外部 NTP 服务器的关联（`cluster time-service ntp server delete` ）。
+* 在高级权限级别，您可以通过清除所有外部 NTP 服务器与集群的关联来重置配置（`cluster time-service ntp server reset` ）。
+
+
+加入集群的节点会自动采用集群的 NTP 配置。
+
+除了使用 NTP 之外，您还可以使用 ONTAP 手动管理集群时间。当您需要更正错误的时间（例如，重新启动后节点的时间明显不正确）时，此功能很有用。在这种情况下，您可以为集群指定一个大致时间，直到 NTP 可以与外部时间服务器同步为止。手动设置的时间将在集群中的所有节点上生效。
+
+您可以通过以下方式手动管理集群时间：
+
+* 您可以设置或修改集群上的时区，日期和时间（`cluster date modify` ）。
+* 您可以显示集群的当前时区，日期和时间设置（`cluster date show` ）。
+
+
+[NOTE]
+====
+作业计划不会根据手动集群日期和时间更改进行调整。这些作业将根据创建作业的当前集群时间或最近运行的作业时间计划运行。因此，如果您手动更改集群日期或时间，则必须使用 `job show` 和 `job history show` 命令验证所有计划的作业是否已根据您的要求排队并完成。
+
+====

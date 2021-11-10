@@ -1,0 +1,69 @@
+---
+permalink: smb-admin/view-shares-mmc-task.html 
+sidebar: sidebar 
+keywords: information, smb, share, svm, perform, management, task, microsoft, management, console, mmc, view, share, connect, svm, view information about smb shares using the mmc 
+summary: 您可以使用 Microsoft 管理控制台（ MMC ）查看 SVM 上的 SMB 共享信息并执行某些管理任务。在查看共享之前，您需要将 MMC 连接到 SVM 。 
+---
+= 使用 MMC 查看有关 SMB 共享的信息
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 Microsoft 管理控制台（ MMC ）查看 SVM 上的 SMB 共享信息并执行某些管理任务。在查看共享之前，您需要将 MMC 连接到 SVM 。
+
+您可以使用 MMC 对 SVM 中包含的共享执行以下任务：
+
+* 查看共享
+* 查看活动会话
+* 查看打开的文件
+* 枚举系统中的会话，文件和树连接列表
+* 关闭系统中已打开的文件
+* 关闭打开的会话
+* 创建 / 管理共享
+
+
+[NOTE]
+====
+上述功能显示的视图是特定于节点的视图，而不是特定于集群的视图。因此，在使用 MMC 连接到 SMB 服务器主机名（即 cifs01.domain.local ）时，系统会根据 DNS 设置方式将您路由到集群中的单个 LIF 。
+
+====
+适用于 ONTAP 的 MMC 不支持以下功能：
+
+* 创建新的本地用户 / 组
+* 管理 / 查看现有本地用户 / 组
+* 查看事件或性能日志
+* 存储
+* 服务和应用程序
+
+
+在不支持此操作的情况下，您可能会遇到 `remote 操作步骤 call failed` 错误。
+
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/FAQ%3A_Using_Windows_MMC_with_ONTAP["常见问题解答：在 ONTAP 中使用 Windows MMC"]
+
+.步骤
+. 要在任何 Windows 服务器上打开计算机管理 MMC ，请在 * 控制面板 * 中选择 * 管理工具 * > * 计算机管理 * 。
+. 选择 * 操作 * > * 连接到另一台计算机 * 。
++
+此时将显示选择计算机对话框。
+
+. 键入存储系统的名称或单击 * 浏览 * 以查找存储系统。
+. 单击 * 确定 * 。
++
+MMC 连接到 SVM 。
+
+. 在导航窗格中，单击 * 共享文件夹 * > * 共享 * 。
++
+SVM 上的共享列表将显示在右侧显示窗格中。
+
+. 要显示共享的共享属性，请双击该共享以打开 * 属性 * 对话框。
+. 如果无法使用 MMC 连接到存储系统，则可以在存储系统上使用以下命令之一将用户添加到 BUILTIN\Administrators 组或 BUILTIN\Power Users 组：
++
+[listing]
+----
+
+cifs users-and-groups local-groups add-members -vserver <vserver_name> -group-name BUILTIN\Administrators -member-names <domainuser>
+
+cifs users-and-groups local-groups add-members -vserver <vserver_name> -group-name "BUILTIN\Power Users" -member-names <domainuser>
+----
+

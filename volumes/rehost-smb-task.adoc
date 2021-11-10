@@ -1,0 +1,82 @@
+---
+permalink: volumes/rehost-smb-task.html 
+sidebar: sidebar 
+keywords: rehost, cifs volumes 
+summary: 您可以重新托管通过 SMB 协议提供数据的卷。重新托管 CIFS 卷后，要继续通过 SMB 协议访问数据，您必须手动配置策略和关联规则。 
+---
+= 重新托管 CIFS 卷
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以重新托管通过 SMB 协议提供数据的卷。重新托管 CIFS 卷后，要继续通过 SMB 协议访问数据，您必须手动配置策略和关联规则。
+
+.您需要什么？ #8217 ；将需要什么
+* 卷必须处于联机状态。
+* 卷移动或 LUN 移动等卷管理操作不得运行。
+* 必须停止对要重新托管的卷的数据访问。
+* 必须配置目标 SVM 的 ns-switch 和名称服务配置，以支持重新托管卷的数据访问。
+* 源 SVM 和目标 SVM 必须具有相同的 Active Directory 和 realmDNS 域。
+* 卷的用户 ID 和组 ID 必须在目标 SVM 中可用或在托管卷上更改。
++
+[NOTE]
+====
+如果配置了本地用户和组，并且该卷上的文件和目录设置了这些用户或组的权限，则这些权限将不再有效。
+
+====
+
+
+.关于此任务
+* 重新托管会造成系统中断。
+* 如果重新托管操作失败，您可能需要在源卷上重新配置卷策略和关联规则。
+* 如果源 SVM 和目标 SVM Active Directory 域不同，您可能无法访问卷上的对象。
+* 如果源 SVM 具有本地用户和组，则在执行卷重新托管操作后，设置的文件和目录（ ACL ）的权限将不再有效。
++
+审核 ACL （ SACL ）也是如此
+
+* 重新托管操作后，源卷中的以下卷策略，策略规则和配置将丢失，必须在重新托管的卷上手动重新配置：
++
+** 卷和 qtree 导出策略
+** 防病毒策略
+** 卷效率策略
+** 服务质量（ QoS ）策略
+** Snapshot 策略
+** 配额规则
+** NS-switch 和名称服务配置导出策略和规则
+** 用户和组 ID
+
+
+
+
+.步骤
+. 记录有关 CIFS 共享的信息，以避免在卷重新托管操作失败时丢失有关 CIFS 共享的信息。
+. 从父卷卸载此卷：
++
+`卷卸载`
+
+. 切换到高级权限级别：
++
+`set -privilege advanced`
+
+. 在目标 SVM 上重新托管卷：
++
+`volume rehost -vserver source_sVM -volume vol_name -destination-vserver destination_sVM`
+
+. 在目标 SVM 中的相应接合路径下挂载卷：
++
+`卷挂载`
+
+. 为重新托管的卷创建 CIFS 共享：
++
+`Vserver cifs share create`
+
+. 如果源 SVM 和目标 SVM 的 DNS 域不同，请创建新的用户和组。
+. 使用重新托管的卷的新目标 SVM LIF 和接合路径更新 CIFS 客户端。
+
+
+您必须手动重新配置重新托管的卷上的策略和关联规则。
+
+https://docs.netapp.com/us-en/ontap-sm-classic/smb-config/index.html["SMB 配置"]
+
+https://docs.netapp.com/us-en/ontap-sm-classic/nas-multiprotocol-config/index.html["SMB 和 NFS 多协议配置"]

@@ -1,0 +1,60 @@
+---
+permalink: nas-audit/delete-security-trace-filters-task.html 
+sidebar: sidebar 
+keywords: delete, security trace filters 
+summary: 如果不再需要安全跟踪筛选器条目，可以将其删除。由于每个 Storage Virtual Machine （ SVM ）最多可以有 10 个安全跟踪筛选器，因此，如果已达到最大值，则可以通过删除不需要的筛选器来创建新筛选器。 
+---
+= 删除安全跟踪筛选器
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果不再需要安全跟踪筛选器条目，可以将其删除。由于每个 Storage Virtual Machine （ SVM ）最多可以有 10 个安全跟踪筛选器，因此，如果已达到最大值，则可以通过删除不需要的筛选器来创建新筛选器。
+
+要唯一标识要删除的安全跟踪筛选器，必须指定以下内容：
+
+* 应用跟踪筛选器的 SVM 的名称
+* 跟踪筛选器的筛选器索引编号
+
+
+.步骤
+. 确定要删除的安全跟踪筛选器条目的筛选器索引编号：
++
+`vserver security trace filter show -vserver vserver_name`
+
++
+`vserver security trace filter show -vserver vs1`
+
++
+[listing]
+----
+
+Vserver  Index   Client-IP            Path            Trace-Allow  Windows-Name
+-------- -----  -----------  ----------------------   -----------  -------------
+vs1        1    -            /dir1/dir2/file.txt          yes      -
+vs1        2    -            /dir3/dir4/                  no       mydomain\joe
+----
+. 使用上一步中的筛选器索引编号信息删除筛选器条目：
++
+`vserver security trace filter delete -vserver vserver_name -index index_number`
+
++
+`vserver security trace filter delete -vserver vs1 -index 1`
+
+. 验证是否已删除安全跟踪筛选器条目：
++
+`vserver security trace filter show -vserver vserver_name`
+
++
+`vserver security trace filter show -vserver vs1`
+
++
+[listing]
+----
+
+Vserver  Index   Client-IP            Path            Trace-Allow   Windows-Name
+-------- -----  -----------  ----------------------   -----------   -------------
+vs1        2    -            /dir3/dir4/                  no        mydomain\joe
+----
+

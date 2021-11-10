@@ -1,0 +1,56 @@
+---
+permalink: smb-admin/join-svm-active-directory-domain-task.html 
+sidebar: sidebar 
+keywords: join, storage, virtual, machine, svm, active, directory, domain, delete, deleting, exist, smb, cifs, server, modify, domain, vserver, cifs, rejoin, join a svm to an active directory domain 
+summary: 您可以使用 vserver cifs modify 命令修改此域，从而将 Storage Virtual Machine （ SVM ）加入 Active Directory 域，而无需删除现有 SMB 服务器。您可以重新加入当前域或加入新域。 
+---
+= 将 SVM 加入 Active Directory 域
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过使用 `vserver cifs modify` 命令修改域，您可以将 Storage Virtual Machine （ SVM ）加入 Active Directory 域，而无需删除现有 SMB 服务器。您可以重新加入当前域或加入新域。
+
+.开始之前
+* SVM 必须已具有 DNS 配置。
+* SVM 的 DNS 配置必须能够为目标域提供服务。
++
+DNS 服务器必须包含域 LDAP 和域控制器服务器的服务位置记录（ SRV ）。
+
+
+
+.关于此任务
+* CIFS 服务器的管理状态必须设置为 " `d拥有` " 才能继续修改 Active Directory 域。
+* 如果命令成功完成，则管理状态会自动设置为 "`up` " 。
+* 加入域时，此命令可能需要几分钟才能完成。
+
+
+.步骤
+. 将 SVM 加入 CIFS 服务器域： `vserver cifs modify -vserver _vserver_name_ -domain _domain_name_ -status-admin down`
++
+有关详细信息，请参见 `vserver cifs modify` 命令的手册页。如果需要为新域重新配置 DNS ，请参见 `vserver dns modify` 命令的手册页。
+
++
+要为 SMB 服务器创建 Active Directory 计算机帐户，您必须提供具有足够权限的 Windows 帐户的名称和密码，以便将计算机添加到 ` _example_` .com 域内的 `ou= _example_ ou` 容器中。
+
++
+从 ONTAP 9.7 开始，您的 AD 管理员可以为您提供 keytab 文件的 URI ，而不是为您提供特权 Windows 帐户的名称和密码。收到此 URI 后，请将其包含在 ` vserver cifs` 命令的` -keytab-uri `参数中。
+
+. 验证 CIFS 服务器是否位于所需的 Active Directory 域中： `vserver cifs show`
+
+
+在以下示例中， SVM vs1 上的 SMB 服务器 "`CIFSSERVER1` " 使用 keytab 身份验证加入 example.com 域：
+
+[listing]
+----
+
+cluster1::> vserver cifs modify -vserver vs1 -domain example.com -status-admin down -keytab-uri http://admin.example.com/ontap1.keytab
+
+cluster1::> vserver cifs show
+
+          Server       Status       Domain/Workgroup  Authentication
+Vserver   Name         Admin        Name              Style
+--------- -----------  ---------    ----------------  --------------
+vs1       CIFSSERVER1  up           EXAMPLE          domain
+----

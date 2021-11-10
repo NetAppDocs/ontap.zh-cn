@@ -1,0 +1,408 @@
+---
+permalink: system-admin/commands-manage-node-remotely-reference.html 
+sidebar: sidebar 
+keywords: command, manage, node, remotely, sp, cli, cluster 
+summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来执行节点管理任务来远程管理节点。对于几个常用的远程节点管理任务，您还可以从集群中的另一个节点使用 ONTAP 命令。某些 SP 命令是特定于平台的，可能在您的平台上不可用。 
+---
+= 用于远程管理节点的命令
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过访问节点的 SP 并运行 SP 命令行界面命令来执行节点管理任务来远程管理节点。对于几个常用的远程节点管理任务，您还可以从集群中的另一个节点使用 ONTAP 命令。某些 SP 命令是特定于平台的，可能在您的平台上不可用。
+
+|===
+| 如果您要 ... | 使用此 SP 命令 ... | 使用此 BMC 命令 ... | 或此 ONTAP 命令 ... 
+
+
+ a| 
+显示指定 SP 命令的可用 SP 命令或子命令
+ a| 
+`帮助` [`命令` ]
+ a| 
+ a| 
+
+
+
+ a| 
+显示 SP 命令行界面的当前权限级别
+ a| 
+`priv show`
+ a| 
+ a| 
+
+
+
+ a| 
+设置访问 SP 命令行界面的指定模式的权限级别
+ a| 
+`priv set` ｛`admin` `|` advanced `d|` IAG ｝
+ a| 
+ a| 
+
+
+
+ a| 
+显示系统日期和时间
+ a| 
+`dATE`
+ a| 
+ a| 
+`dATE`
+
+
+
+ a| 
+显示 SP 记录的事件
+ a| 
+`Events` ｛`All` `` 我们的 `info` `我们的` 最新 `数字` 我们的 `s最旧的数字` 我们的搜索关键字
+ a| 
+ a| 
+
+
+
+ a| 
+显示 SP 状态和网络配置信息
+ a| 
+`sp status` [` -v` | ` -d` ]
+
+` -v` 选项可详细显示 SP 统计信息。` -d` 选项可将 SP 调试日志添加到显示中。
+ a| 
+`bmc status` [` -v` | ` -d` ]
+
+` -v` 选项可详细显示 SP 统计信息。` -d` 选项可将 SP 调试日志添加到显示中。
+ a| 
+`ssystem service-processor show`
+
+
+
+ a| 
+显示 SP 已运行的时间长度以及运行队列中过去 1 分钟， 5 分钟和 15 分钟的平均作业数
+ a| 
+`s正常运行时间`
+ a| 
+`bmc 正常运行时间`
+ a| 
+
+
+
+ a| 
+显示系统控制台日志
+ a| 
+`s系统日志`
+ a| 
+ a| 
+
+
+
+ a| 
+显示 SP 日志归档或归档中的文件
+ a| 
+`sp log history show` [` -archive` ｛`latest` | `all` | `archive-name` ｝ ] （` -dump` ｛`all` | `file-name` ｝ ）
+ a| 
+`bmc log history show` [` -archive` ｛`latest` | `all` | `archive-name` ｝ ] （` -dump` ｛`all` | `file-name` ｝ ）
+ a| 
+
+
+
+ a| 
+显示节点控制器的电源状态
+ a| 
+`s系统电源状态`
+ a| 
+ a| 
+`s系统节点电源显示`
+
+
+
+ a| 
+显示电池信息
+ a| 
+`s系统电池显示`
+ a| 
+ a| 
+
+
+
+ a| 
+显示扩展器传感器的 ACP 信息或状态
+ a| 
+`ssystem ACP` `s` `s操作说明` ensors show
+ a| 
+ a| 
+
+
+
+ a| 
+列出所有系统 FRU 及其 ID
+ a| 
+`s系统 FRU 列表`
+ a| 
+ a| 
+
+
+
+ a| 
+显示指定 FRU 的产品信息
+ a| 
+`ssystem fru show` `fru_id`
+ a| 
+ a| 
+
+
+
+ a| 
+显示 FRU 数据历史记录日志
+ a| 
+`ssystem fru log show` （高级权限级别）
+ a| 
+ a| 
+
+
+
+ a| 
+显示环境传感器的状态，包括其状态和当前值
+ a| 
+`s系统传感器` 或 `s系统传感器显示`
+ a| 
+ a| 
+`s系统节点环境传感器显示`
+
+
+
+ a| 
+显示指定传感器的状态和详细信息
+ a| 
+`s系统传感器 get` `sensor_name`
+
+您可以使用 `ssystem sensors` 或 `ssystem sensors show` 命令获取 `sensor_name` 。
+ a| 
+ a| 
+
+
+
+ a| 
+显示 SP 固件版本信息
+ a| 
+`ve版本`
+ a| 
+ a| 
+`ssystem service-processor image show`
+
+
+
+ a| 
+显示 SP 命令历史记录
+ a| 
+`sp log audit` （高级权限级别）
+ a| 
+`bmc LOG AUDIT`
+ a| 
+
+
+
+ a| 
+显示 SP 调试信息
+ a| 
+`sp log debug` （高级权限级别）
+ a| 
+`bmc LOG DEBUG` （高级权限级别）
+ a| 
+
+
+
+ a| 
+显示 SP 消息文件
+ a| 
+`sp log messages` （高级权限级别）
+ a| 
+`bmc 日志消息` （高级权限级别）
+ a| 
+
+
+
+ a| 
+显示用于收集 watchdog 重置事件的系统取证信息的设置，显示在 watchdog 重置事件期间收集的系统取证信息，或者清除收集的系统取证信息
+ a| 
+`s系统取证` `s` 操作说明 `日志转储` 我们 `日志清除`
+ a| 
+ a| 
+
+
+
+ a| 
+登录到系统控制台
+ a| 
+`s系统控制台`
+ a| 
+ a| 
+`ssystem node run-console`
+
+
+
+ a| 
+您应按 Ctrl-D 退出系统控制台会话。
+
+
+
+ a| 
+打开或关闭节点，或者执行重新启动（关闭电源，然后重新打开）
+ a| 
+`s系统电源` `打开`
+ a| 
+ a| 
+`s系统节点启动` （高级权限级别）
+
+
+
+ a| 
+`s系统电源` `关闭`
+ a| 
+ a| 
+
+
+
+ a| 
+`s系统电源` `周期`
+ a| 
+ a| 
+
+
+
+ a| 
+备用电源保持打开，以使 SP 保持运行，而不会中断。在重新启动期间，在重新打开电源之前会短暂暂停。
+
+[NOTE]
+====
+使用这些命令关闭节点或重新启动节点可能发生原因会导致节点不正确关闭（也称为 _dirty shutdown_ ），并且无法替代使用 ONTAP `ssystem node halt` 命令正常关闭。
+
+====
+
+
+ a| 
+创建核心转储并重置节点
+ a| 
+`s系统核心` [` -f` ]
+
+` -f` 选项可强制创建核心转储并重置节点。
+ a| 
+ a| 
+`s系统节点核心转储触发器`
+
+（高级权限级别）
+
+
+
+ a| 
+这些命令的效果与按节点上的不可屏蔽中断（ NMI ）按钮相同，它会导致节点异常关闭，并在暂停节点时强制转储核心文件。当节点上的 ONTAP 挂起或不响应 `ssystem node shutdown` 等命令时，这些命令非常有用。生成的核心转储文件将显示在 `ssystem node coredump show` 命令的输出中。只要节点的输入电源不中断， SP 就会保持运行。
+
+
+
+ a| 
+使用可选指定的 BIOS 固件映像（主，备份或当前）重新启动节点，以从节点启动设备映像损坏等问题中恢复
+ a| 
+`s系统重置` ｛`primary` `我们的主系统` 我们的备份 `我们的当前版本` ｝
+ a| 
+ a| 
+`ssystem node reset` with the ` -firmware` ｛`primary` | `backup` `|` current ｝ 参数（高级权限级别）
+
+`s系统节点重置`
+
+
+
+ a| 
+[NOTE]
+====
+此操作会导致节点异常关闭。
+
+====
+如果未指定 BIOS 固件映像，则会使用当前映像进行重新启动。只要节点的输入电源不中断， SP 就会保持运行。
+
+
+
+ a| 
+显示电池固件自动更新的状态，或者在下次 SP 启动时启用或禁用电池固件自动更新
+ a| 
+`s系统电池 auto_update` `s` `tatStatus` | `denable` _ isable
+
+（高级权限级别）
+ a| 
+ a| 
+
+
+
+ a| 
+将当前电池固件映像与指定的固件映像进行比较
+ a| 
+`s系统电池验证` [`image_URL` ]
+
+（高级权限级别）
+
+如果未指定 `image_url` ，则使用默认电池固件映像进行比较。
+ a| 
+ a| 
+
+
+
+ a| 
+从指定位置的映像更新电池固件
+ a| 
+`s系统电池闪存` `image_URL`
+
+（高级权限级别）
+
+如果电池固件自动升级过程因某种原因失败，请使用此命令。
+ a| 
+ a| 
+
+
+
+ a| 
+使用指定位置的映像更新 SP 固件
+ a| 
+`sp update` `image_url image_url` 不得超过 200 个字符。
+ a| 
+`bmc update` `image_url image_url` 不得超过 200 个字符。
+ a| 
+`s系统服务处理器映像更新`
+
+
+
+ a| 
+重新启动 SP
+ a| 
+`sp reboot`
+ a| 
+ a| 
+`ssystem service-processor reboot-sp`
+
+
+
+ a| 
+[NOTE]
+====
+您应避免从备份映像启动 SP 。从备份映像启动仅供故障排除和恢复使用。可能需要禁用 SP 自动固件更新，这不是建议的设置。在尝试从备份映像启动 SP 之前，您应联系技术支持。
+
+====
+
+
+ a| 
+擦除 NVRAM 闪存内容
+ a| 
+`s系统 NVRAM 闪存清除` （高级权限级别）
+
+如果控制器电源已关闭（ `ssystem power off` ），则无法启动此命令。
+ a| 
+ a| 
+
+
+
+ a| 
+退出 SP 命令行界面
+ a| 
+`退出`
+ a| 
+ a| 
+
+|===

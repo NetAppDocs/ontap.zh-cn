@@ -1,0 +1,32 @@
+---
+permalink: smb-admin/install-self-signed-root-ca-certificate-svm-task.html 
+sidebar: sidebar 
+keywords: ldap, authentication, tls, bind, server, install, self-signed, root, ca, certificate, svm, install the self-signed root ca certificate on the svm 
+summary: 如果在绑定到 LDAP 服务器时需要使用 TLS 进行 LDAP 身份验证，则必须先在 SVM 上安装自签名根 CA 证书。 
+---
+= 在 SVM 上安装自签名根 CA 证书
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在绑定到 LDAP 服务器时需要使用 TLS 进行 LDAP 身份验证，则必须先在 SVM 上安装自签名根 CA 证书。
+
+启用基于 TLS 的 LDAP 后， SVM 上的 ONTAP LDAP 客户端在 ONTAP 9.0 和 9.1 中不支持已撤销的证书。
+
+从 ONTAP 9.2 开始， ONTAP 中使用 TLS 通信的所有应用程序都可以使用联机证书状态协议（ Online Certificate Status Protocol ， OCSP ）检查数字证书状态。如果为基于 TLS 的 LDAP 启用了 OCSP ，则已撤销的证书将被拒绝，并且连接将失败。
+
+.步骤
+. 安装自签名根 CA 证书：
++
+.. 开始安装证书： `security certificate install -vserver vserver_name -type server-ca`
++
+控制台输出将显示以下消息： `Please enter Certificate ： Press <Enter> when done`
+
+.. 使用文本编辑器打开证书 ` .pem` 文件，复制证书，包括以 ` 开头的行— 开始证书 -- ` 并以 ` 结尾 结束证书 -- ` ，然后在命令提示符后粘贴证书。
+.. 验证证书是否显示正确。
+.. 按 Enter 键完成安装。
+
+
+. 验证是否已安装此证书： `security certificate show -vserver _vserver_name_`
+

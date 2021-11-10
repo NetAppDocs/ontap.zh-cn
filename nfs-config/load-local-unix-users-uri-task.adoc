@@ -1,0 +1,56 @@
+---
+permalink: nfs-config/load-local-unix-users-uri-task.html 
+sidebar: sidebar 
+keywords: load, local, unix, users, uri 
+summary: 除了在 SVM 中手动创建单个本地 UNIX 用户之外，您还可以通过统一资源标识符（ Uniform Resource Identifier ， URI ）（ Vserver services name-service unix-user load-from-uri ）将本地 UNIX 用户列表加载到 SVM 中来简化此任务。 
+---
+= 从 URI 加载本地 UNIX 用户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+除了在 SVM 中手动创建单个本地 UNIX 用户之外，您还可以通过统一资源标识符（ Uniform Resource Identifier ， URI ）（`vserver services name-service unix-user load-from-uri` ）将本地 UNIX 用户列表加载到 SVM 中来简化此任务。
+
+.步骤
+. 创建一个包含要加载的本地 UNIX 用户列表的文件。
++
+此文件必须包含 UNIX ` /etc/passwd` 格式的用户信息：
+
++
+` 用户名：密码： user_ID ： Group_ID ： full_name_`
+
++
+此命令会丢弃 ` _password_` 字段的值以及 ` Full_name_` 字段（` _HOME_DIRECTORY_` 和 ` _shell_` ）后面的字段值。
+
++
+支持的最大文件大小为 2.5 MB 。
+
+. 验证此列表是否不包含任何重复信息。
++
+如果此列表包含重复条目，则加载此列表将失败并显示错误消息。
+
+. 将文件复制到服务器。
++
+存储系统必须可通过 HTTP ， HTTPS ， FTP 或 FTPS 访问此服务器。
+
+. 确定文件的 URI 。
++
+此 URI 是您为存储系统提供的地址，用于指示文件的位置。
+
+. 从 URI 将包含本地 UNIX 用户列表的文件加载到 SVM 中：
++
+`vserver services name-service unix-user load-from-uri -vserver _vserver_name_ -uri ｛ ftp_http_FTPS_https ｝ ： //_uri_ -overwrite ｛ true_false ｝`
+
++
+` 覆盖` ｛`true` ｝`false` ｝ 指定是否覆盖条目。默认值为 `false` 。
+
+
+
+以下命令会将 URI ` +ftp://ftp.example.com/passwd+` 中的本地 UNIX 用户列表加载到名为 vs1 的 SVM 中。SVM 上的现有用户不会被 URI 中的信息覆盖。
+
+[listing]
+----
+node::> vserver services name-service unix-user load-from-uri -vserver vs1
+-uri ftp://ftp.example.com/passwd -overwrite false
+----

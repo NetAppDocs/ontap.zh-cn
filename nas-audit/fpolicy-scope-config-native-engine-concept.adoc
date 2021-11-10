@@ -1,0 +1,21 @@
+---
+permalink: nas-audit/fpolicy-scope-config-native-engine-concept.html 
+sidebar: sidebar 
+keywords: requirement, fpolicy, scope, configurations, policy, native engine 
+summary: 如果您将 FPolicy 策略配置为使用原生引擎，则需要明确说明如何定义为该策略配置的 FPolicy 范围。 
+---
+= FPolicy 策略使用原生引擎时的 FPolicy 范围配置要求
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您将 FPolicy 策略配置为使用原生引擎，则需要明确说明如何定义为该策略配置的 FPolicy 范围。
+
+FPolicy 范围定义了应用 FPolicy 策略的边界，例如 FPolicy 适用场景是否指定了卷或共享。有许多参数进一步限制了 FPolicy 策略的适用范围。其中一个参数 ` is-file-extension-check-on-directory-enabled` 用于指定是否检查目录上的文件扩展名。默认值为 `false` ，这意味着不会检查目录上的文件扩展名。
+
+如果在共享或卷上启用了使用原生引擎的 FPolicy 策略，并且在该策略范围内将 ` -is-file-extension -check-on-directory-enabled` 参数设置为 `false` ，则会拒绝目录访问。使用此配置时，由于不会检查文件扩展名中是否存在目录，因此，如果任何目录操作属于此策略的范围，则会拒绝此操作。
+
+要确保在使用原生引擎时能够成功访问目录，必须在创建范围时将 ` -is-file-extension-check-on-directory-enabled 参数` 设置为 `true` 。
+
+将此参数设置为 `true` 时，将对目录操作执行扩展检查，并根据 FPolicy 范围配置中包含或排除的扩展决定是否允许或拒绝访问。

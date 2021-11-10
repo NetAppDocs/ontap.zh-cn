@@ -1,0 +1,28 @@
+---
+permalink: volumes/change-security-style-qtree-affects-quotas-concept.html 
+sidebar: sidebar 
+keywords: how, changing, security, style of a qtree, affects, user quotas 
+summary: 您可以使用 NTFS 或混合安全模式对 qtree 应用访问控制列表（ ACL ），但不能使用 UNIX 安全模式。因此，更改 qtree 的安全模式可能会影响配额的计算方式。更改 qtree 的安全模式后，应始终重新初始化配额。 
+---
+= 更改 qtree 的安全模式如何影响用户配额
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 NTFS 或混合安全模式对 qtree 应用访问控制列表（ ACL ），但不能使用 UNIX 安全模式。因此，更改 qtree 的安全模式可能会影响配额的计算方式。更改 qtree 的安全模式后，应始终重新初始化配额。
+
+如果将 qtree 的安全模式从 NTFS 或混合更改为 UNIX ，则会忽略该 qtree 中文件的任何 ACL ，并将文件使用量计入 UNIX 用户 ID 。
+
+如果将 qtree 的安全模式从 UNIX 更改为混合或 NTFS ，则会显示先前隐藏的 ACL 。此外，忽略的任何 ACL 将重新生效， NFS 用户信息将被忽略。如果之前没有 ACL ，则配额计算中将继续使用 NFS 信息。
+
+[NOTE]
+====
+要确保在更改 qtree 的安全模式后正确计算 UNIX 和 Windows 用户的配额使用量，必须重新初始化包含该 qtree 的卷的配额。
+
+====
+以下示例显示了 qtree 安全模式的更改如何导致其他用户因使用特定 qtree 中的文件而被收费。
+
+假设 qtree A 采用 NTFS 安全性， ACL 为 Windows 用户 corp\joe 提供了一个 5 MB 文件的所有权。用户 corp\joe 将从 qtree A 的 5 MB 磁盘空间使用量中扣除费用
+
+现在，您可以将 qtree A 的安全模式从 NTFS 更改为 UNIX 。重新初始化配额后，此文件不再向 Windows 用户 corp\joe 收费，而是向文件 UID 对应的 UNIX 用户收费。UID 可以是映射到 corp\joe 的 UNIX 用户，也可以是 root 用户。

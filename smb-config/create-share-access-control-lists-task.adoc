@@ -1,0 +1,75 @@
+---
+permalink: smb-config/create-share-access-control-lists-task.html 
+sidebar: sidebar 
+keywords: configure, configuring, share, permission, create, access, control, list, acl, smb, enable, level, access, user, group, create smb share access control lists 
+summary: 通过为 SMB 共享创建访问控制列表（ ACL ）来配置共享权限，可以控制用户和组对共享的访问级别。 
+---
+= 创建 SMB 共享访问控制列表
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过为 SMB 共享创建访问控制列表（ ACL ）来配置共享权限，可以控制用户和组对共享的访问级别。
+
+您必须已确定要为哪些用户或组授予对共享的访问权限。
+
+您可以使用本地或域 Windows 用户名或组名称配置共享级 ACL 。
+
+在创建新 ACL 之前，应删除默认共享 ACL `Everyone / Full Control` ，这会带来安全风险。
+
+在工作组模式下，本地域名为 SMB 服务器名称。
+
+.步骤
+. 删除默认共享 ACL ：``vserver cifs share access-control delete -vserver _vserver_name_ -share _share_name_ -user-or-group everyone``
+. 配置新 ACL ：
++
+|===
+| 如果要使用配置 ACL ，请使用 ... | 输入命令 ... 
+
+
+ a| 
+Windows 用户
+ a| 
+`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _windows_domain_name\\user_name_ -permission access_right`
+
+
+
+ a| 
+Windows 组
+ a| 
+`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _windows_group_name_ -permission access_right`
+
+|===
+. 使用 `vserver cifs share access-control show` 命令验证应用于共享的 ACL 是否正确。
+
+
+以下命令为 "`vs1.example.com`"SVM: 上的 `sSales` 共享向 `SSales` Windows 组提供 `Change` 权限
+
+[listing]
+----
+cluster1::> vserver cifs share access-control create -vserver vs1.example.com -share sales -user-or-group "Sales Team" -permission Change
+
+cluster1::> vserver cifs share access-control show
+                 Share       User/Group              User/Group  Access
+Vserver          Name        Name                    Type        Permission
+---------------- ----------- --------------------    ---------   -----------
+vs1.example.com  c$          BUILTIN\Administrators  windows     Full_Control
+vs1.example.com  sales       DOMAIN\"Sales Team"     windows     Change
+----
+以下命令为 ``vs1` SVM 上的 `datavol5` 共享向名为 "`Tiger Team` " 的本地 Windows 组提供 `Change` 权限，并为名为 `Sual_Control` 的本地 Windows 用户提供权限` ：
+
+[listing]
+----
+cluster1::> vserver cifs share access-control create -vserver vs1 -share datavol5 -user-group-type windows -user-or-group "Tiger Team" -permission Change
+
+cluster1::> vserver cifs share access-control create -vserver vs1 -share datavol5 -user-group-type windows -user-or-group "Sue Chang" -permission Full_Control
+
+cluster1::> vserver cifs share access-control show -vserver vs1
+               Share       User/Group                  User/Group  Access
+Vserver        Name        Name                        Type        Permission
+-------------- ----------- --------------------------- ----------- -----------
+vs1            c$          BUILTIN\Administrators      windows     Full_Control
+vs1            datavol5    DOMAIN\"Tiger Team"         windows     Change
+vs1            datavol5    DOMAIN\"Sue Chang"          windows     Full_Control
+----

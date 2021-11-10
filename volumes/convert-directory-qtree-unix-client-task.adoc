@@ -1,0 +1,49 @@
+---
+permalink: volumes/convert-directory-qtree-unix-client-task.html 
+sidebar: sidebar 
+keywords: convert, directory to a qtree, using, unix client 
+summary: 要在 UNIX 中将目录转换为 qtree ，请重命名该目录，在存储系统上创建一个 qtree ，然后将该目录的内容移动到该 qtree 。 
+---
+= 使用 UNIX 客户端将目录转换为 qtree
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要在 UNIX 中将目录转换为 qtree ，请重命名该目录，在存储系统上创建一个 qtree ，然后将该目录的内容移动到该 qtree 。
+
+.步骤
+. 打开 UNIX 客户端窗口。
+. 使用 `mv` 命令重命名目录。
++
+[listing]
+----
+client: mv /n/user1/vol1/dir1 /n/user1/vol1/olddir
+----
+. 在存储系统中，使用 `volume qtree create` 命令创建具有原始名称的 qtree 。
++
+[listing]
+----
+system1: volume qtree create /n/user1/vol1/dir1
+----
+. 在客户端中，使用 `mv` 命令将旧目录的内容移动到 qtree 中。
++
+[NOTE]
+====
+要移动的目录中包含的子目录越多，移动操作所需的时间就越长。
+
+====
++
+[listing]
+----
+client: mv /n/user1/vol1/olddir/* /n/user1/vol1/dir1
+----
+. 使用 `rmdir` 命令删除现在为空的旧目录。
++
+[listing]
+----
+client: rmdir /n/user1/vol1/olddir
+----
+
+
+根据 UNIX 客户端实施 `mv` 命令的方式，可能不会保留文件所有权和权限。如果发生这种情况，请将文件所有者和权限更新为其先前的值。

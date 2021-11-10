@@ -1,0 +1,104 @@
+---
+permalink: data-protection/restore-single-file-lun-task.html 
+sidebar: sidebar 
+keywords: restore, single file, lun, nvme, namespace, snapmirror, destination 
+summary: 您可以从 Snapshot 副本还原单个文件， LUN ，一组文件或 LUN ，也可以从 SnapMirror 目标卷还原 NVMe 命名空间。从 ONTAP 9.7 开始，您还可以从 SnapMirror 同步目标还原 NVMe 命名空间。您可以将文件还原到原始源卷或其他卷。 
+---
+= 从 SnapMirror 目标还原单个文件， LUN 或 NVMe 命名空间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以从 Snapshot 副本还原单个文件， LUN ，一组文件或 LUN ，也可以从 SnapMirror 目标卷还原 NVMe 命名空间。从 ONTAP 9.7 开始，您还可以从 SnapMirror 同步目标还原 NVMe 命名空间。您可以将文件还原到原始源卷或其他卷。
+
+要从 SnapMirror 同步目标（从 ONTAP 9.5 开始受支持）还原文件或 LUN ，必须先删除并释放此关系。
+
+要将文件或 LUN 还原到的卷（目标卷）必须为读写卷：
+
+* 如果源卷和目标卷具有通用 Snapshot 副本（通常情况下，还原到原始源卷时）， SnapMirror 将执行 _incremental restore" 。
+* 否则， SnapMirror 将执行 _baseline restore" ，其中指定的 Snapshot 副本及其引用的所有数据块将传输到目标卷。
+
+
+.步骤
+. 列出目标卷中的 Snapshot 副本：
++
+`volume snapshot show -vserver _svm_ -volume volume`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例显示了 `vserverB ： secondary1` 目标上的 Snapshot 副本：
+
++
+[listing]
+----
+
+cluster_dst::> volume snapshot show -vserver vserverB -volume secondary1
+
+Vserver     Volume      Snapshot                State    Size  Total% Used%
+-------     ------      ---------- ----------- ------   -----  ------ -----
+vserverB    secondary1  hourly.2013-01-25_0005  valid   224KB     0%    0%
+                        daily.2013-01-25_0010   valid   92KB      0%    0%
+                        hourly.2013-01-25_0105  valid   228KB     0%    0%
+                        hourly.2013-01-25_0205  valid   236KB     0%    0%
+                        hourly.2013-01-25_0305  valid   244KB     0%    0%
+                        hourly.2013-01-25_0405  valid   244KB     0%    0%
+                        hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 从 SnapMirror 目标卷中的 Snapshot 副本还原单个文件或 LUN 或一组文件或 LUN ：
++
+`snapmirror restore -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -source-snapshot snapshot -file-list _source_file_path ，@destination_file_path_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+[NOTE]
+====
+您必须从目标 SVM 或目标集群运行此命令。
+
+====
++
+以下命令会将文件 `file1` 和 `file2` 从原始目标卷 `secondary1` 中的 Snapshot 副本 `daily.2013-01-25_0010` 还原到原始源卷 `primary1` 的活动文件系统中的同一位置：
+
++
+[listing]
+----
+
+cluster_dst::> snapmirror restore -source-path vserverB:secondary1 -destination-path vserverA:primary1 -source-snapshot daily.2013-01-25_0010 -file-list /dir1/file1,/dir2/file2
+
+[Job 3479] Job is queued: snapmirror restore for the relationship with destination vserverA:primary1
+----
++
+以下命令会将文件 `file1` 和 `file2` 从原始目标卷 `secondary1` 中的 Snapshot 副本 `daily.2013-01-25_0010` 还原到原始源卷 `primary1` 的活动文件系统中的其他位置。
+
++
+目标文件路径以 @ 符号开头，后跟原始源卷根中文件的路径。在此示例中， `file1` 还原到 ` /dir1/file1.new` ， file2 还原到 ` /dir2.new/file2` on `primary1` ：
+
++
+[listing]
+----
+
+cluster_dst::> snapmirror restore -source-path vserverB:secondary1 -destination-path vserverA:primary1 -source-snapshot daily.2013-01-25_0010 -file-list /dir/file1,@/dir1/file1.new,/dir2/file2,@/dir2.new/file2
+
+[Job 3479] Job is queued: snapmirror restore for the relationship with destination vserverA:primary1
+----
++
+以下命令会将文件 `file1` 和 `file3` 从初始目标卷 `secondary1` 中的 Snapshot 副本 `daily.2013-01-25_0010` 还原到初始源卷 `primary1` 的活动文件系统中的不同位置，并将 `file2` 从 `snap1` 还原到 `主` 文件系统中的同一位置。
+
++
+在此示例中，文件 `file1` 还原为 ` /dir1/file1.new` ，而 `file3` 还原为 ` /dir3.new/file3` ：
+
++
+[listing]
+----
+
+cluster_dst::> snapmirror restore -source-path vserverB:secondary1 -destination-path vserverA:primary1 -source-snapshot daily.2013-01-25_0010 -file-list /dir/file1,@/dir1/file1.new,/dir2/file2,/dir3/file3,@/dir3.new/file3
+
+[Job 3479] Job is queued: snapmirror restore for the relationship with destination vserverA:primary1
+----
+

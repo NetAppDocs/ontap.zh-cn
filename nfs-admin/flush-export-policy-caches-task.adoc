@@ -1,0 +1,99 @@
+---
+permalink: nfs-admin/flush-export-policy-caches-task.html 
+sidebar: sidebar 
+keywords: flush, export, policy, cache 
+summary: 手动刷新导出策略缓存（ vserver export-policy cache flush ）会删除可能过时的信息，并强制 ONTAP 从相应的外部资源检索当前信息。这有助于解决与客户端访问 NFS 导出相关的各种问题。 
+---
+= 刷新导出策略缓存
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 使用多个导出策略缓存来存储与导出策略相关的信息，以加快访问速度。手动刷新导出策略缓存（`vserver export-policy cache flush` ）会删除可能过时的信息，并强制 ONTAP 从相应的外部资源检索当前信息。这有助于解决与客户端访问 NFS 导出相关的各种问题。
+
+由于以下原因，导出策略缓存信息可能已过时：
+
+* 最近对导出策略规则进行的更改
+* 最近对名称服务器中的主机名记录进行的更改
+* 最近对名称服务器中的网络组条目进行的更改
+* 从阻止网络组完全加载的网络中断中恢复
+
+
+.步骤
+. 如果未启用名称服务缓存，请在高级权限模式下执行以下操作之一：
++
+[cols="2*"]
+|===
+| 要刷新的内容 | 输入命令 ... 
+
+
+ a| 
+所有导出策略缓存（ showmount 除外）
+ a| 
+`vserver export-policy cache flush -vserver vserver_name`
+
+
+
+ a| 
+导出策略规则访问缓存
+ a| 
+`vserver export-policy cache flush -vserver vserver_name -cache access` 您可以使用可选的 ` 节点` 参数来指定要刷新访问缓存的节点。
+
+
+
+ a| 
+主机名缓存
+ a| 
+`vserver export-policy cache flush -vserver vserver_name -cache host`
+
+
+
+ a| 
+网络组缓存
+ a| 
+`vserver export-policy cache flush -vserver vserver_name -cache netgroup` 处理网络组需要大量资源。只有在尝试解析因网络组陈旧而导致的客户端访问问题描述时，才应刷新网络组缓存。
+
+
+
+ a| 
+showmount 缓存
+ a| 
+`vserver export-policy cache flush -vserver vserver_name -cache showmount`
+
+|===
+. 如果启用了名称服务缓存，请执行以下操作之一：
++
+[cols="2*"]
+|===
+| 要刷新的内容 | 输入命令 ... 
+
+
+ a| 
+导出策略规则访问缓存
+ a| 
+`vserver export-policy cache flush -vserver vserver_name -cache access` 您可以使用可选的 ` 节点` 参数来指定要刷新访问缓存的节点。
+
+
+
+ a| 
+主机名缓存
+ a| 
+`vserver services name-service cache hosts forward-lookup delete-all`
+
+
+
+ a| 
+网络组缓存
+ a| 
+`vserver services name-service cache netgroups ip-etgroup delete-all` `vserver services name-service cache netgroups members delete-all` 处理网络组占用大量资源。只有在尝试解析因网络组陈旧而导致的客户端访问问题描述时，才应刷新网络组缓存。
+
+
+
+ a| 
+showmount 缓存
+ a| 
+`vserver export-policy cache flush -vserver vserver_name -cache showmount`
+
+|===
+

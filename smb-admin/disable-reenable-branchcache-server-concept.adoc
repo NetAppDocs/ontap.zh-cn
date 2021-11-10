@@ -1,0 +1,32 @@
+---
+permalink: smb-admin/disable-reenable-branchcache-server-concept.html 
+sidebar: sidebar 
+keywords: previous, configure, branchcache, branch, office, client, cache, content, disable, what happens when you disable or reenable branchcache on the cifs server 
+summary: 如果先前已配置 BranchCache ，但不希望分支机构客户端使用缓存的内容，则可以在 CIFS 服务器上禁用缓存。您必须了解禁用 BranchCache 时会发生什么情况。 
+---
+= 在 CIFS 服务器上禁用或重新启用 BranchCache 时会发生什么情况
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果先前已配置 BranchCache ，但不希望分支机构客户端使用缓存的内容，则可以在 CIFS 服务器上禁用缓存。您必须了解禁用 BranchCache 时会发生什么情况。
+
+禁用 BranchCache 后， ONTAP 将不再计算哈希或将元数据发送到发出请求的客户端。但是，文件访问不会中断。此后，当启用了 BranchCache 的客户端请求要访问的内容的元数据信息时， ONTAP 会做出响应，并显示 Microsoft 定义的错误，这会导致客户端发送第二个请求，请求实际内容。在响应内容请求时， CIFS 服务器会发送存储在 Storage Virtual Machine （ SVM ）上的实际内容。
+
+在 CIFS 服务器上禁用 BranchCache 后， SMB 共享不会公布 BranchCache 功能。要访问新 SMB 连接上的数据，客户端会发出正常的读取 SMB 请求。
+
+您可以随时在 CIFS 服务器上重新启用 BranchCache 。
+
+* 由于禁用 BranchCache 时不会删除哈希存储，因此，如果请求的哈希仍然有效，则在重新启用 BranchCache 后， ONTAP 可以使用存储的哈希响应哈希请求。
+* 如果随后重新启用了 BranchCache ，则在禁用 BranchCache 期间与已启用 BranchCache 的共享建立 SMB 连接的任何客户端都不会获得 BranchCache 支持。
++
+这是因为在设置 SMB 会话时， ONTAP 会公布对共享的 BranchCache 支持。在禁用 BranchCache 期间与已启用 BranchCache 的共享建立会话的客户端需要断开连接并重新连接，才能使用此共享的缓存内容。
+
+
+
+[NOTE]
+====
+如果在 CIFS 服务器上禁用 BranchCache 后不想保存哈希存储，则可以手动将其删除。如果重新启用 BranchCache ，则必须确保哈希存储目录存在。重新启用 BranchCache 后，启用了 BranchCache 的共享会公布 BranchCache 功能。启用了 BranchCache 的客户端发出新请求时， ONTAP 会创建新哈希。
+
+====

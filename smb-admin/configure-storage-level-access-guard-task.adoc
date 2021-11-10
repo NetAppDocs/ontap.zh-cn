@@ -1,0 +1,254 @@
+---
+permalink: smb-admin/configure-storage-level-access-guard-task.html 
+sidebar: sidebar 
+keywords: level, storage, access, security, provide, guard, applies, access, apply, object, protocol, volume, qtree 
+summary: 要在卷或 qtree 上配置存储级别访问防护，需要执行多个步骤。存储级别访问防护可提供在存储级别设置的访问安全性级别。它可以确保从所有 NAS 协议对应用了该协议的存储对象进行的所有访问均通过适用场景进行安全保护。 
+---
+= 配置存储级别访问防护
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要在卷或 qtree 上配置存储级别访问防护，需要执行多个步骤。存储级别访问防护可提供在存储级别设置的访问安全性级别。它可以确保从所有 NAS 协议对应用了该协议的存储对象进行的所有访问均通过适用场景进行安全保护。
+
+.步骤
+. 使用 `vserver security file-directory ntfs create` 命令创建安全描述符。
++
+`vserver security file-directory ntfs create -vserver vs1 -ntfs-SD sd1` `vserver security file-directory ntfs show -vserver vs1`
+
++
+[listing]
+----
+
+Vserver: vs1
+
+   NTFS Security    Owner Name
+   Descriptor Name
+   ------------     --------------
+   sd1              -
+----
++
+系统将使用以下四个默认 DACL 访问控制条目（ ACE ）创建安全描述符：
+
++
+[listing]
+----
+
+Vserver: vs1
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access          Apply To
+                     Type     Rights
+    --------------   -------  -------         -----------
+    BUILTIN\Administrators
+                     allow    full-control   this-folder, sub-folders, files
+    BUILTIN\Users    allow    full-control   this-folder, sub-folders, files
+    CREATOR OWNER    allow    full-control   this-folder, sub-folders, files
+    NT AUTHORITY\SYSTEM
+                     allow    full-control   this-folder, sub-folders, files
+----
++
+如果您不想在配置存储级别访问防护时使用默认条目，则可以在创建自己的 ACE 并将其添加到安全描述符之前将其删除。
+
+. 从安全描述符中删除不希望配置存储级别访问防护安全性的任何默认 DACL ACE ：
++
+.. 使用 `vserver security file-directory ntfs dacl remove` 命令删除任何不需要的 DACL ACE 。
++
+在此示例中，将从安全描述符中删除三个默认 DACL ACE ： BUILTIN\Administrators ， BUILTIN\Users 和 Creator OWNER 。
+
++
+`vserver security file-directory ntfs dacl remove -vserver vs1 -ntfs-SD sd1 -access-type allow -account builtin\users` `vserver security file-directory ntfs dacl remove -vserver vs1 -ntfs-sd1 -access-type allow -account buildin\Administrators` `vserver security file-directory ntfs dacl remove -vserver vs1 -owner ntfs -access -type sd1 -access -user`
+
+.. 使用 `vserver security file-directory ntfs dacl show` 命令验证是否已从安全描述符中删除不想用于存储级别访问防护安全性的 DACL ACE 。
++
+在此示例中，命令的输出将验证是否已从安全描述符中删除三个默认 DACL ACE ，而仅保留 NT AUTHORITY\SYSTEM 默认 DACL ACE 条目：
+
++
+`vserver security file-directory ntfs dacl show -vserver vs1`
+
++
+[listing]
+----
+
+Vserver: vs1
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access          Apply To
+                     Type     Rights
+    --------------   -------  -------         -----------
+    NT AUTHORITY\SYSTEM
+                     allow    full-control   this-folder, sub-folders, files
+----
+
+
+. 使用 `vserver security file-directory ntfs dacl add` 命令将一个或多个 DACL 条目添加到安全描述符中。
++
+在此示例中，将两个 DACL ACE 添加到安全描述符中：
+
++
+`vserver security file-directory ntfs dacl add -vserver vs1 -ntfs-sd1 -access-type allow -account example\engineering -rights full-control -apply-to sis-folder ， sub-folders ， files` `vserver security file-directory ntfs dacl add -vserver vs1 -ntfs-sd1 -access-type allow -account "example\Domain-users ， sub-folders" ，` s."
+
+. 使用 `vserver security file-directory ntfs sacl add` 命令将一个或多个 SACL 条目添加到安全描述符中。
++
+在此示例中，将两个 SACL ACE 添加到安全描述符中：
+
++
+`vserver security file-directory ntfs sacl add -vserver vs1 -ntfs-sd1 -access-type failure -account "example\Domain users" -rights read -apply-to sis-folder ， sub-folders ， files` `vserver security file-directory ntfs sacl add -vserver vs1 -ntfs-sd1 -access-type success -account example\engineering -folder ， file-control -file-folder ，`
+
+. 分别使用 `vserver security file-directory ntfs dacl show` 和 `vserver security file-directory ntfs sacl show` 命令验证是否已正确配置 DACL 和 SACL ACE 。
++
+在此示例中，以下命令显示有关安全描述符 " `sD1` " 的 DACL 条目的信息：
+
++
+`vserver security file-directory ntfs dacl show -vserver vs1 -ntfs-SD sd1`
+
++
+[listing]
+----
+
+Vserver: vs1
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access          Apply To
+                     Type     Rights
+    --------------   -------  -------         -----------
+    EXAMPLE\Domain Users
+                     allow    read           this-folder, sub-folders, files
+    EXAMPLE\engineering
+                     allow    full-control   this-folder, sub-folders, files
+    NT AUTHORITY\SYSTEM
+                     allow    full-control   this-folder, sub-folders, files
+----
++
+在此示例中，以下命令显示有关安全描述符 " `sD1` " 的 SACL 条目的信息：
+
++
+`vserver security file-directory ntfs sacl show -vserver vs1 -ntfs-SD sd1`
+
++
+[listing]
+----
+
+Vserver: vs1
+  NTFS Security Descriptor Name: sd1
+
+    Account Name     Access   Access          Apply To
+                     Type     Rights
+    --------------   -------  -------         -----------
+    EXAMPLE\Domain Users
+                     failure  read           this-folder, sub-folders, files
+    EXAMPLE\engineering
+                     success  full-control   this-folder, sub-folders, files
+----
+. 使用 `vserver security file-directory policy create` 命令创建安全策略。
++
+以下示例将创建一个名为 "`policy1` " 的策略：
+
++
+`vserver security file-directory policy create -vserver vs1 -policy-name policy1`
+
+. 使用 `vserver security file-directory policy show` 命令验证策略配置是否正确。
++
+`vserver security file-directory policy show`
+
++
+[listing]
+----
+
+   Vserver          Policy Name
+   ------------     --------------
+   vs1              policy1
+----
+. 使用 `vserver security file-directory policy-task add` 命令并将 ` access-control` 参数设置为 `slag` ，将具有关联安全描述符的任务添加到安全策略中。
++
+即使策略可以包含多个存储级别访问防护任务，您也无法将策略配置为同时包含文件目录和存储级别访问防护任务。策略必须包含所有存储级别访问防护任务或所有文件目录任务。
+
++
+在此示例中，将任务添加到名为 "`policy1` " 的策略中，该策略分配给安全描述符 " `sD1` " 。它会分配给 ` /datavol1` 路径，并将访问控制类型设置为 " `slag` " 。
+
++
+`vserver security file-directory policy task add -vserver vs1 -policy-name policy1 -path /datavol1 -access-control slag -securation-type ntfs -ntfs-mode propagate -ntfs-SD sd1`
+
+. 使用 `vserver security file-directory policy task show` 命令验证是否已正确配置任务。
++
+`vserver security file-directory policy task show -vserver vs1 -policy-name policy1`
+
++
+[listing]
+----
+
+ Vserver: vs1
+  Policy: policy1
+
+   Index  File/Folder  Access           Security  NTFS       NTFS Security
+          Path         Control          Type      Mode       Descriptor Name
+   -----  -----------  ---------------  --------  ---------- ---------------
+   1      /datavol1    slag             ntfs      propagate  sd1
+----
+. 使用 `vserver security file-directory policy apply` 命令应用存储级别访问防护安全策略。
++
+`vserver security file-directory apply -vserver vs1 -policy-name policy1`
+
++
+已计划应用安全策略的作业。
+
+. 使用 `vserver security file-directory show` 命令验证应用的存储级别访问防护安全设置是否正确。
++
+在此示例中，命令的输出显示存储级别访问防护安全性已应用于 NTFS 卷 ` /datavol1` 。即使默认 DACL 允许对所有人进行完全控制，存储级别访问防护安全性也会限制（和审核）对存储级别访问防护设置中定义的组的访问。
+
++
+`vserver security file-directory show -vserver vs1 -path /datavol1`
+
++
+[listing]
+----
+
+                Vserver: vs1
+              File Path: /datavol1
+      File Inode Number: 77
+         Security Style: ntfs
+        Effective Style: ntfs
+         DOS Attributes: 10
+ DOS Attributes in Text: ----D---
+Expanded Dos Attributes: -
+           Unix User Id: 0
+          Unix Group Id: 0
+         Unix Mode Bits: 777
+ Unix Mode Bits in Text: rwxrwxrwx
+                   ACLs: NTFS Security Descriptor
+                         Control:0x8004
+                         Owner:BUILTIN\Administrators
+                         Group:BUILTIN\Administrators
+                         DACL - ACEs
+                           ALLOW-Everyone-0x1f01ff
+                           ALLOW-Everyone-0x10000000-OI|CI|IO
+
+
+                         Storage-Level Access Guard security
+                         SACL (Applies to Directories):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                         DACL (Applies to Directories):
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff
+                         SACL (Applies to Files):
+                           AUDIT-EXAMPLE\Domain Users-0x120089-FA
+                           AUDIT-EXAMPLE\engineering-0x1f01ff-SA
+                         DACL (Applies to Files):
+                           ALLOW-EXAMPLE\Domain Users-0x120089
+                           ALLOW-EXAMPLE\engineering-0x1f01ff
+                           ALLOW-NT AUTHORITY\SYSTEM-0x1f01ff
+----
+
+
+* 相关信息 *
+
+xref:manage-ntfs-security-audit-policies-slag-concept.adoc[使用命令行界面管理 SVM 上的 NTFS 文件安全性， NTFS 审核策略和存储级别访问防护]
+
+xref:workflow-config-storage-level-access-guard-concept.adoc[用于配置存储级别访问防护的工作流]
+
+xref:display-storage-level-access-guard-task.adoc[显示有关存储级别访问防护的信息]
+
+xref:remove-storage-level-access-guard-task.adoc[正在删除存储级别访问防护]

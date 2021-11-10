@@ -1,0 +1,72 @@
+---
+permalink: nfs-config/create-kerberos-config-task.html 
+sidebar: sidebar 
+keywords: enable, kerberos, data, lif 
+summary: 您可以使用 vserver nfs kerberos interface enable 命令在数据 LIF 上启用 Kerberos 。这样， SVM 就可以对 NFS 使用 Kerberos 安全服务。 
+---
+= 在数据 LIF 上启用 Kerberos
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `vserver nfs kerberos interface enable` 命令在数据 LIF 上启用 Kerberos 。这样， SVM 就可以对 NFS 使用 Kerberos 安全服务。
+
+如果您使用的是 Active Directory KDC ，则所使用的任何 SPN 的前 15 个字符必须在域或域中的 SVM 之间是唯一的。
+
+.步骤
+. 创建 NFS Kerberos 配置：
++
+`vserver nfs kerberos interface enable -vserver _vserver_name_ -lif _logical_interface_-SPN _service_principal 名称 _`
+
++
+ONTAP 需要 KDC 中 SPN 的机密密钥才能启用 Kerberos 接口。
+
++
+对于 Microsoft KDC ，将联系 KDC ，并在命令行界面上发出用户名和密码提示以获取机密密钥。如果需要在 Kerberos 域的其他 OU 中创建 SPN ，则可以指定可选的 ` -ou` 参数。
+
++
+对于非 Microsoft KDC ，可以使用以下两种方法之一获取机密密钥：
+
++
+|===
+| 如果您 ... | 您还必须在命令中包含以下参数 ... 
+
+
+ a| 
+拥有 KDC 管理员凭据，以便直接从 KDC 检索密钥
+ a| 
+` -admin-username` ` KDC 管理用户名 _`
+
+
+
+ a| 
+没有 KDC 管理员凭据，但具有包含此密钥的 KDC 中的 keytab 文件
+ a| 
+` -keytab-uri` ｛ ftp_http ｝ ： //` uri`
+
+|===
+. 验证是否已在 LIF 上启用 Kerberos ：
++
+`vserver nfs kerberos-config show`
+
+. 重复步骤 1 和 2 ，在多个 LIF 上启用 Kerberos 。
+
+
+以下命令将在逻辑接口 ves03-d1 上为名为 vs1 的 SVM 创建并验证 NFS Kerberos 配置，并在 OU lab2ou 中使用 SPN NFS/ves03-d1.lab.example.com@TEST.LAB.EXAMPLE.COM ：
+
+[listing]
+----
+vs1::> vserver nfs kerberos interface enable -lif ves03-d1 -vserver vs2
+-spn nfs/ves03-d1.lab.example.com@TEST.LAB.EXAMPLE.COM -ou "ou=lab2ou"
+
+vs1::>vserver nfs kerberos-config show
+        Logical
+Vserver Interface Address       Kerberos  SPN
+------- --------- -------       --------- -------------------------------
+vs0     ves01-a1
+                  10.10.10.30   disabled  -
+vs2     ves01-d1
+                  10.10.10.40   enabled   nfs/ves03-d1.lab.example.com@TEST.LAB.EXAMPLE.COM
+2 entries were displayed.
+----

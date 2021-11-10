@@ -1,0 +1,48 @@
+---
+permalink: nfs-config/create-new-ldap-client-schema-task.html 
+sidebar: sidebar 
+keywords: create, new, ldap, client, schema 
+summary: 如果环境中的 LDAP 模式与 ONTAP 默认值不同，则必须在创建 LDAP 客户端配置之前为 ONTAP 创建新的 LDAP 客户端模式。 
+---
+= 创建新的 LDAP 客户端模式
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果环境中的 LDAP 模式与 ONTAP 默认值不同，则必须在创建 LDAP 客户端配置之前为 ONTAP 创建新的 LDAP 客户端模式。
+
+大多数 LDAP 服务器都可以使用 ONTAP 提供的默认模式：
+
+* MS-AD-BIS （大多数 Windows 2012 及更高版本 AD 服务器的首选架构）
+* AD-IDMU （ Windows 2008 ， Windows 2012 及更高版本的 AD 服务器）
+* AD-SFU （ Windows 2003 及更早版本的 AD 服务器）
+* RFC-2307 （ UNIX LDAP 服务器）
+
+
+如果需要使用非默认 LDAP 模式，则必须在创建 LDAP 客户端配置之前创建该模式。在创建新模式之前，请咨询 LDAP 管理员。
+
+无法修改 ONTAP 提供的默认 LDAP 模式。要创建新模式，请创建一个副本，然后相应地修改该副本。
+
+.步骤
+. 显示现有 LDAP 客户端模式模板以确定要复制的模板：
++
+`vserver services name-service ldap client schema show`
+
+. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+. 为现有 LDAP 客户端模式创建副本：
++
+`vserver services name-service ldap client schema copy -vserver _vserver_name_ -schema _existing_schema_name_ -new-schema-name _new_schema_name_`
+
+. 修改新架构并根据您的环境对其进行自定义：
++
+`vserver services name-service ldap client schema modify`
+
+. 返回到管理权限级别：
++
+`set -privilege admin`
+
+

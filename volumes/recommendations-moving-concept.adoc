@@ -1,0 +1,79 @@
+---
+permalink: volumes/recommendations-moving-concept.html 
+sidebar: sidebar 
+keywords: considerations, recommendations, when, moving, volumes, flexclone volume, metroCluster configuration 
+summary: 移动卷具有许多注意事项和建议，这些注意事项和建议会受到要移动的卷或系统配置（例如 MetroCluster 配置）的影响。您应了解与移动卷相关的注意事项和建议。 
+---
+= 移动卷时的注意事项和建议
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+移动卷具有许多注意事项和建议，这些注意事项和建议会受到要移动的卷或系统配置（例如 MetroCluster 配置）的影响。您应了解与移动卷相关的注意事项和建议。
+
+
+
+== 一般注意事项和建议
+
+* 如果要升级集群的版本系列，请在升级集群中的所有节点之前不要移动卷。
++
+此建议可防止您无意中尝试将卷从较新的版本系列移动到较旧的版本系列。
+
+* 源卷必须一致。
+* 如果已将一个或多个聚合分配给关联的 Storage Virtual Machine （ SVM ），则目标聚合必须是已分配的聚合之一。
+* 您不能将卷移入或移出接管的 CFO 聚合。
+* 如果包含 LUN 的卷在移动前未启用 NVFAIL ，则在移动后将启用 NVFAIL 。
+* 您可以将卷从 Flash Pool 聚合移动到另一个 Flash Pool 聚合。
++
+** 该卷的缓存策略也会移动。
+** 移动可能会影响卷性能。
+
+
+* 您可以在 Flash Pool 聚合和非 Flash Pool 聚合之间移动卷。
++
+** 如果将卷从 Flash Pool 聚合移动到非 Flash Pool 聚合， ONTAP 将显示一条消息，警告您移动可能会影响卷性能并询问您是否要继续。
+** 如果将卷从非 Flash Pool 聚合移动到 Flash Pool 聚合， ONTAP 会分配 `auto` caching-policy 。
+
+
+* 卷所在的聚合具有空闲数据保护。如果将卷从包含 NSE 驱动器的聚合移动到不包含 NSE 驱动器的聚合，则卷将不再具有 NSE 空闲数据保护。
+
+
+
+
+== FlexClone 卷注意事项和建议
+
+* 移动 FlexClone 卷时，这些卷不能脱机。
+* 您可以将 FlexClone 卷从一个聚合移动到同一 SVM 中同一节点或另一节点上的另一个聚合，而无需拆分。
+* 移动克隆后， FlexClone 卷 Snapshot 副本不会丢失。
+* 您可以将 FlexClone 父卷从一个聚合移动到另一个聚合。
++
+移动 FlexClone 父卷时，系统会留下一个临时卷，用作所有 FlexClone 卷的父卷。除了使临时卷脱机或将其删除之外，不允许对临时卷执行任何操作。拆分或销毁所有 FlexClone 卷后，系统会自动清理临时卷。
+
+* 移动 FlexClone 子卷后，该卷将不再是 FlexClone 卷。
+* FlexClone 移动操作不能与 FlexClone 副本或拆分操作共存。
+* 如果正在执行克隆拆分操作，则移动卷可能会失败。
++
+在克隆拆分操作完成之前，不应移动卷。
+
+
+
+
+
+== MetroCluster 配置注意事项
+
+* 在 MetroCluster 配置中移动卷期间，如果在源集群上的目标聚合上创建了临时卷，则还会在运行正常的集群上创建与已镜像但未同化的聚合中的卷对应的临时卷的记录。
+* 如果在转换之前发生 MetroCluster 切换，则目标卷会有一条记录，并且是临时卷（类型为 TMP 的卷）。
++
+移动作业将在运行正常的（灾难恢复）集群上重新启动，报告故障并清理所有与移动相关的项，包括临时卷。如果无法正确执行清理，则会生成一个 EMS ，提醒系统管理员执行必要的清理。
+
+* 如果在转换阶段开始之后但移动作业完成之前发生 MetroCluster 切换（即，移动已达到可更新集群以指向目标聚合的阶段），则移动作业将在运行正常的情况下重新启动（灾难恢复） 集群并运行至完成状态。
++
+所有与移动相关的项都会被清理，包括临时卷（原始源）。如果无法正确执行清理，则会生成一个 EMS ，提醒系统管理员执行必要的清理。
+
+* 如果正在对属于已切换站点的卷执行任何卷移动操作，则不允许强制或非强制 MetroCluster 切回。
++
+如果正在对运行正常的站点的本地卷执行卷移动操作，则不会阻止切回。
+
+* 非强制 MetroCluster 切换会被阻止，但如果正在执行任何卷移动操作，则不会阻止强制 MetroCluster 切换。
+

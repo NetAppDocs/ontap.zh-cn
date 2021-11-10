@@ -1,0 +1,21 @@
+---
+permalink: volumes/quotas-applied-root-user-concept.html 
+sidebar: sidebar 
+keywords: how, quotas are applied, root user 
+summary: UNIX 客户端上的 root 用户（ UID=0 ）受树配额限制，但不受用户配额或组配额限制。这样， root 用户就可以代表其他用户执行操作，否则配额会阻止这些操作。 
+---
+= 如何将配额应用于 root 用户
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+UNIX 客户端上的 root 用户（ UID=0 ）受树配额限制，但不受用户配额或组配额限制。这样， root 用户就可以代表其他用户执行操作，否则配额会阻止这些操作。
+
+当 root 用户代表权限较低的用户执行文件或目录所有权更改或其他操作（例如 UNIX `chown` 命令）时， ONTAP 会根据新所有者检查配额，但不会报告错误或停止此操作。 即使超过新所有者的硬配额限制也是如此。当恢复丢失的数据等管理操作导致临时超过配额时，此功能非常有用。
+
+[NOTE]
+====
+但是，在执行所有权传输后，如果用户在仍超过配额的情况下尝试分配更多磁盘空间，则客户端系统将报告磁盘空间错误。
+
+====

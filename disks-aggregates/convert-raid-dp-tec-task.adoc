@@ -1,0 +1,32 @@
+---
+permalink: disks-aggregates/convert-raid-dp-tec-task.html 
+sidebar: sidebar 
+keywords: convert, raid-dp, raid-tec 
+summary: 如果要添加三重奇偶校验保护，可以从 RAID-DP 转换为 RAID-TEC 。如果聚合中使用的磁盘大小大于 4 TiB ，建议使用 RAID-TEC 。 
+---
+= 从 RAID-DP 转换为 RAID-TEC
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要添加三重奇偶校验保护，可以从 RAID-DP 转换为 RAID-TEC 。如果聚合中使用的磁盘大小大于 4 TiB ，建议使用 RAID-TEC 。
+
+要转换的聚合必须至少具有六个磁盘。
+
+硬盘驱动器（ HDD ）聚合可以从 RAID-DP 转换为 RAID-TEC 。这包括 Flash Pool 聚合中的 HDD 层。
+
+.步骤
+. 验证聚合是否联机且至少具有六个磁盘：
++
+`storage aggregate show-status -aggregate _aggregate_name_`
+
+. 将聚合从 RAID-DP 转换为 RAID-TEC ：
++
+`storage aggregate modify -aggregate _aggregate_name_ -raidtype raid_tec`
+
+. 验证聚合 RAID 策略是否为 RAID-TEC ：
++
+`storage aggregate show _aggregate_name_`
+
+

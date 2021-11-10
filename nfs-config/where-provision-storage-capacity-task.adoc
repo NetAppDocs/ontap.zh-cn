@@ -1,0 +1,39 @@
+---
+permalink: nfs-config/where-provision-storage-capacity-task.html 
+sidebar: sidebar 
+keywords: decide, provision, new, nfs, storage, capacity 
+summary: 在创建新的 NFS 卷或 qtree 之前，您必须先确定是将其置于新的还是现有的 SVM 中，以及 SVM 需要多少配置。此决定将决定您的工作流。 
+---
+= 确定在何处配置新的 NFS 存储容量
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在创建新的 NFS 卷或 qtree 之前，您必须先确定是将其置于新的还是现有的 SVM 中，以及 SVM 需要多少配置。此决定将决定您的工作流。
+
+.选项
+* 如果要在新 SVM 或已启用但未配置 NFS 的现有 SVM 上配置卷或 qtree ，请完成 " 配置对 SVM 的 NFS 访问 " 和 " 将 NFS 存储添加到启用了 NFS 的 SVM " 中的步骤。
++
+xref:access-svm-task.adoc[配置对 SVM 的 NFS 访问]
+
++
+xref:add-storage-capacity-nfs-enabled-svm-concept.adoc[将 NFS 存储添加到启用了 NFS 的 SVM]
+
++
+如果满足以下条件之一，您可以选择创建新的 SVM ：
+
++
+** 首次在集群上启用 NFS 。
+** 集群中的现有 SVM 不希望启用 NFS 支持。
+** 一个集群中有一个或多个启用了 NFS 的 SVM ，您希望在一个隔离的命名空间中使用另一个 NFS 服务器（多租户情形）。您还应选择此选项，以便在已启用但未配置 NFS 的现有 SVM 上配置存储。如果您创建了用于 SAN 访问的 SVM ，或者在创建 SVM 时未启用任何协议，则可能会出现这种情况。
+
+
++
+在 SVM 上启用 NFS 后，继续配置卷或 qtree 。
+
+* 如果要在已完全配置为可进行 NFS 访问的现有 SVM 上配置卷或 qtree ，请完成 " 将 NFS 存储添加到启用了 NFS 的 SVM" 中的步骤。
++
+xref:add-storage-capacity-nfs-enabled-svm-concept.adoc[将 NFS 存储添加到启用了 NFS 的 SVM]
+
+

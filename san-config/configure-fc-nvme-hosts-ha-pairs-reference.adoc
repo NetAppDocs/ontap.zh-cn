@@ -1,0 +1,33 @@
+---
+permalink: san-config/configure-fc-nvme-hosts-ha-pairs-reference.html 
+sidebar: sidebar 
+keywords: ways to, configure, fc, fc-nvme, san hosts with ha pairs 
+summary: 您可以将 FC 和 FC-NVMe SAN 主机配置为通过一个或多个网络结构连接到 HA 对。如果不使用交换机，则无法将 FC 或 FC-NVMe SAN 主机直接连接到 HA 对。 
+---
+= 配置 FC 和 AMP 的方法；使用 HA 对的 FC-NVMe SAN 主机
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将 FC 和 FC-NVMe SAN 主机配置为通过一个或多个网络结构连接到 HA 对。如果不使用交换机，则无法将 FC 或 FC-NVMe SAN 主机直接连接到 HA 对。
+
+您可以使用单个网络结构 HA 对或多网络结构 HA 对配置 FC 和 FC-NVMe SAN 主机。例如，插图中的 FC 目标端口号（ 0a ， 0c ， 0d ， 1a ， 1b ）。实际端口号因存储节点的型号以及是否使用扩展适配器而异。
+
+
+
+== 单网络结构 HA 对
+
+在单网络结构 HA 对配置中，有一个网络结构将 HA 对中的两个控制器连接到一个或多个主机。由于主机和控制器通过单个交换机连接，因此单网络结构 HA 对并非完全冗余。
+
+支持 FC 配置的所有平台均支持单网络结构 HA 对配置，但 FAS2240 平台除外。FAS2240 平台仅支持单网络结构单节点配置。
+
+image::../media/scrn_en_drw_fc-62xx-single-HA.png[单交换机网络结构 HA 对示意图]
+
+
+
+== 多网络结构 HA 对
+
+在多网络结构 HA 对中，有两个或更多交换机将 HA 对连接到一个或多个主机。为了简单起见，以下多网络结构 HA 对图仅显示了两个网络结构，但您可以在任何多网络结构配置中使用两个或更多网络结构：
+
+image::../media/scrn_en_drw_fc-32xx-multi-HA.png[多网络结构 HA 对示意图]

@@ -1,0 +1,100 @@
+---
+permalink: smb-admin/statistics-monitor-automatic-node-referral-task.html 
+sidebar: sidebar 
+keywords: smb, connection, refer, monitor, automatic, node, referral, extent, locating, locate, host, redistribute, lif, local, access, cifs, use statistics to monitor automatic node referral activity 
+summary: 要确定转介的 SMB 连接数，您可以使用 statistics 命令监控自动节点转介活动。通过监控转介，您可以确定自动转介在托管共享的节点上查找连接的范围，以及是否应重新分布数据 LIF 以更好地在本地访问 CIFS 服务器上的共享。 
+---
+= 使用统计信息监控自动节点转介活动
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要确定转介的 SMB 连接数，您可以使用 `statitics` 命令监控自动节点转介活动。通过监控转介，您可以确定自动转介在托管共享的节点上查找连接的范围，以及是否应重新分布数据 LIF 以更好地在本地访问 CIFS 服务器上的共享。
+
+`cifs` 对象在高级权限级别提供了多个计数器，这些计数器在监控 SMB 自动节点转介时很有用：
+
+* `node_referral_issued`
++
+在客户端使用由共享根节点托管的 LIF 进行连接后，已向共享根节点发出转介的客户端数量。
+
+* `node_referral_local`
++
+使用由托管共享根的同一节点托管的 LIF 连接的客户端数量。本地访问通常可提供最佳性能。
+
+* `node_referral_not_possible`
++
+在使用由共享根节点之外的节点托管的 LIF 进行连接后，尚未向托管共享根的节点发出转介的客户端数量。这是因为未找到共享根节点的活动数据 LIF 。
+
+* `node_referral_remote`
++
+使用由与托管共享根的节点不同的节点托管的 LIF 连接的客户端数量。远程访问可能会导致性能下降。
+
+
+
+您可以通过收集和查看特定时间段的数据（样本）来监控 Storage Virtual Machine （ SVM ）上的自动节点转介统计信息。如果不停止数据收集，您可以查看样本中的数据。停止数据收集可提供一个固定样本。如果不停止数据收集，则可以获取更新后的数据，以便与先前的查询进行比较。此比较可帮助您确定性能趋势。
+
+[NOTE]
+====
+要评估和使用从 `satictics` 命令收集的信息，您应了解客户端在环境中的分布情况。
+
+====
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 使用 `statitics` 命令查看自动节点转介统计信息。
++
+此示例通过收集和查看采样时间段的数据来查看自动节点转介统计信息：
+
++
+.. 开始收集： `satictics start -object cifs -instance vs1 -sample-id sample1`
++
+[listing]
+----
+Statistics collection is being started for Sample-id: sample1
+----
+.. 等待所需的收集时间过去。
+.. 停止收集： `statists stop -sample-id sample1`
++
+[listing]
+----
+Statistics collection is being stopped for Sample-id: sample1
+----
+.. 查看自动节点转介统计信息： `statictics show -sample-id sample1 -counter * node*`
++
+[listing]
+----
+Object: cifs
+Instance: vs1
+Start-time: 2/4/2013 19:27:02
+End-time: 2/4/2013 19:30:11
+Cluster: cluster1
+
+    Counter                                             Value
+    ----------------------------- ---------------------------
+    node_name                                          node1
+    node_referral_issued                                    0
+    node_referral_local                                     1
+    node_referral_not_possible                              2
+    node_referral_remote                                    2
+    ...
+
+    node_name                                          node2
+    node_referral_issued                                    2
+    node_referral_local                                     1
+    node_referral_not_possible                              0
+    node_referral_remote                                    2
+    ...
+----
++
+输出将显示参与 SVM vs1 的所有节点的计数器。为清晰起见，此示例仅提供与自动节点转介统计信息相关的输出字段。
+
+
+
+. 返回到管理权限级别： `set -privilege admin`
+
+
+* 相关信息 *
+
+xref:display-statistics-task.adoc[显示统计信息]
+
+link:../performance-config/index.html["性能监控设置"]

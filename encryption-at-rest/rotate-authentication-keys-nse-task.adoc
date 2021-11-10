@@ -1,0 +1,28 @@
+---
+permalink: encryption-at-rest/rotate-authentication-keys-nse-task.html 
+sidebar: sidebar 
+keywords: rotating, authentication, keys, netapp, storage, encryption 
+summary: 使用 NetApp 存储加密（ NetApp Storage Encryption ， NSE ）时，您可以轮换身份验证密钥。 
+---
+= 轮换 NetApp 存储加密的身份验证密钥
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 NetApp 存储加密（ NetApp Storage Encryption ， NSE ）时，您可以轮换身份验证密钥。
+
+如果您使用的是外部密钥管理器（ KMIP ），则支持在 NSE 环境中轮换身份验证密钥。
+
+[NOTE]
+====
+板载密钥管理器（ OKM ）不支持在 NSE 环境中轮换身份验证密钥。
+
+====
+.步骤
+. 使用 `security key-manager create-key` 命令生成新的身份验证密钥。
++
+您需要先生成新的身份验证密钥，然后才能更改身份验证密钥。
+
+. 使用 `storage encryption disk modify -disk * -data-key-id` 命令更改身份验证密钥。
+

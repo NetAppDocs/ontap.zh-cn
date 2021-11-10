@@ -1,0 +1,39 @@
+---
+permalink: volumes/view-space-savings-flexclone-files-luns-task.html 
+sidebar: sidebar 
+keywords: view, space, savings, due to flexclone files, flexclone luns 
+summary: 您可以查看包含 FlexClone 文件和 LUN 的卷中通过块共享节省的磁盘空间百分比。 
+---
+= 查看因 FlexClone 文件和 FlexClone LUN 而节省的空间
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以查看包含 FlexClone 文件和 LUN 的卷中通过块共享节省的磁盘空间百分比。
+
+.步骤
+. 要查看因 FlexClone 文件和 FlexClone LUN 而节省的空间，请输入以下命令：
++
+`df -s volname`
+
++
+`volname` 是 FlexVol 卷的名称。
+
++
+[NOTE]
+====
+如果在已启用重复数据删除的 FlexVol 卷上运行 `df -s` 命令，则可以查看通过重复数据删除以及 FlexClone 文件和 LUN 节省的空间。
+
+====
+
+
+以下示例显示了 FlexClone 卷 test1 上的空间节省：
+
+[listing]
+----
+systemA> df -s test1
+
+Filesystem         used   saved   %saved Vserver
+/vol/test1/        4828    5744     54%  vs1
+----

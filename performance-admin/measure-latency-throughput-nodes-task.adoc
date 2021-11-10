@@ -1,0 +1,104 @@
+---
+permalink: performance-admin/measure-latency-throughput-nodes-task.html 
+sidebar: sidebar 
+keywords: check, throughput, latency, between, nodes 
+summary: 您可以使用 network test-path 命令确定网络瓶颈，或者对节点之间的网络路径进行资格认定。您可以在集群间节点或集群内节点之间运行命令。 
+---
+= 检查节点之间的吞吐量和延迟
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `network test-path` 命令确定网络瓶颈，或者对节点之间的网络路径进行资格认定。您可以在集群间节点或集群内节点之间运行命令。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须是集群管理员才能执行此任务。
+* 此任务需要高级权限级别命令。
+* 对于集群间路径，源集群和目标集群必须建立对等关系。
+
+
+有时，节点之间的网络性能可能无法满足路径配置的预期。例如，在 SnapMirror 复制操作中，对于这种大型数据传输， 1 Gbps 的传输速率与源集群和目标集群之间的 10 GbE 链路不一致。
+
+您可以使用 `network test-path` 命令测量节点之间的吞吐量和延迟。您可以在集群间节点或集群内节点之间运行命令。
+
+[NOTE]
+====
+此测试会将网络路径与数据饱和，因此，您应在系统不繁忙以及节点之间的网络流量不大时运行此命令。测试在 10 秒后超时。此命令只能在 ONTAP 9 节点之间运行。
+
+====
+`session-type` 选项可确定您通过网络路径运行的操作类型，例如， "AsyncMirrorRemote" ，用于将 SnapMirror 复制到远程目标。类型决定了测试中使用的数据量。下表定义了会话类型：
+
+|===
+| 会话类型 | Description 
+
+
+ a| 
+Default
+ a| 
+在不同集群中的节点之间进行 SnapMirror 复制
+
+
+
+ a| 
+AsyncMirrorLocal
+ a| 
+在同一集群中的节点之间进行 SnapMirror 复制
+
+
+
+ a| 
+AsyncMirrorRemote
+ a| 
+在不同集群中的节点之间进行 SnapMirror 复制
+
+
+
+ a| 
+SyncMirrorRemote
+ a| 
+在不同集群中的节点之间进行 SyncMirror 复制
+
+
+
+ a| 
+RemoteDataTransfer
+ a| 
+同一集群中节点之间的数据传输（例如，向节点发出 NFS 请求，请求存储在不同节点上的卷中的文件）
+
+|===
+.步骤
+. 更改为高级权限级别：
++
+`set -privilege advanced`
+
+. 测量节点之间的吞吐量和延迟：
++
+`network test-path -source-node _source_nodename _ _local -destination-cluster _destination_clustername_ -destination-node _destination_nodename_ -session-type Default_AsyncMirrorLocal|SyncMirrorRemote_SyncMirrorRemote_RemoteDataTransfer`
+
++
+源节点必须位于本地集群中。目标节点可以位于本地集群或对等集群中。` -source-node` 的值 "local" 用于指定运行命令的节点。
+
++
+以下命令用于测量本地集群上的 `node1` 与 `cluster2` 上的 `node3` 之间 SnapMirror 类型复制操作的吞吐量和延迟：
+
++
+[listing]
+----
+cluster1::> network test-path -source-node node1 -destination-cluster cluster2 -destination-node node3 -session-type AsyncMirrorRemote
+Test Duration:      10.88 secs
+Send Throughput:    18.23 MB/sec
+Receive Throughput: 18.23 MB/sec
+MB sent:            198.31
+MB received:        198.31
+Avg latency in ms:  2301.47
+Min latency in ms:  61.14
+Max latency in ms:  3056.86
+----
+. 返回到管理权限：
++
+`set -privilege admin`
+
+
+
+如果性能不符合路径配置的预期，则应检查节点性能统计信息，使用可用工具隔离网络中的问题，检查交换机设置等。

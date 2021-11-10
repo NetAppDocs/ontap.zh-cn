@@ -1,0 +1,68 @@
+---
+permalink: smb-admin/enable-disable-required-signing-incoming-traffic-task.html 
+sidebar: sidebar 
+keywords: enforce, requirement, client, smb, message, enabling, enable, require, sign, disable, enable or disable require smb signing for incoming smb traffic 
+summary: 您可以通过启用所需的 SMB 签名来强制实施客户端对 SMB 消息签名的要求。如果启用，则 ONTAP 仅在 SMB 消息具有有效签名时才接受这些消息。如果要允许 SMB 签名，但不需要它，可以禁用所需的 SMB 签名。 
+---
+= 为传入的 SMB 流量启用或禁用所需的 SMB 签名
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过启用所需的 SMB 签名来强制实施客户端对 SMB 消息签名的要求。如果启用，则 ONTAP 仅在 SMB 消息具有有效签名时才接受这些消息。如果要允许 SMB 签名，但不需要它，可以禁用所需的 SMB 签名。
+
+默认情况下，所需的 SMB 签名处于禁用状态。您可以随时启用或禁用所需的 SMB 签名。
+
+[NOTE]
+====
+在以下情况下，默认情况下不会禁用 SMB 签名：
+
+. 已启用所需的 SMB 签名，并且集群将还原到不支持 SMB 签名的 ONTAP 版本。
+. 集群随后升级到支持 SMB 签名的 ONTAP 版本。
++
+在这些情况下，最初在受支持的 ONTAP 版本上配置的 SMB 签名配置将通过还原和后续升级保留。
+
+
+
+====
+设置 Storage Virtual Machine （ SVM ）灾难恢复关系时，为 `snapmirror create` 命令的 ` -identity-preserve` 选项选择的值将确定复制到目标 SVM 中的配置详细信息。
+
+如果将 ` -identity-preserve` 选项设置为 `true` （ ID-preserve ），则 SMB 签名安全设置将复制到目标。
+
+如果将 ` -identity-preserve` 选项设置为 `false` （ non-ID-preserve ），则 SMB 签名安全设置不会复制到目标。在这种情况下，目标上的 CIFS 服务器安全设置将设置为默认值。如果已在源 SVM 上启用所需的 SMB 签名，则必须在目标 SVM 上手动启用所需的 SMB 签名。
+
+.步骤
+. 执行以下操作之一：
++
+|===
+| 所需的 SMB 签名状态 | 输入命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver cifs security modify -vserver _vserver_name_ -is-signing-required true`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver cifs security modify -vserver _vserver_name_ -is-signing-required false`
+
+|===
+. 通过确定以下命令输出中的 `is signing required` 字段中的值是否设置为所需值来验证所需的 SMB 签名已启用或禁用： `vserver cifs security show -vserver _vserver_name_ -fields is-signing-required`
+
+
+以下示例将为 SVM vs1 启用所需的 SMB 签名：
+
+[listing]
+----
+cluster1::> vserver cifs security modify -vserver vs1 -is-signing-required true
+
+cluster1::> vserver cifs security show -vserver vs1 -fields is-signing-required
+vserver  is-signing-required
+-------- -------------------
+vs1      true
+----

@@ -1,0 +1,37 @@
+---
+permalink: system-admin/sp-bmc-network-interface--firmware-updates-concept.html 
+sidebar: sidebar 
+keywords: sp, bmc, network, interface, firmware, update 
+summary: 如果 SP 运行的是 1.5 ， 2.5 ， 3.1 或更高版本，则从 ONTAP 触发的 SP 固件更新支持通过 SP 网络接口使用基于 IP 的文件传输机制。 
+---
+= SP/BMC 使用网络接口进行固件更新时
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果 SP 运行的是 1.5 ， 2.5 ， 3.1 或更高版本，则从 ONTAP 触发的 SP 固件更新支持通过 SP 网络接口使用基于 IP 的文件传输机制。
+
+[NOTE]
+====
+本主题将同时对 SP 和 BMC 进行适用场景。
+
+====
+通过网络接口更新 SP 固件比通过串行接口更新要快。它可以缩短更新 SP 固件的维护时间，并且不会对 ONTAP 操作造成中断。ONTAP 附带了支持此功能的 SP 版本。它们也可从 NetApp 支持站点获得，并可安装在运行兼容版本的 ONTAP 的控制器上。
+
+如果您运行的是 SP 1.5 ， 2.5 ， 3.1 或更高版本，则以下固件升级行为适用：
+
+* ONTAP 触发的 _automatically _ SP 固件更新默认使用网络接口进行更新；但是，如果发生以下情况之一， SP 自动更新将切换到使用串行接口进行固件更新：
++
+** SP 网络接口未配置或不可用。
+** 基于 IP 的文件传输失败。
+** SP API 服务已禁用。
+
+
+
+
+无论您运行的是哪个 SP 版本，从 SP CLI 触发的 SP 固件更新始终使用 SP 网络接口进行更新。
+
+* 相关信息 *
+
+https://mysupport.netapp.com/site/downloads/firmware/system-firmware-diagnostics["NetApp 下载：系统固件和诊断"]

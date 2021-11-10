@@ -1,0 +1,39 @@
+---
+permalink: smb-config/configure-time-services-task.html 
+sidebar: sidebar 
+keywords: creating, create, smb, server, active, domain, controller, ensure, cluster, time, match, configure time services 
+summary: 在 Active Domain 控制器中创建 SMB 服务器之前，您必须确保集群时间和 SMB 服务器所属域的域控制器上的时间在五分钟内匹配。 
+---
+= 配置时间服务
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 Active Domain 控制器中创建 SMB 服务器之前，您必须确保集群时间和 SMB 服务器所属域的域控制器上的时间在五分钟内匹配。
+
+您应将集群 NTP 服务配置为使用与 Active Directory 域相同的 NTP 服务器进行时间同步。
+
+从 ONTAP 9.5 开始，您可以使用对称身份验证设置 NTP 服务器。
+
+.步骤
+. 使用 `cluster time-service ntp server create` 命令配置时间服务。
++
+** 要在不使用对称身份验证的情况下配置时间服务，请输入以下命令： `cluster time-service ntp server create -server server_ip_address`
+** 要使用对称身份验证配置时间服务，请输入以下命令： `cluster time-service ntp server create -server server_ip_address -key-id key_id` `cluster time-service ntp server create -server 10.10.10.1` `cluster time-service ntp server create -server 10.10.10.2`
+
+
+. 使用 `cluster time-service ntp server show` 命令验证是否已正确设置时间服务。
++
+`cluster time-service ntp server show`
+
++
+[listing]
+----
+
+Server                         Version
+------------------------------ -------
+10.10.10.1                     auto
+10.10.10.2                     auto
+----
+

@@ -1,0 +1,30 @@
+---
+permalink: volumes/user-group-quotas-qtrees-concept.html 
+sidebar: sidebar 
+keywords: how, user and group quotas, work, with, qtrees 
+summary: 树配额限制了 qtree 的总大小。要防止单个用户或组使用整个 qtree ，请为此 qtree 指定用户或组配额。 
+---
+= 用户配额和组配额如何与 qtree 配合使用
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+树配额限制了 qtree 的总大小。要防止单个用户或组使用整个 qtree ，请为此 qtree 指定用户或组配额。
+
+假设您具有以下配额文件：
+
+[listing]
+----
+
+#Quota target type            disk files thold sdisk sfile
+#-----------  ----            ---- ----- ----- ----- -----
+*             user@/vol/vol1  50M   -     45M
+jsmith        user@/vol/vol1  80M   -     75M
+----
+您会注意到，某个用户 kjones 在位于 vol2 中的关键 qtree qt1 中占用了太多空间。您可以通过向配额文件添加以下行来限制此用户的空间：
+
+[listing]
+----
+kjones        user@/vol/vol2/qt1  20M  -   15M
+----

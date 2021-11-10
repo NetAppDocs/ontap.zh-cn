@@ -1,0 +1,31 @@
+---
+permalink: performance-admin/check-smb-multiplex-settings-task.html 
+sidebar: sidebar 
+keywords: check, cifs, multiplex, settings 
+summary: 如果 CIFS 网络性能较慢导致出现性能问题描述，您可以修改多路传输设置以改进和更正它。 
+---
+= 检查 CIFS 多路传输设置
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果 CIFS 网络性能较慢导致出现性能问题描述，您可以修改多路传输设置以改进和更正它。
+
+.步骤
+. 检查 CIFS 多路传输设置：
++
+`vserver cifs options show -vserver _-vserver_name_ -instance`
+
+. 修改 CIFS 多路传输设置：
++
+`vserver cifs options modify – vserver _-vserver_name_ – max-MPX _intege_`
+
+
+
+以下示例将 `SVM1` 上的最大多路传输计数更改为 255 ：
+
+[listing]
+----
+cluster1::> vserver cifs options modify -vserver SVM1 -max-mpx 255
+----

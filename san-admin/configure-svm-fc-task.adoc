@@ -1,0 +1,43 @@
+---
+permalink: san-admin/configure-svm-fc-task.html 
+sidebar: sidebar 
+keywords: configure, svm, for fc 
+summary: 要为 FC 配置 Storage Virtual Machine （ SVM ），必须为 SVM 创建 LIF 并将 FC 协议分配给这些 LIF 。 
+---
+= 为 FC 配置 SVM
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要为 FC 配置 Storage Virtual Machine （ SVM ），必须为 SVM 创建 LIF 并将 FC 协议分配给这些 LIF 。
+
+您必须具有 FC 许可证，并且必须启用该许可证。如果未启用 FC 许可证，则 LIF 和 SVM 显示为联机，但运行状态为 `down` 。要使 LIF 和 SVM 正常运行，必须启用 FC 服务。要托管启动程序，必须对 SVM 中的所有 FC LIF 使用单个启动程序分区。
+
+对于使用 FC 协议提供数据的每个 SVM ， NetApp 至少支持每个节点一个 FC LIF 。每个节点必须使用两个 LIF ，并使用两个网络结构，每个节点连接一个 LIF 。这样可以在节点层和网络结构上实现冗余。
+
+.步骤
+. 在 SVM 上启用 FC 服务：
++
+`vserver fcp create -vserver _vserver_name_ -status-admin up`
+
+. 在为 FC 提供服务的每个节点上为 SVM 创建两个 LIF ：
++
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol fcp -home-node _node_name_ -home-port _port_`
+
++
+` -role` 参数应为 `data` ， `data-protocol` 参数应为 `fcp` 。
+
+. 确认已创建 LIF ，并且其运行状态为 `online` ：
++
+`network interface show -vserver _vserver_name_ _lif_name_`
+
+
+
+* 相关信息 *
+
+https://mysupport.netapp.com/site/global/dashboard["NetApp 支持"]
+
+https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"]
+
+xref:life-cluster-concept.adoc[集群 SAN 环境中 LIF 的注意事项]

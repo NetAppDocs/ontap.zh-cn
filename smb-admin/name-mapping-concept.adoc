@@ -1,0 +1,32 @@
+---
+permalink: smb-admin/name-mapping-concept.html 
+sidebar: sidebar 
+keywords: ontap, map, credential, user, local, name, map, database, ldap, server, exist, service, configuration, svm, how name mapping works 
+summary: 当 ONTAP 必须映射用户的凭据时，它会首先检查本地名称映射数据库和 LDAP 服务器中是否存在现有映射。它是检查一个还是同时检查这两者，以及检查顺序取决于 SVM 的名称服务配置。 
+---
+= 名称映射的工作原理
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当 ONTAP 必须映射用户的凭据时，它会首先检查本地名称映射数据库和 LDAP 服务器中是否存在现有映射。它是检查一个还是同时检查这两者，以及检查顺序取决于 SVM 的名称服务配置。
+
+* 适用于 Windows 到 UNIX 的映射
++
+如果未找到映射， ONTAP 将检查小写的 Windows 用户名是否为 UNIX 域中的有效用户名。如果此操作不起作用，则只要配置了默认 UNIX 用户，它就会使用默认 UNIX 用户。如果未配置默认 UNIX 用户，并且 ONTAP 也无法通过这种方式获取映射，则映射将失败并返回错误。
+
+* UNIX 到 Windows 的映射
++
+如果未找到映射， ONTAP 将尝试查找与 SMB 域中的 UNIX 名称匹配的 Windows 帐户。如果此操作不起作用，则会使用默认 SMB 用户，但前提是已配置此用户。如果未配置默认 CIFS 用户，并且 ONTAP 也无法通过此方式获取映射，则映射将失败并返回错误。
+
+
+
+默认情况下，计算机帐户映射到指定的默认 UNIX 用户。如果未指定默认 UNIX 用户，计算机帐户映射将失败。
+
+* 从 ONTAP 9.5 开始，您可以将计算机帐户映射到默认 UNIX 用户以外的用户。
+* 在 ONTAP 9.4 及更早版本中，您无法将计算机帐户映射到其他用户。
++
+即使为计算机帐户定义了名称映射，也会忽略这些映射。
+
+

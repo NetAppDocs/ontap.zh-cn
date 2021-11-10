@@ -1,0 +1,25 @@
+---
+permalink: concepts/snapshot-copies-concept.html 
+sidebar: sidebar 
+keywords: snapshot copies 
+summary: Snapshot 副本是卷的只读时间点映像。此映像占用的存储空间极少，并且性能开销极低，因为它仅记录自上次创建 Snapshot 副本以来对文件所做的更改。 
+---
+= Snapshot 副本
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+传统上， ONTAP 复制技术可满足灾难恢复（ DR ）和数据归档的需求。随着云服务的出现， ONTAP 复制已进行了调整，可适应 NetApp Data Fabric 中端点之间的数据传输。所有这些用途的基础是 ONTAP Snapshot 技术。
+
+_Snapshot 副本 _ 是卷的只读时间点映像。此映像占用的存储空间极少，并且性能开销极低，因为它仅记录自上次创建 Snapshot 副本以来对文件所做的更改。
+
+Snapshot 副本的效率归功于 ONTAP 的核心存储虚拟化技术—任意位置写入文件布局（ WAFL ）。 _ 与数据库一样， WAFL 使用元数据指向磁盘上的实际数据块。但是，与数据库不同， WAFL 不会覆盖现有块。它会将更新后的数据写入新块并更改元数据。
+
+这是因为 ONTAP 在创建 Snapshot 副本时引用元数据，而不是复制数据块，因此 Snapshot 副本的效率非常高。这样做可以避免其他系统在查找要复制的块时产生的 " `s时间` " ，以及自行创建副本的成本。
+
+您可以使用 Snapshot 副本恢复单个文件或 LUN ，或者还原卷的整个内容。ONTAP 会将 Snapshot 副本中的指针信息与磁盘上的数据进行比较，以重建缺少或损坏的对象，而不会造成停机或高昂的性能成本。
+
+_Snapshot 策略 _ 用于定义系统如何创建卷的 Snapshot 副本。此策略用于指定何时创建 Snapshot 副本，要保留的副本数量，如何为其命名以及如何为其添加标签以进行复制。例如，系统可能会在每天中午 12 ： 10 创建一个 Snapshot 副本，保留两个最新副本，将其命名为 " `daily` " （附加时间戳），并将其标记为 " `daily` " 以进行复制。
+
+image::../media/snapshot-copy.gif[Snapshot 副本]

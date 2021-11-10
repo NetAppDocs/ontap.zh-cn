@@ -1,0 +1,65 @@
+---
+permalink: nas-audit/create-fpolicy-external-engine-task.html 
+sidebar: sidebar 
+keywords: create, fpolicy, external engine 
+summary: 您必须创建外部引擎才能开始创建 FPolicy 配置。外部引擎定义了 FPolicy 如何建立和管理与外部 FPolicy 服务器的连接。如果您的配置使用内部 ONTAP 引擎（原生外部引擎）来简单地阻止文件，则无需配置单独的 FPolicy 外部引擎，也无需执行此步骤。 
+---
+= 创建 FPolicy 外部引擎
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须创建外部引擎才能开始创建 FPolicy 配置。外部引擎定义了 FPolicy 如何建立和管理与外部 FPolicy 服务器的连接。如果您的配置使用内部 ONTAP 引擎（原生外部引擎）来简单地阻止文件，则无需配置单独的 FPolicy 外部引擎，也无需执行此步骤。
+
+应填写外部引擎工作表。
+
+如果在 MetroCluster 配置中使用外部引擎，则应将源站点上 FPolicy 服务器的 IP 地址指定为主服务器。目标站点上 FPolicy 服务器的 IP 地址应指定为二级服务器。
+
+.步骤
+. 使用 `vserver fpolicy policy external-engine create` 命令创建 FPolicy 外部引擎。
++
+以下命令将在 Storage Virtual Machine （ SVM ） vs1.example.com 上创建外部引擎。与 FPolicy 服务器的外部通信不需要身份验证。
+
++
+`vserver fpolicy policy external-engine create -vserver-name vs1.example.com -engine-name Engine1 -primary-servers 10.1.1.2 ， 10.1.1.3 -port 6789 -ssl-option no-auth`
+
+. 使用 `vserver fpolicy external-engine show` 命令验证 FPolicy 外部引擎配置。
++
+以下命令显示有关在 SVM vs1.example.com 上配置的所有外部引擎的信息：
+
++
+`vserver fpolicy policy external-engine show -vserver vs1.example.com`
+
++
+[listing]
+----
+
+                                Primary        Secondary          External
+Vserver            Engine       Servers        Servers       Port Engine Type
+---------------    -----------  -------------- ----------- ------ -----------
+vs1.example.com    engine1      10.1.1.2,      -             6789 synchronous
+                                10.1.1.3
+----
++
+以下命令显示有关 SVM vs1.example.com 上名为 "`Engine1` " 的外部引擎的详细信息：
+
++
+`vserver fpolicy policy external-engine show -vserver vs1.example.com -engine-name Engine1`
+
++
+[listing]
+----
+
+                              Vserver: vs1.example.com
+                               Engine: engine1
+              Primary FPolicy Servers: 10.1.1.2, 10.1.1.3
+       Port Number of FPolicy Service: 6789
+            Secondary FPolicy Servers: -
+                 External Engine Type: synchronous
+SSL Option for External Communication: no-auth
+           FQDN or Custom Common Name: -
+         Serial Number of Certificate: -
+                Certificate Authority: -
+----
+

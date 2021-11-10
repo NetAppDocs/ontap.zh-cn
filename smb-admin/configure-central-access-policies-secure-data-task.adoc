@@ -1,0 +1,147 @@
+---
+permalink: smb-admin/configure-central-access-policies-secure-data-task.html 
+sidebar: sidebar 
+keywords: secure, access, data, cifs, server, central, access, policies, policy, dynamic, access, control, dac, gpo, configure central access policies to secure data on cifs servers 
+summary: 要使用中央访问策略保护对 CIFS 服务器上数据的访问，您必须执行几个步骤，包括在 CIFS 服务器上启用动态访问控制（ DAC ），在 Active Directory 中配置中央访问策略，将中央访问策略应用于具有 GPO 的 Active Directory 容器， 并在 CIFS 服务器上启用 GPO 。 
+---
+= 配置中央访问策略以保护 CIFS 服务器上的数据安全
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要使用中央访问策略保护对 CIFS 服务器上数据的访问，您必须执行几个步骤，包括在 CIFS 服务器上启用动态访问控制（ DAC ），在 Active Directory 中配置中央访问策略，将中央访问策略应用于具有 GPO 的 Active Directory 容器， 并在 CIFS 服务器上启用 GPO 。
+
+.开始之前
+* 必须将 Active Directory 配置为使用中央访问策略。
+* 您必须对 Active Directory 域控制器具有足够的访问权限，才能创建中央访问策略，并创建 GPO 并将其应用于包含 CIFS 服务器的容器。
+* 您必须对 Storage Virtual Machine （ SVM ）具有足够的管理访问权限才能执行必要的命令。
+
+
+中央访问策略已定义并应用于 Active Directory 上的组策略对象（ GPO ）。有关配置中央访问策略和 GPO 的说明，请参见 Microsoft TechNet 库。
+
+http://technet.microsoft.com/library/["Microsoft TechNet 库"]
+
+.步骤
+. 如果尚未使用 `vserver cifs options modify` 命令启用动态访问控制，请在 SVM 上启用动态访问控制。
++
+`vserver cifs options modify -vserver vs1 -is-dDAC enabled true`
+
+. 如果尚未使用 `vserver cifs group-policy modify` 命令启用 CIFS 服务器上的组策略对象（ GPO ），请启用它们。
++
+`vserver cifs group-policy modify -vserver vs1 -status enabled`
+
+. 在 Active Directory 上创建中央访问规则和中央访问策略。
+. 创建组策略对象（ GPO ）以在 Active Directory 上部署中央访问策略。
+. 将 GPO 应用于 CIFS 服务器计算机帐户所在的容器。
+. 使用 `vserver cifs group-policy update` 命令手动更新应用于 CIFS 服务器的 GPO 。
++
+`vserver cifs group-policy update -vserver vs1`
+
+. 使用 `vserver cifs group-policy show-applied` 命令验证 GPO 中央访问策略是否应用于 CIFS 服务器上的资源。
++
+以下示例显示默认域策略具有两个应用于 CIFS 服务器的中央访问策略：
+
++
+`vserver cifs group-policy show-applied`
+
++
+[listing]
+----
+Vserver: vs1
+-----------------------------
+    GPO Name: Default Domain Policy
+       Level: Domain
+      Status: enabled
+  Advanced Audit Settings:
+      Object Access:
+          Central Access Policy Staging: failure
+  Registry Settings:
+      Refresh Time Interval: 22
+      Refresh Random Offset: 8
+      Hash Publication Mode for BranchCache: per-share
+      Hash Version Support for BranchCache: all-versions
+  Security Settings:
+      Event Audit and Event Log:
+          Audit Logon Events: none
+          Audit Object Access: success
+          Log Retention Method: overwrite-as-needed
+          Max Log Size: 16384
+      File Security:
+          /vol1/home
+          /vol1/dir1
+      Kerberos:
+          Max Clock Skew: 5
+          Max Ticket Age: 10
+          Max Renew Age:  7
+      Privilege Rights:
+          Take Ownership: usr1, usr2
+          Security Privilege: usr1, usr2
+          Change Notify: usr1, usr2
+      Registry Values:
+          Signing Required: false
+      Restrict Anonymous:
+          No enumeration of SAM accounts: true
+          No enumeration of SAM accounts and shares: false
+          Restrict anonymous access to shares and named pipes: true
+          Combined restriction for anonymous user: no-access
+      Restricted Groups:
+          gpr1
+          gpr2
+  Central Access Policy Settings:
+      Policies: cap1
+                cap2
+
+    GPO Name: Resultant Set of Policy
+       Level: RSOP
+  Advanced Audit Settings:
+      Object Access:
+          Central Access Policy Staging: failure
+  Registry Settings:
+      Refresh Time Interval: 22
+      Refresh Random Offset: 8
+      Hash Publication Mode for BranchCache: per-share
+      Hash Version Support for BranchCache: all-versions
+  Security Settings:
+      Event Audit and Event Log:
+          Audit Logon Events: none
+          Audit Object Access: success
+          Log Retention Method: overwrite-as-needed
+          Max Log Size: 16384
+      File Security:
+          /vol1/home
+          /vol1/dir1
+      Kerberos:
+          Max Clock Skew: 5
+          Max Ticket Age: 10
+          Max Renew Age:  7
+      Privilege Rights:
+          Take Ownership: usr1, usr2
+          Security Privilege: usr1, usr2
+          Change Notify: usr1, usr2
+      Registry Values:
+          Signing Required: false
+      Restrict Anonymous:
+          No enumeration of SAM accounts: true
+          No enumeration of SAM accounts and shares: false
+          Restrict anonymous access to shares and named pipes: true
+          Combined restriction for anonymous user: no-access
+      Restricted Groups:
+          gpr1
+          gpr2
+  Central Access Policy Settings:
+      Policies: cap1
+                cap2
+2 entries were displayed.
+----
+
+
+* 相关信息 *
+
+xref:display-gpo-config-task.adoc[显示有关 GPO 配置的信息]
+
+xref:display-central-access-policies-task.adoc[显示有关中央访问策略的信息]
+
+xref:display-central-access-policy-rules-task.adoc[显示有关中央访问策略规则的信息]
+
+xref:enable-disable-dynamic-access-control-task.adoc[启用或禁用动态访问控制]

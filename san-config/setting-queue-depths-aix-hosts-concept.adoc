@@ -1,0 +1,34 @@
+---
+permalink: san-config/setting-queue-depths-aix-hosts-concept.html 
+sidebar: sidebar 
+keywords: set, queue, depths, aix hosts 
+summary: '您可以使用 `chdev` 命令更改 AIX 主机上的队列深度。使用 `chdev` 命令所做的更改会在重新启动后持续存在。' 
+---
+= 设置 AIX 主机上的队列深度
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `chdev` 命令更改 AIX 主机上的队列深度。使用 `chdev` 命令所做的更改会在重新启动后持续存在。
+
+示例
+
+* 要更改 hdisk7 设备的队列深度，请使用以下命令：
++
+`chdev -l hdisk7 -a queue_depth=32`
+
+* 要更改 fcs0 HBA 的队列深度，请使用以下命令：
++
+`chdev -l fcs0 -a num_cmd_elems =128`
+
++
+`num_cmd_elems` 的默认值为 200 。最大值为 2 ， 048 。
+
++
+[NOTE]
+====
+可能需要使 HBA 脱机才能更改 `num_cmd_elems` ，然后使用 `rmdev -l fcs0 -R` 和 `makdev -l fcs0 -P` 命令将其恢复联机。
+
+====
+

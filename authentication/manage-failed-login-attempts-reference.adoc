@@ -1,0 +1,39 @@
+---
+permalink: authentication/manage-failed-login-attempts-reference.html 
+sidebar: sidebar 
+keywords: manage, failed, login, attempts 
+summary: 登录尝试重复失败有时表示入侵者正在尝试访问存储系统。您可以执行多个步骤来确保不发生入侵。 
+---
+= 管理失败的登录尝试
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+登录尝试重复失败有时表示入侵者正在尝试访问存储系统。您可以执行多个步骤来确保不发生入侵。
+
+
+
+== 如何知道登录尝试失败
+
+事件管理系统（ EMS ）每小时向您发出一次失败登录尝试的通知。您可以在 `audit.log` 文件中找到失败登录尝试的记录。
+
+
+
+== 重复登录尝试失败时应执行的操作
+
+从短期来看，您可以采取多个步骤来防止入侵：
+
+* 要求密码至少包含大写字符，小写字符，特殊字符和 / 或数字
+* 在登录尝试失败后施加延迟
+* 限制允许的失败登录尝试次数，并在指定失败尝试次数后锁定用户
+* 使处于非活动状态的帐户在指定天数内过期并锁定
+
+
+您可以使用 `ssecurity login role config modify` 命令执行这些任务。
+
+从长期来看，您还可以执行以下附加步骤：
+
+* 使用 `ssecurity ssh modify` 命令限制所有新创建的 SVM 的失败登录尝试次数。
+* 通过要求用户更改密码，将现有 MD5 算法帐户迁移到更安全的 SHA-512 算法。
+

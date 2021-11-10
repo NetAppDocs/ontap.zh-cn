@@ -1,0 +1,58 @@
+---
+permalink: nfs-admin/multi-byte-file-directory-qtree-names-concept.html 
+sidebar: sidebar 
+keywords: ontap, multi byte, file, directory, qtree, name 
+summary: 从 ONTAP 9.5 开始，通过支持 4 字节 UTF-8 编码名称，可以在基本多语言平面（ BMP ）之外创建和显示包含 Unicode 补充字符的文件，目录和树名。在早期版本中，这些补充字符无法在多协议环境中正确显示。 
+---
+= ONTAP 如何处理多字节文件，目录和 qtree 名称
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.5 开始，通过支持 4 字节 UTF-8 编码名称，可以在基本多语言平面（ BMP ）之外创建和显示包含 Unicode 补充字符的文件，目录和树名。在早期版本中，这些补充字符无法在多协议环境中正确显示。
+
+要支持 4 字节 UTF-8 编码名称，可以为 `vserver` 和 `volume` 命令系列提供一个新的 _utf8mb4_ 语言代码。
+
+* 您必须通过以下方式之一创建新卷：
+* 显式设置卷 ` 语言` 选项：
++
+`volume create -language utf8mb4 ｛… ｝`
+
+* 从已使用此选项创建或修改的 SVM 继承卷 ` 语言` 选项：
++
+`vserver [creat|modify] -language utf8mb4 ｛… ｝``volume create ｛… ｝`
+
+* 您不能修改现有卷以支持 utf8mb4 ；您必须创建一个新的 utf8mb4 就绪卷，然后使用基于客户端的复制工具迁移数据。
++
+您可以更新 SVM 以获得 utf8mb4 支持，但现有卷会保留其原始语言代码。
+
++
+[NOTE]
+====
+当前不支持包含 4 字节 UTF-8 字符的 LUN 名称。
+
+====
+* Unicode 字符数据通常在使用 16 位 Unicode 转换格式（ UTF-16 ）的 Windows 文件系统应用程序和使用 8 位 Unicode 转换格式（ UTF-8 ）的 NFS 文件系统中表示。
++
+在 ONTAP 9.5 之前的版本中，由 Windows 客户端创建的名称（包括 UTF-16 补充字符）会正确显示给其他 Windows 客户端，但对于 NFS 客户端，这些名称未正确转换为 UTF-8 。同样，对于 Windows 客户端，已创建的 NFS 客户端使用 UTF-8 补充字符的名称也未正确转换为 UTF-16 。
+
+* 在运行 ONTAP 9.4 或更早版本的系统上创建包含有效或无效补充字符的文件名时， ONTAP 将拒绝该文件名并返回无效文件名错误。
++
+要避免此问题描述，请在文件名中仅使用 BMP 字符并避免使用补充字符，或者升级到 ONTAP 9.5 或更高版本。
+
+
+
+qtree 名称中允许使用 Unicode 字符。
+
+* 您可以使用 `volume qtree` 命令系列或 System Manager 设置或修改 qtree 名称。
+* qtree 名称可以包含 Unicode 格式的多字节字符，例如日语和中文字符。
+* 在 ONTAP 9.5 之前的版本中，仅支持 BMP 字符（即，可以用 3 个字节表示的字符）。
++
+[NOTE]
+====
+在 ONTAP 9.5 之前的版本中， qtree 父卷的接合路径可以包含带有 Unicode 字符的 qtree 和目录名称。如果父卷采用 UTF-8 语言设置，则 `volume show` 命令可以正确显示这些名称。但是，如果父卷语言不是 UTF-8 语言设置之一，则会使用数字 NFS 备用名称显示接合路径的某些部分。
+
+====
+* 在 9.5 及更高版本中，如果 qtree 位于启用了 utf8mb4 的卷中，则 qtree 名称中支持 4 字节字符。
+

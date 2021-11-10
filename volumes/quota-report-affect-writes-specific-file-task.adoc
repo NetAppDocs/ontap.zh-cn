@@ -1,0 +1,36 @@
+---
+permalink: volumes/quota-report-affect-writes-specific-file-task.html 
+sidebar: sidebar 
+keywords: use, quota report, determine, quotas limit, writes, specific file 
+summary: 您可以使用 volume quota report 命令和特定的文件路径来确定哪些配额限制会影响对文件的写入操作。这有助于您了解哪个配额阻止了写入操作。 
+---
+= 使用配额报告确定哪些配额限制对特定文件的写入
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 volume quota report 命令和特定的文件路径来确定哪些配额限制会影响对文件的写入操作。这有助于您了解哪个配额阻止了写入操作。
+
+.步骤
+. 使用带有 -path 参数的 volume quota report 命令。
+
+
+以下示例显示了命令和输出，用于确定写入文件 file1 的有效配额，该文件位于 FlexVol 卷 vol2 的 qtree q1 中：
+
+[listing]
+----
+cluster1:> volume quota report -vserver vs0 -volume vol2 -path /vol/vol2/q1/file1
+Virtual Server: vs0
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol2     q1        tree    jsmith     1MB  100MB       2   10000   q1
+vol2     q1        group   eng        1MB  700MB       2   70000
+vol2               group   eng        1MB  700MB       6   70000   *
+vol2               user    corp\jsmith
+                                      1MB   50MB       1       -   *
+vol2     q1        user    corp\jsmith
+                                      1MB   50MB       1       -
+5 entries were displayed.
+----

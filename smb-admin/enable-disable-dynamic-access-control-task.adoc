@@ -1,0 +1,47 @@
+---
+permalink: smb-admin/enable-disable-dynamic-access-control-task.html 
+sidebar: sidebar 
+keywords: option, enable, dynamic, access, control, dac, secure, object, cifs, server, disable, default, enable or disable dynamic access control 
+summary: 默认情况下，用于使用动态访问控制（ DAC ）保护 CIFS 服务器上的对象的选项处于禁用状态。如果要在 CIFS 服务器上使用动态访问控制，则必须启用此选项。如果您稍后决定不使用动态访问控制来保护存储在 CIFS 服务器上的对象，则可以禁用此选项。 
+---
+= 启用或禁用动态访问控制概述
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+默认情况下，用于使用动态访问控制（ DAC ）保护 CIFS 服务器上的对象的选项处于禁用状态。如果要在 CIFS 服务器上使用动态访问控制，则必须启用此选项。如果您稍后决定不使用动态访问控制来保护存储在 CIFS 服务器上的对象，则可以禁用此选项。
+
+启用动态访问控制后，文件系统可以包含具有与动态访问控制相关的条目的 ACL 。如果禁用了动态访问控制，则会忽略当前的动态访问控制条目，并且不允许输入新条目。
+
+此选项仅在高级权限级别可用。
+
+.步骤
+. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 执行以下操作之一：
++
+|===
+
+
+| 动态访问控制的目标位置 | 输入命令 ... 
+
+
+ a| 
+enabled
+ a| 
+`vserver cifs options modify -vserver _vserver_name_ -is-dcpa-enabled true`
+
+
+
+ a| 
+已禁用
+ a| 
+`vserver cifs options modify -vserver _vserver_name_ -is-dcpa-enabled false`
+
+|===
+. 返回到管理员权限级别： `set -privilege admin`
+
+
+* 相关信息 *
+
+xref:configure-central-access-policies-secure-data-task.adoc[配置中央访问策略以保护 CIFS 服务器上的数据安全]
