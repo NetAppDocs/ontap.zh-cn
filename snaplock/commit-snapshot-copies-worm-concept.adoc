@@ -69,13 +69,31 @@ SnapLock 模式 " 合规性 " 或 " 企业 " 是从聚合继承的。不支持�
 ----
 cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -type DP -size 2GB
 ----
-. 在目标集群上，设置默认保留期限，如中所述 xref:set-default-retention-period-task.adoc[设置默认保留期限]。
-. 在目标 SVM 上，初始化 SnapVault 关系：
+. 在目标集群上，设置默认保留期限，如中所述 xref:set-default-retention-period-task.adoc[设置默认保留期限]。=
+
+
+====
+作为存储目标的 SnapLock 卷会为其分配默认保留期限。对于 SnapLock 企业卷，此期限的值最初设置为最短 0 年，对于 SnapLock 合规性卷，此期限的值最长设置为 30 年。首次提交每个 NetApp Snapshot 副本时都会使用此默认保留期限。如果需要，可以稍后延长保留期限。有关详细信息，请参见 xref:set-retention-period-task.adoc[设置保留时间概述]。
+
+====
+. xref:../data-protection/create-replication-relationship-task.adoc[创建新的复制关系] 在非 SnapLock 源和步骤 3 中创建的新 SnapLock 目标之间。
 +
-` * snapmirror initialize -destination-path _destination_path_*`
+此示例将使用策略 `XDPDefault` 与目标 SnapLock 卷 `dstvolB` 创建一个新的 SnapMirror 关系，以便按每小时计划存储标记为 daily 和 weekly 的 Snapshot 副本：
 
 +
-初始化过程会向目标卷执行 _baseline transfer_ 。SnapMirror 为源卷创建 Snapshot 副本，然后将该副本及其引用的所有数据块传输到目标卷。
+[listing]
+----
+cluster2::> snapmirror create -source-path SVM1:srcvolA -destination-path SVM2:dstvolB -vserver SVM2 -policy XDPDefault -schedule hourly
+----
++
+[NOTE]
+====
+xref:../data-protection/create-custom-replication-policy-concept.adoc[创建自定义复制策略] 或 xref:/data-protection/create-replication-job-schedule-task.adoc[自定义计划] 如果可用的默认值不适用。
+
+====
+. 在目标 SVM 上，初始化步骤 5 中创建的 SnapVault 关系：
++
+` * snapmirror initialize -destination-path _destination_path_*`
 
 +
 以下命令将初始化源卷 `srcvolA` on `SVM1` 与目标卷 `dstvolB` on `SVM2` 之间的关系：
@@ -83,7 +101,16 @@ cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -
 +
 [listing]
 ----
-SVM2::> snapmirror initialize -destination-path SVM2:dstvolB
+cluster2::> snapmirror initialize -destination-path SVM2:dstvolB
+----
+. 初始化此关系并使其闲置后，在目标上使用 `snapshot show` 命令验证应用于复制的 SnapLock 副本的 Snapshot 到期时间。
++
+此示例列出了卷 `dstvolB` 上具有 SnapMirror 标签和 SnapLock 到期日期的 Snapshot 副本：
+
++
+[listing]
+----
+cluster2::> snapshot show -vserver SVM2 -volume dstvolB -fields snapmirror-label, snaplock-expiry-time
 ----
 
 

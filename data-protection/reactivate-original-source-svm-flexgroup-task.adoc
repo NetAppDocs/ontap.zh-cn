@@ -170,6 +170,18 @@ cluster_src::> snapmirror quiesce -source-path svm_backup: -destination-path svm
 ----
 cluster_src::> snapmirror break -source-path svm_backup: -destination-path svm1:
 ----
+. 如果原始源 SVM 先前已停止，请从原始源集群启动原始源 SVM ：
++
+`vserver start -vserver _svm_`
+
++
+以下示例将启动初始源 SVM ：
+
++
+[listing]
+----
+cluster_src::> vserver start svm1
+----
 . 从原始源 SVM 或原始源集群中，删除已反转的 SVM DR 关系：
 +
 `snapmirror delete -source-path SVM ： -destination-path SVM ：`
@@ -241,17 +253,5 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 [listing]
 ----
 cluster_dst::> snapmirror resync -source-path svm1: -destination-path svm_backup:
-----
-. 如果原始源 SVM 先前已停止，请从原始源集群启动原始源 SVM ：
-+
-`vserver start -vserver _svm_`
-
-+
-以下示例将启动初始源 SVM ：
-
-+
-[listing]
-----
-cluster_src::> vserver start svm1
 ----
 

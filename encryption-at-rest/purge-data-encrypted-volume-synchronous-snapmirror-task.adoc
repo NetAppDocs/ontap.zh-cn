@@ -10,14 +10,14 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有同�
 
 
 [role="lead"]
-从 ONTAP 9.8 开始，您可以使用安全清除功能在具有同步 SnapMirror 关系且已启用 NVE 的卷上无中断地执行 " `scrub` " 数据。
+从 ONTAP 9.8 开始，您可以使用安全清除功能在具有同步 SnapMirror 关系且已启用 NVE 的卷上无中断地传输 " `scrub` " 数据。
 
 .您需要什么？ #8217 ；将需要什么
 * 您必须是集群管理员才能执行此任务。
 * 此任务需要高级权限。
 
 
-完成安全清除可能需要几分钟到数小时，具体取决于已删除文件中的数据量。您可以使用 `volume encryption secure — purge show` 命令查看操作状态。您可以使用 `volume encryption secure — purge abort` 命令终止此操作。
+安全清除可能需要几分钟到几小时才能完成，具体取决于已删除文件中的数据量。您可以使用 `volume encryption secure — purge show` 命令查看操作状态。您可以使用 `volume encryption secure — purge abort` 命令终止此操作。
 
 [NOTE]
 ====
@@ -35,25 +35,25 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有同�
 ** 在 SAN 主机上，删除要安全清除的 LUN ，或者为要清除的文件中的块打孔。
 
 
-. 安全清除异步关系中的准备 vol_A ：
+. 准备异步关系中要安全清除的目标卷：
 +
 `volume encryption sure-purge start -vserver svm_name -volume volume_name -prepare true`
 
 +
 对同步 SnapMirror 关系中的另一个卷重复此步骤。
 
-. 如果要安全清除的文件位于快照中，请删除这些快照：
+. 如果要安全清除的文件位于 Snapshot 副本中，请删除 Snapshot 副本：
 +
 `snapshot delete -vserver svm_name -volume vol_a -snapshot snapshot`
 
-. 如果安全清除文件位于基本快照或通用快照中，请更新 SnapMirror 以将通用快照前移：
+. 如果安全清除文件位于基本 Snapshot 副本或通用 Snapshot 副本中，请更新 SnapMirror 以将通用 Snapshot 副本前移：
 +
 `snapmirror update -source-snapshot snapshot_name -destination-path destination_path`
 
 +
-有两个常见快照，因此必须发出此命令两次。
+有两个通用 Snapshot 副本，因此必须发出此命令两次。
 
-. 如果安全清除文件位于应用程序一致的快照中，请删除同步 SnapMirror 关系中两个卷上的快照：
+. 如果安全清除文件位于应用程序一致的 Snapshot 副本中，请删除同步 SnapMirror 关系中两个卷上的 Snapshot 副本：
 +
 `snapshot delete -vserver svm_name -volume vol_name -snapshot snapshot`
 
@@ -68,7 +68,7 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有同�
 对同步 SnapMirror 关系中的每个卷重复此步骤。
 
 +
-以下命令可安全清除 SMV `vs1` 上的 `vol1` 上已删除的文件。
+以下命令可安全清除 SMV"`vs1` " 上 "`vol1` " 上已删除的文件。
 
 +
 [listing]

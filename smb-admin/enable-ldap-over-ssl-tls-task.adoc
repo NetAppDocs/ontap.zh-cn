@@ -1,19 +1,23 @@
 ---
 permalink: smb-admin/enable-ldap-over-ssl-tls-task.html 
 sidebar: sidebar 
-keywords: cifs, server, tls, secure, communication, active, directory, ldap, security, enable ldap over tls on the cifs server 
-summary: 在 CIFS 服务器使用 TLS 与 Active Directory LDAP 服务器进行安全通信之前，您必须修改 CIFS 服务器安全设置以启用基于 TLS 的 LDAP 。 
+keywords: cifs, smb, server, tls, secure, communication, active, directory, ldap, security, enable ldap over tls on the cifs server 
+summary: 在 SMB 服务器使用 TLS 与 Active Directory LDAP 服务器进行安全通信之前，您必须修改 SMB 服务器安全设置以启用基于 TLS 的 LDAP 。 
 ---
-= 在 CIFS 服务器上启用基于 TLS 的 LDAP
+= 在服务器上启用基于 TLS 的 LDAP
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在 CIFS 服务器使用 TLS 与 Active Directory LDAP 服务器进行安全通信之前，您必须修改 CIFS 服务器安全设置以启用基于 TLS 的 LDAP 。
+在 SMB 服务器使用 TLS 与 Active Directory LDAP 服务器进行安全通信之前，您必须修改 SMB 服务器安全设置以启用基于 TLS 的 LDAP 。
+
+从 ONTAP 9.10.1 开始，默认情况下， Active Directory （ AD ）和名称服务 LDAP 连接均支持 LDAP 通道绑定。只有在启用了 Start-TLS 或 LDAPS 且会话安全设置为 sign 或 seal 的情况下， ONTAP 才会尝试使用 LDAP 连接进行通道绑定。要禁用或重新启用与 AD 服务器的 LDAP 通道绑定，请在 `cifs security modify` 命令中使用 `` -try-channel-binding for-ad-ldap` 参数。
+
+有关详细信息，请参见link:https://support.microsoft.com/en-us/topic/2020-ldap-channel-binding-and-ldap-signing-requirements-for-windows-ef185fb8-00f7-167d-744c-f299a66fc00a["2020 年 Windows 的 LDAP 通道绑定和 LDAP 签名要求"^]。
 
 .步骤
-. 配置允许与 Active Directory LDAP 服务器进行安全 LDAP 通信的 CIFS 服务器安全设置： `vserver cifs security modify -vserver _vserver_name_ -use-start-tls-for-ad-ldap true`
+. 配置允许与 Active Directory LDAP 服务器进行安全 LDAP 通信的 SMB 服务器安全设置： `vserver cifs security modify -vserver _vserver_name_ -use-start-tls-for-ad-ldap true`
 . 验证基于 TLS 的 LDAP 安全设置是否设置为 `true` ： `vserver cifs security show -vserver _vserver_name_`
 +
 [NOTE]

@@ -14,18 +14,21 @@ summary: 您可以使用 volume move start 命令通过移动现有卷来启用�
 
 要执行此任务，您必须是集群管理员，或者集群管理员已向其委派权限的 SVM 管理员。
 
-xref:delegate-volume-encryption-svm-administrator-task.adoc[委派权限以运行 volume move 命令]
+link:delegate-volume-encryption-svm-administrator-task.html["委派权限以运行 volume move 命令"]
 
 您不能使用 `volume move start` 在 SnapLock 或 FlexGroup 卷上启用加密。
 
 从 ONTAP 9.4 开始，如果在设置板载密钥管理器时启用 "`cc-mode` " ，则使用 `volume move start` 命令创建的卷会自动加密。您不需要指定 ` -encrypt-destination true` 。
 
-从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要移动的卷的所属聚合分配密钥。使用唯一密钥加密的卷称为 _NVE volume_ 。使用聚合级别密钥加密的卷称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
+从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要移动的卷所在的聚合分配密钥。使用唯一密钥加密的卷称为 _NVE volume_ 。使用聚合级别密钥加密的卷称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
 
 .步骤
 . 移动现有卷并指定是否在卷上启用加密：
 +
+[cols="35,65"]
 |===
+
+
 | 要转换 ... | 使用此命令 ... 
 
 
@@ -150,9 +153,5 @@ Vserver  Volume  Aggregate  State  Type  Size  Available  Used
 vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
 ----
 
-
-
-
-== 结果
 
 如果您使用 KMIP 服务器存储节点的加密密钥，则在对卷进行加密时， ONTAP 会自动 "`推送` " 加密密钥到服务器。

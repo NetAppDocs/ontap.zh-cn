@@ -1,7 +1,7 @@
 ---
 permalink: encryption-at-rest/configure-netapp-volume-encryption-concept.html 
 sidebar: sidebar 
-keywords: configure, netapp, volume encryption, nve, aggregate-level, support details 
+keywords: configure, netapp, volume encryption, nve, aggregate-level, support details, data encryption, encrypt data at rest, storage encryption, key 
 summary: NetApp 卷加密（ NVE ）是一种基于软件的技术，用于一次对一个卷上的空闲数据进行加密。只有存储系统可以访问的加密密钥可确保在底层设备被重新利用，退回，放置在不当位置或被盗时无法读取卷数据。 
 ---
 = 配置 NetApp 卷加密概述
@@ -22,7 +22,7 @@ NetApp 卷加密（ NVE ）是一种基于软件的技术，用于一次对一�
 * 板载密钥管理器是一个内置工具，可为数据所在存储系统中的节点提供密钥。
 
 
-从 ONTAP 9.7 开始，如果您拥有卷加密（ Volume Encryption ， VE ）许可证并使用板载或外部密钥管理器，则默认情况下会启用聚合和卷加密。每当配置外部或板载密钥管理器时，为全新聚合和全新卷配置空闲数据加密的方式都会发生变化。默认情况下，全新聚合将启用 NetApp 聚合加密（ NAE ）。默认情况下，不属于 NAE 聚合的全新卷将启用 NetApp 卷加密（ NVE ）。如果在具有 NAE 的聚合中为数据存储虚拟机（ SVM ）配置了自己的密钥管理器，并使用多租户密钥管理功能，则为该 SVM 创建的卷将自动配置 NVE 。
+从 ONTAP 9.7 开始，如果您拥有卷加密（ Volume Encryption ， VE ）许可证并使用板载或外部密钥管理器，则默认情况下会启用聚合和卷加密。每当配置外部或板载密钥管理器时，为全新聚合和全新卷配置空闲数据加密的方式都会发生变化。默认情况下，全新聚合将启用 NetApp 聚合加密（ NAE ）。默认情况下，不属于 NAE 聚合的全新卷将启用 NetApp 卷加密（ NVE ）。如果使用多租户密钥管理为数据存储虚拟机（ SVM ）配置了自己的密钥管理器，则为该 SVM 创建的卷将自动配置 NVE 。
 
 您可以对新卷或现有卷启用加密。NVE 支持所有存储效率功能，包括重复数据删除和数据压缩。
 
@@ -44,7 +44,7 @@ AFF A220 ， AFF A800 ， FAS2720 ， FAS2750 及更高版本的系统会将核�
 
 通常，每个加密卷都分配有一个唯一的密钥。删除卷后，此密钥将随之删除。
 
-从 ONTAP 9.6 开始，您可以使用 _NetApp 聚合加密（ NAE ） _ 为要加密的卷所在的聚合分配密钥。删除加密卷后，聚合的密钥将保留下来。只有在删除聚合中最后一个加密卷之后，才会删除这些密钥。
+从 ONTAP 9.6 开始，您可以使用 _NetApp 聚合加密（ NAE ） _ 为要加密的卷所在的聚合分配密钥。删除加密卷后，聚合的密钥将保留下来。这些密钥将被删除整个聚合。
 
 如果计划执行实时或后台聚合级重复数据删除，则必须使用聚合级加密。否则， NVE 不支持聚合级重复数据删除。
 
@@ -83,7 +83,10 @@ NVE 和 NAE 卷可以同时位于同一聚合上。默认情况下，在聚合�
 
 下表显示了 NVE 支持详细信息：
 
+[cols="25,75"]
 |===
+
+
 | 资源或功能 | 支持详细信息 
 
 
@@ -97,7 +100,7 @@ NVE 和 NAE 卷可以同时位于同一聚合上。默认情况下，在聚合�
  a| 
 加密
  a| 
-从 ONTAP 9.7 开始，如果添加卷加密（ VE ）并配置了板载或外部密钥管理器，则新创建的聚合和卷会默认加密。如果需要创建未加密的聚合，请使用以下命令：
+从 ONTAP 9.7 开始，在添加卷加密（ Volume Encryption ， VE ）许可证并配置板载或外部密钥管理器时，新创建的聚合和卷会默认加密。如果需要创建未加密的聚合，请使用以下命令：
 
 `storage aggregate create -encrypt-with -aggr-key false`
 
@@ -107,7 +110,7 @@ NVE 和 NAE 卷可以同时位于同一聚合上。默认情况下，在聚合�
 
 在以下情况下，默认情况下不启用加密：
 
-* 未配置 Ve
+* 未安装 Ve 许可证。
 * 未配置密钥管理器
 * 平台或软件不支持加密
 * 已启用硬件加密
@@ -139,7 +142,7 @@ RAID0 ， RAID4 ， RAID-DP ， RAID-TEC 。
  a| 
 Volumes
  a| 
-数据卷，现有根卷和 MetroCluster 元数据卷。您不能对 SVM 根卷上的数据进行加密。
+数据卷和现有根卷。您不能对 SVM 根卷或 MetroCluster 元数据卷上的数据进行加密。
 
 
 

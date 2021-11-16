@@ -14,7 +14,7 @@ summary: 您可以使用 storage encryption disk modify 命令将数据身份验
 
 您必须是集群管理员才能执行此任务。
 
-只有当自加密驱动器的身份验证密钥 ID 设置为非默认值时，才会保护其免遭未经授权的访问。密钥 ID 为 0x0 的制造商安全 ID （ MSID ）是 SAS 驱动器的标准默认值。对于 NVMe 驱动器，标准默认值为空密钥，表示为空密钥 ID 。分配自加密驱动器的密钥 ID 时，系统会将其身份验证密钥 ID 更改为非默认值。
+只有当自加密驱动器的身份验证密钥 ID 设置为非默认值时，才会保护其免遭未经授权的访问。密钥 ID 为 0x0 的制造商安全 ID （ MSID ）是 SAS 驱动器的标准默认值。对于 NVMe 驱动器，标准默认值为空密钥，表示为空密钥 ID 。将密钥 ID 分配给自加密驱动器时，系统会将其身份验证密钥 ID 更改为非默认值。
 
 .步骤
 . 将数据身份验证密钥分配给 FIPS 驱动器或 SED ：
@@ -33,7 +33,7 @@ summary: 您可以使用 storage encryption disk modify 命令将数据身份验
 +
 [listing]
 ----
-cluster1::> storage encryption disk modify -disk 0.10.* -data-key-id F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+cluster1::> storage encryption disk modify -disk 0.10.* -data-key-id 0000000000000000020000000000010019215b9738bc7b43d4698c80246db1f4
 
 Info: Starting modify on 14 disks.
       View the status of the operation by using the
@@ -52,8 +52,8 @@ Info: Starting modify on 14 disks.
 cluster1::> storage encryption disk show
 Disk    Mode Data Key ID
 -----   ---- ----------------------------------------------------------------
-0.0.0   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
-0.0.1   data F1CB30AFF1CB30B00101000000000000A68B167F92DD54196297159B5968923C
+0.0.0   data 0000000000000000020000000000010019215b9738bc7b43d4698c80246db1f4
+0.0.1   data 0000000000000000020000000000010059851742AF2703FC91369B7DB47C4722
 [...]
 ----
 

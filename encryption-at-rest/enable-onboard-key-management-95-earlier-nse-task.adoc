@@ -17,10 +17,10 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 .您需要什么？ #8217 ；将需要什么
 * 如果将 NSE 与外部密钥管理（ KMIP ）服务器结合使用，则必须已删除外部密钥管理器数据库。
 +
-xref:delete-key-management-database-task.adoc[从外部密钥管理过渡到板载密钥管理]
+link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
 
 * 您必须是集群管理员才能执行此任务。
-* 在启用加密之前，您必须配置 MetroCluster 环境。
+* 在配置板载密钥管理器之前，您必须先配置 MetroCluster 环境。
 
 
 每次向集群添加节点时，您都必须运行 `security key-manager setup` 命令。
@@ -41,7 +41,7 @@ xref:delete-key-management-database-task.adoc[从外部密钥管理过渡到板�
 
 ====
 .步骤
-. 启动密钥管理器设置向导：
+. 启动密钥管理器设置：
 +
 `security key-manager setup -enable-cc-mode yes|no`
 
@@ -52,7 +52,7 @@ xref:delete-key-management-database-task.adoc[从外部密钥管理过渡到板�
 
 ====
 +
-以下示例将在 cluster1 上启动密钥管理器设置向导，而无需在每次重新启动后输入密码短语：
+以下示例将开始在 cluster1 上设置密钥管理器，而无需在每次重新启动后输入密码短语：
 
 +
 [listing]
@@ -72,7 +72,7 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 +
 [NOTE]
 ====
-如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置向导再次显示密码短语提示之前会有五秒的延迟。
+如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置操作再次显示密码短语提示之前会有五秒的延迟。
 
 ====
 . 在密码短语确认提示符处，重新输入密码短语。
@@ -104,6 +104,6 @@ Key ID                                                           Used By
 ----
 
 
-将密码短语复制到存储系统以外的安全位置，以供将来使用。
+所有密钥管理信息都会自动备份到集群的复制数据库（ RDB ）。
 
-所有密钥管理信息都会自动备份到集群的复制数据库（ RDB ）。您还应手动备份此信息，以便在发生灾难时使用。
+配置板载密钥管理器密码短语时，您还应手动将信息备份到存储系统以外的安全位置，以便在发生灾难时使用。请参见 link:backup-key-management-information-manual-task.html["手动备份板载密钥管理信息"]。

@@ -12,6 +12,10 @@ summary: 如果在您的环境中使用 LDAP 提供名称服务，则需要与 L
 [role="lead"]
 如果在您的环境中使用 LDAP 提供名称服务，则需要与 LDAP 管理员一起确定要求和适当的存储系统配置，然后将 SVM 作为 LDAP 客户端启用。
 
+从 ONTAP 9.10.1 开始，默认情况下， Active Directory 和名称服务 LDAP 连接均支持 LDAP 通道绑定。只有在启用了 Start-TLS 或 LDAPS 且会话安全设置为 sign 或 seal 的情况下， ONTAP 才会尝试使用 LDAP 连接进行通道绑定。要禁用或重新启用与名称服务器的 LDAP 通道绑定，请将 ` -try-channel-binding` 参数与 `ldap client modify` 命令结合使用。
+
+有关详细信息，请参见link:https://support.microsoft.com/en-us/topic/2020-ldap-channel-binding-and-ldap-signing-requirements-for-windows-ef185fb8-00f7-167d-744c-f299a66fc00a["2020 年 Windows 的 LDAP 通道绑定和 LDAP 签名要求"^]。
+
 * 在为 ONTAP 配置 LDAP 之前，您应验证站点部署是否符合 LDAP 服务器和客户端配置的最佳实践。具体而言，必须满足以下条件：
 +
 ** LDAP 服务器的域名必须与 LDAP 客户端上的条目匹配。

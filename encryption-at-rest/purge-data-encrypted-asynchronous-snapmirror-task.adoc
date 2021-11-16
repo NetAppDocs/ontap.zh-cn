@@ -10,7 +10,7 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异�
 
 
 [role="lead"]
-从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异步 SnapMirror 关系且已启用 NVE 的卷上无中断地执行 " `scrub` " 数据。
+从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异步 SnapMirror 关系且已启用 NVE 的卷上无中断地传输 " `scrub` " 数据。
 
 .您需要什么？ #8217 ；将需要什么
 * 您必须是集群管理员才能执行此任务。
@@ -35,30 +35,36 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异�
 ** 在 SAN 主机上，删除要安全清除的 LUN ，或者为要清除的文件中的块打孔。
 
 
-. 安全清除异步关系中的准备 vol_A ：
+. 准备异步关系中要安全清除的目标卷：
 +
 `volume encryption sure-purge start -vserver svm_name -volume volume_name -prepare true`
 
 +
 对异步 SnapMirror 关系中的每个卷重复此步骤。
 
-. 如果要安全清除的文件位于快照中，请删除这些快照：
+. 如果要安全清除的文件位于 Snapshot 副本中，请删除 Snapshot 副本：
 +
 `snapshot delete -vserver svm_name -volume vol_name -snapshot`
 
-. 如果要安全清除的文件位于基本快照中，请执行以下操作：
+. 如果要安全清除的文件位于基本 Snapshot 副本中，请执行以下操作：
 +
-.. 在异步 SnapMirror 关系中的 vol_A 上创建快照： + `volume snapshot create -snapshot snapshot_name -vserver svm_name -volume vol_name`
-.. 更新 SnapMirror 以将基本快照向前移动： + `snapmirror update -source-snapshot snapshot_name -destination-path destination_path`
+.. 在异步 SnapMirror 关系中的目标卷上创建 Snapshot 副本：
++
+`volume snapshot create -snapshot snapshot_name -vserver svm_name -volume vol_name`
+
+.. 更新 SnapMirror 以将基本 Snapshot 副本向前移动：
++
+`snapmirror update -source-snapshot snapshot_name -destination-path destination_path`
+
 +
 对异步 SnapMirror 关系中的每个卷重复此步骤。
 
-.. 重复步骤（ a ）和（ b ），使其等于基本快照数加 1 。
+.. 重复步骤（ a ）和（ b ），使其等于基本 Snapshot 副本数加 1 。
 +
-例如，如果您有两个基本快照，则应重复步骤（ a ）和（ b ）三次。
+例如，如果您有两个基本 Snapshot 副本，则应重复步骤（ a ）和（ b ）三次。
 
-.. 验证是否存在基本快照： + `snapshot show -vserver svm_name -volume vol_name``
-.. 删除基本快照： + `snapshot delete -vserver svm_name -volume vol_name -snapshot snapshot`
+.. 验证是否存在基本 Snapshot 副本： + `snapshot show -vserver svm_name -volume vol_name``
+.. 删除基本 Snapshot 副本： + `snapshot delete -vserver svm_name -volume vol_name -snapshot snapshot`
 
 
 . 安全清除已删除的文件：
@@ -69,7 +75,7 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异�
 对异步 SnapMirror 关系中的每个卷重复此步骤。
 
 +
-以下命令可安全清除 SVM``vs1`` 上的 `vol1` 上的已删除文件：
+以下命令可安全清除 SVM "`vs1` " 上 "`vol1` " 上的已删除文件：
 
 +
 [listing]

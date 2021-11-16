@@ -15,7 +15,7 @@ summary: 您可以使用一个或多个 KMIP 服务器来保护集群用于访�
 .您需要什么？ #8217 ；将需要什么
 * 必须已安装 KMIP SSL 客户端和服务器证书。
 * 要执行此任务，您必须是集群或 SVM 管理员。
-* 在启用加密之前，您必须配置 MetroCluster 环境。
+* 在配置密钥管理器之前，您必须先配置 MetroCluster 环境。
 
 
 您最多可以将四个 KMIP 服务器连接到一个集群或 SVM 。建议至少使用两台服务器来实现冗余和灾难恢复。
@@ -23,7 +23,7 @@ summary: 您可以使用一个或多个 KMIP 服务器来保护集群用于访�
 外部密钥管理的范围决定了密钥管理服务器是保护集群中的所有 SVM 还是仅保护选定 SVM ：
 
 * 您可以使用 _cluster scopter_ 为集群中的所有 SVM 配置外部密钥管理。集群管理员可以访问存储在服务器上的每个密钥。
-* 从 ONTAP 9.6 开始，您可以使用 _SVM scopter_ 为集群中的指定 SVM 配置外部密钥管理。这最适合多租户环境，其中每个租户都使用不同的 SVM （或一组 SVM ）来提供数据。只有给定租户的 SVM 管理员才能访问该租户的密钥。
+* 从 ONTAP 9.6 开始，您可以使用 _SVM scopter_ 为集群中的数据 SVM 配置外部密钥管理。这最适合多租户环境，其中每个租户都使用不同的 SVM （或一组 SVM ）来提供数据。只有给定租户的 SVM 管理员才能访问该租户的密钥。
 * 对于多租户环境，请使用以下命令为 _MT_EK_MGMT_ 安装许可证：
 +
 `ssystem license add -license-code <MT_EK_Mgmt license code>`
@@ -56,7 +56,7 @@ summary: 您可以使用一个或多个 KMIP 服务器来保护集群用于访�
 ----
 clusterl::> security key-manager external enable -vserver cluster1 -key-servers ks1.local:15696,10.0.0.10,[fd20:8b1e:b255:814e:32bd:f35c:832c:5a09]:1234 -client-cert AdminVserverClientCert -server-ca-certs AdminVserverServerCaCert
 ----
-. 配置 SVM 的密钥管理器连接：
+. 配置密钥管理器 SVM ：
 +
 `security key-manager external enable -vserver SVM -key-servers host_name_ip_address ： port ， ... -client-cert client_certificate -server-ca-cert server_CA_certificates`
 

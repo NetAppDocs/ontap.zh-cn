@@ -18,10 +18,13 @@ summary: 您可以使用 security key-manager key create 命令为节点创建�
 
 ONTAP 会为集群中的所有节点创建身份验证密钥。
 
-* 启用板载密钥管理后，不支持此命令。
+* 启用板载密钥管理器后，不支持此命令。但是，启用板载密钥管理器后，系统会自动创建两个身份验证密钥。可以使用以下命令查看这些密钥：
++
+`sSecurity key-manager key query -key-type NSE-AK`
+
 * 如果已配置的密钥管理服务器已存储超过 128 个身份验证密钥，则会收到警告。
 +
-您可以使用 `security key-manager key delete` 命令删除任何未使用的密钥。如果给定密钥当前由 ONTAP 使用，则 `security key-manager key delete` 命令将失败。
+您可以使用 `security key-manager key delete` 命令删除任何未使用的密钥。如果给定密钥当前由 ONTAP 使用，则 `security key-manager key delete` 命令将失败。（要使用此命令，您的权限必须大于 "`admin` " 。）
 
 
 

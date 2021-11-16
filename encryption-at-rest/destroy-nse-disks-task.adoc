@@ -1,7 +1,7 @@
 ---
 permalink: encryption-at-rest/destroy-nse-disks-task.html 
 sidebar: sidebar 
-keywords: destroy, fips, drive, sed 
+keywords: destroy, fips, drive, sed, psid, physical secure ID, nrd plus 
 summary: 如果要使 FIPS 驱动器或 SED 上的数据永久不可访问，并且不需要重复使用该驱动器，可以使用 storage encryption disk destroy 命令销毁该磁盘。 
 ---
 = 销毁 FIPS 驱动器或 SED
@@ -14,7 +14,7 @@ summary: 如果要使 FIPS 驱动器或 SED 上的数据永久不可访问，并
 
 您必须是集群管理员才能执行此任务。
 
-销毁 FIPS 驱动器或 SED 后，系统会将磁盘加密密钥设置为未知的随机值，并永久锁定该驱动器。这样做会使磁盘几乎不可用，并且磁盘上的数据永远不可访问。但是，您可以使用磁盘标签上印有的 PSID 将磁盘重置为出厂配置的设置。有关详细信息，请参见 xref:return-self-encrypting-disks-keys-not-available-task.adoc[丢失身份验证密钥后，使 FIPS 驱动器或 SED 恢复正常运行]。
+销毁 FIPS 驱动器或 SED 后，系统会将磁盘加密密钥设置为未知的随机值，并永久锁定该驱动器。这样做会使磁盘几乎不可用，并且磁盘上的数据永远不可访问。但是，您可以使用磁盘标签上印有的物理安全 ID （ PSID ）将磁盘重置为出厂配置的设置。有关详细信息，请参见 link:return-self-encrypting-disks-keys-not-available-task.html["丢失身份验证密钥后，使 FIPS 驱动器或 SED 恢复正常运行"]。
 
 [NOTE]
 ====
@@ -22,7 +22,7 @@ summary: 如果要使 FIPS 驱动器或 SED 上的数据永久不可访问，并
 
 ====
 .步骤
-. 将需要保留的所有数据迁移到其他磁盘的聚合。
+. 将需要保留的所有数据迁移到另一个磁盘上的聚合。
 . 删除要销毁的 FIPS 驱动器或 SED 上的聚合：
 +
 `storage aggregate delete -aggregate aggregate_name`

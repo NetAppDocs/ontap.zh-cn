@@ -1,0 +1,28 @@
+---
+permalink: concepts/snapmirror-cloud-backups-object-store-concept.html 
+sidebar: sidebar 
+keywords: snapmirror cloud backup, recovery, data protection, replication, object storage, ontap s3, StorageGRID 
+summary: SnapMirror 云是一种备份和恢复技术，专为希望将数据保护工作流过渡到云的 ONTAP 用户而设计。从传统备份到磁带架构迁移的企业可以使用对象存储作为长期数据保留和归档的备用存储库。 
+---
+= SnapMirror Cloud 备份到对象存储
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+_SnapMirror Cloud_ 是一种备份和恢复技术，专为希望将数据保护工作流过渡到云的 ONTAP 用户而设计。从传统备份到磁带架构迁移的企业可以使用对象存储作为长期数据保留和归档的备用存储库。SnapMirror Cloud 在增量永久备份策略中提供了 ONTAP 到对象存储复制功能。
+
+ONTAP 9.8 引入了 SnapMirror 云，作为 SnapMirror 复制技术系列的扩展。虽然 SnapMirror 经常用于 ONTAP 到 ONTAP 备份，但 SnapMirror Cloud 使用同一个复制引擎将 ONTAP 的 Snapshot 副本传输到符合 S3 的对象存储备份。
+
+SnapMirror Cloud 针对备份使用情形，支持长期保留和归档工作流。与 SnapMirror 一样，初始 SnapMirror Cloud 备份会对卷执行基线传输。对于后续备份， SnapMirror Cloud 会生成源卷的快照副本，并将仅包含已更改数据块的快照副本传输到对象存储目标。
+
+可以在 ONTAP 系统之间配置 SnapMirror 云关系，并选择内部部署和公有云对象存储目标，包括 AWS S3 ， Google 云存储平台和 Microsoft Azure Blob 存储。其他内部对象存储目标包括 StoragGRID 和 ONTAP S3 。
+
+SnapMirror 云复制是一项获得许可的 ONTAP 功能，需要经过批准的应用程序来编排数据保护工作流。可通过多种业务流程选项管理 SnapMirror Cloud 备份：
+
+* 支持 SnapMirror 云复制的多个第三方备份合作伙伴。可从获取参与的供应商 xref:https://www.netapp.com/blog/new-backup-architecture-snapdiff-v3/[NetApp 博客]。
+* 适用于 NetApp 原生解决方案 for ONTAP 环境的 Cloud Manager 和 Cloud Backup
+* 用于为数据保护工作流开发自定义软件或利用自动化工具的 API
+
+
+image::../media/snapmirror-cloud.gif[SnapMirror 云]
