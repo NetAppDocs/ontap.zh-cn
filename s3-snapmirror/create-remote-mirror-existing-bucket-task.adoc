@@ -1,0 +1,163 @@
+---
+sidebar: sidebar 
+permalink: s3-snapmirror/create-remote-mirror-existing-bucket-task.html 
+keywords: snapmirror create a mirror relationship for an existing bucket, existing bucket, protect existing s3 buckets,s3 snapmirror relationship, remote cluster,  storage vm, bucket access policy, snapmirror protection, mirror buckets, snapmirror policy, source vm, destination vm, peering, mirror data to remote cluster, first s3 snapmirror relationship 
+summary: 您可以随时开始保护现有的 S3 存储分段；例如，如果从 ONTAP 9.10.1 之前的版本升级了 S3 配置。 
+---
+= 为现有存储分段（远程集群）创建镜像关系
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以随时开始保护现有的 S3 存储分段；例如，如果从 ONTAP 9.10.1 之前的版本升级了 S3 配置。
+
+.您将需要什么
+* 已完成 ONTAP 版本，许可和 S3 服务器配置的要求。
+* 源集群和目标集群之间存在对等关系，源 Storage VM 和目标 Storage VM 之间存在对等关系。
+* 源和目标 VM 需要 CA 证书。您可以使用自签名 CA 证书或由外部 CA 供应商签名的证书。
+
+
+您需要在源集群和目标集群上执行任务。
+
+
+
+== System Manager 操作步骤
+
+. 如果这是此 Storage VM 的第一个 S3 SnapMirror 关系，请验证源和目标 Storage VM 是否都存在根用户密钥，如果没有，请重新生成这些密钥：
++
+.. 单击 * 存储 > 存储 VM* ，然后选择此 Storage VM 。
+.. 在 * 设置 * 选项卡中，单击 image:icon_pencil.gif["编辑图标"] 在 * S3 * 区块中。
+.. 在 * 用户 * 选项卡中，验证是否存在 root 用户的访问密钥。
+.. 如果没有，请单击 image:icon_kabob.gif["更多图标"] 在 * 根 * 旁边，单击 * 重新生成密钥。 * 如果已存在密钥，请勿重新生成密钥。
+
+
+. 验证源和目标 Storage VM 中的用户和组访问是否正确：单击 * 存储 > Storage VM* ，单击此 Storage VM ，单击 * 设置 * ，然后单击 image:icon_pencil.gif["编辑图标"] 在 * S3 下。
++
+请参见 link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组"] 有关详细信息 ...
+
+. 在源集群上，如果您没有 S3 SnapMirror 策略，并且不想使用默认策略，请创建该策略：
++
+.. 单击 * 保护 > 概述 * ，然后单击 * 本地策略设置 * 。
+.. 单击 image:../media/icon_arrow.gif["右箭头"] 在 * 保护策略 * 旁边，单击 * 添加 * 。
+.. 输入策略名称和问题描述。
+.. 选择策略范围，集群或 SVM
+.. 为 S3 SnapMirror 关系选择 * 持续 * 。
+.. 输入 * 限制 * 和 * 恢复点目标 * 值。
+
+
+. 验证现有存储分段的存储分段访问策略是否仍满足您的需求：
++
+.. 单击 * 存储 > 分段 * ，然后选择要保护的分段。
+.. 在 * 权限 * 选项卡中，单击 image:icon_pencil.gif["编辑图标"] * 编辑 * ，然后单击 * 权限 * 下的 * 添加 * 。
++
+*** * 主体和影响 * ：选择与您的用户组设置对应的值，或者接受默认值。
+*** * 操作 * ：确保显示以下值： `GetObject ， PutObject ， DeleteObject ， ListBucketAcl ， GetObjectAcl ， ListBucketMultipartuplads ， ListMultipartu上传 部件`
+*** * 资源 * ：使用默认值 ` （ _bucketname ， bucketname_/* ）` 或其他所需值。
++
+请参见 link:../task_object_provision_manage_bucket_access.html["管理用户对存储分段的访问权限"] 有关这些字段的详细信息，请参见。
+
+
+
+
+
+. 使用 S3 SnapMirror 保护保护现有存储分段：
++
+.. 单击 * 存储 * > * 分段 * ，然后选择要保护的分段。
+.. 单击 * 保护 * 并输入以下值：
++
+*** 目标
++
+**** * 目标 * ： ONTAP 系统
+**** * 集群 * ：选择远程集群。
+**** * Storage VM* ：选择远程集群上的 Storage VM 。
+**** * S3 服务器 CA 证书 * ：复制并粘贴 _sourc_ 证书的内容。
+
+
+*** 源
++
+**** * S3 服务器 CA 证书 * ：复制并粘贴 _destination_certificate 的内容。
+
+
+
+
+
+
+
+
+选中 * 如果您使用的是由外部 CA 供应商签名的证书，请在目标 * 上使用相同的证书。
+
+如果单击 * 目标设置 * ，您还可以输入自己的值来替代存储分段名称，容量和性能服务级别的默认值。
+
+当您使用命令行界面 * ck * 保存 * 时，现有的 * 存储分段将镜像到目标 Storage VM 中的新存储分段。
+
+
+
+== 命令行界面操作步骤
+
+. 如果这是此 SVM 的第一个 S3 SnapMirror 关系，请验证源和目标 SVM 是否都存在根用户密钥，如果不存在根用户密钥，请重新生成这些密钥： `vserver object-store-server user show` + 验证是否存在 root 用户的访问密钥。如果没有，请输入： `vserver object-store-server user re生成 密钥 -vserver _svm_name_ -user _root_` + 如果已存在，请勿重新生成密钥。
+. 在目标 SVM 上创建一个存储分段作为镜像目标：
++
+`vserver object-store-server bucket create -vserver _svm_name_ -buck_dest_bucket_name_ "-size _intege_[KB_MB|GB_TB_PB]] [-comment _text_] [_Additional _options_]`
+
+. 验证源和目标 SVM 中默认分段策略的访问规则是否正确：
++
+`vserver object-store-server bucket policy add-statement -vserver _svm_name_ -buck_bucket_name_ -Effect ｛ allow_deny ｝ -action _object_store_actions_ -principal _user_and_group_name_ -resource _object_store_resources_[-SID _text_] [-index _intege_]`
+
++
+.示例
+[listing]
+----
+src_cluster::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
+----
+. 在源 SVM 上，如果您没有 S3 SnapMirror 策略，并且不想使用默认策略，请创建该策略：
++
+`snapmirror policy create -vserver svm_name -policy policy_name -type continuous （ -RPO _intege_） 【 -throttle _throttle_type_] 【 -comment _text_] 【 _Additional _options】`
+
++
+Parameters
+
++
+** `continuous` — S3 SnapMirror 关系的唯一策略类型（必需）。
+** ` -RPO` —指定恢复点目标的时间，以秒为单位（可选）。
+** ` -throttle` —指定吞吐量 / 带宽的上限，以 KB/ 秒为单位（可选）。
++
+.示例
+[listing]
+----
+src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -policy test-policy
+----
+
+
+. 在源集群和目标集群上安装 CA 证书：
++
+.. 在 _source_cluster 上，从 _destination_cluster 安装 S3 服务器证书： `security certificate install -type server-ca -vserver _src_svm_ -ct-name _dest_server_certificate_`
+.. 在 _destination cluster_ 上，从 _source_cluster 安装 S3 服务器证书： `security certificate install -type server-ca -vserver _dest_svm_ -ct-name _src_server_certificate_` + 如果您使用的是由外部 CA 供应商签名的证书，请在源和目标 SVM 上输入相同的证书。
++
+有关详细信息，请参见 `security certificate install` 手册页。
+
+
+
+. 在源 SVM 上，创建 S3 SnapMirror 关系：
++
+`snapmirror create -source-path _src_svm_name_ ： /buce/_bucket_name_ -destination-path dest_peer_svm_name ： /bucket/_bucket_name_ ， ... ｝ 【 -policy policy_name】`
+
++
+您可以使用创建的策略或接受默认值。
+
++
+.示例
+[listing]
+----
+src_cluster::> snapmirror create -source-path vs0:/bucket/test-bucket -destination-path vs1:/bucket/test-bucket-mirror -policy test-policy
+----
+. 验证镜像是否处于活动状态： `snapmirror show -policy-type continuous -fields status`
+

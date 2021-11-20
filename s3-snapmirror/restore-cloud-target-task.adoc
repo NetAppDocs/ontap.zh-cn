@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: s3-snapmirror/restore-cloud-target-task.html 
+keywords: restore a bucket from a cloud target, restore, bucket, restore bucket, source bucket data loss, restore from destination bucket, bucket, s3 snapmirror data loss, s3 snapmirror restore bucket, s3 snapmirror, s3 snapmirror restore bucket from cloud 
+summary: 如果源存储分段中的数据丢失或损坏，您可以通过从目标存储分段还原来重新填充数据。 
+---
+= 从云目标还原存储分段
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+如果源存储分段中的数据丢失或损坏，您可以通过从目标存储分段还原来重新填充数据。
+
+您可以将目标存储分段还原到现有存储分段或新存储分段。还原操作的目标存储分段必须大于目标存储分段的逻辑已用空间。
+
+如果您使用现有存储分段，则在启动还原操作时，此存储分段必须为空。还原不会 " 回滚 " 某个存储分段，而是会使用先前的内容填充一个空存储分段。
+
+
+
+== System Manager 操作步骤
+
+还原备份数据：
+
+. 单击 * 保护 > 关系 * ，然后选择 * S3 SnapMirror* 。
+. 单击 image:icon_kabob.gif["更多图标"] 然后选择 * 还原 * 。
+. 在 * 源 * 下，选择 * 现有分段 * （默认值）或 * 新分段 * 。
++
+** 要还原到 * 现有 Bucket* （默认值），请完成以下操作：
++
+*** 选择集群和 Storage VM 以搜索现有存储分段。
+*** 选择现有存储分段。
+*** 复制并粘贴 _destination_S3 服务器 CA 证书的内容。
+
+
+** 要还原到 * 新存储分段 * ，请输入以下值：
++
+*** 用于托管新存储分段的集群和 Storage VM 。
+*** 新存储分段的名称，容量和性能服务级别。请参见 link:../s3-config/storage-service-definitions-reference.html["存储服务级别"] 有关详细信息 ...
+*** 目标 S3 服务器 CA 证书的内容。
+
+
+
+
+. 在 * 目标 * 下，复制并粘贴 _source_ S3 服务器 CA 证书的内容。
+. 单击 * 保护 > 关系 * 以监控还原进度。
+
+
+
+
+== 命令行界面操作步骤
+
+. 如果要还原到新存储分段，请创建新存储分段。有关详细信息，请参见 link:create-cloud-backup-new-bucket-task.html["为需求存储分段（云目标）创建备份关系"]。
+. 为目标存储分段启动还原操作： `snapmirror restore -source-path _server_name_ ： /_bucket_name_ -destination-path _svm_name_ ： /bucket/_bucket_name_`
+
+
+以下示例将目标存储分段还原到现有存储分段。
+
+`clusterA ：：： > snapmirror restore -source-path sgws.example.com:/target-test-bucket -destination-path vs0 ： /bucket/test-bucket`

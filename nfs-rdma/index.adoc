@@ -2,7 +2,7 @@
 permalink: nfs-rdma/index.html 
 sidebar: sidebar 
 keywords: NFS over RDMA, NVIDIA, GPU, NVIDIA GDX 
-summary: 基于 RDMA 的 NFS 可提高 NFSv4.0 的性能，并利用 RDMA 适配器将内存直接从存储复制到 GPU ，从而避免 CPU 开销。 
+summary: 基于 RDMA 的 NFS 利用 RDMA 适配器，可以在存储系统内存和主机系统内存之间直接复制数据，从而避免 CPU 中断和开销。 
 ---
 = 基于 RDMA 的 NFS
 :icons: font
@@ -10,17 +10,19 @@ summary: 基于 RDMA 的 NFS 可提高 NFSv4.0 的性能，并利用 RDMA 适配
 
 
 [role="lead"]
-基于 RDMA 的 NFS 可提高 NFSv4.0 的性能，并利用 RDMA 适配器将内存直接从存储复制到 GPU ，从而避免 CPU 开销。
+基于 RDMA 的 NFS 利用 RDMA 适配器，可以在存储系统内存和主机系统内存之间直接复制数据，从而避免 CPU 中断和开销。
 
-基于 RDMA 的 NFS 配置专为使用 NVIDIA GDX 生态系统的 GPU 密集型工作负载（例如 AI 和机器学习）客户而设计。
+基于 RDMA 的 NFS 配置专为具有延迟敏感型或高带宽工作负载（例如机器学习和分析）的客户而设计。NVIDIA 已通过 RDMA 扩展 NFS ，以启用 GPU 直接存储（ GDS ）。GDS 通过使用 RDMA 直接在存储系统和 GPU 内存之间传输数据，完全绕过 CPU 和主内存，从而进一步加速支持 GPU 的工作负载。
 
-在 ONTAP 9.10.1 中，只有在与 Mellanox CX-5 或 CX-6 适配器结合使用时， NFSv4.0 协议才支持此配置，该适配器使用 RoCE 协议版本 2 支持 RDMA 。
+在 ONTAP 9.10.1 中，只有在与 Mellanox CX-5 或 CX-6 适配器结合使用时， NFSv4.0 协议才支持此配置，该适配器使用 RoCE 协议版本 2 支持 RDMA 。只有使用 NVIDIA Tesla 和 Ampere 系列 GPU 以及 Mellanox NIC 卡和 MoFED 软件时，才支持 GDS 。
 
 .要求
-* ONTAP 9.10.1 或更高版本
+* 存储系统必须运行 ONTAP 9.10.1
+* HA 对中的两个节点必须为相同版本
+* 存储系统控制器必须支持 RDMA （当前为 A400 ， A700 和 A800 ）
 * 配置了 RDMA 支持的硬件的存储设备（例如 Mellanox CX-5 或 CX-6 ）
-* NIC 控制器必须支持 RDMA （当前为 A400 ， A700 和 A800 ）
-* LIF 及其 HA 对都必须升级到相同的 ONTAP 版本并支持 RDMA
+* 必须配置数据 LIF 以支持 RDMA 。
+* 客户端必须使用支持 Mellanox RDMA 的 NIC 卡和 Mellanox OFED （ MoFED ）网络软件。
 
 
 .后续步骤

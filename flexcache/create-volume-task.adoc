@@ -75,10 +75,22 @@ from peer cluster "cluster2" with any of the local Vservers. Do you want to cont
 `volume FlexCache create -vserver cache_svm -volume cache_vol_name -auto-provision-as FlexGroup -size vol_size -original-vserver original_svm -original-volume origin_vol_name`
 
 +
+以下示例将创建一个 FlexCache 卷并自动选择要配置的现有聚合：
+
++
 [listing]
 ----
 cluster1::> volume flexcache create -vserver vs_1 -volume fc1 -auto-provision-as flexgroup -origin-volume vol_1 -size 160MB -origin-vserver vs_1
 [Job 443] Job succeeded: Successful
+----
++
+以下示例将创建一个 FlexCache 卷并设置接合路径：
+
++
+[listing]
+----
+cluster1::> flexcache create -vserver vs34 -volume fc4 -aggr-list aggr34,aggr43 -origin-volume origin1 -size 400m -junction-path /fc4
+[Job 903] Job succeeded: Successful
 ----
 . 验证 FlexCache 卷和原始卷的 FlexCache 关系。
 +

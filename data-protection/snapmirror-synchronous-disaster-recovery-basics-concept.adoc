@@ -16,9 +16,9 @@ summary: 从 ONTAP 9.5 开始，至少具有 16 GB 内存的所有 FAS 和 AFF �
 
 每个 HA 对的 SnapMirror 同步复制操作数限制取决于控制器型号。
 
-[cols="3*"]
+[cols="4*"]
 |===
-| 平台 | 在 ONTAP 9.9.1 之前的版本中，每个 HA 对允许的 SnapMirror 同步操作数 | 在 ONTAP 9.9.1 及更高版本中，每个 HA 对允许的 SnapMirror 同步操作数 
+| 平台 | 在 ONTAP 9.9.1 之前的版本中，每个 HA 对允许的 SnapMirror 同步操作数 | 在 ONTAP 9.9.1 中，每个 HA 对允许的 SnapMirror 同步操作数 | 在 ONTAP 9.10.1 中，每个 HA 对允许的 SnapMirror 同步操作数 
 
 
  a| 
@@ -27,6 +27,8 @@ AFF
 80
  a| 
 160
+ a| 
+200
 
 
 
@@ -34,6 +36,8 @@ AFF
 FAS
  a| 
 40
+ a| 
+80
  a| 
 80
 
@@ -45,11 +49,18 @@ ONTAP Select
 20
  a| 
 40
+ a| 
+40
 
 |===
 
 
 == 支持的功能
+
+ONTAP 9.10.1 中的 SnapMirror 同步技术支持以下功能；前提是源集群和目标集群中的所有节点都运行 ONTAP 9.10.1 ：
+
+* NFSv4.2
+
 
 在 ONTAP 9.5 及更高版本中， SnapMirror 同步技术支持在延迟不超过 10 毫秒的所有网络上使用 NFSv3 ， FC 和 iSCSI 协议。
 
@@ -67,6 +78,19 @@ ONTAP 9.7 中的 SnapMirror 同步技术支持以下功能：
 
 
 ONTAP 9.6 中的 SnapMirror 同步技术支持以下功能；前提是源集群和目标集群中的所有节点都运行 ONTAP 9.6 ：
+
+* SVM 灾难恢复
++
+** SnapMirror 同步源也可以是 SVM DR 源，例如，使用 SM-S 作为一个分支，使用 SVM DR 作为另一个分支的扇出配置。
+** SnapMirror 同步源不能是 SVM 灾难恢复目标，因为 SM-S 不支持级联 DP 源。
++
+在目标集群中执行 SVM DR 反转重新同步之前，必须释放同步关系。
+
+** SnapMirror 同步目标不能是 SVM DR 源，因为 SVM DR 不支持复制 DP 卷。
++
+如果对同步源执行反转重新同步，则 SVM DR 将排除目标集群中的 DP 卷。
+
+
 
 * NFSv4.0 和 NFSv4.1
 * SMB 2.0 或更高版本
@@ -96,7 +120,11 @@ SnapMirror 同步关系的目标卷中的关系必须是异步 SnapMirror 关系
 
 同步 SnapMirror 关系不支持以下功能：
 
-* SVM 灾难恢复
+* MCC
+* SFMOD
+* SFCOD
+* VVOL
+* AppDM
 * 混合 SAN 和 NAS 访问
 +
 SnapMirror 同步关系的主卷可以提供 NAS 数据或 SAN 数据。不支持从 SnapMirror 同步关系的主卷进行 SAN 和 NAS 访问。

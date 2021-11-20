@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: s3-snapmirror/index.html 
-keywords: snapmirror, s3 snapmirror, mirroring and backup, buckets, data protection bundle 
+keywords: s3 snapmirror overview, snapmirror, s3 snapmirror, s3 snapmirror mirroring and backup, s3 snapmirror requirments, s3 snapmirror buckets, snapmirror buckets SVM, s3 snapmirror new buckets, s3 snapmirror buckets with data protection, s3 snapmirror data protection bundle, s3 snapmirror data protection bundle and hybrid cloud bundle, s3 snapmirror relationship, VM peering, cluster and storage VM peering, s3 SnapMirror considerations and restrictions, Fan-in deployments, data protection relationships, s3 snapmirror policy, peering 
 summary: 从 ONTAP 9.10.1 开始，您可以使用熟悉的 SnapMirror 镜像和备份功能来保护 ONTAP S3 对象存储中的存储分段 
 ---
 = S3 SnapMirror 概述
@@ -13,7 +13,7 @@ summary: 从 ONTAP 9.10.1 开始，您可以使用熟悉的 SnapMirror 镜像和
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media/
+:imagesdir: ./media/
 :toc-position: content
 
 
@@ -37,14 +37,14 @@ ONTAP S3
 | image:status-enabled-perf-config.gif["复选标记"] | image:status-enabled-perf-config.gif["复选标记"] 
 
 
-| StorageGRID 网络级 |  | image:status-enabled-perf-config.gif["复选标记"] 
+| StorageGRID |  | image:status-enabled-perf-config.gif["复选标记"] 
 
 
 | AWS S3 |  | image:status-enabled-perf-config.gif["复选标记"] 
 |===
 您可以保护 ONTAP S3 服务器上的现有存储分段，也可以在立即启用数据保护的情况下创建新存储分段。
 
-S3 SnapMirror 支持扇出和级联关系。有关概述，请参见 link:../data-protection/supported-deployment-config-concept.html["扇出和级联数据保护部署"]。
+S3 SnapMirror 支持扇出和级联关系。有关概述，请参见 link:..data-protection/supported-deployment-config-concept.html["扇出和级联数据保护部署"]。
 
 
 
@@ -60,8 +60,8 @@ S3 SnapMirror 支持扇出和级联关系。有关概述，请参见 link:../dat
 
 * ONTAP S3
 +
-** ONTAP S3 服务器必须运行源和目标 SVM 。
-** 建议但不要求在 S3 服务器上安装 TLS 访问证书。您可以使用系统生成的证书或外部颁发机构提供的证书。
+** 安装了用于 TLS 访问的证书的 ONTAP S3 服务器必须运行源和目标 SVM 。
+** 建议但不要求在托管 S3 服务器的 Storage VM 上安装用于 TLS 访问的 CA 证书。您可以使用自签名 CA 证书或由外部 CA 供应商签名的证书。
 
 
 * 对等（对于 ONTAP S3 目标）
@@ -71,13 +71,23 @@ S3 SnapMirror 支持扇出和级联关系。有关概述，请参见 link:../dat
 ** 源和目标 Storage VM 已建立对等关系（对于所有 ONTAP 目标）。
 
 
-* SnapMirror 策略所有 S3 SnapMirror 关系都需要使用 S3 专用的 SnapMirror 策略，但您可以对多个关系使用相同的策略。
-* S3 SnapMirror 关系需要使用 root 用户密钥 Storage VM root 用户访问密钥；默认情况下， ONTAP 不会分配这些密钥。首次创建 S3 SnapMirror 关系时，您必须验证密钥是否位于源和目标 Storage VM 上，如果不存在，则重新生成这些密钥。分配后，不应重新生成这些卷，否则现有的 S3 SnapMirror 关系将失败。
+* SnapMirror 策略
++
+** 所有 S3 SnapMirror 关系都需要使用 S3 专用的 SnapMirror 策略，但您可以对多个关系使用同一策略。
+** 您可以创建自己的策略或接受默认的 * 持续 * 策略，其中包含以下值：
++
+*** 限制（吞吐量 / 带宽的上限）—无限制。
+*** 恢复点目标的时间： 1 小时（ 3600 秒）。
+
+
+
+
+* S3 SnapMirror 关系需要使用 root 用户密钥 Storage VM root 用户访问密钥；默认情况下， ONTAP 不会分配这些密钥。首次创建 S3 SnapMirror 关系时，您必须验证源和目标 Storage VM 上是否存在这些密钥，如果不存在，则重新生成这些密钥。如果需要重新生成这些密钥，则必须确保使用访问密钥和机密密钥对的所有客户端和所有 SnapMirror 对象存储配置都使用新密钥进行更新。
 
 
 有关 S3 服务器配置的信息，请参见以下主题：
 
-* link:../task_object_provision_enable_s3_server.html["在 Storage VM 上启用 S3 服务器（ System Manager ）"]
+* link:../task_object_provision_enable_s3_server.html["在 Storage VM 上启用 S3 服务器"]
 * link:../s3-config/index.html["关于 S3 配置过程（ CLI ）"]
 
 
@@ -91,7 +101,17 @@ S3 SnapMirror 支持扇出和级联关系。有关概述，请参见 link:../dat
 
 == S3 SnapMirror 注意事项和限制
 
+创建新存储分段时，您可以通过创建用户和组来控制访问。有关详细信息，请参见以下主题：
+
+* link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组（ System Manager ）"]
+* link:../s3-config/create-s3-user-task.html["创建 S3 用户（命令行界面）"]
+* link:../s3-config/create-modify-groups-task.html["创建或修改 S3 组（命令行界面）"]
+
+
 当前 S3 SnapMirror 版本不支持以下标准 SnapMirror 功能：
 
-* 扇入部署（多个源存储分段和一个目标存储分段之间的数据保护关系） S3 SnapMirror 可以支持从多个集群到一个二级集群的多个存储分段镜像，但每个源存储分段在二级集群上必须有自己的目标存储分段。
+* 扇入部署（多个源存储分段和单个目标存储分段之间的数据保护关系）
++
+S3 SnapMirror 支持从多个集群到一个二级集群的多个存储分段镜像，但每个源存储分段在二级集群上必须有自己的目标存储分段。
+
 

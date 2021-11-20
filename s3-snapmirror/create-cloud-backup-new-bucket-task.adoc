@@ -1,0 +1,139 @@
+---
+sidebar: sidebar 
+permalink: s3-snapmirror/create-cloud-backup-new-bucket-task.html 
+keywords: create a backup relationship for a new bucket 
+summary: 创建新的 S3 存储分段时，您可以立即将其备份到对象存储提供程序上的 S3 SnapMirror 目标分段，该对象存储提供程序可以是 StorageGRID 系统或 AWS S3 部署。 
+---
+= 为新存储分段（云目标）创建备份关系
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+创建新的 S3 存储分段时，您可以立即将其备份到对象存储提供程序上的 S3 SnapMirror 目标分段，该对象存储提供程序可以是 StorageGRID 系统或 AWS S3 部署。
+
+.您将需要什么
+* 您拥有对象存储提供程序的有效帐户凭据和配置信息。
+* 已在源系统上配置集群间网络接口和 IP 空间。
+* •源 Storage VM 的 DNS 配置必须能够解析目标的 FQDN 。
+
+
+
+
+== System Manager 操作步骤
+
+. 编辑 Storage VM 以添加用户，并将用户添加到组。
++
+.. 单击 * 存储 > Storage VM* ，单击此 Storage VM ，单击 * 设置 * ，然后单击 image:icon_pencil.gif["编辑图标"] 在 * S3 下。
++
+请参见 link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组"] 有关详细信息 ...
+
+
+
+. 在源系统上添加云对象存储：
++
+.. 单击 * 保护 > 概述 * ，然后选择 * 云对象存储 * 。
+.. 单击 * 添加 * ，然后选择 * Amazon S3* 或 * StorageGRID * 。
+.. 输入以下值：
++
+*** 云对象存储名称
+*** URL 模式（路径或虚拟托管）
+*** Storage VM （为 S3 启用）
+*** 对象存储服务器名称（ FQDN ）
+*** 对象存储证书
+*** 访问密钥
+*** 机密密钥
+*** 容器（分段）名称
+
+
+
+
+. 如果您没有 S3 SnapMirror 策略，并且不想使用默认策略，请创建该策略：
++
+.. 单击 * 保护 > 概述 * ，然后单击 * 本地策略设置 * 。
+.. 单击 image:../media/icon_arrow.gif["右箭头"] 在 * 保护策略 * 旁边，单击 * 添加 * 。
++
+*** 输入策略名称和问题描述。
+*** 选择策略范围，集群或 SVM
+*** 为 S3 SnapMirror 关系选择 * 持续 * 。
+*** 输入 * 限制 * 和 * 恢复点目标 * 值。
+
+
+
+
+. 创建具有 SnapMirror 保护的存储分段：
++
+.. 单击 * 存储 > 分段 * ，然后单击 * 添加 * 。
+.. 输入名称，选择 Storage VM ，输入大小，然后单击 * 更多选项 * 。
+.. 在 * 权限 * 下，单击 * 添加 * 。验证权限是可选的，但建议这样做。
++
+*** * 主体 * 和 * 影响 * —选择与您的用户组设置对应的值或接受默认值。
+*** * 操作 * - 确保显示以下值： `GetObject ， PutObject ， DeleteObject ， ListBucketAcl ， GetObjectAcl ， ListBucketMultipartuplads ， ListMultipartu上传 部件`
+*** * 资源 * - 使用默认值 ` _ （ bucketname ， bucketname/* ）` 或其他所需值。
++
+请参见 link:../task_object_provision_manage_bucket_access.html["管理用户对存储分段的访问权限"] 有关这些字段的详细信息，请参见。
+
+
+
+.. 在 * 保护 * 下，选中 * 启用 SnapMirror （ ONTAP 或云） * ，选择 * 云存储 * ，然后选择 * 云对象存储 * 。
+
+
+
+
+单击 * 保存 * 时，将在源 Storage VM 中创建一个新存储分段，并将其备份到云对象存储。
+
+
+
+== 命令行界面操作步骤
+
+. 如果这是此 SVM 的第一个 S3 SnapMirror 关系，请验证源和目标 SVM 是否都存在根用户密钥，如果不存在根用户密钥，请重新生成这些密钥： `vserver object-store-server user show` + 验证是否存在 root 用户的访问密钥。如果没有，请输入： `vserver object-store-server user re生成 密钥 -vserver svm_name -user _root_` + 如果已存在，请勿重新生成密钥
+. 在源 SVM 中创建一个存储分段： `vserver object-store-server bucket create -vserver _svm_name_ -buck_bucket_name_ "-size _intege_[KB|MB_GB_TB_PB]] [-comment _text_] [_Additional _options_]`
+. 将访问规则添加到默认存储分段策略： `vserver object-store-server bucket policy add-statement -vserver _svm_name_ -buck_bucket_name_ -Effect ｛ allow_deny ｝ -action _object_store_Actions_ -principal _user_and_group_name_ -resource _object_store_resources_ [-SID _text_]_] -integer _index_integer`
++
+....
+clusterA::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
+....
+. 如果您现有的 S3 SnapMirror 策略不想使用默认策略，请创建一个： `snapmirror policy create -vserver svm_name -policy policy_name -type continuous （ -RPO _intege_） "-throttle _throttle_type_] （ -comment _text_] ）【 _Additional _options】`
++
+Parameters
+
++
+** type `continuous` — S3 SnapMirror 关系的唯一策略类型（必需）。
+** ` -RPO` —指定恢复点目标的时间，以秒为单位（可选）。
+** ` -throttle` —指定吞吐量 / 带宽的上限，以 KB/ 秒为单位（可选）。
++
+....
+clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -policy test-policy
+....
+
+
+. 如果目标是 StorageGRID 系统，请在源系统上安装 StorageGRID CA 服务器证书： `security certificate install -type server-ca -vserver _src_svm_ -ct-name _storage_grid_server_certificate_`
++
+有关详细信息，请参见 `security certificate install` 手册页。
+
+. 定义 S3 SnapMirror 目标对象存储： `snapmirror object-store config create -source-path -vserver _svm_name_ -object-store-name _target_store_name_ -usage data -provider-type ｛ AWS_S3_SGWS ｝ -server _target_FQDN_ -container-name _remote_bucket_name_ -is-ssl-enabled key_key_access_key_fqdn_key_key_name_ -port_key_key_key_name_ -name_ -id_ -id_ -id_port_key_key_name_ -name_ -`
++
+....
+src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
+....
+. 创建 S3 SnapMirror 关系： `snapmirror create -source-path _svm_name_ ： /bucket/_bucket_name_ -destination-path _server_fqdn_ ： /_bucket_name_ -policy _policy_name_`
++
+` 目标路径` —完全限定域名和分段名称
+
++
+您可以使用创建的策略或接受默认值。
+
++
+....
+src_cluster::> snapmirror create -source-path vs0:/bucket/buck-evp -destination-path sgws.example.com:/sgws-store -policy test-policy
+....
+. 验证镜像是否处于活动状态： `snapmirror show -policy-type continuous -fields status`
+

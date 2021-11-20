@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: s3-snapmirror/requirements-cloud-targets-concept.html 
+keywords: requirements for cloud target relationships 
+summary: 确保源环境和目标环境满足从 S3 SnapMirror 备份保护到云目标的要求。 
+---
+= 云目标关系的要求
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+确保源环境和目标环境满足从 S3 SnapMirror 备份保护到云目标的要求。
+
+要访问数据分段，您必须具有对象存储提供程序的有效帐户凭据。
+
+在集群连接到云对象存储之前，应在集群上配置集群间网络接口和 IP 空间。您应在每个节点上创建输入集群网络接口，以便将数据从本地存储无缝传输到云对象存储。
+
+对于 StorageGRID 目标，您需要了解以下信息：
+
+* 服务器名称，以完全限定域名（ FQDN ）表示
+* 存储分段名称；存储分段必须已存在
+* 访问密钥
+* 机密密钥
+
+
+此外，还需要使用 `security certificate install 命令` 在 ONTAP S3 系统上安装 StorageGRID 证书。有关详细信息，请参见 link:../fabricpool/install-ca-certificate-storagegrid-task.html["安装 CA 证书"] 如果使用 StorageGRID 。
+
+对于 AWS S3 目标，您需要了解以下信息：
+
+* 服务器名称，以完全限定域名（ FQDN ）表示
+* 存储分段名称；存储分段必须已存在
+* 访问密钥
+* 机密密钥
+
