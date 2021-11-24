@@ -97,7 +97,7 @@ summary: 您可以随时开始保护现有的 S3 存储分段；例如，如果�
 
 如果单击 * 目标设置 * ，您还可以输入自己的值来替代存储分段名称，容量和性能服务级别的默认值。
 
-当您使用命令行界面 * ck * 保存 * 时，现有的 * 存储分段将镜像到目标 Storage VM 中的新存储分段。
+单击 * 保存 * 时，现有存储分段将镜像到目标 Storage VM 中的新存储分段。
 
 
 
@@ -137,10 +137,10 @@ src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -po
 ----
 
 
-. 在源集群和目标集群上安装 CA 证书：
+. 在源集群和目标集群的管理 SVM 上安装 CA 证书：
 +
-.. 在 _source_cluster 上，从 _destination_cluster 安装 S3 服务器证书： `security certificate install -type server-ca -vserver _src_svm_ -ct-name _dest_server_certificate_`
-.. 在 _destination cluster_ 上，从 _source_cluster 安装 S3 服务器证书： `security certificate install -type server-ca -vserver _dest_svm_ -ct-name _src_server_certificate_` + 如果您使用的是由外部 CA 供应商签名的证书，请在源和目标 SVM 上输入相同的证书。
+.. 在源集群上，安装对 _destination_S3 服务器证书签名的 CA 证书： `security certificate install -type server-ca -vserver _src_admin_svm_ -ct-name _dest_server_certificate_`
+.. 在目标集群上，安装对 _source_S3 服务器证书签名的 CA 证书： `security certificate install -type server-ca -vserver _dest_admin_svm_ -cert-name _src_server_certificate_` + 如果您使用的是由外部 CA 供应商签名的证书，请在源和目标 SVM 上输入相同的证书。
 +
 有关详细信息，请参见 `security certificate install` 手册页。
 

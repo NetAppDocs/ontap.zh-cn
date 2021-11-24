@@ -148,10 +148,10 @@ src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -po
 ----
 
 
-. 在源集群和目标集群上安装 CA 服务器证书：
+. 在源集群和目标集群的管理 SVM 上安装 CA 服务器证书：
 +
-.. 在源集群上，从 _destination_cluster 安装证书： `security certificate install -type server-ca -vserver _src_svm_ -ct-name _dest_server_certificate_`
-.. 在目标集群上，从 _source_cluster 安装证书： `security certificate install -type server-ca -vserver _dest_svm_ -ct-name _src_server_certificate_`
+.. 在源集群上，安装对 _destination_S3 服务器证书签名的 CA 证书： `security certificate install -type server-ca -vserver _src_admin_svm_ -ct-name _dest_server_certificate_`
+.. 在目标集群上，安装对 _source_S3 服务器证书签名的 CA 证书： `security certificate install -type server-ca -vserver _dest_admin_svm_ -ct-name _src_server_certificate_`
 +
 如果您使用的证书由外部 CA 供应商签名，请在源和目标 SVM 上输入相同的证书。
 

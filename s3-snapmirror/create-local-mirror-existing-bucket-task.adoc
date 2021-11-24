@@ -83,7 +83,7 @@ summary: 您可以随时开始保护同一集群上的现有 S3 存储分段；�
 +
 **** * 目标 * ： ONTAP 系统
 **** * 集群 * ：选择本地集群。
-**** * 单击保护并输入以下值 ORAGE VM* ：选择相同或不同的 Storage VM 。
+**** * Storage VM* ：选择相同或不同的 Storage VM 。
 **** * S3 服务器 CA 证书 * ：复制并粘贴 _sourc_ 证书的内容。
 
 
@@ -146,12 +146,9 @@ Parameters
 ----
 clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -policy test-policy
 ----
-
-
-. 为源和目标 SVM 安装 CA 服务器证书：
 +
-.. 从 _source_SVM 上的 _destination_SVM 安装 S3 服务器证书： `security certificate install -type server-ca -vserver _src_svm_ -ct-name _dest_server_certificate_`
-.. 从 _destination_SVM 上的 _source_SVM 安装 S3 服务器证书： `security certificate install -type server-ca -vserver _dest_svm_ -ct-name _src_server_certificate_` + 如果您使用的是由外部 CA 供应商签名的证书，请在源和目标 SVM 上输入相同的证书。
+`security certificate install -type server-ca -vserver _src_admin_svm_ -ct-name _ca_certificate_` + 您可以输入自签名证书或外部 CA 供应商签名的证书。
+
 +
 有关详细信息，请参见 `security certificate install` 手册页。
 

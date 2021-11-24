@@ -115,7 +115,7 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 ....
 
 
-. 如果目标是 StorageGRID 系统，请在源系统上安装 StorageGRID CA 服务器证书： `security certificate install -type server-ca -vserver _src_svm_ -ct-name _storage_grid_server_certificate_`
+. 如果目标是 StorageGRID 系统，请在源集群的管理 SVM 上安装 StorageGRID CA 服务器证书： `security certificate install -type server-ca -vserver _src_admin_svm_ -ct-name _storage_grid_server_certificate_`
 +
 有关详细信息，请参见 `security certificate install` 手册页。
 
@@ -124,16 +124,16 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 ....
 src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
 ....
-. 创建 S3 SnapMirror 关系： `snapmirror create -source-path _svm_name_ ： /bucket/_bucket_name_ -destination-path _server_fqdn_ ： /_bucket_name_ -policy _policy_name_`
+. 创建 S3 SnapMirror 关系： `snapmirror create -source-path _svm_name_ ： /bucket/_bucket_name_ -destination-path _object_store_name_ ： /objstore -policy _policy_name_`
 +
-` 目标路径` —完全限定域名和分段名称
+` -destination-path` —您在上一步中创建的对象存储名称以及 fixe 值 `objstore` 。
 
 +
 您可以使用创建的策略或接受默认值。
 
 +
 ....
-src_cluster::> snapmirror create -source-path vs0:/bucket/buck-evp -destination-path sgws.example.com:/sgws-store -policy test-policy
+src_cluster::> snapmirror create -source-path vs0:/bucket/buck-evp -destination-path sgws-store:/objstore -policy test-policy
 ....
 . 验证镜像是否处于活动状态： `snapmirror show -policy-type continuous -fields status`
 
