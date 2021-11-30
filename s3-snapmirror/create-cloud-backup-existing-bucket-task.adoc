@@ -110,18 +110,25 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 ....
 
 
-. 如果目标是 StorageGRID 系统，请在源集群的管理 SVM 上安装 StorageGRID CA 服务器证书： `security certificate install -type server-ca -vserver _src_admin_svm_ -ct-name _storage_grid_server_certificate_`
+. 如果目标是 StorageGRID 系统，请在源集群的管理 SVM 上安装 StorageGRID CA 证书： `security certificate install -type server-ca -vserver _src_admin_svm_ -ct-name _storage_grid_server_certificate_`
 +
 有关详细信息，请参见 `security certificate install` 手册页。
 
-. 定义 S3 SnapMirror 目标对象存储： `snapmirror object-store config create -source-path -vserver _svm_name_ -object-store-name _target_store_name_ -usage data -provider-type ｛ AWS_S3_SGWS ｝ -server _target_FQDN_ -container-name _remote_bucket_name_ -is-ssl-enabled key_key_name_ -port_key_key_name_ -id_key_name_ -name_ -id_key_name_ -id_port_key_key_name_ -name_ -id_key_name_ -name`
+. 定义 S3 SnapMirror 目标对象存储： `snapmirror object-store config create -vserver _svm_name_ -object-store-name _target_store_name_ -usage data -provider-type ｛ AWS_S3\SGWS ｝ -server _target_FQDN_ -container-name _remote_bucket_name_ -is-ssl-enabled true -port _port_key_key_key_access_key_key_key_key_key_name_ -name_ -name_ -name_ -port_key_key_key_name_`
+
+
+参数： * ` -object-store-name` —本地 ONTAP 系统上的对象存储目标的名称。* ` 使用` —在此工作流中使用 `data` 。支持 * ` 提供商类型` – `AWS_S3` 和 `SGWS` （ StorageGRID ）目标。* ` 服务器` —目标服务器的 FQDN 或 IP 地址。* ` -is-ssl-enabled` –启用 SSL 是可选的，但建议使用。
+
+有关详细信息，请参见 `snapmirror object-store config create` 手册页。
+
 +
+
 ....
 src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
 ....
 . 创建 S3 SnapMirror 关系： `snapmirror create -source-path _svm_name_ ： /bucket/_bucket_name_ -destination-path _object_store_name_ ： /objstore -policy _policy_name_`
 +
-` -destination-path` —您在上一步中创建的对象存储名称以及 fixe 值 `objstore` 。
+` -destination-path` —您在上一步中创建的对象存储名称以及固定值 `objstore` 。
 
 +
 您可以使用创建的策略或接受默认值。

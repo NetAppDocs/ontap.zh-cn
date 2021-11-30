@@ -128,12 +128,17 @@ Parameters
 ** ` -RPO` —指定恢复点目标的时间，以秒为单位（可选）。
 ** ` -throttle` —指定吞吐量 / 带宽的上限，以 KB/ 秒为单位（可选）。
 +
-....
+.示例
+[listing]
+----
 src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -policy test-policy
-....
-+
-`security certificate install -type server-ca -vserver _src_admin_svm_ -ct-name _ca_certificate_` + 您可以输入自签名证书或外部 CA 供应商签名的证书。
+----
 
+
+. 在管理 SVM 上安装 CA 服务器证书：
++
+.. 在管理 SVM 上安装对 _source_S3 服务器证书签名的 CA 证书： `security certificate install -type server-ca -vserver _admin_svm_ -ct-name _src_server_certificate_`
+.. 在管理 SVM 上安装签名 _destination_S3 服务器证书的 CA 证书： `security certificate install -type server-ca -vserver _admin_svm_ -cert -name _dest_server_certificate_` + 如果您使用的是由外部 CA 供应商签名的证书，则只需在管理 SVM 上安装此证书。
 +
 有关详细信息，请参见 `security certificate install` 手册页。
 

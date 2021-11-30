@@ -26,18 +26,20 @@ summary: 确保源环境和目标环境满足从 S3 SnapMirror 备份保护到�
 
 对于 StorageGRID 目标，您需要了解以下信息：
 
-* 服务器名称，以完全限定域名（ FQDN ）表示
+* 服务器名称，以完全限定域名（ FQDN ）或 IP 地址表示
 * 存储分段名称；存储分段必须已存在
 * 访问密钥
 * 机密密钥
 
 
-此外，还需要使用 `security certificate install 命令` 在 ONTAP S3 系统上安装 StorageGRID 证书。有关详细信息，请参见 link:../fabricpool/install-ca-certificate-storagegrid-task.html["安装 CA 证书"] 如果使用 StorageGRID 。
+此外，需要使用 `security certificate install 命令` 在 ONTAP S3 集群的管理 Storage VM 上安装用于签署 StorageGRID 服务器证书的 CA 证书。有关详细信息，请参见 link:../fabricpool/install-ca-certificate-storagegrid-task.html["安装 CA 证书"] 如果使用 StorageGRID 。
 
 对于 AWS S3 目标，您需要了解以下信息：
 
-* 服务器名称，以完全限定域名（ FQDN ）表示
+* 服务器名称，以完全限定域名（ FQDN ）或 IP 地址表示
 * 存储分段名称；存储分段必须已存在
 * 访问密钥
 * 机密密钥
 
+
+ONTAP 集群的管理 Storage VM 的 DNS 服务器必须能够将 FQDN （如果使用）解析为 IP 地址。
