@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: smbc/smbc_plan_additional_restrictions_and_limitations.html 
-keywords: SM-BC, SMBC, restrictions, limitations, consistency group, volume 
+keywords: SM-BC, SMBC, restrictions, limitations, consistency group, volume, solaris 
 summary: 使用 SnapMirror Business Continuity 解决方案时，还存在一些其他限制和限制。 
 ---
 = 其他限制和限制
@@ -80,3 +80,36 @@ NOTE: 限制是端点数量，而不是关系数量。包含 12 个卷的一致�
 === NTFS 安全模式
 
 SM-BC 卷不支持 NTFS 安全模式。
+
+
+
+=== SM-BC 配置的 Solaris 主机设置建议
+
+从 ONTAP 9.10.1 开始， SM-BC 支持 Solaris 11.4 。为了确保在 SM-BC 环境中发生计划外站点故障转移切换时 Solaris 客户端应用程序不会造成中断，需要在 Solaris 11.4 主机上配置以下设置。此设置将覆盖故障转移模块 `f_tpgs` ，以防止执行检测到冲突的代码路径。
+
+按照说明配置 override 参数：
+
+. 为连接到主机的 NetApp 存储类型创建配置文件 ` /etc/driver/drv/scsi_vhci.conf` ，并输入类似于以下内容的条目：
++
+[listing]
+----
+scsi-vhci-failover-override =
+"NETAPP  LUN","f_tpgs"
+----
+. 使用 `devprop` 和 `mdb` 命令验证是否已成功应用覆盖：
++
+[listing]
+----
+root@host-A:~# devprop -v -n /scsi_vhci scsi-vhci-failover-override scsi-vhci-failover-override=NETAPP  LUN + f_tpgs
+root@host-A:~# echo "*scsi_vhci_dip::print -x struct dev_info devi_child | ::list struct dev_info devi_sibling| ::print struct dev_info devi_mdi_client| ::print mdi_client_t ct_vprivate| ::print struct scsi_vhci_lun svl_lun_wwn svl_fops_name"| mdb -k`
+----
++
+[listing]
+----
+svl_lun_wwn = 0xa002a1c8960 "600a098038313477543f524539787938"
+svl_fops_name = 0xa00298d69e0 "conf f_tpgs"
+----
+
+
+
+NOTE: 应用 `scsI-vhcI-failover-override` 后， `conf` 将添加到 `svl_fPS_name` 中。有关追加信息以及对默认设置的建议更改，请参阅 NetApp 知识库文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Solaris_Host_support_recommended_settings_in_SnapMirror_Business_Continuity_(SM-BC)_configuration["Solaris 主机支持 SnapMirror 业务连续性（ SM-BC ）配置中的建议设置"]。
