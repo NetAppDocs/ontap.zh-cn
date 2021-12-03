@@ -13,7 +13,7 @@ summary: 您可以随时开始备份现有的 S3 存储分段；例如，如果�
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../media/
 :toc-position: content
 
 
@@ -93,48 +93,38 @@ summary: 您可以随时开始备份现有的 S3 存储分段；例如，如果�
 
 . 验证默认存储分段策略中的访问规则是否正确： `vserver object-store-server bucket policy add-statement -vserver _svm_name_ -buck_bucket_name_ -Effect ｛ allow_deny ｝ -action _object_store_Actions_ -principal _user_and_group_name_ -resource _object_store_resources_ [-sid_text_]`
 +
-....
+.示例
+[listing]
+----
 clusterA::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
-....
+----
 . 如果您现有的 S3 SnapMirror 策略不想使用默认策略，请创建一个： `snapmirror policy create -vserver svm_name -policy policy_name -type continuous （ -RPO _intege_） "-throttle _throttle_type_] （ -comment _text_] ）【 _Additional _options】`
 +
 参数： * `type continuous` — S3 SnapMirror 关系的唯一策略类型（必需）。* ` -RPO` —指定恢复点目标的时间，以秒为单位（可选）。* ` -throttle` —指定吞吐量 / 带宽的上限，以 KB/ 秒为单位（可选）。
 
 +
-+ 。示例
-
-+
-+
-
-+
-....
+.示例
+[listing]
+----
 clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -policy test-policy
-....
+----
 . 如果目标是 StorageGRID 系统，请在源集群的管理 SVM 上安装 StorageGRID CA 证书： `security certificate install -type server-ca -vserver _src_admin_svm_ -ct-name _storage_grid_server_certificate_`
 +
 有关详细信息，请参见 `security certificate install` 手册页。
 
 . 定义 S3 SnapMirror 目标对象存储： `snapmirror object-store config create -vserver _svm_name_ -object-store-name _target_store_name_ -usage data -provider-type ｛ AWS_S3\SGWS ｝ -server _target_FQDN_ -container-name _remote_bucket_name_ -is-ssl-enabled true -port _port_key_key_key_access_key_key_key_key_key_name_ -name_ -name_ -name_ -port_key_key_key_name_`
 +
-参数： * ` -object-store-name` —本地 ONTAP 系统上的对象存储目标的名称。* ` 使用` —在此工作流中使用 `data` 。支持 * ` 提供商类型` – `AWS_S3` 和 `SGWS` （ StorageGRID ）目标。* ` 服务器` —目标服务器的 FQDN 或 IP 地址。* ` -is-ssl-enabled` –启用 SSL 是可选的，但建议使用。
-
-
-
-有关详细信息，请参见 `snapmirror object-store config create` 手册页。
-
-+ 。示例
+参数： * ` -object-store-name` —本地 ONTAP 系统上的对象存储目标的名称。* ` 使用` —在此工作流中使用 `data` 。支持 * ` 提供商类型` – `AWS_S3` 和 `SGWS` （ StorageGRID ）目标。* ` 服务器` —目标服务器的 FQDN 或 IP 地址。* ` -is-ssl-enabled` –启用 SSL 是可选的，但建议使用。+ 有关详细信息，请参见 `snapmirror object-store config create` 手册页。
 
 +
-
-....
+.示例
+[listing]
+----
 src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
-....
+----
 . 创建 S3 SnapMirror 关系： `snapmirror create -source-path _svm_name_ ： /bucket/_bucket_name_ -destination-path _object_store_name_ ： /objstore -policy _policy_name_`
 +
-` -destination-path` —您在上一步中创建的对象存储名称以及固定值 `objstore` 。
-
-+
-您可以使用创建的策略或接受默认值。
+参数： * ` -destination-path` —您在上一步中创建的对象存储名称以及固定值 `objstore` 。+ 您可以使用创建的策略或接受默认值。
 
 +
 ....
