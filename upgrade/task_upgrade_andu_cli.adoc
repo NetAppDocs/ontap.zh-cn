@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: upgrade/task_upgrade_andu_cli.html 
-keywords: netapp, ontap, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
+keywords: netapp, ontap, automate, automatic, automated, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
 summary: 您可以无中断地更新集群上的 ONTAP 版本。 
 ---
-= 使用命令行界面自动实现无中断
+= 使用 CLI 自动无中断升级
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -20,7 +20,15 @@ summary: 您可以无中断地更新集群上的 ONTAP 版本。
 [role="lead"]
 您可以使用命令行界面（ CLI ）验证集群是否可以无中断升级，在每个节点上安装目标 ONTAP 映像，然后在后台执行升级。
 
-如果您不打算监控升级过程的进度，则最好这样做 xref:task_requesting_notification_of_issues_encountered_in_nondisruptive_upgrades.html[请求可能需要手动干预的错误的 EMS 通知]。
+如果您不打算监控升级过程的进度，则最好这样做 link:task_requesting_notification_of_issues_encountered_in_nondisruptive_upgrades.html["请求可能需要手动干预的错误的 EMS 通知"]。
+
+.开始之前
+* 您应启动 Active IQ 数字顾问。
++
+Active I ！的 Upgrade Advisor 组件Digital Advisor 可帮助您规划成功升级。
+
++
+Active IQ 数字顾问会向所有与 * SupportEdge * 签有有效合同的 NetApp 客户提供数据驱动型洞察和建议（功能因产品和支持层而异）。
 
 * 您必须满足升级准备要求。
 * 对于每个 HA 对，每个节点应在同一广播域上具有一个或多个端口。
@@ -36,7 +44,7 @@ cluster image validate 命令会检查集群组件，以验证升级是否可以
 
 NOTE: 在开始自动无中断升级（ ANDU ）之前修改 storage failover modify-auto-giveback 命令选项的设置不会影响升级过程。在更新所需的接管 / 交还期间， andu 进程会忽略此选项的任何预设值。例如，在启动 andu 之前将 -autogiveback 设置为 false 不会中断交还前的自动升级。
 
-. 删除先前的 ONTAP 软件包：``cluster image package delete -version previous _ontap_Version``
+. 删除先前的 ONTAP 软件包： `cluster image package delete -version previous _ontap_Version`
 . 下载目标 ONTAP 软件包： `cluster image package get -url location`
 +
 
@@ -83,7 +91,7 @@ WARNING: There are additional manual upgrade validation checks that must be perf
 +
 ** 如果要从 ONTAP 9.3 升级到 9.7 ，请使用上述命令中的 9.7 package_version_number 。
 ** 如果要从 ONTAP 9.5 升级到 9.9.1 ，请使用上述命令中的 9.9.1 package_version_number 。
-** 对于除双节点 MetroCluster 系统之外的任何 MetroCluster 配置，在用户提供确认后，升级过程将在两个集群（灾难恢复集群和生产集群）上同时启动。对于双节点 MetroCluster 系统，首先在灾难恢复站点（即未启动升级的站点）上启动更新。在灾难恢复站点上完成更新后，生产站点上开始升级。
+** 对于除双节点 MetroCluster 系统之外的任何 MetroCluster 配置，在用户启动并在命令行上提供确认之后， ONTAP 升级过程会在两个站点（本地站点和灾难恢复站点）的 HA 对上同时启动。对于双节点 MetroCluster 系统，首先在灾难恢复站点（即未启动升级的站点）上启动更新。在灾难恢复站点上完成更新后，升级将在本地站点上开始。
 ** 如果集群包含 2 到 6 个节点，则会执行滚动升级。如果集群包含 8 个或更多节点，则默认情况下会执行批量升级。如果需要，可以使用 -force-rolling 参数指定滚动升级。
 ** 完成每次接管和交还后，升级将等待 8 分钟，以使客户端应用程序能够从接管和交还期间发生的 I/O 暂停中恢复。如果您的环境需要的客户端稳定时间或多或少，您可以使用 -stife-minutes 参数指定不同的稳定时间量。
 +
