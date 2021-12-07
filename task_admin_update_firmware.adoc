@@ -36,7 +36,7 @@ image:workflow_admin_update_firmware.gif["更新固件任务的工作流图"]
 
 
 
-== 从 Active IQ 查看固件更新警报
+=== 从 Active IQ 查看固件更新警报
 
 从 ONTAP 9.1.1 开始，您可以从 Active IQ Unified Manager 在 System Manager 中收到警报，通知您集群上的固件更新处于待定状态。
 
@@ -152,32 +152,32 @@ NOTE: 您可以在 * 固件更新摘要 * 下监控或验证更新。
 
 == 自动更新固件
 
-从 ONTAP 9.10.1 开始，您可以启用 System Manager 的 " 自动更新 " 功能，以使 ONTAP 能够自动下载和安装 NetApp 提供的建议软件修补程序，升级和更新（默认行为）。
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 启用自动更新功能，从而使 ONTAP 能够自动下载并安装由 NetApp 提供的建议固件修补程序，升级和更新（默认行为）。
+
+自动更新功能需要通过 HTTPS 建立 AutoSupport 连接。要对连接问题进行故障排除，请参见 link:../system-admin/troubleshoot-autosupport-http-https-task.html["对通过 HTTP 或 HTTPS 传送 AutoSupport 消息进行故障排除"]。
 
 更新包括以下类别的固件修补程序，升级和更新：
 
 * * 存储固件 * ：存储设备，磁盘和磁盘架
-* * SP/BMC 固件 * ：服务处理器和 SP/BMC 模块
+* * SP/BMC FIRMENT* ：服务处理器和 BMC 模块
 
 
-在 System Manager 中，您可以更改每个类别的默认行为，以便从 Active IQ 数字顾问处收到固件修复和更新建议，从而可以确定要安装的固件，并在需要安装时设置计划。您也可以关闭此功能。
+在 System Manager 中，您可以更改每个类别的默认行为，以便收到固件更新建议，从而可以确定要安装的固件，并在需要安装时设置计划。您也可以关闭此功能。
 
-要计划自动执行修复和更新以及接收有关更新的建议，请执行以下工作流任务：
+要计划自动更新并接收有关更新的建议，请执行以下工作流任务：
 
 image:../media/sm-firmware-auto-update.gif["自动更新工作流"]
 
-要在 System Manager 中接收有关固件更新的警报，您必须向 Active IQ 数字顾问注册。请参见 https://docs.netapp.com/us-en/active-iq/index.html["Active IQ 数字顾问文档"]。
-
 * <<Ensure Automatic Update feature is enabled>>
 * <<Specify default actions for update recommendations>>
-* <<Manage automatic fixes and update recommendations>>
+* <<Manage automatic update recommendations>>
 
 
 
 
-== 确保已启用自动更新功能
+=== 确保已启用自动更新功能
 
-要启用 System Manager 的自动更新功能，您必须接受 NetApp 指定的条款和条件。
+在 System Manager 中，要启用自动更新功能，您必须接受 NetApp 指定的条款和条件。
 
 自动更新功能要求启用 AutoSupport 并使用 HTTPS 协议。
 
@@ -193,7 +193,7 @@ image:../media/sm-firmware-auto-update.gif["自动更新工作流"]
 
 
 
-== 指定更新建议的默认操作
+=== 指定更新建议的默认操作
 
 您可以设置要对存储固件更新和 SP/BMC 固件更新执行的默认操作。
 
@@ -201,14 +201,14 @@ image:../media/sm-firmware-auto-update.gif["自动更新工作流"]
 . 在 System Manager 中，单击 * 集群 > 设置 * 。
 . 在 * 自动更新 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"] 可查看操作列表。
 . 单击 * 编辑自动更新设置 * 。
-. 为这两种类型的通知选择默认操作。
+. 为这两类更新选择默认操作。
 
 
 
 
-== 管理自动修复和更新建议
+=== 管理自动更新建议
 
-在 System Manager 中，您可以查看 Active IQ 提供的建议列表，并一次性对每个建议或所有建议执行操作。
+在 System Manager 中，您可以查看建议列表，并一次性对每个建议或所有建议执行操作。
 
 .步骤
 . 使用任一方法查看建议列表：
@@ -278,7 +278,7 @@ image:../media/sm-firmware-auto-update.gif["自动更新工作流"]
 
 
  a| 
-已应用或正在下载
+正在应用或正在下载
  a| 
 * 取消 * ：取消更新。
 

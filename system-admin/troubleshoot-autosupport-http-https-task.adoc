@@ -1,7 +1,7 @@
 ---
 permalink: system-admin/troubleshoot-autosupport-http-https-task.html 
 sidebar: sidebar 
-keywords: troubleshoot, autosupport, message, delivery, http, https, chekc, settings, resolve, problem 
+keywords: troubleshoot, autosupport, message, delivery, http, https, check, settings, resolve, problem 
 summary: 如果系统未发送预期的 AutoSupport 消息，并且您使用的是 HTTP 或 HTTPS ，则可以检查多项设置来解决此问题。 
 ---
 = 对通过 HTTP 或 HTTPS 传送 AutoSupport 消息进行故障排除
@@ -10,7 +10,7 @@ summary: 如果系统未发送预期的 AutoSupport 消息，并且您使用的�
 
 
 [role="lead"]
-如果系统未发送预期的 AutoSupport 消息，并且您使用的是 HTTP 或 HTTPS ，则可以检查多项设置来解决此问题。
+如果系统未发送预期的 AutoSupport 消息，并且您使用的是 HTTP 或 HTTPS ，或者自动更新功能不起作用，则可以检查多项设置来解决此问题。
 
 您应已确认基本网络连接和 DNS 查找：
 
@@ -25,38 +25,44 @@ summary: 如果系统未发送预期的 AutoSupport 消息，并且您使用的�
 如果您遇到错误或无法完成此操作步骤中的某个步骤，请先确定并解决此问题，然后再继续执行下一步。
 
 .步骤
-. 运行 `ssystem node AutoSupport check show-details` 命令以显示 AutoSupport 子系统的详细状态。其中包括通过发送测试消息来验证与 AutoSupport 目标的连接，并提供 AutoSupport 配置设置中可能出现的错误列表。
-. 验证节点管理 LIF 的状态：
+. 显示 AutoSupport 子系统的详细状态：
 +
-` * 网络接口 show -home-node local -role node-mgmt -fields vserver ， lif ， status-oper ， status-admin ， address ， role*`
+`s系统节点 AutoSupport check show-details`
 
 +
-`ststatus-oper` 和 `ststatus-admin` 字段应返回 `up` 。
+其中包括通过发送测试消息来验证与 AutoSupport 目标的连接，并提供 AutoSupport 配置设置中可能出现的错误列表。
+
+. 验证节点管理 LIF 的状态：
++
+`network interface show -home-node local -role node-mgmt -fields vserver ， lif ， status-oper ， status-admin ， address ， role`
+
++
+`ststatus-oper` 和 `ststatus-admin` 字段应返回 "`up` " 。
 
 . 记录 SVM 名称， LIF 名称和 LIF IP 地址，以供日后使用。
 . 确保已启用并正确配置 DNS ：
 +
-` * vserver services name-service dns show*`
+`vserver services name-service dns show`
 
 . 解决 AutoSupport 消息返回的任何错误：
 +
-` * 系统节点 AutoSupport history show -node * -fields node ， seq-num ， destination ， last-update ， status ， error*`
+`ssystem node AutoSupport history show -node * -fields node ， seq-num ， destination ， last-update ， status ， error`
 
 +
 如果此错误涉及数字证书的问题，请联系技术支持。
 
 . 确认集群可以成功访问所需的服务器和 Internet ：
 +
-.. ` * 网络 traceroute -lif node-management_LIF -destination DNS server*`
-.. ` * 网络 traceroute -lif node_management_LIF -destination support.netapp.com*`
+.. `network traceroute -lif node-management_LIF -destination DNS server`
+.. `network traceroute -lif node_management_LIF -destination support.netapp.com`
 +
 [NOTE]
 ====
 地址 `support.netapp.com` 本身不会对 ping 或 traceroute 做出响应，但每跃点信息很有价值。
 
 ====
-.. ` * 系统节点 AutoSupport show -fields proxy-url*`
-.. ` * 网络 traceroute -node node_management_LIF -destination proxy_URL*`
+.. `ssystem node AutoSupport show -fields proxy-url`
+.. `network traceroute -node node_management_LIF -destination proxy_URL`
 
 
 +
@@ -69,9 +75,16 @@ summary: 如果系统未发送预期的 AutoSupport 消息，并且您使用的�
 确保所有配置参数的值与 AutoSupport 配置的值相同，包括使用相同的代理服务器，用户名，密码和端口。
 
 .. 使用 Web 客户端访问 ` + https://support.netapp.com+` 。
-
-
 +
 访问应成功。如果没有，请确保已正确配置所有防火墙以允许 HTTPS 和 DNS 流量，并且已正确配置代理服务器。有关为 support.netapp.com 配置静态名称解析的详细信息，请参见文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_would_a_HOST_entry_be_added_in_ONTAP_for_support.netapp.com%3F["如何在 ONTAP for support.netapp.com? 中添加主机条目"]。
+
+
+
+. 从 ONTAP 9.10.1 开始，如果您启用了自动更新功能，请确保与以下其他 URL 建立 HTTPS 连接：
++
+** https://support-sg-emea.netapp.com
+** https://support-sg-naeast.netapp.com
+** https://support-sg-nawest.netapp.com
+
 
 

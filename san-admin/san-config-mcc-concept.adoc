@@ -1,7 +1,7 @@
 ---
 permalink: san-admin/san-config-mcc-concept.html 
 sidebar: sidebar 
-keywords: metrocluster environments, considerations, san configuration 
+keywords: metrocluster environments, considerations, san configuration, metrocluster, environments, san, configurations, cisco switch, brocade switch, 
 summary: 在 MetroCluster 环境中使用 SAN 配置时，您必须了解一些注意事项。 
 ---
 = MetroCluster 环境中 SAN 配置的注意事项
@@ -34,11 +34,10 @@ Cisco 交换机
 .. 连接到交换机并登录。
 .. 进入配置模式：
 +
-[listing]
-----
+....
 switch# config t
 switch(config)#
-----
+....
 .. 使用新设备覆盖名称服务器数据库中的第一个设备条目：
 +
 [listing]
@@ -53,7 +52,7 @@ switch(config)# no fcns reject-duplicate-pwwn vsan 1
 
 +
 ....
-Stats:  fs flogi quiesce timerval:  0
+ Stats:  fs flogi quiesce timerval:  0
 ....
 ... 如果上一步中的输出未指示时间为零，则将其设置为零：
 +
@@ -75,19 +74,17 @@ Brocade 交换机
 .. 输入 `sswitchDisable` 命令。
 .. 输入 `configure` 命令，然后在提示符处按 `y` 。
 +
-[listing]
-----
-F-Port login parameters (yes, y, no, n): [no] y
-----
+....
+ F-Port login parameters (yes, y, no, n): [no] y
+....
 .. 选择设置 1 ：
 +
-[listing]
-----
+....
 - 0: First login take precedence over the second login (default)
 - 1: Second login overrides first login.
 - 2: the port type determines the behavior
 Enforce FLOGI/FDISC login: (0..2) [0] 1
-----
+....
 .. 响应其余提示，或按 * Ctrl + D* 。
 .. 输入 `sswitchEnable` 命令。
 
