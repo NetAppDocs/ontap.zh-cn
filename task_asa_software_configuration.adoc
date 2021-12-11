@@ -18,7 +18,7 @@ summary:
 
 
 [role="lead"]
-以下内容介绍如何使用 ONTAP 系统管理器配置全 SAN 阵列。
+以下内容介绍了如何使用 System Manager 配置全 SAN 阵列。
 
 
 
@@ -31,8 +31,6 @@ ASA 平台可在双节点有交换机或无交换机集群中使用，可配置 
 
 NOTE: 现在，借助 ONTAP 9.1.1 ，客户可以将 AFF ASA 配置扩展到多达 12 个节点。ONTAP 9.7 及更高版本支持 ASA 。中列出了支持的配置 link:http://mysupport.netapp.com/matrix/["NetApp 互操作性表工具"]。
 
-* 相关信息 *
-
 link:http://www.netapp.com/us/media/tr-4515.pdf["NetApp 技术报告 4515 ：《 ONTAP AFF 全 SAN 阵列系统》"]
  
 
@@ -42,7 +40,7 @@ link:http://www.netapp.com/us/media/tr-4515.pdf["NetApp 技术报告 4515 ：《
 
 所有 SAN 阵列（ ASA ）均采用与非 ASA 系统相同的设置操作步骤。
 
-ONTAP System Manager 将指导您完成初始化集群，创建本地层，配置协议以及为 ASA 配置存储所需的过程。请参见步骤至 xref:task_configure_ontap.html[配置 ONTAP]。
+System Manager 将指导您完成初始化集群，创建本地层，配置协议以及为 ASA 配置存储所需的过程。请参见步骤至 xref:task_configure_ontap.html[配置 ONTAP]。
 
 
 
@@ -63,7 +61,7 @@ NOTE: 在 ONTAP 9.1.1 中， AFF ASA 系统现在支持 NVMe-oF 协议。
 
 == 支持永久性端口
 
-从 ONTAP 9.8 开始，默认情况下，所有配置为使用 FC 协议的 SAN 阵列（ ASA ）都会启用永久性端口。永久性端口仅适用于 FC ，并且需要使用全球通用端口名称（ WWPN ）标识的区域成员资格。
+从 ONTAP 9.8 开始，默认情况下，配置为使用 FC 协议的所有 SAN 阵列（ ASA ）都会启用永久性端口。永久性端口仅适用于 FC ，并且需要使用全球通用端口名称（ WWPN ）标识的区域成员资格。
 
 永久性端口可通过在 HA 配对节点的相应物理端口上创建影子 LIF 来减少接管的影响。接管节点后，配对节点上的影子 LIF 将采用原始 LIF 的标识，包括 WWPN 。在被接管节点的路径状态更改为故障之前，影子 LIF 将显示为主机 MPIO 堆栈的主动 / 优化路径，并且 I/O 将发生移动。这样可以减少 I/O 中断，因为即使在存储故障转移操作期间，主机也始终可以看到相同数量的目标路径。
 
@@ -93,8 +91,8 @@ NOTE: 在 ONTAP 9.1.1 中， AFF ASA 系统现在支持 NVMe-oF 协议。
 
 == 识别 ASA 系统的方法
 
-您可以使用 ONTAP 系统管理器或 ONTAP 命令行界面（ CLI ）来标识 ASA 系统。
+您可以使用 System Manager 或 ONTAP 命令行界面（ CLI ）来标识 ASA 系统。
 
-从 ONTAP 系统管理器信息板中，单击 * 集群 > 概述 * ，然后选择系统节点。"* 特性 * " 显示为 "* 所有 SAN 阵列 * " 。
+在 System Manager 信息板中，单击 * 集群 > 概述 * ，然后选择系统节点。"* 特性 * " 显示为 "* 所有 SAN 阵列 * " 。
 
 在 CLI 中，您可以使用 san config show 命令。对于 ASA 系统， "All SAN Array" 值将返回为 true 。

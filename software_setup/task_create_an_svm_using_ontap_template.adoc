@@ -10,7 +10,7 @@ summary: 从 ONTAP 9.3 开始，您可以使用预配置的模板创建和配置
 
 
 [role="lead"]
-从 ONTAP 9.3 开始，您可以使用预配置的模板创建和配置 SVM 。您必须为模板中定义的参数提供值。* 问题：用户为什么需要这样做？ *
+从 ONTAP 9.3 开始，您可以使用预配置的模板创建和配置 SVM 。您必须为模板中定义的参数提供值。
 
 必须在集群上安装所有必需的功能许可证。
 
@@ -29,6 +29,7 @@ VserverEnvironmentSetup 模板是预配置的模板，可用于配置 SVM 。您
 
 VserverEnvironmentSetup 模板是一个只读模板。您不能修改此模板的默认参数值。如果要修改模板中任何参数的默认值，必须复制此模板，然后修改这些参数的默认值。
 
+.步骤
 . 查看并记下用于创建和配置 SVM 的模板中定义的参数值： `template parameter show`
 +
 [listing]
@@ -76,7 +77,10 @@ cifs_server         string       -            no   CIFS Server Name
 ----
 . 如果要修改模板中任何参数的默认值，请自定义现有模板：
 +
-.. 复制模板： `template copy -name template_name -destination_name new_template_name`
+.. 复制模板：
++
+`template copy -name template_name -destination_name new_template_name`
+
 +
 [listing]
 ----
@@ -85,7 +89,10 @@ cluster1::> template copy -name VserverEnvironmentSetup -destination-name templa
 +
 新模板是一个读 / 写模板。
 
-.. 修改要更改的参数的默认值： `template parameter modify -template template_name -name parameter_name -default-value new_default_value`
+.. 修改要更改的参数的默认值：
++
+`template parameter modify -template template_name -name parameter_name -default-value new_default_value`
+
 +
 [listing]
 ----
@@ -93,7 +100,10 @@ cluster1::> template parameter modify -template template1 -name security_style -
 ----
 
 
-. 通过为模板中的参数指定值来配置 SVM ： `template provision-name template_name`
+. 通过为模板中的参数指定值来配置 SVM ：
++
+`template provision-name template_name`
+
 +
 [listing]
 ----

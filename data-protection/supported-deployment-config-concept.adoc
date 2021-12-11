@@ -1,7 +1,7 @@
 ---
 permalink: data-protection/supported-deployment-config-concept.html 
 sidebar: sidebar 
-keywords: fan-out, cascade, data, protection, deployments 
+keywords: fan-out, fanout, fan out, cascade, data, protection, deployments, snapmirror, snap mirror, snapvault, synchronous, asynchronous, unified, replication, replicate, vault-mirror, vault-vault 
 summary: 您可以使用扇出部署将数据保护扩展到多个二级系统。您可以使用级联部署将数据保护扩展到三级系统。 
 ---
 = 扇出和级联数据保护部署
@@ -45,7 +45,7 @@ SnapMirror 支持 _mirror-mirror_ ， _mirror-vaults_ ， _vault-mirror_ 和 _va
 
 镜像 - 镜像级联部署由一系列关系组成，其中，源卷镜像到二级卷，而二级卷镜像到三级卷。如果二级卷不可用，您可以同步主卷和三级卷之间的关系，而无需执行新的基线传输。
 
-从 ONTAP 9.6 开始，镜像 - 镜像级联部署支持 SnapMirror 同步关系。只有主卷和二级卷才能处于 SnapMirror 同步关系中。二级卷和三级卷之间的关系必须是异步的。
+从 ONTAP 9.6 开始，在镜像 - 镜像级联部署中支持 SnapMirror 同步关系。只有主卷和二级卷才能处于 SnapMirror 同步关系中。二级卷和三级卷之间的关系必须是异步的。
 
 image::../media/sm-mirror-mirror-cascade.png[SnapMirror 部署：源到镜像 - 镜像级联链]
 
@@ -53,8 +53,8 @@ image::../media/sm-mirror-mirror-cascade.png[SnapMirror 部署：源到镜像 - 
 
 image::../media/sm-mirror-vault-cascade.png[SnapMirror 部署：源到镜像 - 存储级联链]
 
-此外，还支持存储 - 镜像以及从 ONTAP 9.2 开始的存储 - 存储级联部署：
+此外，还支持存储镜像以及从 ONTAP 9.2 开始的存储 - 存储级联部署：
 
 * 存储 - 镜像级联部署由一系列关系组成，其中，源卷存储到二级卷，而二级卷镜像到三级卷。
-* 存储 - 存储级联部署由一系列关系组成，其中，源卷存储到二级卷，二级卷存储到三级卷。
+* （从 ONTAP 9.2 开始）存储 - 存储级联部署由一系列关系组成，其中，源卷存储到二级卷，二级卷存储到三级卷。
 

@@ -1,7 +1,7 @@
 ---
 permalink: san-admin/move-luns-task.html 
 sidebar: sidebar 
-keywords: ontap 9.2, move, luns 
+keywords: system manager, ontap 9.2, move, lun 
 summary: 您可以在 Storage Virtual Machine （ SVM ）中的卷之间移动 LUN ，但不能在 SVM 之间移动 LUN 。在 SVM 中跨卷移动的 LUN 会立即移动，而不会丢失连接。 
 ---
 = 移动 LUN
@@ -41,11 +41,11 @@ summary: 您可以在 Storage Virtual Machine （ SVM ）中的卷之间移动 L
 
 == System Manager 操作步骤
 
-从 ONTAP 9.10.1 开始，您可以使用 System Manager 在移动单个 LUN 时创建新卷。在 ONTAP 9.9 和 9.8 中，要将 LUN 移动到的卷必须存在，然后才能开始移动 LUN 。
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 在移动单个 LUN 时创建新卷。在 ONTAP 9.8 和 9.9 中，要将 LUN 移动到的卷必须存在，然后才能开始移动 LUN 。
 
 步骤
 
-. 在 ONTAP 系统管理器中，单击 * 存储 ">LUN* 。
+. 在 System Manager 中，单击 * 存储 ">LUN* 。
 . 右键单击要移动的 LUN ，然后单击 image:icon_kabob.gif["kabob 图标"] 并选择 * 移动 LUN* 。
 +
 在 ONTAP 9.10.1 中，选择将 LUN 移动到 * 现有卷 * 或 * 新卷 * 。
@@ -61,15 +61,20 @@ summary: 您可以在 Storage Virtual Machine （ SVM ）中的卷之间移动 L
 == 命令行界面操作步骤
 
 .步骤
-. 移动 LUN ： `lun move start` 。
+. 移动 LUN ：
++
+`lun move start` 。
+
 +
 在很短的时间内， LUN 会同时显示在原始卷和目标卷上。这是预期行为，完成移动后即可解决。
 
-. 跟踪移动状态并验证是否成功完成： `lun move show` 。
+. 跟踪移动状态并验证是否成功完成：
++
+`lun move show` 。
 
 
-* 相关信息 *
 
-* xref:selective-lun-map-concept.adoc[选择性 LUN 映射]
-* xref:modify-slm-reporting-nodes-task.adoc[修改 SLM 报告节点列表]
+.相关信息
+* link:selective-lun-map-concept.html["选择性 LUN 映射"]
+* link:modify-slm-reporting-nodes-task.html["修改 SLM 报告节点列表"]
 

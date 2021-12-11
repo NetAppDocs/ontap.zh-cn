@@ -37,9 +37,14 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
 
 
 .步骤
-. 创建 LIF ： `network interface create -vserver vserver_name -lif lif_name -role data -data-protocol cifs -home-node node_name -home-port port_name ｛ -address ip_address -netmask ip_address | -subnet-name subnet_name ｝ -firewall-policy data -auto-revert ｛ true_false ｝`
+. 创建 LIF ：
++
+`network interface create -vserver vserver_name -lif lif_name -role data -data-protocol cifs -home-node node_name -home-port port_name ｛ -address ip_address -netmask ip_address | -subnet-name subnet_name ｝ -firewall-policy data -auto-revert ｛ true_false ｝`
+
 +
 |===
+
+
 | * ONTAP 9.5 及更早版本 * 
 
 
@@ -49,16 +54,20 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
 |===
 +
 |===
+
+
 | * ONTAP 9.6 及更高版本 * 
 
 
-| `network interface create -vserver vserver_name -lif lif_name -service-policy service_policy_name -home-node node_name -home-port port_name ｛ -address ip_address -netmask ip_address _ address _ -subnet-name subnet_name ｝ -firewall-policy data -auto-revert ｛ true_false ｝` 
+ a| 
+`network interface create -vserver vserver_name -lif lif_name -service-policy service_policy_name -home-node node_name -home-port port_name ｛ -address ip_address -netmask ip_address _ address _ -subnet-name subnet_name ｝ -firewall-policy data -auto-revert ｛ true_false ｝`
+
 |===
 +
 ** 使用服务策略创建 LIF 时，不需要 ` -role` 参数（从 ONTAP 9.6 开始）。
 ** 必须在创建 LIF 时指定 ` -data-protocol` 参数，如果稍后不销毁并重新创建数据 LIF ，则无法修改此参数。
 +
-使用服务策略创建 LIF 时，不需要 ` -data-protocol` 参数（从 ONTAP 9.6 开始）。
+使用服务策略（从 ONTAP 9.6 开始）创建 LIF 时，不需要 ` -data-protocol` 参数。
 
 ** ` -home-node` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的节点。
 +
@@ -75,10 +84,15 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
 ** 使用 ` -auto-revert` 可以指定在启动，更改管理数据库状态或建立网络连接等情况下数据 LIF 是否自动还原到其主节点。默认设置为 `false` ，但您可以根据环境中的网络管理策略将其设置为 `false` 。
 
 
-. 使用 `network interface show` 命令验证是否已成功创建 LIF 。
+. 验证是否已成功创建 LIF ：
++
+`network interface show`
+
 . 验证配置的 IP 地址是否可访问：
 +
 |===
+
+
 | 要验证 ... | 使用 ... 
 
 

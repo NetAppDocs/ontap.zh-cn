@@ -1,8 +1,8 @@
 ---
 permalink: data-protection/snapmirror-licensing-concept.html 
 sidebar: sidebar 
-keywords: snapmirror, licensing 
-summary: 随着 ONTAP 9.3 的推出，许可功能已得到简化，可在 ONTAP 实例之间进行复制。在 ONTAP 9 版本中， SnapMirror 许可证既支持存储关系，也支持镜像关系。现在，用户可以购买 SnapMirror 许可证，以便在备份和灾难恢复用例中支持 ONTAP 复制。 
+keywords: snapmirror, licensing, snapvault, vault, mirror, relationship, replication, backup, back up, disaster recovery, dr 
+summary: 从 ONTAP 9.3 开始，简化了在 ONTAP 实例之间复制的许可。在 ONTAP 9 版本中， SnapMirror 许可证既支持存储关系，也支持镜像关系。现在，用户可以购买 SnapMirror 许可证，以便在备份和灾难恢复用例中支持 ONTAP 复制。 
 ---
 = SnapMirror 许可概述
 :icons: font
@@ -10,7 +10,7 @@ summary: 随着 ONTAP 9.3 的推出，许可功能已得到简化，可在 ONTAP
 
 
 [role="lead"]
-随着 ONTAP 9.3 的推出，许可功能已得到简化，可在 ONTAP 实例之间进行复制。在 ONTAP 9 版本中， SnapMirror 许可证既支持存储关系，也支持镜像关系。现在，用户可以购买 SnapMirror 许可证，以便在备份和灾难恢复用例中支持 ONTAP 复制。
+从 ONTAP 9.3 开始，简化了在 ONTAP 实例之间复制的许可。在 ONTAP 9 版本中， SnapMirror 许可证既支持存储关系，也支持镜像关系。现在，用户可以购买 SnapMirror 许可证，以便在备份和灾难恢复用例中支持 ONTAP 复制。
 
 在 ONTAP 9.3 之前的版本中，我们提供了两个许可证来支持不同的复制使用情形。要在 ONTAP 实例之间配置 _vaults_ 关系，需要 SnapVault 许可证，在这些实例中， DP 实例可以保留更多的 Snapshot 副本，以支持保留时间较长的备份使用情形。要在 ONTAP 实例之间配置 _mirror_ 关系，需要一个 SnapMirror 许可证，其中每个 ONTAP 实例都会保留相同数量的 Snapshot 副本（即 _mirror_ 映像），以支持可能发生集群故障转移的灾难恢复使用情形。SnapVault 8.x 和 9.x 版本可以继续使用和支持 SnapMirror 和 ONTAP 许可证。
 
@@ -50,7 +50,7 @@ SnapMirror Cloud 不能作为独立许可证提供，只能在购买混合云捆
 * 配置多策略复制工作流（例如，磁盘到磁盘到云）时，所有 ONTAP 实例都需要 SnapMirror 许可证，而仅直接复制到对象存储端点的源集群需要 SnapMirror 云许可证。
 
 
-SnapMirror Cloud 是一种最终用户许可证，可以从 NetApp 或经批准的 NetApp 经销商合作伙伴购买。SnapMirror 云许可证可提供最终用户授权，但不会启用异步 ONTAP 来复制对象存储。要为 SnapMirror 云调用 ONTAP API ，需要从授权应用程序获得唯一的 API 密钥。用于编排 SnapMirror 云复制的授权和许可应用程序包括 ONTAP System Manager ，也可从多个第三方应用程序提供商处获得。这些授权应用程序将嵌入唯一的 API 密钥以调用 ONTAP API 。要编排和启用 SnapMirror Cloud 复制，需要结合使用 SnapMirror Cloud 最终用户许可证和授权的第三方备份应用程序。
+SnapMirror Cloud 是一种最终用户许可证，可以从 NetApp 或经批准的 NetApp 经销商合作伙伴购买。SnapMirror 云许可证可提供最终用户授权，但不会启用异步 ONTAP 来复制对象存储。要为 SnapMirror 云调用 ONTAP API ，需要从授权应用程序获得唯一的 API 密钥。用于编排 SnapMirror Cloud 复制的授权和许可应用程序包括 System Manager ，也可从多个第三方应用程序提供商处获得。这些授权应用程序将嵌入唯一的 API 密钥以调用 ONTAP API 。要编排和启用 SnapMirror Cloud 复制，需要结合使用 SnapMirror Cloud 最终用户许可证和授权的第三方备份应用程序。
 
 从 ONTAP 9.1.1 开始，您可以使用 System Manager 进行 SnapMirror 云复制。有关详细信息，请参见 https://docs.netapp.com/us-en/ontap/task_dp_back_up_to_cloud.html["备份到云"]。
 
@@ -82,6 +82,8 @@ DPO 在多个 ONTAP 版本中提供了其他 ONTAP 功能。
 
 [cols="6*"]
 |===
+
+
 | 功能 | 9.3 | 9.4 | 9.5 | 9.6 | 9.7+ 
 
 
@@ -152,6 +154,8 @@ HDD 的跨卷聚合重复数据删除
 
 [cols="7*"]
 |===
+
+
 |  | 9.3--9.5 ，不带 DPO | 采用 DPO 的 9.3-9.5 | 9.6 不带 DPO | 采用 DPO 的 9.6 | 9.7-9.9.1 ，不使用 DPO | 使用 DPO 时为 9.7-9.9.1.9.1 
 
 

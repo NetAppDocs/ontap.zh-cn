@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: task_metrocluster_switchover_switchback.html 
-keywords: switchover, switchback, switch over, switch back, metrocluster, maintenance, NVram mirroring, synchronize, mediator, healing 
+keywords: system manager, switchover, switchback, switch over, switch back, metrocluster, maintenance, nvram mirroring, synchronize, mediator, healing, recover 
 summary: 您可以从一个 MetroCluster 站点切换到另一个站点，以执行维护或从问题描述恢复。 
 ---
 = 执行 IP MetroCluster 切换和切回
@@ -46,16 +46,16 @@ NOTE: 只有 IP MetroCluster 配置才支持切换和切回过程。
 
 您可以对 ONTAP 9.7 和 9.8 执行不同的切换和切回过程：
 
-* <<Use System Manager 9.7 for switchover and switchback>>
-* <<Use System Manager 9.8 for switchover and switchback>>
+* <<sm97-sosb,使用 ONTAP 9.7 中的 System Manager 进行切换和切回>>
+* <<sm98-sosb,使用 ONTAP 9.8 中的 System Manager 进行切换和切回>>
 
 
 
 
-== 使用 System Manager 9.7 进行切换和切回
+== 使用 ONTAP 9.7 中的 System Manager 进行切换和切回
 
 .步骤
-. 登录到 System Manager 9.7 。
+. 在 ONTAP 9.7 中登录到 System Manager 。
 . 单击 * （返回经典版本） * 。
 . 单击 * 配置 > MetroCluster * 。
 +
@@ -78,14 +78,14 @@ System Manager 将验证是否可以进行协商切换。
 
 
 
-== 使用 System Manager 9.8 进行切换和切回
+== 使用 ONTAP 9.8 中的 System Manager 进行切换和切回
 
 
 
 === 执行计划内切换（ ONTAP 9.8 ）
 
 .步骤
-. 登录到 System Manager 9.8 。
+. 在 ONTAP 9.8 中登录到 System Manager 。
 . 选择 * 信息板 * 。在 * MetroCluster 集群 * 部分中，两个集群显示有一个连接。
 . 在本地集群（如左侧所示）中，单击 image:icon_kabob.gif["\" 串器 \" 图标"]，然后选择 * 控制远程站点 * 。
 +
@@ -106,7 +106,7 @@ NOTE: 在执行切回之前，不应使用远程集群进行数据服务。
 ONTAP 可能会自动启动计划外切换。如果 ONTAP 无法确定是否需要切回，则仍在运行的 MetroCluster 站点的系统管理员将通过以下步骤启动切换：
 
 .步骤
-. 登录到 System Manager 9.8 。
+. 在 ONTAP 9.8 中登录到 System Manager 。
 . 选择 * 信息板 * 。
 +
 在 * MetroCluster 集群 * 部分中，两个集群之间的连接显示有一个 "X" ，表示无法检测到连接。连接或集群已关闭。
@@ -130,7 +130,7 @@ NOTE: 在远程集群重新联机后，在执行切回之前，不应将其用�
 无论远程集群是由于计划内维护还是因灾难而关闭，它现在都应正常运行并等待切回。
 
 .步骤
-. 在本地集群上，登录到 System Manager 9.8 。
+. 在本地集群上，登录到 ONTAP 9.8 中的 System Manager 。
 . 选择 * 信息板 * 。
 +
 在 * MetroCluster 集群 * 部分中，显示了两个集群。

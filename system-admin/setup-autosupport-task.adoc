@@ -24,7 +24,7 @@ summary: 您可以控制是否以及如何将 AutoSupport 信息发送给技术�
 默认情况下，每个节点都启用了 AutoSupport ，以便使用 HTTPS 传输协议向技术支持发送消息。
 
 .步骤
-. 使用以下命令确保已启用 AutoSupport ：
+. 确保已启用 AutoSupport ：
 +
 [listing]
 ----
@@ -45,6 +45,8 @@ system node autosupport modify -support enable
 
 +
 |===
+
+
 | 如果您要 ... | 然后，为 `ssystem node AutoSupport modify` 命令设置以下参数 ... 
 
 
@@ -79,6 +81,8 @@ system node autosupport modify -support enable
 .. 通过设置 `ssystem node AutoSupport modify` 命令的以下参数来确定组织中的收件人：
 +
 |===
+
+
 | 设置此参数 ... | 目标位置 ... 
 
 
@@ -118,9 +122,11 @@ system node autosupport modify -support enable
 
 
 . 配置 DNS 。
-. 可选：如果要更改特定设置，请添加命令选项：
+. （可选）如果要更改特定设置，请添加命令选项：
 +
 |===
+
+
 | 如果要执行此操作 ... | 然后，为 `ssystem node AutoSupport modify` 命令设置以下参数 ... 
 
 
@@ -152,11 +158,12 @@ cluster1::> system node autosupport invoke -type test -node node1
 ----
 .. 确认 NetApp 正在接收您的 AutoSupport 消息：
 +
- system node autosupport history show -node local
+system node AutoSupport history show -node local
+
 +
 对于所有适当的协议目标，最新传出 AutoSupport 消息的状态最终应更改为 `snt-successful` 。
 
-.. 可选：通过检查为 `ssystem node AutoSupport modify` 命令的 ` 到` ， ` 到` 或 ` 配对节点地址` 参数配置的任何地址的电子邮件，确认 AutoSupport 消息已发送到您的内部支持组织或您的支持合作伙伴。
+.. （可选）检查为 `ssystem node AutoSupport modify` 命令的 ` 到` ， ` 到` 或 ` 到合作伙伴地址` 参数配置的任何地址的电子邮件，以确认 AutoSupport 消息已发送到您的内部支持组织或您的支持合作伙伴。
 
 
 

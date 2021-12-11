@@ -1,7 +1,7 @@
 ---
 permalink: nfs-admin/improve-performance-ldap-directory-searches-task.html 
 sidebar: sidebar 
-keywords: improve, performance, ldap, directory, netgroup, host, search 
+keywords: improve, performance, ldap, directory, netgroup, host, search, ptr, forward, reverse, rfc 5952, export rule, 
 summary: 如果 LDAP 环境配置为允许按主机搜索网络组，则可以将 ONTAP 配置为利用此功能并按主机执行网络组搜索。这样可以显著加快网络组搜索速度，并减少因网络组搜索期间出现延迟而可能导致的 NFS 客户端访问问题。 
 ---
 = 提高 LDAP 目录 netgroup-by-host 搜索的性能
@@ -59,7 +59,5 @@ NIS 服务器会将网络组信息存储在三个单独的映射中，分别名�
 cluster1::*> vserver services name-service ldap client modify -vserver vs1 -client-config ldap_corp -is-netgroup-byhost-enabled true -netgroup-byhost-dn nisMapName="netgroup.byhost",dc=corp,dc=example,dc=com
 ----
 目录中的 `netgroup.byHost` 和 `netgroup` 映射必须始终保持同步，以避免客户端访问问题。
-
-* 相关信息 *
 
 https://datatracker.ietf.org/doc/html/rfc5952["IETF RFC 5952 ： IPv6 地址文本表示建议"]
