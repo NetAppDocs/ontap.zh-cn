@@ -16,8 +16,9 @@ ONTAP 可以审核某些命令行界面更改事件，包括某些 CIFS-share �
 
 作为管理员，如果您执行任何命令来更改与 cifs-share ，本地用户组，本地安全组，授权策略和审核策略事件相关的配置， 生成记录并审核相应的事件：
 
-[cols="4*"]
 |===
+
+
 | 审核类别 | 事件 | 事件 IDs | 运行此命令 ... 
 
 
@@ -32,7 +33,7 @@ Mhost 审核
 
 
 
-|   a| 
+ a| 
 文件共享
  a| 
 [5142] Network share was add得
@@ -41,14 +42,14 @@ Mhost 审核
 
 
 
-|  |   a| 
+ a| 
 [5143] Network share was modified
  a| 
 `vserver cifs share modify` `vserver cifs share cree|modify-delete` `vserver cifs share adds| remove`
 
 
 
-|  |   a| 
+ a| 
 [5144] Network share deleted
  a| 
 `Vserver cifs share delete`
@@ -66,49 +67,49 @@ Mhost 审核
 
 
 
-|  |   a| 
+ a| 
 [4722] 已启用本地用户
  a| 
 `Vserver cifs users-and-groups local-user create-modify`
 
 
 
-|  |   a| 
+ a| 
 [4724] 本地用户密码重置
  a| 
 `Vserver cifs users-and-groups local-user set-password`
 
 
 
-|  |   a| 
+ a| 
 [4725] 已禁用本地用户
  a| 
 `Vserver cifs users-and-groups local-user create-modify`
 
 
 
-|  |   a| 
+ a| 
 [4726] 本地用户已删除
  a| 
 `vserver cifs users-and-groups local-user delete` `vserver services name-service unix-user delete`
 
 
 
-|  |   a| 
+ a| 
 [4738] Local user Change.
  a| 
 `vserver cifs users-and-groups local-user modify` `vserver services name-service unix-user modify`
 
 
 
-|  |   a| 
+ a| 
 【 4781 】本地用户重命名
  a| 
 `Vserver cifs users-and-groups local-user rename`
 
 
 
-|   a| 
+ a| 
 安全组
  a| 
 【 4731 】已创建本地安全组
@@ -117,39 +118,46 @@ Mhost 审核
 
 
 
-|  |   a| 
+ a| 
 [4734] Local Security Group deleted
  a| 
 `vserver cifs users-and-groups local-group delete` `vserver services name-service unix-group delete`
 
 
 
-|  |   a| 
+ a| 
 [4735] Local Security Group Modified
  a| 
 `vserver cifs users-and-groups local-group rename_modify` `vserver services name-service unix-group modify`
 
 
 
-|  |   a| 
+ a| 
 [4732] 已将用户添加到本地组
  a| 
 `vserver cifs users-and-groups local-group add-members` `vserver services name-service unix-group adduser`
 
 
 
-|  |   a| 
+ a| 
 [4733] 已从本地组中删除此用户
  a| 
 `vserver cifs users-and-groups local-group remove-members` `vserver services name-service unix-group deluser`
 
 
 
-|   a| 
+ a| 
 authorization-policy-change
  a| 
 【 4704 】已分配用户权限
  a| 
 `Vserver cifs users-and-groups privilege add-privilege`
+
+
+
+ a| 
+【 4705 】已删除用户权限
+ a| 
+`Vserver cifs users-and-groups privilege remove-privilege` reset-privilege
 
 |===

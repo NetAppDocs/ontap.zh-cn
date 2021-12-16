@@ -28,30 +28,36 @@ summary: 您可以通过向 FlexGroup 卷的现有成分卷添加更多容量或
 .步骤
 . 根据需要通过提高 FlexGroup 卷的容量或性能来增加 FlexGroup 卷的大小：
 +
-[cols="2*"]
 |===
+
+
 | 如果要增加 ... | 然后执行此操作 ... 
 
 
  a| 
 FlexGroup 卷的容量
  a| 
-调整 FlexGroup 卷的成分卷大小： `volume modify -vserver vserver_name -volume fg_name -size new_size`
+调整 FlexGroup 卷的成分卷大小：
+
+`volume modify -vserver vserver_name -volume fg_name -size new_size`
 
 
 
  a| 
 FlexGroup 卷的性能
  a| 
-通过添加新成分卷来扩展 FlexGroup 卷： ` + volume expand -vserver vserver_name -volume fg_name -aggr-list aggregate name ， ... ` aggr-list-multiplier constituents_per_aggr++ `` -aggr-list-multiplier 参数的默认值为 1 。
+通过添加新成分卷扩展 FlexGroup 卷：
+
+` + volume expand -vserver vserver_name -volume fg_name -aggr-list 聚合名称， ... [-aggr-list-multiplier constituents_per_aggr]+`
+
+` -aggr-list-multiplier` 参数的默认值为 1 。
 
 要在 ONTAP 9.5 中为 FabricPool 扩展 FlexGroup 卷，使用的任何新聚合都必须为 FabricPool 。
 
 |===
-+
+
+
 应尽可能增加 FlexGroup 卷的容量。如果必须扩展 FlexGroup 卷，则应以与现有 FlexGroup 卷的成分卷相同的倍数添加成分卷，以确保性能一致。例如，如果现有 FlexGroup 卷包含 16 个成分卷，每个节点包含 8 个成分卷，则可以将现有 FlexGroup 卷扩展 8 个或 16 个成分卷。
-
-
 
 * 增加现有成分卷容量的示例 *
 

@@ -83,38 +83,46 @@ NOTE: 有时，当节点上的 LIF 发生更改时， CDP 信息不会在接收�
 .步骤
 . 显示节点或集群中所有节点的当前 CDP 设置：
 +
-[cols="2*"]
+[cols="30,70"]
 |===
+
+
 | 要查看 CDP 设置 ... | 输入 ... 
 
 
  a| 
 节点
-| run —节点 <node_name> 选项 cdpd.enable 
+ a| 
+`run —节点 <node_name> 选项 cdpd.enable`
+
 
 
  a| 
 集群中的所有节点
-| options cdpd.enable 
+ a| 
+`options cdpd.enable`
+
 |===
 . 在节点的所有端口或集群中所有节点的所有端口上启用或禁用 CDP ：
 +
-[cols="2*"]
+[cols="30,70"]
 |===
+
+
 | 要启用或禁用 CDP ，请执行以下操作 ... | 输入 ... 
 
 
  a| 
 节点
  a| 
-运行 -node node_name options cdpd.enable ｛ on or off ｝
+`run -node node_name options cdpd.enable ｛ on or off ｝`
 
 
 
  a| 
 集群中的所有节点
  a| 
-options cdpd.enable ｛ on or off ｝
+`options cdpd.enable ｛ on or off ｝`
 
 |===
 
@@ -169,25 +177,47 @@ sti2650-212/cdp
 .步骤
 . 显示节点或集群中所有节点的当前 CDP 保持时间：
 +
+[cols="30,70"]
 |===
+
+
 | 要查看保持时间 ... | 输入 ... 
 
 
-| 节点 | `run -node node_name options cdpd.holdTime` 
+ a| 
+节点
+ a| 
+`run -node node_name options cdpd.holdTime`
 
 
-| 集群中的所有节点 | `options cdpd.holdTime` 
+
+ a| 
+集群中的所有节点
+ a| 
+`options cdpd.holdTime`
+
 |===
 . 在节点的所有端口或集群中所有节点的所有端口上配置 CDP 保持时间：
 +
+[cols="30,70"]
 |===
+
+
 | 要设置保持时间 ... | 输入 ... 
 
 
-| 节点 | `run -node node_name options cdpd.holdTime holdTime` 
+ a| 
+节点
+ a| 
+`run -node node_name options cdpd.holdTime holdTime`
 
 
-| 集群中的所有节点 | 操作时间`tions CDPD.HoldTime HoldTime` 
+
+ a| 
+集群中的所有节点
+ a| 
+`options CDPD.HoldTime HoldTime`
+
 |===
 
 
@@ -204,25 +234,47 @@ CDP 公告会定期发送到 CDP 邻居。您可以根据网络流量和网络�
 .步骤
 . 显示节点或集群中所有节点的当前 CDP 公告时间间隔：
 +
+[cols="30,70"]
 |===
+
+
 | 要查看间隔 ... | 输入 ... 
 
 
-| 节点 | `运行 -node node_name options cdpd.interval` 
+ a| 
+节点
+ a| 
+`运行 -node node_name options cdpd.interval`
 
 
-| 集群中的所有节点 | `options cdpd.interval` 
+
+ a| 
+集群中的所有节点
+ a| 
+`options cdpd.interval`
+
 |===
 . 配置为节点的所有端口或集群中所有节点的所有端口发送 CDP 公告的间隔：
 +
+[cols="30,70"]
 |===
+
+
 | 要设置间隔 ... | 输入 ... 
 
 
-| 节点 | `run -node node_name options cdpd.interval interval` 
+ a| 
+节点
+ a| 
+`run -node node_name options cdpd.interval interval`
 
 
-| 集群中的所有节点 | `options cdpd.interval interval` 
+
+ a| 
+集群中的所有节点
+ a| 
+`options cdpd.interval interval`
+
 |===
 
 
@@ -236,14 +288,25 @@ CDP 公告会定期发送到 CDP 邻居。您可以根据网络流量和网络�
 
 显示或清除节点上所有端口的当前 CDP 统计信息：
 
+[cols="30,70"]
 |===
+
+
 | 如果您要 ... | 输入 ... 
 
 
-| 查看 CDP 统计信息 | `run -node node_name CDPD show-stats` 
+ a| 
+查看 CDP 统计信息
+ a| 
+`run -node node_name CDPD show-stats`
 
 
-| 清除 CDP 统计信息 | `run -node node_name CDPD zero-stats` 
+
+ a| 
+清除 CDP 统计信息
+ a| 
+`run -node node_name CDPD zero-stats`
+
 |===
 
 
@@ -340,18 +403,23 @@ NOTE: LLDP 规范定义了通过 SNMP MIB 访问收集的信息。但是， ONTA
 
 . 在节点的所有端口或集群中所有节点的所有端口上启用或禁用 LLDP ：
 +
+[cols="30,70"]
 |===
 
 
 | 要启用或禁用 LLDP ，请执行以下操作 ... | 输入 ... 
 
 
-| 节点  a| 
+ a| 
+节点
+ a| 
 `运行 -node node_name options lldp.enable ｛ on_off ｝`
 
 
 
-| 集群中的所有节点  a| 
+ a| 
+集群中的所有节点
+ a| 
 `options lldp.enable ｛ on|off ｝`
 
 |===
@@ -376,13 +444,16 @@ options lldp.enable {on|off}
 
 您可以查看有关连接到集群节点的每个端口的相邻设备的信息，前提是该端口连接到 LLDP 兼容的设备。您可以使用 network device-discovery show 命令查看邻居信息。
 
-显示有关连接到集群中节点上端口的所有 LLDP 兼容设备的信息：
-
+.步骤
+. 显示有关连接到集群中节点上端口的所有 LLDP 兼容设备的信息：
++
 ....
 network device-discovery show -node node -protocol lldp
 ....
++
 以下命令显示了连接到节点 cluster-1_01 上端口的邻居。输出列出了连接到指定节点的每个端口且已启用 LLDP 的设备。如果省略 ` 协议` 选项，则输出还会列出启用了 CDP 的设备。
 
++
 ....
 network device-discovery show -node cluster-1_01 -protocol lldp
 Node/       Local  Discovered
@@ -394,6 +465,8 @@ cluster-1_01/lldp
             e2c    0013.c31e.5c60            GigabitEthernet1/34
             e2d    0013.c31e.5c60            GigabitEthernet1/33
 ....
+
+
 
 
 === 调整传输 LLDP 公告的间隔

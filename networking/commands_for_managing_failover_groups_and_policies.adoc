@@ -15,33 +15,66 @@ summary: 管理故障转移组
 [role="lead"]
 您可以使用 `network interface failover-groups` 命令管理故障转移组。您可以使用 `network interface modify` 命令管理应用于 LIF 的故障转移组和故障转移策略。
 
-[cols="2*"]
 |===
+
+
 | 如果您要 ... | 使用此命令 ... 
 
 
-| 将网络端口添加到故障转移组 | network interface failover-groups add-targets 
+ a| 
+将网络端口添加到故障转移组
+ a| 
+`network interface failover-groups add-targets`
 
 
-| 从故障转移组中删除网络端口 | 网络接口故障转移组 remove-targets 
+
+ a| 
+从故障转移组中删除网络端口
+ a| 
+`network interface failover-groups remove-targets`
 
 
-| 修改故障转移组中的网络端口 | network interface failover-groups modify 
+
+ a| 
+修改故障转移组中的网络端口
+ a| 
+`network interface failover-groups modify`
 
 
-| 显示当前故障转移组 | network interface failover-groups show 
+
+ a| 
+显示当前故障转移组
+ a| 
+`network interface failover-groups show`
 
 
-| 在 LIF 上配置故障转移 | network interface modify -failover-group -failover-policy 
+
+ a| 
+在 LIF 上配置故障转移
+ a| 
+`network interface modify -failover-group -failover-policy`
 
 
-| 显示每个 LIF 正在使用的故障转移组和故障转移策略 | network interface show -fields failover-group ， failover-policy 
+
+ a| 
+显示每个 LIF 正在使用的故障转移组和故障转移策略
+ a| 
+`network interface show -fields failover-group ， failover-policy`
 
 
-| 重命名故障转移组 | 网络接口故障转移组重命名 
+
+ a| 
+重命名故障转移组
+ a| 
+`network interface failover-groups rename`
 
 
-| 删除故障转移组 | 删除网络接口故障转移组 
+
+ a| 
+删除故障转移组
+ a| 
+`network interface failover-groups delete`
+
 |===
 
 NOTE: 如果修改故障转移组，使其无法为集群中的任何 LIF 提供有效的故障转移目标，则可能会在 LIF 尝试进行故障转移时导致中断。
