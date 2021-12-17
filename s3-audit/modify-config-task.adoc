@@ -1,8 +1,8 @@
 ---
 permalink: s3-audit/modify-config-task.html 
 sidebar: sidebar 
-keywords: s3 audit, enable 
-summary: 如果要修改单个存储分段的审核参数或 SVM 的审核配置，必须先禁用 SVM 的审核，然后运行相应的修改命令。 
+keywords: s3 audit, modify 
+summary: 您可以修改单个存储分段的审核参数或在 SVM 中选择用于审核的所有存储分段的审核配置。 
 ---
 = 修改 S3 审核配置
 :icons: font
@@ -10,44 +10,27 @@ summary: 如果要修改单个存储分段的审核参数或 SVM 的审核配置
 
 
 [role="lead"]
-如果要修改单个存储分段的审核参数或 SVM 的审核配置，必须先禁用 SVM 的审核，然后运行相应的 `mmodify` 命令。
+您可以修改单个存储分段的审核参数或在 SVM 中选择用于审核的所有存储分段的审核配置。
 
-修改存储分段的审核配置时，您可以选择让新值影响某个存储分段或在该 SVM 中选择要审核的所有存储分段。
-
-修改 SVM 的审核配置时，新值会影响在该 SVM 中选择进行审核的所有分段。
-
-.操作步骤
-. 禁用 S3 审核：
-+
-`vserver object-store-server audit disable -vserver _svm_name_`
-
-. 修改审核配置：
-+
 [cols="2,4"]
 |===
-| 要修改的配置 | 输入 ... 
+| 要修改的审核配置 | 输入 ... 
 
 
-| 存储分段 | `vserver object-store-server audit event-selector modify -vserver _svm_name_ [-bucket _bucket_name_] [_parameters to modify_]` 
+| 单个存储分段 | `vserver object-store-server audit event-selector modify -vserver _svm_name_ [-bucket _bucket_name_] [_parameters to modify_]` 
 
 
-| svms  a| 
+| SVM 中的所有分段  a| 
 `vserver object-store-server audit modify -vserver _svm_name_ [_parameters to modify_]`
 
 |===
-. 重新启用 S3 审核：
-+
-`vserver object-store-server audit enable -vserver _svm_name_`
-
-
-
-以下示例将修改存储分段审核配置，以便仅审核只写访问事件：
+以下示例将修改单个存储分段审核配置，以便仅审核只写访问事件：
 
 [listing]
 ----
 cluster1::> vserver object-store-server audit event-selector modify -vserver vs1 -bucket test-bucket -access write-only
 ----
-以下示例将修改 SVM 审核配置，以便在轮换前将日志大小限制更改为 10 MB 并保留 3 个日志文件。
+以下示例将修改 SVM 中所有存储分段的审核配置，以将日志大小限制更改为 10 MB ，并在轮换前保留 3 个日志文件。
 
 [listing]
 ----
