@@ -10,43 +10,4 @@ summary: 本文介绍如何在命令行界面中启用和使用文件系统分�
 
 
 [role="lead"]
-您可以通过文件系统分析框架监控数据使用情况。本文介绍如何启用文件系统分析以进行容量分析和监控非活动数据，以及如何启用 <<Activity Tracking>>。
-
-
-
-== 文件系统分析
-
-在创建新的 FlexGroup 或 FlexVol 卷时，或者在将系统升级到 ONTAP 9.8 或更高版本时，您可以启用文件系统分析。升级后，请确保所有升级过程均已完成，然后再启用分析。
-
-根据卷的大小和内容，在 ONTAP 处理卷中的现有数据时，启用分析可能需要一段时间。
-
-.步骤
-. 启用文件系统分析：
-+
-`-vserver _svm_name_ -volume _volume_name_ "-foreground ｛ true_false ｝ ] 上的卷分析`
-
-+
-默认情况下，命令在前台运行； ONTAP 将显示进度并在完成后提供分析数据。如果您需要更精确的信息，可以在后台运行命令，方法是使用 ` -foreground false` 选项，然后使用 `volume Analytics show` 命令显示初始化进度。
-
-
-
-
-
-== 活动跟踪
-
-从 ONTAP 9.10.1 开始，您可以启用活动跟踪来查看有关卷上的高流量和高吞吐量活动的信息。
-
-.步骤
-. 启用活动跟踪：
-+
-`-vsverer _svm_name_ -volume _volume_name_` 上的卷活动跟踪
-
-+
-您可以使用命令检查卷的活动跟踪状态是打开还是关闭：
-
-+
-`volume active-tracking show -vsverer _svm_name_ -volume _volume_name_ -state`
-
-
-
-使用 System Manager 或 ONTAP REST API 显示分析或活动跟踪数据。
+您可以通过文件系统分析框架监控数据使用情况。阅读相关内容 xref:../task_nas_file_system_analytics_view.adoc[如何启用文件系统分析] 或 xref:../event-performance-monitoring/activity-tracking.html[如何启用活动跟踪]。

@@ -1,0 +1,31 @@
+---
+sidebar: sidebar 
+permalink: file-system-analytics/considerations-concept.html 
+keywords: file system analytics, performance, 7-mode 
+summary: 文件系统分析旨在提供对包含活动 NAS 数据的卷的可见性。其使用存在限制和限制。 
+---
+= 文件系统分析注意事项
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应了解与实施文件系统分析相关的特定使用限制和潜在性能影响。
+
+
+
+== 支持的卷类型
+
+文件系统分析旨在提供对包含活动 NAS 数据的卷的可见性，但 FlexCache 缓存和 SnapMirror 目标卷除外。
+
+
+
+== 性能注意事项
+
+启用文件系统分析可能会在初始元数据收集期间影响性能。请勿对利用率最高的系统启用分析。
+
+ONTAP System Manager 可提供 xref:../concept_cluster_performance_overview.adoc[性能监控工具] 以管理集群运行状况和指标。
+
+* 受 SVM 保护的关系 *
+
+如果已对包含 SVM 的卷处于保护关系中的卷启用文件系统分析，则分析数据不会复制到目标 SVM 。如果必须在恢复操作中重新同步源 SVM ，则必须在恢复后手动重新启用对所需卷的分析。
