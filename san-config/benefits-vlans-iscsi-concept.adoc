@@ -1,7 +1,7 @@
 ---
 permalink: san-config/benefits-vlans-iscsi-concept.html 
 sidebar: sidebar 
-keywords: benefits, using, vlans, iscsi, configurations 
+keywords: benefits, vlans, iscsi, configurations, static, dynamic, security, limit, available, paths 
 summary: VLAN 由一组交换机端口组成，这些端口组合在一起形成一个广播域。一个 VLAN 可以位于一个交换机上，也可以跨越多个交换机机箱。静态和动态 VLAN 可用于提高安全性，隔离问题并限制 IP 网络基础架构中的可用路径。 
 ---
 = 在 iSCSI 配置中使用 VLAN 的优势
@@ -26,3 +26,21 @@ VLAN 可让您在利用现有基础架构的同时，仍可提供增强的安全
 路径过多会缩短重新连接时间。如果主机没有多路径解决方案，则可以使用 VLAN 仅允许一个路径。
 
 
+
+
+
+== 动态 VLANs
+
+动态 VLAN 基于 MAC 地址。您可以通过指定要包括的成员的 MAC 地址来定义 VLAN 。
+
+动态 VLAN 具有灵活性，不需要映射到设备物理连接到交换机的物理端口。您可以将缆线从一个端口移动到另一个端口，而无需重新配置 VLAN 。
+
+
+
+== 静态 VLAN
+
+静态 VLAN 基于端口。交换机和交换机端口用于定义 VLAN 及其成员。
+
+静态 VLAN 可提高安全性，因为使用介质访问控制（ MAC ）欺骗无法违反 VLAN 。但是，如果有人对交换机具有物理访问权限，则更换缆线并重新配置网络地址可以允许访问。
+
+在某些环境中，与动态 VLAN 相比，创建和管理静态 VLAN 更容易。这是因为静态 VLAN 只需要指定交换机和端口标识符，而不是 48 位 MAC 地址。此外，您还可以使用 VLAN 标识符标记交换机端口范围。

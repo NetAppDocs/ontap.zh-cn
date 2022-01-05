@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: task_san_provision_linux.html 
-keywords: netapp, ontap, san, provisioning, linux, servers, provision, storage, create lun, fc, iscsi, zone switches, scsi disk 
+keywords: netapp, ontap, san, provisioning, linux, servers, provision, storage, create lun, fc, iscsi, zone switches, scsi disk, iscsi 
 summary: 创建 LUN 以使用 FC 或 iSCSI SAN 协议为 Linux 服务器提供存储。LUN 在 Linux 中显示为 SCSI 磁盘设备。 
 ---
 = 为 Linux 服务器配置 SAN 存储
@@ -18,9 +18,11 @@ summary: 创建 LUN 以使用 FC 或 iSCSI SAN 协议为 Linux 服务器提供�
 
 
 [role="lead"]
-创建 LUN 以使用 FC 或 iSCSI SAN 协议为 Linux 服务器提供存储。LUN 在 Linux 中显示为 SCSI 磁盘设备。
+创建 LUN ，以便使用 ONTAP System Manager 中的 FC 或 iSCSI SAN 协议为 Linux 服务器提供存储，此协议可在 ONTAP 9.7 及更高版本的 ONTAP 9 中使用。
 
-此操作步骤会在现有 Storage VM 上创建新的 LUN 。应已设置 FC 或 iSCSI 协议。您需要了解 Linux 服务器的启动程序标识符（ FC WWPN 或 iSCSI iqn ）。
+此操作步骤会在现有 Storage VM 上创建新的 LUN 。LUN 在 Linux 中显示为 SCSI 磁盘设备。
+
+应已设置 FC 或 iSCSI 协议。您需要了解 Linux 服务器的启动程序标识符（ FC WWPN 或 iSCSI iqn ）。
 
 image:workflow_san_provision_linux.gif["为 Linux 配置 SAN 存储的工作流图"]
 
@@ -113,6 +115,22 @@ NOTE: 也可以对 LUN 进行分区并创建文件系统。
 . 验证 Linux 服务器是否可以在 LUN 上写入和读取数据。
 
 
+如果您需要有关 SAN 管理的其他详细信息，请参见 link:../san-admin/index.html["SAN 管理概述"]。
+
+
+
+== 在 ONTAP 中执行此操作的其他方法
+
+[cols="2*"]
+|===
+| * 要使用 ... 完成此任务，请执行以下操作： * | * 请参见此内容 ...* 
+
+
+| System Manager 经典版（ 9.7 及更早版本提供） | https://docs.netapp.com/us-en/ontap-sm-classic/iscsi-config-rhel/index.html["适用于 Red Hat Enterprise Linux 的 iSCSI 配置"] 
+
+
+| ONTAP 命令行界面（ CLI ） | https://docs.netapp.com/us-en/ontap/san-admin/lun-setup-workflow-concept.html["使用 CLI 设置 LUN 的工作流"] 
+|===
 
 
 == 在 ONTAP 中执行此操作的其他方法

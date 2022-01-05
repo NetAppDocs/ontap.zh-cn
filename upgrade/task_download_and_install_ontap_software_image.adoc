@@ -18,6 +18,8 @@ summary: 您必须先下载 ONTAP 软件，然后才能进行安装。
 
 对于 ONTAP 9.4 及更高版本，您可以将 ONTAP 软件映像从 NetApp 支持站点复制到本地文件夹。对于从 ONTAP 9.3 或更早版本升级的系统，您必须将 ONTAP 软件映像复制到网络上的 HTTP 服务器或 FTP 服务器。
 
+从 ONTAP 9.6 开始，如果存储端安装了正确的 Web 服务器 SSL 证书，则可以使用 HTTPS 选项
+
 您应注意以下重要信息：
 
 * 软件映像特定于平台型号。
@@ -78,7 +80,7 @@ summary: 您必须先下载 ONTAP 软件，然后才能进行安装。
 [listing]
 ----
 cluster image package show-repository\
-<<smoke6-vsim-ucs6b4c#c-login_27|There are no packages in the repository.\r\n
+<<name_of_vsim|There are no packages in the repository.\r\n
 ----
 . 下载映像。
 +
@@ -96,9 +98,9 @@ cluster image package show-repository\
 [listing]
 ----
 cluster image package show-repository -fields download-ver\
-<<smoke6-vsim-ucs6b4c#c-login_27| download-verX;X\r\n
-<<smoke6-vsim-ucs6b4c#c-login_27| Downloaded VersionX;X\r\n
-<<smoke6-vsim-ucs6b4c#c-login_27| ONTAP 9.10.1.X;X\r\n
+<<name_of_vsim| download-verX;X\r\n
+<<name_of_vsim| Downloaded VersionX;X\r\n
+<<name_of_vsim| ONTAP 9.10.1.X;X\r\n
 ----
 
 
@@ -107,6 +109,9 @@ cluster image package show-repository -fields download-ver\
 === 用于手动升级
 
 . 下载映像。
++
+从 ONTAP 9.6 开始，如果存储上安装了正确的 Web 服务器 SSL 证书，则可以使用 HTTPS 作为选项。
+
 +
 .. 如果要升级非 MetroCluster 配置或双节点 MetroCluster 配置，请使用以下命令下载映像：
 +

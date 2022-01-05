@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: i/o misalignments, occur, properly, aligned, luns 
 summary: ONTAP 可能会报告正确对齐的 LUN 上的 I/O 不对齐。通常，只要您确信 LUN 配置正确且分区表正确无误，就可以忽略这些错位警告。 
 ---
-= 正确对齐的 LUN 概述可能会发生 I/O 不对齐
+= 正确对齐的 LUN 上的 I/O 不对齐概述
 :icons: font
 :imagesdir: ../media/
 
@@ -25,5 +25,156 @@ image::../media/bsag-cmode-lbpb.gif[BSAG cmode lbpb]
 * https://docs.netapp.com/us-en/ontap-sanhost/hu_wuhu_71.html["Windows Unified Host Utilities 7.1"]
 * https://docs.netapp.com/ontap-9/topic/com.netapp.doc.exp-iscsi-esx-cpg/GUID-7428BD24-A5B4-458D-BD93-2F3ACD72CBBB.html["《适用于 VMware vSphere 的 Virtual Storage Console 安装和管理指南》"]
 
+
+
+
+== 使用 LUN 操作系统类型实现 I/O 对齐
+
+要使用操作系统分区方案实现 I/O 对齐，应使用与您的操作系统最匹配的建议 ONTAP LUN `ostype` 值。
+
+主机操作系统采用的分区方案是导致 I/O 错位的一个主要因素。某些 ONTAP LUN `ostype` 值使用称为 "`prefix` " 的特殊偏移，以使主机操作系统使用的默认分区方案保持对齐。
+
+[NOTE]
+====
+在某些情况下，可能需要使用自定义分区表来实现 I/O 对齐。但是，对于 "`prefix` " 值大于 `0` 的 `ostype` 值，自定义分区可能会创建错位的 I/O
+
+====
+应根据您的操作系统使用下表中的 lun `ostype` 值。
+
+[cols="4*"]
+|===
+| LUN `ostype` | 前缀（字节） | 前缀（扇区） | 操作系统 
+
+
+ a| 
+`窗口`
+ a| 
+32,256
+ a| 
+63.
+ a| 
+Windows 2000 ， 2003 （ MBR 格式）
+
+
+
+ a| 
+`windows_gpt`
+ a| 
+17,408
+ a| 
+34
+ a| 
+Windows 2003 （ GPT 格式）
+
+
+
+ a| 
+`windows_2008`
+ a| 
+0
+ a| 
+0
+ a| 
+Windows 2008 及更高版本
+
+
+
+ a| 
+`Linux`
+ a| 
+0
+ a| 
+0
+ a| 
+所有 Linux 分发版
+
+
+
+ a| 
+`Xen`
+ a| 
+0
+ a| 
+0
+ a| 
+Citrix XenServer
+
+
+
+ a| 
+`VMware`
+ a| 
+0
+ a| 
+0
+ a| 
+VMware ESX
+
+
+
+ a| 
+`solaris`
+ a| 
+1 MB
+ a| 
+2 ， 048
+ a| 
+Solaris
+
+
+
+ a| 
+`solaris_efi`
+ a| 
+17,408
+ a| 
+34
+ a| 
+Solaris
+
+
+
+ a| 
+`HPUX`
+ a| 
+0
+ a| 
+0
+ a| 
+HP-UX
+
+
+
+ a| 
+`AIX`
+ a| 
+0
+ a| 
+0
+ a| 
+AIX
+
+|===
+
+
+== Linux 的特殊 I/O 对齐注意事项
+
+Linux 分发版提供了多种使用 LUN 的方法，包括将 LUN 用作数据库，各种卷管理器和文件系统的原始设备。当用作原始设备或逻辑卷中的物理卷时，无需在 LUN 上创建分区。
+
+对于 RHEL 5 及更早版本以及 SLES 10 及更早版本，如果要在没有卷管理器的情况下使用 LUN ，则应将 LUN 分区为一个分区，该分区以对齐偏移开始，该分区是一个扇区，它是八个逻辑块的偶数倍。
+
+
+
+== Solaris LUN 的特殊 I/O 对齐注意事项
+
+在确定是否应使用 `solaris` ostype 或 `solaris_efi` ostype 时，需要考虑各种因素。
+
+请参见 http://mysupport.netapp.com/documentation/productlibrary/index.html?productID=61343["《 Solaris Host Utilities 安装和管理指南》"] 了解详细信息。
+
+
+
+== ESX 启动 LUN 报告不对齐
+
+ONTAP 通常会将用作 ESX 启动 LUN 的 LUN 报告为未对齐。ESX 会在启动 LUN 上创建多个分区，因此很难对齐。ESX 启动 LUN 不对齐通常不会造成性能问题，因为不对齐的 I/O 总量很小。假设已使用 VMware `ostype` 正确配置 LUN ，则无需执行任何操作。
 
 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/Virtual_Storage_Console_for_VMware_vSphere/Guest_VM_file_system_partition%2F%2Fdisk_alignment_for_VMware_vSphere["适用于 VMware vSphere ，其他虚拟环境和 NetApp 存储系统的子虚拟机文件系统分区 / 磁盘对齐"]
