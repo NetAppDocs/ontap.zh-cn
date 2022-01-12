@@ -15,14 +15,14 @@ summary: 您可以使用 snapmirror delete 和 snapmirror release 命令删除�
 使用 `snapmirror release` 命令可从源中删除 SnapMirror 创建的任何 Snapshot 副本。您可以使用 ` -relationship-info-only` 选项保留 Snapshot 副本。
 
 .步骤
-. 如果您具有 SnapMirror 同步关系（从 ONTAP 9.5 开始受支持），请暂停复制关系：
+. 暂停复制关系：
 +
 `snapmirror quiesce -destination-path _svm ： volume_|_cluster ： //svm/volume_`
 
 +
 [listing]
 ----
-cluster_src::> snapmirror quiesce -destination-path svm_backup:volA_dst
+cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
 . 删除复制关系：
 +
