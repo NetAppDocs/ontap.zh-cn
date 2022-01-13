@@ -22,27 +22,32 @@ summary: 活动跟踪可查看指定卷中的热文件，目录，客户端和�
 
 对于监控的每个类别，活动跟踪将显示读取 IOPS ，写入 IOPS ，读取吞吐量和写入吞吐量。有关活动跟踪的查询，每 10 到 15 秒刷新一次与系统中在前五秒间隔内发现的热点相关的信息。
 
-
-NOTE: 活动跟踪信息为近似信息，数据的准确性取决于传入 I/O 流量的分布情况。
+活动跟踪信息为近似信息，数据的准确性取决于传入 I/O 流量的分布情况。
 
 在 System Manager 中查看活动跟踪时，只有扩展卷的菜单才会主动刷新。如果任何卷的视图已折叠，则只有在卷显示展开后，这些卷才会刷新。您可以使用 * 暂停刷新 * 按钮停止刷新。可以下载 CSV 格式的活动数据，此格式将显示为选定卷捕获的所有时间点数据。
 
-.在 System Manager 中启用活动跟踪
+
+
+== 过程
+
+您可以使用 ONTAP 系统管理器， ONTAP 命令行界面或 ONTAP REST API 启用活动跟踪。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
 . 选择 * 存储 > 卷 * 。选择所需的卷。从单个卷菜单中，选择文件系统，然后选择活动选项卡。
 . 确保已启用 * 活动跟踪 * ，以查看有关顶层目录，文件，客户端和用户的各个报告。
 . 要在不刷新的情况下更深入地分析数据，请选择 * 暂停刷新 * 。您也可以下载数据以获取报告的 CSV 记录。
 
 
-.使用 CLI 启用活动跟踪
-. 启用活动跟踪：
-+
-`-vsverer _svm_name_ -volume _volume_name_` 上的卷活动跟踪
-
-+
-您可以使用命令检查卷的活动跟踪状态是打开还是关闭：
-
-+
-`volume active-tracking show -vsverer _svm_name_ -volume _volume_name_ -state`
-
+--
+.命令行界面
+--
+. 启用活动跟踪： + `vsverer _svm_name_ -volume _volume_name_` 上的卷活动跟踪
+. 您可以使用以下命令检查卷的活动跟踪状态是打开还是关闭： + `volume active-tracking show -vsverer _svm_name_ -volume _volume_name_ -state`
 . 启用后，使用 ONTAP 系统管理器或 ONTAP REST API 显示活动跟踪数据。
 
+
+--
+====
