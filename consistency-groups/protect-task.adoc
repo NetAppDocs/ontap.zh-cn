@@ -14,11 +14,11 @@ summary: 为一致性组设置保护策略，以便使用本地快照策略或�
 
 创建一致性组不会自动启用保护。可以在创建时或创建一致性组之后设置本地和 / 或远程保护策略。保护策略可以包括本地 Snapshot 副本或使用 SnapMirror 业务连续性（ SM-BC ）的远程 SnapMirror 保护。如果使用嵌套一致性组，则可以为各个卷设置不同的保护策略。
 
-如果您正在利用远程 SM-BC 保护，则为了确保将在一致性组上复制的快照复制到目标，源集群和目标集群中的策略标签必须匹配。默认情况下， SM-BC 不会复制快照，除非向预定义的 AutomatedFailOver 策略添加了带有 SnapMirror 标签的规则，并且使用该标签创建了快照。要了解有关此过程的更多信息，请参见 xref:../task_san_configure_protection_for_business_continuity.adoc[配置业务连续性保护]。
+如果您正在利用远程 SM-BC 保护，则为了确保将在一致性组上创建的一致性组的快照复制到目标，源集群和目标集群中的策略标签必须匹配。默认情况下， SM-BC 不会复制快照，除非向预定义的 AutomatedFailOver 策略添加了带有 SnapMirror 标签的规则，并且使用该标签创建了快照。要了解有关此过程的更多信息，请参见 xref:../task_san_configure_protection_for_business_continuity.adoc[配置业务连续性保护]。
 
 可以对整个一致性组，分层配置中的单个一致性组或一致性组中的单个卷进行恢复。要实现恢复，可以选择要从中恢复的一致性组，选择 Snapshot 类型，然后确定要基于还原的特定 Snapshot 。有关此过程的详细信息，请参见 xref:../task_dp_restore_from_vault.html[从早期的 Snapshot 副本还原卷]。
 
-从 ONTAP 9.10.1 开始， System Manager 有助于在 * 保护 > 关系 * 菜单下管理 LUN 关系。选择源关系时， System Manager 将显示源关系的可视化视图。通过选择卷，您可以深入了解这些关系，以查看包含的 LUN 以及启动程序组关系的列表。此信息可以作为 Excel 工作簿从单个卷视图中下载。此任务将在后台运行。
+从 ONTAP 9.10.1 开始， System Manager 会在 * 保护 > 关系 * 菜单下直观显示 LUN 映射。选择源关系时， System Manager 将显示源关系的可视化视图。通过选择卷，您可以深入了解这些关系，以查看包含的 LUN 以及启动程序组关系的列表。此信息可以作为 Excel 工作簿从单个卷视图中下载。此任务将在后台运行。
 
 
 
