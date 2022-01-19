@@ -9,7 +9,7 @@
   <meta property="og:title" content="下载并安装 ONTAP 软件映像" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/upgrade/task_download_and_install_ontap_software_image.html" />
-	<meta property="og:description" content="您必须先下载 ONTAP 软件，然后才能进行安装。" />
+	<meta property="og:description" content="您必须先从 NetApp 支持站点下载 ONTAP 软件，然后才能使用自动无中断升级（ ANDU ）或手动升级过程进行安装。" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
@@ -18,7 +18,7 @@
   <meta http-equiv="nss-type" content="Product Documentation"/>
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
-  <meta name="description" content="您必须先下载 ONTAP 软件，然后才能进行安装。">
+  <meta name="description" content="您必须先从 NetApp 支持站点下载 ONTAP 软件，然后才能使用自动无中断升级（ ANDU ）或手动升级过程进行安装。">
   <meta name="keywords" content=" ontap, software, image, download, downloading, install, installing">
   
   
@@ -15683,6 +15683,34 @@
 
 
 
+
+
+          
+        </li>
+      </ul>
+    
+
+  
+
+
+
+    
+      <ul class="subfolders" style="display:none;">
+        <li class="pdf-ux-container">
+          <a target="_blank" 
+            
+              href="/zh-cn/ontap/pdfs/sidebar/更新已弃用的_EMS_事件映射.pdf" 
+            
+          >
+            <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>
+            更新已弃用的 EMS 事件映射
+          </a>
+          
+
+
+
+
+
           
         </li>
       </ul>
@@ -21891,6 +21919,15 @@
         配置 EMS 事件以将通知转发到系统日志服务器
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/error-messages/configure-snmp-traphosts-event-notifications-task.html">
         配置 SNMP 陷阱主机以接收事件通知
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/error-messages/configure-webhooks-event-notifications-task.html">
+        配置重要的 EMS 事件以将通知转发到 REST API 服务器
+      </a></li></ul></li><li class="subfolders "><a href="#">
+        <div class="na-navbar-padding"> 更新已弃用的 EMS 事件映射</div>
+      </a>
+      <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/error-messages/ems-routing-notifications-models-concept.html">
+        EMS 事件映射模型
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/error-messages/convert-ems-routing-to-notifications-task.html">
+        使用已弃用的 ONTAP 命令更新 EMS 事件映射
       </a></li></ul></li></ul></li></ul></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/reference_legal_notices.html">
         法律声明
       </a></li></ul>
@@ -21950,11 +21987,19 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-18 03:57:17 +0000">01/18/2022</time>
+    <time datetime="2022-01-19 05:21:33 +0000">01/19/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-forry">
+    <img  class="avatar avatar-small"
+          alt="netapp-forry"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/51911827?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
   <a target="_blank" href="https://github.com/netapp-ahibbard">
     <img  class="avatar avatar-small"
           alt="netapp-ahibbard"
@@ -21972,7 +22017,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph lead">
-<p>您必须先从 NetApp 支持站点下载 ONTAP 软件，然后才能进行安装。</p>
+<p>您必须先从 NetApp 支持站点下载 ONTAP 软件，然后才能使用自动无中断升级（ ANDU ）或手动升级过程进行安装。</p>
 </div>
 </div>
 </div>
@@ -21980,10 +22025,7 @@
 <h2 id="下载软件映像">下载软件映像</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>对于 ONTAP 9.4 及更高版本，您可以将 ONTAP 软件映像从 NetApp 支持站点复制到本地文件夹。对于从 ONTAP 9.3 或更早版本升级的系统，您必须将 ONTAP 软件映像复制到网络上的 HTTP 服务器或 FTP 服务器。</p>
-</div>
-<div class="paragraph">
-<p>从 ONTAP 9.6 开始，如果存储端安装了正确的 Web 服务器 SSL 证书，则可以使用 HTTPS 选项</p>
+<p>根据您的 ONTAP 版本，您可以将 ONTAP 软件映像从 NetApp 支持站点复制到以下位置之一：网络上的 HTTP ， HTTPS 或 FTP 服务器或本地文件夹。</p>
 </div>
 <div class="paragraph">
 <p>您应注意以下重要信息：</p>
@@ -22010,28 +22052,48 @@
 </li>
 <li>
 <p>如果要从 ONTAP 9.3 升级到 9.7 ，则必须复制 ONTAP 9.5 和 9.7 的软件映像。</p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">步骤</div>
+<ol class="arabic">
 <li>
 <p>在中找到目标 ONTAP 软件 <a href="http://mysupport.netapp.com/NOW/cgi-bin/software">"软件下载"</a> NetApp 支持站点的区域。</p>
 </li>
 <li>
-<p>复制软件映像。</p>
-<div class="ulist">
-<ul>
-<li>
-<p>对于 ONTAP 9.3 或更早版本，请将软件映像（例如 93_q_image.tgz ）从 NetApp 支持站点复制到 HTTP 服务器或 FTP 服务器上要提供此映像的目录。</p>
-</li>
-<li>
-<p>对于 ONTAP 9.4 或更高版本，请将软件映像（例如 97_q_image.tgz ）从 NetApp 支持站点复制到要从中提供此映像的 HTTP 服务器或 FTP 服务器上的目录或本地文件夹。</p>
-</li>
-</ul>
+<p>将软件映像（例如 97_q_image.tgz ）复制到相应位置。</p>
+<div class="paragraph">
+<p>根据您的 ONTAP 版本，此位置将是 HTTP ， HTTPS 或 FTP 服务器的目录，此映像将从该目录提供给本地系统或存储系统上的本地文件夹。</p>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">您可以将此映像复制到此位置 &#8230;&#8203;</th>
+<th class="tableblock halign-left valign-top">如果您正在运行以下 ONTAP 版本 &#8230;&#8203;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">HTTP 或 FTP 服务器</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ONTAP 9.0 及更高版本</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">本地文件夹</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ONTAP 9.4 及更高版本</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">必须在本地系统上安装 HTTPS 服务器 + 服务器的 CA 证书。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ONTAP 9.6 及更高版本</p></td>
+</tr>
+</tbody>
+</table>
 </li>
 </ol>
-</div>
-</li>
-</ul>
 </div>
 </div>
 </div>
@@ -22053,16 +22115,6 @@
 <p>如果要从 ONTAP 9.5 直接升级到 9.1.1 ，则必须下载 ONTAP 9.7 和 9.1.1 的软件映像。如果要从 ONTAP 9.3 直接升级到 9.7 ，则必须下载 ONTAP 9.5 和 9.7 的软件映像。</p>
 <div class="paragraph">
 <p>自动升级过程会使用后台的两个映像完成升级。</p>
-</div>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
-<li>
-<p>将权限级别设置为高级，在系统提示您继续时输入 * y* ： <code>set -privilege advanced</code></p>
-<div class="paragraph">
-<p>此时将显示高级提示符（` * &gt;` ）。</p>
-</div>
-</li>
-</ol>
 </div>
 </li>
 </ul>
@@ -22115,28 +22167,25 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>下载映像。</p>
+<p>将权限级别设置为高级，在系统提示您继续时输入 * y* ： <code>set -privilege advanced</code></p>
 <div class="paragraph">
-<p>从 ONTAP 9.6 开始，如果存储上安装了正确的 Web 服务器 SSL 证书，则可以使用 HTTPS 作为选项。</p>
+<p>此时将显示高级提示符（` * &gt;` ）。</p>
 </div>
+</li>
+<li>
+<p>下载映像。</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>如果要升级非 MetroCluster 配置或双节点 MetroCluster 配置，请使用以下命令下载映像：</p>
+<p>如果要升级不具有 MetroCluster 配置或双节点 MetroCluster 配置的集群，请使用以下命令下载此映像：</p>
 <div class="paragraph">
-<p><code>ssystem node image update -node * -package location -replace -package true -setdefault true -background true</code></p>
+<p><code>ssystem node image update -node * -package <em>location</em>-replace package true -setdefault true -background true</code></p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<img src="/us-en/ontap/images/note.svg" alt="注">
-</td>
-<td class="content">
-此命令可同时在所有节点上下载并安装软件映像。要一次在每个节点上下载并安装一个映像，请勿指定 -background 参数。
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>_location_can 是 Web 服务器或本地文件夹，具体取决于 ONTAP 版本。有关详细信息，请参见 <code>ssystem node image update</code> 手册页。</p>
+</div>
+<div class="paragraph">
+<p>此命令可同时在所有节点上下载并安装软件映像。要一次在每个节点上下载并安装一个映像，请勿指定 ` -background` 参数。</p>
 </div>
 </li>
 <li>

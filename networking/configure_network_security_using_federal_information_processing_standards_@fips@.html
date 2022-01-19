@@ -15683,6 +15683,34 @@
 
 
 
+
+
+          
+        </li>
+      </ul>
+    
+
+  
+
+
+
+    
+      <ul class="subfolders" style="display:none;">
+        <li class="pdf-ux-container">
+          <a target="_blank" 
+            
+              href="/zh-cn/ontap/pdfs/sidebar/更新已弃用的_EMS_事件映射.pdf" 
+            
+          >
+            <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>
+            更新已弃用的 EMS 事件映射
+          </a>
+          
+
+
+
+
+
           
         </li>
       </ul>
@@ -21891,6 +21919,15 @@
         配置 EMS 事件以将通知转发到系统日志服务器
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/error-messages/configure-snmp-traphosts-event-notifications-task.html">
         配置 SNMP 陷阱主机以接收事件通知
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/error-messages/configure-webhooks-event-notifications-task.html">
+        配置重要的 EMS 事件以将通知转发到 REST API 服务器
+      </a></li></ul></li><li class="subfolders "><a href="#">
+        <div class="na-navbar-padding"> 更新已弃用的 EMS 事件映射</div>
+      </a>
+      <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/error-messages/ems-routing-notifications-models-concept.html">
+        EMS 事件映射模型
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/error-messages/convert-ems-routing-to-notifications-task.html">
+        使用已弃用的 ONTAP 命令更新 EMS 事件映射
       </a></li></ul></li></ul></li></ul></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/reference_legal_notices.html">
         法律声明
       </a></li></ul>
@@ -21950,11 +21987,19 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-18 03:57:17 +0000">01/18/2022</time>
+    <time datetime="2022-01-19 05:21:33 +0000">01/19/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-forry">
+    <img  class="avatar avatar-small"
+          alt="netapp-forry"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/51911827?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
   <a target="_blank" href="https://github.com/netapp-barbe">
     <img  class="avatar avatar-small"
           alt="netapp-barbe"
@@ -21993,6 +22038,28 @@
 <div class="paragraph">
 <p>启用 SSL FIPS 模式后，从 ONTAP 到外部客户端或 ONTAP 外部服务器组件的 SSL 通信将使用 FIPS 兼容的 SSL 加密。</p>
 </div>
+<div class="paragraph">
+<p>如果您希望管理员帐户使用 SSH 公有密钥访问 SVM ，则在启用 SSL FIPS 模式之前，必须确保主机密钥算法受支持。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>支持的密钥类型： ECDSA-SHA2-nistp256 ， ssh-ed25519</p>
+</li>
+<li>
+<p>不支持的密钥类型： SSH/RSA ， ssh-dss ， ecdsa-sha2-nistp256 ， ssh-ed25519</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>在启用 FIPS 之前，必须使用支持的密钥类型重新配置不具有受支持密钥算法的现有 SSH 公有密钥帐户，否则管理员身份验证将失败。</p>
+</div>
+<div class="paragraph">
+<p>有关详细信息，请参见 <a href="../authentication/enable-ssh-public-key-accounts-task.html">"启用 SSH 公有密钥帐户"</a>。</p>
+</div>
+<div class="paragraph">
+<p>有关 SSL FIPS 模式配置的详细信息，请参见 <code>security config modify</code> 手册页。</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -22000,22 +22067,6 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>建议所有安全用户在系统安装或升级后立即调整其安全配置。启用 SSL FIPS 模式后，从 ONTAP 到外部客户端或 ONTAP 外部服务器组件的 SSL 通信将使用 FIPS 兼容的 SSL 加密。</p>
-</div>
-<div class="paragraph">
-<p>建议使用以下设置启用 FIPS ：</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>FIPS ：启用</code></p>
-</li>
-<li>
-<p><code>sSL 协议 = ｛ TLSv1.2 ｝</code></p>
-</li>
-<li>
-<p><code>sSL 密码 = ｛ all ：！ low ：！ aNULL ：！ EXP ：！ eNULL ：！ RC4 ｝</code></p>
-</li>
-</ul>
 </div>
 <div class="olist arabic">
 <div class="title">步骤</div>
@@ -22059,22 +22110,6 @@ Do you want to continue? {y|n}: y</pre>
 <div class="paragraph">
 <p>如果您仍在运行较旧的系统配置，并且希望为 ONTAP 配置向后兼容性，则只有在禁用 FIPS 时才能打开 SSLv3 。</p>
 </div>
-<div class="paragraph">
-<p>建议使用以下设置禁用 FIPS ：</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><code>FIPS = false</code></p>
-</li>
-<li>
-<p><code>sSL 协议 = ｛ SSLv3 ｝</code></p>
-</li>
-<li>
-<p><code>sSL 密码 = ｛ all ：！ low ：！ aNULL ：！ expp ：！ eNULL ｝</code></p>
-</li>
-</ul>
-</div>
 <div class="olist arabic">
 <div class="title">步骤</div>
 <ol class="arabic">
@@ -22087,7 +22122,7 @@ Do you want to continue? {y|n}: y</pre>
 <li>
 <p>通过键入以下命令禁用 FIPS ：</p>
 <div class="paragraph">
-<p><code>sSecurity config modify -interface ssl -supported -protocols SSLv3</code></p>
+<p><code>security config modify -interface ssl -is-fips-enabled false</code></p>
 </div>
 </li>
 <li>
