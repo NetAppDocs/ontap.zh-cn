@@ -24,18 +24,23 @@ summary: 所有 SSL 连接均符合联邦信息处理标准（ FIPS ） 140-2
 
 启用 SSL FIPS 模式后，从 ONTAP 到外部客户端或 ONTAP 外部服务器组件的 SSL 通信将使用 FIPS 兼容的 SSL 加密。
 
+如果您希望管理员帐户使用 SSH 公有密钥访问 SVM ，则在启用 SSL FIPS 模式之前，必须确保主机密钥算法受支持。
+
+* 支持的密钥类型： ECDSA-SHA2-nistp256 ， ssh-ed25519
+* 不支持的密钥类型： SSH/RSA ， ssh-dss ， ecdsa-sha2-nistp256 ， ssh-ed25519
+
+
+在启用 FIPS 之前，必须使用支持的密钥类型重新配置不具有受支持密钥算法的现有 SSH 公有密钥帐户，否则管理员身份验证将失败。
+
+有关详细信息，请参见 link:../authentication/enable-ssh-public-key-accounts-task.html["启用 SSH 公有密钥帐户"]。
+
+有关 SSL FIPS 模式配置的详细信息，请参见 `security config modify` 手册页。
+
 
 
 == 启用 FIPS
 
 建议所有安全用户在系统安装或升级后立即调整其安全配置。启用 SSL FIPS 模式后，从 ONTAP 到外部客户端或 ONTAP 外部服务器组件的 SSL 通信将使用 FIPS 兼容的 SSL 加密。
-
-建议使用以下设置启用 FIPS ：
-
-* `FIPS ：启用`
-* `sSL 协议 = ｛ TLSv1.2 ｝`
-* `sSL 密码 = ｛ all ：！ low ：！ aNULL ：！ EXP ：！ eNULL ：！ RC4 ｝`
-
 
 .步骤
 . 更改为高级权限级别：
@@ -65,13 +70,6 @@ Do you want to continue? {y|n}: y
 
 如果您仍在运行较旧的系统配置，并且希望为 ONTAP 配置向后兼容性，则只有在禁用 FIPS 时才能打开 SSLv3 。
 
-建议使用以下设置禁用 FIPS ：
-
-* `FIPS = false`
-* `sSL 协议 = ｛ SSLv3 ｝`
-* `sSL 密码 = ｛ all ：！ low ：！ aNULL ：！ expp ：！ eNULL ｝`
-
-
 .步骤
 . 更改为高级权限级别：
 +
@@ -79,7 +77,7 @@ Do you want to continue? {y|n}: y
 
 . 通过键入以下命令禁用 FIPS ：
 +
-`sSecurity config modify -interface ssl -supported -protocols SSLv3`
+`security config modify -interface ssl -is-fips-enabled false`
 
 . 当系统提示您继续时，输入 `y` 。
 . 手动重新启动集群中的每个节点。

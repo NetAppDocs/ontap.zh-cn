@@ -1,0 +1,88 @@
+---
+permalink: error-messages/ems-routing-notifications-models-concept.html 
+sidebar: sidebar 
+keywords: configure, map, important, ems, events, notifications, filters 
+summary: 在 ONTAP 9.0 之前的版本中，只能根据事件名称模式匹配将 EMS 事件映射到事件目标。与该型号关联的 ONTAP 命令仍然可用，但从 ONTAP 9.0 开始，这些命令已弃用。 
+---
+= EMS 事件映射模型
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在 ONTAP 9.0 之前的版本中，只能根据事件名称模式匹配将 EMS 事件映射到事件目标。使用此模型的 ONTAP 命令集（`event destination` ， `event route` ）在最新版本的 ONTAP 中继续可用，但从 ONTAP 9.0 开始已弃用。
+
+从 ONTAP 9.0 开始， ONTAP EMS 事件目标映射的最佳实践是，使用更具扩展性的事件筛选器模型，使用 `event filter` ， `event notification` 和 `event notification destination` 命令集对多个字段执行模式匹配。
+
+如果 EMS 映射是使用已弃用的命令配置的，则应更新映射以使用 `event filter` ， `event notification` 和 `event notification destination` 命令集。
+
+事件目标有两种类型：
+
+. * 系统生成的目标 * ：系统生成的事件目标有五个（默认为创建）
++
+** `allenents`
+** `asup`
+** `关键`
+** `传呼机`
+** `陷阱主机`
++
+系统生成的某些目标用于特殊目的。例如， asup 目标会将 CallHome.* 事件路由到 ONTAP 中的 AutoSupport 模块，以生成 AutoSupport 消息。
+
+
+
+. * 用户创建的目标 * ：使用 `event destination create` 命令手动创建这些目标。
++
+[listing]
+----
+cluster-1::event*> destination show
+                                                                 Hide
+Name             Mail Dest.        SNMP Dest.         Syslog Dest.       Params
+---------------- ----------------- ------------------ ------------------ ------
+allevents        -                 -                  -                  false
+asup             -                 -                  -                  false
+criticals        -                 -                  -                  false
+pager            -                 -                  -                  false
+traphost         -                 -                  -                  false
+5 entries were displayed.
++
+cluster-1::event*> destination create -name test -mail test@xyz.com
+This command is deprecated. Use the "event filter", "event notification destination" and "event notification" commands, instead.
++
+cluster-1::event*> destination show
++                                                                     Hide
+Name             Mail Dest.        SNMP Dest.         Syslog Dest.       Params
+---------------- ----------------- ------------------ ------------------ ------
+allevents        -                 -                  -                  false
+asup             -                 -                  -                  false
+criticals        -                 -                  -                  false
+pager            -                 -                  -                  false
+test             test@xyz.com      -                  -                  false
+traphost         -                 -                  -                  false
+6 entries were displayed.
+----
+
+
+在已弃用的型号中， EMS 事件会使用 `event route add-destinations` 命令单独映射到目标。
+
+[listing]
+----
+cluster-1::event*> route add-destinations -message-name raid.aggr.* -destinations test
+This command is deprecated. Use the "event filter", "event notification destination" and "event notification" commands, instead.
+4 entries were acted on.
+
+cluster-1::event*> route show -message-name raid.aggr.*
+                                                               Freq    Time
+Message                          Severity       Destinations   Threshd Threshd
+-------------------------------- -------------- -------------- ------- -------
+raid.aggr.autoGrow.abort         NOTICE         test           0       0
+raid.aggr.autoGrow.success       NOTICE         test           0       0
+raid.aggr.lock.conflict          INFORMATIONAL  test           0       0
+raid.aggr.log.CP.count           DEBUG          test           0       0
+4 entries were displayed.
+----
+更具可扩展性的新 EMS 事件通知机制基于事件筛选器和事件通知目标。有关新事件通知机制的详细信息，请参见以下知识库文章：
+
+* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/FAQ%3A_Overview_of_Event_Management_System_for_ONTAP_9["ONTAP 9 事件管理系统概述"^]
+
+
+image:../media/ems-event-diag.jpg["事件模型示意图"]

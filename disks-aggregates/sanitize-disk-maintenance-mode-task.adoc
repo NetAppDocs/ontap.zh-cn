@@ -1,7 +1,7 @@
 ---
 permalink: disks-aggregates/sanitize-disk-maintenance-mode-task.html 
 sidebar: sidebar 
-keywords: sanitize, disk, maintenance mode 
+keywords: sanitize, disk, maintenance mode, nodeshell 
 summary: 从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。这样，您就可以从已停用或无法运行的系统上的磁盘或一组磁盘中删除数据，从而无法恢复这些数据。 
 ---
 = 清理磁盘
@@ -12,14 +12,20 @@ summary: 从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。
 [role="lead"]
 清理磁盘可以从已停用或无法运行的系统上的磁盘或一组磁盘中删除数据，以便永远无法恢复数据。
 
+清理磁盘的方法有两种：
+
+* 在 ONTAP 9.6 及更高版本中使用维护模式命令。
+* 在所有 ONTAP 9 版本中使用 nodeshell 命令。
 
 
-== ONTAP 9.6 及更高版本
+
+
+== 维护模式方法
 
 从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。
 
 .您需要什么？ #8217 ；将需要什么
-* 磁盘不能是自加密磁盘（ SED ）。
+* 这些磁盘不能是自加密磁盘（ SED ）。
 +
 您必须使用 `storage encryption disk sanitize` 命令对 SED 进行清理。
 
@@ -69,12 +75,22 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 
 
 
-== ONTAP 9.5 及更早版本
+== nodeshell 方法
 
-启用磁盘清理后，它会禁用某些 Data ONTAP 命令。在节点上启用磁盘清理后，无法将其禁用。
+如果使用 nodeshell 命令启用了磁盘清理，则会禁用一些低级别的 ONTAP 命令。在节点上启用磁盘清理后，无法将其禁用。
 
 .您需要什么？ #8217 ；将需要什么
-* 这些磁盘必须是备用磁盘；它们必须归节点所有，但不能在聚合中使用。+ 如果磁盘已分区，则聚合中不能使用任何分区。
+* 这些磁盘必须是备用磁盘；它们必须归节点所有，但不能在聚合中使用。
++
+如果磁盘已分区，则聚合中不能使用任何分区。
+
+* 这些磁盘不能是自加密磁盘（ SED ）。
++
+您必须使用 `storage encryption disk sanitize` 命令对 SED 进行清理。
+
++
+link:../encryption-at-rest/index.html["空闲数据加密"]
+
 * 磁盘不能属于存储池。
 
 

@@ -2,7 +2,7 @@
 permalink: upgrade/task_download_and_install_ontap_software_image.html 
 sidebar: sidebar 
 keywords: ontap, software, image, download, downloading, install, installing 
-summary: 您必须先下载 ONTAP 软件，然后才能进行安装。 
+summary: 您必须先从 NetApp 支持站点下载 ONTAP 软件，然后才能使用自动无中断升级（ ANDU ）或手动升级过程进行安装。 
 ---
 = 下载并安装 ONTAP 软件映像
 :icons: font
@@ -10,15 +10,13 @@ summary: 您必须先下载 ONTAP 软件，然后才能进行安装。
 
 
 [role="lead"]
-您必须先从 NetApp 支持站点下载 ONTAP 软件，然后才能进行安装。
+您必须先从 NetApp 支持站点下载 ONTAP 软件，然后才能使用自动无中断升级（ ANDU ）或手动升级过程进行安装。
 
 
 
 == 下载软件映像
 
-对于 ONTAP 9.4 及更高版本，您可以将 ONTAP 软件映像从 NetApp 支持站点复制到本地文件夹。对于从 ONTAP 9.3 或更早版本升级的系统，您必须将 ONTAP 软件映像复制到网络上的 HTTP 服务器或 FTP 服务器。
-
-从 ONTAP 9.6 开始，如果存储端安装了正确的 Web 服务器 SSL 证书，则可以使用 HTTPS 选项
+根据您的 ONTAP 版本，您可以将 ONTAP 软件映像从 NetApp 支持站点复制到以下位置之一：网络上的 HTTP ， HTTPS 或 FTP 服务器或本地文件夹。
 
 您应注意以下重要信息：
 
@@ -33,16 +31,28 @@ summary: 您必须先下载 ONTAP 软件，然后才能进行安装。
 
 * 如果要从 ONTAP 9.5 升级到 9.1.1 ，则必须复制 ONTAP 9.7 和 9.1.1 的软件映像。
 * 如果要从 ONTAP 9.3 升级到 9.7 ，则必须复制 ONTAP 9.5 和 9.7 的软件映像。
+
+
+.步骤
+. 在中找到目标 ONTAP 软件 link:http://mysupport.netapp.com/NOW/cgi-bin/software["软件下载"] NetApp 支持站点的区域。
+. 将软件映像（例如 97_q_image.tgz ）复制到相应位置。
 +
-.. 在中找到目标 ONTAP 软件 link:http://mysupport.netapp.com/NOW/cgi-bin/software["软件下载"] NetApp 支持站点的区域。
-.. 复制软件映像。
+根据您的 ONTAP 版本，此位置将是 HTTP ， HTTPS 或 FTP 服务器的目录，此映像将从该目录提供给本地系统或存储系统上的本地文件夹。
+
 +
-*** 对于 ONTAP 9.3 或更早版本，请将软件映像（例如 93_q_image.tgz ）从 NetApp 支持站点复制到 HTTP 服务器或 FTP 服务器上要提供此映像的目录。
-*** 对于 ONTAP 9.4 或更高版本，请将软件映像（例如 97_q_image.tgz ）从 NetApp 支持站点复制到要从中提供此映像的 HTTP 服务器或 FTP 服务器上的目录或本地文件夹。
+[cols="2"]
+|===
+| 您可以将此映像复制到此位置 ... | 如果您正在运行以下 ONTAP 版本 ... 
 
 
+| HTTP 或 FTP 服务器 | ONTAP 9.0 及更高版本 
 
 
+| 本地文件夹 | ONTAP 9.4 及更高版本 
+
+
+| 必须在本地系统上安装 HTTPS 服务器 + 服务器的 CA 证书。 | ONTAP 9.6 及更高版本 
+|===
 
 
 
@@ -58,13 +68,6 @@ summary: 您必须先下载 ONTAP 软件，然后才能进行安装。
 * 如果要从 ONTAP 9.5 直接升级到 9.1.1 ，则必须下载 ONTAP 9.7 和 9.1.1 的软件映像。如果要从 ONTAP 9.3 直接升级到 9.7 ，则必须下载 ONTAP 9.5 和 9.7 的软件映像。
 +
 自动升级过程会使用后台的两个映像完成升级。
-
-+
-.. 将权限级别设置为高级，在系统提示您继续时输入 * y* ： `set -privilege advanced`
-+
-此时将显示高级提示符（` * >` ）。
-
-
 
 
 
@@ -108,18 +111,21 @@ cluster image package show-repository -fields download-ver\
 
 === 用于手动升级
 
+. 将权限级别设置为高级，在系统提示您继续时输入 * y* ： `set -privilege advanced`
++
+此时将显示高级提示符（` * >` ）。
+
 . 下载映像。
 +
-从 ONTAP 9.6 开始，如果存储上安装了正确的 Web 服务器 SSL 证书，则可以使用 HTTPS 作为选项。
+.. 如果要升级不具有 MetroCluster 配置或双节点 MetroCluster 配置的集群，请使用以下命令下载此映像：
++
+`ssystem node image update -node * -package _location_-replace package true -setdefault true -background true`
 
 +
-.. 如果要升级非 MetroCluster 配置或双节点 MetroCluster 配置，请使用以下命令下载映像：
-+
-`ssystem node image update -node * -package location -replace -package true -setdefault true -background true`
+_location_can 是 Web 服务器或本地文件夹，具体取决于 ONTAP 版本。有关详细信息，请参见 `ssystem node image update` 手册页。
 
 +
-
-NOTE: 此命令可同时在所有节点上下载并安装软件映像。要一次在每个节点上下载并安装一个映像，请勿指定 -background 参数。
+此命令可同时在所有节点上下载并安装软件映像。要一次在每个节点上下载并安装一个映像，请勿指定 ` -background` 参数。
 
 .. 如果要升级四节点或八节点 MetroCluster 配置，则必须在两个集群上执行问题描述以下命令：
 +

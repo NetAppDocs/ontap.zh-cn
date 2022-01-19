@@ -1,0 +1,102 @@
+---
+permalink: error-messages/configure-webhooks-event-notifications-task.html 
+sidebar: sidebar 
+keywords: configure, important, ems, events, receive, email, notifications, forward, rest, api, webhook 
+summary: 要在 REST API 服务器上接收事件通知，必须配置 REST API webhook 支持。 
+---
+= 配置重要的 EMS 事件以将通知转发到 REST API 服务器
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要在 REST API 服务器上接收事件通知，必须配置 REST API webhook 支持。
+
+.开始之前
+* 您需要一台支持 REST API/webhook 且能够接收 EMS 事件的服务器。
+* REST API 服务器可以使用服务器端或客户端安全证书。
+* 证书的配置由目标决定。有关基于目标的证书配置概述，请参见以下内容：
++
+** * http ： - 不涉及任何证书
+** * https ： - 服务器证书由 ONTAP 系统验证。也可以配置客户端证书，该证书将由 ONTAP 系统发送，以供服务器验证。
+
+
+* 客户端证书要求使用可在源 ONTAP 系统上安装的专用密钥和证书。
+
+
+
+NOTE: 如果要同时配置客户端和服务器证书 REST API 转发，则需要使用服务器端证书才能使用客户端证书。因此，您必须按照客户端说明使用这两种身份验证方法。
+
+
+
+== 配置 HTTP REST API 转发
+
+您可以在集群运行时随时通过在 ONTAP 命令行上输入命令来执行此任务。
+
+.步骤
+. 为筛选器 `reimport-events` 创建新目标` stapi-ems `目标：
++
+`事件通知目标 create -name restapi-ems -rest-api-url \http://<url_to_rest_api_server>`
+
+. 创建将 `importal-events` 筛选器与新的 `restapi-ems` 目标链接的通知：
++
+`event notification create -filter-name importal-events -destinations restapi-EMS`
+
+
+
+
+
+== 配置服务器证书 HTTPS REST API 转发
+
+此操作步骤假定您先前已生成服务器端专用密钥和公有证书。此外，还假定您已拥有可在 ONTAP 中安装的根证书。
+
+.步骤
+. 在 REST API 服务器中安装相应的服务器专用密钥和公有证书。
++
+
+NOTE: 具体说明取决于服务器。
+
+. 在 ONTAP 中安装服务器根证书。
++
+`security certificate install -type server-ca`
+
++
+命令将查询公有证书。
+
+. 为筛选器 `import-events` 创建 `restapi-EMS` 目标。
++
+要使用服务器端证书，必须使用 HTTPS 方案。
+
++
+`事件通知目标 create -name restapi-ems -rest-api-url \https://<url_to_rest_api_server>`
+
+. 创建将 `import-events` 筛选器与新的 `restapi-EMS` 目标链接的通知：
++
+`event notification create -filter-name importal-events -destinations restapi-EMS`
+
+
+
+
+
+== 配置客户端证书 HTTPS REST API 转发
+
+使用客户端证书是可选的，只有在需要服务器进行客户端身份验证时才需要使用。此操作步骤假定您先前已生成客户端专用密钥和公有证书。
+
+.步骤
+. 在 REST API 服务器中安装相应的根证书和中间证书，以验证您的客户端证书。
+. 在 ONTAP 中安装客户端证书。
++
+`s安全证书安装 -type client`
+
++
+命令将查询私钥和公有证书。
+
+. 为筛选器 `import-events` 创建 `restapi-EMS` 目标。
++
+`事件通知目标 create -name restapi-ems -rest-api-url https://<url_to_rest_api_server>[] -certificate-authority < 客户端证书的颁发者 > -certificate-serial < 客户端证书的序列 >`
+
+. 创建将 `importal-events` 筛选器与新的 `restapi-EMS` 目标链接的通知。
++
+`event notification create -filter-name importal-events -destinations restapi-EMS`
+
+

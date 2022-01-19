@@ -1,0 +1,116 @@
+---
+permalink: error-messages/convert-ems-routing-to-notifications-task.html 
+sidebar: sidebar 
+keywords: update, ems, mapping, notification, filter, event 
+summary: 使用命令行从已弃用的 ONTAP 命令更新 EMS 事件映射。 
+---
+= 使用已弃用的 ONTAP 命令更新 EMS 事件映射
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果当前使用已弃用的 ONTAP 命令集（`event destination` ， `event route` ）配置了 EMS 事件映射，则应按照此操作步骤更新映射，以使用 `event filter` ， `event notification` 和 `event notification destination` 命令集。
+
+.步骤
+. 使用 `event destination show` 命令列出系统中的所有事件目标。
++
+[listing]
+----
+cluster-1::event*> destination show
+                                                                         Hide
+Name             Mail Dest.        SNMP Dest.         Syslog Dest.       Params
+---------------- ----------------- ------------------ ------------------ ------
+allevents        -                 -                  -                  false
+asup             -                 -                  -                  false
+criticals        -                 -                  -                  false
+pager            -                 -                  -                  false
+test             test@xyz.com      -                  -                  false
+traphost         -                 -                  -                  false
+6 entries were displayed.
+----
+. 对于每个目标，使用 `event route show -destinations <destination name>` 命令列出要映射到该目标的事件。
++
+[listing]
+----
+cluster-1::event*> route show -destinations test
+                                                               Freq    Time
+Message                          Severity       Destinations   Threshd Threshd
+-------------------------------- -------------- -------------- ------- -------
+raid.aggr.autoGrow.abort         NOTICE         test           0       0
+raid.aggr.autoGrow.success       NOTICE         test           0       0
+raid.aggr.lock.conflict          INFORMATIONAL  test           0       0
+raid.aggr.log.CP.count           DEBUG          test           0       0
+4 entries were displayed.
+----
+. 创建相应的 `event filter` ，其中包括所有这些事件子集。例如，如果要仅包含 `raid.aggr.` * 事件，请在创建筛选器时为 `message-name` 参数使用通配符。您还可以为单个事件创建筛选器。
++
+
+NOTE: 您最多可以创建 50 个事件筛选器。
+
++
+[listing]
+----
+cluster-1::event*> filter create -filter-name test_events
+
+cluster-1::event*> filter rule add -filter-name test_events -type include -message-name raid.aggr.*
+
+cluster-1::event*> filter show -filter-name test_events
+Filter Name Rule     Rule      Message Name           SNMP Trap Type  Severity
+            Position Type
+----------- -------- --------- ---------------------- --------------- --------
+test_events
+            1        include   raid.aggr.*            *               *
+            2        exclude   *                      *               *
+2 entries were displayed.
+----
+. 为每个 `事件目标` 端点（即 SMTP/SNMP/syslog ）创建一个 `事件通知目标`
++
+[listing]
+----
+cluster-1::event*> notification destination create -name dest1 -email test@xyz.com
+
+cluster-1::event*> notification destination show
+Name            Type        Destination
+--------------  ----------  ---------------------
+dest1           email       test@xyz.com (via "localhost" from "admin@localhost", configured in "event config")
+snmp-traphost   snmp        - (from "system snmp traphost")
+2 entries were displayed.
+----
+. 通过将事件筛选器映射到事件通知目标来创建事件通知。
++
+[listing]
+----
+cluster-1::event*> notification create -filter-name asup_events -destinations dest1
+
+cluster-1::event*> notification show
+ID   Filter Name                     Destinations
+---- ------------------------------  -----------------
+1    default-trap-events             snmp-traphost
+2    asup_events                     dest1
+2 entries were displayed.
+----
+. 对具有 `event route` mapping 的每个 `event destination` 重复步骤 1-5 。
++
+
+NOTE: 路由到 SNMP 目标的事件应映射到 `snmp-traphost` 事件通知目标。SNMP 陷阱主机目标使用系统配置的 SNMP 陷阱主机。
+
++
+[listing]
+----
+cluster-1::event*> system snmp traphost add 10.234.166.135
+
+cluster-1::event*> system snmp traphost show
+        scspr2410142014.gdl.englab.netapp.com (scspr2410142014.gdl.englab.netapp.com) <10.234.166.135>    Community: public
+
+cluster-1::event*> notification destination show -name snmp-traphost
+
+                Destination Name: snmp-traphost
+             Type of Destination: snmp
+                     Destination: 10.234.166.135 (from "system snmp traphost")
+ Server CA Certificates Present?: -
+   Client Certificate Issuing CA: -
+Client Certificate Serial Number: -
+       Client Certificate Valid?: -
+----
+
