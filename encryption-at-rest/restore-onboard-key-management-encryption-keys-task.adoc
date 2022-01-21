@@ -10,55 +10,26 @@ summary: 有时，您可能需要还原板载密钥管理加密密钥。确认�
 
 
 [role="lead"]
-有时，您可能需要还原板载密钥管理加密密钥。确认需要还原密钥后，您可以设置板载密钥管理器以还原此密钥。
+如果需要还原板载密钥管理加密密钥，请先验证是否需要还原密钥，然后设置板载密钥管理器以还原密钥。
 
-+link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
+.您需要什么？ #8217 ；将需要什么
+* 如果将 NSE 与外部密钥管理（ KMIP ）服务器结合使用，则必须已删除外部密钥管理器数据库。
++
+link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
 
 * 您必须是集群管理员才能执行此任务。
 
 
-在 ONTAP 9.6 及更高版本中，您可以使用 `security key-manager key query -node` 命令验证是否需要还原密钥。
 
-在 ONTAP 9.5 及更早版本中，您可以使用 `security key-manager key show` 命令验证是否需要还原密钥。
 
-.步骤
-. 如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，请执行以下操作：
+== 适用于 ONTAP 9.6 及更高版本的步骤
+
+. 验证是否需要还原密钥： + `security key-manager key query -node _nod_`
+. 如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，请完成 <<root_volume_encrypted>>。
 +
-如果您运行的是 ONTAP 9.7 或更早版本，或者运行的是 ONTAP 9.8 或更高版本，并且根卷未加密，请跳过此步骤。
+如果您运行的是 ONTAP 9.6 或 9.7 ，或者运行的是 ONTAP 9.8 或更高版本，并且根卷未加密，请跳过此步骤。
 
-+
-.. 启动节点至启动菜单，然后选择选项 ` （ 10 ） set on板 载密钥管理恢复密码` 。
-.. 输入 `y` 以使用此选项。
-.. 在提示符处，输入集群的板载密钥管理密码短语。
-.. 在提示符处，输入备份密钥数据。
-+
-节点将返回到启动菜单。
-
-.. 从启动菜单中，选择选项 ` （ 1 ） Normal Boot` 。
-
-
-. 还原密钥：
-+
-[cols="35,65"]
-|===
-
-
-| 对于此 ONTAP 版本 ... | 使用此命令 ... 
-
-
- a| 
-ONTAP 9.6 及更高版本
- a| 
-`sSecurity key-manager 板载同步`
-
-
-
- a| 
-ONTAP 9.5 及更早版本
- a| 
-`security key-manager setup -node node`
-
-|===
+. 还原密钥： + `sSecurity key-manager on板 载同步`
 +
 有关完整的命令语法，请参见手册页。
 
@@ -73,4 +44,36 @@ cluster1::> security key-manager onboard sync
 Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
 ----
 . 在密码短语提示符处，输入集群的板载密钥管理密码短语。
+
+
+
+
+== 适用于 ONTAP 9.5 及更早版本的步骤
+
+. 验证是否需要还原密钥： + `security key-manager key show`
+. 如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，请完成以下步骤：
++
+如果您运行的是 ONTAP 9.6 或 9.7 ，或者运行的是 ONTAP 9.8 或更高版本，并且根卷未加密，请跳过此步骤。
+
+. 还原密钥： + `sSecurity key-manager setup -node _nod_`
++
+有关完整的命令语法，请参见手册页。
+
+. 在密码短语提示符处，输入集群的板载密钥管理密码短语。
+
+
+
+
+== 根卷加密后的步骤
+
+如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，则必须在启动菜单中设置板载密钥管理恢复密码短语。
+
+. 启动节点至启动菜单，然后选择选项 ` （ 10 ） set on板 载密钥管理恢复密码` 。
+. 输入 `y` 以使用此选项。
+. 在提示符处，输入集群的板载密钥管理密码短语。
+. 在提示符处，输入备份密钥数据。
++
+节点将返回到启动菜单。
+
+. 从启动菜单中，选择选项 ` （ 1 ） Normal Boot` 。
 
