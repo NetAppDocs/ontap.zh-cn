@@ -21995,11 +21995,19 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-20 20:11:20 +0000">01/20/2022</time>
+    <time datetime="2022-01-22 01:08:50 +0000">01/22/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-forry">
+    <img  class="avatar avatar-small"
+          alt="netapp-forry"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/51911827?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
   <a target="_blank" href="https://github.com/netapp-thomi">
     <img  class="avatar avatar-small"
           alt="netapp-thomi"
@@ -22014,35 +22022,99 @@
 </p>
 
 
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph lead">
-<p>有时，您可能需要还原板载密钥管理加密密钥。确认需要还原密钥后，您可以设置板载密钥管理器以还原此密钥。</p>
-</div>
-<div class="paragraph">
-<p>+<a href="delete-key-management-database-task.html">"从外部密钥管理过渡到板载密钥管理"</a></p>
+<p>如果需要还原板载密钥管理加密密钥，请先验证是否需要还原密钥，然后设置板载密钥管理器以还原密钥。</p>
 </div>
 <div class="ulist">
+<div class="title">您需要什么？ #8217 ；将需要什么</div>
 <ul>
+<li>
+<p>如果将 NSE 与外部密钥管理（ KMIP ）服务器结合使用，则必须已删除外部密钥管理器数据库。</p>
+<div class="paragraph">
+<p><a href="delete-key-management-database-task.html">"从外部密钥管理过渡到板载密钥管理"</a></p>
+</div>
+</li>
 <li>
 <p>您必须是集群管理员才能执行此任务。</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>在 ONTAP 9.6 及更高版本中，您可以使用 <code>security key-manager key query -node</code> 命令验证是否需要还原密钥。</p>
 </div>
-<div class="paragraph">
-<p>在 ONTAP 9.5 及更早版本中，您可以使用 <code>security key-manager key show</code> 命令验证是否需要还原密钥。</p>
 </div>
+<div class="sect1">
+<h2 id="适用于-ontap-9-6-及更高版本的步骤">适用于 ONTAP 9.6 及更高版本的步骤</h2>
+<div class="sectionbody">
 <div class="olist arabic">
-<div class="title">步骤</div>
 <ol class="arabic">
 <li>
-<p>如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，请执行以下操作：</p>
+<p>验证是否需要还原密钥： + <code>security key-manager key query -node <em>nod</em></code></p>
+</li>
+<li>
+<p>如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，请完成 <a href="#root_volume_encrypted">[root_volume_encrypted]</a>。</p>
 <div class="paragraph">
-<p>如果您运行的是 ONTAP 9.7 或更早版本，或者运行的是 ONTAP 9.8 或更高版本，并且根卷未加密，请跳过此步骤。</p>
+<p>如果您运行的是 ONTAP 9.6 或 9.7 ，或者运行的是 ONTAP 9.8 或更高版本，并且根卷未加密，请跳过此步骤。</p>
 </div>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+</li>
+<li>
+<p>还原密钥： + <code>sSecurity key-manager on板 载同步</code></p>
+<div class="paragraph">
+<p>有关完整的命令语法，请参见手册页。</p>
+</div>
+<div class="paragraph">
+<p>以下 ONTAP 9.6 命令可同步板载密钥层次结构中的密钥：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cluster1::&gt; security key-manager onboard sync
+
+Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    &lt;32..256 ASCII characters long text&gt;</pre>
+</div>
+</div>
+</li>
+<li>
+<p>在密码短语提示符处，输入集群的板载密钥管理密码短语。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="适用于-ontap-9-5-及更早版本的步骤">适用于 ONTAP 9.5 及更早版本的步骤</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>验证是否需要还原密钥： + <code>security key-manager key show</code></p>
+</li>
+<li>
+<p>如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，请完成以下步骤：</p>
+<div class="paragraph">
+<p>如果您运行的是 ONTAP 9.6 或 9.7 ，或者运行的是 ONTAP 9.8 或更高版本，并且根卷未加密，请跳过此步骤。</p>
+</div>
+</li>
+<li>
+<p>还原密钥： + <code>sSecurity key-manager setup -node <em>nod</em></code></p>
+<div class="paragraph">
+<p>有关完整的命令语法，请参见手册页。</p>
+</div>
+</li>
+<li>
+<p>在密码短语提示符处，输入集群的板载密钥管理密码短语。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="根卷加密后的步骤">根卷加密后的步骤</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，则必须在启动菜单中设置板载密钥管理恢复密码短语。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>启动节点至启动菜单，然后选择选项 ` （ 10 ） set on板 载密钥管理恢复密码` 。</p>
 </li>
@@ -22063,55 +22135,7 @@
 </li>
 </ol>
 </div>
-</li>
-<li>
-<p>还原密钥：</p>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 35%;">
-<col style="width: 65%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">对于此 ONTAP 版本 &#8230;&#8203;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">使用此命令 &#8230;&#8203;</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>ONTAP 9.6 及更高版本</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>sSecurity key-manager 板载同步</code></p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>ONTAP 9.5 及更早版本</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>security key-manager setup -node node</code></p>
-</div></div></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>有关完整的命令语法，请参见手册页。</p>
 </div>
-<div class="paragraph">
-<p>以下 ONTAP 9.6 命令可同步板载密钥层次结构中的密钥：</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>cluster1::&gt; security key-manager onboard sync
-
-Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    &lt;32..256 ASCII characters long text&gt;</pre>
-</div>
-</div>
-</li>
-<li>
-<p>在密码短语提示符处，输入集群的板载密钥管理密码短语。</p>
-</li>
-</ol>
 </div>
 
     </article>

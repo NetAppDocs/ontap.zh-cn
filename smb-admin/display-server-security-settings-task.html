@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title>显示有关 CIFS 服务器安全设置的信息</title>
+  <title>显示有关 SMB 服务器安全设置的信息</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="显示有关 CIFS 服务器安全设置的信息" />
+  <meta property="og:title" content="显示有关 SMB 服务器安全设置的信息" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/smb-admin/display-server-security-settings-task.html" />
-	<meta property="og:description" content="您可以显示有关 Storage Virtual Machine （ SVM ）上的 CIFS 服务器安全设置的信息。您可以使用此信息验证安全设置是否正确。" />
+	<meta property="og:description" content="您可以显示有关 Storage Virtual Machine （ SVM ）上的 SMB 服务器安全设置的信息。您可以使用此信息验证安全设置是否正确。" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
@@ -18,8 +18,8 @@
   <meta http-equiv="nss-type" content="Product Documentation"/>
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
-  <meta name="description" content="您可以显示有关 Storage Virtual Machine （ SVM ）上的 CIFS 服务器安全设置的信息。您可以使用此信息验证安全设置是否正确。">
-  <meta name="keywords" content=" display, information, cifs, server, security, settings, storage, virtual, machine, svm, verify, setting, correct, display information about cifs server security settings">
+  <meta name="description" content="您可以显示有关 Storage Virtual Machine （ SVM ）上的 SMB 服务器安全设置的信息。您可以使用此信息验证安全设置是否正确。">
+  <meta name="keywords" content=" display, information, smb, cifs, server, security, settings, storage, virtual, machine, svm, verify, setting,">
   
   
 
@@ -21965,7 +21965,7 @@
           <a href="/zh-cn/ontap/">ONTAP&nbsp;9</a>
         </li>
         <li class="n-breadcrumb__list-item">
-          显示有关 CIFS 服务器安全设置的信息
+          显示有关 SMB 服务器安全设置的信息
         </li>
       </ul>
     </div>
@@ -21988,14 +21988,14 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading">显示有关 CIFS 服务器安全设置的信息</h1>
+  <h1 class="n-doc__component-detail-heading">显示有关 SMB 服务器安全设置的信息</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-01-20 20:11:20 +0000">01/20/2022</time>
+    <time datetime="2022-01-22 01:08:50 +0000">01/22/2022</time>
     
   
 
@@ -22005,6 +22005,14 @@
           alt="netapp-ahibbard"
           width="20" height="20"
           src="https://avatars.githubusercontent.com/u/85892662?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
+  <a target="_blank" href="https://github.com/netapp-forry">
+    <img  class="avatar avatar-small"
+          alt="netapp-forry"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/51911827?v=4"
           style="border-radius: 50%;"/>
   </a>
   
@@ -22023,24 +22031,13 @@
 
 
 <div class="paragraph lead">
-<p>您可以显示有关 Storage Virtual Machine （ SVM ）上的 CIFS 服务器安全设置的信息。您可以使用此信息验证安全设置是否正确。</p>
+<p>您可以显示有关 Storage Virtual Machine （ SVM ）上的 SMB 服务器安全设置的信息。您可以使用此信息验证安全设置是否正确。</p>
 </div>
 <div class="paragraph">
 <p>显示的安全设置可以是该对象的默认值，也可以是使用 ONTAP 命令行界面或使用 Active Directory 组策略对象（ GPO ）配置的非默认值。</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<img src="/us-en/ontap/images/note.svg" alt="注">
-</td>
-<td class="content">
 <div class="paragraph">
-<p>在工作组模式下，不能对 CIFS 服务器使用 <code>vserver cifs security show</code> 命令，因为某些选项无效。</p>
-</div>
-</td>
-</tr>
-</table>
+<p>请勿在工作组模式下对 SMB 服务器使用 <code>vserver cifs security show</code> 命令，因为某些选项无效。</p>
 </div>
 <div class="olist arabic">
 <div class="title">步骤</div>
@@ -22089,17 +22086,28 @@
 
 Vserver: vs1
 
-                    Kerberos Clock Skew:                   5 minutes
-                    Kerberos Ticket Age:                  10 hours
-                   Kerberos Renewal Age:                   7 days
-                   Kerberos KDC Timeout:                   3 seconds
-                    Is Signing Required:               false
-        Is Password Complexity Required:                true
-   Use start_tls For AD LDAP connection:               false
-              Is AES Encryption Enabled:               false
-                 LM Compatibility Level:  lm-ntlm-ntlmv2-krb
-             Is SMB Encryption Required:               false</pre>
+                          Kerberos Clock Skew:        5 minutes
+                          Kerberos Ticket Age:        10 hours
+                         Kerberos Renewal Age:        7 days
+                         Kerberos KDC Timeout:        3 seconds
+                          Is Signing Required:        false
+              Is Password Complexity Required:        true
+         Use start_tls For AD LDAP connection:        false
+                    Is AES Encryption Enabled:        false
+                       LM Compatibility Level:        lm-ntlm-ntlmv2-krb
+                   Is SMB Encryption Required:        false
+                      Client Session Security:        none
+              SMB1 Enabled for DC Connections:        false
+              SMB2 Enabled for DC Connections:        system-default
+LDAP Referral Enabled For AD LDAP connections:        false
+             Use LDAPS for AD LDAP connection:        false
+    Encryption is required for DC Connections:        false
+ AES session key enabled for NetLogon channel:        false
+  Try Channel Binding For AD LDAP Connections:        false</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>请注意，显示的设置取决于正在运行的 ONTAP 版本。</p>
 </div>
 <div class="paragraph">
 <p>以下示例显示了 SVM vs1 的 Kerberos 时钟偏差：</p>
@@ -22126,7 +22134,7 @@ Vserver: vs1
   <div class="page-nav-toolbar">
     <div id="version-dropdown"></div>
     <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[显示有关 CIFS 服务器安全设置的信息](https://docs.netapp.com/zh-cn/ontap/smb-admin/display-server-security-settings-task.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[显示有关 SMB 服务器安全设置的信息](https://docs.netapp.com/zh-cn/ontap/smb-admin/display-server-security-settings-task.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
       <a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/smb-admin/display-server-security-settings-task.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
       <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a>
     </div>

@@ -19,7 +19,7 @@
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
   <meta name="description" content="使用 SnapMirror Business Continuity 解决方案时，还存在一些其他限制和限制。">
-  <meta name="keywords" content=" SM-BC, SMBC, restrictions, limitations, consistency group, volume, solaris">
+  <meta name="keywords" content=" SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris">
   
   
 
@@ -21995,7 +21995,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-20 20:11:20 +0000">01/20/2022</time>
+    <time datetime="2022-01-22 01:08:50 +0000">01/22/2022</time>
     
   
 
@@ -22048,28 +22048,19 @@
 <div class="sect2">
 <h3 id="一致性组">一致性组</h3>
 <div class="paragraph">
-<p>从 ONTAP 9.8 到 9.1.1 ，集群中的最大 SnapMirror 同步一致性组关系数为 5 ，这一限制与平台无关。从 ONTAP 9.10.1 开始，一个集群中的最大 SnapMirror 同步一致性组关系数为 20 。如果达到或尝试超过此限制，则会显示一条错误消息。</p>
+<p>从 ONTAP 9.8 到 9.1.1 ，集群中的最大 SM-BC 一致性组关系数为 5 ，这一限制与平台无关。从 ONTAP 9.10.1 开始，集群中的最大 SM-BC 一致性组关系数为 20 。</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="每个一致性组的卷数">每个一致性组的卷数</h3>
 <div class="paragraph">
-<p>从 ONTAP 9.8 到 9.1.1 ，每个 SnapMirror 同步一致性组关系支持的最大卷数为 12 个，这一限制与平台无关。从 ONTAP 9.10.1 开始，每个 SnapMirror 同步关系支持的最大卷数为 16 。如果达到或尝试超过此限制，则会显示一条错误消息。</p>
+<p>从 ONTAP 9.8 到 9.1.1 ，每个 SM-BC 一致性组关系支持的最大卷数为 12 个，这一限制与平台无关。从 ONTAP 9.10.1 开始，每个 SM-BC 关系支持的最大卷数为十六。</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="volumes">Volumes</h3>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<img src="/us-en/ontap/images/note.svg" alt="注">
-</td>
-<td class="content">
-限制是端点数量，而不是关系数量。包含 12 个卷的一致性组会在源和目标上提供 12 个端点。与同一 HA 对上的源卷和目标卷建立 SnapMirror 同步关系可提供 2 个端点。
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>在 SM-BC 中，限制是根据端点数量而不是关系数量来计算的。包含 12 个卷的一致性组会在源和目标上提供 12 个端点。SM-BC 和 SnapMirror 同步关系都会影响端点总数。</p>
 </div>
 <div class="paragraph">
 <p>下表列出了每个平台的最大端点数量。</p>
