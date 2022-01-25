@@ -1,0 +1,26 @@
+---
+permalink: disks-aggregates/sanitization-not-performed-concept.html 
+sidebar: sidebar 
+keywords: disks, disk sanitization, unsupported disk sanitization, disk sanitization process 
+summary: 并非所有磁盘类型都支持磁盘清理。此外，在某些情况下，无法执行磁盘清理。 
+---
+= 无法执行磁盘清理时
+
+
+[role="lead"]
+并非所有磁盘类型都支持磁盘清理。此外，在某些情况下，无法执行磁盘清理。
+
+* 并非所有 SSD 部件号都支持此功能。
++
+有关哪些 SSD 部件号支持磁盘清理的信息，请参见 https://hwu.netapp.com/["Hardware Universe"^]。
+
+* HA 对中的系统在接管模式下不支持此功能。
+* 无法对因可读性或可写性问题而失败的磁盘执行此操作。
+* 它不会对 ATA 驱动器执行格式化阶段。
+* 如果使用的是随机模式，则不能一次对 100 个以上的磁盘执行此操作。
+* 阵列 LUN 不支持此功能。
+* 如果同时清理同一 ESH 磁盘架中的两个 SES 磁盘，则控制台上会显示有关访问该磁盘架的错误，并且在清理期间不会报告磁盘架警告。
++
+但是，对该磁盘架的数据访问不会中断。
+
+

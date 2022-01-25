@@ -1,0 +1,15 @@
+---
+permalink: disks-aggregates/sanitization-interrupted-concept.html 
+sidebar: sidebar 
+keywords: disks, interrupted disk sanitization, power outage, disk sanitization, power failure 
+summary: 如果磁盘清理因用户干预或断电等意外事件而中断， ONTAP 会采取措施将正在清理的磁盘返回到已知状态，但您还必须采取措施，才能完成清理过程。 
+---
+= 磁盘清理中断时会发生什么情况
+
+
+[role="lead"]
+如果磁盘清理因用户干预或断电等意外事件而中断， ONTAP 会采取措施将正在清理的磁盘返回到已知状态，但您还必须采取措施，才能完成清理过程。
+
+磁盘清理是一项长期运行的操作。如果清理过程因电源故障，系统崩溃或手动干预而中断，则必须从头开始重复执行清理过程。磁盘未指定为已清理。
+
+如果磁盘清理的格式化阶段中断，则 ONTAP 必须恢复因中断而损坏的所有磁盘。在系统重新启动后， ONTAP 每小时检查一次是否有任何清理目标磁盘未完成清理的格式化阶段。如果发现任何此类磁盘， ONTAP 会将其恢复。恢复方法取决于磁盘类型。恢复磁盘后，您可以在该磁盘上重新运行清理过程；对于 HDD ，您可以使用 ` -s` 选项指定不再重复格式化阶段。
