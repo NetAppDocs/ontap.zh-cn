@@ -331,7 +331,7 @@
 <div class="ie-main">
   <!-- Sidebar Column -->
   
-  <div class="col-md-3" >
+  <div class="col-md-3" id="sidebar-height">
       <div class="n-pdf-header">
   <a id="toggleButtonPdf" class="n-pdf-button" type="button">
     <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>可用的 PDF<span>
@@ -21977,6 +21977,13 @@
         法律声明
       </a></li></ul>
 </div>
+<script>
+  window.onscroll = () => {
+    const value = -40 - (document.body.scrollHeight - (window.innerHeight + document.scrollingElement.scrollTop));
+    
+    document.getElementById("sidebar-height").style.bottom = Math.max(0,value) + "px";
+};
+</script>
 <!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
 <script>$("li.active").parents('li').toggleClass("active");</script>
 
@@ -22032,7 +22039,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-27 20:09:45 +0000">01/27/2022</time>
+    <time datetime="2022-01-28 14:55:53 +0000">01/28/2022</time>
     
   
 
@@ -22045,6 +22052,9 @@
 
 <div class="paragraph lead">
 <p>只有当节点的身份验证密钥 ID 设置为非默认值时， FIPS 驱动器或 SED 才会受到保护，防止未经授权的访问。您可以使用 <code>storage encryption disk modify</code> 命令将密钥 ID 设置为默认值，将 FIPS 驱动器或 SED 返回到未受保护的模式。</p>
+</div>
+<div class="paragraph">
+<p>如果 HA 对使用加密 SAS 或 NVMe 驱动器（ SED ， NSE ， FIPS ），则必须在初始化系统之前对 HA 对中的所有驱动器执行此过程（启动选项 4 或 9 ）。如果不这样做，则在重新利用驱动器时，可能会导致未来数据丢失。</p>
 </div>
 <div class="paragraph">
 <p>您必须是集群管理员才能执行此任务。</p>
@@ -22061,7 +22071,7 @@
 <li>
 <p>如果 FIPS 驱动器以 FIPS 兼容模式运行，请将节点的 FIPS 身份验证密钥 ID 设置回默认 MSID 0x0 ：</p>
 <div class="paragraph">
-<p><code>storage encryption disk modify -disk disk_id -fips-key-id 0x0</code></p>
+<p><code>storage encryption disk modify -disk <em>disk_id</em> -fips-key-id 0x0</code></p>
 </div>
 <div class="paragraph">
 <p>您可以使用 <code>security key-manager query</code> 命令查看密钥 ID 。</p>
@@ -22075,11 +22085,31 @@ Info: Starting modify on 14 disks.
       storage encryption disk show-status command.</pre>
 </div>
 </div>
+<div class="paragraph">
+<p>使用命令确认操作成功：</p>
+</div>
+<div class="paragraph">
+<p><code>s存储加密磁盘 show-status</code></p>
+</div>
+<div class="paragraph">
+<p>重复 show-status 命令，直到数字相同为止。如果 " 磁盘已开始 " 和 " 磁盘已完成 " 中的数字相同，则操作完成。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cluster1:: storage encryption disk show-status
+
+            FIPS    Latest   Start               Execution   Disks   Disks Disks
+Node        Support Request  Timestamp           Time (sec)  Begun   Done  Successful
+-------     ------- -------- ------------------  ---------- ------ ------  ----------
+cluster1    true    modify   1/18/2022 15:29:38    3           14     5         5
+1 entry was displayed.</pre>
+</div>
+</div>
 </li>
 <li>
 <p>将节点的数据身份验证密钥 ID 重新设置为默认 MSID 0x0 ：</p>
 <div class="paragraph">
-<p><code>storage encryption disk modify -disk disk_id -data-key-id 0x0</code></p>
+<p><code>storage encryption disk modify -disk <em>disk_id</em> -data-key-id 0x0</code></p>
 </div>
 <div class="paragraph">
 <p>无论您将 SAS 或 NVMe 驱动器返回到未受保护的模式， ` data-key-id` 的值都应设置为 0x0 。</p>
@@ -22095,6 +22125,15 @@ Info: Starting modify on 14 disks.
       View the status of the operation by using the
       storage encryption disk show-status command.</pre>
 </div>
+</div>
+<div class="paragraph">
+<p>使用命令确认操作成功：</p>
+</div>
+<div class="paragraph">
+<p><code>s存储加密磁盘 show-status</code></p>
+</div>
+<div class="paragraph">
+<p>重复 show-status 命令，直到数字相同为止。如果 " 磁盘已开始 " 和 " 磁盘已完成 " 中的数字相同，则操作完成。</p>
 </div>
 </li>
 </ol>

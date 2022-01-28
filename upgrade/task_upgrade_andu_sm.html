@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title>使用 System Manager 实现自动化无中断</title>
+  <title>使用 System Manager 自动进行无中断更新</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="使用 System Manager 实现自动化无中断" />
+  <meta property="og:title" content="使用 System Manager 自动进行无中断更新" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/upgrade/task_upgrade_andu_sm.html" />
 	<meta property="og:description" content="使用 System Manager ，您可以无中断地更新集群上的 ONTAP 版本。" />
@@ -19,7 +19,7 @@
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
   <meta name="description" content="使用 System Manager ，您可以无中断地更新集群上的 ONTAP 版本。">
-  <meta name="keywords" content=" system manager, netapp, ontap, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu, resuming, resume, after, error, andu, automated, process">
+  <meta name="keywords" content=" system manager, netapp, ontap, upgrade, nondisruptive, nondisruptive upgrade, upgrade a cluster, configuration, software image, update, update ONTAP, update software, ndu, resuming, resume, after, error, andu, automated, process">
   
   
 
@@ -331,7 +331,7 @@
 <div class="ie-main">
   <!-- Sidebar Column -->
   
-  <div class="col-md-3" >
+  <div class="col-md-3" id="sidebar-height">
       <div class="n-pdf-header">
   <a id="toggleButtonPdf" class="n-pdf-button" type="button">
     <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>可用的 PDF<span>
@@ -21977,6 +21977,13 @@
         法律声明
       </a></li></ul>
 </div>
+<script>
+  window.onscroll = () => {
+    const value = -40 - (document.body.scrollHeight - (window.innerHeight + document.scrollingElement.scrollTop));
+    
+    document.getElementById("sidebar-height").style.bottom = Math.max(0,value) + "px";
+};
+</script>
 <!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
 <script>$("li.active").parents('li').toggleClass("active");</script>
 
@@ -22002,7 +22009,7 @@
           <a href="/zh-cn/ontap/">ONTAP&nbsp;9</a>
         </li>
         <li class="n-breadcrumb__list-item">
-          使用 System Manager 实现自动化无中断
+          使用 System Manager 自动进行无中断更新
         </li>
       </ul>
     </div>
@@ -22025,34 +22032,18 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading">使用 System Manager 实现自动化无中断</h1>
+  <h1 class="n-doc__component-detail-heading">使用 System Manager 自动进行无中断更新</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-01-27 20:09:45 +0000">01/27/2022</time>
+    <time datetime="2022-01-28 14:55:53 +0000">01/28/2022</time>
     
   
 
 <span>提供者
-  <a target="_blank" href="https://github.com/netapp-ahibbard">
-    <img  class="avatar avatar-small"
-          alt="netapp-ahibbard"
-          width="20" height="20"
-          src="https://avatars.githubusercontent.com/u/85892662?v=4"
-          style="border-radius: 50%;"/>
-  </a>
-  
-  <a target="_blank" href="https://github.com/netapp-thomi">
-    <img  class="avatar avatar-small"
-          alt="netapp-thomi"
-          width="20" height="20"
-          src="https://avatars.githubusercontent.com/u/54111336?v=4"
-          style="border-radius: 50%;"/>
-  </a>
-  
 </span>
 
 
@@ -22359,7 +22350,7 @@
   <div class="page-nav-toolbar">
     <div id="version-dropdown"></div>
     <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[使用 System Manager 实现自动化无中断](https://docs.netapp.com/zh-cn/ontap/upgrade/task_upgrade_andu_sm.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[使用 System Manager 自动进行无中断更新](https://docs.netapp.com/zh-cn/ontap/upgrade/task_upgrade_andu_sm.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
       <a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/upgrade/task_upgrade_andu_sm.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
       <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a>
     </div>

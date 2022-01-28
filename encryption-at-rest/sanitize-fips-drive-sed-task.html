@@ -331,7 +331,7 @@
 <div class="ie-main">
   <!-- Sidebar Column -->
   
-  <div class="col-md-3" >
+  <div class="col-md-3" id="sidebar-height">
       <div class="n-pdf-header">
   <a id="toggleButtonPdf" class="n-pdf-button" type="button">
     <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>可用的 PDF<span>
@@ -21977,6 +21977,13 @@
         法律声明
       </a></li></ul>
 </div>
+<script>
+  window.onscroll = () => {
+    const value = -40 - (document.body.scrollHeight - (window.innerHeight + document.scrollingElement.scrollTop));
+    
+    document.getElementById("sidebar-height").style.bottom = Math.max(0,value) + "px";
+};
+</script>
 <!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
 <script>$("li.active").parents('li').toggleClass("active");</script>
 
@@ -22032,7 +22039,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-27 20:09:45 +0000">01/27/2022</time>
+    <time datetime="2022-01-28 14:55:53 +0000">01/28/2022</time>
     
   
 
@@ -22061,7 +22068,7 @@
 <li>
 <p>删除要清理的 FIPS 驱动器或 SED 上的聚合：</p>
 <div class="paragraph">
-<p><code>storage aggregate delete -aggregate aggregate_name</code></p>
+<p><code>storage aggregate delete -aggregate <em>aggregate_name</em></code></p>
 </div>
 <div class="paragraph">
 <p>有关完整的命令语法，请参见手册页。</p>
@@ -22075,7 +22082,7 @@
 <li>
 <p>确定要清理的 FIPS 驱动器或 SED 的磁盘 ID ：</p>
 <div class="paragraph">
-<p><code>s存储加密磁盘 show</code></p>
+<p><code>storage encryption disk show -fields data-key-id ， fips-key-id ， owner</code></p>
 </div>
 <div class="paragraph">
 <p>有关完整的命令语法，请参见手册页。</p>
@@ -22093,9 +22100,27 @@ Disk    Mode Data Key ID
 </div>
 </li>
 <li>
+<p>如果 FIPS 驱动器以 FIPS 兼容模式运行，请将节点的 FIPS 身份验证密钥 ID 设置回默认 MSID 0x0 ：</p>
+<div class="paragraph">
+<p><code>storage encryption disk modify -disk <em>disk_id</em> -fips-key-id 0x0</code></p>
+</div>
+<div class="paragraph">
+<p>您可以使用 <code>security key-manager query</code> 命令查看密钥 ID 。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>cluster1::&gt; storage encryption disk modify -disk 1.10.2 -fips-key-id 0x0
+
+Info: Starting modify on 1 disk.
+      View the status of the operation by using the
+      storage encryption disk show-status command.</pre>
+</div>
+</div>
+</li>
+<li>
 <p>清理驱动器：</p>
 <div class="paragraph">
-<p><code>s存储加密磁盘清理 -disk disk_id</code></p>
+<p><code>s存储加密磁盘清理 -disk <em>disk_id</em></code></p>
 </div>
 <div class="paragraph">
 <p>您只能使用此命令清理热备用磁盘或损坏的磁盘。要清理所有磁盘而不考虑类型，请使用 ` force-all-state` 选项。有关完整的命令语法，请参见手册页。</p>

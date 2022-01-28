@@ -331,7 +331,7 @@
 <div class="ie-main">
   <!-- Sidebar Column -->
   
-  <div class="col-md-3" >
+  <div class="col-md-3" id="sidebar-height">
       <div class="n-pdf-header">
   <a id="toggleButtonPdf" class="n-pdf-button" type="button">
     <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>可用的 PDF<span>
@@ -21977,6 +21977,13 @@
         法律声明
       </a></li></ul>
 </div>
+<script>
+  window.onscroll = () => {
+    const value = -40 - (document.body.scrollHeight - (window.innerHeight + document.scrollingElement.scrollTop));
+    
+    document.getElementById("sidebar-height").style.bottom = Math.max(0,value) + "px";
+};
+</script>
 <!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
 <script>$("li.active").parents('li').toggleClass("active");</script>
 
@@ -22032,11 +22039,19 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-27 20:09:45 +0000">01/27/2022</time>
+    <time datetime="2022-01-28 14:55:53 +0000">01/28/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-ahibbard">
+    <img  class="avatar avatar-small"
+          alt="netapp-ahibbard"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/85892662?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
   <a target="_blank" href="https://github.com/netapp-thomi">
     <img  class="avatar avatar-small"
           alt="netapp-thomi"
@@ -22075,6 +22090,12 @@
 </li>
 </ul>
 </div>
+<div class="paragraph">
+<p>如果您计划从较旧的 ONTAP 版本（例如 9.3 ）进行 ONTAP 升级，则最佳做法是先升级到同一 ONTAP 版本系列中的最新修补程序版本，然后再升级到下一个受支持的主要版本。这样可以确保在升级之前解决旧版本中的所有问题。</p>
+</div>
+<div class="paragraph">
+<p>例如，如果您的系统运行的是 ONTAP 9.3P9 ，并且您计划升级到 9.9.1 ，则建议使用以下路径： 9.3P9 &#8594; 9.3P21 &#8594; 9.7 &#8594; 9.9.1 在所有主要 ONTAP 版本中，请使用最新可用的修补程序版本。</p>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -22100,7 +22121,7 @@
 <p>ONTAP 9.9.1</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>ONTAP 9.10.1</p>
+<p>ONTAP 9.10.0 ， 9.10.1</p>
 </div></div></td>
 </tr>
 <tr>
@@ -22116,7 +22137,7 @@
 <p>ONTAP 9.8</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>ONTAP 9.9.0 或 9.9.1</p>
+<p>ONTAP 9.0.0 ， 9.9.1 ， 9.10.1</p>
 </div></div></td>
 </tr>
 <tr>

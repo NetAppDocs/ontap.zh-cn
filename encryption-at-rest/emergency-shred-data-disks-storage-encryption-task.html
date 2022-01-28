@@ -19,7 +19,7 @@
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
   <meta name="description" content="在发生安全紧急情况时，您可以立即阻止访问 FIPS 驱动器或 SED ，即使存储系统或 KMIP 服务器没有电源也是如此。">
-  <meta name="keywords" content=" emergency, shredding, data, fips, drive, sed">
+  <meta name="keywords" content=" emergency, shred, data, fips, drive, sed, disk encrypt sanitize, disk encrypt destroy">
   
   
 
@@ -331,7 +331,7 @@
 <div class="ie-main">
   <!-- Sidebar Column -->
   
-  <div class="col-md-3" >
+  <div class="col-md-3" id="sidebar-height">
       <div class="n-pdf-header">
   <a id="toggleButtonPdf" class="n-pdf-button" type="button">
     <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>可用的 PDF<span>
@@ -21977,6 +21977,13 @@
         法律声明
       </a></li></ul>
 </div>
+<script>
+  window.onscroll = () => {
+    const value = -40 - (document.body.scrollHeight - (window.innerHeight + document.scrollingElement.scrollTop));
+    
+    document.getElementById("sidebar-height").style.bottom = Math.max(0,value) + "px";
+};
+</script>
 <!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
 <script>$("li.active").parents('li').toggleClass("active");</script>
 
@@ -22032,11 +22039,19 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-27 20:09:45 +0000">01/27/2022</time>
+    <time datetime="2022-01-28 14:55:53 +0000">01/28/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-ahibbard">
+    <img  class="avatar avatar-small"
+          alt="netapp-ahibbard"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/85892662?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
   <a target="_blank" href="https://github.com/netapp-thomi">
     <img  class="avatar avatar-small"
           alt="netapp-thomi"
@@ -22058,7 +22073,7 @@
 <div class="title">您需要什么？ #8217 ；将需要什么</div>
 <ul>
 <li>
-<p>您必须使用 KMIP 服务器，并且 KMIP 服务器必须配置一个易于销毁的身份验证项（例如，智能卡或 USB 驱动器）。</p>
+<p>如果您使用的 KMIP 服务器没有电源，则必须为 KMIP 服务器配置一个易于销毁的身份验证项（例如，智能卡或 USB 驱动器）。</p>
 </li>
 <li>
 <p>您必须是集群管理员才能执行此任务。</p>
@@ -22072,13 +22087,14 @@
 <p>对 FIPS 驱动器或 SED 上的数据执行紧急粉碎：</p>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 30%;">
-<col style="width: 70%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
 </colgroup>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">条件</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">那么 &#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">那么 &#8230;&#8203;</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
@@ -22136,33 +22152,60 @@
 </li>
 </ol>
 </div></div></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>存储系统已通电，您必须立即粉碎数据</p>
 </div></div></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="olist loweralpha">
 <ol class="loweralpha" type="a">
+<li>
+<p>* 如果要使磁盘上的数据无法访问且仍能重复使用这些磁盘，请清理磁盘： *</p>
+</li>
 <li>
 <p>如果存储系统配置为 HA 对，请禁用接管。</p>
 </li>
 <li>
-<p>将权限级别设置为 advanced ： + <code>set -privilege advanced</code></p>
+<p>将权限级别设置为高级：</p>
+<div class="paragraph">
+<p><code>set -privilege advanced</code></p>
+</div>
 </li>
 <li>
-<p>清理或销毁磁盘：</p>
-<div class="ulist">
-<ul>
-<li>
-<p>如果要使磁盘上的数据无法访问且仍能重复使用这些磁盘，请清理磁盘： + <code>s存储加密磁盘清理磁盘 * -force-all-states true</code></p>
+<p>如果驱动器处于 FIPS 兼容模式，请将节点的 FIPS 身份验证密钥 ID 重新设置为默认 MSID ：</p>
+<div class="paragraph">
+<p><code>storage encryption disk modify -disk * -fips-key-id 0x0</code></p>
+</div>
 </li>
 <li>
-<p>如果您要使磁盘上的数据无法访问，并且不需要保存磁盘，请销毁这些磁盘： + <code>s存储加密磁盘销毁 -disk * -force-all-states true</code> 存储系统崩溃，使系统处于永久禁用状态并擦除所有数据。要再次使用系统，必须重新配置它。</p>
-</li>
-</ul>
+<p>清理磁盘：</p>
+<div class="paragraph">
+<p><code>s存储加密磁盘清理 -disk * -force-all-states true</code></p>
 </div>
 </li>
 </ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>* 如果要使磁盘上的数据无法访问，并且不需要保存磁盘，请销毁磁盘： *</p>
+</li>
+<li>
+<p>如果存储系统配置为 HA 对，请禁用接管。</p>
+</li>
+<li>
+<p>将权限级别设置为高级：</p>
+<div class="paragraph">
+<p><code>set -privilege advanced</code></p>
+</div>
+</li>
+<li>
+<p>销毁磁盘： <code>s存储加密磁盘销毁 -disk * -force-all-states true</code></p>
+</li>
+</ol>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>存储系统崩溃，使系统处于永久禁用状态，并擦除所有数据。要再次使用系统，必须重新配置它。</p>
 </div></div></td>
 </tr>
 <tr>
@@ -22179,13 +22222,8 @@
 </li>
 </ol>
 </div></div></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>KMIP 服务器或存储系统不能通电</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>销毁 KMIP 服务器的身份验证项（例如智能卡）。这样会阻止存储系统访问磁盘加密密钥。</p>
 </div></div></td>
 </tr>
 </tbody>
