@@ -1,7 +1,7 @@
 ---
 permalink: encryption-at-rest/emergency-shred-data-disks-storage-encryption-task.html 
 sidebar: sidebar 
-keywords: emergency, shredding, data, fips, drive, sed 
+keywords: emergency, shred, data, fips, drive, sed, disk encrypt sanitize, disk encrypt destroy 
 summary: 在发生安全紧急情况时，您可以立即阻止访问 FIPS 驱动器或 SED ，即使存储系统或 KMIP 服务器没有电源也是如此。 
 ---
 = 对 FIPS 驱动器或 SED 上的数据进行紧急粉碎
@@ -13,18 +13,17 @@ summary: 在发生安全紧急情况时，您可以立即阻止访问 FIPS 驱�
 在发生安全紧急情况时，您可以立即阻止访问 FIPS 驱动器或 SED ，即使存储系统或 KMIP 服务器没有电源也是如此。
 
 .您需要什么？ #8217 ；将需要什么
-* 您必须使用 KMIP 服务器，并且 KMIP 服务器必须配置一个易于销毁的身份验证项（例如，智能卡或 USB 驱动器）。
+* 如果您使用的 KMIP 服务器没有电源，则必须为 KMIP 服务器配置一个易于销毁的身份验证项（例如，智能卡或 USB 驱动器）。
 * 您必须是集群管理员才能执行此任务。
 
 
 .步骤
 . 对 FIPS 驱动器或 SED 上的数据执行紧急粉碎：
 +
-[cols="30,70"]
 |===
 
 
-| 条件 | 那么 ... 
+| 条件 2+| 那么 ... 
 
 
  a| 
@@ -56,15 +55,35 @@ summary: 在发生安全紧急情况时，您可以立即阻止访问 FIPS 驱�
  a| 
 存储系统已通电，您必须立即粉碎数据
  a| 
+.. * 如果要使磁盘上的数据无法访问且仍能重复使用这些磁盘，请清理磁盘： *
 .. 如果存储系统配置为 HA 对，请禁用接管。
-.. 将权限级别设置为 advanced ： + `set -privilege advanced`
-.. 清理或销毁磁盘：
+.. 将权限级别设置为高级：
 +
-*** 如果要使磁盘上的数据无法访问且仍能重复使用这些磁盘，请清理磁盘： + `s存储加密磁盘清理磁盘 * -force-all-states true`
-*** 如果您要使磁盘上的数据无法访问，并且不需要保存磁盘，请销毁这些磁盘： + `s存储加密磁盘销毁 -disk * -force-all-states true` 存储系统崩溃，使系统处于永久禁用状态并擦除所有数据。要再次使用系统，必须重新配置它。
+`set -privilege advanced`
+
+.. 如果驱动器处于 FIPS 兼容模式，请将节点的 FIPS 身份验证密钥 ID 重新设置为默认 MSID ：
++
+`storage encryption disk modify -disk * -fips-key-id 0x0`
+
+.. 清理磁盘：
++
+`s存储加密磁盘清理 -disk * -force-all-states true`
+
+
+ a| 
+.. * 如果要使磁盘上的数据无法访问，并且不需要保存磁盘，请销毁磁盘： *
+.. 如果存储系统配置为 HA 对，请禁用接管。
+.. 将权限级别设置为高级：
++
+`set -privilege advanced`
+
+.. 销毁磁盘： `s存储加密磁盘销毁 -disk * -force-all-states true`
 
 
 
+
+ a| 
+存储系统崩溃，使系统处于永久禁用状态，并擦除所有数据。要再次使用系统，必须重新配置它。
 
 
 

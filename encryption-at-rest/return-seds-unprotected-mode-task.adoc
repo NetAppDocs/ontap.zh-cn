@@ -12,6 +12,8 @@ summary: 只有当节点的身份验证密钥 ID 设置为非默认值时， FIP
 [role="lead"]
 只有当节点的身份验证密钥 ID 设置为非默认值时， FIPS 驱动器或 SED 才会受到保护，防止未经授权的访问。您可以使用 `storage encryption disk modify` 命令将密钥 ID 设置为默认值，将 FIPS 驱动器或 SED 返回到未受保护的模式。
 
+如果 HA 对使用加密 SAS 或 NVMe 驱动器（ SED ， NSE ， FIPS ），则必须在初始化系统之前对 HA 对中的所有驱动器执行此过程（启动选项 4 或 9 ）。如果不这样做，则在重新利用驱动器时，可能会导致未来数据丢失。
+
 您必须是集群管理员才能执行此任务。
 
 .步骤
@@ -21,7 +23,7 @@ summary: 只有当节点的身份验证密钥 ID 设置为非默认值时， FIP
 
 . 如果 FIPS 驱动器以 FIPS 兼容模式运行，请将节点的 FIPS 身份验证密钥 ID 设置回默认 MSID 0x0 ：
 +
-`storage encryption disk modify -disk disk_id -fips-key-id 0x0`
+`storage encryption disk modify -disk _disk_id_ -fips-key-id 0x0`
 
 +
 您可以使用 `security key-manager query` 命令查看密钥 ID 。
@@ -35,9 +37,29 @@ Info: Starting modify on 14 disks.
       View the status of the operation by using the
       storage encryption disk show-status command.
 ----
++
+使用命令确认操作成功：
+
++
+`s存储加密磁盘 show-status`
+
++
+重复 show-status 命令，直到数字相同为止。如果 " 磁盘已开始 " 和 " 磁盘已完成 " 中的数字相同，则操作完成。
+
++
+[listing]
+----
+cluster1:: storage encryption disk show-status
+
+            FIPS    Latest   Start               Execution   Disks   Disks Disks
+Node        Support Request  Timestamp           Time (sec)  Begun   Done  Successful
+-------     ------- -------- ------------------  ---------- ------ ------  ----------
+cluster1    true    modify   1/18/2022 15:29:38    3           14     5         5
+1 entry was displayed.
+----
 . 将节点的数据身份验证密钥 ID 重新设置为默认 MSID 0x0 ：
 +
-`storage encryption disk modify -disk disk_id -data-key-id 0x0`
+`storage encryption disk modify -disk _disk_id_ -data-key-id 0x0`
 
 +
 无论您将 SAS 或 NVMe 驱动器返回到未受保护的模式， ` data-key-id` 的值都应设置为 0x0 。
@@ -54,4 +76,13 @@ Info: Starting modify on 14 disks.
       View the status of the operation by using the
       storage encryption disk show-status command.
 ----
++
+使用命令确认操作成功：
+
++
+`s存储加密磁盘 show-status`
+
++
+重复 show-status 命令，直到数字相同为止。如果 " 磁盘已开始 " 和 " 磁盘已完成 " 中的数字相同，则操作完成。
+
 

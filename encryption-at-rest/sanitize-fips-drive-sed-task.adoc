@@ -20,7 +20,7 @@ summary: 如果要使 FIPS 驱动器或 SED 上的数据永久不可访问，并
 . 将需要保留的所有数据迁移到另一个磁盘上的聚合。
 . 删除要清理的 FIPS 驱动器或 SED 上的聚合：
 +
-`storage aggregate delete -aggregate aggregate_name`
+`storage aggregate delete -aggregate _aggregate_name_`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -32,7 +32,7 @@ cluster1::> storage aggregate delete -aggregate aggr1
 ----
 . 确定要清理的 FIPS 驱动器或 SED 的磁盘 ID ：
 +
-`s存储加密磁盘 show`
+`storage encryption disk show -fields data-key-id ， fips-key-id ， owner`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -48,9 +48,25 @@ Disk    Mode Data Key ID
 1.10.2  data F1CB30AFF1CB30B00101000000000000CF0EFD81EA9F6324EA97B369351C56AC
 [...]
 ----
+. 如果 FIPS 驱动器以 FIPS 兼容模式运行，请将节点的 FIPS 身份验证密钥 ID 设置回默认 MSID 0x0 ：
++
+`storage encryption disk modify -disk _disk_id_ -fips-key-id 0x0`
+
++
+您可以使用 `security key-manager query` 命令查看密钥 ID 。
+
++
+[listing]
+----
+cluster1::> storage encryption disk modify -disk 1.10.2 -fips-key-id 0x0
+
+Info: Starting modify on 1 disk.
+      View the status of the operation by using the
+      storage encryption disk show-status command.
+----
 . 清理驱动器：
 +
-`s存储加密磁盘清理 -disk disk_id`
+`s存储加密磁盘清理 -disk _disk_id_`
 
 +
 您只能使用此命令清理热备用磁盘或损坏的磁盘。要清理所有磁盘而不考虑类型，请使用 ` force-all-state` 选项。有关完整的命令语法，请参见手册页。
