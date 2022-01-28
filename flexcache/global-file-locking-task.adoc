@@ -12,33 +12,47 @@ summary: 如果要使 FlexCache 卷的一致性高于可用性，则可以在这
 [role="lead"]
 从 ONTAP 9.10.1 开始，可以应用全局文件锁定，以防止读取所有相关缓存文件。
 
-默认情况下， FlexCache 卷倾向于使用可用性而不是一致性。如果没有全局文件锁定，对原始卷的任何修改都将分发到 FlexCache 卷，但可能不会同时更新。全局文件锁定有利于卷之间的一致性，而不是可用性。启用全局文件锁定后，对初始卷的修改将暂停，直到所有 FlexCache 卷联机为止。
+默认情况下， FlexCache 卷倾向于使用可用性而不是一致性。如果没有全局文件锁定，对源的任何修改将分发到 FlexCache 卷，但可能不会同时更新。全局文件锁定有利于卷之间的一致性，而不是可用性。启用全局文件锁定后，对初始卷的修改将暂停，直到所有 FlexCache 卷联机为止。
 
 
 NOTE: 只有当您能够控制缓存与初始卷之间连接的可靠性时，才应启用全局文件锁定，因为在 FlexCache 卷脱机时，由于暂停以及修改可能超时而导致此连接的可靠性。
 
-全局文件锁定要求包含原始缓存以及所有关联缓存的集群运行 ONTAP 9.9 或更高版本。可以在新的或现有的 FlexCache 卷上启用全局文件锁定。此命令可以在一个卷上运行，并将应用于所有关联的卷。要启用全局文件锁定，您必须处于高级权限级别。
+全局文件锁定要求包含原始缓存以及所有关联缓存的集群运行 ONTAP 9.9.1 或更高版本。可以在新的或现有的 FlexCache 卷上启用全局文件锁定。此命令可以在一个卷上运行，并将应用于所有关联的卷。
 
-启用全局文件锁定的过程取决于源服务器是否具有现有缓存。
+要启用全局文件锁定，您必须处于高级权限级别。
 
-.操作步骤要在新 FlexCache 卷上启用全局文件锁定，请执行以下操作：
+启用全局文件锁定的过程取决于原始服务器是否具有现有缓存。
+
+* <<enable-gfl-new>>
+* <<enable-gfl-existing>>
+
+
+
+
+== 在新 FlexCache 卷上启用全局文件锁定
+
+.步骤
 . 创建 FlexCache 卷，并将 ` -is-global-file-locking` 设置为 true ：
 +
 `volume FlexCache create volume _volume_name_ -is-global-file-locking-enabled true`
 
 +
-默认值 ` -is-global-file-locking 为 false` 。在对卷运行任何后续的 `volume FlexCache create` 命令时，必须在传递命令时将 ` -is-global-file-locking enabled` 设置为 true 。
+默认值 ` -is-global-file-locking` 为 "`false` " 。在卷上运行任何后续的 `volume FlexCache create` 命令时，必须在启用了 ` -is-global-file-locking 的情况下传递这些命令` 设置为 "`true` " 。
 
 
 
-.操作步骤，用于在现有 FlexCache 卷上启用全局文件锁定
+
+
+== 在现有 FlexCache 卷上启用全局文件锁定
+
+.步骤
 . 必须从原始卷设置全局文件锁定。
 . 源服务器不能具有任何其他现有关系（例如 SnapMirror ）。任何现有关系都必须解除关联。必须在运行命令时连接所有缓存和卷。要检查连接状态，请运行：
 +
 `volume FlexCache connection-status show`
 
 +
-列出的所有卷的状态均应显示为 " 已连接 " 。 有关详细信息，请参见 xref:flexcache\view-connection-status-origin-task.adoc[查看 FlexCache 关系的状态] 或 xref:synchronize-properties-origin-volume-task.adoc[从初始卷同步 FlexCache 卷的属性]。
+列出的所有卷的状态均应显示为`connected 。` 有关详细信息，请参见 link:flexcache\view-connection-status-origin-task.html["查看 FlexCache 关系的状态"] 或 。
 
 . 对缓存启用全局文件锁定：
 +
@@ -46,4 +60,6 @@ NOTE: 只有当您能够控制缓存与初始卷之间连接的可靠性时，�
 
 
 
-如果还原到 ONTAP 9.9 之前的版本，则必须先在原始缓存和关联缓存上禁用全局文件锁定。可通过运行以下命令来管理此操作： `volume FlexCache prepare-to-downgrade -disable-feature-set 9.10.0`
+如果还原到 ONTAP 9.1.1 之前的版本，则必须先在原始缓存和关联缓存上禁用全局文件锁定。可以通过运行以下命令来管理此问题：
+
+`volume FlexCache prepare-to-downgrade -disable-feature-set 9.10.0`

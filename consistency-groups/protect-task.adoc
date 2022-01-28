@@ -14,9 +14,9 @@ summary: 为一致性组设置保护策略，以便使用本地快照策略或�
 
 创建一致性组不会自动启用保护。可以在创建时或创建一致性组之后设置本地和 / 或远程保护策略。保护策略可以包括本地 Snapshot 副本或使用 SnapMirror 业务连续性（ SM-BC ）的远程 SnapMirror 保护。如果使用嵌套一致性组，则可以为各个卷设置不同的保护策略。
 
-如果您正在利用远程 SM-BC 保护，则为了确保将在一致性组上创建的一致性组的快照复制到目标，源集群和目标集群中的策略标签必须匹配。默认情况下， SM-BC 不会复制快照，除非向预定义的 AutomatedFailOver 策略添加了带有 SnapMirror 标签的规则，并且使用该标签创建了快照。要了解有关此过程的更多信息，请参见 xref:../task_san_configure_protection_for_business_continuity.adoc[配置业务连续性保护]。
+如果您正在利用远程 SM-BC 保护，则要确保将在一致性组上创建的一致性组的 Snapshot 副本复制到目标，源集群和目标集群中的策略标签必须匹配。默认情况下， SM-BC 不会复制 Snapshot 副本，除非将带有 SnapMirror 标签的规则添加到预定义的 AutomatedFailOver 策略中，并且使用该标签创建 Snapshot 副本。要了解有关此过程的更多信息，请参见 link:../task_san_configure_protection_for_business_continuity.html["配置业务连续性保护"]。
 
-可以对整个一致性组，分层配置中的单个一致性组或一致性组中的单个卷进行恢复。要实现恢复，可以选择要从中恢复的一致性组，选择 Snapshot 类型，然后确定要基于还原的特定 Snapshot 。有关此过程的详细信息，请参见 xref:../task_dp_restore_from_vault.html[从早期的 Snapshot 副本还原卷]。
+可以对整个一致性组，分层配置中的单个一致性组或一致性组中的单个卷进行恢复。要实现恢复，可以选择要从中恢复的一致性组，选择 Snapshot 副本类型，然后确定要基于还原的特定 Snapshot 副本。有关此过程的详细信息，请参见 link:../task_dp_restore_from_vault.html["从早期的 Snapshot 副本还原卷"]。
 
 从 ONTAP 9.10.1 开始， System Manager 会在 * 保护 > 关系 * 菜单下直观显示 LUN 映射。选择源关系时， System Manager 将显示源关系的可视化视图。通过选择卷，您可以深入了解这些关系，以查看包含的 LUN 以及启动程序组关系的列表。此信息可以作为 Excel 工作簿从单个卷视图中下载。此任务将在后台运行。
 
@@ -28,9 +28,9 @@ summary: 为一致性组设置保护策略，以便使用本地快照策略或�
 . 从一致性组菜单中选择已创建的一致性组。
 . 在一致性组的概述页面的右上角，选择 * 编辑 * 。
 . 选中 * 计划 Snapshot 副本（本地） * 旁边的框。
-. 选择快照策略。要配置新的自定义策略，请参见 xref:../task_dp_create_custom_data_protection_policies.html[创建自定义数据保护策略]。
+. 选择快照策略。要配置新的自定义策略，请参见 link:../task_dp_create_custom_data_protection_policies.html["创建自定义数据保护策略"]。
 . 选择 * 保存 * 。
-. 返回一致性组概述菜单。在 * Snapshot 副本（本地） * 下的左列中，绿色屏蔽旁边的状态应为 " 已保护 " ，并带有复选标记 image:../media/icon_shield.png["Alt= 绿色屏蔽图标"]。
+. 返回一致性组概述菜单。在左列的 * Snapshot 副本（本地） * 下，状态应显示为 " 已保护 " 旁边 image:../media/icon_shield.png["Alt= 绿色屏蔽图标"]。
 
 
 
@@ -38,7 +38,7 @@ summary: 为一致性组设置保护策略，以便使用本地快照策略或�
 == 设置远程 SM-BC 策略
 
 .步骤
-. 确保满足使用 SM-BC 的前提条件。请参见 xref:../smbc/smbc_plan_prerequisites.adoc[SM-BC 前提条件]
+. 确保满足使用 SM-BC 的前提条件。请参见 link:../smbc/smbc_plan_prerequisites.html["SM-BC 前提条件"]
 +
 
 NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
@@ -48,7 +48,7 @@ NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
 . 源端信息应在页面左侧自动进行。
 . 为目标选择适当的集群和 Storage VM 。选择一个保护策略。确保已选中 * 初始化关系 * 。
 . 单击 * 保存 * 。
-. 一致性组必须进行初始化和同步。完成此操作后，在 * SnapMirror （远程） * 下，绿色屏蔽旁边的状态应显示为已保护，并带有复选标记 image:../media/icon_shield.png["Alt= 绿色屏蔽图标"]。
+. 一致性组必须进行初始化和同步。完成此操作后，在 * SnapMirror （远程） * 下，状态应显示旁边的 "`protected` " image:../media/icon_shield.png["Alt= 绿色屏蔽图标"]。
 
 
-* 后续步骤 * +xref:../task_dp_configure_snapshot.adoc[配置 Snapshot 副本] +xref:../task_dp_create_custom_data_protection_policies.adoc[创建自定义数据保护策略] +xref:../task_dp_recover_snapshot.adoc[从 Snapshot 副本恢复] +xref:../task_dp_restore_from_vault.adoc[从早期的 Snapshot 副本还原卷]
+link:../task_dp_configure_snapshot.html["配置 Snapshot 副本"] + + +

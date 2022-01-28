@@ -15,14 +15,16 @@ summary: 如果要通过添加或删除卷来更改一致性组的构成，则�
 [role="lead"]
 如果要通过添加或删除卷来更改一致性组的构成，则必须先删除原始关系，然后使用新的构成重新创建一致性组。
 
-此工作流适用场景 ONTAP 9.8 和 9.9 。从 ONTAP 9.10.1 开始，建议您进行管理 xref:../consistency-groups/index.adoc[一致性组] 通过 System Manager 或使用 ONTAP REST API 。
+
+NOTE: 此工作流适用场景 ONTAP 9.8 和 9.1.1 。从 ONTAP 9.10.1 开始，建议您进行管理 link:../consistency-groups/index.html["一致性组"] 通过 System Manager 或使用 ONTAP REST API 。
 
 .关于此任务
 * 如果一致性组处于 "INSYNC" 状态，则不允许更改成分组合。
 * 目标卷的类型应为 DP 。
 
 
-为扩展一致性组而添加的新卷必须在源卷和目标卷之间具有一对通用 Snapshot 副本。
+
+NOTE: 为扩展一致性组而添加的新卷必须在源卷和目标卷之间具有一对通用 Snapshot 副本。
 
 此操作步骤假定端点 vs1_src ： /CG/CG_src 和 vs1_dst ： /CG/cG_dst 之间存在两个一致性组关系： vol_src1 <-> vol_dst1 和 vol_src2 <-> vol_dst2 。
 
@@ -47,7 +49,11 @@ summary: 如果要通过添加或删除卷来更改一致性组的构成，则�
 
 . 取消映射 LUN 并删除现有一致性组关系：
 +
-`d目标： >lun mapping delete -vserver vs1_dst -path <lun_path> -igroup <igroup_name>` 注：目标 LUN 未映射，而主副本上的 LUN 继续为主机 I/O 提供服务
+`d目标：： >lun mapping delete -vserver vs1_dst -path <lun_path> -igroup <igroup_name>`
+
++
+
+NOTE: 目标 LUN 将取消映射，而主副本上的 LUN 将继续为主机 I/O 提供服务
 
 +
 `d目标： >snapmirror delete -destination-path vs1_dst ： /CG/CG_DST`

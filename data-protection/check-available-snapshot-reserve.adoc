@@ -1,0 +1,35 @@
+---
+permalink: data-protection/check-available-snapshot-reserve.html 
+sidebar: sidebar 
+keywords: modify, snapshot, copy, reserve 
+summary: '您可能需要使用 `snapshot-reserve-available` 参数和 `volume show` 命令来检查卷上的可用 Snapshot 副本预留量。' 
+---
+= 检查卷上可用的 Snapshot 副本预留
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可能需要使用 `snapshot-reserve-available` 参数和 `volume show` 命令来检查卷上的可用 Snapshot 副本预留量。
+
+.步骤
+. 检查卷上可用的 Snapshot 副本预留：
++
+`vol show -vserver _svm_ -volume _volume_ -fields snapshot-reserve-available`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例显示了 `vol1` 的可用 Snapshot 副本预留：
+
++
+[listing]
+----
+cluster1::> vol show -vserver vs0 -volume vol1 -fields snapshot-reserve-available
+
+vserver volume snapshot-reserve-available
+------- ------ --------------------------
+vs0     vol1   4.84GB
+----
+
