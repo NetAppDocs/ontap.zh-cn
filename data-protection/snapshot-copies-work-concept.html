@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title>从 NFS 或 CIFS 客户端上的 Snapshot 副本还原文件</title>
+  <title>从 NFS 或 CIFS/SMB 客户端上的 Snapshot 副本还原文件</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="从 NFS 或 CIFS 客户端上的 Snapshot 副本还原文件" />
+  <meta property="og:title" content="从 NFS 或 CIFS/SMB 客户端上的 Snapshot 副本还原文件" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/data-protection/snapshot-copies-work-concept.html" />
 	<meta property="og:description" content="NFS 或 CIFS 客户端上的用户可以直接从 Snapshot 副本还原文件，而无需存储系统管理员干预。" />
@@ -19,7 +19,7 @@
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
   <meta name="description" content="NFS 或 CIFS 客户端上的用户可以直接从 Snapshot 副本还原文件，而无需存储系统管理员干预。">
-  <meta name="keywords" content=" restore, file, snapshot copy, nfs, cifs, client">
+  <meta name="keywords" content=" restore, file, snapshot copy, nfs, cifs, smb, client">
   
   
 
@@ -12981,6 +12981,8 @@
 
 
 
+
+
           
         </li>
       </ul>
@@ -13204,6 +13206,8 @@
             管理 Snapshot 副本预留
           </a>
           
+
+
 
 
 
@@ -20850,8 +20854,10 @@
         从目标提供数据
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_from_destination.html">
         重新同步保护关系
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_recover_snapshot.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_from_vault.html">
         从早期的 Snapshot 副本还原卷
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_recover_snapshot.html">
+        从 Snapshot 副本恢复
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_to_new_volume.html">
         还原到新卷
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_reverse_resynch_a_destination_vm.html">
@@ -20943,6 +20949,8 @@
         删除受保护的文件会导致文件空间比预期少
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/monitor-snapshot-copy-disk-consumption-task.html">
         监控 Snapshot 副本的磁盘占用情况
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/check-available-snapshot-reserve.html">
+        检查卷上可用的 Snapshot 副本预留
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/modify-snapshot-copy-reserve-task.html">
         修改 Snapshot 副本预留
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/autodelete-snapshot-copies-task.html">
@@ -22009,7 +22017,7 @@
           <a href="/zh-cn/ontap/">ONTAP&nbsp;9</a>
         </li>
         <li class="n-breadcrumb__list-item">
-          从 NFS 或 CIFS 客户端上的 Snapshot 副本还原文件
+          从 NFS 或 CIFS/SMB 客户端上的 Snapshot 副本还原文件
         </li>
       </ul>
     </div>
@@ -22032,18 +22040,26 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading">从 NFS 或 CIFS 客户端上的 Snapshot 副本还原文件</h1>
+  <h1 class="n-doc__component-detail-heading">从 NFS 或 CIFS/SMB 客户端上的 Snapshot 副本还原文件</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-01-28 14:55:53 +0000">01/28/2022</time>
+    <time datetime="2022-01-28 22:37:13 +0000">01/28/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-lenida">
+    <img  class="avatar avatar-small"
+          alt="netapp-lenida"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/54081920?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
 </span>
 
 
@@ -22051,10 +22067,10 @@
 
 
 <div class="paragraph lead">
-<p>NFS 或 CIFS 客户端上的用户可以直接从 Snapshot 副本还原文件，而无需存储系统管理员干预。</p>
+<p>NFS 或 CIFS/SMB 客户端上的用户可以直接从 Snapshot 副本还原文件，而无需存储系统管理员干预。</p>
 </div>
 <div class="paragraph">
-<p>文件系统中的每个目录都包含一个名为 ` .snapshot` 的子目录， NFS 和 CIFS 用户可以访问该子目录。` .snapshot` 子目录包含与卷的 Snapshot 副本对应的子目录：</p>
+<p>文件系统中的每个目录都包含一个名为 ` .snapshot` 的子目录， NFS 和 CIFS/SMB 用户可以访问该子目录。` .snapshot` 子目录包含与卷的 Snapshot 副本对应的子目录：</p>
 </div>
 <div class="literalblock">
 <div class="content">
@@ -22092,7 +22108,7 @@ my.txt</pre>
   <div class="page-nav-toolbar">
     <div id="version-dropdown"></div>
     <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[从 NFS 或 CIFS 客户端上的 Snapshot 副本还原文件](https://docs.netapp.com/zh-cn/ontap/data-protection/snapshot-copies-work-concept.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[从 NFS 或 CIFS/SMB 客户端上的 Snapshot 副本还原文件](https://docs.netapp.com/zh-cn/ontap/data-protection/snapshot-copies-work-concept.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
       <a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/data-protection/snapshot-copies-work-concept.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
       <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a>
     </div>

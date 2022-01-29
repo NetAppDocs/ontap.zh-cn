@@ -12990,6 +12990,8 @@
 
 
 
+
+
           
         </li>
       </ul>
@@ -13213,6 +13215,8 @@
             管理 Snapshot 副本预留
           </a>
           
+
+
 
 
 
@@ -20850,8 +20854,10 @@
         从目标提供数据
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_from_destination.html">
         重新同步保护关系
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_recover_snapshot.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_from_vault.html">
         从早期的 Snapshot 副本还原卷
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_recover_snapshot.html">
+        从 Snapshot 副本恢复
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_to_new_volume.html">
         还原到新卷
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_reverse_resynch_a_destination_vm.html">
@@ -20943,6 +20949,8 @@
         删除受保护的文件会导致文件空间比预期少
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/monitor-snapshot-copy-disk-consumption-task.html">
         监控 Snapshot 副本的磁盘占用情况
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/check-available-snapshot-reserve.html">
+        检查卷上可用的 Snapshot 副本预留
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/modify-snapshot-copy-reserve-task.html">
         修改 Snapshot 副本预留
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/autodelete-snapshot-copies-task.html">
@@ -22039,11 +22047,19 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-28 14:55:53 +0000">01/28/2022</time>
+    <time datetime="2022-01-28 22:37:13 +0000">01/28/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-thomi">
+    <img  class="avatar avatar-small"
+          alt="netapp-thomi"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/54111336?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
   <a target="_blank" href="https://github.com/netapp-ahibbard">
     <img  class="avatar avatar-small"
           alt="netapp-ahibbard"
@@ -22058,11 +22074,13 @@
 </p>
 
 
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph lead">
 <p>从 ONTAP 9.10.1 开始，可以应用全局文件锁定，以防止读取所有相关缓存文件。</p>
 </div>
 <div class="paragraph">
-<p>默认情况下， FlexCache 卷倾向于使用可用性而不是一致性。如果没有全局文件锁定，对原始卷的任何修改都将分发到 FlexCache 卷，但可能不会同时更新。全局文件锁定有利于卷之间的一致性，而不是可用性。启用全局文件锁定后，对初始卷的修改将暂停，直到所有 FlexCache 卷联机为止。</p>
+<p>默认情况下， FlexCache 卷倾向于使用可用性而不是一致性。如果没有全局文件锁定，对源的任何修改将分发到 FlexCache 卷，但可能不会同时更新。全局文件锁定有利于卷之间的一致性，而不是可用性。启用全局文件锁定后，对初始卷的修改将暂停，直到所有 FlexCache 卷联机为止。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -22077,13 +22095,31 @@
 </table>
 </div>
 <div class="paragraph">
-<p>全局文件锁定要求包含原始缓存以及所有关联缓存的集群运行 ONTAP 9.9 或更高版本。可以在新的或现有的 FlexCache 卷上启用全局文件锁定。此命令可以在一个卷上运行，并将应用于所有关联的卷。要启用全局文件锁定，您必须处于高级权限级别。</p>
+<p>全局文件锁定要求包含原始缓存以及所有关联缓存的集群运行 ONTAP 9.9.1 或更高版本。可以在新的或现有的 FlexCache 卷上启用全局文件锁定。此命令可以在一个卷上运行，并将应用于所有关联的卷。</p>
 </div>
 <div class="paragraph">
-<p>启用全局文件锁定的过程取决于源服务器是否具有现有缓存。</p>
+<p>要启用全局文件锁定，您必须处于高级权限级别。</p>
 </div>
+<div class="paragraph">
+<p>启用全局文件锁定的过程取决于原始服务器是否具有现有缓存。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#enable-gfl-new">[enable-gfl-new]</a></p>
+</li>
+<li>
+<p><a href="#enable-gfl-existing">[enable-gfl-existing]</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="在新-flexcache-卷上启用全局文件锁定">在新 FlexCache 卷上启用全局文件锁定</h2>
+<div class="sectionbody">
 <div class="olist arabic">
-<div class="title">操作步骤要在新 FlexCache 卷上启用全局文件锁定，请执行以下操作：</div>
+<div class="title">步骤</div>
 <ol class="arabic">
 <li>
 <p>创建 FlexCache 卷，并将 ` -is-global-file-locking` 设置为 true ：</p>
@@ -22091,13 +22127,18 @@
 <p><code>volume FlexCache create volume <em>volume_name</em> -is-global-file-locking-enabled true</code></p>
 </div>
 <div class="paragraph">
-<p>默认值 ` -is-global-file-locking 为 false` 。在对卷运行任何后续的 <code>volume FlexCache create</code> 命令时，必须在传递命令时将 ` -is-global-file-locking enabled` 设置为 true 。</p>
+<p>默认值 ` -is-global-file-locking` 为 "`false` " 。在卷上运行任何后续的 <code>volume FlexCache create</code> 命令时，必须在启用了 ` -is-global-file-locking 的情况下传递这些命令` 设置为 "`true` " 。</p>
 </div>
 </li>
 </ol>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="在现有-flexcache-卷上启用全局文件锁定">在现有 FlexCache 卷上启用全局文件锁定</h2>
+<div class="sectionbody">
 <div class="olist arabic">
-<div class="title">操作步骤，用于在现有 FlexCache 卷上启用全局文件锁定</div>
+<div class="title">步骤</div>
 <ol class="arabic">
 <li>
 <p>必须从原始卷设置全局文件锁定。</p>
@@ -22108,7 +22149,7 @@
 <p><code>volume FlexCache connection-status show</code></p>
 </div>
 <div class="paragraph">
-<p>列出的所有卷的状态均应显示为 " 已连接 " 。 有关详细信息，请参见 <a href="flexcache\view-connection-status-origin-task.html">查看 FlexCache 关系的状态</a> 或 <a href="synchronize-properties-origin-volume-task.html">从初始卷同步 FlexCache 卷的属性</a>。</p>
+<p>列出的所有卷的状态均应显示为`connected 。` 有关详细信息，请参见 <a href="flexcache\view-connection-status-origin-task.html">"查看 FlexCache 关系的状态"</a> 或 。</p>
 </div>
 </li>
 <li>
@@ -22120,7 +22161,12 @@
 </ol>
 </div>
 <div class="paragraph">
-<p>如果还原到 ONTAP 9.9 之前的版本，则必须先在原始缓存和关联缓存上禁用全局文件锁定。可通过运行以下命令来管理此操作： <code>volume FlexCache prepare-to-downgrade -disable-feature-set 9.10.0</code></p>
+<p>如果还原到 ONTAP 9.1.1 之前的版本，则必须先在原始缓存和关联缓存上禁用全局文件锁定。可以通过运行以下命令来管理此问题：</p>
+</div>
+<div class="paragraph">
+<p><code>volume FlexCache prepare-to-downgrade -disable-feature-set 9.10.0</code></p>
+</div>
+</div>
 </div>
 
     </article>

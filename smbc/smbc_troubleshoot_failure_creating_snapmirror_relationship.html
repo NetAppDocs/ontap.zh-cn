@@ -12981,6 +12981,8 @@
 
 
 
+
+
           
         </li>
       </ul>
@@ -13204,6 +13206,8 @@
             管理 Snapshot 副本预留
           </a>
           
+
+
 
 
 
@@ -20850,8 +20854,10 @@
         从目标提供数据
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_from_destination.html">
         重新同步保护关系
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_recover_snapshot.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_from_vault.html">
         从早期的 Snapshot 副本还原卷
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_recover_snapshot.html">
+        从 Snapshot 副本恢复
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_to_new_volume.html">
         还原到新卷
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_reverse_resynch_a_destination_vm.html">
@@ -20943,6 +20949,8 @@
         删除受保护的文件会导致文件空间比预期少
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/monitor-snapshot-copy-disk-consumption-task.html">
         监控 Snapshot 副本的磁盘占用情况
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/check-available-snapshot-reserve.html">
+        检查卷上可用的 Snapshot 副本预留
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/modify-snapshot-copy-reserve-task.html">
         修改 Snapshot 副本预留
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/autodelete-snapshot-copies-task.html">
@@ -22039,11 +22047,35 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-28 14:55:53 +0000">01/28/2022</time>
+    <time datetime="2022-01-28 22:37:13 +0000">01/28/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-thomi">
+    <img  class="avatar avatar-small"
+          alt="netapp-thomi"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/54111336?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
+  <a target="_blank" href="https://github.com/netapp-ahibbard">
+    <img  class="avatar avatar-small"
+          alt="netapp-ahibbard"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/85892662?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
+  <a target="_blank" href="https://github.com/netapp-lenida">
+    <img  class="avatar avatar-small"
+          alt="netapp-lenida"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/54081920?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
 </span>
 
 
@@ -22054,7 +22086,7 @@
 <p>创建 SnapMirror 关系和一致性组初始化失败。</p>
 </div>
 <div class="paragraph">
-<p>如果使用的是 ONTAP 9.8 或 9.9 。确保此配置中的一致性组不超过 5 个。从 ONTAP 9.10.1 开始，限制为 20 。请参见 <a href="smbc_plan_additional_restrictions_and_limitations.html">"其他限制和限制"</a>。</p>
+<p>如果您使用的是 ONTAP 9.8 或 9.1.1 ，请确保此配置中的一致性组不超过 5 个。从 ONTAP 9.10.1 开始，限制为 20 。请参见 <a href="smbc_plan_additional_restrictions_and_limitations.html">"其他限制和限制"</a>。</p>
 </div>
 <div class="paragraph">
 <p>如果一致性组一直处于初始化状态，请使用 ONTAP REST API ， System Manager 或命令 <code>sn show -expand</code> 检查一致性组初始化的状态。</p>
@@ -22069,20 +22101,20 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">如果使用的是 ONTAP 9.8-9.9</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果您使用的是 ONTAP 9.8-9.9.1</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">如果使用的是 ONTAP 9.10.1</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><a href="smbc_admin_removing_an_smbc_configuration.html">删除 SM-BC 配置</a></p>
+<p><a href="smbc_admin_removing_an_smbc_configuration.html">"删除 SM-BC 配置"</a></p>
 </li>
 <li>
-<p><a href="smbc_install_creating_a_consistency_group_relationship.html">创建一致性组关系</a></p>
+<p><a href="smbc_install_creating_a_consistency_group_relationship.html">"创建一致性组关系"</a></p>
 </li>
 <li>
-<p><a href="smbc_install_initializing_a_consistency_group.doc">初始化一致性组关系</a></p>
+<p><a href="smbc_install_initializing_a_consistency_group.html">"初始化一致性组关系"</a></p>
 </li>
 </ol>
 </div></div></td>
@@ -22092,10 +22124,10 @@
 <p>在 * 保护 &gt; 关系 * 下，找到一致性组上的 SM-BC 关系。选择 &#8230;&#8203; <span class="image"><img src="../media/icon_kabob.gif" alt="三个堆积垂直点图标"></span>，然后 * 删除 * 以删除 SM-BC 关系。</p>
 </li>
 <li>
-<p><a href="../consistency-groups/delete-task.html">删除一致性组</a></p>
+<p><a href="../consistency-groups/delete-task.html">"删除一致性组"</a></p>
 </li>
 <li>
-<p><a href="../consistency-groups/configure-task.html">配置一致性组</a></p>
+<p><a href="../consistency-groups/configure-task.html">"配置一致性组"</a></p>
 </li>
 </ol>
 </div></div></td>

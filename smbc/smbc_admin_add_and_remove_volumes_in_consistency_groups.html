@@ -12981,6 +12981,8 @@
 
 
 
+
+
           
         </li>
       </ul>
@@ -13204,6 +13206,8 @@
             管理 Snapshot 副本预留
           </a>
           
+
+
 
 
 
@@ -20850,8 +20854,10 @@
         从目标提供数据
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_from_destination.html">
         重新同步保护关系
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_recover_snapshot.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_from_vault.html">
         从早期的 Snapshot 副本还原卷
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_recover_snapshot.html">
+        从 Snapshot 副本恢复
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_restore_to_new_volume.html">
         还原到新卷
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_dp_reverse_resynch_a_destination_vm.html">
@@ -20943,6 +20949,8 @@
         删除受保护的文件会导致文件空间比预期少
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/monitor-snapshot-copy-disk-consumption-task.html">
         监控 Snapshot 副本的磁盘占用情况
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/check-available-snapshot-reserve.html">
+        检查卷上可用的 Snapshot 副本预留
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/modify-snapshot-copy-reserve-task.html">
         修改 Snapshot 副本预留
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/autodelete-snapshot-copies-task.html">
@@ -22039,11 +22047,35 @@
 <p class="page-details">
   
     
-    <time datetime="2022-01-28 14:55:53 +0000">01/28/2022</time>
+    <time datetime="2022-01-28 22:37:13 +0000">01/28/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-ahibbard">
+    <img  class="avatar avatar-small"
+          alt="netapp-ahibbard"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/85892662?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
+  <a target="_blank" href="https://github.com/netapp-thomi">
+    <img  class="avatar avatar-small"
+          alt="netapp-thomi"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/54111336?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
+  <a target="_blank" href="https://github.com/netapp-lenida">
+    <img  class="avatar avatar-small"
+          alt="netapp-lenida"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/54081920?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
 </span>
 
 
@@ -22053,8 +22085,17 @@
 <div class="paragraph lead">
 <p>如果要通过添加或删除卷来更改一致性组的构成，则必须先删除原始关系，然后使用新的构成重新创建一致性组。</p>
 </div>
-<div class="paragraph">
-<p>此工作流适用场景 ONTAP 9.8 和 9.9 。从 ONTAP 9.10.1 开始，建议您进行管理 <a href="../consistency-groups/index.html">一致性组</a> 通过 System Manager 或使用 ONTAP REST API 。</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/ontap/images/note.svg" alt="注">
+</td>
+<td class="content">
+此工作流适用场景 ONTAP 9.8 和 9.1.1 。从 ONTAP 9.10.1 开始，建议您进行管理 <a href="../consistency-groups/index.html">"一致性组"</a> 通过 System Manager 或使用 ONTAP REST API 。
+</td>
+</tr>
+</table>
 </div>
 <div class="ulist">
 <div class="title">关于此任务</div>
@@ -22067,8 +22108,17 @@
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>为扩展一致性组而添加的新卷必须在源卷和目标卷之间具有一对通用 Snapshot 副本。</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/ontap/images/note.svg" alt="注">
+</td>
+<td class="content">
+为扩展一致性组而添加的新卷必须在源卷和目标卷之间具有一对通用 Snapshot 副本。
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>此操作步骤假定端点 vs1_src ： /CG/CG_src 和 vs1_dst ： /CG/cG_dst 之间存在两个一致性组关系： vol_src1 &lt;&#8594; vol_dst1 和 vol_src2 &lt;&#8594; vol_dst2 。</p>
@@ -22105,7 +22155,19 @@
 <li>
 <p>取消映射 LUN 并删除现有一致性组关系：</p>
 <div class="paragraph">
-<p><code>d目标： &gt;lun mapping delete -vserver vs1_dst -path &lt;lun_path&gt; -igroup &lt;igroup_name&gt;</code> 注：目标 LUN 未映射，而主副本上的 LUN 继续为主机 I/O 提供服务</p>
+<p><code>d目标：： &gt;lun mapping delete -vserver vs1_dst -path &lt;lun_path&gt; -igroup &lt;igroup_name&gt;</code></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/ontap/images/note.svg" alt="注">
+</td>
+<td class="content">
+目标 LUN 将取消映射，而主副本上的 LUN 将继续为主机 I/O 提供服务
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><code>d目标： &gt;snapmirror delete -destination-path vs1_dst ： /CG/CG_DST</code></p>
