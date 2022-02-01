@@ -19,7 +19,7 @@
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
   <meta name="description" content="基于 RDMA 的 NFS 利用 RDMA 适配器，可以在存储系统内存和主机系统内存之间直接复制数据，从而避免 CPU 中断和开销。">
-  <meta name="keywords" content=" NFS over RDMA, NVIDIA, GPU, NVIDIA GDX">
+  <meta name="keywords" content=" NFS over RDMA, GPU, NVIDIA GDX">
   
   
 
@@ -22050,6 +22050,14 @@
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-ahibbard">
+    <img  class="avatar avatar-small"
+          alt="netapp-ahibbard"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/85892662?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
 </span>
 
 
@@ -22063,7 +22071,7 @@
 <p>基于 RDMA 的 NFS 配置专为具有延迟敏感型或高带宽工作负载（例如机器学习和分析）的客户而设计。NVIDIA 已通过 RDMA 扩展 NFS ，以启用 GPU 直接存储（ GDS ）。GDS 通过使用 RDMA 直接在存储系统和 GPU 内存之间传输数据，完全绕过 CPU 和主内存，从而进一步加速支持 GPU 的工作负载。</p>
 </div>
 <div class="paragraph">
-<p>在 ONTAP 9.10.1 中，只有在与 Mellanox CX-5 或 CX-6 适配器结合使用时， NFSv4.0 协议才支持此配置，该适配器使用 RoCE 协议版本 2 支持 RDMA 。只有使用 NVIDIA Tesla 和 Ampere 系列 GPU 以及 Mellanox NIC 卡和 MoFED 软件时，才支持 GDS 。基于 RDMA 的 NFS 支持仅限于节点 - 本地流量。支持所有成分卷位于同一节点上的标准 FlexVol 或 FlexGroup ，并且必须从同一节点上的 LIF 进行访问。</p>
+<p>在 ONTAP 9.10.1 中，只有在与 Mellanox CX-5 或 CX-6 适配器结合使用时， NFSv4.0 协议才支持此配置，该适配器使用 RoCE 协议版本 2 支持 RDMA 。只有使用 NVIDIA Tesla 和 Ampere 系列 GPU 以及 Mellanox NIC 卡和 MoFED 软件时，才支持 GDS 。基于 RDMA 的 NFS 支持仅限于节点 - 本地流量。支持所有成分卷位于同一节点上的标准 FlexVol 或 FlexGroup ，并且必须从同一节点上的 LIF 进行访问。如果 NFS 挂载大小超过 64k ，则会导致 NFS over RDMA 配置的性能不稳定。</p>
 </div>
 <div class="ulist">
 <div class="title">要求</div>
