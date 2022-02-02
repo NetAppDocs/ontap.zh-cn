@@ -20699,7 +20699,7 @@
         在集群上安装 SSL 证书
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/encryption-at-rest/enable-external-key-management-96-later-nve-task.html">
         在 ONTAP 9.6 及更高版本（ NVE ）中启用外部密钥管理
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/encryption-at-rest/enable-exernal-key-management-95-earlier-hw-task.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/encryption-at-rest/enable-external-key-management-95-earlier-task.html">
         在 ONTAP 9.5 及更早版本中启用外部密钥管理
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/encryption-at-rest/manage-keys-azure-google-task.html">
         使用 Azure 或 Google 密钥管理服务管理密钥
@@ -22049,11 +22049,19 @@
 <p class="page-details">
   
     
-    <time datetime="2022-02-01 09:05:45 +0000">02/01/2022</time>
+    <time datetime="2022-02-02 05:58:55 +0000">02/02/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-lenida">
+    <img  class="avatar avatar-small"
+          alt="netapp-lenida"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/54081920?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
   <a target="_blank" href="https://github.com/netapp-thomi">
     <img  class="avatar avatar-small"
           alt="netapp-thomi"
@@ -22099,11 +22107,17 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>有关创建 SVM DR 关系的信息，请参见 <a href="https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-dap/GUID-C6D7E4F1-76F0-44E7-909E-04BA68AE77A8.html?cp=7_3_5">"管理 SnapMirror SVM 复制"</a>。</p>
+<p>有关创建 SVM DR 关系的信息，请参见 <a href="https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-svm-replication-workflow-concept.html">"管理 SnapMirror SVM 复制"</a>。</p>
 </div>
 <div class="olist arabic">
 <div class="title">步骤</div>
 <ol class="arabic">
+<li>
+<p>创建 SVM DR 关系或使用现有关系。</p>
+<div class="paragraph">
+<p><a href="https://docs.netapp.com/us-en/ontap/data-protection/replicate-entire-svm-config-task.html">"复制整个 SVM 配置"</a></p>
+</div>
+</li>
 <li>
 <p>在主站点上使用所需数量的成分卷创建 FlexGroup 卷。</p>
 <div class="paragraph">
@@ -22111,7 +22125,7 @@
 </div>
 </li>
 <li>
-<p>更新二级站点的 SVM ： <code>snapmirror update -destination-path destination_svm_name ： -source-path source_svm_name ：</code></p>
+<p>要复制 FlexGroup 卷，请更新二级站点上的 SVM ： <code>snapmirror update -destination-path destination_svm_name ： -source-path source_svm_name ：</code></p>
 </li>
 <li>
 <p>在二级站点上，验证 SnapMirror 关系是否运行正常： <code>snapmirror show</code></p>

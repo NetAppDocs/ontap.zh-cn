@@ -20699,7 +20699,7 @@
         在集群上安装 SSL 证书
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/encryption-at-rest/enable-external-key-management-96-later-nve-task.html">
         在 ONTAP 9.6 及更高版本（ NVE ）中启用外部密钥管理
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/encryption-at-rest/enable-exernal-key-management-95-earlier-hw-task.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/encryption-at-rest/enable-external-key-management-95-earlier-task.html">
         在 ONTAP 9.5 及更早版本中启用外部密钥管理
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/encryption-at-rest/manage-keys-azure-google-task.html">
         使用 Azure 或 Google 密钥管理服务管理密钥
@@ -22049,7 +22049,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-02-01 09:05:45 +0000">02/01/2022</time>
+    <time datetime="2022-02-02 05:58:55 +0000">02/02/2022</time>
     
   
 
@@ -22091,25 +22091,28 @@
 <td class="tableblock halign-left valign-top"><div class="content"><div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>清理损坏的磁盘： + <code>s存储加密磁盘清理 -disk disk_id</code></p>
+<p>将权限级别设置为 advanced ： <code>set -privilege advanced</code></p>
 </li>
 <li>
-<p>将权限级别设置为 advanced ： + <code>set -privilege advanced</code></p>
+<p>将 FIPS 密钥重置为默认的制造安全 ID 0x0 ： <code>storage encryption disk modify -fips-key-id 0x0 -disk <em>disk_id</em></code></p>
 </li>
 <li>
-<p>Unfail the sanitized disk ： + <code>storage disk unfail -spare true -disk disk_id</code></p>
+<p>验证操作是否成功： <code>storage encryption disk show-status</code> 如果操作失败，请使用本主题中的 PSID 过程。</p>
 </li>
 <li>
-<p>检查磁盘是否具有所有者： + <code>storage disk show -disk disk_id</code></p>
+<p>清理损坏的磁盘： <code>storage encryption disk sanitize -disk <em>disk_id</em></code> 使用命令 <code>storage encryption disk show-status</code> 验证操作是否成功，然后再继续执行下一步。</p>
 </li>
 <li>
-<p>如果磁盘没有所有者，请分配一个，然后再次使磁盘无故障： + <code>storage disk assign -owner node -disk disk_id</code></p>
-<div class="paragraph">
-<p><code>storage disk unfail -spare true -disk disk_id</code></p>
-</div>
+<p>使经过清理的磁盘正常运行： <code>storage disk unfail -spare true -disk <em>disk_id</em></code></p>
 </li>
 <li>
-<p>验证磁盘现在是否为备用磁盘并可在聚合中重复使用： + <code>storage disk show -disk disk_id</code></p>
+<p>检查磁盘是否具有所有者： <code>storage disk show -disk <em>disk_id</em></code></p>
+</li>
+<li>
+<p>如果磁盘没有所有者，请分配一个，然后重新使磁盘无故障： <code>storage disk assign -owner node -disk <em>disk_id</em></code> <code>storage disk unfail -spare true -disk <em>disk_id</em></code></p>
+</li>
+<li>
+<p>验证磁盘现在是否为备用磁盘并可在聚合中重复使用： <code>storage disk show -disk <em>disk_id</em></code></p>
 </li>
 </ol>
 </div></div></td>
@@ -22124,36 +22127,33 @@
 <p>从磁盘标签中获取磁盘的 PSID 。</p>
 </li>
 <li>
-<p>将权限级别设置为 advanced ： + <code>set -privilege advanced</code></p>
+<p>将权限级别设置为 advanced ： <code>set -privilege advanced</code></p>
 </li>
 <li>
-<p>将磁盘重置为出厂配置的设置： + <code>storage encryption disk revert-to-original-state -disk disk_id -psid disk_physical_secure_id</code></p>
+<p>将磁盘重置为出厂配置的设置： <code>storage encryption disk revert-to-original-state -disk <em>disk_id</em> -psid <em>disk_physical_secure_id</em></code> 使用命令 <code>storage encryption disk show-status</code> 验证操作是否成功，然后再继续下一步。</p>
 </li>
 <li>
-<p>Unfail the sanitized disk ： + <code>storage disk unfail -spare true -disk disk_id</code></p>
+<p>使经过清理的磁盘正常运行： <code>storage disk unfail -spare true -disk <em>disk_id</em></code></p>
 </li>
 <li>
-<p>检查磁盘是否具有所有者： + <code>storage disk show -disk disk_id</code></p>
+<p>检查磁盘是否具有所有者： <code>storage disk show -disk <em>disk_id</em></code></p>
 </li>
 <li>
-<p>如果磁盘没有所有者，请分配一个，然后再次使磁盘无故障： + <code>storage disk assign -owner node -disk disk_id</code></p>
-<div class="paragraph">
-<p><code>storage disk unfail -spare true -disk disk_id</code></p>
-</div>
+<p>如果磁盘没有所有者，请分配一个，然后重新使磁盘无故障： <code>storage disk assign -owner node -disk <em>disk_id</em></code> <code>storage disk unfail -spare true -disk <em>disk_id</em></code></p>
 </li>
 <li>
-<p>验证磁盘现在是否为备用磁盘并可在聚合中重复使用： + <code>storage disk show -disk disk_id</code></p>
+<p>验证磁盘现在是否为备用磁盘并可在聚合中重复使用： <code>storage disk show -disk <em>disk_id</em></code></p>
 </li>
 </ol>
 </div></div></td>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p>有关完整的命令语法，请参见手册页。</p>
-</div>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>有关完整的命令语法，请参见手册页。</p>
 </div>
 
     </article>
