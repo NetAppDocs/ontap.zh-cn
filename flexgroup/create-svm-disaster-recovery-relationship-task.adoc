@@ -24,14 +24,18 @@ summary: 从 ONTAP 9.1.1 开始，您可以使用 FlexGroup 卷创建 SVM 灾难
 * 主站点和二级站点之间的 SVM DR 关系应运行正常，并且在主 SVM 和二级 SVM 上都应有足够的空间来支持 FlexGroup 卷。
 
 
-有关创建 SVM DR 关系的信息，请参见 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-dap/GUID-C6D7E4F1-76F0-44E7-909E-04BA68AE77A8.html?cp=7_3_5["管理 SnapMirror SVM 复制"]。
+有关创建 SVM DR 关系的信息，请参见 https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-svm-replication-workflow-concept.html["管理 SnapMirror SVM 复制"]。
 
 .步骤
+. 创建 SVM DR 关系或使用现有关系。
++
+https://docs.netapp.com/us-en/ontap/data-protection/replicate-entire-svm-config-task.html["复制整个 SVM 配置"]
+
 . 在主站点上使用所需数量的成分卷创建 FlexGroup 卷。
 +
 link:create-task.html["创建 FlexGroup 卷"]。
 
-. 更新二级站点的 SVM ： `snapmirror update -destination-path destination_svm_name ： -source-path source_svm_name ：`
+. 要复制 FlexGroup 卷，请更新二级站点上的 SVM ： `snapmirror update -destination-path destination_svm_name ： -source-path source_svm_name ：`
 . 在二级站点上，验证 SnapMirror 关系是否运行正常： `snapmirror show`
 +
 [listing]

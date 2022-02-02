@@ -5,6 +5,7 @@ keywords: returning, fips, drive, sed, service, authentication, keys, lost
 summary: 如果您永久丢失 FIPS 驱动器或 SED 的身份验证密钥，并且无法从 KMIP 服务器检索这些密钥，则系统会将其视为已损坏。虽然您无法访问或恢复磁盘上的数据，但可以采取措施使 SED 的未用空间再次可用于数据。 
 ---
 = 如果身份验证密钥丢失，请将 FIPS 驱动器或 SED 恢复使用
+:hardbreaks:
 :icons: font
 :imagesdir: ../media/
 
@@ -29,15 +30,14 @@ summary: 如果您永久丢失 FIPS 驱动器或 SED 的身份验证密钥，并
  a| 
 不在 FIPS 兼容模式或 FIPS 兼容模式下，并且 FIPS 密钥可用
  a| 
-.. 清理损坏的磁盘： + `s存储加密磁盘清理 -disk disk_id`
-.. 将权限级别设置为 advanced ： + `set -privilege advanced`
-.. Unfail the sanitized disk ： + `storage disk unfail -spare true -disk disk_id`
-.. 检查磁盘是否具有所有者： + `storage disk show -disk disk_id`
-.. 如果磁盘没有所有者，请分配一个，然后再次使磁盘无故障： + `storage disk assign -owner node -disk disk_id`
-+
-`storage disk unfail -spare true -disk disk_id`
-
-.. 验证磁盘现在是否为备用磁盘并可在聚合中重复使用： + `storage disk show -disk disk_id`
+.. 将权限级别设置为 advanced ： `set -privilege advanced`
+.. 将 FIPS 密钥重置为默认的制造安全 ID 0x0 ： `storage encryption disk modify -fips-key-id 0x0 -disk _disk_id_`
+.. 验证操作是否成功： `storage encryption disk show-status` 如果操作失败，请使用本主题中的 PSID 过程。
+.. 清理损坏的磁盘： `storage encryption disk sanitize -disk _disk_id_` 使用命令 `storage encryption disk show-status` 验证操作是否成功，然后再继续执行下一步。
+.. 使经过清理的磁盘正常运行： `storage disk unfail -spare true -disk _disk_id_`
+.. 检查磁盘是否具有所有者： `storage disk show -disk _disk_id_`
+.. 如果磁盘没有所有者，请分配一个，然后重新使磁盘无故障： `storage disk assign -owner node -disk _disk_id_` `storage disk unfail -spare true -disk _disk_id_`
+.. 验证磁盘现在是否为备用磁盘并可在聚合中重复使用： `storage disk show -disk _disk_id_`
 
 
 
@@ -46,19 +46,15 @@ summary: 如果您永久丢失 FIPS 驱动器或 SED 的身份验证密钥，并
 在 FIPS 兼容模式下， FIPS 密钥不可用， SED 的标签上印有 PSID
  a| 
 .. 从磁盘标签中获取磁盘的 PSID 。
-.. 将权限级别设置为 advanced ： + `set -privilege advanced`
-.. 将磁盘重置为出厂配置的设置： + `storage encryption disk revert-to-original-state -disk disk_id -psid disk_physical_secure_id`
-.. Unfail the sanitized disk ： + `storage disk unfail -spare true -disk disk_id`
-.. 检查磁盘是否具有所有者： + `storage disk show -disk disk_id`
-.. 如果磁盘没有所有者，请分配一个，然后再次使磁盘无故障： + `storage disk assign -owner node -disk disk_id`
-+
-`storage disk unfail -spare true -disk disk_id`
-
-.. 验证磁盘现在是否为备用磁盘并可在聚合中重复使用： + `storage disk show -disk disk_id`
+.. 将权限级别设置为 advanced ： `set -privilege advanced`
+.. 将磁盘重置为出厂配置的设置： `storage encryption disk revert-to-original-state -disk _disk_id_ -psid _disk_physical_secure_id_` 使用命令 `storage encryption disk show-status` 验证操作是否成功，然后再继续下一步。
+.. 使经过清理的磁盘正常运行： `storage disk unfail -spare true -disk _disk_id_`
+.. 检查磁盘是否具有所有者： `storage disk show -disk _disk_id_`
+.. 如果磁盘没有所有者，请分配一个，然后重新使磁盘无故障： `storage disk assign -owner node -disk _disk_id_` `storage disk unfail -spare true -disk _disk_id_`
+.. 验证磁盘现在是否为备用磁盘并可在聚合中重复使用： `storage disk show -disk _disk_id_`
 
 
 |===
-+
+
+
 有关完整的命令语法，请参见手册页。
-
-

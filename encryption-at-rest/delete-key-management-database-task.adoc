@@ -12,7 +12,7 @@ summary: 如果要从外部密钥管理切换到板载密钥管理，则必须�
 [role="lead"]
 如果要从外部密钥管理切换到板载密钥管理，则必须先删除外部密钥管理配置，然后才能启用板载密钥管理。
 
-.您需要什么？ #8217 ；将需要什么
+.开始之前
 * 对于基于硬件的加密，必须将所有 FIPS 驱动器或 SED 的数据密钥重置为默认值。
 +
 link:return-seds-unprotected-mode-task.html["将 FIPS 驱动器或 SED 恢复到未受保护的模式"]
@@ -24,45 +24,28 @@ link:remove-external-key-server-93-later-task.html["删除外部密钥管理器�
 * 您必须是集群管理员才能执行此任务。
 
 
-.步骤
-. 删除集群的外部密钥管理配置：
-+
-`security key-manager delete-kmip-config`
-
-+
-[cols="25,75"]
-|===
 
 
-| 对于此 ONTAP 版本 ... | 使用此命令 ... 
+== 操作步骤
 
-
- a| 
-ONTAP 9.6 及更高版本
- a| 
-`security key-manager external disable -vserver admin_sVM`
-
-
-
- a| 
-ONTAP 9.5 及更早版本
- a| 
-`security key-manager delete-kmip-config`
-
-|===
-+
-[NOTE]
+[role="tabbed-block"]
 ====
-有关完整的命令语法，请参见手册页。ONTAP 9.6 版命令需要高级权限级别。
+.ONTAP 9.6 及更高版本
+--
+. 更改为高级权限级别：
++
+`set -privilege advanced`
 
+. 使用命令：
++
+`security key-manager external disable -vserver _admin_svm_`
+
+
+
+--
+.ONTAP 9.5 及更早版本
+--
+使用命令： `security key-manager delete-kmip-config`
+
+--
 ====
-+
-以下 ONTAP 9.6 命令可删除 `cluster1` 的外部密钥管理配置：
-
-+
-[listing]
-----
-cluster1::> set -privilege advanced
-cluster1::> security key-manager external disable
-----
-
