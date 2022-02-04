@@ -13262,6 +13262,8 @@
 
 
 
+
+
           
         </li>
       </ul>
@@ -20962,6 +20964,8 @@
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/snapshot-copies-work-concept.html">
         从 NFS 或 CIFS 客户端上的 Snapshot 副本还原文件
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protectionenable-disable-snapshot-dir-access-task.html">
+        启用和禁用 NFS 和 SMB 客户端对 Snapshot 副本目录的访问
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/restore-single-file-snapshot-task.html">
         从 Snapshot 副本还原单个文件
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/restore-part-file-snapshot-task.html">
@@ -22049,11 +22053,19 @@
 <p class="page-details">
   
     
-    <time datetime="2022-02-03 15:16:24 +0000">02/03/2022</time>
+    <time datetime="2022-02-04 15:18:04 +0000">02/04/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-ahibbard">
+    <img  class="avatar avatar-small"
+          alt="netapp-ahibbard"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/85892662?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
 </span>
 
 
@@ -22073,20 +22085,23 @@
 <div class="title">步骤</div>
 <ol class="arabic">
 <li>
+<p>您必须首先确保已分配数据身份验证密钥。可以使用来完成此操作 <a href="assign-authentication-keys-seds-external-task.html">外部密钥管理器</a> 或 <a href="assign-authentication-keys-seds-onboard-task.html">板载密钥管理器</a>。使用命令 <code>storage encryption disk show</code> 确认已分配密钥。</p>
+</li>
+<li>
 <p>将 FIPS 140-2 身份验证密钥分配给 SED ：</p>
 <div class="paragraph">
-<p><code>storage encryption disk modify -disk disk_id -fips-key-id fips_authentication_key_id</code></p>
+<p><code>storage encryption disk modify -disk <em>disk_id</em> -fips-key-id <em>fips_authentication_key_id</em></code></p>
 </div>
 <div class="paragraph">
 <p>您可以使用 <code>security key-manager query</code> 命令查看密钥 ID 。</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>cluster1::&gt; storage encryption disk modify -disk 2.10.* -fips-key-id 6A1E21D80000000001000000000000005A1FB4EE8F62FD6D8AE6754C9019F35A
+<pre class="highlight"><code>cluster1::&gt; storage encryption disk modify -disk 2.10.* -fips-key-id 6A1E21D80000000001000000000000005A1FB4EE8F62FD6D8AE6754C9019F35A
 
 Info: Starting modify on 14 disks.
       View the status of the operation by using the
-      storage encryption disk show-status command.</pre>
+      storage encryption disk show-status command.</code></pre>
 </div>
 </div>
 </li>
