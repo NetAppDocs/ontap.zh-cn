@@ -1,0 +1,45 @@
+---
+permalink: data-protection/enable-disable-snapshot-dir-access-task.html 
+sidebar: sidebar 
+keywords: enable, disable, access, snapshot copy 
+summary: '要确定 NFS 和 SMB 客户端是否可以查看 Snapshot 副本目录以从 Snapshot 副本还原文件或 LUN ，您可以使用 `volume modify` 命令的 ` -snapdir-access` 选项启用和禁用对 Snapshot 副本目录的访问。' 
+---
+= 启用和禁用 NFS 和 SMB 客户端对 Snapshot 副本目录的访问
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要确定 NFS 和 SMB 客户端是否可以查看 Snapshot 副本目录以从 Snapshot 副本还原文件或 LUN ，您可以使用 `volume modify` 命令的 ` -snapdir-access` 选项启用和禁用对 Snapshot 副本目录的访问。
+
+.步骤
+. 检查 Snapshot 目录访问状态：
++
+ `volume show -vserver _SVM_name_ -volume _vol_name_ -fields snapdir-access`
++
+示例
+
++
+[listing]
+----
+
+clus1::> volume show -vserver vs0 -volume vol1 -fields snapdir-access
+vserver volume snapdir-access
+------- ------ --------------
+vs0     vol1   false
+----
+. 启用或禁用 Snapshot 副本目录访问：
++
+`volume modify -volume _vol_name_ -snapdir-access true_false`
+
++
+以下示例将在 vol1 上启用 Snapshot 副本目录访问：
+
++
+[listing]
+----
+
+clus1::> volume modify -volume vol1 -snapdir-access true
+Volume modify successful on volume vol1 of Vserver vs0.
+----
+
