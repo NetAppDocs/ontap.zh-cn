@@ -1,18 +1,18 @@
 ---
 permalink: revert/task_identifying_and_moving_cifs_servers_in_workgroup_mode.html 
 sidebar: sidebar 
-keywords: ontap, revert, reverting, reversion, identifying, identify, move, moving, delete, deleting, cifs, servers, workgroup, mode 
-summary: 在执行还原之前，您必须删除工作组模式下的任何 CIFS 服务器或将其移入域。ONTAP 9 之前的 ONTAP 版本不支持工作组模式。 
+keywords: ontap, revert, reverting, reversion, identifying, identify, move, moving, delete, deleting, cifs, servers, workgroup, mode, SMB 
+summary: 在执行还原之前，您必须删除工作组模式下的任何 SMB 服务器或将其移入域。ONTAP 9 之前的 ONTAP 版本不支持工作组模式。 
 ---
-= 确定并移动工作组模式下的 CIFS 服务器
+= 确定并移动工作组模式下的 SMB 服务器
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在执行还原之前，您必须删除工作组模式下的任何 CIFS 服务器或将其移入域。ONTAP 9 之前的 ONTAP 版本不支持工作组模式。
+在执行还原之前，您必须删除工作组模式下的任何 SMB 服务器或将其移入域。ONTAP 9 之前的 ONTAP 版本不支持工作组模式。
 
-. 确定采用工作组身份验证模式的任何 CIFS 服务器： `vserver cifs show`
+. 确定采用工作组身份验证模式的任何 SMB 服务器： `vserver cifs show`
 . 移动或删除已确定的服务器：
 +
 [cols="2*"]
@@ -21,19 +21,19 @@ summary: 在执行还原之前，您必须删除工作组模式下的任何 CIFS
 
 
  a| 
-将 CIFS 服务器从工作组移动到 Active Directory 域：
+将 SMB 服务器从工作组移动到 Active Directory 域：
  a| 
-`vserver cifs modify -vserver vserver_name -domain domain_name`
+`vserver cifs modify -vserver _vserver_name_ -domain _domain_name_`
 
 
 
  a| 
-删除 CIFS 服务器
+删除 SMB 服务器
  a| 
 `vserver cifs delete -vserver vserver_name`
 
 |===
-. 如果删除了 CIFS 服务器，请输入域的用户名，然后输入用户密码。
+. 如果删除了 SMB 服务器，请输入域的用户名，然后输入用户密码。
 
 
 link:../smb-admin/index.html["SMB 管理"]

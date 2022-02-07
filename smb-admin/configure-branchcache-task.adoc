@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: configure, branchcache, service, per-share, basis, smb, share, configure branchcache on the cifs server 
 summary: 您可以将 BranchCache 配置为按共享提供 BranchCache 服务。或者，您也可以将 BranchCache 配置为在所有 SMB 共享上自动启用缓存。 
 ---
-= 在 CIFS 服务器上配置 BranchCache
+= 在 SMB 服务器上配置 BranchCache
 :icons: font
 :imagesdir: ../media/
 
@@ -82,23 +82,23 @@ ONTAP 支持 BranchCache 1 和 2 。您可以启用版本 1 ，版本 2 或这�
 . 根据需要启用 SMB 2.1 和 3.0 ：
 +
 .. 将权限级别设置为 advanced ： `set -privilege advanced`
-.. 检查已配置的 SVM SMB 设置以确定是否已启用所有所需的 SMB 版本： `vserver cifs options show -vserver vserver_name`
-.. 如有必要，请启用 SMB 2.1 ： `vserver cifs options modify -vserver vserver_name -smb2-enabled true`
+.. 检查已配置的 SVM SMB 设置以确定是否已启用所有所需的 SMB 版本： `vserver cifs options show -vserver _vserver_name_`
+.. 如有必要，请启用 SMB 2.1 ： `vserver cifs options modify -vserver _vserver_name_ -smb2-enabled true`
 +
 命令将同时启用 SMB 2.0 和 SMB 2.1 。
 
-.. 如有必要，请启用 SMB 3.0 ： `vserver cifs options modify -vserver vserver_name -smb3-enabled true`
+.. 如有必要，请启用 SMB 3.0 ： `vserver cifs options modify -vserver _vserver_name_ -smb3-enabled true`
 .. 返回到管理权限级别： `set -privilege admin`
 
 
-. 配置 BranchCache ： `vserver cifs branchcache create -vserver vserver_name -hash-store-path path "-hash-store-max-size ｛ integer ｛ KB|MB|GB_TB_PB] ｝ ] （ -versions ｛ v1-enable_v2-enable_enable-all] ）【服务器密钥文本】 -operating 模式 ｛ per-share ｝`
+. 配置 BranchCache ： `vserver cifs branchcache create -vserver _vserver_name_ -hash-store-path path "-hash-store-max-size ｛ integer ｛ KB|MB|GB_TB_PB] ｝ ] （ -versions ｛ v1-enable_v2-enable_enable-all] ）【服务器密钥文本】 -operating 模式 ｛ per-share ｝`
 +
 指定的哈希存储路径必须存在，并且必须驻留在 SVM 管理的卷上。此路径还必须位于可读写卷上。如果路径为只读或不存在，则此命令将失败。
 
 +
 如果要对其他 SVM BranchCache 配置使用相同的服务器密钥，请记录为服务器密钥输入的值。显示有关 BranchCache 配置的信息时，不会显示服务器密钥。
 
-. 验证 BranchCache 配置是否正确： `vserver cifs branchcache show -vserver vserver_name`
+. 验证 BranchCache 配置是否正确： `vserver cifs branchcache show -vserver _vserver_name_`
 
 
 以下命令验证是否已启用 SMB 2.1 和 3.0 ，并将 BranchCache 配置为在 SVM vs1 上的所有 SMB 共享上自动启用缓存：

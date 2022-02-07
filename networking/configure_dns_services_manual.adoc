@@ -13,13 +13,13 @@ summary: 在创建 NFS 或 SMB 服务器之前，为 SVM 配置 DNS 服务
 
 
 [role="lead"]
-在创建 NFS 或 CIFS 服务器之前，您必须为 SVM 配置 DNS 服务。通常， DNS 名称服务器是 NFS 或 CIFS 服务器要加入的域的 Active Directory 集成 DNS 服务器。
+在创建 NFS 或 SMB 服务器之前，您必须为 SVM 配置 DNS 服务。通常， DNS 名称服务器是 NFS 或 SMB 服务器要加入的域的 Active Directory 集成 DNS 服务器。
 
-Active Directory 集成的 DNS 服务器包含域 LDAP 和域控制器服务器的服务位置记录（ SRV ）。如果 SVM 找不到 Active Directory LDAP 服务器和域控制器，则 NFS 或 CIFS 服务器设置将失败。
+Active Directory 集成的 DNS 服务器包含域 LDAP 和域控制器服务器的服务位置记录（ SRV ）。如果 SVM 找不到 Active Directory LDAP 服务器和域控制器，则 NFS 或 SMB 服务器设置将失败。
 
 SVM 使用 hosts 名称服务 ns-switch 数据库确定要使用的名称服务以及查找有关主机的信息的顺序。主机数据库支持的两个名称服务为 `files` 和 `dns` 。
 
-在创建 CIFS 服务器之前，您必须确保 `dns` 是其中一个源。
+在创建 SMB 服务器之前，您必须确保 `dns` 是其中一个源。
 
 
 NOTE: 要查看 mgwd 进程和 SecD 进程的 DNS 名称服务统计信息，请使用统计信息 UI 。
@@ -126,7 +126,7 @@ NOTE: 要避免不符合 DDNS 更新的 RFC 规则的 SVM FQDN 配置失败，�
 `vserver services name-service dns dynamic-update modify -vserver _vs1_ -is-enabled _tru_ - use-secure _tru_ -vserver-fqdn _vs1.example.com_`
 
 +
-星号不能用作自定义 FQDN 的一部分。例如， ` * .netapp.com` 无效。
+星号不能用作自定义 FQDN 的一部分。例如， ` ｛ asterisk ｝ .netapp.com` 无效。
 
 . 验证 DDNS 配置是否正确：
 +

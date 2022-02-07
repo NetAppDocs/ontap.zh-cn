@@ -1,7 +1,7 @@
 ---
 permalink: revert/task_identifying_current_cluster_activity.html 
 sidebar: sidebar 
-keywords: ontap, downgrade, dowgrading, cluster, activity, running, jobs, stop, shutdown, active, cifs, sessions 
+keywords: ontap, downgrade, dowgrading, cluster, activity, running, jobs, stop, shutdown, active, SMB, sessions 
 summary: 在执行无中断降级之前，您应确定并正常终止所有不持续可用的 CIFS 会话。 
 ---
 = 降级前验证当前集群活动
@@ -10,7 +10,7 @@ summary: 在执行无中断降级之前，您应确定并正常终止所有不�
 
 
 [role="lead"]
-降级之前，不应运行任何作业，并且任何不持续可用的 CIFS 会话都应终止。
+降级之前，不应运行任何作业，并且任何不持续可用的 SMB 会话都应终止。
 
 
 
@@ -64,15 +64,15 @@ Job ID Name                 Vserver    Node           State
 
 
 
-== 确定应终止的活动 CIFS 会话
+== 确定应终止的活动 SMB 会话
 
-在执行无中断降级之前，您应确定并正常终止所有不持续可用的 CIFS 会话。
+在执行无中断降级之前，您应确定并正常终止所有不持续可用的 SMB 会话。
 
-通过 SMB 3.0 协议由 Hyper-V 或 Microsoft SQL Server 客户端访问的持续可用 CIFS 共享，无需在升级或降级之前终止。
+通过使用 SMB 3.0 协议的 Hyper-V 或 Microsoft SQL Server 客户端访问的持续可用 SMB 共享，无需在升级或降级之前终止。
 
-. 确定任何已建立但不持续可用的 CIFS 会话： `vserver cifs session show -continuously-available Yes -instance`
+. 确定任何已建立但不持续可用的 SMB 会话： `vserver cifs session show -continuously-available Yes -instance`
 +
-此命令可显示有关任何不具有持续可用性的 CIFS 会话的详细信息。在继续 ONTAP 降级之前，您应终止它们。
+此命令可显示有关任何不具有持续可用性的 SMB 会话的详细信息。在继续 ONTAP 降级之前，您应终止它们。
 
 +
 [listing]
@@ -97,7 +97,7 @@ Incoming Data LIF IP Address: 198.51.100.5
       Continuously Available: No
 1 entry was displayed.
 ----
-. 如有必要，请确定为您标识的每个 CIFS 会话打开的文件： `vserver cifs session file show -session-id session_ID`
+. 如有必要，请确定为您标识的每个 SMB 会话打开的文件： `vserver cifs session file show -session-id _session_ID_`
 +
 [listing]
 ----

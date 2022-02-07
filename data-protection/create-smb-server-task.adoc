@@ -2,15 +2,15 @@
 permalink: data-protection/create-smb-server-task.html 
 sidebar: sidebar 
 keywords: cifs, create, server 
-summary: 如果源 SVM 具有 CIFS 配置，并且您选择将 identity-preserve 设置为 false ，则必须为目标 SVM 创建 CIFS 服务器。某些 CIFS 配置需要 CIFS 服务器，例如在 SnapMirror 关系初始化期间共享。 
+summary: 如果源 SVM 具有 SMB 配置，并且您选择将 identity-preserve 设置为 false ，则必须为目标 SVM 创建 SMB 服务器。某些 SMB 配置需要 SMB 服务器，例如在 SnapMirror 关系初始化期间共享。 
 ---
-= 仅限 CIFS ：创建 CIFS 服务器
+= 仅 SMB ：创建 SMB 服务器
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果源 SVM 具有 CIFS 配置，并且您选择将 `identity-preserve` 设置为 `false` ，则必须为目标 SVM 创建 CIFS 服务器。某些 CIFS 配置需要 CIFS 服务器，例如在 SnapMirror 关系初始化期间共享。
+如果源 SVM 具有 SMB 配置，并且您选择将 `identity-preserve` 设置为 `false` ，则必须为目标 SVM 创建 SMB 服务器。某些 SMB 配置需要 SMB 服务器，例如在 SnapMirror 关系初始化期间共享。
 
 .步骤
 . 使用 `vserver start` 命令启动目标 SVM 。
@@ -60,7 +60,7 @@ dvs1 -name-servers 192.0.2.128 -state enabled
 destination_cluster::>vserver cifs domain preferred-dc add -vserver dvs1 -preferred-dc
 192.0.2.128 -domain mydomain.example.com
 ----
-. 使用 `vserver cifs create` 命令创建 CIFS 服务器。
+. 使用 `vserver cifs create` 命令创建 SMB 服务器。
 +
 [listing]
 ----

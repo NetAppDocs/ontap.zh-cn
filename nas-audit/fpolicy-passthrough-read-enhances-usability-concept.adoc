@@ -1,7 +1,7 @@
 ---
 permalink: nas-audit/fpolicy-passthrough-read-enhances-usability-concept.html 
 sidebar: sidebar 
-keywords: ontap 9, fpolicy, passthrough-read, enhances, usability, hierarchical, storage management 
+keywords: fpolicy, passthrough-read, enhances, usability, hierarchical, storage management 
 summary: 通过直通读取， FPolicy 服务器（用作分层存储管理（ HSM ）服务器）可以对脱机文件进行读取访问，而无需将文件从二级存储系统重新调用到主存储系统。 
 ---
 = FPolicy 直通读取如何提高分层存储管理的可用性
@@ -12,7 +12,7 @@ summary: 通过直通读取， FPolicy 服务器（用作分层存储管理（ H
 [role="lead"]
 通过直通读取， FPolicy 服务器（用作分层存储管理（ HSM ）服务器）可以对脱机文件进行读取访问，而无需将文件从二级存储系统重新调用到主存储系统。
 
-如果将 FPolicy 服务器配置为向驻留在 CIFS 服务器上的文件提供 HSM ，则会发生基于策略的文件迁移，其中，文件脱机存储在二级存储上，而只有存根文件仍保留在主存储上。即使存根文件在客户端中显示为普通文件，但它实际上是一个与原始文件大小相同的稀疏文件。稀疏文件设置了 CIFS 脱机位，并指向已迁移到二级存储的实际文件。
+如果将 FPolicy 服务器配置为向 SMB 服务器上的文件提供 HSM ，则会发生基于策略的文件迁移，其中，文件脱机存储在二级存储上，而只有存根文件保留在主存储上。即使存根文件在客户端中显示为普通文件，但它实际上是一个与原始文件大小相同的稀疏文件。稀疏文件设置了 SMB 脱机位，并指向已迁移到二级存储的实际文件。
 
 通常，在收到脱机文件的读取请求时，必须将请求的内容重新调用回主存储，然后通过主存储进行访问。需要将数据重新调用回主存储会产生一些不希望出现的影响。其中一个不希望受到的影响是，由于需要在响应请求之前重新调用内容，客户端请求的延迟增加，并且主存储上重新调用的文件所需的空间消耗增加。
 

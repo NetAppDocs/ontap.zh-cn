@@ -2,7 +2,7 @@
 permalink: data-protection/workloads-strictsync-sync-policies-concept.html 
 sidebar: sidebar 
 keywords: understand, workloads, support, strictsync, policy, strict sync, policies, snapmirror, snap mirror, cifs, vmware, eda, synchronous, fc, iscsi, nvme, nfsv3, nfsv4 
-summary: StrictSync 和 Sync 策略支持使用 FC ， iSCSI 和 FC-NVMe 协议的所有基于 LUN 的应用程序，以及适用于数据库， VMware ，配额， CIFS 等企业级应用程序的 NFSv3 和 NFSv4 协议。从 ONTAP 9.6 开始， SnapMirror 同步可用于电子设计自动化（ Electronic Design Automation ， EDA ），主目录和软件构建工作负载等企业级文件服务。 
+summary: StrictSync 和 Sync 策略支持使用 FC ， iSCSI 和 FC-NVMe 协议的所有基于 LUN 的应用程序，以及适用于数据库， VMware ，配额， SMB 等企业级应用程序的 NFSv3 和 NFSv4 协议。从 ONTAP 9.6 开始， SnapMirror 同步可用于电子设计自动化（ Electronic Design Automation ， EDA ），主目录和软件构建工作负载等企业级文件服务。 
 ---
 = 关于 StrictSync 和 Sync 策略支持的工作负载
 :icons: font
@@ -10,7 +10,7 @@ summary: StrictSync 和 Sync 策略支持使用 FC ， iSCSI 和 FC-NVMe 协议�
 
 
 [role="lead"]
-StrictSync 和 Sync 策略支持使用 FC ， iSCSI 和 FC-NVMe 协议的所有基于 LUN 的应用程序，以及适用于数据库， VMware ，配额， CIFS 等企业级应用程序的 NFSv3 和 NFSv4 协议。从 ONTAP 9.6 开始， SnapMirror 同步可用于电子设计自动化（ Electronic Design Automation ， EDA ），主目录和软件构建工作负载等企业级文件服务。
+StrictSync 和 Sync 策略支持使用 FC ， iSCSI 和 FC-NVMe 协议的所有基于 LUN 的应用程序，以及适用于数据库， VMware ，配额， SMB 等企业级应用程序的 NFSv3 和 NFSv4 协议。从 ONTAP 9.6 开始， SnapMirror 同步可用于电子设计自动化（ Electronic Design Automation ， EDA ），主目录和软件构建工作负载等企业级文件服务。
 
 在 ONTAP 9.5 中，对于同步策略，在选择 NFSv3 或 NFSv4 工作负载时，需要考虑几个重要方面。不需要考虑工作负载的数据读取或写入操作量，因为 Sync 策略可以处理高读取或写入 IO 工作负载。在 ONTAP 9.5 中，文件创建，目录创建，文件权限更改或目录权限更改过多的工作负载可能不适用（这些工作负载称为高元数据工作负载）。高元数据工作负载的一个典型示例是 DevOps 工作负载，在此工作负载中，您可以创建多个测试文件，运行自动化并删除这些文件。另一个示例是并行构建工作负载，该工作负载会在编译期间生成多个临时文件。写入元数据活动率较高的影响是，它可以暂时中断镜像之间的发生原因同步，从而使客户端的读取和写入 IO 停止。
 
