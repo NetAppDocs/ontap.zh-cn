@@ -16200,7 +16200,7 @@
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html">
         FlexGroup 卷
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/task_identifying_and_moving_cifs_servers_in_workgroup_mode.html">
-        工作组模式下的 CIFS 服务器
+        工作组模式下的 SMB 服务器
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/task_reverting_systems_with_deduplicated_volumes.html">
         已删除重复数据的卷
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/task_disable_asuo.html">
@@ -16225,7 +16225,7 @@
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/task_preparing_snapshot_copies_after_reverting.html">
         启用 Snapshot 副本策略
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/task_verifying_client_access_cifs_and_nfs.html">
-        验证客户端访问（ CIFS 和 NFS ）
+        验证客户端访问（ SMB 和 NFS ）
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/task_verifying_ipv6_firewall_entries.html">
         验证 IPv6 防火墙条目
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/task_reverting_password_hash_function.html">
@@ -18240,7 +18240,7 @@
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/nfs-admin/ontap-name-services-concept.html">
         ONTAP 如何使用名称服务
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/nfs-admin/smb-access-nfs-clients-concept.html">
-        ONTAP 如何从 NFS 客户端授予 CIFS 文件访问权限
+        ONTAP 如何从 NFS 客户端授予 SMB 文件访问权限
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/nfs-admin/nfs-credential-cache-concept.html">
         NFS 凭据缓存的工作原理
       </a></li></ul></li></ul></li><li class="subfolders "><a href="#">
@@ -20382,7 +20382,7 @@
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/antivirus/enable-on-access-policy-task.html">
         启用实时策略
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/antivirus/modify-vscan-file-profile-smb-share-task.html">
-        修改 CIFS 共享的 Vscan 文件操作配置文件
+        修改 SMB 共享的 Vscan 文件操作配置文件
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/antivirus/commands-manage-on-access-policies-reference.html">
         用于管理实时策略的命令
       </a></li></ul></li><li class="subfolders "><a href="#">
@@ -20963,7 +20963,7 @@
         <div class="na-navbar-padding"> 从 Snapshot 副本还原文件</div>
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/snapshot-copies-work-concept.html">
-        从 NFS 或 CIFS 客户端上的 Snapshot 副本还原文件
+        从 NFS 或 SMB 客户端上的 Snapshot 副本还原文件
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protectionenable-disable-snapshot-dir-access-task.html">
         启用和禁用 NFS 和 SMB 客户端对 Snapshot 副本目录的访问
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/restore-single-file-snapshot-task.html">
@@ -21084,7 +21084,7 @@
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/specify-svmdr-vol-dest-aggr.html">
         指定用于 SVM DR 关系的聚合
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/create-smb-server-task.html">
-        仅限 CIFS ：创建 CIFS 服务器
+        仅 SMB ：创建 SMB 服务器
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/data-protection/exclude-volumes-svm-replication-task.html">
         从 SVM 复制中排除卷
       </a></li></ul></li><li class="subfolders "><a href="#">
@@ -22053,11 +22053,19 @@
 <p class="page-details">
   
     
-    <time datetime="2022-02-04 15:18:04 +0000">02/04/2022</time>
+    <time datetime="2022-02-07 15:49:52 +0000">02/07/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-ahibbard">
+    <img  class="avatar avatar-small"
+          alt="netapp-ahibbard"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/85892662?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
 </span>
 
 
@@ -22075,14 +22083,14 @@
 <h2 id="域信任如何影响-unix-用户到-windows-用户名称映射搜索">域信任如何影响 UNIX 用户到 Windows 用户名称映射搜索</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>要了解多域用户名映射的工作原理，您必须了解域信任如何与 ONTAP 配合使用。与 CIFS 服务器主域的 Active Directory 信任关系可以是双向信任，也可以是两种类型的单向信任之一，即入站信任或出站信任。主域是 SVM 上的 CIFS 服务器所属的域。</p>
+<p>要了解多域用户名映射的工作原理，您必须了解域信任如何与 ONTAP 配合使用。与 SMB 服务器主域的 Active Directory 信任关系可以是双向信任，也可以是两种类型的单向信任之一，即入站信任或出站信任。主域是 SVM 上的 SMB 服务器所属的域。</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p>_ 双向信任 _</p>
 <div class="paragraph">
-<p>通过双向信任，两个域相互信任。如果 CIFS 服务器的主域与另一个域具有双向信任，则主域可以对属于受信任域的用户进行身份验证和授权，反之亦然。</p>
+<p>通过双向信任，两个域相互信任。如果 SMB 服务器的主域与另一个域具有双向信任，则主域可以对属于受信任域的用户进行身份验证和授权，反之亦然。</p>
 </div>
 <div class="paragraph">
 <p>UNIX 用户到 Windows 用户名映射搜索只能在主域和另一个域之间具有双向信任的域上执行。</p>
@@ -22100,7 +22108,7 @@
 <li>
 <p><em>Inbound trust</em></p>
 <div class="paragraph">
-<p>对于入站信任，另一个域信任 CIFS 服务器的主域。在这种情况下，主域无法对属于入站受信任域的用户进行身份验证或授权。</p>
+<p>对于入站信任，另一个域信任 SMB 服务器的主域。在这种情况下，主域无法对属于入站受信任域的用户进行身份验证或授权。</p>
 </div>
 <div class="paragraph">
 <p>在执行 UNIX 用户到 Windows 用户名映射搜索时，系统会搜索与主域具有入站信任的域。</p>
