@@ -35,7 +35,10 @@ https://docs.netapp.com/us-en/ontap/data-protection/replicate-entire-svm-config-
 +
 link:create-task.html["创建 FlexGroup 卷"]。
 
-. 要复制 FlexGroup 卷，请更新二级站点上的 SVM ： `snapmirror update -destination-path destination_svm_name ： -source-path source_svm_name ：`
++
+请等待 FlexGroup 及其所有成分卷均已创建，然后再继续。
+
+. 要复制 FlexGroup 卷，请更新二级站点上的 SVM ： `snapmirror update -destination-path destination_svm_name ： -source-path source_svm_name ：` + 您也可以输入 `snapmirror show -fields schedule` 来检查是否已存在计划的 SnapMirror 更新
 . 在二级站点上，验证 SnapMirror 关系是否运行正常： `snapmirror show`
 +
 [listing]
