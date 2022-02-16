@@ -14,6 +14,8 @@ summary: 您可以使用 snapmirror create 命令的 -identity-preserve false �
 
 源和目标集群以及 SVM 必须建立对等关系。
 
+有关详细信息，请参见 link:../peering/create-cluster-relationship-93-later-task.html["创建集群对等关系（ ONTAP 9.3 及更高版本）"] 和 。
+
 有关保留的协议和名称服务设置的列表，请参见 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在 SVM DR 关系中复制的配置"]。
 
 有关完整的命令语法，请参见手册页。
@@ -34,6 +36,10 @@ SVM 名称在源集群和目标集群中必须是唯一的。
 ----
 cluster_dst:> vserver create -vserver svm_backup -subtype dp-destination
 ----
+. 在目标集群中，使用 `vserver peer create` 命令创建 SVM 对等关系。
++
+有关详细信息，请参见 link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["创建 SVM 集群间对等关系（ ONTAP 9.3 及更高版本）"]。
+
 . 创建复制作业计划
 +
 `job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
