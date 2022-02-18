@@ -9,7 +9,7 @@
   <meta property="og:title" content="为 VMware 数据存储库配置 SAN 存储" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/task_san_provision_vmware.html" />
-	<meta property="og:description" content="创建 LUN 以使用 FC 或 iSCSI SAN 协议为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。" />
+	<meta property="og:description" content="使用 ONTAP 系统管理器（ 9.7 及更高版本）中的 FC 或 iSCSI SAN 协议创建 LUN 以为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
@@ -18,7 +18,7 @@
   <meta http-equiv="nss-type" content="Product Documentation"/>
   <meta http-equiv="nss-subtype" content="User Guide"/>
   
-  <meta name="description" content="创建 LUN 以使用 FC 或 iSCSI SAN 协议为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。">
+  <meta name="description" content="使用 ONTAP 系统管理器（ 9.7 及更高版本）中的 FC 或 iSCSI SAN 协议创建 LUN 以为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。">
   <meta name="keywords" content=" netapp, ontap, SAN, provisioning, provision, vmware, datastore, add lun, create, fc, iscsi, zone switches, storage, esxi host, Virtual Storage Console (VSC), vmware, vsphere">
   
   
@@ -5838,15 +5838,6 @@
           
 
 
-    <ul class="subfolders" style="display:none;"><li class="active pdf-hide">
-  <a target="_blank" href="/zh-cn/ontap/pdfs/pages/task_san_provision_vmware.pdf" >
-    <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>
-    PDF of this page
-  </a>
-</li>
-
-</ul>
-  
 
 
 
@@ -16763,7 +16754,7 @@
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/disks-aggregates/raid-protection-levels-disks-concept.html">
         磁盘的 RAID 保护级别
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/disks-aggregates/determine-number-disks-partitions-aggregate-concept.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/disks-aggregates/determine-number-disks-partitions-concept.html">
         确定聚合所需的磁盘或磁盘分区数
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/disks-aggregates/correct-misaligned-spare-partitions-task.html">
         更正错位的备用分区
@@ -18050,7 +18041,7 @@
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/concept_nas_provision_overview.html">
         NAS 存储概述
-      </a></li><li class="  active "><a class="na-navbar-padding" href="/zh-cn/ontap/task_san_provision_vmware.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_nas_provision_nfs_vmware.html">
         VMware 数据存储库
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_nas_provision_home_directories.html">
         主目录
@@ -22062,7 +22053,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-02-16 18:56:34 +0000">02/16/2022</time>
+    <time datetime="2022-02-18 20:24:58 +0000">02/18/2022</time>
     
   
 
@@ -22073,16 +22064,8 @@
 </p>
 
 
-<div id="toc" class="toc">
-<div id="toctitle">目录</div>
-<ul class="sectlevel1">
-<li><a href="#在-ontap-中执行此操作的其他方法">在 ONTAP 中执行此操作的其他方法</a></li>
-</ul>
-</div>
-<div id="preamble">
-<div class="sectionbody">
 <div class="paragraph lead">
-<p>创建 LUN 以使用 FC 或 iSCSI SAN 协议为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。</p>
+<p>使用 ONTAP 系统管理器（ 9.7 及更高版本）中的 FC 或 iSCSI SAN 协议创建 LUN 以为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。</p>
 </div>
 <div class="paragraph">
 <p>此操作步骤会在现有 Storage VM 上创建新的 LUN 。应已设置 FC 或 iSCSI 协议。</p>
@@ -22101,6 +22084,18 @@
 </td>
 </tr>
 </table>
+</div>
+<div class="paragraph">
+<p>完成此操作步骤 后，您可以使用适用于 VMware vSphere 的虚拟存储控制台（ VSC ）管理 VMware 数据存储库。从 VSC 7.0 开始， VSC 属于 <a href="https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html" target="_blank" rel="noopener">"适用于 VMware vSphere 虚拟设备的 ONTAP 工具"</a>，其中包括适用于 VMware vSphere 的 VSC ， vStorage APIs for Storage Awareness （ VASA ） Provider 和 Storage Replication Adapter （ SRA ）功能。</p>
+</div>
+<div class="paragraph">
+<p>请务必检查 <a href="https://imt.netapp.com/matrix/" target="_blank" rel="noopener">"NetApp 互操作性表"</a> 以确认当前 ONTAP 版本与 VSC 版本之间的兼容性。</p>
+</div>
+<div class="paragraph">
+<p>要使用 System Manager 经典版（适用于 ONTAP 9.7 及更早版本）为 ESXi 主机设置对数据存储库的 SAN 协议访问，请参见以下主题： * <a href="https://docs.netapp.com/us-en/ontap-sm-classic/fc-config-windows/index.html" target="_blank" rel="noopener">"适用于 Windows 的 FC 配置概述"</a>*</p>
+</div>
+<div class="paragraph">
+<p>有关详细信息，请参见 <a href="https://docs.netapp.com/us-en/netapp-solutions/virtualization/vsphere_ontap_ontap_for_vsphere.html" target="_blank" rel="noopener">"TR-4597 ：适用于 ONTAP 的 VMware vSphere"</a> 以及适用于您的 VSC 版本的文档。</p>
 </div>
 <div class="olist arabic">
 <div class="title">步骤</div>
@@ -22245,33 +22240,6 @@
 <p>验证 ESXi 主机是否可以在 LUN 上写入和读取数据。</p>
 </li>
 </ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="在-ontap-中执行此操作的其他方法">在 ONTAP 中执行此操作的其他方法</h2>
-<div class="sectionbody">
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">要执行以下任务，请执行以下操作 &#8230;&#8203;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">请参见 &#8230;&#8203;</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">System Manager 经典版（适用于 ONTAP 9.7 及更早版本</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://docs.netapp.com/us-en/ontap-sm-classic/fc-config-windows/index.html" target="_blank" rel="noopener">"适用于 Windows 的 FC 配置概述"</a> +</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ONTAP 命令行界面（ CLI ）</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="./san-admin/lun-setup-workflow-concept.html">"使用 CLI 设置 LUN 的工作流"</a></p></td>
-</tr>
-</tbody>
-</table>
-</div>
 </div>
 
     </article>

@@ -16754,7 +16754,7 @@
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/disks-aggregates/raid-protection-levels-disks-concept.html">
         磁盘的 RAID 保护级别
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/disks-aggregates/determine-number-disks-partitions-aggregate-concept.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/disks-aggregates/determine-number-disks-partitions-concept.html">
         确定聚合所需的磁盘或磁盘分区数
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/disks-aggregates/correct-misaligned-spare-partitions-task.html">
         更正错位的备用分区
@@ -18041,7 +18041,7 @@
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/concept_nas_provision_overview.html">
         NAS 存储概述
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_san_provision_vmware.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_nas_provision_nfs_vmware.html">
         VMware 数据存储库
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_nas_provision_home_directories.html">
         主目录
@@ -22053,7 +22053,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-02-16 18:56:34 +0000">02/16/2022</time>
+    <time datetime="2022-02-18 20:24:58 +0000">02/18/2022</time>
     
   
 
@@ -22100,13 +22100,15 @@
 <col style="width: 16.6666%;">
 <col style="width: 16.667%;">
 </colgroup>
-<tbody>
+<thead>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">S否</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">平台</p></td>
-<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">SM-BC 的每个 HA 端点</p></td>
-<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock">每个 HA 的整体同步端点和 SM-BC 端点</p></td>
+<th class="tableblock halign-left valign-top">S否</th>
+<th class="tableblock halign-left valign-top">平台</th>
+<th class="tableblock halign-left valign-top" colspan="2">SM-BC 的每个 HA 端点</th>
+<th class="tableblock halign-left valign-top" colspan="2">每个 HA 的整体同步端点和 SM-BC 端点</th>
 </tr>
+</thead>
+<tbody>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
@@ -22187,10 +22189,10 @@
 <div class="sect2">
 <h3 id="sm-bc-配置的-solaris-主机设置建议">SM-BC 配置的 Solaris 主机设置建议</h3>
 <div class="paragraph">
-<p>从 ONTAP 9.10.1 开始， SM-BC 支持 Solaris 11.4 。为了确保在 SM-BC 环境中发生计划外站点故障转移切换时 Solaris 客户端应用程序不会造成中断，需要在 Solaris 11.4 主机上配置以下设置。此设置将覆盖故障转移模块 <code>f_tpgs</code> ，以防止执行检测到冲突的代码路径。</p>
+<p>从 ONTAP 9.10.1 开始， SM-BC 支持 Solaris 11.4 。要确保在 SM-BC 环境中发生计划外站点故障转移切换时 Solaris 客户端应用程序不会造成中断，必须在 Solaris 11.4 主机上配置以下设置。此设置会覆盖故障转移模块 <code>f_tpgs</code> ，以防止执行检测到冲突的代码路径。</p>
 </div>
 <div class="paragraph">
-<p>按照说明配置 override 参数：</p>
+<p>按照以下步骤配置 override 参数：</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -22231,6 +22233,15 @@ svl_fops_name = 0xa00298d69e0 "conf f_tpgs"</pre>
 </td>
 </tr>
 </table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="hp-ux-sm-bc-配置的已知问题和限制">HP-UX SM-BC 配置的已知问题和限制</h3>
+<div class="paragraph">
+<p>从 ONTAP 9.10.1 开始，支持适用于 HP-UX 的 SM-BC 。如果在 SM-BC 配置中的隔离主集群上发生自动计划外故障转移（ Automatic Unplanned Failover ， AUFO ）事件，则在 HP-UX 主机上恢复 I/O 可能需要 120 秒以上的时间。根据正在运行的应用程序，此操作可能不会导致任何 I/O 中断或错误消息。如果隔离的主集群上发生了 AUFO 事件，则必须在中断容错小于 120 秒的 HP-UX 主机上重新启动应用程序。</p>
+</div>
+<div class="paragraph">
+<p>如果主集群和二级集群之间的连接丢失，并且主集群和调解器之间的连接也丢失，则隔离的主集群上的 AINFO 事件可能会发生发生原因 双事件故障。与其他 AINFO 事件不同，此事件被视为罕见事件。</p>
 </div>
 </div>
 
