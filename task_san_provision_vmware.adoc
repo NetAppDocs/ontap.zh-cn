@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: task_san_provision_vmware.html 
 keywords: 'netapp, ontap, SAN, provisioning, provision, vmware, datastore, add lun, create, fc, iscsi, zone switches, storage, esxi host, Virtual Storage Console (VSC), vmware, vsphere' 
-summary: 创建 LUN 以使用 FC 或 iSCSI SAN 协议为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。 
+summary: 使用 ONTAP 系统管理器（ 9.7 及更高版本）中的 FC 或 iSCSI SAN 协议创建 LUN 以为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。 
 ---
 = 为 VMware 数据存储库配置 SAN 存储
 :toc: macro
@@ -18,7 +18,7 @@ summary: 创建 LUN 以使用 FC 或 iSCSI SAN 协议为 ESXi 主机提供存储
 
 
 [role="lead"]
-创建 LUN 以使用 FC 或 iSCSI SAN 协议为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。
+使用 ONTAP 系统管理器（ 9.7 及更高版本）中的 FC 或 iSCSI SAN 协议创建 LUN 以为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。
 
 此操作步骤会在现有 Storage VM 上创建新的 LUN 。应已设置 FC 或 iSCSI 协议。
 
@@ -26,6 +26,14 @@ image:workflow_san_provision_vmware.gif["为 VMware 配置 SAN 的工作流图"]
 
 
 NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
+
+完成此操作步骤 后，您可以使用适用于 VMware vSphere 的虚拟存储控制台（ VSC ）管理 VMware 数据存储库。从 VSC 7.0 开始， VSC 属于 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["适用于 VMware vSphere 虚拟设备的 ONTAP 工具"^]，其中包括适用于 VMware vSphere 的 VSC ， vStorage APIs for Storage Awareness （ VASA ） Provider 和 Storage Replication Adapter （ SRA ）功能。
+
+请务必检查 https://imt.netapp.com/matrix/["NetApp 互操作性表"^] 以确认当前 ONTAP 版本与 VSC 版本之间的兼容性。
+
+要使用 System Manager 经典版（适用于 ONTAP 9.7 及更早版本）为 ESXi 主机设置对数据存储库的 SAN 协议访问，请参见以下主题： * https://docs.netapp.com/us-en/ontap-sm-classic/fc-config-windows/index.html["适用于 Windows 的 FC 配置概述"^]*
+
+有关详细信息，请参见 https://docs.netapp.com/us-en/netapp-solutions/virtualization/vsphere_ontap_ontap_for_vsphere.html["TR-4597 ：适用于 ONTAP 的 VMware vSphere"^] 以及适用于您的 VSC 版本的文档。
 
 .步骤
 . 在 System Manager 中，单击 * 存储 > LUN* ，然后单击 * 添加 * 。
@@ -104,19 +112,3 @@ NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS �
 . 使用适用于 VMware vSphere 的 Virtual Storage Console （ VSC ）发现并初始化 LUN 。
 . 验证 ESXi 主机是否可以在 LUN 上写入和读取数据。
 
-
-
-
-== 在 ONTAP 中执行此操作的其他方法
-
-|===
-
-
-| 要执行以下任务，请执行以下操作 ... | 请参见 ... 
-
-
-| System Manager 经典版（适用于 ONTAP 9.7 及更早版本 | link:https://docs.netapp.com/us-en/ontap-sm-classic/fc-config-windows/index.html["适用于 Windows 的 FC 配置概述"^] + 
-
-
-| ONTAP 命令行界面（ CLI ） | link:./san-admin/lun-setup-workflow-concept.html["使用 CLI 设置 LUN 的工作流"] 
-|===

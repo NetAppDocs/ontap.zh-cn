@@ -36,8 +36,6 @@ summary: 使用 SnapMirror Business Continuity 解决方案时，还存在一些
 下表列出了每个平台的最大端点数量。
 
 |===
-
-
 | S否 | 平台 2+| SM-BC 的每个 HA 端点 2+| 每个 HA 的整体同步端点和 SM-BC 端点 
 
 
@@ -86,9 +84,9 @@ SM-BC 卷不支持 NTFS 安全模式。
 
 === SM-BC 配置的 Solaris 主机设置建议
 
-从 ONTAP 9.10.1 开始， SM-BC 支持 Solaris 11.4 。为了确保在 SM-BC 环境中发生计划外站点故障转移切换时 Solaris 客户端应用程序不会造成中断，需要在 Solaris 11.4 主机上配置以下设置。此设置将覆盖故障转移模块 `f_tpgs` ，以防止执行检测到冲突的代码路径。
+从 ONTAP 9.10.1 开始， SM-BC 支持 Solaris 11.4 。要确保在 SM-BC 环境中发生计划外站点故障转移切换时 Solaris 客户端应用程序不会造成中断，必须在 Solaris 11.4 主机上配置以下设置。此设置会覆盖故障转移模块 `f_tpgs` ，以防止执行检测到冲突的代码路径。
 
-按照说明配置 override 参数：
+按照以下步骤配置 override 参数：
 
 . 为连接到主机的 NetApp 存储类型创建配置文件 ` /etc/driver/drv/scsi_vhci.conf` ，并输入类似于以下内容的条目：
 +
@@ -114,3 +112,11 @@ svl_fops_name = 0xa00298d69e0 "conf f_tpgs"
 
 
 NOTE: 应用 `scsI-vhcI-failover-override` 后， `conf` 将添加到 `svl_fPS_name` 中。有关追加信息以及对默认设置的建议更改，请参阅 NetApp 知识库文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Solaris_Host_support_recommended_settings_in_SnapMirror_Business_Continuity_(SM-BC)_configuration["Solaris 主机支持 SnapMirror 业务连续性（ SM-BC ）配置中的建议设置"]。
+
+
+
+=== HP-UX SM-BC 配置的已知问题和限制
+
+从 ONTAP 9.10.1 开始，支持适用于 HP-UX 的 SM-BC 。如果在 SM-BC 配置中的隔离主集群上发生自动计划外故障转移（ Automatic Unplanned Failover ， AUFO ）事件，则在 HP-UX 主机上恢复 I/O 可能需要 120 秒以上的时间。根据正在运行的应用程序，此操作可能不会导致任何 I/O 中断或错误消息。如果隔离的主集群上发生了 AUFO 事件，则必须在中断容错小于 120 秒的 HP-UX 主机上重新启动应用程序。
+
+如果主集群和二级集群之间的连接丢失，并且主集群和调解器之间的连接也丢失，则隔离的主集群上的 AINFO 事件可能会发生发生原因 双事件故障。与其他 AINFO 事件不同，此事件被视为罕见事件。
