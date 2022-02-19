@@ -19796,7 +19796,7 @@
         启动 SVM 的 NVMe/FC 服务
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-admin/delete-nvme-fc-service-task.html">
         从 SVM 中删除 NVMe/FC 服务
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/..nvme/resize-namespace-task.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/nvme/resize-namespace-task.html">
         调整 NVMe 命名空间大小
       </a></li></ul></li><li class="subfolders "><a href="#">
         <div class="na-navbar-padding"> 管理所有 SAN 协议的 LIF</div>
@@ -22053,7 +22053,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-02-18 20:24:58 +0000">02/18/2022</time>
+    <time datetime="2022-02-19 20:18:56 +0000">02/19/2022</time>
     
   
 
@@ -22068,6 +22068,7 @@
 <div id="toctitle">目录</div>
 <ul class="sectlevel1">
 <li><a href="#反勒索软件的性能和频率注意事项">反勒索软件的性能和频率注意事项</a></li>
+<li><a href="#检测到勒索软件时自动-snapshot-副本的工作原理">检测到勒索软件时自动 Snapshot 副本的工作原理</a></li>
 </ul>
 </div>
 <div id="preamble">
@@ -22214,6 +22215,14 @@
 </div>
 <div class="paragraph">
 <p>由于反勒索软件分析按优先顺序运行，因此随着受保护卷数量的增加，对每个卷运行分析的频率也会降低。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="检测到勒索软件时自动-snapshot-副本的工作原理">检测到勒索软件时自动 Snapshot 副本的工作原理</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>为了尽可能获得最佳恢复点，一旦检测到异常文件活动，反勒索软件功能就会创建一个自动 Snapshot 副本。但是，反勒索软件功能不会立即标记警报；相反，在生成警报之前，需要运行分析并确认可疑活动与勒索软件配置文件匹配。此过程可能需要长达 60 分钟。如果分析确定活动不可疑，则不会生成警报，但自动创建的 Snapshot 副本会在文件系统上至少保留两天。</p>
 </div>
 </div>
 </div>
