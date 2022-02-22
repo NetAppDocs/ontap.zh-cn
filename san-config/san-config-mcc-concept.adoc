@@ -16,10 +16,13 @@ summary: 在 MetroCluster 环境中使用 SAN 配置时，您必须了解一些�
 * 双节点，四节点和八节点 MetroCluster 配置支持 SAN 协议。
 * 使用 SAN 客户端配置时，您必须检查互操作性表工具（ IMT ）中提供的注释中是否包含有关 MetroCluster 配置的任何特殊注意事项。
 * MetroCluster 在前端 SAN 的两端使用相同的 WWPN 。
-+
+
+
+
+NOTE: 在切换期间，正常运行的站点上的 FC 端口可能会在网络结构检测到灾难站点上的 FC 端口脱机并从名称和目录服务中删除此端口之前登录到网络结构。如果灾难中的 FC 端口尚未删除，则正常运行的站点上 FC 端口的光纤登录尝试可能会因 WWPN 重复而被拒绝。可以更改 FC 交换机的这种行为，以支持上一个设备的登录，而不是现有设备的登录。您应验证此行为对其他网络结构设备的影响。有关详细信息，请联系交换机供应商。
+
 为了避免在旧端口脱机且新端口联机时出现重叠，请按照以下步骤配置前端交换机：
 
-+
 [cols="20,80"]
 |===
 
@@ -30,22 +33,22 @@ summary: 在 MetroCluster 环境中使用 SAN 配置时，您必须了解一些�
  a| 
 Cisco 交换机
  a| 
-.. 连接到交换机并登录。
-.. 进入配置模式：
+. 连接到交换机并登录。
+. 进入配置模式：
 +
 ....
 switch# config t
 switch(config)#
 ....
-.. 使用新设备覆盖名称服务器数据库中的第一个设备条目：
+. 使用新设备覆盖名称服务器数据库中的第一个设备条目：
 +
 [listing]
 ----
 switch(config)# no fcns reject-duplicate-pwwn vsan 1
 ----
-.. 在运行 NX-OS 8.x 的交换机中，确认 FLOGI 暂停超时设置为零：
+. 在运行 NX-OS 8.x 的交换机中，确认 FLOGI 暂停超时设置为零：
 +
-... 显示暂停时间服务：
+.. 显示暂停时间服务：
 +
 `switch （ config ） # show FLOGI interval info | I quiesce`
 
@@ -53,7 +56,7 @@ switch(config)# no fcns reject-duplicate-pwwn vsan 1
 ....
  Stats:  fs flogi quiesce timerval:  0
 ....
-... 如果上一步中的输出未指示时间为零，则将其设置为零：
+.. 如果上一步中的输出未指示时间为零，则将其设置为零：
 +
 `switch （ config ） # FLOGI scale enable`
 
@@ -69,14 +72,14 @@ switch(config)# no fcns reject-duplicate-pwwn vsan 1
  a| 
 Brocade 交换机
  a| 
-.. 连接到交换机并登录。
-.. 输入 `sswitchDisable` 命令。
-.. 输入 `configure` 命令，然后在提示符处按 `y` 。
+. 连接到交换机并登录。
+. 输入 `sswitchDisable` 命令。
+. 输入 `configure` 命令，然后在提示符处按 `y` 。
 +
 ....
  F-Port login parameters (yes, y, no, n): [no] y
 ....
-.. 选择设置 1 ：
+. 选择设置 1 ：
 +
 ....
 - 0: First login take precedence over the second login (default)
@@ -84,13 +87,11 @@ Brocade 交换机
 - 2: the port type determines the behavior
 Enforce FLOGI/FDISC login: (0..2) [0] 1
 ....
-.. 响应其余提示，或按 * Ctrl + D* 。
-.. 输入 `sswitchEnable` 命令。
+. 响应其余提示，或按 * Ctrl + D* 。
+. 输入 `sswitchEnable` 命令。
 
 
 |===
-
-
 有关 MetroCluster 专用主机的详细信息，请参阅以下 NetApp 知识库文章：
 
 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/MetroCluster/What_are_AIX_Host_support_considerations_in_a_MetroCluster_configuration%3F["MetroCluster 配置中的 AIX 主机支持注意事项有哪些？"]
