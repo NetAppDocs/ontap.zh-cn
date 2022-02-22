@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title>使用 CLI 自动无中断升级</title>
+  <title>使用命令行界面自动进行无中断 ONTAP 升级</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="使用 CLI 自动无中断升级" />
+  <meta property="og:title" content="使用命令行界面自动进行无中断 ONTAP 升级" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/upgrade/task_upgrade_andu_cli.html" />
 	<meta property="og:description" content="您可以无中断地更新集群上的 ONTAP 版本。" />
@@ -22023,7 +22023,7 @@
           <a href="/zh-cn/ontap/">ONTAP&nbsp;9</a>
         </li>
         <li class="n-breadcrumb__list-item">
-          使用 CLI 自动无中断升级
+          使用命令行界面自动进行无中断 ONTAP 升级
         </li>
       </ul>
     </div>
@@ -22046,14 +22046,14 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading">使用 CLI 自动无中断升级</h1>
+  <h1 class="n-doc__component-detail-heading">使用命令行界面自动进行无中断 ONTAP 升级</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-02-19 20:18:56 +0000">02/19/2022</time>
+    <time datetime="2022-02-22 03:37:04 +0000">02/22/2022</time>
     
   
 
@@ -22076,6 +22076,21 @@
 <p>您可以使用命令行界面（ CLI ）验证集群是否可以无中断升级，在每个节点上安装目标 ONTAP 映像，然后在后台执行升级。</p>
 </div>
 <div class="paragraph">
+<p>升级后，您应验证集群版本，集群运行状况和存储运行状况。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/ontap/images/note.svg" alt="注">
+</td>
+<td class="content">
+如果您使用的是 MetroCluster FC 配置，则还需要验证集群是否已启用自动计划外切换。
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
 <p>如果您不打算监控升级过程的进度，则最好这样做 <a href="task_requesting_notification_of_issues_encountered_in_nondisruptive_upgrades.html">"请求可能需要手动干预的错误的 EMS 通知"</a>。</p>
 </div>
 <div class="ulist">
@@ -22084,7 +22099,7 @@
 <li>
 <p>您应启动 Active IQ 数字顾问。</p>
 <div class="paragraph">
-<p>Active I ！的 Upgrade Advisor 组件Digital Advisor 可帮助您规划成功升级。</p>
+<p>Active IQ 数字顾问的 Upgrade Advisor 组件可帮助您规划成功的升级。</p>
 </div>
 <div class="paragraph">
 <p>Active IQ 数字顾问会向所有与 * SupportEdge * 签有有效合同的 NetApp 客户提供数据驱动型洞察和建议（功能因产品和支持层而异）。</p>
@@ -22108,7 +22123,7 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>cluster image validate 命令会检查集群组件，以验证升级是否可以无中断地完成，然后提供每个检查的状态以及执行软件升级之前必须执行的任何必要操作。</p>
+<p><code>cluster image validate</code> 命令会检查集群组件，以验证升级是否可以无中断地完成，然后提供每个检查的状态以及执行软件升级之前必须执行的任何必要操作。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -22117,7 +22132,7 @@
 <img src="/us-en/ontap/images/note.svg" alt="注">
 </td>
 <td class="content">
-在开始自动无中断升级（ ANDU ）之前修改 storage failover modify-auto-giveback 命令选项的设置不会影响升级过程。在更新所需的接管 / 交还期间， andu 进程会忽略此选项的任何预设值。例如，在启动 andu 之前将 -autogiveback 设置为 false 不会中断交还前的自动升级。
+在自动无中断升级（ ANDU ）开始之前修改 <code>storage failover modify-auto-giveback</code> 命令选项的设置不会影响升级过程。在更新所需的接管 / 交还期间， andu 进程会忽略此选项的任何预设值。例如，在开始 andu 之前将 ` -autogiveback` 设置为 false 不会中断交还前的自动升级。
 </td>
 </tr>
 </table>
@@ -22125,10 +22140,16 @@
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>删除先前的 ONTAP 软件包： <code>cluster image package delete -version previous _ontap_Version</code></p>
+<p>删除先前的 ONTAP 软件包：</p>
+<div class="paragraph">
+<p><code>cluster image package delete -version previous _ontap_Version</code></p>
+</div>
 </li>
 <li>
-<p>下载目标 ONTAP 软件包： <code>cluster image package get -url location</code></p>
+<p>下载目标 ONTAP 软件包：</p>
+<div class="paragraph">
+<p><code>集群映像包 get -url location</code></p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -22151,7 +22172,10 @@ Package processing completed.</pre>
 </div>
 </li>
 <li>
-<p>验证集群软件包存储库中是否存在软件包： <code>cluster image package show-repository</code></p>
+<p>验证集群软件包存储库中是否存在软件包：</p>
+<div class="paragraph">
+<p><code>集群映像包 show-repository</code></p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre>cluster1::&gt; cluster image package show-repository
@@ -22162,7 +22186,10 @@ Package Version  Package Build Time
 </div>
 </li>
 <li>
-<p>验证集群是否已准备好无中断升级： <code>cluster image validate -version package_version_number</code></p>
+<p>验证集群是否已做好无中断升级的准备：</p>
+<div class="paragraph">
+<p><code>cluster image validate -version package_version_number</code></p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -22185,19 +22212,28 @@ WARNING: There are additional manual upgrade validation checks that must be perf
 </div>
 </li>
 <li>
-<p>监控验证进度： <code>cluster image show-update-progress</code></p>
+<p>监控验证进度：</p>
+<div class="paragraph">
+<p><code>cluster image show-update-progress</code></p>
+</div>
 </li>
 <li>
 <p>完成验证确定的所有必需操作。</p>
 </li>
 <li>
-<p>生成软件升级估计值： <code>cluster image update -version package_version_number -estimate-only</code></p>
+<p>生成软件升级估计值：</p>
+<div class="paragraph">
+<p><code>cluster image update -version package_version_number -estimate-only</code></p>
+</div>
 <div class="paragraph">
 <p>软件升级估计值可显示有关要更新的每个组件的详细信息以及估计的升级持续时间。</p>
 </div>
 </li>
 <li>
-<p>执行软件升级： <code>cluster image update -version package_version_number</code></p>
+<p>执行软件升级：</p>
+<div class="paragraph">
+<p><code>cluster image update -version package_version_number</code></p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -22210,10 +22246,10 @@ WARNING: There are additional manual upgrade validation checks that must be perf
 <p>对于除双节点 MetroCluster 系统之外的任何 MetroCluster 配置，在用户启动并在命令行上提供确认之后， ONTAP 升级过程会在两个站点（本地站点和灾难恢复站点）的 HA 对上同时启动。对于双节点 MetroCluster 系统，首先在灾难恢复站点（即未启动升级的站点）上启动更新。在灾难恢复站点上完成更新后，升级将在本地站点上开始。</p>
 </li>
 <li>
-<p>如果集群包含 2 到 6 个节点，则会执行滚动升级。如果集群包含 8 个或更多节点，则默认情况下会执行批量升级。如果需要，可以使用 -force-rolling 参数指定滚动升级。</p>
+<p>如果集群包含 2 到 6 个节点，则会执行滚动升级。如果集群包含 8 个或更多节点，则默认情况下会执行批量升级。如果需要，您可以使用 ` -force-rolling` 参数指定滚动升级。</p>
 </li>
 <li>
-<p>完成每次接管和交还后，升级将等待 8 分钟，以使客户端应用程序能够从接管和交还期间发生的 I/O 暂停中恢复。如果您的环境需要的客户端稳定时间或多或少，您可以使用 -stife-minutes 参数指定不同的稳定时间量。</p>
+<p>完成每次接管和交还后，升级将等待 8 分钟，以使客户端应用程序能够从接管和交还期间发生的 I/O 暂停中恢复。如果您的环境需要的客户端稳定时间或多或少，您可以使用 ` -stify-minutes` 参数指定不同的稳定时间量。</p>
 <div class="listingblock">
 <div class="content">
 <pre>cluster1::&gt; cluster image update -version 9.7
@@ -22240,7 +22276,10 @@ cluster-1::&gt;</pre>
 </div>
 </li>
 <li>
-<p>显示集群更新进度： <code>cluster image show-update-progress</code></p>
+<p>显示集群更新进度：</p>
+<div class="paragraph">
+<p><code>cluster image show-update-progress</code></p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -22275,9 +22314,12 @@ cluster1::&gt;</pre>
 </div>
 </li>
 <li>
-<p>触发 AutoSupport 通知： <code>AutoSupport invoke -node * -type all -message "fining_NDU"</code></p>
+<p>触发 AutoSupport 通知：</p>
 <div class="paragraph">
-<p>如果集群未配置为发送 AutoSupport 消息，则通知的副本将保存在本地</p>
+<p><code>AutoSupport invoke -node * -type all -message "fining_NDU"</code></p>
+</div>
+<div class="paragraph">
+<p>如果集群未配置为发送 AutoSupport 消息，则通知的副本将保存在本地。</p>
 </div>
 </li>
 </ol>
@@ -22287,22 +22329,29 @@ cluster1::&gt;</pre>
 <div class="sect1">
 <h2 id="在自动升级过程中出现错误后恢复升级使用命令行界面">在自动升级过程中出现错误后恢复升级（使用命令行界面）</h2>
 <div class="sectionbody">
-<div class="paragraph lead">
+<div class="paragraph">
 <p>如果自动升级因错误而暂停，您可以解决此错误并恢复自动升级，也可以取消自动升级并手动完成此过程。如果选择继续自动升级，请勿手动执行任何升级步骤。</p>
 </div>
 <div class="paragraph">
-<p>如果要手动完成升级，请使用 cluster image cancel-update 命令取消自动过程并手动继续。如果要继续自动升级，请完成以下步骤。</p>
+<p>如果要手动完成升级，请使用 <code>cluster image cancel-update</code> 命令取消自动过程并手动继续。如果要继续自动升级，请完成以下步骤。</p>
 </div>
 <div class="olist arabic">
+<div class="title">步骤</div>
 <ol class="arabic">
 <li>
-<p>查看升级错误： <code>cluster image show-update-progress</code></p>
+<p>查看升级错误：</p>
+<div class="paragraph">
+<p><code>cluster image show-update-progress</code></p>
+</div>
 </li>
 <li>
 <p>解决此错误。</p>
 </li>
 <li>
-<p>恢复更新： <code>cluster image resume-update</code></p>
+<p>恢复更新：</p>
+<div class="paragraph">
+<p><code>集群映像 resume-update</code></p>
+</div>
 </li>
 </ol>
 </div>
@@ -22324,7 +22373,7 @@ cluster1::&gt;</pre>
   <div class="page-nav-toolbar">
     <div id="version-dropdown"></div>
     <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[使用 CLI 自动无中断升级](https://docs.netapp.com/zh-cn/ontap/upgrade/task_upgrade_andu_cli.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[使用命令行界面自动进行无中断 ONTAP 升级](https://docs.netapp.com/zh-cn/ontap/upgrade/task_upgrade_andu_cli.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
       <a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/upgrade/task_upgrade_andu_cli.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
       <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a>
     </div>

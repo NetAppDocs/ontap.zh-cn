@@ -22053,7 +22053,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-02-19 20:18:56 +0000">02/19/2022</time>
+    <time datetime="2022-02-22 03:37:04 +0000">02/22/2022</time>
     
   
 
@@ -22080,6 +22080,21 @@
 </li>
 <li>
 <p>MetroCluster 在前端 SAN 的两端使用相同的 WWPN 。</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/ontap/images/note.svg" alt="注">
+</td>
+<td class="content">
+在切换期间，正常运行的站点上的 FC 端口可能会在网络结构检测到灾难站点上的 FC 端口脱机并从名称和目录服务中删除此端口之前登录到网络结构。如果灾难中的 FC 端口尚未删除，则正常运行的站点上 FC 端口的光纤登录尝试可能会因 WWPN 重复而被拒绝。可以更改 FC 交换机的这种行为，以支持上一个设备的登录，而不是现有设备的登录。您应验证此行为对其他网络结构设备的影响。有关详细信息，请联系交换机供应商。
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>为了避免在旧端口脱机且新端口联机时出现重叠，请按照以下步骤配置前端交换机：</p>
 </div>
@@ -22097,8 +22112,8 @@
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>Cisco 交换机</p>
 </div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+<td class="tableblock halign-left valign-top"><div class="content"><div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>连接到交换机并登录。</p>
 </li>
@@ -22121,8 +22136,8 @@ switch(config)#</pre>
 </li>
 <li>
 <p>在运行 NX-OS 8.x 的交换机中，确认 FLOGI 暂停超时设置为零：</p>
-<div class="olist lowerroman">
-<ol class="lowerroman" type="i">
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
 <li>
 <p>显示暂停时间服务：</p>
 <div class="paragraph">
@@ -22141,7 +22156,7 @@ switch(config)#</pre>
 &#8230;&#8203;.
  Stats:  fs flogi quiesce timerval:  0
 &#8230;&#8203;.
-&#8230;&#8203; 如果上一步中的输出未指示时间为零，则将其设置为零：
+.. 如果上一步中的输出未指示时间为零，则将其设置为零：
 +
 <code>switch （ config ） # FLOGI scale enable</code></p>
 <p class="tableblock">+
@@ -22152,9 +22167,6 @@ switch(config)#</pre>
 </tr>
 </tbody>
 </table>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p>有关 MetroCluster 专用主机的详细信息，请参阅以下 NetApp 知识库文章：</p>
 </div>
