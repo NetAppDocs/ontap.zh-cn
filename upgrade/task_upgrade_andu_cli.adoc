@@ -176,6 +176,30 @@ cluster1::>
 +
 如果集群未配置为发送 AutoSupport 消息，则通知的副本将保存在本地。
 
+. 验证集群是否已启用自动计划外切换：
++
+
+NOTE: 仅对 MetroCluster FC 配置执行此操作步骤 。如果您使用的是 MetroCluster IP 配置，请跳过此操作步骤 。
+
++
+.. 检查是否已启用自动计划外切换：
++
+`MetroCluster show`
+
++
+如果启用了自动计划外切换，则命令输出中将显示以下语句：
+
++
+....
+AUSO Failure Domain    auso-on-cluster-disaster
+....
+.. 如果输出中未显示该语句，请启用自动计划外切换：
++
+`MetroCluster modify -auto-switchover-failure-domain auso-on-cluster-disaster`
+
+.. 重复步骤 1 ，验证是否已启用自动计划外切换。
+
+
 
 
 
