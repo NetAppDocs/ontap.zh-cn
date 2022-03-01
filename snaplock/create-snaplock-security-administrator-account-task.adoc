@@ -17,7 +17,7 @@ summary: 要执行 SnapLock 卷移动，您必须具有 SnapLock 安全管理员
 * 您必须已通过安全连接（ SSH ，控制台或 ZAPI ）登录。
 
 
-SnapLock 角色与集群 SVM 关联，而 vsadmin-SnapLock 角色与数据 SVM 关联。
+SnapLock 角色与管理 SVM 关联，而 vsadmin-SnapLock 角色则与数据 SVM 关联。
 
 .步骤
 . 创建具有 SnapLock 管理员角色的 SVM 管理员帐户：
@@ -25,11 +25,11 @@ SnapLock 角色与集群 SVM 关联，而 vsadmin-SnapLock 角色与数据 SVM �
 ` * security login create -vserver _svm_name_ -user-or-group-name _user_or_group_name_ -application _application_-authmethod _authentication_method _ -role _role_ -comment _comtion_*`
 
 +
-以下命令使用密码启用具有预定义的 `SnapLock` 角色的 SVM 管理员帐户 `SnapLockAdmin` 以访问 `SVM2` ：
+以下命令使用 SnapLock 密码启用具有预定义 `SVM` 角色的 SVM 管理员帐户 `SnapLockAdmin` 以访问管理 SVM `cluster1` ：
 
 +
 [listing]
 ----
-cluster1::> security login create -vserver SVM2 -user-or-group-name SnapLockAdmin -application ssh -authmethod password -role snaplock
+cluster1::> security login create -vserver cluster1 -user-or-group-name SnapLockAdmin -application ssh -authmethod password -role snaplock
 ----
 
