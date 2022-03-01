@@ -22061,11 +22061,19 @@
 <p class="page-details">
   
     
-    <time datetime="2022-02-28 20:33:43 +0000">02/28/2022</time>
+    <time datetime="2022-03-01 18:16:55 +0000">03/01/2022</time>
     
   
 
 <span>提供者
+  <a target="_blank" href="https://github.com/netapp-lenida">
+    <img  class="avatar avatar-small"
+          alt="netapp-lenida"
+          width="20" height="20"
+          src="https://avatars.githubusercontent.com/u/54081920?v=4"
+          style="border-radius: 50%;"/>
+  </a>
+  
   <a target="_blank" href="https://github.com/netapp-ahibbard">
     <img  class="avatar avatar-small"
           alt="netapp-ahibbard"
@@ -22095,7 +22103,7 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>SnapLock 角色与集群 SVM 关联，而 vsadmin-SnapLock 角色与数据 SVM 关联。</p>
+<p>SnapLock 角色与管理 SVM 关联，而 vsadmin-SnapLock 角色则与数据 SVM 关联。</p>
 </div>
 <div class="olist arabic">
 <div class="title">步骤</div>
@@ -22106,11 +22114,11 @@
 <p>` * security login create -vserver <em>svm_name</em> -user-or-group-name <em>user_or_group_name</em> -application <em>application</em>-authmethod <em>authentication_method _ -role _role</em> -comment <em>comtion</em>*`</p>
 </div>
 <div class="paragraph">
-<p>以下命令使用密码启用具有预定义的 <code>SnapLock</code> 角色的 SVM 管理员帐户 <code>SnapLockAdmin</code> 以访问 <code>SVM2</code> ：</p>
+<p>以下命令使用 SnapLock 密码启用具有预定义 <code>SVM</code> 角色的 SVM 管理员帐户 <code>SnapLockAdmin</code> 以访问管理 SVM <code>cluster1</code> ：</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>cluster1::&gt; security login create -vserver SVM2 -user-or-group-name SnapLockAdmin -application ssh -authmethod password -role snaplock</pre>
+<pre>cluster1::&gt; security login create -vserver cluster1 -user-or-group-name SnapLockAdmin -application ssh -authmethod password -role snaplock</pre>
 </div>
 </div>
 </li>
