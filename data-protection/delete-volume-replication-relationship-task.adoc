@@ -24,10 +24,15 @@ summary: 您可以使用 snapmirror delete 和 snapmirror release 命令删除�
 ----
 cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
-. 中断 SnapMirror 关系：
+. 中断复制关系：
 +
-`snapmirror break -source-path svm1 ： vola -destination-path svm_backup ： vola_dst`
+`snapmirror break -source-path SVM ： volume| cluster ： //svm/ volume ，…​ -destination-path SVM ： volume| cluster ： //svm/ volume ，…​`
 
++
+[listing]
+----
+cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
+----
 . 删除复制关系：
 +
 `snapmirror delete -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
