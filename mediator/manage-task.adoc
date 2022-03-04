@@ -1,0 +1,116 @@
+---
+permalink: mediator/manage-task.html 
+sidebar: sidebar 
+keywords: mediator, username, password, change, uninstall 
+summary: 安装 ONTAP 调解器服务后，您可能需要更改用户名或密码。您也可以卸载 ONTAP 调解器服务。 
+---
+= 管理 ONTAP 调解器服务
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安装 ONTAP 调解器服务后，您可以更改用户名或密码。您也可以卸载 ONTAP 调解器服务。
+
+
+
+== 更改用户名
+
+这些任务在安装了 ONTAP 调解器服务的 Linux 主机上执行。
+
+如果无法访问此命令，则可能需要使用完整路径运行此命令，如以下示例所示：
+
+` /usr/local/bin/medier_username`
+
+通过选择以下选项之一更改用户名：
+
+* 运行命令 mediate_change_user 并响应提示，如以下示例所示：
++
+....
+ [root@mediator-host ~]# mediator_change_user
+ Modify the Mediator API username by entering the following values:
+     Mediator API User Name: mediatoradmin
+                   Password:
+ New Mediator API User Name: mediator
+ The account username has been modified successfully.
+ [root@mediator-host ~]#
+....
+* 运行以下命令：
++
+`mEDIATOR_USERNAME=mediator mediator_password=mediator2 mediator_new_username=mediatoradmin mediator_change_user`
+
++
+....
+ [root@mediator-host ~]# MEDIATOR_USERNAME= mediator MEDIATOR_PASSWORD='mediator2' MEDIATOR_NEW_USERNAME= mediatoradmin mediator_change_user
+ The account username has been modified successfully.
+ [root@mediator-host ~]#
+....
+
+
+
+
+== 更改密码
+
+此任务在安装了 ONTAP 调解器服务的 Linux 主机上执行。
+
+如果无法访问此命令，则可能需要使用完整路径运行此命令，如以下示例所示：
+
+` /usr/local/bin/medier_change_password`
+
+通过选择以下选项之一更改密码：
+
+* 运行 `medidator_change_password` 命令并响应提示，如以下示例所示：
++
+....
+ [root@mediator-host ~]# mediator_change_password
+ Change the Mediator API password by entering the following values:
+    Mediator API User Name: mediatoradmin
+              Old Password:
+              New Password:
+          Confirm Password:
+ The password has been updated successfully.
+ [root@mediator-host ~]#
+....
+* 运行以下命令：
++
+`mEDIATOR_USERNAME= mediatoradmin mediator_password=mediator1 mediator_new_password=mediator2 mediator_change_password`
+
++
+此示例显示密码已从 "mediator1" 更改为 "mediator2" 。
+
++
+....
+ [root@mediator-host ~]# MEDIATOR_USERNAME=mediatoradmin MEDIATOR_PASSWORD=mediator1 MEDIATOR_NEW_PASSWORD=mediator2 mediator_change_password
+ The password has been updated successfully.
+ [root@mediator-host ~]#
+....
+
+
+
+
+== 卸载 ONTAP 调解器服务
+
+如有必要，您可以删除 ONTAP 调解器服务。在删除调解器服务之前，必须断开调解器与 ONTAP 的连接。
+
+此任务在安装了 ONTAP 调解器服务的 Linux 主机上执行。
+
+如果无法访问此命令，则可能需要使用完整路径运行此命令，如以下示例所示：
+
+` /usr/local/bin/uninstall_ontap_mediator`
+
+.步骤
+. 卸载 ONTAP 调解器服务：
++
+`uninstall_ontap_mediator`
+
++
+....
+ [root@mediator-host ~]# uninstall_ontap_mediator
+
+ ONTAP Mediator: Self Extracting Uninstaller
+
+ + Removing ONTAP Mediator. (Log: /tmp/ontap_mediator.GmRGdA/uninstall_ontap_mediator/remove.log)
+ + Remove successful.
+ [root@mediator-host ~]#
+....
+

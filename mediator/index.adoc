@@ -1,0 +1,474 @@
+---
+permalink: mediator/index.html 
+sidebar: sidebar 
+keywords: ontap mediator service, install requirements, mediator requirements 
+summary: 要安装 ONTAP 调解器服务，必须确保满足所有前提条件，获取安装包并在主机上运行安装程序。 
+---
+= 安装或升级 ONTAP 调解器服务
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要安装 ONTAP 调解器服务，必须确保满足所有前提条件，获取安装包并在主机上运行安装程序。此操作步骤用于安装或升级现有安装。
+
+您必须满足以下前提条件。
+
+[cols="30,70"]
+|===
+
+
+| 调解器版本 | 支持的 Linux 版本 
+
+
+ a| 
+1.3
+ a| 
+* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 7.9 ， 8.0 ， 8.1 ， 8.2 ， 8.3
+* CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
+
+
+
+
+ a| 
+1.2
+ a| 
+* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 8.0 ， 8.1
+* CentOS ： 7.6 ， 7.7 ， 7.8
+
+
+|===
+
+NOTE: 内核版本必须与操作系统版本匹配。
+
+* 64 位物理安装或虚拟机
+* 8 GB RAM
+* 用户： root 访问权限
+
+
+
+
+== 依次升级主机操作系统和调解器
+
+下表提供了从 RHEL/CentOS 7.6 升级到更高版本 RHEL/CentOS 以及升级调解器版本的升级准则。
+
+[cols="20,20,60"]
+|===
+
+
+| 目标 Linux 版本 | 目标调解器版本 | 升级说明 
+
+
+ a| 
+* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 8.0 ， 8.1
+* CentOS ： 7.6 ， 7.7 ， 7.8
+
+ a| 
+1.2
+ a| 
+* 必须按以下顺序执行升级：
++
+.. 从 RHEL/CentOS 版本升级操作系统。
+.. 重新启动主机以应用内核模块更改。
+.. 将调解器从先前版本升级到当前版本。
+
+
+* 对于 MetroCluster ：
++
+.. storage iscsi-initiator show 命令将报告升级期间与调解器服务的连接已关闭。
+.. ONTAP 操作系统将生成以下 EMS 事件：
++
+... cf.mccip.med.auso.stDisabled
+... 重新启用自动计划外切换时显示 cf.mccip.med.auso.stEnabled
+
+
+
+
+
+
+
+
+ a| 
+* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 7.9 ， 8.0 ， 8.1 ， 8.2 ， 8.3
+* CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
+
+ a| 
+1.3
+ a| 
+. 从 RHEL/CentOS 版本升级操作系统。
+. 重新启动主机以应用内核模块更改。
+. 将调解器从先前版本升级到当前版本。
+
+
+|===
+下面列出了在系统上安装 Red Hat Enterprise Linux 或 CentOS 以及关联存储库的最佳实践。以不同方式安装或配置的系统可能需要执行其他步骤。
+
+* 您必须根据 Red Hat 最佳实践安装 Red Hat Enterprise Linux 或 CentOS 。由于 CentOS 8.x 版本的支持已停止使用，因此不建议使用 RHEL 或兼容的 CentOS 7.x 版本
+* 在 Red Hat Enterprise Linux 或 CentOS 上安装 ONTAP 调解器服务时，系统必须能够访问相应的存储库，以便安装程序可以访问和安装所有必需的软件依赖项。
+* 要使 yum 安装程序在 Red Hat Enterprise Linux 存储库中查找相关软件，您必须在 Red Hat Enterprise Linux 安装期间或之后使用有效的 Red Hat 订阅注册系统。
++
+有关 Red Hat 订阅管理器的信息，请参见 Red Hat 文档。
+
+* 必须未使用以下端口，这些端口可用于调解器：
++
+** 31784
+** 3260
+
+
+* 如果使用第三方防火墙：请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["ONTAP 调解器的防火墙要求"^]
+* 如果 Linux 主机所在位置无法访问 Internet ，您可以手动安装这些软件包，也可以确保所需的软件包在本地存储库中可用。
++
+您可以使用以下链接获取有关设置存储库的信息。
+
++
+如果您在 Linux 环境中使用链路聚合控制协议（ Link Aggregation Control Protocol ， LACP ），则必须正确配置内核，并确保 `sysctl net.IPv4.conf.all.arp_ignore` 设置为 "2" 。
+
++
+ONTAP 调解器服务需要以下软件包：
+
++
+[cols="25,35,40"]
+|===
+
+
+| 所有 RHEL/CentOS 版本 | 适用于 RHEL/CentOS 7.x 的其他软件包 | 适用于 RHEL 8.x 的其他软件包 
+
+
+ a| 
+** OpenSSL
+** OpenSSL 开发
+** 内核开发
+** GCC
+** libselinux-utils
+** 创建
+** RedHat-lsb-core
+** patch
+** bzip 2
+** python36
+** python36- devel
+** Perl 数据 - Dumper
+** Perl 扩展程序 -MakeMaker
+** python3-pip
+
+ a| 
+** policycoreutils-python
+** python36 pip
+
+ a| 
+** elfutils-libelf-devel
+** policycoreutils-python 实用程序
+
+
+|===
+* 如果配置了签名验证，则必须将其禁用。可以通过以下两种方式之一完成此操作：
++
+** 如果配置了 UEFI SecureBoot 机制，请将其禁用。
+** 通过更新和重新生成 grub.cfg 文件禁用签名验证机制：
++
+... 打开 /etc/default/grub 文件。
+... 将字符串 module.sig_enforce 添加到 Grub_CMDLINE_Linux 语句末尾。
+... 重新生成 grub.cfg 文件以实施更改：
++
+`update-bootloader || update-grub || grub2-mkconfig -o /boot/grub2/grub.cfg`
+
+... 重新启动主机。
+
+
+
+
+
+
+调解器安装包是一个自解压压缩 tar 文件，其中包括：
+
+* 一个 RPM 文件，其中包含无法从受支持版本的存储库获取的所有依赖项。
+* 安装脚本。
+
+
+建议使用有效的 SSL 认证，如本操作步骤中所述。
+
+
+
+== 启用对存储库的访问
+
+|===
+
+
+| 操作系统 | 您必须提供对这些存储库的访问权限 ... 
+
+
+ a| 
+RHEL 7.x
+ a| 
+rhel-7-server-optional -rpms
+
+
+
+ a| 
+CentOS 7.x
+ a| 
+C7.6.1810 —基本存储库
+
+
+
+ a| 
+RHEL 8.x
+ a| 
+* rhel-8-for-x86_64 — basos-rpms
+* rhel-8-for-x86_64 — AppStream — rpms
+
+
+|===
+启用对上述存储库的访问，以便调解器可以在安装过程中访问所需的软件包。请根据您的操作系统使用以下操作步骤。
+
+* 适用于的操作步骤 <<rhel7x,RHEL 7.x>> 操作系统
+* 适用于的操作步骤 <<rhel8x,RHEL 8.x>> 操作系统
+* 适用于的操作步骤 <<centos7x,CentOS 7.x>> 操作系统
+
+
+
+
+=== 适用于 RHEL 7.x 操作系统的操作步骤
+
+如果您的操作系统为 * RHEL 7.x* ：
+
+.步骤
+. 订阅所需的存储库：
++
+`ssubscription-manager repos-enable rhel-7-server-optional-rpms`
+
++
+以下示例显示了此命令的执行情况：
+
++
+[listing]
+----
+[root@localhost ~]# subscription-manager repos --enable rhel-7-server-optional-rpms
+Repository 'rhel-7-server-optional-rpms' is enabled for this system.
+----
+. 运行 `yum repolist` 命令。
++
+以下示例显示了此命令的执行情况。列表中应显示 rhel-7-server-optional -rpms 存储库。
+
++
+[listing]
+----
+[root@localhost ~]# yum repolist
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+rhel-7-server-optional-rpms | 3.2 kB  00:00:00
+rhel-7-server-rpms | 3.5 kB  00:00:00
+(1/3): rhel-7-server-optional-rpms/7Server/x86_64/group                                               |  26 kB  00:00:00
+(2/3): rhel-7-server-optional-rpms/7Server/x86_64/updateinfo                                          | 2.5 MB  00:00:00
+(3/3): rhel-7-server-optional-rpms/7Server/x86_64/primary_db                                          | 8.3 MB  00:00:01
+repo id                                      repo name                                             status
+rhel-7-server-optional-rpms/7Server/x86_64   Red Hat Enterprise Linux 7 Server - Optional (RPMs)   19,447
+rhel-7-server-rpms/7Server/x86_64            Red Hat Enterprise Linux 7 Server (RPMs)              26,758
+repolist: 46,205
+[root@localhost ~]#
+----
+
+
+
+
+=== 适用于 RHEL 8.x 操作系统的操作步骤
+
+如果您的操作系统为 * RHEL 8.x * ：
+
+.步骤
+. 订阅所需的存储库：
++
+`ssubscription-manager repos-enable rhel-8-for-x86_64 basos-rpms`
+
++
+`ssubscription-manager repos-enable rhel-8-for-x86_64 -AppStream -rpms`
+
++
+以下示例显示了此命令的执行情况：
+
++
+[listing]
+----
+[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms
+[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms
+Repository 'rhel-8-for-x86_64-baseos-rpms' is enabled for this system.
+Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
+----
+. 运行 `yum repolist` 命令。
++
+新订阅的存储库应显示在列表中。
+
+
+
+
+
+=== 适用于 CentOS 7.x 操作系统的操作步骤
+
+如果您的操作系统为 * CentOS 7.x * ：
+
+.步骤
+. 添加 C7.6.1810 —基本存储库。C7.6.1810 —基础存储库包含 ONTAP 调解器所需的 kernel-devel 软件包。
+. 将以下行添加到 /etc/yum.repos.d/Centos-vault.repo.
++
+[listing]
+----
+[C7.6.1810-base]
+name=CentOS-7.6.1810 - Base
+baseurl=http://vault.centos.org/7.6.1810/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=1
+----
+. 运行 `yum repolist` 命令。
++
+以下示例显示了此命令的执行情况。CentOS-7.6.1810 —基本存储库应显示在列表中。
+
++
+[listing]
+----
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: distro.ibiblio.org
+ * extras: distro.ibiblio.org
+ * updates: ewr.edge.kernel.org
+C7.6.1810-base                                                   | 3.6 kB  00:00:00
+(1/2): C7.6.1810-base/x86_64/group_gz                            | 166 kB  00:00:00
+(2/2): C7.6.1810-base/x86_64/primary_db                          | 6.0 MB  00:00:04
+repo id                                           repo name                                                                                                    status
+C7.6.1810-base/x86_64                             CentOS-7.6.1810 - Base                                                                                       10,019
+base/7/x86_64                                     CentOS-7 - Base                                                                                              10,097
+extras/7/x86_64                                   CentOS-7 - Extras                                                                                               307
+updates/7/x86_64                                  CentOS-7 - Updates                                                                                            1,010
+repolist: 21,433
+[root@localhost ~]#
+----
+
+
+
+
+== 下载调解器安装包
+
+.步骤
+. 从 ONTAP 调解器页面下载调解器安装包。
++
+https://mysupport.netapp.com/site/products/all/details/ontap-mediator/downloads-tab["ONTAP 调解器下载页面"^]
+
+. 确认调解器安装包位于目标目录中：
++
+`ls`
+
++
+[listing]
+----
+[root@mediator-host ~]#ls
+./ontap-mediator_1.3
+----
++
+如果您所在位置无法访问 Internet ，则必须确保安装程序能够访问所需的软件包。
+
+. 如有必要，请将调解器安装包从下载目录移至 Linux 调解器主机上的安装目录。
+
+
+
+
+== 安装 ONTAP 调解器安装包
+
+.步骤
+. 安装调解器安装包并根据需要响应提示：
++
+` 。 /ontap-mediate_1.3`
+
++
+安装过程将继续创建所需的帐户并安装所需的软件包。如果主机上安装了先前版本的调解器，系统将提示您确认是否要升级。
+
+
+
+link:../media/console_output_mediator_installation.txt["ONTAP 调解器安装示例（控制台输出）"^]
+
+
+
+== 验证安装。
+
+.步骤
+. 运行以下命令以查看 ONTAP 调解器服务的状态：
++
+`systemctl`
+
++
+[listing]
+----
+ [root@scspr1915530002 ~]# systemctl status ontap_mediator mediator-scst
+
+        ∙ ontap_mediator.service - ONTAP Mediator
+            Loaded: loaded (/opt/netapp/lib/ontap_mediator/systemd/ontap_mediator.service; enabled; vendor preset: disabled)
+
+            Active: active (running) since Thu 2020-06-18 09:55:02 EDT; 3 days ago
+
+         Main PID: 3559 (uwsgi)
+
+            Status: "uWSGI is ready"
+
+            CGroup: /system.slice/ontap_mediator.service
+
+                    \u251c\u25003559 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+                    \u251c\u25004510 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+                    \u2514\u25004512 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+
+
+         Jun 18 09:54:43 scspr1915530002 systemd[1]: Starting ONTAP Mediator...
+
+         Jun 18 09:54:45 scspr1915530002 ontap_mediator[3559]: [uWSGI] getting INI configuration from /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+         Jun 18 09:55:02 scspr1915530002 systemd[1]: Started ONTAP Mediator.
+
+
+
+         ∙ mediator-scst.service
+            Loaded: loaded (/opt/netapp/lib/ontap_mediator/systemd/mediator-scst.service; enabled; vendor preset: disabled)
+
+            Active: active (running) since Thu 2020-06-18 09:54:51 EDT; 3 days ago
+
+           Process: 3564 ExecStart=/etc/init.d/scst start (code=exited, status=0/SUCCESS)
+
+         Main PID: 4202 (iscsi-scstd)
+
+            CGroup: /system.slice/mediator-scst.service
+
+                    \u2514\u25004202 /usr/local/sbin/iscsi-scstd
+
+
+
+         Jun 18 09:54:43 scspr1915530002 systemd[1]: Starting mediator-scst.service...
+
+         Jun 18 09:54:48 scspr1915530002 iscsi-scstd[4200]: max_data_seg_len 1048576, max_queued_cmds 2048
+
+         Jun 18 09:54:51 scspr1915530002 scst[3564]: Loading and configuring SCST[  OK  ]
+
+         Jun 18 09:54:51 scspr1915530002 systemd[1]: Started mediator-scst.service.
+
+         [root@scspr1915530002 ~]#
+----
+. 确认 ONTAP 调解器服务正在使用的端口： netstat
++
+[listing]
+----
+         [root@scspr1905507001 ~]# netstat -anlt | grep -E '3260|31784'
+
+         tcp   0   0 0.0.0.0:31784   0.0.0.0:*      LISTEN
+
+         tcp   0   0 0.0.0.0:3260    0.0.0.0:*      LISTEN
+
+         tcp6  0   0 :::3260         :::*           LISTEN
+----
+
+
+
+
+== 结果
+
+此时， ONTAP 调解器服务已安装并正在运行。要使用调解器功能，必须在 ONTAP 存储系统中执行进一步配置：
+
+* 要在 MetroCluster IP 配置中使用 ONTAP 调解器服务，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["从 MetroCluster IP 配置配置 ONTAP 调解器服务"^]
+* 要使用 SnapMirror 业务连续性，请参见 xref:../smbc/smbc_install_confirm_ontap_cluster.html[安装 ONTAP 调解器服务并确认 ONTAP 集群配置]
+
