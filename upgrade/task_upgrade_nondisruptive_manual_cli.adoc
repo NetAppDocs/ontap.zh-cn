@@ -2,15 +2,15 @@
 sidebar: sidebar 
 permalink: upgrade/task_upgrade_nondisruptive_manual_cli.html 
 keywords: netapp, ontap, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
-summary: 您可以无中断地更新集群上的 ONTAP 版本。 
+summary: '要使用手动无中断方法升级包含两个或更多节点的集群，您必须对 HA 对中的每个节点启动故障转移操作，更新 " 故障 " 节点，启动交还，然后对集群中的每个 HA 对重复此过程。' 
 ---
-= 使用 CLI 手动无中断（滚动方法）
+= 使用 CLI 手动无中断升级（非 MetroCluster 系统）
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-通过滚动升级方法，您可以无中断地更新由两个或更多节点组成的集群。此方法包括几个步骤：在 HA 对中的每个节点上启动故障转移操作，更新 "`failed` " 节点，启动交还，然后对集群中的每个 HA 对重复此过程。
+要使用手动无中断方法升级包含两个或更多节点的集群，您必须对 HA 对中的每个节点启动故障转移操作，更新 "`Failed` " 节点，启动交还，然后对集群中的每个 HA 对重复此过程。
 
 您必须满足升级准备要求。
 
@@ -88,13 +88,13 @@ node1    false
 ----
 . 运行以下命令两次，以确定要更新的节点当前是否正在为任何客户端提供服务 `ssystem node run -node nodenameA -command uptime`
 +
-uptime 命令显示节点自上次启动以来对 NFS ， CIFS ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您必须运行两次命令以确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。
+uptime 命令可显示节点自上次启动以来对 NFS ， SMB ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您必须运行两次命令以确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。
 
 +
 * 注 * ：您应记下客户端操作不断增加的每个协议，以便在更新节点后验证客户端流量是否已恢复。
 
 +
-以下示例显示了具有 NFS ， CIFS ， FC 和 iSCSI 操作的节点。但是，此节点当前仅为 NFS 和 iSCSI 客户端提供服务。
+以下示例显示了具有 NFS ， SMB ， FC 和 iSCSI 操作的节点。但是，此节点当前仅为 NFS 和 iSCSI 客户端提供服务。
 
 +
 [listing]
@@ -323,13 +323,13 @@ node0    false
 ----
 . 运行以下命令两次，以确定要更新的节点当前是否正在为任何客户端提供服务： `ssystem node run -node nodenameB -command uptime`
 +
-uptime 命令显示节点自上次启动以来对 NFS ， CIFS ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您必须运行两次命令以确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。
+uptime 命令可显示节点自上次启动以来对 NFS ， SMB ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您必须运行两次命令以确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。
 
 +
 * 注 * ：您应记下客户端操作不断增加的每个协议，以便在更新节点后验证客户端流量是否已恢复。
 
 +
-以下示例显示了具有 NFS ， CIFS ， FC 和 iSCSI 操作的节点。但是，此节点当前仅为 NFS 和 iSCSI 客户端提供服务。
+以下示例显示了具有 NFS ， SMB ， FC 和 iSCSI 操作的节点。但是，此节点当前仅为 NFS 和 iSCSI 客户端提供服务。
 
 +
 [listing]
