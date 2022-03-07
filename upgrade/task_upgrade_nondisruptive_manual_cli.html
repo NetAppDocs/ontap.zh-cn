@@ -1,35 +1,26 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title>使用 CLI 手动无中断（滚动方法）</title>
+  <title>使用 CLI 手动无中断升级（非 MetroCluster 系统）</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="使用 CLI 手动无中断（滚动方法）" />
+  <meta property="og:title" content="使用 CLI 手动无中断升级（非 MetroCluster 系统）" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/upgrade/task_upgrade_nondisruptive_manual_cli.html" />
-	<meta property="og:description" content="您可以无中断地更新集群上的 ONTAP 版本。" />
+	<meta property="og:description" content="要使用手动无中断方法升级包含两个或更多节点的集群，您必须对 HA 对中的每个节点启动故障转移操作，更新 " 故障 " 节点，启动交还，然后对集群中的每个 HA 对重复此过程。" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="encoding" content="utf-8">
   <meta http-equiv="nss-type" content="Product Documentation"/>
-  <meta http-equiv="nss-subtype" content="User Guide"/>
-  
-  <meta name="description" content="您可以无中断地更新集群上的 ONTAP 版本。">
-  <meta name="keywords" content=" netapp, ontap, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu">
-  
-  
-
-  <!-- Icons -->
+  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="要使用手动无中断方法升级包含两个或更多节点的集群，您必须对 HA 对中的每个节点启动故障转移操作，更新 " 故障 " 节点，启动交还，然后对集群中的每个 HA 对重复此过程。">
+  <meta name="keywords" content=" netapp, ontap, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu"><!-- Icons -->
   <link rel="icon" href="/zh-cn/ontap/images/favicon.ico" type="image/x-icon">
 
-  <!-- RSS Feed -->
-  
-
-  <!-- CSS Definitions: NetApp CSS should be defined after generic css -->
+  <!-- RSS Feed --><!-- CSS Definitions: NetApp CSS should be defined after generic css -->
 
   <!-- Elastic Search -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/searchkit/0.10.0/theme.css">
@@ -60,26 +51,10 @@
   <link rel="stylesheet" href="/zh-cn/ontap/css/landing-page.css" type="text/css">
   <link rel="stylesheet" href="/zh-cn/ontap/css/tabbed-blocks.css" type="text/css">
   <link rel="stylesheet" href='/zh-cn/ontap/css/product-family.css' type="text/css">
-  
-
-  
-  <link rel='stylesheet' href='/zh-cn/ontap/css/na-feature.css' type='text/css'>
-  
-
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <link rel='stylesheet' href='/zh-cn/ontap/css/na-feature.css' type='text/css'><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
   <!-- Used to import Promise for IE. Required for SearchKit -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script>
-  
-    <script src='/zh-cn/ontap/js/na-search.js'></script>
-  
-
-  
-  <script src='/zh-cn/ontap/js/na-pagenav.js'></script>
-  
-
-  <link rel='stylesheet' href='/zh-cn/ontap/css/prism.css' type='text/css'>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script><script src='/zh-cn/ontap/js/na-search.js'></script><script src='/zh-cn/ontap/js/na-pagenav.js'></script><link rel='stylesheet' href='/zh-cn/ontap/css/prism.css' type='text/css'>
   <link rel='stylesheet' href='/zh-cn/ontap/css/prism-netapp.css' type='text/css'>
 
 
@@ -97,9 +72,7 @@
   <script src='/zh-cn/ontap/js/jquery.navgoco.min.js'></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script src='/zh-cn/ontap/js/toc.js'></script>
-  <script src='/zh-cn/ontap/js/customscripts.js'></script>
-
-  <script>
+  <script src='/zh-cn/ontap/js/customscripts.js'></script><script>
       $(document).ready(function() {
           
           var collapseOnInit = true;
@@ -22042,8 +22015,7 @@
   
 
   <div class="ie-content-pane n-doc__component-detail-content n-doc__component-detail-content--show-code">
-    <!-- Begin of page container -->
-    <article class="page-content">
+    <!-- Begin of page container --><article class="page-content">
       <div class="ie-utility">
   <div class="ie-menu">
     <div class="n-breadcrumb">
@@ -22060,7 +22032,7 @@
           <a href="/zh-cn/ontap/">ONTAP&nbsp;9</a>
         </li>
         <li class="n-breadcrumb__list-item">
-          使用 CLI 手动无中断（滚动方法）
+          使用 CLI 手动无中断升级（非 MetroCluster 系统）
         </li>
       </ul>
     </div>
@@ -22083,14 +22055,14 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading">使用 CLI 手动无中断（滚动方法）</h1>
+  <h1 class="n-doc__component-detail-heading">使用 CLI 手动无中断升级（非 MetroCluster 系统）</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-03-04 04:26:20 +0000">03/04/2022</time>
+    <time datetime="2022-03-07 21:42:51 +0000">03/07/2022</time>
     
   
 
@@ -22104,7 +22076,7 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph lead">
-<p>通过滚动升级方法，您可以无中断地更新由两个或更多节点组成的集群。此方法包括几个步骤：在 HA 对中的每个节点上启动故障转移操作，更新 "`failed` " 节点，启动交还，然后对集群中的每个 HA 对重复此过程。</p>
+<p>要使用手动无中断方法升级包含两个或更多节点的集群，您必须对 HA 对中的每个节点启动故障转移操作，更新 "`Failed` " 节点，启动交还，然后对集群中的每个 HA 对重复此过程。</p>
 </div>
 <div class="paragraph">
 <p>您必须满足升级准备要求。</p>
@@ -22213,14 +22185,14 @@ node1    false
 <li>
 <p>运行以下命令两次，以确定要更新的节点当前是否正在为任何客户端提供服务 <code>ssystem node run -node nodenameA -command uptime</code></p>
 <div class="paragraph">
-<p>uptime 命令显示节点自上次启动以来对 NFS ， CIFS ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您必须运行两次命令以确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。</p>
+<p>uptime 命令可显示节点自上次启动以来对 NFS ， SMB ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您必须运行两次命令以确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p>注 * ：您应记下客户端操作不断增加的每个协议，以便在更新节点后验证客户端流量是否已恢复。</p>
 <div class="paragraph">
-<p>以下示例显示了具有 NFS ， CIFS ， FC 和 iSCSI 操作的节点。但是，此节点当前仅为 NFS 和 iSCSI 客户端提供服务。</p>
+<p>以下示例显示了具有 NFS ， SMB ， FC 和 iSCSI 操作的节点。但是，此节点当前仅为 NFS 和 iSCSI 客户端提供服务。</p>
 </div>
 </li>
 </ul>
@@ -22533,14 +22505,14 @@ node0    false
 <li>
 <p>运行以下命令两次，以确定要更新的节点当前是否正在为任何客户端提供服务： <code>ssystem node run -node nodenameB -command uptime</code></p>
 <div class="paragraph">
-<p>uptime 命令显示节点自上次启动以来对 NFS ， CIFS ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您必须运行两次命令以确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。</p>
+<p>uptime 命令可显示节点自上次启动以来对 NFS ， SMB ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您必须运行两次命令以确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
 <p>注 * ：您应记下客户端操作不断增加的每个协议，以便在更新节点后验证客户端流量是否已恢复。</p>
 <div class="paragraph">
-<p>以下示例显示了具有 NFS ， CIFS ， FC 和 iSCSI 操作的节点。但是，此节点当前仅为 NFS 和 iSCSI 客户端提供服务。</p>
+<p>以下示例显示了具有 NFS ， SMB ， FC 和 iSCSI 操作的节点。但是，此节点当前仅为 NFS 和 iSCSI 客户端提供服务。</p>
 </div>
 </li>
 </ul>
@@ -22834,7 +22806,7 @@ node1
   <div class="page-nav-toolbar">
     <div id="version-dropdown"></div>
     <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[使用 CLI 手动无中断（滚动方法）](https://docs.netapp.com/zh-cn/ontap/upgrade/task_upgrade_nondisruptive_manual_cli.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[使用 CLI 手动无中断升级（非 MetroCluster 系统）](https://docs.netapp.com/zh-cn/ontap/upgrade/task_upgrade_nondisruptive_manual_cli.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
       <a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/upgrade/task_upgrade_nondisruptive_manual_cli.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
       <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a>
     </div>
@@ -22848,8 +22820,7 @@ node1
     </div>
   </div>
   
-  <div style="clear: both"></div><!-- Main needs to have height -->
-</div>
+  <div style="clear: both"></div><!-- Main needs to have height --></div>
 
         </main>
 
@@ -22951,9 +22922,7 @@ node1
 </div>
 </footer>
 
-      </div>
-
-      <!-- Elasticsearch JS -->
+      </div><!-- Elasticsearch JS -->
       <script type="text/javascript" src='/zh-cn/ontap/js/bundle.js'></script>
 
       <!-- Syntax Highlighting -->
@@ -22968,7 +22937,4 @@ node1
     </script>
     <script src='/zh-cn/ontap/js/www-ntap.js'></script>
     <script src='/zh-cn/ontap/js/tabbed-blocks.js'></script>
-  </body>
-
-  
-</html>
+  </body></html>
