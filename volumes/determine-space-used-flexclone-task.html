@@ -50,10 +50,10 @@
   
   <link rel="stylesheet" href="/zh-cn/ontap/css/landing-page.css" type="text/css">
   <link rel="stylesheet" href="/zh-cn/ontap/css/tabbed-blocks.css" type="text/css">
-  <link rel="stylesheet" href='/zh-cn/ontap/css/product-family.css' type="text/css">
   <link rel='stylesheet' href='/zh-cn/ontap/css/na-feature.css' type='text/css'><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-  <!-- Used to import Promise for IE. Required for SearchKit -->
+
+  <!-- Used for Product Family Page Sidebar Visibility --><!-- Used to import Promise for IE. Required for SearchKit -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.5/bluebird.min.js"></script><script src='/zh-cn/ontap/js/na-search.js'></script><script src='/zh-cn/ontap/js/na-pagenav.js'></script><link rel='stylesheet' href='/zh-cn/ontap/css/prism.css' type='text/css'>
   <link rel='stylesheet' href='/zh-cn/ontap/css/prism-netapp.css' type='text/css'>
 
@@ -131,7 +131,6 @@
   }
   </script>
   <script src='/zh-cn/ontap/js/version-dropdown.js'></script>
-  <script src='/zh-cn/ontap/js/product-family.js'></script>
   <script src='/zh-cn/ontap/js/FileSaver.min.js'></script>
   <script src='/zh-cn/ontap/js/jszip-utils.min.js'></script>
   <script src='/zh-cn/ontap/js/jszip.min.js'></script>
@@ -144,6 +143,25 @@
       <div class="n-off-canvas-menu__menu"><!--TODO: Add offcanvas code --></div>
       <div class="n-off-canvas-menu__content-wrap">
         <header class="site-header" id="banner">
+  
+  <!-- Start Page Toolbar -->
+  <div class="page-nav-toolbar">
+    <div id="version-dropdown"></div>
+    <div class="page-nav-contribute"  >
+      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[确定 FlexClone 卷使用的空间](https://docs.netapp.com/zh-cn/ontap/volumes/determine-space-used-flexclone-task.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
+      <a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/volumes/determine-space-used-flexclone-task.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
+      <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a>
+    </div>
+    <div class="page-nav-container">
+      <nav class="page-nav-fixed">
+        <div class="page-nav-title">在此页面上</div>
+        <div class="page-nav-links">
+          <ul class="page-nav-inner" id="page-menu"></ul>
+        </div>
+      </nav>
+    </div>
+  </div>
+  
   <!-- Start top_hat -->
   <div class="n-top-hat">
     <div class="n-container">
@@ -22021,19 +22039,16 @@
     <div class="n-breadcrumb">
       <ul class="n-breadcrumb__list">
         <li class="n-breadcrumb__list-item">
-          <a href="https://www.netapp.com">主页</a>
+          <a href="https://docs.netapp.com">docs.netapp.com</a>
         </li>
-        <li class="n-breadcrumb__list-item">
-          <a href="https://docs.netapp.com">文档</a>
-        </li>
+        
+
         
 
         <li class="n-breadcrumb__list-item">
           <a href="/zh-cn/ontap/">ONTAP&nbsp;9</a>
         </li>
-        <li class="n-breadcrumb__list-item">
-          确定 FlexClone 卷使用的空间
-        </li>
+
       </ul>
     </div>
     <div style="clear: both"></div><!-- Main needs to have height -->
@@ -22062,7 +22077,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-03-10 02:52:32 +0000">03/10/2022</time>
+    <time datetime="2022-03-15 03:29:12 +0000">03/15/2022</time>
     
   
 
@@ -22071,7 +22086,6 @@
 
 
 </p>
-
 
 <div class="paragraph lead">
 <p>您可以根据 FlexClone 卷的标称大小及其与父 FlexVol 卷共享的空间量来确定 FlexClone 卷使用的空间。创建 FlexClone 卷时，它会与其父卷共享其所有数据。因此，虽然 FlexVol 卷的标称大小与其父卷的大小相同，但它使用聚合中的可用空间非常少。</p>
@@ -22107,25 +22121,6 @@ vs01     clone_vol1   20MB   18.45MB   564KB       7%             196KB         
     <!-- Page Container -->
   </div>
 
-  
-  <!-- Start Page Toolbar -->
-  <div class="page-nav-toolbar">
-    <div id="version-dropdown"></div>
-    <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[确定 FlexClone 卷使用的空间](https://docs.netapp.com/zh-cn/ontap/volumes/determine-space-used-flexclone-task.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
-      <a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/volumes/determine-space-used-flexclone-task.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
-      <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a>
-    </div>
-    <div class="page-nav-container">
-      <nav class="page-nav-fixed">
-        <div class="page-nav-title">在此页面上</div>
-        <div class="page-nav-links">
-          <ul class="page-nav-inner" id="page-menu"></ul>
-        </div>
-      </nav>
-    </div>
-  </div>
-  
   <div style="clear: both"></div><!-- Main needs to have height --></div>
 
         </main>
