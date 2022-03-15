@@ -12,19 +12,36 @@ summary: 您可以从集群中删除不需要的节点，一次删除一个节�
 [role="lead"]
 您可以从集群中删除不需要的节点，一次删除一个节点。删除节点后，您还必须删除其故障转移配对节点。如果要删除某个节点，则其数据将无法访问或擦除。
 
-.您需要什么？ #8217 ；将需要什么
+从集群中删除节点之前，必须满足以下条件：
+
 * 集群中一半以上的节点必须运行状况良好。
 * 必须已清空节点上要删除的所有数据。
-* 必须已删除所有集群间 LIF 。
 +
-[NOTE]
-====
-删除集群间 LIF 时，将显示一条警告，可以忽略此警告。
+** 这可能包括 link:../encryption-at-rest/secure-purge-data-encrypted-volume-concept.html["清除加密卷中的数据"]。
 
-在自动 ONTAP 升级过程中，您不能执行 `cluster remove-node` ， `cluster unjoin` 和 `node rename` 等操作。
 
-====
+* 所有卷均已 link:../volumes/move-volume-task.html["已移动"] 或  来自节点所拥有的聚合。
+* 所有聚合均已 link:../disks-aggregates/commands-manage-aggregates-reference.html["已删除"] 从节点。
+* 如果节点拥有联邦信息处理标准（ FIPS ）磁盘或自加密磁盘（ SED ）， link:../encryption-at-rest/return-seds-unprotected-mode-task.html["磁盘加密已删除"] 将磁盘返回到未受保护的模式。
++
+** 您可能还需要 link:../encryption-at-rest/sanitize-fips-drive-sed-task.html["清理 FIPS 驱动器或 SED"]。
 
+
+* 数据 LIF 已经过 link:../networking/delete_a_lif.html["已删除"] 或  从节点。
+* 集群管理 LIF 已启用 link:../networking/migrate_a_lif.html["已重新定位"] 已更改节点和主端口。
+* 所有集群间 LIF 均已启用 link:../networking/delete_a_lif.html["已删除"]。
++
+** 删除集群间 LIF 时，将显示一条警告，可以忽略此警告。
+
+
+* 存储故障转移已完成 link:../high-availability/ha_commands_for_enabling_and_disabling_storage_failover.html["已禁用"] 。
+* 所有 LIF 故障转移规则均已完成 link:../networking/commands_for_managing_failover_groups_and_policies.html["已修改"] 删除节点上的端口。
+* 节点上的所有 VLAN 均已 link:../networking/configure_vlans_over_physical_ports.html#delete-a-vlan["已删除"]。
+
+
+建议问题描述 您发送一条 AutoSupport 消息，以通知 NetApp 技术支持正在删除节点。
+
+* 注意： * 在自动 ONTAP 升级过程中，不能执行 `cluster remove-node` ， `cluster unjoin` 和 `node rename` 等操作。
 
 如果您运行的是混合版本的集群，则可以使用从 ONTAP 9.3 开始的高级权限命令之一删除最后一个低版本节点：
 
@@ -32,42 +49,12 @@ summary: 您可以从集群中删除不需要的节点，一次删除一个节�
 * ONTAP 9.4 及更高版本： `cluster remove-node -skip-last-low-version-node-check`
 
 
-[NOTE]
-====
-在从集群中删除节点之前，您必须使用户无法访问连接到此节点的磁盘中的所有系统和用户数据。从集群中删除节点后，如果需要将此节点重新加入同一集群，请联系技术支持以获得有关还原数据的帮助。
+* 注： * 在从集群中删除节点之前，您必须使用户无法访问连接到节点的磁盘中的所有系统和用户数据。从集群中删除节点后，如果需要将此节点重新加入同一集群，请联系技术支持以获得有关还原数据的帮助。
 
-====
 .步骤
 . 将权限级别更改为高级：
 +
 ` * 设置 -privilege advanced*`
-
-. 如果在集群上启用了存储加密，并且自加密磁盘（ SED ）正在运行，则必须将 data-id-key 设置为 0x0 。
-+
-.. 将 data-id-key 设置为 0x0 ：
-+
-` * 存储加密磁盘修改 -disk \_disk_path_name_\] -data-key-id 0x0*`
-
-.. 可选：如果启用了存储加密且 SED 在联邦信息处理标准（ FIPS ）合规模式下运行，则除了设置 data-id-key 之外，还必须禁用 FIPS 合规模式。
-+
-这样，在将节点从集群中删除后，便可对连接到此节点的磁盘进行清理和重新利用。
-
-+
-*** 显示当前处于 FIPS 兼容模式的 SED ：
-+
-` * 存储加密磁盘 show -fips*`
-
-*** 禁用 FIPS 合规模式：
-+
-` * 存储加密磁盘修改磁盘 [_disk_path_name_]-fips-key-id 0x0*`
-
-*** 验证修改后的 SED 是否不再处于 FIPS 合规模式：
-+
-` * 存储加密磁盘 show -fips*`
-
-
-
-
 
 . 如果要删除的节点是当前主节点，请将此主节点的集群资格更改为 `false` ，以使集群中的另一个节点能够被选为主节点：
 +
