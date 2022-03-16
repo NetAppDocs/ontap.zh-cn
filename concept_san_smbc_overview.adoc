@@ -1,56 +1,7 @@
 ---
-sidebar: sidebar 
 permalink: concept_san_smbc_overview.html 
-keywords: netapp, ontap, system manager, san, san protocol, all san array, asa, aff, clusters protect, automated failover, fail over, snapmirror, SM-BC, smbc, mirror clones, server, VM, data protection, protection, mediator, synchronous replication 
-summary: 从 ONTAP 9.8 开始，您可以使用 System Manager 保护 LUN 以实现透明的应用程序故障转移，从而在使用两个 AFF 集群或两个全 SAN 阵列（ ASA ）集群时，应用程序可以自动进行故障转移以实现业务连续性。 
+redirect: ontap/smbc/index.html 
 ---
-= SnapMirror 业务连续性概述
-:toc: macro
-:hardbreaks:
-:toclevels: 1
-:toc: 
-:toclevels: 1
-:nofooter: 
-:icons: font
-:linkattrs: 
-:imagesdir: ./media/
-:toc-position: content
+= 
 
 
-[role="lead"]
-从 ONTAP 9.8 开始，您可以使用 System Manager 保护 LUN 以实现透明的应用程序故障转移，从而在使用两个 AFF 集群或两个全 SAN 阵列（ ASA ）集群时，应用程序可以自动进行故障转移以实现业务连续性。您的集群不能混用；它们必须包含两个 AFF 集群或两个 ASA 集群。保护业务连续性支持 iSCSI 和 FCP 协议。
-
-SnapMirror 业务连续性具有以下优势：
-
-* 业务关键型应用程序的自动故障转移
-* 简化应用程序管理，使用一致性组实现依赖写入顺序一致性
-* 测试每个应用程序的故障转移的能力
-* 即时创建镜像克隆而不影响应用程序可用性
-
-
-image:workflow_san_snapmirror_business_continuity.png["SnapMirror 业务连续性工作流"]
-
-
-
-== 要求
-
-SnapMirror 业务连续性具有以下要求：
-
-* 仅限双节点 HA 集群— AFF 或 ASA 。无混用。
-* 运行 RHEL 7.6 或 7.8 或 CentOS 8.0 或 8.1 的服务器或 VM ，用于安装 ONTAP 调解器
-* 数据保护或超值包许可证
-
-
-
-
-== 支持
-
-SnapMirror 业务连续性支持以下功能：
-
-* 同步复制
-* SAN 协议— FCP 或 iSCSI
-* 最多 5 个一致性组，每个一致性组最多 12 个卷
-* 在 ONTAP 9.8 和 9.9.9.1 中，每个 HA 对总共有 80 个并发同步关系，在 ONTAP 9.10.1 中为 200 个，包括一致性组
-
-
-image:workflow_san_snapmirror_synchronous.png["SnapMirror 同步工作流"]
