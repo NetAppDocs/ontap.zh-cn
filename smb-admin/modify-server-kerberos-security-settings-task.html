@@ -9,15 +9,15 @@
   <meta property="og:title" content="修改 CIFS 服务器 Kerberos 安全设置" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/smb-admin/modify-server-kerberos-security-settings-task.html" />
-	<meta property="og:description" content="您可以修改某些 CIFS 服务器 Kerberos 安全设置，包括允许的最大 Kerberos 时钟转换时间， Kerberos 票证生命周期以及票证续订天数。" />
+	<meta property="og:description" content="您可以修改某些 CIFS 服务器 Kerberos 安全设置，包括允许的最大 Kerberos 时钟偏差时间， Kerberos 票证生命周期以及票证续订天数。" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="encoding" content="utf-8">
   <meta http-equiv="nss-type" content="Product Documentation"/>
-  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="您可以修改某些 CIFS 服务器 Kerberos 安全设置，包括允许的最大 Kerberos 时钟转换时间， Kerberos 票证生命周期以及票证续订天数。">
-  <meta name="keywords" content=" modify, cifs, server, kerberos, security, setting, clock, slew, time, ticket, lifetime, renewal, modify the cifs server kerberos security ticket settings"><!-- Icons -->
+  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="您可以修改某些 CIFS 服务器 Kerberos 安全设置，包括允许的最大 Kerberos 时钟偏差时间， Kerberos 票证生命周期以及票证续订天数。">
+  <meta name="keywords" content=" modify, cifs, server, kerberos, security, setting, clock, skew, time, ticket, lifetime, renewal, modify the cifs server kerberos security ticket settings"><!-- Icons -->
   <link rel="icon" href="/zh-cn/ontap/images/favicon.ico" type="image/x-icon">
 
   <!-- RSS Feed --><!-- CSS Definitions: NetApp CSS should be defined after generic css -->
@@ -22081,7 +22081,7 @@
 <p class="page-details">
   
     
-    <time datetime="2021-12-11 01:20:01 +0000">12/11/2021</time>
+    <time datetime="2022-03-23 00:45:45 +0000">03/23/2022</time>
     
   
 
@@ -22089,7 +22089,7 @@
 </p>
 
 <div class="paragraph lead">
-<p>您可以修改某些 CIFS 服务器 Kerberos 安全设置，包括允许的最大 Kerberos 时钟转换时间， Kerberos 票证生命周期以及票证续订天数。</p>
+<p>您可以修改某些 CIFS 服务器 Kerberos 安全设置，包括允许的最大 Kerberos 时钟偏差时间， Kerberos 票证生命周期以及票证续订天数。</p>
 </div>
 <div class="paragraph">
 <p>使用 <code>vserver cifs security modify</code> 命令修改 CIFS 服务器 Kerberos 设置仅会修改使用 ` -vserver` 参数指定的单个 Storage Virtual Machine （ SVM ）上的设置。您可以使用 Active Directory 组策略对象（ GPO ）集中管理属于同一 Active Directory 域的集群上所有 SVM 的 Kerberos 安全设置。</p>
@@ -22104,55 +22104,68 @@
 <col style="width: 50%;">
 <col style="width: 50%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">如果您要 &#8230;&#8203;</th>
-<th class="tableblock halign-left valign-top">输入 &#8230;&#8203;</th>
-</tr>
-</thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果您要 &#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">输入 &#8230;&#8203;</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>指定允许的最大 Kerberos 时钟偏差时间（以分钟为单位）</p>
+<p>指定允许的最大 Kerberos 时钟偏差时间（以分钟为单位）。</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>vserver cifs security modify -vserver <em>vserver_name</em> -kerberos-clock-skew <em>intege_in_minutes</em></code> 默认设置为 5 分钟。</p>
+<p><code>vserver cifs security modify -vserver <em>vserver_name</em> -kerberos-clock-skew <em>intege_in_minutes</em></code></p>
+</div>
+<div class="paragraph">
+<p>默认设置为 5 分钟。</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>以小时为单位指定 Kerberos 票证的生命周期</p>
+<p>以小时为单位指定 Kerberos 票证的生命周期。</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>vserver cifs security modify -vserver <em>vserver_name</em> -kerberos-ticket-age intege_in_hours</code> 默认设置为 10 小时。</p>
-</div></div></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>指定最大票证续订天数</p>
-</div></div></td>
-<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>vserver cifs security modify -vserver <em>vserver_name</em> -kerberos-renew-age <em>intege_in_days</em></code> 默认设置为 7 天。</p>
+<p><code>vserver cifs security modify -vserver <em>vserver_name</em> -kerberos-ticket-age integer in_hours</code></p>
+</div>
+<div class="paragraph">
+<p>默认设置为 10 小时。</p>
 </div></div></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>指定 KDC 上的套接字超时，超过此超时后，所有 KDC 都将标记为不可访问</p>
+<p>指定最大票证续订天数。</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p><code>vserver cifs security modify -vserver <em>vserver_name</em> -kerberos-kw-timeout <em>intege_in_seconds</em></code> 默认设置为 3 秒。</p>
+<p><code>vserver cifs security modify -vserver <em>vserver_name</em> -kerberos-renew-age <em>intege_in_days</em></code></p>
+</div>
+<div class="paragraph">
+<p>默认设置为 7 天。</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>指定 KDC 上的套接字超时，超过此超时后，所有 KDC 都将标记为不可访问。</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>vserver cifs security modify -vserver <em>vserver_name</em> -kerberos-kw-timeout <em>intege_in_seconds</em></code></p>
+</div>
+<div class="paragraph">
+<p>默认设置为 3 秒。</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
 </li>
 <li>
-<p>验证 Kerberos 安全设置： <code>vserver cifs security show -vserver <em>vserver_name</em></code></p>
+<p>验证 Kerberos 安全设置：</p>
+<div class="paragraph">
+<p><code>vserver cifs security show -vserver <em>vserver_name</em></code></p>
+</div>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>以下示例对 Kerberos 安全性进行了以下更改：对于 SVM vs1 ， <code>Kerberos 时钟间隔</code> 设置为 <code>3</code> 分钟， <code>Kerberos 票证期限</code> 设置为 <code>8</code> 小时：</p>
+<p>以下示例对 Kerberos 安全性进行了以下更改：对于 SVM vs1 ， "`Kerberos Clock Skew` " 设置为 3 分钟， "`Kerberos 票证期限` " 设置为 8 小时：</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -22175,13 +22188,13 @@ Vserver: vs1
 </div>
 </div>
 <div class="paragraph">
-<p><a href="display-server-security-settings-task.html">显示有关 CIFS 服务器安全设置的信息</a></p>
+<p><a href="display-server-security-settings-task.html">"显示有关 CIFS 服务器安全设置的信息"</a></p>
 </div>
 <div class="paragraph">
-<p><a href="supported-gpos-concept.html">支持的 GPO</a></p>
+<p><a href="supported-gpos-concept.html">"支持的 GPO"</a></p>
 </div>
 <div class="paragraph">
-<p><a href="applying-group-policy-objects-concept.html">将组策略对象应用于 CIFS 服务器</a></p>
+<p><a href="applying-group-policy-objects-concept.html">"将组策略对象应用于 CIFS 服务器"</a></p>
 </div>
 
     </article>
