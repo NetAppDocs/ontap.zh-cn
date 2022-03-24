@@ -22081,7 +22081,7 @@
 <p class="page-details">
   
     
-    <time datetime="2021-11-11 21:57:31 +0000">11/11/2021</time>
+    <time datetime="2022-03-24 22:05:44 +0000">03/24/2022</time>
     
   
 
@@ -22101,37 +22101,19 @@
 <div class="title">步骤</div>
 <ol class="arabic">
 <li>
-<p>进入高级权限模式：</p>
-<div class="paragraph">
-<p>` * 设置高级 *`</p>
-</div>
+<p>进入高级权限模式： ` * 设置高级 *`</p>
 </li>
 <li>
-<p>启用安全协议（ RSH 或 Telnet ）：</p>
-<div class="paragraph">
-<p>` * 安全协议修改 -application <em>security_protocol</em> -enabled true*`</p>
-</div>
+<p>启用安全协议（ RSH 或 Telnet ）： ` * 安全协议修改 -application <em>security_protocol</em> -enabled true*`</p>
 </li>
 <li>
-<p>根据 <code>mGMT</code> 管理防火墙策略创建新的管理防火墙策略：</p>
-<div class="paragraph">
-<p>` * 系统服务防火墙策略克隆 -policy mgmt -new-policy-name <em>policy-name</em>*`</p>
-</div>
+<p>根据 <code>mGMT</code> 管理防火墙策略创建新的管理防火墙策略： ` * 系统服务防火墙策略 clone -policy mgmt -destination-policy <em>policy-name</em>*`</p>
 </li>
 <li>
-<p>在新的管理防火墙策略中启用 Telnet 或 RSH ：</p>
-<div class="paragraph">
-<p>` * 系统服务防火墙策略 create -policy <em>policy-name</em> -service <em>security_protocol</em> -action allow -ip-list <em>ip_address/netmask</em>*`</p>
-</div>
-<div class="paragraph">
-<p>要允许使用所有 IP 地址，应指定 ` -ip-list 0.0.0.0/0`</p>
-</div>
+<p>在新的管理防火墙策略中启用 Telnet 或 RSH ： ` * 系统服务防火墙策略 create -policy <em>policy-name</em> -service <em>security_protocol</em> -action allow -ip-list <em>ip_address/netmask</em>*` 要允许所有 IP 地址，应指定 ` -ip-list 0.0.0.0/0`</p>
 </li>
 <li>
-<p>将新策略与集群管理 LIF 关联：</p>
-<div class="paragraph">
-<p>` * 网络接口修改 -vserver <em>cluster_management_LIF</em> -lif cluster_mgmt -firewall-policy <em>policy-name</em>*`</p>
-</div>
+<p>将新策略与集群管理 LIF 关联： ` * network interface modify -vserver <em>cluster_management_LIF</em> -lif cluster_mgmt -firewall-policy <em>policy-name</em>*`</p>
 </li>
 </ol>
 </div>
