@@ -1476,6 +1476,8 @@
 
 
 
+
+
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
@@ -1538,6 +1540,8 @@
             集群和 SVM 管理员
           </a>
           
+
+
 
 
 
@@ -1715,34 +1719,6 @@
     
 
   
-
-
-
-
-
-          
-        </li>
-      </ul>
-    
-
-  
-
-
-
-    
-      <ul class="subfolders" style="display:none;">
-        <li class="pdf-ux-container">
-          <a target="_blank" 
-            
-              href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_进行集群访问.pdf" 
-            
-          >
-            <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>
-            使用 System Manager 进行集群访问
-          </a>
-          
-
-
 
 
 
@@ -16261,6 +16237,8 @@
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/concept_administration_overview.html">
         管理概述
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/access-cluster-system-manager-browser-task.html">
+        使用 System Manager 访问集群
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_admin_enable_new_features.html">
         启用新功能
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_admin_view_submit_support_cases.html">
@@ -16290,6 +16268,8 @@
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/cluster-svm-administrators-concept.html">
         角色
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/manage-access-system-manager-concept.html">
+        管理对 System Manager 的访问
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/cluster-management-server-concept.html">
         什么是集群管理服务器
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/types-svms-concept.html">
@@ -16364,15 +16344,6 @@
         用于管理 CLI 会话记录的命令
       </a></li></ul></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/commands-manage-timeout-period-reference.html">
         用于管理 CLI 会话自动超时期限的命令
-      </a></li></ul></li><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用 System Manager 进行集群访问</div>
-      </a>
-      <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/access-cluster-system-manager-browser-task.html">
-        使用 System Manager 访问集群
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/system-manager-concept.html">
-        关于 System Manager
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/manage-access-system-manager-concept.html">
-        管理对 System Manager 的访问的方式
       </a></li></ul></li></ul></li><li class="subfolders "><a href="/zh-cn/ontap/system-admin/command-line-interface-concept.html">
         <div class="na-navbar-padding"> 使用 ONTAP 命令行界面</div>
       </a>
@@ -19814,7 +19785,7 @@
         <div class="na-navbar-padding"> 管理 NVMe 协议</div>
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-admin/manage-nvme-concept.html">
-        许可要求
+        概述
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-admin/start-nvme-fc-service-svm-task.html">
         启动 SVM 的 NVMe/FC 服务
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-admin/delete-nvme-fc-service-task.html">
@@ -22081,13 +22052,15 @@
 <p class="page-details">
   
     
-    <time datetime="2021-11-11 21:57:31 +0000">11/11/2021</time>
+    <time datetime="2022-03-25 17:55:22 +0000">03/25/2022</time>
     
   
 
 
 </p>
 
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph lead">
 <p>对于使用 NVMe 协议的系统，您必须创建一个或多个 NVMe 命名空间和子系统。然后，可以将每个命名空间映射到 NVMe 子系统，以便从主机系统访问数据。</p>
 </div>
@@ -22128,6 +22101,35 @@
 </div>
 </li>
 </ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="关于-nvme-子系统">关于 NVMe 子系统</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>NVMe 子系统包括一个或多个控制器，一个或多个命名空间，一个或多个非易失性内存（ NVM ）子系统端口（ FC-NVMe 或 RDMA 传输端口），一个 NVM 存储介质以及一个控制器和 NVM 存储介质之间的接口。对于控制器映射和管理， NVM 子系统会映射到 ONTAP 中的 SVM 。</p>
+</div>
+<div class="paragraph">
+<p>基于网络结构的 NVMe （ NVMeoF ）子系统是驻留在 FreeBSD 内核中的一个单独内核对象。NVMeoF 子系统可与以下组件连接：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>SAN 组件，例如 BCOMKA ， FCT 和 VDOM</p>
+</li>
+<li>
+<p>WAFL</p>
+</li>
+<li>
+<p>RAS 组件，例如 CM ， ASUP 和 EMS</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>与 NVMeoF 子系统的所有接口都遵循 ONTAP 中的当前定义和模式。</p>
+</div>
+</div>
 </div>
 
     </article>
