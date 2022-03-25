@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: manage, nvme 
 summary: 从 ONTAP 9.4 开始，支持 NVMe/FC 。从 ONTAP 9.5 开始，需要许可证才能支持 NVMe 。如果在 ONTAP 9.4 中启用了 NVMe ，则在升级到 ONTAP 9.5 之后，可以在 90 天的宽限期内获取许可证。 
 ---
-= 管理 NVMe
+= NVMe 概述
 :icons: font
 :imagesdir: ../media/
 
@@ -15,3 +15,28 @@ summary: 从 ONTAP 9.4 开始，支持 NVMe/FC 。从 ONTAP 9.5 开始，需要�
 您可以使用以下命令启用许可证：
 
 `ssystem license add -license-code _nva_license_key_`
+
+
+
+== 什么是 NVMe
+
+非易失性内存快速（ NVMe ）协议是一种用于访问非易失性存储介质的传输协议。
+
+基于网络结构的 NVMe （ NVMeoF ）是 NVMe 的一个规范定义扩展，支持通过 PCIe 以外的连接进行基于 NVMe 的通信。此接口允许将外部存储机箱连接到服务器。
+
+NVMe 旨在提供对使用非易失性内存构建的存储设备的高效访问，从闪存技术到性能更高的持久性内存技术。因此，它的限制与为硬盘驱动器设计的存储协议不同。闪存和固态设备（ SSD ）是一种非易失性内存（ NVM ）。NVM 是一种在断电期间保留其内容的内存。您可以通过 NVMe 访问该内存。
+
+NVMe 的优势包括提高了数据传输的速度，工作效率，吞吐量和容量。具体特征如下：
+
+* NVMe 的设计可支持多达 64 ， 000 个队列。
++
+反过来，每个队列最多可以有 64 ， 000 个并发命令。
+
+* 多家硬件和软件供应商均支持 NVMe
+* NMVe 利用闪存技术提高了工作效率，从而加快了响应速度
+* NVMe 支持对发送到 SSD 的每个 "n `request` " 发出多个数据请求。
++
+NVMe 对 " `request` " 进行解码所需时间更短，并且在多线程程序中不需要线程锁定。
+
+* NVMe 支持防止 CPU 级别出现瓶颈的功能，并可随着系统扩展实现大规模可扩展性
+
