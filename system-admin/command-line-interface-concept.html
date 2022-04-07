@@ -45,12 +45,52 @@
   <link rel="stylesheet" href='/zh-cn/ontap/css/na-utility.css' type='text/css'>
   <link rel="stylesheet" href='/zh-cn/ontap/css/na-sidebar.css' type='text/css'>
   <link rel='stylesheet' href='/zh-cn/ontap/css/clouddocs.css' type='text/css'>
+  <link rel='stylesheet' href='/zh-cn/ontap/css/custom-dropdown.css' type='text/css'>
   <link rel='stylesheet' href='/zh-cn/ontap/css/na-pagenav.css' type='text/css'>
 
   
   <link rel="stylesheet" href="/zh-cn/ontap/css/landing-page.css" type="text/css">
   <link rel="stylesheet" href="/zh-cn/ontap/css/tabbed-blocks.css" type="text/css">
-  <link rel='stylesheet' href='/zh-cn/ontap/css/na-feature.css' type='text/css'><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <!-- Canonical url -->
+  <link rel='stylesheet' href='/zh-cn/ontap/css/na-feature.css' type='text/css'><!-- Top level site integrations --><script>
+    if (document.location.hostname === "docs.netapp.com") {
+      var head = document.getElementsByTagName('head')[0];
+      var onetrustConsent = document.createElement("script");
+      onetrustConsent.type = "text/javascript";
+      onetrustConsent.src = "https://cdn.cookielaw.org/consent/72570c5c-fe30-465f-b0e0-b77f7fb4ae34/OtAutoBlock.js";
+      head.appendChild(onetrustConsent);
+
+      var onetrustScript = document.createElement("script");
+      onetrustScript.type = "text/javascript";
+      onetrustScript.src = "https://cdn.cookielaw.org/scripttemplates/otSDKStub.js";
+      onetrustScript.charset = "UTF-8";
+      onetrustScript.dataset.documentLanguage = "true";
+      onetrustScript.dataset.domainScript = "72570c5c-fe30-465f-b0e0-b77f7fb4ae34";
+      head.appendChild(onetrustScript);
+    }
+
+    function OptanonWrapper() { }
+
+    if (document.location.hostname === "docs.netapp.com") {
+      var adobe = document.createElement("script");
+      adobe.type = "text/plain";
+      adobe.className = "optanon-category-C0002";
+      adobe.src = "//assets.adobedtm.com/60287eadf1ee/c284da483c83/launch-e9ff3acac59f.min.js";
+      head.appendChild(adobe);
+
+      var google = document.createElement("script");
+      google.type = "text/plain";
+      google.className = "optanon-category-C0002";
+      google.src = "https://www.googletagmanager.com/gtag/js?id=UA-81697994-3";
+      head.appendChild(google);
+
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-81697994-3');
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
   <!-- Used for Product Family Page Sidebar Visibility --><!-- Used to import Promise for IE. Required for SearchKit -->
@@ -60,15 +100,6 @@
 
   <script src='/zh-cn/ontap/js/na-utility.js'></script>
   <script src='/zh-cn/ontap/js/clouddocs.js'></script>
-  <script>
-  if (document.location.hostname === "docs.netapp.com") {
-    var head = document.getElementsByTagName('head')[0];
-    var adobe = document.createElement("script");
-    adobe.type = "text/javascript";
-    adobe.src = "//assets.adobedtm.com/60287eadf1ee/c284da483c83/launch-e9ff3acac59f.min.js";
-    head.appendChild(adobe);
-  }
-  </script>
   <script src='/zh-cn/ontap/js/jquery.navgoco.min.js'></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <script src='/zh-cn/ontap/js/toc.js'></script>
@@ -121,16 +152,8 @@
               $("#tg-sb-icon").toggleClass('fa-toggle-off');
           });
       });
-  </script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-81697994-3"></script>
-  <script>
-  if (document.location.hostname === "docs.netapp.com") {
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'UA-81697994-3');
-  }
   </script>
-  <script src='/zh-cn/ontap/js/version-dropdown.js'></script>
+  <script src='/zh-cn/ontap/js/custom-dropdown.js'></script>
   <script src='/zh-cn/ontap/js/FileSaver.min.js'></script>
   <script src='/zh-cn/ontap/js/jszip-utils.min.js'></script>
   <script src='/zh-cn/ontap/js/jszip.min.js'></script>
@@ -138,20 +161,15 @@
 </head>
 
 
-  <body class role="document">
+  <body class role="document" data-flavor="">
     <div id="page" class="n-off-canvas-menu">
       <div class="n-off-canvas-menu__menu"><!--TODO: Add offcanvas code --></div>
       <div class="n-off-canvas-menu__content-wrap">
         <header class="site-header" id="banner">
   
   <!-- Start Page Toolbar -->
-  <div class="page-nav-toolbar">
-    <div id="version-dropdown"></div>
-    <div class="page-nav-contribute"  >
-      <a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[使用 ONTAP 命令行界面](https://docs.netapp.com/zh-cn/ontap/system-admin/command-line-interface-concept.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a>
-      <a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/system-admin/command-line-interface-concept.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a>
-      <a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a>
-    </div>
+  
+  <div class="page-nav-toolbar"><div class="page-nav-contribute"><a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[使用 ONTAP 命令行界面](https://docs.netapp.com/zh-cn/ontap/system-admin/command-line-interface-concept.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a><a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/system-admin/command-line-interface-concept.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a><a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a></div>
     <div class="page-nav-container">
       <nav class="page-nav-fixed">
         <div class="page-nav-title">在此页面上</div>
@@ -161,6 +179,7 @@
       </nav>
     </div>
   </div>
+  
   
   <!-- Start top_hat -->
   <div class="n-top-hat">
@@ -244,7 +263,8 @@
           data-did-you-mean="搜索 {suggestion}。" 
           data-no-results-found-did-you-mean="未找到与 {query} 匹配的结果。您是否要搜索 {suggestion}?" 
           data-results-found="找到 {hitCount} 个结果"  
-          data-sk-es-pf-indexes=""></div>
+          data-sk-es-pf-indexes=""
+          data-flavor=""></div>
           <button class="n-property-bar__search-toggle-button" type="button">
             <svg class="n-icon-search n-property-bar__search-toggle-button-icon" aria-labelledby="title">
               <title>search</title>
@@ -333,6 +353,9 @@
 </div>
 <div class="n-pdf-body-container">
   <ul id="toggleContainerPdf" class="n-pdf-body" style="display:none;"><li class="pdf-ux-container">
+        
+        
+        
         <a target="_blank" href="/zh-cn/ontap/pdfs/fullsite-sidebar/ONTAP_9_文档.pdf" >
           <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>此文档站点的 PDF</a>
 
@@ -343,6 +366,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/简介和概念.pdf" 
@@ -356,6 +382,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_概念.pdf" 
@@ -379,6 +408,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/网络架构.pdf" 
@@ -411,6 +443,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/磁盘和聚合.pdf" 
@@ -441,6 +476,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/存储虚拟化.pdf" 
@@ -471,6 +509,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/路径故障转移.pdf" 
@@ -501,6 +542,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/Replication.pdf" 
@@ -535,6 +579,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/存储效率.pdf" 
@@ -565,6 +612,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/安全性.pdf" 
@@ -608,6 +658,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_和云.pdf" 
@@ -623,6 +676,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/数据保护和云.pdf" 
@@ -655,6 +711,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/将整个工作负载迁移到云.pdf" 
@@ -668,6 +727,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/存储协议.pdf" 
@@ -709,6 +771,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/云中的性能和效率.pdf" 
@@ -737,6 +802,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在云中管理_ONTAP.pdf" 
@@ -769,6 +837,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/合规性和云.pdf" 
@@ -817,6 +888,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/设置_升级和还原_ONTAP.pdf" 
@@ -830,6 +904,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/设置_ONTAP.pdf" 
@@ -847,6 +924,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面设置集群.pdf" 
@@ -892,6 +972,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/升级_ONTAP.pdf" 
@@ -911,6 +994,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/不使用_Upgrade_Advisor_升级.pdf" 
@@ -928,6 +1014,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在不使用_Upgrade_Advisor_进行升级之前_应验证哪些内容_.pdf" 
@@ -967,6 +1056,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在使用或不使用_Upgrade_Advisor_升级之前_应验证什么_.pdf" 
@@ -996,6 +1088,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/特殊注意事项.pdf" 
@@ -1015,6 +1110,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/MetroCluster_配置.pdf" 
@@ -1045,6 +1143,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SnapMirror.pdf" 
@@ -1103,6 +1204,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/我应使用哪种升级方法_.pdf" 
@@ -1124,6 +1228,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_手动无中断.pdf" 
@@ -1139,6 +1246,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/MetroCluster_配置.pdf" 
@@ -1185,6 +1295,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/升级后应执行什么操作_.pdf" 
@@ -1204,6 +1317,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/验证特殊配置.pdf" 
@@ -1266,6 +1382,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/还原_ONTAP.pdf" 
@@ -1285,6 +1404,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在还原之前_应阅读哪些内容_.pdf" 
@@ -1313,6 +1435,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在还原之前_还应检查其他哪些内容_.pdf" 
@@ -1328,6 +1453,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SnapMirror.pdf" 
@@ -1383,6 +1511,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/还原集群后应执行什么操作_.pdf" 
@@ -1439,6 +1570,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/集群管理.pdf" 
@@ -1452,6 +1586,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_进行集群管理.pdf" 
@@ -1481,6 +1618,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理节点.pdf" 
@@ -1516,6 +1656,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_进行集群管理.pdf" 
@@ -1531,6 +1674,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/集群和_SVM_管理员.pdf" 
@@ -1561,6 +1707,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_管理界面基础知识.pdf" 
@@ -1574,6 +1723,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面访问集群_仅限集群管理员_.pdf" 
@@ -1608,6 +1760,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_ONTAP_命令行界面.pdf" 
@@ -1632,6 +1787,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于_CLI_命令的不同_shell__仅限集群管理员_.pdf" 
@@ -1693,6 +1851,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_CLI_会话_仅限集群管理员_.pdf" 
@@ -1706,6 +1867,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_CLI_会话的记录.pdf" 
@@ -1754,6 +1918,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_ONTAP_命令行界面.pdf" 
@@ -1767,6 +1934,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于_CLI_命令的不同_shell__仅限集群管理员_.pdf" 
@@ -1835,6 +2005,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/集群管理基础知识_仅限集群管理员_.pdf" 
@@ -1869,6 +2042,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理节点.pdf" 
@@ -1896,6 +2072,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/用于管理节点根卷和根聚合的规则.pdf" 
@@ -1924,6 +2103,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/启动或停止节点.pdf" 
@@ -1956,6 +2138,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_SP_BMC_远程管理节点.pdf" 
@@ -1975,6 +2160,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_SP_BMC_网络.pdf" 
@@ -2011,6 +2199,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/访问_SP_BMC.pdf" 
@@ -2075,6 +2266,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理管理活动的审核日志记录.pdf" 
@@ -2109,6 +2303,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理横幅和_MOTD.pdf" 
@@ -2141,6 +2338,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理许可证_仅限集群管理员_.pdf" 
@@ -2169,6 +2369,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理作业和计划.pdf" 
@@ -2197,6 +2400,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/备份和还原集群配置_仅限集群管理员_.pdf" 
@@ -2212,6 +2418,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理配置备份.pdf" 
@@ -2240,6 +2449,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/恢复节点配置.pdf" 
@@ -2266,6 +2478,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/恢复集群配置.pdf" 
@@ -2307,6 +2522,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/监控存储系统.pdf" 
@@ -2324,6 +2542,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面管理_AutoSupport.pdf" 
@@ -2377,6 +2598,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/对_AutoSupport_进行故障排除.pdf" 
@@ -2416,6 +2640,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/监控系统的运行状况.pdf" 
@@ -2473,6 +2700,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理对_Web_服务的访问.pdf" 
@@ -2492,6 +2722,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/为_Web_服务配置_SAML_身份验证.pdf" 
@@ -2520,6 +2753,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_Web_服务.pdf" 
@@ -2565,6 +2801,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用证书验证远程服务器的身份.pdf" 
@@ -2584,6 +2823,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/对集群和_KMIP_服务器进行相互身份验证.pdf" 
@@ -2632,6 +2874,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_管理磁盘和聚合.pdf" 
@@ -2647,6 +2892,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/聚合创建.pdf" 
@@ -2681,6 +2929,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/聚合扩展.pdf" 
@@ -2713,6 +2964,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理聚合.pdf" 
@@ -2734,6 +2988,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/重新定位_HA_对中的聚合所有权.pdf" 
@@ -2781,6 +3038,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_Flash_Pool_聚合.pdf" 
@@ -2794,6 +3054,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/Flash_Pool_缓存策略和_SSD_分区.pdf" 
@@ -2824,6 +3087,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_SSD_存储池创建_Flash_Pool_聚合.pdf" 
@@ -2858,6 +3124,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/确定是否修改_Flash_Pool_聚合的缓存策略.pdf" 
@@ -2895,6 +3164,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理磁盘.pdf" 
@@ -2916,6 +3188,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/手动分配已分区磁盘的所有权.pdf" 
@@ -2954,6 +3229,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/磁盘清理.pdf" 
@@ -3005,6 +3283,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_RAID_组.pdf" 
@@ -3035,6 +3316,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/已镜像和未镜像聚合.pdf" 
@@ -3072,6 +3356,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_进行_FabricPool_层管理.pdf" 
@@ -3108,6 +3395,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面管理_FabricPool_层.pdf" 
@@ -3131,6 +3421,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_FabricPool.pdf" 
@@ -3144,6 +3437,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/准备_FabricPool_配置.pdf" 
@@ -3167,6 +3463,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/将对象存储设置为_FabricPool_的云层.pdf" 
@@ -3190,6 +3489,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/AWS_S3_作为云层.pdf" 
@@ -3253,6 +3555,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_FabricPool.pdf" 
@@ -3270,6 +3575,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/根据需要向_FabricPool_添加或移动卷.pdf" 
@@ -3296,6 +3604,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用用户创建的自定义标记进行对象标记.pdf" 
@@ -3338,6 +3649,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/将数据提升到性能层.pdf" 
@@ -3379,6 +3693,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_FabricPool_镜像.pdf" 
@@ -3428,6 +3745,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SVM_数据移动性.pdf" 
@@ -3464,6 +3784,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/高可用性管理.pdf" 
@@ -3506,6 +3829,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_管理_REST_API.pdf" 
@@ -3541,6 +3867,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/卷管理.pdf" 
@@ -3554,6 +3883,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_管理卷和_LUN.pdf" 
@@ -3608,6 +3940,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_进行逻辑存储管理.pdf" 
@@ -3623,6 +3958,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建和管理卷.pdf" 
@@ -3638,6 +3976,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SAN_volumes.pdf" 
@@ -3690,6 +4031,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/删除目录.pdf" 
@@ -3731,6 +4075,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/移动和复制卷.pdf" 
@@ -3765,6 +4112,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_FlexClone_卷为_FlexVol_卷创建高效副本.pdf" 
@@ -3797,6 +4147,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_FlexClone_文件和_FlexClone_LUN_为文件和_LUN_创建高效副本.pdf" 
@@ -3820,6 +4173,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/FlexVol_卷如何使用自动删除设置回收可用空间.pdf" 
@@ -3859,6 +4215,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_qtree_对_FlexVol_卷进行分区.pdf" 
@@ -3878,6 +4237,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/将目录转换为_qtree.pdf" 
@@ -3917,6 +4279,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/卷的逻辑空间报告和强制实施.pdf" 
@@ -3947,6 +4312,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用配额限制或跟踪资源使用情况.pdf" 
@@ -3960,6 +4328,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配额过程概述.pdf" 
@@ -3985,6 +4356,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/特殊类型的配额.pdf" 
@@ -4019,6 +4393,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配额如何与用户和组配合使用.pdf" 
@@ -4063,6 +4440,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/树配额的工作原理.pdf" 
@@ -4093,6 +4473,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/qtree_更改如何影响配额.pdf" 
@@ -4123,6 +4506,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/如何激活配额.pdf" 
@@ -4151,6 +4537,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/如何查看配额信息.pdf" 
@@ -4185,6 +4574,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配额报告和_UNIX_客户端显示的空间使用量差异.pdf" 
@@ -4247,6 +4639,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用重复数据删除_数据压缩和数据缩减提高存储效率.pdf" 
@@ -4294,6 +4689,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建卷效率策略以运行效率操作.pdf" 
@@ -4328,6 +4726,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/手动管理卷效率操作.pdf" 
@@ -4360,6 +4761,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用计划管理卷效率操作.pdf" 
@@ -4386,6 +4790,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/监控卷效率操作.pdf" 
@@ -4427,6 +4834,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/将卷从一个_SVM_重新托管到另一个_SVM.pdf" 
@@ -4463,6 +4873,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/建议的卷和文件或_LUN_配置组合.pdf" 
@@ -4495,6 +4908,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/更改文件或目录容量时的注意事项和注意事项.pdf" 
@@ -4525,6 +4941,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/FlexClone_文件和_FlexClone_LUN_支持的功能.pdf" 
@@ -4580,6 +4999,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面管理_FlexGroup_卷.pdf" 
@@ -4599,6 +5021,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/FlexGroup_卷设置.pdf" 
@@ -4629,6 +5054,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_FlexGroup_卷.pdf" 
@@ -4673,6 +5101,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/FlexGroup_卷的数据保护.pdf" 
@@ -4715,6 +5146,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_FlexGroup_卷的数据保护操作.pdf" 
@@ -4728,6 +5162,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/FlexGroup_卷的灾难恢复.pdf" 
@@ -4758,6 +5195,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/展开_SnapMirror_关系中的_FlexGroup_卷.pdf" 
@@ -4803,6 +5243,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/将_FlexVol_卷转换为_FlexGroup_卷.pdf" 
@@ -4842,6 +5285,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面管理_FlexCache_卷.pdf" 
@@ -4863,6 +5309,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建_FlexCache_卷.pdf" 
@@ -4880,6 +5329,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建_FlexCache_卷的过程.pdf" 
@@ -4917,6 +5369,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_FlexCache_关系.pdf" 
@@ -4969,6 +5424,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/网络管理.pdf" 
@@ -4982,6 +5440,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_管理网络.pdf" 
@@ -5012,6 +5473,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_设置_NAS_路径故障转移.pdf" 
@@ -5025,6 +5489,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_9_8_及更高版本.pdf" 
@@ -5040,6 +5507,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/工作流_NAS_路径故障转移.pdf" 
@@ -5087,6 +5557,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_9_7_及更早版本.pdf" 
@@ -5102,6 +5575,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/工作流_NAS_路径故障转移.pdf" 
@@ -5164,6 +5640,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_管理网络.pdf" 
@@ -5179,6 +5658,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/升级注意事项.pdf" 
@@ -5205,6 +5687,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/集群的网络组件.pdf" 
@@ -5233,6 +5718,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置网络端口_仅限集群管理员_.pdf" 
@@ -5275,6 +5763,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_IP_空间_仅限集群管理员_.pdf" 
@@ -5309,6 +5800,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置广播域_仅限集群管理员_.pdf" 
@@ -5322,6 +5816,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_9_8_及更高版本.pdf" 
@@ -5360,6 +5857,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_9_7_及更早版本.pdf" 
@@ -5409,6 +5909,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/为_LIF_配置故障转移组和策略.pdf" 
@@ -5439,6 +5942,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置子网_仅限集群管理员_.pdf" 
@@ -5473,6 +5979,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_LIF__仅限集群管理员_.pdf" 
@@ -5519,6 +6028,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置主机名解析.pdf" 
@@ -5547,6 +6059,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/平衡网络负载以优化用户流量_仅限集群管理员_.pdf" 
@@ -5577,6 +6092,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/保护您的网络安全.pdf" 
@@ -5607,6 +6125,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_QoS_标记_仅限集群管理员_.pdf" 
@@ -5637,6 +6158,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在集群上管理_SNMP__仅限集群管理员_.pdf" 
@@ -5673,6 +6197,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_SVM_中的路由.pdf" 
@@ -5707,6 +6234,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/存储系统上的_ONTAP_端口使用情况.pdf" 
@@ -5733,6 +6263,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/查看网络信息.pdf" 
@@ -5801,6 +6334,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/NAS_存储管理.pdf" 
@@ -5814,6 +6350,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_管理_NAS_协议.pdf" 
@@ -5851,6 +6390,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/启用_NAS_存储.pdf" 
@@ -5888,6 +6430,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面配置_NFS.pdf" 
@@ -5905,6 +6450,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/准备.pdf" 
@@ -5935,6 +6483,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置对_SVM_的_NFS_访问.pdf" 
@@ -5960,6 +6511,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置名称服务.pdf" 
@@ -5977,6 +6531,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置本地_UNIX_用户和组.pdf" 
@@ -6011,6 +6568,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用网络组.pdf" 
@@ -6041,6 +6601,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_LDAP.pdf" 
@@ -6084,6 +6647,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/将_Kerberos_与_NFS_结合使用可增强安全性.pdf" 
@@ -6125,6 +6691,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/向启用了_NFS_的_SVM_添加存储容量.pdf" 
@@ -6144,6 +6713,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建卷或_qtree_存储容器.pdf" 
@@ -6170,6 +6742,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用导出策略确保_NFS_访问安全.pdf" 
@@ -6215,6 +6790,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_导出与_7__模式导出有何不同.pdf" 
@@ -6252,6 +6830,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面管理_NFS.pdf" 
@@ -6267,6 +6848,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/了解_NAS_文件访问.pdf" 
@@ -6280,6 +6864,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/命名空间和接合点.pdf" 
@@ -6306,6 +6893,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_如何控制对文件的访问.pdf" 
@@ -6334,6 +6924,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_如何处理_NFS_客户端身份验证.pdf" 
@@ -6373,6 +6966,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_NAS_命名空间中创建和管理数据卷.pdf" 
@@ -6403,6 +6999,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置安全模式.pdf" 
@@ -6416,6 +7015,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/安全模式如何影响数据访问.pdf" 
@@ -6465,6 +7067,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_NFS_设置文件访问.pdf" 
@@ -6480,6 +7085,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用导出策略确保_NFS_访问安全.pdf" 
@@ -6526,6 +7134,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/将_Kerberos_与_NFS_结合使用以增强安全性.pdf" 
@@ -6554,6 +7165,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置名称服务.pdf" 
@@ -6569,6 +7183,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_LDAP.pdf" 
@@ -6614,6 +7231,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置名称映射.pdf" 
@@ -6663,6 +7283,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_NFS_管理文件访问.pdf" 
@@ -6734,6 +7357,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_NFS_凭据缓存.pdf" 
@@ -6760,6 +7386,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理导出策略缓存.pdf" 
@@ -6790,6 +7419,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理文件锁定.pdf" 
@@ -6826,6 +7458,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_NFSv4_ACL.pdf" 
@@ -6860,6 +7495,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_NFSv4_文件委派.pdf" 
@@ -6886,6 +7524,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_NFSv4_文件和记录锁定.pdf" 
@@ -6947,6 +7588,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/附录_支持的_NFS_版本和客户端.pdf" 
@@ -6983,6 +7627,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/附录__NFS_和_SMB_文件和目录命名依赖关系.pdf" 
@@ -7028,6 +7675,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/通过_RDMA_管理_NFS.pdf" 
@@ -7058,6 +7708,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面配置_SMB.pdf" 
@@ -7075,6 +7728,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/准备.pdf" 
@@ -7105,6 +7761,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置对_SVM_的_SMB_访问.pdf" 
@@ -7130,6 +7789,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_Active_Directory_域中设置_SMB_服务器.pdf" 
@@ -7160,6 +7822,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在工作组中设置_SMB_服务器.pdf" 
@@ -7205,6 +7870,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_SMB_客户端对共享存储的访问.pdf" 
@@ -7220,6 +7888,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建卷或_qtree_存储容器.pdf" 
@@ -7276,6 +7947,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面管理_SMB.pdf" 
@@ -7291,6 +7965,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SMB_服务器支持.pdf" 
@@ -7323,6 +8000,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_SMB_服务器.pdf" 
@@ -7338,6 +8018,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用选项自定义_CIFS_服务器.pdf" 
@@ -7359,6 +8042,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理如何为_UNIX_安全模式数据的_SMB_客户端提供文件安全性.pdf" 
@@ -7398,6 +8084,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_SMB_服务器安全设置.pdf" 
@@ -7427,6 +8116,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_SMB_签名增强网络安全性.pdf" 
@@ -7465,6 +8157,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_SMB_服务器上配置通过_SMB_传输数据所需的_SMB_加密.pdf" 
@@ -7497,6 +8192,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/安全_LDAP_会话通信.pdf" 
@@ -7514,6 +8212,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置基于_TLS_的_LDAP.pdf" 
@@ -7562,6 +8263,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_SMB_服务器上配置默认_Windows_用户到_UNIX_用户映射.pdf" 
@@ -7594,6 +8298,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用传统机会锁和租用机会锁提高客户端性能.pdf" 
@@ -7628,6 +8335,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/将组策略对象应用于_SMB_服务器.pdf" 
@@ -7649,6 +8359,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/如何在_SMB_服务器上更新_GPO.pdf" 
@@ -7696,6 +8409,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理域控制器连接.pdf" 
@@ -7732,6 +8448,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用空会话访问非_Kerberos_环境中的存储.pdf" 
@@ -7760,6 +8479,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_SMB_服务器的_NetBIOS_别名.pdf" 
@@ -7792,6 +8514,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理其他_SMB_服务器任务.pdf" 
@@ -7828,6 +8553,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/对_SMB_访问和_SMB_服务使用_IPv6.pdf" 
@@ -7871,6 +8599,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_SMB_设置文件访问.pdf" 
@@ -7884,6 +8615,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置安全模式.pdf" 
@@ -7897,6 +8631,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/安全模式如何影响数据访问.pdf" 
@@ -7946,6 +8683,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_NAS_命名空间中创建和管理数据卷.pdf" 
@@ -7978,6 +8718,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置名称映射.pdf" 
@@ -8014,6 +8757,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置多域名称映射搜索.pdf" 
@@ -8046,6 +8792,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建和配置_SMB_共享.pdf" 
@@ -8067,6 +8816,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_SMB_共享属性.pdf" 
@@ -8110,6 +8862,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_SMB_共享_ACL_确保文件访问安全.pdf" 
@@ -8138,6 +8893,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用文件权限确保文件访问安全.pdf" 
@@ -8166,6 +8924,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用动态访问控制__DAC__确保文件访问安全.pdf" 
@@ -8206,6 +8967,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用导出策略确保_SMB_访问安全.pdf" 
@@ -8236,6 +9000,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用存储级别访问防护确保文件访问安全.pdf" 
@@ -8281,6 +9048,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_SMB_管理文件访问.pdf" 
@@ -8294,6 +9064,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用本地用户和组进行身份验证和授权.pdf" 
@@ -8307,6 +9080,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_如何使用本地用户和组.pdf" 
@@ -8345,6 +9121,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/什么是本地权限.pdf" 
@@ -8377,6 +9156,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/启用或禁用本地用户和组功能.pdf" 
@@ -8405,6 +9187,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理本地用户帐户.pdf" 
@@ -8439,6 +9224,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理本地组.pdf" 
@@ -8473,6 +9261,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理本地权限.pdf" 
@@ -8512,6 +9303,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置绕过遍历检查.pdf" 
@@ -8540,6 +9334,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/显示有关文件安全性和审核策略的信息.pdf" 
@@ -8576,6 +9373,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面管理_SVM_上的_NTFS_文件安全性__NTFS_审核策略和存储级别访问防护.pdf" 
@@ -8599,6 +9399,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面在_NTFS_文件和文件夹上配置和应用文件安全性.pdf" 
@@ -8635,6 +9438,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用命令行界面配置审核策略并将其应用于_NTFS_文件和文件夹.pdf" 
@@ -8694,6 +9500,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/为_SMB_共享配置元数据缓存.pdf" 
@@ -8722,6 +9531,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理文件锁定.pdf" 
@@ -8754,6 +9566,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/监控_SMB_活动.pdf" 
@@ -8793,6 +9608,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/部署基于_SMB_客户端的服务.pdf" 
@@ -8806,6 +9624,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用脱机文件可以缓存文件以供脱机使用.pdf" 
@@ -8838,6 +9659,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用漫游配置文件将用户配置文件集中存储在与_SVM_关联的_SMB_服务器上.pdf" 
@@ -8866,6 +9690,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用文件夹重定向将数据存储在_SMB_服务器上.pdf" 
@@ -8896,6 +9723,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用先前版本恢复文件和文件夹.pdf" 
@@ -8939,6 +9769,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/部署基于_SMB_服务器的服务.pdf" 
@@ -8952,6 +9785,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理主目录.pdf" 
@@ -8967,6 +9803,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/主目录共享.pdf" 
@@ -9018,6 +9857,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_SMB_客户端对_UNIX_符号链接的访问.pdf" 
@@ -9052,6 +9894,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_BranchCache_在分支机构缓存_SMB_共享内容.pdf" 
@@ -9067,6 +9912,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/要求和准则.pdf" 
@@ -9101,6 +9949,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_BranchCache.pdf" 
@@ -9131,6 +9982,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置已启用_BranchCache_的_SMB_共享.pdf" 
@@ -9159,6 +10013,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理和监控_BranchCache_配置.pdf" 
@@ -9197,6 +10054,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_SMB_共享上禁用_BranchCache.pdf" 
@@ -9225,6 +10085,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_SVM_上禁用或启用_BranchCache.pdf" 
@@ -9251,6 +10114,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/删除_SVM_上的_BranchCache_配置.pdf" 
@@ -9288,6 +10154,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/提高_Microsoft_远程复制性能.pdf" 
@@ -9322,6 +10191,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/通过使用自动位置提供_SMB_自动节点转介来缩短客户端响应时间.pdf" 
@@ -9356,6 +10228,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用基于访问的枚举为共享提供文件夹安全性.pdf" 
@@ -9393,6 +10268,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/NFS_和_SMB_文件和目录命名依赖关系.pdf" 
@@ -9438,6 +10316,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/Microsoft_Hyper_V_和_SQL_Server_的_SMB_配置.pdf" 
@@ -9455,6 +10336,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/通过_SMB_实现_Hyper_V_和_SQL_Server_无中断运行.pdf" 
@@ -9489,6 +10373,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用远程_VSS_进行基于共享的备份.pdf" 
@@ -9521,6 +10408,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置要求和注意事项.pdf" 
@@ -9561,6 +10451,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/规划基于_SMB_的_Hyper_V_或_SQL_Server_配置.pdf" 
@@ -9587,6 +10480,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建_ONTAP_配置_以便通过_SMB_使用_Hyper_V_和_SQL_Server_实现无中断运行.pdf" 
@@ -9629,6 +10525,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/通过_SMB_配置管理_Hyper_V_和_SQL_Server.pdf" 
@@ -9655,6 +10554,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用统计信息通过_SMB_监控_Hyper_V_和_SQL_Server_活动.pdf" 
@@ -9681,6 +10583,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/验证此配置是否能够无中断运行.pdf" 
@@ -9702,6 +10607,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/确定_SMB_会话是否持续可用.pdf" 
@@ -9755,6 +10663,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SAN_存储管理.pdf" 
@@ -9768,6 +10679,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_进行_SAN_管理.pdf" 
@@ -9781,6 +10695,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SAN_存储.pdf" 
@@ -9821,6 +10738,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/NVMe_存储.pdf" 
@@ -9858,6 +10778,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_进行_SAN_管理.pdf" 
@@ -9873,6 +10796,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/为_FC_和_iSCSI_设置_LUN.pdf" 
@@ -9913,6 +10839,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/为_NVMe_设置命名空间.pdf" 
@@ -9943,6 +10872,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_FC_和_iSCSI_的_LUN.pdf" 
@@ -9989,6 +10921,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/建议的卷和文件或_LUN_配置组合.pdf" 
@@ -10023,6 +10958,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/选择性_LUN_映射.pdf" 
@@ -10053,6 +10991,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_iSCSI_协议.pdf" 
@@ -10089,6 +11030,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_FC_协议.pdf" 
@@ -10115,6 +11059,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理具有_FC_适配器的系统.pdf" 
@@ -10159,6 +11106,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_NVMe_协议.pdf" 
@@ -10189,6 +11139,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理所有_SAN_协议的_LIF.pdf" 
@@ -10227,6 +11180,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SAN_环境中的数据保护方法.pdf" 
@@ -10242,6 +11198,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/移动或复制_Snapshot_副本上的_LUN_的影响.pdf" 
@@ -10272,6 +11231,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_FlexClone_LUN_保护数据.pdf" 
@@ -10308,6 +11270,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_SAN_环境中配置和使用_SnapVault_备份.pdf" 
@@ -10353,6 +11318,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SAN_概念.pdf" 
@@ -10366,6 +11334,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于_SAN_主机配置.pdf" 
@@ -10381,6 +11352,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/iSCSI_服务管理.pdf" 
@@ -10406,6 +11380,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/iSNS_服务器注册要求.pdf" 
@@ -10456,6 +11433,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于_SAN_卷.pdf" 
@@ -10488,6 +11468,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于主机端空间管理.pdf" 
@@ -10526,6 +11509,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_VMware_和_Microsoft_副本卸载实现存储虚拟化.pdf" 
@@ -10547,6 +11533,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/Microsoft_卸载数据传输__Offloaded_Data_Transfer___ODX__.pdf" 
@@ -10602,6 +11591,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SAN_配置参考.pdf" 
@@ -10617,6 +11609,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/iSCSI_配置的注意事项.pdf" 
@@ -10649,6 +11644,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/FC_配置的注意事项.pdf" 
@@ -10685,6 +11683,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理具有_FC_适配器的系统.pdf" 
@@ -10714,6 +11715,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_X1143A_R6_适配器.pdf" 
@@ -10723,8 +11727,6 @@
             管理 X1143A-R6 适配器
           </a>
           
-
-
 
 
 
@@ -10757,6 +11759,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_FCoE_的方式.pdf" 
@@ -10785,6 +11790,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/光纤通道和_FCoE_分区.pdf" 
@@ -10821,6 +11829,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/主机支持多路径.pdf" 
@@ -10849,6 +11860,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置限制.pdf" 
@@ -10903,6 +11917,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/S3_对象存储管理.pdf" 
@@ -10916,6 +11933,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_配置_S3.pdf" 
@@ -10950,6 +11970,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_配置_S3.pdf" 
@@ -10965,6 +11988,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/ONTAP_9_中的_S3_支持.pdf" 
@@ -10995,6 +12021,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于_S3_配置过程.pdf" 
@@ -11025,6 +12054,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置对_SVM_的_S3_访问.pdf" 
@@ -11059,6 +12091,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/向启用了_S3_的_SVM_添加存储容量.pdf" 
@@ -11078,6 +12113,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建或修改访问策略语句.pdf" 
@@ -11106,6 +12144,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/启用客户端对_S3_对象存储的访问.pdf" 
@@ -11154,6 +12195,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_S3_SnapMirror_保护存储分段.pdf" 
@@ -11169,6 +12213,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/远程集群上的镜像和备份保护.pdf" 
@@ -11199,6 +12246,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/本地集群上的镜像和备份保护.pdf" 
@@ -11229,6 +12279,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/利用云目标实现备份保护.pdf" 
@@ -11270,6 +12323,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/审核_S3_事件.pdf" 
@@ -11313,6 +12369,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/安全性和数据加密.pdf" 
@@ -11326,6 +12385,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_管理安全性.pdf" 
@@ -11358,6 +12420,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_管理管理员身份验证和_RBAC.pdf" 
@@ -11377,6 +12442,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建登录帐户.pdf" 
@@ -11392,6 +12460,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/启用本地帐户访问.pdf" 
@@ -11439,6 +12510,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理访问控制角色.pdf" 
@@ -11471,6 +12545,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理管理员帐户.pdf" 
@@ -11488,6 +12565,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/生成并安装_CA_签名的服务器证书.pdf" 
@@ -11516,6 +12596,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_Active_Directory_域控制器访问.pdf" 
@@ -11544,6 +12627,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_LDAP_或_NIS_服务器访问.pdf" 
@@ -11600,6 +12686,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/勒索软件保护.pdf" 
@@ -11636,6 +12725,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/防病毒配置.pdf" 
@@ -11651,6 +12743,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于_NetApp_防病毒保护.pdf" 
@@ -11681,6 +12776,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置扫描程序池.pdf" 
@@ -11715,6 +12813,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置实时扫描.pdf" 
@@ -11745,6 +12846,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置按需扫描.pdf" 
@@ -11783,6 +12887,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/对连接问题进行故障排除.pdf" 
@@ -11818,6 +12925,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/NAS_审核和安全跟踪.pdf" 
@@ -11833,6 +12943,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/审核_SVM_上的_NAS_事件.pdf" 
@@ -11848,6 +12961,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/审核的工作原理.pdf" 
@@ -11882,6 +12998,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/可审核的_SMB_事件.pdf" 
@@ -11916,6 +13035,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_SVM_上创建文件和目录审核配置.pdf" 
@@ -11944,6 +13066,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置文件和文件夹审核策略.pdf" 
@@ -11972,6 +13097,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/显示有关应用于文件和目录的审核策略的信息.pdf" 
@@ -12000,6 +13128,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/可审核的_CLI_更改事件.pdf" 
@@ -12034,6 +13165,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理审核配置.pdf" 
@@ -12079,6 +13213,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_FPolicy_在_SVM_上监控和管理文件.pdf" 
@@ -12092,6 +13229,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/FPolicy_的工作原理.pdf" 
@@ -12111,6 +13251,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/FPolicy_如何与外部_FPolicy_服务器配合使用.pdf" 
@@ -12166,6 +13309,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/规划_FPolicy_配置.pdf" 
@@ -12179,6 +13325,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/规划_FPolicy_外部引擎配置.pdf" 
@@ -12209,6 +13358,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/规划_FPolicy_事件配置.pdf" 
@@ -12241,6 +13393,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/规划_FPolicy_策略配置.pdf" 
@@ -12269,6 +13424,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/规划_FPolicy_范围配置.pdf" 
@@ -12304,6 +13462,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建_FPolicy_配置.pdf" 
@@ -12336,6 +13497,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/修改_FPolicy_配置.pdf" 
@@ -12362,6 +13526,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/显示有关_FPolicy_配置的信息.pdf" 
@@ -12392,6 +13559,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_FPolicy_服务器连接.pdf" 
@@ -12431,6 +13601,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用安全跟踪来验证文件和目录访问或对其进行故障排除.pdf" 
@@ -12450,6 +13623,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/执行安全跟踪.pdf" 
@@ -12510,6 +13686,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_管理加密.pdf" 
@@ -12536,6 +13715,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_管理加密.pdf" 
@@ -12551,6 +13733,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_NetApp_卷加密.pdf" 
@@ -12568,6 +13753,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_NVE.pdf" 
@@ -12585,6 +13773,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置外部密钥管理.pdf" 
@@ -12632,6 +13823,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_NVE_对卷数据进行加密.pdf" 
@@ -12675,6 +13869,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置基于_NetApp_硬件的加密.pdf" 
@@ -12692,6 +13889,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置外部密钥管理.pdf" 
@@ -12730,6 +13930,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置板载密钥管理.pdf" 
@@ -12771,6 +13974,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_NetApp_加密.pdf" 
@@ -12798,6 +14004,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/安全地清除加密卷上的数据.pdf" 
@@ -12840,6 +14049,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使_FIPS_驱动器或_SED_上的数据无法访问.pdf" 
@@ -12913,6 +14125,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/数据保护和灾难恢复.pdf" 
@@ -12926,6 +14141,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_保护数据.pdf" 
@@ -12986,6 +14204,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_建立集群和_SVM_对等关系.pdf" 
@@ -13001,6 +14222,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/准备集群和_SVM_对等.pdf" 
@@ -13031,6 +14255,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置集群间_LIF.pdf" 
@@ -13059,6 +14286,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置对等关系__ONTAP_9_3_及更高版本_.pdf" 
@@ -13087,6 +14317,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置对等关系__ONTAP_9_2_及更早版本_.pdf" 
@@ -13128,6 +14361,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_保护数据.pdf" 
@@ -13143,6 +14379,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理本地_Snapshot_副本.pdf" 
@@ -13158,6 +14397,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置自定义_Snapshot_策略.pdf" 
@@ -13188,6 +14430,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_Snapshot_副本预留.pdf" 
@@ -13224,6 +14469,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/从_Snapshot_副本还原文件.pdf" 
@@ -13265,6 +14513,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SnapMirror_卷复制.pdf" 
@@ -13296,6 +14547,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SnapMirror_许可.pdf" 
@@ -13333,6 +14587,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_SnapMirror_卷复制.pdf" 
@@ -13350,6 +14607,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/一次配置一个复制关系.pdf" 
@@ -13367,6 +14627,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/自定义复制策略.pdf" 
@@ -13416,6 +14679,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/从_SnapMirror_灾难恢复目标卷提供数据.pdf" 
@@ -13444,6 +14710,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/从_SnapMirror_目标卷还原文件.pdf" 
@@ -13491,6 +14760,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_SnapMirror_SVM_复制.pdf" 
@@ -13504,6 +14776,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/复制_SVM_配置.pdf" 
@@ -13542,6 +14817,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/从_SVM_灾难恢复目标提供数据.pdf" 
@@ -13568,6 +14846,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/重新激活源_SVM.pdf" 
@@ -13609,6 +14890,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_SnapMirror_根卷复制.pdf" 
@@ -13639,6 +14923,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SnapMirror_技术详细信息.pdf" 
@@ -13680,6 +14967,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_SnapLock_技术实现归档和合规性.pdf" 
@@ -13699,6 +14989,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_SnapLock.pdf" 
@@ -13722,6 +15015,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/设置保留时间.pdf" 
@@ -13763,6 +15059,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/将文件提交到_WORM.pdf" 
@@ -13799,6 +15098,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用特权删除功能.pdf" 
@@ -13831,6 +15133,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/移动_SnapLock_卷.pdf" 
@@ -13868,6 +15173,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/一致性组管理.pdf" 
@@ -13891,6 +15199,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SnapMirror_业务连续性.pdf" 
@@ -13908,6 +15219,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/规划.pdf" 
@@ -13942,6 +15256,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_管理_SnapMirror_以实现业务连续性.pdf" 
@@ -13970,6 +15287,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_ONTAP_命令行界面安装和设置.pdf" 
@@ -14004,6 +15324,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理.pdf" 
@@ -14046,6 +15369,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/故障排除.pdf" 
@@ -14108,6 +15434,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/适用于_MetroCluster_和_SnapMirror_业务连续性的调解器服务.pdf" 
@@ -14134,6 +15463,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_管理_MetroCluster_站点.pdf" 
@@ -14170,6 +15502,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用磁带备份保护数据.pdf" 
@@ -14189,6 +15524,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理磁带驱动器.pdf" 
@@ -14225,6 +15563,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于磁带驱动器.pdf" 
@@ -14244,6 +15585,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/磁带设备概述.pdf" 
@@ -14272,6 +15616,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/磁带别名.pdf" 
@@ -14315,6 +15662,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_ndmpcopy_传输数据.pdf" 
@@ -14341,6 +15691,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/适用于_FlexVol_卷的_NDMP.pdf" 
@@ -14356,6 +15709,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于_NDMP_操作模式.pdf" 
@@ -14384,6 +15740,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/环境变量.pdf" 
@@ -14435,6 +15794,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_FlexVol_卷的节点范围的_NDMP_模式.pdf" 
@@ -14463,6 +15825,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理_FlexVol_卷的_SVM_范围的_NDMP_模式.pdf" 
@@ -14505,6 +15870,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于_FlexVol_卷的转储引擎.pdf" 
@@ -14565,6 +15933,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/关于_FlexVol_卷的_SMTape_引擎.pdf" 
@@ -14609,6 +15980,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/监控_FlexVol_卷的磁带备份和还原操作.pdf" 
@@ -14626,6 +16000,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/什么是转储和还原事件日志消息格式.pdf" 
@@ -14667,6 +16044,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/有关_FlexVol_卷的磁带备份和还原的错误消息.pdf" 
@@ -14680,6 +16060,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/备份和还原错误消息.pdf" 
@@ -14734,6 +16117,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/NDMP_错误消息.pdf" 
@@ -14778,6 +16164,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/转储错误消息.pdf" 
@@ -14820,6 +16209,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/SMTape_错误消息.pdf" 
@@ -14926,6 +16318,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/NDMP_配置.pdf" 
@@ -14949,6 +16344,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_SVM_级别或节点级别配置_NDMP.pdf" 
@@ -14964,6 +16362,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置_SVM_范围的_NDMP.pdf" 
@@ -14994,6 +16395,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置节点范围的_NDMP.pdf" 
@@ -15040,6 +16444,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_NetApp_Element_软件和_ONTAP_之间进行复制.pdf" 
@@ -15057,6 +16464,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/在_Element_软件中启用_SnapMirror.pdf" 
@@ -15085,6 +16495,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/配置复制关系.pdf" 
@@ -15100,6 +16513,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/自定义复制策略.pdf" 
@@ -15126,6 +16542,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/创建复制关系.pdf" 
@@ -15163,6 +16582,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/从_SnapMirror_灾难恢复目标卷提供数据.pdf" 
@@ -15213,6 +16635,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/事件和性能监控.pdf" 
@@ -15226,6 +16651,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_查看集群性能.pdf" 
@@ -15258,6 +16686,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_设置性能监控.pdf" 
@@ -15273,6 +16704,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/性能监控.pdf" 
@@ -15292,6 +16726,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/安装_Active_IQ_Unified_Manager.pdf" 
@@ -15320,6 +16757,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/设置基本监控任务.pdf" 
@@ -15337,6 +16777,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用性能阈值生成事件通知.pdf" 
@@ -15394,6 +16837,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_进行性能管理.pdf" 
@@ -15409,6 +16855,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/监控性能.pdf" 
@@ -15428,6 +16877,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/安装_Active_IQ_Unified_Manager.pdf" 
@@ -15456,6 +16908,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/设置基本监控任务.pdf" 
@@ -15501,6 +16956,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理性能问题.pdf" 
@@ -15516,6 +16974,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/执行基本基础架构检查.pdf" 
@@ -15529,6 +16990,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/检查存储系统上的协议设置.pdf" 
@@ -15576,6 +17040,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/管理工作负载.pdf" 
@@ -15593,6 +17060,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/通过_QoS_保证吞吐量.pdf" 
@@ -15658,6 +17128,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/文件系统分析.pdf" 
@@ -15692,6 +17165,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/EMS_配置.pdf" 
@@ -15709,6 +17185,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_配置_EMS_事件通知.pdf" 
@@ -15743,6 +17222,9 @@
     
       <ul class="subfolders" style="display:none;">
         <li class="pdf-ux-container">
+          
+          
+          
           <a target="_blank" 
             
               href="/zh-cn/ontap/pdfs/sidebar/更新已弃用的_EMS_事件映射.pdf" 
@@ -20017,8 +21499,6 @@
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-config/supported-port-config-x1143a-r6-adapter-concept.html">
         概述
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-config/port-config-options-x1143a-r6-adapter-concept.html">
-        X1143A-R6 适配器的端口配置选项
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-config/configure-ports-task.html">
         配置端口
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-config/change-uta2-port-cna-mode-fc-task.html">
@@ -21259,7 +22739,7 @@
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smbc/smbc_install_high_level_deployment_workflow.html">
         高级部署工作流
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smbc/smbc-install-confirm-ontap-cluster.html">
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smbc/smbc_install_confirm_ontap_cluster.html">
         安装 ONTAP 调解器服务并确认 ONTAP 集群配置
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smbc/smbc_install_initialize_the_ontap_mediator.html">
         初始化 ONTAP 调解器
@@ -22013,6 +23493,7 @@
 <!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
 <script>$("li.active").parents('li').toggleClass("active");</script>
 
+
   </div>
   
 
@@ -22093,98 +23574,122 @@
   <div class="n-footer__bottom">
     <div class="n-container">
       <div class="n-footer__bottom-left">
-
         <div class="n-footer__copyright">
           <ul class="n-footer__copyright-list">
             <li class="n-footer__copyright-link">
-            <a href="https://www.netapp.com/us/legal/copyright.aspx">© 2022 NetApp, Inc.</a>
+              <a href="https://www.netapp.com/us/legal/copyright.aspx">© 2022 NetApp, Inc.</a>
             </li>
-
-</ul>
-</div>
-<div class="n-footer__social-links">
-<ul class="n-footer__social-link-list">
-<li class="n-footer__social-link-list-item">
-<a class="n-footer__social-link" data-ntap-social="follow-blog" href="https://blog.netapp.com" target="_blank" title="blog" alt="blog">
-<span class="n-footer__social-link-text">blog</span>
-<svg class="n-icon-blog n-footer__social-link-icon" aria-labelledby="title">
-  <title>blog@</title>
-  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/zh-cn/ontap/common/svg/sprite.svg#blog"></use>
-</svg>
-
-</a>
-</li>
-<li class="n-footer__social-link-list-item">
-<a class="n-footer__social-link" data-ntap-social="follow-community" href="https://community.netapp.com/" target="_blank" title="community" alt="community">
-<span class="n-footer__social-link-text">community</span>
-<svg class="n-icon-community n-footer__social-link-icon" aria-labelledby="title">
-<title>community@</title>
-<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/zh-cn/ontap/common/svg/sprite.svg#comments"></use>
-</svg>
-
-</a>
-</li>
-<li class="n-footer__social-link-list-item">
-<a class="n-footer__social-link" data-ntap-social="follow-twitter" href="https://twitter.com/netapp" target="_blank" title="twitter" alt="twitter">
-<span class="n-footer__social-link-text">twitter</span>
-<svg class="n-icon-twitter n-footer__social-link-icon" aria-labelledby="title">
-<title>twitter@</title>
-<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/zh-cn/ontap/common/svg/sprite.svg#twitter"></use>
-</svg>
-
-</a>
-</li>
-<li class="n-footer__social-link-list-item">
-<a class="n-footer__social-link" data-ntap-social="follow-facebook" href="https://www.facebook.com/NetApp" target="_blank" title="facebook" alt="facebook">
-<span class="n-footer__social-link-text">facebook</span>
-<svg class="n-icon-facebook n-footer__social-link-icon" aria-labelledby="title">
-<title>facebook@</title>
-<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/zh-cn/ontap/common/svg/sprite.svg#facebook"></use>
-</svg>
-
-</a>
-</li>
-<li class="n-footer__social-link-list-item">
-<a class="n-footer__social-link" data-ntap-social="follow-linkedin" href="https://www.linkedin.com/company/netapp" target="_blank" title="linkedin" alt="linkedin">
-<span class="n-footer__social-link-text">linkedin</span>
-<svg class="n-icon-linkedin n-footer__social-link-icon" aria-labelledby="title">
-<title>linkedin@</title>
-<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/zh-cn/ontap/common/svg/sprite.svg#linkedin"></use>
-</svg>
-
-</a>
-</li>
-<li class="n-footer__social-link-list-item">
-<a class="n-footer__social-link" data-ntap-social="follow-youtube" href="https://www.youtube.com/user/NetAppTV" target="_blank" title="youtube" alt="youtube">
-<span class="n-footer__social-link-text">youtube</span>
-<svg class="n-icon-youtube n-footer__social-link-icon" aria-labelledby="title">
-<title>youtube@</title>
-<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/zh-cn/ontap/common/svg/sprite.svg#youtube"></use>
-</svg>
-
-</a>
-</li>
-<li class="n-footer__social-link-list-item">
-<a class="n-footer__social-link" data-ntap-social="follow-slideshare" href="https://www.slideshare.net/NetApp" target="_blank" title="slideshare" alt="slideshare">
-<span class="n-footer__social-link-text">slideshare</span>
-<svg class="n-icon-slideshare n-footer__social-link-icon" aria-labelledby="title">
-<title>slideshare@</title>
-<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/zh-cn/ontap/common/svg/sprite.svg#slideshare"></use>
-</svg>
-
-</a>
-</li>
-</ul>
-</div>
-
-</div>
-<div class="n-footer__bottom-right">
-  <p class="n-footer__fine-print">想就我们的网站提供反馈?<a target="_self" href="javascript:netapp_mailto()" class="n-footer__copyright">请告诉我们</a>
-  <a href="https://docs.netapp.com/zh-cn/announcements/" class="n-footer__copyright">通知</a>
-  </p>
-</div>
-</div>
-</div>
+            <li class="n-footer__copyright-link">
+              <a href="https://www.netapp.com/company/legal/terms-of-use/">条款和条件</a>
+            </li>
+            <li class="n-footer__copyright-link">
+              <a href="https://www.netapp.com/company/legal/privacy-policy/">隐私政策</a>
+            </li>
+            <li class="n-footer__copyright-link">
+              <a href="https://www.netapp.com/company/legal/cookie-policy/">Cookie 政策</a>
+            </li>
+            <li class="n-footer__copyright-link">
+              <a class="ot-sdk-show-settings">Cookie 设置</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="n-footer__bottom-right">
+        <div class="n-footer__copyright">
+          <ul class="n-footer__copyright-list">
+            <li class="n-footer__copyright-link">
+              <span class="n-footer__fine-print">想就我们的网站提供反馈?</span>
+              <a target="_self" href="javascript:netapp_mailto()">请告诉我们</a>
+            </li>
+            <li class="n-footer__copyright-link">
+              <a href="https://docs.netapp.com/zh-cn/announcements/">通知</a>
+            </li>
+          </ul>
+        </div>
+        <div class="n-footer__social-links">
+          <ul class="n-footer__social-link-list">
+            <li class="n-footer__social-link-list-item">
+              <a class="n-footer__social-link" data-ntap-social="follow-blog" href="https://blog.netapp.com"
+                target="_blank" title="blog" alt="blog">
+                <span class="n-footer__social-link-text">blog</span>
+                <svg class="n-icon-blog n-footer__social-link-icon" aria-labelledby="title">
+                  <title>blog@</title>
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xlink:href="/zh-cn/ontap/common/svg/sprite.svg#blog"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="n-footer__social-link-list-item">
+              <a class="n-footer__social-link" data-ntap-social="follow-community" href="https://community.netapp.com/"
+                target="_blank" title="community" alt="community">
+                <span class="n-footer__social-link-text">community</span>
+                <svg class="n-icon-community n-footer__social-link-icon" aria-labelledby="title">
+                  <title>community@</title>
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xlink:href="/zh-cn/ontap/common/svg/sprite.svg#comments"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="n-footer__social-link-list-item">
+              <a class="n-footer__social-link" data-ntap-social="follow-twitter" href="https://twitter.com/netapp"
+                target="_blank" title="twitter" alt="twitter">
+                <span class="n-footer__social-link-text">twitter</span>
+                <svg class="n-icon-twitter n-footer__social-link-icon" aria-labelledby="title">
+                  <title>twitter@</title>
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xlink:href="/zh-cn/ontap/common/svg/sprite.svg#twitter"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="n-footer__social-link-list-item">
+              <a class="n-footer__social-link" data-ntap-social="follow-facebook" href="https://www.facebook.com/NetApp"
+                target="_blank" title="facebook" alt="facebook">
+                <span class="n-footer__social-link-text">facebook</span>
+                <svg class="n-icon-facebook n-footer__social-link-icon" aria-labelledby="title">
+                  <title>facebook@</title>
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xlink:href="/zh-cn/ontap/common/svg/sprite.svg#facebook"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="n-footer__social-link-list-item">
+              <a class="n-footer__social-link" data-ntap-social="follow-linkedin"
+                href="https://www.linkedin.com/company/netapp" target="_blank" title="linkedin" alt="linkedin">
+                <span class="n-footer__social-link-text">linkedin</span>
+                <svg class="n-icon-linkedin n-footer__social-link-icon" aria-labelledby="title">
+                  <title>linkedin@</title>
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xlink:href="/zh-cn/ontap/common/svg/sprite.svg#linkedin"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="n-footer__social-link-list-item">
+              <a class="n-footer__social-link" data-ntap-social="follow-youtube"
+                href="https://www.youtube.com/user/NetAppTV" target="_blank" title="youtube" alt="youtube">
+                <span class="n-footer__social-link-text">youtube</span>
+                <svg class="n-icon-youtube n-footer__social-link-icon" aria-labelledby="title">
+                  <title>youtube@</title>
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xlink:href="/zh-cn/ontap/common/svg/sprite.svg#youtube"></use>
+                </svg>
+              </a>
+            </li>
+            <li class="n-footer__social-link-list-item">
+              <a class="n-footer__social-link" data-ntap-social="follow-slideshare"
+                href="https://www.slideshare.net/NetApp" target="_blank" title="slideshare" alt="slideshare">
+                <span class="n-footer__social-link-text">slideshare</span>
+                <svg class="n-icon-slideshare n-footer__social-link-icon" aria-labelledby="title">
+                  <title>slideshare@</title>
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xlink:href="/zh-cn/ontap/common/svg/sprite.svg#slideshare"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </footer>
 
       </div><!-- Elasticsearch JS -->
