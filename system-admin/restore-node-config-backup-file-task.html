@@ -23533,7 +23533,7 @@
 <p class="page-details">
   
     
-    <time datetime="2021-11-11 21:57:31 +0000">11/11/2021</time>
+    <time datetime="2022-04-08 04:16:08 +0000">04/08/2022</time>
     
   
 
@@ -23550,26 +23550,24 @@
 <div class="title">步骤</div>
 <ol class="arabic">
 <li>
-<p>如果节点运行状况良好，则在其他节点的高级权限级别下，使用 <code>cluster modify</code> 命令以及 ` 节点` 和 ` 资格` 参数将其标记为不符合条件并将其与集群隔离。</p>
-<div class="paragraph">
-<p>如果节点运行不正常，则应跳过此步骤。</p>
-</div>
-<div class="paragraph">
-<p>以下示例将 node2 修改为不符合加入集群的条件，以便可以还原其配置：</p>
+<p>更改为高级权限级别： <code>set -privilege advanced</code></p>
+</li>
+<li>
+<p>如果节点运行状况良好，则在其他节点的高级权限级别下，使用 <code>cluster modify</code> 命令以及 ` 节点` 和 ` 资格` 参数将其标记为不符合条件并将其与集群隔离。如果节点运行不正常，则应跳过此步骤。以下示例将 node2 修改为不符合加入集群的条件，以便可以还原其配置：</p>
+</li>
+</ol>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre>cluster1::*&gt; cluster modify -node node2 -eligibility false</pre>
 </div>
 </div>
-</li>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>在高级权限级别使用 <code>ssystem configuration recovery node restore</code> 命令从配置备份文件还原节点的配置。</p>
-<div class="paragraph">
-<p>如果节点丢失了其标识（包括名称），则应使用 ` -nodename-in-backup` 参数在配置备份文件中指定节点名称。</p>
-</div>
-<div class="paragraph">
-<p>以下示例将使用存储在节点上的一个配置备份文件还原节点的配置：</p>
+<p>在高级权限级别使用 <code>ssystem configuration recovery node restore</code> 命令从配置备份文件还原节点的配置。如果节点丢失了其标识（包括名称），则应使用 ` -nodename-in-backup` 参数在配置备份文件中指定节点名称。以下示例将使用存储在节点上的一个配置备份文件还原节点的配置：</p>
+</li>
+</ol>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -23586,7 +23584,8 @@ Do you want to continue? {y|n}: y</pre>
 <div class="paragraph">
 <p>配置将还原，节点将重新启动。</p>
 </div>
-</li>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>如果将此节点标记为不符合条件，请使用 <code>ssystem configuration recovery cluster sync</code> 命令将此节点标记为符合条件并将其与集群同步。</p>
 </li>
