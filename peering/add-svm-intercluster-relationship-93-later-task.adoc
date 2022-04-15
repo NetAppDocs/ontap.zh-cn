@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: add, intercluster, svm, peer, relationship 
 summary: 如果在配置集群对等关系后创建 SVM ，则需要手动为此 SVM 添加对等关系。您可以使用 vserver peer create 命令在 SVM 之间创建对等关系。创建对等关系后，您可以在远程集群上运行 Vserver peer accept 以授权对等关系。 
 ---
-= 添加集群间 SVM 对等关系（ ONTAP 9.3 及更高版本）
+= 添加集群间 SVM 对等关系
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -56,10 +56,10 @@ vs1 -applications snapmirror -peer-cluster cluster01
 [listing]
 ----
 cluster01::> vserver peer show-all
-                   Peer              Peer                        Peering
-Vserver            Vserver           State       Peer Cluster    Applications
------------        -----------       ----------  --------------  ------------
-pvs1               vs1               initiated   Cluster02       snapmirror
+            Peer        Peer                      Peering
+Vserver     Vserver     State      Peer Cluster   Applications
+--------    --------    ---------  -------------  ------------
+pvs1        vs1         initiated   Cluster02       snapmirror
 ----
 . 在数据保护目标集群上，显示待定 SVM 对等关系：
 +
