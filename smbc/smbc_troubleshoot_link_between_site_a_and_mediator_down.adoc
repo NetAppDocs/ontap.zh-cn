@@ -6,6 +6,7 @@ summary: 对站点 A 和调解器关闭以及站点 B 关闭之间的链路故�
 ---
 = 站点 A 和调解器之间的链路关闭，站点 B 关闭
 :hardbreaks:
+:allow-uri-read: 
 :nofooter: 
 :icons: font
 :linkattrs: 
@@ -47,6 +48,9 @@ vserver volume                  smbc-consensus
 vs0     zrto_cg_894191_188b_RW1 Awaiting-consensus
 ....
 完成以下步骤以覆盖 SM-BC 共识并强制恢复站点 A 上的 I/O ：
+
+
+NOTE: 此解决方案 使用 `dIAG` 级别的命令，您需要联系 NetApp 支持部门。
 
 . 取消映射站点 A 上的 LUN
 . 在站点 A 上使用 ` -force` 和 `override-smbc-consenson` 选项对 `snapmirror release` 命令执行问题描述

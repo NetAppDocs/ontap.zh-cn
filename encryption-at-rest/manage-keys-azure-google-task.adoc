@@ -6,6 +6,7 @@ summary: 使用 Azure 密钥存储（ AKV ）简化对 ONTAP 加密密钥的保�
 ---
 = 使用 Azure Key Vault 或 Google Cloud KMS 管理密钥
 :hardbreaks:
+:allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
@@ -35,36 +36,41 @@ summary: 使用 Azure 密钥存储（ AKV ）简化对 ONTAP 加密密钥的保�
 
 == 使用 CLI 启用外部密钥管理
 
+启用外部密钥管理取决于您使用的特定密钥管理器。如果要在 Cloud Volumes ONTAP 中启用 AKV ，请注意，有一个单独的操作步骤 。选择适合您需求的密钥管理器和环境选项卡：
+
 [role="tabbed-block"]
 ====
-.Azure 酒店
+.适用于 ONTAP 的 Azure
 --
-.使用命令行界面启用 AKV
-. 开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。
-+
-此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 `cluster show` 检查此问题。
-
+.为 ONTAP 启用 Azure 密钥存储
+. 开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 `cluster show` 检查此问题。
 . 将权限级别设置为 advanced `set -priv advanced`
-. 在 SVM 上启用 AKV `security key-manager external azure enable -client-id _client_id_ -tenant-id _tenant_id_ -name -key-id _key_id_ -authentication-method ｛ certificates| client-secret ｝`
+. 在 SVM 上启用 AKV `sSecurity key-manager external azure enable -client-id _client_id_ -tenant-id _tenant_id_ -name -key-id _key_id_ -authentication-method ｛ certificate_client-secret ｝` 出现提示时，输入 Azure 帐户中的客户端证书或客户端密钥。
+. 验证是否已正确启用 AKV ： `security key-manager external azure show vserver _vserver_name_` 如果服务可访问性不正常，请通过数据 Vserver LIF 与 AKV 密钥管理服务建立连接。
+
+
+--
+.适用于 Cloud Volumes ONTAP 的 Azure
+--
+.为 Cloud Volumes ONTAP 启用 Azure 密钥存储
+. 开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 `cluster show` 检查此问题。
+. 将权限级别设置为 advanced `set -priv advanced`
+. 在 SVM 上启用 AKV `sSecurity key-manager external azure enable -client-id _client_id_ -tenant-id _tenant_id_ -name -key-id _key_id_ -authentication-method ｛ certificate_client-secret ｝` 出现提示时，输入 Azure 帐户中的客户端证书或客户端密钥。
+. 为数据 SVM 设置 DNS ： `dns create -domain_domain_name_ -name-servers _server_address_ -vserver _vserver_name_`
+. 转到 Azure 门户以获取包含您的密钥存储的订阅。选择 "* 访问策略 "* 菜单。为应用程序提供密钥权限，机密权限和证书权限，然后保存。
 +
-出现提示时，输入 Azure 帐户的客户端证书或客户端密钥。
+image::azure-key-vault-access-policies.png[Azure 访问策略菜单，其中显示了必须提供的权限字段]
 
 . 验证是否已正确启用 AKV ： `security key-manager external azure show vserver _vserver_name_` 如果服务可访问性不正常，请通过数据 Vserver LIF 与 AKV 密钥管理服务建立连接。
 
 
 --
-.Google Cloud
+.适用于 ONTAP 的 Google Cloud
 --
-.使用命令行界面启用 Cloud KMS
-. 开始之前，您需要以 JSON 格式获取 Google Cloud KMS 帐户密钥文件的专用密钥。您可以在 GCP 帐户中找到此信息。
-+
-此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 `cluster show` 检查此问题。
-
+.使用适用于 ONTAP 的 CLI 启用云 KMS
+. 开始之前，您需要以 JSON 格式获取 Google Cloud KMS 帐户密钥文件的专用密钥。您可以在 GCP 帐户中找到此信息。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 `cluster show` 检查此问题。
 . 将权限级别设置为 advanced `set -priv advanced`
-. 在 SVM `sSecurity key-manager 外部 GCP 上启用 Cloud KMS enable -vserver _data_svm_name_ -project-id _project_id_-key-ring-name _key_ring_name_ -key-ring-location _key_ring_location_location_-key-name _key_name_`
-+
-出现提示时，使用服务帐户专用密钥输入 JSON 文件的内容
-
+. 在 SVM `sSecurity key-manager 外部 GCP 上启用 Cloud KMS enable -vserver _data_svm_name_ -project-id _project_id_-key-ring-name _key_ring_name_ -key-ring-location _key_ring_location_-key-name _key_name_` 出现提示时，输入 JSON 服务专用帐户的内容
 . 验证 Cloud KMS 是否配置了正确的参数： `security key-manager external gcp show vserver _vserver_name_` 如果未创建加密卷，则状态 `kms_wrappered_key_status` will be ` "unknown"` if no encrypted volumes have been created_volumes 。如果服务可访问性不正常，请通过数据 Vserver LIF 与 GCP 密钥管理服务建立连接。
 
 
