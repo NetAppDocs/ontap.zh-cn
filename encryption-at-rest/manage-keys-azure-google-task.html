@@ -23533,7 +23533,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-04 15:08:49 +0000">04/04/2022</time>
+    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
     
   
 
@@ -23590,27 +23590,57 @@
 <div class="sect1">
 <h2 id="使用-cli-启用外部密钥管理">使用 CLI 启用外部密钥管理</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>启用外部密钥管理取决于您使用的特定密钥管理器。如果要在 Cloud Volumes ONTAP 中启用 AKV ，请注意，有一个单独的操作步骤 。选择适合您需求的密钥管理器和环境选项卡：</p>
+</div>
 <div class="exampleblock tabbed-block">
 <div class="content">
 <div class="openblock">
-<div class="title">Azure 酒店</div>
+<div class="title">适用于 ONTAP 的 Azure</div>
 <div class="content">
 <div class="olist arabic">
-<div class="title">使用命令行界面启用 AKV</div>
+<div class="title">为 ONTAP 启用 Azure 密钥存储</div>
 <ol class="arabic">
 <li>
-<p>开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。</p>
-<div class="paragraph">
-<p>此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 <code>cluster show</code> 检查此问题。</p>
-</div>
+<p>开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 <code>cluster show</code> 检查此问题。</p>
 </li>
 <li>
 <p>将权限级别设置为 advanced <code>set -priv advanced</code></p>
 </li>
 <li>
-<p>在 SVM 上启用 AKV <code>security key-manager external azure enable -client-id <em>client_id</em> -tenant-id <em>tenant_id</em> -name -key-id <em>key_id</em> -authentication-method ｛ certificates| client-secret ｝</code></p>
-<div class="paragraph">
-<p>出现提示时，输入 Azure 帐户的客户端证书或客户端密钥。</p>
+<p>在 SVM 上启用 AKV <code>sSecurity key-manager external azure enable -client-id <em>client_id</em> -tenant-id <em>tenant_id</em> -name -key-id <em>key_id</em> -authentication-method ｛ certificate_client-secret ｝</code> 出现提示时，输入 Azure 帐户中的客户端证书或客户端密钥。</p>
+</li>
+<li>
+<p>验证是否已正确启用 AKV ： <code>security key-manager external azure show vserver <em>vserver_name</em></code> 如果服务可访问性不正常，请通过数据 Vserver LIF 与 AKV 密钥管理服务建立连接。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="openblock">
+<div class="title">适用于 Cloud Volumes ONTAP 的 Azure</div>
+<div class="content">
+<div class="olist arabic">
+<div class="title">为 Cloud Volumes ONTAP 启用 Azure 密钥存储</div>
+<ol class="arabic">
+<li>
+<p>开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 <code>cluster show</code> 检查此问题。</p>
+</li>
+<li>
+<p>将权限级别设置为 advanced <code>set -priv advanced</code></p>
+</li>
+<li>
+<p>在 SVM 上启用 AKV <code>sSecurity key-manager external azure enable -client-id <em>client_id</em> -tenant-id <em>tenant_id</em> -name -key-id <em>key_id</em> -authentication-method ｛ certificate_client-secret ｝</code> 出现提示时，输入 Azure 帐户中的客户端证书或客户端密钥。</p>
+</li>
+<li>
+<p>为数据 SVM 设置 DNS ： <code>dns create -domain_domain_name_ -name-servers <em>server_address</em> -vserver <em>vserver_name</em></code></p>
+</li>
+<li>
+<p>转到 Azure 门户以获取包含您的密钥存储的订阅。选择 "* 访问策略 "* 菜单。为应用程序提供密钥权限，机密权限和证书权限，然后保存。</p>
+<div class="imageblock">
+<div class="content">
+<img src="../media/azure-key-vault-access-policies.png" alt="Azure 访问策略菜单，其中显示了必须提供的权限字段">
+</div>
 </div>
 </li>
 <li>
@@ -23621,25 +23651,19 @@
 </div>
 </div>
 <div class="openblock">
-<div class="title">Google Cloud</div>
+<div class="title">适用于 ONTAP 的 Google Cloud</div>
 <div class="content">
 <div class="olist arabic">
-<div class="title">使用命令行界面启用 Cloud KMS</div>
+<div class="title">使用适用于 ONTAP 的 CLI 启用云 KMS</div>
 <ol class="arabic">
 <li>
-<p>开始之前，您需要以 JSON 格式获取 Google Cloud KMS 帐户密钥文件的专用密钥。您可以在 GCP 帐户中找到此信息。</p>
-<div class="paragraph">
-<p>此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 <code>cluster show</code> 检查此问题。</p>
-</div>
+<p>开始之前，您需要以 JSON 格式获取 Google Cloud KMS 帐户密钥文件的专用密钥。您可以在 GCP 帐户中找到此信息。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 <code>cluster show</code> 检查此问题。</p>
 </li>
 <li>
 <p>将权限级别设置为 advanced <code>set -priv advanced</code></p>
 </li>
 <li>
-<p>在 SVM <code>sSecurity key-manager 外部 GCP 上启用 Cloud KMS enable -vserver <em>data_svm_name</em> -project-id <em>project_id</em>-key-ring-name <em>key_ring_name</em> -key-ring-location <em>key_ring_location_location</em>-key-name <em>key_name</em></code></p>
-<div class="paragraph">
-<p>出现提示时，使用服务帐户专用密钥输入 JSON 文件的内容</p>
-</div>
+<p>在 SVM <code>sSecurity key-manager 外部 GCP 上启用 Cloud KMS enable -vserver <em>data_svm_name</em> -project-id <em>project_id</em>-key-ring-name <em>key_ring_name</em> -key-ring-location <em>key_ring_location</em>-key-name <em>key_name</em></code> 出现提示时，输入 JSON 服务专用帐户的内容</p>
 </li>
 <li>
 <p>验证 Cloud KMS 是否配置了正确的参数： <code>security key-manager external gcp show vserver <em>vserver_name</em></code> 如果未创建加密卷，则状态 <code>kms_wrappered_key_status</code> will be ` "unknown"` if no encrypted volumes have been created_volumes 。如果服务可访问性不正常，请通过数据 Vserver LIF 与 GCP 密钥管理服务建立连接。</p>
