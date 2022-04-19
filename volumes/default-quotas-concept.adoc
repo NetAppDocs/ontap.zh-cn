@@ -5,6 +5,7 @@ keywords: how, default quotas, work
 summary: 您可以使用默认配额将配额应用于给定配额类型的所有实例。例如，默认用户配额会影响系统上指定 FlexVol 卷或 qtree 的所有用户。此外，您还可以通过默认配额轻松修改配额。 
 ---
 = 默认配额的工作原理
+:hardbreaks:
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -24,6 +25,7 @@ summary: 您可以使用默认配额将配额应用于给定配额类型的所�
 配额由空字符串（ "" ）或星号（ * ）的目标指示，具体取决于上下文：
 
 * 使用 `volume quota policy rule create` 命令创建配额时，如果将 ` -target` 参数设置为空字符串（ "" ），则会创建默认配额。
+* 在 `volume quota policy rule create` 命令中， ` -qtree` 参数指定要应用配额规则的 qtree 的名称。此参数不适用于树类型规则。对于卷级别的用户或组类型规则，此参数应包含 "" 。
 * 在 `volume quota policy rule show` 命令的输出中，默认配额显示为目标，并显示一个空字符串（ "" ）。
 * 在 `volume quota report` 命令的输出中，默认配额显示时带有星号（ * ）作为 ID 和配额说明符。
 
