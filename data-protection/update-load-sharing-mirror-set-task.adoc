@@ -1,8 +1,8 @@
 ---
 permalink: data-protection/update-load-sharing-mirror-set-task.html 
 sidebar: sidebar 
-keywords: update, loaad-sharing, mirror, relationship 
-summary: 如果您希望在下次计划更新之前显示根卷上的更改，则应手动更新负载共享镜像（ LSM ）关系。例如，在 SVM 的根卷上挂载新卷时，您应更新 LSM 关系。 
+keywords: update, loaad-sharing, mirror, relationship, LSM, manual update 
+summary: '在 SVM 中的某个卷挂载或卸载之后，以及在包含 `junction-path`选项的 `volume create` 操作期间， SVM 根卷的负载共享镜像（ LSM ）关系会自动更新。如果您希望在下次计划更新之前更新 LSM 关系，可以手动更新该关系。' 
 ---
 = 更新负载共享镜像关系
 :allow-uri-read: 
@@ -11,7 +11,14 @@ summary: 如果您希望在下次计划更新之前显示根卷上的更改，�
 
 
 [role="lead"]
-如果您希望在下次计划更新之前显示根卷上的更改，则应手动更新负载共享镜像（ LSM ）关系。例如，在 SVM 的根卷上挂载新卷时，您应更新 LSM 关系。
+在 SVM 中的某个卷挂载或卸载之后，以及在包含 `junction-path`选项的 `volume create` 操作期间， SVM 根卷的负载共享镜像（ LSM ）关系会自动更新。如果您希望在下次计划更新之前更新 LSM 关系，可以手动更新该关系。
+
+在以下情况下，负载共享镜像关系会自动更新：
+
+* 现在是进行计划内更新的时候了
+* 对 SVM 根卷中的卷执行挂载或卸载操作
+* 发出 `volume create` 命令，其中包含 `juntion-path` 选项
+
 
 .步骤
 . 手动更新负载共享镜像关系：
