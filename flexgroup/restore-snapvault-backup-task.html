@@ -8014,11 +8014,11 @@
           
           <a target="_blank" 
             
-              href="/zh-cn/ontap/pdfs/sidebar/使用选项自定义_CIFS_服务器.pdf" 
+              href="/zh-cn/ontap/pdfs/sidebar/使用选项自定义_SMB_服务器.pdf" 
             
           >
             <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>
-            使用选项自定义 CIFS 服务器
+            使用选项自定义 SMB 服务器
           </a>
           
 
@@ -20114,14 +20114,14 @@
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smb-admin/modify-servers-task.html">
         修改 SMB 服务器
       </a></li><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用选项自定义 CIFS 服务器</div>
+        <div class="na-navbar-padding"> 使用选项自定义 SMB 服务器</div>
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smb-admin/server-options-reference.html">
         可用的 SMB 服务器选项
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smb-admin/configure-server-options-task.html">
-        配置 CIFS 服务器选项
+        配置 SMB 服务器选项
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smb-admin/configure-grant-unix-group-permission-users-task.html">
-        配置向 CIFS 用户授予 UNIX 组权限
+        配置向 SMB 用户授予 UNIX 组权限
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smb-admin/configure-access-restrictions-anonymous-users-task.html">
         配置匿名用户的访问限制
       </a></li><li class="subfolders "><a href="#">
@@ -20829,7 +20829,7 @@
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smb-admin/requirements-configuring-branchcache-concept.html">
         配置 BranchCache 的要求
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smb-admin/configure-branchcache-task.html">
-        在 CIFS 服务器上配置 BranchCache
+        在 SMB 服务器上配置 BranchCache
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/smb-admin/configure-branchcache-remote-office-concept.html">
         从何处查找有关在远程办公室配置 BranchCache 的信息
       </a></li></ul></li><li class="subfolders "><a href="#">
@@ -23497,7 +23497,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-04-21 20:47:05 +0000">04/21/2022</time>
     
   
 
@@ -23508,45 +23508,24 @@
 <p>您可以从 SnapVault 二级卷中的 Snapshot 副本对 FlexGroup 卷执行完整卷还原操作。您可以将 FlexGroup 卷还原到原始源卷或新的 FlexGroup 卷。</p>
 </div>
 <div class="paragraph">
-<p>您必须了解还原 FlexGroup 卷的某些注意事项。</p>
-</div>
-<div class="paragraph">
-<p><a href="snapvault-restore-operations-concept.html">FlexGroup 卷的 SnapVault 还原操作注意事项</a></p>
-</div>
-<div class="paragraph">
-<p>从 FlexGroup 卷的 SnapVault 备份还原时，您还必须了解某些注意事项。</p>
+<p>从 FlexGroup 卷的 SnapVault 备份还原时，您必须了解某些注意事项。</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>只支持从 SnapVault 备份执行部分 Snapshot 副本的基线还原。</p>
-<div class="paragraph">
-<p>目标卷中的成分卷数量必须与创建 Snapshot 副本时源卷中的成分卷数量匹配。</p>
-</div>
+<p>只支持从 SnapVault 备份执行部分 Snapshot 副本的基线还原。目标卷中的成分卷数量必须与创建 Snapshot 副本时源卷中的成分卷数量匹配。</p>
 </li>
 <li>
-<p>如果还原操作失败，则在还原操作完成之前不允许执行其他操作。</p>
-<div class="paragraph">
-<p>您可以重试还原操作，也可以使用 <code>cleanup</code> 参数运行还原操作。</p>
-</div>
+<p>如果还原操作失败，则在还原操作完成之前不允许执行其他操作。您可以重试还原操作，也可以使用 <code>cleanup</code> 参数运行还原操作。</p>
 </li>
 <li>
-<p>FlexGroup 卷只能是一个备份关系或还原关系的源卷。</p>
-<div class="paragraph">
-<p>FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 SnapVault 关系和一个还原关系的源。</p>
-</div>
+<p>FlexGroup 卷只能是一个备份关系或还原关系的源卷。FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 SnapVault 关系和一个还原关系的源。</p>
 </li>
 <li>
-<p>SnapVault 备份和还原操作不能并行运行。</p>
-<div class="paragraph">
-<p>在执行基线还原操作或增量还原操作时，您应暂停备份操作。</p>
-</div>
+<p>SnapVault 备份和还原操作不能并行运行。在执行基线还原操作或增量还原操作时，您应暂停备份操作。</p>
 </li>
 <li>
-<p>您必须中止从目标 FlexGroup 卷还原部分 Snapshot 副本的操作。</p>
-<div class="paragraph">
-<p>您不能从源卷中止部分 Snapshot 副本的还原操作。</p>
-</div>
+<p>您必须中止从目标 FlexGroup 卷还原部分 Snapshot 副本的操作。您不能从源卷中止部分 Snapshot 副本的还原操作。</p>
 </li>
 <li>
 <p>如果中止还原操作，则必须使用与上次还原操作相同的 Snapshot 副本重新启动还原操作。</p>
@@ -23563,10 +23542,7 @@
 <div class="title">步骤</div>
 <ol class="arabic">
 <li>
-<p>还原 FlexGroup 卷： <code>snapmirror restore -source-path src_sVM ： src_flexgroup -destination-path dest_sVM ： dest_flexgroup -snapshot snapshot_name</code></p>
-<div class="paragraph">
-<p><code>snapshot_name</code> 是要从源卷还原到目标卷的 Snapshot 副本。如果未指定 Snapshot 副本，则会从最新的 Snapshot 副本还原目标卷。</p>
-</div>
+<p>还原 FlexGroup 卷： <code>snapmirror restore -source-path <em>src_svm ： src_flexgroup</em> -destination-path <em>dest_svm ： dest_flexgroup</em> -snapshot <em>snapshot_name</em></code> <code>snapshot_name</code> 是要从源卷还原到目标卷的 Snapshot 副本。如果未指定 Snapshot 副本，则会从最新的 Snapshot 副本还原目标卷。</p>
 <div class="listingblock">
 <div class="content">
 <pre>vserverA::&gt; snapmirror restore -source-path vserverB:dstFG -destination-path vserverA:newFG -snapshot daily.2016-07-15_0010
