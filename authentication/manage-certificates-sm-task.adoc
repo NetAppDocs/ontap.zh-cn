@@ -1,0 +1,277 @@
+---
+permalink: authentication/manage-certificates-sm-task.html 
+sidebar: sidebar 
+keywords: system manager, certificate, trusted certificate authority, authority, authorities, client server certificate, local certificate authority, onboard, view, add, install, generate, renew, delete, restore, sign a certificate, stored certificate, csr, common name, scope 
+summary: 从 ONTAP 9.10.1 开始，您可以使用 System Manager 管理可信证书颁发机构，客户端 / 服务器证书以及本地（板载）证书颁发机构。 
+---
+= 使用 System Manager 管理证书
+:allow-uri-read: 
+
+
+[role="lead"]
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 管理可信证书颁发机构，客户端 / 服务器证书以及本地（板载）证书颁发机构。
+
+使用 System Manager ，您可以管理从其他应用程序收到的证书，以便对来自这些应用程序的通信进行身份验证。您还可以管理自己的证书，以便向其他应用程序标识您的系统。
+
+
+
+== 查看证书信息
+
+使用 System Manager ，您可以查看集群上存储的可信证书颁发机构，客户端 / 服务器证书以及本地证书颁发机构。
+
+.步骤
+. 在 System Manager 中，单击 * 集群 > 设置 * 。
+. 滚动到 * 安全性 * 区域。在 * 证书 * 部分中，将显示以下详细信息：
++
+** 存储的受信任证书颁发机构的数量。
+** 存储的客户端 / 服务器证书的数量。
+** 存储的本地证书颁发机构的数量。
+
+
+. 单击任意数字可查看有关某个证书类别的详细信息，或者单击 image:icon_arrow.gif["右箭头"] 可查看 * 证书 * 页面，其中包含有关所有类别的信息。此列表将显示整个集群的信息。如果要仅显示特定 Storage VM 的信息，请执行以下步骤：
++
+.. 单击 * 存储 > 存储 VM* 。
+.. 选择 Storage VM 。
+.. 查看 * 设置 * 选项卡。
+.. 单击 * 证书 * 部分中显示的数字。
+
+
+
+
+.下一步操作
+* 在 * 证书 * 页面中，您可以 <<Generate a certificate signing request>>。
+* 证书信息分为三个选项卡，每个类别一个。您可以从每个选项卡执行以下任务：
+
+
+[cols="30,70"]
+|===
+
+
+| 在此选项卡上 ... | 您可以执行以下过程 ... 
+
+
+ a| 
+* 可信证书颁发机构 *
+ a| 
+* <<install-trusted-cert>>
+* <<Delete a trusted certificate authority>>
+* <<Renew a trusted certificate authority>>
+
+
+
+
+ a| 
+* 客户端 / 服务器证书 *
+ a| 
+* <<install-cs-cert>>
+* <<gen-cs-cert>>
+* <<delete-cs-cert>>
+* <<renew-cs-cert>>
+
+
+
+
+ a| 
+* 本地证书颁发机构 *
+ a| 
+* <<Create a new local certificate authority>>
+* <<Sign a certificate using a local certificate authority>>
+* <<Delete a local certificate authority>>
+* <<Renew a local certificate authority>>
+
+
+|===
+
+
+== 生成证书签名请求
+
+您可以从 * 证书 * 页面的任何选项卡使用 System Manager 生成证书签名请求（ CSR ）。此时将生成私钥和相应的 CSR ，可以使用证书颁发机构对其进行签名，以生成公有证书。
+
+.步骤
+. 查看 * 证书 * 页面。请参见 <<View certificate information>>。
+. 单击 * + 生成 CSR* 。
+. 填写主题名称的信息：
++
+.. 输入 * 公用名 * 。
+.. 选择一个 * 国家 / 地区 * 。
+.. 输入 * 组织 * 。
+.. 输入 * 组织单位 * 。
+
+
+. 如果要覆盖默认值，请选择 * 更多选项 * 并提供追加信息。
+
+
+
+
+== 安装（添加）可信证书颁发机构
+
+您可以在 System Manager 中安装其他受信任的证书颁发机构。
+
+.步骤
+. 查看 * 可信证书颁发机构 * 选项卡。请参见 <<View certificate information>>。
+. 单击 image:icon_add_blue_bg.gif["添加图标"]。
+. 在 * 添加可信证书颁发机构 * 面板上，执行以下操作：
++
+** 输入 * 名称 * 。
+** 对于 * 范围 * ，选择一个 Storage VM 。
+** 输入 * 公用名 * 。
+** 选择 * 类型 * 。
+** 输入或导入 * 证书详细信息 * 。
+
+
+
+
+
+
+== 删除可信证书颁发机构
+
+使用 System Manager ，您可以删除受信任的证书颁发机构。
+
+
+NOTE: 您不能删除预安装了 ONTAP 的受信任证书颁发机构。
+
+.步骤
+. 查看 * 可信证书颁发机构 * 选项卡。请参见 <<View certificate information>>。
+. 单击受信任证书颁发机构的名称。
+. 单击 image:icon_kabob.gif["\" 串器 \" 图标"] 在名称旁边，单击 * 删除 * 。
+
+
+
+
+== 续订可信证书颁发机构
+
+使用 System Manager ，您可以续订已过期或即将过期的可信证书颁发机构。
+
+.步骤
+. 查看 * 可信证书颁发机构 * 选项卡。请参见 <<View certificate information>>。
+. 单击受信任证书颁发机构的名称。
+. 单击 image:icon_kabob.gif["\" 串器 \" 图标"] 在名称旁边，单击 * 续订 * 。
+
+
+
+
+== 安装（添加）客户端 / 服务器证书
+
+使用 System Manager ，您可以安装其他客户端 / 服务器证书。
+
+.步骤
+. 查看 * 客户端 / 服务器证书 * 选项卡。请参见 <<View certificate information>>。
+. 单击 image:icon_add_blue_bg.gif["添加图标"]。
+. 在 * 添加客户端 / 服务器证书 * 面板上，执行以下操作：
++
+** 输入 * 证书名称 * 。
+** 对于 * 范围 * ，选择一个 Storage VM 。
+** 输入 * 公用名 * 。
+** 选择 * 类型 * 。
+** 输入或导入 * 证书详细信息 * 。您可以从文本文件写入或复制并粘贴证书详细信息，也可以通过单击 * 导入 * 从证书文件导入文本。
+** 输入 * 专用密钥 * 。您可以从文本文件写入或复制并粘贴私钥，也可以通过单击 * 导入 * 从私钥文件导入文本。
+
+
+
+
+
+
+= 生成（添加）自签名客户端 / 服务器证书
+
+使用 System Manager ，您可以生成其他自签名客户端 / 服务器证书。
+
+.步骤
+. 查看 * 客户端 / 服务器证书 * 选项卡。请参见 <<View certificate information>>。
+. 单击 * + 生成自签名证书 * 。
+. 在 * 生成自签名证书 * 面板上，执行以下操作：
++
+** 输入 * 证书名称 * 。
+** 对于 * 范围 * ，选择一个 Storage VM 。
+** 输入 * 公用名 * 。
+** 选择 * 类型 * 。
+** 选择 * 哈希函数 * 。
+** 选择 * 密钥大小 * 。
+** 选择一个 * 存储虚拟机 * 。
+
+
+
+
+
+
+== 删除客户端 / 服务器证书
+
+使用 System Manager ，您可以删除客户端 / 服务器证书。
+
+.步骤
+. 查看 * 客户端 / 服务器证书 * 选项卡。请参见 <<View certificate information>>。
+. 单击客户端 / 服务器证书的名称。
+. 单击 image:icon_kabob.gif["\" 串器 \" 图标"] 在名称旁边，单击 * 删除 * 。
+
+
+
+
+== 续订客户端 / 服务器证书
+
+使用 System Manager ，您可以续订已过期或即将过期的客户端 / 服务器证书。
+
+.步骤
+. 查看 * 客户端 / 服务器证书 * 选项卡。请参见 <<View certificate information>>。
+. 单击客户端 / 服务器证书的名称。
+. 单击 image:icon_kabob.gif["\" 串器 \" 图标"] 在名称旁边，单击 * 续订 * 。
+
+
+
+
+== 创建新的本地证书颁发机构
+
+使用 System Manager ，您可以创建新的本地证书颁发机构。
+
+.步骤
+. 查看 * 本地证书颁发机构 * 选项卡。请参见 <<View certificate information>>。
+. 单击 image:icon_add_blue_bg.gif["添加图标"]。
+. 在 * 添加本地证书颁发机构 * 面板上，执行以下操作：
++
+** 输入 * 名称 * 。
+** 对于 * 范围 * ，选择一个 Storage VM 。
+** 输入 * 公用名 * 。
+
+
+. 如果要覆盖默认值，请选择 * 更多选项 * 并提供追加信息。
+
+
+
+
+== 使用本地证书颁发机构对证书进行签名
+
+在 System Manager 中，您可以使用本地证书颁发机构对证书进行签名。
+
+.步骤
+. 查看 * 本地证书颁发机构 * 选项卡。请参见 <<View certificate information>>。
+. 单击本地证书颁发机构的名称。
+. 单击 image:icon_kabob.gif["\" 串器 \" 图标"] 在名称旁边，单击 * 签署证书 * 。
+. 填写 * 签署证书签名请求 * 表单。
++
+** 您可以粘贴证书签名内容，也可以单击 * 导入 * 导入证书签名请求文件。
+** 指定证书有效的天数。
+
+
+
+
+
+
+== 删除本地证书颁发机构
+
+使用 System Manager ，您可以删除本地证书颁发机构。
+
+.步骤
+. 查看 * 本地证书颁发机构 * 选项卡。请参见 <<View certificate information>>。
+. 单击本地证书颁发机构的名称。
+. 单击 image:icon_kabob.gif["\" 串器 \" 图标"] 在名称旁边，单击 * 删除 * 。
+
+
+
+
+== 续订本地证书颁发机构
+
+使用 System Manager ，您可以续订已过期或即将过期的本地证书颁发机构。
+
+.步骤
+. 查看 * 本地证书颁发机构 * 选项卡。请参见 <<View certificate information>>。
+. 单击本地证书颁发机构的名称。
+. 单击 image:icon_kabob.gif["\" 串器 \" 图标"] 在名称旁边，单击 * 续订 * 。
+

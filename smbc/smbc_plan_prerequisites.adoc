@@ -18,7 +18,7 @@ summary: 在规划 SnapMirror 业务连续性解决方案部署时，您应考�
 
 
 
-=== 硬件
+== 硬件
 
 * 仅支持双节点 HA 集群
 * 两个集群必须为 AFF 或 ASA （不能混用）
@@ -26,13 +26,14 @@ summary: 在规划 SnapMirror 业务连续性解决方案部署时，您应考�
 
 
 
-=== 软件
+== 软件
 
 * ONTAP 9.8 或更高版本
 * ONTAP 调解器 1.2 或更高版本
 * 用于 ONTAP 调解器的 Linux 服务器或虚拟机，运行以下任一项：
 
 
+[cols="30,70"]
 |===
 
 
@@ -42,42 +43,42 @@ summary: 在规划 SnapMirror 业务连续性解决方案部署时，您应考�
  a| 
 1.3
  a| 
-Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 7.9 ， 8.0 ， 8.1 ， 8.2 ， 8.3
+* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 7.9 ， 8.0 ， 8.1 ， 8.2 ， 8.3
+* CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
 
-CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
 
 
 
  a| 
 1.2
  a| 
-Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 8.0 ， 8.1
+* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 8.0 ， 8.1
+* CentOS ： 7.6 ， 7.7 ， 7.8
 
-CentOS ： 7.6 ， 7.7 ， 7.8
 
 |===
 
 
-=== 许可
+== 许可
 
 * 必须在两个集群上应用 SnapMirror 同步（ SM-S ）许可证
 * 必须在两个集群上应用 SnapMirror 许可证
 +
 
-NOTE: 如果您的 ONTAP 存储系统是在 2019 年 6 月之前购买的，请单击 https://mysupport.netapp.com/NOW/knowledge/docs/olio/guides/master_lickey/["NetApp ONTAP 主许可证密钥"^] 以获取所需的 SM-S 许可证。
+NOTE: 如果您的 ONTAP 存储系统是在 2019 年 6 月之前购买的，请单击 link:https://mysupport.netapp.com/site/systems/master-license-keys["NetApp ONTAP 主许可证密钥"^] 以获取所需的 SM-S 许可证。
 
 
 
 
 
-=== 网络环境
+== 网络环境
 
 * 集群间延迟往返时间（ RTT ）必须小于 10 毫秒
 
 
 
 
-=== 支持的协议
+== 支持的协议
 
 * 仅支持 SAN 协议（而不是 NFS/CIFS ）
 * 仅支持光纤通道和 iSCSI 协议
@@ -86,7 +87,7 @@ NOTE: 如果您的 ONTAP 存储系统是在 2019 年 6 月之前购买的，请�
 
 
 
-=== ONTAP 调解器
+== ONTAP 调解器
 
 * 必须在外部配置并连接到 ONTAP ，以实现透明的应用程序故障转移
 * 有关 ONTAP 调解器的详细信息，请参见 https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_install_configure_mediator.html["安装或升级 ONTAP 调解器服务"^]。
@@ -94,14 +95,14 @@ NOTE: 如果您的 ONTAP 存储系统是在 2019 年 6 月之前购买的，请�
 
 
 
-=== 读写目标卷
+== 读写目标卷
 
 * 读写目标卷不支持 SM-BC 关系。在使用读写卷之前，必须先创建卷级 SnapMirror 关系，然后删除此关系，将其转换为 DP 卷。有关详细信息，请参见 link:smbc_admin_converting_existing_relationships_to_smbc.html#["将现有关系转换为 SM-BC 关系"]
 
 
 
 
-=== 大型 LUN 和大型卷
+== 大型 LUN 和大型卷
 
 * 只有所有 SAN 阵列才支持大 LUN 和大于 100TB 的大卷
 
