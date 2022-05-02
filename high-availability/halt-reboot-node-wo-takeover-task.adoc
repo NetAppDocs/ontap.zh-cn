@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: high-availability/halt-reboot-node-wo-takeover-task.html 
+keywords: high availability pair, hair, inhibit-takeover, reboot, epsilon, HA 
+summary: '如果 -inhibit-takeover 参数设置为 `true` ，则 HA 集群中的两个节点都将停止提供数据，除非您更改特定的配置设置。' 
+---
+= 暂停或重新启动节点，而不启动双节点集群中的接管
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在双节点集群中，集群高可用性（ HA ）可确保一个节点发生故障时不会禁用集群。如果在未接管的情况下使用 ` -inhibit-takeover` 参数设置为 `true` 暂停或重新启动双节点集群中的节点，则两个节点都将停止提供数据，除非您更改特定的配置设置。
+
+在使用 ` -inhibit-takeover true` 参数重新启动或暂停为集群 HA 配置的集群中的节点之前，您必须先禁用集群 HA ，然后将 epsilon 分配给要保持联机的节点。
+
+.暂停或重新启动节点
+. 禁用集群 HA ： `cluster ha modify -configured false` 请注意，此操作不会禁用存储故障转移。
+. 由于禁用集群 HA 会自动将 epsilon 分配给两个节点之一，因此您必须确定哪个节点持有 epsilon ，并在必要时将其重新分配给要保持联机的节点。
++
+.. 将权限级别设置为高级： set -privilege advanced 在系统提示您继续进入高级模式时确认。此时将显示高级模式提示符（ * > ）。
+.. 使用以下命令确定哪个节点持有 epsilon ： cluster show 在以下示例中， Node1 持有 epsilon ：
++
+[listing]
+----
+cluster::*> cluster show
+Node         Health  Eligibility   Epsilon
+------------ ------- ------------  ------------
+Node1        true    true          true
+Node2        true    true          false
+----
++
+如果要暂停或重新启动的节点不持有 epsilon ，请继续执行步骤 3 。
+
+.. 如果要暂停或重新启动的节点持有 epsilon ，则必须将其从节点中删除： `cluster modify -node Node1 -epsilon false` 此时，两个节点均不持有 epsilon 。
+.. 将 epsilon 分配给要保持联机的节点（在此示例中为 Node2 ）： `cluster modify -node Node2 -epsilon true`
+
+
+. 根据需要使用以下任一命令暂停或重新启动不持有 epsilon 的节点（在此示例中为 Node2 ）并禁止接管： `ssystem node halt -node Node2 -inhibit-takeover true` `ssystem node reboot -node Node2 -inhibit-takeover true`
+. 暂停或重新启动的节点恢复联机后，您必须使用以下命令启用集群 HA ： `cluster ha modify -configured true` 启用集群 HA 会自动从两个节点中删除 epsilon 。
+. 返回到管理权限级别： `set -privilege admin`
+
+
+.相关信息
+* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_halt_a_single_node_without_takeover_in_a_two-node__ONTAP_cluster["如何在双节点 ONTAP 集群中暂停单个节点而不接管"^]
+
