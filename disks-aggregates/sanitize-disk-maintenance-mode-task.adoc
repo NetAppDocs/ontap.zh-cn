@@ -25,7 +25,7 @@ summary: 从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。
 
 从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。
 
-.您需要什么？ #8217 ；将需要什么
+.开始之前
 * 这些磁盘不能是自加密磁盘（ SED ）。
 +
 您必须使用 `storage encryption disk sanitize` 命令对 SED 进行清理。
@@ -39,6 +39,12 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 . 启动至维护模式：
 . 如果要清理的磁盘已分区，请取消每个磁盘的分区：
 +
+[NOTE]
+====
+取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。强烈建议您在继续操作之前联系NetApp支持部门。
+
+====
++
 `d取消分区 disk_name`
 
 . 清理指定磁盘：
@@ -46,11 +52,9 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 `d清理开始时间（ -p _pattern1_v-r （ -p _pattern2_-r ）（ -p _pattern3_-r]] （ -c _cycle_count_） _disk_list_`
 
 +
-[NOTE]
-====
-清理期间，请勿关闭节点电源，中断存储连接或删除目标磁盘。如果在格式化阶段中断清理，则必须重新启动格式化阶段并允许完成此阶段，然后才能对磁盘进行清理并准备好返回到备用池。如果您需要中止清理过程，可以使用 `ddisk sanitize abort` 命令来中止清理过程。如果指定磁盘正处于清理的格式化阶段，则在该阶段完成之前不会中止。
 
-====
+NOTE: 清理期间，请勿关闭节点电源，中断存储连接或删除目标磁盘。如果在格式化阶段中断清理，则必须重新启动格式化阶段并允许完成此阶段，然后才能对磁盘进行清理并准备好返回到备用池。如果您需要中止清理过程，可以使用 `ddisk sanitize abort` 命令来中止清理过程。如果指定磁盘正处于清理的格式化阶段，则在该阶段完成之前不会中止。
+
 +
 ` -p` ` _Pattern1_` ` -p` ` _pattern2_` ` -p` ` _pattern3_` 指定一到三个用户定义的十六进制字节覆盖模式的周期，这些模式可连续应用于要清理的磁盘。默认模式为三次，第一次使用 0x55 ，第二次使用 0xAA ，第三次使用 0x3c 。
 
@@ -80,7 +84,7 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 
 如果使用 nodeshell 命令启用了磁盘清理，则会禁用一些低级别的 ONTAP 命令。在节点上启用磁盘清理后，无法将其禁用。
 
-.您需要什么？ #8217 ；将需要什么
+.开始之前
 * 这些磁盘必须是备用磁盘；它们必须归节点所有，但不能在聚合中使用。
 +
 如果磁盘已分区，则聚合中不能使用任何分区。
@@ -98,7 +102,7 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 .步骤
 . 输入拥有要清理的磁盘的节点的 nodeshell ：
 +
-`ssystem node run -node node_name`
+`ssystem node run -node _node_name_`
 
 . 启用磁盘清理：
 +
@@ -113,7 +117,13 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 
 . 如果要清理的磁盘已分区，请取消每个磁盘的分区：
 +
-`d取消分区 disk_name`
+[NOTE]
+====
+取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。强烈建议您在继续操作之前联系NetApp支持部门。
+
+====
++
+`d取消分区_disk_name_`
 
 . 清理指定磁盘：
 +
@@ -183,11 +193,11 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 
 . 将未分配的已清理磁盘分配给每个磁盘的相应节点：
 +
-`storage disk assign -disk disk_name -owner node_name`
+`s存储磁盘分配-disk _disk_name_-owner _node_name_`
 
 . 将每个磁盘的磁盘恢复为备用状态：
 +
-`storage disk unfail -disk disk_name -s -q`
+`s存储磁盘unfail -disk _disk_name_-s -q`
 
 . 返回到管理模式： `set -privilege admin`
 
