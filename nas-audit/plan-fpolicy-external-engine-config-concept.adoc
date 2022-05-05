@@ -19,7 +19,7 @@ summary: 在配置 FPolicy 外部引擎（外部引擎）之前，您必须了�
 
 外部引擎配置定义了 FPolicy 在建立和管理与外部 FPolicy 服务器（ FPolicy 服务器）的连接时所需的信息，其中包括以下信息：
 
-* Storage Virtual Machine （ SVM ）名称
+* SVM name
 * 引擎名称
 * 主和二级 FPolicy 服务器的 IP 地址以及在连接到 FPolicy 服务器时要使用的 TCP 端口号
 * 引擎类型是异步还是同步
@@ -31,6 +31,7 @@ summary: 在配置 FPolicy 外部引擎（外部引擎）之前，您必须了�
 +
 其中包括用于定义超时值，重试值，保活值，最大请求值，已发送和接收缓冲区大小值以及会话超时值等内容的参数。
 
+* 发送到外部引擎的Fpolicy通知消息的格式
 
 
 使用 `vserver fpolicy policy external-engine create` 命令创建 FPolicy 外部引擎。
@@ -180,9 +181,20 @@ _ 主 FPolicy 服务器 _
 
 指定在 SVM 和 FPolicy 服务器之间配置了 SSL 身份验证时用于身份验证的证书的 CA 名称。
 
-如果为 ` -ssl-option` 参数指定 `mual-auth` ，则必须为 ` -certificate-ca` 参数指定一个值。
+如果为`-ssl-option`参数指定`mual-auth`、则必须为`-certificate-ca`参数指定一个值。
  a| 
-` -certificate-ca` `文本`
+`证书CA``文本`
+
+
+
+ a| 
+外部引擎格式_
+
+指定发送到外部引擎的Fpolicy通知消息的格式。此参数的默认值为`xml`。
+
+从ONTAP 9.11.1开始、在指定`protobuf`时、可以使用Google Protobuf以二进制格式对通知消息进行编码。在设置`protobuf`之前、请确保Fpolicy服务器也支持Protobuf反序列化。
+ a| 
+`……`-extern-engine-format｛xml|protobuf｝]…
 
 |===
 

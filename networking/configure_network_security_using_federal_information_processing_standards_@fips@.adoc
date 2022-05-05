@@ -18,6 +18,7 @@ summary: 所有 SSL 连接均符合联邦信息处理标准（ FIPS ） 140-2
 
 默认情况下， ONTAP 上的 SSL 设置为禁用 FIPS 合规性，并启用 SSL 协议，其中包括以下内容：
 
+* TLSv1.3 (从ONTAP 9.11.1开始)
 * TLSv1.2
 * TLSv1.1
 * TLSv1
@@ -27,10 +28,32 @@ summary: 所有 SSL 连接均符合联邦信息处理标准（ FIPS ） 140-2
 
 如果您希望管理员帐户使用 SSH 公有密钥访问 SVM ，则在启用 SSL FIPS 模式之前，必须确保主机密钥算法受支持。
 
-* 支持的密钥类型： ECDSA-SHA2-nistp256 ， ssh-ed25519
-* 不支持的密钥类型： SSH-RSA ， ssh-DSS
+*注：* ONTAP 9.11.1及更高版本对主机密钥算法的支持已发生更改。
+
+[cols="30,30,30"]
+|===
 
 
+| ONTAP 版本 | 支持的密钥类型 | 不支持的密钥类型 
+
+
+ a| 
+9.11.1及更高版本
+ a| 
+ECDSA-SHA2-nistp256
+ a| 
+RSA-SHA2-512 + RSA-SHA2-256 + ssh-ed25519 + ssh-dss + ssh-rsa
+
+
+
+ a| 
+9.10.1及更早版本
+ a| 
+ECDSA-SHA2-nistp256 + ssh-ed25519
+ a| 
+SSH/DSS + SSH/RSA
+
+|===
 在启用 FIPS 之前，必须使用支持的密钥类型重新配置不具有受支持密钥算法的现有 SSH 公有密钥帐户，否则管理员身份验证将失败。
 
 有关详细信息，请参见 link:../authentication/enable-ssh-public-key-accounts-task.html["启用 SSH 公有密钥帐户"]。

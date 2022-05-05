@@ -1,0 +1,76 @@
+---
+sidebar: sidebar 
+permalink: encryption-at-rest/configure-cluster-key-server-task.html 
+keywords: KMIP, clustered key server, external key server, secondary key server 
+summary: 通过创建集群为外部密钥管理服务器提供更多支持。 
+---
+= 配置集群模式外部密钥服务器
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.11.1开始、您可以配置与SVM上的集群模式外部密钥管理服务器的连接。使用集群模式密钥服务器、您可以在SVM上指定主密钥服务器和二级密钥服务器。注册密钥时、ONTAP 会先尝试访问主密钥服务器、然后再按顺序尝试访问二级服务器、直到操作成功完成、从而防止密钥重复。
+
+外部密钥服务器可用于NSE、NVE、NAE和SED密钥。一个SVM最多可支持四个主外部KMIP服务器。每个主服务器最多可支持三个二级密钥服务器。
+
+
+
+== 开始之前
+
+* link:install-ssl-certificates-hardware-task.html["已为SVM启用KMIP密钥管理"]。
+* 此过程仅支持使用KMIP的密钥服务器。有关支持的密钥服务器列表、请查看 link:http://mysupport.netapp.com/matrix/["NetApp 互操作性表工具"^]。
+* 集群中的所有节点都必须运行ONTAP 9.11.1或更高版本。
+* `-secondary key-servers`参数中的服务器列表参数顺序反映了外部密钥管理(KMIP)服务器的访问顺序。
+
+
+
+
+== 创建集群密钥服务器
+
+配置操作步骤 取决于您是否配置了主密钥服务器。
+
+[role="tabbed-block"]
+====
+.将主密钥服务器和二级密钥服务器添加到SVM
+--
+. 确认尚未为集群启用密钥管理：`security key-manager external show -vserver _vserver_name_`如果SVM已启用最多四个主密钥服务器、则必须先删除现有主密钥服务器之一、然后再添加新的主密钥服务器。
+. 启用主密钥管理器：`security key-manager external enable -vserver _vserver_name_-key-servers _server_ip_-client-cert _client_ct_name_-server-ca-certs _server_ca_ct_name_`
+. 修改主密钥服务器以添加二级密钥服务器。`-secondary key-servers`参数可接受一个逗号分隔列表、其中最多包含三个密钥服务器。`security key-manager external modify-server -vserver _vserver_name_-key-servers _primary_key_server_-secondary key-servers _list_of_key_servers_`
+
+
+--
+.将二级密钥服务器添加到现有主密钥服务器
+--
+. 修改主密钥服务器以添加二级密钥服务器。`-secondary key-servers`参数可接受一个逗号分隔列表、其中最多包含三个密钥服务器。`security key-manager external modify-server -vserver _vserver_name_-key-servers _primary_key_server_-secondary key-servers _list_of_key_servers_`有关二级密钥服务器的详细信息、请参见 <<mod-secondary>>。
+
+
+--
+====
+
+
+== 修改集群模式密钥服务器
+
+您可以通过更改特定密钥服务器的状态(主或二级)、添加和删除二级密钥服务器或更改二级密钥服务器的访问顺序来修改外部密钥服务器集群。
+
+
+
+=== 转换主密钥服务器和二级密钥服务器
+
+要将主密钥服务器转换为二级密钥服务器、必须先使用`security key-manager external remove-servers`命令将其从SVM中删除。
+
+要将二级密钥服务器转换为主密钥服务器、必须先从其现有主密钥服务器中删除二级密钥服务器。请参见 <<mod-secondary>>。如果在删除现有密钥的同时将二级密钥服务器转换为主服务器、则在完成删除和转换之前尝试添加新服务器可能会导致密钥重复。
+
+
+
+=== 修改二级密钥服务器
+
+二级密钥服务器可使用`security key-manager external modify-server`命令的`-secondary key-servers`参数进行管理。`-secondary key-servers`参数接受逗号分隔列表。此列表中二级密钥服务器的指定顺序决定了二级密钥服务器的访问顺序。可以通过运行命令`security key-manager external modify-server`并按不同顺序输入二级密钥服务器来修改访问顺序。
+
+要删除二级密钥服务器、在省略要删除的密钥服务器时、`二级密钥服务器`参数应包含要保留的密钥服务器。要删除所有二级密钥服务器、请使用参数`-`、表示无。
+
+对于追加信息 、请参阅中的`sSecurity key-manager external`页面 link:https://docs.netapp.com/ontap-9/topic/com.netapp.nav.cr/home.html["ONTAP 命令参考"^]。

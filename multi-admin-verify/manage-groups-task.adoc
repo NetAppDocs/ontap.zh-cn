@@ -1,0 +1,164 @@
+---
+sidebar: sidebar 
+permalink: multi-admin-verify/manage-groups-task.html 
+keywords: ontap, mav, multi, admin, verification, administrator, approval groups, manage, system, manager, cli, approvers, access, protected, operation 
+summary: '在启用多管理员验证(MAV)之前、您必须创建一个管理员批准组、其中包含一个或多个要授予批准或否决权限的管理员。' 
+---
+= 管理管理员批准组
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在启用多管理员验证(MAV)之前、您必须创建一个管理员批准组、其中包含一个或多个要授予批准或否决权限的管理员。启用多管理员验证后、对批准组成员资格进行的任何修改都需要获得现有合格管理员之一的批准。
+
+您可以将现有管理员添加到MAV组或创建新管理员。
+
+MAV功能可支持现有的基于角色的访问控制(Role-Based Access Control、RBAC)设置。潜在的MAV管理员必须具有足够的权限来执行受保护的操作、才能将其添加到MAV管理员组。 link:../authentication/create-svm-user-accounts-task.html["了解有关RBAC的更多信息。"]
+
+您可以将MAV配置为向MAV管理员发出批准请求待处理的警报。要执行此操作、您必须配置电子邮件通知、尤其是`Mail from`和`Mail Server`参数、或者您也可以清除这些参数以禁用通知。如果没有电子邮件警报、MAV管理员必须手动检查批准队列。
+
+
+
+== System Manager 操作步骤
+
+如果要首次创建MAV批准组、请参见System Manager操作步骤 to link:enable-disable-task.html#system-manager-procedure["启用多管理员验证。"]
+
+要修改现有批准组或创建其他批准组、请执行以下操作：
+
+. 确定要接收多管理员验证的管理员。
++
+.. 单击*集群>设置。*
+.. 单击 image:icon_arrow.gif["蓝色箭头图标"] 在*用户和角色*旁边
+.. 单击 image:icon_add.gif["添加图标"] 在*用户*下
+.. 根据需要修改此名册。
++
+有关详细信息，请参见 link:../task_security_administrator_access.html["控制管理员访问。"]
+
+
+
+. 创建或修改MAV批准组：
++
+.. 单击*集群>设置。*
+.. 单击 image:icon_arrow.gif["蓝色箭头图标"] 在*安全性*部分中的*多管理员批准*旁边。(此时将显示 image:icon_gear.gif["齿轮图标"] 如果尚未配置MAV、则显示图标。)
++
+*** name：输入组名称。
+*** 审批者：从用户列表中选择审批者。
+*** 电子邮件地址：输入电子邮件地址。
+*** 默认组：选择一个组。
+
+
+
+
+
+
+启用MAV后、要编辑现有配置、需要获得MAV批准。
+
+
+
+== 命令行界面操作步骤
+
+. 验证是否已为`Mail from`和`Mail Server`参数设置了值。输入 ...
++
+`event config show`
+
++
+显示内容应类似于以下内容：
+
++
+[listing]
+----
+cluster01::> event config show
+                           Mail From:  admin@localhost
+                         Mail Server:  localhost
+                           Proxy URL:  -
+                          Proxy User:  -
+ Publish/Subscribe Messaging Enabled:  true
+----
++
+要配置这些参数、请输入：
+
++
+`event config modify -mail-from _email_address_-mail-server _server_name_`
+
+. 确定要接收多管理员验证的管理员
++
+[cols="50,50"]
+|===
+| 如果要… | 输入此命令 
+
+
+| 显示当前管理员  a| 
+`ssecurity login show`
+
+
+
+| 修改当前管理员的凭据  a| 
+`ssecurity login modify _<参数>_`
+
+
+
+| 创建新的管理员帐户  a| 
+`ssecurity login create -user-or-group-name _admin_name_-application ssh -authentication-method password`
+
+|===
+. 创建MAV批准组：
++
+`s安全性多管理员验证批准组创建[-vserver _svm_name_]-name _group_name_-perfers _approver1_、_approver2_… [-email _address1_]、_address1_...]`
+
++
+** `-vserver`—此版本仅支持管理SVM。
+** `名称`—MAV组名称、最多64个字符。
+** `批准者`—一个或多个批准者的列表。
+** `电子邮件`—在创建、批准、否决或执行请求时通知的一个或多个电子邮件地址。
++
+*示例：*以下命令将创建一个包含两个成员和关联电子邮件地址的MAV组。
+
++
+[listing]
+----
+cluster-1::> security multi-admin-verify approval-group create -name mav-grp1 -approvers pavan,julia -email pavan@myfirm.com,julia@myfirm.com
+----
+
+
+. 验证组创建和成员资格：
++
+`security multi-admin-verify Approval -group show [-instance]`
+
++
+* 示例： *
+
++
+[listing]
+----
+cluster-1::> security multi-admin-verify approval-group show -instance
+Vserver  Name        Approvers        Email
+-------  ---------------- ------------------  ------------------------------------------------------------
+svm-1    mav-grp1   pavan,julia      email pavan@myfirm.com,julia@myfirm.com
+----
+
+
+使用以下命令修改初始MAV组配置。
+
+*注：*执行前、所有操作都需要获得MAV管理员的批准。
+
+[cols="50,50"]
+|===
+| 如果要… | 输入此命令 
+
+
+| 修改组特征或修改现有成员信息  a| 
+`security multi-admin-verify Approval group modify [_parameters_]`
+
+
+
+| 添加或删除成员  a| 
+`s安全性多管理员验证批准组替换项为"-vserver _svm_name_]-name _group_name_[-perverant-to_add _approver1_、_approver2_…]]…`…
+
+
+
+| 删除组  a| 
+`security multi-admin-verify Approval -group delete "-vserver _svm_name_]-name _group_name_`
+
+|===

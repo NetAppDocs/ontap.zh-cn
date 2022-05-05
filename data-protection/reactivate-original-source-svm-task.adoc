@@ -1,7 +1,7 @@
 ---
 permalink: data-protection/reactivate-original-source-svm-task.html 
 sidebar: sidebar 
-keywords: reactivate, original, source, svm 
+keywords: reactivate, original, source, svm, quick resync, resynchronize, reverse resync 
 summary: 当您不再需要从目标提供数据时，可以在源和目标 SVM 之间重新建立初始数据保护关系。在卷复制方面，操作步骤与操作步骤大致相同，但有一个例外。在重新激活源 SVM 之前，必须停止目标 SVM 。 
 ---
 = 重新激活原始源 SVM
@@ -16,6 +16,11 @@ summary: 当您不再需要从目标提供数据时，可以在源和目标 SVM 
 如果在提供目标卷数据时增加了目标卷的大小，则在重新激活源卷之前，应手动增加原始源卷上的最大自动大小，以确保其可以充分增长。
 
 link:destination-volume-grows-automatically-concept.html["目标卷自动增长时"]
+
+从ONTAP 9.11.1开始、您可以在执行SVM DR关系的反向重新同步时、使用`snapmirror resync`命令的`-quast-resync true`选项来缩短灾难恢复演练期间的重新同步时间。快速重新同步可以绕过数据仓库重建和还原操作、从而缩短恢复生产所需的时间。
+
+
+NOTE: 快速重新同步不会保留目标卷的存储效率。启用快速重新同步可能会增加目标卷使用的卷空间。
 
 此操作步骤假定原始源卷中的基线完好无损。如果基线不完好，则必须在执行操作步骤之前创建并初始化提供数据的卷与原始源卷之间的关系。
 
@@ -66,6 +71,14 @@ cluster_src::> snapmirror create -source-path svm_backup: -destination-path svm1
 [listing]
 ----
 cluster_src::> snapmirror resync -source-path svm_backup: -destination-path svm1:
+----
++
+使用-quick重新同步选项的示例：
+
++
+[listing]
+----
+cluster_src::> snapmirror resync -source-path svm_backup: -destination-path svm1: -quick-resync true
 ----
 . 准备好重新建立对原始源 SVM 的数据访问后，请停止原始目标 SVM 以断开当前连接到原始目标 SVM 的所有客户端。
 +

@@ -17,13 +17,13 @@ summary: 您可以在 ONTAP 中使用一致性组，包括分层一致性组和�
 
 一致性组支持任何 FlexVol 卷，而不考虑协议（ NAS ， SAN 或 NVMe ），并且可以通过 ONTAP REST API 或 System Manager 中的 * 存储 > 一致性组 * 菜单项进行管理。
 
-一致性组可以单独存在，也可以存在分层关系。单个一致性组是一组卷。除了从一致性组继承的 Snapshot 策略之外，卷还可以具有单独的本地 Snapshot 策略。一致性组只能具有一个 SM-BC 关系和共享的 SM-BC 策略，此策略可用于恢复整个一致性组。
+一致性组可以单独存在，也可以存在分层关系。单个一致性组是一组卷。卷可以具有自己的卷粒度快照策略。此外、与卷关联的一致性组可以具有自己的Snapshot策略。一致性组只能具有一个 SM-BC 关系和共享的 SM-BC 策略，此策略可用于恢复整个一致性组。
 
 image:../media/consistency-group-single-diagram.gif["一个一致性组及其成分卷和本地 Snapshot 策略的示意图"]
 
 较大的应用程序工作负载可能需要多个一致性组。在这种情况下，可以将多个一致性组置于一个分层关系中。在此配置中，单个一致性组将成为父一致性组的子组件。父一致性组最多可以包含五个子一致性组。与各个一致性组一样，可以对一致性组（父级和子级）的整个配置应用远程 SM-BC 保护策略来恢复应用程序工作负载。
 
-image:../media/consistency-group-nested-diagram.gif["嵌套一致性组及其所在卷的示意图"]
+image:../media/consistency-group-nested-diagram.gif["嵌套一致性组及其关联卷的示意图"]
 
 
 
@@ -34,6 +34,26 @@ image:../media/consistency-group-nested-diagram.gif["嵌套一致性组及其所
 
 NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
 
+从ONTAP 9.11.1开始、还支持使用一致性组 link:protect-task.html#two-phase-CG-snapshot-creation["创建两阶段一致性组快照"]。
+
+
+
+== MetroCluster 配置中的一致性组
+
+从ONTAP 9.11.1开始、您可以在MetroCluster 配置中的集群上使用新卷配置一致性组。这些卷在镜像聚合上进行配置。
+
+配置完这些卷后、您可以在镜像聚合和未镜像聚合之间移动与一致性组关联的卷。因此、它们可以位于镜像聚合或未镜像聚合上、也可以同时位于这两者上。您可以将包含与一致性组关联的卷的镜像聚合修改为未镜像。同样、您也可以修改包含与一致性组关联的卷的未镜像聚合以启用镜像。
+
+与放置在镜像聚合上的一致性组关联的卷及其Snapshot (包括任何一致性组Snapshot)将复制到远程站点(站点B)。站点B上卷的内容符合一致性组语义。您可以在运行ONTAP 9.11.1或更高版本的集群上使用一致性组Snapshot REST API和System Manager访问复制的一致性组Snapshot。
+
+如果与一致性组关联的部分或全部卷位于当前无法访问的未镜像聚合上、则对一致性组执行的获取或删除操作就像本地卷或托管聚合脱机一样。
+
+
+
+=== 一致性组配置复制
+
+如果站点B运行的是ONTAP 9.10.1或更早版本、则只会将与镜像聚合上的一致性组关联的卷复制到站点B只有当两个站点都运行ONTAP 9.11.1或更高版本时、一致性组配置才会复制到站点B。在将站点B升级到ONTAP 9.11.1之后、站点A上所有关联卷都放置在镜像聚合上的一致性组的数据会复制到站点B
+
 
 
 == 升级注意事项
@@ -42,7 +62,7 @@ NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
 
 使用 ONTAP REST API 创建的一致性组快照可以通过 System Manager 的一致性组界面和一致性组 API 端点进行管理。
 
-使用 ONTAPI 命令 `cg-start` 和 `cg-commit` 创建的快照不会被识别为一致性组快照，因此无法通过 ONTAP API 中的 System Manager 一致性组界面或一致性组端点进行管理。
+使用ONTAPI命令`cg-start`和`cg-commit`创建的快照不会被识别为一致性组快照、因此无法通过ONTAP API中的System Manager一致性组界面或一致性组端点进行管理。
 
 
 

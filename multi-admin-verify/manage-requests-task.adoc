@@ -1,0 +1,168 @@
+---
+sidebar: sidebar 
+permalink: multi-admin-verify/manage-requests-task.html 
+keywords: ontap, mav, multi, admin, verification, administrator, protected, operation, rules, request, cluster, approve, rbac, manage, cli, system, manager 
+summary: '当收到有关待处理操作执行请求的通知后、MAV批准组(MAV管理员)中的管理员必须在固定时间段(批准到期)内通过批准或否决消息进行响应。' 
+---
+= 管理受保护的操作请求
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当收到有关待处理操作执行请求的通知后、MAV批准组(MAV管理员)中的管理员必须在固定时间段(批准到期)内通过批准或否决消息进行响应。如果未收到足够数量的批准、请求者必须删除此请求并再提交一份。
+
+批准请求使用索引编号进行标识、索引编号包含在电子邮件消息和请求队列的显示中。
+
+可以显示请求队列中的以下信息：
+
+操作:: 创建请求的受保护操作。
+查询:: 用户要应用操作的一个或多个对象。
+State:: 请求的当前状态；待定、已批准、已拒绝、已过期、 已执行。如果一个审批者拒绝了某个请求、则无法执行其他操作。
+所需审批者:: 批准请求所需的MAV管理员数量。用户可以为此操作规则设置requireed-approvers参数。如果用户未将所需审批者设置为规则、则会应用全局设置中的所需审批者。
+待定审批者:: 仍然需要批准请求以将此请求标记为已批准的MAV管理员数量。
+批准到期:: MAV管理员必须对批准请求做出响应的期限。任何授权用户都可以为操作规则设置批准到期时间。如果未为此规则设置Approval expiry、则会应用全局设置中的Approval expiry。
+执行到期:: 发出请求的管理员必须完成操作的期限。任何授权用户都可以为操作规则设置执行到期时间。如果未为此规则设置execing-expiry、则会应用全局设置中的execing-expiry。
+已批准用户:: 批准此请求的MAV管理员。
+已否决用户:: 已否决此请求的MAV管理员。
+Storage VM (SVM):: 与请求关联的SVM。此版本仅支持管理SVM。
+用户已请求:: 创建请求的用户的用户名。
+创建时间:: 创建请求的时间。
+批准时间:: 请求状态更改为"已批准"的时间。
+comment:: 与请求关联的任何注释。
+允许的用户:: 允许执行请求获得批准的受保护操作的用户列表。如果`users-permitted`为空、则具有适当权限的任何用户均可执行此操作。
+
+
+如果达到1000个请求的限制、或者已过期请求的到期时间超过8小时、则所有已过期或已执行的请求都会被删除。被否决的请求一旦标记为已过期、将被删除。
+
+
+
+== System Manager 操作步骤
+
+MAV管理员会收到电子邮件消息、其中包含批准请求、请求到期期限以及用于批准或拒绝请求的链接的详细信息。他们可以通过单击电子邮件中的链接来访问批准对话框、或者导航到System Manager中的*事件和作业>请求*。
+
+如果启用了多管理员验证、则可以使用*请求*窗口、该窗口将根据用户的登录ID和MAV角色(审批者或非审批者)显示待处理的请求。
+
+* 操作
+* 索引(编号)
+* 状态(待定、已批准、已拒绝、已执行或已过期)
++
+如果一个审批者拒绝了某个请求、则无法执行其他操作。
+
+* 查询(请求操作的任何参数或值)
+* 正在请求用户
+* 请求将于到期
+* (数量)待定审批者
+* (数量)潜在审批者
+
+
+MAV管理员在此窗口中具有其他控件；他们可以批准、拒绝或删除单个操作或选定的操作组。但是、如果MAV管理员是发出请求的用户、他们将无法批准、拒绝或删除自己的请求。
+
+
+
+== 命令行界面操作步骤
+
+. 通过电子邮件通知待处理请求时、请记下请求的索引编号和批准到期期限。此外、还可以使用下面提到的*显示*或*显示-待定*选项来显示索引编号。
+. 批准或否决此请求。
++
+[cols="50,50"]
+|===
+| 如果要… | 输入此命令 
+
+
+ a| 
+批准请求
+ a| 
+`s安全性多管理员验证请求批准_nn_`
+
+
+
+ a| 
+否决请求
+ a| 
+`s安全性多管理验证请求否决_nn_`
+
+
+
+ a| 
+显示所有请求、待处理请求或单个请求
+ a| 
+`s安全性多管理员验证请求｛show | show-pending｝[_nn_]｛-fields _field1_、_field2_...] `<-instance >｝
+
+您可以显示队列中的所有请求、也可以仅显示待处理的请求。如果输入索引编号、则仅显示该索引编号的信息。您可以使用`字段`参数显示有关特定字段的信息、也可以使用`实例`参数显示有关所有字段的信息。
+
+
+
+ a| 
+删除请求
+ a| 
+`s安全性多管理验证请求delete _nn_`
+
+|===
+
+
+在MAV管理员收到索引编号为3的请求电子邮件后、以下顺序将批准请求、该电子邮件已获得一项批准。
+
+[listing]
+----
+          cluster1::> security multi-admin-verify request show-pending
+                                   Pending
+Index Operation      Query State   Approvers Requestor
+----- -------------- ----- ------- --------- ---------
+    3 volume delete  -     pending 1         julia
+
+
+cluster-1::> security multi-admin-verify request approve 3
+
+cluster-1::> security multi-admin-verify request show 3
+
+     Request Index: 3
+         Operation: volume delete
+             Query: -
+             State: approved
+Required Approvers: 2
+ Pending Approvers: 0
+   Approval Expiry: 2/25/2022 14:32:03
+  Execution Expiry: 2/25/2022 14:35:36
+         Approvals: mav-admin2
+       User Vetoed: -
+           Vserver: cluster-1
+    User Requested: julia
+      Time Created: 2/25/2022 13:32:03
+     Time Approved: 2/25/2022 13:35:36
+           Comment: -
+   Users Permitted: -
+----
+在MAV管理员收到索引编号为3的请求电子邮件后、以下顺序将否决此请求、此电子邮件已获得一项批准。
+
+[listing]
+----
+      cluster1::> security multi-admin-verify request show-pending
+                                   Pending
+Index Operation      Query State   Approvers Requestor
+----- -------------- ----- ------- --------- ---------
+    3 volume delete  -     pending 1         pavan
+
+
+cluster-1::> security multi-admin-verify request veto 3
+
+cluster-1::> security multi-admin-verify request show 3
+
+     Request Index: 3
+         Operation: volume delete
+             Query: -
+             State: vetoed
+Required Approvers: 2
+ Pending Approvers: 0
+   Approval Expiry: 2/25/2022 14:32:03
+  Execution Expiry: 2/25/2022 14:35:36
+         Approvals: mav-admin1
+       User Vetoed: mav-admin2
+           Vserver: cluster-1
+    User Requested: pavan
+      Time Created: 2/25/2022 13:32:03
+     Time Approved: 2/25/2022 13:35:36
+           Comment: -
+   Users Permitted: -
+----

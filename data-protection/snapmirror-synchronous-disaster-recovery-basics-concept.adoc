@@ -5,6 +5,7 @@ keywords: snapmirror, synchronous, disaster, recovery
 summary: 从 ONTAP 9.5 开始，至少具有 16 GB 内存的所有 FAS 和 AFF 平台以及所有 ONTAP Select 平台均支持 SnapMirror 同步（ SM-S ）技术。SnapMirror 同步技术是一种按节点许可的功能，可在卷级别提供同步数据复制。 
 ---
 = SnapMirror 同步灾难恢复基础知识
+:hardbreaks:
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -20,7 +21,7 @@ summary: 从 ONTAP 9.5 开始，至少具有 16 GB 内存的所有 FAS 和 AFF �
 |===
 
 
-| 平台 | 在 ONTAP 9.9.1 之前的版本中，每个 HA 对允许的 SnapMirror 同步操作数 | 在 ONTAP 9.9.1 中，每个 HA 对允许的 SnapMirror 同步操作数 | 在 ONTAP 9.10.1 中，每个 HA 对允许的 SnapMirror 同步操作数 
+| 平台 | 在 ONTAP 9.9.1 之前的版本中，每个 HA 对允许的 SnapMirror 同步操作数 | 在 ONTAP 9.9.1 中，每个 HA 对允许的 SnapMirror 同步操作数 | 在 ONTAP 9.10.1 中，每个 HA 对允许的 SnapMirror 同步操作数 | 在ONTAP 9.11.1中、每个HA对允许的SnapMirror同步操作数 
 
 
  a| 
@@ -31,6 +32,8 @@ AFF
 160
  a| 
 200
+ a| 
+400
 
 
 
@@ -42,6 +45,8 @@ FAS
 80
  a| 
 80
+ a| 
+80
 
 
 
@@ -49,6 +54,8 @@ FAS
 ONTAP Select
  a| 
 20
+ a| 
+40
  a| 
 40
  a| 
@@ -68,15 +75,9 @@ ONTAP 9.10.1 中的 SnapMirror 同步技术支持以下功能；前提是源集�
 
 ONTAP 9.7 中的 SnapMirror 同步技术支持以下功能：
 
-* 复制应用程序创建的 Snapshot 副本
-+
-仅包含 SnapMirror 标签与同步或严格同步策略关联规则匹配的 Snapshot 副本。不会复制使用 Snapshot 策略创建的计划 Snapshot 副本。
-
+* 复制应用程序创建的Snapshot副本时、仅复制SnapMirror标签与同步或严格同步策略相关规则匹配的Snapshot副本。不会复制使用 Snapshot 策略创建的计划 Snapshot 副本。
 * FC-NVMe
-* LUN 克隆和 NVMe 命名空间克隆
-+
-此外，还支持由应用程序创建的 Snapshot 副本提供支持的 LUN 克隆。
-
+* 此外、还支持LUN克隆和NVMe命名空间克隆由应用程序创建的Snapshot副本提供支持的LUN克隆。
 
 
 ONTAP 9.6 中的 SnapMirror 同步技术支持以下功能；前提是源集群和目标集群中的所有节点都运行 ONTAP 9.6 ：
@@ -84,33 +85,18 @@ ONTAP 9.6 中的 SnapMirror 同步技术支持以下功能；前提是源集群�
 * SVM 灾难恢复
 +
 ** SnapMirror 同步源也可以是 SVM DR 源，例如，使用 SM-S 作为一个分支，使用 SVM DR 作为另一个分支的扇出配置。
-** SnapMirror 同步源不能是 SVM 灾难恢复目标，因为 SM-S 不支持级联 DP 源。
-+
-在目标集群中执行 SVM DR 反转重新同步之前，必须释放同步关系。
-
-** SnapMirror 同步目标不能是 SVM DR 源，因为 SVM DR 不支持复制 DP 卷。
-+
-如果对同步源执行反转重新同步，则 SVM DR 将排除目标集群中的 DP 卷。
-
+** SnapMirror 同步源不能是 SVM 灾难恢复目标，因为 SM-S 不支持级联 DP 源。在目标集群中执行 SVM DR 反转重新同步之前，必须释放同步关系。
+** SnapMirror 同步目标不能是 SVM DR 源，因为 SVM DR 不支持复制 DP 卷。如果对同步源执行反转重新同步，则 SVM DR 将排除目标集群中的 DP 卷。
 
 
 * NFSv4.0 和 NFSv4.1
 * SMB 2.0 或更高版本
 * 混合协议访问（ NFSv3 和 SMB ）
 * SnapMirror 同步关系的主卷上的防病毒
-* SnapMirror 同步关系的主卷上的硬配额或软配额
-+
-配额规则不会复制到目标；因此，配额数据库不会复制到目标。
-
+* SnapMirror同步关系中主卷上的硬配额或软配额配额不会复制到目标；因此、不会将配额数据库复制到目标。
 * SnapMirror 同步关系的主卷上的 FPolicy
-* SnapMirror 同步镜像 - 镜像级联
-+
-SnapMirror 同步关系的目标卷中的关系必须是异步 SnapMirror 关系。
-
-* NAS 的源卷和目标卷之间的时间戳奇偶校验
-+
-如果已从 ONTAP 9.5 升级到 ONTAP 9.6 ，则仅会为源卷中的任何新文件和修改后的文件复制时间戳。源卷中现有文件的时间戳未同步。
-
+* SnapMirror同步镜像-镜像级联SnapMirror同步关系的目标卷中的关系必须是异步SnapMirror关系。
+* NAS的源卷和目标卷之间的时间戳奇偶校验如果已从ONTAP 9.5升级到ONTAP 9.6、则只会为源卷中的任何新文件和已修改文件复制时间戳。源卷中现有文件的时间戳未同步。
 * 取消高元数据操作频率限制
 * 使用 TLS 1.2 加密确保传输中敏感数据的安全性
 * 克隆自动删除
@@ -126,14 +112,8 @@ SnapMirror 同步关系的目标卷中的关系必须是异步 SnapMirror 关系
 * SFMOD
 * SFCOD
 * VVOL
-* 混合 SAN 和 NAS 访问
-+
-SnapMirror 同步关系的主卷可以提供 NAS 数据或 SAN 数据。不支持从 SnapMirror 同步关系的主卷进行 SAN 和 NAS 访问。
-
-* 混合 SAN 和 NVMe 访问
-+
-同一个卷或 SVM 不支持 LUN 和 NVMe 命名空间。
-
+* 混合SAN和NAS访问SnapMirror同步关系的主卷可以提供NAS数据或SAN数据。不支持从 SnapMirror 同步关系的主卷进行 SAN 和 NAS 访问。
+* 同一卷或SVM不支持混合SAN和NVMe访问LUN以及NVMe命名空间。
 * SnapLock 卷
 * FlexGroup 卷
 * FlexCache 卷
@@ -152,20 +132,8 @@ SnapMirror 同步关系的主卷可以提供 NAS 数据或 SAN 数据。不支�
 
 根据所使用的 SnapMirror 策略类型， SnapMirror 同步具有两种操作模式：
 
-* * 同步模式 *
-+
-在 Sync 模式下，主存储的 I/O 会首先复制到二级存储。然后， I/O 将写入主存储，并向发出 I/O 的应用程序发送确认如果由于任何原因未完成对二级存储的写入，则允许应用程序继续写入主存储。更正错误情况后， SnapMirror 同步技术会自动与二级存储重新同步，并恢复在同步模式下从主存储复制到二级存储。
-
-+
-在同步模式下， RPO=0 且 RTO 非常低，直到二级复制失败，此时 RPO 和 RTO 将变得不确定，但等于修复导致二级复制失败的问题描述以及完成重新同步所需的时间。
-
-* * StrictSync 模式 *
-+
-SnapMirror 同步可以选择在 StrictSync 模式下运行。如果由于任何原因未完成对二级存储的写入，则应用程序 I/O 将失败，从而确保主存储和二级存储完全相同。只有在 SnapMirror 关系恢复到 `InSync` 状态后，主系统的应用程序 I/O 才会恢复。如果主存储发生故障，则可以在故障转移后在二级存储上恢复应用程序 I/O ，而不会丢失数据。
-
-+
-在 StrictSync 模式下， RPO 始终为零， RTO 非常低。
-
+* *同步模式*在同步模式下、主存储的I/O会首先复制到二级存储。然后， I/O 将写入主存储，并向发出 I/O 的应用程序发送确认如果由于任何原因未完成对二级存储的写入，则允许应用程序继续写入主存储。更正错误情况后， SnapMirror 同步技术会自动与二级存储重新同步，并恢复在同步模式下从主存储复制到二级存储。在同步模式下， RPO=0 且 RTO 非常低，直到二级复制失败，此时 RPO 和 RTO 将变得不确定，但等于修复导致二级复制失败的问题描述以及完成重新同步所需的时间。
+* * StrictSync模式* SnapMirror同步可以选择在StrictSync模式下运行。如果由于任何原因未完成对二级存储的写入，则应用程序 I/O 将失败，从而确保主存储和二级存储完全相同。只有在 SnapMirror 关系恢复到 `InSync` 状态后，主系统的应用程序 I/O 才会恢复。如果主存储发生故障，则可以在故障转移后在二级存储上恢复应用程序 I/O ，而不会丢失数据。在 StrictSync 模式下， RPO 始终为零， RTO 非常低。
 
 
 

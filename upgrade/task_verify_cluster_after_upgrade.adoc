@@ -62,7 +62,9 @@ node1                 true    true
 +
 `set -privilege advanced`
 
-. 输入 "`y` " 以继续。
++
+输入 "`y` " 以继续。
+
 . 验证每个 RDB 进程的配置详细信息。
 +
 ** 每个节点的关系数据库 epoch 和数据库 epochs 应匹配。
@@ -121,26 +123,19 @@ node2     vldb     154      154      14847    node0     secondary
 node3     vldb     154      154      14847    node0     secondary
 4 entries were displayed.
 ----
-. 如果您在 SAN 环境中运行，请验证每个节点是否处于 SAN 仲裁状态：
-+
-`event log show -messagename scsiblade.*`
-
+. 如果您在SAN环境中运行、请验证每个节点是否处于SAN仲裁状态：`event log show -severity informational -message-name scsiblade.*`
 +
 每个节点的最新 scsiblade 事件消息应指示 SCSI 刀片处于仲裁状态。
 
 +
 [listing]
 ----
-cluster1::*> event log show -messagename scsiblade.*
-Time                Node             Severity      Event
-------------------- ---------------- ------------- ---------------------------
-MM/DD/YYYY TIME  node0            INFORMATIONAL scsiblade.in.quorum: The scsi-blade ...
-MM/DD/YYYY TIME  node1            INFORMATIONAL scsiblade.in.quorum: The scsi-blade ...
+cluster1::*> event log show  -severity informational -message-name scsiblade.*
+Time             Node       Severity       Event
+---------------  ---------- -------------- ---------------------------
+MM/DD/YYYY TIME  node0      INFORMATIONAL  scsiblade.in.quorum: The scsi-blade ...
+MM/DD/YYYY TIME  node1      INFORMATIONAL  scsiblade.in.quorum: The scsi-blade ...
 ----
-. 返回到管理权限级别：
-+
-`set -privilege admin`
-
 
 
 link:../system-admin/index.html["系统管理"]

@@ -1,0 +1,165 @@
+---
+sidebar: sidebar 
+permalink: multi-admin-verify/enable-disable-task.html 
+keywords: ontap, mav, multi, admin, verification, administrator, enable, disable, approval, groups, cli, system manager 
+summary: '必须明确启用多管理员验证(MAV)。启用多管理员验证后、需要经MAV批准组(MAV管理员)中的管理员批准才能将其删除。' 
+---
+= 启用和禁用多管理员验证
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必须明确启用多管理员验证(MAV)。启用多管理员验证后、需要经MAV批准组(MAV管理员)中的管理员批准才能将其删除。
+
+启用MAV后、修改或禁用MAV需要获得MAV管理员的批准。
+
+
+NOTE: 如果您需要在未经MAV管理员批准的情况下禁用多管理员验证功能、请联系NetApp支持部门并提及以下知识库文章： https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_disable_Multi-Admin_Verification_if_MAV_admin_is_unavailable["如何在MAV管理不可用时禁用多管理员验证"^]。
+
+启用MAV时、可以全局指定以下参数。
+
+批准组:: 全球批准组列表。要启用MAV功能、至少需要一个组。
+所需审批者:: 执行受保护操作所需的批准者数量。默认值和最小值为1。
++
+--
+*注意：*所需的批准者数量必须小于默认批准组中唯一批准者的总数。
+
+--
+批准到期时间(小时、分钟、秒):: MAV管理员必须对批准请求做出响应的期限。默认值为1小时(1小时)、支持的最小值为1秒(1秒)、支持的最大值为14天(14天)。
+执行到期时间(小时、分钟、秒):: 发出请求的管理员必须完成：：操作的期限。默认值为1小时(1小时)、支持的最小值为1秒(1秒)、支持的最大值为14天(14天)。
+
+
+您还可以覆盖特定的任何参数 link:manage-rules-task.html["操作规则。"]
+
+
+
+== System Manager 操作步骤
+
+. 确定要接收多管理员验证的管理员。
++
+.. 单击*集群>设置。*
+.. 单击 image:icon_arrow.gif["蓝色箭头图标"] 在*用户和角色*旁边
+.. 单击 image:icon_add.gif["添加图标"] 在*用户*下
+.. 根据需要修改此名册。
++
+有关详细信息，请参见 link:../task_security_administrator_access.html["控制管理员访问。"]
+
+
+
+. 创建至少一个批准组并添加至少一个规则、以启用多管理员验证。
++
+.. 单击*集群>设置。*
+.. 单击 image:icon_gear.gif["齿轮图标"] 在*安全性*部分中的*多管理员批准*旁边。
+.. 单击 image:icon_add.gif["添加图标"] 至少添加一个批准组。
++
+*** Name—输入组名称。
+*** 审批者—从用户列表中选择审批者。
+*** 电子邮件地址—输入电子邮件地址。
+*** Default group—选择一个组。
+
+
+.. 至少添加一个规则。
++
+*** 操作—从列表中选择受支持的命令。
+*** 查询—输入任何所需的命令选项和值。
+*** 可选参数；留空以应用全局设置、或者为特定规则分配其他值以覆盖全局设置。
++
+**** 所需数量的审批者
+**** 批准组
+
+
+
+
+.. 单击*高级设置*以查看或修改默认值。
++
+*** 所需的批准者数量(默认值：1)
+*** 执行请求到期(默认：1小时)
+*** 批准请求到期(默认：1小时)
+*** 邮件服务器*
+*** 发件人电子邮件地址*
++
+*这些更新了"通知管理"下管理的电子邮件设置。如果尚未配置它们、系统将提示您进行设置。
+
+
+
+.. 单击*启用*以完成MAV初始配置。
+
+
+
+
+初始配置后、当前MAV状态将显示在*多管理员批准*图块中。
+
+* 状态(已启用或未启用)
+* 需要批准的活动操作
+* 处于待定状态的未处理请求数
+
+
+您可以通过单击来显示现有配置 image:icon_arrow.gif["蓝色箭头图标"]。要编辑现有配置、需要获得MAV批准。
+
+禁用多管理员验证：
+
+. 单击*集群>设置。*
+. 单击 image:icon_gear.gif["齿轮图标"] 在*安全性*部分中的*多管理员批准*旁边。
+. 单击已启用切换按钮。
++
+要完成此操作、需要获得MAV批准。
+
+
+
+
+
+== 命令行界面操作步骤
+
+在命令行界面上启用MAV功能之前、至少需要一个 link:manage-groups-task.html["MAV管理员组"] 必须已创建。
+
+[cols="50,50"]
+|===
+| 如果要… | 输入此命令 
+
+
+ a| 
+启用MAV功能
+ a| 
+`security multi-admin-verify modify -apperction-groups _group1_[、_group2_...] 【-requireed-wher批准 者_nnn_】-enabled true【-execution-expiry [_nnn__h]_nnnn_m_m]]【_nnnnnn__s]]【-aport-expiry [_nnn__h]【_nnnnt_m_m]]`
+
+*示例*：以下命令将启用具有1个批准组、2个所需审批者和默认到期期限的MAV。
+
+[listing]
+----
+cluster-1::> security multi-admin-verify modify -approval-groups mav-grp1 -required-approvers 2 -enabled true
+----
+至少添加一个以完成初始配置 link:manage-rules-task.html["操作规则。"]
+
+
+
+ a| 
+修改MAV配置(需要获得MAV批准)
+ a| 
+`s安全性多管理员验证审批组修改数为-apperment-groups _group1_、_group2_……]] 【-requireed-wher批准 者_nnn_】【-execution-expiry [_nnn__h]【_nnnnn_m_m]]【_nnnnn__h】【_nnnnnnn__m_m]]`
+
+
+
+ a| 
+验证MAV功能
+ a| 
+`security multi-admin-verify show`
+
+* 示例： *
+
+....
+cluster-1::> security multi-admin-verify show
+Is      Required  Execution Approval Approval
+Enabled Approvers Expiry    Expiry   Groups
+------- --------- --------- -------- ----------
+true    2         1h        1h       mav-grp1
+....
+
+
+ a| 
+禁用MAV功能(需要获得MAV批准)
+ a| 
+`security multi-admin-verify modify -enabled false`
+
+|===

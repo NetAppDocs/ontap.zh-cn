@@ -1,0 +1,63 @@
+---
+permalink: flexcache/enable-file-access-time-updates-task.html 
+sidebar: sidebar 
+keywords: atime, atime-update, flexcache, flex cache, access time 
+summary: '您可以在FlexCache 卷上启用`-atime-update`字段、以允许文件访问时间更新。您也可以使用`-atime-update-period`属性设置访问时间更新期限。atime-update-period用于控制发生atime更新的频率以及何时可以将这些更新传播到原始卷。' 
+---
+= 启用文件访问时间更新
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.11.1开始、您可以在FlexCache 卷上启用`-atime-update`字段、以允许文件访问时间更新。您也可以使用`-atime-update-period`属性设置访问时间更新期限。`-atime-update-period`属性用于控制访问时间更新的频率以及更新传播到原始卷的时间。
+
+
+
+== 概述
+
+ONTAP 提供了一个名为`-atime-update`的卷级字段、用于管理使用read、readlink和READDIR读取的文件和目录的访问时间更新。atime用于为不常访问的文件和目录制定数据生命周期决策。不常访问的文件最终会迁移到归档存储、并且以后通常会移动到磁带。
+
+默认情况下、现有和新创建的FlexCache 卷上的atime-update字段处于禁用状态。如果使用的FlexCache 卷的ONTAP 版本早于9.11.1、则应保持禁用atime-update字段、以便在对原始卷执行读取操作时不会不必要地逐出缓存。但是、对于大型FlexCache 缓存、管理员会使用专用工具来管理数据、并帮助确保热数据保留在缓存中、冷数据也会被清除。禁用atime-update时无法执行此操作。但是、从ONTAP 9.11.1开始、您可以启用`-atime-update`和`-atime-update-period、`并使用管理缓存数据所需的工具。
+
+
+
+== 开始之前
+
+所有FlexCache 卷都必须运行ONTAP 9.11.1或更高版本。
+
+
+
+== 关于此任务
+
+将`-atime-update-period`设置为86400秒后、无论对文件执行何种类似读取操作、每24小时期间的访问时间更新都不能超过一个。
+
+将`-atime-update-period`设置为0会将消息发送到每个读取访问的原始服务器。然后、原始卷会通知每个FlexCache 卷、atime已过时、这会影响性能。
+
+.步骤
+. 启用文件访问时间更新并设置更新频率：
++
+`volume modify -volume vol_name -vserver _svm_name_-atime-update true -atime-update-period _seconds_`
+
++
+以下示例将启用`-atime-update`并将`-atime-update-period`设置为86400秒或24小时：
+
++
+[listing]
+----
+c1: volume modify -volume origin1 vs1_c1 -atime-update true -atime-update-period 86400
+----
+. 验证是否已启用`-atime-update`：
++
+`volume show -volume _vol_name_-fields atime-update、atime-update-period`
+
++
+[listing]
+----
+c1::*> volume show -volume cache1_origin1 -fields atime-update,atime-update-period
+vserver volume         atime-update atime-update-period
+------- -------------- ------------ -------------------
+vs2_c1  cache1_origin1 true         86400
+----
+

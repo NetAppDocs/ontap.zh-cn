@@ -1,0 +1,30 @@
+---
+permalink: nvme/convert-namespace-to-lun-task.html 
+sidebar: sidebar 
+keywords: nvme, convert, namespace, lun 
+summary: 从ONTAP 9.11.1开始、您可以使用ONTAP 命令行界面将单个现有NVMe命名空间过渡到LUN、而不会丢失任何数据。 
+---
+= 将命名空间转换为LUN
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.11.1开始、您可以使用ONTAP 命令行界面将现有NVMe命名空间原位转换为LUN。
+
+
+
+== 开始之前
+
+* 指定的NVMe命名空间不应与子系统具有任何现有映射。
+* 命名空间不应作为快照的一部分、也不应作为只读命名空间位于SnapMirror关系的目标端。
+* 由于NVMe命名空间仅支持特定平台和网卡、因此此功能仅适用于特定硬件。
+
+
+.步骤
+. 您可以输入以下命令将NVMe命名空间转换为LUN：
++
+`lun convert-from-namespace -vserver -namespace-path`
+
+

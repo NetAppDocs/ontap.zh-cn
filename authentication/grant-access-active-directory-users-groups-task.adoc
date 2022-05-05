@@ -26,6 +26,7 @@ xref:enable-ad-users-groups-access-cluster-svm-task.adoc[配置 Active Directory
 +
 您可以在启用帐户访问之前或之后执行此任务。
 
+* 从ONTAP 9.11.1开始、您可以使用 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["用于nsswitch身份验证的LDAP快速绑定"] AD LDAP服务器是否支持此功能。
 * 如果您不确定要分配给登录帐户的访问控制角色，可以稍后使用 `ssecurity login modify` 命令添加此角色。
 +
 xref:modify-role-assigned-administrator-task.adoc[修改分配给管理员的角色]
@@ -40,7 +41,7 @@ xref:modify-role-assigned-administrator-task.adoc[修改分配给管理员的角
 .步骤
 . 启用 AD 用户或组管理员帐户以访问 SVM ：
 +
-`ssecurity login create -vserver svm_name -user-or-group-name user_or_group_name -application -authmethod domain -role -comment comment`
+`ssecurity login create -vserver svm_name -user-or-group-name user_or_group_name -application -authmethod domain -role -comment [-is-ldap-fastbind true"`
 
 +
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。

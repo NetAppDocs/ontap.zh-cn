@@ -96,6 +96,53 @@ Non-NetApp 磁盘
  a| 
 是，从 ONTAP 9.5 开始
 
+|===
+
+
+== SnapLock 支持和不支持的功能
+
+下表显示了SnapLock 合规模式、SnapLock 企业模式或两者均支持的功能：
+
+|===
+
+
+| 功能 | 支持SnapLock 合规性 | 受SnapLock Enterprise支持 
+
+
+ a| 
+一致性组
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SAN
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SnapMirror 同步
+ a| 
+否
+ a| 
+否
+
+
+
+ a| 
+SnapMirror 业务连续性
+ a| 
+否
+ a| 
+否
+
 
 
  a| 
@@ -154,7 +201,7 @@ MetroCluster 配置
 
 所有 MetroCluster 配置均支持镜像聚合。请参见 ONTAP 发行说明以确定您的 MetroCluster 配置是否支持未镜像聚合。
 
-https://library.netapp.com/ecmdocs/ECMLP2492508/html/frameset.html["《 ONTAP 9 发行说明》"]
+https://library.netapp.com/ecmdocs/ECMLP2492508/html/frameset.html["《 ONTAP 9 发行说明》"^]
  a| 
 否
 
@@ -172,6 +219,37 @@ https://library.netapp.com/ecmdocs/ECMLP2492508/html/frameset.html["《 ONTAP 9 
 您应注意， FabricPool 分层到公有或私有云的任何数据都不再受 SnapLock 保护，因为云管理员可以删除这些数据。
 
 ====
+
+
+ a| 
+FlexGroup 卷
+ a| 
+可以、从ONTAP 9.11.1开始；但是、不支持以下功能：
+
+* 合法持有
+* 基于事件的保留
+* 适用于LockVault的SnapLock
+
+
+您还应了解以下行为：
+
+* FlexGroup 卷的卷合规时钟(Volume Compliance Clock、VCC)由根成分卷的VCC确定。所有非根成分卷的VCC都将与根VCC紧密同步。
+* SnapLock 配置属性仅在整个FlexGroup 上设置。各个成分卷不能具有不同的配置属性、例如默认保留时间和自动提交期限。
+
+ a| 
+可以、从ONTAP 9.11.1开始；但是、不支持以下功能：
+
+* 合法持有
+* 基于事件的保留
+* 适用于LockVault的SnapLock
+
+
+您还应了解以下行为：
+
+* FlexGroup 卷的卷合规时钟(Volume Compliance Clock、VCC)由根成分卷的VCC确定。所有非根成分卷的VCC都将与根VCC紧密同步。
+* SnapLock 配置属性仅在整个FlexGroup 上设置。各个成分卷不能具有不同的配置属性、例如默认保留时间和自动提交期限。
+
+
 |===
 
 

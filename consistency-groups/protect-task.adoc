@@ -1,10 +1,11 @@
 ---
 permalink: consistency-groups/protect-task.html 
 sidebar: sidebar 
-keywords: consistency groups, consistency group, application protection, parent, child, configure 
+keywords: consistency groups, consistency group, application protection, parent, child, configure, two-phase commit, 2 phase 
 summary: 为一致性组设置保护策略，以便使用本地快照策略或远程 SM-BC 保护启用应用程序备份 
 ---
 = 保护一致性组
+:hardbreaks:
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,7 +14,7 @@ summary: 为一致性组设置保护策略，以便使用本地快照策略或�
 [role="lead"]
 一致性组可为跨多个卷的 SAN ， NAS 和 NVMe 应用程序提供轻松管理的本地和远程保护。
 
-创建一致性组不会自动启用保护。可以在创建时或创建一致性组之后设置本地和 / 或远程保护策略。保护策略可以包括本地 Snapshot 副本或使用 SnapMirror 业务连续性（ SM-BC ）的远程 SnapMirror 保护。如果使用嵌套一致性组，则可以为各个卷设置不同的保护策略。
+创建一致性组不会自动启用保护。可以在创建时或创建一致性组之后设置本地和 / 或远程保护策略。保护策略可以包括本地 Snapshot 副本或使用 SnapMirror 业务连续性（ SM-BC ）的远程 SnapMirror 保护。如果使用嵌套一致性组，则可以为各个卷设置不同的保护策略。从ONTAP 9.11.1开始、一致性组可提供 <<two-phase,创建两阶段一致性组Snapshot>>。
 
 如果您正在利用远程 SM-BC 保护，则要确保将在一致性组上创建的一致性组的 Snapshot 副本复制到目标，源集群和目标集群中的策略标签必须匹配。默认情况下， SM-BC 不会复制 Snapshot 副本，除非将带有 SnapMirror 标签的规则添加到预定义的 AutomatedFailOver 策略中，并且使用该标签创建 Snapshot 副本。要了解有关此过程的更多信息，请参见 link:../task_san_configure_protection_for_business_continuity.html["配置业务连续性保护"]。
 
@@ -40,7 +41,8 @@ summary: 为一致性组设置保护策略，以便使用本地快照策略或�
 
 .步骤
 . 确保满足使用 SM-BC 的前提条件。请参见 link:../smbc/smbc_plan_prerequisites.html["SM-BC 前提条件"]
-+
+
+
 
 NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
 
@@ -52,4 +54,42 @@ NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
 . 一致性组必须进行初始化和同步。完成此操作后，在 * SnapMirror （远程） * 下，状态应显示旁边的 "`protected` " image:../media/icon_shield.png["Alt= 绿色屏蔽图标"]。
 
 
-link:../task_dp_configure_snapshot.html["配置 Snapshot 副本"] +link:../task_dp_create_custom_data_protection_policies.html["创建自定义数据保护策略"] +link:../task_dp_recover_snapshot.html["从 Snapshot 副本恢复"] +link:../task_dp_restore_from_vault.html["从早期的 Snapshot 副本还原卷"]
+
+
+== 创建两阶段CG Snapshot
+
+从ONTAP 9.11.1开始、一致性组支持为一致性组(CG) Snapshot创建提交两阶段。此功能仅适用于ONTAP REST API。双阶段CG Snapshot创建仅适用于Snapshot创建、而不适用于配置一致性组或还原一致性组。
+
+创建两阶段CG Snapshot会将在向`应用程序/一致性组/｛consistency_group_uuid｝/snapshots`端点发出POST请求时调用的Snapshot创建过程分为两个阶段。在POST请求启动的第一阶段中、API将执行预检、触发Snapshot创建并按指定间隔启动计时器。如果第一阶段中的POST请求使用201状态代码完成、您可以在第一阶段起的指定时间间隔内调用第二阶段、并将Snapshot提交到相应的端点。
+
+要使用两阶段CG Snapshot创建、集群中的所有节点都必须运行ONTAP 9.11.1。可以使用`action=start`参数调用两阶段CG Snapshot创建。此外、您还可以使用`action_timeout`参数来指定Snapshot创建过程可能需要的最大秒数。可以将`action_timeout`参数设置为介于5到120之间的整数。默认值`action_timeout`为7。
+
+一致性组实例一次仅支持一次主动调用一致性组Snapshot创建操作、无论是一阶段还是两阶段。如果在另一个Snapshot创建过程中尝试调用Snapshot创建、则会导致失败。
+
+有关ONTAP REST API的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html["API 参考"^] 或访问 link:https://devnet.netapp.com/restapi.php["ONTAP REST API页面"^] 在NetApp开发人员网络中获取完整的API端点列表。
+
+.创建两阶段提交
+. 使用`action=start`参数调用Snapshot创建并向一致性组端点发出POST请求。
++
+[source, curl]
+----
+curl -k -X POST 'https://<IP_address>/application/consistency-groups/<cg-uuid>/snapshots?action=start&action_timeout=7' -H "accept: application/hal+json" -H "content-type: application/json" -d '
+{
+  "name": "name_of_this_snapshot",
+  "consistency_type": "crash",
+  "comment": "<comment>",
+  "snapmirror_label": "<snap_mirror label>"
+}'
+----
+. 如果POST请求成功、则输出将包含一个Snapshot UUID。使用该信息、提交修补程序请求以提交Snapshot。
++
+[source, curl]
+----
+curl -k -X PATCH 'https://<IP_address>/application/consistency-groups/<cg_uuid>/snapshots/<snapshot_id>?action=commit' -H "accept: application/hal+json" -H "content-type: application/json"
+----
+
+
+link:../task_dp_configure_snapshot.html["配置 Snapshot 副本"]
+link:../task_dp_create_custom_data_protection_policies.html["创建自定义数据保护策略"]
+link:../task_dp_recover_snapshot.html["从 Snapshot 副本恢复"]
+link:../task_dp_restore_from_vault.html["从早期的 Snapshot 副本还原卷"]

@@ -1,0 +1,107 @@
+---
+permalink: flexgroup/manage-client-async-dir-delete-task.html 
+sidebar: sidebar 
+keywords: perform, directory, enable, delete, files, asynchronous, client rights, SMB, NFS, share, flexvol, flex vol, flexgroup, flex group 
+summary: '从ONTAP 9.11.1开始、存储管理员可以授予对卷的权限、以允许NFS和SMB客户端执行低延迟_fast目录删除_操作。启用异步删除后、NFS客户端可以使用`mv`命令、SMB客户端可以使用`rename`命令删除指定卷上的某个目录、并将该目录移动到默认名为.ontaptrashbin的隐藏目录。' 
+---
+= 管理客户端权限以快速删除目录
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.11.1开始、存储管理员可以授予对卷的权限、以允许NFS和SMB客户端自行执行低延迟_fast-directory delete_操作。在集群上启用异步删除后、Linux客户端用户可以使用`mv`命令、Windows客户端用户可以使用`rename`命令将指定卷上的目录移动到默认名为.ontaptrashbin的隐藏目录、从而快速删除该目录。
+
+
+
+== 启用客户端异步目录删除
+
+.步骤
+. 从集群命令行界面中、进入高级权限模式：`-privilege advanced`
+. 启用客户端异步删除、并根据需要为trashbin目录提供备用名称：
++
+`volume file async-delete client enable volume _volname_ vserver _vserverName_ trashbinname _name_`
+
++
+使用默认垃圾桶名称的示例：
+
++
+[listing]
+----
+cluster1::*> volume file async-delete client enable -volume v1 -vserver  vs0
+
+Info: Async directory delete from the client has been enabled on volume "v1" in
+      Vserver "vs0".
+----
++
+指定备用垃圾桶名称的示例：
+
++
+[listing]
+----
+cluster1::*> volume file async-delete client enable -volume test -trashbin ntaptrash -vserver vs1
+
+Success: Async directory delete from the client is enabled on volume "v1" in
+      Vserver "vs0".
+----
+. 验证是否已启用客户端异步删除：
++
+`volume file async-delete client show`
+
++
+示例
+
++
+[listing]
+----
+cluster1::*> volume file async-delete client show
+
+Vserver Volume      async-delete client TrashBinName
+------------ ------------ ----------------------- -------------
+vs1          vol1         Enabled          .ntaptrash
+vs2          vol2         Disabled          -
+
+2 entries were displayed.
+----
+
+
+
+
+== 禁用客户端异步目录删除
+
+.步骤
+. 在集群CLI中、禁用客户端时间同步目录删除：
++
+`volume file async-delete client disable volume _volname_ vserver _vserverName_`
+
++
+示例
+
++
+[listing]
+----
+cluster1::*> volume file async-delete client disable -volume vol1 -vserver vs1
+
+       Success: Asynchronous directory delete client disabled successfully on volume.
+----
+. 验证是否已禁用客户端异步删除：
++
+`volume file async-delete client show`
+
++
+示例
+
++
+[listing]
+----
+cluster1::*> volume file async-delete client show
+
+Vserver      Volume      async-delete client      TrashBinName
+------------ ------------ ----------------------- -------------
+vs1          vol1         Disabled                -
+vs2          vol2         Disabled                -
+
+2 entries were displayed.
+----
+

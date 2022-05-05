@@ -26,20 +26,19 @@ node1                 true    true
 +
 如果任何节点运行状况不正常或不符合条件，请检查 EMS 日志中的错误并采取更正措施。
 
-. 如果您在 SAN 环境中运行，请验证每个节点是否处于 SAN 仲裁状态： `event log show -messagename scsiblade.*`
+. 如果您在SAN环境中运行、请验证每个节点是否处于SAN仲裁状态：`event log show -severity informational -message-name scsiblade.*`
 +
 每个节点的最新 scsiblade 事件消息应指示 SCSI 刀片处于仲裁状态。
 
 +
 [listing]
 ----
-cluster1::*> event log show -messagename scsiblade.*
-Time                Node             Severity      Event
-------------------- ---------------- ------------- ---------------------------
-MM/DD/YYYY TIME  node0            INFORMATIONAL scsiblade.in.quorum: The scsi-blade ...
-MM/DD/YYYY TIME  node1            INFORMATIONAL scsiblade.in.quorum: The scsi-blade ...
+cluster1::*> event log show  -severity informational -message-name scsiblade.*
+Time             Node       Severity       Event
+---------------  ---------- -------------- ---------------------------
+MM/DD/YYYY TIME  node0      INFORMATIONAL  scsiblade.in.quorum: The scsi-blade ...
+MM/DD/YYYY TIME  node1      INFORMATIONAL  scsiblade.in.quorum: The scsi-blade ...
 ----
-. 返回到管理权限级别： `set -privilege admin`
 
 
 link:../system-admin/index.html["系统管理"]

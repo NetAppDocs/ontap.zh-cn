@@ -23,9 +23,18 @@ summary: 要安装 ONTAP 调解器服务，必须确保满足所有前提条件�
 
 
  a| 
+1.4.
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
+* CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
+
+
+
+
+ a| 
 1.3
  a| 
-* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 7.9 ， 8.0 ， 8.1 ， 8.2 ， 8.3
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3
 * CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
 
 
@@ -34,7 +43,7 @@ summary: 要安装 ONTAP 调解器服务，必须确保满足所有前提条件�
  a| 
 1.2
  a| 
-* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 8.0 ， 8.1
+* Red Hat Enterprise Linux：7.6、7.7、7.8、8.1
 * CentOS ： 7.6 ， 7.7 ， 7.8
 
 
@@ -61,7 +70,7 @@ NOTE: 内核版本必须与操作系统版本匹配。
 
 
  a| 
-* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 8.0 ， 8.1
+* Red Hat Enterprise Linux：7.6、7.7、7.8、8.1
 * CentOS ： 7.6 ， 7.7 ， 7.8
 
  a| 
@@ -90,7 +99,7 @@ NOTE: 内核版本必须与操作系统版本匹配。
 
 
  a| 
-* Red Hat Enterprise Linux ： 7.6 ， 7.7 ， 7.8 ， 7.9 ， 8.0 ， 8.1 ， 8.2 ， 8.3
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3
 * CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
 
  a| 
@@ -101,10 +110,24 @@ NOTE: 内核版本必须与操作系统版本匹配。
 . 将调解器从先前版本升级到当前版本。
 
 
+
+
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4
+* CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
+
+ a| 
+1.4.
+ a| 
+. 从 RHEL/CentOS 版本升级操作系统。
+. 重新启动主机以应用内核模块更改。
+. 将调解器从先前版本升级到当前版本。
+
+
 |===
 下面列出了在系统上安装 Red Hat Enterprise Linux 或 CentOS 以及关联存储库的最佳实践。以不同方式安装或配置的系统可能需要执行其他步骤。
 
-* 您必须根据 Red Hat 最佳实践安装 Red Hat Enterprise Linux 或 CentOS 。由于 CentOS 8.x 版本的支持已停止使用，因此不建议使用 RHEL 或兼容的 CentOS 7.x 版本
+* 您必须根据 Red Hat 最佳实践安装 Red Hat Enterprise Linux 或 CentOS 。由于CentOS 8.x版本支持生命周期终结、因此不建议使用兼容版本的CentOS 8.x。
 * 在 Red Hat Enterprise Linux 或 CentOS 上安装 ONTAP 调解器服务时，系统必须能够访问相应的存储库，以便安装程序可以访问和安装所有必需的软件依赖项。
 * 要使 yum 安装程序在 Red Hat Enterprise Linux 存储库中查找相关软件，您必须在 Red Hat Enterprise Linux 安装期间或之后使用有效的 Red Hat 订阅注册系统。
 +
@@ -117,7 +140,7 @@ NOTE: 内核版本必须与操作系统版本匹配。
 
 
 * 如果使用第三方防火墙：请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["ONTAP 调解器的防火墙要求"^]
-* 如果 Linux 主机所在位置无法访问 Internet ，您可以手动安装这些软件包，也可以确保所需的软件包在本地存储库中可用。
+* 如果Linux主机所在位置无法访问Internet、则必须确保所需的软件包在本地存储库中可用。
 +
 您可以使用以下链接获取有关设置存储库的信息。
 
@@ -161,22 +184,6 @@ ONTAP 调解器服务需要以下软件包：
 
 
 |===
-* 如果配置了签名验证，则必须将其禁用。可以通过以下两种方式之一完成此操作：
-+
-** 如果配置了 UEFI SecureBoot 机制，请将其禁用。
-** 通过更新和重新生成 grub.cfg 文件禁用签名验证机制：
-+
-... 打开 /etc/default/grub 文件。
-... 将字符串 module.sig_enforce 添加到 Grub_CMDLINE_Linux 语句末尾。
-... 重新生成 grub.cfg 文件以实施更改：
-+
-`update-bootloader || update-grub || grub2-mkconfig -o /boot/grub2/grub.cfg`
-
-... 重新启动主机。
-
-
-
-
 
 
 调解器安装包是一个自解压压缩 tar 文件，其中包括：
@@ -305,6 +312,9 @@ Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
 
 如果您的操作系统为 * CentOS 7.x * ：
 
+
+NOTE: 以下示例显示了适用于CentOS 7.6的存储库、可能无法用于其他CentOS版本。使用适用于您的CentOS版本的基础存储库。
+
 .步骤
 . 添加 C7.6.1810 —基本存储库。C7.6.1810 —基础存储库包含 ONTAP 调解器所需的 kernel-devel 软件包。
 . 将以下行添加到 /etc/yum.repos.d/Centos-vault.repo.
@@ -360,7 +370,7 @@ https://mysupport.netapp.com/site/products/all/details/ontap-mediator/downloads-
 [listing]
 ----
 [root@mediator-host ~]#ls
-./ontap-mediator_1.3
+ontap-mediator
 ----
 +
 如果您所在位置无法访问 Internet ，则必须确保安装程序能够访问所需的软件包。
@@ -372,89 +382,133 @@ https://mysupport.netapp.com/site/products/all/details/ontap-mediator/downloads-
 
 == 安装 ONTAP 调解器安装包
 
+.关于此任务
+* 从ONTAP 调解器1.4开始、安全启动机制在UEFI系统上启用。启用安全启动后、您必须执行其他步骤、以便在安装后注册安全密钥：
++
+** 按照README文件中的说明进行操作：`/opt/netapp/lib/ontap_medier/ontap_medier/scST_mod_keys/README.module-signing`对SCST内核模块进行签名。
+** 找到所需密钥：`/opt/netapp/lib/ontap_medier/ontap_medier/scST_mod_keys`
+
+
++
+
+NOTE: 安装后、系统输出中还会提供README文件和密钥位置。
+
+
+
 .步骤
 . 安装调解器安装包并根据需要响应提示：
 +
-` 。 /ontap-mediate_1.3`
+`。/ontap-mediator`
 
 +
 安装过程将继续创建所需的帐户并安装所需的软件包。如果主机上安装了先前版本的调解器，系统将提示您确认是否要升级。
 
 
 
-link:../media/console_output_mediator_installation.txt["ONTAP 调解器安装示例（控制台输出）"^]
+.ONTAP 调解器1.4安装示例(控制台输出)
+====
+[listing]
+----
+[root@scs000065018 ~]# ./ontap-mediator
+ONTAP Mediator: Self Extracting Installer
+ONTAP Mediator requires two user accounts. One for the service (netapp), and one for use by ONTAP to the mediator API (mediatoradmin).
+Would you like to use the default account names: netapp + mediatoradmin? (Y(es)/n(o)): y
+Enter ONTAP Mediator user account (mediatoradmin) password:
+Re-Enter ONTAP Mediator user account (mediatoradmin) password:
+Checking if SELinux is in enforcing mode
+Checking for default Linux firewall
+Linux firewall is running. Open ports 31784 and 3260? y(es)/n(o): y
+success
+success
 
+
+
+Preparing for installation of ONTAP Mediator packages.
+Do you wish to continue? Y(es)/n(o): y
++ Installing required packages.
+Last metadata expiration check: 1:56:17 ago on Thu 07 Apr 2022 11:35:42 AM EDT.
+Package openssl-1:1.1.1k-6.el8_5.x86_64 is already installed.
+Package openssl-devel-1:1.1.1k-6.el8_5.x86_64 is already installed.
+
+.
+.
+.
+.
+
+Dependencies resolved.
+Nothing to do.
+Complete!
+OS package installations finished
++ Installing ONTAP Mediator. (Log: /tmp/ontap_mediator.5gmxnI/ontap-mediator/install_20220407133105.log)
+    This step will take several minutes. Use the log file to view progress.
+Sudo include verified
+ONTAP Mediator logging enabled
++ Install successful. (Moving log to /opt/netapp/lib/ontap_mediator/log/install_20220407133105.log)
++ WARNING: This system supports UEFI
+           Secure Boot (SB) is currently enabled on this system.
+           The following action need be taken:
+           Using the keys in /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys follow
+           instructions in /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/README.module-signing
+           to sign the SCST kernel module. Note that reboot will be needed.
+     SCST will not start automatically when Secure Boot is enabled and not configured properly.
++ Note: ONTAP Mediator uses a kernel module compiled specifically for the current
+        system OS. Using 'yum update' to upgrade the kernel may cause a service
+        interruption.
+    For more information, see /opt/netapp/lib/ontap_mediator/README
+[root@scs000065018 ~]#
+----
+====
 
 
 == 验证安装。
 
 .步骤
-. 运行以下命令以查看 ONTAP 调解器服务的状态：
+. 运行以下命令以查看ONTAP 调解器服务的状态：
 +
-`systemctl`
-
-+
-[listing]
-----
- [root@scspr1915530002 ~]# systemctl status ontap_mediator mediator-scst
-
-        ∙ ontap_mediator.service - ONTAP Mediator
-            Loaded: loaded (/opt/netapp/lib/ontap_mediator/systemd/ontap_mediator.service; enabled; vendor preset: disabled)
-
-            Active: active (running) since Thu 2020-06-18 09:55:02 EDT; 3 days ago
-
-         Main PID: 3559 (uwsgi)
-
-            Status: "uWSGI is ready"
-
-            CGroup: /system.slice/ontap_mediator.service
-
-                    \u251c\u25003559 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
-
-                    \u251c\u25004510 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
-
-                    \u2514\u25004512 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
-
-
-
-         Jun 18 09:54:43 scspr1915530002 systemd[1]: Starting ONTAP Mediator...
-
-         Jun 18 09:54:45 scspr1915530002 ontap_mediator[3559]: [uWSGI] getting INI configuration from /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
-
-         Jun 18 09:55:02 scspr1915530002 systemd[1]: Started ONTAP Mediator.
-
-
-
-         ∙ mediator-scst.service
-            Loaded: loaded (/opt/netapp/lib/ontap_mediator/systemd/mediator-scst.service; enabled; vendor preset: disabled)
-
-            Active: active (running) since Thu 2020-06-18 09:54:51 EDT; 3 days ago
-
-           Process: 3564 ExecStart=/etc/init.d/scst start (code=exited, status=0/SUCCESS)
-
-         Main PID: 4202 (iscsi-scstd)
-
-            CGroup: /system.slice/mediator-scst.service
-
-                    \u2514\u25004202 /usr/local/sbin/iscsi-scstd
-
-
-
-         Jun 18 09:54:43 scspr1915530002 systemd[1]: Starting mediator-scst.service...
-
-         Jun 18 09:54:48 scspr1915530002 iscsi-scstd[4200]: max_data_seg_len 1048576, max_queued_cmds 2048
-
-         Jun 18 09:54:51 scspr1915530002 scst[3564]: Loading and configuring SCST[  OK  ]
-
-         Jun 18 09:54:51 scspr1915530002 systemd[1]: Started mediator-scst.service.
-
-         [root@scspr1915530002 ~]#
-----
-. 确认 ONTAP 调解器服务正在使用的端口： netstat
+.. run：`systemctl status ontap_mediator`
 +
 [listing]
 ----
-         [root@scspr1905507001 ~]# netstat -anlt | grep -E '3260|31784'
+[root@scspr1915530002 ~]# systemctl status ontap_mediator
+
+ ontap_mediator.service - ONTAP Mediator
+Loaded: loaded (/etc/systemd/system/ontap_mediator.service; enabled; vendor preset: disabled)
+Active: active (running) since Mon 2022-04-18 10:41:49 EDT; 1 weeks 0 days ago
+Process: 286710 ExecStop=/bin/kill -s INT $MAINPID (code=exited, status=0/SUCCESS)
+Main PID: 286712 (uwsgi)
+Status: "uWSGI is ready"
+Tasks: 3 (limit: 49473)
+Memory: 139.2M
+CGroup: /system.slice/ontap_mediator.service
+      ├─286712 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+      ├─286716 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+      └─286717 /opt/netapp/lib/ontap_mediator/pyenv/bin/uwsgi --ini /opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini
+
+[root@scspr1915530002 ~]#
+----
+.. run：`systemctl status medier-scst`
++
+[listing]
+----
+[root@scspr1915530002 ~]# systemctl status mediator-scst
+   Loaded: loaded (/etc/systemd/system/mediator-scst.service; enabled; vendor preset: disabled)
+   Active: active (running) since Mon 2022-04-18 10:41:47 EDT; 1 weeks 0 days ago
+  Process: 286595 ExecStart=/etc/init.d/scst start (code=exited, status=0/SUCCESS)
+ Main PID: 286662 (iscsi-scstd)
+    Tasks: 1 (limit: 49473)
+   Memory: 1.2M
+   CGroup: /system.slice/mediator-scst.service
+           └─286662 /usr/local/sbin/iscsi-scstd
+
+[root@scspr1915530002 ~]#
+----
+
+
+. 确认ONTAP 调解器服务正在使用的端口：`netstat`
++
+[listing]
+----
+[root@scspr1905507001 ~]# netstat -anlt | grep -E '3260|31784'
 
          tcp   0   0 0.0.0.0:31784   0.0.0.0:*      LISTEN
 
@@ -471,5 +525,5 @@ link:../media/console_output_mediator_installation.txt["ONTAP 调解器安装示
 此时， ONTAP 调解器服务已安装并正在运行。要使用调解器功能，必须在 ONTAP 存储系统中执行进一步配置：
 
 * 要在 MetroCluster IP 配置中使用 ONTAP 调解器服务，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["从 MetroCluster IP 配置配置 ONTAP 调解器服务"^]
-* 要使用 SnapMirror 业务连续性，请参见 xref:../smbc/smbc_install_confirm_ontap_cluster.html[安装 ONTAP 调解器服务并确认 ONTAP 集群配置]
+* 要使用 SnapMirror 业务连续性，请参见 link:https://docs.netapp.com/us-en/ontap/smbc/smbc_install_confirm_ontap_cluster.html["安装 ONTAP 调解器服务并确认 ONTAP 集群配置"^]
 

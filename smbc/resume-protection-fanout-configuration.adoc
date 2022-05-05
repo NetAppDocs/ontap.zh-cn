@@ -1,7 +1,7 @@
 ---
 permalink: smbc/resume-protection-fan-out-configuration.html 
 sidebar: sidebar 
-keywords: fan out, asynchronous, restore, third site 
+keywords: fan out, asynchronous, restore, third site, MirrorAllSnapshots, MirrorAndVault 
 summary: SM-BC 支持扇出配置。在 SM-BC 端点上进行故障转移后，您必须恢复与异步扇出端点的连接。 
 ---
 = 使用 SM-BC 在扇出配置中恢复保护
@@ -12,7 +12,9 @@ summary: SM-BC 支持扇出配置。在 SM-BC 端点上进行故障转移后，�
 
 
 [role="lead"]
-支持 SM-BC xref:../data-protection/supported-deployment-config-concept.html[扇出配置]。使用 `MirrorAllSnapshots` 策略，可以将源卷镜像到 SM-BC 目标端点以及一个或多个异步 SnapMirror 关系。
+支持 SM-BC xref:../data-protection/supported-deployment-config-concept.html[扇出配置]。您的源卷可以镜像到一个SM-BC目标端点以及一个或多个异步SnapMirror关系。
+
+`MirrorAllSnapshots`策略以及从ONTAP 9.11.1开始的`MirrorAndVault`策略支持扇出配置。从ONTAP 9.11.1开始、`XDPDefault`策略不支持SM-BC中的扇出配置。
 
 如果在 SM-BC 目标上发生故障转移，异步 SnapMirror 目标将变得不正常，您必须通过删除并重新创建与异步 SnapMirror 端点的关系来手动还原保护。
 

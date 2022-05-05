@@ -1,39 +1,40 @@
 ---
 permalink: system-admin/forward-command-history-log-file-destination-task.html 
 sidebar: sidebar 
-keywords: forward, audit, log, destination, cluster, forwarding, splunk, create, command 
-summary: 使用 cluster log-forwarding create 命令最多可以将审核日志转发到指定的 10 个目标。例如，您可以将日志转发到 Splunk 或系统日志服务器，以便进行监控，分析或备份。 
+keywords: forward, audit, log, destination, cluster, forwarding, splunk 
+summary: 您最多可以将审核日志转发到10个目标。例如，您可以将日志转发到 Splunk 或系统日志服务器，以便进行监控，分析或备份。 
 ---
-= 将审核日志转发到目标
+= 管理审核日志目标
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-使用 `cluster log-forwarding create` 命令，您最多可以将审核日志转发到指定的 10 个目标。例如，您可以将日志转发到 Splunk 或系统日志服务器，以便进行监控，分析或备份。
+您最多可以将审核日志转发到10个目标。例如，您可以将日志转发到 Splunk 或系统日志服务器，以便进行监控，分析或备份。
 
-如果 `cluster log-forwarding create` 命令无法对目标主机执行 ping 操作以验证连接，则此命令将失败并显示错误。尽管不建议这样做，但在命令中使用 ` -force` 参数可绕过连接验证。
+要配置转发、您必须提供系统日志或Splunk主机的IP地址、其端口号、传输协议以及用于转发日志的系统日志工具。 https://datatracker.ietf.org/doc/html/rfc5424["了解系统日志工具"^]。
 
-您可以在转发日志文件时配置传输安全选项：
+您可以选择以下传输值之一：
 
-* 用于向目标发送消息的协议
-+
-您可以选择以下 ` 协议` 值之一：
-
-+
-** `udp-unencrypted` ：无安全性的用户数据报协议（默认）
-** `tcp-unencrypted` ：传输控制协议无安全性
-** `TCP 加密` ：传输层安全（ TLS ）传输控制协议
+UDP未加密:: 无安全性的用户数据报协议(默认)
+TCP未加密:: 传输控制协议无安全性
+TCP已加密:: 如果选择了TCP加密协议、则可以使用具有传输层安全(Transport Layer Security、TLS)的传输控制协议+*验证服务器*选项。
 
 
-* 验证目标服务器身份
-+
-将 ` -verify-server` 参数设置为 `true` 时，日志转发目标的身份将通过验证其证书进行验证。只有在 ` -protocol` 字段中选择 `tcp-encrypted` 值时，才能将此值设置为 `true` 。
+您可以从ONTAP 命令行界面转发审核日志、并从ONTAP 9.11.1开始从System Manager转发审核日志。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+* 要显示审核日志目标、请选择*集群>设置*。+日志目标计数显示在*通知管理区块*中。单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"] 以显示详细信息。
+* 要添加、修改或删除审核日志目标、请选择*事件和作业>审核日志*、然后单击屏幕右上角的*管理审核目标*。+单击 image:icon_add.gif["添加图标"]、或单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"] 在*主机地址*列中编辑或删除条目。
 
 
-
-.步骤
+--
+.命令行界面
+--
 . 对于要将审核日志转发到的每个目标，请指定目标 IP 地址或主机名以及任何安全选项。
 +
 [listing]
@@ -44,6 +45,11 @@ cluster1::> cluster log-forwarding create -destination 192.168.123.96
 cluster1::> cluster log-forwarding create -destination 192.168.123.98
 -port 514 -protocol tcp-encrypted -facility user
 ----
++
+** 如果 `cluster log-forwarding create` 命令无法对目标主机执行 ping 操作以验证连接，则此命令将失败并显示错误。尽管不建议这样做，但在命令中使用 ` -force` 参数可绕过连接验证。
+** 将 ` -verify-server` 参数设置为 `true` 时，日志转发目标的身份将通过验证其证书进行验证。只有在 ` -protocol` 字段中选择 `tcp-encrypted` 值时，才能将此值设置为 `true` 。
+
+
 . 使用 `cluster log-forwarding show` 命令验证目标记录是否正确。
 +
 [listing]
@@ -59,4 +65,7 @@ Destination Host          Port   Protocol        Server Facility
 ----
 
 
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"]
+有关详细信息、请参见手册页。
+
+--
+====

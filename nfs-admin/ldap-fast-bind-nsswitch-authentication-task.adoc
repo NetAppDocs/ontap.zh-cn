@@ -1,0 +1,66 @@
+---
+permalink: /nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html 
+sidebar: sidebar 
+keywords: use, ldap, fast, bind, authentication, configure 
+summary: '从ONTAP 9.11.1开始、您可以利用ldap_fast bind_功能(也称为_concurrent bind_)来更快、更简单地处理客户端身份验证请求。要使用此功能、LDAP服务器必须支持快速绑定功能' 
+---
+= 使用LDAP快速绑定进行nsswitch身份验证
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.11.1开始、您可以利用ldap_fast bind_功能(也称为_concurrent bind_)来更快、更简单地处理客户端身份验证请求。要使用此功能、LDAP服务器必须支持快速绑定功能。
+
+如果没有快速绑定、ONTAP 将使用LDAP简单绑定向LDAP服务器对管理员用户进行身份验证。使用此身份验证方法、ONTAP 会向LDAP服务器发送用户或组名称、接收存储的哈希密码、并将服务器哈希代码与本地通过用户密码生成的哈希密码进行比较。如果它们相同、则ONTAP 会授予登录权限。
+
+借助快速绑定功能、ONTAP 仅通过安全连接向LDAP服务器发送用户凭据(用户名和密码)。然后、LDAP服务器会验证这些凭据并指示ONTAP 授予登录权限。
+
+快速绑定的一个优势是、ONTAP 无需支持LDAP服务器支持的每个新哈希算法、因为密码哈希是由LDAP服务器执行的。
+
+link:https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/dc4eb502-fb94-470c-9ab8-ad09fa720ea6["了解如何使用快速绑定。"^]
+
+您可以使用现有LDAP客户端配置进行LDAP快速绑定。但是、强烈建议为LDAP客户端配置TLS或LDAPS；否则、密码将通过线缆以纯文本形式发送。
+
+要在ONTAP 环境中启用LDAP快速绑定、您必须满足以下要求：
+
+* 必须在支持快速绑定的LDAP服务器上配置ONTAP 管理员用户。
+* 必须在名称服务开关(nsswitch)数据库中为LDAP配置ONTAP SVM。
+* 必须使用快速绑定为nsswitch身份验证配置ONTAP 管理员用户和组帐户。
+
+
+.步骤
+. 与LDAP管理员确认LDAP服务器支持LDAP快速绑定。
+. 确保已在LDAP服务器上配置ONTAP 管理员用户凭据。
+. 验证是否已为LDAP快速绑定正确配置管理或数据SVM。
++
+.. 要确认LDAP快速绑定服务器已在LDAP客户端配置中列出、请输入：
++
+`vserver services name-service ldap client show`
+
++
+link:https://docs.netapp.com/us-en/ontap/nfs-config/create-ldap-client-config-task.html["了解LDAP客户端配置。"]
+
+.. 要确认`ldap`是为nsswitch `passwd` database配置的源之一、请输入：
++
+`vserver services name-service ns-switch show`
+
++
+link:https://docs.netapp.com/us-en/ontap/nfs-config/configure-name-service-switch-table-task.html["了解nsswitch配置。"]
+
+
+
+. 确保管理员用户正在使用nsswitch进行身份验证、并且已在其帐户中启用LDAP快速绑定身份验证。
++
+** 对于现有用户、输入`ssecurity login modify`并验证以下参数设置：
++
+`身份验证方法nsswitch`
+
++
+`-is-ldap-fastbind true`
+
+** 对于新的管理员用户、请参见 link:https://docs.netapp.com/us-en/ontap/authentication/grant-access-nis-ldap-user-accounts-task.html["启用LDAP或NIS帐户访问。"]
+
+
+

@@ -21,6 +21,47 @@ summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版
 [role="lead"]
 在当前版本中，勒索软件保护最适合 NAS 环境。未来版本将支持其他环境。
 
+ONTAP 平台支持：
+
+[cols="2*"]
+|===
+| 平台 | 可用开始... 
+
+
+ a| 
+ONTAP 内部部署
+ a| 
+ONTAP 9.10.1
+
+
+
+ a| 
+Cloud Volumes ONTAP
+ a| 
+ONTAP 9.11.1
+
+
+
+ a| 
+适用于 AWS 和 Google Cloud 的 Cloud Volume Services
+ a| 
+不支持
+
+
+
+ a| 
+Azure NetApp Files
+ a| 
+不支持
+
+
+
+ a| 
+ONTAP Select
+ a| 
+不支持
+
+|===
 合适的工作负载：
 
 * NFS 存储上的数据库
@@ -46,11 +87,6 @@ summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版
 * SAN 环境
 * ONTAP S3 环境
 * NFS 上的 VMDK
-* Cloud Volumes ONTAP
-* 适用于 AWS 和 Google Cloud 的 Cloud Volume Services
-* Azure NetApp Files
-* 适用于 ONTAP 的 Amazon FSX
-* ONTAP Select
 
 
 卷要求：
@@ -90,3 +126,5 @@ summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版
 == 检测到勒索软件时自动 Snapshot 副本的工作原理
 
 为了尽可能获得最佳恢复点，一旦检测到异常文件活动，反勒索软件功能就会创建一个自动 Snapshot 副本。但是，反勒索软件功能不会立即标记警报；相反，在生成警报之前，需要运行分析并确认可疑活动与勒索软件配置文件匹配。此过程可能需要长达 60 分钟。如果分析确定活动不可疑，则不会生成警报，但自动创建的 Snapshot 副本会在文件系统上至少保留两天。
+
+从ONTAP 9.11.1开始、您可以控制针对可疑勒索软件攻击自动生成的反勒索软件Snapshot副本的数量和保留期限。了解操作方法 link:modify-automatic-shapshot-options-task.html["修改自动Snapshot副本的选项"]。

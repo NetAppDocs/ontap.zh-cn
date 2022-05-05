@@ -1,0 +1,44 @@
+---
+permalink: upgrade/considerations-authenticate-ssh-public-key-fips-concept.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, update, considerations, ssl, fips mode, host key algorithm 
+summary: 如果在管理员帐户使用SSH公有 密钥进行身份验证的集群上启用了SSL FIPS模式、则在升级ONTAP 之前、必须确保目标版本支持主机密钥算法。 
+---
+= 面向会话的协议的注意事项
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在管理员帐户使用SSH公有 密钥进行身份验证的集群上启用了SSL FIPS模式、则在升级ONTAP 之前、必须确保目标版本支持主机密钥算法。
+
+*注：* ONTAP 9.11.1及更高版本对主机密钥算法的支持已发生更改。
+
+[cols="30,30,30"]
+|===
+
+
+| ONTAP 版本 | 支持的密钥类型 | 不支持的密钥类型 
+
+
+ a| 
+9.11.1及更高版本
+ a| 
+ECDSA-SHA2-nistp256
+ a| 
+RSA-SHA2-512 + RSA-SHA2-256 + ssh-ed25519 + ssh-dss + ssh-rsa
+
+
+
+ a| 
+9.10.1及更早版本
+ a| 
+ECDSA-SHA2-nistp256 + ssh-ed25519
+ a| 
+SSH/DSS + SSH/RSA
+
+|===
+在启用升级之前、必须使用受支持的密钥类型重新配置不具有受支持密钥算法的现有SSH公有 密钥帐户、否则管理员身份验证将失败。
+
+link:../authentication/enable-ssh-public-key-accounts-task.html["了解有关启用SSH公有 密钥帐户的更多信息。"]

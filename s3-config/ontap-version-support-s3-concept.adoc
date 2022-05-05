@@ -1,8 +1,8 @@
 ---
 permalink: s3-config/ontap-version-support-s3-concept.html 
 sidebar: sidebar 
-keywords: ontap, version, support, s3, object, storage, AWS S3, Azure S3 
-summary: 在 ONTAP 9.7 中， S3 对象存储是作为公有预览版引入的。该版本不适用于生产环境，从 ONTAP 9.8 开始将不再更新。只有 ONTAP 9.8 及更高版本支持在生产环境中使用 S3 对象存储。 
+keywords: ontap, version, support, s3, object, storage, AWS S3, Azure S3, cloud volumes ontap, aws, azure 
+summary: 从ONTAP 9.8开始、ONTAP 支持在内部环境中使用S3对象存储。从ONTAP 9.1.1开始、Cloud Volumes ONTAP 支持在云环境中使用S3对象存储。 
 ---
 = S3 对象存储的 ONTAP 版本支持
 :allow-uri-read: 
@@ -11,13 +11,16 @@ summary: 在 ONTAP 9.7 中， S3 对象存储是作为公有预览版引入的�
 
 
 [role="lead"]
-在 ONTAP 9.7 中， S3 对象存储是作为公有预览版引入的。该版本不适用于生产环境，从 ONTAP 9.8 开始将不再更新。只有 ONTAP 9.8 及更高版本支持在生产环境中使用 S3 对象存储。
-
-使用 9.7 公有预览版创建的 S3 存储分段可在 ONTAP 9.8 及更高版本中使用，但无法利用功能增强功能。如果您使用 9.7 公有预览版创建了分段，则应将这些分段的内容迁移到 9.8 分段，以增强功能支持，安全性和性能。
+从ONTAP 9.8开始、ONTAP 支持在内部环境中使用S3对象存储。从ONTAP 9.1.1开始、Cloud Volumes ONTAP 支持在云环境中使用S3对象存储。
 
 
 
 == Cloud Volumes ONTAP 支持S3
+
+ONTAP S3在Cloud Volumes ONTAP 中的配置和功能与在内部环境中相同、但有一个例外：
+
+* 底层聚合只能来自一个节点。了解更多信息 link:create-bucket-task.html["在CVO环境中创建存储分段"]。
+
 
 |===
 | 云提供商 | ONTAP 版本 
@@ -31,3 +34,10 @@ summary: 在 ONTAP 9.7 中， S3 对象存储是作为公有预览版引入的�
 
 | Google Cloud | 当前不支持 
 |===
+
+
+== ONTAP 9.7中的S3公有 预览
+
+在 ONTAP 9.7 中， S3 对象存储是作为公有预览版引入的。该版本不适用于生产环境，从 ONTAP 9.8 开始将不再更新。只有 ONTAP 9.8 及更高版本支持在生产环境中使用 S3 对象存储。
+
+使用 9.7 公有预览版创建的 S3 存储分段可在 ONTAP 9.8 及更高版本中使用，但无法利用功能增强功能。如果您使用 9.7 公有预览版创建了分段，则应将这些分段的内容迁移到 9.8 分段，以增强功能支持，安全性和性能。
