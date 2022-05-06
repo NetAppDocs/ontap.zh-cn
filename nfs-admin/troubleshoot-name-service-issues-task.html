@@ -23599,7 +23599,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-05-06 20:14:32 +0000">05/06/2022</time>
     
   
 
@@ -23644,68 +23644,111 @@
 <ol class="arabic">
 <li>
 <p>执行以下操作之一：</p>
-<div class="literalblock">
-<div class="content">
-<pre>[cols="2*",options="header"]
-|===
-| To retrieve the...| Use the command...
-a|
-IP address of a host name
-a|
-`vserver services name-service getxxbyyy getaddrinfo`     `vserver services name-service getxxbyyy gethostbyname` (IPv4 addresses only)
-a|
-Members of a group by group ID
-a|
-`vserver services name-service getxxbyyy getgrbygid`
-a|
-Members of a group by group name
-a|
-`vserver services name-service getxxbyyy getgrbyname`
-a|
-List of groups a user belongs to
-a|
-`vserver services name-service getxxbyyy getgrlist`
-a|
-Host name of an IP address
-a|
-`vserver services name-service getxxbyyy getnameinfo`     `vserver services name-service getxxbyyy gethostbyaddr` (IPv4 addresses only)
-a|
-User information by user name
-a|
-`vserver services name-service getxxbyyy getpwbyname`     You can test name resolution of RBAC users by specifying the `-use-rbac` parameter as `true`.
-a|
-User information by user ID
-a|
-`vserver services name-service getxxbyyy getpwbyuid`</pre>
+</li>
+</ol>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">检索&#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用命令 &#8230;&#8203;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>主机名的IP地址</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>vserver services name-service getxxbyyy getaddrinfo``vserver services name-service getxxbyyy gethostbyname</code>(仅限IPv4地址)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>按组ID显示组成员</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>vserver services name-service getxxbyyy getgrbygid</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>按组名称显示组成员</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>vserver services name-service getxxbyyy getgrbyname</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>用户所属组的列表</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>vserver services name-service getxxbyyy getgrlist</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>IP地址的主机名</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>vserver services name-service getxxbyyy getnameinfo``vserver services name-service getxxbyyy gethostbyaddr</code>(仅限IPv4地址)</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>按用户名显示用户信息</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>vserver services name-service getxxbyyy getpwbyname`您可以通过将</code>-use-rbac`参数指定为`true`来测试RBAC用户的名称解析。</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>按用户ID显示用户信息</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>vserver services name-service getxxbyyy getpwbyuid`您可以通过将</code>-use-rbac`参数指定为`true`来测试RBAC用户的名称解析。</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>客户端的网络组成员资格</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>vserver services name-service getxxbyyy netgrp</code></p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>使用netgroup-by-host搜索的客户端的网络组成员资格</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><code>vserver services name-service getxxbyyy netgrpbhost</code></p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>以下示例显示了通过尝试获取主机acast1.eng.example.com的IP地址来对SVM vs1执行的DNS查找测试：</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>You can test name resolution of RBAC users by specifying the `-use-rbac` parameter as `true`.
-a|
-Netgroup membership of a client
-a|
-`vserver services name-service getxxbyyy netgrp`
-a|
-Netgroup membership of a client using netgroup-by-host search
-a|
-`vserver services name-service getxxbyyy netgrpbyhost`
-|===
-The following example shows a DNS lookup test for the SVM vs1 by attempting to obtain the IP address for the host acast1.eng.example.com:
-----
-cluster1::*&gt; vserver services name-service getxxbyyy getaddrinfo -vserver vs1 -hostname acast1.eng.example.com -address-family all -show-source true
+<pre>cluster1::*&gt; vserver services name-service getxxbyyy getaddrinfo -vserver vs1 -hostname acast1.eng.example.com -address-family all -show-source true
 Source used for lookup: DNS
 Host name: acast1.eng.example.com
 Canonical Name: acast1.eng.example.com
-IPv4: 10.72.8.29
-----</pre>
+IPv4: 10.72.8.29</pre>
 </div>
 </div>
-<div class="literalblock">
+<div class="paragraph">
+<p>以下示例显示了通过尝试检索UID为501768的用户的用户信息来对SVM vs1执行的NIS查找测试：</p>
+</div>
+<div class="listingblock">
 <div class="content">
-<pre>The following example shows a NIS lookup test for the SVM vs1 by attempting to retrieve user information for a user with the UID 501768:
-----
-cluster1::*&gt; vserver services name-service getxxbyyy getpwbyuid -vserver vs1 -userID 501768 -show-source true
+<pre>cluster1::*&gt; vserver services name-service getxxbyyy getpwbyuid -vserver vs1 -userID 501768 -show-source true
 Source used for lookup: NIS
 pw_name: jsmith
 pw_passwd: $1$y8rA4XX7$/DDOXAvc2PC/IsNFozfIN0
@@ -23713,15 +23756,15 @@ pw_uid: 501768
 pw_gid: 501768
 pw_gecos:
 pw_dir: /home/jsmith
-pw_shell: /bin/bash
-----
-The following example shows an LDAP lookup test for the SVM vs1 by attempting to retrieve user information for a user with the name ldap1:</pre>
+pw_shell: /bin/bash</pre>
 </div>
 </div>
-<div class="literalblock">
+<div class="paragraph">
+<p>以下示例显示了通过尝试检索名为ldap1的用户的用户信息来对SVM vs1执行的LDAP查找测试：</p>
+</div>
+<div class="listingblock">
 <div class="content">
-<pre>----
-cluster1::*&gt; vserver services name-service getxxbyyy getpwbyname -vserver vs1 -username ldap1 -use-rbac false -show-source true
+<pre>cluster1::*&gt; vserver services name-service getxxbyyy getpwbyname -vserver vs1 -username ldap1 -use-rbac false -show-source true
 Source used for lookup: LDAP
 pw_name: ldap1
 pw_passwd: {crypt}JSPM6yc/ilIX6
@@ -23729,39 +23772,36 @@ pw_uid: 10001
 pw_gid: 3333
 pw_gecos: ldap1 user
 pw_dir: /u/ldap1
-pw_shell: /bin/csh
-----</pre>
+pw_shell: /bin/csh</pre>
 </div>
 </div>
-<div class="literalblock">
+<div class="paragraph">
+<p>以下示例显示了SVM vs1的网络组查找测试、该测试尝试确定客户端dnshost0是否为网络组lnetgroup136的成员：</p>
+</div>
+<div class="listingblock">
 <div class="content">
-<pre>The following example shows a netgroup lookup test for the SVM vs1 by attempting to find out whether the client dnshost0 is a member of the netgroup lnetgroup136:</pre>
-</div>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>----
-cluster1::*&gt; vserver services name-service getxxbyyy netgrp -vserver vs1 -netgroup lnetgroup136 -client dnshost0 -show-source true
+<pre>cluster1::*&gt; vserver services name-service getxxbyyy netgrp -vserver vs1 -netgroup lnetgroup136 -client dnshost0 -show-source true
 Source used for lookup: LDAP
-dnshost0 is a member of lnetgroup136
-----</pre>
+dnshost0 is a member of lnetgroup136</pre>
 </div>
 </div>
-</li>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
 <p>分析您执行的测试的结果并采取必要的措施。</p>
+</li>
+</ol>
+</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
 <col style="width: 50%;">
 </colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">如果 &#8230;&#8203;</th>
-<th class="tableblock halign-left valign-top">检查</th>
-</tr>
-</thead>
 <tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果 &#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">检查</p></td>
+</tr>
 <tr>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p>主机名或 IP 地址查找失败或生成的结果不正确</p>
@@ -23794,16 +23834,13 @@ dnshost0 is a member of lnetgroup136
 <p>主机名查找失败或超时，并且 DNS 服务器无法解析 DNS 短名称（例如 host1 ）</p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>用于顶级域（ TLD ）查询的 DNS 配置您可以使用 <code>vserver services name-service dns modify</code> 命令的 ` -is-tld-query-enabled false` 选项禁用 TLD 查询。</p>
+<p>用于顶级域(TLD)查询的DNS配置。您可以使用`vserver services name-service dns modify`命令的`-is-tld-query-enabled false`选项禁用TLD查询。</p>
 </div></div></td>
 </tr>
 </tbody>
 </table>
-</li>
-</ol>
-</div>
 <div class="paragraph">
-<p><a href="https://www.netapp.com/pdf.html?item=/media/16328-tr-4668pdf.pdf">"NetApp 技术报告 4668 ：《名称服务最佳实践指南》"</a></p>
+<p><a href="https://www.netapp.com/pdf.html?item=/media/16328-tr-4668pdf.pdf" target="_blank" rel="noopener">"NetApp 技术报告 4668 ：《名称服务最佳实践指南》"</a></p>
 </div>
 
     </article>
