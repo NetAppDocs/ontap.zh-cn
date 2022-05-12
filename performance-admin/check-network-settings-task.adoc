@@ -26,15 +26,15 @@ summary: 如果存储系统上的网络设置与客户端或其他网络端点�
 +
 `network port show -instance`
 
-. 将 MTU 端口设置更改为 9000 ：
+. 更改端口所使用的广播域上的MTU：
 +
-`network port modify -node _nodename_ -port _port_ -mtu 9000`
+`network port broadcast-domain modify -ipspace _ipspace_-broadcast-domain _broadcast_domain_-mtu _new _mtu`
 
 
 
-以下示例将 `e0a` 的 MTU 端口设置更改为 9000 ：
+以下示例将MTU端口设置更改为9000：
 
 [listing]
 ----
-cluster1::*> network port modify -node node0 -port e0a -mtu 9000
+network port broadcast-domain modify -ipspace Cluster -broadcast-domain Cluster -mtu 9000
 ----

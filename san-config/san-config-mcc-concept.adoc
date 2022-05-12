@@ -17,11 +17,18 @@ summary: 在 MetroCluster 环境中使用 SAN 配置时，您必须了解一些�
 * MetroCluster 配置不支持前端 NVMe 主机连接。
 * MetroCluster 配置支持其他 SAN 协议。
 * 使用 SAN 客户端配置时，您必须检查互操作性表工具（ IMT ）中提供的注释中是否包含有关 MetroCluster 配置的任何特殊注意事项。
+* 操作系统和应用程序必须提供120秒的I/O故障恢复能力、才能支持MetroCluster 自动计划外切换以及Tiebreaker或调解器启动的切换。
 * MetroCluster 在前端 SAN 的两端使用相同的 WWPN 。
 
 
 
 NOTE: 在切换期间，正常运行的站点上的 FC 端口可能会在网络结构检测到灾难站点上的 FC 端口脱机并从名称和目录服务中删除此端口之前登录到网络结构。如果灾难中的 FC 端口尚未删除，则正常运行的站点上 FC 端口的光纤登录尝试可能会因 WWPN 重复而被拒绝。可以更改 FC 交换机的这种行为，以支持上一个设备的登录，而不是现有设备的登录。您应验证此行为对其他网络结构设备的影响。有关详细信息，请联系交换机供应商。
+
+要了解更多信息、请参见：
+
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/manage/concept_understanding_mcc_data_protection_and_disaster_recovery.html["了解 MetroCluster 数据保护和灾难恢复"]
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/manage/task_perform_switchover_for_tests_or_maintenance.html["为测试或维护执行切换"]
+
 
 为了避免在旧端口脱机且新端口联机时出现重叠，请按照以下步骤配置前端交换机：
 
