@@ -13,7 +13,7 @@ summary: 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot �
 [role="lead"]
 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot 副本进行 WORM 保护。您可以在 SnapVault 目标上执行所有基本 SnapLock 任务。目标卷会自动挂载为只读，因此无需明确将 Snapshot 副本提交到 WORM ；因此，不支持使用 SnapMirror 策略在目标卷上创建计划的 Snapshot 副本。
 
-.您需要什么？ #8217 ；将需要什么
+.开始之前
 * 源集群必须运行 ONTAP 8.2.2 或更高版本。
 * 源聚合和目标聚合必须为 64 位。
 * 源卷不能是 SnapLock 卷。
@@ -26,18 +26,14 @@ summary: 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot �
 
 源卷可以使用 NetApp 或非 NetApp 存储。对于非 NetApp 存储，您必须使用 FlexArray 虚拟化。
 
-[NOTE]
-====
-您不能重命名提交到 WORM 状态的 Snapshot 副本。
 
-====
+NOTE: 您不能重命名提交到 WORM 状态的 Snapshot 副本。
+
 您可以克隆 SnapLock 卷，但不能克隆 SnapLock 卷上的文件。
 
-[NOTE]
-====
-SnapLock 卷不支持 LUN 。虽然可以使用传统技术将 LUN 移动到 SnapLock 卷上，但这不是受支持的操作，也不是涉及 SnapLock 卷上 LUN 的任何其他操作。
 
-====
+NOTE: SnapLock 卷不支持 LUN 。虽然可以使用传统技术将 LUN 移动到 SnapLock 卷上，但这不是受支持的操作，也不是涉及 SnapLock 卷上 LUN 的任何其他操作。
+
 对于 MetroCluster 配置，您应注意以下事项：
 
 * 您只能在 sync-source SVM 之间创建 SnapVault 关系，而不能在 sync-source SVM 与 sync-destination SVM 之间创建此关系。
@@ -51,7 +47,7 @@ image::../media/snapvault-steps-clustered.gif[此图显示了用于初始化 Sna
 
 .步骤
 . 确定目标集群。
-. 在目标集群上，安装 SnapLock 许可证，初始化 ComplianceClock 并创建 SnapLock 聚合，如中所述 xref:configure-snaplock-concept.adoc[配置 SnapLock]。
+. 在目标集群上，安装 SnapLock 许可证，初始化 ComplianceClock 并创建 SnapLock 聚合，如中所述 xref:workflow-concept.html[SnapLock 工作流]。
 . 在目标集群上，创建类型为 `DP` 的 SnapLock 目标卷，该卷的大小等于或大于源卷：
 +
 ` * volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -type DP -size _size_*`
@@ -89,7 +85,7 @@ cluster2::> snapmirror create -source-path SVM1:srcvolA -destination-path SVM2:d
 +
 [NOTE]
 ====
-xref:../data-protection/create-custom-replication-policy-concept.adoc[创建自定义复制策略] 或 xref:/data-protection/create-replication-job-schedule-task.adoc[自定义计划] 如果可用的默认值不适用。
+xref:../data-protection/create-custom-replication-policy-concept.adoc[创建自定义复制策略] 或 xref:../data-protection/create-replication-job-schedule-task.adoc[自定义计划] 如果可用的默认值不适用。
 
 ====
 . 在目标 SVM 上，初始化步骤 5 中创建的 SnapVault 关系：

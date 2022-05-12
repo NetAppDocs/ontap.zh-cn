@@ -19,7 +19,7 @@ xref:manual-client-cutover-task.adoc[迁移 SVM 后手动转换客户端]
 
 * 您可以使用高级权限 ` auto-source-cleanup false` 选项禁用转换后删除源 SVM ，然后在转换后手动触发源清理。
 +
-xref:manual-source-remove-task.adoc[转换后手动删除源 SVM]
+xref:manual-source-removal-task.adoc[转换后手动删除源 SVM]
 
 
 
@@ -32,11 +32,11 @@ xref:manual-source-remove-task.adoc[转换后手动删除源 SVM]
 .步骤
 . 从目标集群运行迁移预检：
 +
-`dest_cluster> vserver migrate start -vserver <vserver name> -source-cluster <cluster name> -check-only true`
+`dest_cluster> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_-check-only true`
 
 . 从目标集群启动 SVM 迁移：
 +
-`dest_cluster> vserver migrate start -vserver <vserver name> -source-cluster <cluster name>`
+`dest_cluster> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_`
 
 . 检查迁移状态：
 +
@@ -56,11 +56,11 @@ SVM 迁移完成后，状态将显示 migrate-complete 。
 .步骤
 . 从目标集群运行迁移预检：
 +
-`dest_cluster> vserver migrate start -vserver <vserver name> -source-cluster <cluster name> -check-only true`
+`dest_cluster> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_-check-only true`
 
 . 从目标集群启动 SVM 迁移：
 +
-`dest_cluster> vserver migrate start -vserver <vserver name> -source-cluster <cluster name> -auto-cutover false`
+`dest_cluster> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_-auto-cutover false`
 
 . 检查迁移状态：
 +
@@ -77,11 +77,11 @@ SVM 迁移完成后，状态将显示 migrate-complete 。
 .步骤
 . 从目标集群运行迁移预检：
 +
-`dest_cluster* > vserver migrate start -vserver <vserver name> -source-cluster <cluster name> -check-only true`
+`dest_cluster*> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_-check-only true`
 
 . 从目标集群启动 SVM 迁移：
 +
-`dest_cluster* > vserver migrate start -vserver <vserver name> -source-cluster <cluster name> -auto-source-cleanup false`
+`dest_cluster*> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_-auto-source-cleanup false`
 
 . 检查迁移状态：
 +
