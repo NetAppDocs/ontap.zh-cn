@@ -23599,7 +23599,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-05-12 07:03:44 +0000">05/12/2022</time>
     
   
 
@@ -23610,7 +23610,7 @@
 <p>要使用基于 RDMA 的 NFS ，必须将 LIF 配置为与 RDMA 兼容。LIF 及其故障转移对都必须支持 RDMA 。</p>
 </div>
 <div class="paragraph">
-<p>从 ONTAP 9.10.1 开始，网络接口命令中有一个新的 RDMA_protocols 参数，您可以在该参数中配置支持以及设置适当的服务策略。</p>
+<p>从ONTAP 9.10.1开始、网络接口命令中提供了一个新的`-RDMA_protocols`参数、您可以在该参数中配置支持以及设置适当的服务策略。</p>
 </div>
 <div class="olist arabic">
 <div class="title">操作步骤以创建新的 LIF</div>
@@ -23618,7 +23618,7 @@
 <li>
 <p>创建 LIF ：</p>
 <div class="paragraph">
-<p><code>network interface create -vserver <em>vserver_name</em> -lif <em>lif_name</em> -service-policy <em>service_policy_name</em> -home-node <em>node_name</em> -home-port <em>port_name</em> ｛ -address <em>ip_address</em> -netmask <em>netmask_value</em> _ _ - subnet-name <em>subnet_name</em> ｝ -firewall-policy <em>rma_policy_name</em> ｛ auto-name_ -ma_auto-name_ ｝ -netma_auto-policy_modma_sma__-netmask_sma_</code></p>
+<p>`` network interface create -vserver <em>svm_name</em>-lif <em>lif_name</em>-service-policy <em>service_policy_name</em>-home-node <em>node_name</em>-home-port <em>port_name</em>｛-address <em>ip_address</em>-netmask <em>netmask_value<em></em>- subnet-name <em>subnet_name</em>｝-firewall-policy <em>rma_policy_name</em>｛auto-name_-ma_auto-name_｝-netma_auto-policy_modma</em>sma__sma_-netma_</p>
 </div>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
@@ -23642,19 +23642,25 @@
 <li>
 <p>要修改 LIF ，请运行：</p>
 <div class="paragraph">
-<p><code>network interface modify vserver <em>vserver_name</em> -lif <em>lif_name</em> -service-policy <em>service_policy_name</em> -home-node <em>node_name</em> -home-port <em>port_name</em> ｛ -address <em>ip_address</em> -netmask <em>netmask_value</em> _ _ - -subnet-name <em>subnet_name</em> ｝ -firewall-policy <em>policy_roce_name</em></code> ｛ auto-name_</p>
+<p>`` network interface modify vserver <em>svm_name</em>-lif <em>lif_name</em>-service-policy <em>service_policy_name</em>-home-node <em>node_name</em>-home-port <em>port_name</em>｛-address <em>ip_address</em>-netmask <em>netmask_value__</em>--subnet-name <em>subnet_name</em>-firewall-policy <em>policy_roce_name</em>-sma_auto-name_</p>
 </div>
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p>如果当前未将 LIF 分配给支持该协议的端口，则修改 LIF 以要求使用特定的卸载协议会产生错误。</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/ontap/images/note.svg" alt="注">
+</td>
+<td class="content">
+如果当前未将 LIF 分配给支持该协议的端口，则修改 LIF 以要求使用特定的卸载协议会产生错误。
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
-<p><a href="../networking/create_a_lif.html">"创建 LIF"</a></p>
-</div>
-<div class="paragraph">
-<p><a href="../networking/what_lifs_are.html">"什么是 LIF"</a></p>
+<p><a href="../networking/create_a_lif.html">创建 LIF</a></p>
 </div>
 
     </article>
