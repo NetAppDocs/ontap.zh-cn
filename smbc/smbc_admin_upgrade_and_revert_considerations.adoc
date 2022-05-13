@@ -18,7 +18,7 @@ summary: 您应了解升级和还原 SM-BC 配置的要求。
 
 
 
-=== 升级
+== 升级
 
 在配置和使用 SM-BC 之前，您必须将源集群和目标集群上的所有节点升级到 ONTAP 9.8 或更高版本。link:link:../upgrade/index.html["在 ONTAP 集群上更新软件"]
 
@@ -29,13 +29,13 @@ NOTE: 混合 ONTAP 9.7 和 ONTAP 9.8 集群不支持 SM-BC 。
 
 
 
-=== 从 ONTAP 9.10.1 还原到 ONTAP 9.9.1
+== 从 ONTAP 9.10.1 还原到 ONTAP 9.9.1
 
 要将关系从 9.10.1 还原到 9.9.1 ，必须先删除 SM-BC 关系，然后再删除 9.10.1 一致性组实例。无法删除具有活动 SMBC 关系的一致性组。在 9.9.1 或更早版本中升级到 9.10.1 且先前与另一个智能容器或企业应用程序关联的任何 FlexVol 卷将在还原时不再关联。删除一致性组不会删除成分卷或卷粒度快照。请参见 link:../consistency-groups/delete-task.html["删除一致性组"] 有关此任务的详细信息，请参见。
 
 
 
-=== 从 ONTAP 9.8 还原到 ONTAP 9.7
+== 从 ONTAP 9.8 还原到 ONTAP 9.7
 
 从 ONTAP 9.8 还原到 ONTAP 9.7 时，必须注意以下事项：
 
@@ -94,7 +94,7 @@ Disable snapshot policies.
     snapmirror policy show -type
    active-strict-sync-mirror,active-sync-mirror
    The command to delete a policy is :
-    snapmirror policy delete -vserver <vserver-name> -policy <policy-name>
+    snapmirror policy delete -vserver <SVM-name> -policy <policy-name>
 ....
 
 
