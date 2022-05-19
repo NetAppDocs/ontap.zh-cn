@@ -39,16 +39,14 @@ summary: 在升级集群前后，您应验证磁盘，聚合和卷的状态。
 
 |===
 . 通过显示以下状态验证所有聚合是否处于联机状态： `storage aggregate show -state ！ online` 此命令显示 _not_ online 的聚合。在执行重大升级或还原之前和之后，所有聚合都必须处于联机状态。
-
-
++
 [listing]
 ----
 cluster1::> storage aggregate show -state !online
 There are no entries matching your query.
 ----
 . 通过显示任何 _not_ online 卷来验证所有卷是否已联机： `volume show -state ！ online` 执行重大升级或还原前后，所有卷都必须联机。
-
-
++
 [listing]
 ----
 cluster1::> volume show -state !online

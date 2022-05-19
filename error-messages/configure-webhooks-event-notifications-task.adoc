@@ -2,42 +2,93 @@
 permalink: error-messages/configure-webhooks-event-notifications-task.html 
 sidebar: sidebar 
 keywords: configure, important, ems, events, receive, email, notifications, forward, rest, api, webhook 
-summary: 要在 REST API 服务器上接收事件通知，必须配置 REST API webhook 支持。 
+summary: 您可以将ONTAP 配置为将重要事件通知转发到webhook应用程序。所需的配置步骤取决于您选择的安全性级别。 
 ---
-= 配置重要的 EMS 事件以将通知转发到 REST API 服务器
+= 配置重要的EMS事件以将通知转发到webhook应用程序
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-要在 REST API 服务器上接收事件通知，必须配置 REST API webhook 支持。
-
-.开始之前
-* 您需要一台支持 REST API/webhook 且能够接收 EMS 事件的服务器。
-* REST API 服务器可以使用服务器端或客户端安全证书。
-* 证书的配置由目标决定。有关基于目标的证书配置概述，请参见以下内容：
-+
-** * http ： - 不涉及任何证书
-** * https ： - 服务器证书由 ONTAP 系统验证。也可以配置客户端证书，该证书将由 ONTAP 系统发送，以供服务器验证。
-
-
-* 客户端证书要求使用可在源 ONTAP 系统上安装的专用密钥和证书。
+您可以将ONTAP 配置为将重要事件通知转发到webhook应用程序。所需的配置步骤取决于您选择的安全性级别。
 
 
 
-NOTE: 如果要同时配置客户端和服务器证书 REST API 转发，则需要使用服务器端证书才能使用客户端证书。因此，您必须按照客户端说明使用这两种身份验证方法。
+== 准备配置EMS事件转发
+
+在配置ONTAP 将事件通知转发到webhook应用程序之前、您应考虑几个概念和要求。
 
 
 
-== 配置 HTTP REST API 转发
+=== webhook应用程序
 
-您可以在集群运行时随时通过在 ONTAP 命令行上输入命令来执行此任务。
+您需要一个能够接收ONTAP 事件通知的webhook应用程序。webhook是用户定义的回调例程、用于扩展运行它的远程应用程序或服务器的功能。客户端(在本例中为ONTAP)通过向目标URL发送HTTP请求来调用或激活webhooks。具体而言、ONTAP 会向托管webhook应用程序的服务器发送HTTP POST请求以及XML格式的事件通知详细信息。
+
+
+
+=== 安全选项
+
+根据传输层安全(Transport Layer Security、TLS)协议的使用方式、有多个安全选项可用。您选择的选项将确定所需的ONTAP 配置。
+
+
+NOTE: TLS是一种加密协议、在互联网上广泛使用。它使用一个或多个公有 密钥证书提供隐私以及数据完整性和身份验证。证书由可信证书颁发机构颁发。
+
+HTTP:: 您可以使用HTTP传输事件通知。使用此配置时、连接不安全。不会验证ONTAP 客户端和webhook应用程序的身份。此外、网络流量不会加密或受到保护。请参见 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-http["配置webhook目标以使用HTTP"] 以获取配置详细信息。
+HTTPS:: 为了提高安全性、您可以在托管webhook例程的服务器上安装证书。ONTAP 使用HTTPS协议来验证webhook应用程序服务器的身份、双方也使用此协议来确保网络流量的隐私和完整性。请参见 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https["将网络挂机目标配置为使用HTTPS"] 以获取配置详细信息。
+使用HTTPS进行相互身份验证:: 您可以通过在发出webbook请求的ONTAP 系统上安装客户端证书来进一步增强HTTPS安全性。除了ONTAP 验证webhook应用程序服务器的身份并保护网络流量之外、webhook应用程序还会验证ONTAP 客户端的身份。这种双向对等身份验证称为_mutual tls_.请参见 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https-with-mutual-authentication["配置一个webhook目标以使用HTTPS进行相互身份验证"] 以获取配置详细信息。
+
+
+.相关信息
+* https://www.rfc-editor.org/info/rfc8446["传输层安全(TLS)协议版本1.3"^]
+
+
+
+
+== 配置webhook目标以使用HTTP
+
+您可以将ONTAP 配置为使用HTTP将事件通知转发到webhook应用程序。这是最不安全的选项、但设置最简单。
 
 .步骤
-. 为筛选器 `reimport-events` 创建新目标` stapi-ems `目标：
+. 创建新目标`restapi-ems`以接收事件：
 +
-`事件通知目标 create -name restapi-ems -rest-api-url \http://<url_to_rest_api_server>`
+`事件通知目标create -name restapi-ems -rest-api-url \http://<webhook-application>`
+
++
+在上述命令中、必须对目标使用* HTTP *方案。
+
+. 创建一个通知、将`import-events`筛选器与`restapi-ems`目标链接起来：
++
+`event notification create -filter-name importal-events -destinations restapi-EMS`
+
+
+
+
+
+== 将网络挂机目标配置为使用HTTPS
+
+您可以将ONTAP 配置为使用HTTPS将事件通知转发到webhook应用程序。ONTAP 使用服务器证书来确认webhook应用程序的身份并保护网络流量。
+
+.开始之前
+* 为webhook应用程序服务器生成专用密钥和证书
+* 准备好可在ONTAP 中安装的根证书
+
+
+.步骤
+. 在托管webhook应用程序的服务器上安装相应的服务器专用密钥和证书。具体的配置步骤取决于服务器。
+. 在ONTAP 中安装服务器根证书：
++
+`security certificate install -type server-ca`
+
++
+命令将要求提供证书。
+
+. 创建`restapi-ems`目标以接收事件：
++
+`事件通知目标create -name restapi-ems -rest-api-url \https://<webhook-application>`
+
++
+在上述命令中、必须对目标使用* HTTPS *方案。
 
 . 创建将 `importal-events` 筛选器与新的 `restapi-ems` 目标链接的通知：
 +
@@ -47,56 +98,35 @@ NOTE: 如果要同时配置客户端和服务器证书 REST API 转发，则需�
 
 
 
-== 配置服务器证书 HTTPS REST API 转发
+== 配置一个webhook目标以使用HTTPS进行相互身份验证
 
-此操作步骤假定您先前已生成服务器端专用密钥和公有证书。此外，还假定您已拥有可在 ONTAP 中安装的根证书。
+您可以将ONTAP 配置为使用HTTPS并通过相互身份验证将事件通知转发到webhook应用程序。在此配置中、有两个证书。ONTAP 使用服务器证书确认webhook应用程序的身份并保护网络流量。此外、托管webhook的应用程序使用客户端证书来确认ONTAP 客户端的身份。
+
+在配置ONTAP 之前、必须执行以下操作：
+
+* 为webhook应用程序服务器生成专用密钥和证书
+* 准备好可在ONTAP 中安装的根证书
+* 为ONTAP 客户端生成专用密钥和证书
+
 
 .步骤
-. 在 REST API 服务器中安装相应的服务器专用密钥和公有证书。
-+
-
-NOTE: 具体说明取决于服务器。
-
-. 在 ONTAP 中安装服务器根证书。
-+
-`security certificate install -type server-ca`
-
-+
-命令将查询公有证书。
-
-. 为筛选器 `import-events` 创建 `restapi-EMS` 目标。
-+
-要使用服务器端证书，必须使用 HTTPS 方案。
-
-+
-`事件通知目标 create -name restapi-ems -rest-api-url \https://<url_to_rest_api_server>`
-
-. 创建将 `import-events` 筛选器与新的 `restapi-EMS` 目标链接的通知：
-+
-`event notification create -filter-name importal-events -destinations restapi-EMS`
-
-
-
-
-
-== 配置客户端证书 HTTPS REST API 转发
-
-使用客户端证书是可选的，只有在需要服务器进行客户端身份验证时才需要使用。此操作步骤假定您先前已生成客户端专用密钥和公有证书。
-
-.步骤
-. 在 REST API 服务器中安装相应的根证书和中间证书，以验证您的客户端证书。
-. 在 ONTAP 中安装客户端证书。
+. 执行任务中的前两个步骤 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https["将网络挂机目标配置为使用HTTPS"] 安装服务器证书、以便ONTAP 可以验证服务器的身份。
+. 在webhook应用程序中安装相应的根证书和中间证书以验证客户端证书。
+. 在ONTAP 中安装客户端证书：
 +
 `s安全证书安装 -type client`
 
 +
-命令将查询私钥和公有证书。
+命令将要求提供私钥和证书。
 
-. 为筛选器 `import-events` 创建 `restapi-EMS` 目标。
+. 创建`restapi-ems`目标以接收事件：
 +
-`事件通知目标 create -name restapi-ems -rest-api-url https://<url_to_rest_api_server>[] -certificate-authority < 客户端证书的颁发者 > -certificate-serial < 客户端证书的序列 >`
+`event notification destination create -name restapi-ems -rest-api-url \https://<webhook-application>-certificate-authority <客户端证书的颁发者>-certificate-serial <客户端证书的序列>`
 
-. 创建将 `importal-events` 筛选器与新的 `restapi-EMS` 目标链接的通知。
++
+在上述命令中、必须对目标使用* HTTPS *方案。
+
+. 创建将 `importal-events` 筛选器与新的 `restapi-ems` 目标链接的通知：
 +
 `event notification create -filter-name importal-events -destinations restapi-EMS`
 
