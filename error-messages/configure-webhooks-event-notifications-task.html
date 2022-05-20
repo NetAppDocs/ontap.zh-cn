@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title>配置重要的 EMS 事件以将通知转发到 REST API 服务器</title>
+  <title>配置重要的EMS事件以将通知转发到webhook应用程序</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="配置重要的 EMS 事件以将通知转发到 REST API 服务器" />
+  <meta property="og:title" content="配置重要的EMS事件以将通知转发到webhook应用程序" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/error-messages/configure-webhooks-event-notifications-task.html" />
-	<meta property="og:description" content="要在 REST API 服务器上接收事件通知，必须配置 REST API webhook 支持。" />
+	<meta property="og:description" content="您可以将ONTAP 配置为将重要事件通知转发到webhook应用程序。所需的配置步骤取决于您选择的安全性级别。" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="encoding" content="utf-8">
   <meta http-equiv="nss-type" content="Product Documentation"/>
-  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="要在 REST API 服务器上接收事件通知，必须配置 REST API webhook 支持。">
+  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="您可以将ONTAP 配置为将重要事件通知转发到webhook应用程序。所需的配置步骤取决于您选择的安全性级别。">
   <meta name="keywords" content=" configure, important, ems, events, receive, email, notifications, forward, rest, api, webhook"><!-- Icons -->
   <link rel="icon" href="/zh-cn/ontap/images/favicon.ico" type="image/x-icon">
 
@@ -169,7 +169,7 @@
   
   <!-- Start Page Toolbar -->
   
-  <div class="page-nav-toolbar"><div class="page-nav-contribute"><a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[配置重要的 EMS 事件以将通知转发到 REST API 服务器](https://docs.netapp.com/zh-cn/ontap/error-messages/configure-webhooks-event-notifications-task.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a><a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/error-messages/configure-webhooks-event-notifications-task.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a><a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a></div>
+  <div class="page-nav-toolbar"><div class="page-nav-contribute"><a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[配置重要的EMS事件以将通知转发到webhook应用程序](https://docs.netapp.com/zh-cn/ontap/error-messages/configure-webhooks-event-notifications-task.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" class="github-icon" />请求文档变更</a><a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/error-messages/configure-webhooks-event-notifications-task.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" class="github-icon" />在 GitHub 上编辑</a><a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" class="github-icon" />提供者指南</a></div>
     <div class="page-nav-container">
       <nav class="page-nav-fixed">
         <div class="page-nav-title">在此页面上</div>
@@ -23528,7 +23528,7 @@
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/error-messages/configure-snmp-traphosts-event-notifications-task.html">
         配置 SNMP 陷阱主机以接收事件通知
       </a></li><li class="  active "><a class="na-navbar-padding" href="/zh-cn/ontap/error-messages/configure-webhooks-event-notifications-task.html">
-        配置重要的 EMS 事件以将通知转发到 REST API 服务器
+        配置EMS事件以将通知转发到webhook应用程序
       </a></li></ul></li><li class="subfolders "><a href="#">
         <div class="na-navbar-padding"> 更新已弃用的 EMS 事件映射</div>
       </a>
@@ -23592,14 +23592,14 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading">配置重要的 EMS 事件以将通知转发到 REST API 服务器</h1>
+  <h1 class="n-doc__component-detail-heading">配置重要的EMS事件以将通知转发到webhook应用程序</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-05-19 22:26:09 +0000">05/19/2022</time>
     
   
 
@@ -23609,34 +23609,26 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph lead">
-<p>要在 REST API 服务器上接收事件通知，必须配置 REST API webhook 支持。</p>
+<p>您可以将ONTAP 配置为将重要事件通知转发到webhook应用程序。所需的配置步骤取决于您选择的安全性级别。</p>
 </div>
-<div class="ulist">
-<div class="title">开始之前</div>
-<ul>
-<li>
-<p>您需要一台支持 REST API/webhook 且能够接收 EMS 事件的服务器。</p>
-</li>
-<li>
-<p>REST API 服务器可以使用服务器端或客户端安全证书。</p>
-</li>
-<li>
-<p>证书的配置由目标决定。有关基于目标的证书配置概述，请参见以下内容：</p>
-<div class="ulist">
-<ul>
-<li>
-<p>* http ： - 不涉及任何证书</p>
-</li>
-<li>
-<p>* https ： - 服务器证书由 ONTAP 系统验证。也可以配置客户端证书，该证书将由 ONTAP 系统发送，以供服务器验证。</p>
-</li>
-</ul>
 </div>
-</li>
-<li>
-<p>客户端证书要求使用可在源 ONTAP 系统上安装的专用密钥和证书。</p>
-</li>
-</ul>
+</div>
+<div class="sect1">
+<h2 id="准备配置ems事件转发">准备配置EMS事件转发</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在配置ONTAP 将事件通知转发到webhook应用程序之前、您应考虑几个概念和要求。</p>
+</div>
+<div class="sect2">
+<h3 id="webhook应用程序">webhook应用程序</h3>
+<div class="paragraph">
+<p>您需要一个能够接收ONTAP 事件通知的webhook应用程序。webhook是用户定义的回调例程、用于扩展运行它的远程应用程序或服务器的功能。客户端(在本例中为ONTAP)通过向目标URL发送HTTP请求来调用或激活webhooks。具体而言、ONTAP 会向托管webhook应用程序的服务器发送HTTP POST请求以及XML格式的事件通知详细信息。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="安全选项">安全选项</h3>
+<div class="paragraph">
+<p>根据传输层安全(Transport Layer Security、TLS)协议的使用方式、有多个安全选项可用。您选择的选项将确定所需的ONTAP 配置。</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -23645,26 +23637,105 @@
 <img src="/us-en/ontap/images/note.svg" alt="注">
 </td>
 <td class="content">
-如果要同时配置客户端和服务器证书 REST API 转发，则需要使用服务器端证书才能使用客户端证书。因此，您必须按照客户端说明使用这两种身份验证方法。
+TLS是一种加密协议、在互联网上广泛使用。它使用一个或多个公有 密钥证书提供隐私以及数据完整性和身份验证。证书由可信证书颁发机构颁发。
 </td>
 </tr>
 </table>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">HTTP</dt>
+<dd>
+<p>您可以使用HTTP传输事件通知。使用此配置时、连接不安全。不会验证ONTAP 客户端和webhook应用程序的身份。此外、网络流量不会加密或受到保护。请参见 <a href="configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-http">"配置webhook目标以使用HTTP"</a> 以获取配置详细信息。</p>
+</dd>
+<dt class="hdlist1">HTTPS</dt>
+<dd>
+<p>为了提高安全性、您可以在托管webhook例程的服务器上安装证书。ONTAP 使用HTTPS协议来验证webhook应用程序服务器的身份、双方也使用此协议来确保网络流量的隐私和完整性。请参见 <a href="configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https">"将网络挂机目标配置为使用HTTPS"</a> 以获取配置详细信息。</p>
+</dd>
+<dt class="hdlist1">使用HTTPS进行相互身份验证</dt>
+<dd>
+<p>您可以通过在发出webbook请求的ONTAP 系统上安装客户端证书来进一步增强HTTPS安全性。除了ONTAP 验证webhook应用程序服务器的身份并保护网络流量之外、webhook应用程序还会验证ONTAP 客户端的身份。这种双向对等身份验证称为_mutual tls_.请参见 <a href="configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https-with-mutual-authentication">"配置一个webhook目标以使用HTTPS进行相互身份验证"</a> 以获取配置详细信息。</p>
+</dd>
+</dl>
+</div>
+<div class="ulist">
+<div class="title">相关信息</div>
+<ul>
+<li>
+<p><a href="https://www.rfc-editor.org/info/rfc8446" target="_blank" rel="noopener">"传输层安全(TLS)协议版本1.3"</a></p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="配置-http-rest-api-转发">配置 HTTP REST API 转发</h2>
+<h2 id="配置webhook目标以使用http">配置webhook目标以使用HTTP</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>您可以在集群运行时随时通过在 ONTAP 命令行上输入命令来执行此任务。</p>
+<p>您可以将ONTAP 配置为使用HTTP将事件通知转发到webhook应用程序。这是最不安全的选项、但设置最简单。</p>
 </div>
 <div class="olist arabic">
 <div class="title">步骤</div>
 <ol class="arabic">
 <li>
-<p>为筛选器 <code>reimport-events</code> 创建新目标` stapi-ems `目标：</p>
+<p>创建新目标`restapi-ems`以接收事件：</p>
 <div class="paragraph">
-<p><code>事件通知目标 create -name restapi-ems -rest-api-url http://&lt;url_to_rest_api_server&gt;</code></p>
+<p><code>事件通知目标create -name restapi-ems -rest-api-url http://&lt;webhook-application&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>在上述命令中、必须对目标使用* HTTP *方案。</p>
+</div>
+</li>
+<li>
+<p>创建一个通知、将`import-events`筛选器与`restapi-ems`目标链接起来：</p>
+<div class="paragraph">
+<p><code>event notification create -filter-name importal-events -destinations restapi-EMS</code></p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="将网络挂机目标配置为使用https">将网络挂机目标配置为使用HTTPS</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>您可以将ONTAP 配置为使用HTTPS将事件通知转发到webhook应用程序。ONTAP 使用服务器证书来确认webhook应用程序的身份并保护网络流量。</p>
+</div>
+<div class="ulist">
+<div class="title">开始之前</div>
+<ul>
+<li>
+<p>为webhook应用程序服务器生成专用密钥和证书</p>
+</li>
+<li>
+<p>准备好可在ONTAP 中安装的根证书</p>
+</li>
+</ul>
+</div>
+<div class="olist arabic">
+<div class="title">步骤</div>
+<ol class="arabic">
+<li>
+<p>在托管webhook应用程序的服务器上安装相应的服务器专用密钥和证书。具体的配置步骤取决于服务器。</p>
+</li>
+<li>
+<p>在ONTAP 中安装服务器根证书：</p>
+<div class="paragraph">
+<p><code>security certificate install -type server-ca</code></p>
+</div>
+<div class="paragraph">
+<p>命令将要求提供证书。</p>
+</div>
+</li>
+<li>
+<p>创建`restapi-ems`目标以接收事件：</p>
+<div class="paragraph">
+<p><code>事件通知目标create -name restapi-ems -rest-api-url https://&lt;webhook-application&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>在上述命令中、必须对目标使用* HTTPS *方案。</p>
 </div>
 </li>
 <li>
@@ -23678,86 +23749,56 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="配置服务器证书-https-rest-api-转发">配置服务器证书 HTTPS REST API 转发</h2>
+<h2 id="配置一个webhook目标以使用https进行相互身份验证">配置一个webhook目标以使用HTTPS进行相互身份验证</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>此操作步骤假定您先前已生成服务器端专用密钥和公有证书。此外，还假定您已拥有可在 ONTAP 中安装的根证书。</p>
+<p>您可以将ONTAP 配置为使用HTTPS并通过相互身份验证将事件通知转发到webhook应用程序。在此配置中、有两个证书。ONTAP 使用服务器证书确认webhook应用程序的身份并保护网络流量。此外、托管webhook的应用程序使用客户端证书来确认ONTAP 客户端的身份。</p>
+</div>
+<div class="paragraph">
+<p>在配置ONTAP 之前、必须执行以下操作：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>为webhook应用程序服务器生成专用密钥和证书</p>
+</li>
+<li>
+<p>准备好可在ONTAP 中安装的根证书</p>
+</li>
+<li>
+<p>为ONTAP 客户端生成专用密钥和证书</p>
+</li>
+</ul>
 </div>
 <div class="olist arabic">
 <div class="title">步骤</div>
 <ol class="arabic">
 <li>
-<p>在 REST API 服务器中安装相应的服务器专用密钥和公有证书。</p>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<img src="/us-en/ontap/images/note.svg" alt="注">
-</td>
-<td class="content">
-具体说明取决于服务器。
-</td>
-</tr>
-</table>
-</div>
+<p>执行任务中的前两个步骤 <a href="configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https">"将网络挂机目标配置为使用HTTPS"</a> 安装服务器证书、以便ONTAP 可以验证服务器的身份。</p>
 </li>
 <li>
-<p>在 ONTAP 中安装服务器根证书。</p>
-<div class="paragraph">
-<p><code>security certificate install -type server-ca</code></p>
-</div>
-<div class="paragraph">
-<p>命令将查询公有证书。</p>
-</div>
+<p>在webhook应用程序中安装相应的根证书和中间证书以验证客户端证书。</p>
 </li>
 <li>
-<p>为筛选器 <code>import-events</code> 创建 <code>restapi-EMS</code> 目标。</p>
-<div class="paragraph">
-<p>要使用服务器端证书，必须使用 HTTPS 方案。</p>
-</div>
-<div class="paragraph">
-<p><code>事件通知目标 create -name restapi-ems -rest-api-url https://&lt;url_to_rest_api_server&gt;</code></p>
-</div>
-</li>
-<li>
-<p>创建将 <code>import-events</code> 筛选器与新的 <code>restapi-EMS</code> 目标链接的通知：</p>
-<div class="paragraph">
-<p><code>event notification create -filter-name importal-events -destinations restapi-EMS</code></p>
-</div>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="配置客户端证书-https-rest-api-转发">配置客户端证书 HTTPS REST API 转发</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>使用客户端证书是可选的，只有在需要服务器进行客户端身份验证时才需要使用。此操作步骤假定您先前已生成客户端专用密钥和公有证书。</p>
-</div>
-<div class="olist arabic">
-<div class="title">步骤</div>
-<ol class="arabic">
-<li>
-<p>在 REST API 服务器中安装相应的根证书和中间证书，以验证您的客户端证书。</p>
-</li>
-<li>
-<p>在 ONTAP 中安装客户端证书。</p>
+<p>在ONTAP 中安装客户端证书：</p>
 <div class="paragraph">
 <p><code>s安全证书安装 -type client</code></p>
 </div>
 <div class="paragraph">
-<p>命令将查询私钥和公有证书。</p>
+<p>命令将要求提供私钥和证书。</p>
 </div>
 </li>
 <li>
-<p>为筛选器 <code>import-events</code> 创建 <code>restapi-EMS</code> 目标。</p>
+<p>创建`restapi-ems`目标以接收事件：</p>
 <div class="paragraph">
-<p><code>事件通知目标 create -name restapi-ems -rest-api-url <a href="https://&lt;url_to_rest_api_server&gt;" class="bare">https://&lt;url_to_rest_api_server&gt;</a> -certificate-authority &lt; 客户端证书的颁发者 &gt; -certificate-serial &lt; 客户端证书的序列 &gt;</code></p>
+<p><code>event notification destination create -name restapi-ems -rest-api-url https://&lt;webhook-application&gt;-certificate-authority &lt;客户端证书的颁发者&gt;-certificate-serial &lt;客户端证书的序列&gt;</code></p>
+</div>
+<div class="paragraph">
+<p>在上述命令中、必须对目标使用* HTTPS *方案。</p>
 </div>
 </li>
 <li>
-<p>创建将 <code>importal-events</code> 筛选器与新的 <code>restapi-EMS</code> 目标链接的通知。</p>
+<p>创建将 <code>importal-events</code> 筛选器与新的 <code>restapi-ems</code> 目标链接的通知：</p>
 <div class="paragraph">
 <p><code>event notification create -filter-name importal-events -destinations restapi-EMS</code></p>
 </div>
