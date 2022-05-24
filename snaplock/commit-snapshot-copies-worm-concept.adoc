@@ -47,15 +47,15 @@ image::../media/snapvault-steps-clustered.gif[此图显示了用于初始化 Sna
 
 .步骤
 . 确定目标集群。
-. 在目标集群上，安装 SnapLock 许可证，初始化 ComplianceClock 并创建 SnapLock 聚合，如中所述 xref:workflow-concept.html[SnapLock 工作流]。
+. 在目标集群上、安装SnapLock 许可证并初始化ComplianceClock、如果您使用的是9.10.1之前的ONTAP 版本、请创建SnapLock 聚合、如中所述 xref:workflow-concept.html[SnapLock 工作流]。
 . 在目标集群上，创建类型为 `DP` 的 SnapLock 目标卷，该卷的大小等于或大于源卷：
 +
-` * volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -type DP -size _size_*`
+`* volume create -vserver _svm_name_-volume _volume_name_-aggregate _aggregate_name_-SnapLock-type compliancy|企业级类型DP -size _size_*`
 
 +
 [NOTE]
 ====
-SnapLock 模式 " 合规性 " 或 " 企业 " 是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。
+在ONTAP 9.10.1之前的ONTAP 版本中、SnapLock 模式"合规性"或"企业"是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。
 
 ====
 +
@@ -64,7 +64,7 @@ SnapLock 模式 " 合规性 " 或 " 企业 " 是从聚合继承的。不支持�
 +
 [listing]
 ----
-cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -type DP -size 2GB
+cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GB
 ----
 . 在目标集群上，设置默认保留期限，如中所述 xref:set-default-retention-period-task.adoc[设置默认保留期限]。
 +

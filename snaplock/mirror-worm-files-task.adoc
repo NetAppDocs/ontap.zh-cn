@@ -46,15 +46,15 @@ image::../media/snapmirror_steps_clustered.png[此图显示了用于初始化 Sn
 
 .步骤
 . 确定目标集群。
-. 在目标集群上，安装 SnapLock 许可证，初始化 ComplianceClock 并创建 SnapLock 聚合。
+. 在目标集群上、安装SnapLock 许可证、初始化ComplianceClock、如果您使用的是ONTAP 9.10.1之前的版本、请创建SnapLock 聚合。
 . 在目标集群上，创建类型为 `DP` 的 SnapLock 目标卷，该卷大小等于或大于源卷：
 +
-` * volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -type DP -size _size_*`
+`* volume create -vserver _svm_name_-volume _volume_name_-aggregate _aggregate_name_-SnapLock-type compliancy|企业级类型DP -size _size_*`
 
 +
 [NOTE]
 ====
-SnapLock 模式 - 合规性或企业 - 从聚合继承。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。
+在ONTAP 9.10.1之前的ONTAP 版本中、SnapLock 模式-合规性或企业-是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。
 
 ====
 +
@@ -63,7 +63,7 @@ SnapLock 模式 - 合规性或企业 - 从聚合继承。不支持版本灵活�
 +
 [listing]
 ----
-cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -type DP -size 2GB
+cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GB
 ----
 . 在目标 SVM 上，创建 SnapMirror 策略：
 +
