@@ -23599,7 +23599,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-12 07:03:44 +0000">05/12/2022</time>
+    <time datetime="2022-05-24 18:44:00 +0000">05/24/2022</time>
     
   
 
@@ -23693,12 +23693,12 @@ SnapLock 卷不支持 LUN 。虽然可以使用传统技术将 LUN 移动到 Sna
 <p>确定目标集群。</p>
 </li>
 <li>
-<p>在目标集群上，安装 SnapLock 许可证，初始化 ComplianceClock 并创建 SnapLock 聚合，如中所述 <a href="workflow-concept.html">SnapLock 工作流</a>。</p>
+<p>在目标集群上、安装SnapLock 许可证并初始化ComplianceClock、如果您使用的是9.10.1之前的ONTAP 版本、请创建SnapLock 聚合、如中所述 <a href="workflow-concept.html">SnapLock 工作流</a>。</p>
 </li>
 <li>
 <p>在目标集群上，创建类型为 <code>DP</code> 的 SnapLock 目标卷，该卷的大小等于或大于源卷：</p>
 <div class="paragraph">
-<p>` * volume create -vserver <em>svm_name</em> -volume <em>volume_name</em> -aggregate <em>aggregate_name</em> -type DP -size <em>size</em>*`</p>
+<p><code>* volume create -vserver <em>svm_name</em>-volume <em>volume_name</em>-aggregate <em>aggregate_name</em>-SnapLock-type compliancy|企业级类型DP -size <em>size</em>*</code></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -23708,7 +23708,7 @@ SnapLock 卷不支持 LUN 。虽然可以使用传统技术将 LUN 移动到 Sna
 </td>
 <td class="content">
 <div class="paragraph">
-<p>SnapLock 模式 " 合规性 " 或 " 企业 " 是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。</p>
+<p>在ONTAP 9.10.1之前的ONTAP 版本中、SnapLock 模式"合规性"或"企业"是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。</p>
 </div>
 </td>
 </tr>
@@ -23719,7 +23719,7 @@ SnapLock 卷不支持 LUN 。虽然可以使用传统技术将 LUN 移动到 Sna
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>cluster2::&gt; volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -type DP -size 2GB</pre>
+<pre>cluster2::&gt; volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GB</pre>
 </div>
 </div>
 </li>

@@ -23599,7 +23599,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-05-24 18:44:00 +0000">05/24/2022</time>
     
   
 
@@ -23676,12 +23676,12 @@
 <p>确定目标集群。</p>
 </li>
 <li>
-<p>在目标集群上，安装 SnapLock 许可证，初始化 ComplianceClock 并创建 SnapLock 聚合。</p>
+<p>在目标集群上、安装SnapLock 许可证、初始化ComplianceClock、如果您使用的是ONTAP 9.10.1之前的版本、请创建SnapLock 聚合。</p>
 </li>
 <li>
 <p>在目标集群上，创建类型为 <code>DP</code> 的 SnapLock 目标卷，该卷大小等于或大于源卷：</p>
 <div class="paragraph">
-<p>` * volume create -vserver <em>svm_name</em> -volume <em>volume_name</em> -aggregate <em>aggregate_name</em> -type DP -size <em>size</em>*`</p>
+<p><code>* volume create -vserver <em>svm_name</em>-volume <em>volume_name</em>-aggregate <em>aggregate_name</em>-SnapLock-type compliancy|企业级类型DP -size <em>size</em>*</code></p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -23691,7 +23691,7 @@
 </td>
 <td class="content">
 <div class="paragraph">
-<p>SnapLock 模式 - 合规性或企业 - 从聚合继承。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。</p>
+<p>在ONTAP 9.10.1之前的ONTAP 版本中、SnapLock 模式-合规性或企业-是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。</p>
 </div>
 </td>
 </tr>
@@ -23702,7 +23702,7 @@
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>cluster2::&gt; volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -type DP -size 2GB</pre>
+<pre>cluster2::&gt; volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GB</pre>
 </div>
 </div>
 </li>
