@@ -15,7 +15,17 @@ summary: 虽然 S3 可以与其他协议共存于 SVM 中，但您可能需要�
 
 如果您仅从此 SVM 提供 S3 对象存储，则 S3 服务器不需要任何 DNS 配置。但是，如果使用其他协议，则可能需要在 SVM 上配置 DNS 。
 
+在使用System Manager配置对新的或现有Storage VM的S3访问时、系统会提示您输入证书和网络信息、并在一次操作中创建S3对象存储服务器。
+
+您应准备为接口角色数据输入 S3 服务器名称（ FQDN ）和 IP 地址。
+
+如果您使用的是外部 CA 签名证书，则在此操作步骤期间，系统将提示您输入此证书；您也可以选择使用系统生成的证书。
+
+[role="tabbed-block"]
 .步骤
+====
+.命令行界面
+--
 . 验证 S3 是否已在集群上获得许可：
 +
 `ssystem license show -package S3`
@@ -25,7 +35,7 @@ summary: 虽然 S3 可以与其他协议共存于 SVM 中，但您可能需要�
 
 . 创建 SVM ：
 +
-`vserver create -vserver svm_name -rootvolume root_volume_name -aggregate aggregate_name -rootvolume-security-style UNIX -language C.UTF-8 -IPSpace IPspace_name`
+`vserver create -vserver _svm_name_-rootvolume _root_volume_name_-aggregate _aggregate_name_-rootvolume-security-style UNIX -language C.UTF-8 -IPSpace _IPspace_name_`
 
 +
 ** 对 ` -rootvolume-security-style` 选项使用 UNIX 设置。
@@ -35,7 +45,7 @@ summary: 虽然 S3 可以与其他协议共存于 SVM 中，但您可能需要�
 
 . 验证新创建的 SVM 的配置和状态：
 +
-`vserver show -vserversvm_name`
+`vserver show -vserver _svm_name_`
 
 +
 `vserver Operational State` 字段必须显示 `running` state 。如果显示 `initializing` 状态，则表示某些中间操作（例如创建根卷）失败，您必须删除 SVM 并重新创建它。
@@ -80,3 +90,36 @@ cluster-1::> vserver show -vserver svm1.example.com
                                 Config Lock: false
                                IPspace Name: ipspaceA
 ----
+--
+.System Manager
+--
+. 在 Storage VM 上启用 S3 。
++
+.. 添加新的 Storage VM ：单击 * 存储 > Storage VM* ，然后单击 * 添加 * 。
++
+如果这是一个没有现有 Storage VM 的新系统：单击 * 信息板 > 配置协议 * 。
+
++
+如果要将 S3 服务器添加到现有 Storage VM ：单击 * 存储 > Storage VM* ，选择一个 Storage VM ，单击 * 设置 * ，然后单击 image:icon_gear.gif["设置图标"] 在 * S3 下。
+
+.. 单击 * 启用 S3* ，然后输入 S3 服务器名称。
++
+这是客户端将使用的完全限定域名（ FQDN ）。
+
+.. 选择证书类型。
++
+无论选择系统生成的证书还是您自己的证书之一，客户端访问都需要此证书。
+
+.. 输入网络接口。
+
+
+. 如果选择了系统生成的证书，则在确认创建新 Storage VM 后，您将看到证书信息。单击 * 下载 * 并保存以供客户端访问。
++
+** 不会再显示此机密密钥。
+** 如果您再次需要证书信息：单击 * 存储 > 存储 VM* ，选择 Storage VM ，然后单击 * 设置 * 。
+
+
+
+
+--
+====

@@ -15,18 +15,28 @@ summary: 您可以向默认存储分段策略添加访问规则。其访问控�
 
 包含 S3 服务器和存储分段且已启用 S3 的 SVM 必须已存在。
 
+在授予权限之前，您必须已创建用户或组。
+
 您可以为新用户和组添加新语句，也可以修改现有语句的属性。有关更多选项，请参见 `vserver object-store-server bucket policy` 手册页。
 
+可以在创建存储分段时或稍后根据需要授予用户和组权限。您还可以修改存储分段容量和 QoS 策略组分配。
+
+从ONTAP 9.9.1及更高版本开始、如果您计划在ONTAP S3服务器上支持AWS客户端对象标记功能、则需要允许使用存储分段或组策略执行操作`GetObjectTagging`、`PutObjectTagging`和`DDeleteObjectTagging`。
+
+[role="tabbed-block"]
+====
+.命令行界面
+--
 .步骤
 . 向存储分段策略添加语句：
 +
-`vserver object-store-server bucket policy add-statement -vserver svm_name -bucket bucket_name -Effect ｛ allow_deny ｝ -action object_store_actions -principal user_and_group_name -resource object_store_resources [-SID text] [-index integer ]`
+`vserver object-store-server bucket policy add-statement -vserver _svm_name_-buck_bucket_name_-Effect｛allow_deny｝-action _object_store_Actions_-principal _user_and_group_name_-resource _object_store_resources_[-SID text][-index integer integer ]`
 
 +
 以下参数用于定义访问权限：
 
 +
-[cols="2*"]
+[cols="1,3"]
 |===
 
 
@@ -80,3 +90,23 @@ cluster1::> vserver object-store-server bucket policy statement create -vserver 
 ----
 cluster1::> vserver object-store-server bucket policy statement create -vserver svm1.example.com -bucket bucket1 -effect allow -action GetObject,PutObject,DeleteObject,ListBucket -principal group/group1 -resource bucket1/* -sid "fullAccessForGroup1"
 ----
+--
+.System Manager
+--
+.步骤
+. 编辑存储分段：单击 * 存储 > 存储分段 * ，单击所需分段，然后单击 * 编辑 * 。添加或修改权限时，您可以指定以下参数：
++
+** Principal ：向其授予访问权限的用户或组。
+** 影响：允许或拒绝对用户或组的访问。
+** 操作：指定用户或组在存储分段中允许执行的操作。
+** 资源：允许或拒绝访问的存储分段中对象的路径和名称。
++
+默认值 * ； bucketname_* 和 * ； bucketname/* ；用于授予对存储分段中所有对象的访问权限。您还可以授予对单个对象的访问权限，例如 * ； bucketname/_* ； readme.txt * 。
+
+** 条件（可选）：尝试访问时评估的表达式。例如，您可以指定允许或拒绝访问的 IP 地址列表。
+
+
+
+
+--
+====

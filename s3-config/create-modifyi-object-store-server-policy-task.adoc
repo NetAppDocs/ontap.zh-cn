@@ -17,11 +17,9 @@ summary: 您可以创建可应用于对象存储中的一个或多个分段的�
 
 您可以通过在对象存储服务器组中指定默认或自定义策略来在 SVM 级别启用访问策略。只有在组定义中指定策略后，这些策略才会生效。
 
-[NOTE]
-====
-使用对象存储服务器策略时，您可以在组定义中指定主体（即用户和组），而不是在策略本身中指定主体。
 
-====
+NOTE: 使用对象存储服务器策略时，您可以在组定义中指定主体（即用户和组），而不是在策略本身中指定主体。
+
 访问 ONTAP S3 资源有三种只读默认策略：
 
 * 完全访问
@@ -29,16 +27,22 @@ summary: 您可以创建可应用于对象存储中的一个或多个分段的�
 * 只读访问
 
 
-您也可以创建新的自定义策略，然后为新用户和组添加新语句，或者修改现有语句的属性。有关更多选项，请参见 `vserver object-store-server policy` 手册页。
+您也可以创建新的自定义策略，然后为新用户和组添加新语句，或者修改现有语句的属性。有关更多选项、请参见`vserver object-store-server policy` link:https://docs.netapp.com/us-en/ontap-cli-9111/index.html["命令参考"^]。
 
+从ONTAP 9.9.1及更高版本开始、如果您计划在ONTAP S3服务器上支持AWS客户端对象标记功能、则需要允许使用存储分段或组策略执行操作`GetObjectTagging`、`PutObjectTagging`和`DDeleteObjectTagging`。
+
+[role="tabbed-block"]
+====
+.命令行界面
+--
 .步骤
 . 创建对象存储服务器策略：
 +
-`vserver object-store-server policy create -vserver svm_name -policy policy_name [-comment text]`
+`vserver object-store-server policy create -vserver _svm_name_-policy _policy_name_[-comment _text_]`
 
 . 为策略创建语句：
 +
-`vserver object-store-server policy statement create -vserver svm_name] -policy policy_name -effect ｛ allow_deny ｝ -action object_store_actions -resource object_store_resources [-SID text]`
+`vserver object-store-server policy statement create -vserver _svm_name_-policy _policy_name_-effect｛allow_deny｝-action _object_store_actions_-resource _object_store_resources_[-SID text]`
 
 +
 以下参数用于定义访问权限：
@@ -75,3 +79,36 @@ summary: 您可以创建可应用于对象存储中的一个或多个分段的�
 默认情况下，新的语句将添加到语句列表的末尾，并按顺序进行处理。稍后添加或修改语句时，您可以选择修改语句的 ` 索引` 设置以更改处理顺序。
 
 
+
+--
+.System Manager
+--
+.步骤
+. 编辑 Storage VM ：单击 * 存储 > Storage VM* ，单击此 Storage VM ，单击 * 设置 * ，然后单击 image:icon_pencil.gif["铅笔图标"] 在 S3 下。
+. 添加用户：单击 * 策略 * ，然后单击 * 添加 * 。
++
+.. 输入策略名称并从组列表中进行选择。
+.. 选择现有默认策略或添加新策略。
++
+添加或修改组策略时，您可以指定以下参数：
+
++
+*** group ：授予访问权限的组。
+*** 影响：允许或拒绝对一个或多个组的访问。
+*** 操作：给定组的一个或多个分段中允许的操作。
+*** 资源：授予或拒绝访问权限的一个或多个分段中的对象的路径和名称。例如：
++
+**** *** 授予对 Storage VM 中所有分段的访问权限。
+**** * bucketname* 和 * bucketname/* 授予对特定存储分段中所有对象的访问权限。
+**** *bucketname/readme.txt 授予对特定存储分段中某个对象的访问权限。
+
+
+
+
+.. 如果需要，可将语句添加到现有策略中。
+
+
+
+
+--
+====

@@ -22,6 +22,8 @@ summary: 为 LIF 创建并分配服务策略
 
 您可以为 LIF 创建服务策略。您可以将服务策略分配给一个或多个 LIF ，从而使 LIF 能够传输单个服务或一系列服务的流量。
 
+要运行`network interface service-policy create`命令、您需要高级权限。
+
 内置服务和服务策略可用于管理数据和系统 SVM 上的数据和管理流量。大多数使用情形均可通过内置服务策略来满足，而不是创建自定义服务策略。
 
 如果需要，您可以修改这些内置服务策略。
@@ -40,7 +42,8 @@ network interface service show
 
 +
 ....
-network interface service show
+cluster1::> network interface service show
+
 Service                     Protocol:Ports
 -------                     --------------
 cluster-core                -
@@ -57,41 +60,11 @@ management-https            tcp:443
 management-ssh              tcp:22
 12 entries were displayed.
 ....
-. 创建服务策略：
+. 查看集群中存在的服务策略：
 +
 ....
-network interface service-policy create -vserver <svm_name> -policy <service_policy_name> -services <service_name> -allowed-addresses <IP_address/mask,...>
-....
-+
-** "service_name" 指定应包含在策略中的服务列表。
-** "ip_address/mask" 指定允许访问服务策略中服务的地址的子网掩码列表。默认情况下，添加所有指定服务时，默认允许的地址列表为 0.0.0.0/0 ，允许来自所有子网的流量。如果提供了非默认允许的地址列表，则会将使用此策略的 LIF 配置为阻止源地址与任何指定掩码不匹配的所有请求。
-+
-以下示例显示了如何为包含 NFS 和 SMB 服务的 SVM 创建数据服务策略 svm1_data_policy ：
+cluster1::> network interface service-policy show
 
-+
-....
-network interface service-policy create -vserver svm1 -policy svm1_data_policy -services data-nfs,data-cifs,data-core -allowed-addresses 10.1.0.0/16
-....
-+
-以下示例显示了如何创建集群间服务策略：
-
-+
-....
-network interface service-policy create -vserver cluster1 -policy intercluster1 -services intercluster-core -allowed-addresses 10.1.0.0/16
-....
-
-
-. 验证是否已创建服务策略。
-+
-....
-network interface service-policy show
-....
-+
-以下输出显示了可用的服务策略：
-
-+
-....
-network interface service-policy show
 Vserver   Policy                     Service: Allowed Addresses
 --------- -------------------------- ----------------------------------------
 cluster1
@@ -122,6 +95,91 @@ vs0
                                      management-https: 0.0.0.0/0
 
 7 entries were displayed.
+....
+. 创建服务策略：
++
+....
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+cluster1::> network interface service-policy create -vserver <svm_name> -policy <service_policy_name> -services <service_name> -allowed-addresses <IP_address/mask,...>
+....
++
+** "service_name" 指定应包含在策略中的服务列表。
+** "ip_address/mask" 指定允许访问服务策略中服务的地址的子网掩码列表。默认情况下，添加所有指定服务时，默认允许的地址列表为 0.0.0.0/0 ，允许来自所有子网的流量。如果提供了非默认允许的地址列表，则会将使用此策略的 LIF 配置为阻止源地址与任何指定掩码不匹配的所有请求。
++
+以下示例显示了如何为包含_nfs_和_smb_服务的SVM创建数据服务策略_svm1_data_policy_：
+
++
+....
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+cluster1::> network interface service-policy create -vserver svm1 -policy svm1_data_policy -services data-nfs,data-cifs,data-core
+....
++
+以下示例显示了如何创建集群间服务策略：
+
++
+....
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them only when directed to do so by technical support.
+Do you wish to continue? (y or n): y
+
+cluster1::> network interface service-policy create -vserver cluster1 -policy intercluster1 -services intercluster-core
+....
+
+
+. 验证是否已创建服务策略。
++
+....
+cluster1::> network interface service-policy show
+....
++
+以下输出显示了可用的服务策略：
+
++
+....
+cluster1::> network interface service-policy show
+
+Vserver   Policy                     Service: Allowed Addresses
+--------- -------------------------- ----------------------------------------
+cluster1
+          default-intercluster       intercluster-core: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          intercluster1              intercluster-core: 0.0.0.0/0
+
+          default-management         management-core: 0.0.0.0/0
+                                     management-autosupport: 0.0.0.0/0
+                                     management-ssh: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          default-route-announce     management-bgp: 0.0.0.0/0
+
+Cluster
+          default-cluster            cluster-core: 0.0.0.0/0
+
+vs0
+          default-data-blocks        data-core: 0.0.0.0/0
+                                     data-iscsi: 0.0.0.0/0
+
+          default-data-files         data-core: 0.0.0.0/0
+                                     data-nfs: 0.0.0.0/0
+                                     data-cifs: 0.0.0.0/0
+                                     data-flexcache: 0.0.0.0/0
+
+          default-management         data-core: 0.0.0.0/0
+                                     management-ssh: 0.0.0.0/0
+                                     management-https: 0.0.0.0/0
+
+          svm1_data_policy           data-core: 0.0.0.0/0
+                                     data-nfs: 0.0.0.0/0
+                                     data-cifs: 0.0.0.0/0
+
+9 entries were displayed.
 ....
 
 
@@ -159,7 +217,7 @@ NOTE: 服务策略只能由创建服务策略时指定的同一 SVM 中的 LIF �
 以下示例显示了如何修改 LIF 的服务策略以使用默认管理服务策略：
 
 ....
-network interface modify -vserver cluster1 -lif lif1 -service-policy default-management
+cluster1::> network interface modify -vserver cluster1 -lif lif1 -service-policy default-management
 ....
 
 
@@ -174,56 +232,56 @@ network interface modify -vserver cluster1 -lif lif1 -service-policy default-man
 
 
  a| 
-创建服务策略
+创建服务策略(需要高级权限)
  a| 
 `network interface service-policy create`
 
 
 
  a| 
-向现有服务策略添加其他服务条目
+向现有服务策略添加其他服务条目(需要高级权限)
  a| 
 `network interface service-policy add-service`
 
 
 
  a| 
-克隆现有服务策略
+克隆现有服务策略(需要高级权限)
  a| 
 `network interface service-policy clone`
 
 
 
  a| 
-修改现有服务策略中的服务条目
+修改现有服务策略中的服务条目(需要高级权限)
  a| 
 `network interface service-policy modify-service`
 
 
 
  a| 
-从现有服务策略中删除服务条目
+从现有服务策略中删除服务条目(需要高级权限)
  a| 
 `network interface service-policy remove-service`
 
 
 
  a| 
-重命名现有服务策略
+重命名现有服务策略(需要高级权限)
  a| 
 `network interface service-policy rename`
 
 
 
  a| 
-删除现有服务策略
+删除现有服务策略(需要高级权限)
  a| 
 `network interface service-policy delete`
 
 
 
  a| 
-将内置服务策略还原到其原始状态
+将内置服务策略还原到其原始状态(需要高级权限)
  a| 
 `network interface service-policy restore-defaults`
 

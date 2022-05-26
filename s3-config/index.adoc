@@ -4,34 +4,61 @@ sidebar: sidebar
 keywords: decide, s3, configuration, client, access, configure, object, bucket, svm 
 summary: 您可以使用 ONTAP 9 命令行界面命令配置 S3 客户端对 SVM 中存储分段中的对象的访问权限。 
 ---
-= 使用命令行界面概述 S3 配置
+= S3配置概述
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用 ONTAP 9 命令行界面命令配置 S3 客户端对 SVM 中存储分段中的对象的访问权限。这些过程包括示例和高级配置选项。
+从 ONTAP 9.8 开始，您可以在 ONTAP 集群中启用 ONTAP 简单存储服务（ S3 ）对象存储服务器。有关详细信息，请参见 xref:s3-support-concept.html[ONTAP 9 中的 S3 支持]。
 
 如果要按以下方式配置 S3 对象存储，应使用以下过程：
 
 * 您希望从运行 ONTAP 的现有集群提供 S3 对象存储。
 +
-如果您需要在现有集群上使用 S3 功能，而无需额外的硬件和管理，则可以部署 ONTAP 。对于 300 TB 以上的部署， NetApp StorageGRID 软件仍然是 NetApp 的旗舰级对象存储解决方案。
-
-* 您希望使用命令行界面（ CLI ），而不是 System Manager 或自动化脚本编写工具。
-+
-[NOTE]
-====
-如果您希望能够指定用于存储分段的聚合，则只能使用命令行界面来执行此操作。
-
-====
-* 您希望使用最佳实践，而不是浏览每个可用选项。
-+
-有关命令语法的详细信息，请参见 CLI 帮助和 ONTAP 手册页。
-
-+
-有关 ONTAP 技术以及与外部服务交互的追加信息信息，请参见 ONTAP 参考库和技术报告（ TR ）。
+如果您需要在现有集群上使用 S3 功能，而无需额外的硬件和管理，则 ONTAP S3 是合适的。对于 300 TB 以上的部署， NetApp StorageGRID 软件仍然是 NetApp 的旗舰级对象存储解决方案。有关详细信息，请参见 link:https://docs.netapp.com/sgws-114/index.jsp["StorageGRID 文档"^]。
 
 * 您拥有集群管理员权限，而不是 SVM 管理员权限。
 
+
+
+
+== 使用System Manager和ONTAP 命令行界面进行S3配置
+
+您可以使用System Manager和ONTAP 命令行界面配置和管理ONTAP S3。启用S3并使用System Manager创建存储分段时、ONTAP 会选择最佳实践默认值以简化配置。如果需要指定配置参数、则可能需要使用ONTAP 命令行界面。如果您从CLI配置S3服务器和存储分段、则仍可根据需要使用System Manager对其进行管理、反之亦然。
+
+System Manager 支持在为 S3 对象存储提供服务时的两种内部使用情形：
+
+* FabricPool 层到本地集群（分层到本地分段）或远程集群（云层）上的分段。
+* S3 客户端应用程序访问本地集群或远程集群上的存储分段。
+
+
+使用 System Manager 创建 S3 存储分段时， ONTAP 会配置系统上可用性最高的默认性能服务级别。例如，在 AFF 系统上，默认设置为 * 至尊 * 。性能服务级别是预定义的自适应服务质量（ QoS ）策略组。您可以指定自定义 QoS 策略组，也可以不指定策略组，而不指定默认服务级别之一。
+
+有关 FabricPool 分层的详细信息，请参见 xref:../concept_cloud_overview.html[使用 System Manager 进行 FabricPool 层管理概述]。
+
+预定义的自适应 QoS 策略组包括：
+
+* * 至尊 * ：用于预期延迟最低且性能最高的应用程序。
+* * 性能 * ：用于性能需求和延迟适中的应用程序。
+* * 值 * ：用于吞吐量和容量比延迟更重要的应用程序。
+* * 自定义 * ：指定自定义 QoS 策略或不指定 QoS 策略。
+
+
+如果选择 * 用于分层 * ，则不会选择任何性能服务级别，系统会尝试为分层数据选择具有最佳性能的低成本介质。
+
+另请参见： link:../performance-admin/adaptive-qos-policy-groups-task.html["使用自适应 QoS 策略组"]。
+
+ONTAP 会尝试在磁盘最合适的本地层上配置此存储分段，以满足所选的服务级别。但是，如果需要指定要包含在存储分段中的磁盘，请考虑通过指定本地层（聚合）从 CLI 配置 S3 对象存储。如果您通过 CLI 配置 S3 服务器，则仍可根据需要使用 System Manager 对其进行管理。
+
+* 如果您希望能够指定用于存储分段的聚合，则只能使用命令行界面来执行此操作。
+
+
+
+
+== 在Cloud Volumes ONTAP 上配置S3存储分段
+
+如果要从Cloud Volumes ONTAP 提供存储分段、强烈建议您手动选择底层聚合、以确保它们仅使用一个节点。使用这两个节点的聚合可能会影响性能、因为这些节点将位于不同地理位置的可用性区域中、因此容易受到延迟问题的影响。因此、在Cloud Volumes ONTAP 环境中、您应该执行此操作 xref:create-bucket-task.html[从CLI配置S3存储分段]。
+
+否则、Cloud Volumes ONTAP 上的S3服务器在Cloud Volumes ONTAP 中的配置和维护与在内部环境中相同。

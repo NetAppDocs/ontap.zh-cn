@@ -26,7 +26,7 @@ link:../authentication/index.html["管理员身份验证和 RBAC"]
 .步骤
 . 创建自签名数字证书：
 +
-`security certificate create -vserver svm_name -type root-ca -common-name ca_ct_name`
+`s安全证书create -vserver _svm_name_-type root-ca -common-name _ca_ct_name_`
 
 +
 ` 类型 root-ca` 选项可创建并安装自签名数字证书，以便通过充当证书颁发机构（ CA ）对其他证书进行签名。
@@ -52,7 +52,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 生成证书签名请求：
 +
-`s安全证书 generate-csr -common-name s3_server_name [Additional _options]`
+`s安全证书generate-csr -common-name _s3_server_name_[Additional _options]`
 
 +
 签名请求的 ` -common-name` 参数必须为 S3 服务器名称（ FQDN ）。
@@ -65,7 +65,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 使用 SVM_CA 对 CSR 签名以生成 S3 服务器的证书：
 +
-`s安全证书符号 -vserver svm_name -ca ca_ct_name -ca-serial ca_ct_serial _number [additional _options]`
+`s安全证书符号-vserver _svm_name_-ca _ca_ct_name_-ca-serial _ca_ct_serial _number_[additional _options]`
 
 +
 输入您在先前步骤中使用的命令选项：
@@ -86,7 +86,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 在启用了 S3 的 SVM 上安装签名证书：
 +
-`security certificate install -type server -vserver svm_name`
+`security certificate install -type server -vserver _svm_name_`
 
 +
 出现提示时，输入证书和专用密钥。
@@ -99,7 +99,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 获取公有密钥证书：
 +
-`security certificate show -vserver svm_name -common-name ca_ct_name -type root-ca -instance`
+`security certificate show -vserver _svm_name_-common-name _ca_ct_name_-type root-ca -instance`
 
 +
 保存公有密钥证书以供稍后的客户端配置使用。
