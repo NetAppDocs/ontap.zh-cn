@@ -2,7 +2,7 @@
 permalink: concepts/client-protocols-concept.html 
 sidebar: sidebar 
 keywords: client protocols 
-summary: ONTAP 支持所有主要的行业标准客户端协议： NFS ， SMB ， FC ， FCoE ， iSCSI ， 和 NVMe/FC 。 
+summary: ONTAP 支持所有主要的行业标准客户端协议：NFS、SMB、FC、FCoE、iSCSI、 NVMe/FC和S3。 
 ---
 = 客户端协议
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: ONTAP 支持所有主要的行业标准客户端协议： NFS ， SMB �
 
 
 [role="lead"]
-ONTAP 支持所有主要的行业标准客户端协议： NFS ， SMB ， FC ， FCoE ， iSCSI ， 和 NVMe/FC 。
+ONTAP 支持所有主要的行业标准客户端协议：NFS、SMB、FC、FCoE、iSCSI、 NVMe/FC和S3。
 
 
 
@@ -56,3 +56,21 @@ iSCSI 是一种可在标准以太网网络上运行的块协议。大多数客�
 最新的块协议 NVMe/FC 专为使用基于闪存的存储而设计。它可以提供可扩展的会话，显著降低延迟并提高并行性，因此非常适合内存数据库和分析等低延迟和高吞吐量应用程序。
 
 与 FC 和 iSCSI 不同， NVMe 不使用 LUN 。而是使用存储在 ONTAP 卷中的命名空间。NVMe 命名空间只能通过 NVMe 协议进行访问。
+
+
+
+== S3
+
+从ONTAP 9.8开始、您可以在ONTAP 集群中启用ONTAP 简单存储服务(S3)服务器、从而可以使用S3存储分段在对象存储中提供数据。
+
+ONTAP 支持在为S3对象存储提供服务时采用两种内部使用情形：
+
+* FabricPool 层到本地集群（分层到本地分段）或远程集群（云层）上的分段。
+* S3 客户端应用程序访问本地集群或远程集群上的存储分段。
+
+
+[NOTE]
+====
+如果您需要在现有集群上使用 S3 功能，而无需额外的硬件和管理，则 ONTAP S3 是合适的。对于 300 TB 以上的部署， NetApp StorageGRID 软件仍然是 NetApp 的旗舰级对象存储解决方案。了解相关信息 link:https://docs.netapp.com/sgws-114/index.jsp["StorageGRID"^]。
+
+====
