@@ -9,15 +9,15 @@
   <meta property="og:title" content="创建存储分段" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/s3-config/create-bucket-task.html" />
-	<meta property="og:description" content="S3 对象保留在存储分段中，它们不会嵌套为其他目录内某个目录内的文件。" />
+	<meta property="og:description" content="S3 对象保留在 _bages_ 中—它们不嵌套为其他目录内某个目录内的文件。" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="encoding" content="utf-8">
   <meta http-equiv="nss-type" content="Product Documentation"/>
-  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="S3 对象保留在存储分段中，它们不会嵌套为其他目录内某个目录内的文件。">
-  <meta name="keywords" content=" create, bucket"><!-- Icons -->
+  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="S3 对象保留在 _bages_ 中—它们不嵌套为其他目录内某个目录内的文件。">
+  <meta name="keywords" content=" s3, bucket, system manager,"><!-- Icons -->
   <link rel="icon" href="/zh-cn/ontap/images/favicon.ico" type="image/x-icon">
 
   <!-- RSS Feed --><!-- CSS Definitions: NetApp CSS should be defined after generic css -->
@@ -11942,48 +11942,11 @@
           
           <a target="_blank" 
             
-              href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_配置_S3.pdf" 
+              href="/zh-cn/ontap/pdfs/sidebar/S3_配置.pdf" 
             
           >
             <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>
-            使用 System Manager 配置 S3
-          </a>
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
-        </li>
-      </ul>
-    
-
-  
-
-
-
-    
-      <ul class="subfolders" style="display:none;">
-        <li class="pdf-ux-container">
-          
-          
-          
-          <a target="_blank" 
-            
-              href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_配置_S3.pdf" 
-            
-          >
-            <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>
-            使用 CLI 配置 S3
+            S3 配置
           </a>
           
 
@@ -21606,22 +21569,7 @@
         <div class="na-navbar-padding"> S3 对象存储管理</div>
       </a>
       <ul><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用 System Manager 配置 S3</div>
-      </a>
-      <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/concept_object_provision_overview.html">
-        对象存储概述
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_object_provision_enable_s3_server.html">
-        启用 S3 服务器
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_object_provision_buckets.html">
-        配置存储分段
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_object_provision_add_s3_users_groups.html">
-        添加 S3 用户和组
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_object_provision_manage_bucket_access.html">
-        管理存储分段访问
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_object_provision_manage_svm_access.html">
-        管理 Storage VM 访问
-      </a></li></ul></li><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用 CLI 配置 S3</div>
+        <div class="na-navbar-padding"> S3 配置</div>
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/s3-config/index.html">
         概述
@@ -23595,13 +23543,15 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-05 05:24:15 +0000">05/05/2022</time>
+    <time datetime="2022-05-27 00:10:15 +0000">05/27/2022</time>
     
   
 
 
 </p>
 
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph lead">
 <p>S3 对象保留在 <em>bages</em> 中—它们不嵌套为其他目录内某个目录内的文件。</p>
 </div>
@@ -23609,7 +23559,7 @@
 <p>包含 S3 服务器的 SVM 必须已存在。</p>
 </div>
 <div class="paragraph">
-<p>创建存储分段时，您有两个配置选项：</p>
+<p>对于CLI、在创建存储分段时、您有两个配置选项：</p>
 </div>
 <div class="ulist">
 <ul>
@@ -23638,27 +23588,36 @@
 <p>如果为新存储分段指定聚合和成分卷，则会为新存储分段创建新的 FlexGroup 。</p>
 </li>
 <li>
-<p>如果不为新存储分段指定聚合和成分卷，则新存储分段将添加到现有 FlexGroup 中。有关详细信息，请参见 FlexGroup 文档。</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><a href="../flexgroup/index.html">"FlexGroup 卷管理"</a></p>
-</div>
-</li>
-</ul>
-</div>
+<p>如果不为新存储分段指定聚合和成分卷，则新存储分段将添加到现有 FlexGroup 中。请参见 <a href="../flexgroup/index.html">FlexGroup 卷管理</a> 有关详细信息 &#8230;&#8203;</p>
 <div class="paragraph">
 <p>在创建存储分段时指定聚合和成分卷时，不会应用任何 QoS 策略组，默认或自定义。您可以稍后使用 <code>vserver object-store-server bucket modify</code> 命令执行此操作。</p>
 </div>
 </li>
 </ul>
 </div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
 <div class="paragraph">
-<p>*注：*如果您从Cloud Volumes ONTAP 提供存储分段、强烈建议您手动选择底层聚合、以确保它们仅使用一个节点。使用这两个节点的聚合可能会影响性能、因为这些节点将位于不同地理位置的可用性区域中、因此容易受到延迟问题的影响。</p>
+<p>*注意：*如果您正在从Cloud Volumes ONTAP 提供存储分段、则应使用命令行界面操作步骤。强烈建议您手动选择底层聚合、以确保它们仅使用一个节点。使用这两个节点的聚合可能会影响性能、因为这些节点将位于不同地理位置的可用性区域中、因此容易受到延迟问题的影响。</p>
 </div>
 <div class="paragraph">
 <p>存储服务级别是预定义的自适应服务质量（ QoS ）策略组，具有 <em>value</em> ， <em>performage</em> 和 _Extreme 默认级别。您还可以定义自定义 QoS 策略组并将其应用于存储分段，而不是默认存储服务级别之一。</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/ontap/images/note.svg" alt="注">
+</td>
+<td class="content">
+从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p><a href="storage-service-definitions-reference.html">"存储服务定义"</a></p>
@@ -23667,13 +23626,25 @@
 <p>如果要配置本地容量分层，请在数据 SVM 中创建分段和用户，而不是在 S3 服务器所在的系统 SVM 中创建。</p>
 </div>
 <div class="paragraph">
+<p>要进行远程客户端访问，您必须在启用了 S3 的 Storage VM 中配置存储分段。如果在未启用 S3 的 Storage VM 中创建存储分段，则此分段仅可用于本地分层。</p>
+</div>
+<div class="paragraph">
 <p><a href="../performance-admin/index.html">"性能管理"</a></p>
 </div>
 <div class="paragraph">
 <p>有关其他配置和显示选项，请参见 <code>vserver object-store-server bucket</code> 手册页。</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="创建存储分段的过程">创建存储分段的过程</h2>
+<div class="sectionbody">
+<div class="exampleblock tabbed-block">
+<div class="content">
+<div class="openblock">
+<div class="title">命令行界面</div>
+<div class="content">
 <div class="olist arabic">
-<div class="title">步骤</div>
 <ol class="arabic">
 <li>
 <p>如果您计划自行选择聚合和 FlexGroup 组件，请将权限级别设置为高级（否则，管理权限级别就足够了）： <code>set -privilege advanced</code></p>
@@ -23751,6 +23722,92 @@
 <div class="listingblock">
 <div class="content">
 <pre>cluster-1::*&gt; vserver object-store-server bucket create -vserver svm1.example.com -bucket testbucket -aggr-list aggr1 -size 1TB</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock">
+<div class="title">System Manager</div>
+<div class="content">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>在启用了 S3 的 Storage VM 上添加新存储分段。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>单击 * 存储 &gt; 分段 * ，然后单击 * 添加 * 。</p>
+</li>
+<li>
+<p>输入名称，选择 Storage VM 并输入大小。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>如果此时单击 * 保存 * ，则会使用以下默认设置创建一个存储分段：</p>
+<div class="ulist">
+<ul>
+<li>
+<p>除非任何组策略已生效，否则不会向任何用户授予对存储分段的访问权限。</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/ontap/images/note.svg" alt="注">
+</td>
+<td class="content">
+您不应使用 S3 root 用户管理 ONTAP 对象存储并共享其权限，因为它对对象存储具有无限制的访问权限。而是使用您分配的管理权限创建一个用户或组。
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>系统可用性最高的服务质量（性能）级别。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>您可以在配置存储分段时单击 * 更多选项 * 来配置用户权限和性能级别，也可以稍后修改这些设置。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>在使用 * 更多选项 * 配置用户和组权限之前，您必须已创建用户和组。</p>
+</li>
+<li>
+<p>如果要使用 S3 对象存储进行 FabricPool 分层，请考虑选择 * 用于分层 * （使用低成本介质，为分层数据提供最佳性能），而不是性能服务级别。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>在 S3 客户端应用程序（另一个 ONTAP 系统或外部第三方应用程序）上，输入以下命令验证对新存储分段的访问：</p>
+<div class="ulist">
+<ul>
+<li>
+<p>S3 服务器 CA 证书。</p>
+</li>
+<li>
+<p>用户的访问密钥和机密密钥。</p>
+</li>
+<li>
+<p>S3 服务器 FQDN 名称和存储分段名称。</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 

@@ -11942,48 +11942,11 @@
           
           <a target="_blank" 
             
-              href="/zh-cn/ontap/pdfs/sidebar/使用_System_Manager_配置_S3.pdf" 
+              href="/zh-cn/ontap/pdfs/sidebar/S3_配置.pdf" 
             
           >
             <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>
-            使用 System Manager 配置 S3
-          </a>
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
-        </li>
-      </ul>
-    
-
-  
-
-
-
-    
-      <ul class="subfolders" style="display:none;">
-        <li class="pdf-ux-container">
-          
-          
-          
-          <a target="_blank" 
-            
-              href="/zh-cn/ontap/pdfs/sidebar/使用_CLI_配置_S3.pdf" 
-            
-          >
-            <img src="/zh-cn/ontap/images/pdf.png" width="16" height="16"/>
-            使用 CLI 配置 S3
+            S3 配置
           </a>
           
 
@@ -21606,22 +21569,7 @@
         <div class="na-navbar-padding"> S3 对象存储管理</div>
       </a>
       <ul><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用 System Manager 配置 S3</div>
-      </a>
-      <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/concept_object_provision_overview.html">
-        对象存储概述
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_object_provision_enable_s3_server.html">
-        启用 S3 服务器
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_object_provision_buckets.html">
-        配置存储分段
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_object_provision_add_s3_users_groups.html">
-        添加 S3 用户和组
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_object_provision_manage_bucket_access.html">
-        管理存储分段访问
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_object_provision_manage_svm_access.html">
-        管理 Storage VM 访问
-      </a></li></ul></li><li class="subfolders "><a href="#">
-        <div class="na-navbar-padding"> 使用 CLI 配置 S3</div>
+        <div class="na-navbar-padding"> S3 配置</div>
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/s3-config/index.html">
         概述
@@ -23595,7 +23543,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-05-27 00:10:15 +0000">05/27/2022</time>
     
   
 
@@ -23618,9 +23566,7 @@
 <img src="/us-en/ontap/images/note.svg" alt="注">
 </td>
 <td class="content">
-<div class="paragraph">
-<p>使用对象存储服务器策略时，您可以在组定义中指定主体（即用户和组），而不是在策略本身中指定主体。</p>
-</div>
+使用对象存储服务器策略时，您可以在组定义中指定主体（即用户和组），而不是在策略本身中指定主体。
 </td>
 </tr>
 </table>
@@ -23642,21 +23588,29 @@
 </ul>
 </div>
 <div class="paragraph">
-<p>您也可以创建新的自定义策略，然后为新用户和组添加新语句，或者修改现有语句的属性。有关更多选项，请参见 <code>vserver object-store-server policy</code> 手册页。</p>
+<p>您也可以创建新的自定义策略，然后为新用户和组添加新语句，或者修改现有语句的属性。有关更多选项、请参见`vserver object-store-server policy` <a href="https://docs.netapp.com/us-en/ontap-cli-9111/index.html" target="_blank" rel="noopener">"命令参考"</a>。</p>
 </div>
+<div class="paragraph">
+<p>从ONTAP 9.9.1及更高版本开始、如果您计划在ONTAP S3服务器上支持AWS客户端对象标记功能、则需要允许使用存储分段或组策略执行操作`GetObjectTagging`、<code>PutObjectTagging`和`DDeleteObjectTagging</code>。</p>
+</div>
+<div class="exampleblock tabbed-block">
+<div class="content">
+<div class="openblock">
+<div class="title">命令行界面</div>
+<div class="content">
 <div class="olist arabic">
 <div class="title">步骤</div>
 <ol class="arabic">
 <li>
 <p>创建对象存储服务器策略：</p>
 <div class="paragraph">
-<p><code>vserver object-store-server policy create -vserver svm_name -policy policy_name [-comment text]</code></p>
+<p><code>vserver object-store-server policy create -vserver <em>svm_name</em>-policy <em>policy_name</em>[-comment <em>text</em>]</code></p>
 </div>
 </li>
 <li>
 <p>为策略创建语句：</p>
 <div class="paragraph">
-<p><code>vserver object-store-server policy statement create -vserver svm_name] -policy policy_name -effect ｛ allow_deny ｝ -action object_store_actions -resource object_store_resources [-SID text]</code></p>
+<p><code>vserver object-store-server policy statement create -vserver <em>svm_name</em>-policy <em>policy_name</em>-effect｛allow_deny｝-action <em>object_store_actions</em>-resource <em>object_store_resources</em>[-SID text]</code></p>
 </div>
 <div class="paragraph">
 <p>以下参数用于定义访问权限：</p>
@@ -23701,6 +23655,71 @@
 </div>
 </li>
 </ol>
+</div>
+</div>
+</div>
+<div class="openblock">
+<div class="title">System Manager</div>
+<div class="content">
+<div class="olist arabic">
+<div class="title">步骤</div>
+<ol class="arabic">
+<li>
+<p>编辑 Storage VM ：单击 * 存储 &gt; Storage VM* ，单击此 Storage VM ，单击 * 设置 * ，然后单击 <span class="image"><img src="../media/icon_pencil.gif" alt="铅笔图标"></span> 在 S3 下。</p>
+</li>
+<li>
+<p>添加用户：单击 * 策略 * ，然后单击 * 添加 * 。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>输入策略名称并从组列表中进行选择。</p>
+</li>
+<li>
+<p>选择现有默认策略或添加新策略。</p>
+<div class="paragraph">
+<p>添加或修改组策略时，您可以指定以下参数：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>group ：授予访问权限的组。</p>
+</li>
+<li>
+<p>影响：允许或拒绝对一个或多个组的访问。</p>
+</li>
+<li>
+<p>操作：给定组的一个或多个分段中允许的操作。</p>
+</li>
+<li>
+<p>资源：授予或拒绝访问权限的一个或多个分段中的对象的路径和名称。例如：</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>*</strong> 授予对 Storage VM 中所有分段的访问权限。</p>
+</li>
+<li>
+<p>* bucketname* 和 * bucketname/* 授予对特定存储分段中所有对象的访问权限。</p>
+</li>
+<li>
+<p>*bucketname/readme.txt 授予对特定存储分段中某个对象的访问权限。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>如果需要，可将语句添加到现有策略中。</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
 </div>
 
     </article>
