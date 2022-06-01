@@ -1,7 +1,7 @@
 ---
 permalink: smb-hyper-v-sql/server-volume-requirements-sql-serve-concept.html 
 sidebar: sidebar 
-keywords: smb, cifs, server, volume, requirement, sql, nondisruptive, operation 
+keywords: smb, cifs, server, volume, requirement, sql, nondisruptive, operation, snapcenter plug-in 
 summary: 在创建基于 SMB 的 SQL Server 配置以实现无中断运行时，您需要了解特定的 SMB 服务器和卷要求。 
 ---
 = 基于 SMB 的 SQL Server 的 SMB 服务器和卷要求
@@ -47,7 +47,7 @@ summary: 在创建基于 SMB 的 SQL Server 配置以实现无中断运行时，
 要使用持续可用的 SMB 连接为应用程序服务器提供 NDOS ，包含共享的卷必须为 NTFS 卷。此外，它必须始终是 NTFS 卷。您不能将混合安全模式卷或 UNIX 安全模式卷更改为 NTFS 安全模式卷，也不能通过 SMB 共享将其直接用于 NDOS 。如果您将混合安全模式卷更改为 NTFS 安全模式卷，并打算通过 SMB 共享将其用于 NDOS ，则必须手动将 ACL 放置在卷顶部，并将该 ACL 传播到包含的所有文件和文件夹。否则，如果源卷或目标卷最初创建为混合卷或 UNIX 安全模式卷，然后更改为 NTFS 安全模式，则将文件移至另一个卷的虚拟机迁移或数据库文件导出和导入可能会失败。
 
 * 尽管包含数据库文件的卷可以包含接合，但在创建数据库目录结构时， SQL Server 不会跨越接合。
-* 要成功执行 SnapManager for Microsoft SQL Server 备份操作，卷上必须具有足够的可用空间。
+* 要使适用于Microsoft SQL Server的SnapCenter 插件备份操作成功、卷上必须具有足够的可用空间。
 +
 SQL Server 数据库文件所在的卷必须足够大，才能容纳数据库目录结构以及驻留在共享中的所有包含的文件。
 
