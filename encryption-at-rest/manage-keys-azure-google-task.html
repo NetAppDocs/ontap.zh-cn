@@ -23543,7 +23543,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-06-01 21:19:26 +0000">06/01/2022</time>
     
   
 
@@ -23556,13 +23556,13 @@
 <p>从 ONTAP 9.10.1 开始，您可以使用 <a href="https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts" target="_blank" rel="noopener">"Azure 密钥存储（ AKV ）"</a> 和 <a href="https://cloud.google.com/kms/docs" target="_blank" rel="noopener">"Google Cloud Platform 的密钥管理服务（ Cloud KMS ）"</a> 在部署了 Azure 或 Google 云平台的应用程序中保护 ONTAP 加密密钥。</p>
 </div>
 <div class="paragraph">
-<p>可以使用 AKV 和 Cloud KMS 进行保护 <a href="configure-netapp-volume-encryption-concept.html">"NetApp 卷加密（ NVE ）密钥"</a> 仅适用于数据 SVM 。</p>
+<p>可以使用 AKV 和 Cloud KMS 进行保护 <a href="configure-netapp-volume-encryption-concept.html">"NetApp 卷加密（ NVE ）密钥"</a> 仅适用于数据SVM。</p>
 </div>
 <div class="paragraph">
 <p>可以使用命令行界面或 ONTAP REST API 启用使用 AKV 或 Cloud KMS 的密钥管理。</p>
 </div>
 <div class="paragraph">
-<p>使用 AKV 或 Cloud KMS 时，请注意，默认情况下，数据 Vserver LIF 用于与云密钥管理端点进行通信。节点管理网络用于与云提供商的身份验证服务进行通信（适用于 Azure 的 login.microsoftonline.com ；适用于 Cloud KMS 的 oauth2.googleapis.com ）。如果集群网络配置不正确，集群将无法正确利用密钥管理服务。</p>
+<p>使用AKV或Cloud KMS时、请注意、默认情况下、数据SVM LIF用于与云密钥管理端点进行通信。节点管理网络用于与云提供商的身份验证服务进行通信（适用于 Azure 的 login.microsoftonline.com ；适用于 Cloud KMS 的 oauth2.googleapis.com ）。如果集群网络配置不正确，集群将无法正确利用密钥管理服务。</p>
 </div>
 <div class="ulist">
 <div class="title">前提条件</div>
@@ -23577,7 +23577,7 @@
 <p>已安装多租户加密密钥管理（ MTEKM ）许可证</p>
 </li>
 <li>
-<p>您必须是集群或 SVM 管理员</p>
+<p>您必须是集群管理员或SVM管理员</p>
 </li>
 </ul>
 </div>
@@ -23591,7 +23591,7 @@
 <p>MetroCluster 配置不支持 AKV 和 Cloud KMS 。</p>
 </li>
 <li>
-<p>只能在数据 SVM 上配置 AKV 和 Cloud KMS</p>
+<p>只能在数据SVM上配置AKV和Cloud KMS</p>
 </li>
 </ul>
 </div>
@@ -23606,7 +23606,7 @@
 <div class="exampleblock tabbed-block">
 <div class="content">
 <div class="openblock">
-<div class="title">适用于 ONTAP 的 Azure</div>
+<div class="title">Azure 酒店</div>
 <div class="content">
 <div class="olist arabic">
 <div class="title">为 ONTAP 启用 Azure 密钥存储</div>
@@ -23621,47 +23621,14 @@
 <p>在 SVM 上启用 AKV <code>sSecurity key-manager external azure enable -client-id <em>client_id</em> -tenant-id <em>tenant_id</em> -name -key-id <em>key_id</em> -authentication-method ｛ certificate_client-secret ｝</code> 出现提示时，输入 Azure 帐户中的客户端证书或客户端密钥。</p>
 </li>
 <li>
-<p>验证是否已正确启用 AKV ： <code>security key-manager external azure show vserver <em>vserver_name</em></code> 如果服务可访问性不正常，请通过数据 Vserver LIF 与 AKV 密钥管理服务建立连接。</p>
+<p>验证是否已正确启用AKV：`security key-manager external azure show vserver <em>svm_name</em>`如果服务可访问性不正常、请通过数据SVM LIF与AKV密钥管理服务建立连接。</p>
 </li>
 </ol>
 </div>
 </div>
 </div>
 <div class="openblock">
-<div class="title">适用于 Cloud Volumes ONTAP 的 Azure</div>
-<div class="content">
-<div class="olist arabic">
-<div class="title">为 Cloud Volumes ONTAP 启用 Azure 密钥存储</div>
-<ol class="arabic">
-<li>
-<p>开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 <code>cluster show</code> 检查此问题。</p>
-</li>
-<li>
-<p>将权限级别设置为 advanced <code>set -priv advanced</code></p>
-</li>
-<li>
-<p>在 SVM 上启用 AKV <code>sSecurity key-manager external azure enable -client-id <em>client_id</em> -tenant-id <em>tenant_id</em> -name -key-id <em>key_id</em> -authentication-method ｛ certificate_client-secret ｝</code> 出现提示时，输入 Azure 帐户中的客户端证书或客户端密钥。</p>
-</li>
-<li>
-<p>为数据 SVM 设置 DNS ： <code>dns create -domain_domain_name_ -name-servers <em>server_address</em> -vserver <em>vserver_name</em></code></p>
-</li>
-<li>
-<p>转到 Azure 门户以获取包含您的密钥存储的订阅。选择 "* 访问策略 "* 菜单。为应用程序提供密钥权限，机密权限和证书权限，然后保存。</p>
-<div class="imageblock">
-<div class="content">
-<img src="../media/azure-key-vault-access-policies.png" alt="Azure 访问策略菜单，其中显示了必须提供的权限字段">
-</div>
-</div>
-</li>
-<li>
-<p>验证是否已正确启用 AKV ： <code>security key-manager external azure show vserver <em>vserver_name</em></code> 如果服务可访问性不正常，请通过数据 Vserver LIF 与 AKV 密钥管理服务建立连接。</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="openblock">
-<div class="title">适用于 ONTAP 的 Google Cloud</div>
+<div class="title">Google Cloud</div>
 <div class="content">
 <div class="olist arabic">
 <div class="title">使用适用于 ONTAP 的 CLI 启用云 KMS</div>
@@ -23676,7 +23643,7 @@
 <p>在 SVM <code>sSecurity key-manager 外部 GCP 上启用 Cloud KMS enable -vserver <em>data_svm_name</em> -project-id <em>project_id</em>-key-ring-name <em>key_ring_name</em> -key-ring-location <em>key_ring_location</em>-key-name <em>key_name</em></code> 出现提示时，输入 JSON 服务专用帐户的内容</p>
 </li>
 <li>
-<p>验证 Cloud KMS 是否配置了正确的参数： <code>security key-manager external gcp show vserver <em>vserver_name</em></code> 如果未创建加密卷，则状态 <code>kms_wrappered_key_status</code> will be ` "unknown"` if no encrypted volumes have been created_volumes 。如果服务可访问性不正常，请通过数据 Vserver LIF 与 GCP 密钥管理服务建立连接。</p>
+<p>验证Cloud KMS是否配置了正确的参数：<code>security key-manager external gcp show vserver <em>svm_name</em>`如果未创建加密卷、则状态`kms_wrappered_key_status</code> will be <code>"unknown"</code> if no encrypted volumes have been created_volumes。如果服务可访问性不正常、请通过数据SVM LIF与GCP密钥管理服务建立连接。</p>
 </li>
 </ol>
 </div>
@@ -23685,7 +23652,7 @@
 </div>
 </div>
 <div class="paragraph">
-<p>如果已为数据 Vserver 配置一个或多个加密卷，并且相应的 NVE 密钥由管理 Vserver 板载密钥管理器管理，则这些密钥应迁移到外部密钥管理服务。要使用 CLI 执行此操作，请运行： <code>security key-manager key migrate -from-vserver <em>admin_vserver</em>-to_vserver <em>data_vserver</em></code> 只有在成功迁移数据 SVM 的所有 NVE 密钥之后，才能为租户的数据 SVM 创建新的加密卷。</p>
+<p>如果已为数据SVM配置一个或多个加密卷、并且相应的NVE密钥由管理SVM板载密钥管理器管理、则这些密钥应迁移到外部密钥管理服务。要使用CLI执行此操作、请运行以下命令：`security key-manager key migrate -from-vserver <em>admin_svm</em>-to_vserver <em>data_svm</em>`只有在成功迁移数据SVM的所有NVE密钥之后、才能为租户的数据SVM创建新的加密卷。</p>
 </div>
 </div>
 </div>
