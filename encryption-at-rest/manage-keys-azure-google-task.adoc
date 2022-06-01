@@ -13,23 +13,23 @@ summary: 使用 Azure 密钥存储（ AKV ）简化对 ONTAP 加密密钥的保�
 
 从 ONTAP 9.10.1 开始，您可以使用 link:https://docs.microsoft.com/en-us/azure/key-vault/general/basic-concepts["Azure 密钥存储（ AKV ）"^] 和 link:https://cloud.google.com/kms/docs["Google Cloud Platform 的密钥管理服务（ Cloud KMS ）"^] 在部署了 Azure 或 Google 云平台的应用程序中保护 ONTAP 加密密钥。
 
-可以使用 AKV 和 Cloud KMS 进行保护 link:configure-netapp-volume-encryption-concept.html["NetApp 卷加密（ NVE ）密钥"] 仅适用于数据 SVM 。
+可以使用 AKV 和 Cloud KMS 进行保护 link:configure-netapp-volume-encryption-concept.html["NetApp 卷加密（ NVE ）密钥"] 仅适用于数据SVM。
 
 可以使用命令行界面或 ONTAP REST API 启用使用 AKV 或 Cloud KMS 的密钥管理。
 
-使用 AKV 或 Cloud KMS 时，请注意，默认情况下，数据 Vserver LIF 用于与云密钥管理端点进行通信。节点管理网络用于与云提供商的身份验证服务进行通信（适用于 Azure 的 login.microsoftonline.com ；适用于 Cloud KMS 的 oauth2.googleapis.com ）。如果集群网络配置不正确，集群将无法正确利用密钥管理服务。
+使用AKV或Cloud KMS时、请注意、默认情况下、数据SVM LIF用于与云密钥管理端点进行通信。节点管理网络用于与云提供商的身份验证服务进行通信（适用于 Azure 的 login.microsoftonline.com ；适用于 Cloud KMS 的 oauth2.googleapis.com ）。如果集群网络配置不正确，集群将无法正确利用密钥管理服务。
 
 .前提条件
 * ONTAP 集群的节点必须支持 NVE
 * 已安装卷加密（ VE ）许可证
 * 已安装多租户加密密钥管理（ MTEKM ）许可证
-* 您必须是集群或 SVM 管理员
+* 您必须是集群管理员或SVM管理员
 
 
 .限制
 * NSE 和 NAE 不支持 AKV 和 Cloud KMS 。 link:enable-external-key-management-96-later-nve-task.html["外部 KMIP"] 可以改用
 * MetroCluster 配置不支持 AKV 和 Cloud KMS 。
-* 只能在数据 SVM 上配置 AKV 和 Cloud KMS
+* 只能在数据SVM上配置AKV和Cloud KMS
 
 
 
@@ -40,40 +40,25 @@ summary: 使用 Azure 密钥存储（ AKV ）简化对 ONTAP 加密密钥的保�
 
 [role="tabbed-block"]
 ====
-.适用于 ONTAP 的 Azure
+.Azure 酒店
 --
 .为 ONTAP 启用 Azure 密钥存储
 . 开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 `cluster show` 检查此问题。
 . 将权限级别设置为 advanced `set -priv advanced`
 . 在 SVM 上启用 AKV `sSecurity key-manager external azure enable -client-id _client_id_ -tenant-id _tenant_id_ -name -key-id _key_id_ -authentication-method ｛ certificate_client-secret ｝` 出现提示时，输入 Azure 帐户中的客户端证书或客户端密钥。
-. 验证是否已正确启用 AKV ： `security key-manager external azure show vserver _vserver_name_` 如果服务可访问性不正常，请通过数据 Vserver LIF 与 AKV 密钥管理服务建立连接。
+. 验证是否已正确启用AKV：`security key-manager external azure show vserver _svm_name_`如果服务可访问性不正常、请通过数据SVM LIF与AKV密钥管理服务建立连接。
 
 
 --
-.适用于 Cloud Volumes ONTAP 的 Azure
---
-.为 Cloud Volumes ONTAP 启用 Azure 密钥存储
-. 开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 `cluster show` 检查此问题。
-. 将权限级别设置为 advanced `set -priv advanced`
-. 在 SVM 上启用 AKV `sSecurity key-manager external azure enable -client-id _client_id_ -tenant-id _tenant_id_ -name -key-id _key_id_ -authentication-method ｛ certificate_client-secret ｝` 出现提示时，输入 Azure 帐户中的客户端证书或客户端密钥。
-. 为数据 SVM 设置 DNS ： `dns create -domain_domain_name_ -name-servers _server_address_ -vserver _vserver_name_`
-. 转到 Azure 门户以获取包含您的密钥存储的订阅。选择 "* 访问策略 "* 菜单。为应用程序提供密钥权限，机密权限和证书权限，然后保存。
-+
-image::azure-key-vault-access-policies.png[Azure 访问策略菜单，其中显示了必须提供的权限字段]
-
-. 验证是否已正确启用 AKV ： `security key-manager external azure show vserver _vserver_name_` 如果服务可访问性不正常，请通过数据 Vserver LIF 与 AKV 密钥管理服务建立连接。
-
-
---
-.适用于 ONTAP 的 Google Cloud
+.Google Cloud
 --
 .使用适用于 ONTAP 的 CLI 启用云 KMS
 . 开始之前，您需要以 JSON 格式获取 Google Cloud KMS 帐户密钥文件的专用密钥。您可以在 GCP 帐户中找到此信息。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 `cluster show` 检查此问题。
 . 将权限级别设置为 advanced `set -priv advanced`
 . 在 SVM `sSecurity key-manager 外部 GCP 上启用 Cloud KMS enable -vserver _data_svm_name_ -project-id _project_id_-key-ring-name _key_ring_name_ -key-ring-location _key_ring_location_-key-name _key_name_` 出现提示时，输入 JSON 服务专用帐户的内容
-. 验证 Cloud KMS 是否配置了正确的参数： `security key-manager external gcp show vserver _vserver_name_` 如果未创建加密卷，则状态 `kms_wrappered_key_status` will be ` "unknown"` if no encrypted volumes have been created_volumes 。如果服务可访问性不正常，请通过数据 Vserver LIF 与 GCP 密钥管理服务建立连接。
+. 验证Cloud KMS是否配置了正确的参数：`security key-manager external gcp show vserver _svm_name_`如果未创建加密卷、则状态`kms_wrappered_key_status` will be `"unknown"` if no encrypted volumes have been created_volumes。如果服务可访问性不正常、请通过数据SVM LIF与GCP密钥管理服务建立连接。
 
 
 --
 ====
-如果已为数据 Vserver 配置一个或多个加密卷，并且相应的 NVE 密钥由管理 Vserver 板载密钥管理器管理，则这些密钥应迁移到外部密钥管理服务。要使用 CLI 执行此操作，请运行： `security key-manager key migrate -from-vserver _admin_vserver_-to_vserver _data_vserver_` 只有在成功迁移数据 SVM 的所有 NVE 密钥之后，才能为租户的数据 SVM 创建新的加密卷。
+如果已为数据SVM配置一个或多个加密卷、并且相应的NVE密钥由管理SVM板载密钥管理器管理、则这些密钥应迁移到外部密钥管理服务。要使用CLI执行此操作、请运行以下命令：`security key-manager key migrate -from-vserver _admin_svm_-to_vserver _data_svm_`只有在成功迁移数据SVM的所有NVE密钥之后、才能为租户的数据SVM创建新的加密卷。
