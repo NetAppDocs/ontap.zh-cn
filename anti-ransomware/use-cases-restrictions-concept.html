@@ -23535,7 +23535,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-06-01 21:19:26 +0000">06/01/2022</time>
+    <time datetime="2022-06-08 17:12:12 +0000">06/08/2022</time>
     
   
 
@@ -23552,9 +23552,6 @@
 <div id="preamble">
 <div class="sectionbody">
 <div class="paragraph lead">
-<p>在当前版本中，勒索软件保护最适合 NAS 环境。未来版本将支持其他环境。</p>
-</div>
-<div class="paragraph">
 <p>ONTAP 平台支持：</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -23720,15 +23717,34 @@
 <div class="paragraph">
 <p>按吞吐量和峰值 IOPS 衡量，反勒索软件功能对系统性能的影响最小。反勒索软件功能的影响在很大程度上取决于卷工作负载。对于大多数典型或常见工作负载，建议使用以下配置限制：</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>如果工作负载为读取密集型或数据可以压缩，则每个节点的卷数不超过 50 个。</p>
-</li>
-<li>
-<p>如果工作负载的写入密集型工作负载无法压缩数据，则每个节点的卷数不超过 20 个。</p>
-</li>
-</ul>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 37.5%;">
+<col style="width: 25%;">
+<col style="width: 37.5%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">工作负载特征</th>
+<th class="tableblock halign-left valign-top">每个节点的建议卷限制</th>
+<th class="tableblock halign-left valign-top">超出每节点卷限制时性能下降传递：[*]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">读取密集型数据或数据可以压缩。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">150</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">最大IOPS的4%</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">写入密集型、无法压缩数据。</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">60</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">最大IOPS的10%</p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>密码：[*]无论添加的卷数是否超过建议的限制、系统性能均不会超过这些百分比。</p>
 </div>
 <div class="paragraph">
 <p>由于反勒索软件分析按优先顺序运行，因此随着受保护卷数量的增加，对每个卷运行分析的频率也会降低。</p>
