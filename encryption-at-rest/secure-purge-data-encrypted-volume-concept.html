@@ -1853,6 +1853,8 @@
 
 
 
+
+
         </li>
       </ul>
     
@@ -16800,7 +16802,7 @@
         <div class="na-navbar-padding"> 关于 CLI 命令的不同 shell （仅限集群管理员）</div>
       </a>
       <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/different-shells-cli-commands-concept.html">
-        About
+        概述
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/access-nodeshell-commands-options-clustershell-concept.html">
         访问 clustershell 中的 nodeshell 命令和选项
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/display-nodeshell-commands-task.html">
@@ -16846,10 +16848,12 @@
       </a></li></ul></li></ul></li><li class="subfolders "><a href="/zh-cn/ontap/system-admin/command-line-interface-concept.html">
         <div class="na-navbar-padding"> 使用 ONTAP 命令行界面</div>
       </a>
-      <ul><li class="subfolders "><a href="/zh-cn/ontap/system-admin/different-shells-cli-commands-concept.html">
+      <ul><li class="subfolders "><a href="#">
         <div class="na-navbar-padding"> 关于 CLI 命令的不同 shell （仅限集群管理员）</div>
       </a>
-      <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/access-nodeshell-commands-options-clustershell-concept.html">
+      <ul><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/different-shells-cli-commands-concept-cluster-admin.html">
+        概述
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/access-nodeshell-commands-options-clustershell-concept.html">
         访问 clustershell 中的 nodeshell 命令和选项
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/system-admin/display-nodeshell-commands-task.html">
         显示可用的 nodeshell 命令
@@ -22559,26 +22563,50 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-06-28 21:03:08 +0000">06/28/2022</time>
     
   
 
 
 </p>
 
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph lead">
 <p>从 ONTAP 9.4 开始，您可以使用安全清除功能无中断擦洗启用了 NVE 的卷上的数据。擦除加密卷上的数据可确保无法从物理介质恢复数据，例如，在 " <code>s占用，</code> " 的情况下，覆盖块时可能会留下数据跟踪，或者用于安全删除空出租户的数据。</p>
 </div>
 <div class="paragraph">
 <p>安全清除仅适用于启用了 NVE 的卷上先前删除的文件。您不能擦除未加密的卷。您必须使用 KMIP 服务器提供密钥，而不是板载密钥管理器。</p>
 </div>
-<div class="paragraph">
-<p>安全清除功能因 ONTAP 版本而异。</p>
 </div>
+</div>
+<div class="sect1">
+<h2 id="使用安全清除的注意事项">使用安全清除的注意事项</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p>在 ONTAP 9.8 及更高版本中：</p>
+<p>在为NetApp聚合加密(NAE)启用的聚合中创建的卷不支持安全清除。</p>
+</li>
+<li>
+<p>安全清除仅适用于启用了 NVE 的卷上先前删除的文件。</p>
+</li>
+<li>
+<p>您不能擦除未加密的卷。</p>
+</li>
+<li>
+<p>您必须使用 KMIP 服务器提供密钥，而不是板载密钥管理器。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>安全清除功能因 ONTAP 版本而异。</p>
+</div>
+<div class="exampleblock tabbed-block">
+<div class="content">
+<div class="openblock">
+<div class="title">ONTAP 9.8 及更高版本</div>
+<div class="content">
 <div class="ulist">
 <ul>
 <li>
@@ -22604,13 +22632,15 @@
 </div>
 </li>
 <li>
-<p>默认情况下， FlexVol 卷中的所有 Snapshot 副本都会在安全清除操作期间自动删除。默认情况下，在安全清除操作期间，不会自动删除使用 SnapMirror 数据保护的 FlexGroup 卷和卷中的快照。可以使用 <code>spurge delete-all-snapshots [true|false]</code> 更改这些默认值。命令：</p>
+<p>默认情况下， FlexVol 卷中的所有 Snapshot 副本都会在安全清除操作期间自动删除。默认情况下，在安全清除操作期间，不会自动删除使用 SnapMirror 数据保护的 FlexGroup 卷和卷中的快照。可以使用`secure purge delete-all-snapshots [true|false]`命令更改这些默认值。</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p>在 ONTAP 9.7 及更早版本中：</p>
+</div>
+</div>
+<div class="openblock">
+<div class="title">ONTAP 9.7及更早版本：</div>
+<div class="content">
 <div class="ulist">
 <ul>
 <li>
@@ -22635,9 +22665,6 @@
 <p>如果卷中的 Snapshot 副本繁忙，则必须先释放 Snapshot 副本，然后才能清除卷。例如，您可能需要将 FlexClone 卷从其父卷拆分。</p>
 </div>
 </li>
-</ul>
-</div>
-</li>
 <li>
 <p>成功调用安全清除功能将触发卷移动，以便使用新密钥重新加密其余未清除的数据。</p>
 <div class="paragraph">
@@ -22645,6 +22672,12 @@
 </div>
 </li>
 </ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
     </article>
