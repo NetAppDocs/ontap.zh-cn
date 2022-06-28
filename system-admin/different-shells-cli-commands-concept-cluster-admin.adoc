@@ -1,0 +1,34 @@
+---
+permalink: system-admin/different-shells-cli-commands-concept-cluster-admin.html 
+sidebar: sidebar 
+keywords: diag, secd, different, shells, cli, commands, cluster, administrators, clustershell, nodeshell, systemshell 
+summary: 集群为 CLI 命令提供了三种不同的 shell ： clustershell ， nodeshell 和 systemshell 。这些 shell 的用途各不相同，它们各自具有不同的命令集。 
+---
+= 关于 CLI 命令的不同 shell 概述（仅限集群管理员）
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+集群为 CLI 命令提供了三种不同的 shell ： _clustershell_ ， _nodeshell_ 和 _systemshell_ 。这些 shell 的用途各不相同，它们各自具有不同的命令集。
+
+* clustershell 是在登录到集群时自动启动的原生 shell 。
++
+它提供了配置和管理集群所需的所有命令。clustershell CLI 帮助（由 ` ？` 触发 在 clustershell 提示符处）显示可用的 clustershell 命令。clustershell 中的 `man _command_name_` 命令可显示指定 clustershell 命令的手册页。
+
+* nodeshell 是一个专用 shell ，用于仅在节点级别生效的命令。
++
+可以通过 `ssystem node run` 命令访问 nodeshell 。
+
++
+nodeshell CLI 帮助（由 ` ？` 触发 或 `help` 在 nodeshell 提示符处）显示可用的 nodeshell 命令。nodeshell 中的 `man _command_name_` 命令将显示指定 nodeshell 命令的手册页。
+
++
+许多常用的 nodeshell 命令和选项会通过通道连接到 clustershell 或以别名方式连接到 clustershell ，也可以从 clustershell 执行。
+
+* systemshell 是一种低级 Shell ，仅用于诊断和故障排除目的。
++
+systemshell 和关联的 `dIAG` 帐户用于低级别诊断。其访问权限需要诊断权限级别，并且仅供技术支持执行故障排除任务时使用。
+
+
