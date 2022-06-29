@@ -26,6 +26,7 @@ summary: 通过查看卷中处于非活动状态的数据量，您可以充分�
 ** Flash Pool （混合聚合或 SnapLock 聚合）
 
 
+* 默认情况下、在任何卷启用了自适应数据压缩的聚合上启用非活动数据报告。
 * 默认情况下， ONTAP 9.6 中的所有 SSD 聚合都会启用非活动数据报告。
 * 在 ONTAP 9.4 和 ONTAP 9.5 中， FabricPool 聚合默认启用非活动数据报告。
 * 从 ONTAP 9.6 开始，您可以使用 ONTAP 命令行界面对非 FabricPool 聚合启用非活动数据报告，包括 HDD 聚合。
@@ -64,19 +65,20 @@ vs1     vv2    10.38MB                             0%
 +
 ** `performance-tier-inactive-user-data` 字段可显示聚合中存储的非活动用户数据量。
 ** `performance-tier-inactive-user-data-percent` 字段显示活动文件系统和 Snapshot 副本中处于非活动状态的数据百分比。
-** 对于未用于 FabricPool 的聚合，在为 ONTAP 启用非活动数据报告之后需要 31 天才能显示整个卷的非活动数据，而不管是否已设置分层策略或分层策略是什么。
+** 对于不用于FabricPool 的聚合、非活动数据报告使用分层策略确定要报告为冷数据的数据量。
++
+*** 对于`none`分层策略、使用31天。
+*** 对于`snapshot-only`和`auto`、非活动数据报告使用`tiering-minimum-cooling-days`。
+*** 对于`All`策略、非活动数据报告假定数据将在一天内分层。
 +
 在达到此时间段之前，输出将显示非活动数据量 "` -` " ，而不是值。
 
+
+
 ** 在属于 FabricPool 的卷上， ONTAP 报告为非活动的内容取决于在卷上设置的分层策略。
 +
-*** 对于 `auto` tiering 策略， ONTAP 会在 `volume create` 或 `volume modify` 命令的高级权限级别中报告由 ` tiering-minimum-cooling-days` 参数指定的时间段内整个卷的非活动量。
-+
-如果未为 ` -tiering-minimum-cooling-days` 设置任何值，则 ONTAP 将使用默认值（ 31 天）。
-
-*** 对于 `snapshot-only` 分层策略， ONTAP 会报告至少 31 天处于非活动状态的活动文件系统数量。
 *** 对于 `none` 分层策略， ONTAP 会报告至少 31 天处于非活动状态的整个卷的数量。您不能将 ` -tiering-minimum-cooling-days` 参数与 `none` 分层策略结合使用。
-*** 对于 `所有` 分层策略，不支持非活动数据报告。
+*** 对于`所有`分层策略、不支持非活动数据报告。
 
 
 
