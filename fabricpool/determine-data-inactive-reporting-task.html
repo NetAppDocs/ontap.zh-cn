@@ -22563,7 +22563,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-06-30 01:38:14 +0000">06/30/2022</time>
     
   
 
@@ -22597,6 +22597,9 @@
 </li>
 </ul>
 </div>
+</li>
+<li>
+<p>默认情况下、在任何卷启用了自适应数据压缩的聚合上启用非活动数据报告。</p>
 </li>
 <li>
 <p>默认情况下， ONTAP 9.6 中的所有 SSD 聚合都会启用非活动数据报告。</p>
@@ -22653,9 +22656,22 @@ vs1     vv2    10.38MB                             0%
 <p><code>performance-tier-inactive-user-data-percent</code> 字段显示活动文件系统和 Snapshot 副本中处于非活动状态的数据百分比。</p>
 </li>
 <li>
-<p>对于未用于 FabricPool 的聚合，在为 ONTAP 启用非活动数据报告之后需要 31 天才能显示整个卷的非活动数据，而不管是否已设置分层策略或分层策略是什么。</p>
+<p>对于不用于FabricPool 的聚合、非活动数据报告使用分层策略确定要报告为冷数据的数据量。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>对于`none`分层策略、使用31天。</p>
+</li>
+<li>
+<p>对于`snapshot-only`和`auto`、非活动数据报告使用`tiering-minimum-cooling-days`。</p>
+</li>
+<li>
+<p>对于`All`策略、非活动数据报告假定数据将在一天内分层。</p>
 <div class="paragraph">
 <p>在达到此时间段之前，输出将显示非活动数据量 "` -` " ，而不是值。</p>
+</div>
+</li>
+</ul>
 </div>
 </li>
 <li>
@@ -22663,19 +22679,10 @@ vs1     vv2    10.38MB                             0%
 <div class="ulist">
 <ul>
 <li>
-<p>对于 <code>auto</code> tiering 策略， ONTAP 会在 <code>volume create</code> 或 <code>volume modify</code> 命令的高级权限级别中报告由 ` tiering-minimum-cooling-days` 参数指定的时间段内整个卷的非活动量。</p>
-<div class="paragraph">
-<p>如果未为 ` -tiering-minimum-cooling-days` 设置任何值，则 ONTAP 将使用默认值（ 31 天）。</p>
-</div>
-</li>
-<li>
-<p>对于 <code>snapshot-only</code> 分层策略， ONTAP 会报告至少 31 天处于非活动状态的活动文件系统数量。</p>
-</li>
-<li>
 <p>对于 <code>none</code> 分层策略， ONTAP 会报告至少 31 天处于非活动状态的整个卷的数量。您不能将 ` -tiering-minimum-cooling-days` 参数与 <code>none</code> 分层策略结合使用。</p>
 </li>
 <li>
-<p>对于 <code>所有</code> 分层策略，不支持非活动数据报告。</p>
+<p>对于`所有`分层策略、不支持非活动数据报告。</p>
 </li>
 </ul>
 </div>
