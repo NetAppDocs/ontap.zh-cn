@@ -9,14 +9,14 @@
   <meta property="og:title" content="可访问 SP 的帐户" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/system-admin/accounts-access-sp-concept.html" />
-	<meta property="og:description" content="尝试访问 SP 时，系统会提示您提供凭据。使用 service-processor 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。" />
+	<meta property="og:description" content="尝试访问 SP 时，系统会提示您提供凭据。使用 service-processor 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。从ONTAP 9.1.1开始、SP用户帐户必须具有管理员角色。" />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="encoding" content="utf-8">
   <meta http-equiv="nss-type" content="Product Documentation"/>
-  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="尝试访问 SP 时，系统会提示您提供凭据。使用 service-processor 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。">
+  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="尝试访问 SP 时，系统会提示您提供凭据。使用 service-processor 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。从ONTAP 9.1.1开始、SP用户帐户必须具有管理员角色。">
   <meta name="keywords" content=" account, access, sp, cluster, user, cli, node"><!-- Icons -->
   <link rel="icon" href="/zh-cn/ontap/images/favicon.ico" type="image/x-icon">
 
@@ -1287,6 +1287,8 @@
 
 
 
+
+
         </li>
       </ul>
     
@@ -1453,6 +1455,8 @@
             还原集群后应执行什么操作？
           </a>
           
+
+
 
 
 
@@ -10411,8 +10415,6 @@
 
 
 
-
-
         </li>
       </ul>
     
@@ -16649,6 +16651,8 @@
         为 NFS 客户端设置所需的 NT ACL 权限显示级别
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/upgrade/task_enforcing_sha_2_on_user_account_passwords_dot_9_0_upgrade_guide.html">
         对管理员密码强制执行 SHA-2
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/upgrade/sp-user-accounts-change-concept.html">
+        可访问服务处理器的用户帐户的更改
       </a></li></ul></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/upgrade/concept_when_you_need_to_update_the_disk_qualification_package.html">
         更新 DQP
       </a></li></ul></li></ul></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_admin_update_firmware.html">
@@ -16724,6 +16728,8 @@
         还原密码哈希函数
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/concept_support_of_sp_firmware_automatic_revert.html">
         自动更新 SP 固件
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/verify-sp-user-accounts-task.html">
+        验证可访问服务处理器的用户帐户
       </a></li></ul></li></ul></li></ul></li><li class="subfolders "><a href="/zh-cn/ontap/cluster-admin/index.html">
         <div class="na-navbar-padding"> 集群管理</div>
       </a>
@@ -20264,8 +20270,6 @@
         解决存储系统上的 iSCSI 错误消息
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-admin/troubleshoot-iscsi-luns-not-visible-reference.html">
         对主机上不可见的 iSCSI LUN 进行故障排除
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-admin/asa-iscsi-lif-fo-task.html">
-        适用于ASA 平台的iSCSI LIF故障转移
       </a></li></ul></li><li class="subfolders "><a href="#">
         <div class="na-navbar-padding"> 管理 FC 协议</div>
       </a>
@@ -22563,7 +22567,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-07-01 01:42:09 +0000">07/01/2022</time>
     
   
 
@@ -22571,10 +22575,33 @@
 </p>
 
 <div class="paragraph lead">
-<p>尝试访问 SP 时，系统会提示您提供凭据。使用 <code>sservice-processor</code> 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。</p>
+<p>尝试访问 SP 时，系统会提示您提供凭据。使用 <code>sservice-processor</code> 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。从ONTAP 9.1.1开始、SP用户帐户必须具有`admin`角色。</p>
 </div>
 <div class="paragraph">
-<p>用于访问 SP 的用户帐户通过 ONTAP 而不是 SP 命令行界面进行管理。如果在创建 SP 时将 <code>ssecurity login create</code> 命令的 ` 应用程序` 参数设置为 <code>sservice-processor</code> 且将 ` -authmethod` 参数设置为 <code>password</code> ，则任何角色的集群用户帐户均可访问 SP 。SP 仅支持密码身份验证。</p>
+<p>用于访问 SP 的用户帐户通过 ONTAP 而不是 SP 命令行界面进行管理。如果在创建`ssecurity login create`命令的`-application`参数设置为`sservice-processor`且`-authmethod`参数设置为`password`的情况下、集群用户帐户可以访问SP。SP 仅支持密码身份验证。</p>
+</div>
+<div class="paragraph">
+<p>创建SP用户帐户时、必须指定`-role`参数。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>在ONTAP 9.9.1及更高版本中、您必须为`-role`参数指定`admin`、并且对帐户进行的任何修改都需要`admin`角色。出于安全原因、不再允许使用其他角色。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>如果要升级到ONTAP 9.9.1或更高版本、请参见 <a href="../upgrade/sp-user-accounts-change-concept.html">"可访问服务处理器的用户帐户的更改"</a>。</p>
+</li>
+<li>
+<p>如果要还原到ONTAP 9.8或更早版本、请参见 <a href="../revert/verify-sp-user-accounts-task.html">"验证可访问服务处理器的用户帐户"</a>。</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>在ONTAP 9.8及更早版本中、任何角色均可访问SP、但建议使用`admin`。</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>默认情况下，名为 "`admin` " 的集群用户帐户包含 <code>sservice-processor</code> 应用程序类型，并可访问 SP 。</p>

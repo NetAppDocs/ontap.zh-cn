@@ -1287,6 +1287,8 @@
 
 
 
+
+
         </li>
       </ul>
     
@@ -1453,6 +1455,8 @@
             还原集群后应执行什么操作？
           </a>
           
+
+
 
 
 
@@ -10411,8 +10415,6 @@
 
 
 
-
-
         </li>
       </ul>
     
@@ -16649,6 +16651,8 @@
         为 NFS 客户端设置所需的 NT ACL 权限显示级别
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/upgrade/task_enforcing_sha_2_on_user_account_passwords_dot_9_0_upgrade_guide.html">
         对管理员密码强制执行 SHA-2
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/upgrade/sp-user-accounts-change-concept.html">
+        可访问服务处理器的用户帐户的更改
       </a></li></ul></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/upgrade/concept_when_you_need_to_update_the_disk_qualification_package.html">
         更新 DQP
       </a></li></ul></li></ul></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/task_admin_update_firmware.html">
@@ -16724,6 +16728,8 @@
         还原密码哈希函数
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/concept_support_of_sp_firmware_automatic_revert.html">
         自动更新 SP 固件
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/revert/verify-sp-user-accounts-task.html">
+        验证可访问服务处理器的用户帐户
       </a></li></ul></li></ul></li></ul></li><li class="subfolders "><a href="/zh-cn/ontap/cluster-admin/index.html">
         <div class="na-navbar-padding"> 集群管理</div>
       </a>
@@ -20264,8 +20270,6 @@
         解决存储系统上的 iSCSI 错误消息
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-admin/troubleshoot-iscsi-luns-not-visible-reference.html">
         对主机上不可见的 iSCSI LUN 进行故障排除
-      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/san-admin/asa-iscsi-lif-fo-task.html">
-        适用于ASA 平台的iSCSI LIF故障转移
       </a></li></ul></li><li class="subfolders "><a href="#">
         <div class="na-navbar-padding"> 管理 FC 协议</div>
       </a>
@@ -22563,7 +22567,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-07-01 01:42:09 +0000">07/01/2022</time>
     
   
 
@@ -22591,10 +22595,21 @@
 <p>从 SnapMirror 目标重新同步 FlexGroup 级别的 SnapMirror 关系： <code>snapmirror resync</code></p>
 </li>
 <li>
-<p>创建 FlexGroup SVM DR SnapMirror 关系： <code>snapmirror create -policy dPDefault -identity-preserve true -destination-path dest_sVM ： dest_flexgroup -source-path src_sVM ： src_flexgroup</code></p>
+<p>创建FlexGroup SVM DR SnapMirror关系。使用在FlexGroup 卷SnapMirror关系上配置的相同SnapMirror策略：<code>snapmirror create -destination-path dest_SVM：-source-path src_SVM：-identity-preserve true -policy MirrorAllSnapshots</code></p>
 </li>
+</ol>
+</div>
+<div class="exampleblock">
+<div class="content">
+<div class="paragraph">
+<p>创建复制关系时，您必须使用 <code>snapmirror create</code> 命令的 ` -identity-preserve true` 选项。</p>
+</div>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>验证此关系是否已断开： <code>snapmirror show -destination-path dest_svm ： dest_flexgroup -source-path src_svm ： src_flexgroup</code></p>
+<p>验证此关系是否已断开：<code>snapmirror show -destination-path dest_svm：-source-path src_svm：</code></p>
 <div class="listingblock">
 <div class="content">
 <pre>snapmirror show -destination-path fg_vs_renamed: -source-path fg_vs:
@@ -22619,7 +22634,7 @@ fg_vs:        XDP  fg_vs1_renamed:     Broken-off
 </div>
 </li>
 <li>
-<p>重新同步 SVM SnapMirror 关系： <code>snapmirror resync -destination-path dest_sVM ： dest_flexgroup -source-path src_sVM ： src_flexgroup</code></p>
+<p>重新同步SVM SnapMirror关系：<code>snapmirror resync -destination-path dest_svm：-source-path src_svm：</code></p>
 <div class="listingblock">
 <div class="content">
 <pre>snapmirror resync -destination-path fg_vs_renamed: -source-path fg_vs:
