@@ -2,7 +2,7 @@
 permalink: system-admin/accounts-access-sp-concept.html 
 sidebar: sidebar 
 keywords: account, access, sp, cluster, user, cli, node 
-summary: 尝试访问 SP 时，系统会提示您提供凭据。使用 service-processor 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。 
+summary: 尝试访问 SP 时，系统会提示您提供凭据。使用 service-processor 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。从ONTAP 9.1.1开始、SP用户帐户必须具有管理员角色。 
 ---
 = 可访问 SP 的帐户
 :allow-uri-read: 
@@ -11,9 +11,20 @@ summary: 尝试访问 SP 时，系统会提示您提供凭据。使用 service-p
 
 
 [role="lead"]
-尝试访问 SP 时，系统会提示您提供凭据。使用 `sservice-processor` 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。
+尝试访问 SP 时，系统会提示您提供凭据。使用 `sservice-processor` 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。从ONTAP 9.1.1开始、SP用户帐户必须具有`admin`角色。
 
-用于访问 SP 的用户帐户通过 ONTAP 而不是 SP 命令行界面进行管理。如果在创建 SP 时将 `ssecurity login create` 命令的 ` 应用程序` 参数设置为 `sservice-processor` 且将 ` -authmethod` 参数设置为 `password` ，则任何角色的集群用户帐户均可访问 SP 。SP 仅支持密码身份验证。
+用于访问 SP 的用户帐户通过 ONTAP 而不是 SP 命令行界面进行管理。如果在创建`ssecurity login create`命令的`-application`参数设置为`sservice-processor`且`-authmethod`参数设置为`password`的情况下、集群用户帐户可以访问SP。SP 仅支持密码身份验证。
+
+创建SP用户帐户时、必须指定`-role`参数。
+
+* 在ONTAP 9.9.1及更高版本中、您必须为`-role`参数指定`admin`、并且对帐户进行的任何修改都需要`admin`角色。出于安全原因、不再允许使用其他角色。
++
+** 如果要升级到ONTAP 9.9.1或更高版本、请参见 link:../upgrade/sp-user-accounts-change-concept.html["可访问服务处理器的用户帐户的更改"]。
+** 如果要还原到ONTAP 9.8或更早版本、请参见 link:../revert/verify-sp-user-accounts-task.html["验证可访问服务处理器的用户帐户"]。
+
+
+* 在ONTAP 9.8及更早版本中、任何角色均可访问SP、但建议使用`admin`。
+
 
 默认情况下，名为 "`admin` " 的集群用户帐户包含 `sservice-processor` 应用程序类型，并可访问 SP 。
 

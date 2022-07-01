@@ -20,8 +20,14 @@ summary: 您可以通过过渡现有的 FlexGroup 卷 SnapMirror 关系来创建
 
 .步骤
 . 从 SnapMirror 目标重新同步 FlexGroup 级别的 SnapMirror 关系： `snapmirror resync`
-. 创建 FlexGroup SVM DR SnapMirror 关系： `snapmirror create -policy dPDefault -identity-preserve true -destination-path dest_sVM ： dest_flexgroup -source-path src_sVM ： src_flexgroup`
-. 验证此关系是否已断开： `snapmirror show -destination-path dest_svm ： dest_flexgroup -source-path src_svm ： src_flexgroup`
+. 创建FlexGroup SVM DR SnapMirror关系。使用在FlexGroup 卷SnapMirror关系上配置的相同SnapMirror策略：`snapmirror create -destination-path dest_SVM：-source-path src_SVM：-identity-preserve true -policy MirrorAllSnapshots`
+
+
+====
+创建复制关系时，您必须使用 `snapmirror create` 命令的 ` -identity-preserve true` 选项。
+
+====
+. 验证此关系是否已断开：`snapmirror show -destination-path dest_svm：-source-path src_svm：`
 +
 [listing]
 ----
@@ -42,7 +48,7 @@ vserver stop -vserver fg_vs_renamed
 [Job 245] Job is queued: Vserver Stop fg_vs_renamed.
 [Job 245] Done
 ----
-. 重新同步 SVM SnapMirror 关系： `snapmirror resync -destination-path dest_sVM ： dest_flexgroup -source-path src_sVM ： src_flexgroup`
+. 重新同步SVM SnapMirror关系：`snapmirror resync -destination-path dest_svm：-source-path src_svm：`
 +
 [listing]
 ----

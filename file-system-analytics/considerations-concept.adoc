@@ -37,8 +37,6 @@ ONTAP System Manager 可提供 xref:../concept_cluster_performance_overview.adoc
 
 如果您是 System Manager 或 ONTAP REST API 的用户 xref:../concepts/administrator-authentication-rbac-concept.html[RBAC] 在您的 ONTAP 设置中，您需要创建一个专用角色来控制对文件系统分析中活动跟踪的访问权限。
 
-高级别 1 。创建一个可访问所有的角色接受 "volume file show-disk-usage" 命令目录 2.为新角色创建 Web 访问 3.创建具有新角色的用户 4.登录到 System Manager 或使用新用户进行 REST 调用
-
 .控制对活动跟踪的访问
 . 创建一个默认角色以访问所有功能。在创建限制性角色之前需要执行此操作，以确保此角色仅对活动跟踪具有限制性：
 +
@@ -64,4 +62,5 @@ vserver services web access create -vserver _svm-name_ -name REST -role storageA
 +
 `ssecurity login create -user-or-group-name storageUser -authentication-method password -application http -role storageAdmin`
 
+. 现在、您可以使用新的用户凭据登录到System Manager或使用ONTAP REST API访问文件系统分析数据。
 
