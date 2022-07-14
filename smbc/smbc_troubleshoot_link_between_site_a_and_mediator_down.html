@@ -22569,7 +22569,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-04-15 14:36:52 +0000">04/15/2022</time>
+    <time datetime="2022-07-14 02:29:28 +0000">07/14/2022</time>
     
   
 
@@ -22579,85 +22579,39 @@
 <div class="paragraph lead">
 <p>使用 SM-BC 时，调解器或对等集群之间的连接可能会断开。您可以通过检查 SM-BC 关系不同部分的连接，可用性和协商一致状态，然后强制恢复连接来诊断问题描述 。</p>
 </div>
-<div class="paragraph">
-<p>使用 <code>snapmirror mediator show</code> 命令从站点 A 检查调解器的状态。</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>C1_cluster::*&gt; snapmirror mediator show
-Mediator Address Peer Cluster     Connection Status Quorum Status
----------------- ---------------- ----------------- -------------
-10.237.86.17     C2_cluster       unreachable       true
-
-C1_cluster::*&gt; snapmirror list-destinations
-                                                  Progress
-Source             Destination         Transfer   Last         Relationship
-Path         Type  Path         Status Progress   Updated      Id
------------ ----- ------------ ------- --------- ------------ ---------------
-vs0:/cg/src_cg_1  XDP   vs1:/cg/dst_cg_1  OutOfSync  -         -            bba7d354-06f6-11eb-9138-005056acec19</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>使用 <code>cluster peer show</code> 命令检查站点 B 的连接：</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>C1_sti78-vsim-ucs188a_cluster::*&gt; cluster peer show
-Peer Cluster Name         Cluster Serial Number Availability   Authentication
-------------------------- --------------------- -------------- --------------
-C2_cluster                1-80-000011           Unavailable    ok</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>使用命令 <code>volume show <em>volume_name</em> -fields smbc-consensus</code> 检查 SM-BC 卷上的协商一致状态：</p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>C1_cluster::*&gt; volume show zrto_cg_894191_188b_RW1 -fields smbc-consensus
-vserver volume                  smbc-consensus
-------- ----------------------- ------------------
-vs0     zrto_cg_894191_188b_RW1 Awaiting-consensus</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>完成以下步骤以覆盖 SM-BC 共识并强制恢复站点 A 上的 I/O ：</p>
-</div>
-<div class="admonitionblock note">
-<table>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
 <tr>
-<td class="icon">
-<img src="/us-en/ontap/images/note.svg" alt="注">
-</td>
-<td class="content">
-此解决方案 使用 <code>dIAG</code> 级别的命令，您需要联系 NetApp 支持部门。
-</td>
+<th class="tableblock halign-left valign-top">要检查的内容</th>
+<th class="tableblock halign-left valign-top">CLI 命令</th>
+<th class="tableblock halign-left valign-top">指示符</th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">来自站点A的调解器</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>snapmirror mediator show</code> …</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">连接状态将为`unreachable`</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">站点B连接</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>cluster peer show</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">可用性将为`不可用`</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SM-BC卷的协商一致状态</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>volume show <em>volume_name</em>-fields smbc-consensus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sm-bc Consensus`字段将显示`awaiting -consensus</code></p></td>
+</tr>
+</tbody>
 </table>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>取消映射站点 A 上的 LUN</p>
-</li>
-<li>
-<p>在站点 A 上使用 ` -force` 和 <code>override-smbc-consenson</code> 选项对 <code>snapmirror release</code> 命令执行问题描述</p>
-</li>
-<li>
-<p>重新映射 LUN 。</p>
-</li>
-<li>
-<p>首先，启动调解器，然后启动站点 B 节点。</p>
-</li>
-<li>
-<p>使用 <code>snapmirror resync</code> 重新同步一致性组关系。</p>
-</li>
-<li>
-<p>站点 B 启动后，验证一致性组关系是否已启动且处于同步状态。</p>
-</li>
-<li>
-<p>在主机上执行 LUN 重新扫描，以还原 LUN 的所有路径。</p>
-</li>
-</ol>
+<div class="paragraph">
+<p>有关追加信息 有关诊断和解决此问题描述 的信息、请参阅知识库文章 <a href="https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Link_between_Site_A_and_Mediator_down_and_Site_B_down_when_using_SM-BC" target="_blank" rel="noopener">"使用SM-BC时、站点A和调解器之间的链路关闭、站点B关闭"</a>。</p>
 </div>
 
     </article>
