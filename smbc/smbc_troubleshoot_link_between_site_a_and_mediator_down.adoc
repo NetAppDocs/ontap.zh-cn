@@ -16,47 +16,17 @@ summary: 对站点 A 和调解器关闭以及站点 B 关闭之间的链路故�
 [role="lead"]
 使用 SM-BC 时，调解器或对等集群之间的连接可能会断开。您可以通过检查 SM-BC 关系不同部分的连接，可用性和协商一致状态，然后强制恢复连接来诊断问题描述 。
 
-使用 `snapmirror mediator show` 命令从站点 A 检查调解器的状态。
-
-....
-C1_cluster::*> snapmirror mediator show
-Mediator Address Peer Cluster     Connection Status Quorum Status
----------------- ---------------- ----------------- -------------
-10.237.86.17     C2_cluster       unreachable       true
-
-C1_cluster::*> snapmirror list-destinations
-                                                  Progress
-Source             Destination         Transfer   Last         Relationship
-Path         Type  Path         Status Progress   Updated      Id
------------ ----- ------------ ------- --------- ------------ ---------------
-vs0:/cg/src_cg_1  XDP   vs1:/cg/dst_cg_1  OutOfSync  -         -            bba7d354-06f6-11eb-9138-005056acec19
-....
-使用 `cluster peer show` 命令检查站点 B 的连接：
-
-....
-C1_sti78-vsim-ucs188a_cluster::*> cluster peer show
-Peer Cluster Name         Cluster Serial Number Availability   Authentication
-------------------------- --------------------- -------------- --------------
-C2_cluster                1-80-000011           Unavailable    ok
-....
-使用命令 `volume show _volume_name_ -fields smbc-consensus` 检查 SM-BC 卷上的协商一致状态：
-
-....
-C1_cluster::*> volume show zrto_cg_894191_188b_RW1 -fields smbc-consensus
-vserver volume                  smbc-consensus
-------- ----------------------- ------------------
-vs0     zrto_cg_894191_188b_RW1 Awaiting-consensus
-....
-完成以下步骤以覆盖 SM-BC 共识并强制恢复站点 A 上的 I/O ：
+[cols="3"]
+|===
+| 要检查的内容 | CLI 命令 | 指示符 
 
 
-NOTE: 此解决方案 使用 `dIAG` 级别的命令，您需要联系 NetApp 支持部门。
+| 来自站点A的调解器 | `snapmirror mediator show` … | 连接状态将为`unreachable` 
 
-. 取消映射站点 A 上的 LUN
-. 在站点 A 上使用 ` -force` 和 `override-smbc-consenson` 选项对 `snapmirror release` 命令执行问题描述
-. 重新映射 LUN 。
-. 首先，启动调解器，然后启动站点 B 节点。
-. 使用 `snapmirror resync` 重新同步一致性组关系。
-. 站点 B 启动后，验证一致性组关系是否已启动且处于同步状态。
-. 在主机上执行 LUN 重新扫描，以还原 LUN 的所有路径。
 
+| 站点B连接 | `cluster peer show` | 可用性将为`不可用` 
+
+
+| SM-BC卷的协商一致状态 | `volume show _volume_name_-fields smbc-consensus` | `sm-bc Consensus`字段将显示`awaiting -consensus` 
+|===
+有关追加信息 有关诊断和解决此问题描述 的信息、请参阅知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Link_between_Site_A_and_Mediator_down_and_Site_B_down_when_using_SM-BC["使用SM-BC时、站点A和调解器之间的链路关闭、站点B关闭"^]。
