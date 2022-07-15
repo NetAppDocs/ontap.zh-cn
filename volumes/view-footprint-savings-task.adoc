@@ -1,0 +1,49 @@
+---
+permalink: volumes/view-footprint-savings-task.html 
+sidebar: sidebar 
+keywords: view, temperature, sensitive, storage, efficiency, footprint, savings, volume 
+summary: 从ONTAP 9.11.1开始、在卷上设置了对温度敏感的存储效率后、您可以查看节省的物理占用空间。 
+---
+= 查看对温度敏感的存储效率节省的物理占用空间
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.11.1开始、在卷上设置了对温度敏感的存储效率后、您可以查看节省的物理占用空间。
+
+.步骤
+. 查看对温度敏感的存储效率占用空间：
++
+`卷显示占用空间`
+
++
+在以下示例中、启用了对温度敏感的存储效率后、"占用空间数据减少"和"自动自适应数据压缩"将显示占用空间减少或节省情况。
+
++
+[listing]
+----
+*> volume show-footprint <vol>
+
+      Vserver : vs0
+      Volume  : vol1
+
+      Feature                                         Used       Used%
+      --------------------------------             ----------    -----
+      Volume Data Footprint                            4.61MB       0%
+      Volume Guarantee                                     0B       0%
+      Flexible Volume Metadata                          208KB       0%
+      Deduplication Metadata                            156KB       0%
+           Deduplication                                 80KB       0%
+           Temporary Deduplication                       72KB       0%
+           Cross Volume Deduplication                     4KB       0%
+      Delayed Frees                                     116KB       0%
+
+      Total Footprint                                  5.07MB       0%
+
+      Footprint Data Reduction                           40KB       0%
+           Auto Adaptive Compression                     40KB       0%
+      Effective Total Footprint                        5.04MB       0%
+----
+

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: smbc/smbc_plan_additional_restrictions_and_limitations.html 
-keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris 
+keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix 
 summary: 使用 SnapMirror Business Continuity 解决方案时，还存在一些其他限制和限制。 
 ---
 = 其他限制和限制
@@ -100,6 +100,16 @@ SM-BC 卷不支持 NTFS 安全模式。
 支持 SM-BC xref:../data-protection/supported-deployment-config-concept.html[扇出配置] 使用`MirrorAllSnapshots`策略、从ONTAP 9.11.1开始、使用`MirrorAndVault`策略。`XDPDefault`策略不支持扇出配置。
 
 如果在扇出配置中的SM-BC目标发生故障转移、则必须手动执行 xref:resume-protection-fan-out-configuration.html[在扇出配置中恢复保护]。
+
+
+
+== AIX
+
+从ONTAP 9.11.1开始、SM-BC支持AIX。在AIX配置中、主集群是"活动"集群。
+
+在AIX配置中、故障转移会造成中断。每次故障转移时、您都需要在主机上执行重新扫描、才能恢复I/O操作。
+
+要使用SM-BC为AIX主机配置、请参阅知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_configure_an_AIX_host_for_SnapMirror_Business_Continuity_(SM-BC)["如何为SnapMirror业务连续性(SM-BC)配置AIX主机"]。
 
 
 

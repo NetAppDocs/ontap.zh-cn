@@ -30,19 +30,21 @@ NOTE: 如果更改 LIF 的服务策略以进一步限制故障转移，则系统
 +
 如果没有有效故障转移目标的 LIF 尝试进行故障转移，可能会发生中断。
 
+* 从ONTAP 9.11.1开始、在所有SAN阵列(ASA)平台上、新创建的Storage VM上新创建的iSCSI LIF会自动启用iSCSI LIF故障转移。
++
+此外、您还可以在已有iSCSI LIF上手动启用iSCSI LIF故障转移、这意味着在升级到ONTAP 9.11.1或更高版本之前创建的LIF。link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故障转移"]
+
 * 以下列表介绍了 -failover-policy 设置如何影响从故障转移组中选择的目标端口：
-+
-** `broadcast-domain-wide` 适用场景故障转移组中所有节点上的所有端口。
-** `s系统定义` 仅对 LIF 主节点上的端口以及集群中的其他一个节点（通常为非 SFO 配对节点）上的端口执行适用场景操作（如果存在）。
-** `仅本地` 仅适用场景 LIF 主节点上的端口。
-** `sfo-partner-only` 仅适用场景 LIF 主节点及其 SFO 配对节点上的端口。
-** `d已标记` 表示 LIF 未配置为进行故障转移。
-+
-
-NOTE: SAN 协议的逻辑接口不支持故障转移，因此，这些 LIF 始终设置为 disabled 。
 
 
 
+NOTE: 对于iSCSI LIF故障转移、仅支持故障转移策略`local-only`、`sfo-partner-only`和`disenabled`。
+
+* `broadcast-domain-wide` 适用场景故障转移组中所有节点上的所有端口。
+* `s系统定义` 仅对 LIF 主节点上的端口以及集群中的其他一个节点（通常为非 SFO 配对节点）上的端口执行适用场景操作（如果存在）。
+* `仅本地` 仅适用场景 LIF 主节点上的端口。
+* `sfo-partner-only` 仅适用场景 LIF 主节点及其 SFO 配对节点上的端口。
+* `d已标记` 表示 LIF 未配置为进行故障转移。
 
 
 为现有接口配置故障转移设置：
