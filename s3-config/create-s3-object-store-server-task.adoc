@@ -13,6 +13,8 @@ summary: ONTAP 对象存储服务器将数据作为 S3 对象进行管理，而�
 [role="lead"]
 ONTAP 对象存储服务器将数据作为 S3 对象进行管理，而不是由 ONTAP NAS 和 SAN 服务器提供的文件或块存储。
 
+您应准备好将S3服务器名称输入为完全限定域名(FQDN)、客户端将使用该域名进行S3访问。FQDN不能以分段名称开头。
+
 您应具有自签名 CA 证书（在先前步骤中创建）或由外部 CA 供应商签名的证书。在本地分层使用情形中， IP 流量仅通过集群 LIF 时，不需要 CA 证书。
 
 创建对象存储服务器时，将创建 UID 为 0 的 root 用户。不会为此 root 用户生成访问密钥或机密密钥。ONTAP 管理员必须运行 `object-store-server users er生成 密钥` 命令来为此用户设置访问密钥和机密密钥。
@@ -24,10 +26,14 @@ ONTAP 对象存储服务器将数据作为 S3 对象进行管理，而不是由 
 ====
 有关其他配置和显示选项，请参见 `vserver object-store-server` 手册页。
 
+[role="tabbed-block"]
 .步骤
+====
+.命令行界面
+--
 . 创建 S3 服务器：
 +
-`vserver object-store-server create -vserver _svm_name_-object-store-server _s3_server_name_-certificate-name _ca_ct_name_-comment _text_` Additional _options]
+`vserver object-store-server create -vserver _svm_name_-object-store-server _s3_server_fqdn_-certificate-name _ca_ct_name_-comment _text_` Additional _options]
 
 +
 您可以在创建 S3 服务器时或以后任何时间指定其他选项。
@@ -67,3 +73,31 @@ cluster1::> vserver object-store-server show
              Certificate for HTTPS Connections: svm1_ca
                                        Comment: Server comment
 ----
+--
+.System Manager
+--
+如果要将S3服务器添加到现有Storage VM、请使用此操作步骤。要将S3服务器添加到新的Storage VM、请参见 link:create-svm-s3-task.html["为S3创建存储SVM"]。
+
+您应准备为接口角色数据输入IP地址。
+
+. 在现有Storage VM上启用S3。
++
+.. 选择Storage VM：单击*存储> Storage VM*、选择一个Storage VM、单击*设置*、然后单击 image:icon_gear.gif["设置图标"] 在 * S3 下。
+.. 单击 * 启用 S3* ，然后输入 S3 服务器名称。
+.. 选择证书类型。
++
+无论选择系统生成的证书还是您自己的证书之一，客户端访问都需要此证书。
+
+.. 输入网络接口。
+
+
+. 如果选择了系统生成的证书，则在确认创建新 Storage VM 后，您将看到证书信息。单击 * 下载 * 并保存以供客户端访问。
++
+** 不会再显示此机密密钥。
+** 如果您再次需要证书信息：单击 * 存储 > 存储 VM* ，选择 Storage VM ，然后单击 * 设置 * 。
+
+
+
+
+--
+====
