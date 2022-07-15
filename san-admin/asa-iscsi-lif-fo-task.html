@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
   <head class="at-element-marker">
-  <title></title>
+  <title>适用于ASA 平台的iSCSI LIF故障转移</title>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge,chrome=1">
   <meta http-equiv="language" content="en">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="" />
+  <meta property="og:title" content="适用于ASA 平台的iSCSI LIF故障转移" />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://docs.netapp.com/zh-cn/ontap/san-admin/asa-iscsi-lif-fo-task.html" />
-	<meta property="og:description" content="" />
+	<meta property="og:description" content="从全SAN阵列(ASA)平台上的ONTAP 9.11.1开始、iSCSI LIF故障转移功能支持在SFO配对节点故障转移(iSCSI LIF从其主节点/端口移至其HA配对节点/端口并再次返回)和本地故障转移中自动和手动迁移iSCSI LIF (当iSCSI LIF从运行状况不正常的端口移至当前主节点上运行状况良好..." />
   <meta property="og:image" content="https://docs.netapp.com/zh-cn/ontap/images/logo-tophat-social.png" />
   <meta property="og:image:alt" content="NetApp Logo" />
   <meta name="format-detection" content="telephone=no">
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="encoding" content="utf-8">
   <meta http-equiv="nss-type" content="Product Documentation"/>
-  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="">
-  <meta name="keywords" content=" "><!-- Icons -->
+  <meta http-equiv="nss-subtype" content="User Guide"/><meta name="description" content="从全SAN阵列(ASA)平台上的ONTAP 9.11.1开始、iSCSI LIF故障转移功能支持在SFO配对节点故障转移(iSCSI LIF从其主节点/端口移至其HA配对节点/端口并再次返回)和本地故障转移中自动和手动迁移iSCSI LIF (当iSCSI LIF从运行状况不正常的端口移至当前主节点上运行状况良好...">
+  <meta name="keywords" content=" failover, iscsi, all san array, cli, system manager, auto-revert, revert network interface"><!-- Icons -->
   <link rel="icon" href="/zh-cn/ontap/images/favicon.ico" type="image/x-icon">
 
   <!-- RSS Feed --><!-- CSS Definitions: NetApp CSS should be defined after generic css -->
@@ -53,9 +53,6 @@
   <link rel="stylesheet" href="/zh-cn/ontap/css/tabbed-blocks.css" type="text/css">
   <!-- Canonical url -->
   <link rel='stylesheet' href='/zh-cn/ontap/css/na-feature.css' type='text/css'><!-- Top level site integrations --><script>
-    pageRedirect("https://docs.netapp.com/zh-cn/ontap/san-admin/index.html");
-    function pageRedirect(url) { location.href = url; }
-  </script><script>
     if (document.location.hostname === "docs.netapp.com") {
       var head = document.getElementsByTagName('head')[0];
       var onetrustConsent = document.createElement("script");
@@ -172,7 +169,7 @@
   
   <!-- Start Page Toolbar -->
   
-  <div class="page-nav-toolbar"><div class="page-nav-contribute"><a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[](https://docs.netapp.com/zh-cn/ontap/san-admin/asa-iscsi-lif-fo-task.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" alt="" class="github-icon" />请求文档变更</a><a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/san-admin/asa-iscsi-lif-fo-task.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" alt="" class="github-icon" />在 GitHub 上编辑</a><a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" alt="" class="github-icon" />提供者指南</a></div>
+  <div class="page-nav-toolbar"><div class="page-nav-contribute"><a target="_blank" href="https://github.com/NetAppDocs/ontap/issues/new?body=Page%3A%20[适用于ASA 平台的iSCSI LIF故障转移](https://docs.netapp.com/zh-cn/ontap/san-admin/asa-iscsi-lif-fo-task.html)" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/discuss-sm.svg" alt="" class="github-icon" />请求文档变更</a><a target="_blank" href="https://github.com/NetAppDocs/ontap/blob/main/san-admin/asa-iscsi-lif-fo-task.adoc" class="page-nav-contribute-link" role="button"><img src="/zh-cn/ontap/images/edit-sm.svg" alt="" class="github-icon" />在 GitHub 上编辑</a><a target="_blank" href="https://docs.netapp.com/us-en/contribute/" class="page-nav-contribute-link"  ><img src="/zh-cn/ontap/images/article-sm.svg" alt="" class="github-icon" />提供者指南</a></div>
     <div class="page-nav-container">
       <nav class="page-nav-fixed">
         <div class="page-nav-title">在此页面上</div>
@@ -4404,6 +4401,8 @@
             使用重复数据删除，数据压缩和数据缩减提高存储效率
           </a>
           
+
+
 
 
 
@@ -17919,6 +17918,8 @@
         检查卷效率模式
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/volumes/change-efficiency-mode-task.html">
         更改卷效率模式
+      </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/volumes/view-footprint-savings-task.html">
+        查看对温度敏感的存储效率节省的物理占用空间
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/volumes/enable-data-compression-volume-task.html">
         在卷上启用数据压缩
       </a></li><li class=" "><a class="na-navbar-padding" href="/zh-cn/ontap/volumes/move-between-secondary-adaptive-compression-task.html">
@@ -22563,23 +22564,260 @@
     </div>
   </span>
 </div><div class="n-doc__component-detail-heading-wrap">
-  <h1 class="n-doc__component-detail-heading"></h1>
+  <h1 class="n-doc__component-detail-heading">适用于ASA 平台的iSCSI LIF故障转移</h1>
 </div>
 
 
 <p class="page-details">
   
     
-    <time datetime="2022-07-01 01:42:09 +0000">07/01/2022</time>
+    <time datetime="2022-07-15 16:19:12 +0000">07/15/2022</time>
     
   
 
 
 </p>
 
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph lead">
+<p>从全SAN阵列(ASA)平台上的ONTAP 9.11.1开始、iSCSI LIF故障转移功能支持在SFO配对节点故障转移(iSCSI LIF从其主节点/端口移至其HA配对节点/端口并再次返回)和本地故障转移中自动和手动迁移iSCSI LIF (当iSCSI LIF从运行状况不正常的端口移至当前主节点上运行状况良好的端口并再次移回时)。此功能可加快iSCSI上运行的SAN工作负载的I/O恢复速度。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="关于启用iscsi-lif故障转移">关于启用iSCSI LIF故障转移</h2>
+<div class="sectionbody">
+<div class="paragraph Lead">
+<p>您应熟悉有关何时自动启用iSCSI LIF故障转移以及何时必须手动启用此故障转移的各个方面、包括新创建的iSCSI LIF和现有iSCSI LIF如何受到影响。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>iSCSI LIF的自动迁移是LIF故障转移和自动还原、在某些事件中会触发此功能、例如计划内或计划外故障转移、物理以太网链路关闭或节点从复制的数据库(RDB)仲裁中退出。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>将ASA HA对升级到ONTAP 9.11.1后、如果指定Storage VM中不存在iSCSI LIF、或者指定Storage VM中的所有现有iSCSI LIF已通过iSCSI LIF故障转移启用、则新创建的iSCSI LIF将自动启用此功能。</p>
+</li>
+<li>
+<p>对于在升级到ONTAP 9.11.1之前创建的iSCSI LIF、要使用iSCSI LIF故障转移功能、必须使用ONTAP 命令行界面启用它。(启用故障转移功能和自动还原功能意味着将故障转移策略更改为`sfo-partner-only`并将自动还原值指定为`true`。)</p>
 <div class="paragraph">
-<p>=
-:allow-uri-read:</p>
+<p><a href="#Manage iSCSI LIFs using the ONTAP CLI">[Manage iSCSI LIFs using the ONTAP CLI]</a></p>
+</div>
+<div class="paragraph">
+<p>如果不在现有iSCSI LIF上启用iSCSI LIF故障转移、则在发生故障转移事件时、iSCSI LIF不会进行故障转移。</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>此外、如果在升级到ONTAP 9.11.1或更高版本后、某个Storage VM中的现有iSCSI LIF尚未启用iSCSI LIF故障转移功能、而您在同一Storage VM中创建了新的iSCSI LIF、 新的iSCSI LIF采用与Storage VM中现有iSCSI LIF相同的故障转移策略(<code>d已标记为</code>)。</p>
+</div>
+</li>
+<li>
+<p>手动迁移iSCSI LIF是指LIF迁移和还原、此操作由集群管理员使用ONTAP 命令行界面或System Manager启动。</p>
+<div class="paragraph">
+<p><a href="#Migrate and revert an iSCSI LIF">[Migrate and revert an iSCSI LIF]</a></p>
+</div>
+<div class="paragraph">
+<p>在以下情况下、您可以手动迁移和还原iSCSI LIF：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>需要按计划进行维护或更换时。</p>
+</li>
+<li>
+<p>如果您已有iSCSI LIF、这意味着iSCSI LIF是在将HA对升级到ONTAP 9.11.1或更高版本之前创建的、并且尚未在此LIF上启用iSCSI LIF故障转移功能。</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="iscsi-lif故障转移的工作原理">iSCSI LIF故障转移的工作原理</h2>
+<div class="sectionbody">
+<div class="paragraph Lead">
+<p>对于启用了iSCSI LIF故障转移(自动或手动)的LIF、适用以下规则。</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>对于使用`data-iscsi`服务策略的LIF、failover-policy限制为`sfo-partner-only`、<code>local-only`和`disenabled</code>。</p>
+</li>
+<li>
+<p>iSCSI LIF的故障转移策略设置为`sfo-partner-only`时、只能故障转移到HA配对节点。</p>
+</li>
+<li>
+<p>如果自动还原设置为`true`、并且LIF的主端口运行状况良好且能够托管LIF、则会自动还原LIF。</p>
+</li>
+<li>
+<p>在计划内或计划外节点接管时、被接管节点上的iSCSI LIF将故障转移到HA配对节点。LIF故障转移所使用的端口由VIF Manager确定。</p>
+</li>
+<li>
+<p>故障转移完成后、iSCSI LIF将正常运行。</p>
+</li>
+<li>
+<p>启动交还后、如果自动还原设置为`true`、则iSCSI LIF将还原回其主节点和端口。</p>
+</li>
+<li>
+<p>当托管一个或多个iSCSI LIF的端口上的以太网链路关闭时、VIF Manager会将LIF从关闭的端口迁移到同一广播域中的其他端口。新端口可以位于同一节点或其HA配对节点中。还原链路并将自动还原设置为`true`后、VIF Manager会将iSCSI LIF还原回其主节点和主端口。</p>
+</li>
+<li>
+<p>当某个节点退出复制的数据库(RDB)仲裁时、VIF Manager会将iSCSI LIF从仲裁不足的节点迁移到其HA配对节点。一旦节点恢复仲裁并将自动还原设置为`true`、VIF Manager就会将iSCSI LIF还原回其主节点和主端口。</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="迁移和还原iscsi-lif">迁移和还原iSCSI LIF</h2>
+<div class="sectionbody">
+<div class="paragraph Lead">
+<p>您可以使用System Manager或ONTAP 命令行界面手动将iSCSI LIF迁移到同一节点上的其他端口或HA配对节点上的其他端口、然后将LIF还原到其主节点和主端口。</p>
+</div>
+<div class="sect2">
+<h3 id="使用system-manager迁移和还原iscsi-lif">使用System Manager迁移和还原iSCSI LIF</h3>
+<div class="paragraph Lead">
+<p>您可以使用System Manager手动将一个或多个iSCSI LIF (网络接口)迁移和还原到同一节点上的另一个端口或HA配对节点上的某个端口。</p>
+</div>
+<div class="paragraph">
+<p>您必须具有ASA 平台HA对、并且此平台必须运行ONTAP 9.11.1或更高版本。</p>
+</div>
+<div class="sect3">
+<h4 id="迁移-lif">迁移 LIF</h4>
+<div class="olist arabic">
+<div class="title">步骤</div>
+<ol class="arabic">
+<li>
+<p>在System Manager中、单击*网络&gt;概述&gt;网络接口*</p>
+</li>
+<li>
+<p>选择要迁移的LIF、然后单击 <span class="image"><img src="../media/icon_kabob.gif" alt="kabob 图标"></span>、然后单击*迁移*。</p>
+</li>
+<li>
+<p>在*迁移接口*对话框中、选择HA配对节点的目标节点和端口。</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<img src="/us-en/ontap/images/note.svg" alt="注">
+</td>
+<td class="content">
+您可以通过选中此复选框来选择永久迁移iSCSI LIF。请注意、iSCSI LIF必须处于脱机状态、才能永久迁移。此外、永久迁移iSCSI LIF后、它将无法撤消。没有还原选项。
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>单击 * 迁移 * 。</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect3">
+<h4 id="还原lif">还原LIF</h4>
+<div class="olist arabic">
+<div class="title">步骤</div>
+<ol class="arabic">
+<li>
+<p>在System Manager中、单击*网络&gt;概述&gt;网络接口*。</p>
+</li>
+<li>
+<p>选择要还原的LIF、然后单击 <span class="image"><img src="../media/icon_kabob.gif" alt="kabob 图标"></span> 然后单击*还原网络接口*。</p>
+</li>
+<li>
+<p>在*还原网络接口*对话框中、单击*还原*。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="使用ontap-命令行界面迁移和还原iscsi-lif">使用ONTAP 命令行界面迁移和还原iSCSI LIF</h3>
+<div class="paragraph Lead">
+<p>您可以使用ONTAP 命令行界面手动将一个或多个iSCSI LIF迁移和还原到同一节点上的另一个端口或HA配对节点上的某个端口。</p>
+</div>
+<div class="paragraph">
+<p>您必须具有ASA 平台HA对、并且此平台必须运行ONTAP 9.11.1或更高版本。</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果您要 &#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用此命令 &#8230;&#8203;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将iSCSI LIF迁移到另一个节点/端口</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">请参见 <a href="../networking/migrate_a_lif.html">"迁移 LIF"</a> 可用命令。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">将iSCSI LIF还原回其主节点/端口</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">请参见 <a href="../networking/revert_a_lif_to_its_home_port.html">"将 LIF 还原到其主端口"</a> 可用命令。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="使用ontap-命令行界面管理iscsi-lif">使用ONTAP 命令行界面管理iSCSI LIF</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>您可以使用ONTAP 命令行界面管理iSCSI LIF、包括创建新的iSCSI LIF以及为原有LIF启用iSCSI LIF故障转移功能。</p>
+</div>
+<div class="paragraph">
+<p>您必须具有ASA 平台HA对、并且此平台必须运行ONTAP 9.11.1或更高版本。</p>
+</div>
+<div class="paragraph">
+<p>请参见 <a href="https://docs.netapp.com/us-en/ontap-cli-9111/index.html" target="_blank" rel="noopener">"《ONTAP 9.11.1命令参考》"</a> 有关`network interface`命令的完整列表。</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">如果您要 &#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">使用此命令 &#8230;&#8203;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">创建iSCSI LIF</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">`network interface create -vserver <em>vserver_name</em>-lif <em>iscsi_lif</em>-service-policy default-data-blocks -data-protocol iscsi -home-node <em>node_name</em>-home-port <em>port_name</em>-address <em>ip_address</em>-netmask <em>netmask_value</em>`如果需要、请参见 <a href="../networking/create_a_lif.html">"创建 LIF"</a> 有关详细信息 &#8230;&#8203;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">验证是否已成功创建LIF</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>network interface show -vserver <em>vserver_name</em>-fields failover-policy、failover-group、auto-revert、is-home</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">验证是否可以覆盖iSCSI LIF上的自动还原默认值</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>network interface modify -vserver <em>vserver_name</em>-lif <em>iscsi_lif</em>-auto-revert false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">对iSCSI LIF执行存储故障转移</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>storage failover takeover -ofnode <em>node_name</em>-option normal`您收到警告：`将启动接管。配对节点重新启动后、系统将自动启动交还。是否要继续？｛y/n｝：</code> a `y`响应显示其HA配对节点的接管消息。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">为已有LIF启用iSCSI LIF故障转移功能</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">对于在将集群升级到ONTAP 9.11.1或更高版本之前创建的iSCSI LIF、您可以启用iSCSI LIF故障转移功能(方法是将故障转移策略修改为`sfo-partner-only`、并将自动还原功能修改为`true`)： `network interface modify -vserver <em>vserver_name</em>-lif <em>iscsi_lif</em>–failover-policy sfo-partner-only -auto-revert true`通过指定"-lif*"并保持所有其他参数不变、可以在Storage VM中的所有iSCSI LIF上运行此命令。</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">为已有LIF禁用iSCSI LIF故障转移功能</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">对于在将集群升级到ONTAP 9.11.1或更高版本之前创建的iSCSI LIF、您可以禁用iSCSI LIF故障转移功能和自动还原功能： `network interface modify -vserver <em>vserver_name</em>-lif <em>iscsi_lif</em>–failover-policy disabled -auto-revert false`通过指定"-lif*"并保持所有其他参数不变、可以在Storage VM中的所有iSCSI LIF上运行此命令。</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 
     </article>
