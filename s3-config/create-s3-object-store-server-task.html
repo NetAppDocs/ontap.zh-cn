@@ -22573,7 +22573,7 @@
 <p class="page-details">
   
     
-    <time datetime="2022-05-27 00:10:15 +0000">05/27/2022</time>
+    <time datetime="2022-07-15 21:46:54 +0000">07/15/2022</time>
     
   
 
@@ -22582,6 +22582,9 @@
 
 <div class="paragraph lead">
 <p>ONTAP 对象存储服务器将数据作为 S3 对象进行管理，而不是由 ONTAP NAS 和 SAN 服务器提供的文件或块存储。</p>
+</div>
+<div class="paragraph">
+<p>您应准备好将S3服务器名称输入为完全限定域名(FQDN)、客户端将使用该域名进行S3访问。FQDN不能以分段名称开头。</p>
 </div>
 <div class="paragraph">
 <p>您应具有自签名 CA 证书（在先前步骤中创建）或由外部 CA 供应商签名的证书。在本地分层使用情形中， IP 流量仅通过集群 LIF 时，不需要 CA 证书。</p>
@@ -22606,13 +22609,18 @@
 <div class="paragraph">
 <p>有关其他配置和显示选项，请参见 <code>vserver object-store-server</code> 手册页。</p>
 </div>
+<div class="exampleblock tabbed-block">
+<div class="title">示例 1. 步骤</div>
+<div class="content">
+<div class="openblock">
+<div class="title">命令行界面</div>
+<div class="content">
 <div class="olist arabic">
-<div class="title">步骤</div>
 <ol class="arabic">
 <li>
 <p>创建 S3 服务器：</p>
 <div class="paragraph">
-<p><code>vserver object-store-server create -vserver <em>svm_name</em>-object-store-server <em>s3_server_name</em>-certificate-name <em>ca_ct_name</em>-comment <em>text</em></code> Additional _options]</p>
+<p><code>vserver object-store-server create -vserver <em>svm_name</em>-object-store-server <em>s3_server_fqdn</em>-certificate-name <em>ca_ct_name</em>-comment <em>text</em></code> Additional _options]</p>
 </div>
 <div class="paragraph">
 <p>您可以在创建 S3 服务器时或以后任何时间指定其他选项。</p>
@@ -22662,6 +22670,60 @@
                                  HTTPS Enabled: true
              Certificate for HTTPS Connections: svm1_ca
                                        Comment: Server comment</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="openblock">
+<div class="title">System Manager</div>
+<div class="content">
+<div class="paragraph">
+<p>如果要将S3服务器添加到现有Storage VM、请使用此操作步骤。要将S3服务器添加到新的Storage VM、请参见 <a href="create-svm-s3-task.html">"为S3创建存储SVM"</a>。</p>
+</div>
+<div class="paragraph">
+<p>您应准备为接口角色数据输入IP地址。</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>在现有Storage VM上启用S3。</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>选择Storage VM：单击*存储&gt; Storage VM*、选择一个Storage VM、单击*设置*、然后单击 <span class="image"><img src="../media/icon_gear.gif" alt="设置图标"></span> 在 * S3 下。</p>
+</li>
+<li>
+<p>单击 * 启用 S3* ，然后输入 S3 服务器名称。</p>
+</li>
+<li>
+<p>选择证书类型。</p>
+<div class="paragraph">
+<p>无论选择系统生成的证书还是您自己的证书之一，客户端访问都需要此证书。</p>
+</div>
+</li>
+<li>
+<p>输入网络接口。</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>如果选择了系统生成的证书，则在确认创建新 Storage VM 后，您将看到证书信息。单击 * 下载 * 并保存以供客户端访问。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>不会再显示此机密密钥。</p>
+</li>
+<li>
+<p>如果您再次需要证书信息：单击 * 存储 &gt; 存储 VM* ，选择 Storage VM ，然后单击 * 设置 * 。</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
 </div>
 </div>
 
