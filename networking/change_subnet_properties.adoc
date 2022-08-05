@@ -21,6 +21,31 @@ summary: 更改子网地址，掩码值，网关地址或 IP 地址范围
 * 如果添加或更改网关 IP 地址，则在使用子网在新 SVM 中创建 LIF 时，修改后的网关将应用于这些 SVM 。如果 SVM 还不存在网关的默认路由，则会为该路由创建。更改网关 IP 地址时，您可能需要手动向 SVM 添加新路由。
 
 
+您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+*从ONTAP 9.12.0开始、您可以使用System Manager更改子网属性*
+
+.步骤
+. 选择*网络>概述>子网*。
+. 选择 ... image:icon_kabob.gif["kabob 图标"]要更改的子网旁边的*>编辑*。
+. 进行更改。
+. 保存所做的更改。
++
+.. 如果输入的IP地址或范围已被某个接口使用、则会显示以下消息：`此范围中的IP地址已被某个LIF占用。是否将LIF与此子网关联？`
+.. 单击*确定*后、现有LIF将与子网关联。
+
+
+
+
+--
+.命令行界面
+--
+*使用命令行界面更改子网属性*
+
 修改子网属性：
 
 ....
@@ -39,3 +64,5 @@ network subnet modify -subnet-name <subnet_name> [-ipspace <ipspace_name>] [-sub
 ....
 network subnet modify -subnet-name <sub3> -gateway <192.0.3.1>
 ....
+--
+====

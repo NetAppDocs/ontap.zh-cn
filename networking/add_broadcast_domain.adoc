@@ -1,0 +1,96 @@
+---
+sidebar: sidebar 
+permalink: networking/add_broadcast_domain.html 
+keywords: broadcast, domain, adding, add, network, ports, cluster, svm, IPspace, mtu 
+summary: 广播域对集群中属于同一第2层网络的网络端口进行分组。然后， SVM 可以使用这些端口。 
+---
+= 添加广播域
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+广播域对集群中属于同一第2层网络的网络端口进行分组。然后， SVM 可以使用这些端口。
+
+从 ONTAP 9.8 开始，在集群创建或加入操作期间会自动创建广播域。从ONTAP 9.12.0开始、除了自动创建的广播域之外、您还可以在System Manager中手动添加广播域。
+
+计划添加到广播域的端口不能属于另一个广播域。如果要使用的端口属于另一个广播域、但未使用、请从原始广播域中删除这些端口。
+
+.关于此任务
+* 所有广播域名在 IP 空间中必须是唯一的。
+* 添加到广播域的端口可以是物理网络端口、VLAN或链路聚合组/接口组(LAG/ifgrp)。
+* 添加到广播域的端口的最大传输单元(MTU)将更新为在广播域中设置的MTU值。
+* MTU 值必须与连接到该第 2 层网络的所有设备匹配，但处理管理流量的 e0M 端口除外。
+* 如果未指定 IP 空间名称，则会在 " 默认 "IP 空间中创建广播域。
+
+
+为了简化系统配置，系统会自动创建一个同名的故障转移组，该故障转移组包含相同的端口。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+.步骤
+. 选择*网络>概述>广播域*。
+. 单击 image:icon_add.gif["添加图标"]
+. 命名广播域。
+. 设置MTU。
+. 选择 IP 空间。
+. 保存广播域。
+
+
+您可以在添加广播域后对其进行编辑或删除。
+
+--
+.命令行界面
+--
+在ONTAP 9.7或更早版本中、您可以手动创建广播域。
+
+.步骤
+. 查看当前未分配给广播域的端口：
++
+`network port show`
+
++
+如果显示内容较大，请使用 `network port show -broadcast-domain` 命令仅查看未分配的端口。
+
+. 创建广播域：
++
+`network port broadcast-domain create -broadcast-domain _broadcast_domain_name_ -mtu _mtu _value_ "-ipspace _ipspace_name_] "-ports _ports_list_]`
+
++
+.. `broadcast_domain_name`是要创建的广播域的名称。
+.. `mtu_value`是IP数据包的MTU大小；1500和9000是典型值。
++
+此值将应用于添加到此广播域的所有端口。
+
+.. `ipspace_name`是要将此广播域添加到的IP空间的名称。
++
+除非为此参数指定值，否则将使用 "Default" IP 空间。
+
+.. `ports_list`是要添加到广播域的端口列表。
++
+添加的端口格式为`node_name：port_number`、例如、`node1：e0c`。
+
+
+
+. 验证是否已根据需要创建广播域：
++
+`network port show -instance -broadcast-domain new_domain`
+
+
+
+以下命令会在默认 IP 空间中创建广播域 bcast1 ，将 MTU 设置为 1500 ，并添加四个端口：
+
+`network port broadcast-domain create -broadcast-domain _bcast1_ -mtu _1500_ -ports _cluster1-01 ： e0e ， cluster1-01 ： e0f ， cluster1-02 ： e0e ， cluster1-02 ： e0f`
+
+您可以通过创建子网来定义广播域中可用的 IP 地址池，也可以此时将 SVM 和接口分配给 IP 空间。有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap/peering/index.html["集群和 SVM 对等"]。
+
+如果需要更改现有广播域的名称、请使用`network port broadcast-domain rename`命令。
+
+--
+====

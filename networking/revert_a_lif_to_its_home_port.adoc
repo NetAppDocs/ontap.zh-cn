@@ -22,6 +22,25 @@ summary: 在故障转移或迁移 LIF 后，将其还原到其主端口
 * 您必须确保为 LIF 启用了 "auto-revert" 选项以还原到其主端口。
 
 
+您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+*使用System Manager将网络接口还原到其主端口*
+
+.步骤
+. 选择*网络>概述>网络接口*。
+. 选择 ... image:icon_kabob.gif["键盘图标"] 要更改的网络接口旁边的*> Revere*。
+. 保存所做的更改。
+
+
+--
+.命令行界面
+--
+*使用命令行界面将LIF还原到其主端口*
+
 手动或自动将 LIF 还原到其主端口：
 
 [cols="30,70"]
@@ -31,8 +50,10 @@ summary: 在故障转移或迁移 LIF 后，将其还原到其主端口
 | 如果要将 LIF 还原到其主端口 ... | 然后输入以下命令 ... 
 
 
-| 手动 | network interface revert -vserver vserver_name -lif lif_name 
+| 手动 | `network interface revert -vserver vserver_name -lif lif_name` 
 
 
-| 自动 | network interface modify -vserver vserver_name -lif lif_name -auto-revert true 
+| 自动 | `network interface modify -vserver vserver_name -lif lif_name -auto-revert true` 
 |===
+--
+====

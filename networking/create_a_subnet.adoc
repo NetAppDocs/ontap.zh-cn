@@ -14,19 +14,47 @@ summary: 创建子网
 
 
 [role="lead"]
-创建广播域后，您可以创建一个子网来分配特定的 IPv4 或 IPv6 地址块，以便稍后在为 SVM 创建 LIF 时使用。
+您可以创建子网来分配特定的IPv4或IPv6地址块、以便稍后在为SVM创建LIF时使用。
 
 这样，您就可以通过指定子网名称，而不必为每个 LIF 指定 IP 地址和网络掩码值来更轻松地创建 LIF 。
 
 您必须是集群管理员才能执行此任务。
 
+您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+*从ONTAP 9.12.0开始、您可以使用System Manager创建子网*
+
+.步骤
+. 选择*网络>概述>子网*。
+. 单击 image:icon_add.gif["添加图标"] 以创建子网。
+. 为子网命名。
+. 指定子网IP地址。
+. 设置子网掩码。
+. 定义构成子网的IP地址范围。
+. 如果有用、请指定网关。
+. 选择子网所属的广播域。
+. 保存所做的更改。
++
+.. 如果输入的IP地址或范围已被某个接口使用、则会显示以下消息：`此范围中的IP地址已被某个LIF占用。是否将LIF与此子网关联？`
+.. 单击*确定*后、现有LIF将与子网关联。
+
+
+
+
+--
+.命令行界面
+--
+*使用命令行界面创建子网*
+
 .步骤
 . 创建子网。
 +
-[listing]
-----
-network subnet create -broadcast-domain ipspace1 -ipspace ipspace1 -subnet-name ipspace1 -subnet 10.0.0.0/24 -gateway 10.0.0.1 -ip-ranges "10.0.0.128-10.0.0.130,10.0.0.132"
-----
+`network subnet create -broadcast-domain _ipspace1_-ipspace _ipspace1_-subnet-name _ipspace1_-subnet _10.0.0.0/24 _-gateway _10.0.0.1_-ip-ranges _"10.0.0.128-10.0.0.130、10.0.0.132"_`
+
 +
 子网名称可以是 `192.0.2.0/24` 之类的子网 IP 值，也可以是与本示例中使用的` ipspace1 `之类的字符串。
 
@@ -35,6 +63,9 @@ network subnet create -broadcast-domain ipspace1 -ipspace ipspace1 -subnet-name 
 此示例的输出显示了有关 ipspace1 IP 空间中名为 ipspace1 的子网的信息。子网属于广播域名 ipspace1 。您可以将此子网中的 IP 地址分配给在 ipspace1 IP 空间中创建的 SVM 的数据 LIF 。
 
 +
-`network subnet show -ipspace ipspace1`
+`network subnet show -ipspace _ipspace1_`
 
 
+
+--
+====

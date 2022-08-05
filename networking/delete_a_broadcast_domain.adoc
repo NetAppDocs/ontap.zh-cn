@@ -23,13 +23,33 @@ summary: '删除不必要的广播域；这会将关联端口移至 " 默认 "IP
 * 删除此广播域时，系统会删除与此广播域相关的所有故障转移组。
 
 
+您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+*从ONTAP 9.12.0开始、您可以使用System Manager删除广播域*
+
+如果广播域包含端口或与子网关联、则不会显示删除选项。
+
+.步骤
+. 选择*网络>概述>广播域*。
+. 选择 ... image:icon_kabob.gif["键盘图标"] 要删除的广播域旁边的*>删除*。
+
+
+--
+.命令行界面
+--
+*使用命令行界面删除广播域*
+
 删除广播域：
 
-....
-network port broadcast-domain delete -broadcast-domain <broadcast_domain_name> [-ipspace <ipspace_name>]
-....
+`network port broadcast-domain delete -broadcast-domain _broadcast_domain_name_"-IPSpace _IPspace_name_]`
+
 以下命令将删除 IP 空间 ipspace1 中的广播域 Default-1 ：
 
-....
-network port broadcast-domain delete -broadcast-domain <Default-1> -ipspace <ipspace1>
-....
+`network port broadcast-domain delete -broadcast-domain _Default-1_-ipspace _ipspace1_`
+
+--
+====

@@ -44,6 +44,25 @@ summary: 将 LIF 迁移到集群中同一节点或不同节点上的其他端口
 * 迁移源或目标 LIF 时， VMware VAAI 副本卸载操作失败。有关 VMware VAAI 的详细信息，请参见 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.cdot-famg-nfs/GUID-39C8E616-EAE8-46A4-881A-87C4B8421281.html["NFS 参考"^] 或 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-D97EE182-9068-4BD8-A3BF-F5C458303740.html["SAN 管理"^]。
 
 
+您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+*使用System Manager迁移网络接口*
+
+.步骤
+. 选择*网络>概述>网络接口*。
+. 选择 ... image:icon_kabob.gif["键盘图标"] 要更改的网络接口旁边的*> Migrate *。
+. 保存所做的更改。
+
+
+--
+.命令行界面
+--
+*使用命令行界面迁移LIF*
+
 根据您要迁移特定 LIF 还是所有 LIF ，请执行相应的操作：
 
 [cols="30,70"]
@@ -83,3 +102,5 @@ network interface migrate -vserver vs0 -lif datalif1 -dest-node node0b -dest-por
 ....
 network interface migrate-all -node local
 ....
+--
+====
