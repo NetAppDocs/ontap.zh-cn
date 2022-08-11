@@ -41,11 +41,13 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 +
 [NOTE]
 ====
-取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。强烈建议您在继续操作之前联系NetApp支持部门。
+取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。*强烈建议您在继续操作之前联系NetApp支持部门
+
+您也可以参考知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 中取消对备用驱动器的分区"^]。
 
 ====
 +
-`d取消分区 disk_name`
+`d取消分区_disk_name_`
 
 . 清理指定磁盘：
 +
@@ -100,6 +102,18 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 
 
 .步骤
+. 如果要清理的磁盘已分区，请取消每个磁盘的分区：
++
+[NOTE]
+====
+取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。*强烈建议您在继续操作之前联系NetApp支持部门
+
+您也可以参考知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 中取消对备用驱动器的分区"^]。
+
+====
++
+`d取消分区_disk_name_`
+
 . 输入拥有要清理的磁盘的节点的 nodeshell ：
 +
 `ssystem node run -node _node_name_`
@@ -114,16 +128,6 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 . 切换到 nodeshell 高级权限级别：
 +
 `priv set advanced`
-
-. 如果要清理的磁盘已分区，请取消每个磁盘的分区：
-+
-[NOTE]
-====
-取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。强烈建议您在继续操作之前联系NetApp支持部门。
-
-====
-+
-`d取消分区_disk_name_`
 
 . 清理指定磁盘：
 +
@@ -158,7 +162,7 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 
 . 清理过程完成后，将磁盘恢复为备用状态：
 +
-`d清理发布 disk_name`
+`d清理版本 _disk_name_`
 
 . 返回到 nodeshell 管理权限级别：
 +
