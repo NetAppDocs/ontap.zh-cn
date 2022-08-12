@@ -70,14 +70,17 @@ summary: 您可以使用 system health 命令显示有关系统资源运行状�
 |===
 
 
-== 管理集群和管理网络交换机的发现
+== 管理集群、存储和管理网络交换机的发现
 
+[cols="3*"]
 |===
-| 如果您要 ... | 使用此命令 ... 
+| 如果您要 ... | 使用此命令。(ONTAP 9.8及更高版本) | 使用此命令。(ONTAP 9.7及更早版本) 
 
 
  a| 
 显示集群监控的交换机
+ a| 
+`s系统交换机以太网show`
  a| 
 `ssystem cluster-switch show`
 
@@ -88,12 +91,16 @@ summary: 您可以使用 system health 命令显示有关系统资源运行状�
 
 此命令可在高级权限级别下使用。
  a| 
+`s系统交换机以太网show-all`
+ a| 
 `ssystem cluster-switch show-all`
 
 
 
  a| 
 配置发现未发现的交换机
+ a| 
+`s系统交换机以太网create`
  a| 
 `ssystem cluster-switch create`
 
@@ -102,12 +109,16 @@ summary: 您可以使用 system health 命令显示有关系统资源运行状�
  a| 
 修改有关集群监控的交换机的信息（例如，设备名称， IP 地址， SNMP 版本和社区字符串）
  a| 
+`s系统交换机以太网修改`
+ a| 
 `ssystem cluster-switch modify`
 
 
 
  a| 
 禁用对交换机的监控
+ a| 
+`s系统交换机以太网modify -disable-monitoring`
  a| 
 `ssystem cluster-switch modify -disable-monitoring`
 
@@ -116,6 +127,8 @@ summary: 您可以使用 system health 命令显示有关系统资源运行状�
  a| 
 禁用对交换机的发现和监控，并删除交换机配置信息
  a| 
+`s系统交换机以太网删除`
+ a| 
 `ssystem cluster-switch delete`
 
 
@@ -123,14 +136,16 @@ summary: 您可以使用 system health 命令显示有关系统资源运行状�
  a| 
 永久删除存储在数据库中的交换机配置信息（这样做会重新启用交换机的自动发现）
  a| 
+`s系统交换机以太网删除-force`
+ a| 
 `ssystem cluster-switch delete -force`
 
 
 
  a| 
 启用自动日志记录以随 AutoSupport 消息一起发送。
-
-此命令可在高级权限级别下使用。
+ a| 
+`s系统交换机以太网日志`
  a| 
 `s系统集群交换机日志`
 
@@ -247,18 +262,4 @@ summary: 您可以使用 system health 命令显示有关系统资源运行状�
 使用 ` -instance` 参数显示有关每个策略的详细信息。使用其他参数筛选警报列表，例如，按策略状态（是否已启用），运行状况监控器，警报等进行筛选。
 
 ====
-|===
-
-
-== 降级两个次要版本之间的软件版本
-
-|===
-| 如果您要 ... | 使用此命令 ... 
-
-
- a| 
-降级软件版本命令
- a| 
-`s系统集群交换机准备降级`
-
 |===

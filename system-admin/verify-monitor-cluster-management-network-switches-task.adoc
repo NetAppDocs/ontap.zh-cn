@@ -14,26 +14,60 @@ summary: 集群交换机运行状况监控器会自动尝试监控其发现的�
 集群交换机运行状况监控器会自动尝试监控其发现的交换机；但是，如果交换机配置不正确，监控可能不会自动进行。您应验证是否已正确配置运行状况监控器以监控交换机。
 
 .步骤
-. 使用 `ssystem health cluster-switch show` 命令确定集群交换机运行状况监控器发现的交换机。
+. 要确定集群交换机运行状况监控器发现的交换机、请输入以下命令：
++
+[role="tabbed-block"]
+====
+.ONTAP 9.8 及更高版本
+--
+`s系统交换机以太网show`
+
+--
+.ONTAP 9.7 及更早版本
+--
+`ssystem cluster-switch show`
+
+--
+====
 +
 如果 `Model` 列显示值 `Other` ，则 ONTAP 无法监控交换机。如果自动发现的交换机不支持运行状况监控，则 ONTAP 会将此值设置为 `其他` 。
 
 +
 [NOTE]
 ====
-如果命令输出中未显示交换机，则必须配置交换机发现。
+如果命令输出中未显示交换机、则必须配置交换机发现。
 
 ====
 . 升级到支持的最新交换机软件，并参考 NetApp 支持站点上的配置文件（ RCF ）。
 +
-http://support.netapp.com/NOW/download/software/cm_switches/["Cisco 以太网交换机页面"]
+http://support.netapp.com/NOW/download/software/cm_switches/["NetApp支持下载页面"^]
 
 +
 交换机 RCF 中的社区字符串必须与配置为运行状况监控器使用的社区字符串匹配。默认情况下，运行状况监控器使用社区字符串 `cshm1 ！` 。
 
 +
-如果您需要更改有关集群监控的交换机的信息，可以使用 `ssystem health cluster-switch modify` 命令修改运行状况监控器使用的社区字符串。
+[NOTE]
+====
+目前、运行状况监控器仅支持SNMPv2。
 
+====
++
+如果需要更改有关集群监控的交换机的信息、可以使用以下命令修改运行状况监控器使用的社区字符串：
+
++
+[role="tabbed-block"]
+====
+.ONTAP 9.8 及更高版本
+--
+`s系统交换机以太网修改`
+
+--
+.ONTAP 9.7 及更早版本
+--
+`ssystem cluster-switch modify`
+
+--
+====
 . 验证交换机的管理端口是否已连接到管理网络。
 +
 要执行 SNMP 查询，需要此连接。
