@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/respond-abnormal-task.html 
-keywords: Respond to abnormal activity, anti-ransomware abnormal activity, data entropy, unusual file extensions, potential ransomware attack, false positive, suspected ransomware attack, abnormal activity notification, security, ransomware alert message, detected abnormal volume, suspected file types, attack report, anti-ransomware attack 
-summary: 当反勒索软件检测到受保护卷中的异常活动时，它会发出警告。您应评估此通知，以确定此活动是否预期且可接受，或者是否正在进行攻击。 
+keywords: Respond to abnormal activity, anti-ransomware abnormal activity, data entropy, unusual file extensions, potential ransomware attack, false positive, suspected ransomware attack, abnormal activity notification, security, ransomware alert message, detected abnormal volume, suspected file types, attack report, anti-ransomware attack, autonomous, ransomware, protection, arp 
+summary: '当自主勒索软件保护(ARP)检测到受保护卷中的异常活动时、它会发出警告。您应评估此通知，以确定此活动是否预期且可接受，或者是否正在进行攻击。' 
 ---
 = 应对异常活动。
 :toc: macro
@@ -19,13 +19,13 @@ summary: 当反勒索软件检测到受保护卷中的异常活动时，它会�
 
 
 [role="lead"]
-当反勒索软件检测到受保护卷中的异常活动时，它会发出警告。您应评估此通知，以确定此活动是否预期且可接受，或者是否正在进行攻击。
+当自主勒索软件保护(ARP)检测到受保护卷中的异常活动时、它会发出警告。您应评估此通知，以确定此活动是否预期且可接受，或者是否正在进行攻击。
 
 .您将需要什么
-* 反勒索软件正在活动模式下运行。
+* ARP正在活动模式下运行。
 
 
-如果检测到高数据容量，具有数据加密的异常卷活动以及异常文件扩展名的任意组合，则反勒索软件将显示可疑文件的列表。
+如果ARP检测到高数据容量、具有数据加密的异常卷活动以及异常文件扩展名的任意组合、则会显示可疑文件的列表。
 
 发出警告后，您可以通过以下两种方式之一来标记文件活动：
 
@@ -39,15 +39,16 @@ summary: 当反勒索软件检测到受保护卷中的异常活动时，它会�
 
 
 
-在这两种情况下，在更新和清除通知后将恢复正常监控；反勒索软件会记录您的评估结果，日志会使用新文件类型进行更新，并将其用于未来分析。但是，在发生可疑攻击时，您必须确定是否是攻击，如果是攻击，则对此进行响应，并在清除通知之前还原受保护的数据。有关详细信息，请参见 link:index.html#how-to-recover-data-in-ontap-after-a-ransomware-attack["如何从勒索软件攻击中恢复"]。
+在这两种情况下、在更新和清除通知后将恢复正常监控；ARP会记录您的评估结果、日志会使用新的文件类型进行更新、并将其用于将来的分析。但是，在发生可疑攻击时，您必须确定是否是攻击，如果是攻击，则对此进行响应，并在清除通知之前还原受保护的数据。 link:index.html#how-to-recover-hdata-in-ontap-after-a-ransomware-attack["详细了解如何从勒索软件攻击中恢复"]。
 
 
 NOTE: 如果还原了整个卷、则不会通知您要清除。
 
-
-
-== System Manager 操作步骤
-
+[role="tabbed-block"]
+.步骤
+====
+.System Manager
+--
 . 收到 " 异常活动 " 通知后，单击链接或导航到 * 卷 * 概述的 * 安全性 * 选项卡。
 +
 警告将显示在事件窗口的概述窗格中。
@@ -69,12 +70,11 @@ NOTE: 如果还原了整个卷、则不会通知您要清除。
 | 误报 | 单击 * 更新 * 和 * 清除可疑文件类型 * 以记录您的决策并恢复正常的反勒索软件监控。 
 
 
-| 潜在勒索软件攻击 | 应对攻击并还原受保护的数据。然后，单击 * 更新 * 和 * 清除可疑文件类型 * 以记录您的决定并恢复正常的反勒索软件监控。+如果还原了整个卷、则不需要清除任何可疑文件类型。 
+| 潜在勒索软件攻击 | 应对攻击并还原受保护的数据。然后单击*更新*和*清除可疑文件类型*以记录您的决定并恢复正常ARP监控。+如果还原了整个卷、则不需要清除任何可疑文件类型。 
 |===
-
-
-== 命令行界面操作步骤
-
+--
+.命令行界面
+--
 . 收到可疑勒索软件攻击的通知后，请验证此攻击的时间和严重性：
 +
 `sSecurity anti-ranson勒索 软件 volume show -vserver _svm_name_ -volume _vol_name_`
@@ -127,7 +127,7 @@ Number of Attacks: 1
 
 ** 潜在的勒索软件攻击
 +
-应对攻击并还原数据。然后，输入以下命令记录您的决定并恢复正常的反勒索软件监控：
+应对攻击并还原数据。然后、输入以下命令记录您的决定并恢复正常ARP监控：
 
 +
 `反勒索软件卷攻击 clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive false`
@@ -141,3 +141,6 @@ Number of Attacks: 1
 
 
 
+
+--
+====

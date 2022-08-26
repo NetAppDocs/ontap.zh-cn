@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/enable-default-task.html 
-keywords: system manager, cli, enable, anti-ransomware, anti ransomware, antiransom, antiransomware, default, volumes, configure, storage volumes, enable anti-ransomware in system manager, modify, storage VM, SVM, create 
+keywords: system manager, cli, enable, anti-ransomware, anti ransomware, antiransom, antiransomware, autonomous, ransomware, protection, arp, default, volumes, configure, storage volumes, enable anti-ransomware in system manager, modify, storage VM, SVM, create 
 summary: 从 ONTAP 9.10.1 开始，您可以配置 Storage VM （ SVM ），以便在学习模式下默认为反勒索软件启用新卷。 
 ---
-= 默认情况下，在新卷中启用反勒索软件
+= 默认情况下、在新卷中启用自主勒索软件保护
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -19,7 +19,7 @@ summary: 从 ONTAP 9.10.1 开始，您可以配置 Storage VM （ SVM ），以�
 
 
 [role="lead"]
-从 ONTAP 9.10.1 开始，您可以配置 Storage VM （ SVM ），以便在学习模式下默认为反勒索软件启用新卷。
+从ONTAP 9.10.1开始、您可以配置Storage VM (SVM)、以便在学习模式下为自动勒索软件保护(ARP)默认启用新卷。
 
 .您将需要什么
 * 已为您的ONTAP 版本安装正确的许可证。
@@ -44,22 +44,25 @@ MT_EK_Mgmt (多租户密钥管理)
 |===
 
 
-默认情况下，系统会在禁用模式下使用反勒索软件创建新卷，但您可以在 System Manager 和 CLI 中更改此设置。默认情况下，在学习模式下，启用的卷会设置为反勒索软件。
+默认情况下、新卷会在ARP处于禁用模式的情况下创建、但您可以在System Manager和CLI中更改此设置。默认情况下、处于学习模式的卷会设置为ARP。
 
-
-
-== System Manager 操作步骤
-
+[role="tabbed-block"]
+.步骤
+====
+.System Manager
+--
 . 单击 * 存储 > 存储 VM* ，然后选择用于默认防病毒的 Storage VM 。
-. 在 * 设置 * 选项卡中的 * 安全性 * 部分中，单击 image:icon_pencil.gif["笔图标"] 在 * 反勒索软件 * 框中，选中此框可为 NAS 卷启用反勒索软件。
+. 在 * 设置 * 选项卡中的 * 安全性 * 部分中，单击 image:icon_pencil.gif["笔图标"] 在*防勒索软件*框中、选中此框可为NAS卷启用ARP。
 
 
-
-
-== 命令行界面操作步骤
-
-. 修改现有 SVM 以在新卷中默认启用反勒索软件： `vserver modify -vserver _svm_name_ -anti-ranswere-default-volume-state dry-run`
+--
+.命令行界面
+--
+. 修改现有SVM以在新卷中默认启用ARP：`vserver modify -vserver _svm_name_-anti-ransweron-default-volume-state dry-run`
 +
-在 CLI 中，您还可以创建一个新的 SVM ，并为新卷默认启用反勒索软件。`vserver create -vserver svm_name -anti-ransweron-default-volume-state dry-run [_other parameters as needed_]`
+在CLI中、您还可以创建一个新的SVM、并为新卷默认启用ARP。`vserver create -vserver svm_name -anti-ransweron-default-volume-state dry-run [_other parameters as needed_]`
 
 
+
+--
+====

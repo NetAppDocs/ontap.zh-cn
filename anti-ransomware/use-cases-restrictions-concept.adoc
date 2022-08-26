@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/use-cases-restrictions-concept.html 
-keywords: anti-ransomware use cases and restrictions, anti-ransomware performance and frequency considerations, anti-ransomware workloads, anti-ransomware volume requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations 
+keywords: anti-ransomware use cases and restrictions, anti-ransomware performance and frequency considerations, anti-ransomware workloads, anti-ransomware volume requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations, autonomous ransomware protection, arp 
 summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版本将支持其他环境。 
 ---
-= 反勒索软件使用情形和注意事项
+= 自主勒索软件保护使用情形和注意事项
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -21,7 +21,7 @@ summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版
 [role="lead"]
 ONTAP 平台支持：
 
-* 从ONTAP 9.10.1开始、所有内部ONTAP 系统均可使用防勒索软件功能。
+* 从ONTAP 9.10.1开始、所有内部ONTAP 系统均可使用自动勒索软件保护(ARP)功能。
 * 目前在Cloud Volumes ONTAP 环境中不提供此功能。
 
 
@@ -41,8 +41,8 @@ ONTAP 平台支持：
 不适合的工作负载：
 
 * 文件创建或删除频率较高的工作负载（几秒内就有数十万个文件；例如，测试 / 开发工作负载）
-* 反勒索软件功能取决于识别文件创建或删除活动异常激增的能力。如果应用程序本身是文件活动的源，则无法有效地将其与勒索软件活动区分开来
-* 应用程序或主机对数据进行加密的工作负载防勒索软件功能取决于将传入数据区分为加密或未加密。如果应用程序本身正在对数据进行加密，则此功能的有效性将会降低。但是，根据文件活动（创建，删除和覆盖）和文件类型，此功能仍可正常工作。
+* ARP取决于识别文件创建或删除活动异常激增的能力。如果应用程序本身是文件活动的源，则无法有效地将其与勒索软件活动区分开来
+* 应用程序或主机对数据ARP进行加密的工作负载取决于将传入数据区分为加密或未加密。如果应用程序本身正在对数据进行加密，则此功能的有效性将会降低。但是，根据文件活动（创建，删除和覆盖）和文件类型，此功能仍可正常工作。
 
 
 不支持的系统配置：
@@ -73,9 +73,9 @@ ONTAP 平台支持：
 
 
 
-== 反勒索软件的性能和频率注意事项
+== ARP性能和频率注意事项
 
-按吞吐量和峰值 IOPS 衡量，反勒索软件功能对系统性能的影响最小。反勒索软件功能的影响在很大程度上取决于卷工作负载。对于大多数典型或常见工作负载，建议使用以下配置限制：
+按吞吐量和峰值IOPS衡量、ARP功能对系统性能的影响最小。反勒索软件功能的影响在很大程度上取决于卷工作负载。对于大多数典型或常见工作负载，建议使用以下配置限制：
 
 [cols="30,20,30"]
 |===
@@ -89,12 +89,12 @@ ONTAP 平台支持：
 |===
 密码：[*]无论添加的卷数是否超过建议的限制、系统性能均不会超过这些百分比。
 
-由于反勒索软件分析按优先顺序运行，因此随着受保护卷数量的增加，对每个卷运行分析的频率也会降低。
+由于ARP分析按优先顺序运行、因此随着受保护卷数量的增加、对每个卷运行分析的频率也会降低。
 
 
 
 == 检测到勒索软件时自动 Snapshot 副本的工作原理
 
-为了尽可能获得最佳恢复点，一旦检测到异常文件活动，反勒索软件功能就会创建一个自动 Snapshot 副本。但是，反勒索软件功能不会立即标记警报；相反，在生成警报之前，需要运行分析并确认可疑活动与勒索软件配置文件匹配。此过程可能需要长达 60 分钟。如果分析确定活动不可疑，则不会生成警报，但自动创建的 Snapshot 副本会在文件系统上至少保留两天。
+为了尽可能获得最佳恢复点、ARP检测到异常文件活动后会立即创建一个自动Snapshot副本。但是、ARP不会立即标记警报；相反、在生成警报之前、需要运行分析并确认可疑活动与勒索软件配置文件匹配。此过程可能需要长达 60 分钟。如果分析确定活动不可疑，则不会生成警报，但自动创建的 Snapshot 副本会在文件系统上至少保留两天。
 
-从ONTAP 9.11.1开始、您可以控制针对可疑勒索软件攻击自动生成的反勒索软件Snapshot副本的数量和保留期限。了解操作方法 link:modify-automatic-shapshot-options-task.html["修改自动Snapshot副本的选项"]。
+从ONTAP 9.11.1开始、您可以控制因可疑勒索软件攻击而自动生成的ARP Snapshot副本的数量和保留期限。了解操作方法 link:modify-automatic-shapshot-options-task.html["修改自动Snapshot副本的选项"]。

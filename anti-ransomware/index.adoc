@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/index.html 
-keywords: anti-ransomware overview, ransomware, security, introduce, protection, detect, detection, threat, attack, suspect, what ontap anti-ransomware detects, entropy, abnormal volume activity, ransomware, antiransomware, extension conformity, recover data after a ransomware attack, ransomware protection strategy 
-summary: 从 ONTAP 9.10.1 开始，反勒索软件功能使用 NAS （ NFS 和 SMB ）环境中的工作负载分析主动检测并警告可能指示勒索软件攻击的异常活动。 
+keywords: anti-ransomware overview, ransomware, security, introduce, autonomous, protection, arp, detect, detection, threat, attack, suspect, what ontap anti-ransomware detects, entropy, abnormal volume activity, ransomware, antiransomware, extension conformity, recover data after a ransomware attack, ransomware protection strategy 
+summary: '从ONTAP 9.10.1开始、自动勒索软件保护(ARP)功能使用NAS (NFS和SMB)环境中的工作负载分析功能主动检测并警告可能指示勒索软件攻击的异常活动。' 
 ---
-= 反勒索软件概述
+= 自主勒索软件保护概述
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -19,11 +19,11 @@ summary: 从 ONTAP 9.10.1 开始，反勒索软件功能使用 NAS （ NFS 和 S
 
 
 [role="lead"]
-从 ONTAP 9.10.1 开始，反勒索软件功能使用 NAS （ NFS 和 SMB ）环境中的工作负载分析主动检测并警告可能指示勒索软件攻击的异常活动。
+从ONTAP 9.10.1开始、自动勒索软件保护(ARP)功能使用NAS (NFS和SMB)环境中的工作负载分析功能主动检测并警告可能指示勒索软件攻击的异常活动。
 
-如果怀疑发生攻击、除了从计划的Snapshot副本中提供现有保护之外、反勒索软件还会创建新的Snapshot副本。
+如果怀疑发生攻击、ARP除了从计划的Snapshot副本中提供现有保护之外、还会创建新的Snapshot副本。
 
-反勒索软件功能可通过以下许可证启用。
+已使用以下许可证启用ARP功能。
 
 [cols="2*"]
 |===
@@ -43,11 +43,11 @@ ONTAP 9.10.1
 MT_EK_Mgmt (多租户密钥管理)
 
 |===
-* 如果您要升级到ONTAP 9.11.1或更高版本、并且系统上已配置反勒索软件保护、则无需购买新的反勒索软件许可证。对于新的反勒索软件配置、需要新的许可证。
-* 如果您要从ONTAP 9.11.1或更高版本还原到ONTAP 9.10.1、并且您已使用反勒索软件许可证启用反勒索软件保护、则会看到一条警告消息、并且可能需要重新配置反勒索软件。 link:../revert/anti-ransomware-license-task.html["了解如何还原反勒索软件保护"]。
+* 如果您要升级到ONTAP 9.11.1或更高版本、并且您的系统上已配置ARP、则无需购买新的反勒索软件许可证。对于新的ARP配置、需要新的许可证。
+* 如果您要从ONTAP 9.11.1或更高版本还原到ONTAP 9.10.1、并且已使用防勒索软件许可证启用ARP、则会看到一条警告消息、可能需要重新配置ARP。 link:../revert/anti-ransomware-license-task.html["了解还原ARP的相关信息"]。
 
 
-您可以使用 ONTAP 系统管理器或 ONTAP 命令行界面（ CLI ）按卷配置反勒索软件保护。
+您可以使用ONTAP 系统管理器或ONTAP 命令行界面(CLI)按卷配置ARP。
 
 
 
@@ -57,13 +57,13 @@ MT_EK_Mgmt (多租户密钥管理)
 
 一个比喻是车辆的安全特性。您不希望依靠安全带等单一功能在意外事件中为您提供全面保护。安全袋，防抱死制动器和前向碰撞警告都是额外的安全功能，可以带来更好的结果。应以相同方式查看勒索软件保护。
 
-虽然 ONTAP 包含 FPolicy ， Snapshot 副本， SnapLock 和 Active IQ 数字顾问等功能，可帮助防止勒索软件，但以下信息重点介绍 ONTAP 的机载反勒索软件功能以及机器学习功能。
+虽然ONTAP 包含FPolicy、Snapshot副本、SnapLock 和Active IQ 数字顾问等功能、可帮助防止勒索软件、但以下信息重点介绍具有机器学习功能的ONTAP ARP即装即用功能。
 
 要详细了解 ONTAP 的其他反勒索软件功能，请参见： https://www.netapp.com/media/7334-tr4572.pdf["TR-4572 ：《 NetApp 解决方案 for 勒索软件》。"^]
 
 
 
-== ONTAP 反勒索软件检测到的内容
+== ONTAP ARP检测到的内容
 
 勒索软件攻击有两种：
 
@@ -71,7 +71,7 @@ MT_EK_Mgmt (多租户密钥管理)
 . 敏感专有数据被盗。攻击者威胁要将此数据释放到公有域，除非支付了勒索。
 
 
-ONTAP 勒索软件保护解决了第一种类型，它采用了一种基于以下内容的反勒索软件检测机制：
+ONTAP ARP利用基于以下内容的反勒索软件检测机制解决了第一种类型：
 
 . 将传入数据标识为加密或纯文本。
 . 分析，用于检测
@@ -84,7 +84,7 @@ ONTAP 勒索软件保护解决了第一种类型，它采用了一种基于以�
 
 
 
-NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索软件攻击的安全。虽然攻击可能会被检测不到，但如果防病毒软件无法检测到入侵， NetApp 勒索软件保护可作为一个重要的额外防御层。在对少量文件进行加密后，反勒索软件可以检测到大多数勒索软件攻击的蔓延，自动采取措施保护数据，并提醒您可疑攻击正在发生。
+NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索软件攻击的安全。虽然可能无法检测到攻击、但如果防病毒软件无法检测到入侵、则NetApp ARP可作为一个重要的额外防御层。在对少量文件进行加密后、ARP可以检测到大多数勒索软件攻击的蔓延、并自动采取措施保护数据、并提醒您可疑攻击正在发生。
 
 
 
@@ -96,7 +96,7 @@ NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索�
 
 了解受影响的文件和攻击时间后，可以有选择地从各种 Snapshot 副本恢复受影响的文件，而不是简单地将整个卷还原到某个快照。
 
-因此，反勒索软件基于经验证的 ONTAP 数据保护和灾难恢复技术构建，可应对勒索软件攻击。有关恢复数据的详细信息，请参见以下主题。
+因此、ARP建立在经验证的ONTAP 数据保护和灾难恢复技术之上、可应对勒索软件攻击。有关恢复数据的详细信息，请参见以下主题。
 
 * link:../task_dp_recover_snapshot.html["从 Snapshot 副本恢复（ System Manager ）"]
 * link:../data-protection/restore-contents-volume-snapshot-task.html["从 Snapshot 副本还原文件（命令行界面）"]

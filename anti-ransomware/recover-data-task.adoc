@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/recover-data-task.html 
-keywords: Restore data after an attack, anti-ransomware backup, restore data from snapshot copies, potential ransomware attack, ransomware attack, recovery snapshot copies are deleted, recover deleted snapshot copies 
+keywords: Restore data after an attack, anti-ransomware backup, restore data from snapshot copies, potential ransomware attack, ransomware attack, recovery snapshot copies are deleted, recover deleted snapshot copies, autonomous, ransomware, protection, arp 
 summary: 当反勒索软件检测到潜在攻击时，系统会创建名为 Anti 勒索软件 _backup 的 Snapshot 副本。您可以从这些反勒索软件副本或其他 Snapshot 副本还原数据。 
 ---
-= 在发生攻击后还原数据
+= 在勒索软件攻击后还原数据
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -19,28 +19,31 @@ summary: 当反勒索软件检测到潜在攻击时，系统会创建名为 Anti
 
 
 [role="lead"]
-当反勒索软件检测到潜在攻击时，系统会创建名为 "Anti 勒索软件 _backup" 的 Snapshot 副本。您可以从这些反勒索软件副本或其他 Snapshot 副本还原数据。
+当自主勒索软件保护(ARP)检测到潜在攻击时、系统会创建名为"Anti勒索软件_backup"的Snapshot副本。您可以从这些ARP副本或其他Snapshot副本还原数据。
 
 
 NOTE: 如果发生勒索软件攻击、请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Ransomware_prevention_and_recovery_in_ONTAP["ONTAP 中的勒索软件预防和恢复"^] 用于追加信息 的恢复和未来缓解。
 
 .您将需要什么
-* 支持反勒索软件
+* 已启用ARP
 * 来自潜在勒索软件攻击的报告
 
 
-
-
-== System Manager 操作步骤
-
+[role="tabbed-block"]
+.步骤
+====
+.System Manager
+--
 . 显示已确定为潜在攻击的卷中的 Snapshot 副本：单击 * 存储 > 卷 * ，选择卷，然后单击 Snapshot 副本选项卡。
 . 按照以下说明还原所需的副本：link:../task_dp_recover_snapshot.html["从 Snapshot 副本恢复"]
 
 
-
-
-== 命令行界面操作步骤
-
+--
+.命令行界面
+--
 . 显示在已确定为潜在攻击的卷中的 Snapshot 副本： `volume snapshot show -vserver _svm_name_ -volume _vol_name_`
 . 按照以下说明还原所需的副本：link:../data-protection/restore-contents-volume-snapshot-task.html["从 Snapshot 副本还原文件"]
 
+
+--
+====
