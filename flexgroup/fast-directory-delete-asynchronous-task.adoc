@@ -24,8 +24,8 @@ summary: 从ONTAP 9.8开始、您可以使用volume file async-delete命令在�
 .命令行界面
 --
 .使用命令行界面执行快速目录删除：
-. 进入高级权限模式： ` -privilege advanced`
-. 删除 FlexVol 或 FlexGroup 卷上的文件或目录： `volume file async-delete start -vserver vserver_name -volume volume_name -path file_path -throttle throttle`
+. 进入高级权限模式：`set -privilege advanced`
+. 删除FlexVol 或FlexGroup 卷上的文件或目录：`volume file async-delete start -vserver _svm_name_-volume _volume_name_-path _file_path_-throttle _throttle_value_`
 +
 最小限制值为 10 ，最大值为 100 ， 000 ，默认值为 5000 。
 
@@ -54,7 +54,7 @@ MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success:
 .取消目录删除作业
 . 进入高级权限模式：
 +
-` 权限高级`
+`set -privilege advanced`
 
 . 验证目录删除是否正在进行中：
 +
@@ -65,7 +65,7 @@ MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success:
 
 . 取消目录删除：
 +
-`volume file async-delete cancel -vserver svm_name -volume volume_name -jobid job_id`
+`volume file async-delete cancel -vserver _svm_name_-volume _volume_name_-jobid _job_id_`
 
 
 

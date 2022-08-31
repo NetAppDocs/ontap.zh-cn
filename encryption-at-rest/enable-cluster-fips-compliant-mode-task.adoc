@@ -22,22 +22,6 @@ summary: 您可以将 security config modify 命令与 -is-fips-enabled 选项�
 
 修改集群范围的安全配置后，您必须手动重新启动集群节点。
 
-
-
-== ONTAP 9.11.1RC1注意事项
-
-由于ONTAP 9.11.1RC1的更改、FIPS 140-2合规性管理模式不再使用经过FIPS 140-2验证的软件模块。
-
-ONTAP 9.11.1RC1升级了用于HTTPS管理和控制平面连接的OpenSSL版本。此版本的OpenSSL (OpenSSL 3.x FIPS提供程序)尚未完成FIPS 140-2加密模块验证计划(CMVP)验证过程。
-
-启用FIPS兼容模式后、用于HTTPS连接的加密算法与加密算法验证计划(CAVP)证书A1938中发布的OpenSSL Project OpenSSL 3.x FIPS提供程序算法相同。*此更改仅影响在FIPS兼容模式下配置的ONTAP 系统。*
-
-一旦ONTAP 9.11.1RC1中已升级的OpenSSL模块通过NIST完成FIPS 140-2验证、此问题描述 将得到修复。如果您的环境要求使用已通过FIPS 140-2 CMVP验证的模块运行ONTAP 集群管理控制平面、则建议不要升级到9.11.1RC1。
-
-这不会影响NSE、NVE和NAE等NetApp空闲加密技术、因为这些功能使用的加密模块与ONTAP 中的OpenSSL提供的加密模块不同。
-
-有关详细信息，请参见 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Upgrading_to_ONTAP_9.11.1RC1_results_in_FIPS_140-2_compliance_management_configuration_that_is_not_validated["升级到ONTAP 9.11.1RC1会导致FIPS 140-2合规性管理配置未经过验证"^]。
-
 .步骤
 . 将权限级别设置为高级：
 +
