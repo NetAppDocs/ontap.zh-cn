@@ -45,7 +45,7 @@ Info: Starting modify on 14 disks.
 `s存储加密磁盘 show-status`
 
 +
-重复 show-status 命令，直到数字相同为止。如果 " 磁盘已开始 " 和 " 磁盘已完成 " 中的数字相同，则操作完成。
+重复show-status命令、直到"磁盘已开始"和"磁盘已完成"中的数字相同为止。
 
 +
 [listing]
@@ -85,5 +85,30 @@ Info: Starting modify on 14 disks.
 
 +
 重复 show-status 命令，直到数字相同为止。如果 " 磁盘已开始 " 和 " 磁盘已完成 " 中的数字相同，则操作完成。
+
+
+
+
+
+== 维护模式
+
+从ONTAP 9.7开始、您可以从维护模式重新为FIPS驱动器设置密钥。只有在无法使用上一节中的ONTAP 命令行界面说明时、才应使用维护模式。
+
+.步骤
+. 将节点的FIPS身份验证密钥ID重新设置为默认MSID 0x0：
++
+`disk encrypt rekey_fips 0x0 _disklist_`
+
+. 将节点的数据身份验证密钥 ID 重新设置为默认 MSID 0x0 ：
++
+`disk encrypt rekey 0x0 _disklist_`
+
+. 确认已成功重新设置FIPS身份验证密钥密钥：
++
+`disk encrypt show_fips`
+
+. 确认已使用成功重新设置数据身份验证密钥密钥：
++
+`disk encrypt show`
 
 
