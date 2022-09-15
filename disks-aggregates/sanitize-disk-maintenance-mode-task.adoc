@@ -1,7 +1,7 @@
 ---
 permalink: disks-aggregates/sanitize-disk-maintenance-mode-task.html 
 sidebar: sidebar 
-keywords: sanitize, disk, maintenance mode, nodeshell 
+keywords: sanitize, disk, maintenance mode, nodeshell, node shell, sanitization 
 summary: 从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。这样，您就可以从已停用或无法运行的系统上的磁盘或一组磁盘中删除数据，从而无法恢复这些数据。 
 ---
 = 清理磁盘
@@ -13,16 +13,10 @@ summary: 从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。
 [role="lead"]
 清理磁盘可以从已停用或无法运行的系统上的磁盘或一组磁盘中删除数据，以便永远无法恢复数据。
 
-清理磁盘的方法有两种：
+使用命令行界面清理磁盘的方法有两种：
 
-* 在 ONTAP 9.6 及更高版本中使用维护模式命令。
-* 在所有 ONTAP 9 版本中使用 nodeshell 命令。
-
-
-
-
-== 维护模式方法
-
+.使用&#8220；维护模式和#8221；命令清理磁盘(ONTAP 9.6及更高版本)
+====
 从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。
 
 .开始之前
@@ -39,13 +33,9 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 . 启动至维护模式：
 . 如果要清理的磁盘已分区，请取消每个磁盘的分区：
 +
-[NOTE]
-====
-取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。*强烈建议您在继续操作之前联系NetApp支持部门
 
-您也可以参考知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 中取消对备用驱动器的分区"^]。
+NOTE: 取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。强烈建议您在继续操作之前联系NetApp支持部门。您也可以参考知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 中取消对备用驱动器的分区"^]
 
-====
 +
 `d取消分区_disk_name_`
 
@@ -80,16 +70,15 @@ NOTE: 清理期间，请勿关闭节点电源，中断存储连接或删除目�
 . 退出维护模式：
 
 
-
-
-== nodeshell 方法
-
-如果使用 nodeshell 命令启用了磁盘清理，则会禁用一些低级别的 ONTAP 命令。在节点上启用磁盘清理后，无法将其禁用。
+====
+.使用&#8220；nodeshell和#8221；命令清理磁盘(所有ONTAP 9版本)
+====
+对于所有版本的ONTAP 9、如果使用nodeshell命令启用磁盘清理、则会禁用某些低级别的ONTAP 命令。在节点上启用磁盘清理后，无法将其禁用。
 
 .开始之前
-* 这些磁盘必须是备用磁盘；它们必须归节点所有，但不能在聚合中使用。
+* 这些磁盘必须是备用磁盘；它们必须归节点所有、但不能在本地层(聚合)中使用。
 +
-如果磁盘已分区，则聚合中不能使用任何分区。
+如果磁盘已分区、则任何分区都不能在本地层(聚合)中使用。
 
 * 这些磁盘不能是自加密磁盘（ SED ）。
 +
@@ -104,13 +93,11 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 .步骤
 . 如果要清理的磁盘已分区，请取消每个磁盘的分区：
 +
-[NOTE]
-====
-取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。*强烈建议您在继续操作之前联系NetApp支持部门
+--
 
-您也可以参考知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 中取消对备用驱动器的分区"^]。
+NOTE: 取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。*强烈建议您在继续操作之前联系NetApp支持部门。*您也可以参考知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 中取消对备用驱动器的分区"^]。
 
-====
+--
 +
 `d取消分区_disk_name_`
 
@@ -134,13 +121,9 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 `dsanitize e start （ -p pattern1]-r （ -p pattern2]-r ）（ -p pattern3|-r]] （ -c cycle_count ） disk_list`
 
 +
-[NOTE]
-====
-清理期间，请勿关闭节点电源，中断存储连接或删除目标磁盘。如果在格式化阶段中断清理，则必须重新启动格式化阶段并允许完成此阶段，然后才能对磁盘进行清理并准备好返回到备用池。
 
-如果需要中止清理过程，可以使用 disk sanitize abort 命令来中止清理过程。如果指定磁盘正处于清理的格式化阶段，则在该阶段完成之前不会中止。
+NOTE: 清理期间，请勿关闭节点电源，中断存储连接或删除目标磁盘。如果在格式化阶段中断清理，则必须重新启动格式化阶段并允许完成此阶段，然后才能对磁盘进行清理并准备好返回到备用池。如果需要中止清理过程，可以使用 disk sanitize abort 命令来中止清理过程。如果指定磁盘正处于清理的格式化阶段，则在该阶段完成之前不会中止。
 
-====
 +
 ` -p pattern1 -p pattern2 -p pattern3` 指定一到三个用户定义的十六进制字节覆盖模式的周期，这些模式可连续应用于要清理的磁盘。默认模式为三次，第一次使用 0x55 ，第二次使用 0xAA ，第三次使用 0x3c 。
 
@@ -176,8 +159,7 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 +
 `s存储聚合 show-spare-disks`
 
-
-
++
 [cols="1,2"]
 |===
 
@@ -191,20 +173,26 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 | 某些已清理磁盘未列为备用磁盘  a| 
 完成以下步骤：
 
-. 进入高级权限模式：
+.. 进入高级权限模式：
 +
 `set -privilege advanced`
 
-. 将未分配的已清理磁盘分配给每个磁盘的相应节点：
+.. 将未分配的已清理磁盘分配给每个磁盘的相应节点：
 +
 `s存储磁盘分配-disk _disk_name_-owner _node_name_`
 
-. 将每个磁盘的磁盘恢复为备用状态：
+.. 将每个磁盘的磁盘恢复为备用状态：
 +
 `s存储磁盘unfail -disk _disk_name_-s -q`
 
-. 返回到管理模式： `set -privilege admin`
+.. 返回到管理模式：
++
+`set -privilege admin`
+
 
 
 |===
+
+
+====
 指定的磁盘将进行清理并指定为热备用磁盘。已清理磁盘的序列号将写入 ` /etc/log/sanitized_disks` 。

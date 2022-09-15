@@ -15,17 +15,29 @@ summary: 从ONTAP 9.8开始、您可以使用volume file async-delete命令在�
 
 如果您使用的ONTAP 版本早于ONTAP 9.11.1、则必须是使用高级权限模式的集群管理员或SVM管理员。
 
-从ONTAP 9.11.1开始、存储管理员可以授予对卷的权限、以允许NFS和SMB客户端执行异步删除操作。有关详细信息，请参见 xref:manage-client-async-dir-delete-task.adoc[管理客户端权限以快速删除目录]。
+从ONTAP 9.11.1开始、存储管理员可以授予对卷的权限、以允许NFS和SMB客户端执行异步删除操作。有关详细信息，请参见 link:manage-client-async-dir-delete-task.html["管理客户端权限以快速删除目录"]。
 
 从ONTAP 9.8开始、您可以使用ONTAP 命令行界面使用快速目录删除功能。从ONTAP 9.1.1开始、您可以在System Manager中使用此功能。有关此过程的详细信息，请参见 https://docs.netapp.com/us-en/ontap/task_nas_file_system_analytics_take_corrective_action.html["根据分析结果采取更正操作"]。
 
 [role="tabbed-block"]
 ====
+.System Manager
+--
+有关详细信息，请参见 https://docs.netapp.com/us-en/ontap/task_nas_file_system_analytics_take_corrective_action.html["根据分析结果采取更正操作"]。
+
+--
 .命令行界面
 --
-.使用命令行界面执行快速目录删除：
-. 进入高级权限模式：`set -privilege advanced`
-. 删除FlexVol 或FlexGroup 卷上的文件或目录：`volume file async-delete start -vserver _svm_name_-volume _volume_name_-path _file_path_-throttle _throttle_value_`
+*使用命令行界面执行快速目录删除*
+
+. 进入高级权限模式：
++
+` 权限高级`
+
+. 删除FlexVol 或FlexGroup 卷上的文件或目录：
++
+`volume file async-delete start -vserver vserver_name -volume volume_name -path file_path -throttle throttle`
+
 +
 最小限制值为 10 ，最大值为 100 ， 000 ，默认值为 5000 。
 
@@ -33,25 +45,27 @@ summary: 从ONTAP 9.8开始、您可以使用volume file async-delete命令在�
 以下示例将删除名为 d2 的目录，该目录位于名为 d1 的目录中。
 
 +
-[listing]
-----
+....
 cluster::*>volume file async-delete start -vserver vs1 -volume vol1 -path d1/d2
-----
-. 验证是否已删除此目录： `event log show`
+....
+. 验证是否已删除此目录：
++
+`事件日志显示`
+
 +
 以下示例显示了成功删除目录后事件日志的输出。
 
 +
-[listing]
-----
+....
 cluster-cli::*> event log show
 Time                 Node             Severity      Event
 -------------------  ---------------- ------------- --------------------
 MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success: Async delete job on path d1/d2 of volume (MSID: 2162149232) was completed.
-----
+....
 
 
-.取消目录删除作业
+*取消目录删除作业*
+
 . 进入高级权限模式：
 +
 `set -privilege advanced`
@@ -61,7 +75,7 @@ MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success:
 `volume file async-delete show`
 
 +
-如果显示了 SVM ，卷，作业 ID 和目录路径，则可以取消作业。
+如果显示SVM、卷、作业ID和目录路径、则可以取消作业。
 
 . 取消目录删除：
 +
@@ -70,9 +84,7 @@ MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success:
 
 
 --
-.System Manager
 --
-有关详细信息，请参见 https://docs.netapp.com/us-en/ontap/task_nas_file_system_analytics_take_corrective_action.html["根据分析结果采取更正操作"]。
 
 --
 ====

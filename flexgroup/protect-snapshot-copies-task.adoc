@@ -16,11 +16,10 @@ summary: 您可以创建 Snapshot 策略来自动管理 Snapshot 副本的创建
 .关于此任务
 * 如果有多个 FlexGroup 卷与一个 Snapshot 策略关联，则应确保 FlexGroup 卷计划不会重叠。
 * 从 ONTAP 9.8 开始， FlexGroup 卷支持的最大 Snapshot 副本数为 1023 。
-+
+
+
 
 NOTE: 从 ONTAP 9.8 开始，适用于 FlexGroup 卷的 `volume snapshot show` 命令会使用逻辑块报告 Snapshot 副本大小，而不是计算最小拥有的块。这种新的大小计算方法可能会使 Snapshot 副本大小比早期版本的 ONTAP 中的计算更大。
-
-
 
 .步骤
 . 创建 Snapshot 策略或手动创建 Snapshot 副本：
@@ -36,11 +35,9 @@ NOTE: 从 ONTAP 9.8 开始，适用于 FlexGroup 卷的 `volume snapshot show` �
  a| 
 `volume snapshot policy create`
 
-[NOTE]
-====
-与 FlexGroup 卷的 Snapshot 策略关联的计划的间隔必须大于 30 分钟。
 
-====
+NOTE: 与 FlexGroup 卷的 Snapshot 策略关联的计划的间隔必须大于 30 分钟。
+
 创建 FlexGroup 卷时， `default` Snapshot 策略将应用于 FlexGroup 卷。
 
 
@@ -50,13 +47,12 @@ NOTE: 从 ONTAP 9.8 开始，适用于 FlexGroup 卷的 `volume snapshot show` �
  a| 
 `volume snapshot create`
 
-[NOTE]
-====
-为 FlexGroup 卷创建 Snapshot 副本后，您将无法修改 Snapshot 副本的属性。如果要修改属性，必须先删除 Snapshot 副本，然后再重新创建该副本。
 
-====
+NOTE: 为 FlexGroup 卷创建 Snapshot 副本后，您将无法修改 Snapshot 副本的属性。如果要修改属性，必须先删除 Snapshot 副本，然后再重新创建该副本。
+
 |===
-+
+
+
 创建 Snapshot 副本时，客户端对 FlexGroup 卷的访问会暂时暂停。
 
 . 验证是否为 FlexGroup 卷创建了有效的 Snapshot 副本： `volume snapshot show -volume volume_name -fields state`

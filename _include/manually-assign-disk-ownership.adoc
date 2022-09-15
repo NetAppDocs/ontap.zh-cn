@@ -1,0 +1,24 @@
+= 
+:allow-uri-read: 
+
+
+[role="lead"]
+磁盘必须归节点所有、才能在本地层(聚合)中使用。
+
+如果集群未配置为使用自动磁盘所有权分配，则必须手动分配所有权。
+
+您不能重新分配本地层中正在使用的磁盘的所有权。
+
+.步骤
+. 使用命令行界面显示所有未分配的磁盘：
++
+`storage disk show -container-type unassigned`
+
+. 分配每个磁盘：
++
+`s存储磁盘分配 -disk _disk_name_ -owner _owner_name_`
+
++
+You can use the wildcard character to assign more than one disk at once.如果要重新分配已归其他节点所有的备用磁盘、则必须使用"`-force`"选项。
+
+

@@ -31,9 +31,11 @@ summary: 您可以将ONTAP 配置为将重要事件通知转发到webhook应用�
 
 根据传输层安全(Transport Layer Security、TLS)协议的使用方式、有多个安全选项可用。您选择的选项将确定所需的ONTAP 配置。
 
+[NOTE]
+====
+TLS是一种加密协议、在互联网上广泛使用。它使用一个或多个公有 密钥证书提供隐私以及数据完整性和身份验证。证书由可信证书颁发机构颁发。
 
-NOTE: TLS是一种加密协议、在互联网上广泛使用。它使用一个或多个公有 密钥证书提供隐私以及数据完整性和身份验证。证书由可信证书颁发机构颁发。
-
+====
 HTTP:: 您可以使用HTTP传输事件通知。使用此配置时、连接不安全。不会验证ONTAP 客户端和webhook应用程序的身份。此外、网络流量不会加密或受到保护。请参见 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-http["配置webhook目标以使用HTTP"] 以获取配置详细信息。
 HTTPS:: 为了提高安全性、您可以在托管webhook例程的服务器上安装证书。ONTAP 使用HTTPS协议来验证webhook应用程序服务器的身份、双方也使用此协议来确保网络流量的隐私和完整性。请参见 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https["将网络挂机目标配置为使用HTTPS"] 以获取配置详细信息。
 使用HTTPS进行相互身份验证:: 您可以通过在发出webbook请求的ONTAP 系统上安装客户端证书来进一步增强HTTPS安全性。除了ONTAP 验证webhook应用程序服务器的身份并保护网络流量之外、webhook应用程序还会验证ONTAP 客户端的身份。这种双向对等身份验证称为_mutual tls_.请参见 link:configure-webhooks-event-notifications-task.html#configure-a-webhook-destination-to-use-https-with-mutual-authentication["配置一个webhook目标以使用HTTPS进行相互身份验证"] 以获取配置详细信息。

@@ -1,17 +1,19 @@
 ---
 permalink: disks-aggregates/create-ssd-storage-pool-task.html 
 sidebar: sidebar 
-keywords: create, ssd storage pool 
-summary: 您可以创建固态驱动器（ SSD ）存储池，以便为两到四个 Flash Pool 聚合提供 SSD 缓存。 
+keywords: create, provision, ssd, storage, flash, pool, add, cache, local tier, aggregate 
+summary: '您可以创建固态驱动器(SSD)存储池、以便为两到四个Flash Pool本地层(聚合)提供SSD缓存。' 
 ---
-= 创建 SSD 存储池
+= 通过创建SSD存储池向本地层(聚合)添加缓存
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以创建固态驱动器（ SSD ）存储池，以便为两到四个 Flash Pool 聚合提供 SSD 缓存。
+您可以通过添加固态驱动器(SSD)将现有本地层(聚合)转换为Flash Pool本地层(聚合)来配置缓存。
+
+您可以创建固态驱动器(SSD)存储池、以便为两到四个Flash Pool本地层(聚合)提供SSD缓存。通过 Flash Pool 聚合，您可以将闪存部署为工作数据集的高性能缓存，同时使用低成本的 HDD 来存储访问频率较低的数据。
 
 .关于此任务
 * 在创建磁盘或向存储池添加磁盘时，必须提供磁盘列表。
@@ -20,6 +22,31 @@ summary: 您可以创建固态驱动器（ SSD ）存储池，以便为两到四
 
 * 存储池中使用的 SSD 大小应相同。
 
+
+您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+*使用System Manager添加SSD缓存(仅限ONTAP 9.7)*
+
+
+NOTE: 如果您的ONTAP 版本不是9.7、请使用命令行界面操作步骤
+
+.步骤
+. 单击 * （返回经典版本） * 。
+. 单击 * 存储 > 聚合和磁盘 > 聚合 * 。
+. 选择本地层（聚合），然后单击 * 操作 > 添加缓存 * 。
+. 选择缓存源作为 " 存储池 " 或 " 专用 SSD " 。
+. 单击 * （切换到新体验） * 。
+. 单击 * 存储 > 层 * 以验证新聚合的大小。
+
+
+--
+.命令行界面
+--
+*使用命令行界面创建SSD存储池*
 
 .步骤
 . 确定可用备用 SSD 的名称：
@@ -39,4 +66,6 @@ summary: 您可以创建固态驱动器（ SSD ）存储池，以便为两到四
 
 
 
+--
+====
 将 SSD 放入存储池后，它们将不再显示为集群上的备用磁盘，即使存储池提供的存储尚未分配给任何 Flash Pool 缓存。您不能将 SSD 作为离散驱动器添加到 RAID 组；其存储只能使用其所属存储池的分配单元进行配置。

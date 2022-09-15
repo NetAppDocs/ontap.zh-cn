@@ -1,17 +1,94 @@
 ---
 permalink: disks-aggregates/create-aggregates-auto-provision-task.html 
 sidebar: sidebar 
-keywords: ontap 9, create, aggregates, auto-provision 
-summary: 如果自动配置方法适合您的环境，则可以运行存储聚合自动配置来生成聚合布局建议。然后，您可以在查看并批准 ONTAP 建议后创建聚合。 
+keywords: ontap 9, create, aggregates, auto-provision, add, local tier, automatic, automatically 
+summary: '如果ONTAP 为自动添加本地层(使用自动配置创建聚合)提供的最佳实践建议适用于您的环境、则您可以接受此建议并让ONTAP 添加本地层。' 
 ---
-= 使用自动配置创建聚合
+= 自动添加本地层(通过自动配置创建聚合)
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果自动配置方法适合您的环境，请运行 `s存储聚合自动配置` 以生成聚合布局建议。然后，您可以在查看并批准 ONTAP 建议后创建聚合。
+如果ONTAP 为自动添加本地层(使用自动配置创建聚合)提供的最佳实践建议适用于您的环境、则您可以接受此建议并让ONTAP 添加本地层。
+
+您遵循的过程取决于您使用的界面—System Manager或CLI。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+*使用System Manager自动添加本地层*
+
+.步骤
+. 在 System Manager 中，单击 * 存储 > 层 * 。
+. 在*层*页面中、单击 image:icon-add-local-tier.png["添加本地层图标"] 要创建新的本地层、请执行以下操作：
++
+"*添加本地层*"页面显示了可在节点上创建的建议本地层数以及可用存储。
+
+. 单击*建议详细信息*以查看System Manager建议的配置。
++
+System Manager从ONTAP 9.8开始显示以下信息：
+
++
+** *本地层名称*(您可以编辑从ONTAP 9.10.1开始的本地层名称)
+** * 节点名称 *
+** *可用大小*
+** *存储类型*
+
+
++
+从ONTAP 9.10.1开始、将显示追加信息 ：
+
++
+** *磁盘*：显示磁盘的数量、大小和类型
+** *布局*：显示RAID组布局、包括哪些磁盘为奇偶校验磁盘或数据磁盘以及哪些插槽未使用。
+** *备用磁盘*：显示节点名称、备用磁盘的数量和大小以及存储类型。
+
+
+. 执行以下步骤之一：
++
+|===
+
+
+| 如果要… | 然后执行此操作… 
+
+
+ a| 
+接受System Manager中的建议。
+ a| 
+继续执行 ,配置板载密钥管理器进行加密的步骤。
+
+
+
+ a| 
+手动配置本地层、并使用System Manager中的建议*；not_*。
+ a| 
+继续执行 link:create-aggregates-manual-task.html["手动添加本地层(创建聚合)"]：
+
+** 对于ONTAP 9.10.1及更早版本、请按照以下步骤使用命令行界面。
+** 从ONTAP 9.11.1开始、按照以下步骤使用System Manager。
+
+
+|===
+. 【第5步- OKM-encrypt]](可选)：如果已安装板载密钥管理器、则可以对其进行加密配置。选中*为板载密钥管理器配置加密*复选框。
++
+.. 输入密码短语。
+.. 再次输入密码短语进行确认。
+.. 保存密码短语、以备将来需要恢复系统时使用。
+.. 备份密钥数据库以供将来使用。
+
+
+. 单击*保存*以创建本地层并将其添加到存储解决方案 中。
+
+
+--
+.命令行界面
+--
+*使用命令行界面创建具有自动配置功能的聚合*
+
+您可以运行`storage aggregate auto-provisione`命令来生成聚合布局建议。然后，您可以在查看并批准 ONTAP 建议后创建聚合。
 
 集群上必须运行 ONTAP 9.2 或更高版本。
 
@@ -37,8 +114,20 @@ summary: 如果自动配置方法适合您的环境，则可以运行存储聚�
 ** ` skip-confirmation` option ：创建建议的聚合，而不显示或确认
 
 
-. 查看建议聚合的显示后，对提示进行响应以创建建议的聚合。
+. 执行以下步骤之一：
 +
+[cols="35,65"]
+|===
+
+
+| 如果要… | 然后执行此操作… 
+
+
+ a| 
+接受ONTAP 的建议。
+ a| 
+查看建议聚合的显示、然后响应提示创建建议的聚合。
+
 [listing]
 ----
 Do you want to create recommended aggregates? {y|n}:y
@@ -48,4 +137,14 @@ Info: Creating node1_SSD_1 ...
 ----
 
 
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"]
+ a| 
+手动配置本地层、并使用ONTAP 中的建议*。
+ a| 
+继续执行 link:create-aggregates-manual-task.html["手动添加本地层(创建聚合)"]。
+
+|===
+
+
+--
+====
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9命令"^]

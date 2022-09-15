@@ -1,22 +1,22 @@
 ---
 permalink: disks-aggregates/determine-drive-raid-group-info-aggregate-task.html 
 sidebar: sidebar 
-keywords: determine, drive, raid group, information, aggregate 
-summary: 某些聚合管理任务要求您了解构成聚合的驱动器类型，驱动器大小，校验和和和状态，是否与其他聚合共享以及 RAID 组的大小和构成。 
+keywords: determine, drive, raid group, information, aggregate, local tier 
+summary: '某些本地层(聚合)管理任务要求您了解构成本地层的驱动器类型、驱动器大小、校验和和状态、是否与其他聚合共享以及RAID组的大小和构成。' 
 ---
-= 确定聚合的驱动器和 RAID 组信息
+= 确定本地层(聚合)的驱动器和RAID组信息
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-某些聚合管理任务要求您了解构成聚合的驱动器类型，驱动器大小，校验和和和状态，是否与其他聚合共享以及 RAID 组的大小和构成。
+某些本地层(聚合)管理任务要求您了解构成本地层的驱动器类型、驱动器大小、校验和和状态、是否与其他本地层共享以及RAID组的大小和构成。
 
 .步骤
 . 按 RAID 组显示聚合的驱动器：
 +
-`storage aggregate show-status _aggregate_name_`
+`storage aggregate show-status _aggr_name_`
 
 +
 此时将显示聚合中每个 RAID 组的驱动器。
@@ -26,30 +26,32 @@ summary: 某些聚合管理任务要求您了解构成聚合的驱动器类型�
 
 
 
-.示例：使用 SSD 存储池和数据分区的 Flash Pool 聚合
-[listing]
-----
+....
 cluster1::> storage aggregate show-status nodeA_fp_1
 
 Owner Node: cluster1-a
  Aggregate: nodeA_fp_1 (online, mixed_raid_type, hybrid) (block checksums)
   Plex: /nodeA_fp_1/plex0 (online, normal, active, pool0)
    RAID Group /nodeA_fp_1/plex0/rg0 (normal, block checksums, raid_dp)
-                                                              Usable Physical
-     Position Disk                        Pool Type     RPM     Size     Size Status
-     -------- --------------------------- ---- ----- ------ -------- -------- -------
-     shared   2.0.1                        0   SAS    10000  472.9GB  547.1GB (normal)
-     shared   2.0.3                        0   SAS    10000  472.9GB  547.1GB (normal)
-     shared   2.0.5                        0   SAS    10000  472.9GB  547.1GB (normal)
-     shared   2.0.7                        0   SAS    10000  472.9GB  547.1GB (normal)
-     shared   2.0.9                        0   SAS    10000  472.9GB  547.1GB (normal)
-     shared   2.0.11                       0   SAS    10000  472.9GB  547.1GB (normal)
 
-   RAID Group /nodeA_flashpool_1/plex0/rg1 (normal, block checksums, raid4) (Storage Pool: SmallSP)
-                                                              Usable Physical
-     Position Disk                        Pool Type     RPM     Size     Size Status
-     -------- --------------------------- ---- ----- ------ -------- -------- -------
-     shared   2.0.13                       0   SSD        -  186.2GB  745.2GB (normal)
-     shared   2.0.12                       0   SSD        -  186.2GB  745.2GB (normal)
+                                             Usable Physical
+     Position Disk       Pool Type     RPM     Size     Size Status
+     -------- ---------- ---- ----- ------ -------- -------- -------
+     shared   2.0.1       0   SAS    10000  472.9GB  547.1GB (normal)
+     shared   2.0.3       0   SAS    10000  472.9GB  547.1GB (normal)
+     shared   2.0.5       0   SAS    10000  472.9GB  547.1GB (normal)
+     shared   2.0.7       0   SAS    10000  472.9GB  547.1GB (normal)
+     shared   2.0.9       0   SAS    10000  472.9GB  547.1GB (normal)
+     shared   2.0.11      0   SAS    10000  472.9GB  547.1GB (normal)
+
+   RAID Group /nodeA_flashpool_1/plex0/rg1
+   (normal, block checksums, raid4) (Storage Pool: SmallSP)
+
+                                             Usable Physical
+     Position Disk       Pool Type     RPM     Size     Size Status
+     -------- ---------- ---- ----- ------ -------- -------- -------
+     shared   2.0.13      0   SSD        -  186.2GB  745.2GB (normal)
+     shared   2.0.12      0   SSD        -  186.2GB  745.2GB (normal)
+
 8 entries were displayed.
-----
+....

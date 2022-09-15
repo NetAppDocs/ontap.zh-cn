@@ -1,43 +1,43 @@
 ---
 permalink: disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html 
 sidebar: sidebar 
-keywords: create, flash pool, aggregate, ssd, storage pool, allocation units 
-summary: 您可以通过将 SSD 存储池中的一个或多个分配单元添加到现有 HDD 聚合来配置 Flash Pool 聚合。 
+keywords: create, flash pool, aggregate, local tier, ssd, storage pool, allocation units 
+summary: '您可以通过将SSD存储池中的一个或多个分配单元添加到现有HDD本地层来配置Flash Pool本地层(聚合)。' 
 ---
-= 使用 SSD 存储池分配单元创建 Flash Pool 聚合
+= 使用SSD存储池分配单元创建Flash Pool本地层(聚合)
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以通过将 SSD 存储池中的一个或多个分配单元添加到现有 HDD 聚合来配置 Flash Pool 聚合。
+您可以通过将SSD存储池中的一个或多个分配单元添加到现有HDD本地层来配置Flash Pool本地层(聚合)。
 
 .您需要什么？ #8217 ；将需要什么
-* 您必须已确定一个由 HDD 组成的有效聚合，以转换为 Flash Pool 聚合。
-* 您必须已确定与聚合关联的卷的写入缓存资格，并已完成解决资格问题所需的所有步骤。
-* 您必须已创建 SSD 存储池，才能为此 Flash Pool 聚合提供 SSD 缓存。
+* 您必须已确定一个由HDD组成的有效本地层以转换为Flash Pool本地层。
+* 您必须已确定与本地层关联的卷的写入缓存资格、并已完成解决资格问题所需的所有步骤。
+* 您必须已创建SSD存储池、才能为此Flash Pool本地层提供SSD缓存。
 +
-存储池中要使用的任何分配单元都必须归拥有 Flash Pool 聚合的同一节点所有。
+存储池中要使用的任何分配单元都必须归拥有Flash Pool本地层的同一节点所有。
 
-* 您必须已确定要添加到聚合的缓存容量。
+* 您必须已确定要添加到本地层的缓存大小。
 +
-您可以按分配单元向聚合添加缓存。如果有空间，您可以稍后通过向存储池添加 SSD 来增加分配单元的大小。
+您可以按分配单元向本地层添加缓存。如果有空间，您可以稍后通过向存储池添加 SSD 来增加分配单元的大小。
 
 * 您必须已确定要用于 SSD 缓存的 RAID 类型。
 +
-从 SSD 存储池向聚合添加缓存后，您将无法更改缓存 RAID 组的 RAID 类型。
+从SSD存储池向本地层添加缓存后、您将无法更改缓存RAID组的RAID类型。
 
-* 您必须已确定系统的最大缓存大小，并确定向聚合添加 SSD 缓存不会导致发生原因超出此限制。
+* 您必须已确定系统的最大缓存大小、并确定向本地层添加SSD缓存不会导致发生原因 超出此限制。
 +
 您可以使用 `storage pool show` 命令查看要添加到缓存总大小的缓存量。
 
-* 您必须已熟悉 Flash Pool 聚合的配置要求。
+* 您必须已熟悉Flash Pool本地层的配置要求。
 
 
-如果希望缓存的 RAID 类型与 HDD RAID 组的 RAID 类型不同，则必须在添加 SSD 容量时指定缓存 RAID 类型。向聚合添加 SSD 容量后，您将无法再更改缓存的 RAID 类型。
+如果希望缓存的RAID类型与HDD RAID组的RAID类型不同、则必须在添加SSD容量时指定缓存RAID类型。将SSD容量添加到本地层后、您将无法再更改缓存的RAID类型。
 
-将 SSD 缓存添加到聚合以创建 Flash Pool 聚合后，您无法删除 SSD 缓存以将聚合转换回其原始配置。
+将SSD缓存添加到本地层以创建Flash Pool本地层后、您无法删除此SSD缓存将本地层转换回其原始配置。
 
 .步骤
 . 将聚合标记为有资格成为 Flash Pool 聚合：
@@ -76,4 +76,4 @@ summary: 您可以通过将 SSD 存储池中的一个或多个分配单元添加
 
 
 
-http://www.netapp.com/us/media/tr-4070.pdf["NetApp 技术报告 4070 ：《 Flash Pool 设计和实施指南》"]
+http://www.netapp.com/us/media/tr-4070.pdf["NetApp 技术报告 4070 ：《 Flash Pool 设计和实施指南》"^]

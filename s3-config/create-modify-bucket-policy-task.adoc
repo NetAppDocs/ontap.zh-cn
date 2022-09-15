@@ -23,8 +23,28 @@ summary: 您可以向默认存储分段策略添加访问规则。其访问控�
 
 从ONTAP 9.9.1及更高版本开始、如果您计划在ONTAP S3服务器上支持AWS客户端对象标记功能、则需要允许使用存储分段或组策略执行操作`GetObjectTagging`、`PutObjectTagging`和`DDeleteObjectTagging`。
 
+您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
+
 [role="tabbed-block"]
 ====
+.System Manager
+--
+.步骤
+. 编辑存储分段：单击 * 存储 > 存储分段 * ，单击所需分段，然后单击 * 编辑 * 。添加或修改权限时，您可以指定以下参数：
++
+** *主体*：被授予访问权限的用户或组。
+** *影响*：允许或拒绝对用户或组的访问。
+** *操作*：给定用户或组在存储分段中允许执行的操作。
+** *资源*：允许或拒绝访问的存储分段中对象的路径和名称。
++
+默认值 * ； bucketname_* 和 * ； bucketname/* ；用于授予对存储分段中所有对象的访问权限。您还可以授予对单个对象的访问权限，例如 * ； bucketname/_* ； readme.txt * 。
+
+** *条件*(可选)：尝试访问时评估的表达式。例如，您可以指定允许或拒绝访问的 IP 地址列表。
+
+
+
+
+--
 .命令行界面
 --
 .步骤
@@ -90,23 +110,5 @@ cluster1::> vserver object-store-server bucket policy statement create -vserver 
 ----
 cluster1::> vserver object-store-server bucket policy statement create -vserver svm1.example.com -bucket bucket1 -effect allow -action GetObject,PutObject,DeleteObject,ListBucket -principal group/group1 -resource bucket1/* -sid "fullAccessForGroup1"
 ----
---
-.System Manager
---
-.步骤
-. 编辑存储分段：单击 * 存储 > 存储分段 * ，单击所需分段，然后单击 * 编辑 * 。添加或修改权限时，您可以指定以下参数：
-+
-** Principal ：向其授予访问权限的用户或组。
-** 影响：允许或拒绝对用户或组的访问。
-** 操作：指定用户或组在存储分段中允许执行的操作。
-** 资源：允许或拒绝访问的存储分段中对象的路径和名称。
-+
-默认值 * ； bucketname_* 和 * ； bucketname/* ；用于授予对存储分段中所有对象的访问权限。您还可以授予对单个对象的访问权限，例如 * ； bucketname/_* ； readme.txt * 。
-
-** 条件（可选）：尝试访问时评估的表达式。例如，您可以指定允许或拒绝访问的 IP 地址列表。
-
-
-
-
 --
 ====

@@ -1,10 +1,10 @@
 ---
 permalink: concepts/aggregates-raid-groups-concept.html 
 sidebar: sidebar 
-keywords: aggregates, raid groups 
+keywords: aggregate, local tier,  raid group, raid-dp, parity disk 
 summary: '现代 RAID 技术可通过在备用磁盘上重建故障磁盘的数据来防止磁盘故障。系统会将 " 奇偶校验磁盘 " 上的索引信息与其余运行正常的磁盘上的数据进行比较，以重建缺少的数据，而不会造成停机或高昂的性能成本。' 
 ---
-= 聚合和 RAID 组
+= 本地层(聚合)和RAID组
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,8 +13,8 @@ summary: '现代 RAID 技术可通过在备用磁盘上重建故障磁盘的数�
 [role="lead"]
 现代 RAID 技术可通过在备用磁盘上重建故障磁盘的数据来防止磁盘故障。系统会将 "`奇偶校验磁盘` " 上的索引信息与其余运行正常的磁盘上的数据进行比较，以重建缺少的数据，而无需停机或高昂的性能成本。
 
-聚合包含一个或多个 _RAID 组。 _ 聚合的 _RAID 类型 _ 决定 RAID 组中的奇偶校验磁盘数以及 RAID 配置可防止的并发磁盘故障数。
+一个本地层(聚合)由一个或多个_RAID组组成。_本地层的_RAID类型_决定RAID组中的奇偶校验磁盘数以及RAID配置可防止的并发磁盘故障数。
 
 默认 RAID 类型 RAID-DP （ RAID-DP （ RAID-DP 双奇偶校验）要求每个 RAID 组具有两个奇偶校验磁盘，并可防止在两个磁盘同时发生故障时丢失数据。对于 RAID-DP ，建议的 RAID 组大小介于 12 到 20 个 HDD 和 20 到 28 个 SSD 之间。
 
-您可以通过在较高的规模估算建议端创建 RAID 组来分摊奇偶校验磁盘的开销成本。SSD 尤其如此，因为 SSD 比容量驱动器更可靠。对于 HDD 聚合，您应在最大化磁盘存储需求与较大 RAID 组所需重建时间较长等反向因素之间取得平衡。
+您可以通过在较高的规模估算建议端创建 RAID 组来分摊奇偶校验磁盘的开销成本。SSD 尤其如此，因为 SSD 比容量驱动器更可靠。对于使用HDD的本地层、您应在最大程度地提高磁盘存储的需求与较大RAID组所需的较长重建时间等抵消因素之间取得平衡。

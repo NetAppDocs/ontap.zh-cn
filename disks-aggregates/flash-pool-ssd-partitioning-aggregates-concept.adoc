@@ -1,28 +1,28 @@
 ---
 permalink: disks-aggregates/flash-pool-ssd-partitioning-aggregates-concept.html 
 sidebar: sidebar 
-keywords: flash pool, ssd partitioning, work, aggregates, storage pools 
-summary: 如果要为两个或更多 Flash Pool 聚合提供缓存，则应使用 Flash Pool 固态驱动器（ SSD ）分区功能。Flash Pool SSD 分区功能允许使用 Flash Pool 的所有聚合共享 SSD 。这样可以将奇偶校验成本分摊到多个聚合上，提高 SSD 缓存分配的灵活性，并最大限度地提高 SSD 性能。 
+keywords: flash pool, ssd partitioning, work, aggregate, storage pool, local tier 
+summary: '如果要向两个或更多Flash Pool本地层(聚合)提供缓存、则应使用Flash Pool固态驱动器(SSD)分区功能。Flash Pool SSD分区功能允许使用Flash Pool的所有本地层共享SSD。这样可以将奇偶校验成本分摊到多个本地层、提高SSD缓存分配的灵活性、并最大限度地提高SSD性能。' 
 ---
-= Flash Pool SSD 分区如何适用于使用存储池的 Flash Pool 聚合
+= 使用存储池为Flash Pool本地层(聚合)进行Flash Pool SSD分区
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果要为两个或更多 Flash Pool 聚合提供缓存，则应使用 Flash Pool 固态驱动器（ SSD ）分区功能。Flash Pool SSD 分区功能允许使用 Flash Pool 的所有聚合共享 SSD 。这样可以将奇偶校验成本分摊到多个聚合上，提高 SSD 缓存分配的灵活性，并最大限度地提高 SSD 性能。
+如果要向两个或更多Flash Pool本地层(聚合)提供缓存、则应使用Flash Pool固态驱动器(SSD)分区功能。Flash Pool SSD分区功能允许使用Flash Pool的所有本地层共享SSD。这样可以将奇偶校验成本分摊到多个本地层、提高SSD缓存分配的灵活性、并最大限度地提高SSD性能。
 
-要在 Flash Pool 聚合中使用 SSD ，必须将 SSD 放置在存储池中。您不能使用已分区的 SSD 在存储池中进行根数据分区。将 SSD 放置到存储池中后，无法再将 SSD 作为独立磁盘进行管理，也无法将其从存储池中删除，除非您销毁与 Flash Pool 关联的聚合并销毁存储池。
+要在Flash Pool本地层中使用SSD、必须将SSD放置在存储池中。您不能使用已分区的 SSD 在存储池中进行根数据分区。将SSD放置到存储池中后、无法再将SSD作为独立磁盘进行管理、也无法将其从存储池中删除、除非您销毁与Flash Pool关联的本地层并销毁存储池。
 
-SSD 存储池分为四个相等的分配单元。添加到存储池的 SSD 分为四个分区，并为四个分配单元中的每个分配一个分区。存储池中的 SSD 必须属于同一个 HA 对。默认情况下，系统会为 HA 对中的每个节点分配两个分配单元。分配单元必须归其所服务的聚合所属的节点所有。如果其中一个节点上的聚合需要更多 Flash Cache ，则可以移动默认分配单元数以减少一个节点上的数量并增加配对节点上的数量。
+SSD 存储池分为四个相等的分配单元。添加到存储池的 SSD 分为四个分区，并为四个分配单元中的每个分配一个分区。存储池中的 SSD 必须属于同一个 HA 对。默认情况下，系统会为 HA 对中的每个节点分配两个分配单元。分配单元必须归拥有所服务的本地层的节点所有。如果其中一个节点上的本地层需要更多Flash Cache、则可以移动默认分配单元数以减少一个节点上的数量并增加配对节点上的数量。
 
-一个存储池只能使用一个备用 SSD 。如果存储池为 HA 对中两个节点所拥有的 Flash Pool 聚合提供了分配单元，则备用 SSD 可以归任一节点所有。但是，如果存储池仅为 HA 对中某个节点所拥有的 Flash Pool 聚合提供分配单元，则 SSD 备用磁盘必须属于同一节点。
+一个存储池只能使用一个备用 SSD 。如果存储池为HA对中两个节点所拥有的Flash Pool本地层提供了分配单元、则备用SSD可以归任一节点所有。但是、如果存储池仅向HA对中某个节点所拥有的Flash Pool本地层提供分配单元、则SSD备用磁盘必须属于同一节点。
 
-下图是 Flash Pool SSD 分区的一个示例。SSD 存储池可为两个 Flash Pool 聚合提供缓存：
+下图是 Flash Pool SSD 分区的一个示例。SSD存储池可为两个Flash Pool本地层提供缓存：
 
 image::../media/shared-ssds-overview.gif[此图通过周围的文本进行了说明。]
 
 存储池 SP1 由五个 SSD 和一个热备用 SSD 组成。存储池的两个分配单元分配给 Flash Pool FP1 ，两个分配给 Flash Pool FP2 。FP1 的缓存 RAID 类型为 RAID4 。因此，提供给 FP1 的分配单元仅包含一个指定用于奇偶校验的分区。FP2 的缓存 RAID 类型为 RAID-DP 。因此，提供给 FP2 的分配单元包括奇偶校验分区和双奇偶校验分区。
 
-在此示例中，每个 Flash Pool 聚合分配两个分配单元。但是，如果一个 Flash Pool 聚合需要更大的缓存，则可以将其中三个分配单元分配给该 Flash Pool 聚合，而只将一个分配单元分配给另一个。
+在此示例中、每个Flash Pool本地层分配两个分配单元。但是、如果一个Flash Pool本地层需要更大的缓存、则可以将其中三个分配单元分配给该Flash Pool本地层、而只将一个分配单元分配给另一个分配单元。

@@ -6,6 +6,8 @@ summary: 此任务说明了 S3 审核中使用的参数。
 ---
 = 规划 S3 审核配置
 :allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
 
 
 [role="lead"]
@@ -21,28 +23,88 @@ summary: 此任务说明了 S3 审核中使用的参数。
 
 [cols="4,2,1"]
 |===
+
+
 | 信息类型 | 选项 | Required 
 
 
-| SVM 名称 _ 要创建审核配置的 SVM 的名称。SVM 必须已存在并已为 S3 启用。 | ` -verserver _svm_name_` | 是的。 
+ a| 
+_SVM 名称 _
+
+要创建审核配置的 SVM 的名称。
+
+SVM 必须已存在并已为 S3 启用。
+ a| 
+` -verserver _svm_name_`
+ a| 
+是的。
 
 
-| _Log destination path_ 指定转换后的审核日志的存储位置。此路径必须已存在于 SVM 上。路径长度最多可包含 864 个字符，并且必须具有读写权限。如果路径无效，审核配置命令将失败。 | ` - 目标 _text_` | 是的。 
+
+ a| 
+日志目标路径 _
+
+指定转换后的审核日志的存储位置。此路径必须已存在于 SVM 上。
+
+路径长度最多可包含 864 个字符，并且必须具有读写权限。
+
+如果路径无效，审核配置命令将失败。
+ a| 
+` - 目标 _text_`
+ a| 
+是的。
 
 
-| 要审核的事件类别 _ 可以审核以下事件类别： * data GetObject ， PutObject 和 DeleteObject Events * management PutBucket 和 DeleteBucket 事件默认仅审核数据事件。 | ` 事件 ｛ data ｛ vbar ｝ management ｝ ， ...` | 否 
+
+ a| 
+要审核的事件的类别 _
+
+可以审核以下事件类别：
+
+* Data GetObject、PutObject和DeleteObject事件
+* Management PutBucket和DeleteBucket事件
+
+
+默认情况下、仅审核数据事件。
+ a| 
+` 事件 ｛ data ｛ vbar ｝ management ｝ ， ...`
+ a| 
+否
+
 |===
 您可以输入以下参数之一来控制审核日志文件的数量。如果未输入任何值，则会保留所有日志文件。
 
 [cols="4,2,1"]
 |===
+
+
 | 信息类型 | 选项 | Required 
 
 
-| _Log files rotation limit_ 确定在将最旧的日志文件转出之前要保留的审核日志文件数。例如，如果输入值 5 ，则会保留最后五个日志文件。值为 0 表示所有日志文件均已保留。默认值为 0. 。 | ` -rotate-limit _intege_` | 否 
+ a| 
+日志文件轮换限制 _
+
+确定在将最旧的日志文件转出之前要保留的审核日志文件数。例如，如果输入值 5 ，则会保留最后五个日志文件。
+
+值为 0 表示所有日志文件均已保留。默认值为 0. 。
+ a| 
+` -rotate-limit _intege_`
+ a| 
+否
 
 
-| _Log files duration limit_ 确定日志文件在被删除之前可以保留多长时间。例如，如果输入值 5d0h0m ，超过 5 天的日志将被删除。值为 0 表示所有日志文件均已保留。默认值为 0. 。 | ` 保留持续时间 _integer _time_` | 否 
+
+ a| 
+日志文件持续时间限制_
+
+确定日志文件在被删除之前可以保留多长时间。例如，如果输入值 5d0h0m ，超过 5 天的日志将被删除。
+
+值为 0 表示所有日志文件均已保留。默认值为 0. 。
+ a| 
+` 保留持续时间 _integer _time_`
+ a| 
+否
+
 |===
 
 

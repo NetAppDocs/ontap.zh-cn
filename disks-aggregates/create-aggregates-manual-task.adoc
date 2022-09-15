@@ -1,29 +1,82 @@
 ---
 permalink: disks-aggregates/create-aggregates-manual-task.html 
 sidebar: sidebar 
-keywords: ontap 9, create, aggregates, manually 
-summary: 在手动创建聚合之前，您应查看磁盘配置选项并模拟创建过程。然后，您可以通过问题描述创建存储聚合并验证结果。 
+keywords: ontap 9, create, aggregates, manually, manual, add, local tier 
+summary: '如果您不想使用ONTAP 提供的最佳实践建议添加本地层(创建聚合)、则可以手动执行此过程。' 
 ---
-= 手动创建聚合
+= 手动添加本地层(创建聚合)
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在手动创建聚合之前，您应查看磁盘配置选项并模拟创建过程。然后，您可以对 `s存储聚合 create` 执行问题描述并验证结果。
+如果您不想使用ONTAP 提供的最佳实践建议添加本地层(创建聚合)、则可以手动执行此过程。
+
+您遵循的过程取决于您使用的界面—System Manager或CLI。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+*使用System Manager手动添加本地层*
+
+从ONTAP 9.11.1开始、如果您不想使用System Manager建议的配置来创建本地层、则可以指定所需的配置。
+
+.步骤
+. 在 System Manager 中，单击 * 存储 > 层 * 。
+. 在*层*页面中、单击 image:icon-add-local-tier.png["添加本地层图标"] 要创建新的本地层、请执行以下操作：
++
+"*添加本地层*"页面显示了可在节点上创建的建议本地层数以及可用存储。
+
+. 当System Manager显示本地层的存储建议时、单击*备用磁盘*部分中的*切换到手动创建本地层*。
++
+"*添加本地层*"页面将显示用于配置本地层的字段。
+
+. 在*添加本地层*页面的第一部分中、完成以下操作：
++
+.. 输入本地层的名称。
+.. (可选)：如果要镜像本地层、请选中*镜像此本地层*复选框。
+.. 选择磁盘类型。
+.. 选择磁盘数。
+
+
+. 在* RAID配置*部分中、完成以下操作：
++
+.. 选择RAID类型。
+.. 选择RAID组大小。
+.. 单击RAID Allocation以查看磁盘在组中的分配方式。
+
+
+. (可选)：如果已安装板载密钥管理器、您可以在页面的*加密*部分中将其配置为加密。选中*为板载密钥管理器配置加密*复选框。
++
+.. 输入密码短语。
+.. 再次输入密码短语进行确认。
+.. 保存密码短语、以备将来需要恢复系统时使用。
+.. 备份密钥数据库以供将来使用。
+
+
+. 单击*保存*以创建本地层并将其添加到存储解决方案 中。
+
+
+--
+.命令行界面
+--
+*使用命令行界面手动创建聚合*
+
+在手动创建聚合之前，您应查看磁盘配置选项并模拟创建过程。
+
+然后、您可以问题描述 `storage aggregate create`命令并验证结果。
 
 您必须已确定聚合中所需的磁盘数量和热备用磁盘数量。
 
-如果已启用根 - 数据 - 数据分区，并且配置中的固态驱动器（ SSD ）不超过 24 个，则建议将数据分区分配给不同的节点。
+如果已启用根-数据-数据分区、并且配置中的固态驱动器(SSD)不超过24个、则建议将数据分区分配给不同的节点。
 
 用于在启用了根数据分区和根数据数据分区的系统上创建聚合的操作步骤与用于在使用未分区磁盘的系统上创建聚合的操作步骤相同。如果您的系统已启用根数据分区，则应使用 ` -diskcount` 选项中的磁盘分区数。对于根 - 数据 - 数据分区， ` -diskcount` 选项指定要使用的磁盘数。
 
-[NOTE]
-====
-创建多个聚合以用于 FlexGroup 时，聚合的大小应尽可能接近。
 
-====
+NOTE: 创建多个聚合以用于 FlexGroup 时，聚合的大小应尽可能接近。
+
 `storage aggregate create` 手册页包含有关聚合创建选项和要求的详细信息。
 
 .步骤
@@ -49,4 +102,6 @@ summary: 在手动创建聚合之前，您应查看磁盘配置选项并模拟�
 
 
 
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"]
+--
+====
+http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]
