@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: setting up, storagegrid, cloud tier 
 summary: 如果您运行的是 ONTAP 9.2 或更高版本，则可以将 StorageGRID 设置为 FabricPool 的云层。 
 ---
-= 指定 StorageGRID 配置信息
+= 将 StorageGRID 设置为云层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,9 +13,40 @@ summary: 如果您运行的是 ONTAP 9.2 或更高版本，则可以将 StorageG
 [role="lead"]
 如果您运行的是 ONTAP 9.2 或更高版本，则可以将 StorageGRID 设置为 FabricPool 的云层。在对 SAN 协议访问的数据进行分层时， NetApp 建议使用私有云，例如 StorageGRID ，因为需要考虑连接问题。
 
+.将StorageGRID 与FabricPool 结合使用的注意事项
+* 除非明确禁用证书检查，否则您需要为 StorageGRID 安装 CA 证书。
+* 不能在对象存储分段上启用 StorageGRID 对象版本控制。
+* 不需要 FabricPool 许可证。
+* 如果 StorageGRID 节点部署在从 NetApp AFF 系统分配存储的虚拟机中，请确认此卷未启用 FabricPool 分层策略。
++
+对 StorageGRID 节点使用的卷禁用 FabricPool 分层可简化故障排除和存储操作。
+
++
+[NOTE]
+====
+切勿使用 FabricPool 将与 StorageGRID 相关的任何数据分层回 StorageGRID 本身。将 StorageGRID 数据分层回 StorageGRID 会增加故障排除和操作复杂性。
+
+====
+
+
 在 ONTAP 9.8 及更高版本中，已为 StorageGRID 启用负载平衡。当服务器的主机名解析为多个 IP 地址时， ONTAP 将使用返回的所有 IP 地址（最多 16 个 IP 地址）建立客户端连接。建立连接后， IP 地址将以轮循方式进行选取。
 
-.步骤
+您可以使用ONTAP System Manager或ONTAP 命令行界面将StorageGRID 设置为FabricPool 的云层。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 单击*存储>层>添加云层*、然后选择StorageGRID 作为对象存储提供程序。
+. 填写请求的信息。
+. 如果要创建云镜像，请单击 * 添加为 FabricPool 镜像 * 。
+
+
+FabricPool 镜像为您提供了一种无缝替换数据存储的方法，它有助于确保数据在发生灾难时可用。
+
+--
+.命令行界面
+--
 . 使用 `storage aggregate object-store config create` 命令和 ` provider-type` `SGWS` 参数指定 StorageGRID 配置信息。
 +
 ** 如果 ONTAP 无法使用提供的信息访问 StorageGRID ，则 `storage aggregate object-store config create` 命令将失败。
@@ -41,3 +72,6 @@ cluster1::> storage aggregate object-store config create
 使用 `storage aggregate object-store config modify` 命令可以修改 FabricPool 的 StorageGRID 配置信息。
 
 
+
+--
+====

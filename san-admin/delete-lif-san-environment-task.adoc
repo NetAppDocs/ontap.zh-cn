@@ -15,7 +15,23 @@ summary: 删除 LIF 之前，应确保连接到 LIF 的主机可以通过其他�
 
 如果要删除的 LIF 是端口集的成员，则必须先从端口集中删除此 LIF ，然后才能删除此 LIF 。
 
+[role="tabbed-block"]
 .步骤
+====
+.System Manager
+--
+使用ONTAP 系统管理器(9.7及更高版本)删除LIF。
+
+. 在System Manager中、单击*网络>概述*、然后选择*网络接口*。
+. 选择要从中删除LIF的Storage VM。
+. 单击 image:icon_kabob.gif["kabob 图标"] 并选择 * 删除 * 。
+
+
+--
+.命令行界面
+--
+使用ONTAP 命令行界面删除LIF。
+
 . 验证要删除的 LIF 和当前端口的名称：
 +
 `network interface show – vserver _vserver_name_`
@@ -46,3 +62,6 @@ vs1
         lif3       up/up      192.168.2.73/24  node-01   e0b     true
 ----
 
+
+--
+====

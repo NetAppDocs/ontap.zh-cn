@@ -1,17 +1,25 @@
 ---
 permalink: san-admin/lun-san-environments-concept.html 
 sidebar: sidebar 
-keywords: lun, guidelines 
+keywords: lun, guidelines, assigning, assign, ids, mapping, map, igroups 
 summary: 开始在集群上设置 LUN 之前，您需要查看 LUN 准则。 
 ---
-= LUN 准则
+= 创建LUN之前需要了解的事项
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
-[role="lead"]
-FC 协议和 iSCSI 协议均通过使用 LUN 来配置存储。设置 LUN 后，您可以执行各种管理任务，例如增加或减小 LUN 大小。配置卷并设置相应的操作系统类型后，您必须完成设置 LUN 所需的步骤。
+
+
+== 为什么实际LUN大小略有不同
+
+您应了解以下有关LUN大小的信息。
+
+* 创建LUN时、根据LUN的操作系统类型、LUN的实际大小可能会略有不同。创建 LUN 后，无法修改 LUN 操作系统类型。
+* 如果创建的LUN最大大小为16 TB、请注意、LUN的实际大小可能会稍小。ONTAP 会将限制取低一点。
+* 每个 LUN 的元数据在其所属聚合中大约需要 64 KB 的空间。创建 LUN 时，必须确保包含的聚合具有足够的空间来容纳 LUN 的元数据。如果聚合不包含足够的空间来容纳 LUN 的元数据，则某些主机可能无法访问 LUN 。
+
 
 
 

@@ -19,28 +19,42 @@ summary: 使用 ONTAP 系统管理器（ 9.7 及更高版本）中的 FC 或 iSC
 
 
 [role="lead"]
-使用 ONTAP 系统管理器（ 9.7 及更高版本）中的 FC 或 iSCSI SAN 协议创建 LUN 以为 ESXi 主机提供存储。LUN 在 ESXi 主机中显示为磁盘。
+此操作步骤 会在已配置FC或iSCSI协议的现有Storage VM上创建新的LUN。
 
-此操作步骤会在现有 Storage VM 上创建新的 LUN 。应已设置 FC 或 iSCSI 协议。
-
-image:workflow_san_provision_vmware.gif["为 VMware 配置 SAN 的工作流图"]
+如果需要创建新的Storage VM并配置FC或iSCSI协议、请参见 link:san-admin/configure-svm-fc-task.html["为 FC 配置 SVM"] 或 link:san-admin/configure-svm-iscsi-task.html["为 iSCSI 配置 SVM"]。
 
 
-NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
+NOTE: 在创建 LUN 期间，始终会启用非对称逻辑单元访问（ ALUA ）。您不能更改 ALUA 设置。
+
+从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
 
 完成此操作步骤 后，您可以使用适用于 VMware vSphere 的虚拟存储控制台（ VSC ）管理 VMware 数据存储库。从 VSC 7.0 开始， VSC 属于 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["适用于 VMware vSphere 虚拟设备的 ONTAP 工具"^]，其中包括适用于 VMware vSphere 的 VSC ， vStorage APIs for Storage Awareness （ VASA ） Provider 和 Storage Replication Adapter （ SRA ）功能。
 
 请务必检查 https://imt.netapp.com/matrix/["NetApp 互操作性表"^] 以确认当前 ONTAP 版本与 VSC 版本之间的兼容性。
 
-要使用 System Manager 经典版（适用于 ONTAP 9.7 及更早版本）为 ESXi 主机设置对数据存储库的 SAN 协议访问，请参见以下主题： * https://docs.netapp.com/us-en/ontap-sm-classic/fc-config-esxi/index.html["使用 VSC 为 ESXi 配置 FC 概述"^]* https://docs.netapp.com/us-en/ontap-sm-classic/iscsi-config-esxi/index.html["使用 VSC 为 ESXi 配置 iSCSI 概述"^]
-
 有关详细信息，请参见 https://docs.netapp.com/us-en/netapp-solutions/virtualization/vsphere_ontap_ontap_for_vsphere.html["TR-4597 ：适用于 ONTAP 的 VMware vSphere"^] 以及适用于您的 VSC 版本的文档。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+使用适用于ONTAP 9.7或更高版本的System Manager创建LUN以提供存储。
+
+LUN 在 ESXi 主机中显示为磁盘。
+
+要使用System Manager经典版(适用于ONTAP 9.7及更早版本)为ESXi主机设置对数据存储库的SAN协议访问、请参见以下主题：
+
+* https://docs.netapp.com/us-en/ontap-sm-classic/fc-config-esxi/index.html["使用 VSC 为 ESXi 配置 FC 概述"^]
+* https://docs.netapp.com/us-en/ontap-sm-classic/iscsi-config-esxi/index.html["使用 VSC 为 ESXi 配置 iSCSI 概述"^]
+
+
+
+NOTE: 在创建 LUN 期间，始终会启用非对称逻辑单元访问（ ALUA ）。您不能更改 ALUA 设置。
 
 .步骤
 . 在 System Manager 中，单击 * 存储 > LUN* ，然后单击 * 添加 * 。
-+
-.. 输入创建 LUN 所需的信息。
-.. 根据您的 ONTAP 版本，您可以单击 * 更多选项 * 执行以下操作。
+. 输入创建 LUN 所需的信息。
+. 您可以单击*更多选项*执行以下任一操作、具体取决于您的ONTAP 版本。
 +
 [cols="80,20"]
 |===
@@ -50,11 +64,11 @@ NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS �
 
 
  a| 
-*** 将 QoS 策略分配给 LUN ，而不是父卷
+** 将 QoS 策略分配给 LUN ，而不是父卷
 +
-**** * 更多选项 > 存储和优化 *
-**** 选择 * 性能服务级别 * 。
-**** 要将 QoS 策略应用于单个 LUN 而不是整个卷，请选择 * 将这些性能限制实施应用于每个 LUN* 。
+*** * 更多选项 > 存储和优化 *
+*** 选择 * 性能服务级别 * 。
+*** 要将 QoS 策略应用于单个 LUN 而不是整个卷，请选择 * 将这些性能限制实施应用于每个 LUN* 。
 +
 默认情况下、性能限制在卷级别应用。
 
@@ -65,10 +79,10 @@ NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS �
 
 
  a| 
-*** 使用现有启动程序组创建新的启动程序组
+** 使用现有启动程序组创建新的启动程序组
 +
-**** * 更多选项 > 主机信息 *
-**** 选择 * 使用现有启动程序组新建启动程序组 * 。
+*** * 更多选项 > 主机信息 *
+*** 选择 * 使用现有启动程序组新建启动程序组 * 。
 +
 * 注 * ：创建包含其他 igroup 的 igroup 后，无法更改其操作系统类型。
 
@@ -79,12 +93,12 @@ NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS �
 
 
  a| 
-*** 将问题描述添加到 igroup 或主机启动程序
+** 将问题描述添加到 igroup 或主机启动程序
 +
 问题描述用作 igroup 或主机启动程序的别名。
 
 +
-**** * 更多选项 > 主机信息 *
+*** * 更多选项 > 主机信息 *
 
 
 
@@ -92,13 +106,13 @@ NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS �
 
 
  a| 
-*** 在现有卷上创建 LUN
+** 在现有卷上创建 LUN
 +
 默认情况下，会在新卷中创建新的 LUN 。
 
 +
-**** * 更多选项 > 添加 LUN*
-**** 选择 * 组相关 LUN* 。
+*** * 更多选项 > 添加 LUN*
+*** 选择 * 组相关 LUN* 。
 
 
 
@@ -106,10 +120,10 @@ NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS �
 
 
  a| 
-*** 禁用 QoS 或选择自定义 QoS 策略
+** 禁用 QoS 或选择自定义 QoS 策略
 +
-**** * 更多选项 > 存储和优化 *
-**** 选择 * 性能服务级别 * 。
+*** * 更多选项 > 存储和优化 *
+*** 选择 * 性能服务级别 * 。
 +
 * 注 * ：在 ONTAP 9.9.1 及更高版本中，如果选择自定义 QoS 策略，则还可以选择手动放置在指定的本地层上。
 
@@ -120,14 +134,85 @@ NOTE: 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS �
 |===
 
 
-
-
 . 对于 FC ，请按 WWPN 对 FC 交换机进行分区。每个启动程序使用一个分区，并在每个分区中包含所有目标端口。
 . 使用适用于 VMware vSphere 的 Virtual Storage Console （ VSC ）发现并初始化 LUN 。
 . 验证 ESXi 主机是否可以在 LUN 上写入和读取数据。
 
 
-.相关信息
-* link:./san-admin/index.html["SAN 管理概述"]
-* link:san-admin/manage-san-initiators-task.html["查看和管理SAN启动程序和igroup"]
+--
+.命令行界面
+--
+使用ONTAP 命令行界面创建LUN以提供存储。
 
+. 使用 `ssystem license show` 命令验证您是否已获得 FC 或 iSCSI 的许可证。
++
+`s系统许可证显示`
+
++
+[listing]
+----
+
+Package           Type    Description           Expiration
+ ----------------- ------- --------------------- --------------------
+ Base              site    Cluster Base License  -
+ NFS               site    NFS License           -
+ CIFS              site    CIFS License          -
+ iSCSI             site    iSCSI License         -
+ FCP               site    FCP License           -
+----
+. 如果您没有 FC 或 iSCSI 许可证，请使用 `license add` 命令。
++
+`license add -license-code _thy_license_code_`
+
+. 在SVM上启用协议服务：
++
+*对于iSCSI：*`vserver iscsi create -vserver _vserver_name_-target-alias _vserver_name_`
+
++
+*对于FC：*`vserver fcp create -vserver _vserver_name_-status-admin up`
+
+. 在每个节点上为SVM创建两个LIF：
++
+`network interface create -vserver _vserver_name_-lif _lif_name_-role data -data-protocol iscsi_fc -home-node _node_name_-home-port _port_name_-address _ip_address_-netmask netmask`
+
++
+对于每个提供数据的SVM、NetApp至少支持每个节点一个iSCSI或FC LIF。但是、要实现冗余、每个节点需要两个LIF。
+
+. 确认已创建 LIF ，并且其运行状态为 `online` ：
++
+`network interface show -vserver _vserver_name_ _lif_name_`
+
+. 创建 LUN ：
++
+`lun create -vserver vserver_name -volume _volume_name_-lun _lun_name_-size _lun_size_-ostype linux -space-reserve enabled| disabled`
+
++
+LUN 名称不能超过 255 个字符，并且不能包含空格。
+
++
+
+NOTE: 在卷中创建 LUN 时， NVFAIL 选项会自动启用。
+
+. 创建 igroup ：
++
+`igroup create -vserver _vserver_name_-igroup _igroup_name_-protocol fcp_iscsi_mixed -ostype linux -initiator _initiator_name_`
+
+. 将 LUN 映射到 igroup ：
++
+`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
+
+. 验证是否已正确配置 LUN ：
++
+`lun show -vserver _vserver_name_`
+
+. link:san-admin/create-port-sets-binding-igroups-task.html["创建端口集并绑定到igroup"] （可选）。
+. 按照主机文档中的步骤在特定主机上启用块访问。
+. 使用 Host Utilities 完成 FC 或 iSCSI 映射并发现主机上的 LUN 。
+
+
+--
+====
+https://docs.netapp.com/us-en/ontap-sanhost/index.html["ONTAP SAN 主机配置"]
+link:./san-admin/index.html["SAN 管理概述"]
+https://docs.netapp.com/us-en/ontap/san-admin/manage-san-initiators-task.html["在System Manager中查看和管理SAN启动程序组"]
+http://www.netapp.com/us/media/tr-4017.pdf["NetApp 技术报告 4017 ：《光纤通道 SAN 最佳实践》"]

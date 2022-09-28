@@ -1,25 +1,49 @@
 ---
 permalink: san-admin/create-port-sets-binding-igroups-task.html 
 sidebar: sidebar 
-keywords: create, port, sets, binding, igroups, port sets 
-summary: 除了使用选择性 LUN 映射（ SLM ）之外，您还可以创建一个端口集并将该端口集绑定到 igroup ，以进一步限制启动程序可使用哪些 LIF 访问 LUN 。如果不将端口集绑定到 igroup ，则 igroup 中的所有启动程序都可以通过 LUN 所属节点及其 HA 配对节点上的所有 LIF 访问映射的 LUN 。 
+keywords: create, port, sets, binding, igroups, portsets,portset 
+summary: '除了使用选择性LUN映射(SLM)之外、您还可以创建一个端口集并将该端口集绑定到igroup、以进一步限制启动程序可使用哪些LIF访问LUN。如果不将端口集绑定到igroup、则igroup中的所有启动程序都可以通过LUN所属节点及其HA配对节点上的所有LIF访问映射的LUN。' 
 ---
-= 创建端口集并将 igroup 绑定到端口集
+= 创建端口集并绑定到igroup
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-除了使用选择性 LUN 映射（ SLM ）之外，您还可以创建一个端口集并将该端口集绑定到 igroup ，以进一步限制启动程序可使用哪些 LIF 访问 LUN 。如果不将端口集绑定到 igroup ，则 igroup 中的所有启动程序都可以通过 LUN 所属节点及其 HA 配对节点上的所有 LIF 访问映射的 LUN 。
+除了使用之外 link:selective-lun-map-concept.html["选择性 LUN 映射（ SLM ）"]、您可以创建一个端口集并将该端口集绑定到igroup、以进一步限制启动程序可使用哪些LIF访问LUN。
+
+如果不将端口集绑定到igroup、则igroup中的所有启动程序都可以通过LUN所属节点及其HA配对节点上的所有LIF访问映射的LUN。
 
 必须至少具有一个 LIF 和一个 igroup 。
 
 除非使用接口组，否则建议为 iSCSI 和 FC 配置两个 LIF 以实现冗余。建议接口组仅使用一个 LIF 。
 
-如果一个节点上的 LIF 超过两个，并且您希望将某个启动程序限制为 LIF 的一部分，则将端口集与 SLM 结合使用比较有利。如果没有端口集，则可以通过 LUN 所属节点及其 HA 配对节点访问 LUN 的所有启动程序都可以访问节点上的所有目标。
+如果一个节点上有两个以上的LIF、并且您希望将某个启动程序限制为LIF的一部分、则将端口集与SLM结合使用会很有优势。如果没有端口集、则可以通过LUN所属节点及其HA配对节点访问LUN的所有启动程序都可以访问节点上的所有目标。
 
+[role="tabbed-block"]
 .步骤
+====
+.System Manager
+--
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 创建端口集并将其绑定到 igroup 。
+
+如果需要在9.10.1之前的ONTAP 版本中创建端口集并将其绑定到igroup、则必须使用ONTAP 命令行界面操作步骤。
+
+. 在 System Manager 中，单击 * 网络 > 概述 > 端口集 * ，然后单击 * 添加 * 。
+. 输入新端口集的信息，然后单击 * 添加 * 。
+. 单击 * 主机 > SAN 启动程序组 * 。
+. 要将端口集绑定到新的 igroup ，请单击 * 添加 * 。
++
+要将端口集绑定到现有 igroup ，请选择此 igroup ，然后单击 image:icon_kabob.gif["kabob 图标"]，然后单击 * 编辑启动程序组 * 。
+
+
+
+link:manage-san-initiators-task.html["查看和管理启动程序和igroup"]
+
+--
+.命令行界面
+--
 . 创建包含相应 LIF 的端口集：
 +
 `portset create -vserver _vserver_name_ -portset _portset_name_ -protocol _protocol_ -port-name _port_name_`
@@ -43,3 +67,6 @@ Vserver   Portset   Protocol Port Names    Igroups
 vs3       portset0  iscsi    lif0,lif1     igroup1
 ----
 
+
+--
+====

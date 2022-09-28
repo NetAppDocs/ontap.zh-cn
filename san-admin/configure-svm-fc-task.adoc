@@ -17,7 +17,37 @@ summary: 要为 FC 配置 Storage Virtual Machine （ SVM ），必须为 SVM �
 
 对于使用 FC 协议提供数据的每个 SVM ， NetApp 至少支持每个节点一个 FC LIF 。每个节点必须使用两个 LIF ，并使用两个网络结构，每个节点连接一个 LIF 。这样可以在节点层和网络结构上实现冗余。
 
+[role="tabbed-block"]
 .步骤
+====
+.System Manager
+--
+使用ONTAP System Manager (9.7及更高版本)为iSCSI配置Storage VM。
+
+[cols="2"]
+|===
+| 在新的Storage VM上配置FC | 在现有Storage VM上配置FC 
+
+
+ a| 
+. 在System Manager中、单击*存储> Storage VM*、然后单击*添加*。
+. 输入Storage VM的名称。
+. 为*访问协议*选择* Fc*。
+. 单击*启用FC*。+自动分配FC端口。
+. 单击 * 保存 * 。
+
+ a| 
+. 在 System Manager 中，单击 * 存储 > 存储 VM* 。
+. 单击要配置的Storage VM。
+. 单击*设置*选项卡、然后单击 image:icon_gear.gif[""] 靠近FC协议。
+. 单击*启用FC*、然后输入网络接口的IP地址和子网掩码。+自动分配FC端口。
+. 单击 * 保存 * 。
+
+
+|===
+--
+.命令行界面
+--
 . 在 SVM 上启用 FC 服务：
 +
 `vserver fcp create -vserver _vserver_name_ -status-admin up`
@@ -35,6 +65,8 @@ summary: 要为 FC 配置 Storage Virtual Machine （ SVM ），必须为 SVM �
 
 
 
+--
+====
 https://mysupport.netapp.com/site/global/dashboard["NetApp 支持"]
 
 https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"^]

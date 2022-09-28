@@ -1,0 +1,96 @@
+---
+permalink: san-admin/resize-lun-task.html 
+sidebar: sidebar 
+keywords: decrease, increase, resize, size, modify, change, lun 
+summary: 您可以增加或减小LUN的大小。 
+---
+= 调整LUN大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以增加或减小LUN的大小。
+
+[NOTE]
+====
+无法调整 Solaris LUN 的大小。
+
+====
+
+
+== 增加 LUN 的大小
+
+您可以将 LUN 增加到的大小因 ONTAP 版本而异。
+
+[cols="2"]
+|===
+| ONTAP 版本 | 最大 LUN 大小 
+
+
+| ONTAP 9.8 及更高版本  a| 
+* 所有 SAN 阵列（ ASA ）为 128 TB
+* 对于非 ASA ， 16 TB
+
+
+
+
+| ONTAP 9.5 ， 9.6 ， 9.7 | 16 TB 
+
+
+| ONTAP 9.4 或更早版本 | 是原始LUN大小的10倍、但不大于16 TB、即最大LUN大小。例如、如果创建一个100 GB的LUN、则只能将其增加到1、000 GB。LUN的实际最大大小可能不完全为16 TB。ONTAP 会将限制取低一点。 
+|===
+您无需使 LUN 脱机即可增加大小。但是，增加大小后，必须重新扫描主机上的 LUN ，以使主机能够识别大小的变化。
+
+有关调整 LUN 大小的详细信息，请参见 `lun resize` 命令的命令参考页面。
+
+[role="tabbed-block"]
+.步骤
+====
+.System Manager
+--
+使用ONTAP 系统管理器(9.7及更高版本)增加LUN的大小。
+
+. 在 System Manager 中，单击 * 存储 > LUN* 。
+. 单击 image:icon_kabob.gif["kabob 图标"] 并选择 * 编辑 * 。
+. 在*存储和优化*下、增加LUN的大小并增加*保存*。
+
+
+--
+.命令行界面
+--
+使用ONTAP 命令行界面增加LUN的大小。
+
+. 增加 LUN 的大小：
++
+`lun resize -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -size _lun_size_`
+
+. 验证增加的 LUN 大小：
++
+`lun show -vserver _vserver_name_`
+
++
+[NOTE]
+====
+ONTAP 操作将对 LUN 的实际最大大小进行舍入，使其略小于预期值。此外，实际 LUN 大小可能会因 LUN 的操作系统类型而略有不同。要获取调整大小后的精确值，请在高级模式下运行以下命令：
+
++`set -unit B`
+
++`lun show -fields max-resize-size -volume _volume_name_-lun _lun_name_`
+
+====
+. 重新扫描主机上的 LUN 。
+. 按照主机文档进行操作，使新创建的 LUN 大小对主机文件系统可见。
+
+
+--
+====
+
+
+== 减小 LUN 的大小
+
+[role="lead"]
+在减小 LUN 大小之前，主机需要将包含 LUN 数据的块迁移到较小 LUN 大小的边界中。您应使用 SnapDrive for Windows 等工具来确保正确减少 LUN ，而不截断包含 LUN 数据的块。不建议手动减小 LUN 大小。
+
+减小 LUN 大小后， ONTAP 会自动通知启动程序 LUN 大小已减小。但是，要使主机能够识别新的 LUN 大小，可能需要在主机上执行其他步骤。有关减小主机文件结构大小的具体信息，请参见主机文档。

@@ -25,7 +25,7 @@ summary: 您应熟悉有关使用 FabricPool 的一些注意事项和要求。
 link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricPool 分层策略的类型"]
 
 ** 指定分层最小冷却期
-** 非活动数据报告
+** 非活动数据报告(IDR)
 ** 使用适用于云的 Microsoft Azure Blob Storage 作为 FabricPool 的云层
 ** 将 FabricPool 与 ONTAP Select 结合使用
 
@@ -109,7 +109,7 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
 +
 ** 在 AFF 系统上，您只能对 FabricPool 使用全闪存（全 SSD ）聚合。
 +
-您不能使用 Flash Pool 聚合（同时包含 SSD 和 HDD ）。
+您不能使用同时包含SSD和HDD的Flash Pool聚合。
 
 ** 在 FAS 系统上，您可以对 FabricPool 使用全闪存（全 SSD ）或 HDD 聚合。
 ** 在 Cloud Volumes ONTAP 和 ONTAP Select 上，您可以对 FabricPool 使用 SSD 或 HDD 聚合。
@@ -147,136 +147,6 @@ http://www.netapp.com/us/media/tr-4598.pdf["NetApp 技术报告 4598 ：《 ONTA
 == 使用 Cloud Volumes ONTAP 时的其他注意事项
 
 无论您使用的对象存储提供程序是什么， Cloud Volumes ONTAP 都不需要 FabricPool 许可证。
-
-
-
-== 将 StorageGRID 与 FabricPool 结合使用的其他注意事项
-
-* 除非明确禁用证书检查，否则您需要为 StorageGRID 安装 CA 证书。
-* 不能在对象存储分段上启用 StorageGRID 对象版本控制。
-* 不需要 FabricPool 许可证。
-* 如果 StorageGRID 节点部署在从 NetApp AFF 系统分配存储的虚拟机中，请确认此卷未启用 FabricPool 分层策略。
-+
-对 StorageGRID 节点使用的卷禁用 FabricPool 分层可简化故障排除和存储操作。
-
-+
-[NOTE]
-====
-切勿使用 FabricPool 将与 StorageGRID 相关的任何数据分层回 StorageGRID 本身。将 StorageGRID 数据分层回 StorageGRID 会增加故障排除和操作复杂性。
-
-====
-
-
-
-
-== 将阿里云对象存储与 FabricPool 结合使用的其他注意事项
-
-* 您可能需要 FabricPool 许可证。
-+
-新订购的 AFF 系统附带了 10 TB 的可用容量，可用于使用 FabricPool 。如果您需要在 AFF 系统上添加容量，在非 AFF 系统上使用阿里云对象存储或从现有集群升级，则需要 FabricPool 许可证。
-
-* 在 AFF 和 FAS 系统以及 ONTAP Select 上， FabricPool 支持以下阿里对象存储服务类：
-+
-** 阿里对象存储服务标准
-** Alibaba 对象存储服务不常访问
-+
-https://www.alibabacloud.com/help/doc-detail/51374.htm["阿里云：存储类简介"]
-
-
-
-
-
-有关未列出的存储类的信息，请与 NetApp 销售代表联系。
-
-
-
-== 将 AWS S3 与 FabricPool 结合使用的其他注意事项
-
-* 您可能需要 FabricPool 许可证。
-+
-** 新订购的 AFF 系统附带了 10 TB 的可用容量，可用于使用 FabricPool 。
-+
-如果您需要在 AFF 系统上添加容量，在非 AFF 系统上使用 AWS S3 或从现有集群升级，则需要 FabricPool 许可证。
-
-+
-如果您是首次为现有集群订购 FabricPool ，则可以获得具有 10 TB 可用容量的 FabricPool 许可证。
-
-
-
-* ONTAP 用于连接到 AWS S3 对象服务器的 LIF 必须位于 10 Gbps 端口上。
-* 在 AFF 和 FAS 系统以及 ONTAP Select 上， FabricPool 支持以下 Amazon S3 存储类：
-+
-** Amazon S3 标准版
-** Amazon S3 Standard —不常访问（ Standard — IA ）
-** Amazon S3 一个区域 - 不常访问（一个区域 - IA ）
-** Amazon S3 智能分层
-** Amazon Commercial Cloud Services
-+
-https://aws.amazon.com/s3/storage-classes/["Amazon Web Services （ AWS ）文档： Amazon S3 存储类"]
-
-
-
-+
-有关未列出的存储类的信息，请联系您的销售代表。
-
-* 在 Cloud Volumes ONTAP 上， FabricPool 支持从 Amazon Elastic Block Store （ EBS ）的通用 SSD （ GP2 ）和吞吐量优化 HDD （ st1 ）卷分层。
-
-
-
-
-== 将 Google Cloud Storage 与 FabricPool 结合使用的其他注意事项
-
-* 您可能需要 FabricPool 许可证。
-+
-新订购的 AFF 系统附带了 10 TB 的可用容量，可用于使用 FabricPool 。如果您需要在 AFF 系统上添加容量，在非 AFF 系统上使用 Google 云存储或从现有集群升级，则需要 FabricPool 许可证。
-
-* ONTAP 用于连接到 Google 云存储对象服务器的 LIF 必须位于 10 Gbps 端口上。
-* 在 AFF 和 FAS 系统以及 ONTAP Select 上， FabricPool 支持以下 Google 云对象存储类：
-+
-** Google Cloud Multi-Regional
-** Google Cloud 区域
-** Google Cloud 近线
-** Google Cloud Coldline
-+
-https://cloud.google.com/storage/docs/storage-classes["Google Cloud ：存储类"]
-
-
-
-
-
-
-
-== 将 IBM 云对象存储与 FabricPool 结合使用的其他注意事项
-
-* 您可能需要 FabricPool 许可证。
-+
-新订购的 AFF 系统附带了 10 TB 的可用容量，可用于使用 FabricPool 。如果您需要在 AFF 系统上添加容量，在非 AFF 系统上使用 IBM 云对象存储或从现有集群升级，则需要 FabricPool 许可证。
-
-+
-如果您是首次为现有集群订购 FabricPool ，则可以获得具有 10 TB 可用容量的 FabricPool 许可证。
-
-* ONTAP 用于连接到 IBM 云对象服务器的 LIF 必须位于 10 Gbps 端口上。
-
-
-
-
-== 将 Microsoft Azure Blob Storage 与 FabricPool 结合使用的其他注意事项
-
-* 您可能需要 FabricPool 许可证。
-+
-新订购的 AFF 系统附带了 10 TB 的可用容量，可用于使用 FabricPool 。如果您需要在 AFF 系统上添加容量，在非 AFF 系统上使用 Azure Blob Storage 或从现有集群升级，则需要 FabricPool 许可证。
-
-+
-如果您是首次为现有集群订购 FabricPool ，则可以获得具有 10 TB 可用容量的 FabricPool 许可证。
-
-* 如果将 Azure Blob Storage 与 Cloud Volumes ONTAP 结合使用，则不需要 FabricPool 许可证。
-* ONTAP 用于连接到 Azure Blob 存储对象服务器的 LIF 必须位于 10 Gbps 端口上。
-* FabricPool 目前不支持 Azure 堆栈，它是内部 Azure 服务。
-* 在 Microsoft Azure Blob Storage 的帐户级别， FabricPool 仅支持热存储层和冷存储层。
-+
-FabricPool 不支持 Blob 级别的分层。它也不支持分层到 Azure 的归档存储层。
-
-
 
 
 

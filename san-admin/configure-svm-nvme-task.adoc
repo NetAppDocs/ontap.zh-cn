@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: configure, svm, nvme 
 summary: 如果要在节点上使用 NVMe 协议，必须专门为 NVMe 配置 SVM 。 
 ---
-= 为 NVMe 配置 SVM
+= 为NVMe配置Storage VM
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -15,7 +15,37 @@ summary: 如果要在节点上使用 NVMe 协议，必须专门为 NVMe 配置 S
 
 您的 FC 或以太网适配器必须支持 NVMe 。中列出了支持的适配器 https://hwu.netapp.com["NetApp Hardware Universe"^]。
 
+[role="tabbed-block"]
 .步骤
+====
+.System Manager
+--
+使用ONTAP System Manager (9.7及更高版本)为NVMe配置Storage VM。
+
+[cols="2"]
+|===
+| 在新的Storage VM上配置NVMe | 在现有Storage VM上配置NVMe 
+
+
+ a| 
+. 在System Manager中、单击*存储> Storage VM*、然后单击*添加*。
+. 输入Storage VM的名称。
+. 为*访问协议*选择* NVMe*。
+. 单击*启用FC*和*保存*。
+
+ a| 
+. 在 System Manager 中，单击 * 存储 > 存储 VM* 。
+. 单击要配置的Storage VM。
+. 单击*设置*选项卡、然后单击 image:icon_gear.gif["设置图标"] 靠近NVMe协议。
+. 单击*启用FC*和*保存*。
+
+
+|===
+--
+.命令行界面
+--
+使用ONTAP 命令行界面为NVMe配置Storage VM。
+
 . 如果不想使用现有 SVM ，请创建一个：
 +
 `vserver create -vserver _svm_name_`
@@ -123,3 +153,6 @@ FC 或 TCP
 如果显示有关自动效率策略的警告消息，则可以安全地忽略此消息。
 
 
+
+--
+====

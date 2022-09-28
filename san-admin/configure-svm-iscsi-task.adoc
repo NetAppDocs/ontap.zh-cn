@@ -15,7 +15,39 @@ summary: 要为 iSCSI 配置 Storage Virtual Machine （ SVM ），必须为 SVM
 
 对于使用 iSCSI 协议提供数据的每个 SVM ，每个节点至少需要一个 iSCSI LIF 。为了实现冗余，每个节点应至少创建两个 LIF 。
 
+[role="tabbed-block"]
 .步骤
+====
+.System Manager
+--
+使用ONTAP System Manager (9.7及更高版本)为iSCSI配置Storage VM。
+
+[cols="2"]
+|===
+| 在新的Storage VM上配置iSCSI | 在现有Storage VM上配置iSCSI 
+
+
+ a| 
+. 在System Manager中、单击*存储> Storage VM*、然后单击*添加*。
+. 输入Storage VM的名称。
+. 为*访问协议*选择* iSCSI *。
+. 单击*启用iSCSI*、然后输入网络接口的IP地址和子网掩码。+每个节点应至少具有两个网络接口。
+. 单击 * 保存 * 。
+
+ a| 
+. 在 System Manager 中，单击 * 存储 > 存储 VM* 。
+. 单击要配置的Storage VM。
+. 单击*设置*选项卡、然后单击 image:icon_gear.gif[""] iSCSI协议旁边。
+. 单击*启用iSCSI*、然后输入网络接口的IP地址和子网掩码。+每个节点应至少具有两个网络接口。
+. 单击 * 保存 * 。
+
+
+|===
+--
+.命令行界面
+--
+使用ONTAP 命令行界面为iSCSI配置Storage VM。
+
 . 启用 SVM 以侦听 iSCSI 流量：
 +
 `vserver iscsi create -vserver _vserver_name_ -target-alias _vserver_name_`
@@ -35,4 +67,6 @@ summary: 要为 iSCSI 配置 Storage Virtual Machine （ SVM ），必须为 SVM
 . 从主机创建与 LIF 的 iSCSI 会话。
 
 
+--
+====
 https://www.netapp.com/media/10680-tr4080.pdf["NetApp 技术报告 4080 ：《现代 SAN 的最佳实践》"]

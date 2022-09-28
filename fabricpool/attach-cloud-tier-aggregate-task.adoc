@@ -4,23 +4,43 @@ sidebar: sidebar
 keywords: attaching, cloud, tier, aggregate 
 summary: 将对象存储设置为云层后，您可以通过将其附加到 FabricPool 来指定要使用的聚合。在 ONTAP 9.5 及更高版本中，您还可以附加包含合格 FlexGroup 卷成分卷的聚合。 
 ---
-= 将云层附加到聚合。
+= 将云层附加到本地层(聚合)
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-将对象存储设置为云层后，您可以通过将其附加到 FabricPool 来指定要使用的聚合。在 ONTAP 9.5 及更高版本中，您还可以附加包含合格 FlexGroup 卷成分卷的聚合。
+将对象存储设置为云层后、您可以通过将其附加到FabricPool 来指定要使用的本地层(聚合)。在ONTAP 9.5及更高版本中、您还可以附加包含合格FlexGroup 卷成分卷的本地层(聚合)。
 
 使用 ONTAP 命令行界面为 FabricPool 设置聚合时，该聚合必须已存在。
 
 [NOTE]
 ====
-使用 System Manager 为 FabricPool 设置聚合时，您可以创建聚合并将其设置为同时用于 FabricPool 。
+使用System Manager为FabricPool 设置本地层时、您可以创建本地层并将其设置为同时用于FabricPool。
 
 ====
-.步骤
+
+
+== 过程
+
+您可以使用ONTAP System Manager或ONTAP 命令行界面将本地层(聚合)附加到FabricPool 对象存储。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*存储>层*、选择一个云层、然后单击 image:icon_kabob.gif["kabob 图标"]。
+. 选择*附加本地层*。
+. 在*添加为主卷*下、验证卷是否符合附加条件。
+. 如有必要、请选择*将卷转换为精简配置*。
+. 单击 * 保存 * 。
+
+
+--
+.命令行界面
+--
+.要使用命令行界面将对象存储附加到聚合、请执行以下操作：
 . * 可选 * ：要查看卷中处于非活动状态的数据量，请按照中的步骤进行操作 link:determine-data-inactive-reporting-task.html["使用非活动数据报告确定卷中处于非活动状态的数据量"]。
 +
 查看卷中处于非活动状态的数据量有助于确定要用于 FabricPool 的聚合。
@@ -49,3 +69,6 @@ Aggregate    Object Store Name    Availability State
 myaggr       Amazon01B1           available
 ----
 
+
+--
+====
