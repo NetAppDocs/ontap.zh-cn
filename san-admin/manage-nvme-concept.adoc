@@ -11,37 +11,13 @@ summary: 从 ONTAP 9.4 开始，支持 NVMe/FC 。从 ONTAP 9.5 开始，需要�
 
 
 [role="lead"]
-从ONTAP 9.4开始、非MetroCluster AFF 配置支持NVMe/FC。从ONTAP 9.9.1开始、所有非MetroCluster AFF 全SAN阵列(ASA)配置也支持NVMe/FC
+从ONTAP 9.4开始、非MetroCluster AFF 配置支持NVMe/FC。从ONTAP 9.9.1开始、所有非MetroCluster全SAN阵列(ASA)配置也支持NVMe/FC。
 
 您可以使用非易失性内存快速（ NVMe ）协议在 SAN 环境中提供存储。NVMe 协议针对固态存储的性能进行了优化。
 
 对于 NVMe ，存储目标称为命名空间。NVMe 命名空间是指可格式化为逻辑块并作为标准块设备提供给主机的非易失性存储数量。您可以创建命名空间和子系统，然后将命名空间映射到子系统，类似于配置 LUN 并将其映射到 FC 和 iSCSI 的 igroup 的方式。
 
 NVMe 目标通过使用 FC 交换机的标准 FC 基础架构或使用以太网交换机和主机端适配器的标准 TCP 基础架构连接到网络。
-
-支持以下 NVMe 协议：
-
-[cols="3*"]
-|===
-
-
-| 协议 | 开头为 ... | 允许者 ... 
-
-
-| TCP | ONTAP 9.10.1 | Default 
-
-
-| FCP | ONTAP 9.4 | Default 
-|===
-
-
-== NVMe许可证要求
-
-从 ONTAP 9.5 开始，需要许可证才能支持 NVMe 。如果在 ONTAP 9.4 中启用了 NVMe ，则在升级到 ONTAP 9.5 之后，可以在 90 天的宽限期内获取许可证。
-
-您可以使用以下命令启用许可证：
-
-`ssystem license add -license-code _nva_license_key_`
 
 
 
@@ -65,10 +41,29 @@ NVMe 的优势包括提高了数据传输的速度，工作效率，吞吐量和
 +
 NVMe 对 " `request` " 进行解码所需时间更短，并且在多线程程序中不需要线程锁定。
 
-* NVMe 支持防止 CPU 级别出现瓶颈的功能，并可随着系统扩展实现大规模可扩展性
+* NVMe支持防止CPU级别出现瓶颈的功能、并可随着系统扩展实现大规模可扩展性。
 
+
+
+
+== 关于 NVMe 命名空间
+
+NVMe 命名空间是指可格式化为逻辑块的非易失性内存（ NVM ）数量。如果为 Storage Virtual Machine 配置了 NVMe 协议，并且命名空间相当于 FC 和 iSCSI 协议的 LUN ，则会使用命名空间。
+
+配置一个或多个命名空间并将其连接到 NVMe 主机。每个命名空间可以支持不同的块大小。
+
+通过 NVMe 协议，可以通过多个控制器访问命名空间。使用大多数操作系统都支持的 NVMe 驱动程序，固态驱动器（ SSD ）命名空间会显示为标准块设备，可以在这些设备上部署文件系统和应用程序，而无需任何修改。
+
+命名空间 ID （ NSID ）是控制器用来提供对命名空间访问的标识符。在为主机或主机组设置 NSID 时，您还可以配置主机对卷的可访问性。逻辑块一次只能映射到一个主机组，而给定主机组不具有任何重复的 NSID 。
+
+
+
+== 关于 NVMe 子系统
+
+NVMe 子系统包括一个或多个 NVMe 控制器，命名空间， NVM 子系统端口，一个 NVM 存储介质以及一个控制器与 NVM 存储介质之间的接口。创建NVMe命名空间时、默认情况下不会将其映射到子系统。您也可以选择将其映射为新的或现有的子系统。
 
 .相关信息
 * link:../task_nvme_provision_suse_linux.html["为 SUSE Linux 配置 NVMe 存储"]
-* link:san-admin/configure-svm-nvme-task.html["为NVMe配置Storage VM"]
+* link:../create-nvme-namespace-subsystem-task.html["为其他主机配置NVMe存储"]
+* link:san-admin/map-nvme-namespace-subsystem-task.html["将 NVMe 命名空间映射到子系统"]
 

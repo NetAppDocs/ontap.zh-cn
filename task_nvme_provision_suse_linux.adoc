@@ -51,9 +51,9 @@ summary: 创建命名空间以使用 NVMe 协议为 SUSE Linux 服务器提供�
 --
 创建命名空间以使用NVMe协议和ONTAP 命令行界面提供存储。
 
-对于使用 NVMe 协议的系统，您必须创建一个或多个 NVMe 命名空间和子系统。然后，可以将每个命名空间映射到 NVMe 子系统，以便从主机系统访问数据。
+此操作步骤 会在已配置NVMe协议的现有Storage VM上创建NVMe命名空间和子系统、然后将此命名空间映射到子系统、以便可以从主机系统访问数据。
 
-必须已为 NVMe 配置 SVM 。
+如果需要为NVMe配置Storage VM、请参见 link:san-admin/configure-svm-nvme-task.html["为 NVMe 配置 SVM"]。
 
 .步骤
 . 验证是否已为 NVMe 配置 SVM ：
@@ -70,6 +70,9 @@ summary: 创建命名空间以使用 NVMe 协议为 SUSE Linux 服务器提供�
 . 创建 NVMe 子系统：
 +
 `vserver nvme subsystem create -vserver _svm_name_ -subsystem _name_of_subsystem_ -ostype _os_type_`
+
++
+NVMe 子系统名称区分大小写。必须包含1到96个字符。允许使用特殊字符。
 
 . 验证是否已创建子系统：
 +
