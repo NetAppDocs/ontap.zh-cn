@@ -62,7 +62,11 @@ NOTE: 目标 LUN 将取消映射，而主副本上的 LUN 将继续为主机 I/O
 +
 `ssource ：：： >snapmirror release -destination-path vs1_dst ： /CG/CG_dst -relationship-info-only true`
 
-. 使用新的构成创建新的一致性组：
+. *如果使用的是ONTAP 9.10.1或更高版本、请删除并重新创建源上具有正确成分卷的一致性组。按照中的步骤进行操作 xref:../consistency-groups/delete-task.html[删除一致性组] 然后 xref:../consistency-groups/configure-task.html[配置一个一致性组]。在ONTAP 9.10.1及更高版本中、您必须在System Manager中或使用ONTAP REST API执行删除和创建操作；没有命令行界面操作步骤。
++
+*如果使用的是ONTAP 9.8、9.0或9.1.1、请跳至下一步
+
+. 在目标上使用新的构成创建新的一致性组：
 +
 `d目标：：： >snapmirror create -source-path vs1_src ： /CG/cG_src -destination-path vs1_dst ： /CG_c_dst -cg-item-mappings vol_src1 ：@vol_dst1 ， vol_src2 ：@vol_dst2 ， vol_src3 ：@vol_dst3`
 
