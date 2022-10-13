@@ -1,0 +1,71 @@
+---
+permalink: upgrade/remove-ems-lif-service-task.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, after, post, ems, event, management, system, lifs, messages, not, delivered 
+summary: Active IQ 数字顾问中的升级顾问服务可提供智能信息，帮助您规划升级并最大程度地降低不确定性和风险。 
+---
+= 从网络服务策略中删除EMS LIF服务
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在从ONTAP 9.7或更早版本升级到ONTAP 9.8或更高版本之前设置了事件管理系统(EMS)消息、则升级后可能无法传送EMS消息。
+
+升级期间、作为EMS LIF服务的management-EMS会添加到所有现有服务策略中。这样、可以从与任何服务策略关联的任何LIF发送EMS消息。如果选定LIF无法访问事件通知目标、则不会传送消息。
+
+为防止出现这种情况、升级后、您应从不提供目标可访问性的网络服务策略中删除EMS LIF服务。
+
+.步骤
+. 确定可用于发送EMS消息的LIF以及关联的网络服务策略：
++
+`network interface show -fields service-policy -services management-EMS`
+
++
+[listing]
+----
+vserver        lif            service-policy
+-------------- ------------ ------------------
+cluster-1      cluster_mgmt
+                                      default-management
+cluster-1      node1-mgmt
+                                      default-management
+cluster-1      node2-mgmt
+                                      default-management
+cluster-1      inter_cluster
+                                      default-intercluster
+4 entries were displayed.
+----
+. 检查每个LIF是否与EMS目标连接：
++
+`network ping -lif lif_name -vserver svm_name -destination destination_address`
+
++
+在每个节点上执行此操作。
+
++
+.示例
+[listing]
+----
+cluster-1::> network ping -lif node1-mgmt -vserver cluster-1 -destination 10.10.10.10
+10.10.10.10 is alive
+
+cluster-1::> network ping -lif inter_cluster -vserver cluster-1 -destination 10.10.10.10
+no answer from 10.10.10.10
+----
+. 输入高级权限级别：
++
+`set advanced`
+
+. 对于无法访问的LIF、请从相应的服务策略中删除management-EMS LIF服务：
++
+`network interface service-policy remove-service -vserver svm_name -policy service_policy_name -service management-EMS`
+
+. 验证management-EMS LIF现在仅与可访问EMS目标的LIF关联：
++
+`network interface show -fields service-policy -services management-EMS`
+
+
+
+link:https://docs.netapp.com/us-en/ontap/networking/lifs_and_service_policies96.html#service-policies-for-system-svms.["ONTAP 9.6及更高版本中的LIF和服务策略"]
