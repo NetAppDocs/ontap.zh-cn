@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: file-system-analytics/considerations-concept.html 
-keywords: file system analytics, performance, 7-mode 
+keywords: file system analytics, performance, SVM 
 summary: 文件系统分析旨在提供对包含活动 NAS 数据的卷的可见性。其使用存在限制和限制。 
 ---
 = 文件系统分析注意事项
@@ -15,54 +15,14 @@ summary: 文件系统分析旨在提供对包含活动 NAS 数据的卷的可见
 
 
 
-== 支持的卷类型
-
-文件系统分析旨在提供对包含活动 NAS 数据的卷的可见性，但 FlexCache 缓存和 SnapMirror 目标卷除外。
-
-
-
-== 性能注意事项
-
-启用文件系统分析可能会在初始元数据收集期间影响性能。请勿对利用率最高的系统启用分析。
-
-ONTAP System Manager 可提供 xref:../concept_cluster_performance_overview.adoc[性能监控工具] 以管理集群运行状况和指标。
-
-如果延迟显著增加、请参阅知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/High_or_fluctuating_latency_after_turning_on_NetApp_ONTAP_File_System_Analytics["启用NetApp ONTAP 文件系统分析后延迟较高或波动较大"^]。
-
-* 受 SVM 保护的关系 *
+== 受SVM保护的关系
 
 如果已对包含 SVM 的卷处于保护关系中的卷启用文件系统分析，则分析数据不会复制到目标 SVM 。如果必须在恢复操作中重新同步源 SVM ，则必须在恢复后手动重新启用对所需卷的分析。
 
 
 
-== 基于角色的访问控制(Role-Based Access Control、RBAC)
+== 性能注意事项
 
-如果您使用 xref:../concepts/administrator-authentication-rbac-concept.html[基于角色的访问控制] (RBAC)在System Manager或ONTAP REST API中、您需要创建一个专用角色来控制对文件系统分析中活动跟踪的访问权限。
+在某些情况下、启用文件系统分析可能会对初始元数据收集期间的性能产生负面影响。在利用率达到最大的系统上、这种情况最常见。为了避免在此类系统上启用分析、您可以使用ONTAP System Manager性能监控工具。
 
-.控制对活动跟踪的访问
-. 创建一个默认角色以访问所有功能。在创建限制性角色之前需要执行此操作，以确保此角色仅对活动跟踪具有限制性：
-+
-`ssecurity login role create -cmddirname default -access all -role storageAdmin`
-
-. 创建限制性角色：
-+
-`ssecurity login role create -cmddirname "volume file show-disk-usage" -access none -role storageAdmin`
-
-. 授权角色访问 SVM 的 Web 服务：
-+
-** `rest` 用于 REST API 调用
-** `s安全性` 用于密码保护
-** `sysmgr` 用于 System Manager 访问
-+
-====
-vserver services web access create -vserver _svm-name_-name REST -role storageAdmin vserver services web access create -vserver _svm-name_-name security -role storageAdmin vserver services web access create -vserver _svm-name_-name sysmgr -role storageAdmin
-
-====
-
-
-. 创建用户。您必须为要应用于用户的每个应用程序问题描述 一个不同的 create 命令。在同一用户上多次调用 create 只会将所有应用程序应用于该用户，而不会每次创建新用户。应用程序类型的 `http` 参数适用于 ONTAP REST API 和系统管理器。
-+
-`ssecurity login create -user-or-group-name storageUser -authentication-method password -application http -role storageAdmin`
-
-. 现在、您可以使用新的用户凭据登录到System Manager或使用ONTAP REST API访问文件系统分析数据。
-
+如果延迟显著增加、请参阅知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/High_or_fluctuating_latency_after_turning_on_NetApp_ONTAP_File_System_Analytics["启用NetApp ONTAP 文件系统分析后延迟较高或波动较大"^]。

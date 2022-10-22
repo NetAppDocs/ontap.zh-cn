@@ -19,31 +19,45 @@ summary: 文件系统分析是一个用于收集和显示有关 FlexGroup 或 Fl
 
 
 [role="lead"]
-从 ONTAP 9.8 开始，文件系统分析（ File System Analytics ， FSA ）是一个用于收集和可视化有关 ONTAP FlexGroup 或 FlexVol 卷内容的关键数据点的框架。FSA 有助于解决组织在数据位置，存储消耗，存储优化和数据保护方面的数据挑战。通过实时洞察数据使用情况， FSA 可帮助您在有效的数据管理和操作方面做出决策，例如对吞吐量进行服务质量更改以及将卷移动到其他控制器或聚合。
+文件系统分析(File System Analytics、FSA)是在ONTAP 9.8中首次推出的、用于实时查看ONTAP FlexGroup 或FlexVol 卷中的文件使用情况和存储容量趋势。此原生 功能无需使用外部工具、并可提供有关如何利用存储以及是否有机会根据业务需求优化存储的重要见解。
 
-FSA 会在卷的文件系统层次结构的每个级别提供详细信息，使您能够：
+借助FSA、您可以查看NAS中卷文件系统层次结构的所有级别。例如、您可以了解Storage VM (SVM)、卷、目录和文件级别的使用情况和容量。您可以使用FSA问题解答 解决以下问题：
 
-* link:task_nas_file_system_analytics_view.html["评估容量使用情况和趋势"]
-* link:task_nas_file_system_analytics_view.html["监控文件和目录计数"]
-* link:./file-system-analytics/activity-tracking-task.html["评估文件活动和历史记录"]
-* link:task_nas_file_system_analytics_view.html["捕获有关非活动数据的信息"]
-* link:task_nas_file_system_analytics_take_corrective_action.html["根据洞察采取更正操作（从 ONTAP 9.1.1 开始）"]
-* link:./file-system-analytics/activity-tracking-task.html["分析并下载有关高流量和高吞吐量活动的信息（从 ONTAP 9.10.1 开始）"]
+* 什么是填满我的存储？是否有任何大文件可以移动到其他存储位置？
+* 哪些是我最活跃的卷、目录和文件？我的存储性能是否针对用户需求进行了优化？
+* 上个月添加了多少数据？
+* 谁是我最活跃或最不活跃的存储用户？
+* 主存储上有多少非活动或休眠数据？我是否可以将这些数据移至成本较低的冷层？
+* 我计划内的服务质量变更是否会对访问经常访问的关键文件产生负面影响？
 
 
-文件系统分析可提供数据列表和图形视图。在图形视图中，大小各不相同的块和颜色阴影以图形方式表示目录。在下面显示的列表视图中，您可以通过数字形式和交互式图形查看每个目录使用的空间以及修改和访问历史记录。
+文件系统分析已集成到ONTAP System Manager中。System Manager中的视图提供：
 
-image::fsa-listview.png[FSA 列表视图的屏幕截图。四个目录按数据使用量的降序显示。每个目录都以动画形式显示，其中包含两个折线图，分别显示了其访问和修改历史记录。]
+* 实时可见性、可实现有效的数据管理和操作
+* 实时数据收集和聚合
+* 子目录以及文件大小和计数以及关联的性能配置文件
+* 用于修改和访问历史记录的文件期限直方图
 
-文件系统分析数据使用 ONTAP 系统管理器显示。您也可以使用 ONTAP REST API 以编程方式访问数据。
 
-* 按版本提供功能 *
+image:flexgroup1.png["FlexGroup 分析"]
+
+
+
+== 支持的卷类型
+
+文件系统分析旨在提供对包含活动 NAS 数据的卷的可见性，但 FlexCache 缓存和 SnapMirror 目标卷除外。
+
+
+
+== 文件系统分析功能的可用性
+
+每个ONTAP 版本都扩展了文件系统分析的分析范围。
 
 [cols="3,1,1,1,1"]
 |===
 
 
-|  | ONTAP 9.8 | ONTAP 9.9.1 | ONTAP 9.10.1 | ONTAP 9.11.1 
+|  | ONTAP 9.11.1 | ONTAP 9.10.1 | ONTAP 9.9.1 | ONTAP 9.8 
 
 
 | System Manager 中的可视化 | X | X | X | X 
@@ -55,25 +69,22 @@ image::fsa-listview.png[FSA 列表视图的屏幕截图。四个目录按数据�
 | 非活动数据信息 | X | X | X | X 
 
 
-| 从 7- 模式系统过渡的卷的可用性 |  | X | X | X 
+| 支持从Data ONTAP 7-模式过渡的卷 | X | X | X |  
 
 
-| 用于在 System Manager 中更改非活动期限的选项 |  | X | X | X 
+| 可以在System Manager中自定义非活动期限 | X | X | X |  
 
 
-| 活动跟踪(卷级) |  |  | X | X 
+| 卷级别活动跟踪 | X | X |  |  
 
 
-| 下载到CSV (活动跟踪、卷级) |  |  | X | X 
+| 将活动跟踪数据下载到CSV | X | X |  |  
 
 
-| 活动跟踪(SVM级别) |  |  |  | X 
+| SVM级别的活动跟踪 | X |  |  |  
 
 
-| 下载到CSV (活动跟踪、SVM级别) |  |  |  | X 
-
-
-| 时间线 |  |  |  | X 
+| 时间线 | X |  |  |  
 |===
 
 
@@ -82,5 +93,5 @@ image::fsa-listview.png[FSA 列表视图的屏幕截图。四个目录按数据�
 video::0oRHfZIYurk[youtube,width=848,height=480]
 .进一步阅读
 * link:https://www.netapp.com/media/20707-tr-4867.pdf["TR 4687 ：《 ONTAP 文件系统分析最佳实践准则》"^]
-* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/High_or_fluctuating_latency_after_turning_on_NetApp_ONTAP_File_System_Analytics["知识库：启用NetApp ONTAP 文件系统分析后的高延迟或波动延迟"^]。
+* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/High_or_fluctuating_latency_after_turning_on_NetApp_ONTAP_File_System_Analytics["知识库：启用NetApp ONTAP 文件系统分析后的高延迟或波动延迟"^]
 
