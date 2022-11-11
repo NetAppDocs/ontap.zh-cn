@@ -28,7 +28,29 @@ summary: '您必须为要提交到 WORM 状态的文件或 Snapshot 副本创建
 SnapLock 卷不支持 LUN 。虽然可以使用传统技术将 LUN 移动到 SnapLock 卷上，但这不是受支持的操作，也不是涉及 SnapLock 卷上 LUN 的任何其他操作。
 
 ====
+使用ONTAP 系统管理器或ONTAP 命令行界面执行此任务。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+从ONTAP 9.12.1开始、您可以使用System Manager创建SnapLock 卷。
+
 .步骤
+. 导航到*存储>卷*、然后单击*添加*。
+. 在*添加卷*窗口中、单击*更多选项*。
+. 输入新卷的信息、包括卷的名称和大小。
+. 选择*启用SnapLock *、然后选择SnapLock 类型：合规性或企业。
+. 在*自动提交文件*部分中、选择*已修改*并输入文件在自动提交之前应保持不变的时间量。最小值为 5 分钟，最大值为 10 年。
+. 在*数据保留*部分中、选择最短和最长保留期限。
+. 选择默认保留期限。
+. 单击 * 保存 * 。
+. 在*卷*页面中选择新卷以验证SnapLock 设置。
+
+
+--
+.命令行界面
+--
 . 创建 SnapLock 卷：
 +
 ` * volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_* -SnapLock-type compliancy| 企业`
@@ -45,3 +67,6 @@ SnapLock 卷不支持 LUN 。虽然可以使用传统技术将 LUN 移动到 Sna
 cluster1::> volume create -vserver vs1 -volume vol1 -aggregate aggr1 -snaplock-type compliance
 ----
 
+
+--
+====

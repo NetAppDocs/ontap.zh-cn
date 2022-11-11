@@ -1,0 +1,78 @@
+---
+permalink: snaplock/create-locked-snapshot-task.html 
+sidebar: sidebar 
+keywords: snaplock, snapshot copy, lock, tamperproof, enable, retention, policy 
+summary: 从ONTAP 9.12.1开始、您可以创建Snapshot副本策略以应用Snapshot副本保留期限、并将此策略应用于卷以在指定期限内锁定Snapshot副本。您也可以通过手动设置保留期限来锁定Snapshot副本。 
+---
+= 创建锁定的Snapshot副本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.12.1开始、您可以创建Snapshot副本策略以应用Snapshot副本保留期限、并将此策略应用于卷以在指定期限内锁定Snapshot副本。您也可以通过手动设置保留期限来锁定Snapshot副本。
+
+
+
+== 创建Snapshot副本锁定策略
+
+. 要创建Snapshot副本策略、请输入以下命令：
++
+`volume snapshot policy create -policy policy_name -enabled true -schedule1 _schedule1_name_ -count1 _maximum_Snapshot_copies -retention-period1 _retention_period_`
+
++
+以下命令将创建Snapshot副本锁定策略：
+
++
+[listing]
+----
+cluster1> volume snapshot policy create -policy policy_name -enabled true -schedule1 5min -count1 5 -retention-period1 "1 months"
+----
+
+
+
+
+== 将锁定策略应用于卷
+
+. 要将Snapshot副本锁定策略应用于现有卷、请输入以下命令：
++
+`volume modify -volume volume_name -vserver vserver_name -snapshot-policy policy_name`
+
+
+
+
+
+== 在手动创建Snapshot副本期间应用保留期限
+
+. 要手动创建Snapshot副本并应用锁定保留期限、请输入以下命令：
++
+`volume snapshot create -volume _volume_name_ -snapshot _snapshot_copy_name_ -expiry-time _expiration_date_time_`
+
++
+以下命令将创建一个新的Snapshot副本并设置保留期限：
+
++
+[listing]
+----
+cluster1> volume snapshot create -vserver vs1 -volume vol1 -snapshot snap1 -snaplock-expiry-time "11/10/2022 09:00:00"
+----
+
+
+
+
+== 将保留期限应用于现有Snapshot副本
+
+. 要手动对现有Snapshot副本应用保留期限、请输入以下命令：
++
+`volume snapshot modify-snaplock-expiry-time -volume _volume_name_ -snapshot _snapshot_copy_name_ -expiry-time _expiration_date_time_`
+
++
+以下示例将保留期限应用于现有Snapshot副本：
+
++
+[listing]
+----
+cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot snap2 -expiry-time "11/10/2022 09:00:00"
+----
+

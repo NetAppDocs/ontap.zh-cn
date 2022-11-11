@@ -1,0 +1,257 @@
+---
+permalink: flexgroup/manage-flexgroup-rebalance-task.html 
+sidebar: sidebar 
+keywords: enable, storage, rebalance, modify, stop, status, flexgroup, volume 
+summary: 从ONTAP 9.12.1开始、您可以通过无中断地将文件从FlexGroup 中的一个成分卷移动到另一个成分卷来重新平衡FlexGroup 卷。 
+---
+= 重新平衡FlexGroup 卷
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.12.1开始、您可以通过无中断地将文件从FlexGroup 中的一个成分卷移动到另一个成分卷来重新平衡FlexGroup 卷。
+
+随着新文件的添加和文件的增长、随着时间的推移、FlexGroup 重新平衡有助于重新分配容量。手动启动重新平衡操作后、ONTAP 将选择文件并自动无中断地移动这些文件。
+
+只有当集群中的所有节点都运行ONTAP 9.12.1或更高版本时、才能使用自动重新平衡。您必须在运行重新平衡操作的任何FlexGroup 卷上启用多部分索引节点粒度数据功能。启用此功能后、您将无法还原到先前的ONTAP 版本、除非您删除FlexGroup 并还原先前的版本。
+
+
+
+== FlexGroup 重新平衡注意事项
+
+您应了解FlexGroup 重新平衡的工作原理及其与其他ONTAP 功能的交互方式。
+
+* FlexVol 到FlexGroup 的转换
++
+建议您不要在FlexVol 到FlexGroup 转换后使用自动FlexGroup 重新平衡。而是可以通过输入来使用ONTAP 9.10.1及更高版本中提供的中断性可追溯文件移动功能 `volume rebalance file-move` 命令：有关命令语法、请参见 `volume rebalance file-move start` 手册页。
+
+* 最小和最大文件大小
++
+用于自动重新平衡的文件选择基于已保存的块。默认情况下、考虑重新平衡的最小文件大小为100 MB (可使用下面显示的min-file-size参数配置为低至4 KB)、最大文件大小为100 GB。
+
+* Snapshot副本中的文件
++
+您可以将FlexGroup 重新平衡配置为仅考虑要移动的文件、而这些文件当前不在任何Snapshot副本中。启动重新平衡后、如果在重新平衡操作期间随时计划执行Snapshot副本操作、则会显示一条通知。
+
++
+如果正在移动文件且正在目标上进行帧传输、则Snapshot副本会受到限制。在进行文件重新平衡期间、不允许执行Snapshot副本还原操作。
+
+* SnapMirror 操作
++
+应在计划的SnapMirror操作之间进行FlexGroup 重新平衡。如果在SnapMirror操作开始之前重新定位某个文件、而该文件移动未在24分钟SnapMirror重试期间内完成、则SnapMirror操作可能会失败。在SnapMirror传输开始后开始的任何新文件重新定位都不会失败。
+
+* 基于文件的压缩存储效率
++
+使用基于文件的压缩存储效率时、文件会在移动到目标之前解压缩、因此压缩节省的空间将会丢失。重新平衡后、手动启动的后台扫描程序在FlexGroup 卷上运行后、将重新获得压缩节省的空间。但是、如果任何文件与任何卷上的Snapshot副本关联、则在进行数据压缩时将忽略该文件。
+
+* 重复数据删除
++
+移动经过重复数据删除的文件可以通过发生原因 提高FlexGroup 卷的整体使用量。在文件重新平衡期间、只会将唯一的块移动到目标、从而释放源上的容量。共享块保留在源上、并复制到目标。虽然这样可以实现减少接近全满源成分卷上的已用容量的目标、但由于在新目标上复制了共享块、因此还可能导致FlexGroup 卷上的整体使用量增加。如果移动属于Snapshot副本一部分的文件、也可以执行此操作。只有在Snapshot副本计划回收并且Snapshot副本中不再存在文件副本之前、才会完全识别空间节省。
+
+* FlexClone 卷
++
+如果在创建FlexClone卷时正在进行文件重新平衡、则不会对FlexClone卷执行重新平衡。应在创建FlexClone卷后对其执行重新平衡。
+
+* 文件移动
++
+在FlexGroup 重新平衡操作期间移动文件时、源成分卷和目标成分卷上的配额核算都会报告文件大小。移动完成后、配额核算将恢复正常、并且只会在新目标上报告文件大小。
+
+
+
+
+
+== 启用FlexGroup 重新平衡
+
+从ONTAP 9.12.1开始、您可以启用自动无中断FlexGroup 卷重新平衡、以便在FlexGroup 成分卷之间重新分布文件。
+
+您必须已启用 `granular-data` 选项、FlexGroup 然后再启用FlexGroup 重新平衡。您可以使用以下方法之一启用它：
+
+* 使用创建FlexGroup 卷时 `volume create` 命令
+* 通过修改现有FlexGroup 卷以使用启用设置 `volume modify` 命令
+* 在使用启动FlexGroup 重新平衡时自动设置 `volume rebalance` 命令
+
+
+您可以使用ONTAP System Manager或ONTAP 命令行界面管理FlexGroup 重新平衡。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+.步骤
+. 导航到*存储>卷*并找到要重新平衡的FlexGroup 卷。
+. 单击 image:icon_dropdown_arrow.gif["显示详细信息图标"] 以查看卷详细信息。
+. 单击*重新平衡*。
+
+
+--
+.命令行界面
+--
+.步骤
+. 启动自动重新平衡： `volume rebalance start -vserver _SVM_name_ -volume _volume_name_`
++
+或者、您也可以指定以下选项：[-max-runtime]<time interval>] Maximum Runtime (最大运行时间)"-max-threshold <percent>] Maximum imbalance Threshold per成分卷的最大不平衡阈值(-min-threshold <percent>>)每个成分卷的最小不平衡阈值(-min-file-size)<kb>]最小不平衡阈值(-max-file-moves <integer)<integer)<integer)每个成分卷的最大并发文件移动数(-snapshotsource>](-min-file-size｛<btbtbtb>
+
++
+示例
+
++
+[listing]
+----
+volume rebalance start -vserver vs0 -volume fg1
+----
+. 在*重新平衡卷*窗口中、根据需要更改默认设置。
+. 单击*保存*接受默认设置。
+
+
+--
+====
+
+
+== 修改FlexGroup 重新平衡配置
+
+您可以更改FlexGroup 重新平衡配置以更新不平衡阈值、并发文件数移动最小文件大小、最大运行时间以及包含或排除Snapshot副本。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+.步骤
+. 导航到*存储>卷*并找到要重新平衡的FlexGroup 卷。
+. 单击 image:icon_dropdown_arrow.gif["显示详细信息图标"] 以查看卷详细信息。
+. 单击*重新平衡*。
+. 在*重新平衡卷*窗口中、根据需要更改默认设置。
+. 单击 * 保存 * 。
+
+
+--
+.命令行界面
+--
+.步骤
+. 修改自动重新平衡： `volume rebalance modify -vserver _SVM_name_ -volume _volume_name_`
++
+您可以指定以下一个或多个选项：[-max-runtime]<时间间隔>>最大运行时间"-max-threshold <percent>]每个成分卷的最大不平衡阈值"-min-threshold <percent>]每个成分卷的最小不平衡阈值"-max-file-moves <inte整 数>]每个成分卷的最大并发文件移动次数"-min-file-size｛<integer｝｛tb>]%文件大小｛nbtbtbsource>*｝排除文件中的最大不平衡阈值
+
+
+
+--
+====
+
+
+== 停止FlexGroup 重新平衡
+
+启用FlexGroup 重新平衡后、您可以随时将其停止。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+.步骤
+. 导航到*存储>卷*并找到FlexGroup 卷。
+. 单击 image:icon_dropdown_arrow.gif["显示详细信息图标"] 以查看卷详细信息。
+. 单击*停止重新平衡*。
+
+
+--
+.命令行界面
+--
+.步骤
+. 停止FlexGroup 重新平衡： `volume rebalance stop -vserver _SVM_name_ -volume _volume_name_`
+
+
+--
+====
+
+
+== 查看FlexGroup 重新平衡状态
+
+您可以显示有关FlexGroup 重新平衡操作、FlexGroup 重新平衡配置、重新平衡操作时间以及重新平衡实例详细信息的状态。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+.步骤
+. 导航到*存储>卷*并找到FlexGroup 卷。
+. 单击 image:icon_dropdown_arrow.gif["显示详细信息图标"] 以查看FlexGroup 详细信息。
+. 详细信息窗格底部附近会显示* FlexGroup Balance Status*。
+. 要查看有关上次重新平衡操作的信息、请单击*上次卷重新平衡状态*。
+
+
+--
+.命令行界面
+--
+.步骤
+. 查看FlexGroup 重新平衡操作的状态： `volume rebalance show`
++
+重新平衡状态示例：
+
++
+[listing]
+----
+> volume rebalance show
+Vserver: vs0
+                                                        Target     Imbalance
+Volume       State                  Total      Used     Used       Size     %
+------------ ------------------ --------- --------- --------- --------- -----
+fg1          idle                     4GB   115.3MB         -       8KB    0%
+----
++
+重新平衡配置详细信息的示例：
+
++
+[listing]
+----
+> volume rebalance show -config
+Vserver: vs0
+                    Max            Threshold         Max          Min          Exclude
+Volume              Runtime        Min     Max       File Moves   File Size    Snapshot
+---------------     ------------   -----   -----     ----------   ---------    ---------
+fg1                 6h0m0s         5%      20%          25          4KB          true
+----
++
+重新平衡时间详细信息的示例：
+
++
+[listing]
+----
+> volume rebalance show -time
+Vserver: vs0
+Volume               Start Time                    Runtime        Max Runtime
+----------------     -------------------------     -----------    -----------
+fg1                  Wed Jul 20 16:06:11 2022      0h1m16s        6h0m0s
+----
++
+重新平衡实例详细信息的示例：
+
++
+[listing]
+----
+    > volume rebalance show -instance
+    Vserver Name: vs0
+    Volume Name: fg1
+    Is Constituent: false
+    Rebalance State: idle
+    Rebalance Notice Messages: -
+    Total Size: 4GB
+    AFS Used Size: 115.3MB
+    Constituent Target Used Size: -
+    Imbalance Size: 8KB
+    Imbalance Percentage: 0%
+    Moved Data Size: -
+    Maximum Constituent Imbalance Percentage: 1%
+    Rebalance Start Time: Wed Jul 20 16:06:11 2022
+    Rebalance Stop Time: -
+    Rebalance Runtime: 0h1m32s
+    Rebalance Maximum Runtime: 6h0m0s
+    Maximum Imbalance Threshold per Constituent: 20%
+    Minimum Imbalance Threshold per Constituent: 5%
+    Maximum Concurrent File Moves per Constituent: 25
+    Minimum File Size: 4KB
+    Exclude Files Stuck in Snapshot Copies: true
+----
+
+
+--
+====

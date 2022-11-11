@@ -41,6 +41,7 @@ summary: 将 LIF 迁移到集群中同一节点或不同节点上的其他端口
 +
 要解决此限制，您必须在目标节点上创建 iSCSI LIF 。有关创建 iSCSI LIF 的准则的信息，请参见 link:../san-admin/index.html["SAN 管理"^]。
 
+* 如果要通过RDMA迁移NFS的LIF (网络接口)、则必须确保目标端口支持RoCE。要使用命令行界面迁移LIF、必须运行ONTAP 9.10.1或更高版本、或者要使用System Manager迁移ONTAP 9.12.1.在System Manager中、选择支持RoCE的目标端口后、必须选中*使用RoCE端口*旁边的框才能成功完成迁移。有关详细信息，请参见 xref:../nfs-rdma/configure-lifs-task.html[通过 RDMA 为 NFS 配置 LIF]。
 * 迁移源或目标 LIF 时， VMware VAAI 副本卸载操作失败。有关 VMware VAAI 的详细信息，请参见 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.cdot-famg-nfs/GUID-39C8E616-EAE8-46A4-881A-87C4B8421281.html["NFS 参考"^] 或 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-D97EE182-9068-4BD8-A3BF-F5C458303740.html["SAN 管理"^]。
 
 
@@ -92,7 +93,7 @@ summary: 将 LIF 迁移到集群中同一节点或不同节点上的其他端口
 `network interface migrate-all -node <node> -port <port>`
 
 |===
-以下示例显示了如何将 SVM vs0 上名为 datalif1 的 LIF 迁移到 node0b 上的端口 e0d ：
+以下示例显示了如何迁移名为的LIF `datalif1` 在SVM上 `vs0` 连接到端口 `e0d` 开启 `node0b`：
 
 ....
 network interface migrate -vserver vs0 -lif datalif1 -dest-node node0b -dest-port e0d

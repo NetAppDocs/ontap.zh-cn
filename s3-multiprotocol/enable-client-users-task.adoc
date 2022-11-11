@@ -1,0 +1,92 @@
+---
+permalink: s3-multiprotocol/enable-client-users-task.html 
+sidebar: sidebar 
+keywords: s3, nas, vserver, configuration, nas, certificate, linux, unix, installation 
+summary: 要使S3客户端用户能够访问NAS数据、您必须将S3用户名映射到相应的NAS用户、然后向其授予使用存储分段服务策略访问NAS数据的权限。 
+---
+= 启用S3客户端用户
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要使S3客户端用户能够访问NAS数据、您必须将S3用户名映射到相应的NAS用户、然后向其授予使用存储分段服务策略访问NAS数据的权限。
+
+客户端访问的用户名—Linux/UNIX、Windows和S3客户端用户—必须已存在。
+
+通过将S3用户名映射到相应的Linux/UNIX或Windows用户、可以在S3客户端访问NAS文件时对这些文件进行授权检查。通过提供S3用户名_Pattern_来指定S3到NAS的映射、该用户名可以表示为单个名称或POSIX正则表达式、并提供Linux/UNIX或Windows用户名_Replacement。
+
+如果不存在名称映射、则会使用默认名称映射、其中S3用户名本身将用作UNIX用户名和Windows用户名。您可以使用修改UNIX和Windows默认用户名映射 `vserver object-store-server modify` 命令：
+
+仅支持本地名称映射配置；不支持LDAP。
+
+将S3用户映射到NAS用户后、您可以为用户授予权限、以指定其有权访问的资源(目录和文件)以及允许或不允许在其中执行的操作。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 为UNIX或Windows客户端(或两者)创建本地名称映射。
++
+.. 单击*存储>分段*、然后选择启用了S3/NAS的Storage VM。
+.. 选择*设置*、然后单击 image:../media/icon_arrow.gif["右箭头"] 在*名称映射*中(在*主机用户和组*下)。
+.. 在* S3到Windows *或* S3到UNIX*图块(或两者)中、单击*添加*、然后输入所需的*模式*(S3)和*替换*(NAS)用户名。
+
+
+. 创建存储分段策略以提供客户端访问。
++
+.. 单击*存储>分段*、然后单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"] 在所需的S3存储分段旁边、单击*编辑*。
+.. 单击*添加*并提供所需的值。
++
+*** *主体*—提供S3用户名或使用默认值(所有用户)
+*** *影响*-选择*允许*或*拒绝/*
+*** *操作*-输入这些用户和资源的操作。对象存储服务器当前为S3 NAS分段支持的一组资源操作包括：GetObject、PutObject、DeleteObject、ListBucketAcl、GetBucketAcl、 GetObjectAcl、GetObjectTagging、PutObjectTagging、DeleteObjectTagging、GetBucketLocation、 GetBucketVersioning、PutBucketVersioning和ListBucketVersions。此参数可使用通配符。
+*** *资源*-输入允许或拒绝操作的文件夹或文件路径、或者使用默认值(存储分段的根目录)。
+
+
+
+
+
+
+--
+.命令行界面
+--
+. 为UNIX或Windows客户端(或两者)创建本地名称映射。+
+`vserver name-mapping create -vserver svm_name> -direction {s3-win|s3-unix} -position _integer_ -pattern _s3_user_name_ -replacement _nas_user_name_`
++
+** `-position` —映射评估的优先级编号；输入1或2。
+** `-pattern` —S3用户名或正则表达式
+** `-replacement` —Windows或UNIX用户名
+
+
+
+
+示例+
+`vserver name-mapping create -direction s3-win -position 1 -pattern s3_user_1 -replacement win_user_1
+vserver name-mapping create -direction s3-unix -position 2 -pattern s3_user_1 -replacement unix_user_1`
+
+. 创建存储分段策略以提供客户端访问。+
+`vserver object-store-server bucket policy add-statement -vserver svm_name -bucket bucket_name -effect {deny|allow}  -action list_of_actions -principal list_of_users_or_groups -resource [-sid alphanumeric_text]`
++
+** `-effect {deny|allow}` -指定在用户请求操作时是允许还是拒绝访问。
+** `-action <Action>, ...` -指定允许或拒绝的资源操作。对象存储服务器当前为S3 NAS分段支持的一组资源操作包括：GetObject、PutObject、DeleteObject、ListBucketAcl、GetBucketAcl、 GetObjectAcl、GetObjectTagging、PutObjectTagging、DeleteObjectTagging、GetBucketLocation、 GetBucketVersioning、PutBucketVersioning和ListBucketVersions。此参数可使用通配符。
+** `-principal <Objectstore Principal>, ...` -根据在此参数中指定的对象存储服务器用户或组验证请求访问的用户。
++
+*** 通过向组名称添加前缀group/来指定对象存储服务器组。
+*** `-principal` -(连字符)授予所有用户访问权限。
+
+
+** `-resource <text>, ...` -指定为其设置了允许/拒绝权限的分段、文件夹或对象。此参数可使用通配符。
+** `[-sid <SID>]` -指定对象存储服务器存储分段策略语句的可选文本注释。
+
+
+
+
+示例+
+`cluster1::> vserver object-store-server bucket policy add-statement -bucket testbucket -effect allow -action  GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl, GetBucketLocation,GetBucketPolicy,PutBucketPolicy,DeleteBucketPolicy -principal user1 -resource testbucket,testbucket/* sid "FullAccessForUser1"`
+
+`cluster1::> vserver object-store-server bucket policy statement create -vserver vs1 -bucket bucket1 -effect allow -action GetObject -principal - -resource bucket1/readme/* -sid "ReadAccessToReadmeForAllUsers"`
+
+--
+====

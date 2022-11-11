@@ -23,7 +23,7 @@ summary: 从 ONTAP 9.5 开始，至少具有 16 GB 内存的所有 FAS 和 AFF �
 |===
 
 
-| 平台 | ONTAP 9.9.1之前的版本 | ONTAP 9.9.1 | ONTAP 9.10.1 | ONTAP 9.11.1 
+| 平台 | ONTAP 9.9.1之前的版本 | ONTAP 9.9.1 | ONTAP 9.10.1 | ONTAP 9.11.1\ONTAP 9.12.1. 
 
 
  a| 
@@ -68,6 +68,8 @@ ONTAP Select
 
 == 支持的功能
 
+ONTAP 9.12.1仅支持在AFF/ASA平台上执行无中断SnapMirror同步操作(NDO)。通过对无中断运行的支持、您无需计划停机时间即可执行许多常见维护任务。支持的操作包括接管和交还以及卷移动、前提是两个集群中的每个集群都有一个节点运行正常。
+
 ONTAP 9.10.1中的SnapMirror同步技术支持以下功能；前提是源集群和目标集群中的所有节点都运行ONTAP 9.10.1：
 
 * NFSv4.2
@@ -111,6 +113,8 @@ ONTAP 9.6 中的 SnapMirror 同步技术支持以下功能；前提是源集群�
 
 同步 SnapMirror 关系不支持以下功能：
 
+* 防篡改Snapshot副本
+* 一致性组
 * MetroCluster 配置
 * SFMOD
 * SFCOD
@@ -149,4 +153,4 @@ ONTAP 9.6 中的 SnapMirror 同步技术支持以下功能；前提是源集群�
 
 如果在 StrictSync 模式下， SnapMirror 同步关系的关系状态变为 `OutofSync` ，则对主卷的所有 I/O 操作都将停止。同步模式下 SnapMirror 同步关系的 `OutofSync` 状态不会中断主卷，并且允许在主卷上执行 I/O 操作。
 
-http://www.netapp.com/us/media/tr-4733.pdf["NetApp技术报告4733：《适用于ONTAP 9.11.1的SnapMirror同步》"^]
+http://www.netapp.com/us/media/tr-4733.pdf["NetApp技术报告4733：《SnapMirror同步配置和最佳实践》"^]

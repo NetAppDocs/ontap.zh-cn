@@ -1,0 +1,53 @@
+---
+permalink: asa/overview.html 
+sidebar: sidebar 
+keywords: all san array, asa, san, array, software, configuration, configure, configuring, setup, set up, limitations, restrictions, nvme, mcc ip, persistent ports, host, settings, utilities, ways to identify 
+summary: 使用 System Manager 按照以下过程配置全 SAN 阵列。 
+---
+= 全SAN阵列软件配置概述
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+NetApp全SAN阵列(ASA)从ONTAP 9.7开始提供。ASA是纯闪存SAN解决方案、基于经验证的AFF NetApp平台构建。
+
+ASA 平台可在双节点有交换机或无交换机集群中使用，可配置 FC 或 iSCSI ，并对多路径使用对称主动 - 主动。所有路径均处于活动 / 优化状态，因此在发生存储故障转移时，主机不需要等待故障转移路径的 ALUA 过渡来恢复 I/O这样可以缩短故障转移时间。
+
+link:http://www.netapp.com/us/media/tr-4515.pdf["NetApp 技术报告 4515 ：《 ONTAP AFF 全 SAN 阵列系统》"^]
+ link:http://www.netapp.com/us/media/tr-4080.pdf["NetApp 技术报告 4080 ：《可扩展 SAN ONTAP 9 最佳实践》"^]
+
+
+
+== 设置 ASA
+
+所有 SAN 阵列（ ASA ）均采用与非 ASA 系统相同的设置操作步骤。
+
+System Manager 将指导您完成初始化集群，创建本地层，配置协议以及为 ASA 配置存储所需的过程。请参见步骤至 xref:task_configure_ontap.html[配置 ONTAP]。
+
+
+
+== ASA 主机设置和实用程序
+
+用于设置所有 SAN 阵列（ ASA ）的主机设置与所有其他 SAN 主机的主机设置相同。
+
+您可以下载 link:https://mysupport.netapp.com/NOW/cgi-bin/software["NetApp Host Utilities 软件"^] 支持站点上的特定主机。
+
+
+
+== 识别 ASA 系统的方法
+
+您可以使用 System Manager 或 ONTAP 命令行界面（ CLI ）来标识 ASA 系统。
+
+在 System Manager 信息板中，单击 * 集群 > 概述 * ，然后选择系统节点。"* 特性 * " 显示为 "* 所有 SAN 阵列 * " 。
+
+在CLI中、您可以使用`san config show`命令。对于 ASA 系统， "All SAN Array" 值将返回为 true 。

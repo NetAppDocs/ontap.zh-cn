@@ -22,7 +22,13 @@ summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版
 ONTAP 平台支持：
 
 * 从ONTAP 9.10.1开始、所有内部ONTAP 系统均可使用自动勒索软件保护(ARP)功能。
-* 它不适用于Cloud Volumes ONTAP 环境。
+* ARP目前在以下Cloud Volumes ONTAP 环境中不可用：
++
+** Amazon FSX
+** Azure 酒店
+** Google Cloud
+
+
 
 
 合适的工作负载：
@@ -36,6 +42,13 @@ ONTAP 平台支持：
 +
 例如，医疗保健记录和电子设计自动化（ Electronic Design Automation ， EDA ）数据。
 
+
+
+从ONTAP 9.12.1开始、ARP可用于以下配置：
+
+* 使用SnapMirror保护的卷
+* 使用SnapMirror进行保护的SVM
+* 已启用SVM进行迁移(SVM数据移动性)
 
 
 不适合的工作负载：
@@ -62,14 +75,22 @@ ONTAP 平台支持：
 
 * 使卷脱机
 * 受限卷
+* 受SnapMirror保护的卷(ONTAP 9.11.1及更早版本)
 * SnapLock 卷
 * FlexGroup 卷
 * FlexCache 卷（原始 FlexVol 卷支持反勒索软件功能，但缓存卷不支持此功能）
 * SAN-only volumes
 * 已停止Storage VM的卷
 * Storage VM的根卷
-* 数据保护卷
 
+
+
+
+== SnapMirror和ARP互操作性
+
+从ONTAP 9.12.1开始、SnapMirror目标卷支持ARP。如果SnapMirror源卷已启用ARP、则SnapMirror目标卷会自动获取源卷的ARP配置状态。
+
+虽然目标卷包含只读(Read Only、RO) Snapshot副本、但不会对其数据执行ARP处理。但是、当SnapMirror目标卷转换为读写(rw)时、将自动在RW转换的目标卷上启用ARP。除了已记录在源卷上的内容之外、目标卷不需要任何其他学习操作步骤。
 
 
 

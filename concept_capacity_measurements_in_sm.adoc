@@ -1,15 +1,15 @@
 ---
 sidebar: sidebar 
 permalink: concept_capacity_measurements_in_sm.html 
-keywords: capacity, measurement, physical, logical, storage, used storage, aggregate capacity, block, capacity concern, issue, add capacity, volume, used capacity, available capacity, total capacity, inactive capacity, explore capacity, capacity explorer, static insights, dynamic insights, snapshot copy, snapshot copies, inactive data, overprovision, overflows, snapshot copy policy, snapshot copy reserves, reserves, policy, top volumes 
-summary: 使用 System Manager ，您可以查看集群已使用的存储容量以及仍可使用的存储容量。此外，从 ONTAP 9.10.1 开始，您可以使用 System Manager 查看有关集群容量的历史数据以及未来将使用或可用容量的预测。 
+keywords: capacity, measurement, physical, logical, storage, used storage, aggregate capacity, block, capacity concern, issue, add capacity, volume, used capacity, available capacity, total capacity, inactive capacity, static insights, dynamic insights, snapshot copy, snapshot copies, inactive data, overprovision, overflows, snapshot copy policy, snapshot copy reserves, reserves, policy, top volumes 
+summary: 使用 System Manager ，您可以查看集群已使用的存储容量以及仍可使用的存储容量。此外，从 ONTAP 9.10.1 开始，您可以使用 System Manager 查看有关集群容量的历史数据以及未来将使用或可用容量的预测。您可以监控卷和本地层的容量。此外、从ONTAP 9.12.1开始、System Manager还会显示本地层的已提交容量。 
 ---
 = 在 System Manager 中监控容量
 :allow-uri-read: 
 
 
 [role="lead"]
-使用 System Manager ，您可以查看集群已使用的存储容量以及仍可使用的存储容量。此外，从 ONTAP 9.10.1 开始，您可以使用 System Manager 查看有关集群容量的历史数据以及有关未来将使用或可用容量的预测。
+使用 System Manager ，您可以查看集群已使用的存储容量以及仍可使用的存储容量。此外，从 ONTAP 9.10.1 开始，您可以使用 System Manager 查看有关集群容量的历史数据以及有关未来将使用或可用容量的预测。您可以监控卷和本地层的容量。此外、从ONTAP 9.12.1开始、System Manager还会显示本地层的已提交容量。
 
 * 
 * 
@@ -97,7 +97,7 @@ NOTE: 对于所有版本的 ONTAP ， System Manager 中用于吞吐量的单位
 |===
 
 
-| 对于 ONTAP 9.10.0 及更早版本， System Manager 中会显示容量单位 | 对于 ONTAP 9.10.1 ， System Manager 中显示的容量单位 | 计算 | 以字节为单位的值 
+| 对于 ONTAP 9.10.0 及更早版本， System Manager 中会显示容量单位 | 对于ONTAP 9.10.1及更高版本、System Manager中显示的容量单位 | 计算 | 以字节为单位的值 
 
 
  a| 
@@ -158,9 +158,19 @@ link:volumes/logical-space-reporting-enforcement-concept.html["卷的逻辑空�
 
 
 
-== 查看集群的容量测量结果
+== 查看容量测量结果
 
-您可以在 System Manager 的信息板上查看集群的容量测量结果。
+使用System Manager、您可以查看不同组件的容量测量结果：
+
+* ,查看集群的容量
+* ,查看本地层的容量
+
+
+
+
+== 查看集群的容量
+
+您可以在System Manager的信息板上查看集群的容量测量结果。
 
 要查看与云中容量相关的数据，您必须拥有 Active IQ 数字顾问帐户并进行连接。
 
@@ -178,4 +188,24 @@ link:volumes/logical-space-reporting-enforcement-concept.html["卷的逻辑空�
 
 
 . 单击 image:../media/icon_arrow.gif["右箭头"] 可查看有关集群容量的更多详细信息。
+
+
+
+
+== 查看本地层的容量
+
+您可以查看有关本地层容量的详细信息。此外、从ONTAP 9.12.1开始、您可以查看本地层的已承诺容量、以确定是否需要向本地层添加容量以提供已承诺的容量并避免可用空间用尽。
+
+.步骤
+. 单击 * 存储 > 层 * 。
+. 选择本地层的名称。
+. 在*概述*页面的*容量*部分中、容量显示在一个条形图中、其中包含三个测量值：
++
+** 已用容量和预留容量
+** Available capacity
+** 已提交容量(从ONTAP 9.12.1开始)
+
+
+. (可选)如果已提交容量大于本地层的容量、您可以考虑在本地层的可用空间不足之前向其添加容量。请参见 link:..disks-aggregates/add-disks-local-tier-aggr-task.html["向本地层添加容量(向聚合添加磁盘)"]。
+. (可选)您还可以通过选择*卷*选项卡来查看特定卷在本地层中使用的容量。
 

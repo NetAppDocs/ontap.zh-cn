@@ -2,7 +2,7 @@
 permalink: svm-migrate/index.html 
 sidebar: sidebar 
 keywords: svm, migrate, workflow, relocate, prerequisites, data mobility 
-summary: 从 ONTAP 9.10.1 开始，集群管理员可以无中断地将 SVM 从源集群重新定位到目标集群，以管理容量和负载平衡，或者启用设备升级或数据中心整合。只有AFF 阵列才支持此功能。 
+summary: 从 ONTAP 9.10.1 开始，集群管理员可以无中断地将 SVM 从源集群重新定位到目标集群，以管理容量和负载平衡，或者启用设备升级或数据中心整合。从ONTAP 9.12.1开始、FAS 和AFF 平台以及混合聚合均支持此功能。 
 ---
 = SVM 数据移动性概述
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 从 ONTAP 9.10.1 开始，集群管理员可以无中断地将 SVM 从�
 
 
 [role="lead"]
-从 ONTAP 9.10.1 开始，集群管理员可以无中断地将 SVM 从源集群重新定位到目标集群，以管理容量和负载平衡，或者启用设备升级或数据中心整合。只有AFF 阵列才支持此功能。
+从 ONTAP 9.10.1 开始，集群管理员可以无中断地将 SVM 从源集群重新定位到目标集群，以管理容量和负载平衡，或者启用设备升级或数据中心整合。从ONTAP 9.12.1开始、FAS 和AFF 平台以及混合聚合均支持此功能。
 
 迁移后， SVM 的名称和 UUID 以及数据 LIF 名称， IP 地址和对象名称（例如卷名称）均保持不变。SVM 中对象的 UUID 将不同。
 
@@ -21,7 +21,7 @@ summary: 从 ONTAP 9.10.1 开始，集群管理员可以无中断地将 SVM 从�
 
 此图显示了 SVM 迁移的典型工作流。从目标集群开始 SVM 迁移。您可以从源或目标监控迁移。您可以执行手动转换或自动转换。默认情况下会执行自动转换。
 
-image::../media/workflow_svm_migrate.gif[工作流 SVM 迁移]
+image::../media/workflow_svm_migrate.gif[SVM 迁移工作流]
 
 
 
@@ -29,20 +29,23 @@ image::../media/workflow_svm_migrate.gif[工作流 SVM 迁移]
 
 下表列出了支持的配置以及支持的ONTAP 版本。
 
-[cols="3,2*"]
+[cols="3,1,1,1"]
 |===
 
 
-| 支持的配置... | ONTAP 9.10.1 | ONTAP 9.11.1 
+| 支持的配置... | ONTAP 9.10.1 | ONTAP 9.11.1 | ONTAP 9.12.1 
 
 
-| 仅限 AFF 阵列 | 是的。 | 是的。 
+| 仅限 AFF 阵列 | 是的。 | 是的。 | 否 
 
 
-| 阵列/节点对总数 | 1. | 3. 
+| 混合平台(AFF-FAS、FAS-AFF、采用混合聚合的AFF-FAS) | 否 | 否 | 是的。 
 
 
-| 使用数据中心进行迁移、最大网络延迟为2毫秒 | 是的。 | 是的。 
+| 阵列/节点对总数 | 1. | 3. | 3. 
+
+
+| 使用数据中心进行迁移、最大网络延迟为2毫秒 | 是的。 | 是的。 | 是的。 
 |===
 
 
@@ -55,9 +58,11 @@ image::../media/workflow_svm_migrate.gif[工作流 SVM 迁移]
 * 源集群中的所有节点都必须运行相同的 ONTAP 版本
 * 目标集群与源集群处于相同或更新的有效集群版本（ ECV ）
 * 源集群和目标集群位于同一数据网络中
-* 源 SVM 包含的数据卷数少于此版本支持的最大数据卷数。
+* 源 SVM 包含的数据卷数少于此版本支持的最大数据卷数。支持的最大数据卷数如下：
 +
-支持的最大数据卷数为100。
+** AFF 阵列：100
+** FAS 平台：80
+
 
 * 目标上具有足够的空间来放置卷
 * 如果源 SVM 具有加密卷，则必须在目标上配置板载密钥管理器
@@ -81,20 +86,20 @@ image::../media/workflow_svm_migrate.gif[工作流 SVM 迁移]
 
 下表列出了支持的功能以及支持的ONTAP 版本。
 
-[cols="3,1,1,4"]
+[cols="3,1,1,1,4"]
 |===
 
 
-| 支持的功能... | ONTAP 9.10.1 | ONTAP 9.11.1 | 追加信息 
+| 支持的功能... | ONTAP 9.10.1 | ONTAP 9.11.1 | ONTAP 9.12.1 | 追加信息 
 
 
-| NFS v3 ， NFS v4.1 和 NFS v4.2 协议 | 是的。 | 是的。 |  
+| 异步SnapMirror副本到云关系 | 否 | 否 | 是的。 | 从ONTAP 9.12.1开始、在将具有SnapMirror副本的SVM迁移到云关系时、迁移目标集群必须安装"复制到云"许可证、并且必须具有足够的可用容量以支持将要镜像到云的卷中的容量移动。 
 
 
-| NetApp 卷加密 | 是的。 | 是的。 |  
+| 异步SnapMirror目标 | 否 | 否 | 是的。 |  
 
 
-| 异步SnapMirror源 | 否 | 是的。  a| 
+| 异步SnapMirror源 | 否 | 是的。 | 是的。  a| 
 * 在大多数迁移过程中、FlexVol SnapMirror关系上的传输可以继续正常进行。
 * 转换期间会取消所有正在进行的传输、转换期间新传输会失败、并且在迁移完成之前无法重新启动这些传输。
 * 迁移完成后、在迁移期间取消或错过的计划传输不会自动启动。
@@ -108,16 +113,31 @@ image::../media/workflow_svm_migrate.gif[工作流 SVM 迁移]
 
 
 
-| SnapMirror应用程序的SVM对等 | 否 | 是的。 |  
+| 自主勒索软件保护 | 否 | 否 | 是的。 |  
 
 
-| 外部密钥管理器 | 否 | 是的。 |  
+| 外部密钥管理器 | 否 | 是的。 | 是的。 |  
 
 
-| 扇出关系(迁移源的SnapMirror源卷具有多个目标) | 否 | 是的。 |  
+| 扇出关系(迁移源的SnapMirror源卷具有多个目标) | 否 | 是的。 | 是的。 |  
 
 
-| 作业计划复制 | 否 | 是的。 | 在ONTAP 9.10.1中、迁移期间不会复制作业计划、必须在目标上手动创建作业计划。从ONTAP 9.11.1开始、源使用的作业计划会在迁移期间自动复制。 
+| 作业计划复制 | 否 | 是的。 | 是的。 | 在ONTAP 9.10.1中、迁移期间不会复制作业计划、必须在目标上手动创建作业计划。从ONTAP 9.11.1开始、源使用的作业计划会在迁移期间自动复制。 
+
+
+| NetApp 卷加密 | 是的。 | 是的。 | 是的。 |  
+
+
+| NFS v3 ， NFS v4.1 和 NFS v4.2 协议 | 是的。 | 是的。 | 是的。 |  
+
+
+| SMB协议 | 否 | 否 | 是的。  a| 
+* 从ONTAP 9.12.1开始、SVM迁移包括通过SMB进行中断迁移。
+
+
+
+
+| SnapMirror应用程序的SVM对等 | 否 | 是的。 | 是的。 |  
 |===
 
 
@@ -125,13 +145,10 @@ image::../media/workflow_svm_migrate.gif[工作流 SVM 迁移]
 
 SVM 迁移不支持以下功能：
 
-* 反勒索软件
-* 异步SnapMirror目标
 * 审核
 * Cloud Volumes ONTAP
 * 数据保护卷
 * FabricPools
-* FAS 阵列
 * Flash Pool 聚合
 * FlexCache 卷
 * FlexGroup 卷
@@ -141,7 +158,7 @@ SVM 迁移不支持以下功能：
 * 负载共享镜像
 * MetroCluster
 * NDMP
-* SAN ，基于光纤的 NVMe ， CIFS ， Vscan ， NFS v4.0 ， vStorage ， S3 复制
+* SAN、基于光纤的NVMe、Vscan、NFS v4.0、vStorage、 S3复制
 * SMTape
 * SnapLock
 * SVM-DR

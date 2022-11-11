@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: networking/create_svms.html 
-keywords: create, creation, creating, add, adding, svm, storage, virtual, machine, create svms, create storage virtual machines, create an svm to serve data to clients 
+keywords: create, creation, creating, add, adding, svm, storage, virtual, machine, create svms, create storage virtual machines, create an svm to serve data to clients, system manager 
 summary: 创建 SVM 以向客户端提供数据 
 ---
 = 创建 SVM
@@ -23,6 +23,279 @@ summary: 创建 SVM 以向客户端提供数据
 如果您计划在此 SVM 上通过 SMB 解决方案实施 Hyper-V 或 SQL Server ，则应对根卷使用 NTFS 安全模式。包含 Hyper-V 文件或 SQL 数据库文件的卷在创建时必须设置为 NTFS 安全性。通过将根卷安全模式设置为 NTFS ，您可以确保不会无意中创建 UNIX 或混合安全模式数据卷。
 
 
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+您可以使用System Manager创建Storage VM。
+
+.步骤
+. 选择*存储VM*。
+. 单击 image:icon_add.gif["添加图标"] 创建Storage VM。
+. 为Storage VM命名。
+. 选择访问协议：
++
+** SMB/CIFS、NFS
+** iSCSI
+** FC
+** NVMe
++
+... 如果选择*启用SMB/CIFS*、请完成以下配置：
+
+
+
+
+
+
+|===
+
+
+| 字段或复选框 | Description 
+
+
+ a| 
+管理员名称
+ a| 
+指定SMB/CIFS Storage VM的管理员用户名。
+
+
+
+ a| 
+Password
+ a| 
+指定SMB/CIFS Storage VM的管理员密码。
+
+
+
+ a| 
+服务器名称
+ a| 
+指定SMB/CIFS Storage VM的服务器名称。
+
+
+
+ a| 
+Active Directory域
+ a| 
+指定用于为SMB/CIFS Storage VM提供用户身份验证的Active Directory域。
+
+
+
+ a| 
+组织单位
+ a| 
+指定Active Directory域中与SMB/CIFS服务器关联的组织单位。"cn=compones"是默认值、可以进行修改。
+
+
+
+ a| 
+访问Storage VM中的共享时对数据进行加密
+ a| 
+选中此复选框可使用SMB 3.0对数据进行加密、以防止未经授权访问SMB/CIFS Storage VM中的共享上的文件。
+
+
+
+ a| 
+域
+ a| 
+为SMB/CIFS Storage VM添加、删除或重新排列列出的域。
+
+
+
+ a| 
+名称服务器
+ a| 
+添加、删除SMB/CIFS Storage VM的名称服务器或对其重新排序。
+
+
+
+ a| 
+默认语言
+ a| 
+指定Storage VM及其卷的默认语言编码设置。使用命令行界面更改Storage VM中各个卷的设置。
+
+
+
+ a| 
+网络接口
+ a| 
+对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
+
+
+
+ a| 
+管理管理员帐户
+ a| 
+如果要管理Storage VM管理员帐户、请选中此复选框。选中后、指定用户名、密码、确认密码并指示是否要添加用于Storage VM管理的网络接口。
+
+|===
+. 如果选择*启用NFS*、请完成以下配置：
+
+
+|===
+
+
+| 字段或复选框 | Description 
+
+
+ a| 
+允许NFS客户端访问复选框
+ a| 
+如果在NFS Storage VM上创建的所有卷都应使用根卷路径"/"进行挂载和遍历、请选中此复选框。向导出策略"default"添加规则、以允许无中断挂载遍历。
+
+
+
+ a| 
+rules
+ a| 
+单击 image:icon_add.gif["添加图标"] 以创建规则。
+
+* 客户端规范：指定主机名、IP地址、网络组或域。
+* 访问协议：选择以下选项的组合：
++
+** SMB/CIFS
+** FlexCache
+** NFS
++
+*** NFSv3
+*** NFSv4
+
+
+
+
+* 访问详细信息：对于每种类型的用户、指定访问级别：只读、读/写或超级用户。用户类型包括：
++
+** 全部
+** 全部(以匿名用户身份)
+** "unix"
+** Kerberos 5.
+** Kerberos 5i
+** Kerberos 5p
+** NTLM
+
+
+
+
+保存规则。
+
+
+
+ a| 
+默认语言
+ a| 
+指定Storage VM及其卷的默认语言编码设置。使用命令行界面更改Storage VM中各个卷的设置。
+
+
+
+ a| 
+网络接口
+ a| 
+对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
+
+
+
+ a| 
+管理管理员帐户
+ a| 
+如果要管理Storage VM管理员帐户、请选中此复选框。选中后、指定用户名、密码、确认密码并指示是否要添加用于Storage VM管理的网络接口。
+
+|===
+. 如果选择*启用iSCSI*、请完成以下配置：
+
+
+|===
+
+
+| 字段或复选框 | Description 
+
+
+ a| 
+网络接口
+ a| 
+对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
+
+
+
+ a| 
+管理管理员帐户
+ a| 
+如果要管理Storage VM管理员帐户、请选中此复选框。选中后、指定用户名、密码、确认密码并指示是否要添加用于Storage VM管理的网络接口。
+
+|===
+. 如果选择*启用FC*、请完成以下配置：
+
+
+|===
+
+
+| 字段或复选框 | Description 
+
+
+ a| 
+配置FC端口
+ a| 
+选择要包含在Storage VM中的节点上的网络接口。建议每个节点使用两个网络接口。
+
+
+
+ a| 
+管理管理员帐户
+ a| 
+如果要管理Storage VM管理员帐户、请选中此复选框。选中后、指定用户名、密码、确认密码并指示是否要添加用于Storage VM管理的网络接口。
+
+|===
+. 如果选择*启用NVMe/FC*、请完成以下配置：
+
+
+|===
+
+
+| 字段或复选框 | Description 
+
+
+ a| 
+配置FC端口
+ a| 
+选择要包含在Storage VM中的节点上的网络接口。建议每个节点使用两个网络接口。
+
+
+
+ a| 
+管理管理员帐户
+ a| 
+如果要管理Storage VM管理员帐户、请选中此复选框。选中后、指定用户名、密码、确认密码并指示是否要添加用于Storage VM管理的网络接口。
+
+|===
+. 如果选择*启用NVMe/tcp*、请完成以下配置：
+
+
+|===
+
+
+| 字段或复选框 | Description 
+
+
+ a| 
+网络接口
+ a| 
+对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
+
+
+
+ a| 
+管理管理员帐户
+ a| 
+如果要管理Storage VM管理员帐户、请选中此复选框。选中后、指定用户名、密码、确认密码并指示是否要添加用于Storage VM管理的网络接口。
+
+|===
+. 保存所做的更改。
+
+
+--
+.命令行界面
+--
+使用命令行界面创建子网。
 
 .步骤
 . 确定哪些聚合是包含 SVM 根卷的候选聚合。
@@ -95,3 +368,6 @@ Is Vserver Protected: false
 在此示例中，命令会在 IP 空间 "ipspace1" 中创建名为 "VS1" 的 SVM 。根卷名为 vs1_root ，并在 aggr3 上使用 NTFS 安全模式创建。
 
 
+
+--
+====

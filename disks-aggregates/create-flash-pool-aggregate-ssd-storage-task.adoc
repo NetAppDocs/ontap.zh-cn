@@ -13,6 +13,8 @@ summary: '您可以通过将SSD存储池中的一个或多个分配单元添加�
 [role="lead"]
 您可以通过将SSD存储池中的一个或多个分配单元添加到现有HDD本地层来配置Flash Pool本地层(聚合)。
 
+从ONTAP 9.12.1开始、您可以使用重新设计的System Manager使用存储池分配单元创建Flash Pool本地层。
+
 .您需要什么？ #8217 ；将需要什么
 * 您必须已确定一个由HDD组成的有效本地层以转换为Flash Pool本地层。
 * 您必须已确定与本地层关联的卷的写入缓存资格、并已完成解决资格问题所需的所有步骤。
@@ -39,6 +41,26 @@ summary: '您可以通过将SSD存储池中的一个或多个分配单元添加�
 
 将SSD缓存添加到本地层以创建Flash Pool本地层后、您无法删除此SSD缓存将本地层转换回其原始配置。
 
+[role="tabbed-block"]
+====
+.System Manager
+--
+从ONTAP 9.12.1开始、您可以使用System Manager将SSD添加到SSD存储池。
+
+.步骤
+. 单击*存储>层*并选择现有的本地HDD存储层。
+. 单击 image:icon_kabob.gif["kabob 图标"] 并选择*添加Flash Pool Cache*。
+. 选择*使用存储池*。
+. 选择存储池。
+. 选择缓存大小和RAID配置。
+. 单击 * 保存 * 。
+. 再次找到存储层、然后单击 image:icon_kabob.gif["kabob 图标"]。
+. 选择*更多详细信息*并验证Flash Pool是否显示为*已启用*。
+
+
+--
+.命令行界面
+--
 .步骤
 . 将聚合标记为有资格成为 Flash Pool 聚合：
 +
@@ -76,4 +98,6 @@ summary: '您可以通过将SSD存储池中的一个或多个分配单元添加�
 
 
 
+--
+====
 http://www.netapp.com/us/media/tr-4070.pdf["NetApp 技术报告 4070 ：《 Flash Pool 设计和实施指南》"^]

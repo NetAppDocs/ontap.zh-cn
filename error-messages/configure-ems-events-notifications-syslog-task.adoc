@@ -17,15 +17,35 @@ summary: 要在系统日志服务器上记录最严重事件的通知，您必�
 
 如果您的环境尚未包含用于发送事件通知的系统日志服务器，则必须先创建一个。如果您的环境已包含一个用于记录其他系统中的事件的系统日志服务器，则您可能需要使用该服务器来发送重要事件通知。
 
-您可以在集群运行时随时通过在 ONTAP 命令行上输入命令来执行此任务。
+您可以在集群运行时随时在ONTAP 命令行界面上输入命令来执行此任务。
+
+从ONTAP 9.12.1开始、可以通过传输层安全(Transport Layer Security、TLS)协议将EMS事件发送到远程系统日志服务器上的指定端口。有两个新参数可用：
+
+`tcp-encrypted`:: 时间 `tcp-encrypted` 已为指定 `syslog-transport`、ONTAP 通过验证目标主机的证书来验证其身份。默认值为 `udp-unencrypted`。
+`syslog-port`:: 默认值 `syslog-port` 参数取决于的设置 `syslog-transport` 参数。条件 `syslog-transport` 设置为 `tcp-encrypted`， `syslog-port` 具有默认值6514。
+
+
+有关详细信息，请参见 `event notification destination create` 手册页。
 
 .步骤
 . 为重要事件创建系统日志服务器目标：
 +
-`事件通知目标 create -name syslog-ems -syslog syslog-server-address`
+`event notification destination create -name _syslog-ems_ -syslog _syslog-server-address_ -syslog-transport {udp-unencrypted|tcp-unencrypted|tcp-encrypted}`
+
++
+从ONTAP 9.12.1开始、可以为指定以下值 `syslog-transport`：
+
++
+** `udp-unencrypted` —无安全性的用户数据报协议
+** `tcp-unencrypted` —传输控制协议无安全性
+** `tcp-encrypted` —传输层安全传输控制协议(TLS)
+
+
++
+默认协议为 `udp-unencrypted``。
 
 . 配置重要事件以将通知转发到系统日志服务器：
 +
-`event notification create -filter-name importal-events -destinations syslog-ems`
+`event notification create -filter-name _important-events_ -destinations _syslog-ems_`
 
 

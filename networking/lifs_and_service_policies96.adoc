@@ -14,7 +14,7 @@ summary: 为 LIF 分配服务策略以指定支持的流量
 
 
 [role="lead"]
-您可以为 LIF 分配服务策略（而不是 LIF 角色），以确定 LIF 支持的流量类型。服务策略定义 LIF 支持的一组网络服务。ONTAP 提供了一组可与 LIF 关联的内置服务策略。
+您可以将服务策略(而不是LIF角色或防火墙策略)分配给LIF、以确定LIF支持的流量类型。服务策略定义 LIF 支持的一组网络服务。ONTAP 提供了一组可与 LIF 关联的内置服务策略。
 
 您可以使用以下命令显示服务策略及其详细信息： `network interface service-policy show`
 
@@ -24,7 +24,7 @@ summary: 为 LIF 分配服务策略以指定支持的流量
 
 管理 SVM 和任何系统 SVM 都包含可用于该 SVM 中 LIF 的服务策略，包括管理和集群间 LIF 。创建 IP 空间时，系统会自动创建这些策略。
 
-下表列出了自ONTAP 9.11.1之日系统SVM中LIF的内置策略。对于其他版本，使用以下命令显示服务策略及其详细信息：
+下表列出了自ONTAP 9.12.1之日系统SVM中LIF的内置策略。对于其他版本，使用以下命令显示服务策略及其详细信息：
 
 `network interface service-policy show`
 
@@ -60,11 +60,11 @@ default-route-announce
  a| 
 default-management
  a| 
-management-core、management-https、management-http、management-ssh、management-autosupport、 management-EMS、management-dns-client、management-ad-client、management-ldap-client、management-nis-client、 management-ntp-client
+management-core、management-https、management-http、management-ssh、management-autosupport、 management-EMS、management-dns-client、management-ad-client、management-ldap-client、management-nis-client、 management-ntp-client、management-log-forwarding
  a| 
 node-mgmt 或 cluster-mgmt
  a| 
-使用此系统范围的管理策略创建系统SVM所拥有的节点和集群范围的管理LIF。这些LIF可用于到DNS、AD、LDAP或NIS服务器的出站连接、以及一些附加连接、以支持代表整个系统运行的应用程序。
+使用此系统范围的管理策略创建系统SVM所拥有的节点和集群范围的管理LIF。这些LIF可用于到DNS、AD、LDAP或NIS服务器的出站连接、以及一些附加连接、以支持代表整个系统运行的应用程序。从ONTAP 9.12.1开始、您可以使用 `management-log-forwarding` 用于控制用于将审核日志转发到远程系统日志服务器的LIF的服务。
 
 |===
 下表列出了自ONTAP 9.11.1之日LIF可在系统SVM上使用的服务：
@@ -208,6 +208,15 @@ management-telnet-server
 -
  a| 
 用于 telnet 服务器管理的服务
+
+
+
+ a| 
+management-log-forwarding
+ a| 
+-
+ a| 
+在ONTAP 9.12.1中引入。用于审核日志转发的服务
 
 |===
 

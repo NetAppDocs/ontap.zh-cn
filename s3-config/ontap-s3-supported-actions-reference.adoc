@@ -10,21 +10,48 @@ summary: ONTAP S3 支持的操作。
 :imagesdir: ../media/
 
 
+标准S3 REST API支持ONTAP S3操作、但如下所示除外。有关详细信息，请参见 link:https://docs.aws.amazon.com/AmazonS3/latest/API/Type_API_Reference.html["Amazon S3 API参考"^]。
+
 
 
 == 存储分段操作
 
-标有星号的操作受 ONTAP 支持，而不是 S3 REST API 支持
+在不支持ONTAP S3 REST API的ONTAP 版本中、支持使用AWS REST API执行以下操作：
 
-* CreateBucket (从ONTAP 9.11.1开始)
-* DeleteBucket*(从ONTAP 9.11.1开始支持S3 REST API)
-* DeleteBucketPolicy*
-* GetBucketAcl
-* HeadBucket
-* List桶
-* PutBucket*
+* 存储分段创建和删除
+* 存储分段策略的创建、修改和删除
 
 
+|===
+| 存储分段操作 | ONTAP 支持、从开始 
+
+
+| CreateBucket | ONTAP 9.11.1 
+
+
+| DeleteBucket | ONTAP 9.11.1 
+
+
+| DeleteBucketPolicy | ONTAP 9.12.1 
+
+
+| GetBucketAcl | ONTAP 9.8 
+
+
+| GetBucketPolicy | ONTAP 9.12.1 
+
+
+| HeadBucket | ONTAP 9.8 
+
+
+| List桶 | ONTAP 9.8 
+
+
+| PutBucket* | ONTAP 9.8 +*仅支持ONTAP REST API 
+
+
+| PutBucketPolicy | ONTAP 9.12.1 
+|===
 
 
 == 对象操作
@@ -47,35 +74,80 @@ summary: ONTAP S3 支持的操作。
 
 从ONTAP 9.11.1开始、ONTAP S3支持使用以下ONTAP API进行对象版本控制和关联操作：
 
-* PutBucketVersioning
 * GetBucketVersioning
 * ListBucketVersions
+* PutBucketVersioning
 
 
-支持的对象操作：
-
-* AbortMultipartUpload
-* CompleteMultipartUpload
-* CreateMultipartUpload
-* DeleteObject
-* DeleteObjects (从ONTAP 9.11.1开始支持S3 REST API)
-* DeleteObjectTagging （从 ONTAP 9.1.1 开始）
-* GetBucketVersioning (从ONTAP 9.11.1开始)
-* GetObject
-* GetObjectAcl
-* GetObjectTagging （从 ONTAP 9.1.1 开始）
-* HeadObject
-* ListMultipartUpload
-* ListObjects
-* ListObjectsV2
-* ListBucketVersions (从ONTAP 9.11.1开始)
-* ListParts
-* PutBucketVersioning (从ONTAP 9.11.1开始)
-* PutObject
-* PutObjectTagging （从 ONTAP 9.1.1 开始）
-* 上传部件
+|===
+| 对象操作 | ONTAP 支持、从开始 
 
 
+| AbortMultipartUpload | ONTAP 9.8 
+
+
+| CompleteMultipartUpload | ONTAP 9.8 
+
+
+| CopyObject | ONTAP 9.12.1 
+
+
+| CreateMultipartUpload | ONTAP 9.8 
+
+
+| DeleteObject | ONTAP 9.8 
+
+
+| DeleteObjects | ONTAP 9.11.1 
+
+
+| DeleteObjectTagging | ONTAP 9.9.1 
+
+
+| GetBucketVersioning | ONTAP 9.11.1 
+
+
+| GetObject | ONTAP 9.8 
+
+
+| GetObjectAcl | ONTAP 9.8 
+
+
+| GetObjectTagging | ONTAP 9.9.1 
+
+
+| HeadObject | ONTAP 9.8 
+
+
+| ListMultipartUpload | ONTAP 9.8 
+
+
+| ListObjects | ONTAP 9.8 
+
+
+| ListObjectsV2 | ONTAP 9.8 
+
+
+| ListBucketVersions | ONTAP 9.11.1 
+
+
+| ListParts | ONTAP 9.8 
+
+
+| PutBucketVersioning | ONTAP 9.11.1 
+
+
+| PutObject | ONTAP 9.8 
+
+
+| PutObjectTagging | ONTAP 9.9.1 
+
+
+| 上传部件 | ONTAP 9.8 
+
+
+| 上传PartCopy | ONTAP 9.12.1 
+|===
 
 
 == 组策略

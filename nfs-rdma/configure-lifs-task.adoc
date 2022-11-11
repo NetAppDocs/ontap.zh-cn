@@ -1,8 +1,8 @@
 ---
 permalink: nfs-rdma/configure-lifs-task.html 
 sidebar: sidebar 
-keywords: networking, LIF, NFS over RDMA, NVIDIA, NFS, RDMA, ROCE 
-summary: 本文介绍如何将 LIF 配置为支持 RDMA 。 
+keywords: networking, LIF, NFS over RDMA, NVIDIA, NFS, RDMA, ROCE, network interface, system manager 
+summary: '本文介绍如何将LIF (网络接口)配置为支持RDMA。' 
 ---
 = 通过 RDMA 为 NFS 配置 LIF
 :allow-uri-read: 
@@ -11,11 +11,31 @@ summary: 本文介绍如何将 LIF 配置为支持 RDMA 。
 
 
 [role="lead"]
-要使用基于 RDMA 的 NFS ，必须将 LIF 配置为与 RDMA 兼容。LIF 及其故障转移对都必须支持 RDMA 。
+要使用基于RDMA的NFS、必须将LIF (网络接口)配置为与RDMA兼容。LIF及其故障转移对都必须能够支持RDMA。
 
-从ONTAP 9.10.1开始、网络接口命令中提供了一个新的`-RDMA_protocols`参数、您可以在该参数中配置支持以及设置适当的服务策略。
 
-.操作步骤以创建新的 LIF
+
+== 创建新的 LIF
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+您必须使用ONTAP 9.12.1或更高版本使用System Manager通过RDMA为NFS创建网络接口。
+
+.步骤
+. 选择*网络>概述>网络接口*。
+. 选择 ... image:icon_add.gif["添加图标"]。
+. 如果选择* NFS、SMB/CIFS、S3*、则可以选择*使用RoCE端口*。选中*使用RoCE端口*复选框。
+. 选择Storage VM和主节点。分配一个名称。输入IP地址和子网掩码。
+. 输入IP地址和子网掩码后、System Manager会将广播域列表筛选为具有支持RoCE的端口的广播域列表。选择广播域。您可以选择添加网关。
+. 选择 * 保存 * 。
+
+
+--
+.命令行界面
+--
+.步骤
 . 创建 LIF ：
 +
 `` network interface create -vserver _svm_name_-lif _lif_name_-service-policy _service_policy_name_-home-node _node_name_-home-port _port_name_｛-address _ip_address_-netmask _netmask_value___- subnet-name _subnet_name_｝-firewall-policy _rma_policy_name_｛auto-name_-ma_auto-name_｝-netma_auto-policy_modma__sma__sma_-netma_
@@ -27,7 +47,21 @@ summary: 本文介绍如何将 LIF 配置为支持 RDMA 。
 
 
 
-.操作步骤以修改 LIF
+--
+====
+
+
+== 修改 LIF
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+您必须使用ONTAP 9.12.1或更高版本使用System Manager通过RDMA为NFS创建网络接口。步骤。选择*网络>概述>网络接口*。。选择 ... image:icon_kabob.gif["kabob 图标"] 要更改的网络接口旁边的*>编辑*。。选中*使用RoCE端口*以启用基于RDMA的NFS、或者取消选中此复选框以将其禁用。如果网络接口位于支持RoCE的端口上、您将看到*使用RoCE端口*旁边的复选框。。根据需要修改其他设置。。选择*保存*以确认所做的更改。
+
+--
+.命令行界面
+--
 . 您可以使用 `network interface show` 命令检查 LIF 的状态。服务策略必须包含 data-nfs 网络接口服务。` RDMA-protocols` 列表应包含 `roce` 。如果上述任一条件不正确，请修改 LIF 。
 . 要修改 LIF ，请运行：
 +
@@ -38,4 +72,26 @@ summary: 本文介绍如何将 LIF 配置为支持 RDMA 。
 
 NOTE: 如果当前未将 LIF 分配给支持该协议的端口，则修改 LIF 以要求使用特定的卸载协议会产生错误。
 
-xref:../networking/create_a_lif.html[创建 LIF]
+--
+====
+
+
+== 迁移 LIF
+
+ONTAP 还允许您迁移网络接口(LIF)以利用基于RDMA的NFS。执行此迁移时、必须确保目标端口支持RoCE。从ONTAP 9.12.1开始、您可以在System Manager中完成此操作步骤。在为网络接口选择目标端口时、System Manager将指定端口是否支持RoCE。
+
+只有在以下情况下、才能将LIF迁移到基于RDMA的NFS配置：
+
+* 它是一个NFS RDMA网络接口(LIF)、托管在支持RoCE的端口上。
+* 它是一个NFS TCP网络接口(LIF)、托管在支持RoCE的端口上。
+* 它是一个NFS TCP网络接口(LIF)、托管在不支持RoCE的端口上。
+
+
+有关迁移网络接口的详细信息、请参见 xref:../networking/migrate_a_lif.html[迁移 LIF]。
+
+.更多信息
+* xref:../networking/create_a_lif.html[创建 LIF]
+* xref:../networking/create_a_lif.html[创建 LIF]
+* xref:../networking/modify_a_lif.html[修改 LIF]
+* xref:../networking/migrate_a_lif.html[迁移 LIF]
+

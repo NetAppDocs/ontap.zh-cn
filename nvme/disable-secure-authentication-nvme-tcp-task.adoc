@@ -1,0 +1,31 @@
+---
+permalink: nvme/disable-secure-authentication-nvme-tcp-task.html 
+sidebar: sidebar 
+keywords: manage, nvme, secure, authentication, tcp, dh-hmac-hcap, chap, disable 
+summary: 从ONTAP 9.12.1开始、可以使用DH-HMAC-CHAP身份验证协议通过NVMe-TCP在NVMe主机和控制器之间进行安全双向身份验证。 
+---
+= 禁用基于NVMe/TCP的安全身份验证
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您运行的是NVMe/TCP协议、并且已使用DH-HMAC-CHAP建立了安全身份验证、则可以随时选择将其禁用。
+
+但是、如果要从ONTAP 9.12.1或更高版本还原到ONTAP 9.12.0或更早版本、则必须在还原之前禁用安全身份验证。如果未禁用使用DH-HMAC-CHAP的安全身份验证、则还原将失败。
+
+.步骤
+. 从子系统中删除主机以禁用DH-HMAC-CHAP身份验证：
++
+`vserver nvme subsystem host remove – vserver svm_name -subsystem subsystem -host-nqn host_nqn`
+
+. 验证是否已从主机中删除DH-HMAC-CHAP身份验证协议：
++
+`vserver nvme subsystem host show`
+
+. 将主机重新添加到子系统而不进行身份验证：
++
+`vserver nvme subsystem host add – vserver svm_name -subsystem subsystem -host-nqn host_nqn`
+
+
