@@ -41,8 +41,8 @@ summary: '本文介绍如何将LIF (网络接口)配置为支持RDMA。'
 `` network interface create -vserver _svm_name_-lif _lif_name_-service-policy _service_policy_name_-home-node _node_name_-home-port _port_name_｛-address _ip_address_-netmask _netmask_value___- subnet-name _subnet_name_｝-firewall-policy _rma_policy_name_｛auto-name_-ma_auto-name_｝-netma_auto-policy_modma__sma__sma_-netma_
 
 +
-.. 服务策略必须为 default-data-files 或包含 data-nfs 网络接口服务的自定义策略。
-.. ` -rdma-protocols` 参数接受列表，默认为空。将 `` 值添加为值时，只能在支持 RoCE 卸载的端口上配置 LIF ，从而影响机器人 LIF 迁移和故障转移。
+** 服务策略必须为 default-data-files 或包含 data-nfs 网络接口服务的自定义策略。
+** ` -rdma-protocols` 参数接受列表，默认为空。将 `` 值添加为值时，只能在支持 RoCE 卸载的端口上配置 LIF ，从而影响机器人 LIF 迁移和故障转移。
 
 
 
@@ -57,7 +57,15 @@ summary: '本文介绍如何将LIF (网络接口)配置为支持RDMA。'
 ====
 .System Manager
 --
-您必须使用ONTAP 9.12.1或更高版本使用System Manager通过RDMA为NFS创建网络接口。步骤。选择*网络>概述>网络接口*。。选择 ... image:icon_kabob.gif["kabob 图标"] 要更改的网络接口旁边的*>编辑*。。选中*使用RoCE端口*以启用基于RDMA的NFS、或者取消选中此复选框以将其禁用。如果网络接口位于支持RoCE的端口上、您将看到*使用RoCE端口*旁边的复选框。。根据需要修改其他设置。。选择*保存*以确认所做的更改。
+您必须使用ONTAP 9.12.1或更高版本使用System Manager通过RDMA为NFS创建网络接口。
+
+.步骤
+. 选择*网络>概述>网络接口*。
+. 选择 ... image:icon_kabob.gif["kabob 图标"] 要更改的网络接口旁边的*>编辑*。
+. 选中*使用RoCE端口*以启用基于RDMA的NFS、或者取消选中此复选框以将其禁用。如果网络接口位于支持RoCE的端口上、您将看到*使用RoCE端口*旁边的复选框。
+. 根据需要修改其他设置。
+. 选择*保存*以确认所做的更改。
+
 
 --
 .命令行界面
