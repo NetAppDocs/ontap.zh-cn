@@ -54,10 +54,15 @@ summary: 要为 FC 配置 Storage Virtual Machine （ SVM ），必须为 SVM �
 
 . 在为 FC 提供服务的每个节点上为 SVM 创建两个 LIF ：
 +
+** 对于ONTAP 9.6及更高版本：
++
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -data-protocol fcp -service-policy default-data-fcp -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask _netmask_`
+
+** 对于ONTAP 9.5及更早版本：
++
 `network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol fcp -home-node _node_name_ -home-port _port_`
 
-+
-` -role` 参数应为 `data` ， `data-protocol` 参数应为 `fcp` 。
+
 
 . 确认已创建 LIF ，并且其运行状态为 `online` ：
 +

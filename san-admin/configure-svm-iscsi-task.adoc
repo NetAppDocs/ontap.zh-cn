@@ -54,7 +54,15 @@ summary: 要为 iSCSI 配置 Storage Virtual Machine （ SVM ），必须为 SVM
 
 . 在每个节点上为 SVM 创建一个 LIF 以用于 iSCSI ：
 +
-`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol iscsi -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask netmask`
+** 对于ONTAP 9.6及更高版本：
++
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -data-protocol iscsi -service-policy default-data-iscsi -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask _netmask_`
+
+** 对于ONTAP 9.5及更早版本：
++
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol iscsi -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask _netmask_`
+
+
 
 . 验证是否已正确设置 LIF ：
 +
