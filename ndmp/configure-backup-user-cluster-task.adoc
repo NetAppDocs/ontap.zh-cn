@@ -2,36 +2,49 @@
 permalink: ndmp/configure-backup-user-cluster-task.html 
 sidebar: sidebar 
 keywords: configure, backup, user, cluster 
-summary: 要从备份应用程序对 NDMP 进行身份验证，您必须为具有 admin 或 backup 角色的集群创建一个本地备份用户或 NIS 或 LDAP 用户，并为备份用户生成 NDMP 密码。 
+summary: 要从备份应用程序对SVM范围的NDMP进行身份验证、必须有一个具有足够权限和NDMP密码的管理用户。 
 ---
-= 为集群配置备份用户
+= 为备份用户启用NDMP身份验证
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-要从备份应用程序对 NDMP 进行身份验证，您必须为具有 admin 或 backup 角色的集群创建一个本地备份用户或 NIS 或 LDAP 用户，并为备份用户生成 NDMP 密码。
+要从备份应用程序对SVM范围的NDMP进行身份验证、必须有一个具有足够权限和NDMP密码的管理用户。
 
-如果使用的是 NIS 或 LDAP 用户，则必须在相应的服务器上创建该用户。您不能使用 Active Directory 用户。
+您必须为备份管理员用户生成NDMP密码。您可以在集群或SVM级别启用备份管理员用户、如有必要、您可以创建新用户。默认情况下、具有以下角色的用户可以对NDMP备份进行身份验证：
+
+* 集群范围： `admin` 或 `backup`
+* 单个SVM： `vsadmin` 或 `vsadmin-backup`
+
+
+如果使用的是NIS或LDAP用户、则该用户必须位于相应的服务器上。您不能使用 Active Directory 用户。
 
 .步骤
-. 使用 `ssecurity login create` 命令创建具有 `admin` 或 `backup` 角色的备份用户。
+. 显示当前管理员用户和权限：
++
+`ssecurity login show`
+
+. 如果需要、使用创建新的NDMP备份用户 `security login create` 命令以及集群范围或单个SVM特权的相应角色。
 +
 您可以为 ` -user-or-group-name` 参数指定本地备份用户名或 NIS 或 LDAP 用户名。
 
 +
-以下命令将创建具有 `backup` 角色的备份用户 backup_admin1 ：
+以下命令将创建备份用户 `backup_admin1` 使用 `backup` 整个集群的角色：
 
 +
-[listing]
-----
-cluster1::> security login create -user-or-group-name backup_admin1 -application ssh
--authmethod password -role backup
+`cluster1::> security login create -user-or-group-name backup_admin1 -application ssh -authmethod password -role backup`
 
-Please enter a password for user 'backup_admin1':
-Please enter it again:
-----
++
+以下命令将创建备份用户 `vsbackup_admin1` 使用 `vsadmin-backup` 单个SVM的角色：
+
++
+`cluster1::> security login create -user-or-group-name vsbackup_admin1 -application ssh -authmethod password -role vsadmin-backup`
+
++
+输入新用户的密码并确认。
+
 . 使用 `vserver services ndmp generate password` 命令为管理 SVM 生成密码。
 +
 生成的密码必须用于对备份应用程序的 NDMP 连接进行身份验证。
