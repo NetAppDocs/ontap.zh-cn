@@ -11,13 +11,15 @@ summary: 从 ONTAP 9.7 开始，如果您拥有 VE 许可证以及板载或外�
 
 
 [role="lead"]
-从 ONTAP 9.7 开始，如果您拥有 VE 许可证以及板载或外部密钥管理，则新创建的聚合和卷会默认加密。从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要加密的卷的所属聚合分配密钥。默认情况下，您在聚合中创建的卷会进行加密。对卷进行加密时，您可以覆盖默认值。
+从 ONTAP 9.7 开始，如果您拥有 VE 许可证以及板载或外部密钥管理，则新创建的聚合和卷会默认加密。从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要加密的卷的所属聚合分配密钥。
 
 您必须是集群管理员才能执行此任务。
 
 如果计划执行实时或后台聚合级重复数据删除，则必须使用聚合级加密。否则， NVE 不支持聚合级重复数据删除。
 
-启用聚合级别加密的聚合称为 _NAE aggregate_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
+启用聚合级别加密的聚合称为 _NAE aggregate_ （适用于 NetApp 聚合加密）。NAE聚合中的所有卷都必须使用NAE或NVE加密进行加密。默认情况下、使用聚合级别加密时、在聚合中创建的卷会使用NAE加密进行加密。您可以覆盖默认值以改用NVE加密。
+
+NAE 聚合不支持纯文本卷。
 
 .步骤
 . 启用或禁用聚合级别加密：
@@ -32,28 +34,28 @@ summary: 从 ONTAP 9.7 开始，如果您拥有 VE 许可证以及板载或外�
  a| 
 使用 ONTAP 9.7 或更高版本创建 NAE 聚合
  a| 
-`storage aggregate create -aggregate aggregate_name -node node_name`
+`storage aggregate create -aggregate _aggregate_name_ -node _node_name_`
 
 
 
  a| 
 使用 ONTAP 9.6 创建 NAE 聚合
  a| 
-`storage aggregate create -aggregate aggregate_name -node node_name -encrypt-wing-aggr-key true`
+`storage aggregate create -aggregate _aggregate_name_ -node _node_name_ -encrypt-with-aggr-key true`
 
 
 
  a| 
 将非 NAE 聚合转换为 NAE 聚合
  a| 
-`storage aggregate modify -aggregate aggregate_name -node node_name -encrypt-wing-aggr-key true`
+`storage aggregate modify -aggregate _aggregate_name_ -node _node_name_ -encrypt-with-aggr-key true`
 
 
 
  a| 
 将 NAE 聚合转换为非 NAE 聚合
  a| 
-`storage aggregate modify -aggregate aggregate_name -node node_name -encrypt-wing-aggr-key false`
+`storage aggregate modify -aggregate _aggregate_name_ -node _node_name_ -encrypt-with-aggr-key false`
 
 |===
 +

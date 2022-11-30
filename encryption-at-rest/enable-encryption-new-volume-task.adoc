@@ -1,7 +1,7 @@
 ---
 permalink: encryption-at-rest/enable-encryption-new-volume-task.html 
 sidebar: sidebar 
-keywords: enabling, encryption, new, volume 
+keywords: encryption, new volume, NAE, NVE, volume create 
 summary: 您可以使用 volume create 命令对新卷启用加密。 
 ---
 = 在新卷上启用加密
@@ -13,15 +13,22 @@ summary: 您可以使用 volume create 命令对新卷启用加密。
 [role="lead"]
 您可以使用 `volume create` 命令对新卷启用加密。
 
-从 ONTAP 9.2 开始，您可以在 SnapLock 卷上启用加密。
+您可以使用NetApp卷加密(NVE)对卷进行加密、从ONTAP 9.6开始、还可以使用NetApp聚合加密(NAE)对卷进行加密。要了解有关NAE和NVE的更多信息、请参见 xref:configure-netapp-volume-encryption-concept[卷加密概述]。
 
-从 ONTAP 9.4 开始，如果在设置板载密钥管理器时启用 "`cc-mode` " ，则无论是否指定 ` -encrypt true` ，使用 `volume create` 命令创建的卷都会自动加密。
+在ONTAP 中启用加密的操作步骤 会根据您使用的ONTAP 版本和特定配置而有所不同：
 
-从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要加密的卷的所属聚合分配密钥。默认情况下，您在聚合中创建的卷会进行加密。您可以在创建卷时使用 ` -encrypt` 选项覆盖默认值。
+* 从ONTAP 9.4开始、如果您启用了 `cc-mode` 设置板载密钥管理器时、您使用创建的卷 `volume create` 无论是否指定、命令都会自动加密 `-encrypt true`。
+* 在ONTAP 9.6及更早版本中、您必须使用 `-encrypt true` 使用 `volume create` 用于启用加密的命令(前提是您未启用 `cc-mode`）。
+* 如果在ONTAP 9.6中使用NAE、则必须在聚合级别启用NAE。请参见 xref:enable-aggregate-level-encryption-nve-license-task.html[使用VE许可证启用聚合级别加密] 了解有关此任务的更多详细信息。
+* 从 ONTAP 9.7 开始，如果您拥有 VE 许可证以及板载或外部密钥管理，则新创建的卷会默认加密。
++
+** 在ONTAP 9.7及更高版本中、如果您使用 `-encrypt true` 要在NAE聚合中创建卷、此卷将采用NVE加密、而不是NAE加密。NAE聚合中的所有卷都必须使用NVE或NAE进行加密。
 
-从 ONTAP 9.7 开始，如果您拥有 VE 许可证以及板载或外部密钥管理，则新创建的卷会默认加密。
 
-使用唯一密钥加密的卷称为 _NVE volume_ 。使用聚合级别密钥加密的卷称为 _NAE aggregate_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
+
+
+
+NOTE: NAE 聚合不支持纯文本卷。
 
 .步骤
 . 创建新卷并指定是否在卷上启用加密：
@@ -34,101 +41,41 @@ summary: 您可以使用 volume create 命令对新卷启用加密。
 
 
  a| 
-ONTAP 9.7 或更高版本的 NAE 卷
+NAE卷
  a| 
-`volume create -vserver svm_name -volume volume_name -aggregate aggregate_name`
+`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_` +
 
 
-
- a| 
-ONTAP 9.6 NAE 卷（假设已启用聚合级别加密）
- a| 
-`volume create -vserver svm_name -volume volume_name -aggregate aggregate_name`
+NOTE: 在ONTAP 9.6中、必须在聚合级别启用NAE才能创建NAE卷。
 
 
 
  a| 
-ONTAP 9.7 或更高版本的 NVE 卷
+NVE卷
  a| 
-`volume create -vserver svm_name -volume volume_name -aggregate aggregate_name`
+`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_` +
 
 
-
- a| 
-ONTAP 9.6 或更早版本的 NVE 卷
- a| 
-`volume create -vserver svm_name -volume volume_name -aggregate aggregate_name -encrypt true`
+NOTE: 如果您使用的是ONTAP 9.6及更早版本、请添加 `-encrypt true` 命令。在ONTAP 9.7或更高版本中使用此参数并在聚合上进行NAE加密、卷将使用NVE。
 
 
 
  a| 
 纯文本卷
  a| 
-`volume create -vserver svm_name -volume volume_name -aggregate aggregate_name -encrypt false`
+`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_ -encrypt false`
 
 |===
 +
-有关完整的命令语法，请参见命令手册页。
+有关完整的命令语法、请参阅链接：https://docs.netapp.com/us-en/ontap-cli-9121/volume-create.html的命令参考页面[`volume create`^。
 
-+
-从 ONTAP 9.7 或更高版本开始，以下命令将在 `aggr1` 上创建一个名为 `vol1` 的 NAE 卷：
-
-+
-[listing]
-----
-cluster1::> volume create -vserver vs1 -volume vol1 -aggregate aggr1
-----
-+
-使用 ONTAP 9.6 ，假设已启用聚合级别加密，以下命令将在 `aggr1` 上创建名为 `vol1` 的 NAE 卷：
-
-+
-[listing]
-----
-cluster1::> volume create -vserver vs1 -volume vol1 -aggregate aggr1
-----
-+
-从 ONTAP 9.7 或更高版本开始，以下命令将在 `aggr1` 上创建一个名为 `vol2` 的 NVE 卷：
-
-+
-[listing]
-----
-cluster1::> volume create -vserver vs1 -volume vol2 -aggregate aggr1
-----
-+
-使用 ONTAP 9.6 或更早版本时，以下命令会在 `aggr1` 上创建一个名为 `vol2` 的 NVE 卷：
-
-+
-[listing]
-----
-cluster1::> volume create -vserver vs1 -volume vol2 -aggregate aggr1 -encrypt true
-----
-+
-以下命令将在 `aggr1` 上创建一个名为 `vol3` 的纯文本卷：
-
-+
-[listing]
-----
-cluster1::> volume create -vserver vs1 -volume vol3 -aggregate aggr1 -encrypt false
-----
 . 验证是否已为卷启用加密：
 +
 `volume show -is-encrypted true`
 
 +
-有关完整的命令语法，请参见命令手册页。
-
-+
-以下命令将显示 `cluster2` 上的加密卷：
-
-+
-[listing]
-----
-cluster2::> volume show -is-encrypted true
-
-Vserver  Volume  Aggregate  State  Type  Size  Available  Used
--------  ------  ---------  -----  ----  -----  --------- ----
-vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
-----
+有关完整的命令语法，请参见 link:https://docs.netapp.com/us-en/ontap-cli-9121/volume-show.html["命令参考"^]。
 
 
-如果您使用 KMIP 服务器存储节点的加密密钥，则在对卷进行加密时， ONTAP 会自动 "`推送` " 加密密钥到服务器。
+
+如果使用KMIP服务器存储节点的加密密钥、则在对卷进行加密时、ONTAP 会自动将加密密钥"推送"到服务器。

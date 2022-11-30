@@ -174,9 +174,6 @@ summary: 自动交还命令
 |===
 下表介绍了 `storage failover modify` 命令的参数组合如何影响崩溃情况下的自动交还。
 
-
-NOTE: 请注意，发生节点崩溃时，可能会出于其他原因发生接管。例如，如果节点崩溃，但其配对节点未收到崩溃数据包，则配对节点可能会执行检测信号丢失接管。在这种情况下，交还不会由 ` -auto-giveback-after-panic` 参数控制，而是由 ` -onfailure` 参数控制。
-
 [cols="60,40"]
 |===
 
@@ -198,20 +195,10 @@ NOTE: 请注意，发生节点崩溃时，可能会出于其他原因发生接�
 
 | ` -onpanic false` 如果 ` -onpanic` 设置为 `false` ，则不会发生接管 / 交还，无论为 ` -auto-giveback` 或 ` -auto-giveback-after-panic` 设置的值如何 | 否 
 |===
-[NOTE]
-====
-如果您修改默认设置， ` -onpanic` 参数可以覆盖自动交还，如上表所示。
 
-* 如果将 ` -onpanic` 参数设置为 `true` ，则在发生崩溃时始终会执行自动交还，除非您更改了 ` -auto-giveback` 和 ` -auto-giveback-after-panic` 参数的默认设置。如果这两个参数都从其默认值（`true` ）更改为 `false` ，则在发生崩溃后不会发生自动交还，即使 ` -onpanic` 参数设置为 `true` 也是如此。
-* 如果将 ` -onpanic` 参数设置为 `false` ，则不会发生接管，并且客户端会遇到 ONTAP 数据服务中断。因此，即使将 ` -auto-giveback-after-panic` 参数设置为 `true` ，也不会发生自动交还。
+NOTE: 接管可能是由与崩溃无关的故障引起的。如果节点与其配对节点之间的通信丢失、则会出现_failure_、也称为_Heartbeat los_。如果因故障而发生接管、交还将由控制 `-onfailure` 参数、而不是 `-auto-giveback-after-panic parameter`。
 
 
-====
-[NOTE]
-====
-* 在节点崩溃期间，接管可能出于其他原因发生。在这种情况下，交还不受 `auto-giveback-after-panic` 设置的控制。
-* 如果将 ` -onpanic` 参数设置为 `true` ，则在发生崩溃时始终会执行自动交还，除非您更改了 ` -auto-giveback` 和 ` -auto-giveback-after-panic` 参数的默认设置。如果这两个参数都从其默认值（`true` ）更改为 `false` ，则在发生崩溃后不会发生自动交还，即使 ` -onpanic` 参数设置为 `true` 也是如此。
-* 如果将 ` -onpanic` 参数设置为 `false` ，则不会发生接管。因此，即使将 ` -auto-giveback-after-panic` 参数设置为 `true` ，也不会发生自动交还。发生客户端中断。
+NOTE: 当节点崩溃时、它会向其配对节点发送崩溃软件包。如果配对节点由于任何原因未收到崩溃软件包、则此崩溃可能会被误解为故障。如果未收到崩溃软件包、配对节点只知道通信已丢失、并且不知道发生了崩溃。在这种情况下、配对节点会将通信丢失视为故障而不是崩溃、交还由控制 `-onfailure` 参数(而不是 `-auto-giveback-after-panic parameter`）。
 
-
-====
+有关所有的详细信息、请参见 `storage failover modify` 参数、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9121/storage-failover-modify.html["ONTAP 手册页"]。
