@@ -1,0 +1,71 @@
+---
+permalink: performance-admin/specify-clusters-monitor-task.html 
+sidebar: sidebar 
+keywords: specify, clusters, monitored 
+summary: 您必须将集群添加到 Active IQ Unified Manager 服务器中，才能监控集群，查看集群发现状态以及监控其性能。 
+---
+= 指定要监控的集群
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您必须将集群添加到 Active IQ Unified Manager 服务器中，才能监控集群，查看集群发现状态以及监控其性能。
+
+.您需要什么？ #8217 ；将需要什么
+* 您必须具有以下信息：
++
+** 主机名或集群管理 IP 地址
++
+主机名是 Unified Manager 用于连接到集群的完全限定域名（ FQDN ）或简称。此主机名必须解析为集群管理 IP 地址。
+
++
+集群管理 IP 地址必须是管理 Storage Virtual Machine （ SVM ）的集群管理 LIF 。如果使用节点管理 LIF ，则操作将失败。
+
+** ONTAP 管理员用户名和密码
+** 可以在集群上配置的协议类型（ HTTP 或 HTTPS ）以及集群的端口号
+
+
+* 您必须具有应用程序管理员或存储管理员角色。
+* ONTAP 管理员必须具有 ONTAPI 和 SSH 管理员角色。
+* Unified Manager FQDN 必须能够对 ONTAP 执行 ping 操作。
++
+您可以使用 ONTAP 命令 `ping -node _node_name_ -destination _Unified Manager_FQDN_` 来验证此问题。
+
+
+
+对于 MetroCluster 配置，必须同时添加本地和远程集群，并且必须正确配置这些集群。
+
+.步骤
+. 单击 * 配置 * > * 集群数据源 * 。
+. 在集群页面中，单击 * 添加 * 。
+. 在 * 添加集群 * 对话框中，指定所需的值，例如集群的主机名或 IP 地址（ IPv4 或 IPv6 ），用户名，密码，通信协议和端口号。
++
+默认情况下， HTTPS 协议处于选中状态。
+
++
+您可以将集群管理 IP 地址从 IPv6 更改为 IPv4 或从 IPv4 更改为 IPv6 。下一个监控周期完成后，新 IP 地址将反映在集群网格和集群配置页面中。
+
+. 单击 * 添加 * 。
+. 如果选择 HTTPS ，请执行以下步骤：
++
+.. 在 * 授权主机 * 对话框中，单击 * 查看证书 * 以查看有关集群的证书信息。
+.. 单击 * 是 * 。
++
+Unified Manager 仅在首次添加集群时才会检查证书，但不会在每次对 ONTAP 进行 API 调用时检查该证书。
+
++
+如果证书已过期，则无法添加集群。您必须续订 SSL 证书，然后添加集群。
+
+
+
+. * 可选 * ：查看集群发现状态：
++
+.. 从 * 集群设置 * 页面查看集群发现状态。
+
+
++
+集群将在默认监控间隔约为 15 分钟后添加到 Unified Manager 数据库中。
+
+
