@@ -31,6 +31,7 @@ NOTE: 您不应在标识符与交换机的原生 VLAN 相同的网络接口上�
 
 您可以使用System Manager或`network port vlan create`命令创建VLAN、以便在同一网络域中维护单独的广播域。
 
+.开始之前
 确认已满足以下要求：
 
 * 网络中部署的交换机必须符合 IEEE 802.1Q 标准，或者实施供应商专用的 VLAN 。
@@ -40,6 +41,7 @@ NOTE: 您不应在标识符与交换机的原生 VLAN 相同的网络接口上�
 * 不会在不包含任何成员端口的接口组端口上创建 VLAN 。
 
 
+.关于此任务
 创建 VLAN 会将 VLAN 连接到集群中指定节点上的网络端口。
 
 首次通过端口配置 VLAN 时，此端口可能会关闭，从而导致网络暂时断开连接。随后向同一端口添加 VLAN 不会影响端口状态。
@@ -100,6 +102,7 @@ network port vlan create -node cluster-1-01 -vlan-name e1c-80
 
 您可以更改广播域或禁用VLAN。
 
+.使用System Manager编辑VLAN
 从ONTAP 9.12.0开始、您可以自动选择广播域或从列表中手动选择On。以前的广播域始终会根据第2层连接自动选择。如果您手动选择广播域、则会显示一条警告、指出手动选择广播域可能会导致连接丢失。
 
 .步骤
@@ -120,8 +123,10 @@ network port vlan create -node cluster-1-01 -vlan-name e1c-80
 
 在从插槽中删除 NIC 之前，您可能需要删除 VLAN 。删除 VLAN 时，它会自动从使用它的所有故障转移规则和组中删除。
 
+.开始之前
 确保没有与 VLAN 关联的 LIF 。
 
+.关于此任务
 从端口删除最后一个 VLAN 可能发生原因会导致网络与端口暂时断开连接。
 
 您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
@@ -143,6 +148,7 @@ network port vlan create -node cluster-1-01 -vlan-name e1c-80
 --
 *使用命令行界面删除VLAN*
 
+.步骤
 使用 `network port vlan delete` 命令删除 VLAN 。
 
 以下示例显示了如何从节点 `cluster-1-01` 上的网络端口 `e1c` 中删除 VLAN `e1c-80` ：

@@ -13,8 +13,10 @@ summary: 您可以在 Storage Virtual Machine （ SVM ）中的卷之间移动 L
 [role="lead"]
 您可以在 Storage Virtual Machine （ SVM ）中的卷之间移动 LUN ，但不能在 SVM 之间移动 LUN 。在 SVM 中跨卷移动的 LUN 会立即移动，而不会丢失连接。
 
+.您需要的内容
 如果 LUN 使用选择性 LUN 映射（ SLM ），则必须已修改 SLM 报告节点，以包括目标节点及其 HA 配对节点。
 
+.关于此任务
 在移动 LUN 期间，重复数据删除，数据压缩和数据缩减等存储效率功能不会保留下来。在 LUN 移动完成后，必须重新应用它们。
 
 通过 Snapshot 副本进行的数据保护在卷级别进行。因此，移动 LUN 时，它属于目标卷的数据保护方案的范围。如果没有为目标卷创建 Snapshot 副本，则不会创建 LUN 的 Snapshot 副本。此外， LUN 的所有 Snapshot 副本都会保留在原始卷中，直到删除这些 Snapshot 副本为止。

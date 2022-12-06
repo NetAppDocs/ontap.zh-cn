@@ -13,10 +13,12 @@ summary: 将卷移动到 FabricPool 时，您可以选择指定或更改移动�
 [role="lead"]
 将卷移动到 FabricPool 时，您可以选择指定或更改移动时卷的分层策略。从 ONTAP 9.8 开始，在移动启用了非活动数据报告的非 FabricPool 卷时， FabricPool 会使用热图读取可控制的块，并将冷数据移至 FabricPool 目标上的容量层。
 
+.您需要的内容
 您必须了解更改分层策略可能会如何影响数据变冷并移至云层所需的时间。
 
 link:tiering-policies-concept.html#what-happens-to-the-tiering-policy-when-you-move-a-volume["移动卷时分层策略会发生什么情况"]
 
+.关于此任务
 如果非 FabricPool 卷启用了非活动数据报告，则在将卷的分层策略 `auto` 或 `snapshot-only` 移动到 FabricPool 时， FabricPool 从热图文件中读取可控制温度的块，并使用该温度将冷数据直接移动到 FabricPool 目标上的容量层。
 
 如果您使用的是 ONTAP 9.8 ，并且希望 FabricPool 使用非活动数据报告信息将数据直接移动到容量层，则不应在卷移动时使用 ` 分层策略` 选项。使用此选项会导致 FabricPools 忽略温度数据，而是遵循 ONTAP 9.8 之前版本的移动行为。
@@ -38,6 +40,7 @@ link:tiering-policies-concept.html#what-happens-to-the-tiering-policy-when-you-m
 
 
 
+.将卷移动到FabricPool 的示例
 以下示例将 "VS1" SVM 的名为 `myvol2` 的卷移动到启用了 FabricPool 的 "dest_FabricPool " 聚合。此卷会显式设置为使用 `none` 分层策略：
 
 [listing]

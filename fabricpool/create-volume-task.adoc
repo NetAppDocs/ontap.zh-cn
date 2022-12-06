@@ -15,7 +15,7 @@ summary: 在为 FabricPool 创建卷时，您可以选择指定分层策略。�
 
 在为 FabricPool 创建卷时，您可以选择指定分层策略。如果未指定分层策略，则创建的卷将使用默认的 `snapshot-only` 分层策略。对于采用 `snapshot-only` 或 `auto` 分层策略的卷，您还可以指定分层最小冷却期。
 
-.您需要什么？ #8217 ；将需要什么
+.您需要的内容
 * 要将卷设置为使用 `auto` 分层策略或指定分层最小冷却期，需要 ONTAP 9.4 或更高版本。
 * 使用 FlexGroup 卷需要 ONTAP 9.5 或更高版本。
 * 要将卷设置为使用 `all` 分层策略，需要使用 ONTAP 9.6 或更高版本。
@@ -79,6 +79,7 @@ link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricP
 
 
 
+.为FabricPool 创建卷的示例
 以下示例将在启用了 FabricPool 的聚合中创建一个名为 `myFabricPool` 的卷，名为` yvol1 `m。分层策略设置为 `auto` ，分层最小冷却期设置为 45 天：
 
 [listing]
@@ -86,4 +87,5 @@ link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricP
 cluster1::*> volume create -vserver myVS -aggregate myFabricPool
 -volume myvol1 -tiering-policy auto -tiering-minimum-cooling-days 45
 ----
+.相关信息
 link:../flexgroup/index.html["FlexGroup 卷管理"]

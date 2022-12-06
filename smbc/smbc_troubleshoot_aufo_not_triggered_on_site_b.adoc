@@ -13,9 +13,11 @@ summary: 站点 A 故障不会在站点 B 上触发计划外故障转移
 :imagesdir: ../media/
 
 
+.问题描述 ：
 [role="lead"]
 站点 A 故障不会在站点 B 上触发计划外故障转移
 
+.可能的发生原因 1：
 未配置调解器。要确定是否为发生原因，问题描述请在站点 B 集群上运行 `snapmirror mediator show` 命令。
 
 ....
@@ -24,8 +26,10 @@ This table is currently empty.
 ....
 此示例指示未在站点 B 上配置调解器
 
+.解决方案 ：
 确保已在两个集群上配置调解器，并且状态为已连接且仲裁设置为 True 。
 
+.可能的发生原因 2：
 SnapMirror 一致性组不同步。要确定这是否为发生原因，请查看事件日志以查看一致性组在站点 A 发生故障期间是否处于同步状态。
 
 ....
@@ -35,6 +39,7 @@ Time                Node             Severity      Event
 ------------------- ---------------- ------------- ---------------------------
 10/1/2020 23:26:12  sti42-vsim-ucs511w ERROR       sms.status.out.of.sync: Source volume "vs0:zrto_cg_556844_511u_RW1" and destination volume "vs1:zrto_cg_556881_511w_DP1" with relationship UUID "55ab7942-03e5-11eb-ba5a-005056a7dc14" is in "out-of-sync" status due to the following reason: "Transfer failed."
 ....
+.解决方案 ：
 要在站点 B 上执行强制故障转移，请完成以下步骤
 
 . 从站点 B 取消映射属于一致性组的所有 LUN

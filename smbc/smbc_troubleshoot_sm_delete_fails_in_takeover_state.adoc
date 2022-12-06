@@ -13,6 +13,7 @@ summary: '如果在集群上安装了 ONTAP 9.9.1 ，则在 SM-BC 一致性组�
 :imagesdir: ../media/
 
 
+.问题描述 ：
 [role="lead"]
 如果在集群上安装了 ONTAP 9.9.1 ，则在 SM-BC 一致性组关系处于接管状态时，执行 `snapmirror delete` 命令将失败。
 
@@ -21,6 +22,7 @@ C2_cluster::> snapmirror delete  vs1:/cg/dd
 
 Error: command failed: RPC: Couldn't make connection
 ....
+.解决方案
 当 SM-BC 关系中的节点处于接管状态时，请在 "-force" 选项设置为 true 的情况下执行 SnapMirror 删除和释放操作。
 
 ....

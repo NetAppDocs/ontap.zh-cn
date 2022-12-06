@@ -13,6 +13,7 @@ summary: 要利用基于 Kerberos 的通信的最强安全性，您可以在 SMB
 [role="lead"]
 要利用基于 Kerberos 的通信的最强安全性，您可以在 SMB 服务器上启用 AES-256 和 AES-128 加密。如果您不希望 SMB 服务器为与 Active Directory （ AD ） KDC 进行基于 Kerberos 的通信选择 AES 加密类型，则可以禁用 AES 加密。默认情况下， AES 加密处于禁用状态。
 
+.关于此任务
 为了增强安全性， Storage Virtual Machine （ SVM ）会在每次修改 AES 安全选项时更改 AD 中的计算机帐户密码。更改密码可能需要包含计算机帐户的组织单位（ OU ）的管理 AD 凭据。
 
 如果将 SVM 配置为未保留身份的灾难恢复目标（在 SnapMirror 配置中， ` -identity-preserve` 选项设置为 `false` ），则不会将非默认 SMB 服务器安全设置复制到目标。如果已在源 SVM 上启用 AES 加密，则必须在目标变为读写（ SnapMirror 关系中断后）后在目标 SVM 上手动启用它。
@@ -43,6 +44,7 @@ enabled
 
 
 
+.示例
 以下示例将为 SVM vs1 上的 CIFS 服务器启用 AES 加密类型：
 
 [listing]

@@ -13,10 +13,12 @@ summary: 如果源 SVM 和目标 SVM 位于不同子网中，则可以使用 sna
 [role="lead"]
 如果源和目标 SVM 位于不同子网中，您可以使用 `snapmirror policy create` 命令的 ` -discard-configs network` 选项从 SVM 复制中排除 LIF 和相关网络设置。
 
+.您需要的内容
 源和目标集群以及 SVM 必须建立对等关系。
 
 有关详细信息，请参见 link:../peering/create-cluster-relationship-93-later-task.html["创建集群对等关系"] 和 link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["创建 SVM 集群间对等关系"]。
 
+.关于此任务
 创建 SVM 复制关系时，必须将 `snapmirror create` 命令的 ` -identity-preserve` 选项设置为 `true` 。
 
 有关完整的命令语法，请参见手册页。
@@ -137,4 +139,5 @@ cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_ba
 ----
 
 
+.完成后
 您必须在目标 SVM 上配置网络和协议，以便在发生灾难时进行数据访问。

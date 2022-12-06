@@ -16,6 +16,7 @@ summary: 创建子网以分配或预留特定的 IP 地址块以用于 ONTAP 网
 [role="lead"]
 您可以创建一个子网来为 ONTAP 网络配置分配或预留特定的 IPv4 或 IPv6 地址块。这样，您就可以通过指定子网名称，而不必为每个新接口指定 IP 地址和网络掩码值来更轻松地创建接口。
 
+.开始之前
 要添加子网的广播域和 IP 空间必须已存在。
 
 .关于此任务
@@ -24,6 +25,7 @@ summary: 创建子网以分配或预留特定的 IP 地址块以用于 ONTAP 网
 * 如果在定义子网时指定了网关，则在使用该子网创建 LIF 时，指向该网关的默认路由会自动添加到 SVM 中。如果不使用子网，或者在定义子网时未指定网关，则需要使用 `route create` 命令手动向 SVM 添加路由。
 
 
+.步骤
 创建子网：
 
 ....
@@ -60,6 +62,7 @@ network subnet create -subnet-name sub1 -broadcast-domain Default-1 -subnet 192.
 ....
 network subnet create -subnet-name sub2 -broadcast-domain Default -subnet 3FFE::/64 - gateway 3FFE::1 -ip-ranges "3FFE::10-3FFE::20"
 ....
+.完成后
 您可以使用子网中的地址将 SVM 和接口分配给 IP 空间。
 
 如果需要更改现有子网的名称，请使用 `network subnet rename` 命令。

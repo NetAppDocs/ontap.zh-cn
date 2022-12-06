@@ -25,6 +25,7 @@ cluster1::>volume quota policy create -vserver vs1 -policy-name quota_policy_vs1
 ----
 cluster1::>vserver modify -vserver vs1 -quota-policy quota_policy_vs1_1
 ----
+.示例1：默认用户配额
 您决定对 vol1 中的每个用户实施 50 MB 的硬限制：
 
 [listing]
@@ -59,6 +60,7 @@ vol1               user    root        0B      -       1       -
 
 如果系统上的任何用户（ root 用户除外）尝试执行的操作在 vol1 中使用的空间超过 50 MB （例如，从编辑器写入文件），则该操作将失败。
 
+.示例2：显式用户配额覆盖默认用户配额
 如果需要在卷 vol1 中为用户 jsmith 提供更多空间，请输入以下命令：
 
 [listing]
@@ -95,6 +97,7 @@ vol1               user    root        0B      -       1       -
 
 因此，即使所有其他用户仍限制为 50 MB ， jsmith 仍可在 vol1 上使用多达 80 MB 的空间。
 
+.示例3：阈值
 假设您希望在用户达到其磁盘限制的 5 MB 以内时收到通知。要为所有用户创建 45 MB 的阈值，并为 jsmith 创建 75 MB 的阈值，请更改现有配额规则：
 
 [listing]
@@ -124,6 +127,7 @@ vol1               user    root        0B      -       1       -
 ----
 阈值显示在磁盘限制列的圆括号中。
 
+.示例4：qtree上的配额
 假设您需要对两个项目的部分空间进行分区。您可以创建两个 qtree ，分别名为 proj1 和 proj2 ，以便在 vol1 中容纳这些项目。
 
 目前，用户可以使用为整个卷分配的 qtree 空间（前提是他们不会通过使用根或另一个 qtree 中的空间超过卷的限制）。此外，每个 qtree 都可以增长以占用整个卷。如果要确保两个 qtree 的大小均不超过 20 GB ，则可以在卷上创建默认树配额：
@@ -185,6 +189,7 @@ vol1     proj2     user    root        0B      -       1       -
 
 由于 root 用户是文件的所有者，因此在为每个 qtree 创建默认用户配额时，也会为每个 qtree 上的 root 用户创建特殊的跟踪配额。这些 ID 显示在 ID 为 root 的行中。
 
+.示例5：qtree上的用户配额
 您决定将 proj1 qtree 中的用户限制为比在整个卷中获得的空间更少的空间。您希望防止它们在 proj1 qtree 中使用超过 10 MB 的空间。因此，您可以为 qtree 创建默认用户配额：
 
 [listing]

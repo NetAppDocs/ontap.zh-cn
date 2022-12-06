@@ -13,6 +13,7 @@ summary: 您可以通过修改 Storage Virtual Machine （ SVM ）上的 BranchC
 [role="lead"]
 您可以通过修改 Storage Virtual Machine （ SVM ）上的 BranchCache 配置并指定其他服务器密钥来更改 BranchCache 服务器密钥。
 
+.关于此任务
 您可以将服务器密钥设置为特定值，以便在多个服务器为相同文件提供 BranchCache 数据时，客户端可以使用使用使用同一服务器密钥的任何服务器的哈希。
 
 更改服务器密钥时，还必须刷新哈希缓存。刷新哈希后， ONTAP 会在启用了 BranchCache 的客户端发出新请求时创建新哈希。
@@ -25,6 +26,7 @@ summary: 您可以通过修改 Storage Virtual Machine （ SVM ）上的 BranchC
 . 使用 `vserver cifs branchcache show` 命令验证 BranchCache 配置是否正确。
 
 
+.示例
 以下示例将设置一个包含空格的新服务器密钥，并刷新 SVM vs1 上的哈希缓存：
 
 [listing]
@@ -40,4 +42,5 @@ cluster1::> vserver cifs branchcache show -vserver vs1
 Encryption Key Used to Secure the Hashes: -
         CIFS BranchCache Operating Modes: per_share
 ----
+.相关信息
 xref:reasons-invalidates-branchcache-hashes-concept.adoc[ONTAP 使 BranchCache 哈希失效的原因]

@@ -13,6 +13,7 @@ summary: 如果您希望 ONTAP 访问环境中的外部 Kerberos 服务器，则
 [role="lead"]
 如果您希望 ONTAP 访问环境中的外部 Kerberos 服务器，则必须先将 SVM 配置为使用现有 Kerberos 域。为此，您需要收集 Kerberos KDC 服务器的配置值，然后使用 `vserver nfs kerberos realm create` 命令在 SVM 上创建 Kerberos 域配置。
 
+.您需要的内容
 集群管理员应已在存储系统，客户端和 KDC 服务器上配置 NTP ，以避免出现身份验证问题。客户端和服务器之间的时间差异（时钟偏差）是常见的身份验证失败发生原因。
 
 .步骤
@@ -27,6 +28,7 @@ summary: 如果您希望 ONTAP 访问环境中的外部 Kerberos 服务器，则
 
 
 
+.示例
 以下命令将为 SVM vs1 创建一个 NFS Kerberos 域配置，该配置使用 Microsoft Active Directory 服务器作为 KDC 服务器。Kerberos 域为 AUTH.EXAMPLE.COM 。Active Directory 服务器名为 AD-1 ，其 IP 地址为 10.10.8.14 。允许的时钟偏差为 300 秒（默认值）。KDC 服务器的 IP 地址为 10.10.8.14 ，其端口号为 88 （默认值）。"Microsoft Kerberos config" 是注释。
 
 [listing]

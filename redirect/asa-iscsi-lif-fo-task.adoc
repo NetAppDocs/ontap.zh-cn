@@ -25,7 +25,7 @@ summary: '从全SAN阵列(ASA)平台上的ONTAP 9.11.1开始、iSCSI LIF故障�
 ** 将ASA HA对升级到ONTAP 9.11.1后、如果指定Storage VM中不存在iSCSI LIF、或者指定Storage VM中的所有现有iSCSI LIF已通过iSCSI LIF故障转移启用、则新创建的iSCSI LIF将自动启用此功能。
 ** 对于在升级到ONTAP 9.11.1之前创建的iSCSI LIF、要使用iSCSI LIF故障转移功能、必须使用ONTAP 命令行界面启用它。(启用故障转移功能和自动还原功能意味着将故障转移策略更改为`sfo-partner-only`并将自动还原值指定为`true`。)
 +
- iSCSI LIFs using the ONTAP CLI
+<<使用ONTAP 命令行界面管理iSCSI LIF>>
 
 +
 如果不在现有iSCSI LIF上启用iSCSI LIF故障转移、则在发生故障转移事件时、iSCSI LIF不会进行故障转移。
@@ -37,7 +37,7 @@ summary: '从全SAN阵列(ASA)平台上的ONTAP 9.11.1开始、iSCSI LIF故障�
 
 * 手动迁移iSCSI LIF是指LIF迁移和还原、此操作由集群管理员使用ONTAP 命令行界面或System Manager启动。
 +
- and revert an iSCSI LIF
+<<迁移和还原iSCSI LIF>>
 
 +
 在以下情况下、您可以手动迁移和还原iSCSI LIF：
@@ -80,6 +80,7 @@ summary: '从全SAN阵列(ASA)平台上的ONTAP 9.11.1开始、iSCSI LIF故障�
 [role="Lead"]
 您可以使用System Manager手动将一个或多个iSCSI LIF (网络接口)迁移和还原到同一节点上的另一个端口或HA配对节点上的某个端口。
 
+.开始之前
 您必须具有ASA 平台HA对、并且此平台必须运行ONTAP 9.11.1或更高版本。
 
 
@@ -114,6 +115,7 @@ NOTE: 您可以通过选中此复选框来选择永久迁移iSCSI LIF。请注�
 [role="Lead"]
 您可以使用ONTAP 命令行界面手动将一个或多个iSCSI LIF迁移和还原到同一节点上的另一个端口或HA配对节点上的某个端口。
 
+.开始之前
 您必须具有ASA 平台HA对、并且此平台必须运行ONTAP 9.11.1或更高版本。
 
 |===
@@ -133,8 +135,10 @@ NOTE: 您可以通过选中此复选框来选择永久迁移iSCSI LIF。请注�
 
 您可以使用ONTAP 命令行界面管理iSCSI LIF、包括创建新的iSCSI LIF以及为原有LIF启用iSCSI LIF故障转移功能。
 
+.开始之前
 您必须具有ASA 平台HA对、并且此平台必须运行ONTAP 9.11.1或更高版本。
 
+.关于此任务
 请参见 https://docs.netapp.com/us-en/ontap-cli-9121/index.html["《ONTAP 命令参考》"^] 查看的完整列表 `network interface` 命令
 
 |===

@@ -13,9 +13,11 @@ summary: 无法删除 Snapshot 副本时， SnapMirror 发布操作将失败。
 :imagesdir: ../media/
 
 
+.问题描述 ：
 [role="lead"]
 无法删除 Snapshot 副本时， SnapMirror 发布操作将失败。
 
+.解决方案 ：
 Snapshot 副本包含一个瞬时标记。使用带有 ` -ignore-owners` 选项的 `snapshot delete` 命令删除瞬时 Snapshot 副本。`snapshot delete -volume <volume_name> -snapshot <snapshot_name> -ignore-owners true -force true`
 
 重试 `snapmirror release` 命令。

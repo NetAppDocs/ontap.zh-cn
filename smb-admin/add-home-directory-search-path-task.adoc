@@ -13,6 +13,7 @@ summary: 如果要使用 ONTAP SMB 主目录，必须至少添加一个主目录
 [role="lead"]
 如果要使用 ONTAP SMB 主目录，必须至少添加一个主目录搜索路径。
 
+.关于此任务
 您可以使用 `vserver cifs home-directory search-path add` 命令添加主目录搜索路径。
 
 在执行命令期间， `vserver cifs home-directory search-path add` 命令会检查在 ` -path` 选项中指定的路径。如果指定的路径不存在，该命令将生成一条消息，提示您是否要继续。您可以选择 `y` 或 `n` 。如果选择 `y` 继续， ONTAP 将创建搜索路径。但是，必须先创建目录结构，然后才能在主目录配置中使用搜索路径。如果选择不继续，则命令将失败；不会创建搜索路径。然后，您可以创建路径目录结构并重新运行 `vserver cifs home-directory search-path add` 命令。
@@ -22,6 +23,7 @@ summary: 如果要使用 ONTAP SMB 主目录，必须至少添加一个主目录
 . 使用 `vserver cifs home-directory search-path show` 命令验证是否已成功添加搜索路径。
 
 
+.示例
 以下示例将路径 ` /home1` 添加到 SVM vs1 上的主目录配置中。
 
 [listing]
@@ -42,4 +44,5 @@ Warning: The specified path "/home2" does not exist in the namespace
          belonging to Vserver "vs1".
 Do you want to continue? {y|n}: n
 ----
+.相关信息
 xref:add-home-directory-share-task.adoc[添加主目录共享]

@@ -13,6 +13,7 @@ summary: Hyper-V 和 SQL Server 使用域帐户创建与持续可用共享的 SM
 [role="lead"]
 Hyper-V 和 SQL Server 使用域帐户创建与持续可用共享的 SMB 连接。要成功创建连接，计算机帐户必须成功映射到 UNIX 用户。为此，最方便的方法是将计算机帐户映射到默认 UNIX 用户。
 
+.关于此任务
 Hyper-V 和 SQL Server 使用域计算机帐户创建 SMB 连接。此外， SQL Server 还使用域用户帐户作为服务帐户，该帐户还会建立 SMB 连接。
 
 创建 Storage Virtual Machine （ SVM ）时， ONTAP 会自动创建名为 "`pcuser` " （ UID 为 `65534` ）的默认用户和名为 "`pcuser` " 的组（ GID 为 `65534` ），并将默认用户添加到 "`pcuser` " 组。如果要在将集群升级到 Data ONTAP 8.2 之前存在的 SVM 上配置基于 SMB 解决方案的 Hyper-V ，则默认用户和组可能不存在。否则，必须先创建它们，然后再配置 CIFS 服务器的默认 UNIX 用户。
@@ -54,6 +55,7 @@ Hyper-V 和 SQL Server 使用域计算机帐户创建 SMB 连接。此外， SQL
 
 
 
+.示例
 以下命令确定未设置 CIFS 服务器的默认用户，但确定 "`pcuser` " 用户和 "`pcuser` " 组存在。在 SVM vs1 上，将 "`pcuser` " 用户分配为 CIFS 服务器的默认用户。
 
 [listing]

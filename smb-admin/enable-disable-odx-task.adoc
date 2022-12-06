@@ -13,8 +13,10 @@ summary: 您可以在 Storage Virtual Machine （ SVM ）上启用或禁用 ODX 
 [role="lead"]
 您可以在 Storage Virtual Machine （ SVM ）上启用或禁用 ODX 。默认情况下，如果同时启用了 SMB 3.0 ，则会启用对 ODX 副本卸载的支持。
 
+.开始之前
 必须启用 SMB 3.0 。
 
+.关于此任务
 如果禁用 SMB 3.0 ，则 ONTAP 还会禁用 SMB ODX 。如果重新启用 SMB 3.0 ，则必须手动重新启用 SMB ODX 。
 
 .步骤
@@ -41,6 +43,7 @@ enabled
 . 返回到管理权限级别： `set -privilege admin`
 
 
+.示例
 以下示例将在 SVM vs1 上启用 ODX 副本卸载：
 
 [listing]
@@ -54,4 +57,5 @@ cluster1::*> vserver cifs options modify -vserver vs1 -copy-offload-enabled true
 
 cluster1::*> set -privilege admin
 ----
+.相关信息
 xref:server-options-reference.adoc[可用的 SMB 服务器选项]

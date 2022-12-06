@@ -13,6 +13,7 @@ summary: 如果要使用 SMB 主目录功能，则必须至少添加一个共享
 [role="lead"]
 如果要使用 SMB 主目录功能，则必须至少添加一个共享，并将主目录属性包含在共享属性中。
 
+.关于此任务
 您可以在创建共享时使用 `vserver cifs share create` 命令创建主目录共享，也可以随时使用 `vserver cifs share modify` 命令将现有共享更改为主目录共享。
 
 要创建主目录共享，在创建或修改共享时，必须在 ` -share-properties` 选项中包含 `homedirectory` 值。您可以使用变量指定共享名称和共享路径，这些变量在用户连接到其主目录时会动态扩展。可在路径中使用的可用变量为 ` %w` ， ` %d` 和 ` %u` ，分别对应于 Windows 用户名，域和映射的 UNIX 用户名。
@@ -47,6 +48,7 @@ summary: 如果要使用 SMB 主目录功能，则必须至少添加一个共享
 . 使用 `vserver cifs share show` 命令验证是否已成功添加主目录共享。
 
 
+.示例
 以下命令将创建一个名为 ` %w` 的主目录共享。除了设置 `homedirectory` share 属性之外，还会设置 `oplocks` ， `browable` 和 `changenotify` share 属性。
 
 [NOTE]
@@ -66,6 +68,7 @@ vs1        %w       %w           oplocks        -        Everyone / Full Control
                                  changenotify
                                  homedirectory
 ----
+.相关信息
 xref:add-home-directory-search-path-task.adoc[正在添加主目录搜索路径]
 
 xref:requirements-automatic-node-referrals-concept.adoc[使用自动节点转介的要求和准则]

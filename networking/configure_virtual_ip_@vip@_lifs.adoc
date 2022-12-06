@@ -16,6 +16,7 @@ summary: 跨子网故障转移 LIF
 [role="lead"]
 某些下一代数据中心使用网络第 3 层机制，这些机制要求 LIF 跨子网进行故障转移。从 ONTAP 9.5 开始，支持 VIP 数据 LIF 以及相关的路由协议边界网关协议（ BGP ），从而使 ONTAP 能够加入这些下一代网络。
 
+.关于此任务
 VIP 数据 LIF 不属于任何子网，可从同一 IP 空间中托管 BGP LIF 的所有端口访问。VIP 数据 LIF 可消除主机对各个网络接口的依赖。由于多个物理适配器传输数据流量，因此整个负载不会集中在一个适配器以及关联的子网上。VIP 数据 LIF 的存在通过路由协议边界网关协议（ BGP ）公布给对等路由器。
 
 VIP 数据 LIF 具有以下优势：
@@ -36,11 +37,13 @@ VIP 数据 LIF 具有以下优势：
 
 如果配置了静态路由，则这些路由仍优先于这些自动默认路由。
 
+.开始之前
 必须将对等路由器配置为接受来自 BGP LIF 的 BGP 连接，以连接已配置的自治系统编号（ ASN ）。
 
 
 NOTE: ONTAP 不会处理从路由器传入的任何路由公告；因此，您应将对等路由器配置为不向集群发送任何路由更新。
 
+.关于此任务
 设置 BGP 包括选择性地创建 BGP 配置，创建 BGP LIF 以及创建 BGP 对等组。在给定节点上创建第一个 BGP 对等组时， ONTAP 会自动使用默认值创建默认 BGP 配置。BGP LIF 用于与对等路由器建立 BGP TCP 会话。对于对等路由器， BGP LIF 是访问 VIP LIF 的下一个跃点。BGP LIF 已禁用故障转移。BGP 对等组公布对等组 IP 空间中所有 SVM 的 VIP 路由。
 
 从 ONTAP 9.8 开始，这些字段已添加到 `network BGP peer-group` 命令中：
@@ -259,4 +262,5 @@ Node        Vserver  bgp status
 
 | 重命名 BGP 对等组 | 网络 BGP 对等组重命名 
 |===
+.相关信息
 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]

@@ -13,15 +13,17 @@ summary: '您可以使用卷 ` -SnapLock-type` 选项指定 Compliance 或 Enter
 [role="lead"]
 您可以使用卷 ` -SnapLock-type` 选项指定 Compliance 或 Enterprise SnapLock 卷类型。对于 ONTAP 9.10.1 之前的版本，必须创建单独的 SnapLock 聚合。从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。
 
-.您需要什么？ #8217 ；将需要什么
+.您需要的内容
 * 您必须是集群管理员才能执行此任务。
 * 节点上必须安装 SnapLock 许可证。
 * 必须初始化节点上的 ComplianceClock 。
 * 如果已将磁盘分区为 "`root` " ， " `data1` " 和 " `data2` " ，则必须确保备用磁盘可用。
 
 
+.升级注意事项
 升级到 ONTAP 9.10.1 时，系统会升级现有的 SnapLock 聚合和非 SnapLock 聚合，以支持 SnapLock 卷和非 SnapLock 卷的存在；但是，不会自动更新现有的 SnapLock 卷属性。例如，数据缩减，跨卷重复数据删除和跨卷后台重复数据删除字段保持不变。在现有聚合上创建的新 SnapLock 卷与非 SnapLock 卷具有相同的默认值，新卷和聚合的默认值取决于平台。
 
+.还原注意事项
 如果需要还原到 9.10.1 之前的 ONTAP 版本，则必须将所有 SnapLock Compliance ， SnapLock Enterprise 和 SnapLock 卷移动到其自己的 SnapLock 聚合。
 
 .关于此任务

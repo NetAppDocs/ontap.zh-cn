@@ -13,10 +13,12 @@ summary: 当您不再需要从目标提供数据时，可以在源和目标 SVM 
 [role="lead"]
 当您不再需要从目标提供数据时，可以在源和目标 SVM 之间重新建立初始数据保护关系。在卷复制方面，操作步骤与操作步骤大致相同，但有一个例外。在重新激活源 SVM 之前，必须停止目标 SVM 。
 
+.您需要的内容
 如果在提供目标卷数据时增加了目标卷的大小，则在重新激活源卷之前，应手动增加原始源卷上的最大自动大小，以确保其可以充分增长。
 
 link:destination-volume-grows-automatically-concept.html["目标卷自动增长时"]
 
+.关于此任务
 从ONTAP 9.11.1开始、您可以在执行SVM DR关系的反向重新同步时、使用`snapmirror resync`命令的`-quast-resync true`选项来缩短灾难恢复演练期间的重新同步时间。快速重新同步可以绕过数据仓库重建和还原操作、从而缩短恢复生产所需的时间。
 
 
@@ -224,4 +226,5 @@ cluster_dst::> snapmirror release -source-path svm_backup: -destination-path svm
 ----
 
 
+.完成后
 使用 `snapmirror show` 命令验证是否已创建 SnapMirror 关系。有关完整的命令语法，请参见手册页。

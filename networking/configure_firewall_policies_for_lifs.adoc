@@ -124,6 +124,7 @@ portmap 服务在 ONTAP 9.3 及更早版本中始终可访问，在 ONTAP 9.4 �
 
 根据您的配置，您可能会禁止对特定类型的 LIF （通常为管理 LIF 和集群间 LIF ）访问服务。在某些情况下，您甚至可以禁止对数据 LIF 进行访问。
 
+.您可以预期的行为
 ONTAP 9.4 到 ONTAP 9.6 的行为旨在在升级时实现无缝过渡。如果 portmap 服务已通过特定类型的 LIF 进行访问，则它将继续通过这些类型的 LIF 进行访问。与先前的 ONTAP 版本一样，您可以在防火墙策略中为 LIF 类型指定可在防火墙内访问的服务。
 
 要使此行为生效，集群中的所有节点都必须运行 ONTAP 9.4 到 ONTAP 9.6 。仅影响入站流量。
@@ -135,6 +136,7 @@ ONTAP 9.4 到 ONTAP 9.6 的行为旨在在升级时实现无缝过渡。如果 p
 * 您可以根据需要将 portmap 服务添加到默认策略或自定义策略中，并根据需要删除此服务。
 
 
+.如何添加或删除portmap服务
 要将 portmap 服务添加到 SVM 或集群防火墙策略中（使其可在防火墙内访问），请输入：
 
 `s系统服务防火墙策略 create -vserver SVM -policy mgmt| 集群间 | 数据 | 自定义 -service portmap`
@@ -191,6 +193,7 @@ ONTAP 9.4 到 ONTAP 9.6 的行为旨在在升级时实现无缝过渡。如果 p
 . 使用 `network interface show -fields firewall-policy` 命令验证是否已将此策略正确添加到 LIF 中。
 
 
+.创建防火墙策略并将其应用于LIF的示例
 以下命令将创建一个名为 data_http 的防火墙策略，用于从 10.10 子网上的 IP 地址访问 HTTP 和 HTTPS 协议，并将该策略应用于 SVM vs1 上名为 data1 的 LIF ，然后显示集群上的所有防火墙策略：
 
 ....

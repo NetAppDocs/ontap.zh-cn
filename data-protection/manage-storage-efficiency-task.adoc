@@ -13,7 +13,7 @@ summary: SnapMirror 可保留源卷和目标卷上的存储效率，但在目标
 [role="lead"]
 SnapMirror 可保留源卷和目标卷上的存储效率，但在目标上启用后处理数据压缩时除外。在这种情况下，目标上的所有存储效率都将丢失。要更正此问题描述，您需要在目标上禁用后处理压缩，手动更新关系并重新启用存储效率。
 
-.您需要什么？ #8217 ；将需要什么
+.您需要的内容
 * 源和目标集群以及 SVM 必须建立对等关系。
 +
 https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM 对等"]
@@ -21,6 +21,7 @@ https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM
 * 必须在目标上禁用后处理压缩。
 
 
+.关于此任务
 您可以使用 `volume efficiency show` 命令确定是否已在卷上启用效率。有关详细信息，请参见手册页。
 
 您可以通过查看 SnapMirror 审核日志并找到传输问题描述来检查 SnapMirror 是否保持存储效率。如果传输问题描述显示 `transfer_desc=Logical Transfer` ，则 SnapMirror 不会保持存储效率。如果传输问题描述显示 `transfer_desc=Logical Transfer with Storage Efficiency` ，则 SnapMirror 将保持存储效率。例如：

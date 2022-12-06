@@ -13,6 +13,7 @@ summary: 执行 snapmirror failover start 命令后， snapmirror failover show 
 :imagesdir: ../media/
 
 
+.问题描述 ：
 [role="lead"]
 执行 `snapmirror failover start` 命令后， `snapmirror failover show` 命令的输出将显示一条消息，指示未配置调解器。
 
@@ -26,8 +27,10 @@ Path Path Type Status start-time end-time Reason
 vs0:/cg/cg vs1:/cg/cg planned failed 10/1/2020 10/1/2020 SnapMirror failover cannot start because the source-side precheck failed. reason: Mediator not configured.
 05:50:42 05:50:43
 ....
+.发生原因 ：
 未配置调解器或存在网络连接问题。
 
+.解决方案 ：
 如果未配置调解器，则必须先配置调解器，然后才能建立 SM-BC 关系。修复任何网络连接问题。使用 snapmirror mediator show 命令确保源站点和目标站点上已连接调解器且仲裁状态为 true 。
 
 ....

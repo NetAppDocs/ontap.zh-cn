@@ -21,6 +21,7 @@ summary: 如果源存储分段中的数据不可用，您可以中断 SnapMirror
 [role="lead"]
 如果源存储分段中的数据不可用，您可以中断 SnapMirror 关系，使目标存储分段可写并开始提供数据。
 
+.关于此任务
 执行接管操作时，源存储分段将转换为只读存储，而原始目标存储分段将转换为读写存储，从而反转 S3 SnapMirror 关系。
 
 当禁用的源存储分段重新可用时， S3 SnapMirror 会自动重新同步这两个存储分段的内容。您无需按照标准卷 SnapMirror 部署的要求明确重新同步此关系。
@@ -45,4 +46,5 @@ summary: 如果源存储分段中的数据不可用，您可以中断 SnapMirror
 . 验证故障转移操作的状态： `snapmirror show -fields status`
 
 
+.示例
 `clusterA ：：： > snapmirror failover start -destination-path vs1 ： /bucket/test-bucket-mirror`

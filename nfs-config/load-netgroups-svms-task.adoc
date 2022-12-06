@@ -13,6 +13,7 @@ summary: 在导出策略规则中匹配客户端的方法之一是使用网络�
 [role="lead"]
 在导出策略规则中匹配客户端的方法之一是使用网络组中列出的主机。您可以将网络组从统一资源标识符（ Uniform Resource Identifier ， URI ）加载到 SVM 中，以替代使用存储在外部名称服务器中的网络组（`vserver services name-service netgroup load` ）。
 
+.您需要的内容
 在加载到 SVM 之前，网络组文件必须满足以下要求：
 
 * 该文件必须使用用于填充 NIS 的正确网络组文本文件格式。
@@ -32,6 +33,7 @@ ONTAP 会在加载网络组文本文件格式之前对其进行检查。如果�
 
 
 
+.关于此任务
 ONTAP 支持按主机搜索本地网络组文件。加载网络组文件后， ONTAP 会自动创建 netgroup.byHost 映射以启用按主机搜索网络组。在处理导出策略规则以评估客户端访问时，这可以显著加快本地网络组搜索的速度。
 
 .步骤
@@ -47,6 +49,7 @@ ONTAP 支持按主机搜索本地网络组文件。加载网络组文件后， O
 
 
 
+.示例
 以下命令会从 HTTP URL ` +http://intranet/downloads/corp-netgroup+`: 将网络组定义加载到名为 vs1 的 SVM 中
 
 [listing]

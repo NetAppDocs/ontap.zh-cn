@@ -15,7 +15,7 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 
 您可以使用板载密钥管理器保护集群用于访问加密数据的密钥。您必须在访问加密卷或自加密磁盘的每个集群上启用板载密钥管理器。
 
-.您需要什么？ #8217 ；将需要什么
+.您需要的内容
 * 如果将 NSE 与外部密钥管理（ KMIP ）服务器结合使用，则必须已删除外部密钥管理器数据库。
 +
 link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
@@ -24,6 +24,7 @@ link:delete-key-management-database-task.html["从外部密钥管理过渡到板
 * 在配置板载密钥管理器之前，您必须先配置 MetroCluster 环境。
 
 
+.关于此任务
 每次向集群添加节点时，您都必须运行 `security key-manager on板 载 enable` 命令。在 MetroCluster 配置中，您必须先在本地集群上运行 `security key-manager 板载 enable` ，然后在远程集群上运行 `security key-manager 板载同步` ，并在每个集群上使用相同的密码短语。
 
 默认情况下，重新启动节点时不需要输入密钥管理器密码短语。除 MetroCluster 之外，您可以使用 `cc-mode-enabled" 选项` 要求用户在重新启动后输入密码短语。
@@ -119,6 +120,7 @@ node2                                 NSE-AK    yes
 ----
 
 
+.完成后
 将密码短语复制到存储系统以外的安全位置，以供将来使用。
 
 所有密钥管理信息都会自动备份到集群的复制数据库（ RDB ）。您还应手动备份此信息，以便在发生灾难时使用。

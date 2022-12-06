@@ -13,8 +13,10 @@ summary: 您可以为 Storage Virtual Machine （ SVM ）上的 SMB 访问启用
 [role="lead"]
 您可以为 Storage Virtual Machine （ SVM ）上的 SMB 访问启用或禁用本地用户身份验证。默认设置为允许本地用户身份验证，当 SVM 无法联系域控制器或您选择不使用域级别访问控制时，此功能非常有用。
 
+.开始之前
 必须在 CIFS 服务器上启用本地用户和组功能。
 
+.关于此任务
 您可以随时启用或禁用本地用户身份验证。如果要在创建 SMB 连接时使用本地用户进行身份验证，则还必须启用 CIFS 服务器的本地用户和组选项。
 
 .步骤
@@ -41,6 +43,7 @@ enabled
 . 返回到管理权限级别： `set -privilege admin`
 
 
+.示例
 以下示例将在 SVM vs1 上启用本地用户身份验证：
 
 [listing]
@@ -54,6 +57,7 @@ cluster1::*> vserver cifs options modify -vserver vs1 -is-local-auth-enabled tru
 
 cluster1::*> set -privilege admin
 ----
+.相关信息
 xref:local-user-authentication-concept.adoc[本地用户身份验证的工作原理]
 
 xref:enable-disable-local-users-groups-task.adoc[启用或禁用本地用户和组]

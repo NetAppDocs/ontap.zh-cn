@@ -13,6 +13,7 @@ summary: ONTAP 会通过 DNS 自动发现域控制器。或者，您也可以将
 [role="lead"]
 ONTAP 会通过 DNS 自动发现域控制器。或者，您也可以将一个或多个域控制器添加到特定域的首选域控制器列表中。
 
+.关于此任务
 如果指定域已存在首选域控制器列表，则新列表将与现有列表合并。
 
 .步骤
@@ -28,10 +29,12 @@ ONTAP 会通过 DNS 自动发现域控制器。或者，您也可以将一个或
 
 
 
+.示例
 以下命令会将域控制器 172.17.102.25 和 172.17.102.24 添加到首选域控制器列表中， SVM vs1 上的 SMB 服务器使用这些控制器来管理对 cifs.lab.example.com 域的外部访问。
 
 [listing]
 ----
 cluster1::> vserver cifs domain preferred-dc add -vserver vs1 -domain cifs.lab.example.com -preferred-dc 172.17.102.25,172.17.102.24
 ----
+.相关信息
 xref:commands-manage-preferred-domain-controllers-reference.adoc[用于管理首选域控制器的命令]

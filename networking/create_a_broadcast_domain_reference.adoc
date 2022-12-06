@@ -16,6 +16,7 @@ summary: 广播域对集群中属于同一第 2 层网络的网络端口进行�
 [role="lead"]
 创建广播域，以便对集群中属于同一第 2 层网络的网络端口进行分组。然后， SVM 可以使用这些端口。
 
+.开始之前
 计划添加到广播域的端口不能属于另一个广播域。
 
 .关于此任务
@@ -60,10 +61,12 @@ summary: 广播域对集群中属于同一第 2 层网络的网络端口进行�
 . 验证是否已根据需要创建广播域： `network port show -instance -broadcast-domain _new_domain_`
 
 
+.示例
 以下命令会在默认 IP 空间中创建广播域 bcast1 ，将 MTU 设置为 1500 ，并添加四个端口：
 
 `network port broadcast-domain create -broadcast-domain _bcast1_ -mtu _1500_ -ports _cluster1-01 ： e0e ， cluster1-01 ： e0f ， cluster1-02 ： e0e ， cluster1-02 ： e0f`
 
+.完成后
 您可以通过创建子网来定义广播域中可用的 IP 地址池，也可以此时将 SVM 和接口分配给 IP 空间。有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM 对等"]。
 
 如果需要更改现有广播域的名称，请使用 `network port broadcast-domain rename` 命令。

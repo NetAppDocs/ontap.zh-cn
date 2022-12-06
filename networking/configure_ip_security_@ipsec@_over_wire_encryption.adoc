@@ -126,12 +126,15 @@ security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168
 
 对于预共享密钥身份验证方法，除非 IPsec 客户端（如 LibresWAN ）需要，否则身份是可选的。对于 PKI/ 证书身份验证方法，本地和远程身份都是必需的。这些标识用于指定在每一方的证书中认证的身份以及在验证过程中使用的身份。如果远程身份未知或可能具有多种不同的身份，请使用特殊身份 `anything` 。
 
+.关于此任务
 在 ONTAP 中，标识是通过修改 SPD 条目或在创建 SPD 策略期间指定的。SPD 可以是 IP 地址或字符串格式的标识名称。
 
+.步骤
 要修改现有 SPD 的身份设置，请使用以下命令：
 
 `sIPsec 安全策略修改`
 
+.命令示例
 `sIPsec 安全策略 modify -vserver _vs1_ -name _test34_ -local-identity _192.168.134.34_ -remote-identity _client.fooboo.com_`
 
 
@@ -140,6 +143,7 @@ security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168
 
 如果少数客户端需要利用 IPsec ，则为每个客户端使用一个 SPD 条目就足以满足要求。但是，当数百甚至数千个客户端需要利用 IPsec 时， NetApp 建议使用 IPsec 多客户端配置。
 
+.关于此任务
 ONTAP 支持将多个网络中的多个客户端连接到启用了 IPsec 的单个 SVM IP 地址。您可以使用以下方法之一完成此操作：
 
 * * 子网配置 *
@@ -170,6 +174,7 @@ NOTE: 在子网配置中使用单个策略条目时，该子网中的 IPsec 客�
 `sIPsec 安全策略 create -vserver _vserver_name_ -name _policy_name_ -local-ip-subnets _ipsec_ip_address/32_ -remote-ip-subnets _ip_address/subnet_ -local-identity _local_id_ -remote-identity _remote_id_`
 
 +
+.命令示例
 `sIPsec 安全策略 create -vserver _vs1_ -name _subnet134_ -local-ip-subnets _192.168.134.344/32_ -remote-ip-subnets _192.168.134.0/24 _ -local-identity _ontap_side _identity_ -remote-identity _client_side identity_`
 
 ... 如果使用 * 允许所有客户端配置 * 来支持多个 IPsec 客户端：
@@ -177,6 +182,7 @@ NOTE: 在子网配置中使用单个策略条目时，该子网中的 IPsec 客�
 `sIPsec 安全策略 create -vserver _vserver_name_ -name _policy_name_ -local-ip-subnets _ipsec_ip_address/32_ -remote-ip-subnets _0.0.0.0/0_ -local-ports _port_number_ -local-identity _local_id_ -remote-identity _remote_identity_id_`
 
 +
+.命令示例
 `sIPsec 安全策略 create -vserver _vs1_ -name _test35_ -local-ip-subnets _ipsec_ip_address/32_ -remote-ip-subnets _0.0.0.0/0_ -local-ports _2049_ -local-identity _ontap_side _identity_ -remote-identity _client_side identity_`
 
 
@@ -193,6 +199,7 @@ NOTE: 在子网配置中使用单个策略条目时，该子网中的 IPsec 客�
 
 您可以使用 statistics 命令来检查 IPsec SAS 和 ike SAS 的状态。
 
+.命令示例
 IKESA 命令示例：
 
 `sIPsec Security show-ikesasa -node _hosting node_name_for_SVM_IP_`

@@ -13,12 +13,14 @@ summary: 您可以使用 vserver cifs create 命令在 SVM 上创建 SMB 服务�
 [role="lead"]
 您可以使用 `vserver cifs create` 命令在 SVM 上创建 SMB 服务器并指定其所属的 Active Directory （ AD ）域。
 
+.开始之前
 您用于提供数据的 SVM 和 LIF 必须已配置为允许 SMB 协议。LIF 必须能够连接到 SVM 上配置的 DNS 服务器以及要加入 SMB 服务器的域的 AD 域控制器。
 
 任何有权在 SMB 服务器要加入的 AD 域中创建计算机帐户的用户都可以在 SVM 上创建 SMB 服务器。这可能包括来自其他域的用户。
 
 从 ONTAP 9.7 开始，您的 AD 管理员可以为您提供 keytab 文件的 URI ，而不是为您提供特权 Windows 帐户的名称和密码。收到此 URI 后，请将其包含在 ` vserver cifs` 命令的` -keytab-uri `参数中。
 
+.关于此任务
 在 Active Directory 域中创建 SMB 服务器时：
 
 * 指定域时，必须使用完全限定域名（ FQDN ）。
@@ -91,6 +93,7 @@ Default Site Used by LIFs Without Site Membership:
 . 如果需要，请启用与域控制器（ ONTAP 9.8 及更高版本）的加密通信： `vserver cifs security modify -vserver svm_name -encryption-requireed-for-dc-connection true`
 
 
+.示例
 以下命令会在 SVM vs2.example.com 上的 "`example.com`" 域中创建一个名为 `sMB_server02` 的 SMB 服务器。计算机帐户在 "`OU=eng ， OU=corp ， DC=example ， DC=com` " 容器中创建。SMB 服务器分配有 NetBIOS 别名。
 
 [listing]
