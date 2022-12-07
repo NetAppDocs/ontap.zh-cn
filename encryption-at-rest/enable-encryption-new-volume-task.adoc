@@ -16,14 +16,14 @@ summary: 您可以使用 volume create 命令对新卷启用加密。
 .关于此任务
 您可以使用NetApp卷加密(NVE)对卷进行加密、从ONTAP 9.6开始、还可以使用NetApp聚合加密(NAE)对卷进行加密。要了解有关NAE和NVE的更多信息、请参见 xref:configure-netapp-volume-encryption-concept[卷加密概述]。
 
-在ONTAP 中启用加密的操作步骤 会根据您使用的ONTAP 版本和特定配置而有所不同：
+在ONTAP 中为新卷启用加密的操作步骤 会根据您使用的ONTAP 版本和特定配置而有所不同：
 
 * 从ONTAP 9.4开始、如果您启用了 `cc-mode` 设置板载密钥管理器时、您使用创建的卷 `volume create` 无论是否指定、命令都会自动加密 `-encrypt true`。
 * 在ONTAP 9.6及更早版本中、您必须使用 `-encrypt true` 使用 `volume create` 用于启用加密的命令(前提是您未启用 `cc-mode`）。
-* 如果在ONTAP 9.6中使用NAE、则必须在聚合级别启用NAE。请参见 xref:enable-aggregate-level-encryption-nve-license-task.html[使用VE许可证启用聚合级别加密] 了解有关此任务的更多详细信息。
-* 从 ONTAP 9.7 开始，如果您拥有 VE 许可证以及板载或外部密钥管理，则新创建的卷会默认加密。
+* 如果要在ONTAP 9.6中创建NAE卷、则必须在聚合级别启用NAE。请参见 xref:enable-aggregate-level-encryption-nve-license-task.html[使用VE许可证启用聚合级别加密] 了解有关此任务的更多详细信息。
+* 从 ONTAP 9.7 开始，如果您拥有 VE 许可证以及板载或外部密钥管理，则新创建的卷会默认加密。默认情况下、在NAE聚合中创建的新卷的类型为NAE、而不是NVE。
 +
-** 在ONTAP 9.7及更高版本中、如果您使用 `-encrypt true` 要在NAE聚合中创建卷、此卷将采用NVE加密、而不是NAE加密。NAE聚合中的所有卷都必须使用NVE或NAE进行加密。
+** 在ONTAP 9.7及更高版本中、如果您添加了 `-encrypt true` 到 `volume create` 命令要在NAE聚合中创建卷、此卷将采用NVE加密、而不是NAE加密。NAE聚合中的所有卷都必须使用NVE或NAE进行加密。
 
 
 
@@ -32,7 +32,7 @@ summary: 您可以使用 volume create 命令对新卷启用加密。
 NOTE: NAE 聚合不支持纯文本卷。
 
 .步骤
-. 创建新卷并指定是否在卷上启用加密：
+. 创建新卷并指定是否在卷上启用加密。如果新卷位于NAE聚合中、则默认情况下、此卷将为NAE卷：
 +
 [cols="25,75"]
 |===
@@ -44,20 +44,17 @@ NOTE: NAE 聚合不支持纯文本卷。
  a| 
 NAE卷
  a| 
-`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_` +
-
-
-NOTE: 在ONTAP 9.6中、必须在聚合级别启用NAE才能创建NAE卷。
+`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_`
 
 
 
  a| 
 NVE卷
  a| 
-`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_` +
+`volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_ -encrypt true` +
 
 
-NOTE: 如果您使用的是ONTAP 9.6及更早版本、请添加 `-encrypt true` 命令。在ONTAP 9.7或更高版本中使用此参数并在聚合上进行NAE加密、卷将使用NVE。
+NOTE: 在不支持NAE的ONTAP 9.6及更早版本中、 `-encrypt true` 指定应使用NVE对卷进行加密。在ONTAP 9.7及更高版本中、如果在NAE聚合中创建卷、 `-encrypt true` 覆盖默认的NAE加密类型以创建NVE卷。
 
 
 
