@@ -9,6 +9,7 @@
 * 必须已安装 KMIP SSL 客户端和服务器证书。
 * 您必须是集群管理员才能执行此任务。
 * 在配置外部密钥管理器之前，您必须配置 MetroCluster 环境。
+* 在MetroCluster 环境中、必须在两个集群上安装KMIP SSL证书。
 
 
 .关于此任务
@@ -22,6 +23,10 @@ ONTAP 为集群中的所有节点配置 KMIP 服务器连接。
 +
 此时将启动密钥管理器设置。
 
++
+
+NOTE: 在MetroCluster 环境中、必须在两个集群上运行此命令。
+
 . 在每个提示符处输入相应的响应。
 . 添加 KMIP 服务器：
 +
@@ -32,6 +37,10 @@ ONTAP 为集群中的所有节点配置 KMIP 服务器连接。
 ----
 clusterl::> security key-manager add -address 20.1.1.1
 ----
++
+
+NOTE: 在MetroCluster 环境中、必须在两个集群上运行此命令。
+
 . 添加额外的 KMIP 服务器以实现冗余：
 +
 `security key-manager add -address key_management_server_ipaddress`
@@ -41,6 +50,10 @@ clusterl::> security key-manager add -address 20.1.1.1
 ----
 clusterl::> security key-manager add -address 20.1.1.2
 ----
++
+
+NOTE: 在MetroCluster 环境中、必须在两个集群上运行此命令。
+
 . 验证所有已配置的 KMIP 服务器是否均已连接：
 +
 `security key-manager show -status`

@@ -26,9 +26,17 @@ ONTAP 会为集群中的所有节点创建身份验证密钥。
 `sSecurity key-manager key query -key-type NSE-AK`
 
 * 如果已配置的密钥管理服务器已存储超过 128 个身份验证密钥，则会收到警告。
+* 您可以使用 `security key-manager key delete` 命令删除任何未使用的密钥。如果给定密钥当前由 ONTAP 使用，则 `security key-manager key delete` 命令将失败。（要使用此命令，您的权限必须大于 "`admin` " 。）
 +
-您可以使用 `security key-manager key delete` 命令删除任何未使用的密钥。如果给定密钥当前由 ONTAP 使用，则 `security key-manager key delete` 命令将失败。（要使用此命令，您的权限必须大于 "`admin` " 。）
+[NOTE]
+====
+在MetroCluster 环境中、删除密钥之前、必须确保配对集群上未使用此密钥。您可以在配对集群上使用以下命令来检查此密钥是否未被使用：
 
+** `storage encryption disk show -data-key-id _key-id_`
+** `storage encryption disk show -fips-key-id _key-id_`
+
+
+====
 
 
 .步骤

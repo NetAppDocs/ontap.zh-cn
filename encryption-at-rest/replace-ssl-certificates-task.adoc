@@ -17,6 +17,7 @@ summary: 所有 SSL 证书都具有到期日期。您必须在证书到期之前
 * 您必须已获取集群的替代公有证书和专用密钥（ KMIP 客户端证书）。
 * 您必须已获取 KMIP 服务器的替代公有证书（ KMIP server-ca 证书）。
 * 要执行此任务，您必须是集群或 SVM 管理员。
+* 在MetroCluster 环境中、必须替换两个集群上的KMIP SSL证书。
 
 
 
@@ -36,7 +37,9 @@ NOTE: 在集群上安装证书之前或之后，您可以在 KMIP 服务器上�
 `security key-manager external modify -vserver <> -client-cert <> -server-ca-certs <>`
 
 +
+如果您在MetroCluster 环境中运行ONTAP 9.6或更高版本、并且要修改管理SVM上的密钥管理器配置、则必须在配置中的两个集群上运行命令。
+
+
+
 
 NOTE: 如果新客户端证书的公共 / 专用密钥与先前安装的密钥不同，则更新密钥管理器配置以使用新安装的证书将返回错误。请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/The_new_client_certificate_public_or_private_keys_are_different_from_the_existing_client_certificate["新的客户端证书公有 或专用密钥与现有客户端证书不同"^] 有关如何覆盖此错误的说明。
-
-
