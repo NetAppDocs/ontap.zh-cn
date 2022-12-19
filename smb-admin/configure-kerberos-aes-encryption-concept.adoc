@@ -2,7 +2,7 @@
 permalink: smb-admin/configure-kerberos-aes-encryption-concept.html 
 sidebar: sidebar 
 keywords: security, kerberos-based, communication, enable, aes-256, aes-128, aes, encryption, smb, server, default, svm, advanced encryption standard, configure, configure strong security for kerberos-based communication by using aes encryption 
-summary: 为了通过基于 Kerberos 的通信实现最强的安全性，您可以在 SMB 服务器上启用 AES-256 和 AES-128 加密。默认情况下，在 SVM 上创建 SMB 服务器时， AES 加密处于禁用状态。您必须启用它，才能利用高级加密标准（ Advanced Encryption Standard ， AES ）加密提供的强大安全性。 
+summary: '为了通过基于 Kerberos 的通信实现最强的安全性，您可以在 SMB 服务器上启用 AES-256 和 AES-128 加密。默认情况下、在SVM上创建SMB服务器时、高级加密标准(Advanced Encryption Standard、AES)加密处于禁用状态。您必须启用它才能利用AES加密提供的强大安全性。' 
 ---
 = 使用 AES 加密为基于 Kerberos 的通信配置强大的安全性
 :allow-uri-read: 
@@ -11,24 +11,26 @@ summary: 为了通过基于 Kerberos 的通信实现最强的安全性，您可�
 
 
 [role="lead"]
-为了通过基于 Kerberos 的通信实现最强的安全性，您可以在 SMB 服务器上启用 AES-256 和 AES-128 加密。默认情况下，在 SVM 上创建 SMB 服务器时， AES 加密处于禁用状态。您必须启用它，才能利用高级加密标准（ Advanced Encryption Standard ， AES ）加密提供的强大安全性。
+为了通过基于 Kerberos 的通信实现最强的安全性，您可以在 SMB 服务器上启用 AES-256 和 AES-128 加密。默认情况下、在SVM上创建SMB服务器时、高级加密标准(Advanced Encryption Standard、AES)加密处于禁用状态。您必须启用它才能利用AES加密提供的强大安全性。
 
 在 SVM 上创建 SMB 服务器期间以及 SMB 会话设置阶段期间，会使用 SMB 的 Kerberos 相关通信。SMB 服务器支持以下 Kerberos 通信加密类型：
 
-* RC4-HMAC
-* DES
-* AES 128
 * AES 256
+* AES 128
+* DES
+* RC4-HMAC
 
 
 如果要对 Kerberos 通信使用最高安全加密类型，则应在 SVM 上为 Kerberos 通信启用 AES 加密。
+
+创建 SMB 服务器时，域控制器会在 Active Directory 中创建计算机帐户。此时， KDC 将了解特定计算机帐户的加密功能。随后，系统会选择一种特定的加密类型来加密客户端在身份验证期间向服务器提供的服务单。
+
+从ONTAP 9.12.1开始、您可以指定要向Active Directory (AD) KDC公布的加密类型。您可以使用 `-advertised-enc-types` 选项以启用建议的加密类型、您可以使用此选项禁用较弱的加密类型。了解操作方法 link:enable-disable-aes-encryption-kerberos-task.html["为基于Kerberos的通信启用和禁用加密类型"]。
 
 [NOTE]
 ====
 SMB 3.0 提供了 Intel AES 新指令（ Intel AES NI ），可改进 AES 算法并加快受支持处理器系列的数据加密速度。从 SMB 3.1.1 开始， AES-128-GCM 将 AES-128-CCM 替换为 SMB 加密使用的哈希算法。
 
 ====
-创建 SMB 服务器时，域控制器会在 Active Directory 中创建计算机帐户。此时， KDC 将了解特定计算机帐户的加密功能。随后，系统会选择一种特定的加密类型来加密客户端在身份验证期间向服务器提供的服务单。
-
 .相关信息
 xref:modify-server-kerberos-security-settings-task.adoc[修改 CIFS 服务器 Kerberos 安全设置]
