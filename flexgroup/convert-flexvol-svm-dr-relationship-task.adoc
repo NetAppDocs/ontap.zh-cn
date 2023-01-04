@@ -22,6 +22,7 @@ summary: 从 ONTAP 9.10.1 开始，您可以将 FlexVol 卷转换为 SVM-DR 源�
 
 
 .步骤
+. 使用高级权限模式登录： `set -privilege advanced`
 . 从目标位置更新 SVM-DR 关系：
 +
 ` * snapmirror update -destination-path destination_svm_name ： -source-path source_svm_name ： *`
@@ -33,6 +34,9 @@ summary: 从 ONTAP 9.10.1 开始，您可以将 FlexVol 卷转换为 SVM-DR 源�
 . 从目标 SVM 中，验证 FlexVol 卷是否已做好转换准备：
 +
 ` * 卷转换 start -vserver svm_name -volume vol_name -check-only true*`
+
++
+如果此命令生成除"此为目标SVMDR卷"以外的任何错误、您可以采取适当的更正操作、再次运行此命令并继续进行转换。
 
 . 从目标上，禁用 SVM-DR 关系上的传输：
 +
