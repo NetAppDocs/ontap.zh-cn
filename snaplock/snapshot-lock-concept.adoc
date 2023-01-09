@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: snaplock, snapshot copy, lock, tamperproof 
 summary: 从ONTAP 9.12.1开始、您可以在非SnapLock卷上锁定Snapshot副本、以防止遭受勒索软件攻击。锁定Snapshot副本可确保不会意外或恶意删除这些副本。 
 ---
-= 防篡改Snapshot副本锁定概述
+= 锁定Snapshot副本以防止勒索软件攻击
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -15,10 +15,7 @@ summary: 从ONTAP 9.12.1开始、您可以在非SnapLock卷上锁定Snapshot副�
 
 您可以使用SnapLock 合规时钟功能在指定时间段内锁定Snapshot副本、以便在达到到期时间之前无法删除这些副本。锁定Snapshot副本可防止数据被篡改、防止他们受到勒索软件威胁。如果卷受到勒索软件攻击的影响、您可以使用锁定的Snapshot副本恢复数据。
 
-
-
-== 防篡改Snapshot副本的要求和注意事项
-
+.防篡改Snapshot副本的要求和注意事项
 * 集群中的所有节点都必须运行ONTAP 9.12.1或更高版本。
 * 集群上必须安装SnapLock 许可证。
 +
@@ -36,10 +33,7 @@ summary: 从ONTAP 9.12.1开始、您可以在非SnapLock卷上锁定Snapshot副�
 * 您可以使用还原已锁定的Snapshot副本 `volume snapshot restore` 仅当锁定的Snapshot副本为最新副本时才使用命令。如果在要还原的Snapshot副本之后存在任何未过期的Snapshot副本、则Snapshot副本还原操作将失败。
 
 
-
-
-== 防篡改Snapshot副本支持的功能
-
+.防篡改Snapshot副本支持的功能
 * FlexGroup 卷
 +
 FlexGroup 卷支持Snapshot副本锁定。Snapshot锁定仅发生在根成分卷Snapshot副本上。只有在根成分卷过期时间已过的情况下、才允许删除FlexGroup 卷。
@@ -54,10 +48,7 @@ FlexGroup 卷支持Snapshot副本锁定。Snapshot锁定仅发生在根成分卷
 
 
 
-
-
-== 不支持的功能
-
+.不支持的功能
 防篡改Snapshot副本当前不支持以下功能：
 
 * 一致性组
@@ -66,4 +57,95 @@ FlexGroup 卷支持Snapshot副本锁定。Snapshot锁定仅发生在根成分卷
 * SnapCenter
 * SnapMirror 业务连续性（ SM-BC ）
 * SnapMirror 同步
+
+
+
+
+== 创建卷时启用Snapshot副本锁定
+
+从ONTAP 9.12.1开始、您可以在创建新卷或使用修改现有卷时启用Snapshot副本锁定 `-snapshot-locking-enabled` 选项 `volume create` 和 `volume modify` 命令
+
+. 要创建新卷并启用Snapshot副本锁定、请输入以下命令：
++
+`volume create -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
+
++
+以下命令将在名为vol1的新卷上启用Snapshot副本锁定：
+
++
+[listing]
+----
+> volume create -volume vol1 -aggregate aggr1 -size 100m -snapshot-locking-enabled true
+Warning: Snapshot copy locking is being enabled on volume “vol1” in Vserver “vs1”. It cannot be disabled until all locked Snapshot copies are past their expiry time. A volume with unexpired locked Snapshot copies cannot be deleted.
+Do you want to continue: {yes|no}: y
+[Job 32] Job succeeded: Successful
+----
+
+
+
+
+== 在现有卷上启用Snapshot副本锁定
+
+. 要修改现有卷以启用Snapshot副本锁定、请输入以下命令：
++
+`volume modify -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
+
+
+
+
+
+== 创建锁定的Snapshot副本
+
+从ONTAP 9.12.1开始、您可以创建Snapshot副本策略以应用Snapshot副本保留期限、并将此策略应用于卷以在指定期限内锁定Snapshot副本。您也可以通过手动设置保留期限来锁定Snapshot副本。
+
+.创建Snapshot副本锁定策略
+. 要创建Snapshot副本策略、请输入以下命令：
++
+`volume snapshot policy create -policy policy_name -enabled true -schedule1 _schedule1_name_ -count1 _maximum_Snapshot_copies -retention-period1 _retention_period_`
+
++
+以下命令将创建Snapshot副本锁定策略：
+
++
+[listing]
+----
+cluster1> volume snapshot policy create -policy policy_name -enabled true -schedule1 5min -count1 5 -retention-period1 "1 months"
+----
+
+
+.将锁定策略应用于卷
+. 要将Snapshot副本锁定策略应用于现有卷、请输入以下命令：
++
+`volume modify -volume volume_name -vserver vserver_name -snapshot-policy policy_name`
+
+
+
+.在手动创建Snapshot副本期间应用保留期限
+. 要手动创建Snapshot副本并应用锁定保留期限、请输入以下命令：
++
+`volume snapshot create -volume _volume_name_ -snapshot _snapshot_copy_name_ -expiry-time _expiration_date_time_`
+
++
+以下命令将创建一个新的Snapshot副本并设置保留期限：
+
++
+[listing]
+----
+cluster1> volume snapshot create -vserver vs1 -volume vol1 -snapshot snap1 -snaplock-expiry-time "11/10/2022 09:00:00"
+----
+
+
+.将保留期限应用于现有Snapshot副本
+. 要手动对现有Snapshot副本应用保留期限、请输入以下命令：
++
+`volume snapshot modify-snaplock-expiry-time -volume _volume_name_ -snapshot _snapshot_copy_name_ -expiry-time _expiration_date_time_`
+
++
+以下示例将保留期限应用于现有Snapshot副本：
+
++
+[listing]
+----
+cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot snap2 -expiry-time "11/10/2022 09:00:00"
+----
 

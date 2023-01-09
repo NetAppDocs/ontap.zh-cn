@@ -106,7 +106,7 @@ System Manager从ONTAP 9.8开始显示以下信息：
 
 如果您熟悉自动配置方法，并且您的环境已准备妥当，则可以使用 ` skip-confirmation` 选项创建建议的聚合，而无需显示和确认。`storage aggregate auto-provisione` 命令不受 CLI session ` confirmations` 设置的影响。
 
-`s存储聚合自动配置` 手册页包含有关聚合布局建议的详细信息。
+。[`storage aggregate auto-provision` 手册页^]包含有关聚合布局建议的详细信息。
 
 .步骤
 . 使用所需的显示选项运行 `storage aggregate auto-provisione` 命令。
@@ -132,10 +132,21 @@ System Manager从ONTAP 9.8开始显示以下信息：
 
 [listing]
 ----
-Do you want to create recommended aggregates? {y|n}:y
+myA400-44556677::> storage aggregate auto-provision
+Node               New Data Aggregate            Usable Size
+------------------ ---------------------------- ------------
+myA400-364        myA400_364_SSD_1                    3.29TB
+myA400-363        myA400_363_SSD_1                    1.46TB
+------------------ ---------------------------- ------------
+Total:             2   new data aggregates            4.75TB
 
-Info: Creating node1_SSD_1 ...
-      Creating node2_SSD_1 ...
+Do you want to create recommended aggregates? {y|n}: y
+
+Info: Aggregate auto provision has started. Use the "storage aggregate
+      show-auto-provision-progress" command to track the progress.
+
+myA400-44556677::>
+
 ----
 
 

@@ -1,16 +1,22 @@
 ---
 permalink: snaplock/commit-files-worm-state-manual-task.html 
 sidebar: sidebar 
-keywords: commit, file, worm, manually, nfs, cifs, read, only 
-summary: 您可以通过将文件设为只读来手动将文件提交到 WORM 。您可以通过 NFS 或 CIFS 使用任何合适的命令或程序将文件的读写属性更改为只读。 
+keywords: commit, file, worm, manually, nfs, cifs, read, only, automatically, program, appendable, nfs, cifs, chunk, vam 
+summary: '您可以手动将文件提交到WORM (一次写入、多次读取)、也可以通过自动提交来提交。您还可以创建WORM可附加文件。' 
 ---
-= 手动将文件提交到 WORM
+= 将文件提交到 WORM
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
+您可以手动将文件提交到WORM (一次写入、多次读取)、也可以通过自动提交来提交。您还可以创建WORM可附加文件。
+
+
+
+== 手动将文件提交到 WORM
+
 您可以通过将文件设为只读来手动将文件提交到 WORM 。您可以通过 NFS 或 CIFS 使用任何合适的命令或程序将文件的读写属性更改为只读。
 
 .您需要的内容
@@ -39,4 +45,218 @@ chmod -w document.txt
 ----
 attrib +r document.txt
 ----
+
+
+
+
+== 自动将文件提交到WORM
+
+使用 SnapLock 自动提交功能，您可以自动将文件提交到 WORM 。
+
+.您需要的内容
+* 要自动提交的文件必须驻留在 SnapLock 卷上。
+* SnapLock 卷必须处于联机状态。
+* SnapLock 卷必须为读写卷。
+
+
+[NOTE]
+====
+SnapLock 自动提交功能可扫描卷中的所有文件，并在满足自动提交要求时提交文件。从文件准备好自动提交到 SnapLock 自动提交扫描程序实际提交之间可能存在一个时间间隔。但是，只要该文件符合自动提交条件，它仍会受到保护，不会被文件系统修改和删除。
+
+====
+.关于此任务
+自动提交期限 _ 用于指定文件在自动提交之前必须保持不变的时间量。在自动提交期限之前更改文件将重新启动文件的自动提交期限。
+
+下表显示了自动提交期限的可能值：
+
+|===
+| 价值 | Unit | 注释： 
+
+
+ a| 
+无
+ a| 
+-
+ a| 
+默认值。
+
+
+
+ a| 
+5 - 5256000
+ a| 
+minutes
+ a| 
+-
+
+
+
+ a| 
+1 - 87600
+ a| 
+hours
+ a| 
+-
+
+
+
+ a| 
+1 - 3650
+ a| 
+days
+ a| 
+-
+
+
+
+ a| 
+1 - 120
+ a| 
+months
+ a| 
+-
+
+
+
+ a| 
+1 - 10
+ a| 
+年
+ a| 
+-
+
+|===
+[NOTE]
+====
+最小值为 5 分钟，最大值为 10 年。
+
+====
+.步骤
+. SnapLock 卷上的自动提交文件到 WORM ：
++
+` * 卷 SnapLock modify -vserver _svm_name_ -volume _volume_name_ -autosit-period _autoscommit_period_*`
+
++
+有关完整的选项列表，请参见命令手册页。
+
++
+以下命令会自动提交 SVM vs1 卷 `vol1` 上的文件，前提是这些文件在 5 小时内保持不变：
+
++
+[listing]
+----
+cluster1::>volume snaplock modify -vserver vs1 -volume vol1 -autocommit-period 5hours
+----
+
+
+
+
+== 创建 WORM 可附加文件
+
+WORM 可附加文件会保留以增量方式写入的数据，如日志条目。默认情况下，您可以使用任何合适的命令或程序创建 WORM 可附加文件，也可以使用 SnapLock _volume append mode" 功能创建 可附加文件。
+
+
+
+== 使用命令或程序创建 WORM 可附加文件
+
+您可以通过 NFS 或 CIFS 使用任何合适的命令或程序来创建 WORM 可附加文件。WORM 可附加文件会保留以增量方式写入的数据，如日志条目。数据以 256 KB 区块的形式附加到文件中。写入每个区块时，上一个区块将受 WORM 保护。在保留期限结束之前，您无法删除此文件。
+
+.您需要的内容
+WORM 可附加文件必须驻留在 SnapLock 卷上。
+
+.关于此任务
+数据不必按顺序写入活动的 256 KB 区块。将数据写入文件的字节 n×256 KB+1 时，先前的 256 KB 区块将受 WORM 保护。
+
+.步骤
+. 使用合适的命令或程序创建具有所需保留时间的零长度文件。
++
+在 UNIX Shell 中，使用以下命令将保留时间设置为 2020 年 11 月 21 日早上 6 ： 00在名为 `document.txt` 的零长度文件上：
+
++
+[listing]
+----
+touch -a -t 202011210600 document.txt
+----
+. 使用合适的命令或程序将文件的读写属性更改为只读。
++
+在 UNIX Shell 中，使用以下命令将名为 `document.txt` 的文件设置为只读：
+
++
+[listing]
+----
+chmod 444 document.txt
+----
+. 使用合适的命令或程序将文件的读写属性重新更改为可写。
++
+[NOTE]
+====
+此步骤不会被视为合规风险，因为文件中没有数据。
+
+====
++
+在 UNIX Shell 中，使用以下命令使名为 `document.txt` 的文件可写：
+
++
+[listing]
+----
+chmod 777 document.txt
+----
+. 使用合适的命令或程序开始向文件写入数据。
++
+在 UNIX Shell 中，使用以下命令将数据写入 `document.txt` ：
+
++
+[listing]
+----
+echo test data >> document.txt
+----
++
+[NOTE]
+====
+如果您不再需要向文件附加数据，请将文件权限改回只读状态。
+
+====
+
+
+
+
+== 使用卷附加模式创建 WORM 可附加文件
+
+从 ONTAP 9.3 开始，默认情况下，您可以使用 WORM _volume append mode" （ SnapLock 卷附加模式）（ VAM ）功能创建可附加文件。WORM 可附加文件会保留以增量方式写入的数据，如日志条目。数据以 256 KB 区块的形式附加到文件中。写入每个区块时，上一个区块将受 WORM 保护。在保留期限结束之前，您无法删除此文件。
+
+.您需要的内容
+* WORM 可附加文件必须驻留在 SnapLock 卷上。
+* SnapLock 卷必须已卸载，并且 Snapshot 副本和用户创建的文件均为空。
+
+
+.关于此任务
+数据不必按顺序写入活动的 256 KB 区块。将数据写入文件的字节 n×256 KB+1 时，先前的 256 KB 区块将受 WORM 保护。
+
+如果为卷指定了自动提交期限，则在超过自动提交期限的时间段内未修改的 WORM 可附加文件将提交到 WORM 。
+
+[NOTE]
+====
+SnapLock 审核日志卷不支持 VAM 。
+
+====
+.步骤
+. 启用 VAM ：
++
+` * volume SnapLock modify -vserver _svm_name_ -volume _volume_name_ -is-volume-apping-mode-enabled true*`
+
++
+有关完整的选项列表，请参见命令手册页。
+
++
+以下命令将在 SVM``vs1`` 的卷 `vol1` 上启用 VAM ：
+
++
+[listing]
+----
+cluster1::>volume snaplock modify -vserver vs1 -volume vol1 -is-volume-append-mode-enabled true
+----
+. 使用合适的命令或程序创建具有写入权限的文件。
++
+默认情况下，这些文件可附加 WORM 。
+
 
