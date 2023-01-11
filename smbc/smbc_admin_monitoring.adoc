@@ -20,50 +20,8 @@ summary: 您可以监控多个 SM-BC 组件和操作。
 
 == ONTAP 调解器
 
-在正常操作期间，应连接调解器状态。如果处于任何其他状态，则可能表示出现错误情况。您可以查看事件管理系统（ EMS ）消息以确定错误和相应的更正操作。
+在正常操作期间，应连接调解器状态。如果处于任何其他状态，则可能表示出现错误情况。您可以查看 link:https://docs.netapp.com/us-en/ontap-ems-9121/sm-mediator-events.html["事件管理系统(EMS)消息"^] 确定错误并采取适当的更正操作。
 
-|===
-| EMS 名称 | Description 
-
-
-| sm.medier.added | 已成功添加调解器 
-
-
-| sm.medier.removed | 已成功删除调解器 
-
-
-| sm.medier.unusable | 由于调解器服务器损坏，调解器无法使用 
-
-
-| sm.medier.misconfigured | 调解器已重新利用，或者调解器服务器上不再安装调解器软件包 
-
-
-| sm.medier.unreachable | 无法访问调解器 
-
-
-| sm.mediate.removed.force | 使用 "force" 选项从集群中删除调解器 
-
-
-| sm.mediator.cacert.expiring | 调解器证书颁发机构（ CA ）证书应在 30 天或更短时间内过期 
-
-
-| sm.mediator.serverc.expiring | 调解器服务器证书将在 30 天或更短时间内过期 
-
-
-| sm.mediate.clientc.expedent.expedisn.exp用 | 调解器客户端证书应在 30 天或更短时间内过期 
-
-
-| sm.mediator.cacert.expired | 调解器证书颁发机构（ CA ）证书已过期 
-
-
-| sm.mediator.serverc.expired | 调解器服务器证书已过期 
-
-
-| sm.mediate.clientc.expired. | 调解器客户端证书已过期 
-
-
-| sm.mediator.in.quorum | 所有 SM-BC 记录都会与调解器重新同步 
-|===
 
 
 == 计划内故障转移操作
@@ -78,17 +36,8 @@ ClusterB::> snapmirror failover start -destination-path vs1:/cg/dcg1
 ....
 ClusterA::> snapmirror show
 ....
-您还可以查看以下消息以确定是否存在错误并采取适当的更正措施。
+请参见 link:https://docs.netapp.com/us-en/ontap-ems-9121/smbc-pfo-events.html["EMS参考"^] 了解事件消息和更正操作。
 
-|===
-| EMS 名称 | Description 
-
-
-| SMBC.PFO.FAILED | SMBC 计划的故障转移操作失败。目标路径： 
-
-
-| SMBC.PFO.START 。目标路径： | 已启动 SMBC 计划内故障转移操作 
-|===
 
 
 == 自动计划外故障转移操作
@@ -108,23 +57,8 @@ Last Progress Update: -
        Failover Type: unplanned
   Error Reason codes: -
 ....
-您还可以查看以下消息以确定是否存在错误并采取适当的更正措施。
+请参见 link:https://docs.netapp.com/us-en/ontap-ems-9121/smbc-aufo-events.html["EMS参考"^] 了解事件消息和更正操作。
 
-|===
-| EMS 名称 | Description 
-
-
-| smbc.aufo.failed | SnapMirror 自动计划故障转移操作失败。目标路径： 
-
-
-| smbc.aufo.start | 已启动 SMBC 计划内故障转移操作。目标路径： 
-
-
-| smbc.aufo.completed: | 已完成 SnapMirror 自动计划故障转移操作。目标路径： 
-
-
-| smbc.aufo.failover.incapable | block.giveback.during.aufo 
-|===
 
 
 == SM-BC 可用性

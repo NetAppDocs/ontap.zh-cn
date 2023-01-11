@@ -45,17 +45,20 @@ cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_ba
 有关完整的命令语法，请参见手册页。
 
 +
-您必须从目标 SVM 或目标集群运行此命令。虽然重新同步不需要基线传输，但它可能非常耗时。您可能希望在非高峰时段运行重新同步。
+[NOTE]
+====
+您必须从原始源SVM或原始源集群运行此命令。虽然重新同步不需要基线传输，但它可能非常耗时。您可能希望在非高峰时段运行重新同步。如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 ... `snapmirror initialize` 重新初始化此关系。
 
+====
 +
 以下示例将反转原始源卷 `volA` on `svm1` 和您提供数据的卷 `vola_dst` on `svm_backup` 之间的关系：
 
 +
 [listing]
 ----
-cluster_dst::> snapmirror resync -source-path svm_backup:volA_dst -destination-path svm1:volA
+cluster_src::> snapmirror resync -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
-. 停止已反转关系的源 SVM ：
+. 准备好重新建立对原始源的数据访问后、停止对原始目标卷的访问。要执行此操作、一种方法是停止原始目标SVM：
 +
 `vserver stop -vserver _svm_`
 
@@ -63,12 +66,18 @@ cluster_dst::> snapmirror resync -source-path svm_backup:volA_dst -destination-p
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将停止已反转关系的源 SVM ：
+[NOTE]
+====
+您必须从原始目标SVM或原始目标集群运行此命令。此命令将停止用户对整个原始目标SVM的访问。您可能希望使用其他方法停止对原始目标卷的访问。
+
+====
++
+以下示例将停止初始目标SVM：
 
 +
 [listing]
 ----
-cluster_src::> vserver stop svm_backup
+cluster_dst::> vserver stop svm_backup
 ----
 . 更新已反转的关系：
 +
@@ -80,7 +89,7 @@ cluster_src::> vserver stop svm_backup
 +
 [NOTE]
 ====
-您必须从目标 SVM 或目标集群运行此命令。如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 `snapmirror initialize` 重新初始化此关系。
+您必须从原始源SVM或原始源集群运行此命令。
 
 ====
 +
@@ -89,9 +98,9 @@ cluster_src::> vserver stop svm_backup
 +
 [listing]
 ----
-cluster_dst::> snapmirror update -source-path svm_backup:volA_dst -destination-path svm1:volA
+cluster_src::> snapmirror update -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
-. 停止已反转关系的计划传输：
+. 从初始源SVM或初始源集群停止已反转关系的计划传输：
 +
 `snapmirror quiesce -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
 
@@ -101,39 +110,18 @@ cluster_dst::> snapmirror update -source-path svm_backup:volA_dst -destination-p
 +
 [NOTE]
 ====
-您必须从目标 SVM 或目标集群运行此命令。
+您必须从原始源SVM或原始源集群运行此命令。
 
 ====
 +
-以下示例将停止从 `vola_dst` on `svm_backup` 提供数据的卷与原始源卷 `vola` on `svm1` 之间的计划传输：
+以下示例将停止初始目标卷之间的计划传输、 `volA_dst` 开启 `svm_backup`和原始源卷、 `volA` 开启 `svm1`：
 
 +
 [listing]
 ----
-cluster_dst::> snapmirror quiesce -source-path svm_backup:volA_dst -destination-path svm1:volA
+cluster_src::> snapmirror quiesce -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
-. 停止已反转关系的正在进行的传输：
-+
-`snapmirror abort -source-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
-
-+
-有关完整的命令语法，请参见手册页。
-
-+
-[NOTE]
-====
-您必须从目标 SVM 或目标集群运行此命令。
-
-====
-+
-以下示例将停止正在提供数据的卷 `vola_dst` on `svm_backup` 和原始源卷 `vola` on `svm1` 之间的当前传输：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror abort -source-path svm_backup:volA_dst -destination-path svm1:volA
-----
-. 中断已反转的关系：
+. 当最终更新完成且关系状态指示"已暂停"时、从原始源SVM或原始源集群运行以下命令以中断已反转的关系：
 +
 `snapmirror break -source-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
 
@@ -143,33 +131,18 @@ cluster_dst::> snapmirror abort -source-path svm_backup:volA_dst -destination-pa
 +
 [NOTE]
 ====
-您必须从目标 SVM 或目标集群运行此命令。
+您必须从原始源SVM或源集群运行此命令。
 
 ====
 +
-以下示例将中断提供数据的卷 `vola_dst` on `svm_backup` 和原始源卷 `vola` on `svm1` 之间的关系：
+以下示例将中断初始目标卷之间的关系、 `volA_dst` 开启 `svm_backup`和原始源卷、 `volA` 开启 `svm1`：
 
 +
 [listing]
 ----
-cluster_dst::> snapmirror break -source-path svm_backup:volA_dst -destination-path svm1:volA
+cluster_scr::> snapmirror break -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
-. 启动初始源 SVM ：
-+
-`vserver start -vserver _svm_`
-
-+
-有关完整的命令语法，请参见手册页。
-
-+
-以下示例将启动初始源 SVM ：
-
-+
-[listing]
-----
-cluster_dst::> vserver start svm1
-----
-. 删除已反转的数据保护关系：
+. 从原始源SVM或原始源集群中、删除已反转的数据保护关系：
 +
 `snapmirror delete -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
 
@@ -177,8 +150,11 @@ cluster_dst::> vserver start svm1
 有关完整的命令语法，请参见手册页。
 
 +
-您必须从已反转关系的源 SVM 或源集群运行此命令。
+[NOTE]
+====
+您必须从原始源SVM或原始源集群运行此命令。
 
+====
 +
 以下示例将删除原始源卷 `volA` on `svm1` 与您提供数据的卷 `vola_dst` on `svm_backup` 之间的反转关系：
 
@@ -187,7 +163,41 @@ cluster_dst::> vserver start svm1
 ----
 cluster_src::> snapmirror delete -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
-. 重新建立原始数据保护关系：
+. 从初始目标SVM或初始目标集群释放已反转的关系。
++
+`snapmirror release -source-path _svm ： volume___cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
+
++
+[NOTE]
+====
+您必须从原始目标SVM或原始目标集群运行此命令。
+
+====
++
+以下示例将释放初始目标卷之间的已反转关系、 `volA_dst` 开启 `svm_backup`和原始源卷、 `volA` 开启 `svm1`：
+
+
+
+[listing]
+----
+cluster_dst::> snapmirror release -source-path svm_backup:volA_dst -destination-path svm1:volA
+----
+. 如果需要、启动初始目标SVM：
++
+`vserver start -vserver _svm_`
+
++
+有关完整的命令语法，请参见手册页。
+
++
+以下示例将启动初始目标SVM：
+
++
+[listing]
+----
+cluster_dst::> vserver start svm_backup
+----
+. 从原始目标重新建立初始数据保护关系：
 +
 `snapmirror resync -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
 
