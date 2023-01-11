@@ -2,7 +2,7 @@
 permalink: smb-admin/export-policies-access-concept.html 
 sidebar: sidebar 
 keywords: export, policies, policy, smb, access, enable, cifs, server, control, svm, volume, client, data, associate, how export policies are used with smb access 
-summary: 如果在 CIFS 服务器上启用了 SMB 访问导出策略，则在控制 SMB 客户端对 SVM 卷的访问时会使用导出策略。要访问数据，您可以创建一个允许 SMB 访问的导出策略，然后将该策略与包含 SMB 共享的卷相关联。 
+summary: 如果在SMB服务器上启用了SMB访问导出策略、则在控制SMB客户端对SVM卷的访问时会使用导出策略。要访问数据，您可以创建一个允许 SMB 访问的导出策略，然后将该策略与包含 SMB 共享的卷相关联。 
 ---
 = 如何在 SMB 访问中使用导出策略
 :allow-uri-read: 
@@ -11,15 +11,11 @@ summary: 如果在 CIFS 服务器上启用了 SMB 访问导出策略，则在控
 
 
 [role="lead"]
-如果在 CIFS 服务器上启用了 SMB 访问导出策略，则在控制 SMB 客户端对 SVM 卷的访问时会使用导出策略。要访问数据，您可以创建一个允许 SMB 访问的导出策略，然后将该策略与包含 SMB 共享的卷相关联。
+如果在SMB服务器上启用了SMB访问导出策略、则在控制SMB客户端对SVM卷的访问时会使用导出策略。要访问数据，您可以创建一个允许 SMB 访问的导出策略，然后将该策略与包含 SMB 共享的卷相关联。
 
 导出策略应用了一个或多个规则，用于指定允许哪些客户端访问数据以及只读和读写访问支持哪些身份验证协议。您可以配置导出策略，以允许通过 SMB 访问所有客户端，一个子网客户端或特定客户端，并允许在确定对数据的只读和读写访问时使用 Kerberos 身份验证， NTLM 身份验证或 Kerberos 和 NTLM 身份验证进行身份验证。
 
-在处理应用于导出策略的所有导出规则后， ONTAP 可以确定是否授予客户端访问权限以及授予的访问级别。导出规则适用于客户端计算机，而不适用于 Windows 用户和组。导出规则不会取代基于 Windows 用户和组的身份验证和授权。除了共享和文件访问权限之外，导出规则还提供了另一层访问安全性。您只需将一个导出策略与每个卷关联，即可配置客户端对卷的访问。每个 SVM 可以包含多个导出策略。这样，您可以对包含多个卷的 SVM 执行以下操作：
-
-* 为 SVM 的每个卷分配不同的导出策略，以便对 SVM 中的每个卷进行单个客户端访问控制。
-* 为 SVM 的多个卷分配相同的导出策略，以实现相同的客户端访问控制，而无需为每个卷创建新的导出策略。
-
+在处理应用于导出策略的所有导出规则后， ONTAP 可以确定是否授予客户端访问权限以及授予的访问级别。导出规则适用于客户端计算机，而不适用于 Windows 用户和组。导出规则不会取代基于 Windows 用户和组的身份验证和授权。除了共享和文件访问权限之外，导出规则还提供了另一层访问安全性。
 
 您只需将一个导出策略关联到每个卷，即可配置客户端对卷的访问。每个 SVM 可以包含多个导出策略。这样，您可以对包含多个卷的 SVM 执行以下操作：
 
@@ -38,4 +34,4 @@ summary: 如果在 CIFS 服务器上启用了 SMB 访问导出策略，则在控
 * 允许使用 Kerberos 或 NTLM 身份验证（或这两者）进行适当的只读和写访问
 
 
-有关配置和管理导出策略的信息，请参见 link:../nfs-admin/index.html["NFS 管理"]。
+了解相关信息 link:../nfs-config/export-policies-concept.html["配置和管理导出策略"]。
