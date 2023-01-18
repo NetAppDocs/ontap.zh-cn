@@ -41,12 +41,12 @@ node1
 4 entries were displayed.
 ----
 . 禁用集群中的所有数据 LIF ： `network interface modify ｛ -role data ｝ -status-admin down`
-. 【第 5 步】如果集群仅包含两个节点，请禁用集群 HA ： `cluster ha modify -configured false`
-. 【第 6 步】从任一节点为 HA 对中的节点禁用存储故障转移： `storage failover modify -node nodename -enabled false`
+. 如果集群仅包含两个节点、请禁用集群HA： `cluster ha modify -configured false`
+. 【第5步】从任一节点为HA对中的节点禁用存储故障转移： `storage failover modify -node nodename -enabled false`
 +
 对于 HA 对，只需禁用一次存储故障转移。如果对某个节点禁用存储故障转移，则该节点的配对节点上也会禁用存储故障转移。
 
-. 登录到要还原的节点。
+. 【第6步】登录到要还原的节点。
 +
 要还原节点，必须通过节点的节点管理 LIF 登录到集群。
 
@@ -146,12 +146,12 @@ node1
          image2  false   true    Y.Y.Y      MM/DD/YYYY TIME
 4 entries were displayed.
 ----
-. 验证每个节点的还原状态是否已完成： `ssystem node upgrade-revert show -node nodename`
+. 【第16步】验证每个节点的还原状态是否已完成： `system node upgrade-revert show -node nodename`
 +
 此状态应列为已完成。
 
-. 重复 <<step-5>> 到 <<step-17>> 在 HA 对中的另一个节点上。
+. 重复 <<step-6>> 到 <<step-16>> 在 HA 对中的另一个节点上。
 . 如果集群仅包含两个节点，请重新启用集群 HA ： `cluster ha modify -configured true`
-. 如果先前已禁用存储故障转移，则在两个节点上重新启用存储故障转移： `storage failover modify -node nodename -enabled true`
-. 重复 <<step-6>> 到 <<step-18>> MetroCluster 配置中的每个附加 HA 对和两个集群。
+. 如果先前已禁用存储故障转移、则在两个节点上重新启用存储故障转移： `storage failover modify -node nodename -enabled true`
+. 重复 <<step-5>> 到 <<step-19>> MetroCluster 配置中的每个附加 HA 对和两个集群。
 
