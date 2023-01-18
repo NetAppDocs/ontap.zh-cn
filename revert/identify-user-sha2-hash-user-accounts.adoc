@@ -1,0 +1,20 @@
+---
+permalink: revert/identify-user-sha2-hash-user-accounts.html 
+sidebar: sidebar 
+keywords: revert, reverting, reversion, password, hash, function, supported, encryption, type 
+summary: 如果您还原到任何 ONTAP 9 版本之前的版本，则 SHA-2 帐户用户将无法再使用其密码进行身份验证。 
+---
+= 确定使用 SHA-2 哈希函数的用户帐户
+:allow-uri-read: 
+
+
+[role="lead"]
+如果要从 ONTAP 9.1 或 ONTAP 9.0 还原到 ONTAP 8.3.x ，则 SHA-2 帐户用户将无法再使用其密码进行身份验证。还原之前，您应确定使用 SHA-2 哈希函数的用户帐户，以便还原后，您可以让他们重置密码，以使用还原到的版本支持的加密类型（ MD5 ）。
+
+. 将权限设置更改为高级： `set -privilege advanced`
+. 确定使用 SHA-2 的用户帐户具有以下功能： `ssecurity login show -vserver * -username * -application * -authentication-method password -hash-function ！ md5`
+. 保留命令输出，以便在还原后使用。
+
+
+
+NOTE: 在还原期间，系统将提示您运行高级命令 `ssecurity login password-prepare-to-downgrade` 来重置您自己的密码以使用 MD5 哈希函数。如果您的密码未使用 MD5 加密，则此命令将提示您输入新密码并使用 MD5 加密，以便在还原后对凭据进行身份验证。
