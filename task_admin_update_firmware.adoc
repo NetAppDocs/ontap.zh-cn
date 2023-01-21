@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: task_admin_update_firmware.html 
 keywords: system manager, netapp, ontap, upgrade, nondisruptive, firmware,  disk, shelves, qualification, package, service, processor, baseboard, management, controller, dqp, sp, bmc, software patch, upgrade, recommendation, recommended, storage firmware, storage devices, disks, shelves, service processors, modules 
-summary: 您可以将更新后的固件应用于集群中支持的设备，例如磁盘，磁盘架，磁盘认证包（ DQP ），服务处理器（ SP ）或基板管理控制器（ BMC ）。 
+summary: '您可以将更新后的固件应用于集群中支持的设备、例如磁盘、磁盘架、服务处理器(SP)或基板管理控制器(BMC)。' 
 ---
 = 更新固件
 :toc: macro
@@ -19,7 +19,7 @@ summary: 您可以将更新后的固件应用于集群中支持的设备，例�
 
 
 [role="lead"]
-使用System Manager、您可以将固件更新应用于集群中支持的设备、例如磁盘、磁盘架、磁盘认证包(DQP)、服务处理器(SP)或基板管理控制器(BMC)。
+使用System Manager、您可以将固件更新应用于集群中支持的设备、例如磁盘、磁盘架、服务处理器(Service Processor、SP)或基板管理控制器(Baseboard Management Controller、BMC)。
 
 您可以手动或自动应用固件更新。选择操作步骤：
 
@@ -33,16 +33,6 @@ summary: 您可以将更新后的固件应用于集群中支持的设备，例�
 
 .关于此任务
 从 ONTAP 9.1.1 开始，您可以从 Active IQ 收到警报，通知您集群上的固件更新处于待定状态。然后，您可以使用 System Manager 下载并上传固件映像。
-
-.开始之前
-您必须具有以下授权之一：
-
-* AIQEXPERT
-* AIQADVISOR
-* AIQUPGRADE
-
-
-您可以通过了解有关授权以及您拥有哪些授权的更多信息 link:/system-admin/manage-licenses-concept.html["管理许可证概述（仅限集群管理员）"]。
 
 image:workflow_admin_update_firmware.gif["更新固件任务的工作流图"]
 
@@ -91,7 +81,7 @@ NOTE: 对于 ONTAP 9.8 ，您必须导航到 NetApp 支持站点以下载更新�
 . 将文件复制到网络上的 HTTP 或 FTP 服务器或本地文件夹。
 
  a| 
-. 在 * 更新 * 页面上，对于要执行的固件更新，请单击 * 从 NetApp 支持站点下载 " 链接。
+. 在*更新*页面上、要执行固件更新、请单击*从NetApp 支持站点 下载*。
 +
 此时将显示 NetApp 支持站点。
 
@@ -121,7 +111,7 @@ NOTE: 对于 ONTAP 9.8 ，您必须导航到 NetApp 支持站点以下载更新�
 
 
  a| 
-ONTAP 9.10.0 或更早版本
+ONTAP 9.8、9.9.x或9.10.0
  a| 
 . 选择 * 从服务器 * 或 * 本地客户端 *
 . 提供服务器 URL 或文件位置。
@@ -130,7 +120,7 @@ ONTAP 9.10.0 或更早版本
 
 
  a| 
-ONTAP 9.10.1
+ONTAP 9.10.1 及更高版本
  a| 
 * 注： * 要计划自动执行修复和更新并接收有关更新的建议，请参见 <<update-firmware-automatically>>。
 
@@ -168,12 +158,21 @@ NOTE: 您可以在 * 固件更新摘要 * 下监控或验证更新。可以在Sy
 从 ONTAP 9.10.1 开始，您可以使用 System Manager 启用自动更新功能，从而使 ONTAP 能够自动下载并安装由 NetApp 提供的建议固件修补程序，升级和更新（默认行为）。
 
 .开始之前
+您必须具有以下授权之一：
+
+* AIQEXPERT
+* AIQADVISOR
+* AIQUPGRADE
+
+
+您可以通过了解有关授权以及您拥有哪些授权的更多信息 link:/system-admin/manage-licenses-concept.html["管理许可证概述（仅限集群管理员）"]。
+
 自动更新功能需要通过 HTTPS 建立 AutoSupport 连接。要对连接问题进行故障排除，请参见 link:./system-admin/troubleshoot-autosupport-http-https-task.html["对通过 HTTP 或 HTTPS 传送 AutoSupport 消息进行故障排除"]。
 
 .关于此任务
 更新包括以下类别的固件修补程序，升级和更新：
 
-* *存储固件*：存储设备、磁盘认证包(DQP)、磁盘和磁盘架
+* * 存储固件 * ：存储设备，磁盘和磁盘架
 * * SP/BMC FIRMENT* ：服务处理器和 BMC 模块
 
 
@@ -215,7 +214,7 @@ ONTAP 会自动检测更新何时可用。它无需任何干预即可启动下�
 
 .步骤
 . 在 System Manager 中，单击 * 集群 > 设置 * 。
-. 在 * 自动更新 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"] 可查看操作列表。
+. 在 * 自动更新 * 部分中，单击 image:../media/icon_kabob.gif["做出选择"] 可查看操作列表。
 . 单击 * 编辑自动更新设置 * 。
 . 为这两类更新选择默认操作。
 
@@ -238,13 +237,13 @@ ONTAP 会自动检测更新何时可用。它无需任何干预即可启动下�
 
  a| 
 .. 单击 * 集群 > 概述 * 。
-.. 在 * 概述 * 部分中，单击 * 更多 * image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * ONTAP Update* 。
+.. 在 * 概述 * 部分中，单击 * 更多 * image:../media/icon_kabob.gif["做出选择"]，然后单击 * ONTAP Update* 。
 .. 选择 * 固件更新 * 选项卡。
-.. 在 * 固件更新 * 选项卡上，单击 * 更多 * image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 查看所有自动更新 * 。
+.. 在 * 固件更新 * 选项卡上，单击 * 更多 * image:../media/icon_kabob.gif["做出选择"]，然后单击 * 查看所有自动更新 * 。
 
  a| 
 .. 单击 * 集群 > 设置 * 。
-.. 在 * 自动更新 * 部分中，单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"]，然后单击 * 查看所有自动更新 * 。
+.. 在 * 自动更新 * 部分中，单击 image:../media/icon_kabob.gif["做出选择"]，然后单击 * 查看所有自动更新 * 。
 
 
 |===
@@ -252,7 +251,7 @@ ONTAP 会自动检测更新何时可用。它无需任何干预即可启动下�
 +
 自动更新日志会显示每个更新日志的建议和详细信息，包括问题描述，类别，计划的安装时间，状态以及任何错误。
 
-. 单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"] 单击问题描述旁边的可查看可对建议执行的操作列表。
+. 单击 image:../media/icon_kabob.gif["做出选择"] 单击问题描述旁边的可查看可对建议执行的操作列表。
 +
 根据建议的状态，您可以执行以下操作之一：
 

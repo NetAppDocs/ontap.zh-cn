@@ -76,7 +76,6 @@ ONTAP 平台支持：
 
 * 使卷脱机
 * 受限卷
-* 受SnapMirror保护的卷(ONTAP 9.11.1及更早版本)
 * SnapLock 卷
 * FlexGroup 卷
 * FlexCache 卷（原始 FlexVol 卷支持反勒索软件功能，但缓存卷不支持此功能）
@@ -89,9 +88,11 @@ ONTAP 平台支持：
 
 == SnapMirror和ARP互操作性
 
-从ONTAP 9.12.1开始、SnapMirror目标卷支持ARP。如果SnapMirror源卷已启用ARP、则SnapMirror目标卷会自动获取源卷的ARP配置状态。
+从ONTAP 9.12.1开始、SnapMirror目标卷支持ARP。如果SnapMirror源卷已启用ARP、则SnapMirror目标卷会自动获取源卷的ARP配置状态(学习、已启用等)、ARP培训数据以及ARP创建的Snapshot。无需显式启用。
 
 虽然目标卷包含只读(Read Only、RO) Snapshot副本、但不会对其数据执行ARP处理。但是、当SnapMirror目标卷转换为读写(rw)时、将自动在RW转换的目标卷上启用ARP。除了已记录在源卷上的内容之外、目标卷不需要任何其他学习操作步骤。
+
+在ONTAP 9.10.1和9.11.1中、SnapMirror不会将ARP配置状态、培训数据和Snapshot副本从源卷传输到目标卷。因此、在将SnapMirror目标卷转换为RW后、必须在转换后的学习模式下明确启用目标卷上的ARP。
 
 
 
