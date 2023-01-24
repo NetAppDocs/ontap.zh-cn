@@ -51,13 +51,29 @@ ONTAP 会将磁盘所有权信息写入磁盘。在从节点中删除备用磁�
 ....
 storage disk removeowner sys1:0a.23,sys1:0a.24,sys1:0a.25
 ....
-. 如果磁盘已进行分区以进行根数据分区，请输入以下两个命令以从分区中删除所有权：
+. 如果磁盘已进行分区以进行根数据分区、请从分区中删除所有权：
 +
+|===
+
+
+| 适用于ONTAP 9.9.1及更早版本 | 适用于ONTAP 9.10.1及更高版本 
+
+
+ a| 
+输入两个命令：
+ a| 
 `s存储磁盘 removeowner -disk _disk_name_ -root true`
 
-+
 `s存储磁盘 removeowner -disk _disk_name_ -data true`
 
+
+
+ a| 
+输入以下命令：
+ a| 
+`storage disk removeowner -disk _disk_name_`
+
+|===
 +
 这两个分区不再归任何节点所有。
 
