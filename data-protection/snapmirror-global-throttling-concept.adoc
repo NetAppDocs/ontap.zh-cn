@@ -16,11 +16,13 @@ summary: 全局网络限制可用于每个节点级别的所有 SnapMirror 和 S
 .关于此任务
 SnapMirror 全局限制用于限制传入和 / 或传出 SnapMirror 和 SnapVault 传输所使用的带宽。此限制会在集群范围内对集群中的所有节点强制实施。
 
-例如，如果传出限制设置为 100 Mbps ，则集群中的每个节点的传出带宽都将设置为 100 Mbps 。如果禁用了全局限制，则会在所有节点上禁用它。
+例如、如果传出限制设置为100 Mbps、则集群中的每个节点的传出带宽都将设置为100 Mbps。如果禁用了全局限制，则会在所有节点上禁用它。
+
+尽管数据传输速率通常以每秒位数（ bps ）表示，但必须以千字节 / 秒（ KBps ）为单位输入限制值。
 
 [NOTE]
 ====
-此限制不会影响 `volume move` transfers 或负载共享镜像传输。尽管数据传输速率通常以每秒位数（ bps ）表示，但必须以千字节 / 秒（ KBps ）为单位输入限制值。
+在ONTAP 9.9.1及更早版本中、此限制对不起作用 `volume move` 传输或负载共享镜像传输。从ONTAP 9.10.0开始、您可以指定一个选项来限制卷移动操作。有关详细信息，请参见 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_throttle_volume_move_in_ONTAP_9.10_or_later["如何在ONTAP 9.10及更高版本中限制卷移动。"]
 
 ====
 全局限制与 SnapMirror 和 SnapVault 传输的每个关系限制功能结合使用。系统将强制实施每个关系限制，直到每个关系传输的总带宽超过全局限制的值为止，之后将强制实施全局限制。限制值 `0` 表示全局限制已禁用。
