@@ -2,7 +2,7 @@
 permalink: smb-admin/default-administrative-shares-concept.html 
 sidebar: sidebar 
 keywords: create, cifs, server, storage, virtual, machine, svm, default, administrative, share, automatic, what the default administrative shares are 
-summary: 在 Storage Virtual Machine （ SVM ）上创建 CIFS 服务器时，系统会自动创建三个默认管理共享。您应了解这些默认共享是什么以及如何使用它们。 
+summary: '在Storage Virtual Machine (SVM)上创建CIFS服务器时、系统会自动创建默认管理共享。您应了解这些默认共享是什么以及如何使用它们。' 
 ---
 = 什么是默认管理共享
 :allow-uri-read: 
@@ -11,12 +11,15 @@ summary: 在 Storage Virtual Machine （ SVM ）上创建 CIFS 服务器时，�
 
 
 [role="lead"]
-在 Storage Virtual Machine （ SVM ）上创建 CIFS 服务器时，系统会自动创建三个默认管理共享。您应了解这些默认共享是什么以及如何使用它们。
+在Storage Virtual Machine (SVM)上创建CIFS服务器时、系统会自动创建默认管理共享。您应了解这些默认共享是什么以及如何使用它们。
 
 在创建 CIFS 服务器时， ONTAP 会创建以下默认管理共享：
 
+
+NOTE: 从ONTAP 9.8开始、默认情况下不再创建admin$共享。
+
 * ipc$
-* 管理 $
+* admin$(仅限ONTAP 9.7及更早版本)
 * C$
 
 
@@ -32,7 +35,11 @@ ipc$ 和 admin$ 共享由 ONTAP 使用， Windows 管理员无法使用这些共
 +
 ipc$ 共享是一种共享命名管道的资源，这些管道对于程序之间的通信至关重要。ipc$ 共享用于远程管理计算机和查看计算机的共享资源。您不能更改 ipc$ 共享的共享设置，共享属性或 ACL 。您也不能重命名或删除 ipc$ 共享。
 
-* admin$ 共享
+* admin$共享(仅限ONTAP 9.7及更早版本)
++
+
+NOTE: 从ONTAP 9.8开始、默认情况下不再创建admin$共享。
+
 +
 admin$ 共享用于远程管理 SVM 。此资源的路径始终是 SVM 根的路径。您不能更改 admin$ 共享的共享设置，共享属性或 ACL 。您也不能重命名或删除 admin$ 共享。
 
