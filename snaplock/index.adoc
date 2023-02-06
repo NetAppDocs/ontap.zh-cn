@@ -13,13 +13,9 @@ summary: 您可以使用 NetApp SnapLock 技术以未经修改的格式保留文
 [role="lead"]
 SnapLock 是一款高性能合规解决方案，适用于使用 WORM 存储以未经修改的形式保留文件以满足监管要求的组织。
 
-SnapLock 有助于防止数据的删除、更改或重命名、以满足SEC 17a-4、HIPAA、FINRA、CFTC和GDPR等法规的要求。借助SnapLock 、您可以创建专用卷、在这些卷中、可以在指定保留期限内或无限期地存储文件并将其提交到不可擦除、不可写入的状态。
+SnapLock 有助于防止数据的删除、更改或重命名、以满足SEC 17a-4、HIPAA、FINRA、CFTC和GDPR等法规的要求。借助SnapLock 、您可以创建专用卷、在这些卷中、可以在指定保留期限内或无限期地存储文件并将其提交到不可擦除、不可写入的状态。SnapLock 允许通过CIFS和NFS等标准开放文件协议在文件级别执行此保留。SnapLock 支持的打开文件协议包括NFS (版本2、3和4)和CIFS (SMB 1.0、2.0和3.0)。
 
-使用SnapLock 、您可以将文件和Snapshot副本提交到WORM存储、并为受WORM保护的数据设置保留期限。
-
-SnapLock 支持的打开文件协议包括NFS (版本2、3和4)和CIFS (SMB 1.0、2.0和3.0)。
-
-SnapLock 不需要任何特殊硬件。所有AFF 和FAS 系统以及ONTAP Select 均支持SnapLock。SnapLock 不是纯软件解决方案 、而是集成的硬件和软件解决方案。这种区分对于SEC 17a-4等严格的WORM法规非常重要、因为这些法规要求集成硬件和软件解决方案。有关详细信息、请参阅SEC的解释：《Broker-Dealer Records的电子存储》。
+使用SnapLock 、您可以将文件和Snapshot副本提交到WORM存储、并为受WORM保护的数据设置保留期限。SnapLock WORM存储使用NetApp Snapshot技术、并可利用SnapMirror复制和SnapVault 备份作为为数据提供备份恢复保护的基础技术。详细了解WORM存储： link:https://www.netapp.com/pdf.html?item=/media/6158-tr4526pdf.pdf["使用NetApp SnapLock 的合规WORM存储—TR-4526"]。
 
 您可以使用应用程序通过 NFS 或 CIFS 将文件提交到 WORM ，或者使用 SnapLock 自动提交功能将文件自动提交到 WORM 。您可以使用 _WORM 可附加文件 _ 来保留以增量方式写入的数据，例如日志信息。有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap/snaplock/volume-append-mode-create-worm-appendable-files-task.html["使用卷附加模式创建 WORM 可附加文件"]。
 
@@ -31,37 +27,24 @@ SnapLock 支持应满足大多数合规性要求的数据保护方法：
 
 SnapLock 是NetApp ONTAP 的一项基于许可证的功能。通过一个许可证，您可以在严格合规模式下使用 SnapLock ，以满足 SEC 规则 17a-4 等外部要求，并可在宽松的企业模式下使用，以满足内部强制要求的数字资产保护法规。SnapLock 许可证是"安全与合规"包的一部分。
 
-SnapLock 支持范围随ONTAP 9版本的变化而有所扩大。最重要的扩展包括：
+所有AFF 和FAS 系统以及ONTAP Select 均支持SnapLock。SnapLock 不是纯软件解决方案 、而是集成的硬件和软件解决方案。这种区分对于SEC 17a-4等严格的WORM法规非常重要、因为这些法规要求集成硬件和软件解决方案。有关详细信息，请参见 link:https://www.sec.gov/rules/interp/34-47806.htm["SEC解释：以电子方式存储代理-经销商记录"]。
 
-存储效率：从ONTAP 9.1.1开始、SnapLock 支持存储效率功能、例如数据缩减、跨卷重复数据删除以及SnapLock 卷和聚合的自适应数据压缩。有关存储效率的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap/volumes/index.html["使用 CLI 进行逻辑存储管理概述"]。
-
-FlexGroup 卷：从ONTAP 9.11.1开始、SnapLock 支持FlexGroup 卷、但使用合法保留、基于事件的保留和适用于SnapVault 的SnapLock 时除外。从ONTAP 9.12.1开始、SnapLock for SnapVault 支持FlexGroup 卷。
-
-SnapLock WORM存储使用NetApp Snapshot®技术、并可利用SnapMirror®复制和SnapVault®备份作为为数据提供备份恢复保护的基础技术。
-
-[NOTE]
-====
-使用System Manager、您可以执行以下SnapLock 任务：安装SnapLock 许可证、设置合规性时钟、创建SnapLock 聚合和卷以及配置SnapLock 卷。对于其他SnapLock 任务、请使用SnapLock API。
-
-====
 
 
 == 您可以使用SnapLock 执行什么操作
 
-您可以完成以下任务：
+配置SnapLock 后、您可以完成以下任务：
 
-* 配置 SnapLock
-* 管理用于灾难恢复的WORM文件
-* 将文件提交到 WORM
-* 将Snapshot副本提交到WORM以用于二级存储
-* 镜像WORM文件以进行灾难恢复
-* 在诉讼期间使用合法保留保留WORM文件
-* 使用特权删除功能删除WORM文件
-* 设置文件保留期限
-* 移动 SnapLock 卷
-* 锁定Snapshot副本以防止勒索软件攻击
-* 查看审核日志中的SnapLock 使用情况
-* 使用SnapLock API
+* link:https://docs.netapp.com/us-en/ontap/snaplock/commit-files-worm-state-manual-task.html["将文件提交到 WORM"]
+* link:https://docs.netapp.com/us-en/ontap/snaplock/commit-snapshot-copies-worm-concept.html["将Snapshot副本提交到WORM以用于二级存储"]
+* link:https://docs.netapp.com/us-en/ontap/snaplock/mirror-worm-files-task.html["镜像WORM文件以进行灾难恢复"]
+* link:https://docs.netapp.com/us-en/ontap/snaplock/hold-tamper-proof-files-indefinite-period-task.html["在诉讼期间使用合法保留保留WORM文件"]
+* link:https://docs.netapp.com/us-en/ontap/snaplock/delete-worm-files-concept.html["使用特权删除功能删除WORM文件"]
+* link:https://docs.netapp.com/us-en/ontap/snaplock/set-retention-period-task.html["设置文件保留期限"]
+* link:https://docs.netapp.com/us-en/ontap/snaplock/move-snaplock-volume-concept.html["移动 SnapLock 卷"]
+* link:https://docs.netapp.com/us-en/ontap/snaplock/snapshot-lock-concept.html["锁定Snapshot副本以防止勒索软件攻击"]
+* link:https://docs.netapp.com/us-en/ontap/snaplock/create-audit-log-task.html["查看审核日志中的SnapLock 使用情况"]
+* link:https://docs.netapp.com/us-en/ontap/snaplock/snaplock-apis-reference.html["使用SnapLock API"]
 
 
 
@@ -146,7 +129,7 @@ SnapLock 合规性模式和企业模式主要在每个模式保护 WORM 文件�
  a| 
 否
  a| 
-是（使用 FlexArray 虚拟化）
+是(使用 link:https://docs.netapp.com/us-en/ontap-flexarray/index.html["FlexArray 虚拟化"]）
 
 
 
@@ -180,17 +163,21 @@ SnapLock 合规性模式和企业模式主要在每个模式保护 WORM 文件�
 
 
  a| 
+加密卷
+ a| 
+是、从ONTAP 9.2开始。了解更多信息 xref:Encryption[加密和SnapLock]。
+ a| 
+是、从ONTAP 9.2开始。了解更多信息 xref:Encryption[加密和SnapLock]。
+
+
+
+ a| 
 SnapLock 聚合上的FabricPools
  a| 
 否
  a| 
-是、从ONTAP 9.8开始。但是、您的客户团队需要创建一个产品差异请求、以记录您了解分层到公有 或私有云的FabricPool 数据不再受SnapLock 保护、因为云管理员可以删除这些数据。
+是、从ONTAP 9.8开始。了解有关SnapLock 企业聚合上的xref：FabricPool的更多信息。
 
-[NOTE]
-====
-您应注意， FabricPool 分层到公有或私有云的任何数据都不再受 SnapLock 保护，因为云管理员可以删除这些数据。
-
-====
 
 
  a| 
@@ -214,31 +201,9 @@ FlexClone
  a| 
 FlexGroup 卷
  a| 
-可以、从ONTAP 9.11.1开始；但是、不支持以下功能：
-
-* 合法持有
-* 基于事件的保留
-* SnapLock for SnapVault (从ONTAP 9.12.1开始支持)
-
-
-您还应了解以下行为：
-
-* FlexGroup 卷的卷合规时钟(Volume Compliance Clock、VCC)由根成分卷的VCC确定。所有非根成分卷的VCC都将与根VCC紧密同步。
-* SnapLock 配置属性仅在整个FlexGroup 上设置。各个成分卷不能具有不同的配置属性、例如默认保留时间和自动提交期限。
-
+是、从ONTAP 9.11.1开始。了解更多信息 xref:FlexGroup volumes[FlexGroup 卷上的SnapLock 支持]。
  a| 
-可以、从ONTAP 9.11.1开始；但是、不支持以下功能：
-
-* 合法持有
-* 基于事件的保留
-* SnapLock for SnapVault (从ONTAP 9.12.1开始支持)
-
-
-您还应了解以下行为：
-
-* FlexGroup 卷的卷合规时钟(Volume Compliance Clock、VCC)由根成分卷的VCC确定。所有非根成分卷的VCC都将与根VCC紧密同步。
-* SnapLock 配置属性仅在整个FlexGroup 上设置。各个成分卷不能具有不同的配置属性、例如默认保留时间和自动提交期限。
-
+是、从ONTAP 9.11.1开始。了解更多信息 xref:FlexGroup volumes[FlexGroup 卷上的SnapLock 支持]。
 
 
 
@@ -254,19 +219,9 @@ LUN
  a| 
 MetroCluster 配置
  a| 
-是、在以下条件下：
-
-* 从ONTAP 9.3开始、未镜像的MetroCluster 聚合支持SnapLock 合规性。
-* 从ONTAP 9.3开始、镜像聚合支持SnapLock 合规性、但前提是使用该聚合托管SnapLock 审核日志卷。
-* 可以使用MetroCluster 将SVM专用的SnapLock 配置复制到主站点和二级站点。
-
+是、从ONTAP 9.3开始。了解有关xref：MetroCluster支持的更多信息。
  a| 
-是、在以下条件下：
-
-* 从ONTAP 9开始、支持SnapLock 企业聚合。
-* 从ONTAP 9.3开始、支持具有特权删除的SnapLock 企业聚合。
-* 可以使用MetroCluster 将SVM专用的SnapLock 配置复制到两个站点。
-
+是、从ONTAP 9.3开始。了解有关xref：MetroCluster支持的更多信息。
 
 
 
@@ -331,11 +286,63 @@ SSD
  a| 
 是、从ONTAP 9.1开始。
 
+
+
+ a| 
+存储效率功能
+ a| 
+是、从ONTAP 9.1.1开始。了解更多信息 xref:Storage efficiency[存储效率支持]。
+ a| 
+是、从ONTAP 9.1.1开始。了解更多信息 xref:Storage efficiency[存储效率支持]。
+
 |===
 
 
-== MetroCluster 配置和合规性时钟
+== SnapLock 企业聚合上的FabricPool
 
+从ONTAP 9.8开始、SnapLock 企业聚合支持FabricPool。但是、您的客户团队需要创建一个产品差异请求、以记录您了解分层到公有 或私有云的FabricPool 数据不再受SnapLock 保护、因为云管理员可以删除这些数据。
+
+[NOTE]
+====
+FabricPool 分层到公共云或私有云的任何数据将不再受SnapLock 保护、因为云管理员可以删除这些数据。
+
+====
+
+
+== FlexGroup 卷
+
+SnapLock 支持从ONTAP 9.11.1开始的FlexGroup 卷、但不支持以下功能：
+
+* 合法持有
+* 基于事件的保留
+* SnapLock for SnapVault (从ONTAP 9.12.1开始支持)
+
+
+您还应了解以下行为：
+
+* FlexGroup 卷的卷合规时钟(Volume Compliance Clock、VCC)由根成分卷的VCC确定。所有非根成分卷的VCC都将与根VCC紧密同步。
+* SnapLock 配置属性仅在整个FlexGroup 上设置。各个成分卷不能具有不同的配置属性、例如默认保留时间和自动提交期限。
+
+
+
+
+== 支持 MetroCluster
+
+MetroCluster 配置中的SnapLock 支持在SnapLock 合规模式和SnapLock 企业模式之间有所不同。
+
+.SnapLock 合规性
+* 从ONTAP 9.3开始、未镜像的MetroCluster 聚合支持SnapLock 合规性。
+* 从ONTAP 9.3开始、镜像聚合支持SnapLock 合规性、但前提是使用该聚合托管SnapLock 审核日志卷。
+* 可以使用MetroCluster 将SVM专用的SnapLock 配置复制到主站点和二级站点。
+
+
+.SnapLock 企业
+* 从ONTAP 9开始、支持SnapLock 企业聚合。
+* 从ONTAP 9.3开始、支持具有特权删除的SnapLock 企业聚合。
+* 可以使用MetroCluster 将SVM专用的SnapLock 配置复制到两个站点。
+
+
+.MetroCluster 配置和合规性时钟
 MetroCluster 配置使用两种合规时钟机制，即卷合规时钟（ Volume Compliance Clock ， VCC ）和系统合规时钟（ System Compliance Clock ， SCC ）。VCC 和 SCC 可用于所有 SnapLock 配置。在节点上创建新卷时，其 VCC 将使用该节点上的当前 SCC 值进行初始化。创建卷后，系统会始终使用 VCC 跟踪卷和文件保留时间。
 
 将卷复制到另一站点时，也会复制其 VCC 。例如，在从站点 A 切换到站点 B 时， VCC 会继续在站点 B 上进行更新，而站点 A 上的 SCC 会在站点 A 脱机时暂停。
@@ -344,9 +351,9 @@ MetroCluster 配置使用两种合规时钟机制，即卷合规时钟（ Volume
 
 
 
-== 7- 模式过渡
+== 存储效率
 
-您可以使用7-模式过渡工具的基于副本的过渡(CBT)功能将SnapLock 卷从7-模式迁移到ONTAP。目标卷的 SnapLock 模式（合规性或企业）必须与源卷的 SnapLock 模式匹配。您不能使用无副本过渡（ CFT ）迁移 SnapLock 卷。
+从 ONTAP 9.1.1 开始， SnapLock 支持存储效率功能，例如数据缩减，跨卷重复数据删除以及 SnapLock 卷和聚合的自适应数据压缩。有关存储效率的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap/volumes/index.html["使用 CLI 进行逻辑存储管理概述"]。
 
 
 
@@ -361,3 +368,8 @@ ONTAP 提供了基于软件和基于硬件的加密技术，可确保在存储�
 从 ONTAP 9.2 开始， SnapLock 聚合支持加密卷。
 
 ====
+
+
+== 7- 模式过渡
+
+您可以使用7-模式过渡工具的基于副本的过渡(CBT)功能将SnapLock 卷从7-模式迁移到ONTAP。目标卷的 SnapLock 模式（合规性或企业）必须与源卷的 SnapLock 模式匹配。您不能使用无副本过渡（ CFT ）迁移 SnapLock 卷。

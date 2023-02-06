@@ -16,7 +16,8 @@ summary: '要确定 NFS 和 SMB 客户端是否可以查看 Snapshot 副本目�
 .步骤
 . 检查 Snapshot 目录访问状态：
 +
- `volume show -vserver _SVM_name_ -volume _vol_name_ -fields snapdir-access`
+`volume show -vserver _SVM_name_ -volume _vol_name_ -fields snapdir-access`
+
 +
 示例
 
@@ -31,7 +32,7 @@ vs0     vol1   false
 ----
 . 启用或禁用 Snapshot 副本目录访问：
 +
-`volume modify -volume _vol_name_ -snapdir-access true_false`
+`volume modify -vserver _SVM_name_ -volume _vol_name_ -snapdir-access true|false`
 
 +
 以下示例将在 vol1 上启用 Snapshot 副本目录访问：
@@ -40,7 +41,7 @@ vs0     vol1   false
 [listing]
 ----
 
-clus1::> volume modify -volume vol1 -snapdir-access true
+clus1::> volume modify -vserver vs0 -volume vol1 -snapdir-access true
 Volume modify successful on volume vol1 of Vserver vs0.
 ----
 
