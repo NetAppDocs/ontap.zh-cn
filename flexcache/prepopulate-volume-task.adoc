@@ -20,16 +20,19 @@ summary: 您可以预先填充 FlexCache 卷，以缩短访问缓存数据所需
 
 .关于此任务
 * 仅预填充读取文件并遍历目录
-* is-recursion 标志适用场景传递给预填充的整个目录列表
+* 。 `-isRecursion` 标记适用场景 传递给预填充的整个目录列表
 
 
 .步骤
 . 预先填充 FlexCache 卷：
 +
-`volume FlexCache prepopulate -cache-vserver vserver_name -cache-volume -path-list path_list -is-recursion true_false`
+`volume flexcache prepopulate -cache-vserver vserver_name -cache-volume -path-list _path_list_ -isRecursion true|false`
 
 +
-此示例包括一个用于预填充的目录路径：
+** 。 `-path-list` 参数表示从原始根目录开始要预先填充的相对目录路径。例如、如果原始根目录名为/origin、并且包含目录/origin/dir1和/origin/dir2、则可以按如下所示指定路径列表： `-path-list dir1, dir2` 或 `-path-list /dir1, /dir2`。
+** 的默认值 `-isRecursion` 参数为True。
++
+此示例预先填充单个目录路径：
 
 +
 [listing]
@@ -39,7 +42,7 @@ cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cac
 [JobId 207]: FlexCache prepopulate job queued.
 ----
 +
-此示例包括预先填充的多个路径列表：
+以下示例预先填充了多个目录中的文件：
 
 +
 [listing]
@@ -47,6 +50,26 @@ cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cac
 cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list /dir1,/dir2,/dir3,/dir4
   (volume flexcache prepopulate start)
 [JobId 208]: FlexCache prepopulate job queued.
+----
++
+此示例预先填充单个文件：
+
++
+[listing]
+----
+cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list /dir1/file1.txt
+  (volume flexcache prepopulate start)
+[JobId 209]: FlexCache prepopulate job queued.
+----
++
+此示例将预先填充原始文件中的所有文件：
+
++
+[listing]
+----
+cluster1::*> flexcache prepopulate start -cache-vserver vs2 -cache-volume fg_cachevol_1 -path-list / -isRecursion true
+  (volume flexcache prepopulate start)
+[JobId 210]: FlexCache prepopulate job queued.
 ----
 +
 此示例包含一个无效的预填充路径：
@@ -60,6 +83,8 @@ cluster1::*> flexcache prepopulate start -cache-volume vol_cache2_vs3_c2_vol_ori
 Error: command failed: Path(s) "dir5, dir6" does not exist in origin volume
        "vol_origin1_vs1_c1" in Vserver "vs1_c1".
 ----
+
+
 . 显示读取的文件数：
 +
 `job show -id job_ID -ins`
