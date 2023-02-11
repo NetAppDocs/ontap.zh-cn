@@ -36,8 +36,18 @@ summary: 在 ONTAP 中启用某个功能可能会占用您不知道的空间，�
 此视角包括聚合中包含的所有卷的卷占用空间，为聚合 Snapshot 副本预留的空间以及其他聚合元数据的总数。
 
 +
+WAFL 会将总磁盘空间的10%预留给聚合级别的元数据和性能。用于维护聚合中的卷的空间将从WAFL 预留中出来、并且无法更改。
+
++
+从ONTAP 9.12.1及更高版本开始、对于全闪存FAS (AFF)和FAS500f平台、超过30 TB的聚合的WAFL 预留将从10%减少到5%、从而增加聚合中的可用空间。
+
++
 您可以使用 `storage aggregate show-space` 命令查看聚合的空间使用量。
 
 
 
 磁带备份和重复数据删除等某些功能会使用空间来存储卷中的元数据以及直接从聚合中获取的元数据。从卷和卷占用空间的角度来看，这些功能显示的空间使用量不同。
+
+.相关信息
+link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Space_Usage["基于知识的文章：空间使用量"]
+link:https://www.netapp.com/blog/free-up-storage-capacity-upgrade-ontap/["升级到ONTAP 9.12.1可释放5%的存储容量"]

@@ -2,16 +2,16 @@
 permalink: upgrade/concept_how_firmware_is_updated_during_upgrade.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, how, firmware, updated, during 
-summary: 由于升级 ONTAP 包括升级固件，因此您无需手动更新固件。 
+summary: 在ONTAP 升级之前、您无需手动更新固件。集群的固件随ONTAP 升级软件包一起提供、并复制到每个节点的启动设备。然后、在升级过程中安装新固件。 
 ---
-= 如何在 ONTAP 升级期间更新固件
+= 准备固件更新
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-由于升级 ONTAP 包括升级固件，因此您无需手动更新固件。执行 ONTAP 升级时， ONTAP 升级软件包附带的集群固件将复制到每个节点的启动设备，并自动安装新固件。
+在ONTAP 升级之前、您无需手动更新固件。集群的固件随ONTAP 升级软件包一起提供、并复制到每个节点的启动设备。然后、在升级过程中安装新固件。
 
 如果集群中的固件版本早于 ONTAP 升级软件包捆绑的固件，则会自动更新以下组件的固件：
 
@@ -22,4 +22,17 @@ summary: 由于升级 ONTAP 包括升级固件，因此您无需手动更新固�
 * Flash Cache
 
 
-如果需要，您还可以在 ONTAP 升级之间手动更新固件。
+要为平稳更新做好准备、您应在升级开始之前重新启动SP或BMC。
+
+.步骤
+. 在升级之前重新启动SP或BMC： `system service-processor reboot-sp -node node_name`
+
+
+如果需要、您也可以 link:https://docs.netapp.com/us-en/ontap/task_admin_update_firmware.html#update-firmware-manually["手动更新固件"] 在ONTAP 升级之间。如果您使用的是Active IQ 、则可以 link:https://activeiq.netapp.com/system-firmware/["查看ONTAP 映像中当前包含的固件版本列表"]。
+
+更新后的固件版本如下所示：
+
+* link:https://mysupport.netapp.com/site/downloads/firmware/system-firmware-diagnostics["系统固件(BIOS、BMC、SP)"]
+* link:https://mysupport.netapp.com/site/downloads/firmware/disk-shelf-firmware["磁盘架固件"]
+* link:https://mysupport.netapp.com/site/downloads/firmware/disk-drive-firmware["磁盘和闪存缓存固件"]
+
