@@ -25,10 +25,10 @@ summary: 从ONTAP 9.12.1开始、您可以通过无中断地将文件从FlexGrou
 
 * FlexVol 到FlexGroup 的转换
 +
-建议您不要在FlexVol 到FlexGroup 转换后使用自动FlexGroup 重新平衡。而是可以通过输入来使用ONTAP 9.10.1及更高版本中提供的中断性可追溯文件移动功能 `volume rebalance file-move` 命令：有关命令语法、请参见 `volume rebalance file-move start` 手册页。
+建议您在FlexVol 到FlexGroup 转换后使用自动FlexGroup 重新平衡。而是可以通过输入来使用ONTAP 9.10.1及更高版本中提供的中断性可追溯文件移动功能 `volume rebalance file-move` 命令：有关命令语法、请参见 `volume rebalance file-move start` 手册页。
 
 +
-重新平衡会创建多部分索引节点、而这些节点在很大程度上会降低性能。在转换过程中、FlexVol 卷上大约50%到85%的数据会移至新的成分卷、从而为这些文件创建了多个多部分索引节点。
+使用无中断可追溯文件移动功能进行重新平衡可能会在移动大量文件时降低性能、例如执行FlexVol 到FlexGroup 的转换、并且FlexVol 卷上多达50%到85%的数据会移动到新的成分卷。
 
 * 最小和最大文件大小
 +

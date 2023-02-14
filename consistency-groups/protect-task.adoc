@@ -14,11 +14,11 @@ summary: 为一致性组设置保护策略，以便使用本地快照策略或�
 [role="lead"]
 一致性组可为跨多个卷的 SAN ， NAS 和 NVMe 应用程序提供轻松管理的本地和远程保护。
 
-创建一致性组不会自动启用保护。可以在创建时或创建一致性组之后设置本地和 / 或远程保护策略。保护策略可以包括本地 Snapshot 副本或使用 SnapMirror 业务连续性（ SM-BC ）的远程 SnapMirror 保护。如果使用嵌套一致性组，则可以为各个卷设置不同的保护策略。从ONTAP 9.11.1开始、一致性组可提供 <<two-phase,创建两阶段一致性组Snapshot>>。
+创建一致性组不会自动启用保护。可以在创建时或创建一致性组之后设置本地和 / 或远程保护策略。保护策略可以包括本地 Snapshot 副本或使用 SnapMirror 业务连续性（ SM-BC ）的远程 SnapMirror 保护。如果使用嵌套一致性组，则可以为各个卷设置不同的保护策略。
 
-如果您正在利用远程 SM-BC 保护，则要确保将在一致性组上创建的一致性组的 Snapshot 副本复制到目标，源集群和目标集群中的策略标签必须匹配。默认情况下， SM-BC 不会复制 Snapshot 副本，除非将带有 SnapMirror 标签的规则添加到预定义的 AutomatedFailOver 策略中，并且使用该标签创建 Snapshot 副本。要了解有关此过程的更多信息，请参见 link:../task_san_configure_protection_for_business_continuity.html["配置业务连续性保护"]。
+从ONTAP 9.11.1开始、一致性组可提供 <<two-phase,创建两阶段一致性组Snapshot>>。两阶段Snapshot将执行预检、以确保成功捕获Snapshot。
 
-可以对整个一致性组，分层配置中的单个一致性组或一致性组中的单个卷进行恢复。要实现恢复，可以选择要从中恢复的一致性组，选择 Snapshot 副本类型，然后确定要基于还原的特定 Snapshot 副本。有关此过程的详细信息，请参见 link:../task_dp_restore_from_vault.html["从早期的 Snapshot 副本还原卷"]。
+可以对整个一致性组，分层配置中的单个一致性组或一致性组中的单个卷进行恢复。要实现恢复、可以选择要从中恢复的一致性组、选择Snapshot副本类型、然后确定要基于还原的Snapshot副本。有关此过程的详细信息，请参见 link:../task_dp_restore_from_vault.html["从早期的 Snapshot 副本还原卷"]。
 
 从 ONTAP 9.10.1 开始， System Manager 会在 * 保护 > 关系 * 菜单下直观显示 LUN 映射。选择源关系时， System Manager 将显示源关系的可视化视图。通过选择卷，您可以深入了解这些关系，以查看包含的 LUN 以及启动程序组关系的列表。此信息可以作为 Excel 工作簿从单个卷视图中下载。此任务将在后台运行。
 
@@ -26,30 +26,42 @@ summary: 为一致性组设置保护策略，以便使用本地快照策略或�
 
 == 设置本地 Snapshot 保护策略
 
+通过设置本地快照保护策略、您可以创建一个涵盖一致性组中所有卷的策略。
+
 .步骤
+. 选择 * 存储 > 一致性组 * 。
 . 从一致性组菜单中选择已创建的一致性组。
 . 在一致性组的概述页面的右上角，选择 * 编辑 * 。
 . 选中 * 计划 Snapshot 副本（本地） * 旁边的框。
 . 选择快照策略。要配置新的自定义策略，请参见 link:../task_dp_create_custom_data_protection_policies.html["创建自定义数据保护策略"]。
 . 选择 * 保存 * 。
-. 返回一致性组概述菜单。在左列的 * Snapshot 副本（本地） * 下，状态应显示为 " 已保护 " 旁边 image:../media/icon_shield.png["Alt= 绿色屏蔽图标"]。
+. 返回一致性组概述菜单。在左列的* Snapshot副本(本地)*下、状态将显示为"已保护"旁边的 image:../media/icon_shield.png["Alt= 绿色屏蔽图标"]。
 
 
 
 
-== 创建两阶段CG Snapshot
+== 创建两阶段一致性组快照
 
-从ONTAP 9.11.1开始、一致性组支持为一致性组(CG) Snapshot创建提交两阶段。此功能仅适用于ONTAP REST API。双阶段CG Snapshot创建仅适用于Snapshot创建、而不适用于配置一致性组或还原一致性组。
+从ONTAP 9.11.1开始、一致性组支持为创建一致性组(CG) Snapshot执行两阶段提交、此阶段会在提交Snapshot之前执行预检。此功能仅适用于ONTAP REST API。双阶段CG Snapshot创建仅适用于Snapshot创建、而不适用于配置一致性组或还原一致性组。
 
-创建两阶段CG Snapshot会将在向`应用程序/一致性组/｛consistency_group_uuid｝/snapshots`端点发出POST请求时调用的Snapshot创建过程分为两个阶段。在POST请求启动的第一阶段中、API将执行预检、触发Snapshot创建并按指定间隔启动计时器。如果第一阶段中的POST请求使用201状态代码完成、您可以在第一阶段起的指定时间间隔内调用第二阶段、并将Snapshot提交到相应的端点。
+两阶段CG Snapshot创建会中断在向发出POST请求时调用的Snapshot创建过程 `/application/consistency-groups/{consistency_group_uuid}/snapshots` 端点分为两个阶段：
 
-要使用两阶段CG Snapshot创建、集群中的所有节点都必须运行ONTAP 9.11.1。可以使用`action=start`参数调用两阶段CG Snapshot创建。此外、您还可以使用`action_timeout`参数来指定Snapshot创建过程可能需要的最大秒数。可以将`action_timeout`参数设置为介于5到120之间的整数。默认值`action_timeout`为7。
+. 在POST请求启动的第一阶段中、API将执行预检、触发Snapshot创建并按指定间隔启动计时器。
+. 如果第一阶段中的POST请求使用201状态代码完成、您可以在第一阶段起的指定时间间隔内调用第二阶段、并将Snapshot提交到相应的端点。
 
-一致性组实例一次仅支持一次主动调用一致性组Snapshot创建操作、无论是一阶段还是两阶段。如果在另一个Snapshot创建过程中尝试调用Snapshot创建、则会导致失败。
 
 有关ONTAP REST API的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html["API 参考"^] 或访问 link:https://devnet.netapp.com/restapi.php["ONTAP REST API页面"^] 在NetApp开发人员网络中获取完整的API端点列表。
 
-.创建两阶段提交
+.两阶段一致性组快照的注意事项
+* 要使用两阶段CG Snapshot创建、集群中的所有节点都必须运行ONTAP 9.11.1或更高版本。
+* 一致性组实例一次仅支持一次主动调用一致性组Snapshot创建操作、无论是一阶段还是两阶段。如果在另一个Snapshot创建过程中尝试调用Snapshot创建、则会导致失败。
+* 可以使用调用两阶段一致性组Snapshot创建 `action=start` 参数。
++
+您还可以使用 `action_timeout` 参数、用于指定Snapshot创建过程可能需要的最大秒数。。 `action_timeout` 参数可以设置为介于5到120之间的整数。的默认值 `action_timeout` 为7。
+
+
+
+.创建两阶段一致性组快照
 . 使用`action=start`参数调用Snapshot创建并向一致性组端点发出POST请求。
 +
 [source, curl]
@@ -74,27 +86,28 @@ curl -k -X PATCH 'https://<IP_address>/application/consistency-groups/<cg_uuid>/
 
 == 设置远程 SM-BC 策略
 
+如果您正在利用远程 SM-BC 保护，则要确保将在一致性组上创建的一致性组的 Snapshot 副本复制到目标，源集群和目标集群中的策略标签必须匹配。默认情况下、除非向预定义的添加了带有SnapMirror标签的规则、否则SM-BC不会复制Snapshot副本 `AutomatedFailOver` 策略和Snapshot副本将使用该标签创建。要了解有关此过程的更多信息，请参见 link:../task_san_configure_protection_for_business_continuity.html["配置业务连续性保护"]。
+
 .步骤
 . 确保满足使用 SM-BC 的前提条件。请参见 link:../smbc/smbc_plan_prerequisites.html["SM-BC 前提条件"]
-
-
++
 
 NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
 
+. 选择 * 存储 > 一致性组 * 。
 . 从一致性组菜单中选择已创建的一致性组。
 . 在概述页面的右上角，依次选择 * 更多 * 和 * 保护 * 。
-. 源端信息应在页面左侧自动进行。
-. 为目标选择适当的集群和 Storage VM 。选择一个保护策略。确保已选中 * 初始化关系 * 。
-. 单击 * 保存 * 。
-. 一致性组必须进行初始化和同步。完成此操作后，在 * SnapMirror （远程） * 下，状态应显示旁边的 "`protected` " image:../media/icon_shield.png["Alt= 绿色屏蔽图标"]。
+. 源端信息将自动创建。为目标选择适当的集群和 Storage VM 。选择一个保护策略。确保已选中 * 初始化关系 * 。
+. 选择 * 保存 * 。
+. 一致性组必须进行初始化和同步。完成此操作后、在* SnapMirror (远程)*下、状态将在旁边显示"`protected`" image:../media/icon_shield.png["Alt= 绿色屏蔽图标"]。
 
-
-有关SM-BC的详细信息、请参见 link:../smbc/index.html["SM-BC概述"]。
 
 .后续步骤
-link:clone-task.html["克隆一致性组"]
-link:../task_dp_configure_snapshot.html["配置 Snapshot 副本"]
-link:../task_dp_create_custom_data_protection_policies.html["创建自定义数据保护策略"]
+* link:clone-task.html["克隆一致性组"]
+* link:../task_dp_configure_snapshot.html["配置 Snapshot 副本"]
+* link:../task_dp_create_custom_data_protection_policies.html["创建自定义数据保护策略"]
 link:../task_dp_recover_snapshot.html["从 Snapshot 副本恢复"]
-link:../task_dp_restore_from_vault.html["从早期的 Snapshot 副本还原卷"]
-link:../smbc/index.html["SM-BC概述"]
+* link:../task_dp_restore_from_vault.html["从早期的 Snapshot 副本还原卷"]
+* link:../smbc/index.html["SM-BC概述"]
+* link:https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自动化文档"^]
+
