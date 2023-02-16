@@ -1,0 +1,163 @@
+---
+sidebar: sidebar 
+permalink: concepts/capacity-measurements-in-sm-concept.html 
+keywords: capacity, measurement, physical, logical, storage, used storage, local tier capacity, aggregate capacity, block, capacity concern, add capacity, volume, used capacity, available capacity, total capacity, inactive capacity, static insights, dynamic insights, snapshot copy, snapshot copies, inactive data, overprovision, overflows, snapshot copy policy, snapshot copy reserves, reserves, policy, top volumes 
+summary: 系统容量可以通过物理空间或逻辑空间来衡量。System Manager 的最新版本使用物理和逻辑容量的测量值。 
+---
+= System Manager 中的容量测量
+:allow-uri-read: 
+
+
+[role="lead"]
+系统容量可以通过物理空间或逻辑空间来衡量。System Manager 的最新版本使用物理和逻辑容量的测量值。
+
+以下说明介绍了这两个测量值之间的差异：
+
+* *物理容量*：物理空间是指卷或本地层中使用的物理存储块。由于存储效率功能（例如重复数据删除和数据压缩）中的数据减少，物理已用容量值通常小于逻辑已用容量值。
+* *逻辑容量*：逻辑空间是指卷或本地层中的可用空间(逻辑块)。逻辑空间是指在不考虑重复数据删除或数据压缩结果的情况下如何使用理论空间。已用逻辑空间值是从已用物理空间量加上已配置的存储效率功能（例如重复数据删除和数据压缩）节省的空间得出的。此度量值通常会大于已用物理容量，因为它包括 Snapshot 副本，克隆和其他组件，并且不会反映数据压缩以及物理空间的其他缩减。因此，总逻辑容量可能会高于配置的空间。
+
+
+
+NOTE: 在 System Manager 中，容量表示不考虑根存储层（聚合）容量。
+
+<<measurements-used-cap>>
+<<cap-measurement-terms>>
+<<cap-measurement-units>>
+
+.追加信息
+您可以在System Manager中监控集群、本地层和卷的容量。请参见 link:./task_admin_monitor_capacity_in_sm.html["在 System Manager 中监控容量"]。
+
+
+
+== 已用容量的测量值
+
+已用容量的测量值会根据您使用的 System Manager 版本而有所不同，如下表所述：
+
+[cols="30,30,40"]
+|===
+
+
+| System Manager 版本 | 容量术语 | 引用的容量类型 
+
+
+ a| 
+9.5 和 9.6 （经典视图）
+ a| 
+已用
+ a| 
+已用物理空间
+
+
+
+ a| 
+9.7 和 9.8
+ a| 
+已用
+ a| 
+已用逻辑空间（如果已启用存储效率设置）
+
+
+
+ a| 
+9.9.1 及更高版本
+ a| 
+已用逻辑容量
+ a| 
+已用逻辑空间（如果已启用存储效率设置）
+
+|===
+
+
+== 容量测量术语
+
+在描述容量时，使用以下术语：
+
+* *可用*：本地层中可用于配置卷的物理空间量。
+* *客户端数据*：客户端数据(物理或逻辑)使用的空间量。
+* *已提交*：本地层的已提交容量。
+* *数据精简*：
++
+** *整体*：所有逻辑已用空间与物理已用空间之比。
+** *不使用Snapshot副本和克隆*：仅由客户端数据使用的逻辑空间与仅由客户端数据使用的物理空间之比。
+
+
+* *已用逻辑空间*：已用空间量、而不考虑存储效率功能节省的空间。
+* *逻辑已用%*：当前已用逻辑容量与配置大小之比的百分比、不包括Snapshot预留。此值可以大于 100% ，因为它包括卷中的效率节省。
+* *物理已用*：卷或本地层的物理块中已用的容量。
+* *物理已用%*：卷的物理块中已用容量与配置大小之比。
+* *预留*：为本地层中已配置卷预留的空间量。
+* *已用和预留*：已用物理空间与预留空间之和。
+
+
+
+
+== 容量测量单位
+
+System Manager 会根据 1024 （ 2^10^ ）字节的二进制单元计算存储容量。在 ONTAP 9.10.0 及更早版本中，这些单位在 System Manager 中显示为 KB ， MB ， GB ， TB 和 PB 。从 ONTAP 9.10.1 开始，它们在 System Manager 中显示为 KiB ， MIB ， GiB ， TiB 和 PIB 。
+
+
+NOTE: 对于所有版本的 ONTAP ， System Manager 中用于吞吐量的单位仍为 KB/ 秒， MB/ 秒， Gb/ 秒， TB/ 秒和 PB / 秒。
+
+[cols="20,20,30,30"]
+|===
+
+
+| 对于 ONTAP 9.10.0 及更早版本， System Manager 中会显示容量单位 | 对于ONTAP 9.10.1及更高版本、System Manager中显示的容量单位 | 计算 | 以字节为单位的值 
+
+
+ a| 
+知识库
+ a| 
+KiB
+ a| 
+1024
+ a| 
+1024 字节
+
+
+
+ a| 
+MB
+ a| 
+MIB
+ a| 
+1024 * 1024
+ a| 
+1 ， 048 ， 576 字节
+
+
+
+ a| 
+GB
+ a| 
+GIB
+ a| 
+1024 * 1024 * 1024
+ a| 
+1 ， 073 ， 741 ， 824 字节
+
+
+
+ a| 
+TB
+ a| 
+TIB
+ a| 
+1024 * 1024 * 1024 * 1024
+ a| 
+1 ， 099 ， 511 ， 627 ， 776 字节
+
+
+
+ a| 
+PB
+ a| 
+PIB
+ a| 
+1024 * 1024 * 1024 * 1024 * 1024
+ a| 
+1 ， 125 ， 898 ， 010 ， 834 ， 424 字节
+
+|===
+.追加信息 ：
+link:./volumes/logical-space-reporting-enforcement-concept.html["卷的逻辑空间报告和强制实施"]

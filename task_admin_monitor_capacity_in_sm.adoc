@@ -1,0 +1,92 @@
+---
+sidebar: sidebar 
+permalink: task_admin_monitor_capacity_in_sm.html 
+keywords: system manager, monitor, capacity, view, measurement, physical, logical, storage, used storage, local tier capacity, aggregate capacity, block, add capacity, volume, used capacity, available capacity, total capacity, snapshot copy, snapshot copies, inactive data, overprovision, overflows, snapshot copy reserves, reserves, clone 
+summary: 使用System Manager、您可以监控已使用的存储容量以及集群或本地层仍可使用的存储容量。 
+---
+= 在 System Manager 中监控容量
+:allow-uri-read: 
+
+
+[role="lead"]
+使用System Manager、您可以监控已使用的存储容量以及集群或本地层仍可使用的存储容量。
+
+此外，从 ONTAP 9.10.1 开始，您可以使用 System Manager 查看有关集群容量的历史数据以及有关未来将使用或可用容量的预测。您还可以监控本地层和卷的容量。此外、从ONTAP 9.12.1开始、System Manager还会显示本地层的已提交容量。
+
+
+NOTE: 已用容量的测量值会根据您使用的System Manager版本而有所不同、如中所述 link:./concepts/concept_capacity_measurements_in_sm.html["System Manager 中的容量测量"]。
+
+
+
+== 查看集群的容量
+
+您可以在System Manager的信息板上查看集群的容量测量结果。
+
+.开始之前
+要查看与云中容量相关的数据，您必须拥有 Active IQ 数字顾问帐户并进行连接。
+
+.步骤
+. 在 System Manager 中，单击 * 信息板 * 。
+. 在 * 容量 * 部分中，您可以查看以下内容：
++
+--
+** 集群的已用总容量
+** 集群的总可用容量
+** 已用容量和可用容量的百分比。
+** 数据精简比率。
+** 云中使用的容量。
+** 容量使用历史记录。
+** 容量使用量预测
+
+
+--
++
+
+NOTE: 在 System Manager 中，容量表示不考虑根存储层（聚合）容量。
+
+. 单击 image:../media/icon_arrow.gif["右箭头"] 可查看有关集群容量的更多详细信息。
+
+
+
+
+== 查看本地层的容量
+
+您可以查看有关本地层容量的详细信息。此外、从ONTAP 9.12.1开始、您可以查看本地层的已提交容量、以确定是否需要向本地层添加容量以容纳已提交的容量并避免可用空间用尽。
+
+.步骤
+. 单击 * 存储 > 层 * 。
+. 选择本地层的名称。
+. 在*概述*页面的*容量*部分中、容量显示在一个条形图中、其中包含三个测量值：
++
+** 已用容量和预留容量
+** Available capacity
+** 已提交容量(从ONTAP 9.12.1开始)
+
+
+. 单击图表可查看有关本地层容量的详细信息。
++
+容量测量结果显示在两个条形图中：
+
++
+--
+** 顶部条形图显示物理容量：已用物理空间、预留空间和可用空间的大小。
+** 底部的条形图显示逻辑容量：客户端数据、Snapshot副本和克隆的大小以及已用逻辑空间的总数。
+
+
+--
++
+条形图下方是数据精简的测量比率：
+
++
+--
+** 整体数据精简率。
+** 仅客户端数据的数据精简率(不包括Snapshot副本和克隆)。
+
+
+--
+
+
+.可选操作
+* 如果已提交容量大于本地层的容量、您可以考虑在本地层的可用空间不足之前向其添加容量。请参见 link:./disks-aggregates/add-disks-local-tier-aggr-task.html["向本地层添加容量(向聚合添加磁盘)"]。
+* 您还可以通过选择*卷*选项卡来查看特定卷在本地层中使用的容量。
+
