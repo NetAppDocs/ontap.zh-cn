@@ -14,9 +14,10 @@ summary: 从 ONTAP 9.6 开始，您可以将 FlexGroup 卷的大小调整为低�
 从 ONTAP 9.6 开始，您可以将 FlexGroup 卷的大小调整为低于其当前大小的值，以释放卷中未使用的空间。减小 FlexGroup 卷的大小后， ONTAP 会自动调整所有 FlexGroup 成分卷的大小。
 
 .步骤
-. 减小 FlexGroup 卷的大小： `volume size -vserver vserver_name -volume fg_name -size new_size`
+. 检查当前FlexGroup 卷大小："volume size -vserver _vserver_name_-volume _fg_name_"
+. 减小FlexGroup 卷的大小： `volume size -vserver _vserver_name_ -volume _fg_name_ _new_size_`
 +
-`new_size` 是 FlexGroup 卷的大小。您可以指定低于当前大小的值，也可以指定减小 FlexGroup 卷当前大小的负值。
+指定新大小时、可以使用减号(-)指定小于当前大小的值、也可以使用负号(减小FlexGroup 卷的当前大小)指定负值。
 
 +
 [NOTE]
@@ -25,13 +26,31 @@ summary: 从 ONTAP 9.6 开始，您可以将 FlexGroup 卷的大小调整为低�
 
 ====
 +
-[listing]
-----
-cluster1::> volume size -vserver svm1 -volume volX -size 10TB
-----
+以下示例显示了名为volX的FlexGroup 卷的当前卷大小、并将卷大小调整为10TB：
+
 +
 [listing]
 ----
-cluster1::> volume size -vserver svm1 -volume volX -size -5TB
+cluster1::> volume size -vserver svm1 -volume volX
+(volume size)
+vol size: FlexGroup volume 'svm1:volX' has size 15TB.
+
+cluster1::> volume size -vserver svm1 -volume volX 10TB
+(volume size)
+vol size: FlexGroup volume 'svm1:volX' size set to 10TB.
+----
++
+以下示例显示了名为volX的FlexGroup 卷的当前卷大小、并将卷大小减少了5 TB：
+
++
+[listing]
+----
+cluster1::> volume size -vserver svm1 -volume volX
+(volume size)
+vol size: FlexGroup volume 'svm1:volX' has size 15TB.
+
+cluster1::> volume size -vserver svm1 -volume volX -5TB
+(volume size)
+vol size: FlexGroup volume 'svm1:volX' size set to 10TB.
 ----
 
