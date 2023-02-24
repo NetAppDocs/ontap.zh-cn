@@ -21,7 +21,7 @@ summary: 通过为 SMB 共享创建访问控制列表（ ACL ）来配置共享�
 在工作组模式下，本地域名为 SMB 服务器名称。
 
 .步骤
-. 删除默认共享 ACL ：``vserver cifs share access-control delete -vserver _vserver_name_ -share _share_name_ -user-or-group everyone``
+. 删除默认共享ACL：`vserver cifs share access-control delete -vserver _vserver_name_-share _share_name_-user-or-group everyone`
 . 配置新 ACL ：
 +
 |===
@@ -31,14 +31,14 @@ summary: 通过为 SMB 共享创建访问控制列表（ ACL ）来配置共享�
  a| 
 Windows 用户
  a| 
-`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _windows_domain_name\\user_name_ -permission _access_right_s`
+`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _Windows_domain_name\user_name_ -permission _access_right_`
 
 
 
  a| 
 Windows 组
  a| 
-`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _windows_group_name_ -permission _access_right_s`
+`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _Windows_domain_name\group_name_ -permission _access_right_`
 
 
 
@@ -59,33 +59,33 @@ UNIX 组
 
 
 .示例
-以下命令为 "`vs1.example.com`"SVM: 上的 `sSales` 共享向 `SSales` Windows 组提供 `Change` 权限
+以下命令提供 `Change` 在"`Svs1.example.com``s```"SVM：
 
 [listing]
 ----
-cluster1::> vserver cifs share access-control create -vserver vs1.example.com -share sales -user-or-group "Sales Team" -permission Change
+cluster1::> vserver cifs share access-control create -vserver vs1.example.com -share sales -user-or-group "DOMAIN\Sales Team" -permission Change
 
-cluster1::> vserver cifs share access-control show
+cluster1::> vserver cifs share access-control show -vserver vs1.example.com
                  Share       User/Group              User/Group  Access
 Vserver          Name        Name                    Type        Permission
 ---------------- ----------- --------------------    ---------   -----------
 vs1.example.com  c$          BUILTIN\Administrators  windows     Full_Control
-vs1.example.com  sales       DOMAIN\"Sales Team"     windows     Change
+vs1.example.com  sales       DOMAIN\Sales Team     windows     Change
 ----
-以下命令为 "`vs2.example.com`"SVM: 上 "`eng` " 共享的 "`engineering` "UNIX 组提供 `Read` 权限
+以下命令提供 `Read` 对"`vs2.example.com`````"SVM：
 
 [listing]
 ----
-cluster1::> vserver cifs share access-control create -vserver vs2.example.com -share eng -user-group-type unix-group -user-or-group  eng -permission Read
+cluster1::> vserver cifs share access-control create -vserver vs2.example.com -share eng -user-group-type unix-group -user-or-group  engineering -permission Read
 
-cluster1::> vserver cifs share access-control show
+cluster1::> vserver cifs share access-control show -vserver vs2.example.com
                  Share       User/Group               User/Group  Access
 Vserver          Name        Name                     Type        Permission
 ---------------- ----------- -------------------      ----------- -----------
 vs2.example.com  c$          BUILTIN\Administrators   windows     Full_Control
 vs2.example.com  eng         engineering              unix-group  Read
 ----
-以下命令为 ``vs1` SVM 上的 `datavol5` 共享向名为 "`Tiger Team` " 的本地 Windows 组提供 `Change` 权限，并为名为 `Sual_Control` 的本地 Windows 用户提供权限` ：
+以下命令提供 `Change` 对名为"`Tiger Team`"和的本地Windows组的权限 `Full_Control` 对`Svs1``d```"SVM：
 
 [listing]
 ----
@@ -98,6 +98,6 @@ cluster1::> vserver cifs share access-control show -vserver vs1
 Vserver        Name        Name                        Type        Permission
 -------------- ----------- --------------------------- ----------- -----------
 vs1            c$          BUILTIN\Administrators      windows     Full_Control
-vs1            datavol5    DOMAIN\"Tiger Team"         windows     Change
-vs1            datavol5    DOMAIN\"Sue Chang"          windows     Full_Control
+vs1            datavol5    Tiger Team         windows     Change
+vs1            datavol5    Sue Chang          windows     Full_Control
 ----
