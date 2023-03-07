@@ -19,18 +19,23 @@ summary: 使用 System Manager 按照以下过程配置全 SAN 阵列。
 
 
 [role="lead"]
-您应使用为AFF 全SAN阵列(ASA)控制器建立的经过测试且受支持的最大配置限制。
+ASA 配置限制和支持因ONTAP 版本而异。有关支持的配置限制的最新详细信息、请参见 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
-为了确保操作可靠，您不应超过中列出的当前已测试和支持的限制 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
+[cols="2"]
+|===
+| 开头为 ... | AFF ASA 控制器支持... 
 
 
+| 9.12.1 | 4节点MetroCluster IP配置上的NVMe/FC协议 
 
-== ASA 配置限制
 
-从ONTAP 9.9.1开始、对于非MetroCluster IP配置、AFF ASA 控制器最多可支持12个节点、对于MetroCluster IP配置、最多可支持8个节点。
+| 9.9.1  a| 
+* 对于非MetroCluser IP配置、最多12个节点
+* 对于MetroCluster IP配置、最多8个节点
+* NVMe-oF协议、但为MetroCluster 配置的协议除外
 
-从ONTAP 9.1.1开始、除为MetroCluster 配置的控制器外、所有AFF ASA 控制器均支持NVMe-oF协议。MetroCluster 配置不支持NVMe-oF。
 
+|===
 
 
 == 支持永久性端口
@@ -52,11 +57,3 @@ summary: 使用 System Manager 按照以下过程配置全 SAN 阵列。
 `EMS ： scsiblade.lif.persistent.ports.fcp.init.error`
 
 有关永久性端口的详细信息，请参见 link:http://www.netapp.com/us/media/tr-4080.pdf["NetApp 技术报告 4080 ：《可扩展 SAN ONTAP 9 最佳实践》"^]。
-
-
-
-== 支持NVMe-oF协议
-
-从ONTAP 9.1.1开始、所有SAN阵列均支持NVMe-oF协议。
-
-从ONTAP 9.12.1开始、4节点MetroCluster IP配置支持NVMe/FC。9.12.1之前的NVMe不支持MetroCluster 配置。
