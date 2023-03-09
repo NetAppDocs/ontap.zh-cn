@@ -17,9 +17,9 @@ summary: 要使集群脱机以还原到早期的 ONTAP 版本，您必须禁用�
 
 还原集群要求您在还原期间使集群脱机。
 
-. 将权限级别设置为高级，在系统提示您继续时输入 * y* ： `set -privilege advanced`
+. 将权限级别设置为 advanced ： `set -privilege advanced`
 +
-此时将显示高级提示符（` * >` ）。
+在系统提示您继续时、输入*。
 
 . 验证是否已安装目标 ONTAP 软件： `ssystem image show`
 +
@@ -41,6 +41,8 @@ node1
 4 entries were displayed.
 ----
 . 禁用集群中的所有数据 LIF ： `network interface modify ｛ -role data ｝ -status-admin down`
+. 确定是否存在集群间FlexCache 关系： `flexcache origin show-caches -relationship-type inter-cluster`
+. 如果存在集群间聚合、请禁用缓存集群上的数据LIF： `network interface modify -vserver vserver_name -lif lif_name -status-admin down`
 . 如果集群仅包含两个节点、请禁用集群HA： `cluster ha modify -configured false`
 . 【第5步】从任一节点为HA对中的节点禁用存储故障转移： `storage failover modify -node nodename -enabled false`
 +
