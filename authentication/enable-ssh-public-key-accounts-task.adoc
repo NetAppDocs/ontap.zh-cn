@@ -27,15 +27,15 @@ xref:manage-public-key-authentication-concept.adoc[将公有密钥与用户帐�
 * 如果您不确定要分配给登录帐户的访问控制角色，可以稍后使用 `ssecurity login modify` 命令添加此角色。
 
 
-如果要在管理员帐户在访问 SVM 之前使用 SSH 公有密钥进行身份验证的集群上启用 SSL FIPS 模式，则必须在启用 FIPS 之前确保主机密钥算法受支持。
+如果要在集群上启用FIPS模式、则必须使用支持的密钥类型重新配置不支持密钥算法的现有SSH公共密钥帐户。在启用FIPS之前、应重新配置这些帐户、否则管理员身份验证将失败。
 
-*注：* ONTAP 9.11.1及更高版本对主机密钥算法的支持已发生更改。
+下表显示了ONTAP SSH连接支持的主机密钥类型算法。这些密钥类型不适用于配置SSH公共身份验证。
 
 [cols="30,30,30"]
 |===
 
 
-| ONTAP 版本 | 支持的密钥类型 | 不支持的密钥类型 
+| ONTAP 版本 | FIPS模式支持的密钥类型 | 非FIPS模式支持的密钥类型 
 
 
  a| 
@@ -43,7 +43,7 @@ xref:manage-public-key-authentication-concept.adoc[将公有密钥与用户帐�
  a| 
 ECDSA-SHA2-nistp256
  a| 
-RSA-SHA2-512 + RSA-SHA2-256 + ssh-ed25519 + ssh-dss + ssh-rsa
+ECDSA-SHA2-nistp256 + RSA-SHA2-512 + RSA-SHA2-256 + Ssh-ed25519 + Ssh-DSS + Ssh-RSA
 
 
 
@@ -52,10 +52,11 @@ RSA-SHA2-512 + RSA-SHA2-256 + ssh-ed25519 + ssh-dss + ssh-rsa
  a| 
 ECDSA-SHA2-nistp256 + ssh-ed25519
  a| 
-SSH/DSS + SSH/RSA
+ECDSA-SHA2-nistp256 + ssh-ed25519 + ssh-dss + ssh-rsa
 
 |===
-在启用 FIPS 之前，必须使用支持的密钥类型重新配置不具有受支持密钥算法的现有 SSH 公有密钥帐户，否则管理员身份验证将失败。
+
+NOTE: 9.11.1删除了对SSH ed25519主机密钥算法的支持
 
 有关详细信息，请参见 link:../networking/configure_network_security_using_federal_information_processing_standards_@fips@.html["使用 FIPS 配置网络安全性"]。
 
