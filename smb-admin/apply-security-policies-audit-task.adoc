@@ -11,10 +11,13 @@ summary: 将审核策略应用于 SVMsis 创建 NTFS ACL 并将其应用于文�
 
 
 [role="lead"]
-将审核策略应用于 SVMsis 创建 NTFS ACL 并将其应用于文件或文件夹的最后一步。
+将审核策略应用于SVM是创建NTFS ACL并将其应用于文件或文件夹的最后一步。
 
 .关于此任务
 您可以将安全策略中定义的安全设置应用于驻留在 FlexVol 卷（ NTFS 或混合安全模式）中的 NTFS 文件和文件夹。
+
+
+NOTE: 应用审核策略和关联的 SACL 后，任何现有 DACL 都会被覆盖。应用安全策略及其关联的DACL后、任何现有DACL都会被覆盖。在创建和应用新安全策略之前，您应查看现有安全策略。
 
 .步骤
 . 应用安全策略： `vserver security file-directory apply -vserver vserver_name -policy-name policy_name`

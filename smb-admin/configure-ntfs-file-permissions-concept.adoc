@@ -16,3 +16,18 @@ summary: 您可以使用 ONTAP 命令行界面为文件和目录配置 NTFS 文�
 您可以通过向与 NTFS 安全描述符关联的 NTFS 随机访问控制列表（ DACL ）添加条目来配置 NTFS 文件权限。然后，安全描述符将应用于 NTFS 文件和目录。
 
 您只能使用命令行配置 NTFS 文件权限。您不能使用命令行界面配置 NFSv4 ACL 。
+
+.步骤
+. 创建NTFS安全描述符。
++
+`vserver security file-directory ntfs create -vserver _svm_name_ -ntfs-sd _ntfs_security_descriptor_name_ -owner _owner_name_ -group _primary_group_name_ -control-flags-raw _raw_control_flags_`
+
+. 将DACL添加到NTFS安全描述符。
++
+`vserver security file-directory ntfs dacl add -vserver _svm_name_ -ntfs-sd _ntfs_security_descriptor_name_ -access-type {deny|allow} -account _account_name_ -rights {no-access|full-control|modify|read-and-execute|read|write} -apply-to {this-folder|sub-folders|files}`
+
+. 创建文件/目录安全策略。
++
+`vserver security file-directory policy create -vserver _svm_name_ -policy-name _policy_name_`
+
+
