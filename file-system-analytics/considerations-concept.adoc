@@ -26,3 +26,36 @@ summary: 文件系统分析旨在提供对包含活动 NAS 数据的卷的可见
 在某些情况下、启用文件系统分析可能会对初始元数据收集期间的性能产生负面影响。在利用率达到最大的系统上、这种情况最常见。为了避免在此类系统上启用分析、您可以使用ONTAP System Manager性能监控工具。
 
 如果延迟显著增加、请参阅知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/High_or_fluctuating_latency_after_turning_on_NetApp_ONTAP_File_System_Analytics["启用NetApp ONTAP 文件系统分析后延迟较高或波动较大"^]。
+
+
+
+== 扫描注意事项
+
+启用容量分析后、ONTAP 将执行初始化扫描。扫描将访问已启用容量分析的卷中所有文件的元数据。扫描期间不读取任何文件数据。
+
+扫描完成后、文件系统分析会随着文件系统的更改而持续实时更新、而无需再次运行扫描。
+
+扫描所需时间与卷上的目录和文件数量成比例。由于扫描会收集元数据、因此文件大小不会影响扫描时间。
+
+
+
+=== 最佳实践
+
+您应对不共享聚合的卷启动扫描。您可以使用命令查看哪些聚合当前托管哪些卷：
+
+`volume show -volume _comma-separated-list_of_volumes_ -fields aggr-list`
+
+在扫描运行期间、卷将继续为客户端流量提供服务。建议您在预期客户端流量较低的时段开始扫描。
+
+如果客户端流量增加、则会占用系统资源、并通过发生原因 扫描所需时间更长。
+
+从ONTAP 9.12.1开始、您可以在System Manager和ONTAP 命令行界面中暂停数据收集。
+
+* 如果使用的是ONTAP 命令行界面：
++
+** 您可以使用命令暂停数据收集： `volume analytics initialization pause -vserver _svm_name_ -volume _volume_name_`
+** 客户端流量降低后、您可以使用以下命令恢复数据收集： `volume analytics initialization resume -vserver _svm_name_ -volume _volume_name_`
+
+
+* 如果您使用的是System Manager、则在卷菜单的*资源管理器*视图中、可以使用*暂停数据收集*和*恢复数据收集*按钮来管理扫描。
+
