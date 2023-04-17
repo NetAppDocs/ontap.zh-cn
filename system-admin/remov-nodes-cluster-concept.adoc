@@ -50,18 +50,33 @@ summary: 您可以从集群中删除不需要的节点，一次删除一个节�
 * 注意： * 在自动 ONTAP 升级过程中，不能执行 `cluster remove-node` ， `cluster unjoin` 和 `node rename` 等操作。
 
 .关于此任务
-如果您运行的是混合版本的集群，则可以使用从 ONTAP 9.3 开始的高级权限命令之一删除最后一个低版本节点：
+* 如果您运行的是混合版本的集群，则可以使用从 ONTAP 9.3 开始的高级权限命令之一删除最后一个低版本节点：
++
+** ONTAP 9.3 ： `cluster unjoin -skip-last-low-version-node-check`
+** ONTAP 9.4 及更高版本： `cluster remove-node -skip-last-low-version-node-check`
 
-* ONTAP 9.3 ： `cluster unjoin -skip-last-low-version-node-check`
-* ONTAP 9.4 及更高版本： `cluster remove-node -skip-last-low-version-node-check`
+
+* 如果从四节点集群中取消加入2个节点、则其余两个节点上会自动启用集群HA。
 
 
-*注意：*在从集群中删除节点之前、用户必须无法访问连接到该节点的所有磁盘中的所有系统和用户数据。如果节点未正确地从集群中退出、请联系NetApp支持部门以获取有关恢复选项的帮助。
+
+NOTE: 在从集群中删除节点之前、用户必须无法访问连接到该节点的所有磁盘中的所有系统和用户数据。如果节点未正确地从集群中退出、请联系NetApp支持部门以获取有关恢复选项的帮助。
 
 .步骤
 . 将权限级别更改为高级：
 +
 ` * 设置 -privilege advanced*`
+
+. 验证集群上的节点是否持有epsilon：
++
+`*cluster show -epsilon true*`
+
++
+.. 如果节点持有epsilon、请将其资格更改为false。
++
+`*cluster modify -node <node_name> -eligibility false*`
+
+
 
 . 如果要删除的节点是当前主节点，请将此主节点的集群资格更改为 `false` ，以使集群中的另一个节点能够被选为主节点：
 +
