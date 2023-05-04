@@ -1,0 +1,74 @@
+---
+permalink: software_setup/convert-ipv4-to-ipv6-task.html 
+sidebar: sidebar 
+keywords: software, setup, ontap, covert, converting, ipv4, ipv6 
+summary: 从ONTAP 9.13.1开始、您可以为A800和FAS4700平台上的管理LUN分配IPv6地址。对于9.13.1之前的ONTAP版本、对于其他平台上的9.13.1及更高版本、您必须为管理LUN分配IPv4地址、然后在完成集群设置后转换IPv6地址。 
+---
+= 将管理生命周期从IPv4转换为IPv6
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.13.1开始、您可以在初始集群设置期间为A800和FAS4700平台上的管理LUN分配IPv6地址。对于9.13.1之前的ONTAP版本或其他平台上的9.13.1及更高版本、您必须先将IPv4地址分配给管理LUN、然后在完成集群设置后转换为IPv6地址。
+
+.步骤
+. 为集群启用IPv6：
++
+[source, cli]
+----
+network options ipv6 modify -enable true
+----
+. 将权限设置为高级：
++
+[source, cli]
+----
+set priv advanced
+----
+. 查看在各种接口上获取的RA前缀列表：
++
+[source, cli]
+----
+network ndp prefix show
+----
+. 创建IPv6管理LIF：
++
+使用格式 `prefix::id` 以手动构建IPv6地址。
+
++
+[source, cli]
+----
+network interface create -vserver <svm_name> -lif <LIF> -home-node <home_node> -home-port <home_port> -address <IPv6prefix::id> -netmask-length <netmask_length> -failover-policy <policy> -service-policy <service_policy> -auto-revert true
+----
+. 验证是否已创建 LIF ：
++
+[source, cli]
+----
+network interface show
+----
+. 验证配置的 IP 地址是否可访问：
++
+[source, cli]
+----
+network ping6
+----
+. 将IPv4 LIF标记为administratively down：
++
+[source, cli]
+----
+network interface modify -vserver <svm_name> -lif <lif_name> -status-admin down
+----
+. 删除IPv4管理LIF：
++
+[source, cli]
+----
+network interface delete -vserver <svm_name> -lif <lif_name>
+----
+. 确认已删除IPv4管理LIF：
++
+[source, cli]
+----
+network interface show
+----
+

@@ -19,8 +19,6 @@ summary: 创建LUN以使用FC或iSCSI SAN协议为主机提供存储。LUN在主
 
 
 [role="lead"]
-如果特定主机的操作步骤 不可用、您可以使用以下步骤为任何支持的SAN主机配置存储。
-
 此操作步骤 会在已配置FC或iSCSI协议的现有Storage VM上创建新的LUN。
 
 如果需要创建新的Storage VM并配置FC或iSCSI协议、请参见 link:configure-svm-fc-task.html["为 FC 配置 SVM"] 或 link:configure-svm-iscsi-task.html["为 iSCSI 配置 SVM"]。
@@ -131,6 +129,10 @@ NOTE: 在创建 LUN 期间，始终会启用非对称逻辑单元访问（ ALUA 
 
 . 对于 FC ，请按 WWPN 对 FC 交换机进行分区。每个启动程序使用一个分区，并在每个分区中包含所有目标端口。
 . 发现主机上的LUN。
++
+对于VMware vSphere、请使用Virtual Storage Console (VSC)发现并初始化LUN。
+
+. 初始化LUN、并可选择创建文件系统。
 . 验证主机是否可以在LUN上写入和读取数据。
 
 
@@ -139,10 +141,12 @@ NOTE: 在创建 LUN 期间，始终会启用非对称逻辑单元访问（ ALUA 
 --
 使用ONTAP 命令行界面使用FC或iSCSI协议创建LUN以为SAN主机提供存储。
 
-. 使用 `ssystem license show` 命令验证您是否已获得 FC 或 iSCSI 的许可证。
+. 确认您已获得FC或iSCSI许可证。
 +
-`s系统许可证显示`
-
+[source, cli]
+----
+system license show
+----
 +
 [listing]
 ----
@@ -157,30 +161,48 @@ Package           Type    Description           Expiration
 ----
 . 如果您没有 FC 或 iSCSI 许可证，请使用 `license add` 命令。
 +
-`license add -license-code _thy_license_code_`
-
+[source, cli]
+----
+license add -license-code <your_license_code>
+----
 . 在SVM上启用协议服务：
 +
-*对于iSCSI：*`vserver iscsi create -vserver _vserver_name_-target-alias _vserver_name_`
+*对于iSCSI：*
 
 +
-*对于FC：*`vserver fcp create -vserver _vserver_name_-status-admin up`
+[source, cli]
+----
+vserver iscsi create -vserver <svm_name> -target-alias <svm_name>
+----
++
+*对于FC：*
 
++
+[source, cli]
+----
+vserver fcp create -vserver <svm_name> -status-admin up
+----
 . 在每个节点上为SVM创建两个LIF：
 +
-`network interface create -vserver _vserver_name_-lif _lif_name_-role data -data-protocol iscsi_fc -home-node _node_name_-home-port _port_name_-address _ip_address_-netmask netmask`
-
+[source, cli]
+----
+network interface create -vserver <svm_name> -lif <lif_name> -role data -data-protocol <iscsi|fc> -home-node <node_name> -home-port <port_name> -address <ip_address> -netmask <netmask>
+----
 +
 对于每个提供数据的SVM、NetApp至少支持每个节点一个iSCSI或FC LIF。但是、要实现冗余、每个节点需要两个LIF。
 
 . 确认已创建 LIF ，并且其运行状态为 `online` ：
 +
-`network interface show -vserver _vserver_name_ _lif_name_`
-
+[source, cli]
+----
+network interface show -vserver <svm_name> <lif_name>
+----
 . 创建 LUN ：
 +
-`lun create -vserver vserver_name -volume _volume_name_-lun _lun_name_-size _lun_size_-ostype linux -space-reserve enabled| disabled`
-
+[source, cli]
+----
+lun create -vserver <svm_name> -volume <volume_name> -lun <lun_name> -size <lun_size> -ostype linux -space-reserve <enabled|disabled>
+----
 +
 LUN 名称不能超过 255 个字符，并且不能包含空格。
 
@@ -190,19 +212,28 @@ NOTE: 在卷中创建 LUN 时， NVFAIL 选项会自动启用。
 
 . 创建 igroup ：
 +
-`igroup create -vserver _vserver_name_-igroup _igroup_name_-protocol fcp_iscsi_mixed -ostype linux -initiator _initiator_name_`
-
+[source, cli]
+----
+igroup create -vserver <svm_name> -igroup <igroup_name> -protocol <fcp|iscsi|mixed> -ostype linux -initiator <initiator_name>
+----
 . 将 LUN 映射到 igroup ：
 +
-`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
-
+[source, cli]
+----
+lun mapping create -vserver <svm__name> -volume <volume_name> -lun <lun_name> -igroup <igroup_name>
+----
 . 验证是否已正确配置 LUN ：
 +
-`lun show -vserver _vserver_name_`
+[source, cli]
+----
+lun show -vserver <svm_name>
 
-. link:create-port-sets-binding-igroups-task.html["创建端口集并绑定到igroup"] （可选）。
-. 按照主机文档中的步骤在特定主机上启用块访问。
-. 使用 Host Utilities 完成 FC 或 iSCSI 映射并发现主机上的 LUN 。
+. Optionally, link:create-port-sets-binding-igroups-task.html[Create a port set and bind to an igroup].
+
+. Follow steps in your host documentation for enabling block access on your specific hosts.
+
+. Use the Host Utilities to complete the FC or iSCSI mapping and to discover your LUNs on the host.
+----
 
 
 --

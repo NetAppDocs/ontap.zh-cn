@@ -1,0 +1,100 @@
+---
+permalink: mediator/post-install-config-concept.html 
+sidebar: sidebar 
+keywords: mediator, new, release, update, install, configuration, post-installation, after installation, metrocluster ip, snapmirror business continuity 
+summary: 安装并运行ONTAP 调解器服务后、必须在ONTAP 存储系统中执行其他配置任务才能使用调解器功能。 
+---
+= 安装后配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+安装并运行ONTAP 调解器服务后、必须在ONTAP 存储系统中执行其他配置任务才能使用调解器功能：
+
+* 要在 MetroCluster IP 配置中使用 ONTAP 调解器服务，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["从 MetroCluster IP 配置配置 ONTAP 调解器服务"^]。
+* 要使用 SnapMirror 业务连续性，请参见 link:https://docs.netapp.com/us-en/ontap/smbc/smbc_install_confirm_ontap_cluster.html["安装 ONTAP 调解器服务并确认 ONTAP 集群配置"^]。
+
+
+
+
+== 配置ONTAP 调解器安全策略
+
+ONTAP 调解器服务器支持多种可配置的安全设置。所有设置的默认值均在low_space_threshold" MIB：10只读文件中提供：
+
+`/opt/netapp/lib/ontap_mediator/server_config/ontap_mediator.user_config.yaml`
+
+放置在中的所有值 `ontap_mediator.user_config.yaml` 将覆盖默认值、并在所有ONTAP 调解器升级中保持不变。
+
+修改后 `ontap_mediator.user_config.yaml`，重新启动ONTAP 调解器服务：
+
+`systemctl restart ontap_mediator`
+
+可以配置以下属性：注：中的其他默认值 `ontap_mediator.config.yaml` 不应修改。
+
+* *用于安装第三方SSL证书以替代默认自签名证书的设置*
++
+....
+cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt'
+key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key'
+ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt'
+ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key'
+ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl'
+cert_valid_days: '1095'                   # Used to set the expiration on client certs to 3 years
+x509_passin_pwd: 'pass:ontap'             # passphrase for the signed client cert
+....
+* *提供保护以防止暴力破解密码攻击的设置*
++
+要启用此功能、请为设置一个值 `window_seconds` 和 `retry_limit`
+
++
+示例
+
++
+--
+** 提供一个5分钟的窗口供您进行猜测、然后将计数重置为零故障：
++
+`authentication_lock_window_seconds: 300`
+
+** 如果在窗口时间范围内发生五次故障、请锁定帐户：
++
+`authentication_retry_limit: 5`
+
+** 通过设置在拒绝每次尝试之前发生的延迟来减少暴力密码猜测攻击的影响、从而减缓攻击的速度。
++
+`authentication_failure_delay_seconds: 5`
+
++
+....
+authentication_failure_delay_seconds: 0   # seconds (float) to delay failed auth attempts prior to response, 0 = no delay
+authentication_lock_window_seconds: null  # seconds (int) since the oldest failure before resetting the retry counter, null = no window
+authentication_retry_limit: null          # number of retries to allow before locking API access, null = unlimited
+....
+
+
+--
+* *用于控制ONTAP 调解器API用户帐户的密码复杂度规则的字段*
++
+....
+password_min_length: 8
+
+password_max_length: 64
+
+password_uppercase_chars: 0    # min. uppercase characters
+
+password_lowercase_chars: 1    # min. lowercase character
+
+password_special_chars: 1      # min. non-letter, non-digit
+
+password_nonletter_chars: 2    # min. non-letter characters (digits, specials, anything)
+....
+* *用于控制上所需可用空间的设置 `/opt/netapp/lib/ontap_mediator` 磁盘。*
++
+如果此空间低于设置的阈值、则此服务将对警告事件执行问题描述 操作。
+
++
+....
+low_space_threshold_mib: 10
+....
+

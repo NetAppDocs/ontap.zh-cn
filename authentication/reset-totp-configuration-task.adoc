@@ -1,0 +1,66 @@
+---
+permalink: authentication/reset-totp-configuration-task.html 
+sidebar: sidebar 
+keywords: enable, ssh, multifactor authentication, mfa, hardware authentication device 
+summary: 为了保护您的帐户安全、如果您的TOTP机密密钥泄露或丢失、您应禁用它并创建一个新密钥。 
+---
+= 重置TOTP机密密钥
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+为了保护您的帐户安全、如果您的TOTP机密密钥泄露或丢失、您应禁用它并创建一个新密钥。
+
+
+
+== 如果您的密钥已损坏、请重置TOTP
+
+如果您的TOTP机密密钥已泄露、但您仍可访问该密钥、则可以删除此泄露密钥并创建一个新密钥。
+
+. 使用您的用户密码或SSH公共密钥以及泄露的TOTP机密密钥登录到您的用户帐户。
+. 删除已泄露的TOTP机密密钥：
++
+[source, cli]
+----
+security login totp delete -vserver <svm_name> -username <account_username>
+----
+. 创建新的TOTP密钥：
++
+[source, cli]
+----
+security login totp create -vserver <svm_name> -username <account_username>
+----
+. 验证是否已在您的帐户上启用TOTP配置：
++
+[source, cli]
+----
+security login totp show -vserver <svm_name> -username <account_username>
+----
+
+
+
+
+== 如果密钥丢失、请重置TOTP
+
+如果您的TOTP机密密钥丢失、请与您的存储管理员联系以获取 link:disable-totp-secret-key-task.html["禁用密钥"]。禁用密钥后、您可以使用第一种身份验证方法登录并配置新的TOTP。
+
+.开始之前：
+存储管理员必须禁用TOTP机密密钥。如果您没有存储管理员帐户、请与存储管理员联系以禁用此密钥。
+
+.步骤
+. 存储管理员禁用TOTP密钥后、使用主身份验证方法登录到本地帐户。
+. 创建新的TOTP密钥：
++
+[source, cli]
+----
+security login totp create -vserver <svm_name> -username <account_username >
+----
+. 验证是否已在您的帐户上启用TOTP配置：
++
+[source, cli]
+----
+security login totp show -vserver <svm_name> -username <account_username>
+----
+

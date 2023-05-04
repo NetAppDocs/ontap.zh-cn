@@ -21,7 +21,9 @@ summary: '如果您预期会发生异常工作负载事件、您可以随时临�
 [role="lead"]
 如果您预期会发生异常工作负载事件、您可以随时临时暂停和恢复自主勒索软件保护(ARP)分析。
 
-.您将需要什么
+从ONTAP 9.13.1开始、您可以启用多管理员验证(MAV)、以便需要两个或更多经过身份验证的用户管理员来暂停ARP。 link:../multi-admin-verify/enable-disable-task.html["了解更多信息。"^]。
+
+.您需要的内容
 * ARP正在学习或活动模式下运行。
 
 
@@ -29,7 +31,7 @@ summary: '如果您预期会发生异常工作负载事件、您可以随时临�
 在ARP暂停期间、不会记录任何事件、也不会对新写入执行任何操作。但是，分析操作仍会在后台对早期日志执行。
 
 
-NOTE: 请勿使用反勒索软件禁用功能暂停分析。这样做会禁用卷上的ARP、并且与所了解的工作负载行为相关的所有现有信息都将丢失。这需要重新开始学习。
+NOTE: 请勿使用ARP禁用功能暂停分析。这样做会禁用卷上的ARP、并且与所了解的工作负载行为相关的所有现有信息都将丢失。这需要重新开始学习。
 
 .步骤
 [role="tabbed-block"]
@@ -38,18 +40,45 @@ NOTE: 请勿使用反勒索软件禁用功能暂停分析。这样做会禁用�
 --
 . 单击*存储>卷*、然后选择要暂停ARP的卷。
 . 在卷概述的安全性选项卡中、单击*防勒索软件*框中的*暂停防勒索软件*。
++
+
+NOTE: 从ONTAP 9.13.1开始，如果使用MAV保护ARP设置，暂停操作将提示您获得一个或多个其他管理员的批准。 link:../multi-admin-verify/request-operation-task.html["必须获得所有管理员的批准"] 与MAV审批组关联、否则操作将失败。
+
 
 
 --
 .命令行界面
 --
-暂停卷上的ARP：
-
+. 暂停卷上的ARP：
++
 `s安全防勒索软件卷暂停 -vserver _svm_name_ -volume _vol_name_`
 
-要恢复处理、请使用`reresume`参数。
-
+. 要恢复处理、请使用`reresume`参数。
++
 `s安全防勒索软件卷恢复 -vserver _svm_name_ -volume _vol_name_`
+
+
+
+从ONTAP 9.13.1开始，如果使用MAV保护ARP设置，暂停操作将提示您获得一个或多个其他管理员的批准。必须从与MAV批准组关联的所有管理员处获得批准、否则操作将失败。
+
+如果您正在使用MAV、并且预期的暂停操作需要额外的审批、则每个MAV组审批人将执行以下操作：
+
+. 显示请求：
++
+`security multi-admin-verify request show`
+
+. 批准申请：
++
+`security multi-admin-verify request approve -index[_number returned from show request_]`
+
++
+最后一个组批准者的响应指示卷已修改、并且ARP状态已暂停。
+
+
+
+如果您正在使用MAV、并且您是MAV组批准者、则可以拒绝暂停操作请求：
+
+`security multi-admin-verify request veto -index[_number returned from show request_]`
 
 --
 ====

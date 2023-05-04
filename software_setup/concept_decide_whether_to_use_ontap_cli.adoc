@@ -2,30 +2,23 @@
 permalink: software_setup/concept_decide_whether_to_use_ontap_cli.html 
 sidebar: sidebar 
 keywords: ontap, software, setup, deciding, decide, if, whether, use, cli, cluster, System Manager, IPv6, HA, root volumes, FlexArray 
-summary: 只有当您的 ONTAP 版本不支持初始集群设置时，才应使用此 命令行界面来执行初始集群设置。 
+summary: '如果您的配置允许、NetApp建议您使用System Manager设置新集群。如果您的ONTAP版本不支持对您的配置进行初始集群设置、或者您需要设置IPv6网络、则应使用System Manager命令行界面(CLI)。' 
 ---
-= 确定是使用 System Manager 还是使用 ONTAP 命令行界面进行集群设置
+= 在新的集群概述中配置ONTAP
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-虽然您可以使用 ONTAP 命令行界面设置新集群，但 NetApp 建议您尽可能使用 System Manager 来简化集群设置过程。只有当您的 System Manager 版本不支持为您计划的 ONTAP 部署进行初始集群设置时，才能使用这些过程。
+如果您的配置允许、NetApp建议您使用System Manager设置新集群。如果您的ONTAP版本不支持对您的配置进行初始集群设置、或者您需要设置IPv6网络、则应使用System Manager命令行界面(CLI)。
 
-您应了解以下 System Manager 支持要求：
-
-* 只有单个节点和 HA 对才支持集群设置
-* 使用命令行界面手动设置节点管理时， System Manager 仅支持 IPv4 ，不支持 IPv6 。但是，如果在使用 DHCP 并使用自动分配的 IP 地址和 Windows 发现完成硬件设置后启动 System Manager ，则 System Manager 可以配置 IPv6 管理地址。
-+
-在 ONTAP 9.6 及更早版本中， System Manager 不支持需要 IPv6 网络的部署。
-
-* MetroCluster 设置支持适用于每个站点具有两个节点的 MetroCluster IP 配置。
-+
-在 ONTAP 9.7 及更早版本中， System Manager 不支持对 MetroCluster 配置进行新的集群设置。
-
-
+从ONTAP 9.13.1开始、在A800和FAS4700平台上、您可以使用ONTAP命令行界面在纯IPv6网络环境中创建和配置新集群。如果您需要在ONTAP 9.13.0及更早版本中或在ONTAP 9.13.1及更高版本中的其他平台上使用IPv6、则必须先使用IPv4再创建新集群 link:convert-ipv4-to-ipv6-task.html["转换为IPv6"]。
 
 如果要在非 NetApp 磁盘上配置 FlexArray ，则需要使用 ONTAP 命令行界面在阵列 LUN 上配置根卷，然后使用集群设置向导设置集群。有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-flexarray/install/concept_flexarray_virtualization_technology_overview_using_array_luns_for_storage.html["FlexArray 虚拟化安装和要求"] 文档。
 
-在完成上述任一过程之前，您应已根据适用于您的平台型号的安装和设置说明安装新存储系统，并为其布线和加电。请参见 https://docs.netapp.com/us-en/ontap-systems/index.html["AFF 和 FAS 文档"]。
+.开始之前
+* 您应已根据适用于您的平台型号的安装和设置说明安装新存储系统、并为其布线和加电。请参见 https://docs.netapp.com/us-en/ontap-systems/index.html["AFF 和 FAS 文档"]。
+* 应在集群的每个节点上配置集群网络接口、以便进行集群内通信。
+* 如果要在集群上配置IPv6、则应在基础管理控制器(BMC)上配置IPv6、以便可以使用SSH访问系统。
+

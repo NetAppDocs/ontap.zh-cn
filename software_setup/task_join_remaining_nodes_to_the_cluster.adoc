@@ -39,6 +39,15 @@ NOTE: 默认情况下， AutoSupport 处于启用状态。
 Type yes to confirm and continue {yes}: yes
 ----
 . 按照屏幕上的说明为节点分配 IP 地址。
++
+从ONTAP 9.13.1开始、您可以为A800和FAS4700平台上的管理LUN分配IPv6地址。对于9.13.1之前的ONTAP版本或其他平台上的9.13.1及更高版本、您必须为管理LUN分配IPv4地址、然后在完成集群设置后转换为IPv6。
+
+. 按 * 输入 * 继续。
++
+[listing]
+----
+Do you want to create a new cluster or join an existing cluster? {create, join}:
+----
 . 将节点加入集群： `join`
 . 按照屏幕上的说明设置节点并将其加入集群。
 . 设置完成后，验证节点是否运行状况良好且符合加入集群的条件： `cluster show`
@@ -59,3 +68,6 @@ cluster1-02           true    true
 
 . 对其余每个节点重复此任务。
 
+
+.完成后
+如果需要， link:convert-ipv4-to-ipv6-task.html["从IPv4转换为IPv6"]。

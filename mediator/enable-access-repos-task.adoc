@@ -1,0 +1,234 @@
+---
+permalink: mediator/enable-access-repos-task.html 
+sidebar: sidebar 
+keywords: mediator, new, release, update, install, 
+summary: 启用对存储库的访问、以便ONTAP 调解器可以在安装过程中访问所需的软件包。 
+---
+= 启用对存储库的访问
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您应启用对存储库的访问、以便ONTAP 调解器可以在安装过程中访问所需的软件包
+
+.步骤
+. 确定必须访问哪些存储库、如下表所示：
++
+[cols="35,65"]
+|===
+
+
+| 操作系统 | 您必须提供对这些存储库的访问权限 ... 
+
+
+ a| 
+RHEL 7.x
+ a| 
+** rhel-7-server-optional -rpms
+
+
+
+
+ a| 
+RHEL 8.x
+ a| 
+** rhel-8-for-x86_64 — basos-rpms
+** rhel-8-for-x86_64 — AppStream — rpms
+
+
+
+
+ a| 
+CentOS 7.x
+ a| 
+** C7.6.1810 —基本存储库
+
+
+
+
+ a| 
+落基Linux 8.
+ a| 
+** AppStream
+** baseos
+
+
+
+
+ a| 
+多石Linux 9
+ a| 
+** AppStream
+** baseos
+
+
+|===
+. 使用以下过程之一启用对上面列出的存储库的访问、以便ONTAP 调解器可以在安装过程中访问所需的软件包。
+
+
+.适用于 RHEL 7.x 操作系统的操作步骤
+[#rhel7x%collapsible]
+====
+如果您的操作系统为*RHEL 7.x*，请使用此操作步骤 来访问存储库：
+
+.步骤
+. 订阅所需的存储库：
++
+`ssubscription-manager repos-enable rhel-7-server-optional-rpms`
+
++
+以下示例显示了此命令的执行情况：
+
++
+[listing]
+----
+[root@localhost ~]# subscription-manager repos --enable rhel-7-server-optional-rpms
+Repository 'rhel-7-server-optional-rpms' is enabled for this system.
+----
+. 运行 `yum repolist` 命令。
++
+以下示例显示了此命令的执行情况。列表中应显示 rhel-7-server-optional -rpms 存储库。
+
++
+[listing]
+----
+[root@localhost ~]# yum repolist
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+rhel-7-server-optional-rpms | 3.2 kB  00:00:00
+rhel-7-server-rpms | 3.5 kB  00:00:00
+(1/3): rhel-7-server-optional-rpms/7Server/x86_64/group              |  26 kB  00:00:00
+(2/3): rhel-7-server-optional-rpms/7Server/x86_64/updateinfo         | 2.5 MB  00:00:00
+(3/3): rhel-7-server-optional-rpms/7Server/x86_64/primary_db         | 8.3 MB  00:00:01
+repo id                                      repo name                                             status
+rhel-7-server-optional-rpms/7Server/x86_64   Red Hat Enterprise Linux 7 Server - Optional (RPMs)   19,447
+rhel-7-server-rpms/7Server/x86_64            Red Hat Enterprise Linux 7 Server (RPMs)              26,758
+repolist: 46,205
+[root@localhost ~]#
+----
+
+
+====
+.适用于 RHEL 8.x 操作系统的操作步骤
+[#rhel8x%collapsible]
+====
+如果您的操作系统为*RHEL 8.x*，请使用此操作步骤 来访问存储库：
+
+.步骤
+. 订阅所需的存储库：
++
+`ssubscription-manager repos-enable rhel-8-for-x86_64 basos-rpms`
+
++
+`ssubscription-manager repos-enable rhel-8-for-x86_64 -AppStream -rpms`
+
++
+以下示例显示了此命令的执行情况：
+
++
+[listing]
+----
+[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms
+[root@localhost ~]# subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms
+Repository 'rhel-8-for-x86_64-baseos-rpms' is enabled for this system.
+Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
+----
+. 运行 `yum repolist` 命令。
++
+新订阅的存储库应显示在列表中。
+
+
+
+====
+.适用于 CentOS 7.x 操作系统的操作步骤
+[#centos7x%collapsible]
+====
+如果您的操作系统为*CentOS 7.x*，请使用此操作步骤 来访问存储库：
+
+
+NOTE: 以下示例显示的是CentOS 7.6的存储库、可能不适用于其他CentOS版本。使用适用于您的CentOS版本的基础存储库。
+
+.步骤
+. 添加 C7.6.1810 —基本存储库。C7.6.1810 -基本存储库包含ONTAP 调解器所需的"kernel-devel"软件包。
+. 将以下行添加到 /etc/yum.repos.d/Centos-vault.repo.
++
+[listing]
+----
+[C7.6.1810-base]
+name=CentOS-7.6.1810 - Base
+baseurl=http://vault.centos.org/7.6.1810/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+enabled=1
+----
+. 运行 `yum repolist` 命令。
++
+以下示例显示了此命令的执行情况。CentOS-7.6.1810 —基本存储库应显示在列表中。
+
++
+[listing]
+----
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: distro.ibiblio.org
+ * extras: distro.ibiblio.org
+ * updates: ewr.edge.kernel.org
+C7.6.1810-base                                 | 3.6 kB  00:00:00
+(1/2): C7.6.1810-base/x86_64/group_gz          | 166 kB  00:00:00
+(2/2): C7.6.1810-base/x86_64/primary_db        | 6.0 MB  00:00:04
+repo id                      repo name               status
+C7.6.1810-base/x86_64        CentOS-7.6.1810 - Base  10,019
+base/7/x86_64                CentOS-7 - Base         10,097
+extras/7/x86_64              CentOS-7 - Extras       307
+updates/7/x86_64             CentOS-7 - Updates      1,010
+repolist: 21,433
+[root@localhost ~]#
+----
+
+
+====
+.适用于Rocky Linux 8或9操作系统的操作步骤
+[#rocky-linux-8-9%collapsible]
+====
+如果您的操作系统是*Rocky Linux 8*或*Rocky Linux 9*，请使用此操作步骤 来访问存储库：
+
+.步骤
+. 订阅所需的存储库：
++
+`dnf config-manager --set-enabled baseos`
+
++
+`dnf config-manager --set-enabled appstream`
+
+. 执行 `clean` 操作：
++
+`dnf clean all`
+
+. 验证存储库列表：
++
+`dnf repolist`
+
+
+
+....
+[root@localhost ~]# dnf config-manager --set-enabled baseos
+[root@localhost ~]# dnf config-manager --set-enabled appstream
+[root@localhost ~]# dnf clean all
+[root@localhost ~]# dnf repolist
+repo id                        repo name
+appstream                      Rocky Linux 8 - AppStream
+baseos                         Rocky Linux 8 - BaseOS
+[root@localhost ~]#
+....
+....
+[root@localhost ~]# dnf config-manager --set-enabled baseos
+[root@localhost ~]# dnf config-manager --set-enabled appstream
+[root@localhost ~]# dnf clean all
+[root@localhost ~]# dnf repolist
+repo id                        repo name
+appstream                      Rocky Linux 9 - AppStream
+baseos                         Rocky Linux 9 - BaseOS
+[root@localhost ~]#
+....
+====

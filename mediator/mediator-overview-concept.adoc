@@ -1,0 +1,72 @@
+---
+permalink: mediator/mediator-overview-concept.html 
+sidebar: sidebar 
+keywords: ontap mediator service, install requirements, mediator requirements 
+summary: ONTAP 调解器为ONTAP 功能提供了多种功能。 
+---
+= ONTAP 调解器概述
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 调解器为ONTAP 功能提供了多种功能：
+
+* 为HA元数据提供永久性隔离存储。
+* 用作控制器可用性的ping代理。
+* 提供同步节点运行状况查询功能、以帮助确定仲裁。
+
+
+ONTAP 调解器提供了两个额外的systemc拨 服务：
+
+* *`ontap_mediator.service`*
++
+维护用于管理ONAP关系的REST API服务器。
+
+* *`mediator-scst.service`*
++
+控制iSCSI模块(SCST)的启动和关闭。
+
+
+
+
+
+== 为系统管理员提供的工具
+
+为系统管理员提供的工具：
+
+* *`/usr/local/bin/mediator_change_password`*
++
+提供当前API用户名和密码后、设置新的API密码。
+
+* *`/usr/local/bin/mediator_change_user`*
++
+提供当前API用户名和密码后、设置新的API用户名。
+
+* *`/usr/local/bin/mediator_generate_support_bundle`*
++
+生成一个本地tgz文件、其中包含与NetApp客户支持进行通信所需的所有有用支持信息。其中包括应用程序配置、日志和一些系统信息。捆绑包会在本地磁盘上生成、可以根据需要手动传输。存储位置：/opt/NetApp/data/support_Bund具/
+
+* *`/usr/local/bin/uninstall_ontap_mediator`*
++
+删除ONTAP 调解器软件包和SCST内核模块。这包括所有配置、日志和邮箱数据。
+
+* *`/usr/local/bin/mediator_unlock_user`*
++
+如果达到身份验证重试限制、则解除对API用户帐户的锁定。此功能用于防止暴力密码派生。它会提示用户输入正确的用户名和密码。
+
+* *`/usr/local/bin/mediator_add_user`*
++
+(仅支持)用于在安装时添加API用户。
+
+
+
+
+
+== 特别说明
+
+ONTAP 调解器依靠SCST来提供iSCSI (请参见 http://scst.sourceforge.net/index.html)[]。此软件包是一个内核模块、在安装期间专门针对内核进行编译。对内核进行任何更新都可能需要重新安装SCST。或者、先卸载、然后重新安装ONTAP 调解器、然后重新配置ONTAP 关系。
+
+
+NOTE: 对服务器操作系统内核的任何更新都应与ONTAP 中的维护窗口协调。

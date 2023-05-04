@@ -1,7 +1,7 @@
 ---
 permalink: flexgroup/create-svm-disaster-recovery-relationship-task.html 
 sidebar: sidebar 
-keywords: create, svm, disaster, recovery, relationship, flexgroup, volume, flex group, flexclone, flex clone 
+keywords: create, svm, disaster, recovery, svm dr, svm-dr, relationship, flexgroup, volume, flex group, flexclone, flex clone 
 summary: 从 ONTAP 9.1.1 开始，您可以使用 FlexGroup 卷创建 SVM 灾难恢复（ SVM DR ）关系。SVM DR 关系可通过同步和复制 SVM 配置及其数据，提供冗余并在发生灾难时恢复 FlexGroup 。SVM DR 需要 SnapMirror 许可证。 
 ---
 = 为 FlexGroup 卷创建 SVM 灾难恢复关系
@@ -14,16 +14,23 @@ summary: 从 ONTAP 9.1.1 开始，您可以使用 FlexGroup 卷创建 SVM 灾难
 从 ONTAP 9.1.1 开始，您可以使用 FlexGroup 卷创建 SVM 灾难恢复（ SVM DR ）关系。SVM DR 关系可通过同步和复制 SVM 配置及其数据，提供冗余并在发生灾难时恢复 FlexGroup 。SVM DR 需要 SnapMirror 许可证。
 
 .开始之前
-您应了解无法创建 FlexGroup SVM DR 关系的情况。
+您无法创建符合以下条件的FlexGroup SVM DR关系。
 
 * 已存在 FlexClone FlexGroup 配置
 * FlexGroup 卷包含 FabricPool 配置
-* FlexGroup 卷属于扇出或级联关系
+* FlexGroup卷是级联关系的一部分
+* FlexGroup卷是扇出关系的一部分、集群运行的ONTAP版本早于ONTAP 9.12.1。(从ONTAP 9.13.1开始、支持扇出关系。)
 
 
 .关于此任务
 * 两个集群中的所有节点都必须与添加了 SVM DR 支持的节点运行相同的 ONTAP 版本（ ONTAP 9.9.1 或更高版本）。
 * 主站点和二级站点之间的 SVM DR 关系应运行正常，并且在主 SVM 和二级 SVM 上都应有足够的空间来支持 FlexGroup 卷。
+* 在创建FlexGroup SVM DR关系时、如果此关系中的FlexGroup卷属于扇出关系、则应注意以下要求：
++
+** 源集群和目标集群必须运行ONTAP 9.13.1或更高版本。
+** 使用FlexGroup 卷的SVM DR支持对八个站点建立SnapMirror扇出关系。
+
+
 
 
 有关创建 SVM DR 关系的信息，请参见 https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-svm-replication-workflow-concept.html["管理 SnapMirror SVM 复制"]。
@@ -40,7 +47,10 @@ link:create-task.html["创建 FlexGroup 卷"]。
 +
 请等待 FlexGroup 及其所有成分卷均已创建，然后再继续。
 
-. 要复制 FlexGroup 卷，请更新二级站点上的 SVM ： `snapmirror update -destination-path destination_svm_name ： -source-path source_svm_name ：` + 您也可以输入 `snapmirror show -fields schedule` 来检查是否已存在计划的 SnapMirror 更新
+. 要复制FlexGroup卷、请更新二级站点上的SVM： `snapmirror update -destination-path destination_svm_name: -source-path source_svm_name:`
++
+您还可以输入来检查是否已存在计划的SnapMirror更新 `snapmirror show -fields schedule`
+
 . 在二级站点上，验证 SnapMirror 关系是否运行正常： `snapmirror show`
 +
 [listing]

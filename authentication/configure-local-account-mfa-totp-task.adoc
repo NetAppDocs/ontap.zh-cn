@@ -1,0 +1,42 @@
+---
+permalink: authentication/configure-local-account-mfa-totp-task.html 
+sidebar: sidebar 
+keywords: enable, ssh, multifactor authentication, mfa, hardware authentication device 
+summary: '要利用基于时间的一次性密码(TOTP)通过多因素身份验证(MFA)提高帐户安全性、您必须配置本地用户帐户以供TOTP使用。' 
+---
+= 使用TOTP配置MFA的本地用户帐户
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.13.1开始、可以使用基于时间的一次性密码(TOTP)为用户帐户配置多因素身份验证(MFA)。
+
+.开始之前
+* 存储管理员必须执行此操作 link:setup-ssh-multifactor-authentication-task.html#enable-mfa-with-totp["使用TOTP启用MFA"] 作为用户帐户的第二种身份验证方法。
+* 您的主用户帐户身份验证方法应为用户密码或公共SSH密钥。
+* 您必须将TOTP应用程序配置为与智能手机配合使用、并创建TOTP机密密钥。
++
+各种身份验证程序应用程序(如Google身份验证程序)均支持TOTP。
+
+
+
+.步骤
+. 使用当前身份验证方法登录到您的用户帐户。
++
+您当前的身份验证方法应为用户密码或SSH公共密钥。
+
+. 在您的帐户上创建TOTP配置：
++
+[source, cli]
+----
+security login totp create -vserver "<svm_name>" -username "<account_username >"
+----
+. 验证是否已在您的帐户上启用TOTP配置：
++
+[source, cli]
+----
+security login totp show -vserver "<svm_name>" -username "<account_username>"
+----
+

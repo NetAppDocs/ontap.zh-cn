@@ -11,12 +11,16 @@ summary: 创建 FlexClone 卷。
 
 
 [role="lead"]
-您可以从 SnapMirror 目标卷或 SnapVault 二级卷的父 FlexVol 卷创建数据保护 FlexClone 卷。创建 FlexClone 卷后，如果 FlexClone 卷存在，则无法删除父卷。
+您可以从 SnapMirror 目标卷或 SnapVault 二级卷的父 FlexVol 卷创建数据保护 FlexClone 卷。从ONTAP 9.7开始、您可以从FlexGroup 卷创建FlexClone卷。创建 FlexClone 卷后，如果 FlexClone 卷存在，则无法删除父卷。
 
 .您需要的内容
 * 集群上必须安装 FlexClone 许可证。
 * 要克隆的卷必须处于联机状态。
 
+
+
+
+== 创建FlexVol 或FlexGroup 的FlexClone卷
 
 .步骤
 . 创建 FlexClone 卷：
@@ -40,4 +44,37 @@ summary: 创建 FlexClone 卷。
 +
 `volume clone create -vserver vs1 -flexclone vol_dp_clone -type DP -parent-volume dp_vol -parent-snapshot snap1`
 
+
+
+
+
+== 创建任何SnapLock 类型的FlexClone
+
+从ONTAP 9.13.1开始、您可以指定以下三种SnapLock 类型之一： `compliance`， `enterprise`， `non-snaplock`创建RW卷的FlexClone时。默认情况下、创建的FlexClone卷与父卷具有相同的SnapLock 类型。但是、您可以使用覆盖默认值 `snaplock-type` 选项。
+
+使用 `non-snaplock` 参数 `snaplock-type` 您可以选择从SnapLock 父卷创建非SnapLock类型的FlexClone卷、以便在必要时更快地将数据恢复联机。
+
+了解更多信息 link:https://docs.netapp.com/us-en/ontap/snaplock/index.html["SnapLock"]。
+
+.开始之前
+如果FlexClone卷的SnapLock 类型与父卷不同、则应注意以下FlexClone卷限制。
+
+* 仅支持RW类型的克隆。不支持SnapLock 类型与父卷不同的DP类型克隆。
+* 无法使用SnapLock-type选项克隆包含LUN的卷、因为SnapLock 卷不支持LUN。
+* 无法使用Compliance SnapLock 类型克隆MetroCluster 镜像聚合上的卷、因为MetroCluster 镜像聚合不支持SnapLock Compliance卷。
+* 不能使用其他SnapLock 类型克隆具有合法保留的SnapLock 合规性卷。只有SnapLock 合规性卷才支持合法保留。
+* SVM DR不支持SnapLock 卷。尝试从SVM中属于SVM DR关系的卷创建SnapLock 克隆将失败。
+* 根据FabricPool 最佳实践、建议克隆保留与父级相同的层策略。但是、启用了FabricPool的卷的SnapLock 合规性克隆不能与父卷具有相同的分层策略。必须将此层策略设置为 `none`。正在尝试从使用非层策略的父级创建SnapLock 合规性克隆 `none` 将失败。
+
+
+.步骤
+. 创建SnapLock 类型的FlexClone卷： `volume clone create -vserver _svm_name_ -flexclone _flexclone_name_ -type RW [ -snaplock-type {non-snaplock|compliance|enterprise} ]`
++
+示例
+
++
+[listing]
+----
+> volume clone create -vserver vs0 -flexclone vol1_clone -type RW -snaplock-type enterprise -parent-volume vol1
+----
 

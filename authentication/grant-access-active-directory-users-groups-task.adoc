@@ -26,6 +26,7 @@ xref:enable-ad-users-groups-access-cluster-svm-task.adoc[配置 Active Directory
 +
 您可以在启用帐户访问之前或之后执行此任务。
 
+* 从ONTAP 9.13.1开始、您可以使用SSH公共密钥作为具有AD用户密码的主身份验证方法或二级身份验证方法。
 * 从ONTAP 9.11.1开始、您可以使用 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["用于nsswitch身份验证的LDAP快速绑定"] AD LDAP服务器是否支持此功能。
 * 如果您不确定要分配给登录帐户的访问控制角色，可以稍后使用 `ssecurity login modify` 命令添加此角色。
 +
@@ -35,36 +36,66 @@ xref:modify-role-assigned-administrator-task.adoc[修改分配给管理员的角
 
 [NOTE]
 ====
-只有 `SSH` 和 `ontapi` 应用程序才支持 AD 组帐户访问。
+只有支持AD组帐户访问 `SSH` 和 `ontapi` 应用程序。SSH公共密钥身份验证不支持AD组、而SSH公共密钥身份验证通常用于多因素身份验证。
 
 ====
 .步骤
 . 启用 AD 用户或组管理员帐户以访问 SVM ：
 +
-`ssecurity login create -vserver svm_name -user-or-group-name user_or_group_name -application -authmethod domain -role -comment [-is-ldap-fastbind true"`
+*对于AD用户：*
 
 +
-有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+[cols="1,1,1,4"]
+|===
+| ONTAP 版本 | 主身份验证 | 二级身份验证 | 命令 
 
-+
-link:config-worksheets-reference.html["创建或修改登录帐户"]
 
-+
-以下命令将使用预定义的 `backup` 角色启用 AD 集群管理员帐户 `DOMAIN1\guest1` 以访问管理 SVM``engCluster`` 。
-
-+
+| 9.13.1及更高版本 | 公共密钥 | 无  a| 
 [listing]
 ----
-cluster1::>security login create -vserver engCluster -user-or-group-name DOMAIN1\guest1 -application ssh -authmethod domain -role backup
+security login create -vserver <svm_name> -user-or-group-name <user_name> -application ssh -authentication-method publickey -role <role>
 ----
-+
-以下命令将启用 AD 组帐户 `DOMAIN1\adgroup` 中具有预定义的 `vsadmin-volume` 角色的 SVM 管理员帐户，以访问 SVM``engData`` 。
 
-+
+
+| 9.13.1及更高版本 | domain | 公共密钥  a| 
+*新用户*
+
 [listing]
 ----
-cluster1::>security login create -vserver engData -user-or-group-name DOMAIN1\adgroup -application ssh -authmethod domain -role vsadmin-volume
+security login create -vserver <svm_name> -user-or-group-name <user_name> -application ssh -authentication-method domain -second-authentication-method publickey -role <role>
 ----
+*对于现有用户*
+
+[listing]
+----
+security login modify -vserver <svm_name> -user-or-group-name <user_name> -application ssh -authentication-method domain -second-authentication-method publickey -role <role>
+----
+
+
+| 9.0及更高版本 | domain | 无  a| 
+[listing]
+----
+security login create -vserver <svm_name> -user-or-group-name <user_name> -application <application> -authentication-method domain -role <role> -comment <comment> [-is-ldap-fastbind true]
+----
+|===
++
+*对于广告组：*
+
++
+[cols="1,1,1,4"]
+|===
+| ONTAP 版本 | 主身份验证 | 二级身份验证 | 命令 
+
+
+| 9.0及更高版本 | domain | 无  a| 
+[listing]
+----
+security login create -vserver <svm_name> -user-or-group-name <user_name> -application <application> -authentication-method domain -role <role> -comment <comment> [-is-ldap-fastbind true]
+----
+|===
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["用于管理员身份验证和RBAC配置的工作表"]
+
 
 
 .完成后

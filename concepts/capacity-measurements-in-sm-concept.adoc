@@ -2,14 +2,14 @@
 sidebar: sidebar 
 permalink: concepts/capacity-measurements-in-sm-concept.html 
 keywords: capacity, measurement, physical, logical, storage, used storage, local tier capacity, aggregate capacity, block, capacity concern, add capacity, volume, used capacity, available capacity, total capacity, inactive capacity, static insights, dynamic insights, snapshot copy, snapshot copies, inactive data, overprovision, overflows, snapshot copy policy, snapshot copy reserves, reserves, policy, top volumes 
-summary: 系统容量可以通过物理空间或逻辑空间来衡量。System Manager 的最新版本使用物理和逻辑容量的测量值。 
+summary: 系统容量可以用物理空间或逻辑空间来衡量。从ONTAP 9.7开始、System Manager可提供物理容量和逻辑容量的测量结果。 
 ---
 = System Manager 中的容量测量
 :allow-uri-read: 
 
 
 [role="lead"]
-系统容量可以通过物理空间或逻辑空间来衡量。System Manager 的最新版本使用物理和逻辑容量的测量值。
+系统容量可以用物理空间或逻辑空间来衡量。从ONTAP 9.7开始、System Manager可提供物理容量和逻辑容量的测量结果。
 
 以下说明介绍了这两个测量值之间的差异：
 
@@ -19,13 +19,6 @@ summary: 系统容量可以通过物理空间或逻辑空间来衡量。System M
 
 
 NOTE: 在 System Manager 中，容量表示不考虑根存储层（聚合）容量。
-
-<<measurements-used-cap>>
-<<cap-measurement-terms>>
-<<cap-measurement-units>>
-
-.追加信息
-您可以在System Manager中监控集群、本地层和卷的容量。请参见 link:../task_admin_monitor_capacity_in_sm.html["在 System Manager 中监控容量"]。
 
 
 
@@ -72,7 +65,9 @@ NOTE: 在 System Manager 中，容量表示不考虑根存储层（聚合）容�
 
 在描述容量时，使用以下术语：
 
-* *可用*：本地层中可用于配置卷的物理空间量。
+* *已分配容量*：已为Storage VM中的卷分配的空间量。
+* *可用*：可用于在Storage VM或本地层中存储数据或配置卷的物理空间量。
+* *卷间容量*：Storage VM上所有卷的已用存储与可用存储之和。
 * *客户端数据*：客户端数据(物理或逻辑)使用的空间量。
 * *已提交*：本地层的已提交容量。
 * *数据精简*：
@@ -83,11 +78,34 @@ NOTE: 在 System Manager 中，容量表示不考虑根存储层（聚合）容�
 
 * *已用逻辑空间*：已用空间量、而不考虑存储效率功能节省的空间。
 * *逻辑已用%*：当前已用逻辑容量与配置大小之比的百分比、不包括Snapshot预留。此值可以大于 100% ，因为它包括卷中的效率节省。
+* *最大容量*：为Storage VM上的卷分配的最大空间量。
 * *物理已用*：卷或本地层的物理块中已用的容量。
 * *物理已用%*：卷的物理块中已用容量与配置大小之比。
 * *预留*：为本地层中已配置卷预留的空间量。
+* *已用*：包含数据的空间量。
 * *已用和预留*：已用物理空间与预留空间之和。
 
+
+
+
+== Storage VM的容量
+
+Storage VM的最大容量由为卷分配的总空间加上剩余的未分配空间决定。
+
+* 为卷分配的空间等于已用容量与FlexVol 卷、FlexGroup 卷和FlexCache 卷的可用容量之和。
+* 即使卷在删除后受到限制、脱机或位于恢复队列中、卷的容量也会计入总和。
+* 如果为卷配置了自动增长、则会在总和中使用卷的最大自动大小值。如果不使用自动增长、则会使用卷的实际容量作为总和。
+
+
+下图说明了卷间容量的衡量指标与最大容量限制之间的关系。
+
+image:max-cap-limit-cap-x-volumes.gif["最大容量限制由已分配的空间和可用空间组成、卷间的容量仅占用已分配的空间。"]
+
+从ONTAP 9.13.1开始、集群管理员可以执行此操作 link:../manage-max-cap-limit-svm-in-sm-task.html["为Storage VM启用最大容量限制"]。但是、对于包含用于数据保护的卷的Storage VM、在SnapMirror关系或MetroCluster 配置中、不能设置存储限制。此外、不能将配额配置为超过Storage VM的最大容量。
+
+设置最大容量限制后、不能将其更改为小于当前分配的容量的大小。
+
+当Storage VM达到其最大容量限制时、无法执行某些操作。System Manager可为中的后续步骤提供建议 link:../insights-system-optimization-task.html["*洞察力*"]。
 
 
 
@@ -156,8 +174,10 @@ PIB
  a| 
 1024 * 1024 * 1024 * 1024 * 1024
  a| 
-1 ， 125 ， 898 ， 010 ， 834 ， 424 字节
+1、125、899、905、843、024字节
 
 |===
-.追加信息 ：
+.相关信息
+link:../task_admin_monitor_capacity_in_sm.html["在 System Manager 中监控容量"]
+
 link:../volumes/logical-space-reporting-enforcement-concept.html["卷的逻辑空间报告和强制实施"]

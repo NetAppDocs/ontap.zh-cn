@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: task_nas_file_system_analytics_enable.html 
-keywords: capacity analytics, data visualization, File System Analytics, System Manager, storage, explorer 
+keywords: capacity analytics, data visualization, File System Analytics 
 summary: 要收集和显示容量分析等使用情况数据，您必须启用文件系统分析。 
 ---
 = 启用文件系统分析
@@ -21,7 +21,10 @@ summary: 要收集和显示容量分析等使用情况数据，您必须启用�
 [role="lead"]
 要收集和显示容量分析等使用情况数据、您需要在卷上启用文件系统分析。
 
-从ONTAP 9.8开始、您可以对新卷或现有卷启用文件系统分析。如果要将系统升级到ONTAP 9.8或更高版本、请确保在启用文件系统分析之前已完成所有升级过程。
+.关于此任务
+* 从ONTAP 9.8开始、您可以对新卷或现有卷启用文件系统分析。如果要将系统升级到ONTAP 9.8或更高版本、请确保在启用文件系统分析之前已完成所有升级过程。
+* 根据卷的大小和内容，在 ONTAP 处理卷中的现有数据时，启用分析可能需要一些时间。System Manager 将显示进度并在完成后提供分析数据。如果您需要有关初始化进度的更精确信息，可以使用 ONTAP 命令行界面命令 `volume Analytics show` 。
+
 
 .关于此任务
 根据卷的大小和内容，在 ONTAP 处理卷中的现有数据时，启用分析可能需要一些时间。System Manager 将显示进度并在完成后提供分析数据。如果您需要有关初始化进度的更精确信息，可以使用 ONTAP 命令行界面命令 `volume Analytics show` 。
@@ -44,9 +47,52 @@ summary: 要收集和显示容量分析等使用情况数据，您必须启用�
 --
 .命令行界面
 --
-.要使用 CLI 启用文件系统分析，请执行以下操作：
+.使用 CLI 启用文件系统分析
 . 运行以下命令： `volume Analytics on -vserver _svm_name_ -volume _volume_name_ （ -foreground ｛ true_false ｝ ）` 默认情况下，此命令在前台运行； ONTAP 将显示进度并在完成后提供分析数据。如果您需要更精确的信息，可以在后台运行命令，方法是使用 ` -foreground false` 选项，然后使用 `volume Analytics show` 命令在命令行界面中显示初始化进度。
-. 成功启用文件系统分析后、请使用ONTAP 系统管理器显示分析数据。
+. 成功启用文件系统分析后、请使用System Manager或ONTAP REST API显示分析数据。
+
+
+--
+====
+
+
+== 修改默认的文件系统分析设置
+
+从ONTAP 9.13.1开始、您可以修改SVM或集群设置、以便在新卷上默认启用文件系统分析。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+如果您使用的是System Manager、则可以修改Storage VM或集群设置、以便默认在创建卷时启用容量分析和活动跟踪。默认启用仅在修改设置后创建的适用场景卷、而不是现有卷。
+
+.修改集群上的文件系统分析设置
+. 在System Manager中、导航到**集群设置**。
+. 在**群集设置**中，查看文件系统设置选项卡。要修改设置、请选择 image:icon_gear.gif["设置档位"] 图标。
+. 默认情况下，在“**活动跟踪**”字段中，输入要启用活动跟踪的SVM的名称。将此字段留空将使所有SVM上的活动跟踪处于禁用状态。
++
+取消选中**在新Storage VM**上启用复选框，默认情况下在新Storage VM上禁用活动跟踪。
+
+. 在**分析**字段中，输入默认情况下要启用容量分析的Storage VM的名称。将此字段留空将使所有SVM上的容量分析处于禁用状态。
++
+取消选中**在新Storage VM**上启用复选框可在默认情况下在新Storage VM上禁用容量分析。
+
+. 选择**保存**。
+
+
+.修改SVM上的文件系统分析设置
+. 选择要修改的SVM，然后选择** Storage VM设置**。
+. 在**文件系统分析**卡中，使用切换为Storage VM上的所有新卷启用或禁用活动跟踪和容量分析。
+
+
+--
+.命令行界面
+--
+您可以使用ONTAP命令行界面将Storage VM配置为在新卷上默认启用文件系统分析。
+
+.默认情况下、在SVM上启用文件系统分析
+. 修改SVM、以便在所有新创建的卷上默认启用容量分析和活动跟踪：
+`vserver modify -vserver _svm_name_ -auto-enable-activity-tracking true -auto-enable-analytics true`
 
 
 --

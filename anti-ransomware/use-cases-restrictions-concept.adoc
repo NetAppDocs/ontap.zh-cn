@@ -22,14 +22,7 @@ summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版
 ONTAP 平台支持：
 
 * 从ONTAP 9.10.1开始、所有内部ONTAP 系统均可使用自动勒索软件保护(ARP)功能。
-* ONTAP Select 当前不支持ARP。
-* ARP目前不适用于Amazon FSX或以下Cloud Volumes ONTAP 环境：
-+
-** AWS
-** Azure 酒店
-** Google Cloud
-
-
+* 从ONTAP Select 9.13.1开始、ONTAP Select可以使用ARP。
 
 
 合适的工作负载：
@@ -37,7 +30,7 @@ ONTAP 平台支持：
 * NFS 存储上的数据库
 * Windows 或 Linux 主目录
 +
-由于用户可以使用在学习期间未检测到的扩展名创建文件，因此此工作负载很可能出现误报。
+由于用户可能会创建在学习期间未检测到扩展名的文件、因此在此工作负载中出现误报的可能性更大。
 
 * 图像和视频
 +
@@ -55,8 +48,8 @@ ONTAP 平台支持：
 不适合的工作负载：
 
 * 文件创建或删除频率较高的工作负载（几秒内就有数十万个文件；例如，测试 / 开发工作负载）
-* ARP取决于识别文件创建或删除活动异常激增的能力。如果应用程序本身是文件活动的源，则无法有效地将其与勒索软件活动区分开来
-* 应用程序或主机对数据ARP进行加密的工作负载取决于将传入数据区分为加密或未加密。如果应用程序本身正在对数据进行加密，则此功能的有效性将会降低。但是，根据文件活动（创建，删除和覆盖）和文件类型，此功能仍可正常工作。
+* ARP取决于能否识别文件创建、重命名或删除活动异常激增的情况。如果应用程序本身是文件活动的源，则无法有效地将其与勒索软件活动区分开来
+* 应用程序或主机对数据ARP进行加密的工作负载取决于将传入数据区分为加密或未加密。如果应用程序本身正在对数据进行加密，则此功能的有效性将会降低。但是、该功能仍可根据文件活动(删除、覆盖或创建、或者使用新文件扩展名创建或重命名)和文件类型来工作。
 
 
 不支持的系统配置：
@@ -77,8 +70,8 @@ ONTAP 平台支持：
 * 使卷脱机
 * 受限卷
 * SnapLock 卷
-* FlexGroup 卷
-* FlexCache 卷（原始 FlexVol 卷支持反勒索软件功能，但缓存卷不支持此功能）
+* FlexGroup 卷(从ONTAP 9.13.1开始、支持FlexGroup 卷)
+* FlexCache卷(原始FlexVol卷支持ARP、但缓存卷不支持ARP)
 * SAN-only volumes
 * 已停止Storage VM的卷
 * Storage VM的根卷
@@ -98,7 +91,7 @@ ONTAP 平台支持：
 
 == ARP性能和频率注意事项
 
-按吞吐量和峰值IOPS衡量、ARP功能对系统性能的影响最小。反勒索软件功能的影响在很大程度上取决于卷工作负载。对于大多数典型或常见工作负载，建议使用以下配置限制：
+按吞吐量和峰值IOPS衡量、ARP功能对系统性能的影响最小。ARP功能的影响在很大程度上取决于卷工作负载。对于大多数典型或常见工作负载，建议使用以下配置限制：
 
 [cols="30,20,30"]
 |===
@@ -121,3 +114,9 @@ ONTAP 平台支持：
 为了尽可能获得最佳恢复点、ARP检测到异常文件活动后会立即创建一个自动Snapshot副本。但是、ARP不会立即标记警报；相反、在生成警报之前、需要运行分析并确认可疑活动与勒索软件配置文件匹配。此过程可能需要长达 60 分钟。如果分析确定活动不可疑，则不会生成警报，但自动创建的 Snapshot 副本会在文件系统上至少保留两天。
 
 从ONTAP 9.11.1开始、您可以控制因可疑勒索软件攻击而自动生成的ARP Snapshot副本的数量和保留期限。了解操作方法 link:modify-automatic-shapshot-options-task.html["修改自动Snapshot副本的选项"]。
+
+
+
+== 对受自动防兰功能保护的卷进行多管理员验证(ARP)
+
+从ONTAP 9.13.1开始、您可以使用ARP启用多管理员验证(MAV)、以提高安全性。MAV可确保至少需要两个或更多经过身份验证的管理员在受保护的卷上关闭ARP、暂停ARP或将可疑攻击标记为误报。了解操作方法 link:../multi-admin-verify/enable-disable-task.html["为受ARP保护的卷启用MAV"^]。您需要为MAV组定义管理员并为创建MAV规则 `security anti-ransomware volume disable`， `security anti-ransomware volume pause`，和 `security anti-ransomware volume attack clear-suspect` 要保护的ARP命令。MAV组中的每个管理员都必须批准每个新规则请求和 link:../multi-admin-verify/enable-disable-task.html["再次添加MAV规则"^] 在MAV设置中。

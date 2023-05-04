@@ -13,8 +13,6 @@ summary: 对于使用 NVMe 协议的系统，您必须创建一个或多个 NVMe
 [role="lead"]
 如果特定主机的操作步骤 不可用、您可以使用以下步骤为任何NVMe支持的主机创建命名空间并配置存储。
 
-命名空间在 Linux 中显示为 SCSI 磁盘设备。
-
 此操作步骤会在现有 Storage VM 上创建新的命名空间。必须为 Storage VM 配置 NVMe ，并且应已设置 FC 或 TCP 传输。
 
 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
@@ -31,8 +29,6 @@ summary: 对于使用 NVMe 协议的系统，您必须创建一个或多个 NVMe
 如果需要创建新子系统，请单击 * 更多选项 * 。
 
 . 如果您运行的是 ONTAP 9.8 或更高版本，并且要禁用 QoS 或选择自定义 QoS 策略，请单击 * 更多选项 * ，然后在 * 存储和优化 * 下选择 * 性能服务级别 * 。
-
-
 . 按 WWPN 对 FC 交换机进行分区。每个启动程序使用一个分区，并在每个分区中包含所有目标端口。
 . 在主机上、发现新命名空间。
 . 初始化命名空间并使用文件系统对其进行格式化。
@@ -51,45 +47,59 @@ summary: 对于使用 NVMe 协议的系统，您必须创建一个或多个 NVMe
 .步骤
 . 验证是否已为 NVMe 配置 SVM ：
 +
-`vserver show -vserver _svm_name_ -fields allowed-protocols`
-
+[source, cli]
+----
+vserver show -vserver <svm_name> -fields allowed-protocols
+----
 +
 `NVMe` 应显示在 `allowed-protocols` 列下。
 
 . 创建 NVMe 命名空间：
 +
-`vserver nvme namespace create -vserver _svm_name_ -path _path_ -size _size_of_namespace_-ostype _os_type_`
-
+[source, cli]
+----
+vserver nvme namespace create -vserver <svm_name> -path <path> -size <size_of_namespace> -ostype <OS_type>
+----
 . 创建 NVMe 子系统：
 +
-`vserver nvme subsystem create -vserver _svm_name_ -subsystem _name_of_subsystem_ -ostype _os_type_`
-
+[source, cli]
+----
+vserver nvme subsystem create -vserver <svm_name> -subsystem <name_of_subsystem> -ostype <OS_type>
+----
 +
 NVMe 子系统名称区分大小写。必须包含1到96个字符。允许使用特殊字符。
 
 . 验证是否已创建子系统：
 +
-`vserver nvme subsystem show -vserver _svm_name_`
-
+[source, cli]
+----
+vserver nvme subsystem show -vserver <svm_name>
+----
 +
 `NVMe` 子系统应显示在 `Ssubsystem` 列下。
 
 . 从主机获取 NQN 。
 . 将主机 NQN 添加到子系统：
 +
-`vserver nvme subsystem host add -vserver _svm_name_ -subsystem _subsystem_name_ -host-nqn _Host_NQN_ ： subsystem._subsystem_name_`
-
+[source, cli]
+----
+vserver nvme subsystem host add -vserver <svm_name> -subsystem <subsystem_name> -host-nqn <Host_NQN>
+----
 . 将命名空间映射到子系统：
 +
-`vserver nvme subsystem map add -vserver _svm_name_ -subsystem _subsystem_name_ -path _path_`
-
+[source, cli]
+----
+vserver nvme subsystem map add -vserver <svm_name> -subsystem <subsystem_name> -path <path>
+----
 +
 一个命名空间只能映射到一个子系统。
 
 . 验证命名空间是否已映射到子系统：
 +
-`vserver nvme namespace show -vserver _svm_name_ -instance`
-
+[source, cli]
+----
+vserver nvme namespace show -vserver <svm_name> -instance
+----
 +
 子系统应列为 `Attached subsystem` 。
 

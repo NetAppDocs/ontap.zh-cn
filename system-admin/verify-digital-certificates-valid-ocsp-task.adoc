@@ -14,7 +14,7 @@ summary: 从 ONTAP 9.2 开始，启用联机证书状态协议（ Online Certifi
 从 ONTAP 9.2 开始，启用联机证书状态协议（ Online Certificate Status Protocol ， OCSP ）后，使用传输层安全（ Transport Layer Security ， TLS ）通信的 ONTAP 应用程序可以接收数字证书状态。您可以随时为特定应用程序启用或禁用 OCSP 证书状态检查。默认情况下， OCSP 证书状态检查处于禁用状态。
 
 .您需要的内容
-这些命令必须在高级权限级别执行。
+要执行此任务、您需要具有高级权限级别访问权限。
 
 .关于此任务
 OCSP 支持以下应用程序：
@@ -25,6 +25,7 @@ OCSP 支持以下应用程序：
 * 密钥管理互操作性协议（ KMIP ）
 * 审核日志记录
 * FabricPool
+* SSH (从ONTAP 9.13.1开始)
 
 
 .步骤
@@ -38,18 +39,14 @@ OCSP 支持以下应用程序：
  a| 
 enabled
  a| 
-`s安全性配置 OCSP enable -app`
-
-`应用程序名称`
+`security config ocsp enable -app` `app name`
 
 
 
  a| 
 已禁用
  a| 
-`s安全性配置 OCSP disable -app`
-
-`应用程序名称`
+`security config ocsp disable -app` `app name`
 
 |===
 +
@@ -111,7 +108,8 @@ cluster::*> security config ocsp show
          kmip                               false
          ldap_ad                            true
          ldap_nis_namemap                   true
+         ssh                                true
 
-         7 entries were displayed.
+         8 entries were displayed.
 ----
 

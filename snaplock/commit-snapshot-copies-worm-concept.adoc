@@ -1,7 +1,7 @@
 ---
 permalink: snaplock/commit-snapshot-copies-worm-concept.html 
 sidebar: sidebar 
-keywords: snaplock, commit, snapshot, copy, worm, snapvault, protect, snapmirror 
+keywords: snaplock, commit, snapshot, copy, worm, snapvault, protect, snapmirror, clone, snaplock type 
 summary: 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot 副本进行 WORM 保护。您可以在 SnapVault 目标上执行所有基本 SnapLock 任务。目标卷会自动挂载为只读，因此无需明确将 Snapshot 副本提交到 WORM ；因此，不支持使用 SnapMirror 策略在目标卷上创建计划的 Snapshot 副本。 
 ---
 = 将Snapshot副本提交到存储目标上的WORM
@@ -34,6 +34,8 @@ NOTE: 您不能重命名提交到 WORM 状态的 Snapshot 副本。
 
 
 NOTE: SnapLock 卷不支持 LUN 。虽然可以使用传统技术将 LUN 移动到 SnapLock 卷上，但这不是受支持的操作，也不是涉及 SnapLock 卷上 LUN 的任何其他操作。从ONTAP 9.0.0开始、对于非SnapLock源卷的Snapshot副本在SnapLock 目标上进行复制和锁定的SnapVault 关系、SnapLock _only_支持SnapLock 卷上的LUN。这些Snapshot副本可以包含LUN。
+
+从ONTAP 9.13.1开始、您可以通过使用创建FlexClone来瞬时还原SnapLock for SnapVault 关系的目标SnapLock 卷上锁定的Snapshot副本 `snaplock-type` 选项设置为"非SnapLock"、并在执行卷克隆创建操作时将Snapshot副本指定为"父快照"。了解更多信息 link:https://docs.netapp.com/us-en/ontap/volumes/create-flexclone-task.html?q=volume+clone["创建SnapLock 类型的FlexClone卷"]。
 
 对于 MetroCluster 配置，您应注意以下事项：
 

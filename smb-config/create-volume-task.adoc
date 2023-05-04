@@ -8,19 +8,29 @@ summary: 您可以使用 volume create 命令创建卷并指定其接合点和�
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
+:firstname: *
+:author: *
+:authorinitials: *
+:authors: *
+:revdate: [.lead]
 
 
-[role="lead"]
 您可以使用 `volume create` 命令创建卷并指定其接合点和其他属性。
-
-.开始之前
-SVM 安全模式必须为 NTFS ，并且 SMB 应设置并运行。
 
 .关于此任务
 卷必须包含 _junction path_ ，才能使其数据可供客户端使用。您可以在创建新卷时指定接合路径。如果在创建卷时未指定接合路径，则必须使用 `volume mount` 命令在 SVM 命名空间中 _mount_ 卷。
 
+.开始之前
+* SMB应已设置并正在运行。
+* SVM安全模式必须为NTFS。
+* 从ONTAP 9.13.1开始、您可以创建启用了容量分析和活动跟踪的卷。要启用容量或活动跟踪、请问题描述 `volume create` 命令 `-analytics-state` 或 `-activity-tracking-state` 设置为 `on`。
++
+要了解有关容量分析和活动跟踪的更多信息、请参见 xref:../task_nas_file_system_analytics_enable.html[启用文件系统分析]。
+
+
+
 .步骤
-. 创建具有接合点的卷： `volume create -vserver vserver_name -volume volume_name -aggregate aggregate_name -size ｛ integer ｛ KB_MB|GB_TB_PB] ｝ -security-style ntfs -junction-path junction_path]`
+. 创建具有接合点的卷： `volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {integer[KB|MB|GB|TB|PB]} -security-style ntfs -junction-path _junction_path_]`
 +
 ` junction-path` 选项如下：
 
@@ -38,7 +48,7 @@ SVM 安全模式必须为 NTFS ，并且 SMB 应设置并运行。
 +
 如果要在新目录（在新卷下的新层次结构中）中创建卷，例如， ` /new_dir/new_vol` ，则必须先创建一个接合到 SVM 根卷的新父卷。然后，您将在新父卷的接合路径（新目录）中创建新的子卷。
 
-. 验证是否已使用所需的接合点创建卷： `volume show -vserver vserver_name -volume volume_name -junction`
+. 验证是否已使用所需的接合点创建卷： `volume show -vserver _svm_name_ -volume _volume_name_ -junction`
 
 
 .示例

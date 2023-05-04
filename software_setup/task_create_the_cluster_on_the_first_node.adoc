@@ -2,7 +2,7 @@
 permalink: software_setup/task_create_the_cluster_on_the_first_node.html 
 sidebar: sidebar 
 keywords: ontap, software, setup, create, cluster, first, node, autosupport, CLI 
-summary: 您可以使用集群设置向导在第一个节点上创建集群。此向导可帮助您配置用于连接节点的集群网络（如果集群包含两个或更多节点），创建集群管理 Storage Virtual Machine （ SVM\ ），添加功能许可证密钥以及为第一个节点创建节点管理接口。 
+summary: 您可以使用集群设置向导在第一个节点上创建集群。此向导可帮助您配置连接节点的集群网络，创建集群管理 Storage Virtual Machine （ SVM ），添加功能许可证密钥以及为第一个节点创建节点管理接口。 
 ---
 = 在第一个节点上创建集群
 :allow-uri-read: 
@@ -13,6 +13,12 @@ summary: 您可以使用集群设置向导在第一个节点上创建集群。�
 [role="lead"]
 您可以使用集群设置向导在第一个节点上创建集群。此向导可帮助您配置连接节点的集群网络，创建集群管理 Storage Virtual Machine （ SVM ），添加功能许可证密钥以及为第一个节点创建节点管理接口。
 
+.开始之前
+* 您应已根据适用于您的平台型号的安装和设置说明安装新存储系统、并为其布线和加电。请参见 https://docs.netapp.com/us-en/ontap-systems/index.html["AFF 和 FAS 文档"]。
+* 应在集群的每个节点上配置集群网络接口、以便进行集群内通信。
+
+
+.步骤
 . 打开要添加到集群中的所有节点的电源。要为集群设置启用发现，必须执行此操作。
 . 连接到第一个节点的控制台。
 +
@@ -34,16 +40,13 @@ Type yes to confirm and continue {yes}: yes
 NOTE: 默认情况下， AutoSupport 处于启用状态。
 
 . 按照屏幕上的说明为节点分配 IP 地址。
-. 如果使用 GUI 向导执行设置，请按照说明在 Web 浏览器中完成设置。如果使用命令行界面向导执行设置，请按 Enter 继续。
++
+从ONTAP 9.13.1开始、您可以为A800和FAS4700平台上的管理LUN分配IPv6地址。对于9.13.1之前的ONTAP版本或其他平台上的9.13.1及更高版本、您必须为管理LUN分配IPv4地址、然后在完成集群设置后转换为IPv6。
+
+. 按 * 输入 * 继续。
 +
 [listing]
 ----
-Use your web browser to complete cluster setup by accessing
-https://10.63.11.29
-
-Otherwise, press Enter to complete cluster setup using the
-command line interface:
-
 Do you want to create a new cluster or join an existing cluster? {create, join}:
 ----
 . 创建新集群： `create`
@@ -64,3 +67,6 @@ cluster1-01           true    true
 您可以使用 `cluster setup` 命令访问集群设置向导以更改为管理 SVM 或节点 SVM 输入的任何值。
 
 
+
+.完成后
+如果需要， link:convert-ipv4-to-ipv6-task.html["从IPv4转换为IPv6"]。

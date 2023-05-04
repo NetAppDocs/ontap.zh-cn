@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: task_admin_add_a_volume.html 
-keywords: system manager, volume, storage, add, increase storage, NFS volume, create, add a volume, create a volume, add to storage VM, Ansible Playbook, manual placement, distribute volume data across cluster, add FlexGroup volume, add FlexVol volume, access permissions, SnapMirror, protection, QoS policy, cache for remote volume, performance service level policy, 
+keywords: system manager, volume, storage, add, increase storage, NFS volume, create, add a volume, create a volume, access permissions 
 summary: 您可以创建卷并将其添加到为NFS或SMB服务配置的现有Storage VM。 
 ---
 = 添加卷
@@ -21,14 +21,16 @@ summary: 您可以创建卷并将其添加到为NFS或SMB服务配置的现有St
 [role="lead"]
 您可以创建卷并将其添加到为NFS或SMB服务配置的现有Storage VM。
 
-image:workflow_admin_add_a_volume.gif["添加卷任务的工作流图"]
+image:workflow_admin_add_a_volume.gif["用于添加卷的工作流示意图"]
 
 .开始之前
-集群中应存在为 NFS 或 SMB 服务配置的 Storage VM 。
+* 集群中应存在为 NFS 或 SMB 服务配置的 Storage VM 。
+* 从ONTAP 9.13.1开始、默认情况下、您可以对新卷启用容量分析和活动跟踪。在System Manager中、您可以管理集群或Storage VM级别的默认设置。有关详细信息，请参见 xref:../task_nas_file_system_analytics_enable.html[启用文件系统分析]。
+
 
 .步骤
 . 转至 * 存储 > 卷 * 。
-. 单击 image:icon_add.gif["添加图标"]。
+. 选择 ... image:icon_add.gif["添加图标"]。
 . 指定卷的名称和大小。
 . 执行以下步骤之一：
 +
@@ -36,7 +38,7 @@ image:workflow_admin_add_a_volume.gif["添加卷任务的工作流图"]
 |===
 
 
-| 单击此按钮 ... | 要执行此操作 ... 
+| 选择此按钮... | 要执行此操作 ... 
 
 
 | * 保存 * | 此卷将使用系统默认值创建和添加。无需执行其他步骤。 
@@ -130,7 +132,7 @@ NOTE: 如果选择 * 添加作为远程卷的缓存 * 或 * 在集群中分布�
 ** *如果选择*启用SnapMirror (本地或远程)*、则从下拉列表中指定目标集群的保护策略和设置。
 
 
-. 单击 * 保存 * 。
+. 选择 * 保存 * 。
 +
 此时将创建卷并将其添加到集群和 Storage VM 中。
 

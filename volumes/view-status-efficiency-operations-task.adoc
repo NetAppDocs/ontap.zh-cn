@@ -1,10 +1,10 @@
 ---
 permalink: volumes/view-status-efficiency-operations-task.html 
 sidebar: sidebar 
-keywords: efficiency, operation, status, view 
+keywords: efficiency, operation, status, view, sequential packing 
 summary: 您可以查看卷上是否启用了重复数据删除或数据压缩。您还可以使用 volume efficiency show 命令查看卷上的效率操作的状态，状态，类型和进度。 
 ---
-= 查看效率操作的状态
+= 查看效率操作和状态
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,8 +13,12 @@ summary: 您可以查看卷上是否启用了重复数据删除或数据压缩�
 [role="lead"]
 您可以查看卷上是否启用了重复数据删除或数据压缩。您还可以使用 `volume efficiency show` 命令查看卷上的压缩状态，状态，类型和效率操作进度。
 
+
+
+== 查看效率状态
+
 .步骤
-. 使用 `volume efficiency show` 命令查看卷上效率操作的状态。
+. 查看卷上的效率操作状态： `volume efficiency show`
 +
 以下命令显示分配了自适应压缩类型的卷 VolA 上的效率操作的状态：
 
@@ -36,4 +40,15 @@ cluster1::> volume efficiency show -vserver vs1 -volume VolA
         Status: Idle
       Progress: Idle for 00:03:20
 ----
+
+
+
+
+== 确定卷是否包含按顺序打包的数据
+
+您可以显示启用了顺序打包的卷列表、例如、当您需要还原到9.13.1之前的ONTAP 版本时。要使用此命令、您必须处于高级权限模式。
+
+.步骤
+. 设置权限级别： `set -privilege advanced`
+. 列出已启用顺序打包的卷："volume效率show -extended－auto－Adaptive－数据压缩true
 

@@ -1,0 +1,48 @@
+---
+permalink: mediator/host-maintenance-task.html 
+sidebar: sidebar 
+keywords: mediator, maintain, host, maintenance 
+summary: 为了获得最佳性能、应定期维护ONTAP 调解器的主机OD。 
+---
+= 维护ONTAP 调解器的操作系统主机
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+为了获得最佳性能、您应定期维护ONTAP 调解器的主机操作系统。
+
+
+
+== 重新启动主机
+
+当集群运行状况良好时、重新启动主机。当ONTAP 调解器处于脱机状态时、集群可能无法对故障做出正确响应。如果需要重新启动、建议使用服务窗口。
+
+ONTAP 调解器将在重新启动期间自动恢复、并将重新输入先前使用ONTAP 集群配置的关系。
+
+
+
+== 主机软件包更新
+
+可以安全地更新任何库或yum软件包(内核除外)、但可能需要重新启动才能生效。如果需要重新启动、建议使用服务窗口。
+
+如果安装 `yum-utils` 软件包、请使用 `needs-restarting` 用于检测任何软件包更改是否需要重新启动的命令。
+
+如果更新了任何ONTAP 调解器依赖关系、则应重新启动、因为它们不会立即对正在运行的进程生效。
+
+
+
+== 主机操作系统次要内核升级
+
+必须为正在使用的内核编译SCST。要更新操作系统、需要维护窗口。
+
+.步骤
+执行以下步骤升级主机操作系统内核。
+
+. 停止ONTAP 调解器
+. 卸载SCST软件包。(SCST不提供升级机制。)
+. 升级操作系统并重新启动。
+. 重新安装SCST软件包。
+. 重新启用ONTAP 调解器服务。
+

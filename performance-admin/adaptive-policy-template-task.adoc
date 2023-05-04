@@ -1,0 +1,32 @@
+---
+permalink: performance-admin/adaptive-policy-template-task.html 
+sidebar: sidebar 
+keywords: qos, throughput floor, throughput ceiling, adaptive policy group template 
+summary: 使用自适应策略组模板在SVM级别强制实施吞吐量下限和上限。 
+---
+= 设置自适应策略组模板
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.13.1开始、您可以使用自适应策略组模板在SVM级别强制实施吞吐量下限和上限。
+
+.关于此任务
+* 自适应策略组模板是默认策略 `apg1`。可以随时修改此策略。它只能通过命令行界面或ONTAP REST API进行设置、并且只能应用于现有SVM。
+* 自适应策略组模板仅会影响在SVM上创建或迁移到该SVM的卷。SVM上的现有卷将保留其现有状态。
++
+如果禁用自适应策略组模板、SVM上的卷将保留其现有策略。只有随后在SVM上创建或迁移到SVM的卷才会受此功能的影响。
+
+* 您不能在具有QoS策略组的SVM上设置自适应策略组模板。
+* 自适应策略组模板专为AFF 平台而设计。可以在其他平台上设置自适应策略组模板、但该策略可能不会强制实施最小吞吐量。同样、您可以向FabricPool 聚合或不支持最小吞吐量的聚合中的SVM添加自适应策略组模板、但不会强制实施吞吐量下限。
+* 如果SVM采用MetroCluster 配置或SnapMirror关系、则会在镜像的SVM上强制实施自适应策略组模板。
+
+
+.步骤
+. 修改SVM以应用自适应策略组模板：
+`vserver modify -qos-adaptive-policy-group-template apg1`
+. 确认已设置策略：
+`vserver show -fields qos-adaptive-policy-group`
+

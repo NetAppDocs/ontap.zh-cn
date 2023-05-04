@@ -11,25 +11,25 @@ summary: 一致性组是一组卷、这些卷按一个单元进行组织、便�
 
 
 [role="lead"]
-一致性组是指作为单个单元进行管理的一组卷。在ONTAP 中、一致性组可为跨越多个卷的应用程序工作负载提供易于管理的保护保证。
+一致性组是指作为一个单元进行管理的一组卷。在ONTAP中、一致性组可为跨多个卷的应用程序工作负载提供轻松的管理和保护保证。
 
-您可以使用一致性组来简化存储管理。假设您有一个跨越20个LUN的重要数据库。您可以单独管理LUN、也可以将LUN视为一个单独的数据集、并将其分组为一个一致性组。
+您可以使用一致性组来简化存储管理。假设您有一个跨越20个LUN的重要数据库。您可以逐个管理LUN、也可以将LUN视为单独的数据集、从而将其组织到一个一致性组中。
 
-一致性组有助于管理应用程序工作负载，便于管理本地和远程保护策略，并在一个时间点同时为一组卷提供崩溃状态一致或应用程序一致的 Snapshot 副本。通过一致性组中的快照，可以还原整个应用程序工作负载。
+一致性组有助于管理应用程序工作负载、可在某个时间点为一组卷提供易于配置的本地和远程保护策略以及同时生成崩溃状态一致或应用程序一致的Snapshot副本。通过一致性组中的快照，可以还原整个应用程序工作负载。
 
 
 
-== 功能
+== 了解一致性组
 
 一致性组支持任何FlexVol 卷、而不考虑协议(NAS、SAN或NVMe)、并且可以通过ONTAP REST API或System Manager中的*存储>一致性组*菜单项进行管理。
 
-一致性组可以作为单个实体存在、也可以处于分层关系中。单个一致性组是一组卷。卷可以具有自己的卷粒度快照策略。此外、与卷关联的一致性组可以具有自己的Snapshot策略。一致性组只能具有一个SnapMirror业务连续性(SM-BC)关系和共享的SM-BC策略、此策略可用于恢复整个一致性组。
+一致性组可以作为单个实体(即卷集合)存在、也可以位于由其他一致性组组成的分层关系中。各个卷可以具有自己的卷粒度快照策略。此外、还可以使用一致性组范围的快照策略。一致性组只能具有一个SnapMirror业务连续性(SM-BC)关系和共享的SM-BC策略、此策略可用于恢复整个一致性组。
 
 下图说明了如何使用单个一致性组。上托管的应用程序的数据 `SVM1` 跨两个卷： `vol1` 和 `vol2`。一致性组上的Snapshot策略每15分钟捕获一次数据快照。
 
 image:../media/consistency-group-single-diagram.gif["一个一致性组及其成分卷和本地 Snapshot 策略的示意图"]
 
-较大的应用程序工作负载可能需要多个一致性组。在这些情况下、您可以创建分层一致性组、其中一个一致性组将成为父一致性组的子组件。父一致性组最多可以包含五个子一致性组。与各个一致性组一样，可以对一致性组（父级和子级）的整个配置应用远程 SM-BC 保护策略来恢复应用程序工作负载。
+较大的应用程序工作负载可能需要多个一致性组。在这些情况下、您可以创建分层一致性组、其中、一个一致性组将成为父一致性组的子组件。父一致性组最多可以包含五个子一致性组。与各个一致性组一样，可以对一致性组（父级和子级）的整个配置应用远程 SM-BC 保护策略来恢复应用程序工作负载。
 
 在以下示例中、应用程序托管在上 `SVM1`。管理员已创建父一致性组、 `SVM1_app`、其中包括两个子一致性组： `SVM1appDataCG` 用于数据和 `SVM1app_logCG` 日志。每个子一致性组都有自己的快照策略。卷的快照 `SVM1appDataCG` 每15分钟执行一次。的快照 `SVM1app_logCG` 每小时执行一次。父一致性组 `SVM1_app` 具有一个SM-BC策略、该策略可复制数据以确保在发生灾难时持续提供服务。
 
@@ -45,24 +45,39 @@ image:../media/consistency-group-nested-diagram.gif["嵌套一致性组及其关
 
 
 
-== 保护
+== 监控一致性组
 
-一致性组提供：
+从ONTAP 9.13.1开始、一致性组可提供实时和历史容量及性能监控功能、从而提供有关应用程序和各个一致性组的性能的洞察信息。
 
-* 通过Snapshot策略提供本地保护
-* 使用进行远程保护 xref:../smbc/index.html[SnapMirror 业务连续性（ SM-BC ）] 或 <<mcc>>
+一致性组监控数据最多可保留一年。您可以跟踪以下各项的指标：
+
+* 性能：IOPS、延迟和吞吐量
+* 容量：大小、可用容量、已用容量
 
 
-创建一致性组不会自动启用保护。可以在创建一致性组时或创建一致性组之后设置本地和/或远程保护策略。
 
-要在一致性组上配置本地保护、请参见 link:protect-task.html["保护一致性组"]。
+NOTE: 您只能使用REST API检索历史指标。无法在System Manager中查看历史指标。
+
+
+
+== 保护一致性组
+
+一致性组可通过以下方式提供保护：
+
+* Snapshot 策略
+* xref:../smbc/index.html[SnapMirror 业务连续性（ SM-BC ）]
+* <<mcc>> (从9.11.1开始)
+* xref:../data-protection/snapmirror-disaster-recovery-concept.html[异步SnapMirror] (从9.13.1开始)
+
+
+创建一致性组不会自动启用保护。可以在创建一致性组时或创建一致性组之后设置本地和远程保护策略。
+
+要为一致性组配置保护、请参见 link:protect-task.html["保护一致性组"]。
 
 要使用远程保护，您必须满足的要求 xref:../smbc/smbc_plan_prerequisites.html#licensing[SnapMirror 业务连续性部署]。
 
 
 NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
-
-从ONTAP 9.11.1开始、一致性组也支持 link:protect-task.html#two-phase["创建两阶段一致性组快照"]。
 
 
 
@@ -92,7 +107,7 @@ NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
 
 
 
-=== 一致性组配置复制
+=== 用于复制的一致性组配置
 
 如果站点B运行的是ONTAP 9.10.1或更早版本、则只会将与镜像聚合上的一致性组关联的卷复制到站点B只有当两个站点都运行ONTAP 9.11.1或更高版本时、一致性组配置才会复制到站点B。将站点B升级到ONTAP 9.11.1后、站点A上所有关联卷都放置在镜像聚合上的一致性组的数据将复制到站点B
 
@@ -100,13 +115,63 @@ NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
 
 == 升级注意事项
 
-在 ONTAP 9.8 和 9.9.1 中使用 SM-BC 创建的一致性组将自动升级，并可在 System Manager 中的 * 存储 > 一致性组 * 下进行管理，或者在升级到 ONTAP 9.10.1 时使用 ONTAP REST API 进行管理。有关升级的详细信息，请参见 link:../smbc/smbc_admin_upgrade_and_revert_considerations.html["SM-BC 升级和还原注意事项"]。
+在ONTAP 9.8和9.9.1中使用SM-BC创建的一致性组将自动升级、并在ONTAP升级到ONTAP 9.10.1或更高版本时在System Manager中的*存储>一致性组*下进行管理。有关从ONTAP 9.8或9.9.1升级的详细信息、请参见 link:../smbc/smbc_admin_upgrade_and_revert_considerations.html["SM-BC 升级和还原注意事项"]。
 
-使用ONTAP REST API创建的一致性组快照可以通过System Manager的一致性组界面和一致性组API端点进行管理。
+一致性组快照ONTAP REST API可通过System Manager的一致性组界面和一致性组REST API端点进行管理。
 
 
-NOTE: 使用ONTAPI命令创建的快照 `cg-start` 和 `cg-commit` 不会被识别为一致性组快照、因此无法通过ONTAP API中的System Manager一致性组界面或一致性组端点进行管理。
+NOTE: 使用ONTAPI命令创建的快照 `cg-start` 和 `cg-commit` 不会被识别为一致性组快照、因此无法通过System Manager的一致性组界面或ONTAP REST API中的一致性组端点进行管理。
 
+
+
+== 支持的功能(按版本)
+
+[cols="3,1,1,1,1"]
+|===
+|  | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
+
+
+| 分层一致性组 | X | X | X | X 
+
+
+| 本地Snapshot保护 | X | X | X | X 
+
+
+| SnapMirror 业务连续性 | X | X | X | X 
+
+
+| 支持 MetroCluster | X | X | X |  
+
+
+| 两阶段提交(仅限REST API) | X | X | X |  
+
+
+| 应用程序和组件标记 | X | X |  |  
+
+
+| 克隆一致性组 | X | X |  |  
+
+
+| 添加和删除卷 | X | X |  |  
+
+
+| 使用新NAS卷创建CGS | X | 仅限REST API |  |  
+
+
+| 使用新NVMe命名卷创建CGS | X | 仅限REST API |  |  
+
+
+| 在子一致性组之间移动卷 | X |  |  |  
+
+
+| 修改一致性组几何结构 | X |  |  |  
+
+
+| 监控 | X |  |  |  
+
+
+| 异步SnapMirror (仅限单个一致性组) | X |  |  |  
+|===
 
 
 == 了解有关一致性组的更多信息
@@ -114,4 +179,7 @@ NOTE: 使用ONTAPI命令创建的快照 `cg-start` 和 `cg-commit` 不会被识�
 video::j0jfXDcdyzE[youtube,width=848,height=480]
 .更多信息
 * link:https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自动化文档"^]
+* xref:../smbc/index.html[SnapMirror 业务连续性]
+* xref:../data-protection/snapmirror-disaster-recovery-concept.html[异步 SnapMirror 灾难恢复基础知识]
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/["MetroCluster 文档"]
 

@@ -1,7 +1,7 @@
 ---
 permalink: snaplock/index.html 
 sidebar: sidebar 
-keywords: decide, about, archive, compliance, snaplock, unmodified, file, worm, storage, snap lock, mirror, unmirror. license, compliance clock, regulatory, governance, rules, govern 
+keywords: decide, about, archive, compliance, snaplock, unmodified, file, worm, storage, snap lock, mirror, unmirror. license, compliance clock, regulatory, governance, rules, govern, MAV, multi-admin verification, supported, unsupported 
 summary: 您可以使用 NetApp SnapLock 技术以未经修改的格式保留文件，以满足监管要求。 
 ---
 = 什么是 SnapLock
@@ -226,6 +226,15 @@ MetroCluster 配置
 
 
  a| 
+多管理员验证(MAV)
+ a| 
+是、从ONTAP 9.13.1开始。了解更多信息 xref:Multi-admin verification (MAV) support[MAV支持]。
+ a| 
+是、从ONTAP 9.13.1开始。了解更多信息 xref:Multi-admin verification (MAV) support[MAV支持]。
+
+
+
+ a| 
 SAN
  a| 
 否
@@ -348,6 +357,12 @@ MetroCluster 配置使用两种合规时钟机制，即卷合规时钟（ Volume
 将卷复制到另一站点时，也会复制其 VCC 。例如，在从站点 A 切换到站点 B 时， VCC 会继续在站点 B 上进行更新，而站点 A 上的 SCC 会在站点 A 脱机时暂停。
 
 当站点 A 恢复联机并执行卷切回时，站点 A 的 SCC 时钟将重新启动，而卷的 VCC 将继续更新。由于无论切换和切回操作如何， VCC 都会持续更新，因此文件保留时间不取决于 SCC 时钟，也不会延长。
+
+
+
+== 多管理员验证(MAV)支持
+
+从ONTAP 9.13.1开始、集群管理员可以明确为集群启用多管理员验证、以便在执行某些SnapLock操作之前需要获得仲裁批准。启用MAV后、SnapLock卷属性(例如default-保留 时间、最小保留时间、最大保留时间、卷附加模式、自动提交期限和特权删除)将需要仲裁批准。了解更多信息 link:https://docs.netapp.com/us-en/ontap/multi-admin-verify/index.html#how-multi-admin-verification-works["最大"^]。
 
 
 

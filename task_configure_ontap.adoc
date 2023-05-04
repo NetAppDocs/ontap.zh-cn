@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: task_configure_ontap.html 
 keywords: install, installing, cluster, set up, setup, configure, disk, data ports, guided setup, local tiers, aggregate, vserver, volume, configuring ONTAP on a new cluster, configuring a new cluster, assign a node-management IP address, node, DNS server, host name, hostname, NTP server, synchronize time, create a local tier, configure protocol, SSD, provision storage, add LUN, add volume, add namespace, volume, vserver, configure ONTAP on a new cluster, configuration 
-summary: 您可以快速创建集群并为集群配置 ONTAP 软件。System Manager 为设置集群和配置存储提供了一个简单易用的工作流。 
+summary: System Manager 为设置集群和配置存储提供了一个简单易用的工作流。 
 ---
-= 在新集群上配置 ONTAP
+= 使用System Manager在新集群上配置ONTAP
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -23,7 +23,23 @@ System Manager 提供了一个简单易用的工作流来设置新集群和配�
 
 在某些情况下，例如某些 MetroCluster 部署或需要 IPv6 网络寻址的集群，您可能需要使用 ONTAP 命令行界面设置新集群。单击 link:./software_setup/concept_set_up_the_cluster.html["此处"] 有关这些要求的更多详细信息，以及使用 ONTAP 命令行界面设置集群的步骤。
 
-无论是使用 System Manager 还是 CLI 进行设置，您的系统都应已根据安装并布线 https://docs.netapp.com/us-en/ontap-systems/index.html["《安装和设置说明》"^] 随系统提供。此外，还应在集群的每个节点上配置集群网络接口，以便进行集群内通信。
+.开始之前
+* 您应已根据适用于您的平台型号的安装和设置说明安装新存储系统、并为其布线和加电。请参见 https://docs.netapp.com/us-en/ontap-systems/index.html["AFF 和 FAS 文档"]。
+* 应在集群的每个节点上配置集群网络接口、以便进行集群内通信。
+* 您应了解以下 System Manager 支持要求：
++
+** 只有单个节点和 HA 对才支持集群设置
+** 使用命令行界面手动设置节点管理时， System Manager 仅支持 IPv4 ，不支持 IPv6 。但是，如果在使用 DHCP 并使用自动分配的 IP 地址和 Windows 发现完成硬件设置后启动 System Manager ，则 System Manager 可以配置 IPv6 管理地址。
++
+在 ONTAP 9.6 及更早版本中， System Manager 不支持需要 IPv6 网络的部署。
+
+** MetroCluster 设置支持适用于每个站点具有两个节点的 MetroCluster IP 配置。
++
+在 ONTAP 9.7 及更早版本中， System Manager 不支持对 MetroCluster 配置进行新的集群设置。
+
+
+
+
 
 image:workflow_configure_ontap_on_new_cluster.gif["在新集群上配置 ONTAP 的任务工作流"]
 

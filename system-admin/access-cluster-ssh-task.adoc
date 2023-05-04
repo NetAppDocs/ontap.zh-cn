@@ -16,7 +16,7 @@ summary: 您可以通过问题描述向集群发送 SSH 请求来执行管理任
 .您需要的内容
 * 您必须已将用户帐户配置为使用 `ssh` 作为访问方法。
 +
-`ssecurity login` 命令的 ` 应用程序` 参数用于指定用户帐户的访问方法。`ssecurity login` 手册页包含追加信息。
+。 `-application` 的参数 `security login` 命令用于指定用户帐户的访问方法。。 `security login` https://review.docs.netapp.com/us-en/ontap-cli-9131_main/security-login-create.html#description["手册页"^] 包含追加信息。
 
 * 如果您使用 Active Directory （ AD ）域用户帐户访问集群，则必须已通过启用了 CIFS 的 Storage Virtual Machine （ SVM ）为集群设置身份验证通道。 此外，您的 AD 域用户帐户还必须使用 `ssh` 作为访问方法，并使用 `domain` 作为身份验证方法添加到集群中。
 * 如果使用 IPv6 连接，则必须已在集群上配置并启用 IPv6 ，并且防火墙策略必须已配置 IPv6 地址。
@@ -45,11 +45,15 @@ AES 支持 128 ， 192 和 256 位密钥长度。3DES 的密钥长度为 56 位�
 +
 AD 用户名和域名不区分大小写。但是， ONTAP 用户名区分大小写。如果在 ONTAP 中创建的用户名与在 AD 中创建的用户名的大小写不匹配，则会导致登录失败。
 
-* 从 ONTAP 9.3 开始，您可以为本地管理员帐户启用 SSH 多因素身份验证。
+
+
+.SSH身份验证选项
+* 从ONTAP 9.3开始、您可以执行此操作 link:../authentication/setup-ssh-multifactor-authentication-task.html["启用SSH多因素身份验证"^] 本地管理员帐户。
 +
 启用 SSH 多因素身份验证后，用户将使用公有密钥和密码进行身份验证。
 
-* 从 ONTAP 9.4 开始，您可以为 LDAP 和 NIS 远程用户启用 SSH 多因素身份验证。
+* 从ONTAP 9.4开始、您可以执行此操作 link:../authentication/grant-access-nis-ldap-user-accounts-task.html["启用SSH多因素身份验证"^] LDAP和NIS远程用户。
+* 从ONTAP 9.13.1开始、您可以选择在SSH身份验证过程中添加证书验证、以增强登录安全性。为此、 link:../authentication/manage-ssh-public-keys-and-certificates.html["将X.509证书与公共密钥相关联"^] 帐户使用的。如果使用SSH公共密钥和X.509证书登录、则ONTAP会在使用SSH公共密钥进行身份验证之前检查X.509证书的有效性。如果此证书已过期或已撤销、则会拒绝SSH登录、并且SSH公共密钥会自动禁用。
 
 
 .步骤

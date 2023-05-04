@@ -1,0 +1,117 @@
+---
+permalink: nfs-admin/manage-nfsv4-storepool-controls-task.html 
+sidebar: sidebar 
+keywords: enable, disable, nfsv4, storepool, controls, limit, client, resource, blocked, 
+summary: 从ONTAP 9.13开始、管理员可以使其NFS服务器在达到每个客户端存储池资源限制时拒绝向NFS客户端提供资源。 
+---
+= 管理NFSv4存储池限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.13开始、管理员可以使NFSv4服务器在达到每个客户端存储池资源限制时拒绝向NFSv4客户端提供资源。如果客户端使用的NFSv4存储池资源过多、则可能会导致其他NFSv4客户端因NFSv4存储池资源不可用而被阻止。
+
+通过启用此功能、客户还可以查看每个客户端的活动存储池资源消耗情况。这样可以更轻松地确定耗尽系统资源的客户端、并可以按客户端设置资源限制。
+
+
+
+== 查看已用存储池资源
+
+。 `vserver nfs storepool show` 命令可显示已使用的存储池资源数量。存储池是NFSv4客户端使用的资源池。
+
+.步骤
+. 以管理员身份运行 `vserver nfs storepool show` 命令以显示NFSv4客户端的存储池信息。
+
+
+.示例
+此示例显示了NFSv4客户端的存储池信息。
+
+[listing]
+----
+cluster1::*> vserver nfs storepool show
+
+Node: node1
+
+Vserver: vs1
+
+Data-Ip: 10.0.1.1
+
+Client-Ip Protocol IsTrunked OwnerCount OpenCount DelegCount LockCount
+
+-------------- --------- --------- ---------- ---------- ---------- ---------
+
+10.0.2.1          nfs4.1     true    2 1 0 4
+
+10.0.2.2          nfs4.2     true    2 1 0 4
+
+2 entries were displayed.
+----
+
+
+== 启用或禁用存储池限制控制
+
+管理员可以使用以下命令启用或禁用存储池限制控制。
+
+.步骤
+. 以管理员身份执行以下操作之一：
++
+[cols="2*"]
+|===
+| 如果您要 ... | 输入以下命令 ... 
+
+
+ a| 
+启用存储池限制控制
+ a| 
+`vserver nfs storepool config modify -limit-enforce enabled`
+
+
+
+ a| 
+禁用存储池限制控制
+ a| 
+`vserver nfs storepool config modify -limit-enforce disabled`
+
+|===
+
+
+
+
+== 查看被阻止的客户端列表
+
+如果启用了存储池限制、则管理员可以查看在达到每个客户端资源阈值时哪些客户端被阻止。管理员可以使用以下命令查看哪些客户端已标记为被阻止的客户端。
+
+.步骤
+. 使用 `vserver nfs storepool blocked-client show` 命令以显示NFSv4阻止的客户端列表。
+
+
+
+
+== 从阻止的客户端列表中删除客户端
+
+达到每个客户端阈值的客户端将断开连接并添加到块-客户端缓存中。管理员可以使用以下命令从块客户端缓存中删除客户端。这样、客户端便可连接到ONTAP NFSv4服务器。
+
+.步骤
+. 使用 `vserver nfs storepool blocked-client flush -client-ip <ip address>` 命令以转储存储池已阻止的客户端缓存。
+. 使用 `vserver nfs storepool blocked-client show` 命令以验证客户端是否已从块客户端缓存中删除。
+
+
+.示例
+此示例显示一个被阻止的客户端、其IP地址"10.2.1.1"正在从所有节点转储。
+
+[listing]
+----
+cluster1::*>vserver nfs storepool blocked-client flush -client-ip 10.2.1.1
+
+cluster1::*>vserver nfs storepool blocked-client show
+
+Node: node1
+
+Client IP
+----------
+10.1.1.1
+
+1 entries were displayed.
+----

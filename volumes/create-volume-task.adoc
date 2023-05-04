@@ -13,18 +13,22 @@ summary: 您可以使用 volume create 命令创建卷并指定其接合点和�
 [role="lead"]
 您可以使用 `volume create` 命令创建卷并指定其接合点和其他属性。
 
-.您需要的内容
-新卷的 SVM 以及将为该卷提供存储的聚合必须已存在。
-
-如果 SVM 包含关联聚合列表，则必须将该聚合包含在此列表中。
-
 .关于此任务
 卷必须包含 _junction path_ ，才能使其数据可供客户端使用。您可以在创建新卷时指定接合路径。如果在创建卷时未指定接合路径，则必须使用 `volume mount` 命令在 SVM 命名空间中 _mount_ 卷。
+
+.开始之前
+* 新卷的 SVM 以及将为该卷提供存储的聚合必须已存在。
+* 如果 SVM 包含关联聚合列表，则必须将该聚合包含在此列表中。
+* 从ONTAP 9.13.1开始、您可以创建启用了容量分析和活动跟踪的卷。要启用容量或活动跟踪、请问题描述 `volume create` 命令 `-analytics-state` 或 `-activity-tracking-state` 设置为 `on`。
++
+要了解有关容量分析和活动跟踪的更多信息、请参见 xref:../task_nas_file_system_analytics_enable.html[启用文件系统分析]。
+
+
 
 .步骤
 . 创建卷
 +
-`volume create -vserver vserver_name -volume volume_name -aggregate aggregate_name -size ｛ integer ｛ KB_MB|GB_TB_PB] ｝ -security-style ｛ ntfs|unix_mixed ｝ -user user_name_or_number -group group_name_or_number -junction-path junction_path [-policy export_policy_name]`
+`volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {integer[KB|MB|GB|TB|PB]} -security-style {ntfs|unix|mixed} -user _user_name_or_number_ -group _group_name_or_number_ -junction-path _junction_path_ [-policy _export_policy_name_]`
 
 +
 ` 安全模式` ， ` 用户` ， ` 组` ， ` 接合路径` 和 ` 策略` 选项仅适用于 NAS 命名空间。
@@ -48,12 +52,12 @@ summary: 您可以使用 volume create 命令创建卷并指定其接合点和�
 
 . 验证是否已使用所需的接合点创建卷：
 +
-`volume show -vserver vserver_name -volume volume_name -junction`
+`volume show -vserver _svm_name_ -volume _volume_name_ -junction`
 
 
 
 .示例
-以下命令将在 SVM vs1.example.com 和聚合 aggr1 上创建一个名为 users1 的新卷。新卷可从 ` /users` 获得。此卷的大小为 750 GB ，其卷保证类型为 volume （默认值）。
+以下命令将在SVM上创建一个名为users1的新卷 `vs1.example.com` 和聚合 `aggr1`。新卷可通过访问 `/users`。此卷的大小为 750 GB ，其卷保证类型为 volume （默认值）。
 
 [listing]
 ----

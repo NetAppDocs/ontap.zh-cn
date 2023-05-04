@@ -1,0 +1,115 @@
+---
+permalink: authentication/manage-ssh-public-keys-and-certificates.html 
+sidebar: sidebar 
+keywords: associate, public key, administrator account 
+summary: 对于SSH公共密钥身份验证、您可以管理管理员帐户的公共密钥及其与X.509证书的关联您可以使用security login publickey命令管理管理员帐户的公共密钥和证书。 
+---
+= 管理管理员帐户的SSH公共密钥和X.509证书
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要提高管理员帐户的SSH身份验证安全性、您可以使用 `security login publickey` 一组命令、用于管理SSH公共密钥及其与X.509证书的关联。
+
+
+
+== 将公共密钥和X.509证书与管理员帐户关联
+
+从ONTAP 9.13.1开始、您可以将X.509证书与与与管理员帐户关联的公共密钥相关联。这样、您就可以在该帐户通过SSH登录时提高证书到期或撤消检查的安全性。
+
+.开始之前
+* 要执行此任务，您必须是集群或 SVM 管理员。
+* 您必须已生成 SSH 密钥。
+* 如果您只需要检查X.509证书是否过期、则可以使用自签名证书。
+* 如果需要检查X.509证书的到期和吊销情况：
++
+** 您必须已从证书颁发机构(CA)收到证书。
+** 您必须使用安装证书链(中间CA证书和根CA证书) `security certificate install` 命令
+** 您需要为SSH启用OCSP。请参见 link:../system-admin/verify-digital-certificates-valid-ocsp-task.html["使用 OCSP 验证数字证书是否有效"^] 有关说明，请参见。
+
+
+
+
+.关于此任务
+如果使用SSH公共密钥和X.509证书通过SSH对帐户进行身份验证、则ONTAP会在使用SSH公共密钥进行身份验证之前检查X.509证书的有效性。如果此证书已过期或已撤销、则SSH登录将被拒绝、并且公共密钥将自动禁用。
+
+.步骤
+. 将公共密钥和X.509证书与管理员帐户关联：
++
+`security login publickey create -vserver _SVM_name_ -username _user_name_ -index _index_ -publickey _certificate_ -x509-certificate install`
+
++
+有关完整的命令语法、请参见的工作表参考 link:config-worksheets-reference.html#associate-a-public-key-with-a-user-account["将公有密钥与用户帐户关联"^]。
+
+. 查看公共密钥以验证更改：
++
+`security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
+
+
+
+.示例
+以下命令会将公共密钥和X.509证书与SVM管理员帐户关联 `svmadmin2` 对于SVM `engData2`。公共密钥的索引编号为6。
+
+[listing]
+----
+cluster1::> security login publickey create -vserver engData2 -username svmadmin2 -index 6 -publickey
+"<key text>" -x509-certificate install
+Please enter Certificate: Press <Enter> when done
+<certificate text>
+----
+
+
+== 从管理员帐户的SSH公共密钥中删除证书关联
+
+您可以从帐户的SSH公共密钥中删除当前证书关联、同时保留公共密钥。
+
+.开始之前
+要执行此任务，您必须是集群或 SVM 管理员。
+
+.步骤
+. 从管理员帐户中删除X.509证书关联、并保留现有SSH公共密钥：
++
+`security login publickey modify -vserver SVM_name -username user_name -index index -x509-certificate delete`
+
+. 查看公共密钥以验证更改：
++
+`security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
+
+
+
+.示例
+以下命令将从SVM管理员帐户中删除X.509证书关联 `svmadmin2` 对于SVM `engData2` 索引编号为6。
+
+[listing]
+----
+cluster1::> security login publickey modify -vserver engData2 -username svmadmin2 -index 6 -x509-certificate delete
+----
+
+
+== 从管理员帐户中删除公共密钥和证书关联
+
+您可以从帐户中删除当前公共密钥和证书配置。
+
+.开始之前
+要执行此任务，您必须是集群或 SVM 管理员。
+
+.步骤
+. 从管理员帐户中删除公共密钥和X.509证书关联：
++
+`security login publickey delete -vserver _SVM_name_ -username _user_name_ -index _index_`
+
+. 查看公共密钥以验证更改：
++
+`security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
+
+
+
+.示例
+以下命令将从SVM管理员帐户中删除公共密钥和X.509证书 `svmadmin3` 对于SVM `engData3` 索引编号为7。
+
+[listing]
+----
+cluster1::> security login publickey delete -vserver engData3 -username svmadmin3 -index 7
+----

@@ -33,7 +33,7 @@ summary: 活动跟踪功能、可用于识别热对象并将其作为CSV文件�
 
 == 为单个卷启用活动跟踪
 
-您可以使用ONTAP System Manager或ONTAP 命令行界面启用活动跟踪。
+您可以使用ONTAP系统管理器或命令行界面启用活动跟踪。
 
 .关于此任务
 如果将 RBAC 与 ONTAP REST API 或 System Manager 结合使用，则需要创建自定义角色来管理对活动跟踪的访问。请参见 xref:role-based-access-control-task.html[基于角色的访问控制] 。
@@ -56,7 +56,7 @@ summary: 活动跟踪功能、可用于识别热对象并将其作为CSV文件�
 +
 `-vsverer _svm_name_ -volume _volume_name_` 上的卷活动跟踪
 
-. 您可以使用命令检查卷的活动跟踪状态是打开还是关闭：
+. 使用命令检查卷的活动跟踪状态是打开还是关闭：
 +
 `volume active-tracking show -vsverer _svm_name_ -volume _volume_name_ -state`
 
@@ -76,20 +76,40 @@ summary: 活动跟踪功能、可用于识别热对象并将其作为CSV文件�
 
 [role="tabbed-block"]
 ====
-.用于特定卷
+.System Manager
 --
-.步骤
+.为特定卷启用
 . 选择 * 存储 > 卷 * 。选择所需的卷。从单个卷菜单中，选择文件系统，然后选择活动选项卡。
 . 选择要启用活动跟踪的卷。在卷列表顶部、选择*更多选项*按钮。选择*启用活动跟踪*。
 . 要在SVM级别查看活动跟踪、请从*存储>卷*中选择要查看的特定SVM。导航到文件系统选项卡、然后导航到活动、您将看到已启用活动跟踪的卷的数据。
 
 
---
-.对于SVM中的所有卷
---
-.步骤
+.为所有卷启用
 . 选择 * 存储 > 卷 * 。从菜单中选择一个SVM。
 . 导航到*文件系统*选项卡、选择*更多*选项卡以对SVM中的所有卷启用活动跟踪。
+
+
+--
+.命令行界面
+--
+从ONTAP 9.13.1开始、您可以使用ONTAP命令行界面为多个卷启用活动跟踪。
+
+.步骤
+. 启用活动跟踪：
++
+`volume activity-tracking on -vserver _svm_name_ -volume [*|!_volume_names_]`
+
++
+使用 ... `*` 为指定Storage VM上的所有卷启用活动跟踪。
+
++
+使用 ... `!` 后跟卷名称、以便为SVM上的所有卷(命名卷除外)启用活动跟踪。
+
+. 确认操作成功：
++
+`volume show -fields activity-tracking-state`
+
+. 启用后，使用 ONTAP 系统管理器或 ONTAP REST API 显示活动跟踪数据。
 
 
 --

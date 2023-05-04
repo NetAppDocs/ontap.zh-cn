@@ -21,7 +21,7 @@ summary: '当自主勒索软件保护(ARP)检测到受保护卷中的异常活�
 [role="lead"]
 当自主勒索软件保护(ARP)检测到受保护卷中的异常活动时、它会发出警告。您应评估此通知，以确定此活动是否预期且可接受，或者是否正在进行攻击。
 
-.您将需要什么
+.您需要的内容
 * ARP正在活动模式下运行。
 
 
@@ -68,7 +68,12 @@ NOTE: 如果还原了整个卷、则不会通知您要清除。
 | 如果选择此值 ... | 执行此操作… 
 
 
-| 误报 | 单击 * 更新 * 和 * 清除可疑文件类型 * 以记录您的决策并恢复正常的反勒索软件监控。 
+| 误报  a| 
+单击*更新*和*清除可疑文件类型*以记录您的决定并恢复正常ARP监控。
+
+
+NOTE: 从ONTAP 9.13.1开始、如果使用MAV保护ARP设置、则清除可疑操作会提示您获得一个或多个其他管理员的批准。 link:../multi-admin-verify/request-operation-task.html["必须获得所有管理员的批准"] 与MAV审批组关联、否则操作将失败。
+
 
 
 | 潜在勒索软件攻击 | 应对攻击并还原受保护的数据。然后单击*更新*和*清除可疑文件类型*以记录您的决定并恢复正常ARP监控。+如果还原了整个卷、则不需要清除任何可疑文件类型。 
@@ -121,14 +126,15 @@ Number of Attacks: 1
 +
 ** 误报
 +
-输入以下命令以记录您的决定—将新扩展添加到允许的扩展列表中—并恢复正常的反勒索软件监控： `反勒索软件卷攻击 clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
+输入以下命令记录您的决定、将新扩展名添加到允许的扩展名列表中、并恢复正常的反勒索软件监控：
+`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
 
 +
 使用以下参数之一确定扩展名： ` [-seq-no _intege_]` 可疑列表中文件的序列号。` （ -extension _text_ ，…） ]` 文件扩展名 ` -start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始和结束时间，格式为 "MM/DD/YYYY HH ： MM ： SS" 。
 
 ** 潜在的勒索软件攻击
 +
-应对攻击并还原数据。然后、输入以下命令记录您的决定并恢复正常ARP监控：
+应对攻击、然后 link:../anti-ransomware/recover-data-task.html["从ARP创建的备份快照恢复数据"]。恢复数据后、输入以下命令记录您的决定并恢复正常ARP监控：
 
 +
 `反勒索软件卷攻击 clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive false`
@@ -137,9 +143,28 @@ Number of Attacks: 1
 使用以下参数之一来确定扩展名： ` （ -seq-no _intege_）` 可疑列表中文件的序列号 ` （ -extension _text_ ，…） ]` 文件扩展名 ` -start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始和结束时间，格式为 "MM/DD/YYYY HH ： MM ： SS" 。
 
 +
-如果还原了整个卷、则不需要清除任何可疑文件类型。
+如果还原了整个卷、则不需要清除任何可疑文件类型。系统将删除ARP创建的备份快照、并清除攻击报告。
 
 
+
+. 如果您使用的是MAV和预期的 `clear-suspect` 运营需要额外的审批、每个MAV组审批人执行以下操作：
++
+.. 显示请求：
++
+`security multi-admin-verify request show`
+
+.. 批准恢复正常反勒索软件监控的请求：
++
+`security multi-admin-verify request approve -index[_number returned from show request_]`
+
++
+最后一个组批准者的响应指示卷已修改、并记录误报。
+
+
+
+. 如果您正在使用MAV、并且您是MAV组批准者、您还可以拒绝可疑交易请求：
++
+`security multi-admin-verify request veto -index[_number returned from show request_]`
 
 
 

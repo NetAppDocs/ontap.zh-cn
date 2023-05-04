@@ -1,7 +1,7 @@
 ---
 permalink: volumes/run-efficiency-operations-manual-task.html 
 sidebar: sidebar 
-keywords: starting deduplication manually, starting data compression manually, efficiency, run 
+keywords: starting deduplication manually, starting data compression manually, efficiency, run, sequential packing 
 summary: 您可以使用 volume efficiency start 命令在卷上手动运行效率操作。 
 ---
 = 手动运行效率操作
@@ -17,17 +17,44 @@ summary: 您可以使用 volume efficiency start 命令在卷上手动运行效�
 根据您要手动运行的效率操作，您必须已在卷上启用重复数据删除或同时启用数据压缩和重复数据删除。
 
 .关于此任务
-如果在卷上启用了重复数据删除和数据压缩，则先运行数据压缩，然后再运行重复数据删除。
+如果在卷上启用了对温度敏感的存储效率、则会先运行重复数据删除、然后再运行数据压缩。
 
 重复数据删除是一个后台进程，它会在运行时占用系统资源。如果卷中的数据更改不频繁，则最好不要频繁运行重复数据删除。在存储系统上运行多个并发重复数据删除操作会导致系统资源消耗量增加。
 
 每个节点最多可以运行八个并发重复数据删除或数据压缩操作。如果计划了更多的效率操作，则这些操作将排队等待。
 
+从ONTAP 9.13.1开始、如果在卷上启用了对温度敏感的存储效率功能、则可以对现有数据运行卷效率功能、以便利用顺序打包进一步提高存储效率。
+
+
+
+== 手动运行效率
+
 .步骤
-. 使用 `volume efficiency start` 命令对卷启动效率操作。
-
-
+. 在卷上启动效率操作： `volume efficiency start`
++
 .示例
-使用以下命令，您可以在卷 VolA 上手动仅启动重复数据删除或数据压缩，然后再启动重复数据删除：
+以下命令可用于在卷VolA上手动仅启动重复数据删除或重复数据删除、然后启动逻辑数据压缩和容器数据压缩
 
-`volume efficiency start -vserver vs1 -volume VolA`
++
+[listing]
+----
+volume efficiency start -vserver vs1 -volume VolA
+----
+
+
+
+
+== 重新打包现有数据
+
+要在启用了温度敏感型存储效率的卷上利用ONTAP 9.13.1中引入的顺序数据打包功能、您可以重新打包现有数据。要使用此命令、您必须处于高级权限模式。
+
+.步骤
+. 设置权限级别： `set -privilege advanced`
+. 重新打包现有数据： `volume efficiency inactive-data-compression start -vserver _vserver_name_ -volume _volume_name_ -scan-mode extended_recompression`
++
+.示例
+[listing]
+----
+volume efficiency inactive-data-compression start -vserver vs1 -volume vol1 -scan-mode extended_recompression
+----
+

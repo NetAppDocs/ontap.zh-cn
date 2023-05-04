@@ -1,0 +1,151 @@
+---
+permalink: volumes/manage-svm-capacity.html 
+sidebar: sidebar 
+keywords: svm capacity, size, auto size, auto size alert 
+summary: 从ONTAP 9.13.1开始、您可以为SVM设置最大容量限制。 
+---
+= 管理SVM容量限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.13.1开始、您可以为Storage VM (SVM)设置最大容量。您还可以在SVM接近阈值容量级别时配置警报。
+
+.关于此任务
+SVM上的容量等于FlexVol、FlexGroup 卷、FlexClone、FlexCache 卷之和。即使卷在删除后受限、脱机或位于恢复队列中、卷也会影响容量计算。如果为卷配置了自动增长、则卷的最大自动大小值将根据SVM大小进行计算；如果不使用自动增长、则会计算卷的实际大小。
+
+下表介绍了如何操作 `autosize-mode` 参数会影响容量计算。
+
+|===
+
+
+| `autosize-mode off` | size参数将用于计算 
+
+
+| `autosize-mode grow` | 。 `max-autosize` 参数将用于计算 
+
+
+| `autosize-mode grow-shrink` | 。 `max-autosize` 参数将用于计算 
+|===
+.开始之前
+* 您必须是集群管理员才能设置SVM限制。
+* 不能为包含数据保护卷、SnapMirror关系中的卷或MetroCluster 配置中的任何SVM配置存储限制。
+* 迁移SVM时、源SVM不能启用存储限制。要完成迁移操作、请在源上禁用存储限制、然后完成迁移。
+* SVM容量与不同 xref:../volumes/quotas-concept.html[配额]。配额不能超过最大大小。
+* 如果正在SVM上执行其他操作、则不能设置存储限制。使用 `job show vservser _svm_name_` 命令以查看现有作业。完成任何作业后、请尝试重新运行命令。
+
+
+
+
+== 容量影响
+
+达到容量限制后、以下操作将失败：
+
+* 创建LUN、命名空间或卷
+* 克隆LUN、命名空间或卷
+* 修改LUN、命名空间或卷
+* 增加LUN、命名空间或卷的大小
+* 扩展LUN、命名空间或卷
+* 重新托管LUN、命名空间或卷
+
+
+
+
+== 在新SVM上设置容量限制
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+.步骤
+. 选择*存储*>*存储VM*。
+. 选择 ... image:icon_add_blue_bg.gif["添加图标"] 以创建SVM。
+. 命名SVM并选择*访问协议*。
+. 在* Storage VM设置*下，选择*启用最大容量限制*。
++
+提供SVM的最大容量大小。
+
+. 选择 * 保存 * 。
+
+
+--
+.命令行界面
+--
+.步骤
+. 创建SVM。要设置存储限制、请提供 `storage-limit` 价值。要为存储限制设置阈值警报、请为提供一个百分比值 `-storage-limit-threshold-alert`。
++
+`vserver create -vserver _vserver_name_ -aggregate _aggregate_name_ -rootvolume _root_volume_name_ -rootvolume-security-style {unix|ntfs|mixed} -storage-limit _value_ [GiB|TIB] -storage-limit-threshold-alert _percentage_ [-ipspace IPspace_name] [-language <language>] [-snapshot-policy _snapshot_policy_name_] [-quota-policy _quota_policy_name_] [-comment _comment_]`
+
++
+如果不提供阈值、则默认情况下、当SVM容量达到90%时、将触发警报。要禁用阈值警报、请提供零值。
+
+. 确认已成功创建SVM：
++
+`vserver show -vserver _vserver_name_`
+
+. 如果要禁用存储限制、请使用修改SVM `-storage-limit` 参数设置为零：
++
+`vserver modify -vserver _vserver_name_ -storage-limit 0`
+
+
+
+--
+====
+
+
+== 在现有SVM上设置或修改容量限制
+
+您可以在现有SVM上设置容量限制和阈值警报、也可以禁用容量限制。
+
+设置容量限制后、您将无法将该限制修改为小于当前分配的容量的值。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+.步骤
+. 选择*存储*>*存储VM*。
+. 选择要修改的SVM。在SVM的名称旁边、选择 image:icon_kabob.gif["\" 串器 \" 图标"] 然后选择*Edit*。
+. 要启用容量限制，请选中*启用容量限制*旁边的框。为*最大容量*和*警报阈值*输入一个百分比值。
++
+如果要禁用容量限制、请取消选中步骤2中的框。
+
+. 选择 * 保存 * 。
+
+
+--
+.命令行界面
+--
+.步骤
+. 在托管SVM的集群上、问题描述 the `vserver modify` 命令：为提供一个数值 `-storage-limit` 和的百分比值 `-storage-limit-threshold-alert`。
++
+`vserver modify -vserver _vserver_name_ -storage-limit _value_ [GiB|TIB] -storage-limit-threshold-alert _percentage_`
+
++
+如果不提供阈值、则默认警报容量为90%。要禁用阈值警报、请提供零值。
+
+. 如果要禁用存储限制、请使用修改SVM `-storage-limit` 设置为零：
++
+`vserver modify -vserver _vserver_name_ -storage-limit 0`
+
+
+
+--
+====
+
+
+== 达到容量限制
+
+当达到最大容量或警报阈值时、您可以查看 `vserver.storage.threshold` EMS消息或使用System Manager中的*洞察力*页面了解可能的操作。可能的解决方法包括：
+
+* 编辑SVM最大容量限制
+* 清除卷恢复队列以释放空间
+* 删除快照以为卷提供空间
+
+
+.追加信息
+* xref:../concepts/capacity-measurements-in-sm-concept.adoc[System Manager 中的容量测量]
+* xref:../task_admin_monitor_capacity_in_sm.html[在 System Manager 中监控容量]
+

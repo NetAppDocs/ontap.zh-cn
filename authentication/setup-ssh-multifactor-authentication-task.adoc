@@ -2,44 +2,45 @@
 permalink: authentication/setup-ssh-multifactor-authentication-task.html 
 sidebar: sidebar 
 keywords: enable, ssh, multifactor authentication, mfa, hardware authentication device 
-summary: 从 ONTAP 9.3 开始，您可以使用 security login create 命令来增强安全性，方法是要求管理员使用 SSH 公有密钥和用户密码登录到管理员或数据 SVM 。 
+summary: '通过多因素身份验证(MFA)、您可以要求用户提供两种身份验证方法来登录到管理员或数据SVM、从而增强安全性。' 
 ---
-= 启用 SSH 多因素身份验证（ MFA ）
+= 启用多因素身份验证
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从ONTAP 9.3开始、您可以使用 `security login create` 命令以增强安全性、方法是要求管理员使用SSH公有 密钥和用户密码登录到管理员或数据SVM。
-
-从ONTAP 9.12.1开始、您可以使用FID02 (快速身份联机)或个人身份验证(PIV)身份验证标准对SSH客户端MFA使用优键硬件身份验证设备。
-
-了解更多信息 link:https://www.netapp.com/pdf.html?item=/media/17055-tr4647pdf.pdf["ONTAP 9中的多因素身份验证(TR-4647)"^]。
-
-.开始之前
-您必须是集群管理员才能执行此任务。
+通过多因素身份验证(MFA)、您可以要求用户提供两种身份验证方法来登录到管理员或数据SVM、从而增强安全性。
 
 .关于此任务
-* 您必须先将公有密钥与帐户关联，然后帐户才能访问 SVM 。
+* 您必须是集群管理员才能执行此任务。
+* 如果您不确定要分配给登录帐户的访问控制角色，可以稍后使用 `ssecurity login modify` 命令添加此角色。
++
+link:modify-role-assigned-administrator-task.html["修改分配给管理员的角色"]
+
+* 如果您使用公共密钥进行身份验证、则必须先将此公共密钥与此帐户关联、然后此帐户才能访问SVM。
 +
 link:manage-public-key-authentication-concept.html["将公有密钥与用户帐户关联"]
 
 +
 您可以在启用帐户访问之前或之后执行此任务。
 
-* 如果您不确定要分配给登录帐户的访问控制角色，可以稍后使用 `ssecurity login modify` 命令添加此角色。
+* 从ONTAP 9.12.1开始、您可以使用FID02 (快速身份联机)或个人身份验证(PIV)身份验证标准对SSH客户端MFA使用优键硬件身份验证设备。
+
+
+
+
+== 使用SSH公共密钥和用户密码启用MFA
+
+从ONTAP 9.3开始、集群管理员可以设置本地用户帐户、以便使用SSH公共密钥和用户密码登录MFA。
+
+. 使用SSH公共密钥和用户密码在本地用户帐户上启用MFA：
 +
-link:modify-role-assigned-administrator-task.html["修改分配给管理员的角色"]
-
-* 用户始终通过公有密钥身份验证进行身份验证，然后进行密码身份验证。
-
-
-.步骤
-. 需要本地管理员帐户才能使用 SSH MFA 访问 SVM ：
-+
-`ssecurity login create -vserver _svm_ -user-or-group-name _user_name_ -application ssh -authentication-method password_publickey -role admin -second-authentication-method password_publickey`
-
+[source, cli]
+----
+security login create -vserver <svm_name> -user-or-group-name <user_name> -application ssh -authentication-method <password|publickey> -role admin -second-authentication-method <password|publickey>
+----
 +
 以下命令要求具有预定义 `admin` 角色的 SVM 管理员帐户 `admin2` 使用 SSH 公有密钥和用户密码登录到 SVM``engData1`` ：
 
@@ -54,7 +55,89 @@ Warning: To use public-key authentication, you must create a public key for user
 ----
 
 
-.完成后
-如果您尚未将公有密钥与管理员帐户关联，则必须先将其关联，然后该帐户才能访问 SVM 。
 
+
+== 使用TOTP启用MFA
+
+从ONTAP 9.13.1开始、您可以通过要求本地用户同时使用SSH公共密钥或用户密码以及基于时间的一次性密码(TOTP)登录到管理员或数据SVM来增强安全性。使用TOTP为帐户启用MFA后、本地用户必须登录到 link:configure-local-account-mfa-totp-task.html["完成配置"]。
+
+TOTP是一种计算机算法、使用当前时间生成一次性密码。如果使用TOTP、则它始终是继SSH公共密钥或用户密码之后的第二种身份验证形式。
+
+.开始之前
+您必须是存储管理员才能执行这些任务。
+
+.步骤
+您可以将MFA设置为、并将用户密码或SSH公共密钥作为第一种身份验证方法、将TOTP作为第二种身份验证方法。
+
+[role="tabbed-block"]
+====
+.使用用户密码和TOTP启用MFA
+--
+. 使用用户密码和TOTP为用户帐户启用多因素身份验证。
++
+*新用户帐户*
+
++
+[source, cli]
+----
+security login create -vserver <svm_name> -user-or-group-name <user_or_group_name> -application ssh -authentication-method password -second-authentication-method totp -role <role> -comment <comment>
+----
++
+*用于现有用户帐户*
+
++
+[source, cli]
+----
+security login modify -vserver <svm_name> -user-or-group-name <user_or_group_name> -application ssh -authentication-method password -second-authentication-method totp -role <role> -comment <comment>
+----
+. 验证是否已启用具有TOTP的MFA：
++
+[listing]
+----
+security login show
+----
+
+
+--
+.使用SSH公共密钥和TOTP启用MFA
+--
+. 使用SSH公共密钥和TOTP为用户帐户启用多因素身份验证。
++
+*新用户帐户*
+
++
+[source, cli]
+----
+security login create -vserver <svm_name> -user-or-group-name <user_or_group_name> -application ssh -authentication-method publickey -second-authentication-method totp -role <role> -comment <comment>
+----
++
+*用于现有用户帐户*
+
++
+[source, cli]
+----
+security login modify -vserver <svm_name> -user-or-group-name <user_or_group_name> -application ssh -authentication-method publickey -second-authentication-method totp -role <role> -comment <comment>
+----
+. 验证是否已启用具有TOTP的MFA：
++
+[listing]
+----
+security login show
+----
+
+
+--
+====
+.完成后
+* 如果您尚未将公有密钥与管理员帐户关联，则必须先将其关联，然后该帐户才能访问 SVM 。
++
 link:manage-public-key-authentication-concept.html["将公有密钥与用户帐户关联"]
+
+* 本地用户必须登录才能使用TOTP完成MFA配置。
++
+link:configure-local-account-mfa-totp-task.html["使用TOTP配置MFA的本地用户帐户"]
+
+
+
+.相关信息
+了解更多信息 link:https://www.netapp.com/pdf.html?item=/media/17055-tr4647pdf.pdf["ONTAP 9中的多因素身份验证(TR-4647)"^]。
