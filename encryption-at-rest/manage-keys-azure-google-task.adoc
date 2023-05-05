@@ -2,9 +2,9 @@
 permalink: encryption-at-rest/manage-keys-azure-google-task.html 
 sidebar: sidebar 
 keywords: key management, Azure, AKV, key vault, NVE keys, third-party, GCP, google cloud, Cloud KMS 
-summary: 使用 Azure 密钥存储（ AKV ）简化对 ONTAP 加密密钥的保护。 
+summary: 使用Azure或Google Cloud简化对ONTAP 加密密钥的保护。 
 ---
-= 使用 Azure Key Vault 或 Google Cloud KMS 管理密钥
+= 通过云提供商管理密钥
 :hardbreaks:
 :allow-uri-read: 
 :icons: font
@@ -62,4 +62,5 @@ summary: 使用 Azure 密钥存储（ AKV ）简化对 ONTAP 加密密钥的保�
 
 --
 ====
-如果已为数据SVM配置一个或多个加密卷、并且相应的NVE密钥由管理SVM板载密钥管理器管理、则这些密钥应迁移到外部密钥管理服务。要使用CLI执行此操作、请运行以下命令：`security key-manager key migrate -from-vserver _admin_svm_-to_vserver _data_svm_`只有在成功迁移数据SVM的所有NVE密钥之后、才能为租户的数据SVM创建新的加密卷。
+如果已为数据SVM配置一个或多个加密卷、并且相应的NVE密钥由管理SVM板载密钥管理器管理、则这些密钥应迁移到外部密钥管理服务。要使用命令行界面执行此操作、请运行以下命令：
+`security key-manager key migrate -from-Vserver _admin_SVM_ -to-Vserver _data_SVM_`只有在成功迁移数据SVM的所有NVE密钥之后、才能为租户的数据SVM创建新的加密卷。
