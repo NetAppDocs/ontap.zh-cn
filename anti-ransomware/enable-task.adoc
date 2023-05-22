@@ -19,71 +19,54 @@ summary: '可以在新卷或现有卷上启用自动勒索软件保护(ARP)。�
 
 
 [role="lead"]
-从ONTAP 9.10.1开始、可以在新卷或现有卷上启用自动勒索软件保护(ARP)。您首先可以在学习模式下启用ARP、在此模式下、系统会分析工作负载以确定正常行为的特征。然后切换到主动模式、在此模式下、系统会标记异常活动以供您进行评估。您可以在现有卷上启用ARP、也可以从头创建新卷并启用ARP。
-
-.您需要的内容
-* 为 NFS 或 SMB （或这两者）启用的 Storage VM 。
-* 已为您的ONTAP 版本安装正确的许可证。
-+
-[cols="2*"]
-|===
-| ONTAP 版本 | 许可证 
-
-
- a| 
-ONTAP 9.10.1
- a| 
-MT_EK_Mgmt (多租户密钥管理)
-
-
-
- a| 
-ONTAP 9.11.1及更高版本
- a| 
-反勒索软件
-
-|===
-* 配置了客户端的 NAS 工作负载。
-* 要保护的卷必须具有活动的 link:../concepts/namespaces-junction-points-concept.html["接合路径"^]。
-* 可选但建议：EMS系统配置为发送电子邮件通知、其中包括ARP活动通知。有关详细信息，请参见 link:../error-messages/configure-ems-events-send-email-task.html["配置 EMS 事件以发送电子邮件通知"]。
-* 可选、但建议：从ONTAP 9.13.1开始、您可以启用多管理员验证(MAV)、以便自动防病毒(RansU要 保护、ARP)配置需要两个或更多经过身份验证的用户管理员。 link:../multi-admin-verify/enable-disable-task.html["了解更多信息。"^]。
-
+从ONTAP 9.10.1开始、可以在新卷或现有卷上启用自动勒索软件保护(ARP)。您首先可以在学习模式下启用ARP、在此模式下、系统会分析工作负载以确定正常行为的特征。您可以在现有卷上启用ARP、也可以从头创建新卷并启用ARP。
 
 .关于此任务
-NetApp ARP包括一个初始学习周期(也称为"试运行")、在该学习周期中、ONTAP 系统会学习哪些文件扩展名有效、并使用分析后的数据来开发警报配置文件。在学习模式下运行ARP并有足够的时间来评估工作负载特征后、您可以切换到活动模式并开始保护数据。从ONTAP 9.13.1开始、ARP分析中添加了自适应学习功能、并自动从学习模式切换到主动模式。
+您应始终在模拟运行(学习模式)状态下初始启用ARP。从活动状态开始，可能会导致误报报告过多。
 
-虽然您可以随时从学习切换到主动模式、但建议学习时间为30天。过早切换可能会导致误报过多。ONTAP 9.13.1中引入的自适应学习可能会确定较短的时间就足够了。在ONTAP 命令行界面中、您可以使用 `security anti-ransomware volume workload-behavior show` 用于显示迄今为止检测到的文件扩展名的命令。建议不要使用此工具缩短学习时间。
+建议您让ARP在学习模式下运行至少30天。从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自动执行交换机操作、这可能会在30天之前发生。
 
-在活动模式下、如果文件扩展名被标记为异常、但随后您对其进行评估并将其标记为误报、则会更新警报配置文件、以便在未来的警报中不会将该扩展名标记为异常。
+有关详细信息，请参见 link:index.html#learning-and-active-mode["学习和主动模式"]。
 
 
 NOTE: 在现有卷中，学习和活动模式仅适用于新写入的数据，而不适用于卷中已有的数据。不会扫描和分析现有数据、因为在为卷启用ARP后、系统会根据新数据假设先前正常数据流量的特征。
 
-要在ONTAP 命令行界面中管理此功能、您可以使用 `security anti-ransomware volume` 命令：您也可以使用 `volume modify` 命令 `-anti-ransomware` 参数。
+.开始之前
+* 您必须为Storage VM启用NFS或SMB (或同时启用这两者)。
+* 。 xref:index.html[正确的许可证] 必须为您的ONTAP 版本安装。
+* 您必须已配置NAS工作负载和客户端。
+* 要设置ARP的卷需要受到保护、必须具有活动的 link:../concepts/namespaces-junction-points-concept.html["接合路径"^]。
+* 建议您将EMS系统配置为发送电子邮件通知、其中包括ARP活动通知。有关详细信息，请参见 link:../error-messages/configure-ems-events-send-email-task.html["配置 EMS 事件以发送电子邮件通知"]。
+* 从ONTAP 9.13.1开始、建议您启用多管理员验证(MAV)、以便需要两个或更多经过身份验证的用户管理员才能进行自动防病毒(ARP)配置。有关详细信息，请参见 link:../multi-admin-verify/enable-disable-task.html["启用多管理员验证"^]。
+
 
 .步骤
 [role="tabbed-block"]
 ====
 .System Manager
 --
-. 单击 * 存储 > 卷 * ，然后选择要保护的卷。
-. 在*卷*概述的*安全性*选项卡中、单击*防勒索软件*框中的*状态*以在学习模式下从已禁用切换到已启用。
+. 选择*存储>卷*，然后选择要保护的卷。
+. 在*Volumes*概述的*Security*选项卡中，在*Anti-勒索 软件*框中选择*Status*，在学习模式下从Disabled切换为Enabled。
 . 学习期结束后、将ARP切换到活动模式。
 +
 
-NOTE: 如果您已升级到ONTAP 9.13.1、ARP会自动确定最佳学习周期间隔并自动执行交换机操作。您可以 link:../anti-ransomware/enable-default-task.html["在关联的Storage VM上禁用此设置"] 如果您要手动将学习模式控制为激活模式开关。
+NOTE: 从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自动执行交换机操作。您可以 link:../anti-ransomware/enable-default-task.html["在关联的Storage VM上禁用此设置"] 如果您要手动将学习模式控制为激活模式开关。
 
 +
-.. 单击 * 存储 > 卷 * ，然后选择已准备好进入活动模式的卷。
-.. 在*卷*概述的*安全性*选项卡中、单击防勒索软件框中的*切换*至活动模式。
+.. 选择*存储>卷*，然后选择已准备好进入活动模式的卷。
+.. 在*卷*概述的*安全性*选项卡中，在防勒索软件框中选择*切换到活动模式。
 
 
-. 您始终可以在*防勒索软件*框中验证卷的ARP状态。要显示所有卷的ARP状态：在*卷*窗格中、单击*显示/隐藏*、然后确保已选中*防勒索软件*状态。
+. 您可以在*Anti-勒索 软件*框中验证卷的ARP状态。
++
+要显示所有卷的ARP状态：在*卷*窗格中，选择*显示/隐藏*，然后确保选中*反勒索软件*状态。
+
 
 
 --
 .命令行界面
 --
+.在现有卷上启用ARP
 . 修改现有卷以在学习模式下启用勒索软件保护：
 +
 `s安全防勒索软件卷 dry-run -volume _vol_name_ -vserver _svm_name_`
@@ -95,17 +78,34 @@ NOTE: 如果您已升级到ONTAP 9.13.1、ARP会自动确定最佳学习周期�
 `volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransone-state dry-run`
 
 +
-在 CLI 中，您还可以在配置数据之前创建一个启用了反勒索软件保护的新卷。
+如果您升级到ONTAP 9.13.1或更高版本、则会启用自适应学习、以便自动更改为活动状态。如果您不希望自动启用此行为、请在所有关联卷上的SVM级别更改此设置：
 
++
+`vserver modify _svm_name_ -anti-ransomware-auto-switch-from-learning-to-enabled false`
+
+. 学习期结束后、如果尚未自动修改受保护卷以切换到活动模式、请将其修改为：
++
+`s安全防勒索软件卷 enable -volume _vol_name_ -vserver _svm_name_`
+
++
+您也可以使用 modify volume 命令切换到活动模式：
+
++
+`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransone-state active`
+
+. 验证卷的ARP状态。
++
+`s安全性反勒索软件卷显示`
+
+
+
+.在新卷上启用ARP
+. 在配置数据之前、创建一个启用了反勒索软件保护的新卷。
 +
 `volume create -volume _vol_name_ -vserver _svm_name_ -aggregate _aggr_name_ -size _nn_ -anti-ransonve-state dry-run -junction-path /_path_name_`
 
 +
-
-NOTE: 您应始终在模拟运行(学习模式)状态下初始启用ARP。从活动状态开始，可能会导致误报报告过多。
-
-+
-如果您升级到ONTAP 9.13.1或更高版本、则会启用自适应学习、以便自动更改为活动状态。如果您不希望自动启用此行为、请在所有关联卷上更改Vserver级别的设置：
+如果您升级到ONTAP 9.13.1或更高版本、则会启用自适应学习、以便自动更改为活动状态。如果您不希望自动启用此行为、请在所有关联卷上的SVM级别更改此设置：
 
 +
 `vserver modify _svm_name_ -anti-ransomware-auto-switch-from-learning-to-enabled false`

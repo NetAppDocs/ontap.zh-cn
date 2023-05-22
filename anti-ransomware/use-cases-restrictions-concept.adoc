@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/use-cases-restrictions-concept.html 
-keywords: anti-ransomware use cases and restrictions, anti-ransomware performance and frequency considerations, anti-ransomware workloads, anti-ransomware volume requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations, autonomous ransomware protection, arp 
+keywords: anti-ransomware workloads, anti-ransomware requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations, arp 
 summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版本将支持其他环境。 
 ---
 = 自主勒索软件保护使用情形和注意事项
@@ -19,6 +19,12 @@ summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版
 
 
 [role="lead"]
+自动防软件功能的可用性取决于您使用的ONTAP 版本。
+
+
+
+== 支持和不支持的配置
+
 ONTAP 平台支持：
 
 * 从ONTAP 9.10.1开始、所有内部ONTAP 系统均可使用自动勒索软件保护(ARP)功能。
@@ -108,14 +114,8 @@ ONTAP 平台支持：
 
 
 
-== 检测到勒索软件时自动 Snapshot 副本的工作原理
-
-为了尽可能获得最佳恢复点、ARP检测到异常文件活动后会立即创建一个自动Snapshot副本。但是、ARP不会立即标记警报；相反、在生成警报之前、需要运行分析并确认可疑活动与勒索软件配置文件匹配。此过程可能需要长达 60 分钟。如果分析确定活动不可疑，则不会生成警报，但自动创建的 Snapshot 副本会在文件系统上至少保留两天。
-
-从ONTAP 9.11.1开始、您可以控制因可疑勒索软件攻击而自动生成的ARP Snapshot副本的数量和保留期限。了解操作方法 link:modify-automatic-shapshot-options-task.html["修改自动Snapshot副本的选项"]。
-
-
-
 == 对受自动防兰功能保护的卷进行多管理员验证(ARP)
 
-从ONTAP 9.13.1开始、您可以使用ARP启用多管理员验证(MAV)、以提高安全性。MAV可确保至少需要两个或更多经过身份验证的管理员在受保护的卷上关闭ARP、暂停ARP或将可疑攻击标记为误报。了解操作方法 link:../multi-admin-verify/enable-disable-task.html["为受ARP保护的卷启用MAV"^]。您需要为MAV组定义管理员并为创建MAV规则 `security anti-ransomware volume disable`， `security anti-ransomware volume pause`，和 `security anti-ransomware volume attack clear-suspect` 要保护的ARP命令。MAV组中的每个管理员都必须批准每个新规则请求和 link:../multi-admin-verify/enable-disable-task.html["再次添加MAV规则"^] 在MAV设置中。
+从ONTAP 9.13.1开始、您可以使用ARP启用多管理员验证(MAV)、以提高安全性。MAV可确保至少需要两个或更多经过身份验证的管理员在受保护的卷上关闭ARP、暂停ARP或将可疑攻击标记为误报。了解操作方法 link:../multi-admin-verify/enable-disable-task.html["为受ARP保护的卷启用MAV"^]。
+
+您需要为MAV组定义管理员并为创建MAV规则 `security anti-ransomware volume disable`， `security anti-ransomware volume pause`，和 `security anti-ransomware volume attack clear-suspect` 要保护的ARP命令。MAV组中的每个管理员都必须批准每个新规则请求和 link:../multi-admin-verify/enable-disable-task.html["再次添加MAV规则"^] 在MAV设置中。

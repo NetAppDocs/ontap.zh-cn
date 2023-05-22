@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/index.html 
-keywords: anti-ransomware overview, ransomware, security, introduce, autonomous, protection, arp, detect, detection, threat, attack, suspect, what ontap anti-ransomware detects, entropy, abnormal volume activity, ransomware, antiransomware, extension conformity, recover data after a ransomware attack, ransomware protection strategy 
+keywords: ransomware, security, autonomous protection, arp, detect, detection, threat, attack, suspect, anti-ransomware, entropy, abnormal volume activity, antiransomware, extension conformity, ransomware protection strategy 
 summary: '从ONTAP 9.10.1开始、自动勒索软件保护(ARP)功能使用NAS (NFS和SMB)环境中的工作负载分析功能主动检测并警告可能指示勒索软件攻击的异常活动。' 
 ---
 = 自主勒索软件保护概述
@@ -23,7 +23,11 @@ summary: '从ONTAP 9.10.1开始、自动勒索软件保护(ARP)功能使用NAS (
 
 如果怀疑发生攻击、ARP除了从计划的Snapshot副本中提供现有保护之外、还会创建新的Snapshot副本。
 
-已使用以下许可证启用ARP功能。
+
+
+== 许可证和支持
+
+ARP需要一个许可证、根据您使用的ONTAP 版本不同、该许可证也会有所不同：
 
 [cols="2*"]
 |===
@@ -47,7 +51,7 @@ MT_EK_Mgmt (多租户密钥管理)
 * 如果您要从ONTAP 9.11.1或更高版本还原到ONTAP 9.10.1、并且已使用防勒索软件许可证启用ARP、则会看到一条警告消息、可能需要重新配置ARP。 link:../revert/anti-ransomware-license-task.html["了解还原ARP的相关信息"]。
 
 
-您可以使用ONTAP 系统管理器或ONTAP 命令行界面(CLI)按卷配置ARP。
+您可以使用ONTAP 系统管理器或ONTAP 命令行界面按卷配置ARP。
 
 
 
@@ -55,42 +59,82 @@ MT_EK_Mgmt (多租户密钥管理)
 
 有效的勒索软件检测策略应包括多个保护层。
 
-一个比喻是车辆的安全特性。您不希望依赖安全带等单一功能来在发生事故时为您提供全面保护。安全袋，防抱死制动器和前向碰撞警告都是额外的安全功能，可以带来更好的结果。应以相同方式查看勒索软件保护。
+一个比喻是车辆的安全特性。您不需要依靠安全带等单一功能来在发生事故时为您提供全面保护。安全袋，防抱死制动器和前向碰撞警告都是额外的安全功能，可以带来更好的结果。应以相同方式查看勒索软件保护。
 
-虽然ONTAP 包含FPolicy、Snapshot副本、SnapLock 和Active IQ 数字顾问等功能、可帮助防止勒索软件、但以下信息重点介绍具有机器学习功能的ONTAP ARP即装即用功能。
+虽然ONTAP 包括FPolicy、Snapshot副本、SnapLock 和Active IQ 数字顾问等功能来帮助防止勒索软件、但以下信息重点介绍了具有机器学习功能的ARP机载功能。
 
-要详细了解 ONTAP 的其他反勒索软件功能，请参见： https://["TR-4572 ：《 NetApp 解决方案 for 勒索软件》。"^]
+要了解有关ONTAP的其他反勒索软件功能的更多信息、请参见 link:https://www.netapp.com/media/7334-tr4572.pdf["TR-4572 ：《 NetApp 解决方案 for 勒索软件》。"^]
 
 
 
-== ONTAP ARP检测到的内容
+== ARP检测到的内容
 
 勒索软件攻击有两种：
 
-. 通过加密数据拒绝为文件提供服务。除非支付了勒索费用，否则攻击者将无法访问此数据。
-. 敏感专有数据被盗。攻击者威胁要将此数据释放到公有域，除非支付了勒索。
+* 通过加密数据拒绝为文件提供服务。除非支付了勒索费用，否则攻击者将无法访问此数据。
+* 敏感专有数据被盗。攻击者威胁要将此数据释放到公有域，除非支付了勒索。
 
 
-ONTAP ARP利用基于以下内容的反勒索软件检测机制解决了第一种类型：
+ARP利用反勒索软件检测机制解决第一种类型、该机制基于：
 
-. 将传入数据标识为加密或纯文本。
-. 分析，用于检测
+* 将传入数据标识为加密或纯文本。
+* 分析，用于检测
 +
-** high data _entropy （评估文件中数据的随机性）
-** 使用数据加密时异常卷活动激增
-** 不符合正常扩展类型的扩展
+** **平均值**：对文件中数据的随机性的评估
+** **文件扩展名类型**：不符合正常扩展名类型的扩展名
+** **文件IOP**：使用数据加密时卷活动异常激增(从ONTAP 9.11.1开始)
 
 
 
 
 
-NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索软件攻击的安全。虽然可能无法检测到攻击、但如果防病毒软件无法检测到入侵、则NetApp ARP可作为一个重要的额外防御层。在对少量文件进行加密后、ARP可以检测到大多数勒索软件攻击的蔓延、并自动采取措施保护数据、并提醒您可疑攻击正在发生。
+NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索软件攻击的安全。虽然攻击可能无法检测到、但如果防病毒软件未能检测到入侵、则NetApp ARP会作为一个重要的额外防御层。在对少量文件进行加密后、ARP可以检测到大多数勒索软件攻击的蔓延、并自动采取措施保护数据、并提醒您可疑攻击正在发生。
+
+
+
+== 学习和主动模式
+
+ARP有两种模式：
+
+. 学习
+. 活动
+
+
+启用ARP后、它将在学习模式下运行。在学习模式下、ONTAP 系统会根据上述分析区域(熵、文件扩展名类型和文件IOPS)开发警报配置文件。在学习模式下运行ARP并有足够的时间来评估工作负载特征后、您可以切换到活动模式并开始保护数据。一旦ARP切换到活动模式、ONTAP 将创建ARP快照、以便在检测到威胁时保护数据。
+
+建议您将ARP保留在学习模式下至少30天、但您可以随时切换到活动模式。过早切换可能会导致误报过多。从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自动执行交换机操作、这可能会在30天之前发生。
+
+在活动模式下、如果文件扩展名被标记为异常、则应评估警报。您可以对警报采取措施来保护您的数据、也可以将警报标记为误报。将误报标记为后、ONTAP 将更新ARP警报配置文件、以便以后不会标记文件扩展名。命令 `security anti-ransomware volume workload-behavior show` 显示在卷中检测到的文件扩展名。(如果您在学习模式早期运行此命令、并且此命令显示了文件类型的准确表示、则不应将此数据用作退出活动模式的基础、因为ONTAP 仍在收集其他指标。)
+
+从ONTAP 9.11.1开始、您可以使用自定义ARP的检测参数 `security anti-ransomware volume attack-detection-parameters modify` 命令：例如、如果您希望在卷中使用多种新文件类型、则可以对前所未见的文件类型禁用警报。有关此命令的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131/security-anti-ransomware-volume-attack-detection-parameters-modify.html["ONTAP 命令参考"^]。
+
+
+
+== 威胁评估
+
+在主动模式下、ARP根据根据所学分析测量的传入数据评估威胁概率。当ARP检测到威胁时、将分配一个度量值：
+
+* **低**：首次在卷中观察到新文件扩展名时，将分配此扩展名。
+* **中等**：观察到多个文件具有相同的"从未见过"文件扩展名。
++
+** 在ONTAP 9.10.1中、升级到"中等"的阈值为100个或更多文件。从ONTAP 9.11.1开始、可以自定义文件数量；其默认值为20。
+
+
+
+
+当攻击概率较低时、ONTAP 将在后台为卷创建Snapshot。例如，APR Snapshot可以通过其名称来识别 `Anti_ransomware_backup.2022-12-20_1248`，并使用标记 `anti-ransomware-backup`。系统会记录处于较低级别的威胁、但ONTAP 不会发送有关较低威胁的警报。
+
+当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
+
+您可以在System Manager的**事件**部分中或使用查看有关威胁的信息，而不受威胁级别的限制 `security anti-ransomware volume show -vserver _svm_name_` 命令：
+
+ARP快照至少保留两天。从ONTAP 9.11.1开始、您可以修改保留设置。有关详细信息，请参见 xref:modify-automatic-shapshot-options-task.html[修改Snapshot副本的选项]。
 
 
 
 == 如何在勒索软件攻击后在 ONTAP 中恢复数据
 
-如果怀疑发生攻击，系统将在该时间点创建卷 Snapshot 副本并锁定该副本。如果稍后确认此攻击，则可以将卷还原到此主动创建的快照，从而最大程度地减少数据丢失。
+如果怀疑发生攻击，系统将在该时间点创建卷 Snapshot 副本并锁定该副本。如果稍后确认攻击、则可以将卷还原到此Snapshot、从而最大限度地减少数据丢失。
 
 无法正常删除已锁定的 Snapshot 副本。但是，如果您稍后决定将此攻击标记为误报，则锁定的副本将被删除。
 
