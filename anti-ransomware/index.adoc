@@ -110,7 +110,7 @@ ARP有两种模式：
 
 
 
-== 威胁评估
+== 威胁评估和ARP快照
 
 在主动模式下、ARP根据根据所学分析测量的传入数据评估威胁概率。当ARP检测到威胁时、将分配一个度量值：
 
@@ -122,9 +122,9 @@ ARP有两种模式：
 
 
 
-当攻击概率较低时、ONTAP 将在后台为卷创建Snapshot。例如，APR Snapshot可以通过其名称来识别 `Anti_ransomware_backup.2022-12-20_1248`，并使用标记 `anti-ransomware-backup`。系统会记录处于较低级别的威胁、但ONTAP 不会发送有关较低威胁的警报。
+如果攻击概率较低、则表示ONTAP检测到一种错误、并将在后台为卷创建一个Snapshot、以创建可能的最佳恢复点。例如、ARP Snapshot可通过其名称进行标识 `Anti_ransomware_backup.2022-12-20_1248`，并使用标记 `anti-ransomware-backup`。
 
-当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
+在ONTAP运行分析报告以确定此非正常情况是否与勒索软件配置文件匹配后、此威胁会升级为中等。系统会记录处于较低级别的威胁、但ONTAP 不会发送有关较低威胁的警报。当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
 
 您可以在System Manager的**事件**部分中或使用查看有关威胁的信息，而不受威胁级别的限制 `security anti-ransomware volume show -vserver _svm_name_` 命令：
 
