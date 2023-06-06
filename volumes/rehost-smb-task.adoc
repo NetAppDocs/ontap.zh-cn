@@ -1,10 +1,10 @@
 ---
 permalink: volumes/rehost-smb-task.html 
 sidebar: sidebar 
-keywords: rehost, cifs volumes 
+keywords: rehost, cifs volumes, smb 
 summary: 您可以重新托管通过 SMB 协议提供数据的卷。重新托管 CIFS 卷后，要继续通过 SMB 协议访问数据，您必须手动配置策略和关联规则。 
 ---
-= 重新托管 CIFS 卷
+= 重新托管SMB卷
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,25 +13,16 @@ summary: 您可以重新托管通过 SMB 协议提供数据的卷。重新托管
 [role="lead"]
 您可以重新托管通过 SMB 协议提供数据的卷。重新托管 CIFS 卷后，要继续通过 SMB 协议访问数据，您必须手动配置策略和关联规则。
 
-.您需要的内容
-* 卷必须处于联机状态。
-* 卷移动或 LUN 移动等卷管理操作不得运行。
-* 必须停止对要重新托管的卷的数据访问。
-* 必须配置目标 SVM 的 ns-switch 和名称服务配置，以支持重新托管卷的数据访问。
-* 源 SVM 和目标 SVM 必须具有相同的 Active Directory 和 realmDNS 域。
-* 卷的用户 ID 和组 ID 必须在目标 SVM 中可用或在托管卷上更改。
-+
-[NOTE]
-====
-如果配置了本地用户和组，并且该卷上的文件和目录设置了这些用户或组的权限，则这些权限将不再有效。
-
-====
-
-
 .关于此任务
 * 重新托管会造成系统中断。
 * 如果重新托管操作失败，您可能需要在源卷上重新配置卷策略和关联规则。
 * 如果源 SVM 和目标 SVM Active Directory 域不同，您可能无法访问卷上的对象。
+* 从ONTAP 9.8开始、支持使用NetApp卷加密(NVE)重新托管卷。如果使用板载密钥管理器、则在重新托管操作期间会修改加密的元数据。用户数据不会更改。
++
+如果您使用的是ONTAP 9.8或早期版、则必须在执行重新托管操作之前对卷取消加密。
+
+
+
 * 如果源 SVM 具有本地用户和组，则在执行卷重新托管操作后，设置的文件和目录（ ACL ）的权限将不再有效。
 +
 审核 ACL （ SACL ）也是如此
@@ -50,6 +41,19 @@ summary: 您可以重新托管通过 SMB 协议提供数据的卷。重新托管
 
 
 
+.开始之前
+* 卷必须处于联机状态。
+* 卷移动或 LUN 移动等卷管理操作不得运行。
+* 必须停止对要重新托管的卷的数据访问。
+* 必须配置目标 SVM 的 ns-switch 和名称服务配置，以支持重新托管卷的数据访问。
+* 源 SVM 和目标 SVM 必须具有相同的 Active Directory 和 realmDNS 域。
+* 卷的用户 ID 和组 ID 必须在目标 SVM 中可用或在托管卷上更改。
++
+
+NOTE: 如果配置了本地用户和组，并且该卷上的文件和目录设置了这些用户或组的权限，则这些权限将不再有效。
+
+
+
 .步骤
 . 记录有关 CIFS 共享的信息，以避免在卷重新托管操作失败时丢失有关 CIFS 共享的信息。
 . 从父卷卸载此卷：
@@ -62,7 +66,7 @@ summary: 您可以重新托管通过 SMB 协议提供数据的卷。重新托管
 
 . 在目标 SVM 上重新托管卷：
 +
-`volume rehost -vserver source_sVM -volume vol_name -destination-vserver destination_sVM`
+`volume rehost -vserver _source_svm_ -volume _vol_name_ -destination-vserver _destination_svm_`
 
 . 在目标 SVM 中的相应接合路径下挂载卷：
 +
