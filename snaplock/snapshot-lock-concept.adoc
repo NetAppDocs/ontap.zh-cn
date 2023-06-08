@@ -180,8 +180,11 @@ Do you want to continue: {yes|no}: y
 +
 [listing]
 ----
-cluster1> volume snapshot policy create -policy policy_name -enabled true -schedule1 5min -count1 5 -retention-period1 "1 months"
+cluster1> volume snapshot policy create -policy policy_name -enabled true -schedule1 hourly -count1 24 -retention-period1 "1 days"
 ----
++
+如果Snapshot副本处于活动保留状态、则不会替换该副本；也就是说、如果存在尚未过期的锁定Snapshot副本、则不会使用保留计数。
+
 
 
 --
