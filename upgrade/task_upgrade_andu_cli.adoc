@@ -55,79 +55,90 @@ NOTE: 在自动无中断升级（ ANDU ）开始之前修改 `storage failover m
 
 . 删除先前的 ONTAP 软件包：
 +
-`cluster image package delete -version previous _ontap_Version`
-
+[source, cli]
+----
+cluster image package delete -version previous_ONTAP_Version
+----
 . 下载目标 ONTAP 软件包：
 +
-`集群映像包 get -url location`
-
-+
-
-NOTE: 如果要从 ONTAP 9.3 升级到 9.7 ，请下载 ONTAP 9.5 的软件包，然后使用同一命令下载 9.7 的软件包。如果要从 ONTAP 9.5 升级到 9.1.1 ，请下载 ONTAP 9.7 的软件包，然后使用同一命令下载 9.1.1 的软件包。
-
+[source, cli]
+----
+cluster image package get -url location
+----
 +
 [listing]
 ----
-cluster1::> cluster image package get -url http://www.example.com/software/9.7/image.tgz
+cluster1::> cluster image package get -url http://www.example.com/software/9.13.1/image.tgz
 
 Package download completed.
 Package processing completed.
 ----
++
+如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，下载升级所需的ONTAP中间版本的软件包，然后使用同一命令下载目标ONTAP版本的软件包。  例如、如果要从9.8升级到9.13.1、则应下载适用于ONTAP 9.12.1的软件包、然后使用同一命令下载适用于9.13.1的软件包。
+
 . 验证集群软件包存储库中是否存在软件包：
 +
-`集群映像包 show-repository`
-
+[source, cli]
+----
+cluster image package show-repository
+----
 +
 [listing]
 ----
 cluster1::> cluster image package show-repository
 Package Version  Package Build Time
 ---------------- ------------------
-9.7              MM/DD/YYYY 10:32:15
+9.13.1              MM/DD/YYYY 10:32:15
 ----
 . 验证集群是否已做好无中断升级的准备：
 +
-`cluster image validate -version package_version_number`
-
+[source, cli]
+----
+cluster image validate -version package_version_number
+----
 +
+** 如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，使用目标ONATP软件包进行验证。  您无需单独验证中间升级映像。  例如、如果要从9.8升级到9.13.1、则应使用9.13.1软件包进行验证。您不需要单独验证9.12.1软件包。
 ** 如果要升级双节点或四节点 MetroCluster 配置，则必须在两个集群上运行此命令，然后才能继续。
-** 如果要从 ONTAP 9.3 升级到 9.7 ，请使用 9.7 软件包进行验证。您无需单独验证 9.5 软件包。
-** 如果要从 ONTAP 9.5 升级到 9.9.1 ，请使用 9.9.1 软件包进行验证。您无需单独验证 9.7 软件包。
-
-
 +
 [listing]
 ----
-cluster1::> cluster image validate -version 9.7
+cluster1::> cluster image validate -version 9.13.1
 
 WARNING: There are additional manual upgrade validation checks that must be performed after these automated validation checks have completed...
 ----
+
+
 . 监控验证进度：
 +
-`cluster image show-update-progress`
-
+[source, cli]
+----
+cluster image show-update-progress
+----
 . 完成验证确定的所有必需操作。
 . 生成软件升级估计值：
 +
-`cluster image update -version package_version_number -estimate-only`
-
+[source, cli]
+----
+cluster image update -version package_version_number -estimate-only
+----
 +
 软件升级估计值可显示有关要更新的每个组件的详细信息以及估计的升级持续时间。
 
 . 执行软件升级：
 +
-`cluster image update -version package_version_number`
-
+[source, cli]
+----
+cluster image update -version package_version_number
+----
 +
-** 如果要从 ONTAP 9.3 升级到 9.7 ，请使用上述命令中的 9.7 package_version_number 。
-** 如果要从 ONTAP 9.5 升级到 9.9.1 ，请使用上述命令中的 9.9.1 package_version_number 。
-** 对于除双节点 MetroCluster 系统之外的任何 MetroCluster 配置，在用户启动并在命令行上提供确认之后， ONTAP 升级过程会在两个站点（本地站点和灾难恢复站点）的 HA 对上同时启动。对于双节点 MetroCluster 系统，首先在灾难恢复站点（即未启动升级的站点）上启动更新。在灾难恢复站点上完成更新后，升级将在本地站点上开始。
+** 如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"] 对pack_version_number使用目标ONTAP版本。例如、如果要从ONTAP 9.8升级到9.13.1、请使用9.13.1作为packing_version_number。
 ** 如果集群包含 2 到 6 个节点，则会执行滚动升级。如果集群包含 8 个或更多节点，则默认情况下会执行批量升级。如果需要，您可以使用 ` -force-rolling` 参数指定滚动升级。
 ** 完成每次接管和交还后，升级将等待 8 分钟，以使客户端应用程序能够从接管和交还期间发生的 I/O 暂停中恢复。如果您的环境需要的客户端稳定时间或多或少，您可以使用 ` -stify-minutes` 参数指定不同的稳定时间量。
+** 对于除双节点 MetroCluster 系统之外的任何 MetroCluster 配置，在用户启动并在命令行上提供确认之后， ONTAP 升级过程会在两个站点（本地站点和灾难恢复站点）的 HA 对上同时启动。对于双节点 MetroCluster 系统，首先在灾难恢复站点（即未启动升级的站点）上启动更新。在灾难恢复站点上完成更新后，升级将在本地站点上开始。
 +
 [listing]
 ----
-cluster1::> cluster image update -version 9.7
+cluster1::> cluster image update -version 9.13.1
 
 Starting validation for this update. Please wait..
 
@@ -149,13 +160,19 @@ cluster-1::>
 
 . 显示集群更新进度：
 +
-`cluster image show-update-progress`
-
+[source, cli]
+----
+cluster image show-update-progress
+----
 +
-
-NOTE: 如果要升级 4 节点或 8 节点 MetroCluster 配置，则 `cluster image show-update-progress` 命令仅会显示运行此命令的节点的进度。您必须在每个节点上运行命令才能查看各个节点的进度。
+如果要升级 4 节点或 8 节点 MetroCluster 配置，则 `cluster image show-update-progress` 命令仅会显示运行此命令的节点的进度。您必须在每个节点上运行命令才能查看各个节点的进度。
 
 . 验证是否已在每个节点上成功完成升级。
++
+[source, cli]
+----
+cluster image show-update-progress
+----
 +
 [listing]
 ----
@@ -170,26 +187,28 @@ Post-update checks   completed                00:10:00        00:02:00
 3 entries were displayed.
 
 Updated nodes: node0, node1.
-
-cluster1::>
 ----
 . 触发 AutoSupport 通知：
 +
-`AutoSupport invoke -node * -type all -message "fining_NDU"`
-
+[source, cli]
+----
+autosupport invoke -node * -type all -message "Finishing_NDU"
+----
 +
 如果集群未配置为发送 AutoSupport 消息，则通知的副本将保存在本地。
 
 . 验证集群是否已启用自动计划外切换：
 +
 
-NOTE: 仅对 MetroCluster FC 配置执行此操作步骤 。如果您使用的是 MetroCluster IP 配置，请跳过此操作步骤 。
+NOTE: 此步骤仅适用于MetroCluster FC配置。  如果您使用的是MetroCluster IP配置、则无需执行此步骤。
 
 +
 .. 检查是否已启用自动计划外切换：
 +
-`MetroCluster show`
-
+[source, cli]
+----
+metrocluster show
+----
 +
 如果启用了自动计划外切换，则命令输出中将显示以下语句：
 
@@ -199,9 +218,16 @@ AUSO Failure Domain    auso-on-cluster-disaster
 ....
 .. 如果输出中未显示该语句，请启用自动计划外切换：
 +
-`MetroCluster modify -auto-switchover-failure-domain auso-on-cluster-disaster`
-
-.. 重复步骤 1 ，验证是否已启用自动计划外切换。
+[source, cli]
+----
+metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster
+----
+.. 验证是否已启用自动计划外切换：
++
+[source, cli]
+----
+metrocluster show
+----
 
 
 
@@ -218,16 +244,20 @@ AUSO Failure Domain    auso-on-cluster-disaster
 .步骤
 . 查看升级错误：
 +
-`cluster image show-update-progress`
-
+[source, cli]
+----
+cluster image show-update-progress
+----
 . 解决此错误。
 . 恢复更新：
 +
-`集群映像 resume-update`
-
+[source, cli]
+----
+cluster image resume-update
+----
 
 
 .相关信息
-https://aiq.netapp.com/["启动 Active IQ"]
+* https://aiq.netapp.com/["启动 Active IQ"]
+* https://docs.netapp.com/us-en/active-iq/["Active IQ 文档"]
 
-https://docs.netapp.com/us-en/active-iq/["Active IQ 文档"]
