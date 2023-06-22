@@ -20,10 +20,12 @@ summary: 您可以控制是否以及如何将 AutoSupport 信息发送给技术�
 ====
 从 ONTAP 9.5 开始， `ssystem node AutoSupport modify` 命令的范围为集群范围。即使指定了 ` 节点` 选项，也会在集群中的所有节点上修改 AutoSupport 配置。此选项将被忽略，但它已保留以实现 CLI 向后兼容性。
 
-在 ONTAP 9.4 及更早版本中， system node AutoSupport modify 命令的作用域特定于节点。应在集群中的每个节点上修改 AutoSupport 配置。
+在ONTAP 9.4及更早版本中、是指的范围 `system node autosupport modify` 命令特定于节点。应在集群中的每个节点上修改 AutoSupport 配置。
 
 ====
 默认情况下，每个节点都启用了 AutoSupport ，以便使用 HTTPS 传输协议向技术支持发送消息。
+
+您必须将HTTPS与TLSv1.2结合使用或使用安全SMTP来传送AutoSupport消息、以提供最佳安全性并支持所有最新的AutoSupport功能。
 
 .步骤
 . 确保已启用 AutoSupport ：
@@ -57,15 +59,6 @@ system node autosupport modify -support enable
  a| 
 .. 将 ` -transport` 设置为 `https` 。
 .. 如果使用代理，请将 ` -proxy-url` 设置为代理的 URL 。此配置支持与 AutoSupport OnDemand 通信以及上传大型文件。
-
-
-
-
- a| 
-使用优先于 SMTP 的 HTTP
- a| 
-.. 将 ` -transport` 设置为 `http` 。
-.. 如果使用代理，请将 ` -proxy-url` 设置为代理的 URL 。此配置支持上传大型文件，但不支持 AutoSupport OnDemand 。
 
 
 
@@ -124,7 +117,7 @@ system node autosupport modify -support enable
 
 
 . 配置 DNS 。
-. （可选）如果要更改特定设置，请添加命令选项：
+. (可选)如果要更改特定设置、请添加命令选项：
 +
 |===
 
@@ -135,7 +128,7 @@ system node autosupport modify -support enable
  a| 
 通过删除，屏蔽或对消息中的敏感数据进行编码来隐藏私有数据
  a| 
-将 ` -remove-private-data` 设置为 `true` 。如果从 `false` 更改为 `true` ，则会删除所有 AutoSupport 历史记录和所有关联文件。
+设置 `-remove-private-data` to `true`。如果您从进行了更改 `false` to `true`，所有AutoSupport历史记录和所有关联文件都将被删除。
 
 
 
@@ -165,7 +158,7 @@ system node AutoSupport history show -node local
 +
 对于所有适当的协议目标，最新传出 AutoSupport 消息的状态最终应更改为 `snt-successful` 。
 
-.. （可选）检查为 `ssystem node AutoSupport modify` 命令的 ` 到` ， ` 到` 或 ` 到合作伙伴地址` 参数配置的任何地址的电子邮件，以确认 AutoSupport 消息已发送到您的内部支持组织或您的支持合作伙伴。
+.. (可选)通过检查为配置的任何地址的电子邮件来确认AutoSupport消息将发送到您的内部支持组织或支持合作伙伴 `-to`， `-noteto`或 `-partner-address`  的参数 `system node autosupport modify` 命令：
 
 
 
