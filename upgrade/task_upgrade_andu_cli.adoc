@@ -131,7 +131,7 @@ cluster image update -version package_version_number -estimate-only
 cluster image update -version package_version_number
 ----
 +
-** 如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"] 对pack_version_number使用目标ONTAP版本。例如、如果要从ONTAP 9.8升级到9.13.1、请使用9.13.1作为packing_version_number。
+** 如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，请使用packue_version_number的目标ONTAP版本。例如、如果要从ONTAP 9.8升级到9.13.1、请使用9.13.1作为packing_version_number。
 ** 如果集群包含 2 到 6 个节点，则会执行滚动升级。如果集群包含 8 个或更多节点，则默认情况下会执行批量升级。如果需要，您可以使用 ` -force-rolling` 参数指定滚动升级。
 ** 完成每次接管和交还后，升级将等待 8 分钟，以使客户端应用程序能够从接管和交还期间发生的 I/O 暂停中恢复。如果您的环境需要的客户端稳定时间或多或少，您可以使用 ` -stify-minutes` 参数指定不同的稳定时间量。
 ** 对于除双节点 MetroCluster 系统之外的任何 MetroCluster 配置，在用户启动并在命令行上提供确认之后， ONTAP 升级过程会在两个站点（本地站点和灾难恢复站点）的 HA 对上同时启动。对于双节点 MetroCluster 系统，首先在灾难恢复站点（即未启动升级的站点）上启动更新。在灾难恢复站点上完成更新后，升级将在本地站点上开始。

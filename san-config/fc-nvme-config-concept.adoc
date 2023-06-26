@@ -11,17 +11,14 @@ summary: 从 ONTAP 9.4 开始，非易失性内存快速（ NVMe ）协议可用
 
 
 [role="lead"]
-从 ONTAP 9.4 开始，非易失性内存快速（ NVMe ）协议可用于 SAN 环境。FC-NVMe 允许您使用 AFF 系统在现有 FC 网络上运行 NVMe 。FC-NVMe 与传统 FC 网络采用相同的物理设置和分区实践，但与 FC-SCSI 相比，它可以提供更大的带宽，增加 IOPS 并减少延迟。
+从ONTAP 9.4开始、 link:https://docs.netapp.com/us-en/ontap/san-admin/manage-nvme-concept.html["非易失性内存标准(NVMe)"] 协议可用于SAN环境。FC-NVMe 与传统 FC 网络采用相同的物理设置和分区实践，但与 FC-SCSI 相比，它可以提供更大的带宽，增加 IOPS 并减少延迟。
 
-支持的配置：
+对NVMe-oF协议的支持因平台和配置而异。有关特定配置的详细信息、请参见 link:https://imt.netapp.com/matrix/["NetApp 互操作性表工具"]。
 
-* 具有 32 G FC 端口的 AFF 平台支持 NVMe 。
+在集群上配置FC-NVMe时、您应注意以下事项。
+
 * 您可以使用单个网络结构或多网络结构设置具有单个节点或 HA 对的 FC-NVMe 配置。
-* 从ONTAP 9.11.1开始、最多包含12个节点的集群支持NVMe。从ONTAP 9.4开始、最多包含4个节点的集群支持NVMe。
-* NVMe 可以是 Storage Virtual Machine （ SVM ）上的唯一数据协议。
-* 每个集群最多支持 8 个 NVMe SVM 。
 * FC-NVMe 可以是数据 LIF 上的唯一数据协议。
-* LUN 和命名空间不能在同一个卷上混用。
 * 您应该为每个支持 SAN 的 SVM 配置一个管理 LIF 。
 * 除嵌入式刀片式交换机外，不支持使用异构 FC 交换机网络结构。
 +
@@ -33,42 +30,9 @@ summary: 从 ONTAP 9.4 开始，非易失性内存快速（ NVMe ）协议可用
 
 
 
-功能增强功能：
-
-|===
-
-
-| 支持此功能 ... | 起始项 
-
-
-| 使用映射的命名空间移动卷 | ONTAP 9.6 
-
-
-| 命名空间支持 512 字节块和 4096 字节块。默认值为 + 4096 。只有当主机操作系统不支持 4096 字节块时，才应使用 512 。 | ONTAP 9.6 
-
-
-| 多路径 HA 对故障转移 / 交还 | ONTAP 9.5 
-|===
-以下内容仅适用于运行 ONTAP 9.4 的节点：
-
-* NVMe LIF 和命名空间必须托管在同一节点上。
-* 必须先创建 NVMe 服务，然后才能创建 NVMe LIF 。
-
-
-NVMe 配置不支持以下 ONTAP 功能：
-
-* NVMe 命名空间移动
-* NVMe 命名空间（按需复制）
-* 在从 7- 模式 Data ONTAP 过渡的卷上创建命名空间。
-* 同步
-* Virtual Storage Console
-
-
-请参见 https://hwu.netapp.com["NetApp Hardware Universe"^] 有关 NVMe 限制的完整列表。
-
 .相关信息
-https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/AFF_Series/How_to_configure_and_Connect_SUSE_Enterprise_Linux_to_ONTAP_NVMe%2F%2FFC_namespaces["如何配置 SUSE Enterprise Linux 和 ONTAP NVMe/FC 命名空间并将其连接起来"]
+* link:https://docs.netapp.com/us-en/ontap/nvme/support-limitations.html["NVMe支持和限制"]
+* http://www.netapp.com/us/media/tr-4684.pdf["NetApp 技术报告 4684 ：《使用 NVMe/FC 实施和配置现代 SAN 》"]
+* https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/AFF_Series/How_to_configure_and_Connect_SUSE_Enterprise_Linux_to_ONTAP_NVMe%2F%2FFC_namespaces["如何配置 SUSE Enterprise Linux 和 ONTAP NVMe/FC 命名空间并将其连接起来"]
+* https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Licensing_information_for_NVMe_protocol_on_ONTAP["ONTAP 上 NVMe 协议的许可信息"]
 
-https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Licensing_information_for_NVMe_protocol_on_ONTAP["ONTAP 上 NVMe 协议的许可信息"]
-
-http://www.netapp.com/us/media/tr-4684.pdf["NetApp 技术报告 4684 ：《使用 NVMe/FC 实施和配置现代 SAN 》"]
