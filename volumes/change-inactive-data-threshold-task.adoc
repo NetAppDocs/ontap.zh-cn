@@ -1,0 +1,33 @@
+---
+permalink: volumes/change-inactive-data-threshold-task.html 
+sidebar: sidebar 
+keywords: storage, efficiency, temperature, change, efficient, default, threshold, inactive, compression, cold data, frequency 
+summary: 您可以通过修改使用温度敏感型存储效率的卷上的冷度阈值来更改ONTAP执行冷数据扫描的频率。 
+---
+= 更改卷非活动数据压缩阈值
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以通过修改使用温度敏感型存储效率的卷上的冷度阈值来更改ONTAP执行冷数据扫描的频率。
+
+.开始之前
+您必须是集群或SVM管理员、并使用ONTAP命令行界面高级权限级别。
+
+.关于此任务
+冷度阈值可以是1到60天。默认阈值为14天。
+
+.步骤
+. 设置权限级别：
++
+`set -privilege advanced`
+
+. 修改卷上的非活动数据压缩：
++
+`volume efficiency inactive-data-compression modify -vserver <vserver_name> -volume <volume_name> -threshold-days <integer>`
+
+
+
+请参见追加信息关于的手册页 link:https://docs.netapp.com/us-en/ontap-cli-9131/volume-efficiency-inactive-data-compression-modify.html#description["修改非活动数据压缩"]。
