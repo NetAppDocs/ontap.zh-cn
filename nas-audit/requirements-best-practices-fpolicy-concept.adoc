@@ -49,19 +49,166 @@ NOTE: 从ONTAP 9.8开始、ONTAP 通过添加为出站FPolicy连接提供客户�
 
 == 设置 FPolicy 时的最佳实践和建议
 
-在 Storage Virtual Machine （ SVM ）上设置 FPolicy 时，您需要熟悉配置最佳实践和建议，以确保您的 FPolicy 配置能够提供稳定可靠的监控性能和结果，从而满足您的要求。
+在Storage Virtual Machine (SVM)上设置FPolicy时、请熟悉常规配置最佳实践和建议、以确保您的FPolicy配置提供稳定可靠的监控性能和结果、从而满足您的要求。
 
-* 外部 FPolicy 服务器（ FPolicy 服务器）应放置在具有高带宽连接的集群附近，以提供最低延迟和高带宽连接。
-* FPolicy 外部引擎应配置多个 FPolicy 服务器，以提供 FPolicy 服务器通知处理的故障恢复能力和高可用性，尤其是在为同步筛选配置策略时。
-* 建议在进行任何配置更改之前禁用 FPolicy 策略。
+有关性能、规模估算和配置的具体准则、请使用您的FPolicy合作伙伴应用程序。
+
+
+
+=== 策略配置
+
+为SVM配置FPolicy外部引擎、事件和范围可以改善整体体验和安全性。
+
+* 为SVM配置FPolicy外部引擎：
 +
-例如，如果要在为已启用策略配置的 FPolicy 外部引擎中添加或修改 IP 地址，则应先禁用此策略。
+** 提供额外的安全性会降低性能成本。启用安全套接字层(SSL)通信会影响访问共享的性能。
+** FPolicy外部引擎应配置多个FPolicy服务器、以提供FPolicy服务器通知处理的故障恢复能力和高可用性。
 
-* 应优化集群节点与 FPolicy 服务器比率，以确保 FPolicy 服务器不会过载，这可能会在 SVM 响应客户端请求时导致延迟。
+
+* 为SVM配置FPolicy事件：
 +
-最佳比率取决于使用 FPolicy 服务器的应用程序。
+监控文件操作会影响您的整体体验。例如、在存储端筛选不需要的文件操作可以改善您的体验。NetApp建议设置以下配置：
+
++
+** 监控最小文件操作类型并启用最大数量的筛选器、而不会违反使用情形。
+** 对getattr、读取、写入、打开和关闭操作使用筛选器。SMB和NFS主目录环境中的这些操作所占比例较高。
 
 
+* 配置SVM的FPolicy范围：
++
+将策略的范围限制为相关存储对象、例如共享、卷和导出、而不是在整个SVM中启用这些对象。NetApp建议检查目录扩展名。如果 `is-file-extension-check-on-directories-enabled` 参数设置为 `true`，目录对象将与常规文件一样进行扩展名检查。
+
+
+
+
+
+=== 网络配置：
+
+FPolicy服务器和控制器之间的网络连接应具有低延迟。NetApp建议使用专用网络将FPolicy流量与客户端流量分隔开。
+
+此外、您还应将外部FPolicy服务器(FPolicy服务器)放置在具有高带宽连接的集群附近、以实现最低延迟和高带宽连接。
+
+
+NOTE: 如果将用于FPolicy流量的LIF配置在与用于客户端流量的LIF不同的端口上、则FPolicy LIF可能会因端口故障而故障转移到另一节点。因此、无法从节点访问FPolicy服务器、从而导致节点上文件操作的FPolicy通知失败。要避免出现此问题描述、请验证是否可通过节点上的至少一个LIF访问FPolicy服务器、以处理对该节点执行文件操作的FPolicy请求。
+
+
+
+=== 硬件配置
+
+您可以将FPolicy服务器放置在物理服务器或虚拟服务器上。如果FPolicy服务器位于虚拟环境中、则应为此虚拟服务器分配专用资源(CPU、网络和内存)。
+
+应优化集群节点与 FPolicy 服务器比率，以确保 FPolicy 服务器不会过载，这可能会在 SVM 响应客户端请求时导致延迟。最佳比率取决于使用FPolicy服务器的配对应用程序。NetApp建议与合作伙伴合作确定适当的价值。
+
+
+
+=== 多策略配置
+
+无论序列号如何、用于本机阻止的FPolicy策略都具有最高优先级、而决策策略的优先级高于其他策略。策略优先级取决于使用情形。NetApp建议与合作伙伴合作确定适当的优先级。
+
+
+
+=== 大小注意事项
+
+FPolicy对SMB和NFS操作执行实时监控、向外部服务器发送通知并等待响应、具体取决于外部引擎通信模式(同步或异步)。此过程会影响SMB和NFS访问以及CPU资源的性能。
+
+要缓解任何问题、NetApp建议在启用FPolicy之前与合作伙伴一起评估环境并对其进行规模估算。性能受多种因素影响、包括用户数量、工作负载特征(例如每个用户的操作数和数据大小)、网络延迟以及故障或服务器速度减低。
+
+
+
+== 监控性能
+
+FPolicy是一个基于通知的系统。通知将发送到外部服务器进行处理、并生成对ONTAP的响应。此往返过程会增加客户端访问的延迟。
+
+通过监控FPolicy服务器和ONTAP中的性能计数器、您可以发现解决方案中的瓶颈、并根据需要调整参数以获得最佳解决方案。例如、FPolicy延迟的增加会对SMB和NFS访问延迟产生级联影响。因此、您应同时监控工作负载(SMB和NFS)和FPolicy延迟。此外、您还可以在ONTAP中使用服务质量策略为启用了FPolicy的每个卷或SVM设置工作负载。
+
+NetApp建议运行 `statistics show –object workload` 命令以显示工作负载统计信息。此外、您还应监控以下参数：
+
+* 平均、读取和写入时间
+* 操作总数
+* 读取和写入计数器
+
+
+您可以使用以下FPolicy计数器监控FPolicy子系统的性能。
+
+
+NOTE: 您必须处于诊断模式才能收集与FPolicy相关的统计信息。
+
+.步骤
+. 收集FPolicy计数器：
++
+.. `statistics start -object fpolicy -instance _instance_name_ -sample-id _ID_`
+.. `statistics start -object fpolicy_policy -instance _instance_name_ -sample-id _ID_`
+
+
+. 显示FPolicy计数器：
++
+.. `statistics show -object fpolicy –instance _instance_name_ -sample-id _ID_`
+.. `statistics show -object fpolicy_server –instance _instance_name_ -sample-id _ID_`
+
+
++
+--
+。 `fpolicy` 和 `fpolicy_server` 计数器可提供有关下表中所述的多个性能参数的信息。
+
+[cols="25,75"]
+|===
+| 计数器 | Description 
+
+
+ a| 
+*"fpolicy"计数器*
+
+
+
+| max_request_延迟 | 最大屏幕请求延迟 
+
+
+| 未完成_请求 | 正在处理的屏幕请求总数 
+
+
+| Request_延迟 历史记录 | 屏幕请求延迟的直方图 
+
+
+| Requests_发放 率 | 每秒发送的屏幕请求数 
+
+
+| Requests_received_rate | 每秒接收的屏幕请求数 
+
+
+ a| 
+*"fpolicy_server"计数器*
+
+
+
+| max_request_延迟 | 屏幕请求的最大延迟 
+
+
+| 未完成_请求 | 等待响应的屏幕请求总数 
+
+
+| request_延迟 | 屏幕请求的平均延迟 
+
+
+| Request_延迟 历史记录 | 屏幕请求延迟的直方图 
+
+
+| Request_sent率 | 每秒发送到FPolicy服务器的屏幕请求数 
+
+
+| respony_received_rate | 每秒从FPolicy服务器收到的屏幕响应数 
+|===
+--
+
+
+
+
+=== 管理FPolicy工作流以及对其他技术的依赖
+
+NetApp建议在进行任何配置更改之前禁用FPolicy策略。例如、如果要在为已启用策略配置的外部引擎中添加或修改某个IP地址、请先禁用该策略。
+
+如果将FPolicy配置为监控NetApp FlexCache卷、NetApp建议您不要将FPolicy配置为监控读取和getATTR文件操作。在ONTAP中监控这些操作需要检索索引节点到路径(i2P)数据。由于无法从FlexCache卷检索I2P数据、因此必须从初始卷检索这些数据。因此、监控这些操作会消除FlexCache可提供的性能优势。
+
+部署FPolicy和机下防病毒解决方案后、防病毒解决方案会首先收到通知。FPolicy处理仅在防病毒扫描完成后开始。正确估算防病毒解决方案的规模非常重要、因为速度较慢的防病毒扫描程序可能会影响整体性能。
 
 
 
@@ -79,8 +226,8 @@ NOTE: 从ONTAP 9.8开始、ONTAP 通过添加为出站FPolicy连接提供客户�
 
 === 还原
 
-还原到不支持 FPolicy 直通读取的 ONTAP 版本之前，必须满足以下条件：
+还原到不支持FPolicy直通读取的ONTAP版本之前、您必须满足以下条件：
 
-* 必须禁用所有使用直通读取的策略，然后必须修改受影响的配置，使其不使用直通读取。
-* 必须通过禁用集群上的每个 FPolicy 策略来禁用集群上的 FPolicy 功能。
+* 使用直通读取禁用所有策略、然后修改受影响的配置、使其不使用直通读取。
+* 通过禁用集群上的每个FPolicy策略、在集群上禁用FPolicy功能。
 

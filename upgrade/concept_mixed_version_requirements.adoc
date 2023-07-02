@@ -1,46 +1,79 @@
 ---
 permalink: upgrade/concept_mixed_version_requirements.html 
 sidebar: sidebar 
-keywords: ontap, upgrade, mixed, version, requirements 
-summary: 从ONTAP 9.3开始、默认情况下、如果集群运行的ONTAP 版本与现有节点上运行的版本不同、则不能向该集群添加新节点。 
+keywords: ontap, upgrade, mixed, version, clusters, mixed-version nodes, requirements 
+summary: '混合版本的ONTAP集群由运行两个不同主要ONTAP版本(例如ONTAP 9.8和9.12.1)的节点组成。只有在特定情形下、NetApp才支持混合版本的ONTAP集群。' 
 ---
-= 混合版本要求
+= 混合版本ONTAP集群
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从ONTAP 9.3开始、默认情况下、如果集群运行的ONTAP 版本与现有节点上运行的版本不同、则不能向该集群添加新节点。
+混合版本的ONTAP集群由运行两个不同主要ONTAP版本(例如ONTAP 9.8和9.12.1或ONTAP 9.9.1和9.13.1)的节点组成。只有在特定情形下、NetApp才支持混合版本的ONTAP集群。
 
-如果您计划向运行的 ONTAP 版本高于现有集群中节点的集群添加新节点，则应先将集群中的节点升级到更高版本，然后再添加新节点。
+两种最常见的情形如下：
 
-不建议使用混合版本集群，但在某些情况下，您可能需要暂时进入混合版本状态。例如，如果要升级到现有集群中某些节点不支持的更高版本的 ONTAP ，则需要进入混合版本状态。在这种情况下、您应升级支持更高版本ONTAP 的节点、然后使用以下命令删除不支持要升级到的ONTAP 版本的节点：
+* 在大型集群中升级ONTAP软件
+* 计划向集群添加新控制器时需要进行ONTAP软件升级
 
-[cols="2"]
+
+此内容包括支持NetApp平台系统的 适用场景 ONTAP版本、例如AFF、ASA、FAS和C系列系统。  此处的信息不适用于ONTAP云版本(9.x.0)、例如9.12.0。
+
+
+
+== 混合版本ONTAP集群的要求
+
+如果集群需要进入混合ONTAP版本状态、您需要了解重要的要求和限制。
+
+* 在任何给定时间、一个集群中的主要ONTAP版本不能超过两个。如果集群中的节点运行的是同一ONTAP版本的不同P或D修补程序级别(例如ONTAP 9.9.1P1和9.9.1P5)、则不会视为混合版本ONTAP集群。
+* 当集群处于混合版本状态时、除非为满足升级要求而需要、否则不应输入任何更改集群操作或配置的命令。为了便于执行控制器升级活动、支持在混合版本的ONTAP集群中执行卷移动操作。
+* 为了获得最佳集群操作、集群处于混合版本状态的时间长度应尽可能短。  集群保持混合版本状态的最长时间取决于集群中最低的ONTAP版本。
++
+[cols="2*"]
 |===
-| ONTAP 版本 | 命令 
+| 如果混合版本集群中运行的最低ONTAP版本为： | 然后、您最多可以保持混合版本状态 
 
 
- a| 
-ONTAP 9.3
- a| 
-`cluster unjoin -skip-last-low-version-node-check`
+| ONTAP 9.8或更高版本 | 90天 
 
 
-
- a| 
-ONATP 9.4及更高版本
- a| 
-`cluster remove-node -skip-last-low-version-node-check`
-
+| ONTAP 9.7或更低版本 | 7天 
 |===
-您可能还需要进入混合版本状态才能进行技术更新或中断升级。在这种情况下、您可以覆盖ONTAP 默认行为并使用添加不同版本的节点 `cluster add-node -allow-mixed-version-join` 高级权限命令。
+* 从ONTAP 9.8开始、混合版本的ONTAP集群最多可跨越4个主要版本。例如、混合版本的ONTAP集群可以包含运行ONTAP 9.8和9.12.1的节点、也可以包含运行ONTAP 9.9.1和9.13.1的节点。但是、不支持包含运行ONTAP 9.8和9.13.1的节点的混合版本ONTAP集群、因为该混合版本集群跨越5个主要版本。
 
-如果必须进入混合版本状态，则应尽快完成升级。
 
-从ONTAP 9.8及更高版本开始、HA对运行与集群中其他HA对不同的ONTAP版本的时间不得超过90天。在ONTAP 9.7及更早版本中、HA对运行与集群中其他HA对不同版本的ONTAP版本的时间不得超过7天。
 
-要使集群正常运行，集群处于混合版本状态的时间应尽可能短。
 
-当集群处于混合版本状态时，除非为满足升级要求而需要，否则不应输入任何更改集群操作或配置的命令。
+== 更新大型集群的ONTAP版本
+
+每个版本的ONTAP都提供了一组更强大的功能。如果您需要升级较大集群的ONTAP版本以升级到较新版本的ONTAP、则在升级集群中的每个节点时、您需要在一段时间内进入混合版本集群状态。
+
+
+
+== 向集群添加新节点
+
+您可以向集群添加新节点来扩展其容量、也可以完全更换控制器。无论哪种情况、您都需要将数据从旧控制器迁移到新系统。
+
+如果您计划向集群添加新节点、并且这些节点所需的ONTAP版本高于集群中现有节点的版本、则需要先将集群中的所有现有节点升级到更高版本的ONTAP、然后再添加新节点。但是、如果由于某些现有节点不支持更高版本的ONTAP而无法做到这一点、则在升级过程中、您需要在有限的时间内进入混合版本状态。
+如果您的节点不支持新控制器所需的最低ONTAP版本、则应执行以下操作：
+
+. link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升级"] 集群中支持新控制器的ONTAP版本的节点。
+. 将新节点添加到集群中。
++
+在高级权限级别使用ONTAP命令cluster add-node -allow -mixed-version-jon加入新节点。
+
+. 将无法升级的任何节点中的数据迁移到运行更高ONTAP版本的节点。
+. link:https://docs.netapp.com/us-en/ontap/system-admin/remov-nodes-cluster-concept.html["从集群中删除不受支持的节点"^]。
++
+使用ONTAP命令cluster remove-node -sky-last -low-version-node－check删除这些节点。(在ONTAP 9.3及更早版本中、使用cluster unjoin -sky-last -low-version-node－check命令。)
+
+
+
+有关数据迁移的详细信息、请参见：
+
+* link:https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade/upgrade-create-aggregate-move-volumes.html["创建聚合并将卷移动到新节点"^]
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/transition/task_move_linux_iscsi_hosts_from_mcc_fc_to_mcc_ip_nodes.html#setting-up-new-iscsi-connections["为SAN卷移动设置新的iSCSI连接"^]
+* link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/encrypt-existing-volume-task.html["移动加密卷"^]
+
