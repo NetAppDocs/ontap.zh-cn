@@ -77,16 +77,19 @@ ONTAP 平台支持：
 * SnapLock 卷
 * FlexGroup 卷(从ONTAP 9.13.1开始、支持FlexGroup 卷)
 * FlexCache卷(原始FlexVol卷支持ARP、但缓存卷不支持ARP)
+* Storage VM的根卷
+* SnapMirror 同步
 * SAN-only volumes
 * 已停止Storage VM的卷
-* Storage VM的根卷
 
 
 
 
 == SnapMirror和ARP互操作性
 
-从ONTAP 9.12.1开始、SnapMirror目标卷支持ARP。如果SnapMirror源卷已启用ARP、则SnapMirror目标卷会自动获取源卷的ARP配置状态(学习、已启用等)、ARP培训数据以及ARP创建的Snapshot。无需显式启用。
+从ONTAP 9.12.1开始、异步SnapMirror目标卷支持ARP。SnapMirror同步**不支持ARP。
+
+如果SnapMirror源卷已启用ARP、则SnapMirror目标卷会自动获取源卷的ARP配置状态(学习、已启用等)、ARP培训数据以及ARP创建的Snapshot。无需显式启用。
 
 虽然目标卷包含只读(Read Only、RO) Snapshot副本、但不会对其数据执行ARP处理。但是、当SnapMirror目标卷转换为读写(rw)时、将自动在RW转换的目标卷上启用ARP。除了已记录在源卷上的内容之外、目标卷不需要任何其他学习操作步骤。
 
@@ -96,7 +99,7 @@ ONTAP 平台支持：
 
 == ARP性能和频率注意事项
 
-按吞吐量和峰值IOPS衡量、ARP功能对系统性能的影响最小。ARP功能的影响在很大程度上取决于卷工作负载。对于大多数典型或常见工作负载，建议使用以下配置限制：
+根据吞吐量和峰值IOPS衡量、ARP对系统性能的影响最小。ARP功能的影响取决于特定的卷工作负载。对于常见工作负载、建议遵循以下配置限制：
 
 [cols="30,20,30"]
 |===
@@ -110,7 +113,7 @@ ONTAP 平台支持：
 |===
 密码：[*]无论添加的卷数是否超过建议的限制、系统性能均不会超过这些百分比。
 
-由于ARP分析按优先顺序运行、因此随着受保护卷数量的增加、对每个卷运行分析的频率也会降低。
+由于ARP分析按优先级顺序运行、因此随着受保护卷数量的增加、在每个卷上运行分析的频率会降低。
 
 
 
