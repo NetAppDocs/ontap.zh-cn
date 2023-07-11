@@ -501,7 +501,13 @@ vs0
 cluster1::> system node run -node node1 -command uptime
   3:15pm up  0 days, 0:16 129 NFS ops, 0 CIFS ops, 0 HTTP ops, 0 FCP ops, 2 iSCSI ops
 ----
-. 如果这是集群中要更新的最后一个节点，则触发 AutoSupport 通知： `AutoSupport invoke -node * -type all -message "fining_NDU"`
+. 如果这是集群中要更新的最后一个节点、则会触发AutoSupport通知：
++
+`set -privilege advanced`
+
++
+`autosupport invoke -node * -type all -message "Finishing_NDU"`
+
 +
 此 AutoSupport 通知包括更新前的系统状态记录。如果更新过程出现问题，它会保存有用的故障排除信息。
 
