@@ -11,7 +11,7 @@ summary: '混合版本的ONTAP集群由运行两个不同主要ONTAP版本(例�
 
 
 [role="lead"]
-混合版本的ONTAP集群由运行两个不同主要ONTAP版本的节点组成。  例如、如果集群包含运行ONTAP 9.8和9.12.1的节点、则该集群为混合版本集群。  同样、节点运行ONTAP 9.9.1和9.13.1的集群也是混合版本集群。  NetApp支持混合版本的ONTAP集群、但时间有限、并且适用于特定场景。
+混合版本的ONTAP集群由在有限时间内运行两个不同主要ONTAP版本的节点组成。  例如、如果集群包含运行ONTAP 9.8和9.12.1的节点、则该集群为混合版本集群。  同样、节点运行ONTAP 9.9.1和9.13.1的集群也是混合版本集群。  NetApp支持混合版本的ONTAP集群、但时间有限、并且适用于特定场景。
 
 以下是ONTAP集群处于混合版本状态的最常见情形：
 
@@ -19,7 +19,7 @@ summary: '混合版本的ONTAP集群由运行两个不同主要ONTAP版本(例�
 * 计划向集群添加新节点时需要进行ONTAP软件升级
 
 
-此内容包括支持NetApp平台系统的 适用场景 ONTAP版本、例如AFF、ASA、FAS和C系列系统。  此处的信息不适用于ONTAP云版本(9.x.0)、例如9.12.0。
+此内容包含支持NetApp平台系统的 适用场景 ONTAP版本、例如AFF A系列和C系列、ASA和FAS以及C系列系统。此处的信息不适用于ONTAP云版本(9.x.0)、例如9.12.0。
 
 
 
@@ -41,33 +41,34 @@ summary: '混合版本的ONTAP集群由运行两个不同主要ONTAP版本(例�
 
 | ONTAP 9.7或更低版本 | 7天 
 |===
-* 从ONTAP 9.8开始、混合版本的ONTAP集群最多可跨越4个主要版本。例如、混合版本的ONTAP集群可以包含运行ONTAP 9.8和9.12.1的节点、也可以包含运行ONTAP 9.9.1和9.13.1的节点。但是、不支持包含运行ONTAP 9.8和9.13.1的节点的混合版本ONTAP集群、因为该混合版本集群跨越5个主要版本。
+* 从ONTAP 9.8开始、混合版本的ONTAP集群最多可跨越4个主要版本。例如、混合版本的ONTAP集群可以包含运行ONTAP 9.8和9.12.1的节点、也可以包含运行ONTAP 9.9.1和9.13.1的节点。不支持包含运行ONTAP 9.8和9.13.1的节点的混合版本ONTAP集群、因为该混合版本集群跨越5个主要版本。
 
 
 
 
 == 更新大型集群的ONTAP版本
 
-每个版本的ONTAP都提供了一组更强大的功能。如果您需要升级较大集群的ONTAP版本以升级到较新版本的ONTAP、则在升级集群中的每个节点时、您需要在一段时间内进入混合版本集群状态。
+进入混合版本集群状态的一种情形是、升级包含多个节点的集群的ONTAP版本、以利用更高版本的ONTAP 9中提供的功能。如果需要升级大型集群的ONTAP版本、则在升级集群中的每个节点时、您将进入混合版本集群状态一段时间。
 
 
 
 == 向集群添加新节点
 
-您可以向集群添加新节点来扩展其容量、也可以完全更换控制器。无论哪种情况、您都需要将数据从旧控制器迁移到新系统。
+进入混合版本集群状态的另一种情况是向集群添加新节点。您可以向集群添加新节点以扩展其容量、也可以在完全更换控制器的过程中添加新节点。无论哪种情况、都需要将数据从现有控制器迁移到新系统中的新节点。
 
-如果您计划向集群添加新节点、并且这些节点所需的ONTAP版本高于集群中现有节点的版本、则需要先将集群中的所有现有节点升级到更高版本的ONTAP、然后再添加新节点。但是、如果由于某些现有节点不支持更高版本的ONTAP而无法做到这一点、则在升级过程中、您需要在有限的时间内进入混合版本状态。
-如果您的节点不支持新控制器所需的最低ONTAP版本、则应执行以下操作：
+如果您计划向集群添加新节点、并且这些节点所需的最低ONTAP版本高于集群中当前运行的版本、则在添加新节点之前、您需要对集群中的现有节点执行任何可能的软件升级。
 
-. link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升级"] 集群中支持新控制器的ONTAP版本的节点。
+理想情况下、您应将所有现有节点升级到计划添加到集群的节点所需的最低ONTAP版本。但是、如果由于某些现有节点不支持更高版本的ONTAP而无法做到这一点、则在升级过程中、您需要在有限的时间内进入混合版本状态。如果您的节点不支持新控制器所需的最低ONTAP版本、则应执行以下操作：
+
+. link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升级"] 集群中支持新控制器所需的最低ONTAP版本的任何节点。
 . 将新节点添加到集群中。
 +
-在高级权限级别使用ONTAP命令cluster add-node -allow -mixed-version-jon加入新节点。
+使用ONTAP命令cluster `add-node -allow-mixed-version-join` 以加入新节点。
 
 . 将无法升级的任何节点中的数据迁移到运行更高ONTAP版本的节点。
 . link:https://docs.netapp.com/us-en/ontap/system-admin/remov-nodes-cluster-concept.html["从集群中删除不受支持的节点"^]。
 +
-使用ONTAP命令cluster remove-node -sky-last -low-version-node－check删除这些节点。(在ONTAP 9.3及更早版本中、使用cluster unjoin -sky-last -low-version-node－check命令。)
+使用ONTAP命令cluster `remove-node -skip-last-low-version-node-check` 以删除这些节点。(在ONTAP 9.3及更早版本中、使用 `cluster unjoin -skip-last-low-version-node-check` 命令。)
 
 
 
