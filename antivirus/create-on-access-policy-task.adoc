@@ -2,7 +2,7 @@
 permalink: antivirus/create-on-access-policy-task.html 
 sidebar: sidebar 
 keywords: create, on-access, policy 
-summary: 实时策略用于定义实时扫描的范围。您可以指定要扫描的文件的最大大小，要包含在扫描中的文件的扩展名以及要从扫描中排除的文件的扩展名和路径。您可以为单个 SVM 或集群中的所有 SVM 创建实时策略。 
+summary: 实时策略用于定义实时扫描的范围。您可以为单个 SVM 或集群中的所有 SVM 创建实时策略。如果您为集群中的所有 SVM 创建了实时策略，则必须分别在每个 SVM 上启用该策略。 
 ---
 = 创建实时策略
 :allow-uri-read: 
@@ -11,19 +11,30 @@ summary: 实时策略用于定义实时扫描的范围。您可以指定要扫�
 
 
 [role="lead"]
-实时策略用于定义实时扫描的范围。您可以指定要扫描的文件的最大大小，要包含在扫描中的文件的扩展名以及要从扫描中排除的文件的扩展名和路径。您可以为单个 SVM 或集群中的所有 SVM 创建实时策略。
+实时策略用于定义实时扫描的范围。您可以为单个 SVM 或集群中的所有 SVM 创建实时策略。如果您为集群中的所有 SVM 创建了实时策略，则必须分别在每个 SVM 上启用该策略。
 
 .关于此任务
-默认情况下， ONTAP 会创建一个名为 `default_cifs` 的实时策略，并为集群中的所有 SVM 启用该策略。
+* 您可以指定要扫描的最大文件大小、要包括在扫描中的文件扩展名和路径以及要从扫描中排除的文件扩展名和路径。
+* 您可以将 `scan -mandatory` 选项设置为 off ，以指定在没有可用于病毒扫描的 Vscan 服务器时允许文件访问。
+* 默认情况下、ONTAP会创建一个名为"default_CIFS"的实时策略、并为集群中的所有SVM启用该策略。
+* 符合基于的扫描排除条件的任何文件 `paths-to-exclude`， `file-ext-to-exclude`或 `max-file-size` 扫描时不考虑参数、即使是 `scan-mandatory` 选项设置为on。(选中此项 link:vscan-server-connection-concept.html["故障排除"] 部分、了解与相关的连接问题 `scan-mandatory` 选项。)
+* 默认情况下，仅扫描读写卷。您可以指定允许扫描只读卷或将扫描限制为使用执行访问打开的文件的筛选器。
+* 如果持续可用参数设置为是、则不会对SMB共享执行病毒扫描。
+* 请参见 link:architecture-concept.html["防病毒架构"] 第节、了解有关_Vscan文件操作配置文件_的详细信息。
+* 每个SVM最多可以创建十(10)个实时策略。但是、一次只能启用一个实时策略。
++
+** 在实时策略中、最多可以从病毒扫描中排除一百(100)个路径和文件扩展名。
 
-您可以将 `scan -mandatory` 选项设置为 off ，以指定在没有可用于病毒扫描的 Vscan 服务器时允许文件访问。请注意，即使将 `sanno-mandatory` 选项设置为 on ，也不会考虑根据 `paths-to-exclude` ， `file-ext-to-exclude` 或 `max-file-size` 参数确定扫描排除条件的任何文件。
 
-[NOTE]
-====
-有关与 `san-mandatory` 选项相关的潜在问题，请参见 xref:vscan-server-connection-concept.adoc[与 scan-mandatory 选项相关的潜在连接问题]。
+* 一些文件排除建议：
++
+** 请考虑从病毒扫描中排除大型文件(可以指定文件大小)、因为它们可能会导致CIFS用户的响应速度较慢或扫描请求超时。要排除的默认文件大小为2 GB。
+** 请考虑排除文件扩展名、例如 `.vhd` 和 `.tmp` 因为具有这些扩展名的文件可能不适合扫描。
+** 请考虑排除一些文件路径、例如隔离目录或仅存储虚拟硬盘驱动器或数据库的路径。
+** 验证是否在同一策略中指定了所有排除项、因为一次只能启用一个策略。NetApp强烈建议使用在防病毒引擎中指定的一组相同排除项。
 
-====
-默认情况下，仅扫描读写卷。您可以指定允许扫描只读卷或将扫描限制为使用执行访问打开的文件的筛选器。
+
+
 
 .步骤
 . 创建实时策略：
@@ -33,7 +44,8 @@ summary: 实时策略用于定义实时扫描的范围。您可以指定要扫�
 +
 ** 为为为单个 SVM 定义的策略指定数据 SVM ，为为集群中的所有 SVM 定义的策略指定集群管理员 SVM 。
 ** ` -file-ext-to-exclude` 设置会覆盖 ` -file-ext-to-include` 设置。
-** 将 ` -scan-file-with -no-ext` 设置为 true 可扫描不带扩展名的文件。以下命令会在 ``vs1``SVM 上创建名为 `Policy1` 的实时策略：
+** 设置 `-scan-files-with-no-ext` 设置为true可扫描不带扩展名的文件。
+以下命令将创建一个名为的实时策略 `Policy1` 在上 `vs1` SVM：
 
 
 +

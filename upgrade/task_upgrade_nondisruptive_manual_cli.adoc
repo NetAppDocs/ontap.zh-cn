@@ -503,9 +503,6 @@ cluster1::> system node run -node node1 -command uptime
 ----
 . 如果这是集群中要更新的最后一个节点、则会触发AutoSupport通知：
 +
-`set -privilege advanced`
-
-+
 `autosupport invoke -node * -type all -message "Finishing_NDU"`
 
 +
@@ -514,7 +511,13 @@ cluster1::> system node run -node node1 -command uptime
 +
 如果集群未配置为发送 AutoSupport 消息，则通知的副本将保存在本地。
 
-. 确认新的 ONTAP 软件正在 HA 对的两个节点上运行： `ssystem node image show`
+. 确认新的ONTAP软件正在HA对的两个节点上运行：
++
+`set -privilege advanced`
+
++
+`system node image show`
+
 +
 在以下示例中， image2 是 ONTAP 的更新版本，也是两个节点上的默认版本：
 

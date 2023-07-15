@@ -2,7 +2,7 @@
 permalink: antivirus/schedule-on-demand-task-task.html 
 sidebar: sidebar 
 keywords: schedule, on-demand, task 
-summary: 如果您创建了按需任务而未分配计划，或者要为任务分配不同的计划，则可以使用 vserver vscan on-demand-task schedule 命令为此任务分配计划。 
+summary: '您可以在不分配计划的情况下创建任务、然后使用 `vserver vscan on-demand-task schedule` 命令以分配计划；或者在创建任务时添加计划。' 
 ---
 = 计划按需任务
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 如果您创建了按需任务而未分配计划，或者要为任务�
 
 
 [role="lead"]
-如果您创建了按需任务而未分配计划，或者要为任务分配不同的计划，则可以使用 `vserver vscan on-demand-task schedule` 命令为该任务分配计划。
+您可以在不分配计划的情况下创建任务、然后使用 `vserver vscan on-demand-task schedule` 命令以分配计划；或者在创建任务时添加计划。
 
 .关于此任务
 使用 `vserver vscan on-demand-task schedule` 命令分配的计划会覆盖已使用 `vserver vscan on-demand-task create` 命令分配的计划。
@@ -22,7 +22,7 @@ summary: 如果您创建了按需任务而未分配计划，或者要为任务�
 `vserver vscan on-demand-task schedule -vserver data_svm -task-name task_name -schedule cron_schedule`
 
 +
-以下命令会在 ``vs2``SVM 上计划一个名为 `Task2` 的实时任务：
+以下命令会计划一个名为的实时任务 `Task2` 在上 `vs2` SVM：
 
 +
 [listing]
@@ -36,7 +36,10 @@ cluster1::> vserver vscan on-demand-task schedule -vserver vs2 -task-name Task2 
 您可以使用 `job show` 命令查看作业状态。您可以使用 `job pause` 和 `job resume` 命令暂停并重新启动作业，或者使用 `job stop` 命令结束作业。
 
 ====
-. 验证是否已计划按需任务： `vserver vscan on-demand-task show -instance data_sVM -task-name task_name`
+. 验证是否已计划按需任务：
++
+`vserver vscan on-demand-task show -instance data_SVM -task-name task_name`
+
 +
 有关完整的选项列表，请参见命令手册页。
 

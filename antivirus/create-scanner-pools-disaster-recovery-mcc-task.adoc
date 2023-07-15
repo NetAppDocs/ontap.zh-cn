@@ -15,22 +15,21 @@ summary: 您必须在 MetroCluster 配置中的每个集群上创建主和二级
 
 .您需要的内容
 * SVM 和 Vscan 服务器必须位于同一域或受信任域中。
-* 对于为单个 SVM 定义的扫描程序池，您必须已为 ONTAP 防病毒连接器配置 SVM 管理 LIF 或 SVM 数据 LIF 。
-* 对于为集群中的所有 SVM 定义的扫描程序池，您必须已为 ONTAP 防病毒连接器配置了集群管理 LIF 。
+* 对于为单个SVM定义的扫描程序池、您必须已为ONTAP防病毒连接器配置SVM管理LIF或SVM数据LIF。
+* 对于为集群中的所有SVM定义的扫描程序池、您必须已使用集群管理LIF配置ONTAP防病毒连接器。
+* 有权限的用户列表必须包含 Vscan 服务器用于连接到 SVM 的域用户帐户。
+* 配置扫描程序池后、请检查与服务器的连接状态。
 
 
 .关于此任务
 MetroCluster 配置通过实施两个物理上独立的镜像集群来保护数据。每个集群会同步复制另一个集群的数据和 SVM 配置。当集群联机时，本地集群上的主 SVM 将提供数据。当远程集群脱机时，本地集群上的二级 SVM 将提供数据。
 
-这意味着，您必须在 MetroCluster 配置中的每个集群上创建主和二级扫描程序池，这些池对应于集群上的主和二级 SVM 。当集群开始从二级 SVM 提供数据时，二级池将变为活动状态。下图显示了典型的 MetroCluster 配置。
+这意味着您必须在MetroCluster配置中的每个集群上创建主扫描程序池和二级扫描程序池、当集群开始从二级SVM提供数据时、二级池将变为活动状态。对于灾难恢复(Disaster Recovery、DR)、此配置与MetroCluster类似。
 
-image::../media/metrocluster-av-config.gif[MetroCluster av 配置]
+此图显示了典型的MetroCluster/DR配置。
 
-[NOTE]
-====
-有权限的用户列表必须包含 Vscan 服务器用于连接到 SVM 的域用户帐户。
+image::../media/metrocluster-av-config.png[MetroCluster av 配置]
 
-====
 .步骤
 . 创建扫描程序池：
 +
@@ -73,7 +72,10 @@ cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
 scanner-pool pool2_for_site2 -hostnames scan2 -privileged-users cifs
 \u1,cifs\u2
 ----
-. 验证是否已创建扫描程序池： `vserver vscan scanner-pool show -vserver _data_svm_cluster_admin_svm_ -scanner-pool _scanner_pool_`
+. 验证是否已创建扫描程序池：
++
+`vserver vscan scanner-pool show -vserver _data_SVM|cluster_admin_SVM_ -scanner-pool _scanner_pool_`
+
 +
 有关完整的选项列表，请参见命令手册页。
 

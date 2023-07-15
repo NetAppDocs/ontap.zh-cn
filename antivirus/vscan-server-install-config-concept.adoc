@@ -2,7 +2,7 @@
 permalink: antivirus/vscan-server-install-config-concept.html 
 sidebar: sidebar 
 keywords: vscan, server installation, configuration 
-summary: 您必须设置一个或多个 Vscan 服务器，以确保对系统上的文件进行病毒扫描。按照供应商提供的说明在服务器上安装和配置防病毒软件。按照 NetApp 提供的自述文件中的说明安装和配置 ONTAP 防病毒连接器。 
+summary: 要启用防病毒扫描、您必须设置和配置一个或多个Vscan服务器。 
 ---
 = Vscan 服务器安装和配置
 :allow-uri-read: 
@@ -11,11 +11,16 @@ summary: 您必须设置一个或多个 Vscan 服务器，以确保对系统上�
 
 
 [role="lead"]
-您必须设置一个或多个 Vscan 服务器，以确保对系统上的文件进行病毒扫描。按照供应商提供的说明在服务器上安装和配置防病毒软件。按照 NetApp 提供的自述文件中的说明安装和配置 ONTAP 防病毒连接器。
+要启用防病毒扫描、您必须设置和配置一个或多个Vscan服务器。
+
+* 要在服务器上安装和配置防病毒软件、请按照供应商提供的说明进行操作。
+* 要安装和配置ONTAP防病毒连接器、请按照中的说明进行操作 `README.txt` 上提供的文件
+https://mysupport.netapp.com/site/products/all/details/ontap-antivirus-connector/downloads-tab["NetApp 支持站点"]。
+
 
 [NOTE]
 ====
-对于灾难恢复和 MetroCluster 配置，您必须为本地集群和配对集群设置单独的 Vscan 服务器。
+对于灾难恢复和MetroCluster配置、您必须为主/本地和二级/配对ONTAP集群设置和配置单独的Vscan服务器。
 
 ====
 
@@ -23,27 +28,24 @@ summary: 您必须设置一个或多个 Vscan 服务器，以确保对系统上�
 == 防病毒软件要求
 
 * 有关防病毒软件要求的信息，请参见供应商文档。
-* 有关 vScan 支持的供应商、软件和版本的信息、请参见 NetApp 互操作性表。
-+
-http://mysupport.netapp.com/matrix["mysupport.netapp.com/matrix"]
-
+* 有关 Vscan 支持的供应商，软件和版本的信息，请参见
+https://imt.netapp.com/matrix/["NetApp 互操作性表工具（ IMT ）"]。
 
 
 
 
 == ONTAP 防病毒连接器要求
 
-* 您可以从 ONTAP 支持站点上的软件下载页面下载 NetApp Antivirus Connector 。 http://mysupport.netapp.com/NOW/cgi-bin/software["NetApp 下载：软件"]
-* 有关 ONTAP 防病毒连接器支持的 Windows 版本的信息，请参见 NetApp 互操作性表。
-+
-http://mysupport.netapp.com/matrix["mysupport.netapp.com/matrix"]
+* 您可以从下载此软件
+https://mysupport.netapp.com/site/products/all/details/ontap-antivirus-connector/downloads-tab/download/63048/1.0.6["NetApp 支持站点"] (需要登录)。
+* 有关软件版本支持的信息、请参见
+https://imt.netapp.com/matrix/["NetApp 互操作性表工具（ IMT ）"]。
 
-+
-[NOTE]
-====
-您可以为集群中的不同 Vscan 服务器安装不同版本的 Windows 服务器。
 
-====
-* Windows 服务器上必须安装 .NET 3.0 或更高版本。
-* 必须在 Windows 服务器上启用 SMB 2.0 。
+
+
+== Vscan服务器配置要求
+
+* 您必须安装.NET 3.0或更高版本、并且必须在Vscan服务器上启用SMB 2.0。对于具有导出策略的SMB服务器、必须将所有Vscan服务器添加到此策略中。
+* 您可以在集群中的不同Vscan服务器上安装不同版本的Windows Server操作系统。ONTAP防病毒连接器至少需要Windows Server 2008。
 

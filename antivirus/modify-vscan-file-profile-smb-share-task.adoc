@@ -2,7 +2,7 @@
 permalink: antivirus/modify-vscan-file-profile-smb-share-task.html 
 sidebar: sidebar 
 keywords: modify, vscan, file-operations, profile, cifs share 
-summary: SMB 共享的 Vscan 文件操作配置文件定义了共享上可以触发扫描的操作。默认情况下，参数设置为标准。创建或修改 SMB 共享时，您可以根据需要调整参数。 
+summary: 'SMB共享的_Vscan文件操作配置文件_用于定义共享上可触发扫描的操作。默认情况下、参数设置为 `standard`。创建或修改 SMB 共享时，您可以根据需要调整参数。' 
 ---
 = 修改 SMB 共享的 Vscan 文件操作配置文件
 :allow-uri-read: 
@@ -11,25 +11,25 @@ summary: SMB 共享的 Vscan 文件操作配置文件定义了共享上可以触
 
 
 [role="lead"]
-SMB 共享的 Vscan 文件操作配置文件定义了共享上可以触发扫描的操作。默认情况下，参数设置为 `standard` 。创建或修改 SMB 共享时，您可以根据需要调整参数。
+SMB共享的_Vscan文件操作配置文件_用于定义共享上可触发扫描的操作。默认情况下、参数设置为 `standard`。创建或修改 SMB 共享时，您可以根据需要调整参数。
 
-.关于此任务
-有关 Vscan 文件操作配置文件的可用值的详细信息，请参见 "`Vscan file-operations profile " 。`
-
-link:architecture-concept.html["Vscan 文件操作配置文件（仅限实时扫描）"]
+请参见 link:architecture-concept.html["防病毒架构"] 第节、了解有关_Vscan文件操作配置文件_的详细信息。
 
 [NOTE]
 ====
-如果 SMB 共享的 `continuously-available` 参数设置为 `Yes` ，则不会对该共享执行病毒扫描。
+不会对具有的SMB共享执行病毒扫描 `continuously-available` 参数设置为 `Yes`。
 
 ====
 .步骤
-. 修改 SMB 共享的 Vscan 文件操作配置文件的值： `vserver cifs share modify -vserver _data_svm_ -share-name _share_ -path _share_path_ -vscan-fileop-profile no-scanne|standard_strict_writes-only`
+. 修改SMB共享的Vscan文件操作配置文件的值：
++
+`vserver cifs share modify -vserver _data_SVM_ -share-name _share_ -path _share_path_ -vscan-fileop-profile no-scan|standard|strict|writes-only`
+
 +
 有关完整的选项列表，请参见命令手册页。
 
 +
-以下命令会将 SMB 共享的 Vscan 文件操作配置文件更改为 `strict` ：
+以下命令将SMB共享的Vscan文件操作配置文件更改为 `strict`：
 
 +
 [listing]
