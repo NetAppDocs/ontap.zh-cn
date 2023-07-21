@@ -1,8 +1,8 @@
 ---
 permalink: volumes/split-flexclone-from-parent-task.html 
 sidebar: sidebar 
-keywords: split, flexclone, volume, parent, volume 
-summary: 如果您希望读写 FlexClone 卷具有自己的磁盘空间，而不是使用其父卷的磁盘空间，则可以将 FlexClone 卷从其父卷中拆分。由于此操作会为当前在父卷和 FlexClone 卷之间共享的数据创建一个副本，因此此操作可能需要一段时间才能完成。 
+keywords: split, flexclone, volume, parent, volume, clone 
+summary: 如果您希望读/写FlexClone卷具有自己的磁盘空间、而不是使用其父卷的磁盘空间、则可以将FlexClone卷从其父卷中拆分出来。 
 ---
 = 将 FlexClone 卷从其父卷拆分
 :allow-uri-read: 
@@ -11,12 +11,12 @@ summary: 如果您希望读写 FlexClone 卷具有自己的磁盘空间，而不
 
 
 [role="lead"]
-如果您希望读写 FlexClone 卷具有自己的磁盘空间，而不是使用其父卷的磁盘空间，则可以将 FlexClone 卷从其父卷中拆分。由于此操作会为当前在父卷和 FlexClone 卷之间共享的数据创建一个副本，因此此操作可能需要一段时间才能完成。
+如果您希望读/写FlexClone卷具有自己的磁盘空间、而不是使用其父卷的磁盘空间、则可以将FlexClone卷从其父卷中拆分出来。
 
 .关于此任务
 将FlexClone卷与其父卷拆分可能会导致在所属聚合上预留更多空间。如果您没有足够的权限来查看聚合中的可用空间，则必须与存储管理员联系，确认聚合中有足够的空间来完成拆分操作。
 
-从 ONTAP 9.4 开始，对于 AFF 系统上的非保证卷， FlexClone 卷的拆分操作会共享物理块，而不会复制数据。因此，在 ONTAP 9.4 中，在 AFF 系统上拆分 FlexClone 卷比在其他 FAS 系统上拆分 FlexClone 卷更快。在 AFF 系统上改进的 FlexClone 拆分操作具有以下优势：
+从 ONTAP 9.4 开始，对于 AFF 系统上的非保证卷， FlexClone 卷的拆分操作会共享物理块，而不会复制数据。因此、在ONTAP 9.4及更高版本中、在AFF系统上拆分FlexClone卷比在其他FAS系统上拆分FlexClone卷更快。在 AFF 系统上改进的 FlexClone 拆分操作具有以下优势：
 
 * 从父级拆分克隆后，存储效率会保留下来。
 * 不会删除现有 Snapshot 副本。
@@ -27,10 +27,10 @@ summary: 如果您希望读写 FlexClone 卷具有自己的磁盘空间，而不
 .步骤
 . 确定完成拆分操作所需的可用空间量：
 +
-`volume clone show -estimate -vserver vserver_name -flexclone clone_volume_name -parent-volume parent_vol_name`
+`volume clone show -estimate -vserver _vserver_name_ -flexclone _clone_volume_name_ -parent-volume _parent_vol_name_`
 
 +
-以下示例提供了有关从父卷 vol1 拆分 FlexClone 卷 clone1 所需的可用空间的信息：
+以下示例提供了有关将FlexClone卷"`clone1`"从其父卷"`vol1`"拆分所需可用空间的信息：
 
 +
 [listing]
@@ -58,7 +58,7 @@ vs1       clone1           40.73MB
 `volume clone split start -vserver _vserver_name_-flexclone _clone_volume_name_`
 
 +
-以下示例显示了如何启动从父卷 vol1 拆分 FlexClone 卷 clone1 的过程：
+以下示例显示了如何启动从父卷"`vol1`"拆分FlexClone卷"`clone1`"的过程：
 
 +
 [listing]
@@ -91,10 +91,10 @@ vs1       clone1        0         0       411247   153600         0        37
 `volume show -volume _volume_name_-fields _clone-volume_s`
 
 +
-对于非 FlexClone 卷的卷， `clone-volume` 选项的值为 `false` 。
+的值 `clone-volume` 对于非FlexClone卷、选项为"`false`"。
 
 +
-以下示例显示了如何验证从父卷拆分的卷 clone1 是否不是 FlexClone 卷。
+以下示例显示了如何验证从其父卷拆分的卷"`clone1`"是否不是FlexClone卷。
 
 +
 [listing]

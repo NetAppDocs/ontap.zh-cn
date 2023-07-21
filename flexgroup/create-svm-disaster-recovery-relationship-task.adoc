@@ -17,7 +17,6 @@ summary: 从 ONTAP 9.1.1 开始，您可以使用 FlexGroup 卷创建 SVM 灾难
 您无法创建符合以下条件的FlexGroup SVM DR关系。
 
 * 已存在 FlexClone FlexGroup 配置
-* FlexGroup 卷包含 FabricPool 配置
 * FlexGroup卷是级联关系的一部分
 * FlexGroup卷是扇出关系的一部分、集群运行的ONTAP版本早于ONTAP 9.12.1。(从ONTAP 9.13.1开始、支持扇出关系。)
 
@@ -25,6 +24,7 @@ summary: 从 ONTAP 9.1.1 开始，您可以使用 FlexGroup 卷创建 SVM 灾难
 .关于此任务
 * 两个集群中的所有节点都必须与添加了 SVM DR 支持的节点运行相同的 ONTAP 版本（ ONTAP 9.9.1 或更高版本）。
 * 主站点和二级站点之间的 SVM DR 关系应运行正常，并且在主 SVM 和二级 SVM 上都应有足够的空间来支持 FlexGroup 卷。
+* 从ONTAP 9.12.1开始、FabricPool、FlexGroup和SVM DR可以结合使用。在ONTAP 9.12.1之前的版本中、其中任何两项功能可以协同工作、但这三项功能并非全部结合使用。
 * 在创建FlexGroup SVM DR关系时、如果此关系中的FlexGroup卷属于扇出关系、则应注意以下要求：
 +
 ** 源集群和目标集群必须运行ONTAP 9.13.1或更高版本。
