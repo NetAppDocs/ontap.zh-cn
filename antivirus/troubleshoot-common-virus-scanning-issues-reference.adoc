@@ -1,0 +1,70 @@
+---
+permalink: antivirus/troubleshoot-common-virus-scanning-issues-reference.html 
+sidebar: sidebar 
+keywords: troubleshooting, troubleshoot, virus scanning, vscan, monitoring, connection, connectivity 
+summary: 此表列出了常见的病毒扫描问题及其可能的原因和解决方法。 
+---
+= 对病毒扫描进行故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对于常见的病毒扫描问题、可能的原因和解决方法是存在的。病毒扫描也称为Vscan。
+
+|===
+
+
+| 问题描述 | 如何解决 
+
+
+ a| 
+Vscan服务器无法连接到
+集群模式ONTAP存储系统。
+ a| 
+检查扫描程序池配置是否指定
+Vscan服务器IP地址。另请检查是否允许
+扫描程序池列表中有权限的用户处于活动状态。要检查扫描程序池、请运行 `vserver vscan scanner-pool show` 命令。
+如果Vscan服务器仍无法连接、则网络中可能存在问题描述。
+
+
+
+ a| 
+客户端存在高延迟
+ a| 
+现在可能是向添加更多Vscan服务器的时候了
+扫描程序池。
+
+
+
+ a| 
+触发的扫描次数过多
+ a| 
+修改的值 `vscan-fileop-profile`
+用于限制文件操作数的参数
+监控病毒扫描。
+
+
+
+ a| 
+未扫描某些文件。
+ a| 
+检查实时策略。的路径可能是
+这些文件已添加到路径排除列表或中
+它们的大小超过为排除项配置的值。收件人：
+检查实时策略、运行 `vserver vscan
+on-access-policy show` 命令
+系统命令提示符。
+
+
+
+ a| 
+文件访问被拒绝。
+ a| 
+检查是否指定了scAN-mandatory(扫描强制)设置
+在策略配置中。此设置拒绝数据访问
+如果未连接Vscan服务器。将设置修改为
+适当。
+
+|===

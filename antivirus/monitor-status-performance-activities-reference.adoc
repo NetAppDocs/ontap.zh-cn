@@ -1,0 +1,278 @@
+---
+permalink: antivirus/monitor-status-performance-activities-reference.html 
+sidebar: sidebar 
+keywords: monitoring, performance, status, connection, statistics 
+summary: 您可以监控关键Vscan服务器问题。 
+---
+= 监控状态和性能活动
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以监控Vscan模块的关键方面、例如Vscan服务器连接状态、
+Vscan服务器的运行状况以及已扫描的文件数。此信息将有所帮助
+您可以诊断与Vscan服务器相关的问题。
+
+
+
+== 查看Vscan服务器连接信息
+
+您可以查看Vscan服务器的连接状态、以管理已在使用的连接
+以及可供使用的连接。各种命令可显示信息
+关于Vscan服务器的连接状态。
+
+|===
+
+
+| 命令... | 显示的信息... 
+
+
+ a| 
+`vserver vscan connection-status show`
+ a| 
+连接状态摘要
+
+
+
+ a| 
+`vserver vscan connection-status show-all`
+ a| 
+有关连接状态的详细信息
+
+
+
+ a| 
+`vserver vscan connection-status show-not-connected`
+ a| 
+可用但未连接的连接的状态
+
+
+
+ a| 
+`vserver vscan connection-status show-connected`
+ a| 
+有关已连接Vscan服务器的信息
+
+|===
+有关这些命令的详细信息，请参见手册页。
+
+
+
+== 查看Vscan服务器统计信息
+
+您可以查看Vscan服务器专用的统计信息、以监控性能并诊断与相关的问题
+病毒扫描。您必须先收集数据样本、然后才能使用 `statistics show` 命令
+显示Vscan服务器统计信息。
+要完成数据样本、请完成以下步骤：
+
+.步骤
+. 运行 `statistics start` 命令和 `optional statistics` 停止命令。
+
+
+
+
+=== 查看有关Vscan服务器请求和持续时间的统计信息
+
+您可以使用ONTAP `offbox_vscan` 每个SVM上的计数器、用于监控Vscan速率
+每秒分派和接收的服务器请求以及所有Vscan的服务器时间
+服务器。要查看这些统计信息、请完成以下步骤：
+
+.步骤
+. 运行统计信息show `object offbox_vscan –instance SVM` 命令
+以下计数器：
++
+|===
+
+
+| 计数器... | 显示的信息... 
+
+
+ a| 
+`scan_request_dispatched_rate`
+ a| 
+每秒从ONTAP发送到Vscan服务器的病毒扫描请求数
+
+
+
+ a| 
+`scan_noti_received_rate`
+ a| 
+ONTAP每秒从Vscan服务器收到的病毒扫描请求数
+
+
+
+ a| 
+`dispatch_latency`
+ a| 
+ONTAP中用于确定可用Vscan服务器并将请求发送到该Vscan服务器的延迟
+
+
+
+ a| 
+`scan_latency`
+ a| 
+从ONTAP到Vscan服务器的往返延迟、包括扫描运行时间
+
+|===
+
+
+
+
+==== 从ONTAP机下vscan计数器生成的统计信息示例
+
+[listing]
+----
+Object: offbox_vscan
+Instance: SVM
+Start-time: 10/16/2013 10:13:25
+End-time: 10/16/2013 10:25:11
+Cluster: cluster01
+Number of Constituents: 2 (complete_aggregation)
+Counter Value
+-------------------------------- --------------------------------
+scan_request_dispatched_rate 291
+scan_noti_received_rate 292
+dispatch_latency 43986us
+scan_latency 3433501us
+-----------------------------------------------------------------
+----
+
+
+=== 查看单个Vscan服务器请求和持续时间的统计信息
+
+您可以使用ONTAP `offbox_vscan_server` 每个SVM、每个机下Vscan服务器上的计数器、
+并按节点监控已分派Vscan服务器请求的速率以及上的服务器延迟
+每个Vscan服务器单独。要收集此信息、请完成以下步骤：
+
+.步骤
+. 运行 `statistics show –object offbox_vscan –instance
+SVM:servername:nodename` 命令和以下计数器：
++
+|===
+
+
+| 计数器... | 显示的信息... 
+
+
+ a| 
+`scan_request_dispatched_rate`
+ a| 
+从ONTAP发送的病毒扫描请求数
+
+
+
+ a| 
+`scan_latency`
+ a| 
+从ONTAP到Vscan服务器的往返延迟、包括扫描运行时间
+每秒Vscan服务器数
+
+|===
+
+
+
+
+==== ONTAP offbox_vscan_server计数器生成的统计信息示例
+
+[listing]
+----
+Object: offbox_vscan_server
+Instance: SVM:vscan_server:node
+Start-time: 10/16/2013 10:13:25
+End-time: 10/16/2013 10:25:11
+Cluster: cluster01
+Number of Constituents: 1 (complete_aggregation)
+Counter Value
+-------------------------------- --------------------------------
+scan_request_dispatched_rate 291
+scan_latency 3433830us
+------------------------------------------------------------------
+----
+
+
+=== 查看Vscan服务器利用率的统计信息
+
+您也可以使用ONTAP `offbox_vscan_server` 用于收集Vscan服务器端利用率的计数器
+统计信息。这些统计信息会按每个SVM、每个机下Vscan服务器和每个节点进行跟踪。他们
+包括Vscan服务器上的CPU利用率、Vscan服务器上扫描操作的队列深度
+(当前和最大)、已用内存和已用网络。
+这些统计信息由防病毒连接器转发到ONTAP中的统计信息计数器。他们
+基于每20秒轮询一次的数据、为确保准确性、必须收集多次；
+否则、统计信息中显示的值仅反映上次轮询。CPU利用率和队列为
+尤其需要进行监控和分析。平均队列的值较高表示
+Vscan服务器存在瓶颈。
+收集每个SVM上的Vscan服务器、每个机下Vscan服务器和每个节点的利用率统计信息
+请完成以下步骤：
+
+.步骤
+. 收集Vscan服务器的利用率统计信息
++
+运行 `statistics show –object offbox_vscan_server –instance
+SVM:servername:nodename` 命令 `offbox_vscan_server` 计数器：
+
+
+
+|===
+
+
+| 计数器... | 显示的信息... 
+
+
+ a| 
+`scanner_stats_pct_cpu_used`
+ a| 
+Vscan服务器上的CPU利用率
+
+
+
+ a| 
+`scanner_stats_pct_input_queue_avg`
+ a| 
+Vscan服务器上扫描请求的平均队列
+
+
+
+ a| 
+`scanner_stats_pct_input_queue_hiwatermark`
+ a| 
+Vscan服务器上扫描请求的峰值队列
+
+
+
+ a| 
+`scanner_stats_pct_mem_used`
+ a| 
+Vscan服务器上使用的内存
+
+
+
+ a| 
+`scanner_stats_pct_network_used`
+ a| 
+Vscan服务器上使用的网络
+
+|===
+
+
+==== Vscan服务器利用率统计信息示例
+
+[listing]
+----
+Object: offbox_vscan_server
+Instance: SVM:vscan_server:node
+Start-time: 10/16/2013 10:13:25
+End-time: 10/16/2013 10:25:11
+Cluster: cluster01
+Number of Constituents: 1 (complete_aggregation)
+Counter Value
+-------------------------------- --------------------------------
+scanner_stats_pct_cpu_used 51
+scanner_stats_pct_dropped_requests 0
+scanner_stats_pct_input_queue_avg 91
+scanner_stats_pct_input_queue_hiwatermark 100
+scanner_stats_pct_mem_used 95
+scanner_stats_pct_network_used 4
+-----------------------------------------------------------------
+----
