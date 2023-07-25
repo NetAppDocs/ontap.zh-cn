@@ -30,10 +30,10 @@ SnapLock 角色与管理 SVM 关联，而 vsadmin-SnapLock 角色则与数据 SV
 .步骤
 . 创建具有 SnapLock 管理员角色的 SVM 管理员帐户：
 +
-` * security login create -vserver _svm_name_ -user-or-group-name _user_or_group_name_ -application _application_-authmethod _authentication_method _ -role _role_ -comment _comtion_*`
+`*security login create -vserver _SVM_name_ -user-or-group-name _user_or_group_name_ -application _application_ -authmethod _authentication_method_ -role _role_ -comment _comment_*`
 
 +
-以下命令使用 SnapLock 密码启用具有预定义 `SVM` 角色的 SVM 管理员帐户 `SnapLockAdmin` 以访问管理 SVM `cluster1` ：
+以下命令将启用SVM管理员帐户 `SnapLockAdmin` 和预定义的 `snaplock` 用于访问管理SVM的角色 `cluster1` 使用密码：
 
 +
 [listing]
@@ -46,7 +46,7 @@ cluster1::> security login create -vserver cluster1 -user-or-group-name SnapLock
 
 == 移动 SnapLock 卷
 
-您可以使用 `volume move` 命令将 SnapLock 卷移动到目标聚合。
+您可以使用 `volume move` 命令将SnapLock卷移动到目标聚合。
 
 .您需要的内容
 * 在执行 SnapLock 卷移动之前，您必须已创建受 SnapLock 保护的审核日志。
@@ -60,14 +60,14 @@ link:create-audit-log-task.html["创建审核日志"]。
 .步骤
 . 使用安全连接登录到 ONTAP 集群管理 LIF ：
 +
-`* ssh SnapLock_user@cluster_mgmt_IP*`
+`*ssh snaplock_user@cluster_mgmt_ip*`
 
 . 移动 SnapLock 卷：
 +
-` * 卷移动开始 -vserver _svm_name_ -volume _SnapLock_volume_name_ -destination-aggregate _destination_aggregate_name_*`
+`*volume move start -vserver _SVM_name_ -volume _SnapLock_volume_name_ -destination-aggregate _destination_aggregate_name_*`
 
 . 检查卷移动操作的状态：
 +
-` * volume move show -volume _SnapLock_volume_name_ -vserver _svm_name_ -fields volume ， phase ， vserver*`
+`*volume move show -volume _SnapLock_volume_name_ -vserver _SVM_name_ -fields volume,phase,vserver*`
 
 

@@ -11,7 +11,7 @@ summary: 从 ONTAP 9.3 开始，您可以使用 snapmirror protect 命令一步�
 
 
 [role="lead"]
-从 ONTAP 9.3 开始，您可以使用 `snapmirror protect` 命令一步配置数据保护关系。您可以指定要复制的卷列表，目标集群上的 SVM ，作业计划和 SnapMirror 策略。`snapmirror protect` 执行其余操作。
+从ONTAP 9.3开始、您可以使用 `snapmirror protect` 命令、一步配置数据保护关系。您可以指定要复制的卷列表，目标集群上的 SVM ，作业计划和 SnapMirror 策略。 `snapmirror protect` 完成其余操作。
 
 .您需要的内容
 * 源和目标集群以及 SVM 必须建立对等关系。
@@ -22,39 +22,39 @@ https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM
 
 
 .关于此任务
-`snapmirror protect` 命令可选择与指定 SVM 关联的聚合。如果没有与 SVM 关联的聚合，则它会从集群中的所有聚合中进行选择。根据聚合上的可用空间量和卷数选择聚合。
+。 `snapmirror protect` 命令可选择与指定SVM关联的聚合。如果没有与 SVM 关联的聚合，则它会从集群中的所有聚合中进行选择。根据聚合上的可用空间量和卷数选择聚合。
 
-然后， `snapmirror protect` 命令将执行以下步骤：
+。 `snapmirror protect` 然后、命令将执行以下步骤：
 
 * 为要复制的卷列表中的每个卷创建一个具有适当类型和预留空间量的目标卷。
 * 配置适合您指定策略的复制关系。
 * 初始化关系。
 
 
-目标卷的名称格式为 ` _source_volume_name_dst_` 。如果与现有名称发生冲突，此命令会在卷名称后附加一个数字。您可以在命令选项中指定前缀和 / 或后缀。后缀将替换系统提供的 `dst` 后缀。
+目标卷的名称格式为 `_source_volume_name_dst_`。如果与现有名称发生冲突，此命令会在卷名称后附加一个数字。您可以在命令选项中指定前缀和 / 或后缀。后缀将替换系统提供的 `dst` 后缀。
 
 在 ONTAP 9.3 及更早版本中，目标卷最多可包含 251 个 Snapshot 副本。在 ONTAP 9.4 及更高版本中，目标卷最多可以包含 1019 个 Snapshot 副本。
 
 [NOTE]
 ====
-初始化可能非常耗时。`snapmirror protect` does not wait for initialization to complete before the job completes.因此，您应使用 `snapmirror show` 命令而不是 `job show` 命令来确定初始化完成的时间。
+初始化可能非常耗时。 `snapmirror protect` 在作业完成之前、不会等待初始化完成。因此、您应使用 `snapmirror show` 命令、而不是 `job show` 命令以确定初始化完成的时间。
 
 ====
-从 ONTAP 9.5 开始，可以使用 `snapmirror protect` 命令创建 SnapMirror 同步关系。
+从ONTAP 9.5开始、可以使用创建SnapMirror同步关系 `snapmirror protect` 命令：
 
 .步骤
 . 一步创建并初始化复制关系：
 +
-`snapmirror protect -path-list _svm ： volume_|_cluster ： //svm/volume_ ， ... -destination-vserver _destination_svm_ -policy _policy_-schedule _schedule_ -auto-initialize true_false -destination-volume-prefix _prefix_ -destination-volume-suffix _suffix_`
+`snapmirror protect -path-list _SVM:volume_|_cluster://SVM/volume_, ... -destination-vserver _destination_SVM_ -policy _policy_ -schedule _schedule_ -auto-initialize true|false -destination-volume-prefix _prefix_ -destination-volume-suffix _suffix_`
 
 +
 [NOTE]
 ====
-您必须从目标 SVM 或目标集群运行此命令。` -auto-initialize` 选项默认为 "`true` " 。
+您必须从目标 SVM 或目标集群运行此命令。。 `-auto-initialize` 选项默认为"`true`"。
 
 ====
 +
-以下示例将使用默认的 `MirrorAllSnapshots` 策略创建并初始化 SnapMirror 灾难恢复关系：
+以下示例将使用默认值创建并初始化SnapMirror灾难恢复关系 `MirrorAllSnapshots` 策略：
 
 +
 [listing]
@@ -68,7 +68,7 @@ cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-v
 
 ====
 +
-以下示例将使用默认 `XDPDefault` 策略创建并初始化 SnapVault 关系：
+以下示例将使用默认值创建并初始化SnapVault关系 `XDPDefault` 策略：
 
 +
 [listing]
@@ -76,7 +76,7 @@ cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-v
 cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_backup -policy XDPDefault -schedule replication_daily
 ----
 +
-以下示例将使用默认 `MirrorAndVault` 策略创建并初始化统一复制关系：
+以下示例将使用默认值创建并初始化统一复制关系 `MirrorAndVault` 策略：
 
 +
 [listing]
@@ -84,7 +84,7 @@ cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-v
 cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-vserver svm_backup -policy MirrorAndVault
 ----
 +
-以下示例将使用默认的 `Sync` 策略创建并初始化 SnapMirror 同步关系：
+以下示例将使用默认值创建并初始化SnapMirror同步关系 `Sync` 策略：
 
 +
 [listing]
@@ -100,4 +100,4 @@ cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-v
 
 
 .完成后
-使用 `snapmirror show` 命令验证是否已创建 SnapMirror 关系。有关完整的命令语法，请参见手册页。
+使用 `snapmirror show` 命令以验证是否已创建SnapMirror关系。有关完整的命令语法，请参见手册页。

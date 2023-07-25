@@ -47,13 +47,13 @@ summary: 您可以从集群中删除不需要的节点，一次删除一个节�
 
 建议问题描述 您发送一条 AutoSupport 消息，以通知 NetApp 技术支持正在删除节点。
 
-* 注意： * 在自动 ONTAP 升级过程中，不能执行 `cluster remove-node` ， `cluster unjoin` 和 `node rename` 等操作。
+*注意：*不能执行等操作 `cluster remove-node`， `cluster unjoin`，和 `node rename` ONTAP自动升级正在进行中。
 
 .关于此任务
 * 如果您运行的是混合版本的集群，则可以使用从 ONTAP 9.3 开始的高级权限命令之一删除最后一个低版本节点：
 +
-** ONTAP 9.3 ： `cluster unjoin -skip-last-low-version-node-check`
-** ONTAP 9.4 及更高版本： `cluster remove-node -skip-last-low-version-node-check`
+** ONTAP 9.3： `cluster unjoin -skip-last-low-version-node-check`
+** ONTAP 9.4及更高版本： `cluster remove-node -skip-last-low-version-node-check`
 
 
 * 如果从四节点集群中取消加入2个节点、则其余两个节点上会自动启用集群HA。
@@ -65,7 +65,7 @@ NOTE: 在从集群中删除节点之前、用户必须无法访问连接到该�
 .步骤
 . 将权限级别更改为高级：
 +
-` * 设置 -privilege advanced*`
+`*set -privilege advanced*`
 
 . 验证集群上的节点是否持有epsilon：
 +
@@ -78,12 +78,12 @@ NOTE: 在从集群中删除节点之前、用户必须无法访问连接到该�
 
 
 
-. 如果要删除的节点是当前主节点，请将此主节点的集群资格更改为 `false` ，以使集群中的另一个节点能够被选为主节点：
+. 如果要删除的节点是当前主节点、请通过将主节点的集群资格更改为来选择集群中的另一个节点作为主节点 `false`：
 +
-` * 集群修改–资格 false *`
+`*cluster modify –eligibility false*`
 
 +
-主节点是指包含 " `mGMT` " ， "`VLDB` " ， "`vifmgr` " ， "`bcomd` " 和 "`crs` " 等进程的节点。`cluster ring show` advanced 命令可显示当前主节点。
+主节点是指包含 " `mGMT` " ， "`VLDB` " ， "`vifmgr` " ， "`bcomd` " 和 "`crs` " 等进程的节点。。 `cluster ring show` 高级命令可显示当前主节点。
 
 +
 [listing]
@@ -100,18 +100,18 @@ cluster::*> cluster modify -node node1 -eligibility false
  a| 
 ONTAP 9.3
  a| 
-` * 集群取消加入 *`
+`*cluster unjoin*`
 
 
 
  a| 
-ONTAP 9.4 及更高版本
+ONTAP 9.4及更高版本
  a| 
-` * 集群删除节点 *`
+`*cluster remove-node*`
 
 |===
 +
-如果您使用的是混合版本集群，并且要删除最后一个较低版本的节点，请在这些命令中使用 ` skip-last-low-version-node-check` 参数。
+如果您使用的是混合版本集群、并且要删除最后一个较低版本的节点、请使用 `-skip-last-low-version-node-check` 参数。
 
 +
 系统会通知您以下信息：
@@ -127,7 +127,7 @@ ONTAP 9.4 及更高版本
 
 
 
-. 如果失败消息指示出现错误情况，请解决这些情况，然后重新运行 `cluster remove-node` 或 `cluster unjoin` 命令。
+. 如果失败消息指示错误情况、请解决这些情况并重新运行 `cluster remove-node` 或 `cluster unjoin` 命令：
 +
 成功从集群中删除节点后，此节点将自动重新启动。
 
@@ -139,7 +139,7 @@ ONTAP 9.4 及更高版本
 
 . 返回到管理员权限级别：
 +
-` * 设置 -privilege admin*`
+`*set -privilege admin*`
 
 . 重复上述步骤，从集群中删除故障转移配对节点。
 

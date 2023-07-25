@@ -16,13 +16,13 @@ summary: 在开始审核文件和目录事件之前，必须在 Storage Virtual 
 在开始审核文件和目录事件之前，必须在 Storage Virtual Machine （ SVM ）上创建审核配置。
 
 .开始之前
-如果您计划为中央访问策略暂存创建审核配置，则 SVM 上必须存在 SMB 服务器。
+如果您计划为中央访问策略暂存创建审核配置、则SVM上必须存在SMB服务器。
 
 [NOTE]
 ====
-* 虽然您可以在审核配置中启用中央访问策略暂存，而无需在 SMB 服务器上启用动态访问控制，但只有在启用动态访问控制的情况下，才会生成中央访问策略暂存事件。
+* 虽然您可以在审核配置中启用中央访问策略暂存、而无需在SMB服务器上启用动态访问控制、但只有在启用动态访问控制后、才会生成中央访问策略暂存事件。
 +
-动态访问控制可通过 SMB 服务器选项启用。默认情况下，不会启用此功能。
+动态访问控制可通过SMB服务器选项启用。默认情况下，不会启用此功能。
 
 * 如果命令中某个字段的参数无效，例如字段的条目无效，条目重复以及条目不存在，则此命令将在审核阶段之前失败。
 +
@@ -54,30 +54,30 @@ summary: 在开始审核文件和目录事件之前，必须在 Storage Virtual 
  a| 
 计划
  a| 
-`vserver audit create -vserver vserver_name -destination path -events [ ｛ file-ops|cifs-logon-logloglaging_cap-staging ｝ ] [-format ｛ xml_evtx ｝ ] [-rotate-schedule-month chun_month] [-rotate-schedule-dayofweek chron_dayofweek`
+`vserver audit create -vserver vserver_name -destination path -events [{file-ops|cifs-logon-logoff|cap-staging}] [-format {xml|evtx}] [-rotate-limit integer] [-rotate-schedule-month chron_month] [-rotate-schedule-dayofweek chron_dayofweek] [-rotate-schedule-day chron_dayofmonth] [-rotate-schedule-hour chron_hour] -rotate-schedule-minute chron_minute`
 
 [NOTE]
 ====
-如果要配置基于时间的审核日志轮换，则需要 ` rotate-schedule-minute` 参数。
+。 `-rotate-schedule-minute` 如果要配置基于时间的审核日志轮换、则需要参数。
 
 ====
 |===
 
 
 .示例
-以下示例将创建一个审核配置，该配置使用基于大小的轮换来审核文件操作以及 SMB 登录和注销事件（默认值）。日志格式为 `evtx` （默认值）。这些日志存储在 ` /audit_log` 目录中。日志文件大小限制为 `200 MB` 。日志大小达到 200 MB 时会进行轮换。
+以下示例将创建一个审核配置、该配置使用基于大小的轮换来审核文件操作以及SMB登录和注销事件(默认设置)。日志格式为 `EVTX` (默认值)。日志存储在中 `/audit_log` 目录。日志文件大小限制为 `200 MB`。日志大小达到 200 MB 时会进行轮换。
 
 [listing]
 ----
 cluster1::> vserver audit create -vserver vs1 -destination /audit_log -rotate-size 200MB
 ----
-以下示例将创建一个审核配置，该配置使用基于大小的轮换来审核文件操作以及 SMB 登录和注销事件（默认值）。日志格式为 `evtx` （默认值）。日志文件大小限制为 `100 MB` （默认值），日志轮换限制为 `5` ：
+以下示例将创建一个审核配置、该配置使用基于大小的轮换来审核文件操作以及SMB登录和注销事件(默认设置)。日志格式为 `EVTX` (默认值)。日志文件大小限制为 `100 MB` (默认值)、日志轮换限制为 `5`：
 
 [listing]
 ----
 cluster1::> vserver audit create -vserver vs1 -destination /audit_log -rotate-limit 5
 ----
-以下示例将创建一个审核配置，该配置使用基于时间的轮换来审核文件操作， CIFS 登录和注销事件以及中央访问策略暂存事件。日志格式为 `evtx` （默认值）。审核日志每月在中午 12 ： 30 轮换一次在一周的所有日期。日志轮换限制为 `5` ：
+以下示例将创建一个审核配置，该配置使用基于时间的轮换来审核文件操作， CIFS 登录和注销事件以及中央访问策略暂存事件。日志格式为 `EVTX` (默认值)。审核日志每月在中午 12 ： 30 轮换一次在一周的所有日期。日志轮换限制为 `5`：
 
 [listing]
 ----

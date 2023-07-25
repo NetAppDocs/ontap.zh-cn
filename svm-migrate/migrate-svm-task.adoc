@@ -13,11 +13,11 @@ summary: SVM 迁移完成后，客户端将自动切换到目标集群，不必�
 [role="lead"]
 SVM 迁移完成后，客户端将自动切换到目标集群，不必要的 SVM 将从源集群中删除。默认情况下，自动转换和自动源清理处于启用状态。如有必要，您可以禁用客户端自动转换，以便在发生转换之前暂停迁移，也可以禁用自动源 SVM 清理。
 
-* 您可以使用 ` -auto-cutover false` 选项在正常情况下发生客户端自动转换时暂停迁移，然后在稍后手动执行转换。
+* 您可以使用 `-auto-cutover false` 可选择在正常情况下自动进行客户端转换时暂停迁移、然后在以后手动执行转换。
 +
 xref:manual-client-cutover-task.adoc[迁移 SVM 后手动转换客户端]
 
-* 您可以使用高级权限 ` auto-source-cleanup false` 选项禁用转换后删除源 SVM ，然后在转换后手动触发源清理。
+* 您可以使用高级权限 `-auto-source-cleanup false` 此选项可在转换后禁止删除源SVM、然后在转换后手动触发源清理。
 +
 xref:manual-source-removal-task.adoc[转换后手动删除源 SVM]
 
@@ -32,11 +32,11 @@ xref:manual-source-removal-task.adoc[转换后手动删除源 SVM]
 .步骤
 . 从目标集群运行迁移预检：
 +
-`dest_cluster> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_-check-only true`
+`dest_cluster> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_ -check-only true`
 
 . 从目标集群启动 SVM 迁移：
 +
-`dest_cluster> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_`
+`dest_cluster> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_`
 
 . 检查迁移状态：
 +
@@ -56,15 +56,16 @@ SVM 迁移完成后，状态将显示 migrate-complete 。
 .步骤
 . 从目标集群运行迁移预检：
 +
-`dest_cluster> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_-check-only true`
+`dest_cluster> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_ -check-only true`
 
 . 从目标集群启动 SVM 迁移：
 +
-`dest_cluster> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_-auto-cutover false`
+`dest_cluster> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_ -auto-cutover false`
 
 . 检查迁移状态：
 +
-`dest_cluster> vserver migrate show` 当 SVM 迁移完成异步数据传输且已准备好进行转换操作时，状态将显示 Ready for-cutover 。
+`dest_cluster> vserver migrate show`
+当 SVM 迁移完成异步数据传输且已准备好进行转换操作时，状态将显示 "ready-for-cutover" 。
 
 
 
@@ -77,15 +78,15 @@ SVM 迁移完成后，状态将显示 migrate-complete 。
 .步骤
 . 从目标集群运行迁移预检：
 +
-`dest_cluster*> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_-check-only true`
+`dest_cluster*> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_ -check-only true`
 
 . 从目标集群启动 SVM 迁移：
 +
-`dest_cluster*> vserver migrate start -vserver _svm_name_-source-cluster _cluster_name_-auto-source-cleanup false`
+`dest_cluster*> vserver migrate start -vserver _SVM_name_ -source-cluster _cluster_name_ -auto-source-cleanup false`
 
 . 检查迁移状态：
 +
-`dest_cluster* > vserver migrate show`
+`dest_cluster*> vserver migrate show`
 
 +
 SVM 迁移转换完成后，状态将显示 "ready-for-source-cleanup" ，并且此状态可以删除源集群上的 SVM 。

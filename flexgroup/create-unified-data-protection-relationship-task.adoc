@@ -19,9 +19,9 @@ summary: 从 ONTAP 9.3 开始，您可以创建和配置 SnapMirror 统一数据
 link:snapvault-backup-concept.html["为 FlexGroup 卷创建 SnapVault 备份关系和统一数据保护关系的注意事项"]
 
 .步骤
-. 创建类型为 `DP` 的目标 FlexGroup 卷，该卷的成分卷数与源 FlexGroup 卷的成分卷数相同：
+. 创建类型为的目标FlexGroup卷 `DP` 与源FlexGroup卷的成分卷具有相同数量的成分卷：
 +
-.. 从源集群中，确定源 FlexGroup 卷中的成分卷数： `volume show -volume volume_name* -is-constituent true`
+.. 从源集群中、确定源FlexGroup卷中的成分卷数： `volume show -volume volume_name* -is-constituent true`
 +
 [listing]
 ----
@@ -38,7 +38,7 @@ vss       srcFG__0006    aggr1        online     RW         25TB    10.64TB   57
 vss       srcFG__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
 ...
 ----
-.. 从目标集群中，创建类型为 `DP` 的目标 FlexGroup 卷，其成分卷数与源 FlexGroup 卷的成分卷数相同。
+.. 从目标集群中、创建类型为的目标FlexGroup卷 `DP` 与源FlexGroup卷具有相同数量的成分卷。
 +
 [listing]
 ----
@@ -48,7 +48,7 @@ Warning: The FlexGroup volume "dstFG" will be created with the following number 
 Do you want to continue? {y|n}: y
 [Job 766] Job succeeded: Successful
 ----
-.. 从目标集群中，验证目标 FlexGroup 卷中的成分卷数： `volume show -volume volume_name* -is-constituent true`
+.. 从目标集群中、验证目标FlexGroup卷中的成分卷数： `volume show -volume volume_name* -is-constituent true`
 +
 [listing]
 ----
@@ -67,37 +67,37 @@ vsd       dstFG__0007    Aggr_cmode   online     RW         25TB    10.63TB   57
 ----
 
 
-. 创建作业计划： `job schedule cron create -name job_name -month month -dayofweek day_of_week -day day_of_month -hour -minute minute`
+. 创建作业计划： `job schedule cron create -name job_name -month month -dayofweek day_of_week -day day_of_month -hour hour -minute minute`
 +
-对于 ` - 月` ， ` - 天 / 周` 和 ` - 小时` 选项，您可以指定 `所有` 分别每月，一周中的每一天和每小时运行作业。
+。 `-month`， `-dayofweek`，和 `-hour` 选项、您可以指定 `all` 以分别每月、每周的每一天和每小时运行此作业。
 
 +
-以下示例将创建一个名为 `my_weekly` 的作业计划，该计划将在星期六凌晨 3 ： 00 运行：
+以下示例将创建一个名为的作业计划 `my_weekly` 在星期六凌晨3：00运行：
 
 +
 [listing]
 ----
 cluster1::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
 ----
-. 创建类型为 `mirror-vault` 的自定义策略，然后为镜像和存储策略定义规则：
+. 创建类型为的自定义策略 `mirror-vault`，然后为镜像和存储策略定义规则：
 +
-.. 为统一数据保护关系创建类型为 `mirror-vault` 的自定义策略： `snapmirror policy create -vserver SVM_name -policy policy_name -type mirror-vault`
-.. 为镜像和存储策略定义一条规则，用于确定在初始化和更新操作期间传输哪些 Snapshot 副本： `snapmirror policy add-rule -vserver SVM_name -policy policy_for_rule - snapmirror-label snapmirror-label -label -keep retention_count -schedule schedule`
+.. 创建类型为的自定义策略 `mirror-vault` 对于统一数据保护关系： `snapmirror policy create -vserver svm_name -policy policy_name -type mirror-vault`
+.. 为镜像和存储策略定义一条规则、用于确定在初始化和更新操作期间传输哪些Snapshot副本： `snapmirror policy add-rule -vserver svm_name -policy policy_for_rule - snapmirror-label snapmirror-label -keep retention_count -schedule schedule`
 
 
 +
-如果未指定自定义策略，则会使用 `MirrorAndVault` 策略建立统一的数据保护关系。
+如果未指定自定义策略、则 `MirrorAndVault` 策略用于统一数据保护关系。
 
-. 创建统一数据保护关系： `snapmirror create -source-path src_sVM ： src_flexgroup -destination-path dest_sVM ： dest_flexgroup -type XDP -schedule schedule_name -policy MirrorAndVault`
+. 创建统一数据保护关系： `snapmirror create -source-path src_svm:src_flexgroup -destination-path dest_svm:dest_flexgroup -type XDP -schedule schedule_name -policy MirrorAndVault`
 +
-在 ONTAP 9.4 及更早版本中，如果未使用 `snapmirror create` 命令指定策略，则默认使用 `MirrorAllSnapshots` 策略。在 ONTAP 9.5 中，如果未使用 `snapmirror create` 命令指定策略，则默认使用 `MirrorAndVault` 策略。
+在ONTAP 9.4及更早版本中、如果未使用指定策略 `snapmirror create` 命令、 `MirrorAllSnapshots` 默认情况下会使用策略。在ONTAP 9.5中、如果未使用指定策略 `snapmirror create` 命令、 `MirrorAndVault` 默认情况下会使用策略。
 
 +
 [listing]
 ----
 cluster2::> snapmirror create -source-path vss:srcFG -destination-path vsd:dstFG -type XDP -schedule Daily -policy MirrorAndVault
 ----
-. 从目标集群中，通过执行基线传输来初始化统一数据保护关系： `snapmirror initialize -destination-path dest_sVM ： dest_flexgroup`
+. 从目标集群中、通过执行基线传输来初始化统一数据保护关系： `snapmirror initialize -destination-path dest_svm:dest_flexgroup`
 +
 [listing]
 ----

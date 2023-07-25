@@ -11,7 +11,7 @@ summary: 在导出策略规则中匹配客户端的方法之一是使用网络�
 
 
 [role="lead"]
-在导出策略规则中匹配客户端的方法之一是使用网络组中列出的主机。您可以将网络组从统一资源标识符（ Uniform Resource Identifier ， URI ）加载到 SVM 中，以替代使用存储在外部名称服务器中的网络组（`vserver services name-service netgroup load` ）。
+在导出策略规则中匹配客户端的方法之一是使用网络组中列出的主机。除了使用存储在外部名称服务器中的网络组之外、您还可以将网络组从统一资源标识符(URI)加载到SVM中 (`vserver services name-service netgroup load`）。
 
 .您需要的内容
 在加载到 SVM 之前，网络组文件必须满足以下要求：
@@ -21,7 +21,7 @@ summary: 在导出策略规则中匹配客户端的方法之一是使用网络�
 ONTAP 会在加载网络组文本文件格式之前对其进行检查。如果文件包含错误，则不会加载该文件，并且会显示一条消息，指示您必须在该文件中执行的更正。更正错误后，您可以将网络组文件重新加载到指定的 SVM 中。
 
 * 网络组文件中主机名中的任何字母字符都应小写。
-* 支持的最大文件大小为 5 MB 。
+* 支持的最大文件大小为5 MB。
 * 支持的嵌套网络组的最大级别为 1000 。
 * 在网络组文件中定义主机名时，只能使用主 DNS 主机名。
 +
@@ -39,7 +39,7 @@ ONTAP 支持按主机搜索本地网络组文件。加载网络组文件后， O
 .步骤
 . 从 URI 将网络组加载到 SVM ：
 +
-`vserver services name-service netgroup load -vserver _vserver_name_ -source ｛ ftp_http_FTPS_https ｝ ： //_uri_`
+`vserver services name-service netgroup load -vserver _vserver_name_ -source {ftp|http|ftps|https}://_uri_`
 
 +
 加载网络组文件并构建 netgroup.byHost 映射可能需要几分钟的时间。
@@ -50,7 +50,7 @@ ONTAP 支持按主机搜索本地网络组文件。加载网络组文件后， O
 
 
 .示例
-以下命令会从 HTTP URL ` +http://intranet/downloads/corp-netgroup+`: 将网络组定义加载到名为 vs1 的 SVM 中
+以下命令会通过HTTP URL将网络组定义加载到名为VS1的SVM中 `+http://intranet/downloads/corp-netgroup+`：
 
 [listing]
 ----

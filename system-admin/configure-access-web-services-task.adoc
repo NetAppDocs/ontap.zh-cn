@@ -18,38 +18,38 @@ summary: 通过配置对 Web 服务的访问，授权用户可以使用 HTTP 或
 +
 [NOTE]
 ====
-您可以使用 `ssystem services firewall show` 命令检查是否启用了防火墙。
+您可以使用检查是否已启用防火墙 `system services firewall show` 命令：
 
 ====
 +
-.. 要验证是否已在防火墙策略中设置 HTTP 或 HTTPS ，请使用 `ssystem services firewall policy show` 命令。
+.. 要验证是否已在防火墙策略中设置HTTP或HTTPS、请使用 `system services firewall policy show` 命令：
 +
-您可以将 `ssystem services firewall policy create` 命令的 ` -service` 参数设置为 `http` 或 `https` ，以启用此策略以支持 Web 访问。
+您可以设置 `-service` 的参数 `system services firewall policy create` 命令 `http` 或 `https` 以启用支持Web访问的策略。
 
-.. 要验证支持 HTTP 或 HTTPS 的防火墙策略是否与提供 Web 服务的 LIF 关联，请使用带有 ` -firewall-policy` 参数的 `network interface show` 命令。
+.. 要验证支持HTTP或HTTPS的防火墙策略是否与提供Web服务的LIF关联、请使用 `network interface show` 命令 `-firewall-policy` 参数。
 +
-您可以使用 `network interface modify` 命令和 ` -firewall-policy` 参数使防火墙策略对 LIF 生效。
+您可以使用 `network interface modify` 命令 `-firewall-policy` 用于使LIF的防火墙策略生效的参数。
 
 
 
-. 要配置集群级别的 Web 协议引擎并使 Web 服务内容可访问，请使用 `ssystem services web modify` 命令。
-. 如果您计划使用安全 Web 服务（ HTTPS ），请使用 `security ssl modify` 命令启用 SSL 并为集群或 SVM 提供数字证书信息。
-. 要为集群或 SVM 启用 Web 服务，请使用 `vserver services web modify` 命令。
+. 要配置集群级别的Web协议引擎并使Web服务内容可访问、请使用 `system services web modify` 命令：
+. 如果您计划使用安全Web服务(HTTPS)、请使用为集群或SVM启用SSL并提供数字证书信息 `security ssl modify` 命令：
+. 要为集群或SVM启用Web服务、请使用 `vserver services web modify` 命令：
 +
 必须对要为集群或 SVM 启用的每个服务重复此步骤。
 
-. 要授权某个角色访问集群或 SVM 上的 Web 服务，请使用 `vserver services web access create` 命令。
+. 要授权某个角色访问集群或SVM上的Web服务、请使用 `vserver services web access create` 命令：
 +
-您授予访问权限的角色必须已存在。您可以使用 `ssecurity login role show` 命令显示现有角色，也可以使用 `ssecurity login role create` 命令创建新角色。
+您授予访问权限的角色必须已存在。您可以使用显示现有角色 `security login role show` 命令或使用创建新角色 `security login role create` 命令：
 
-. 对于已授权访问 Web 服务的角色，请通过检查 `ssecurity login show` 命令的输出，确保为其用户配置了正确的访问方法。
+. 对于已授权访问Web服务的角色、请检查的输出、确保为其用户配置了正确的访问方法 `security login show` 命令：
 +
-要访问 ONTAP API Web 服务（`ontapi` ），必须为用户配置 `ontapi` 访问方法。要访问所有其他 Web 服务，必须为用户配置 `http` 访问方法。
+以访问ONTAP API Web服务  `ontapi`)、则必须为用户配置 `ontapi` 访问方法。要访问所有其他Web服务、必须为用户配置 `http` 访问方法。
 
 +
 [NOTE]
 ====
-您可以使用 `ssecurity login create` 命令为用户添加访问方法。
+您可以使用 `security login create` 用于为用户添加访问方法的命令。
 
 ====
 

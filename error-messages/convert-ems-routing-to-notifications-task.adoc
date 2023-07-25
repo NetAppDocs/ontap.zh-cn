@@ -11,10 +11,10 @@ summary: 使用命令行从已弃用的 ONTAP 命令更新 EMS 事件映射。
 
 
 [role="lead"]
-如果当前使用已弃用的 ONTAP 命令集（`event destination` ， `event route` ）配置了 EMS 事件映射，则应按照此操作步骤更新映射，以使用 `event filter` ， `event notification` 和 `event notification destination` 命令集。
+当前使用已弃用的ONTAP命令集配置EMS事件映射时 (`event destination`， `event route`)、则应按照此操作步骤更新映射以使用 `event filter`， `event notification`，和 `event notification destination` 命令集。
 
 .步骤
-. 使用 `event destination show` 命令列出系统中的所有事件目标。
+. 使用列出系统中的所有事件目标 `event destination show` 命令：
 +
 [listing]
 ----
@@ -30,7 +30,7 @@ test             test@xyz.com      -                  -                  false
 traphost         -                 -                  -                  false
 6 entries were displayed.
 ----
-. 对于每个目标，使用 `event route show -destinations <destination name>` 命令列出要映射到该目标的事件。
+. 对于每个目标、使用列出要映射到它的事件  `event route show -destinations <destination name>` 命令：
 +
 [listing]
 ----
@@ -44,7 +44,8 @@ raid.aggr.lock.conflict          INFORMATIONAL  test           0       0
 raid.aggr.log.CP.count           DEBUG          test           0       0
 4 entries were displayed.
 ----
-. 创建相应的 `event filter` ，其中包括所有这些事件子集。例如，如果要仅包含 `raid.aggr.` * 事件，请在创建筛选器时为 `message-name` 参数使用通配符。您还可以为单个事件创建筛选器。
+. 创建相应的 `event filter` 其中包括所有这些事件子集。
+例如、如果要仅包含 `raid.aggr.`*事件、请使用通配符作为 `message-name` 参数。您还可以为单个事件创建筛选器。
 +
 
 NOTE: 您最多可以创建 50 个事件筛选器。
@@ -65,7 +66,7 @@ test_events
             2        exclude   *                      *               *
 2 entries were displayed.
 ----
-. 为每个 `事件目标` 端点（即 SMTP/SNMP/syslog ）创建一个 `事件通知目标`
+. 创建 `event notification destination` 对于每个 `event destination` 端点(即SMP/SNMP/系统日志)
 +
 [listing]
 ----
@@ -91,10 +92,10 @@ ID   Filter Name                     Destinations
 2    asup_events                     dest1
 2 entries were displayed.
 ----
-. 对具有 `event route` mapping 的每个 `event destination` 重复步骤 1-5 。
+. 对每个重复步骤1-5 `event destination` 具有 `event route` 映射。
 +
 
-NOTE: 路由到 SNMP 目标的事件应映射到 `snmp-traphost` 事件通知目标。SNMP 陷阱主机目标使用系统配置的 SNMP 陷阱主机。
+NOTE: 路由到SNMP目标的事件应映射到 `snmp-traphost` 事件通知目标。SNMP 陷阱主机目标使用系统配置的 SNMP 陷阱主机。
 
 +
 [listing]

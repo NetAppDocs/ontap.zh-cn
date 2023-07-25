@@ -29,7 +29,7 @@ ONTAP 升级过程会自动包括 SP 固件更新，前提是与 ONTAP 捆绑的
 +
 [NOTE]
 ====
-ONTAP 检测到 SP 自动更新失败，并触发更正操作以重试 SP 自动更新，最多三次。如果所有三次重试均失败、请参见知识库文章链接：https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Health_Monitor_SPAutoUpgradeFailedMajorAlert__SP_upgrade_fails_-_AutoSupport_Message[Health监控SPAutoUpgradeFailedMajorAlert SP升级失败- AutoSupport Message]。
+ONTAP 检测到 SP 自动更新失败，并触发更正操作以重试 SP 自动更新，最多三次。如果所有三次重试均失败、请参阅知识库文章链接：https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Health_Monitor_SPAutoUpgradeFailedMajorAlert__SP_upgrade_fails_-_AutoSupport_Message[Health监控器SPAutoUpgradeFailedMajorAlert SP upgrade fails - AutoSupport Message]。
 
 ====
 ** 从 NetApp 支持站点下载 SP 固件版本且下载的版本高于 SP 当前运行的版本时
@@ -40,18 +40,18 @@ SP 固件会自动更新到您还原或降级到的 ONTAP 版本所支持的最�
 
 
 +
-您可以使用 `ssystem service-processor image modify` 命令禁用 SP 自动更新功能。但是，建议您保持启用此功能。禁用此功能可能会导致 ONTAP 映像和 SP 固件映像之间的组合不是最佳组合或不符合要求。
+您可以选择使用禁用SP自动更新功能 `system service-processor image modify` 命令：但是，建议您保持启用此功能。禁用此功能可能会导致 ONTAP 映像和 SP 固件映像之间的组合不是最佳组合或不符合要求。
 
-* 通过 ONTAP ，您可以手动触发 SP 更新，并使用 `ssystem service-processor image update` 命令指定应如何进行更新。
+* 使用ONTAP、您可以手动触发SP更新、并使用指定应如何进行更新 `system service-processor image update` 命令：
 +
 您可以指定以下选项：
 
 +
-** 要使用的 SP 固件包（` -package` ）
+** 要使用的SP固件包 (`-package`）
 +
-您可以通过指定软件包文件名将 SP 固件更新为已下载的软件包。高级 `ssystem image package show` 命令可显示节点上可用的所有软件包文件（包括 SP 固件包的文件）。
+您可以通过指定软件包文件名将 SP 固件更新为已下载的软件包。进步 `system image package show` 命令可显示节点上可用的所有软件包文件(包括SP固件包的文件)。
 
-** 是否使用基线 SP 固件包进行 SP 更新（` -baseline` ）
+** 是否使用基线SP固件包进行SP更新 (`-baseline`）
 +
 您可以将 SP 固件更新为与当前运行的 ONTAP 版本捆绑在一起的基线版本。
 
@@ -63,7 +63,7 @@ SP 固件会自动更新到您还原或降级到的 ONTAP 版本所支持的最�
 如果您使用一些更高级的更新选项或参数，则可能会临时清除 BMC 的配置设置。重新启动后， ONTAP 可能需要长达 10 分钟的时间来还原 BMC 配置。
 
 ====
-* 使用 ONTAP ，您可以使用 `ssystem service-processor image update-progress show` 命令显示从 ONTAP 触发的最新 SP 固件更新的状态。
+* 使用ONTAP、您可以使用显示从ONTAP触发的最新SP固件更新的状态 `system service-processor image update-progress show` 命令：
 
 
 更新 SP 固件时，与 SP 的任何现有连接将终止。无论是自动触发还是手动触发 SP 固件更新，都是如此。

@@ -2,7 +2,7 @@
 permalink: upgrade/remove-ems-lif-service-task.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, after, post, ems, event, management, system, lifs, messages, not, delivered 
-summary: Active IQ 数字顾问中的升级顾问服务可提供智能信息，帮助您规划升级并最大程度地降低不确定性和风险。 
+summary: Active IQ Digital Advisor 中的升级顾问服务可提供智能信息，帮助您规划升级并最大程度地降低不确定性和风险。 
 ---
 = 从网络服务策略中删除EMS LIF服务
 :allow-uri-read: 
@@ -13,14 +13,14 @@ summary: Active IQ 数字顾问中的升级顾问服务可提供智能信息，�
 [role="lead"]
 如果在从ONTAP 9.7或更早版本升级到ONTAP 9.8或更高版本之前设置了事件管理系统(EMS)消息、则升级后可能无法传送EMS消息。
 
-升级期间、作为EMS LIF服务的management-EMS会添加到所有现有服务策略中。这样、可以从与任何服务策略关联的任何LIF发送EMS消息。如果选定LIF无法访问事件通知目标、则不会传送消息。
+升级期间、作为EMS LIF服务的management-EMS会添加到所有现有服务策略中。  这样、可以从与任何服务策略关联的任何LIF发送EMS消息。  如果选定LIF无法访问事件通知目标、则不会传送消息。
 
 为防止出现这种情况、升级后、您应从不提供目标可访问性的网络服务策略中删除EMS LIF服务。
 
 .步骤
 . 确定可用于发送EMS消息的LIF以及关联的网络服务策略：
 +
-`network interface show -fields service-policy -services management-EMS`
+`network interface show -fields service-policy -services management-ems`
 
 +
 [listing]
@@ -60,11 +60,11 @@ no answer from 10.10.10.10
 
 . 对于无法访问的LIF、请从相应的服务策略中删除management-EMS LIF服务：
 +
-`network interface service-policy remove-service -vserver svm_name -policy service_policy_name -service management-EMS`
+`network interface service-policy remove-service -vserver svm_name -policy service_policy_name -service management-ems`
 
 . 验证management-EMS LIF现在仅与可访问EMS目标的LIF关联：
 +
-`network interface show -fields service-policy -services management-EMS`
+`network interface show -fields service-policy -services management-ems`
 
 
 

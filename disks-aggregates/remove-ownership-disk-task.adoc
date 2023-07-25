@@ -34,12 +34,12 @@ ONTAP 会将磁盘所有权信息写入磁盘。在从节点中删除备用磁�
 .步骤
 . 如果已启用磁盘所有权自动分配、请使用命令行界面将其关闭：
 +
-`s存储磁盘选项 modify -node _node_name_ -autosassign off`
+`storage disk option modify -node _node_name_ -autoassign off`
 
 . 如果需要，对节点的 HA 配对节点重复上述步骤。
 . 从磁盘中删除软件所有权信息：
 +
-`s存储磁盘 removeowner _disk_name_`
+`storage disk removeowner _disk_name_`
 
 +
 要从多个磁盘中删除所有权信息、请使用逗号分隔列表。
@@ -60,10 +60,10 @@ storage disk removeowner sys1:0a.23,sys1:0a.24,sys1:0a.25
 
 .. 对于ONTAP 9.9.1及更早版本、输入两个命令：
 +
-`s存储磁盘 removeowner -disk _disk_name_ -root true`
+`storage disk removeowner -disk _disk_name_ -root true`
 
 +
-`s存储磁盘 removeowner -disk _disk_name_ -data true`
+`storage disk removeowner -disk _disk_name_ -data true`
 
 
 
@@ -72,7 +72,7 @@ storage disk removeowner sys1:0a.23,sys1:0a.24,sys1:0a.25
 --
 . 如果您先前已关闭磁盘所有权的自动分配、请在删除或重新分配磁盘后将其打开：
 +
-`s存储磁盘选项 modify -node _node_name_ -autodassign on`
+`storage disk option modify -node _node_name_ -autoassign on`
 
 . 如果需要，对节点的 HA 配对节点重复上述步骤。
 

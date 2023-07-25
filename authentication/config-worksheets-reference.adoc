@@ -17,7 +17,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 == 创建或修改登录帐户
 
-当您允许登录帐户访问 Storage Virtual Machine （ SVM ）时，您可以在 `ssecurity login create` 命令中提供这些值。当您修改帐户访问 SVM 的方式时，可以使用 `ssecurity login modify` 命令提供相同的值。
+您可以在中提供这些值 `security login create` 命令。您可以在中提供相同的值 `security login modify` 命令。
 
 [cols="3*"]
 |===
@@ -27,7 +27,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 帐户访问的 SVM 的名称。默认值为集群的管理 SVM 的名称。
  a| 
@@ -35,7 +35,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` 用户或组名称`
+`-user-or-group-name`
  a| 
 帐户的用户名或组名称。通过指定组名称，可以访问组中的每个用户。您可以将一个用户名或组名称与多个应用程序相关联。
  a| 
@@ -43,7 +43,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` 应用`
+`-application`
  a| 
 用于访问 SVM 的应用程序：
 
@@ -57,45 +57,45 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` -authmethod`
+`-authmethod`
  a| 
 用于对帐户进行身份验证的方法：
 
-* `cert` 用于 SSL 证书身份验证
-* `domain` 用于 Active Directory 身份验证
-* `nsswitch` 用于 LDAP 或 NIS 身份验证
+* `cert` 用于SSL证书身份验证
+* `domain` 用于Active Directory身份验证
+* `nsswitch` 用于LDAP或NIS身份验证
 * `password` 用于用户密码身份验证
-* `publickey` 用于公有密钥身份验证
-* `community` 用于 SNMP 社区字符串
-* `USM` 用于 SNMP 用户安全模型
-* `sAML` 适用于安全断言标记语言（ SAML ）身份验证
+* `publickey` 用于公共密钥身份验证
+* `community` 用于SNMP社区字符串
+* `usm` 适用于SNMP用户安全模型
+* `saml` 用于安全断言标记语言(SAML)身份验证
 
  a| 
 
 
 
  a| 
-` -remote-switch-ipaddress`
+`-remote-switch-ipaddress`
  a| 
-远程交换机的 IP 地址。远程交换机可以是由集群交换机运行状况监控器（ CSHM ）监控的集群交换机，也可以是由 MetroCluster 运行状况监控器（ MCC-HM ）监控的光纤通道（ FC ）交换机。只有当应用程序为 `snmp` 且身份验证方法为 `USM` 时，此选项才适用。
+远程交换机的 IP 地址。远程交换机可以是由集群交换机运行状况监控器（ CSHM ）监控的集群交换机，也可以是由 MetroCluster 运行状况监控器（ MCC-HM ）监控的光纤通道（ FC ）交换机。此选项仅在应用程序为时适用 `snmp` 身份验证方法为 `usm`。
  a| 
 
 
 
  a| 
-` - 角色`
+`-role`
  a| 
 分配给帐户的访问控制角色：
 
-* 对于集群（管理 SVM ），默认值为 `admin` 。
-* 对于数据 SVM ，默认值为 `vsadmin` 。
+* 对于集群(管理SVM)、默认值为 `admin`。
+* 对于数据SVM、默认值为 `vsadmin`。
 
  a| 
 
 
 
  a| 
-` 注释`
+`-comment`
  a| 
 （可选）帐户的描述性文本。文本应用双引号（ " ）括起来。
  a| 
@@ -103,22 +103,22 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` -is-ns-switch-group`
+`-is-ns-switch-group`
  a| 
-帐户是 LDAP 组帐户还是 NIS 组帐户（`yes` 或 `no` ）。
+帐户是LDAP组帐户还是NIS组帐户 (`yes` 或 `no`）。
  a| 
 
 
 
  a| 
-` 第二身份验证方法`
+`-second-authentication-method`
  a| 
 在 * ONTAP 9.3* 中进行多因素身份验证时使用的第二种身份验证方法：
 
-* `none` 如果不使用多因素身份验证，则为默认值
-* `authmethod` 为 password 或 nsswitch 时，用于公有密钥身份验证的` publickey `
-* 当 `authmethod` 为公有密钥时，用于用户密码身份验证的 `password`
-* 当 authmethod 为 publickey 时， `nsswitch` 用于用户密码身份验证
+* `none` 如果不使用多因素身份验证、则为默认值
+* `publickey` 用于公共密钥身份验证 `authmethod` 是password或nsswitch
+* `password` 用于用户密码身份验证 `authmethod` 是公共密钥
+* `nsswitch` 当auth方法 为publickey时用于用户密码身份验证
 +
 [NOTE]
 ====
@@ -135,7 +135,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
  a| 
 `-is-ldap-fastbind`
  a| 
-从ONTAP 9.11.1开始、如果设置为true、则会为nsswitch身份验证启用LDAP快速绑定；默认值为false。要使用LDAP快速绑定、必须将` authentication-method`值设置为`nsswitch`。 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["了解用于nsswitch身份验证的LDAP快速绑定。"]
+从ONTAP 9.11.1开始、如果设置为true、则会为nsswitch身份验证启用LDAP快速绑定；默认值为false。要使用LDAP快速绑定、请 `-authentication-method` 值必须设置为 `nsswitch`。 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["了解用于nsswitch身份验证的LDAP快速绑定。"]
  a| 
 
 |===
@@ -143,7 +143,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 == 定义自定义角色
 
-定义自定义角色时，您可以在 `ssecurity login role create` 命令中提供这些值。
+您可以在中提供这些值 `security login role create` 命令。
 
 [cols="3*"]
 |===
@@ -153,7 +153,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 （可选）与角色关联的 SVM 的名称。
  a| 
@@ -161,7 +161,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` - 角色`
+`-role`
  a| 
 角色的名称。
  a| 
@@ -169,27 +169,27 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` -cmddirname`
+`-cmddirname`
  a| 
-角色授予访问权限的命令或命令目录。您应将命令子目录名称用双引号（ " ）括起来。例如， ` "volume snapshot"` 。要指定所有命令目录，必须输入 `Default` 。
+角色授予访问权限的命令或命令目录。您应将命令子目录名称用双引号（ " ）括起来。例如： `"volume snapshot"`。您必须输入 `DEFAULT` 指定所有命令目录。
  a| 
 
 
 
  a| 
-` 访问`
+`-access`
  a| 
 （可选）角色的访问级别。对于命令目录：
 
-* `none` （自定义角色的默认值）拒绝访问命令目录中的命令
-* `readonly` 授予对命令目录及其子目录中 `show` 命令的访问权限
+* `none` (自定义角色的默认值)拒绝访问命令目录中的命令
+* `readonly` 授予对的访问权限 `show` 命令目录及其子目录中的命令
 * `all` 授予对命令目录及其子目录中所有命令的访问权限
 
 
-对于 _nonintrinsic commands_（ 不以 `create` ， `modify` ， `delete` 或 `show` 结尾的命令）：
+对于_noninsic commands_(不以 `create`， `modify`， `delete`或 `show`）：
 
-* `none` （自定义角色的默认值）拒绝访问命令
-* `re仅支持` 不适用
+* `none` (自定义角色的默认值)拒绝访问命令
+* `readonly` 不适用
 * `all` 授予对命令的访问权限
 
 
@@ -199,9 +199,9 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` 查询`
+`-query`
  a| 
-（可选）用于筛选访问级别的查询对象，该对象以命令或命令目录中某个命令的有效选项的形式指定。您应将查询对象用双引号（ " ）括起来。例如，如果命令目录为 `volume` ，则查询对象 ` -aggr aggr0"` 将仅为 `aggr0` 聚合启用访问。
+（可选）用于筛选访问级别的查询对象，该对象以命令或命令目录中某个命令的有效选项的形式指定。您应将查询对象用双引号（ " ）括起来。例如、如果命令目录为 `volume`，查询对象 `"-aggr aggr0"` 将启用对的访问 `aggr0` 仅聚合。
  a| 
 
 |===
@@ -209,7 +209,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 == 将公有密钥与用户帐户关联
 
-在将 SSH 公有密钥与用户帐户关联时，您可以在 `ssecurity login publickey create` 命令中提供这些值。
+您可以在中提供这些值 `security login publickey create` 命令。
 
 [cols="3*"]
 |===
@@ -219,7 +219,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 （可选）帐户访问的 SVM 的名称。
  a| 
@@ -227,15 +227,15 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` 用户名`
+`-username`
  a| 
-帐户的用户名。默认值 `admin` ，这是集群管理员的默认名称。
+帐户的用户名。默认值、 `admin`，这是集群管理员的默认名称。
  a| 
 
 
 
  a| 
-` 索引`
+`-index`
  a| 
 公有密钥的索引编号。如果密钥是为帐户创建的第一个密钥，则默认值为 0 ；否则，默认值将比帐户的最高现有索引编号多一个。
  a| 
@@ -243,7 +243,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 
  a| 
-` - 公共密钥`
+`-publickey`
  a| 
 OpenSSH 公有密钥。您应将密钥用双引号（ " ）括起来。
  a| 
@@ -251,7 +251,7 @@ OpenSSH 公有密钥。您应将密钥用双引号（ " ）括起来。
 
 
  a| 
-` - 角色`
+`-role`
  a| 
 分配给帐户的访问控制角色。
  a| 
@@ -259,7 +259,7 @@ OpenSSH 公有密钥。您应将密钥用双引号（ " ）括起来。
 
 
  a| 
-` 注释`
+`-comment`
  a| 
 （可选）公有密钥的描述性文本。文本应用双引号（ " ）括起来。
  a| 
@@ -284,7 +284,7 @@ OpenSSH 公有密钥。您应将密钥用双引号（ " ）括起来。
 
 == 安装 CA 签名的服务器数字证书。
 
-在生成用于将 SVM 作为 SSL 服务器进行身份验证的数字证书签名请求（ CSR ）时，您可以在 `security certificate generate-csr` 命令中提供这些值。
+您可以在中提供这些值 `security certificate generate-csr` 命令。
 
 [cols="3*"]
 |===
@@ -294,7 +294,7 @@ OpenSSH 公有密钥。您应将密钥用双引号（ " ）括起来。
 
 
  a| 
-` 公用名`
+`-common-name`
  a| 
 证书的名称，即完全限定域名（ FQDN ）或自定义公用名。
  a| 
@@ -302,23 +302,23 @@ OpenSSH 公有密钥。您应将密钥用双引号（ " ）括起来。
 
 
  a| 
-` 大小`
+`-size`
  a| 
-专用密钥中的位数。值越高，密钥越安全。默认值为 `2048` 。可能值为 `512` ， `1024` ， `1536` 和 `2048` 。
- a| 
-
-
-
- a| 
-` 国家或地区`
- a| 
-SVM 的国家 / 地区，采用双字母代码。默认值为 `US` 。有关代码列表，请参见手册页。
+专用密钥中的位数。值越高，密钥越安全。默认值为 `2048`。可能值为 `512`， `1024`， `1536`，和 `2048`。
  a| 
 
 
 
  a| 
-` 状态`
+`-country`
+ a| 
+SVM 的国家 / 地区，采用双字母代码。默认值为 `US`。有关代码列表，请参见手册页。
+ a| 
+
+
+
+ a| 
+`-state`
  a| 
 SVM 的省 / 自治区 / 直辖市。
  a| 
@@ -326,7 +326,7 @@ SVM 的省 / 自治区 / 直辖市。
 
 
  a| 
-` - 位置`
+`-locality`
  a| 
 SVM 的位置。
  a| 
@@ -334,7 +334,7 @@ SVM 的位置。
 
 
  a| 
-` 组织`
+`-organization`
  a| 
 SVM 的组织结构。
  a| 
@@ -342,7 +342,7 @@ SVM 的组织结构。
 
 
  a| 
-` 单位`
+`-unit`
  a| 
 SVM 组织中的单位。
  a| 
@@ -350,7 +350,7 @@ SVM 组织中的单位。
 
 
  a| 
-` 电子邮件地址`
+`-email-addr`
  a| 
 SVM 的联系管理员的电子邮件地址。
  a| 
@@ -358,9 +358,9 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` 哈希函数`
+`-hash-function`
  a| 
-用于对证书签名的加密哈希函数。默认值为 `s 256` 。可能值为 `SHA1` ， `s 256` 和 `MD5` 。
+用于对证书签名的加密哈希函数。默认值为 `SHA256`。可能值为 `SHA1`， `SHA256`，和 `MD5`。
  a| 
 
 |===
@@ -374,7 +374,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要安装证书的 SVM 的名称。
  a| 
@@ -382,14 +382,14 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` 类型`
+`-type`
  a| 
 证书类型：
 
-* `s服务器` 用于服务器证书和中间证书
-* `client-ca` 表示 SSL 客户端根 CA 的公有密钥证书
-* 对于 ONTAP 作为客户端的 SSL 服务器的根 CA 的公有密钥证书，请 `sserver-ca`
-* `client` 用于自签名或 CA 签名数字证书以及 ONTAP 作为 SSL 客户端的专用密钥
+* `server` 服务器证书和中间证书
+* `client-ca` SSL客户端根CA的公共密钥证书
+* `server-ca` ONTAP为客户端的SSL服务器的根CA的公共密钥证书
+* `client` 作为SSL客户端的ONTAP的自签名或CA签名数字证书和专用密钥
 
  a| 
 
@@ -398,7 +398,7 @@ SVM 的联系管理员的电子邮件地址。
 
 == 配置 Active Directory 域控制器访问
 
-如果您已为数据 SVM 配置 SMB 服务器，并且要将 SVM 配置为用于 Active Directory 域控制器访问集群的网关或 _tunnet_ ，则可以使用 `ssecurity login domain-tunnel create` 命令提供这些值。
+您可以在中提供这些值 `security login domain-tunnel create` 命令。
 
 [cols="3*"]
 |===
@@ -408,13 +408,13 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 已配置 SMB 服务器的 SVM 的名称。
  a| 
 
 |===
-如果您尚未配置 SMB 服务器，并且要在 Active Directory 域上创建 SVM 计算机帐户，则可以使用 `vserver active-directory create` 命令提供这些值。
+您可以在中提供这些值 `vserver active-directory create` 命令。
 
 [cols="3*"]
 |===
@@ -424,7 +424,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要为其创建 Active Directory 计算机帐户的 SVM 的名称。
  a| 
@@ -432,7 +432,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` 帐户名`
+`-account-name`
  a| 
 计算机帐户的 NetBIOS 名称。
  a| 
@@ -440,7 +440,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` 域`
+`-domain`
  a| 
 完全限定域名（ FQDN ）。
  a| 
@@ -448,9 +448,9 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` -ou`
+`-ou`
  a| 
-域中的组织单位。默认值为 `CN=Computers` 。ONTAP 会将此值附加到域名中，以生成 Active Directory 可分辨名称。
+域中的组织单位。默认值为 `CN=Computers`。ONTAP 会将此值附加到域名中，以生成 Active Directory 可分辨名称。
  a| 
 
 |===
@@ -458,11 +458,11 @@ SVM 的联系管理员的电子邮件地址。
 
 == 配置 LDAP 或 NIS 服务器访问
 
-在为 SVM 创建 LDAP 客户端配置时，您可以使用 `vserver services name-service ldap client create` 命令提供这些值。
+您可以在中提供这些值 `vserver services name-service ldap client create` 命令。
 
 [NOTE]
 ====
-从 ONTAP 9.2 开始， ` -ldap-servers` 字段将取代 ` -servers` 字段。此新字段可以使用主机名或 IP 地址作为 LDAP 服务器的值。
+从ONTAP 9.2开始、 `-ldap-servers` 字段将取代 `-servers` 字段。此新字段可以使用主机名或 IP 地址作为 LDAP 服务器的值。
 
 ====
 下表仅显示与帐户配置相关的选项：
@@ -475,7 +475,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 客户端配置的 SVM 的名称。
  a| 
@@ -483,7 +483,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` 客户端配置`
+`-client-config`
  a| 
 客户端配置的名称。
  a| 
@@ -491,7 +491,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` 服务器`
+`-servers`
  a| 
 * ONTAP 9.0 ， 9.1* ：客户端连接到的 LDAP 服务器的 IP 地址列表，以英文逗号分隔。
  a| 
@@ -499,7 +499,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` LDAP 服务器`
+`-ldap-servers`
  a| 
 * ONTAP 9.2 * ：以英文逗号分隔的列表，其中列出了客户端所连接的 LDAP 服务器的 IP 地址和主机名。
  a| 
@@ -507,7 +507,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` 架构`
+`-schema`
  a| 
 客户端用于进行 LDAP 查询的模式。
  a| 
@@ -515,9 +515,9 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` -use-start-tls`
+`-use-start-tls`
  a| 
-客户端是否使用 Start TLS 对与 LDAP 服务器的通信进行加密（`true` 或 `false` ）。
+客户端是否使用Start TLS对与LDAP服务器的通信进行加密 (`true` 或 `false`）。
 
 [NOTE]
 ====
@@ -526,7 +526,7 @@ SVM 的联系管理员的电子邮件地址。
 ==== a| 
 
 |===
-在将 LDAP 客户端配置与 SVM 关联时，您可以使用 `vserver services name-service ldap create` 命令提供这些值。
+您可以在中提供这些值 `vserver services name-service ldap create` 命令。
 
 [cols="3*"]
 |===
@@ -536,7 +536,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要与客户端配置关联的 SVM 的名称。
  a| 
@@ -544,7 +544,7 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-` 客户端配置`
+`-client-config`
  a| 
 客户端配置的名称。
  a| 
@@ -552,17 +552,17 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-已启用 ` 客户端`
+`-client-enabled`
  a| 
-SVM 是否可以使用 LDAP 客户端配置（`true` 或 `false` ）。
+SVM是否可以使用LDAP客户端配置 (`true` 或 `false`）。
  a| 
 
 |===
-在 SVM 上创建 NIS 域配置时，可以使用 `vserver services name-service nis-domain create` 命令提供这些值。
+您可以在中提供这些值 `vserver services name-service nis-domain create` 命令。
 
 [NOTE]
 ====
-从 ONTAP 9.2 开始， ` -nis-servers` 字段将取代 ` -servers` 字段。此新字段可以使用主机名或 IP 地址作为 NIS 服务器的值。
+从ONTAP 9.2开始、 `-nis-servers` 字段将取代 `-servers` 字段。此新字段可以使用主机名或IP地址作为NIS服务器的值。
 
 ====
 [cols="3*"]
@@ -573,7 +573,7 @@ SVM 是否可以使用 LDAP 客户端配置（`true` 或 `false` ）。
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要创建域配置的 SVM 的名称。
  a| 
@@ -581,7 +581,7 @@ SVM 是否可以使用 LDAP 客户端配置（`true` 或 `false` ）。
 
 
  a| 
-` 域`
+`-domain`
  a| 
 域的名称。
  a| 
@@ -589,15 +589,15 @@ SVM 是否可以使用 LDAP 客户端配置（`true` 或 `false` ）。
 
 
  a| 
-` - 主动`
+`-active`
  a| 
-域是否处于活动状态（`true` 或 `false` ）。
+域是否处于活动状态 (`true` 或 `false`）。
  a| 
 
 
 
  a| 
-` 服务器`
+`-servers`
  a| 
 * ONTAP 9.0 ， 9.1* ：域配置所使用的 NIS 服务器的 IP 地址列表，以英文逗号分隔。
  a| 
@@ -605,13 +605,13 @@ SVM 是否可以使用 LDAP 客户端配置（`true` 或 `false` ）。
 
 
  a| 
-` nis-servers`
+`-nis-servers`
  a| 
 * ONTAP 9.2 * ：域配置所使用的 NIS 服务器的 IP 地址和主机名的逗号分隔列表。
  a| 
 
 |===
-在指定名称服务源的查找顺序时，您可以在 `vserver services name-service ns-switch create` 命令中提供这些值。
+您可以在中提供这些值 `vserver services name-service ns-switch create` 命令。
 
 [cols="3*"]
 |===
@@ -621,7 +621,7 @@ SVM 是否可以使用 LDAP 客户端配置（`true` 或 `false` ）。
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要配置名称服务查找顺序的 SVM 的名称。
  a| 
@@ -629,28 +629,28 @@ SVM 是否可以使用 LDAP 客户端配置（`true` 或 `false` ）。
 
 
  a| 
-` 数据库`
+`-database`
  a| 
 名称服务数据库：
 
-* `hosts` 用于文件和 DNS 名称服务
-* `group` 用于文件， LDAP 和 NIS 名称服务
-* 对于文件， LDAP 和 NIS 名称服务，请 `passwd`
-* `netgroup` 用于文件， LDAP 和 NIS 名称服务
-* `namemap` 用于文件和 LDAP 名称服务
+* `hosts` 用于文件和DNS名称服务
+* `group` 适用于文件、LDAP和NIS名称服务
+* `passwd` 适用于文件、LDAP和NIS名称服务
+* `netgroup` 适用于文件、LDAP和NIS名称服务
+* `namemap` 用于文件和LDAP名称服务
 
  a| 
 
 
 
  a| 
-` 源`
+`-sources`
  a| 
 查找名称服务源的顺序（在逗号分隔列表中）：
 
-* `文件`
+* `files`
 * `dns`
-* `LDAP`
+* `ldap`
 * `nis`
 
  a| 
@@ -660,7 +660,7 @@ SVM 是否可以使用 LDAP 客户端配置（`true` 或 `false` ）。
 
 == 配置 SAML 访问
 
-从 ONTAP 9.3 开始，您可以通过 `security SAML SAML -sp create` 命令提供这些值来配置 SAML 身份验证。
+从ONTAP 9.3开始、您可以在中提供这些值 `security saml-sp create` 命令以配置SAML身份验证。
 
 [cols="3*"]
 |===
@@ -670,7 +670,7 @@ SVM 是否可以使用 LDAP 客户端配置（`true` 或 `false` ）。
 
 
  a| 
-` -idp-uri`
+`-idp-uri`
  a| 
 可从中下载 IdP 元数据的身份提供程序（ Identity Provider ， IdP ）主机的 FTP 地址或 HTTP 地址。
  a| 
@@ -678,7 +678,7 @@ SVM 是否可以使用 LDAP 客户端配置（`true` 或 `false` ）。
 
 
  a| 
-` -sp-host`
+`-sp-host`
  a| 
 SAML 服务提供程序主机（ ONTAP 系统）的主机名或 IP 地址。默认情况下，使用集群管理 LIF 的 IP 地址。
  a| 
@@ -694,9 +694,9 @@ SAML 服务提供程序主机（ ONTAP 系统）的主机名或 IP 地址。默�
 
 
  a| 
-` -verify-metadata-server`
+`-verify-metadata-server`
  a| 
-是否必须验证 IdP 元数据服务器的身份（`true` 或 `false` ）。最佳实践是始终将此值设置为 `true` 。
+是否必须验证Idp元数据服务器的身份  `true` 或 `false`）。最佳做法是始终将此值设置为 `true`。
  a| 
 
 |===

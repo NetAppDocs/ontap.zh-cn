@@ -23,17 +23,17 @@ link:delete-key-management-database-task.html["从外部密钥管理过渡到板
 
 
 .关于此任务
-每次向集群添加节点时，您都必须运行 `security key-manager setup` 命令。
+您必须运行 `security key-manager setup` 命令。
 
 如果您使用的是 MetroCluster 配置，请查看以下准则：
 
-* 在 ONTAP 9.5 中，您必须在本地集群上运行 `security key-manager setup` ，并在远程集群上运行 `security key-manager setup -sync-metrocluster-config yes` ，每个都使用相同的密码短语。
-* 在 ONTAP 9.5 之前的版本中，您必须在本地集群上运行 `sSecurity key-manager setup` ，等待大约 20 秒，然后在远程集群上运行 `sSecurity key-manager setup` ，并在每个集群上使用相同的密码短语。
+* 在ONTAP 9.5中、必须运行 `security key-manager setup` 在本地集群上、然后 `security key-manager setup -sync-metrocluster-config yes` 在远程集群上、在每个上使用相同的密码短语。
+* 在ONTAP 9.5之前的版本中、您必须运行 `security key-manager setup` 在本地集群上、等待大约20秒、然后运行 `security key-manager setup` 在远程集群上、在每个上使用相同的密码短语。
 
 
-默认情况下，重新启动节点时不需要输入密钥管理器密码短语。从 ONTAP 9.4 开始，您可以使用 ` -enable-cc-mode yes` 选项要求用户在重新启动后输入密码短语。
+默认情况下，重新启动节点时不需要输入密钥管理器密码短语。从ONTAP 9.4开始、您可以使用 `-enable-cc-mode yes` 选项、要求用户在重新启动后输入密码短语。
 
-对于 NVE ，如果设置 ` -enable-cc-mode yes` ，则使用 `volume create` 和 `volume move start` 命令创建的卷会自动加密。对于 `volume create` ，不需要指定 ` -encrypt true` 。对于 `volume move start` ，您不需要指定 ` -encrypt-destination true` 。
+对于NVE (如果已设置) `-enable-cc-mode yes`、使用创建的卷 `volume create` 和 `volume move start` 命令会自动加密。适用于 `volume create`，则无需指定 `-encrypt true`。适用于 `volume move start`，则无需指定 `-encrypt-destination true`。
 
 [NOTE]
 ====
@@ -48,7 +48,7 @@ link:delete-key-management-database-task.html["从外部密钥管理过渡到板
 +
 [NOTE]
 ====
-从 ONTAP 9.4 开始，您可以使用 ` -enable-cc-mode yes` 选项要求用户在重新启动后输入密钥管理器密码短语。对于 NVE ，如果设置 ` -enable-cc-mode yes` ，则使用 `volume create` 和 `volume move start` 命令创建的卷会自动加密。
+从ONTAP 9.4开始、您可以使用 `-enable-cc-mode yes` 此选项要求用户在重新启动后输入密钥管理器密码短语。对于NVE (如果已设置) `-enable-cc-mode yes`、使用创建的卷 `volume create` 和 `volume move start` 命令会自动加密。
 
 ====
 +
@@ -67,7 +67,7 @@ Would you like to use onboard key-management? {yes, no} [yes]:
 Enter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 ----
-. 在提示符处输入 `yes` 以配置板载密钥管理。
+. 输入 ... `yes` 在提示符处配置板载密钥管理。
 . 在密码短语提示符处，输入 32 到 256 个字符的密码短语，或者对于 "`cc-mode` " ，输入 64 到 256 个字符的密码短语。
 +
 [NOTE]
@@ -78,7 +78,7 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 . 在密码短语确认提示符处，重新输入密码短语。
 . 验证是否已为所有节点配置密钥：
 +
-`sSecurity key-manager key show`
+`security key-manager key show`
 
 +
 有关完整的命令语法，请参见手册页。

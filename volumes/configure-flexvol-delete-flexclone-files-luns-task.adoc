@@ -19,10 +19,11 @@ summary: 您可以使 FlexVol 卷在卷中的可用空间降至特定阈值以�
 
 
 .步骤
-. 使用 `volume snapshot autodelete modify` 命令启用自动删除 FlexVol 卷中的 FlexClone 文件和 FlexClone LUN 。
+. 使用启用FlexVol卷中FlexClone文件和FlexClone LUN的自动删除 `volume snapshot autodelete modify` 命令：
 +
-** 对于 ` trigger` 参数，您可以指定 `volume` 或 `snap_reserve` 。
-** 对于 ` -destroy-list` 参数，无论是否仅删除一种类型的克隆，您都必须始终指定 `lun_clone ， file_clone` 。以下示例显示了如何启用卷 vol1 以触发自动删除 FlexClone 文件和 FlexClone LUN 以进行空间回收，直到卷的 25% 包含可用空间为止：
+** 。 `-trigger` 参数、您可以指定 `volume` 或 `snap_reserve`。
+** 。 `-destroy-list` 参数、则必须始终指定 `lun_clone,file_clone` 无论是否仅删除一种类型的克隆。
+以下示例显示了如何启用卷 vol1 以触发自动删除 FlexClone 文件和 FlexClone LUN 以进行空间回收，直到卷的 25% 包含可用空间为止：
 +
 [listing]
 ----
@@ -33,12 +34,12 @@ Volume modify successful on volume:vol1
 +
 [NOTE]
 ====
-启用 FlexVol 卷自动删除时，如果将 ` -commitment` 参数的值设置为 `destroy` ，则当卷中的可用空间降至指定阈值以下时，所有将 ` -autodelete` 参数设置为 `true` 的 FlexClone 文件和 FlexClone LUN 可能会被删除。但是，不会删除 ` -autodelete` 参数设置为 `false` 的 FlexClone 文件和 FlexClone LUN 。
+如果设置了的值、则在启用FlexVol卷以进行自动删除时 `-commitment` 参数设置为 `destroy`、所有FlexClone文件和FlexClone LUN `-autodelete` 参数设置为 `true` 当卷中的可用空间降至指定阈值以下时、可能会将其删除。但是、FlexClone文件和FlexClone LUN与 `-autodelete` 参数设置为 `false` 不会被删除。
 
 ====
 
 
-. 使用 `volume snapshot autodelete show` 命令验证是否已在 FlexVol 卷中启用 FlexClone 文件和 FlexClone LUN 的自动删除。
+. 使用验证是否已在FlexVol卷中启用FlexClone文件和FlexClone LUN的自动删除 `volume snapshot autodelete show` 命令：
 +
 以下示例显示已启用卷 vol1 以自动删除 FlexClone 文件和 FlexClone LUN ：
 
@@ -61,9 +62,9 @@ Is Constituent Volume: false
 ----
 . 通过执行以下步骤，确保为要删除的卷中的 FlexClone 文件和 FlexClone LUN 启用了自动删除：
 +
-.. 使用 `volume file clone autodelete` 命令启用特定 FlexClone 文件或 FlexClone LUN 的自动删除。
+.. 使用启用特定FlexClone文件或FlexClone LUN的自动删除 `volume file clone autodelete` 命令：
 +
-您可以使用带有 ` -force` 参数的 `volume file clone autodelete` 命令强制自动删除特定的 FlexClone 文件或 FlexClone LUN 。
+您可以使用强制自动删除特定的FlexClone文件或FlexClone LUN `volume file clone autodelete` 命令 `-force` 参数。
 
 +
 以下示例显示已启用卷 vol1 中包含的 FlexClone LUN lun1_clone 的自动删除：
@@ -76,7 +77,7 @@ cluster1::> volume file clone autodelete -vserver vs1 -clone-path /vol/vol1/lun1
 +
 您可以在创建 FlexClone 文件和 FlexClone LUN 时启用自动删除。
 
-.. 使用 `volume file clone show-autodelete` 命令验证 FlexClone 文件或 FlexClone LUN 是否已启用自动删除。
+.. 使用验证是否已启用FlexClone文件或FlexClone LUN自动删除 `volume file clone show-autodelete` 命令：
 +
 以下示例显示已启用 FlexClone LUN lun1_clone 以自动删除：
 

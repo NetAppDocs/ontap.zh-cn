@@ -24,7 +24,7 @@ summary: 您可以在自定义 IP 空间中配置集群间 LIF 。这样可以�
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例显示了 `cluster01` 中的网络端口：
+以下示例显示了中的网络端口 `cluster01`：
 
 +
 [listing]
@@ -54,7 +54,7 @@ cluster01-02
 `network ipspace create -ipspace _ipspace_`
 
 +
-以下示例将创建自定义 IP 空间 `ipspace-IC1` ：
+以下示例将创建自定义IP空间 `ipspace-IC1`：
 
 +
 [listing]
@@ -63,13 +63,13 @@ cluster01::> network ipspace create -ipspace ipspace-IC1
 ----
 . 确定哪些端口可专用于集群间通信：
 +
-`network interface show -fields home-port ， curr-port`
+`network interface show -fields home-port,curr-port`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例显示未为端口 `e0e` 和 `e0f` 分配 LIF ：
+以下示例显示了这些端口 `e0e` 和 `e0f` 尚未分配的生命周期：
 
 +
 [listing]
@@ -91,13 +91,13 @@ cluster01
 ----
 . 从默认广播域中删除可用端口：
 +
-`network port broadcast-domain remove-ports -broadcast-domain default -ports ports ports`
+`network port broadcast-domain remove-ports -broadcast-domain Default -ports ports`
 
 +
 一个端口一次不能位于多个广播域中。有关完整的命令语法，请参见手册页。
 
 +
-以下示例将从默认广播域中删除端口 `e0e` 和 `e0f` ：
+以下示例将删除端口 `e0e` 和 `e0f` 从默认广播域：
 
 +
 [listing]
@@ -113,7 +113,7 @@ cluster01-01:e0e,cluster01-01:e0f,cluster01-02:e0e,cluster01-02:e0f
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例显示已从默认广播域中删除端口 `e0e` 和 `e0f` ：
+以下示例显示了这些端口 `e0e` 和 `e0f` 已从默认广播域中删除：
 
 +
 [listing]
@@ -141,10 +141,10 @@ cluster01-02
 ----
 . 在自定义 IP 空间中创建广播域：
 +
-`network port broadcast-domain create -ipspace _ipspace_-broadcast-domain _broadcast_domain_ -mtu _mtu _ -ports _ports_`
+`network port broadcast-domain create -ipspace _ipspace_ -broadcast-domain _broadcast_domain_ -mtu _MTU_ -ports _ports_`
 
 +
-以下示例将在 IP 空间 `ipspace-IC1` 中创建广播域 `ipspace-IC1-bd` ：
+以下示例将创建广播域 `ipspace-IC1-bd` 在IP空间中 `ipspace-IC1`：
 
 +
 [listing]
@@ -198,21 +198,21 @@ ipspace-IC1
  a| 
 * 在 ONTAP 9.6 及更高版本中： *
  a| 
-`network interface create -vserver _system_svm_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_-home-port _port_ -address _port_ip_ -netmask _netmask_`
+`network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
 
 
 
  a| 
 * 在 ONTAP 9.5 及更早版本中： *
  a| 
-`network interface create -vserver _system_svm_ -lif _LIF_name_ -role intercluster -home-node _node_-home-port _port_ -address _port_ip_ -netmask _netmask_`
+`network interface create -vserver _system_SVM_ -lif _LIF_name_ -role intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
 
 |===
 +
 此时将在分配主端口的广播域中创建 LIF 。此广播域具有一个默认故障转移组，其名称与此广播域相同。有关完整的命令语法，请参见手册页。
 
 +
-以下示例将在广播域 `ipspace-IC1-bd` 中创建集群间 LIF `cluster01_icl01` 和 `cluster01_icl02` ：
+以下示例将创建集群间生命周期 `cluster01_icl01` 和 `cluster01_icl02` 在广播域中 `ipspace-IC1-bd`：
 
 +
 [listing]
@@ -283,7 +283,7 @@ ipspace-IC1
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例显示 SVM `e0e` 端口上的集群间 LIF `cluster01_icl01` 和 `cluster01_icl02` 故障转移到`e0f`端口：
+以下示例显示了集群间的生命周期 `cluster01_icl01` 和 `cluster01_icl02` 在SVM上 `e0e` 端口故障转移到`e0f`端口：
 
 +
 [listing]

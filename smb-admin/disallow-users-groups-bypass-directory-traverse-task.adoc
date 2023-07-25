@@ -11,7 +11,7 @@ summary: 如果您不希望用户遍历路径中的所有目录以访问某个�
 
 
 [role="lead"]
-如果您不希望用户遍历路径中的所有目录以访问某个文件，因为该用户对遍历的目录没有权限，则可以从 Storage Virtual Machine （ SVM ）上的本地 SMB 用户或组中删除 `SeChangeNotifyPrivilege` 权限。
+如果您不希望用户遍历路径中的所有目录以访问某个文件、因为该用户对遍历的目录没有权限、则可以删除 `SeChangeNotifyPrivilege` Storage Virtual Machine (SVM)上的本地SMB用户或组的权限。
 
 .开始之前
 要从中删除权限的本地或域用户或组必须已存在。
@@ -22,7 +22,7 @@ summary: 如果您不希望用户遍历路径中的所有目录以访问某个�
 .步骤
 . 禁止绕过遍历检查： `vserver cifs users-and-groups privilege remove-privilege -vserver _vserver_name_ -user-or-group-name _name_ -privileges SeChangeNotifyPrivilege`
 +
-命令会从您使用 ` -user-or-group-name _name_` 参数值指定的本地或域用户或组中删除 `SeChangeNotifyPrivilege` 权限。
+此命令将删除 `SeChangeNotifyPrivilege` 使用的值指定的本地或域用户或组的权限 `-user-or-group-name _name_` 参数。
 
 . 验证指定的用户或组是否已禁用绕过遍历检查： `vserver cifs users-and-groups privilege show -vserver _vserver_name_ ‑user-or-group-name _name_`
 

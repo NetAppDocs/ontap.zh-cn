@@ -26,10 +26,13 @@ summary: 您可以使用 SnapMirror 在 SVM 之间创建数据保护关系。在
 +
 ** 在正常计划的操作，更新和重新同步期间，源到目标之间不会覆盖这些卷
 ** 在中断操作期间不会删除这些文件。
-** 在执行翻转重新同步操作期间，不会删除这些文件。在使用 ONTAP 9.9.1 及更高版本的镜像存储策略配置 SVM DR 关系时，此策略的行为如下：
+** 在执行翻转重新同步操作期间，不会删除这些文件。
+在使用 ONTAP 9.9.1 及更高版本的镜像存储策略配置 SVM DR 关系时，此策略的行为如下：
 ** 源上用户定义的 Snapshot 副本策略不会复制到目标。
 ** 系统定义的 Snapshot 副本策略不会复制到目标。
-** 与用户和系统定义的 Snapshot 策略的卷关联不会复制到目标。+ SVM 。
+** 与用户和系统定义的 Snapshot 策略的卷关联不会复制到目标。
+ +
+SVM。
 
 
 * 从 ONTAP 9.2 （ _snapmirror 统一复制）开始，目标已配置为进行灾难恢复和长期保留。
@@ -115,12 +118,12 @@ link:compatible-ontap-versions-snapmirror-concept.html["SnapMirror 关系的兼�
 
 SVM 复制关系的内容取决于以下字段的交互：
 
-* `snapmirror create` 命令的 ` -identity-preserve true` 选项可复制整个 SVM 配置。
+* 。 `-identity-preserve true` 的选项 `snapmirror create` 命令可复制整个SVM配置。
 +
-` -identity-preserve false` 选项仅复制 SVM 的卷，身份验证和授权配置以及中列出的协议和名称服务设置 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在 SVM DR 关系中复制的配置"]。
+。 `-identity-preserve false` 选项仅复制SVM的卷、身份验证和授权配置以及中列出的协议和名称服务设置 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在 SVM DR 关系中复制的配置"]。
 
-* `snapmirror policy create` 命令的 ` -discard-configs network` 选项可从 SVM 复制中排除 LIF 和相关网络设置，以便在源和目标 SVM 位于不同子网的情况下使用。
-* `volume modify` 命令的 ` -vserver-dr-protection unprotected` 选项可从 SVM 复制中排除指定的卷。
+* 。 `-discard-configs network` 的选项 `snapmirror policy create` 此命令会从SVM复制中排除LIP和相关网络设置、以便在源和目标SVM位于不同子网的情况下使用。
+* 。 `-vserver-dr-protection unprotected` 的选项 `volume modify` 命令会从SVM复制中排除指定的卷。
 
 
 否则， SVM 复制与卷复制几乎相同。SVM 复制工作流与卷复制工作流几乎相同。
@@ -222,6 +225,13 @@ MetroCluster
 
 
  a| 
+ONTAP S3
+ a| 
+SVM DR 不支持。
+
+
+
+ a| 
 SnapMirror 同步
  a| 
 SVM DR 不支持。
@@ -237,10 +247,10 @@ SVM DR 不支持。
 |===
 
 
-2+| 已复制配置 2+| ` *‑identity‑preserve true*` | ` *‑identity‑preserve false*` 
+2+| 已复制配置 2+| `*‑identity‑preserve true*` | `*‑identity‑preserve false*` 
 
 
-|  |  | * 不带 ` 丢弃 -configs network` set* 的策略 | * 使用 ` -discard-configs network` set* 的策略 |  
+|  |  | *策略不使用 `-discard-configs network` 设置* | *策略 `-discard-configs network` 设置* |  
 
 
  a| 
@@ -336,7 +346,7 @@ IP 空间
  a| 
 SMB
  a| 
-SMB 服务器
+SMB服务器
  a| 
 是的。
  a| 

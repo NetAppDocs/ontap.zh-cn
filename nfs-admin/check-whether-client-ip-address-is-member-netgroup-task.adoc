@@ -11,13 +11,13 @@ summary: 在对与网络组相关的 NFS 客户端访问问题进行故障排除
 
 
 [role="lead"]
-在对与网络组相关的 NFS 客户端访问问题进行故障排除时，您可以使用 `vserver export-policy netgroup check-membership` 命令来帮助确定客户端 IP 是否是某个网络组的成员。
+在对与网络组相关的NFS客户端访问问题进行故障排除时、您可以使用 `vserver export-policy netgroup check-membership` 命令、以帮助确定客户端IP是否为某个网络组的成员。
 
 .关于此任务
 通过检查网络组成员资格，您可以确定 ONTAP 是否意识到客户端是或不是网络组的成员。此外，您还可以通过它来了解刷新网络组信息时 ONTAP 网络组缓存是否处于瞬时状态。此信息有助于您了解客户端为何可能会被意外授予或拒绝访问。
 
 .步骤
-. 检查客户端 IP 地址的网络组成员资格： `vserver export-policy netgroup check-membership -vserver vserver_name -netgroup netgroup_name -client-ip client_ip`
+. 检查客户端IP地址的网络组成员资格： `vserver export-policy netgroup check-membership -vserver vserver_name -netgroup netgroup_name -client-ip client_ip`
 +
 此命令可返回以下结果：
 
@@ -33,7 +33,7 @@ summary: 在对与网络组相关的 NFS 客户端访问问题进行故障排除
 ** 客户端不是网络组的成员。
 ** 由于 ONTAP 当前正在刷新网络组缓存，因此无法确定客户端的成员资格。
 +
-除非这样做，否则不能明确排除成员资格。使用 `vserver export-policy netgroup queue show` 命令监控网络组的加载，并在检查完成后重试。
+除非这样做，否则不能明确排除成员资格。使用 `vserver export-policy netgroup queue show` 命令以监控网络组的加载、并在完成后重试检查。
 
 
 

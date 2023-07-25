@@ -19,7 +19,7 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有同�
 
 
 .关于此任务
-安全清除可能需要几分钟到几小时才能完成，具体取决于已删除文件中的数据量。您可以使用 `volume encryption secure — purge show` 命令查看操作状态。您可以使用 `volume encryption secure — purge abort` 命令终止此操作。
+安全清除可能需要几分钟到几小时才能完成，具体取决于已删除文件中的数据量。您可以使用 `volume encryption secure-purge show` 命令以查看操作状态。您可以使用 `volume encryption secure-purge abort` 命令以终止操作。
 
 [NOTE]
 ====
@@ -39,14 +39,14 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有同�
 
 . 准备异步关系中要安全清除的目标卷：
 +
-`volume encryption sure-purge start -vserver svm_name -volume volume_name -prepare true`
+`volume encryption secure-purge start -vserver SVM_name -volume volume_name -prepare true`
 
 +
 对同步 SnapMirror 关系中的另一个卷重复此步骤。
 
 . 如果要安全清除的文件位于 Snapshot 副本中，请删除 Snapshot 副本：
 +
-`snapshot delete -vserver svm_name -volume vol_a -snapshot snapshot`
+`snapshot delete -vserver SVM_name -volume vol_A -snapshot snapshot`
 
 . 如果安全清除文件位于基本 Snapshot 副本或通用 Snapshot 副本中，请更新 SnapMirror 以将通用 Snapshot 副本前移：
 +
@@ -57,14 +57,14 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有同�
 
 . 如果安全清除文件位于应用程序一致的 Snapshot 副本中，请删除同步 SnapMirror 关系中两个卷上的 Snapshot 副本：
 +
-`snapshot delete -vserver svm_name -volume vol_name -snapshot snapshot`
+`snapshot delete -vserver SVM_name -volume vol_name -snapshot snapshot`
 
 +
 对两个卷执行此步骤。
 
 . 安全清除已删除的文件：
 +
-`volume encryption sure-purge start -vserver svm_name -volume volume_name`
+`volume encryption secure-purge start -vserver SVM_name -volume volume_name`
 
 +
 对同步 SnapMirror 关系中的每个卷重复此步骤。
@@ -79,6 +79,6 @@ cluster1::> volume encryption secure-purge start -vserver vs1 -volume vol1
 ----
 . 验证安全清除操作的状态：
 +
-`volume encryption secure — purge show`
+`volume encryption secure-purge show`
 
 

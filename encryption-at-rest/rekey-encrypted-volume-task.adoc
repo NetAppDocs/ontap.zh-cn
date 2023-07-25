@@ -11,25 +11,25 @@ summary: 安全最佳做法是定期更改卷的加密密钥。从 ONTAP 9.3 开
 
 
 [role="lead"]
-安全最佳做法是定期更改卷的加密密钥。从 ONTAP 9.3 开始，您可以使用 `volume encryption rekey start` 命令更改加密密钥。
+安全最佳做法是定期更改卷的加密密钥。从ONTAP 9.3开始、您可以使用 `volume encryption rekey start` 命令以更改加密密钥。
 
 .关于此任务
-启动重新设置密钥操作后，该操作必须完成。不会返回到旧密钥。如果在此操作期间遇到性能问题描述，您可以运行 `volume encryption rekey pause` 命令暂停此操作，并运行 `volume encryption rekey resume` 命令恢复此操作。
+启动重新设置密钥操作后，该操作必须完成。不会返回到旧密钥。如果您在操作期间遇到性能问题描述、则可以运行 `volume encryption rekey pause` 命令以暂停操作、以及 `volume encryption rekey resume` 命令以恢复操作。
 
 在重新设置密钥操作完成之前，卷将具有两个密钥。新写入及其相应读取将使用新密钥。否则，读取将使用旧密钥。
 
 [NOTE]
 ====
-您不能使用 `volume encryption rekey start` 重新为 SnapLock 卷设置密钥。
+您不能使用 `volume encryption rekey start` 重新设置SnapLock卷密钥。
 
 ====
 .步骤
 . 更改加密密钥：
 +
-`volume encryption rekey start -vserver svm_name -volume volume_name`
+`volume encryption rekey start -vserver SVM_name -volume volume_name`
 
 +
-以下命令将更改 SVM``vs1`` 上的 `vol1` 的加密密钥：
+以下命令将更改的加密密钥 `vol1` 在SVM上``vs1``：
 
 +
 [listing]
@@ -63,7 +63,7 @@ vs1       vol1     9/18/2017 17:51:41   Phase 2 of 2 is in progress.
 有关完整的命令语法，请参见命令手册页。
 
 +
-以下命令将显示 `cluster1` 上的加密卷：
+以下命令将显示上的加密卷 `cluster1`：
 
 +
 [listing]

@@ -60,7 +60,7 @@ SnapMirror 提供两种类型的数据保护关系。对于每种类型， SnapM
 
 您可以在创建数据保护关系时使用默认策略或自定义策略。策略类型 _ 可确定要包含的 Snapshot 副本以及要保留的副本数。
 
-下表显示了默认策略。使用 `MirrorLatest` 策略创建传统 DR 关系。使用 `MirrorAndVault` 或 `Unified7year` 策略创建统一复制关系，在此关系中，在同一目标卷上配置 DR 和长期保留。
+下表显示了默认策略。使用 `MirrorLatest` 用于创建传统灾难恢复关系的策略。使用 `MirrorAndVault` 或 `Unified7year` 用于创建统一复制关系的策略、在此关系中、在同一目标卷上配置灾难恢复和长期保留。
 
 [cols="25,25,50"]
 |===
@@ -179,12 +179,12 @@ Element 卷大致相当于 ONTAP LUN 。初始化 Element 软件和 ONTAP 之间
 SnapMirror
  a| 
 * 不支持 SnapMirror 还原功能。
-* 不支持 `MirrorAllSnapshots` 和 `XDPDefault` 策略。
+* 。 `MirrorAllSnapshots` 和 `XDPDefault` 不支持策略。
 * 不支持 "`vault` " 策略类型。
 * 不支持系统定义的规则 "`all_source_snapshots` " 。
 * 只有在从 Element 软件复制到 ONTAP 时，才支持使用 `mirror-vault` 策略类型。使用 "`async-mirror` " 从 ONTAP 复制到 Element 软件。
-* 不支持 `snapmirror policy add-rule` 的 ` schedule` 和 ` 前缀` 选项。
-* 不支持 ` napmirror resync` 的` -preserve ` 和` -quast-resync `s选项。
+* 。 `-schedule` 和 `-prefix` 选项 `snapmirror policy add-rule` 不支持。
+* 。 `-preserve` 和 `-quick-resync` 选项 `snapmirror resync` 不支持。
 * 不会保留存储效率。
 * 不支持扇出和级联数据保护部署。
 

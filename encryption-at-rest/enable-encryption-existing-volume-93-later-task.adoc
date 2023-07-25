@@ -11,26 +11,26 @@ summary: '从 ONTAP 9.3 开始，您可以使用 volume encryption conversion st
 
 
 [role="lead"]
-从 ONTAP 9.3 开始，您可以使用 `volume encryption conversion start` 命令对现有卷启用 " 原位 " 加密，而无需将卷移动到其他位置。
+从ONTAP 9.3开始、您可以使用 `volume encryption conversion start` 命令以"原位"加密现有卷、而无需将卷移动到其他位置。
 
 .关于此任务
-启动转换操作后，该操作必须完成。如果在此操作期间遇到性能问题描述，您可以运行 `volume encryption conversion pause` 命令暂停此操作，并运行 `volume encryption conversion resume` 命令恢复此操作。
+启动转换操作后，该操作必须完成。如果您在操作期间遇到性能问题描述、则可以运行 `volume encryption conversion pause` 命令以暂停操作、以及 `volume encryption conversion resume` 命令以恢复操作。
 
 [NOTE]
 ====
-您不能使用 `volume encryption convertion start` 来转换 SnapLock 卷。
+您不能使用 `volume encryption conversion start` 转换SnapLock卷。
 
 ====
 .步骤
 . 在现有卷上启用加密：
 +
-`volume encryption conversion start -vserver svm_name -volume volume_name`
+`volume encryption conversion start -vserver SVM_name -volume volume_name`
 
 +
 有关完整的命令语法，请参见命令手册页。
 
 +
-以下命令会对现有卷 `vol1` 启用加密：
+以下命令将对现有卷启用加密 `vol1`：
 
 +
 [listing]
@@ -42,7 +42,7 @@ cluster1::> volume encryption conversion start -vserver vs1 -volume vol1
 
 . 验证转换操作的状态：
 +
-`卷加密转换显示`
+`volume encryption conversion show`
 
 +
 有关完整的命令语法，请参见命令手册页。
@@ -67,7 +67,7 @@ vs1       vol1     9/18/2017 17:51:41   Phase 2 of 2 is in progress.
 有关完整的命令语法，请参见命令手册页。
 
 +
-以下命令将显示 `cluster1` 上的加密卷：
+以下命令将显示上的加密卷 `cluster1`：
 
 +
 [listing]

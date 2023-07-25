@@ -14,18 +14,18 @@ summary: '对于 SnapVault 和统一复制关系，您可以通过在目标上�
 对于 SnapVault 和统一复制关系，您可以通过在目标上为上次传输的 Snapshot 副本创建一份副本来防止更新后的 Snapshot 副本损坏。无论源上的保留规则如何，此 "`local copy` " 都会保留，这样，即使最初由 SnapMirror 传输的 Snapshot 在源上不再可用，目标上也会提供该 Snapshot 的副本。
 
 .关于此任务
-您可以在 `snapmirror policy add-rule` 命令的 ` schedule` 选项中指定创建本地副本的计划。
+您可以在中指定创建本地副本的计划 `-schedule` 的选项 `snapmirror policy add-rule` 命令：
 
 .步骤
 . 定义在目标上创建本地副本的计划：
 +
-`snapmirror policy add-rule -vserver _svm_ -policy _policy_for_rule_ -snapmirror-label _snapmirror-label _ -schedule _schedule_`
+`snapmirror policy add-rule -vserver _SVM_ -policy _policy_for_rule_ -snapmirror-label _snapmirror-label_ -schedule _schedule_`
 
 +
 有关完整的命令语法，请参见手册页。有关如何创建作业计划的示例，请参见 link:create-replication-job-schedule-task.html["创建复制作业计划"]。
 
 +
-以下示例将创建本地副本的计划添加到默认的 `MirrorAndVault` 策略中：
+以下示例将创建本地副本的计划添加到默认值 `MirrorAndVault` 策略：
 
 +
 [listing]
@@ -33,7 +33,7 @@ summary: '对于 SnapVault 和统一复制关系，您可以通过在目标上�
 cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy MirrorAndVault -snapmirror-label my_monthly -schedule my_monthly
 ----
 +
-以下示例将创建本地副本的计划添加到自定义 `my_unified` 策略中：
+以下示例将创建本地副本的计划添加到自定义中 `my_unified` 策略：
 
 +
 [listing]

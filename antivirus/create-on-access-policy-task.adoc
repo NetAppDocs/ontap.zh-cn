@@ -15,7 +15,7 @@ summary: 实时策略用于定义实时扫描的范围。您可以为单个 SVM 
 
 .关于此任务
 * 您可以指定要扫描的最大文件大小、要包括在扫描中的文件扩展名和路径以及要从扫描中排除的文件扩展名和路径。
-* 您可以将 `scan -mandatory` 选项设置为 off ，以指定在没有可用于病毒扫描的 Vscan 服务器时允许文件访问。
+* 您可以设置 `scan-mandatory` 选项设置为off、用于指定在没有可用于病毒扫描的Vscan服务器时允许文件访问。
 * 默认情况下、ONTAP会创建一个名为"default_CIFS"的实时策略、并为集群中的所有SVM启用该策略。
 * 符合基于的扫描排除条件的任何文件 `paths-to-exclude`， `file-ext-to-exclude`或 `max-file-size` 扫描时不考虑参数、即使是 `scan-mandatory` 选项设置为on。(选中此项 link:vscan-server-connection-concept.html["故障排除"] 部分、了解与相关的连接问题 `scan-mandatory` 选项。)
 * 默认情况下，仅扫描读写卷。您可以指定允许扫描只读卷或将扫描限制为使用执行访问打开的文件的筛选器。
@@ -39,11 +39,11 @@ summary: 实时策略用于定义实时扫描的范围。您可以为单个 SVM 
 .步骤
 . 创建实时策略：
 +
-`vserver vscan on-access-policy create -vserver _data_svm_cluster_admin_svm_ -policy-name _policy_name_ -protocol cifs -max-file-size _max_size_of_files_to_scann_ – filters [scan-ro-volume ， ]_scan-ext-execute-access] -file-ext-to-exclude -file_to-exclude -file_to-exclude -file_to_exclude _and_extensions_to_ext_to_exclude -files_won_won_won_won_won_s_`
+`vserver vscan on-access-policy create -vserver _data_SVM|cluster_admin_SVM_ -policy-name _policy_name_ -protocol CIFS -max-file-size _max_size_of_files_to_scan_ –filters [scan-ro-volume,][scan-execute-access] -file-ext-to-include _extensions_of_files_to_include_ -file-ext-to-exclude _extensions_of_files_to_exclude_ -scan-files-with-no-ext true|false -paths-to-exclude _paths_of_files_to_exclude_ -scan-mandatory on|off`
 
 +
 ** 为为为单个 SVM 定义的策略指定数据 SVM ，为为集群中的所有 SVM 定义的策略指定集群管理员 SVM 。
-** ` -file-ext-to-exclude` 设置会覆盖 ` -file-ext-to-include` 设置。
+** 。 `-file-ext-to-exclude` 设置将覆盖 `-file-ext-to-include` 设置。
 ** 设置 `-scan-files-with-no-ext` 设置为true可扫描不带扩展名的文件。
 以下命令将创建一个名为的实时策略 `Policy1` 在上 `vs1` SVM：
 
@@ -53,12 +53,12 @@ summary: 实时策略用于定义实时扫描的范围。您可以为单个 SVM 
 ----
 cluster1::> vserver vscan on-access-policy create -vserver vs1 -policy-name Policy1 -protocol CIFS -filters scan-ro-volume -max-file-size 3GB -file-ext-to-include “mp*”,"tx*" -file-ext-to-exclude "mp3","txt" -scan-files-with-no-ext false -paths-to-exclude "\vol\a b\","\vol\a,b\"
 ----
-. 验证是否已创建实时策略： `vserver vscan on-access-policy show -instance _data_svm_cluster_admin_svm_ -policy-name policy_name`
+. 验证是否已创建实时策略： `vserver vscan on-access-policy show -instance _data_SVM|cluster_admin_SVM_ -policy-name policy_name`
 +
 有关完整的选项列表，请参见命令手册页。
 
 +
-以下命令显示 `Policy1` 策略的详细信息：
+以下命令将显示的详细信息 `Policy1` 策略：
 
 +
 [listing]

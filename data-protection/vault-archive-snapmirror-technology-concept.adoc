@@ -25,7 +25,7 @@ image::../media/snapvault-data-protection.gif[SnapVault 数据保护]
 
 此关系的 SnapMirror 策略用于定义基线内容以及任何更新。
 
-默认存储策略 `XDPDefault` 下的基线传输会为源卷创建 Snapshot 副本，然后将该副本及其引用的数据块传输到目标卷。与 SnapMirror 关系不同，存储备份不会在基线中包含较早的 Snapshot 副本。
+默认存储策略下的基线传输 `XDPDefault` 为源卷创建Snapshot副本、然后将该副本及其引用的数据块传输到目标卷。与 SnapMirror 关系不同，存储备份不会在基线中包含较早的 Snapshot 副本。
 
 
 
@@ -33,10 +33,10 @@ image::../media/snapvault-data-protection.gif[SnapVault 数据保护]
 
 更新是异步的，遵循您配置的计划。您在关系的策略中定义的规则可确定更新中要包含哪些新 Snapshot 副本以及要保留多少副本。在策略中定义的标签（ `m例如 " 每月，` " ）必须与源上 Snapshot 策略中定义的一个或多个标签匹配。否则，复制将失败。
 
-在 `XDPDefault` 策略下的每次更新时， SnapMirror 都会传输自上次更新以来创建的 Snapshot 副本，前提是这些副本的标签与策略规则中定义的标签匹配。在 `XDPDefault` 策略的 `snapmirror policy show` 命令的以下输出中，请注意以下几点：
+在下的每次更新时 `XDPDefault` 策略、SnapMirror将传输自上次更新以来创建的Snapshot副本、前提是这些副本的标签与策略规则中定义的标签匹配。在的以下输出中 `snapmirror policy show` 命令 `XDPDefault` 策略中、请注意以下事项：
 
-* `Create Snapshot` 为 "`false` " ，表示在 SnapMirror 更新关系时， `XDPDefault` 不会创建 Snapshot 副本。
-* `XDPDefault` 具有规则 " `daily` " 和 "`weekly` " ，表示在 SnapMirror 更新关系时传输源上具有匹配标签的所有 Snapshot 副本。
+* `Create Snapshot` 为"`false`"、表示 `XDPDefault` 在SnapMirror更新关系时、不会创建Snapshot副本。
+* `XDPDefault` 具有规则"`daily`"和"`Weekly`"、指示在SnapMirror更新关系时传输源上具有匹配标签的所有Snapshot副本。
 
 
 [listing]

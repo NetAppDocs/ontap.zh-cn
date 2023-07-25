@@ -19,7 +19,7 @@ summary: 环境变量用于在启用了 NDMP 的备份应用程序和存储系�
 
 [NOTE]
 ====
-在大多数情况下，值为 `Y` 的变量也接受 `T` 和 `N` 也接受 `F` 。
+在大多数情况下、具有值的变量、 `Y` 另请接受 `T` 和 `N` 另请接受 `F`。
 
 ====
 
@@ -33,7 +33,7 @@ summary: 环境变量用于在启用了 NDMP 的备份应用程序和存储系�
  a| 
 调试
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
@@ -44,9 +44,9 @@ summary: 环境变量用于在启用了 NDMP 的备份应用程序和存储系�
  a| 
 文件系统
  a| 
-`s正在执行`
+`string`
  a| 
-`无`
+`none`
  a| 
 指定要备份的数据的根的路径名。
 
@@ -57,7 +57,7 @@ NDMP_VERSION
  a| 
 `return_only`
  a| 
-`无`
+`none`
  a| 
 您不应修改 NDMP_VERSION 变量。由备份操作创建， NDMP_VERSION 变量返回 NDMP 版本。
 
@@ -70,7 +70,7 @@ pathname_separator
  a| 
 `return_value`
  a| 
-`无`
+`none`
  a| 
 指定路径名称分隔符字符。
 
@@ -92,7 +92,7 @@ type
  a| 
 详细
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
@@ -112,7 +112,7 @@ acl_start
  a| 
 `return_only`
  a| 
-`无`
+`none`
  a| 
 ACL_START 变量由备份操作创建，是直接访问还原或可重新启动的 NDMP 备份操作使用的偏移值。
 
@@ -123,13 +123,13 @@ ACL_START 变量由备份操作创建，是直接访问还原或可重新启动�
  a| 
 基准日期
  a| 
-`0` ， ` -1` 或 `DUMP_DATE` 值
+`0`， `-1`或 `DUMP_DATE` value
  a| 
-` -1`
+`-1`
  a| 
 指定增量备份的开始日期。
 
-如果设置为 ` -1` ，则 BASE_DATE 增量说明符将被禁用。如果在级别 0 备份上设置为 `0` ，则会启用增量备份。在初始备份之后，先前增量备份中的 DUMP_DATE 变量的值将分配给 BASE_DATE 变量。
+设置为时 `-1`，BASE_DATE_增量 说明符已禁用。设置为时 `0` 在级别0备份上、会启用增量备份。在初始备份之后，先前增量备份中的 DUMP_DATE 变量的值将分配给 BASE_DATE 变量。
 
 这些变量可替代基于级别 / 更新的增量备份。
 
@@ -138,22 +138,22 @@ ACL_START 变量由备份操作创建，是直接访问还原或可重新启动�
  a| 
 直接
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
 指定还原应直接快进到文件数据所在的磁带位置，而不是扫描整个磁带。
 
-要使直接访问恢复正常工作，备份应用程序必须提供定位信息。如果此变量设置为 `Y` ，则备份应用程序将指定文件或目录名称以及定位信息。
+要使直接访问恢复正常工作，备份应用程序必须提供定位信息。如果此变量设置为 `Y`，备份应用程序指定文件或目录名称以及定位信息。
 
 
 
  a| 
 dmp_name
  a| 
-`s正在执行`
+`string`
  a| 
-`无`
+`none`
  a| 
 指定多个子树备份的名称。
 
@@ -166,9 +166,9 @@ DUMP_DATE
  a| 
 `return_value`
  a| 
-`无`
+`none`
  a| 
-您不会直接更改此变量。如果 BASE_DATE 变量设置为 ` -1` 以外的值，则备份会创建此变量。
+您不会直接更改此变量。如果BASE_DATE变量 设置为以外的值、则由备份创建 `-1`。
 
 DUMP_DATE 变量是通过将 32 位级别值预先设置为转储软件计算的 32 位时间值来派生的。此级别从传递到 BASE_DATE 变量的最后一个级别值开始递增。生成的值用作后续增量备份的 BASE_DATE 值。
 
@@ -177,7 +177,7 @@ DUMP_DATE 变量是通过将 32 位级别值预先设置为转储软件计算的
  a| 
 ENHANCED_DAR_ENABLED
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
@@ -187,8 +187,8 @@ ENHANCED_DAR_ENABLED
 
 * ONTAP 支持增强的 DAR 。
 * 备份期间会启用文件历史记录（ HIST=Y ）。
-* `ndmpd.offset_map.enable` 选项设置为 `on` 。
-* 在还原期间， ENHANCED_DAR_ENABLED 变量设置为 `Y` 。
+* 。 `ndmpd.offset_map.enable` 选项设置为 `on`。
+* ENHANCEDAR_ENCEDABLE变量设置为 `Y` 还原期间。
 
 
 
@@ -196,9 +196,9 @@ ENHANCED_DAR_ENABLED
  a| 
 排除
  a| 
-`Pattern_string`
+`pattern_string`
  a| 
-`无`
+`none`
  a| 
 指定在备份数据时排除的文件或目录。
 
@@ -217,7 +217,7 @@ ENHANCED_DAR_ENABLED
 
 [NOTE]
 ====
-如果同时将 non_quota_tree 设置为 `Y` ，则不会排除指定要排除备份的文件或目录。
+如果将NNO_配额 树设置为、则不会排除指定为排除备份的文件或目录 `Y` 同时。
 
 ====
 
@@ -225,7 +225,7 @@ ENHANCED_DAR_ENABLED
  a| 
 提取
  a| 
-`Y` ， `N` 或 `E`
+`Y`， `N`或 `E`
  a| 
 `N`
  a| 
@@ -233,14 +233,14 @@ ENHANCED_DAR_ENABLED
 
 备份应用程序指定要提取的子树的名称。如果指定的文件与备份了内容的目录匹配，则会以递归方式提取该目录。
 
-要在不使用 DAR 的情况下在还原期间重命名文件，目录或 qtree ，必须将 EXTRACT 环境变量设置为 `E` 。
+要在还原期间不使用DAR重命名文件、目录或qtree、必须将extract环境变量设置为 `E`。
 
 
 
  a| 
 提取 ACL
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `Y`
  a| 
@@ -253,13 +253,13 @@ ENHANCED_DAR_ENABLED
  a| 
 【强制】
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
 确定还原操作是否必须检查目标卷上的卷空间和索引节点可用性。
 
-将此变量设置为 `Y` 会导致还原操作跳过目标路径上卷空间和索引节点可用性的检查。
+将此变量设置为 `Y` 使还原操作跳过目标路径上的卷空间和节点可用性检查。
 
 如果目标卷上没有足够的卷空间或索引节点，则还原操作将恢复目标卷空间和索引节点可用性所允许的数据量。当卷空间或索引节点不可用时，还原操作将停止。
 
@@ -268,17 +268,17 @@ ENHANCED_DAR_ENABLED
  a| 
 历史记录
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
 指定将文件历史记录信息发送到备份应用程序。
 
-大多数商用备份应用程序都会将 HIST 变量设置为 `Y` 。如果要提高备份操作的速度，或者要对文件历史记录收集问题进行故障排除，可以将此变量设置为 `N` 。
+大多数商业备份应用程序都会将HIST变量设置为 `Y`。如果要提高备份操作的速度、或者要对文件历史记录收集问题进行故障排除、可以将此变量设置为 `N`。
 
 [NOTE]
 ====
-如果备份应用程序不支持文件历史记录，则不应将 HIST 变量设置为 `Y` 。
+不应将HIST变量设置为 `Y` 备份应用程序不支持文件历史记录。
 
 ====
 
@@ -286,23 +286,23 @@ ENHANCED_DAR_ENABLED
  a| 
 ignore_CTIME
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
 指定仅当文件的 ctime 值自上次增量备份以来发生更改时，才会以增量方式备份文件。
 
-某些应用程序（例如病毒扫描软件）会更改索引节点中某个文件的 ctime 值，即使该文件或其属性未更改也是如此。因此，增量备份可能会备份未更改的文件。只有当增量备份所用的时间或空间量不可接受，因为 ctime 值已修改时，才应指定 `ignore_CTIME` 变量。
+某些应用程序（例如病毒扫描软件）会更改索引节点中某个文件的 ctime 值，即使该文件或其属性未更改也是如此。因此，增量备份可能会备份未更改的文件。。 `IGNORE_CTIME` 只有当增量备份由于修改了ctime值而占用的时间或空间量无法接受时、才应指定变量。
 
 [NOTE]
 ====
-默认情况下， `ndmp dump` 命令会将 `ignore_CTIME` 设置为 `false` 。将其设置为 `true` 可能会导致以下数据丢失：
+。 `NDMP dump` 命令集 `IGNORE_CTIME` to `false` 默认情况下。将其设置为 `true` 可能导致以下数据丢失：
 
-. 如果使用卷级增量 `ndmpcopy` 将 `ignore_CTIME` 设置为 true ，则会删除文件，这些文件会在源上的 qtree 之间移动。
-. 如果在卷级增量转储期间将 `ignore_CTIME` 设置为 true ，则会删除文件，这些文件会在增量还原期间在源上的 qtree 之间移动。
+. 条件 `IGNORE_CTIME` 设置为true、卷级别为增量 `ndmpcopy`，则会删除文件，这些文件会在源上的qtrees之间移动。
+. 条件 `IGNORE_CTIME` 在卷级别增量转储期间设置为true、会导致删除文件、这些文件会在增量还原期间在源上的qtrees之间移动。
 
 
-要避免此问题，在卷级别 `NDMP 转储` 或 `ndmpcopy` 期间，必须将 `ignore_CTIME` 设置为 false 。
+要避免此问题、 `IGNORE_CTIME` 必须在卷级别设置为false `NDMP dumps` 或 `ndmpcopy`。
 
 ====
 
@@ -310,7 +310,7 @@ ignore_CTIME
  a| 
 ignore_qtree
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
@@ -321,7 +321,7 @@ ignore_qtree
  a| 
 level
  a| 
-`0` -`31`
+`0`-`31`
  a| 
 `0`
  a| 
@@ -334,7 +334,7 @@ level
  a| 
 列表
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
@@ -345,7 +345,7 @@ level
  a| 
 List_qtree
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
@@ -356,9 +356,9 @@ List_qtree
  a| 
 多子树名称
  a| 
-`s正在执行`
+`string`
  a| 
-`无`
+`none`
  a| 
 指定备份为多子树备份。
 
@@ -371,7 +371,7 @@ List_qtree
  a| 
 NDMP_UNICODE_ FH
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
@@ -384,7 +384,7 @@ NDMP_UNICODE_ FH
  a| 
 no_ACL
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
@@ -395,17 +395,17 @@ no_ACL
  a| 
 非配额树
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
 指定在备份数据时必须忽略 qtree 中的文件和目录。
 
-如果设置为 `Y` ，则不会备份文件系统变量指定的数据集中 qtree 中的项目。只有当 filesystem 变量指定整个卷时，此变量才有效。non_quota_tree 变量仅适用于级别 0 备份，如果指定了多子树名称变量，则该变量不起作用。
+设置为时 `Y`，不会备份文件系统变量指定的数据集中qtrees中的项目。只有当 filesystem 变量指定整个卷时，此变量才有效。non_quota_tree 变量仅适用于级别 0 备份，如果指定了多子树名称变量，则该变量不起作用。
 
 [NOTE]
 ====
-如果同时将 non_quota_tree 设置为 `Y` ，则不会排除指定要排除备份的文件或目录。
+如果将NNO_配额 树设置为、则不会排除指定为排除备份的文件或目录 `Y` 同时。
 
 ====
 
@@ -413,7 +413,7 @@ no_ACL
  a| 
 NOWRITE
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
@@ -426,34 +426,34 @@ NOWRITE
  a| 
 递归
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `Y`
  a| 
 指定在 DAR 还原期间展开目录条目。
 
-此外，还必须启用 DIRECT 和 ENHANCED_DAR_ENABLED 环境变量（设置为 `Y` ）。如果禁用递归变量（设置为 `N` ），则只会从磁带还原原始源路径中所有目录的权限和 ACL ，而不会还原这些目录的内容。如果 recursive 变量设置为 `N` 或 recovery_full_paths 变量设置为 `Y` ，则恢复路径必须以原始路径结束。
+必须启用直接环境变量和增强型DAR_ENenabled环境变量(设置为 `Y`)。如果禁用递归变量(设置为 `N`)、则只会从磁带还原原始源路径中所有目录的权限和ACL、而不会还原目录的内容。递归变量设置为时 `N` 或recover Full_paths变量设置为 `Y`，则恢复路径必须以原始路径结尾。
 
 [NOTE]
 ====
 如果已禁用递归变量，并且存在多个恢复路径，则所有恢复路径都必须包含在最长的恢复路径中。否则，将显示一条错误消息。
 
 ====
-例如，以下是有效的恢复路径，因为所有恢复路径均位于 `foo/dir1/deepdir/myfile` 中：
+例如、以下是有效的恢复路径、因为所有恢复路径都在中 `foo/dir1/deepdir/myfile`：
 
-* ` /`
-* ` /foo/dir`
-* ` /foo/dir1/deepdir`
-* ` /foo/dir1/deepdir/myfile`
+* `/foo`
+* `/foo/dir`
+* `/foo/dir1/deepdir`
+* `/foo/dir1/deepdir/myfile`
 
 
 以下是无效的恢复路径：
 
-* ` /`
-* ` /foo/dir`
-* ` /fo/dir1/myfile`
-* ` /fo/dir2`
-* ` /fo/dir2/myfile`
+* `/foo`
+* `/foo/dir`
+* `/foo/dir1/myfile`
+* `/foo/dir2`
+* `/foo/dir2/myfile`
 
 
 
@@ -461,20 +461,20 @@ NOWRITE
  a| 
 recovery_full_paths
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
 指定在 DAR 之后还原完整恢复路径的权限和 ACL 。
 
-此外，还必须启用 DIRECT 和 ENHANCED_DAR_ENABLED （设置为 `Y` ）。如果 recovery_full_paths 设置为 `Y` ，则恢复路径必须以原始路径结束。如果目标卷上已存在目录，则不会从磁带还原其权限和 ACL 。
+必须启用Direct和enhanced DAR_enabled (设置为) `Y`)。如果recover Full_paths设置为 `Y`，则恢复路径必须以原始路径结尾。如果目标卷上已存在目录，则不会从磁带还原其权限和 ACL 。
 
 
 
  a| 
 更新
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `Y`
  a| 
@@ -492,17 +492,17 @@ recovery_full_paths
  a| 
 基准日期
  a| 
-`dUMP_DATE`
+`DUMP_DATE`
  a| 
-` -1`
+`-1`
  a| 
 指定增量备份的开始日期。
 
-`BASE_DATE` 是参考 Snapshot 标识符的字符串表示形式。SMTape 使用 `BASE_DATE` 字符串查找参考 Snapshot 副本。
+ `BASE_DATE` 是引用Snapshot标识符的字符串表示。使用 `BASE_DATE` 字符串、SMTape将查找参考Snapshot副本。
 
-基线备份不需要 `BASE_DATE` 。对于增量备份，会将上一个基线或增量备份中的 `DUMP_DATE` 变量的值分配给 `BASE_DATE` 变量。
+ `BASE_DATE` 基线备份不需要。对于增量备份、是的值 `DUMP_DATE` 先前基线或增量备份中的变量将分配给 `BASE_DATE` 变量。
 
-备份应用程序会从先前的 SMTape 基线或增量备份分配 `DUMP_DATE` 值。
+备份应用程序将分配 `DUMP_DATE` 来自先前SMTape基线或增量备份的值。
 
 
 
@@ -511,7 +511,7 @@ DUMP_DATE
  a| 
 `return_value`
  a| 
-`无`
+`none`
  a| 
 在 SMTape 备份结束时， DUMP_DATE 包含一个字符串标识符，用于标识用于该备份的 Snapshot 副本。此 Snapshot 副本可用作后续增量备份的参考 Snapshot 副本。
 
@@ -522,13 +522,13 @@ DUMP_DATE
  a| 
 SMTAPE_BACKUP_SET_ID
  a| 
-`s正在执行`
+`string`
  a| 
-`无`
+`none`
  a| 
 标识与基线备份关联的增量备份顺序。
 
-备份集 ID 是在基线备份期间生成的 128 位唯一 ID 。在增量备份期间，备份应用程序会将此 ID 分配为 `SMTAPE_backup_set_ID` 变量的输入。
+备份集 ID 是在基线备份期间生成的 128 位唯一 ID 。备份应用程序会将此ID分配为的输入 `SMTAPE_BACKUP_SET_ID` 可变。
 
 
 
@@ -537,7 +537,7 @@ SMTAPE_SNAPSHOT_NAME
  a| 
 卷中可用的任何有效 Snapshot 副本
  a| 
-`无效`
+`Invalid`
  a| 
 如果 SMTAPE_SNAPSHOT_NAME 变量设置为 Snapshot 副本，则会将该 Snapshot 副本及其较早的 Snapshot 副本备份到磁带。
 
@@ -548,21 +548,21 @@ SMTAPE_SNAPSHOT_NAME
  a| 
 SMTAPE_DELETE_SNAPSHOT
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
-对于 SMTape 自动创建的 Snapshot 副本，如果 SMTAPE_DELETE_SNAPSHOT 变量设置为 `Y` ，则在备份操作完成后， SMTape 将删除此 Snapshot 副本。但是，不会删除备份应用程序创建的 Snapshot 副本。
+对于SMTape自动创建的Snapshot副本、如果SMTAPE_DELETE_Snapshot变量设置为 `Y`，则在备份操作完成后，SMTape将删除此Snapshot副本。但是，不会删除备份应用程序创建的 Snapshot 副本。
 
 
 
  a| 
 SMTAPE_Breake_mirror
  a| 
-"`Y` " 或 "`N` "
+`Y` 或 `N`
  a| 
 `N`
  a| 
-如果 SMTAPE_BRELE_MIRROR 变量设置为 `Y` ，则在成功还原后，类型为 `DP` 的卷将更改为 `RW` 卷。
+SMTABE_BRAGE_MOR镜像 变量设置为时 `Y`，类型的卷 `DP` 更改为 `RW` 卷。
 
 |===

@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: calculate, queue depth 
 summary: 您可能需要调整主机上的 FC 队列深度，以达到每个节点和 FC 端口扇入的 ITN 的最大值。可以连接到 FC 端口的最大 LUN 数和 HBA 数受 FC 目标端口上可用队列深度的限制。 
 ---
-= 设置 SAN 主机上的队列深度
+= 设置SAN主机上的队列深度
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -17,7 +17,7 @@ summary: 您可能需要调整主机上的 FC 队列深度，以达到每个节�
 
 == AIX 主机
 
-您可以使用 `chdev` 命令更改 AIX 主机上的队列深度。使用 `chdev` 命令所做的更改会在重新启动后持续存在。
+您可以使用更改AIX主机上的队列深度 `chdev` 命令：使用进行的更改 `chdev` 命令在重新启动后仍会保留。
 
 示例
 
@@ -27,15 +27,15 @@ summary: 您可能需要调整主机上的 FC 队列深度，以达到每个节�
 
 * 要更改 fcs0 HBA 的队列深度，请使用以下命令：
 +
-`chdev -l fcs0 -a num_cmd_elems =128`
+`chdev -l fcs0 -a num_cmd_elems=128`
 
 +
-`num_cmd_elems` 的默认值为 200 。最大值为 2 ， 048 。
+的默认值 `num_cmd_elems` 为200。最大值为 2 ， 048 。
 
 +
 [NOTE]
 ====
-可能需要使 HBA 脱机才能更改 `num_cmd_elems` ，然后使用 `rmdev -l fcs0 -R` 和 `makdev -l fcs0 -P` 命令将其恢复联机。
+要进行更改、可能需要使HBA脱机 `num_cmd_elems` 然后使用将其恢复联机 `rmdev -l fcs0 -R` 和 `makdev -l fcs0 -P` 命令
 
 ====
 
@@ -44,17 +44,17 @@ summary: 您可能需要调整主机上的 FC 队列深度，以达到每个节�
 
 == HP-UX 主机
 
-您可以使用内核参数 `scsI_max_qdepth` 更改 HP-UX 主机上的 LUN 或设备队列深度。您可以使用内核参数 `max_fcp_reqs` 更改 HBA 队列深度。
+您可以使用内核参数更改HP-UX主机上的LUN或设备队列深度 `scsi_max_qdepth`。您可以使用内核参数更改HBA队列深度 `max_fcp_reqs`。
 
-* `sCSI 最大 qdepth` 的默认值为 8 。最大值为 255 。
+* 的默认值 `scsi_max_qdepth` 为8。最大值为255。
 +
-可以在运行的系统上使用 `kmtune` 命令上的 ` -u` 选项动态更改 `scsI_max_qdepth` 。此更改将对系统上的所有设备生效。例如，使用以下命令将 LUN 队列深度增加到 64 ：
-
-+
-`kmtune -u -s SCSI_max_qdepth=64`
+`scsi_max_qdepth` 可以使用在正在运行的系统上动态更改 `-u` 选项 `kmtune` 命令：此更改将对系统上的所有设备生效。例如，使用以下命令将 LUN 队列深度增加到 64 ：
 
 +
-可以使用 `scsictl` 命令更改单个设备文件的队列深度。使用 `scsictl` 命令进行的更改在系统重新启动后不会持久。要查看和更改特定设备文件的队列深度，请执行以下命令：
+`kmtune -u -s scsi_max_qdepth=64`
+
++
+可以使用更改单个设备文件的队列深度 `scsictl` 命令：使用进行更改 `scsictl` 命令在系统重新启动后不会持久保留。要查看和更改特定设备文件的队列深度，请执行以下命令：
 
 +
 `scsictl -a /dev/rdsk/c2t2d0`
@@ -62,9 +62,9 @@ summary: 您可能需要调整主机上的 FC 队列深度，以达到每个节�
 +
 `scsictl -m queue_depth=16 /dev/rdsk/c2t2d0`
 
-* `max_fcp_reqs` 的默认值为 512 。最大值为 1024 。
+* 的默认值 `max_fcp_reqs` 为512。最大值为 1024 。
 +
-必须重建内核并重新启动系统，对 `max_fcp_reqs` 所做的更改才能生效。例如，要将 HBA 队列深度更改为 256 ，请使用以下命令：
+要对进行更改、必须重建内核并重新启动系统 `max_fcp_reqs` 以生效。例如，要将 HBA 队列深度更改为 256 ，请使用以下命令：
 
 +
 `kmtune -u -s max_fcp_reqs=256`
@@ -78,13 +78,13 @@ summary: 您可能需要调整主机上的 FC 队列深度，以达到每个节�
 您可以为 Solaris 主机设置 LUN 和 HBA 队列深度。
 
 * 对于 LUN 队列深度：主机上正在使用的 LUN 数乘以每个 LUN 的限制（ lun-queue-depth ）必须小于或等于主机上的 tgt-queue-depth 值。
-* 对于 Sun 堆栈中的队列深度：原生驱动程序不允许在 HBA 级别设置每个 LUN 或每个目标 `max_throttle` 。为原生驱动程序设置 `max_throttle` 值的建议方法是在每个设备类型（ VID_PID ）级别上的 ` /kernel/drv/sd.conf` 和 ` /kernel/drv/sfs.conf` 文件中。对于 MPxIO 配置， Host 实用程序会将此值设置为 64 ，对于 Veritas DMP 配置，则会将此值设置为 8 。
+* 对于Sun堆栈中的队列深度：本机驱动程序不允许按LUN或按目标运行 `max_throttle` HBA级别的设置。建议的设置方法 `max_throttle` 本机驱动程序的值位于中的每设备类型(VID_PID)级别 `/kernel/drv/sd.conf` 和 `/kernel/drv/ssd.conf` 文件。对于 MPxIO 配置， Host 实用程序会将此值设置为 64 ，对于 Veritas DMP 配置，则会将此值设置为 8 。
 
 
 .步骤
-. ` # cd/kernel/drv`
-. ` # vi lpfc.conf`
-. 搜索 ` /ttp-queue （ /tgt-queue ）`
+. `# cd/kernel/drv`
+. `# vi lpfc.conf`
+. 搜索 `/tft-queue (/tgt-queue)`
 +
 `tgt-queue-depth=32`
 
@@ -96,40 +96,40 @@ summary: 您可能需要调整主机上的 FC 队列深度，以达到每个节�
 ====
 . 根据您的环境配置设置所需的值。
 . 保存文件。
-. 使用 ` +sync ； sync ； sync ； reboot — -r+` 命令重新启动主机。
+. 使用重新启动主机 `+sync; sync; sync; reboot -- -r+` 命令：
 
 
 
 
 == QLogic HBA 的 VMware 主机
 
-使用 `esxcfg-module` 命令更改 HBA 超时设置。不建议手动更新 `esx.conf` 文件。
+使用 `esxcfg-module` 命令以更改HBA超时设置。手动更新 `esx.conf` 不建议使用文件。
 
 .步骤
 . 以 root 用户身份登录到服务控制台。
-. 使用 ` #vmkload_mod -l` 命令验证当前已加载的 Qlogic HBA 模块。
+. 使用 `#vmkload_mod -l` 命令以验证当前已加载的逻辑HBA模块。
 . 对于 Qlogic HBA 的单个实例，运行以下命令：
 +
-` #esxcfg-module -s ql2xmaxqdepth=64 qla2300_707`
+`#esxcfg-module -s ql2xmaxqdepth=64 qla2300_707`
 
 +
 [NOTE]
 ====
-此示例使用 qla2300_707 模块。根据 `vmkload_mod -l` 的输出使用相应的模块。
+此示例使用 qla2300_707 模块。根据的输出使用相应的模块 `vmkload_mod -l`。
 
 ====
 . 使用以下命令保存所做的更改：
 +
-` #/usr/sbin/esxcfg-boot -b`
+`#/usr/sbin/esxcfg-boot -b`
 
 . 使用以下命令重新启动服务器：
 +
-` # 重新启动`
+`#reboot`
 
 . 使用以下命令确认更改：
 +
-.. ` #esxcfg-module -g qla2300_707`
-.. `qla2300_707 enabled = 1 个选项 = "ql2xmaxqdepth=64"`
+.. `#esxcfg-module -g qla2300_707`
+.. `qla2300_707 enabled = 1 options = 'ql2xmaxqdepth=64'`
 
 
 
@@ -138,19 +138,19 @@ summary: 您可能需要调整主机上的 FC 队列深度，以达到每个节�
 
 == 适用于 Emulex HBA 的 VMware 主机
 
-使用 `esxcfg-module` 命令更改 HBA 超时设置。不建议手动更新 `esx.conf` 文件。
+使用 `esxcfg-module` 命令以更改HBA超时设置。手动更新 `esx.conf` 不建议使用文件。
 
 .步骤
 . 以 root 用户身份登录到服务控制台。
-. 使用 ` #vmkload_mod -l grep lpfc` 命令验证当前已加载的 Emulex HBA 。
+. 使用 `#vmkload_mod -l grep lpfc` 命令以验证当前已加载的Emulex HBA。
 . 对于 Emulex HBA 的单个实例，输入以下命令：
 +
-` #esxcfg-module -s lpfc0_lun_queue_depth=16 lpfcdd_7xx`
+`#esxcfg-module -s lpfc0_lun_queue_depth=16 lpfcdd_7xx`
 
 +
 [NOTE]
 ====
-根据 HBA 的型号，此模块可以是 lpfcdd_7xx 或 lpfcdd_732 。上述命令使用 lpfcdd_7xx 模块。您应根据 `vmkload_mod -l` 的结果使用相应的模块。
+根据 HBA 的型号，此模块可以是 lpfcdd_7xx 或 lpfcdd_732 。上述命令使用 lpfcdd_7xx 模块。您应根据的结果使用相应的模块 `vmkload_mod -l`。
 
 ====
 +
@@ -158,26 +158,26 @@ summary: 您可能需要调整主机上的 FC 队列深度，以达到每个节�
 
 . 对于 Emulex HBA 的多个实例，运行以下命令：
 +
-`esxcfg-module -s "lpfc0_lun_queue_depth=16 lpfc1_lun_queue_depth=16" lpfcdd_7xx`
+`a esxcfg-module -s "lpfc0_lun_queue_depth=16 lpfc1_lun_queue_depth=16" lpfcdd_7xx`
 
 +
 lpfc0 的 LUN 队列深度和 lpfc1 的 LUN 队列深度均设置为 16 。
 
 . 输入以下命令：
 +
-` #esxcfg-boot -b`
+`#esxcfg-boot -b`
 
-. 使用 ` # reboot` 重新启动。
+. 使用重新启动 `#reboot`。
 
 
 
 
 == 适用于 Emulex HBA 的 Windows 主机
 
-在 Windows 主机上，您可以使用 `LPUTILNT` 实用程序更新 Emulex HBA 的队列深度。
+在Windows主机上、您可以使用 `LPUTILNT` 用于更新Emulex HBA的队列深度的实用程序。
 
 .步骤
-. 运行 `C ： \WINNT\system32` 目录中的 `LPUTILNT` 实用程序。
+. 运行 `LPUTILNT` 实用程序、位于中 `C:\WINNT\system32` 目录。
 . 从右侧菜单中选择 * 驱动器参数 * 。
 . 向下滚动并双击 * 队列深度 * 。
 +
@@ -185,7 +185,7 @@ lpfc0 的 LUN 队列深度和 lpfc1 的 LUN 队列深度均设置为 16 。
 ====
 如果要将 * 队列深度 * 设置为大于 150 ，则还需要相应地增加以下 Windows 注册表值：
 
-`HKEY_LOCAL_MACHINE \System\CurrentControlSet\Services\lpxnds\Parameters\Device\NumberOfRequests`
+`HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\lpxnds\Parameters\Device\NumberOfRequests`
 
 ====
 
@@ -194,10 +194,10 @@ lpfc0 的 LUN 队列深度和 lpfc1 的 LUN 队列深度均设置为 16 。
 
 == Qlogic HBA 的 Windows 主机
 
-在 Windows 主机上，您可以使用和 `SAnsurfer` HBA 管理器实用程序来更新 Qlogic HBA 的队列深度。
+在Windows主机上、您可以使用和 `SANsurfer` HBA管理器实用程序、用于更新qlogic HBA的队列深度。
 
 .步骤
-. 运行 `SAnsurfer` HBA 管理器实用程序。
+. 运行 `SANsurfer` HBA管理器实用程序。
 . 单击 * HBA port* > * 设置 * 。
 . 单击列表框中的 * 高级 HBA 端口设置 * 。
 . 更新 `Execution Throttle` 参数。
@@ -218,20 +218,20 @@ lpfc0 的 LUN 队列深度和 lpfc1 的 LUN 队列深度均设置为 16 。
 此时将显示队列深度参数及其问题描述的列表。根据您的操作系统版本，您可以修改以下一个或多个队列深度参数：
 
 +
-** `lpfc_lun_queue_depth` ：可排队到特定 LUN 的最大 FC 命令数（ uint ）
-** `lpfc_hba_queue_depth` ：可排队到 lpfc HBA 的最大 FC 命令数（ uint ）
-** `lpfc_tgt_queue_depth` ：可排队到特定目标端口（ uint ）的最大 FC 命令数
+** `lpfc_lun_queue_depth`：可以排队到特定LUN的最大FC命令数(uint)
+** `lpfc_hba_queue_depth`：可以排队到lpfc HBA的最大FC命令数(uint)
+** `lpfc_tgt_queue_depth`：可以排队到特定目标端口的最大FC命令数(uint)
 +
-`lpfc_tgt_queue_depth` 参数仅适用于 Red Hat Enterprise Linux 7.x 系统， SUSE Linux Enterprise Server 11 SP4 系统和 12.x 系统。
+。 `lpfc_tgt_queue_depth` 参数仅适用于Red Hat Enterprise Linux 7.x系统、SUSE Linux Enterprise Server 11 SP4系统和12.x系统。
 
 
 
-. 通过将队列深度参数添加到 Red Hat Enterprise Linux 5.x 系统的 ` /etc/modprobe.conf` 文件以及 Red Hat Enterprise Linux 6.x 或 7.x 系统或 SUSE Linux Enterprise Server 11.x 或 12.x 系统的 ` /etc/modprobe.d/scsi.conf` 文件来更新队列深度。
+. 通过向添加队列深度参数来更新队列深度 `/etc/modprobe.conf` 文件(用于Red Hat Enterprise Linux 5.x系统)和 `/etc/modprobe.d/scsi.conf` 文件。
 +
 根据您的操作系统版本，您可以添加以下一个或多个命令：
 
 +
-** `options lpfc lpfc_HBA_queue_depth=new_queue_depth`
+** `options lpfc lpfc_hba_queue_depth=new_queue_depth`
 ** `options lpfc lpfc_lun_queue_depth=new_queue_depth`
 ** `options lpfc_tgt_queue_depth=new_queue_depth`
 
@@ -242,7 +242,7 @@ lpfc0 的 LUN 队列深度和 lpfc1 的 LUN 队列深度均设置为 16 。
 
 . 验证是否已为您修改的每个队列深度参数更新队列深度值：
 +
-`cat /sys/class/scsi_host/host_number/lpfc_lun_queue_depth``cat /sys/class/scsi_host/host_number/lpfc_tgt_queue_depth``cat /sys/class/scsi_host/host_number/lpfc_hba_queue_depth`
+
 
 +
 [listing]
@@ -266,10 +266,10 @@ root@localhost ~]#cat /sys/class/scsi_host/host5/lpfc_lun_queue_depth
 .步骤
 . 确定要修改的设备队列深度参数：
 +
-`modinfo qla2xxx` grep ql2xmaxqdepth
+`modinfo qla2xxx | grep ql2xmaxqdepth`
 
 +
-您只能修改 `ql2xmaxqdepth` queue depth 参数，该参数表示可以为每个 LUN 设置的最大队列深度。对于 RHEL 7.5 及更高版本，默认值为 64 。对于 RHEL 7.4 及更早版本，默认值为 32 。
+您只能修改 `ql2xmaxqdepth` 队列深度参数、表示可为每个LUN设置的最大队列深度。对于 RHEL 7.5 及更高版本，默认值为 64 。对于 RHEL 7.4 及更早版本，默认值为 32 。
 
 +
 [listing]
@@ -281,7 +281,7 @@ parm:       ql2xmaxqdepth:Maximum queue depth to set for each LUN. Default is 64
 +
 ** 如果要使修改持久，请执行以下步骤：
 +
-... 通过将队列深度参数添加到 Red Hat Enterprise Linux 5.x 系统的 ` /etc/modprobe.conf` 文件和 Red Hat Enterprise Linux 6.x 或 7.x 系统的 ` /etc/modprobe.d/scsi.conf` 文件或 SUSE Linux Enterprise Server 11.x 或 12.x 系统的 `/etc/modprobe.d/mscsi.conf` 文件来更新队列深度： options qmax_qla2xxx 或 maxqfase=new depth
+... 通过向添加队列深度参数来更新队列深度 `/etc/modprobe.conf` 文件(用于Red Hat Enterprise Linux 5.x系统)和 `/etc/modprobe.d/scsi.conf` 文件(适用于Red Hat Enterprise Linux 6.x或7.x系统或SUSE Linux Enterprise Server 11.x或12.x系统)： `options qla2xxx ql2xmaxqdepth=new_queue_depth`
 ... 创建新的 RAM 磁盘映像，然后重新启动主机，使更新在重新启动后保持不变。
 +
 有关详细信息，请参见 link:../system-admin/index.html["系统管理"] 适用于您的 Linux 操作系统版本。
@@ -309,13 +309,13 @@ echo 128 > /sys/module/qla2xxx/parameters/ql2xmaxqdepth
 +
 此时将显示队列深度的当前值。
 
-. 通过在 QLogic HBA BIOS 中更新固件参数 `Execution Throttle` 来修改 QLogic HBA 队列深度。
+. 通过更新固件参数修改QLogic HBA队列深度 `Execution Throttle` 从QLogic HBA BIOS。
 +
 .. 登录到 QLogic HBA 管理 CLI ：
 +
-` /opt/QLogic_Corporation/QConvergeConsoleCLI/qaucli`
+`/opt/QLogic_Corporation/QConvergeConsoleCLI/qaucli`
 
-.. 从主菜单中，选择 `Adapter Configuration` 选项。
+.. 从主菜单中、选择 `Adapter Configuration` 选项
 +
 [listing]
 ----
@@ -343,7 +343,7 @@ QConvergeConsole
 
         Please Enter Selection: 2
 ----
-.. 从适配器配置参数列表中，选择 `HBA Parameters` 选项。
+.. 从适配器配置参数列表中、选择 `HBA Parameters` 选项
 +
 [listing]
 ----
@@ -381,9 +381,9 @@ Fibre Channel Adapter Configuration
 +
 此时将显示 HBA 端口的详细信息。
 
-.. 从 HBA Parameters 菜单中，选择 `DisPlay HBA Parameters` 选项以查看 `Execution Throttle` 选项的当前值。
+.. 从HBA Parameters菜单中、选择 `Display HBA Parameters` 选项以查看的当前值 `Execution Throttle` 选项
 +
-`Execution Throttle` 选项的默认值为 65535 。
+的默认值 `Execution Throttle` 选项为65535。
 
 +
 [listing]
@@ -436,8 +436,8 @@ Enable Fabric Assigned WWN     : N/A
 Press <Enter> to continue:
 ----
 .. 按 * 输入 * 继续。
-.. 从 HBA Parameters 菜单中，选择 `Configure HBA Parameters` 选项以修改 HBA 参数。
-.. 从 Configure Parameters 菜单中，选择 `Execute Throttle` 选项并更新此参数的值。
+.. 从HBA Parameters菜单中、选择 `Configure HBA Parameters` 选项以修改HBA参数。
+.. 从Configure Parameters菜单中、选择 `Execute Throttle` 选项并更新此参数的值。
 +
 [listing]
 ----
@@ -482,7 +482,7 @@ Link          : Online
 Enter Execution Throttle [1-65535] [65535]: 65500
 ----
 .. 按 * 输入 * 继续。
-.. 从 Configure Parameters 菜单中，选择 `Commit Changes` 选项以保存更改。
+.. 从Configure Parameters菜单中、选择 `Commit Changes` 选项以保存更改。
 .. 退出菜单。
 
 

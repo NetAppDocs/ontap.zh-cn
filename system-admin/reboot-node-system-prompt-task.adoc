@@ -18,11 +18,11 @@ summary: 您可以从系统提示符处以正常模式重新启动节点。节�
 +
 .. 将权限级别设置为高级：
 +
-` * 设置 -privilege advanced*`
+`*set -privilege advanced*`
 
 .. 确定哪个节点持有 epsilon ：
 +
-` * 集群显示 *`
+`*cluster show*`
 
 +
 以下示例显示 "`node1` " 持有 epsilon ：
@@ -41,21 +41,21 @@ node4                true    true          false
 ----
 .. 如果要重新启动的节点持有 epsilon ，则从节点中删除 epsilon ：
 +
-` * cluster modify -node _node_name_ -epsilon false*`
+`*cluster modify -node _node_name_ -epsilon false*`
 
 .. 将 epsilon 分配给将保持正常运行的其他节点：
 +
-` * cluster modify -node _node_name_ -epsilon true*`
+`*cluster modify -node _node_name_ -epsilon true*`
 
 .. 返回到管理权限级别：
 +
-` * 设置 -privilege admin*`
+`*set -privilege admin*`
 
 
 
-. 使用 `ssystem node reboot` 命令重新启动节点。
+. 使用 `system node reboot` 命令以重新启动节点。
 +
-如果未指定 ` skip-lif-migration` 参数，则命令会尝试在重新启动之前将数据和集群管理 LIF 同步迁移到另一个节点。如果 LIF 迁移失败或超时，重新启动过程将中止， ONTAP 将显示一个错误，指示 LIF 迁移失败。
+如果未指定 `-skip-lif-migration` 参数、则此命令会尝试在重新启动之前将数据和集群管理生命周期同步迁移到另一个节点。如果 LIF 迁移失败或超时，重新启动过程将中止， ONTAP 将显示一个错误，指示 LIF 迁移失败。
 
 +
 [listing]

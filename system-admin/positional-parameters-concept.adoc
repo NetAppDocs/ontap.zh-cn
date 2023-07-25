@@ -18,7 +18,7 @@ summary: 您可以利用 ONTAP 命令行界面的定位参数功能来提高命�
 == 什么是定位参数
 
 * 定位参数是一个参数，不需要在指定参数值之前指定参数名称。
-* 只要定位参数与同一命令中的其他定位参数保持相对顺序，就可以在命令输入中将其与非定位参数穿插在一起，如 ` * 命令名称？ _*` 输出中所示。
+* 只要定位参数与同一命令中的其他定位参数保持相对顺序、就可以在命令输入中将其与非定位参数相结合、如中所示 `*_command_name ?_*` 输出。
 * 定位参数可以是命令的必需或可选参数。
 * 一个参数可以是一个命令的定位参数，而不是另一个命令的定位参数。
 
@@ -32,29 +32,29 @@ summary: 您可以利用 ONTAP 命令行界面的定位参数功能来提高命�
 
 == 确定定位参数
 
-您可以在 ` * _command_name ？ _*` 命令输出中确定一个定位参数。定位参数的参数名称包含方括号，格式如下：
+您可以在中标识定位参数 `*_command_name ?_*` 命令输出。定位参数的参数名称包含方括号，格式如下：
 
-* `` _-parameter_name_ ` ]` 参数值 _ 显示一个必需的定位参数。
-* `` _-parameter_name_ ` ]` 参数值 _ ）显示了一个可选的定位参数。
+* [`_-parameter_name_`] `_parameter_value_` 显示了必需的定位参数。
+* [[`_-parameter_name_`] `_parameter_value_`]显示了一个定位的可选参数。
 
 
-例如，如果在 ` * _command_name ？ _*` 输出中显示为以下内容，则参数是显示在中的命令的定位参数：
+例如、当在中显示为以下内容时 `*_command_name ?_*` 输出中、参数是其所在命令的定位参数：
 
-* ` ，` ， -lif ， <lif-name>
-* `` [-lif] <lif-name>]
+* `[-lif] <lif-name>`
+* `[[-lif] <lif-name>]`
 
 
 但是，如果显示为以下内容，则该参数是其所在命令的非定位参数：
 
-* ` -lif <lif-name>`
-* ` ，` ， -lif ， <lif-name>>
+* `-lif <lif-name>`
+* `[-lif <lif-name>]`
 
 
 
 
 == 使用定位参数的示例
 
-在以下示例中， ` * 卷 create ？ _*` 输出显示了命令的三个定位参数： ` 卷` ， ` 聚合` 和 ` 大小` 。
+在以下示例中、 `*_volume create ?_*` 输出显示三个参数是命令的定位参数： `-volume`， `-aggregate`，和 `-size`。
 
 [listing]
 ----
@@ -73,12 +73,12 @@ cluster1::> volume create ?
   [ -percent-snapshot-space <percent> ]   Space Reserved for Snapshot Copies
   ...
 ----
-在以下示例中，指定 `volume create` 命令时不会利用定位参数功能：
+在以下示例中、 `volume create` 在未利用定位参数功能的情况下指定命令：
 
-`cluster1 ：：： > volume create -vserver svm1 -volume vol1 -aggregate * aggr1 -size 1g* -percent-snapshot-space 0`
+`cluster1::> volume create -vserver svm1 -volume vol1 -aggregate *aggr1 -size 1g* -percent-snapshot-space 0`
 
-以下示例使用定位参数功能来提高命令输入的效率。在 `volume create` 命令中，定位参数与非定位参数穿插在一起，并且指定的定位参数值不带参数名称。定位参数的指定顺序与 ` * volume create ？ *` 输出所指示的顺序相同。也就是说， ` 卷` 的值在 ` 聚合` 之前指定，而在 ` 大小` 之前指定。
+以下示例使用定位参数功能来提高命令输入的效率。定位参数与中的非定位参数交错 `volume create` 命令和定位参数值的指定不带参数名称。定位参数的指定顺序与所示的顺序相同 `*volume create ?*` 输出。即的值 `-volume` 在的指定之前指定 `-aggregate`，依次指定 `-size`。
 
-`cluster1 ：：： > volume create * vol2 * * aggr1 * * * 1g* -vserver svm1 -percent-snapshot-space 0`
+`cluster1::> volume create *vol2* *aggr1* *1g* -vserver svm1 -percent-snapshot-space 0`
 
-`cluster1 ：：： > volume create -vserver svm1 * vol3* -snapshot-policy default * aggr1* -nvfail off * 1 g* -space-guarantee none`
+`cluster1::> volume create -vserver svm1 *vol3* -snapshot-policy default *aggr1* -nvfail off *1g* -space-guarantee none`

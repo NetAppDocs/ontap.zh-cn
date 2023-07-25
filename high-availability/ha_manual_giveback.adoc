@@ -25,7 +25,7 @@ NOTE: 在执行交还之前，您必须按照中所述删除接管系统中的�
 
 如果接管节点在交还过程中遇到故障或断电，则该过程将停止，接管节点将返回接管模式，直到故障修复或电源恢复为止。
 
-但是，这取决于发生故障的交还阶段。如果节点在部分交还状态（交还根聚合之后）遇到故障或断电，则它不会返回到接管模式。而是返回到部分交还模式。如果发生这种情况，请重复交还操作以完成此过程。
+但是，这取决于发生故障的交还阶段。如果节点在部分交还状态（交还根聚合之后）遇到故障或断电，则它不会返回到接管模式。而是返回到部分交还模式。  如果发生这种情况，请重复交还操作以完成此过程。
 
 
 
@@ -33,11 +33,11 @@ NOTE: 在执行交还之前，您必须按照中所述删除接管系统中的�
 
 如果交还被否决，则必须检查 EMS 消息以确定发生原因。根据原因，您可以决定是否可以安全地覆盖此否决。
 
-`storage failover show-giveback` 命令可显示交还进度，并显示哪个子系统否决了交还（如果有）。软否决可以被覆盖，而硬否决则不能被覆盖，即使强制执行也是如此。下表汇总了不应覆盖的软否决以及建议的解决方法。
+。 `storage failover show-giveback` 命令可显示返回进度、并显示否决了此返回的子系统(如果有)。软否决可以被覆盖，而硬否决则不能被覆盖，即使强制执行也是如此。下表汇总了不应覆盖的软否决以及建议的解决方法。
 
 您可以使用以下命令查看任何交还否决的 EMS 详细信息：
 
-`event log show -node * -event GB*`
+`event log show -node * -event gb*`
 
 
 
@@ -55,7 +55,7 @@ NOTE: 在执行交还之前，您必须按照中所述删除接管系统中的�
  a| 
 vfiler_low_level
  a| 
-终止导致否决的 SMB 会话，或者关闭建立已打开会话的 SMB 应用程序。
+终止导致否决的SMB会话、或关闭建立已打开会话的SMB应用程序。
 
 覆盖此否决可能发生原因会使使用 SMB 的应用程序突然断开连接并丢失数据。
 
@@ -85,9 +85,9 @@ vfiler_low_level
  a| 
 锁定管理器
  a| 
-正常关闭具有打开文件的 SMB 应用程序，或者将这些卷移动到其他聚合。
+正常关闭具有打开文件的SMB应用程序、或者将这些卷移动到其他聚合。
 
-覆盖此否决会导致 SMB 锁定状态丢失，从而导致中断和数据丢失。
+覆盖此否决会导致SMB锁定状态丢失、从而导致中断和数据丢失。
 
 
 
@@ -132,7 +132,8 @@ vfiler_low_level
 
 === 用于执行手动交还的命令
 
-完成维护或解决导致接管的任何问题后，您可以手动对 HA 对中的节点启动交还，以便将存储交还给原始所有者。
+完成维护或解决后、您可以在HA对中的节点上手动启动交还、以便将存储归还给原始所有者
+导致接管的任何问题。
 
 |===
 
@@ -142,31 +143,33 @@ vfiler_low_level
 
  a| 
 将存储交还给配对节点
-| `s存储故障转移交还 ‑ofnode _nodename_` 
+| `storage failover giveback ‑ofnode _nodename_` 
 
 
  a| 
 即使配对节点未处于等待交还模式，也交还存储
  a| 
-`s存储故障转移交还 ‑ofnode _nodename_` `‑Require‑partner‑waiting false`
+`storage failover giveback ‑ofnode _nodename_`
+`‑require‑partner‑waiting false`
 
 除非可以接受更长时间的客户端中断，否则请勿使用此选项。
 
 
 
 | 即使进程否决交还操作，也交还存储（强制交还）  a| 
-`s存储故障转移交还 ‑ofnode _nodename_` `‑override‑vetoes true`
+`storage failover giveback ‑ofnode _nodename_`
+`‑override‑vetoes true`
 
 使用此选项可能会导致客户端中断时间延长，或者聚合和卷在交还后不联机。
 
 
 
 | 仅交还 CFO 聚合（根聚合）  a| 
-`s存储故障转移交还 ‑ofnode _nodename_`
+`storage failover giveback ‑ofnode _nodename_`
 
-`‑仅‑CFO‑聚合 true`
+`‑only‑cfo‑aggregates true`
 
 
 
-| 在问题描述 giveback 命令后监控交还进度 | `s存储故障转移显示‑交还` 
+| 在问题描述 giveback 命令后监控交还进度 | `storage failover show‑giveback` 
 |===

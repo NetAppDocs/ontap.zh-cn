@@ -13,9 +13,9 @@ summary: 在复制LUN之前、您应注意某些事项。
 [role="lead"]
 在复制LUN之前、您应注意某些事项。
 
-集群管理员可以使用 `lun copy` 命令在集群中的 Storage Virtual Machine （ SVM ）之间复制 LUN 。在执行 SVM 间 LUN 复制操作之前，集群管理员必须使用 `vserver peer create` 命令建立 Storage Virtual Machine （ SVM ）对等关系。源卷中必须有足够的空间用于 SIS 克隆。
+集群管理员可以使用在集群中的Storage Virtual Machine (SVM)之间复制LUN `lun copy` 命令：集群管理员必须使用建立Storage Virtual Machine (SVM)对等关系 `vserver peer create` 命令。源卷中必须有足够的空间用于 SIS 克隆。
 
-Snapshot 副本中的 LUN 可用作 `lun copy` 命令的源 LUN 。使用 `lun copy` 命令复制 LUN 时， LUN 副本将立即可用于读写访问。创建 LUN 副本后，源 LUN 保持不变。源 LUN 和 LUN 副本都是具有不同 LUN 序列号的唯一 LUN 。对源 LUN 所做的更改不会反映在 LUN 副本中，对 LUN 副本所做的更改也不会反映在源 LUN 中。源 LUN 的 LUN 映射不会复制到新 LUN ；必须映射 LUN 副本。
+Snapshot副本中的LUN可用作的源LUN `lun copy` 命令：使用复制LUN时 `lun copy` 命令时、LUN副本可立即进行读写访问。创建 LUN 副本后，源 LUN 保持不变。源 LUN 和 LUN 副本都是具有不同 LUN 序列号的唯一 LUN 。对源 LUN 所做的更改不会反映在 LUN 副本中，对 LUN 副本所做的更改也不会反映在源 LUN 中。源 LUN 的 LUN 映射不会复制到新 LUN ；必须映射 LUN 副本。
 
 通过 Snapshot 副本进行的数据保护在卷级别进行。因此，如果将 LUN 复制到与源 LUN 的卷不同的卷，则目标 LUN 将受目标卷的数据保护方案的保护。如果没有为目标卷创建 Snapshot 副本，则不会为此 LUN 副本创建 Snapshot 副本。
 

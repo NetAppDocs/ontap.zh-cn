@@ -52,16 +52,16 @@ HTTPS:: 为了提高安全性、您可以在托管webhook例程的服务器上�
 您可以将ONTAP 配置为使用HTTP将事件通知转发到webhook应用程序。这是最不安全的选项、但设置最简单。
 
 .步骤
-. 创建新目标`restapi-ems`以接收事件：
+. 创建新目标 `restapi-ems` 要接收事件、请执行以下操作：
 +
-`事件通知目标create -name restapi-ems -rest-api-url \http://<webhook-application>`
+`event notification destination create -name restapi-ems -rest-api-url \http://<webhook-application>`
 
 +
 在上述命令中、必须对目标使用* HTTP *方案。
 
-. 创建一个通知、将`import-events`筛选器与`restapi-ems`目标链接起来：
+. 创建一个通知以链接 `important-events` 使用进行筛选 `restapi-ems` 目标：
 +
-`event notification create -filter-name importal-events -destinations restapi-EMS`
+`event notification create -filter-name important-events -destinations restapi-ems`
 
 
 
@@ -69,7 +69,7 @@ HTTPS:: 为了提高安全性、您可以在托管webhook例程的服务器上�
 
 == 将网络挂机目标配置为使用HTTPS
 
-您可以将ONTAP 配置为使用HTTPS将事件通知转发到webhook应用程序。ONTAP 使用服务器证书来确认webhook应用程序的身份并保护网络流量。
+您可以将ONTAP配置为使用HTTPS将事件通知转发到webhook应用程序。ONTAP 使用服务器证书来确认webhook应用程序的身份并保护网络流量。
 
 .开始之前
 * 为webhook应用程序服务器生成专用密钥和证书
@@ -85,16 +85,16 @@ HTTPS:: 为了提高安全性、您可以在托管webhook例程的服务器上�
 +
 命令将要求提供证书。
 
-. 创建`restapi-ems`目标以接收事件：
+. 创建 `restapi-ems` 接收事件的目标：
 +
-`事件通知目标create -name restapi-ems -rest-api-url \https://<webhook-application>`
+`event notification destination create -name restapi-ems -rest-api-url \https://<webhook-application>`
 
 +
-在上述命令中、必须对目标使用* HTTPS *方案。
+在上述命令中，必须对目标使用*HTTPS*方案。
 
-. 创建将 `importal-events` 筛选器与新的 `restapi-ems` 目标链接的通知：
+. 创建用于链接的通知 `important-events` 使用新进行筛选 `restapi-ems` 目标：
 +
-`event notification create -filter-name importal-events -destinations restapi-EMS`
+`event notification create -filter-name important-events -destinations restapi-ems`
 
 
 
@@ -117,20 +117,20 @@ HTTPS:: 为了提高安全性、您可以在托管webhook例程的服务器上�
 . 在webhook应用程序中安装相应的根证书和中间证书以验证客户端证书。
 . 在ONTAP 中安装客户端证书：
 +
-`s安全证书安装 -type client`
+`security certificate install -type client`
 
 +
 命令将要求提供私钥和证书。
 
-. 创建`restapi-ems`目标以接收事件：
+. 创建 `restapi-ems` 接收事件的目标：
 +
-`event notification destination create -name restapi-ems -rest-api-url \https://<webhook-application>-certificate-authority <客户端证书的颁发者>-certificate-serial <客户端证书的序列>`
+`event notification destination create -name restapi-ems -rest-api-url \https://<webhook-application> -certificate-authority <issuer of the client certificate> -certificate-serial <serial of the client certificate>`
 
 +
 在上述命令中、必须对目标使用* HTTPS *方案。
 
-. 创建将 `importal-events` 筛选器与新的 `restapi-ems` 目标链接的通知：
+. 创建用于链接的通知 `important-events` 使用新进行筛选 `restapi-ems` 目标：
 +
-`event notification create -filter-name importal-events -destinations restapi-EMS`
+`event notification create -filter-name important-events -destinations restapi-ems`
 
 

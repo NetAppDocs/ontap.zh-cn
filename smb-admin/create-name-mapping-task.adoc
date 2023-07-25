@@ -11,17 +11,17 @@ summary: 您可以使用 vserver name-mapping create 命令创建名称映射。
 
 
 [role="lead"]
-您可以使用 `vserver name-mapping create` 命令创建名称映射。您可以使用名称映射使 Windows 用户能够访问 UNIX 安全模式卷，反之亦然。
+您可以使用 `vserver name-mapping create` 命令以创建名称映射。您可以使用名称映射使 Windows 用户能够访问 UNIX 安全模式卷，反之亦然。
 
 .关于此任务
 对于每个 SVM ， ONTAP 支持每个方向最多 12 ， 500 个名称映射。
 
 .步骤
-. 创建名称映射： `vserver name-mapping create -vserver _vserver_name_ -Direction ｛ krB-UNIX_win-unix_unix-win ｝ -position _integer _ -pattern text -replacement _text_`
+. 创建名称映射： `vserver name-mapping create -vserver _vserver_name_ -direction {krb-unix|win-unix|unix-win} -position _integer_ -pattern text -replacement _text_`
 +
 [NOTE]
 ====
-可以将 ` 模式` 和 ` 替换` 语句表达为正则表达式。您也可以使用 ` replacement` 语句通过使用空替换字符串 ` " "` （空格字符）明确拒绝映射到用户。有关详细信息，请参见 `vserver name-mapping create` 手册页。
+。 `-pattern` 和 `-replacement` 语句可以表达为正则表达式。您也可以使用 `-replacement` 用于使用空替换字符串明确拒绝映射到用户的语句 `" "` (空格字符)。请参见 `vserver name-mapping create` 有关详细信息、请参见手册页。
 
 ====
 +

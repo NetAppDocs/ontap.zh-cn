@@ -2,7 +2,7 @@
 permalink: san-admin/configure-fc-adapters-task.html 
 sidebar: sidebar 
 keywords: configure, fc, adapters, target, initiator, mode 
-summary: 每个板载 FC 端口都可以单独配置为启动程序或目标。某些 FC 适配器上的端口也可以单独配置为目标端口或启动程序端口，就像板载 FC 端口一样。 
+summary: 每个板载 FC 端口都可以单独配置为启动程序或目标。某些 FC 适配器上的端口也可以单独配置为目标端口或启动程序端口，就像板载 FC 端口一样。  
 ---
 = 配置FC适配器
 :allow-uri-read: 
@@ -31,7 +31,7 @@ summary: 每个板载 FC 端口都可以单独配置为启动程序或目标。�
 
 . 将适配器从启动程序更改为目标：
 +
-`ssystem hardware unified-connect modify -t target -node _node_name_ adapter _adapter_name_`
+`system hardware unified-connect modify -t target -node _node_name_ adapter _adapter_name_`
 
 . 重新启动托管已更改适配器的节点。
 . 验证目标端口的配置是否正确：
@@ -61,7 +61,7 @@ NVMe/FC 支持启动程序模式。
 .步骤
 . 从适配器中删除所有 LIF ：
 +
-`network interface delete -vserver _svm_name_ -lif _LIF_name ， LIF_name_`
+`network interface delete -vserver _SVM_name_ -lif _LIF_name,LIF_name_`
 
 . 使适配器脱机：
 +
@@ -72,12 +72,12 @@ NVMe/FC 支持启动程序模式。
 
 . 将适配器从目标更改为启动程序：
 +
-`ssystem hardware unified-connect modify -t initiator _adapter_port_`
+`system hardware unified-connect modify -t initiator _adapter_port_`
 
 . 重新启动托管已更改适配器的节点。
 . 验证 FC 端口是否已配置为适用于您的配置的正确状态：
 +
-`ssystem hardware unified-connect show`
+`system hardware unified-connect show`
 
 . 将适配器恢复联机：
 +

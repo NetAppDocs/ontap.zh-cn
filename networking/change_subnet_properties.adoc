@@ -35,7 +35,8 @@ summary: 更改子网地址，掩码值，网关地址或 IP 地址范围
 . 进行更改。
 . 保存所做的更改。
 +
-.. 如果输入的IP地址或范围已被某个接口使用、则会显示以下消息：`此范围中的IP地址已被某个LIF占用。是否将LIF与此子网关联？`
+.. 如果输入的IP地址或范围已被某个接口使用、则会显示以下消息：
+`An IP address in this range is already in use by a LIF. Associate the LIF with this subnet?`
 .. 单击*确定*后、现有LIF将与子网关联。
 
 
@@ -52,12 +53,12 @@ summary: 更改子网地址，掩码值，网关地址或 IP 地址范围
 ....
 network subnet modify -subnet-name <subnet_name> [-ipspace <ipspace_name>] [-subnet <subnet_address>] [-gateway <gateway_address>] [-ip-ranges <ip_address_list>] [-force-update-lif-associations <true>]
 ....
-* `ssubnet_name` 是要修改的子网的名称。
-* `IPSpace` 是子网所在 IP 空间的名称。
-* 如果适用， `ssubnet` 是子网的新地址和掩码；例如 192.0.2.0/24 。
-* 如果适用， `gateway` 是子网的新网关；例如 192.0.2.1 。输入 * "* 将删除网关条目。
-* 如果适用， `IP_ranges` 是要分配给子网的新 IP 地址列表或范围。IP 地址可以是单个地址，范围或 IP 地址，也可以是逗号分隔列表中的组合。此处指定的范围将替换现有 IP 地址。
-* 更改 IP 地址范围时，需要 `force-update-lif-associations` 。修改 IP 地址范围时，可以将此选项的值设置为 * true * 。如果任何服务处理器或网络接口使用指定范围内的 IP 地址，则此命令将失败。如果将此值设置为 * true * ，则会将任何手动寻址的接口与当前子网相关联，并允许命令成功执行。
+* `subnet_name` 是要修改的子网的名称。
+* `ipspace` 是子网所在IP空间的名称。
+* `subnet` 是子网的新地址和掩码(如果适用)；例如192.0.2.0/24。
+* `gateway` 是子网的新网关(如果适用)；例如192.0.2.1。输入 * "* 将删除网关条目。
+* `ip_ranges` 是要分配给子网的IP地址的新列表或范围(如果适用)。IP 地址可以是单个地址，范围或 IP 地址，也可以是逗号分隔列表中的组合。此处指定的范围将替换现有 IP 地址。
+* `force-update-lif-associations` 更改IP地址范围时需要。修改 IP 地址范围时，可以将此选项的值设置为 * true * 。如果任何服务处理器或网络接口使用指定范围内的 IP 地址，则此命令将失败。如果将此值设置为 * true * ，则会将任何手动寻址的接口与当前子网相关联，并允许命令成功执行。
 
 
 以下命令修改子网 sub3 的网关 IP 地址：

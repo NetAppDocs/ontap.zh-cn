@@ -13,7 +13,8 @@ summary: 同步时间可确保集群中的每个节点都有相同的时间，�
 [role="lead"]
 同步时间可确保集群中的每个节点都有相同的时间，并防止 CIFS 和 Kerberos 出现故障。
 
-应在您的站点上设置网络时间协议（ Network Time Protocol ， NTP ）服务器。从 ONTAP 9.5 开始，您可以使用对称身份验证设置 NTP 服务器。有关详细信息，请参见 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/GUID-1E923D05-447D-4323-8D87-12B82F49B6F1.html?cp=4_7_6["管理集群时间（仅限集群管理员）"]。
+应在您的站点上设置网络时间协议（ Network Time Protocol ， NTP ）服务器。从 ONTAP 9.5 开始，您可以使用对称身份验证设置 NTP 服务器。
+有关详细信息，请参见 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sag/GUID-1E923D05-447D-4323-8D87-12B82F49B6F1.html?cp=4_7_6["管理集群时间（仅限集群管理员）"]。
 
 您可以通过将集群与一个或多个 NTP 服务器关联来同步整个集群的时间。
 
@@ -48,8 +49,8 @@ cluster1::> cluster date modify -timezone GMT
 
 . 使用 cluster time-service ntp server create 命令将集群与 NTP 服务器相关联。
 +
-** 要在不使用对称身份验证的情况下设置 NTP 服务器，请输入以下命令： `cluster time-service ntp server create -server server_name`
-** 要为 NTP 服务器设置对称身份验证，请输入以下命令： `cluster time-service ntp server create -server server_ip_address -key-id key_id`
+** 要设置不采用对称身份验证的NTP服务器、请输入以下命令： `cluster time-service ntp server create -server server_name`
+** 要设置采用对称身份验证的NTP服务器、请输入以下命令： `cluster time-service ntp server create -server server_ip_address -key-id key_id`
 +
 
 NOTE: 从 ONTAP 9.5 开始，可以使用对称身份验证。在 ONTAP 9.4 或更早版本中不提供此功能。
@@ -64,7 +65,7 @@ cluster1::> cluster time-service ntp server create -server ntp1.example.com
 ----
 
 
-. 验证集群是否与 NTP 服务器关联： `cluster time-service ntp server show`
+. 验证集群是否已与NTP服务器关联： `cluster time-service ntp server show`
 +
 [listing]
 ----

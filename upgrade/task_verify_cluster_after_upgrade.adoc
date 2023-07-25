@@ -27,11 +27,11 @@ NOTE: 如果您使用的是 MetroCluster FC 配置，则还需要验证集群是
 
 . 验证集群版本是否为目标 ONTAP 版本：
 +
-`ve版本`
+`version`
 
 . 如果集群版本不是目标 ONTAP 版本，则可以验证所有节点的升级状态：
 +
-`ssystem node upgrade-revert show`
+`system node upgrade-revert show`
 
 
 
@@ -122,7 +122,7 @@ node2     vldb     154      154      14847    node0     secondary
 node3     vldb     154      154      14847    node0     secondary
 4 entries were displayed.
 ----
-. 如果您在SAN环境中运行、请验证每个节点是否处于SAN仲裁状态：`event log show -severity informational -message-name scsiblade.*`
+. 如果您在 SAN 环境中运行，请验证每个节点是否处于 SAN 仲裁状态： `event log show  -severity informational -message-name scsiblade.*`
 +
 每个节点的最新 scsiblade 事件消息应指示 SCSI 刀片处于仲裁状态。
 
@@ -148,12 +148,12 @@ link:../system-admin/index.html["系统管理"]
 
 .关于此任务
 
-NOTE: 仅对 MetroCluster FC 配置执行此操作步骤 。如果您使用的是 MetroCluster IP 配置，请跳过此操作步骤 。
+NOTE: 仅对 MetroCluster FC 配置执行此操作步骤 。  如果您使用的是 MetroCluster IP 配置，请跳过此操作步骤 。
 
 .步骤
 . 检查是否已启用自动计划外切换：
 +
-`MetroCluster show`
+`metrocluster show`
 
 +
 如果启用了自动计划外切换，则命令输出中将显示以下语句：
@@ -165,7 +165,7 @@ AUSO Failure Domain  auso-on-cluster-disaster
 ----
 . 如果未显示此语句，请启用自动计划外切换：
 +
-`MetroCluster modify -auto-switchover-failure-domain auso-on-cluster-disaster`
+`metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster`
 
 . 重复步骤 1 ，验证是否已启用自动计划外切换。
 
@@ -201,7 +201,7 @@ AUSO Failure Domain  auso-on-cluster-disaster
  a| 
 .. 显示处于维护，待定或重建状态的任何磁盘：
 +
-`storage disk show -state maintenance|pending" 正在重建`
+`storage disk show -state maintenance|pending|reconstructing`
 
 .. 等待维护或重建操作完成，然后再继续。
 
@@ -209,7 +209,7 @@ AUSO Failure Domain  auso-on-cluster-disaster
 |===
 . 通过显示物理和逻辑存储（包括存储聚合）的状态，验证所有聚合是否联机：
 +
-`storage aggregate show -state ！ online`
+`storage aggregate show -state !online`
 
 +
 此命令将显示 _not_ 联机的聚合。在执行重大升级或还原之前和之后，所有聚合都必须处于联机状态。
@@ -222,7 +222,7 @@ There are no entries matching your query.
 ----
 . 通过显示任何 _not_ 联机的卷来验证所有卷是否均已联机：
 +
-`volume show -state ！ online`
+`volume show -state !online`
 
 +
 在执行重大升级或还原之前和之后，所有卷都必须处于联机状态。

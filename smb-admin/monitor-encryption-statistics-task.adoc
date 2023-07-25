@@ -14,7 +14,7 @@ summary: 您可以监控 SMB 加密统计信息，并确定哪些已建立的会
 您可以监控 SMB 加密统计信息，并确定哪些已建立的会话和共享连接已加密，哪些未加密。
 
 .关于此任务
-在高级权限级别使用 `statictics` 命令可提供以下计数器，您可以使用这些计数器监控加密的 SMB 会话和共享连接的数量：
+。 `statistics` 高级权限级别的命令提供了以下计数器、您可以使用这些计数器监控加密的SMB会话和共享连接的数量：
 
 |===
 | 计数器名称 | 说明 
@@ -35,44 +35,45 @@ summary: 您可以监控 SMB 加密统计信息，并确定哪些已建立的会
 
 
  a| 
-`resfed_unencryptioned_sessions`
+`rejected_unencrypted_sessions`
  a| 
 提供因缺少客户端加密功能而拒绝的会话设置数量
 
 
 
  a| 
-`resfed_unencryptioned_shares`
+`rejected_unencrypted_shares`
  a| 
 提供因缺少客户端加密功能而拒绝的共享映射的数量
 
 |===
 这些计数器可用于以下统计信息对象：
 
-* 使用 `CIFS` 可以监控所有 SMB 3.0 会话的 SMB 加密。
+* `cifs` 用于监控所有SMB 3.0会话的SMB加密。
 +
-SMB 3.0 统计信息包含在 `CIFS` 对象的输出中。如果要将加密会话数与会话总数进行比较，可以将 `encrypted_sessions` 计数器的输出与 `established_sessions` 计数器的输出进行比较。
+SMB 3.0统计信息包括在的输出中 `cifs` 对象。    如果要将加密会话数与会话总数进行比较、可以比较的输出 `encrypted_sessions` 计数器与的输出 `established_sessions` 计数器。
 
 +
 如果要将加密共享连接数与共享连接总数进行比较、则可以比较的输出 `encrypted_share_connections` 计数器与的输出 `connected_shares` 计数器。
 
-* `refoded_unencryptioned_sessions` 提供尝试建立需要从不支持 SMB 加密的客户端进行加密的 SMB 会话的次数。
-* `refoded_unencryptioned_shares` 提供尝试连接到需要从不支持 SMB 加密的客户端进行加密的 SMB 共享的次数。
+* `rejected_unencrypted_sessions` 提供尝试建立需要从不支持SMB加密的客户端加密的SMB会话的次数。
+* `rejected_unencrypted_shares` 提供尝试连接到需要从不支持SMB加密的客户端加密的SMB共享的次数。
 
 
 您必须先启动统计信息样本收集，然后才能查看生成的数据。如果不停止数据收集，您可以查看样本中的数据。停止数据收集可提供一个固定样本。如果不停止数据收集，则可以获取更新后的数据，以便与先前的查询进行比较。此比较可帮助您确定趋势。
 
 .步骤
-. 将权限级别设置为 advanced ： + `set -privilege advanced`
+. 将权限级别设置为高级：+
+`set -privilege advanced`
 . 开始数据收集：+
 `statistics start -object {cifs|smb1|smb2} -instance _instance_ -sample-id _sample_ID_ [-node _node_name_]`
 +
-如果未指定 ` -sample-id` 参数，则该命令将为您生成一个示例标识符，并将此示例定义为 CLI 会话的默认示例。` -sample-id` 的值为文本字符串。如果您在同一命令行界面会话期间运行此命令，但未指定 ` -sample-id` 参数，则此命令将覆盖先前的默认样本。
+如果未指定 `-sample-id` 参数时、该命令将为您生成示例标识符、并将此示例定义为命令行界面会话的默认示例。的值 `-sample-id` 是文本字符串。如果您在同一命令行界面会话期间运行此命令、但未指定 `-sample-id` 参数、则此命令将覆盖先前的默认样本。
 
 +
 您也可以指定要收集统计信息的节点。如果未指定节点，则此示例将收集集群中所有节点的统计信息。
 
-. 使用 `satictics stop` 命令停止收集样本数据。
+. 使用 `statistics stop` 命令停止收集样本数据。
 . 查看 SMB 加密统计信息：
 +
 |===
@@ -82,48 +83,49 @@ SMB 3.0 统计信息包含在 `CIFS` 对象的输出中。如果要将加密会�
  a| 
 加密会话
  a| 
-`s如何使用 -sample-id _sample_ID_ -counter encrypted_sessions|_node_name_ [-node _node_name_]`
+`show -sample-id _sample_ID_ -counter encrypted_sessions|_node_name_ [-node _node_name_]`
 
 
 
  a| 
 已加密会话和已建立的会话
  a| 
-`s如何使用 -sample-id _sample_ID_ -counter encrypted_sessions|established_sessions|_node_name_ [-node _node_name_]`
+`show -sample-id _sample_ID_ -counter encrypted_sessions|established_sessions|_node_name_ [-node _node_name_]`
 
 
 
  a| 
 加密的共享连接
  a| 
-`s如何使用 -sample-id _sample_ID_ -counter encrypted_share_connections|_node_name_ [-node _node_name_]`
+`show -sample-id _sample_ID_ -counter encrypted_share_connections|_node_name_ [-node _node_name_]`
 
 
 
  a| 
 加密的共享连接和连接的共享
  a| 
-`s如何使用 -sample-id _sample_ID_ -counter encrypted_share_connections|connected_shares_node_name_ [-node _node_name_]`
+`show -sample-id _sample_ID_ -counter encrypted_share_connections|connected_shares|_node_name_ [-node _node_name_]`
 
 
 
  a| 
 拒绝的未加密会话
  a| 
-`s-sample-id _sample_ID_ -counter rejected_unencrypted_sessions|_node_name_ [-node _node_name_]`
+`show -sample-id _sample_ID_ -counter rejected_unencrypted_sessions|_node_name_ [-node _node_name_]`
 
 
 
  a| 
 拒绝未加密的共享连接
  a| 
-`s-sample-id _sample_ID_ -counter rejected_unencrypted_share_node_name_ [-node _node_name_]`
+`show -sample-id _sample_ID_ -counter rejected_unencrypted_share|_node_name_ [-node _node_name_]`
 
 |===
 +
-如果要仅显示单个节点的信息，请指定可选的 ` 节点` 参数。
+如果要仅显示单个节点的信息、请指定可选 `-node` 参数。
 
-. 返回到管理权限级别： + `set -privilege admin`
+. 返回到管理权限级别：+
+`set -privilege admin`
 
 
 .示例

@@ -30,17 +30,17 @@ summary: 如果系统未发送预期的 AutoSupport 消息，并且您使用的�
 .步骤
 . 显示 AutoSupport 子系统的详细状态：
 +
-`s系统节点 AutoSupport check show-details`
+`system node autosupport check show-details`
 
 +
 其中包括通过发送测试消息来验证与 AutoSupport 目标的连接，并提供 AutoSupport 配置设置中可能出现的错误列表。
 
 . 验证节点管理 LIF 的状态：
 +
-`network interface show -home-node local -role node-mgmt -fields vserver ， lif ， status-oper ， status-admin ， address ， role`
+`network interface show -home-node local -role node-mgmt -fields vserver,lif,status-oper,status-admin,address,role`
 
 +
-`ststatus-oper` 和 `ststatus-admin` 字段应返回 "`up` " 。
+。 `status-oper` 和 `status-admin` 字段应返回"`up`"。
 
 . 记录 SVM 名称， LIF 名称和 LIF IP 地址，以供日后使用。
 . 确保已启用并正确配置 DNS ：
@@ -49,7 +49,7 @@ summary: 如果系统未发送预期的 AutoSupport 消息，并且您使用的�
 
 . 解决 AutoSupport 消息返回的任何错误：
 +
-`ssystem node AutoSupport history show -node * -fields node ， seq-num ， destination ， last-update ， status ， error`
+`system node autosupport history show -node * -fields node,seq-num,destination,last-update,status,error`
 
 +
 有关对任何返回的错误进行故障排除的帮助、请参见 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/ONTAP_AutoSupport_(Transport_HTTPS_and_HTTP)_Resolution_Guide["《ONTAP AutoSupport (传输HTTPS和HTTP)解决指南》"^]。
@@ -61,11 +61,11 @@ summary: 如果系统未发送预期的 AutoSupport 消息，并且您使用的�
 +
 [NOTE]
 ====
-地址 `support.netapp.com` 本身不会对 ping 或 traceroute 做出响应，但每跃点信息很有价值。
+地址 `support.netapp.com` 自身不响应ping/traceroute、但每跳信息非常重要。
 
 ====
-.. `ssystem node AutoSupport show -fields proxy-url`
-.. `network traceroute -node node_management_LIF -destination proxy_URL`
+.. `system node autosupport show -fields proxy-url`
+.. `network traceroute -node node_management_LIF -destination proxy_url`
 
 
 +
@@ -77,7 +77,7 @@ summary: 如果系统未发送预期的 AutoSupport 消息，并且您使用的�
 +
 确保所有配置参数的值与 AutoSupport 配置的值相同，包括使用相同的代理服务器，用户名，密码和端口。
 
-.. 使用 Web 客户端访问 ` + https://support.netapp.com+` 。
+.. 访问 `+https://support.netapp.com+` 使用Web客户端。
 +
 访问应成功。如果没有，请确保已正确配置所有防火墙以允许 HTTPS 和 DNS 流量，并且已正确配置代理服务器。有关为support.netapp.com配置静态名称解析的详细信息、请参见知识库文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_would_a_HOST_entry_be_added_in_ONTAP_for_support.netapp.com%3F["如何在 ONTAP for support.netapp.com? 中添加主机条目"^]
 
@@ -85,9 +85,9 @@ summary: 如果系统未发送预期的 AutoSupport 消息，并且您使用的�
 
 . 从 ONTAP 9.10.1 开始，如果您启用了自动更新功能，请确保与以下其他 URL 建立 HTTPS 连接：
 +
-** https://support-sg-emea.netapp.com
-** https://support-sg-naeast.netapp.com
-** https://support-sg-nawest.netapp.com
+** \https://support-sg-emea.netapp.com
+** \https://support-sg-naeast.netapp.com
+** \https://support-sg-nawest.netapp.com
 
 
 

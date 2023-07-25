@@ -15,7 +15,7 @@ summary: 您可以自动或手动扩展目标 FlexGroup 卷并重新建立 SnapM
 
 .您需要的内容
 * 源 FlexGroup 卷必须已扩展。
-* SnapMirror 关系必须处于 `SnapMirrored` 状态。
+* SnapMirror关系必须位于中 `SnapMirrored` 状态。
 +
 不得中断或删除 SnapMirror 关系。
 
@@ -42,8 +42,8 @@ summary: 您可以自动或手动扩展目标 FlexGroup 卷并重新建立 SnapM
 .选项
 * 执行更新传输以自动扩展目标 FlexGroup 卷：
 +
-.. 执行 SnapMirror 更新传输： `snapmirror update -destination-path SVM ： vol_name`
-.. 验证 SnapMirror 关系的状态是否为 `SnapMirrored` state ： `snapmirror show`
+.. 执行SnapMirror更新传输： `snapmirror update -destination-path svm:vol_name`
+.. 验证SnapMirror关系的状态是否在中 `SnapMirrored` 状态： `snapmirror show`
 +
 [listing]
 ----
@@ -64,21 +64,21 @@ vs_src:src_fg
 
 * 手动扩展目标 FlexGroup 卷：
 +
-.. 如果 SnapMirror 关系处于自动扩展模式，请将 SnapMirror 关系设置为手动扩展模式： `snapmirror modify -destination-path SVM ： vol_name -is-auto-expand-enabled false`
+.. 如果SnapMirror关系处于自动扩展模式、请将SnapMirror关系设置为手动扩展模式： `snapmirror modify -destination-path svm:vol_name -is-auto-expand-enabled false`
 +
 [listing]
 ----
 cluster2::> snapmirror modify -destination-path vs_dst:dst_fg -is-auto-expand-enabled false
 Operation succeeded: snapmirror modify for the relationship with destination "vs_dst:dst_fg".
 ----
-.. 暂停 SnapMirror 关系： `snapmirror quiesce -destination-path SVM ： vol_name`
+.. 将SnapMirror关系静用： `snapmirror quiesce -destination-path svm:vol_name`
 +
 [listing]
 ----
 cluster2::> snapmirror quiesce -destination-path vs_dst:dst_fg
 Operation succeeded: snapmirror quiesce for destination "vs_dst:dst_fg".
 ----
-.. 展开目标 FlexGroup 卷： ` + volume expand -vserver vserver_name -volume fg_name -aggr-list aggregate name ， ... [-aggr-list-multiplier constituents_per_aggr]+`
+.. 扩展目标FlexGroup卷： `+volume expand -vserver vserver_name -volume fg_name -aggr-list aggregate name,... [-aggr-list-multiplier constituents_per_aggr]+`
 +
 [listing]
 ----
@@ -88,14 +88,14 @@ Warning: The following number of constituents of size 50GB will be added to Flex
 Do you want to continue? {y|n}: y
 [Job 68] Job succeeded: Successful
 ----
-.. 重新同步 SnapMirror 关系： `snapmirror resync -destination-path SVM ： vol_name`
+.. 重新同步SnapMirror关系： `snapmirror resync -destination-path svm:vol_name`
 +
 [listing]
 ----
 cluster2::> snapmirror resync -destination-path vs_dst:dst_fg
 Operation is queued: snapmirror resync to destination "vs_dst:dst_fg".
 ----
-.. 验证 SnapMirror 关系的状态是否为 `SnapMirrored` ： `snapmirror show`
+.. 验证SnapMirror关系的状态是否为 `SnapMirrored`： `snapmirror show`
 +
 [listing]
 ----

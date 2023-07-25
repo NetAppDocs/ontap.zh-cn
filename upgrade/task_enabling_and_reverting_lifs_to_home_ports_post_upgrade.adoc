@@ -65,14 +65,14 @@ vs0                              sti96-vsim-ucs539h_data6_inet6 e0f e0f
 +
 如果任何 LIF 的状态为 "Down" 或状态为 "false" ，请继续执行下一步。
 
-. 启用数据 LIF ： `network interface modify ｛ -role data ｝ -status-admin up`
+. 启用数据生命周期： `network interface modify {-role data} -status-admin up`
 +
 [listing]
 ----
 cluster1::> network interface modify {-role data} -status-admin up
 8 entries were modified.
 ----
-. 将 LIF 还原到其主端口： `network interface revert *`
+. 将LIF还原到其主端口： `network interface revert *`
 +
 此命令会将所有 LIF 还原回其主端口。
 
@@ -82,7 +82,7 @@ cluster1::> network interface modify {-role data} -status-admin up
 cluster1::> network interface revert *
 8 entries were acted on.
 ----
-. 确认所有 LIF 均位于其主端口： `network interface show`
+. 验证所有的SIFs是否都位于其主端口中： `network interface show`
 +
 此示例显示 SVM vs0 的所有 LIF 均位于其主端口上。
 

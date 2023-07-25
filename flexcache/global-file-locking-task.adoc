@@ -34,12 +34,12 @@ NOTE: 只有当您能够控制缓存与初始卷之间连接的可靠性时，�
 == 在新 FlexCache 卷上启用全局文件锁定
 
 .步骤
-. 创建 FlexCache 卷，并将 ` -is-global-file-locking` 设置为 true ：
+. 使用创建FlexCache卷 `-is-global-file-locking` 设置为true：
 +
-`volume FlexCache create volume _volume_name_ -is-global-file-locking-enabled true`
+`volume flexcache create volume _volume_name_ -is-global-file-locking-enabled true`
 
 +
-默认值 ` -is-global-file-locking` 为 "`false` " 。在卷上运行任何后续的 `volume FlexCache create` 命令时，必须在启用了 ` -is-global-file-locking 的情况下传递这些命令` 设置为 "`true` " 。
+的默认值 `-is-global-file-locking` 为"`false`"。任意后续操作 `volume flexcache create` 命令在卷上运行、必须使用传递 `-is-global-file-locking enabled` 设置为"`true`"。
 
 
 
@@ -51,17 +51,17 @@ NOTE: 只有当您能够控制缓存与初始卷之间连接的可靠性时，�
 . 必须从原始卷设置全局文件锁定。
 . 源服务器不能具有任何其他现有关系（例如 SnapMirror ）。任何现有关系都必须解除关联。必须在运行命令时连接所有缓存和卷。要检查连接状态，请运行：
 +
-`volume FlexCache connection-status show`
+`volume flexcache connection-status show`
 
 +
-列出的所有卷的状态均应显示为`connected 。` 有关详细信息，请参见 link:view-connection-status-origin-task.html["查看 FlexCache 关系的状态"] 或 link:synchronize-properties-origin-volume-task.html["从原始卷同步 FlexCache 卷的属性"]。
+列出的所有卷的状态均应显示为 “`connected.`有关详细信息、请参见 link:view-connection-status-origin-task.html["查看 FlexCache 关系的状态"] 或 link:synchronize-properties-origin-volume-task.html["从原始卷同步 FlexCache 卷的属性"]。
 
 . 对缓存启用全局文件锁定：
 +
-`volume FlexCache origin config show-modify -volume _volume_name_ -is-global-file-locking-enabled true`
+`volume flexcache origin config show/modify -volume _volume_name_ -is-global-file-locking-enabled true`
 
 
 
 如果还原到 ONTAP 9.1.1 之前的版本，则必须先在原始缓存和关联缓存上禁用全局文件锁定。可以通过运行以下命令来管理此问题：
 
-`volume FlexCache prepare-to-downgrade -disable-feature-set 9.10.0`
+`volume flexcache prepare-to-downgrade -disable-feature-set 9.10.0`

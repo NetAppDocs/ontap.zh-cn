@@ -16,11 +16,11 @@ summary: 如果您希望为传入的 SMB 流量要求 SMB 加密，可以在 CIF
 .关于此任务
 您可以在 CIFS 服务器上启用 SMB 加密，该服务器会对 CIFS 服务器上的所有共享进行适用场景。如果您不希望 CIFS 服务器上的所有共享都需要 SMB 加密，或者您希望为基于共享的传入 SMB 流量启用所需的 SMB 加密，则可以在 CIFS 服务器上禁用所需的 SMB 加密。
 
-设置 Storage Virtual Machine （ SVM ）灾难恢复关系时，您为 `snapmirror create` 命令的 ` -identity-preserve` 选项选择的值将确定复制到目标 SVM 中的配置详细信息。
+在设置Storage Virtual Machine (SVM)灾难恢复关系时、您为选择的值 `-identity-preserve` 的选项 `snapmirror create` 命令用于确定复制到目标SVM中的配置详细信息。
 
-如果将 ` -identity-preserve` 选项设置为 `true` （ ID-preserve ），则 SMB 加密安全设置将复制到目标。
+如果您设置了 `-identity-preserve` 选项 `true` (ID保留)、则SMB加密安全设置将复制到目标。
 
-如果将 ` -identity-preserve` 选项设置为 `false` （ non-ID-preserve ），则 SMB 加密安全设置不会复制到目标。在这种情况下，目标上的 CIFS 服务器安全设置将设置为默认值。如果已在源 SVM 上启用 SMB 加密，则必须在目标上手动启用 CIFS 服务器 SMB 加密。
+如果您设置了 `-identity-preserve` 选项 `false` (非ID保留)、则SMB加密安全设置不会复制到目标。在这种情况下，目标上的 CIFS 服务器安全设置将设置为默认值。如果已在源 SVM 上启用 SMB 加密，则必须在目标上手动启用 CIFS 服务器 SMB 加密。
 
 .步骤
 . 执行以下操作之一：
@@ -42,9 +42,9 @@ enabled
 `vserver cifs security modify -vserver _vserver_name_ -is-smb-encryption-required false`
 
 |===
-. 验证是否已根据需要在 CIFS 服务器上启用或禁用所需的 SMB 加密： `vserver cifs security show -vserver _vserver_name_ -fields is-smb-encryption-required`
+. 验证是否已根据需要在CIFS服务器上启用或禁用所需的SMB加密： `vserver cifs security show -vserver _vserver_name_ -fields is-smb-encryption-required`
 +
-如果在 CIFS 服务器上启用了所需的 SMB 加密，则 `is-smb-encrypt-required` 字段将显示 `true` ；如果禁用了 SMB 加密，则显示 `false` 。
+。 `is-smb-encryption-required` 字段 `true` 如果需要、可在CIFS服务器和上启用SMB加密 `false` 如果已禁用。
 
 
 

@@ -23,7 +23,7 @@ summary: 从 ONTAP 9.6 开始，您可以在维护模式下执行磁盘清理。
 .开始之前
 * 这些磁盘不能是自加密磁盘（ SED ）。
 +
-您必须使用 `storage encryption disk sanitize` 命令对 SED 进行清理。
+您必须使用 `storage encryption disk sanitize` 用于对SED进行身份验证的命令。
 
 +
 link:../encryption-at-rest/index.html["空闲数据加密"]
@@ -46,38 +46,39 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 . 如果要清理的磁盘已分区，请取消每个磁盘的分区：
 +
 
-NOTE: 取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。强烈建议您在继续操作之前联系NetApp支持部门。您也可以参考知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 中取消对备用驱动器的分区"^]
+NOTE: 取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。强烈建议您在继续操作之前联系NetApp支持部门。
+您也可以参考知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 中取消对备用驱动器的分区"^]
 
 +
-`d取消分区_disk_name_`
+`disk unpartition _disk_name_`
 
 . 清理指定磁盘：
 +
-`d清理开始时间（ -p _pattern1_v-r （ -p _pattern2_-r ）（ -p _pattern3_-r]] （ -c _cycle_count_） _disk_list_`
+`disk sanitize start [-p _pattern1_|-r [-p _pattern2_|-r [-p _pattern3_|-r]]] [-c _cycle_count_] _disk_list_`
 
 +
 
-NOTE: 清理期间，请勿关闭节点电源，中断存储连接或删除目标磁盘。如果在格式化阶段中断清理，则必须重新启动格式化阶段并允许完成此阶段，然后才能对磁盘进行清理并准备好返回到备用池。如果您需要中止清理过程，可以使用 `ddisk sanitize abort` 命令来中止清理过程。如果指定磁盘正处于清理的格式化阶段，则在该阶段完成之前不会中止。
+NOTE: 清理期间，请勿关闭节点电源，中断存储连接或删除目标磁盘。如果在格式化阶段中断清理，则必须重新启动格式化阶段并允许完成此阶段，然后才能对磁盘进行清理并准备好返回到备用池。如果您需要中止检查过程、可以使用来执行此操作 `disk sanitize abort` 命令：如果指定磁盘正处于清理的格式化阶段，则在该阶段完成之前不会中止。
 
 +
-` -p` ` _Pattern1_` ` -p` ` _pattern2_` ` -p` ` _pattern3_` 指定一到三个用户定义的十六进制字节覆盖模式的周期，这些模式可连续应用于要清理的磁盘。默认模式为三次，第一次使用 0x55 ，第二次使用 0xAA ，第三次使用 0x3c 。
+ `-p` `_pattern1_` `-p` `_pattern2_` `-p` `_pattern3_` 指定一到三个用户定义的十六进制字节覆盖模式的循环、这些模式可以连续应用于要清理的磁盘。默认模式为三次，第一次使用 0x55 ，第二次使用 0xAA ，第三次使用 0x3c 。
 
 +
-` -r` 将模式覆盖替换为任意或所有遍的随机覆盖。
+`-r` 将模式覆盖替换为任意或所有路径的随机覆盖。
 
 +
-` -c` ` c_cycle_count__` 指定应用指定覆盖模式的次数。默认值为一个周期。最大值为七个周期。
+`-c` `_cycle_count_` 指定应用指定覆盖模式的次数。默认值为一个周期。最大值为七个周期。
 
 +
-` disk_list_` 指定要清理的备用磁盘 ID 的空格分隔列表。
+`_disk_list_` 指定要清理的备用磁盘的ID的空格分隔列表。
 
 . 如果需要，请检查磁盘清理过程的状态：
 +
-`d清理状态 [_disk_list_]`
+`disk sanitize status [_disk_list_]`
 
 . 清理过程完成后，将每个磁盘的磁盘恢复为备用状态：
 +
-`d清理版本 _disk_name_`
+`disk sanitize release _disk_name_`
 
 . 退出维护模式：
 
@@ -95,7 +96,7 @@ NOTE: 清理期间，请勿关闭节点电源，中断存储连接或删除目�
 
 * 这些磁盘不能是自加密磁盘（ SED ）。
 +
-您必须使用 `storage encryption disk sanitize` 命令对 SED 进行清理。
+您必须使用 `storage encryption disk sanitize` 用于对SED进行身份验证的命令。
 
 +
 link:../encryption-at-rest/index.html["空闲数据加密"]
@@ -108,15 +109,15 @@ link:../encryption-at-rest/index.html["空闲数据加密"]
 +
 --
 
-NOTE: 取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。*强烈建议您在继续操作之前联系NetApp支持部门。*您也可以参考知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 中取消对备用驱动器的分区"^]。
+NOTE: 取消磁盘分区的命令只能在diag级别使用、并且只能在NetApp支持监督下执行。**强烈建议您在继续操作之前联系NetApp支持部门。**您也可以参考知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Systems/FAS_Systems/How_to_unpartition_a_spare_drive_in_ONTAP["如何在ONTAP 中取消对备用驱动器的分区"^]。
 
 --
 +
-`d取消分区_disk_name_`
+`disk unpartition _disk_name_`
 
 . 输入拥有要清理的磁盘的节点的 nodeshell ：
 +
-`ssystem node run -node _node_name_`
+`system node run -node _node_name_`
 
 . 启用磁盘清理：
 +
@@ -131,34 +132,42 @@ NOTE: 取消磁盘分区的命令只能在diag级别使用、并且只能在NetA
 
 . 清理指定磁盘：
 +
-`dsanitize e start （ -p pattern1]-r （ -p pattern2]-r ）（ -p pattern3|-r]] （ -c cycle_count ） disk_list`
+`disk sanitize start [-p pattern1|-r [-p pattern2|-r [-p pattern3|-r]]] [-c cycle_count] disk_list`
 
 +
 
-NOTE: 清理期间，请勿关闭节点电源，中断存储连接或删除目标磁盘。如果在格式化阶段中断清理，则必须重新启动格式化阶段并允许完成此阶段，然后才能对磁盘进行清理并准备好返回到备用池。如果需要中止清理过程，可以使用 disk sanitize abort 命令来中止清理过程。如果指定磁盘正处于清理的格式化阶段，则在该阶段完成之前不会中止。
+NOTE: 请勿关闭节点电源、中断存储连接或删除目标
+磁盘清理期间。如果在格式化阶段中断了正在进行的检查、则会执行格式化
+在清理磁盘并准备就绪之前、必须重新启动阶段并允许其完成
+已返回到备用池。如果您需要中止磁盘检查过程、可以使用磁盘检查来执行此操作
+中止命令。如果指定磁盘正处于清理的格式化阶段、则
+在阶段完成之前不会发生中止。
 
 +
-` -p pattern1 -p pattern2 -p pattern3` 指定一到三个用户定义的十六进制字节覆盖模式的周期，这些模式可连续应用于要清理的磁盘。默认模式为三次，第一次使用 0x55 ，第二次使用 0xAA ，第三次使用 0x3c 。
+`-p pattern1 -p pattern2 -p pattern3` 指定一到三个用户定义的十六进制字节的循环
+可以对正在清理的磁盘连续应用的覆盖模式。默认值
+模式为三次、第一次使用0x55、第二次使用0xaa、第二次使用0x3c
+第三次通过。
 
 +
-` -r` 将模式覆盖替换为任意或所有遍的随机覆盖。
+`-r` 将模式覆盖替换为任意或所有路径的随机覆盖。
 
 +
-` -c cycle_count` 指定应用指定覆盖模式的次数。
+`-c cycle_count` 指定应用指定覆盖模式的次数。
 
 +
 默认值为一个周期。最大值为七个周期。
 
 +
-`ddisk_list` 指定要清理的备用磁盘的 ID 列表，以空格分隔。
+`disk_list` 指定要清理的备用磁盘的ID的空格分隔列表。
 
 . 如果要检查磁盘清理过程的状态：
 +
-`d清理状态 [disk_list]`
+`disk sanitize status [disk_list]`
 
 . 清理过程完成后，将磁盘恢复为备用状态：
 +
-`d清理版本 _disk_name_`
+`disk sanitize release _disk_name_`
 
 . 返回到 nodeshell 管理权限级别：
 +
@@ -166,11 +175,11 @@ NOTE: 清理期间，请勿关闭节点电源，中断存储连接或删除目�
 
 . 返回到 ONTAP 命令行界面：
 +
-`退出`
+`exit`
 
 . 确定所有磁盘是否均已恢复为备用状态：
 +
-`s存储聚合 show-spare-disks`
+`storage aggregate show-spare-disks`
 
 +
 [cols="1,2"]
@@ -192,11 +201,11 @@ NOTE: 清理期间，请勿关闭节点电源，中断存储连接或删除目�
 
 .. 将未分配的已清理磁盘分配给每个磁盘的相应节点：
 +
-`s存储磁盘分配-disk _disk_name_-owner _node_name_`
+`storage disk assign -disk _disk_name_ -owner _node_name_`
 
 .. 将每个磁盘的磁盘恢复为备用状态：
 +
-`s存储磁盘unfail -disk _disk_name_-s -q`
+`storage disk unfail -disk _disk_name_ -s -q`
 
 .. 返回到管理模式：
 +
@@ -209,6 +218,6 @@ NOTE: 清理期间，请勿关闭节点电源，中断存储连接或删除目�
 
 ====
 .结果
-指定的磁盘将进行清理并指定为热备用磁盘。已清理磁盘的序列号将写入 ` /etc/log/sanitized_disks` 。
+指定的磁盘将进行清理并指定为热备用磁盘。已清理磁盘的序列号将写入到 `/etc/log/sanitized_disks`。
 
-指定磁盘的清理日志会写入到`/mroot/etc/log/sanitization.log`中、其中会显示每个磁盘上已完成的操作。
+指定磁盘的清理日志将写入其中、其中会显示每个磁盘上已完成的操作 `/mroot/etc/log/sanitization.log`。

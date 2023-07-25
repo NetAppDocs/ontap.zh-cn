@@ -25,7 +25,7 @@ summary: 您可以将单个 LUN 还原到新位置或原始位置。您可以从
 克隆中的 LUN 与原始 LUN 具有不同的路径和序列号。不会保留持久预留。
 
 .步骤
-. 运行 `snapmirror show` 命令验证包含 SnapVault 备份的二级卷。
+. 运行 `snapmirror show` 命令以验证包含SnapVault备份的二级卷。
 +
 [listing]
 ----
@@ -39,7 +39,7 @@ vserverA:srcvolA
                         Snapmirrored
                                 Idle       -         true    -
 ----
-. 运行 `volume snapshot show` 命令以确定要从中还原 LUN 的 Snapshot 副本。
+. 运行 `volume snapshot show` 命令以确定要从中还原LUN的Snapshot副本。
 +
 [listing]
 ----
@@ -53,7 +53,7 @@ vserverB
                  snap1.2013-02-10_0015 valid  112KB     0%    0%
                  snap2.2013-02-11_0010  valid  164KB     0%    0%
 ----
-. 运行 `volume clone create` 命令，从所需的 Snapshot 副本创建读写克隆。
+. 运行 `volume clone create` 命令以从所需的Snapshot副本创建读写克隆。
 +
 卷克隆将在与 SnapVault 备份相同的聚合中创建。聚合中必须有足够的空间来存储克隆。
 
@@ -65,7 +65,7 @@ cluster::> volume clone create -vserver vserverB
   -parent-snapshot daily.2013-02-10_0010
 [Job 108] Job succeeded: Successful
 ----
-. 运行 `lun show` 命令列出卷克隆中的 LUN 。
+. 运行 `lun show` 命令以列出卷克隆中的LUN。
 +
 [listing]
 ----
@@ -79,7 +79,7 @@ vserverB  /vol/dstvolB_clone/lun_C  online  unmapped windows
 
 3 entries were displayed.
 ----
-. 如果包含 SnapVault 备份的 SVM 上尚不存在所需主机的 igroup ，请运行 `igroup create` 命令创建一个 igroup 。
+. 如果包含SnapVault备份的SVM上尚不存在所需主机的igroUP、请运行 `igroup create` 命令以创建igroup。
 +
 以下示例将为使用 iSCSI 协议的 Windows 主机创建一个 igroup ：
 
@@ -90,7 +90,7 @@ cluster::> igroup create -vserver vserverB -igroup temp_igroup
   -protocol iscsi -ostype windows
   -initiator iqn.1991-05.com.microsoft:hostA
 ----
-. 运行 `lun mapping create` 命令将所需的 LUN 副本映射到 igroup 。
+. 运行 `lun mapping create` 命令将所需的LUN副本映射到igrop。
 +
 [listing]
 ----

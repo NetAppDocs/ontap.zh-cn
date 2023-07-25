@@ -21,21 +21,21 @@ summary: 您可以通过在创建 SMB 共享时指定符号链接共享属性设
 
 
  a| 
-`enable` （已弃用 * ）
+`enable` (已弃用*)
  a| 
 指定为读写访问启用符号链接。
 
 
 
  a| 
-`reAD_ONonly` （已弃用 * ）
+`read_only` (已弃用*)
  a| 
 指定为只读访问启用符号链接。此设置不适用于 Widelink 。Widelink 访问始终为读写访问。
 
 
 
  a| 
-`隐藏` （已弃用 * ）
+`hide` (已弃用*)
  a| 
 指定阻止 SMB 客户端查看符号链接。
 
@@ -51,33 +51,33 @@ summary: 您可以通过在创建 SMB 共享时指定符号链接共享属性设
  a| 
 `symlinks`
  a| 
-指定在本地为读写访问启用符号链接。即使 CIFS 选项 `is-advertise-dfs-enabled` 设置为 `true` ，也不会生成 DFS 公告。这是默认设置。
+指定在本地为读写访问启用符号链接。即使使用CIFS选项、也不会生成DFS公告 `is-advertise-dfs-enabled` 设置为 `true`。这是默认设置。
 
 
 
  a| 
-`symlinks-and-widelink`
+`symlinks-and-widelinks`
  a| 
-指定本地符号链接和 Widelink 进行读写访问。即使 CIFS 选项 `is-advertise-dfs-enabled` 设置为 `false` ，也会为本地符号链接和 Widelink 生成 DFS 公告。
-
-
-
- a| 
-`d可`
- a| 
-指定禁用符号链接和 Widelink 。即使 CIFS 选项 `is-advertise-dfs-enabled` 设置为 `true` ，也不会生成 DFS 公告。
+指定本地符号链接和 Widelink 进行读写访问。即使使用CIFS选项、也会为本地符号链接和widelink生成DFS公告 `is-advertise-dfs-enabled` 设置为 `false`。
 
 
 
  a| 
-` ""` （空，未设置）
+`disable`
+ a| 
+指定禁用符号链接和 Widelink 。即使使用CIFS选项、也不会生成DFS公告 `is-advertise-dfs-enabled` 设置为 `true`。
+
+
+
+ a| 
+`""` (空、未设置)
  a| 
 禁用共享上的符号链接。
 
 
 
  a| 
-` -` （未设置）
+`-` (未设置)
  a| 
 禁用共享上的符号链接。
 
@@ -97,21 +97,21 @@ summary: 您可以通过在创建 SMB 共享时指定符号链接共享属性设
  a| 
 新的 SMB 共享
  a| 
-` +vserver cifs share create -vserver vserver_name -share-name share_name -path -symlink-properties ｛ enable_hide| read-only" -|symlinks- and-widelinks | disable ｝ ， ...]+`
+`+vserver cifs share create -vserver vserver_name -share-name share_name -path path -symlink-properties {enable|hide|read-only|""|-|symlinks|symlinks-and-widelinks|disable},...]+`
 
 
 
  a| 
 现有 SMB 共享
  a| 
-` +vserver cifs share modify -vserver vserver_name -share-name share_name -symlink-properties ｛ enable_hide| read-only" -|symlinkssymlinks-and-widelinks| disable ｝ ， ...]+`
+`+vserver cifs share modify -vserver vserver_name -share-name share_name -symlink-properties {enable|hide|read-only|""|-|symlinks|symlinks-and-widelinks|disable},...]+`
 
 |===
-. 验证 SMB 共享配置是否正确： `vserver cifs share show -vserver vserver_name -share-name share_name -instance`
+. 验证SMB共享配置是否正确： `vserver cifs share show -vserver vserver_name -share-name share_name -instance`
 
 
 .示例
-以下命令将创建名为 `data1` 的 SMB 共享，并将 UNIX 符号链接配置设置为 `enable` ：
+以下命令将创建名为`data1`的SMB共享、并将UNIX符号链接配置设置为 `enable`：
 
 [listing]
 ----

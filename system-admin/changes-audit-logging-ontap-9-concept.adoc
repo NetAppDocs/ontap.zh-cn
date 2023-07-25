@@ -11,11 +11,11 @@ summary: 从 ONTAP 9 开始， command-history.log 文件将替换为 audit.log 
 
 
 [role="lead"]
-从 ONTAP 9 开始， `command-history.log` 文件将替换为 `audit.log` ，而 `mgwd.log` 文件将不再包含审核信息。如果要升级到 ONTAP 9 ，则应查看引用旧文件及其内容的任何脚本或工具。
+从ONTAP 9开始、 `command-history.log` 文件将替换为 `audit.log`和 `mgwd.log` 文件不再包含审核信息。如果要升级到 ONTAP 9 ，则应查看引用旧文件及其内容的任何脚本或工具。
 
-升级到 ONTAP 9 后，将保留现有的 `command-history.log` 文件。在轮换（创建）新的 `audit.log` 文件时，这些文件将被转出（删除）。
+升级到ONTAP 9后、现有 `command-history.log` 文件将保留。它们将作为新的旋转(删除) `audit.log` 文件将进行轮换(创建)。
 
-检查 `command-history.log` 文件的工具和脚本可能仍会正常工作，因为升级时会创建从 `command-history.log` 到 `audit.log` 的软链接。但是，检查 `mgwd.log` 文件的工具和脚本将失败，因为该文件不再包含审核信息。
+用于检查的工具和脚本 `command-history.log` 文件可能会继续工作、因为中有一个软链接 `command-history.log` to `audit.log` 在升级时创建。但是、用于检查的工具和脚本 `mgwd.log` 文件将失败、因为该文件不再包含审核信息。
 
 此外， ONTAP 9 及更高版本中的审核日志不再包含以下条目，因为它们不会被视为有用，并且发生原因不必要的日志记录活动：
 

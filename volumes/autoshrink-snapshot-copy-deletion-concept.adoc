@@ -15,9 +15,9 @@ summary: 由于自动缩减功能会缩减 FlexVol 卷的大小，因此也会�
 
 自动缩减功能通过以下方式与自动删除卷 Snapshot 副本进行交互：
 
-* 如果同时启用了 `grow_shrink` autosize 模式和 Snapshot 副本自动删除，则在卷大小缩减时，可能会触发 Snapshot 副本自动删除。
+* 如果两者都是 `grow_shrink` 自动大小模式和Snapshot副本自动删除功能处于启用状态、卷大小缩减时、可能会触发Snapshot副本自动删除。
 +
 这是因为 Snapshot 预留基于卷大小的百分比（默认为 5% ），而该百分比现在基于较小的卷大小。这可能会使发生原因 Snapshot 副本从预留中溢出并自动删除。
 
-* 如果启用了 `grow_shrink` autosize 模式，而您手动删除了 Snapshot 副本，则可能会触发卷自动缩减。
+* 如果 `grow_shrink` 如果启用了自动大小模式、而您手动删除了Snapshot副本、则可能会触发卷自动收缩。
 

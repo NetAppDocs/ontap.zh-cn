@@ -21,7 +21,7 @@ summary: 从 ONTAP 9.5 开始，支持 SnapMirror 同步。您可以将异步 Sn
 +
 .. 从目标集群中，删除异步 SnapMirror 关系：
 +
-`snapmirror delete -destination-path _sVM ： volume_`
+`snapmirror delete -destination-path _SVM:volume_`
 
 +
 [listing]
@@ -30,7 +30,7 @@ cluster2::>snapmirror delete -destination-path vs1_dr:vol1
 ----
 .. 在源集群中，释放 SnapMirror 关系而不删除通用 Snapshot 副本：
 +
-`snapmirror release -relationship-info-only true -destination-path _dest_sVM ： dest_volume_s`
+`snapmirror release -relationship-info-only true -destination-path _dest_SVM:dest_volume_`
 
 +
 [listing]
@@ -39,7 +39,7 @@ cluster1::>snapmirror release -relationship-info-only true -destination-path vs1
 ----
 .. 从目标集群中，创建 SnapMirror 同步关系：
 +
-`snapmirror create -source-path _src_svm ： src_volume_-destination-path _dest_sVM ： dest_volume_-policy sync-mirror`
+`snapmirror create -source-path _src_SVM:src_volume_ -destination-path _dest_SVM:dest_volume_ -policy sync-mirror`
 
 +
 [listing]
@@ -48,7 +48,7 @@ cluster2::>snapmirror create -source-path vs1:vol1 -destination-path vs1_dr:vol1
 ----
 .. 重新同步 SnapMirror 同步关系：
 +
-`snapmirror resync -destination-path _dest_sVM ： dest_volume_s`
+`snapmirror resync -destination-path _dest_SVM:dest_volume_`
 
 +
 [listing]
@@ -61,7 +61,7 @@ cluster2::>snapmirror resync -destination-path vs1_dr:vol1
 +
 .. 从目标集群中，暂停现有的 SnapMirror 同步关系：
 +
-`snapmirror quiesce -destination-path dest_sVM ： dest_volume`
+`snapmirror quiesce -destination-path dest_SVM:dest_volume`
 
 +
 [listing]
@@ -70,7 +70,7 @@ cluster2::> snapmirror quiesce -destination-path vs1_dr:vol1
 ----
 .. 从目标集群中，删除异步 SnapMirror 关系：
 +
-`snapmirror delete -destination-path _sVM ： volume_`
+`snapmirror delete -destination-path _SVM:volume_`
 
 +
 [listing]
@@ -79,7 +79,7 @@ cluster2::>snapmirror delete -destination-path vs1_dr:vol1
 ----
 .. 在源集群中，释放 SnapMirror 关系而不删除通用 Snapshot 副本：
 +
-`snapmirror release -relationship-info-only true -destination-path _dest_sVM ： dest_volume_s`
+`snapmirror release -relationship-info-only true -destination-path _dest_SVM:dest_volume_`
 
 +
 [listing]
@@ -88,7 +88,7 @@ cluster1::>snapmirror release -relationship-info-only true -destination-path vs1
 ----
 .. 从目标集群中，创建异步 SnapMirror 关系：
 +
-`snapmirror create -source-path _src_svm ： src_volume_-destination-path _dest_sVM ： dest_volume_-policy MirrorAllSnapshots`
+`snapmirror create -source-path _src_SVM:src_volume_ -destination-path _dest_SVM:dest_volume_ -policy MirrorAllSnapshots`
 
 +
 [listing]
@@ -97,7 +97,7 @@ cluster2::>snapmirror create -source-path vs1:vol1 -destination-path vs1_dr:vol1
 ----
 .. 重新同步 SnapMirror 同步关系：
 +
-`snapmirror resync -destination-path _dest_sVM ： dest_volume_s`
+`snapmirror resync -destination-path _dest_SVM:dest_volume_`
 
 +
 [listing]

@@ -20,7 +20,7 @@ summary: 您应熟悉有关使用 FabricPool 的一些注意事项和要求。
 * 要使用 FabricPool ，必须至少运行 ONTAP 9.2 。
 * 您必须运行 ONTAP 9.4 或更高版本才能使用以下 FabricPool 功能：
 +
-** `auto` 分层策略
+** 。 `auto` 层策略
 +
 link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricPool 分层策略的类型"]
 
@@ -37,9 +37,9 @@ link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricP
 ** 云层的 NetApp 卷加密（ NVE ），默认情况下处于启用状态。
 
 
-* 您必须运行 ONTAP 9.6 或更高版本才能使用以下 FabricPool 功能：
+* 要使用以下FabricPool功能、必须运行ONTAP 9.6或更高版本：
 +
-** `All` 分层策略
+** 。 `all` 层策略
 ** 在 HDD 聚合上手动启用非活动数据报告
 ** 升级到 ONTAP 9.6 并在创建聚合时， SSD 聚合会自动启用非活动数据报告，但 CPU 不足 4 个， RAM 不足 6 GB 或 WAFL-buffer-cache 大小小于 3 GB 的低端系统除外。
 +
@@ -50,7 +50,7 @@ ONTAP 会监控系统负载，如果负载持续保持高 4 分钟，则会禁�
 ** 卷移动而不复制云层数据
 
 
-* 您必须运行 ONTAP 9.7 或更高版本才能使用以下 FabricPool 功能：
+* 要使用以下FabricPool功能、必须运行ONTAP 9.7或更高版本：
 +
 ** 非透明的 HTTP 和 HTTPS 代理，用于仅提供对列入白名单的访问点的访问权限，并提供审核和报告功能。
 ** FabricPool 镜像，可将冷数据同时分层到两个对象存储
@@ -71,7 +71,7 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
 +
 ** 云迁移控制，用于覆盖默认分层策略
 ** 将数据提升到性能层
-** 采用 SnapLock Enterprise 的 FabricPool
+** 采用SnapLock企业版的FabricPool。采用SnapLock企业版的FabricPool需要功能产品差异请求(Feature Product Vvariance Request、FPVR)。要创建FPVR、请联系您的销售团队。
 ** 最短冷却期最长为 183 天
 ** 使用用户创建的自定义标记进行对象标记
 ** HDD 平台和聚合上的 FabricPools
@@ -132,7 +132,7 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
 * 您计划使用的对象存储 "`bucket` " （容器）必须已设置，必须至少具有 10 GB 的存储空间，并且不能重命名。
 * 使用 FabricPool 的 HA 对需要集群间 LIF 与对象存储进行通信。
 * 连接对象存储分段后，您无法将其与 FabricPool 配置断开。
-* 如果使用吞吐量下限（ QoS 最小值），则必须先将卷上的分层策略设置为 `none` ，然后才能将聚合附加到 FabricPool 。
+* 如果使用吞吐量下限(QoS最小值)、则必须将卷上的分层策略设置为 `none` 才能将聚合附加到FabricPool。
 +
 其他分层策略会阻止将聚合附加到 FabricPool 。启用FabricPool后、QoS策略不会强制实施吞吐量下限。
 
@@ -173,7 +173,7 @@ FabricPool仅支持使用StorageGRID的信息生命周期管理策略进行数�
 * 使用 ONTAP 9.7 及更早版本时的 SnapLock 卷
 * 对启用了 FabricPool 的聚合使用 SMTape 进行磁带备份
 * 自动平衡功能
-* 使用非 `none` 的空间保证的卷
+* 使用非空间保证的卷 `none`
 +
 除了根SVM卷和CIFS审核暂存卷之外、FabricPool 不支持将云层附加到包含使用非空间保证的卷的聚合 `none`。例如、使用空间保证的卷 `volume` (`-space-guarantee` `volume`)。
 

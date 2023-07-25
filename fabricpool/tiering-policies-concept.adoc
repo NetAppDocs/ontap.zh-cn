@@ -30,23 +30,23 @@ FabricPool 分层策略可根据热（活动）或冷（非活动）的卷 "`tem
 
 FabricPool 分层策略在卷级别指定。有四种选择：
 
-* `snapshot-only` 分层策略（默认设置）可将卷 Snapshot 副本中未与活动文件系统关联的用户数据块移至云层。
+* 。 `snapshot-only` 分层策略(默认值)会将卷Snapshot副本中与活动文件系统无关的用户数据块移至云层。
 +
-分层最小冷却期为 2 天。您可以在 `volume create` 和 `volume modify` 命令的高级权限级别中使用 ` -tiering-minimum-cooling-days` 参数修改分层最小冷却期的默认设置。使用 ONTAP 9.8 及更高版本时，有效值为 2 到 183 天。如果您使用的 ONTAP 版本早于 9.8 ，则有效值为 2 到 63 天。
+分层最小冷却期为 2 天。您可以使用修改层最小冷却期的默认设置 `-tiering-minimum-cooling-days` 的高级权限级别中的参数 `volume create` 和 `volume modify` 命令使用 ONTAP 9.8 及更高版本时，有效值为 2 到 183 天。如果您使用的 ONTAP 版本早于 9.8 ，则有效值为 2 到 63 天。
 
-* 只有 ONTAP 9.4 及更高版本支持 `auto` 分层策略，此策略会将 Snapshot 副本和活动文件系统中的冷用户数据块移至云层。
+* 。 `auto` 只有ONTAP 9.4及更高版本才支持分层策略、此策略会将Snapshot副本和活动文件系统中的冷用户数据块移至云层。
 +
 对于活动文件系统和 Snapshot 副本，默认分层最小冷却期为 31 天，并对整个卷进行适用场景处理。
 
 +
-您可以在 `volume create` 和 `volume modify` 命令的高级权限级别中使用 ` -tiering-minimum-cooling-days` 参数修改分层最小冷却期的默认设置。有效值为 2 到 183 天。
+您可以使用修改层最小冷却期的默认设置 `-tiering-minimum-cooling-days` 的高级权限级别中的参数 `volume create` 和 `volume modify` 命令有效值为 2 到 183 天。
 
 * 。 `all` 只有ONTAP 9.6及更高版本才支持分层策略、此策略会将活动文件系统和Snapshot副本中的所有用户数据块移至云层。它取代了 `backup` 层策略。
 +
 。 `all` 不应在客户端流量正常的读/写卷上使用卷层策略。
 
 +
-分层最小冷却期不适用，因为一旦运行分层扫描，数据就会移动云层，并且您无法修改设置。
+分层最小冷却期不适用、因为一旦运行分层扫描、数据就会移至云层、并且您无法修改设置。
 
 * 。 `none` 分层策略会将卷的数据保留在性能层中、而不会将冷数据移至云层。
 +
@@ -60,20 +60,20 @@ FabricPool 分层策略在卷级别指定。有四种选择：
 
 
 
-`volume show` 命令输出显示了卷的分层策略。从未与 FabricPool 结合使用的卷会在输出中显示 `none` 分层策略。
+。 `volume show` 命令输出显示了卷的层策略。从未与FabricPool一起使用的卷会显示 `none` 输出中的层策略。
 
 
 
 == 在 FabricPool 中修改卷的分层策略时会发生什么情况
 
-您可以通过执行 `volume modify` 操作来修改卷的分层策略。您必须了解更改分层策略可能会如何影响数据变冷并移至云层所需的时间。
+您可以通过执行来修改卷的层策略 `volume modify` 操作。您必须了解更改分层策略可能会如何影响数据变冷并移至云层所需的时间。
 
-* 将分层策略从 `snapshot-only` 或 `none` 更改为 `auto` 会导致 ONTAP 将活动文件系统中已冷的用户数据块发送到云层，即使这些用户数据块以前不符合云层的条件也是如此。
-* 将分层策略从另一个策略更改为 `all` 会导致 ONTAP 在下次运行分层扫描时将活动文件系统和 Snapshot 副本中的所有用户块移动到云层。
+* 正在从更改此层策略 `snapshot-only` 或 `none` to `auto` 使ONTAP将活动文件系统中已冷的用户数据块发送到云层、即使这些用户数据块先前不符合云层的条件也是如此。
+* 将层策略更改为 `all` 从另一个策略运行会导致ONTAP在下次运行分层扫描时将活动文件系统和Snapshot副本中的所有用户块移动到云层。
 +
 不允许将块移回性能层。
 
-* 将分层策略从 `auto` 更改为 `snapshot-only` 或 `none` 不会对已移至云层并移回性能层的活动文件系统块进行发生原因。
+* 正在从更改此层策略 `auto` to `snapshot-only` 或 `none` 不会发生原因已移至云层以移回性能层的活动文件系统块。
 +
 要将数据移回性能层，需要进行卷读取。
 
@@ -88,14 +88,14 @@ FabricPool 分层策略在卷级别指定。有四种选择：
 +
 但是，只有当卷位于启用了 FabricPool 的聚合中时，分层策略才会生效。
 
-* 卷的 ` 分层最小冷却天数` 参数的现有值随卷一起移动，除非为目标指定不同的分层策略。
+* 的现有值 `-tiering-minimum-cooling-days` 除非您为目标指定了不同的层策略、否则卷的参数将随卷一起移动。
 +
 如果指定其他分层策略，则卷将使用该策略的默认分层最小冷却期。无论目标是否为 FabricPool ，都是如此。
 
 * 您可以跨聚合移动卷，同时修改分层策略。
-* 当 `volume move` 操作涉及 `auto` tiering 策略时，应特别注意。
+* 当出现时、您应特别注意 `volume move` 操作涉及 `auto` 层策略。
 +
-假设源和目标都是启用了 FabricPool 的聚合，下表总结了 `volume move` 操作的结果，该操作涉及到与 `auto` 相关的策略更改：
+假设源和目标均为启用了FabricPool的聚合、下表总结了的结果 `volume move` 涉及与相关的策略更改的操作 `auto`：
 
 +
 |===
@@ -105,7 +105,7 @@ FabricPool 分层策略在卷级别指定。有四种选择：
 
 
  a| 
-`全部`
+`all`
  a| 
 `auto`
  a| 
@@ -114,7 +114,7 @@ FabricPool 分层策略在卷级别指定。有四种选择：
 
 
  a| 
-`snapshot-only` ， `none` 或 `auto`
+`snapshot-only`， `none`或 `auto`
  a| 
 `auto`
  a| 
@@ -125,7 +125,7 @@ FabricPool 分层策略在卷级别指定。有四种选择：
  a| 
 `auto` 或 `all`
  a| 
-`s仅限 napshot-only`
+`snapshot-only`
  a| 
 所有数据都会移至性能层。
 
@@ -134,16 +134,16 @@ FabricPool 分层策略在卷级别指定。有四种选择：
  a| 
 `auto`
  a| 
-`全部`
+`all`
  a| 
 所有用户数据都会移至云层。
 
 
 
  a| 
-`snapshot-only` ，`auto` 或 `all`
+`snapshot-only`,`auto` 或 `all`
  a| 
-`无`
+`none`
  a| 
 所有数据都保留在性能层。
 
@@ -156,15 +156,15 @@ FabricPool 分层策略在卷级别指定。有四种选择：
 
 * 从 ONTAP 9.8 开始，克隆卷始终从父卷继承分层策略和云检索策略。
 +
-在 ONTAP 9.8 之前的版本中，克隆会从父级继承分层策略，除非父级具有 `All` 分层策略。
+在ONTAP 9.8之前的版本中、克隆会从父级继承分层策略、除非父级具有 `all` 层策略。
 
-* 如果父卷具有 `never` cloud retrretrieval policy ，则其克隆卷必须具有 `never` cloud retrretrretrieval policy 或 `all` tiering policy 以及相应的云检索策略 `default` 。
-* 无法将父卷云检索策略更改为 `从不` ，除非其所有克隆卷都具有云检索策略 `从不` 。
+* 如果父卷具有 `never` 云检索策略中、其克隆卷必须具有 `never` 云检索策略或 `all` 分层策略以及相应的云检索策略 `default`。
+* 无法将父卷云检索策略更改为 `never` 除非其所有克隆卷都具有云检索策略 `never`。
 
 
 克隆卷时，请记住以下最佳实践：
 
-* 克隆的 ` -tiering-policy` 选项和 `tiering-minimum-cooling-days` 选项仅控制克隆特有的块的分层行为。因此，我们建议在父 FlexVol 上使用分层设置，这样可以移动与任何克隆相同的数据量或移动较少的数据
+* 。 `-tiering-policy` 选项、然后 `tiering-minimum-cooling-days` 克隆选项仅控制克隆所特有的块的层化行为。因此，我们建议在父 FlexVol 上使用分层设置，这样可以移动与任何克隆相同的数据量或移动较少的数据
 * 父 FlexVol 上的云检索策略应移动相同数量的数据，或者应移动比任何克隆的检索策略更多的数据
 
 
@@ -209,7 +209,7 @@ FabricPool 云数据检索由分层策略控制，分层策略可根据读取模
 无数据检索
 
 |===
-从 ONTAP 9.8 开始，云迁移控制 `cloud retry-policy` 选项会覆盖由分层策略控制的默认云迁移或检索行为。
+从ONTAP 9.8开始、云迁移控制 `cloud-retrieval-policy` 选项会覆盖由层策略控制的默认云迁移或检索行为。
 
 下表列出了支持的云检索策略及其检索行为。
 
@@ -222,7 +222,7 @@ FabricPool 云数据检索由分层策略控制，分层策略可根据读取模
  a| 
 default
  a| 
-分层策略决定应将哪些数据回拉，因此使用 " `default ，` " `cloud retry-policy` 不会对云数据检索进行任何更改。无论托管聚合类型如何，此策略都是任何卷的默认值。
+分层`d决定了应将哪些数据提取回、因此使用"默认"功能时、云数据检索不会发生任何变化,`" `cloud-retrieval-policy`。无论托管聚合类型如何，此策略都是任何卷的默认值。
 
 
 

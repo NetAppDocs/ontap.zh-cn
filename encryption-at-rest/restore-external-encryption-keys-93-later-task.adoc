@@ -17,9 +17,9 @@ summary: '您可以手动还原外部密钥管理加密密钥，并将其 " 推�
 要执行此任务，您必须是集群或 SVM 管理员。
 
 .关于此任务
-在 ONTAP 9.6 及更高版本中，您可以使用 `security key-manager key query -node node_name` 命令验证是否需要还原密钥。
+在ONTAP 9.6及更高版本中、您可以使用 `security key-manager key query -node node_name` 命令以验证是否需要还原密钥。
 
-在 ONTAP 9.5 及更早版本中，您可以使用 `security key-manager key show` 命令验证是否需要还原密钥。
+在ONTAP 9.5及更早版本中、您可以使用 `security key-manager key show` 命令以验证是否需要还原密钥。
 
 .步骤
 . 如果您运行的是 ONTAP 9.8 或更高版本，并且根卷已加密，请执行以下操作：
@@ -27,13 +27,23 @@ summary: '您可以手动还原外部密钥管理加密密钥，并将其 " 推�
 如果您运行的是 ONTAP 9.7 或更早版本，或者运行的是 ONTAP 9.8 或更高版本，并且根卷未加密，请跳过此步骤。
 
 +
-.. 设置 bootargs ： + `setenv kmip.init.ipaddr <ip-address>` + `setenv kmip.init.netmask <netmask>` + `setenv kmip.init.gateway <gateway>` + `setenv kmip.init.interface e0M` + `boot_ontap`
-.. 启动节点至启动菜单，然后选择选项 ` （ 11 ） Configure node for external key management` 。
+.. 设置Bootargs：
+ +
+`setenv kmip.init.ipaddr <ip-address>`
+ +
+`setenv kmip.init.netmask <netmask>`
+ +
+`setenv kmip.init.gateway <gateway>`
+ +
+`setenv kmip.init.interface e0M`
+ +
+`boot_ontap`
+.. 将节点启动至启动菜单、然后选择选项 `(11) Configure node for external key management`。
 .. 按照提示输入管理证书。
 +
 输入所有管理证书信息后，系统将返回到启动菜单。
 
-.. 从启动菜单中，选择选项 ` （ 1 ） Normal Boot` 。
+.. 从启动菜单中、选择选项 `(1) Normal Boot`。
 
 
 . 还原密钥：
@@ -48,14 +58,14 @@ summary: '您可以手动还原外部密钥管理加密密钥，并将其 " 推�
  a| 
 ONTAP 9.6 及更高版本
  a| 
-`sSecurity key-manager external restore -vserver SVM -node -key-server host_name_ip_address ： port -key-id key_id -key-tag key_tag`
+`security key-manager external restore -vserver SVM -node node -key-server host_name|IP_address:port -key-id key_id -key-tag key_tag`
 
 
 
  a| 
 ONTAP 9.5 及更早版本
  a| 
-`security key-manager restore -node node -address ip_address -key-id key_id -key-tag key_tag`
+`security key-manager restore -node node -address IP_address -key-id key_id -key-tag key_tag`
 
 |===
 +
@@ -65,7 +75,7 @@ ONTAP 9.5 及更早版本
 
 ====
 +
-以下 ONTAP 9.6 命令会将外部密钥管理身份验证密钥还原到 `cluster1` 中的所有节点：
+以下ONTAP 9.6命令可将外部密钥管理身份验证密钥还原到中的所有节点 `cluster1`：
 
 +
 [listing]

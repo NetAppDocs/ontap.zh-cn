@@ -22,7 +22,7 @@ summary: 广播域对集群中属于同一第 2 层网络的网络端口进行�
 .关于此任务
 * 所有广播域名在 IP 空间中必须是唯一的。
 * 添加到广播域的端口可以是物理网络端口， VLAN 或接口组（ ifgrp ）。
-* 如果要使用的端口属于另一个广播域，但未使用，请使用 `network port broadcast-domain remove-ports` 命令从现有广播域中删除这些端口。
+* 如果要使用的端口属于另一个广播域、但未使用、请使用 `network port broadcast-domain remove-ports` 命令以从现有广播域中删除端口。
 * 添加到广播域的端口的 MTU 将更新为在广播域中设置的 MTU 值。
 * MTU 值必须与连接到该第 2 层网络的所有设备匹配，但处理管理流量的 e0M 端口除外。
 * 如果未指定 IP 空间名称，则会在 " 默认 "IP 空间中创建广播域。
@@ -36,37 +36,38 @@ summary: 广播域对集群中属于同一第 2 层网络的网络端口进行�
 `network port show`
 
 +
-如果显示内容较大，请使用 `network port show -broadcast-domain` 命令仅查看未分配的端口。
+如果显示屏较大、请使用 `network port show -broadcast-domain` 命令以仅查看未分配的端口。
 
 . 创建广播域：
 +
-`network port broadcast-domain create -broadcast-domain _broadcast_domain_name_ -mtu _mtu _value_ "-ipspace _ipspace_name_] "-ports _ports_list_]`
+`network port broadcast-domain create -broadcast-domain _broadcast_domain_name_ -mtu _mtu_value_ [-ipspace _ipspace_name_] [-ports _ports_list_]`
 
 +
-** ` broadcast_domain_name_` 是要创建的广播域的名称。
-** ` MTU_value_` 是 IP 数据包的 MTU 大小； 1500 和 9000 是典型值。
+** `_broadcast_domain_name_` 是要创建的广播域的名称。
+** `_mtu_value_` 是IP数据包的MTU大小；1500和9000是典型值。
 +
 此值将应用于添加到此广播域的所有端口。
 
-** ` _ipspace_name_` 是要添加此广播域的 IP 空间的名称。
+** `_ipspace_name_` 是要将此广播域添加到的IP空间的名称。
 +
 除非为此参数指定值，否则将使用 "DEFAULT" IP 空间。
 
-** ` ports_list_` 是要添加到广播域的端口列表。
+** `_ports_list_` 是要添加到广播域的端口的列表。
 +
-添加的端口格式为 ` node_name ： port_number_` ，例如， `node1 ： e0c` 。
+此时将以格式添加端口 `_node_name:port_number_`，例如， `node1:e0c`。
 
 
 
-. 验证是否已根据需要创建广播域： `network port show -instance -broadcast-domain _new_domain_`
+. 验证是否已根据需要创建广播域：
+`network port show -instance -broadcast-domain _new_domain_`
 
 
 .示例
 以下命令会在默认 IP 空间中创建广播域 bcast1 ，将 MTU 设置为 1500 ，并添加四个端口：
 
-`network port broadcast-domain create -broadcast-domain _bcast1_ -mtu _1500_ -ports _cluster1-01 ： e0e ， cluster1-01 ： e0f ， cluster1-02 ： e0e ， cluster1-02 ： e0f`
+`network port broadcast-domain create -broadcast-domain _bcast1_ -mtu _1500_ -ports _cluster1-01:e0e,cluster1-01:e0f,cluster1-02:e0e,cluster1-02:e0f_`
 
 .完成后
 您可以通过创建子网来定义广播域中可用的 IP 地址池，也可以此时将 SVM 和接口分配给 IP 空间。有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM 对等"]。
 
-如果需要更改现有广播域的名称，请使用 `network port broadcast-domain rename` 命令。
+如果需要更改现有广播域的名称、请使用 `network port broadcast-domain rename` 命令：

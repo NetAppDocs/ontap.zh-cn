@@ -14,56 +14,56 @@ summary: 如果 LDAP 环境配置为允许按主机搜索网络组，则可以�
 如果 LDAP 环境配置为允许按主机搜索网络组，则可以将 ONTAP 配置为利用此功能并按主机执行网络组搜索。这样可以显著加快网络组搜索速度，并减少因网络组搜索期间出现延迟而可能导致的 NFS 客户端访问问题。
 
 .您需要的内容
-LDAP 目录必须包含 `netgroup.byHost` 映射。
+LDAP目录必须包含 `netgroup.byhost` 映射。
 
 DNS 服务器应同时包含 NFS 客户端的正向（ A ）和反向（ PTR ）查找记录。
 
 在网络组中指定 IPv6 地址时，必须始终按照 RFC 5952 中的说明缩短和压缩每个地址。
 
 .关于此任务
-NIS 服务器会将网络组信息存储在三个单独的映射中，分别名为 `netgroup` ， `netgroup.byuser` 和 `netgroup.byHost` 。`netgroup.byuser` 和 `netgroup.byHost` 映射的目的是加快网络组搜索的速度。ONTAP 可以在 NIS 服务器上按主机执行网络组搜索，以缩短挂载响应时间。
+NIS服务器将网络组信息存储在三个单独的映射中、这些映射称为 `netgroup`， `netgroup.byuser`，和 `netgroup.byhost`。的用途 `netgroup.byuser` 和 `netgroup.byhost` 映射用于加快网络组搜索速度。ONTAP 可以在 NIS 服务器上按主机执行网络组搜索，以缩短挂载响应时间。
 
-默认情况下， LDAP 目录不具有与 NIS 服务器类似的 `netgroup.byHost` 映射。但是，在第三方工具的帮助下，可以将 NIS `netgroup.byHost` 映射导入到 LDAP 目录中，以便按主机快速执行网络组搜索。如果您已将 LDAP 环境配置为允许按主机搜索网络组，则可以使用 `netgroup.byHost` 映射名称， DN 和搜索范围配置 ONTAP LDAP 客户端，以加快按主机搜索网络组的速度。
+默认情况下、LDAP目录不具有此类 `netgroup.byhost` 映射为NIS服务器。但是、借助第三方工具、可以导入NIS `netgroup.byhost` 映射到LDAP目录以启用按主机快速网络组搜索。如果您已将LDAP环境配置为允许按主机搜索网络组、则可以使用配置ONTAP LDAP客户端 `netgroup.byhost` 映射名称、DN和搜索范围、以加快按主机搜索网络组的速度。
 
 通过更快地接收按主机搜索网络组的结果， ONTAP 可以在 NFS 客户端请求访问导出时更快地处理导出规则。这样可以减少因网络组搜索延迟问题而导致访问延迟的可能性。
 
 .步骤
-. 获取导入到 LDAP 目录中的 NIS `netgroup.byHost` 映射的确切完整可分辨名称。
+. 获取NIS的准确完整可分辨名称 `netgroup.byhost` 映射已导入到LDAP目录。
 +
 映射 DN 可能因用于导入的第三方工具而异。为了获得最佳性能，应指定确切的映射 DN 。
 
-. 将权限级别设置为 advanced ： `set -privilege advanced`
-. 在 Storage Virtual Machine （ SVM ）的 LDAP 客户端配置中启用 netgroup-by-host 搜索： `vserver services name-service ldap client modify -vserver vserver_name -client-config config_name -is-netgroup-byhost-enabled true -netgroup-ByHost-dn netgroup-dn netgroup-by-host_map_distinguished _name -netgroup-host_scope`
+. 将权限级别设置为高级： `set -privilege advanced`
+. 在Storage Virtual Machine (SVM)的LDAP客户端配置中启用按主机搜索网络组： `vserver services name-service ldap client modify -vserver vserver_name -client-config config_name -is-netgroup-byhost-enabled true -netgroup-byhost-dn netgroup-by-host_map_distinguished_name -netgroup-byhost-scope netgroup-by-host_search_scope`
 +
-已启用 ` is-is-netgroup-ByHost-enabled` ｛`true` …`false` ｝ 可启用或禁用按主机搜索 LDAP 目录的网络组。默认值为 `false` 。
+`-is-netgroup-byhost-enabled` {`true` `false`}启用或禁用对LDAP目录的按主机网络组搜索。默认值为 `false`。
 
 +
-` -netgroup-ByHost-dn` `netgroup-by-host_map_distinguished _name` 指定 LDAP 目录中 `netgroup.byHost` 映射的可分辨名称。它会覆盖 netgroup-by-host 搜索的基础 DN 。如果不指定此参数，则 ONTAP 将改用基础 DN 。
+`-netgroup-byhost-dn` `netgroup-by-host_map_distinguished_name` 指定的可分辨名称 `netgroup.byhost` 映射到LDAP目录中。它会覆盖 netgroup-by-host 搜索的基础 DN 。如果不指定此参数，则 ONTAP 将改用基础 DN 。
 
 +
-` -netgroup-byhost-scope` ｛`base` ｝`onelevel` `s` subtree ｝ 指定按主机搜索网络组的搜索范围。如果未指定此参数，则默认值为 `ssubtree` 。
+`-netgroup-byhost-scope` {`base`|`onelevel` `subtree`}指定按主机搜索网络组的搜索范围。如果未指定此参数、则默认值为 `subtree`。
 
 +
-如果 LDAP 客户端配置尚不存在，您可以在使用 `vserver services name-service ldap client create` 命令创建新的 LDAP 客户端配置时指定这些参数来启用 netgroup-by-host 搜索。
+如果LDAP客户端配置尚不存在、则可以在使用创建新的LDAP客户端配置时通过指定这些参数来启用按主机进行网络组搜索 `vserver services name-service ldap client create` 命令：
 
 +
 [NOTE]
 ====
-从 ONTAP 9.2 开始，字段 ` -ldap-servers` 将取代字段 ` -servers` 。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
+从ONTAP 9.2开始、此字段为 `-ldap-servers` 替换字段 `-servers`。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
 
 ====
 . 返回到管理权限级别： `set -privilege admin`
 
 
 .示例
-以下命令会修改名为 "`ldap_corp` " 的现有 LDAP 客户端配置，以便使用 `netgroup.byHost` map`nisMapName="netgroup.byhost" ， dc=corp ， dc=example ， dc=com` 和默认搜索范围 `ssubtree` 启用按主机搜索网络组：
+以下命令将修改名为"`ldap_corp`"的现有LDAP客户端配置、以使用启用netgroup-by主机搜索 `netgroup.byhost` 映射名为"`nisMapName="netgroup.byHost"、dc=corp、dc=ex例如、dc=com`"和默认搜索范围 `subtree`：
 
 [listing]
 ----
 cluster1::*> vserver services name-service ldap client modify -vserver vs1 -client-config ldap_corp -is-netgroup-byhost-enabled true -netgroup-byhost-dn nisMapName="netgroup.byhost",dc=corp,dc=example,dc=com
 ----
 .完成后
-目录中的 `netgroup.byHost` 和 `netgroup` 映射必须始终保持同步，以避免客户端访问问题。
+。 `netgroup.byhost` 和 `netgroup` 目录中的映射必须始终保持同步、以避免出现客户端访问问题。
 
 .相关信息
 https://datatracker.ietf.org/doc/html/rfc5952["IETF RFC 5952 ： IPv6 地址文本表示建议"]

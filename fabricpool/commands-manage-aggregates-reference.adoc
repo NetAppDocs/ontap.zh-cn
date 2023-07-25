@@ -11,7 +11,7 @@ summary: 您可以使用 storage aggregate object-store 命令管理 FabricPool 
 
 
 [role="lead"]
-您可以使用 `storage aggregate object-store` 命令来管理 FabricPool 的对象存储。您可以使用 `storage aggregate` 命令管理 FabricPool 的聚合。您可以使用 `volume` 命令管理 FabricPool 的卷。
+您可以使用 `storage aggregate object-store` 用于管理FabricPool对象存储的命令。您可以使用 `storage aggregate` 用于管理FabricPool聚合的命令。您可以使用 `volume` 用于管理FabricPool卷的命令。
 
 |===
 
@@ -22,28 +22,28 @@ summary: 您可以使用 storage aggregate object-store 命令管理 FabricPool 
  a| 
 定义对象存储的配置，以便 ONTAP 可以访问它
  a| 
-`s存储聚合对象存储配置 create`
+`storage aggregate object-store config create`
 
 
 
  a| 
 修改对象存储配置属性
  a| 
-`s存储聚合对象存储配置修改`
+`storage aggregate object-store config modify`
 
 
 
  a| 
 重命名现有对象存储配置
  a| 
-`s存储聚合对象存储配置重命名`
+`storage aggregate object-store config rename`
 
 
 
  a| 
 删除对象存储的配置
  a| 
-`s存储聚合对象存储配置 delete`
+`storage aggregate object-store config delete`
 
 
 
@@ -57,14 +57,14 @@ summary: 您可以使用 storage aggregate object-store 命令管理 FabricPool 
  a| 
 将另一个对象存储作为镜像附加到新的或现有的 FabricPool
  a| 
-`storage aggregate object-store mirror` with the ` -aggregate` and ` -name` parameter in the admin privilege level
+`storage aggregate object-store mirror` 使用 `-aggregate` 和 `-name` 参数
 
 
 
  a| 
 从现有 FabricPool 镜像中删除对象存储镜像
  a| 
-`storage aggregate object-store unmirror` with the ` -aggregate` and ` -name` parameter in the admin privilege level
+`storage aggregate object-store unmirror` 使用 `-aggregate` 和 `-name` 参数
 
 
 
@@ -85,42 +85,42 @@ summary: 您可以使用 storage aggregate object-store 命令管理 FabricPool 
  a| 
 提升对象存储镜像以替换 FabricPool 镜像配置中的主对象存储
  a| 
-`storage aggregate object-store modify` ，并在管理权限级别使用 ` -aggregate` 参数
+`storage aggregate object-store modify` 使用 `-aggregate` 参数
 
 
 
  a| 
 在不将对象存储附加到聚合的情况下测试对象存储的延迟和性能
  a| 
-`storage aggregate object-store profiler start` ，并在高级权限级别使用 ` -object-store-name` 和 ` -node` 参数
+`storage aggregate object-store profiler start` 使用 `-object-store-name` 和 `-node` 参数
 
 
 
  a| 
 监控对象存储配置程序状态
  a| 
-`storage aggregate object-store profiler show` ，并在高级权限级别使用 ` -object-store-name` 和 ` -node` 参数
+`storage aggregate object-store profiler show` 使用 `-object-store-name` 和 `-node` 参数
 
 
 
  a| 
 在对象存储配置程序正在运行时中止它
  a| 
-`storage aggregate object-store profiler abort` ，并在高级权限级别使用 ` -object-store-name` 和 ` -node` 参数
+`storage aggregate object-store profiler abort` 使用 `-object-store-name` 和 `-node` 参数
 
 
 
  a| 
 将对象存储附加到聚合以使用 FabricPool
  a| 
-`s存储聚合对象存储连接`
+`storage aggregate object-store attach`
 
 
 
  a| 
 将对象存储附加到包含 FlexGroup 卷的聚合以使用 FabricPool
  a| 
-`storage aggregate object-store attach` 带有 `allow-flexgroup` `true`
+`storage aggregate object-store attach` 使用 `allow-flexgroup` `true`
 
 
 
@@ -134,35 +134,35 @@ summary: 您可以使用 storage aggregate object-store 命令管理 FabricPool 
  a| 
 显示分层扫描使用的聚合填充度阈值
  a| 
-`storage aggregate object-store show` 并在高级权限级别使用 ` 字段 tiering-fullness-threshold` 参数
+`storage aggregate object-store show` 使用 `-fields tiering-fullness-threshold` 参数
 
 
 
  a| 
 显示附加到启用了 FabricPool 的聚合的对象存储的空间利用率
  a| 
-`s存储聚合对象存储 show-space`
+`storage aggregate object-store show-space`
 
 
 
  a| 
 在不用于 FabricPool 的聚合上启用非活动数据报告
  a| 
-`storage aggregate modify`、并使用`-is-inactive-data-reporting-enabled true`参数
+`storage aggregate modify` 使用 `-is-inactive-data-reporting-enabled true` 参数
 
 
 
  a| 
 显示是否在聚合上启用非活动数据报告
  a| 
-`storage aggregate show` 带有 ` 字段 is-inactive-data-reporting-enabled` 参数
+`storage aggregate show` 使用 `-fields is-inactive-data-reporting-enabled` 参数
 
 
 
  a| 
 显示有关聚合中冷用户数据量的信息
  a| 
-`storage aggregate show-space` 带有 ` 字段 performance-tier-inactive-user-data ， performance-tier-inactive-user-data-percent` 参数
+`storage aggregate show-space` 使用 `-fields performance-tier-inactive-user-data,performance-tier-inactive-user-data-percent` 参数
 
 
 
@@ -170,13 +170,13 @@ summary: 您可以使用 storage aggregate object-store 命令管理 FabricPool 
 为 FabricPool 创建卷，包括指定以下内容：
 
 * 分层策略
-* 分层最小冷却期（适用于 `snapshot-only` 或 `auto` 分层策略）
+* 层最小冷却期(适用于 `snapshot-only` 或 `auto` 分层策略)
 
  a| 
 `volume create`
 
-* 您可以使用 ` -tiering-policy` 参数指定分层策略。
-* 您可以在高级权限级别中使用 ` -tiering-minimum-cooling-days` 参数来指定分层最小冷却期。
+* 您可以使用 `-tiering-policy` 用于指定层策略的参数。
+* 您可以使用 `-tiering-minimum-cooling-days` 参数以指定层最小冷却期。
 
 
 
@@ -185,13 +185,13 @@ summary: 您可以使用 storage aggregate object-store 命令管理 FabricPool 
 修改 FabricPool 的卷，包括修改以下内容：
 
 * 分层策略
-* 分层最小冷却期（适用于 `snapshot-only` 或 `auto` 分层策略）
+* 层最小冷却期(适用于 `snapshot-only` 或 `auto` 分层策略)
 
  a| 
 `volume modify`
 
-* 您可以使用 ` -tiering-policy` 参数指定分层策略。
-* 您可以在高级权限级别中使用 ` -tiering-minimum-cooling-days` 参数来指定分层最小冷却期。
+* 您可以使用 `-tiering-policy` 用于指定层策略的参数。
+* 您可以使用 `-tiering-minimum-cooling-days` 参数以指定层最小冷却期。
 
 
 
@@ -205,8 +205,8 @@ summary: 您可以使用 storage aggregate object-store 命令管理 FabricPool 
  a| 
 `volume show`
 
-* 您可以在高级权限级别中使用 ` 字段 tiering-minimum-cooling-days` 参数来显示分层最小冷却期。
-* 您可以使用 ` 字段 performance-tier-inactive-user-data ， performance-tier-inactive-user-data-percent` 参数来显示冷用户数据量。
+* 您可以使用 `-fields tiering-minimum-cooling-days` 参数以显示层最小冷却期。
+* 您可以使用 `-fields performance-tier-inactive-user-data,performance-tier-inactive-user-data-percent` 用于显示冷用户数据量的参数。
 
 
 
@@ -214,14 +214,14 @@ summary: 您可以使用 storage aggregate object-store 命令管理 FabricPool 
  a| 
 将卷移入或移出 FabricPool
  a| 
-`volume move start` 您可以使用 ` -tiering-policy` 可选参数指定卷的分层策略。
+`volume move start` 您可以使用 `-tiering-policy` 用于指定卷的层策略的可选参数。
 
 
 
  a| 
 修改 FabricPool 回收未引用空间的阈值（碎片整理阈值）
  a| 
-`storage aggregate object-store modify` 并在高级权限级别使用 ` -unresort-space-threshold` 参数
+`storage aggregate object-store modify` 使用 `-unreclaimed-space-threshold` 参数
 
 
 
@@ -230,13 +230,13 @@ summary: 您可以使用 storage aggregate object-store 命令管理 FabricPool 
 
 FabricPool 会继续将冷数据分层到云层，直到本地层容量达到 98% 为止。
  a| 
-`storage aggregate object-store modify` 并在高级权限级别使用 ` -tiering-fullness-threshold` 参数
+`storage aggregate object-store modify` 使用 `-tiering-fullness-threshold` 参数
 
 
 
  a| 
 显示回收 FabricPool 的未引用空间的阈值
  a| 
-`storage aggregate object-store show` 或 `storage aggregate object-store show-space` 命令，并在高级权限级别使用 ` -un回收 空间阈值` 参数
+`storage aggregate object-store show` 或 `storage aggregate object-store show-space` 命令 `-unreclaimed-space-threshold` 参数
 
 |===

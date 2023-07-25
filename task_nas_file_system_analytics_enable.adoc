@@ -23,7 +23,7 @@ summary: 要收集和显示容量分析等使用情况数据，您必须启用�
 
 .关于此任务
 * 从ONTAP 9.8开始、您可以对新卷或现有卷启用文件系统分析。如果要将系统升级到ONTAP 9.8或更高版本、请确保在启用文件系统分析之前已完成所有升级过程。
-* 根据卷的大小和内容，在 ONTAP 处理卷中的现有数据时，启用分析可能需要一些时间。System Manager 将显示进度并在完成后提供分析数据。如果您需要有关初始化进度的更精确信息，可以使用 ONTAP 命令行界面命令 `volume Analytics show` 。
+* 根据卷的大小和内容，在 ONTAP 处理卷中的现有数据时，启用分析可能需要一些时间。System Manager 将显示进度并在完成后提供分析数据。如果您需要有关初始化进度的更精确信息、可以使用ONTAP命令行界面命令 `volume analytics show`。
 +
 有关初始化扫描的其他注意事项、请参见 xref:./file-system-analytics/considerations-concept.html#scan-considerations[扫描注意事项]。
 
@@ -40,13 +40,19 @@ summary: 要收集和显示容量分析等使用情况数据，您必须启用�
 | 在 ONTAP 9.8 和 9.9.1 中 | 从 ONTAP 9.10.1 开始 
 
 
-| 1. 选择 * 存储 > 卷 * 。2. 选择所需的卷，然后选择 * 资源管理器 * 。3. 选择 * 启用分析 * 或 * 禁用分析 * 。 | 1. 选择 * 存储 > 卷 * 。2. 选择所需的卷。从单个卷菜单中，选择 * 文件系统 > 资源管理器 * 。3. 选择 * 启用分析 * 或 * 禁用分析 * 。 
+| 1. 选择 * 存储 > 卷 * 。
+ 2. 选择所需的卷，然后选择 * 资源管理器 * 。
+ 3. 选择 * 启用分析 * 或 * 禁用分析 * 。 | 1. 选择 * 存储 > 卷 * 。
+2. 选择所需的卷。从单个卷菜单中，选择 * 文件系统 > 资源管理器 * 。
+3. 选择 * 启用分析 * 或 * 禁用分析 * 。 
 |===
 --
 .命令行界面
 --
 .使用 CLI 启用文件系统分析
-. 运行以下命令： `volume Analytics on -vserver _svm_name_ -volume _volume_name_ （ -foreground ｛ true_false ｝ ）` 默认情况下，此命令在前台运行； ONTAP 将显示进度并在完成后提供分析数据。如果您需要更精确的信息，可以在后台运行命令，方法是使用 ` -foreground false` 选项，然后使用 `volume Analytics show` 命令在命令行界面中显示初始化进度。
+. 运行以下命令：
+`volume analytics on -vserver _svm_name_ -volume _volume_name_ [-foreground {true|false}]`
+默认情况下，命令在前台运行； ONTAP 将显示进度并在完成后提供分析数据。如果您需要更精确的信息、可以使用在后台运行命令 `-foreground false` 选项、然后使用 `volume analytics show` 命令以在命令行界面中显示初始化进度。
 . 成功启用文件系统分析后、请使用System Manager或ONTAP REST API显示分析数据。
 
 

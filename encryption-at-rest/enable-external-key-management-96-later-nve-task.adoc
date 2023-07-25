@@ -31,7 +31,7 @@ summary: 您可以使用一个或多个 KMIP 服务器来保护集群用于访�
 * 从 ONTAP 9.6 开始，您可以使用 _SVM scopter_ 为集群中的数据 SVM 配置外部密钥管理。这最适合多租户环境，其中每个租户都使用不同的 SVM （或一组 SVM ）来提供数据。只有给定租户的 SVM 管理员才能访问该租户的密钥。
 * 对于多租户环境，请使用以下命令为 _MT_EK_MGMT_ 安装许可证：
 +
-`ssystem license add -license-code <MT_EK_Mgmt license code>`
+`system license add -license-code <MT_EK_MGMT license code>`
 
 +
 有关完整的命令语法，请参见命令手册页。
@@ -40,23 +40,23 @@ summary: 您可以使用一个或多个 KMIP 服务器来保护集群用于访�
 
 您可以在同一集群中使用这两个范围。如果为 SVM 配置了密钥管理服务器，则 ONTAP 仅使用这些服务器来保护密钥。否则， ONTAP 将使用为集群配置的密钥管理服务器来保护密钥。
 
-您可以在集群范围配置板载密钥管理，并在 SVM 范围配置外部密钥管理。您可以使用 `security key-manager key migrate` 命令将密钥从集群范围内的板载密钥管理迁移到 SVM 范围内的外部密钥管理器。
+您可以在集群范围配置板载密钥管理，并在 SVM 范围配置外部密钥管理。您可以使用 `security key-manager key migrate` 命令将密钥从集群范围的板载密钥管理迁移到SVM范围的外部密钥管理器。
 
 .步骤
 . 配置集群的密钥管理器连接：
 +
-`security key-manager external enable -vserver admin_svm -key-servers host_name_ip_address ： port ， ... -client-cert client_certificate -server-ca-cert server_CA_certificates`
+`security key-manager external enable -vserver admin_SVM -key-servers host_name|IP_address:port,... -client-cert client_certificate -server-ca-cert server_CA_certificates`
 
 +
 [NOTE]
 ====
-** 。 `security key-manager external enable` 命令用于替换 `security key-manager setup` 命令：如果在集群登录提示符处运行命令、 `_admin_SVM_` 默认为当前集群的管理SVM。您必须是集群管理员才能配置集群范围。您可以运行 `security key-manager external modify` 用于更改外部密钥管理配置的命令。
+** 。 `security key-manager external enable` 命令用于替换 `security key-manager setup` 命令：如果在集群登录提示符处运行命令、 `_admin_SVM_` 默认为当前集群的管理SVM。  您必须是集群管理员才能配置集群范围。您可以运行 `security key-manager external modify` 用于更改外部密钥管理配置的命令。
 ** 在MetroCluster 环境中、如果要为管理SVM配置外部密钥管理、则必须重复 `security key-manager external enable` 命令。
 
 
 ====
 +
-以下命令可通过三个外部密钥服务器为 `cluster1` 启用外部密钥管理。第一个密钥服务器使用其主机名和端口指定，第二个密钥服务器使用 IP 地址和默认端口指定，第三个密钥服务器使用 IPv6 地址和端口指定：
+以下命令将为启用外部密钥管理 `cluster1` 使用三个外部密钥服务器。第一个密钥服务器使用其主机名和端口指定，第二个密钥服务器使用 IP 地址和默认端口指定，第三个密钥服务器使用 IPv6 地址和端口指定：
 
 +
 [listing]
@@ -65,18 +65,18 @@ clusterl::> security key-manager external enable -vserver cluster1 -key-servers 
 ----
 . 配置密钥管理器 SVM ：
 +
-`security key-manager external enable -vserver SVM -key-servers host_name_ip_address ： port ， ... -client-cert client_certificate -server-ca-cert server_CA_certificates`
+`security key-manager external enable -vserver SVM -key-servers host_name|IP_address:port,... -client-cert client_certificate -server-ca-cert server_CA_certificates`
 
 +
 [NOTE]
 ====
-** 如果在 SVM 登录提示符处运行命令，则 `SVM` 默认为当前 SVM 。您必须是集群或 SVM 管理员才能配置 SVM 范围。您可以运行 `security key-manager external modify` 命令来更改外部密钥管理配置。
+** 如果在SVM登录提示符处运行命令、 `SVM` 默认为当前SVM。  您必须是集群或 SVM 管理员才能配置 SVM 范围。您可以运行 `security key-manager external modify` 用于更改外部密钥管理配置的命令。
 ** 在MetroCluster 环境中、如果要为数据SVM配置外部密钥管理、则不必重复 `security key-manager external enable` 命令。
 
 
 ====
 +
-以下命令将在单个密钥服务器侦听默认端口 5696 的情况下为 `svm1` 启用外部密钥管理：
+以下命令将为启用外部密钥管理 `svm1` 使用单密钥服务器侦听默认端口5696：
 
 +
 [listing]
@@ -87,7 +87,7 @@ svm1l::> security key-manager external enable -vserver svm1 -key-servers keyserv
 +
 [NOTE]
 ====
-您也可以使用 `security key-manager external add servers` 命令配置其他 SVM 。使用 `security key-manager external add servers` 命令可替换 `security key-manager add` 命令。有关完整的命令语法，请参见手册页。
+您也可以使用 `security key-manager external add-servers` 命令以配置其他SVM。。 `security key-manager external add-servers` 命令用于替换 `security key-manager add` 命令：有关完整的命令语法，请参见手册页。
 
 ====
 . 验证所有已配置的 KMIP 服务器是否均已连接：
@@ -97,7 +97,7 @@ svm1l::> security key-manager external enable -vserver svm1 -key-servers keyserv
 +
 [NOTE]
 ====
-使用 `security key-manager external show-status` 命令可替换 `security key-manager show -status` 命令。有关完整的命令语法，请参见手册页。
+。 `security key-manager external show-status` 命令用于替换 `security key-manager show -status` 命令：有关完整的命令语法，请参见手册页。
 
 ====
 +

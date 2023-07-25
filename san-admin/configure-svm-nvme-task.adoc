@@ -49,7 +49,7 @@ summary: 如果要在节点上使用 NVMe 协议，必须专门为 NVMe 配置 S
 
 . 如果不想使用现有 SVM ，请创建一个：
 +
-`vserver create -vserver _svm_name_`
+`vserver create -vserver _SVM_name_`
 
 +
 .. 验证是否已创建 SVM ：
@@ -60,39 +60,39 @@ summary: 如果要在节点上使用 NVMe 协议，必须专门为 NVMe 配置 S
 
 . 验证集群中是否安装了支持 NVMe 或 TCP 的适配器：
 +
-对于 NVMe ： `network fcp adapter show -data-protocols-supported fc-nvme`
+对于NVMe： `network fcp adapter show -data-protocols-supported fc-nvme`
 
 +
-对于 TCP ： `network port show`
+对于TCP： `network port show`
 
 . 如果您运行的是 ONTAP 9.7 或更早版本，请从 SVM 中删除所有协议：
 +
-`vserver remove-protocols -vserver _svm_name_ -protocols iscsi ， fcp ， nfs ， cifs ， ndmp`
+`vserver remove-protocols -vserver _SVM_name_ -protocols iscsi,fcp,nfs,cifs,ndmp`
 
 +
 从 ONTAP 9.8 开始，添加 NVMe 时无需删除其他协议。
 
 . 将 NVMe 协议添加到 SVM ：
 +
-`vserver add-protocols -vserver _svm_name_ -protocols nvme`
+`vserver add-protocols -vserver _SVM_name_ -protocols nvme`
 
 . 如果您运行的是 ONTAP 9.7 或更早版本，请验证 NVMe 是否为 SVM 上允许的唯一协议：
 +
-`vserver show -vserver _svm_name_ -fields allowed-protocols`
+`vserver show -vserver _SVM_name_ -fields allowed-protocols`
 
 +
-NVMe 应是 `允许的协议` 列下显示的唯一协议。
+NVMe应是下显示的唯一协议 `allowed protocols` 列。
 
 . 创建 NVMe 服务：
 +
-`vserver nvme create -vserver _svm_name_`
+`vserver nvme create -vserver _SVM_name_`
 
 . 验证是否已创建 NVMe 服务：
 +
-`vserver nvme show -vserver _svm_name_`
+`vserver nvme show -vserver _SVM_name_`
 
 +
-SVM 的 `管理状态` 应列为 `up` 。
+。 `Administrative Status` SVM的应列为 `up`。
 
 . 创建 NVMe/FC LIF ：
 +
@@ -106,7 +106,7 @@ ONTAP 9.9.1 或更早版本
  a| 
 FC
  a| 
-`network interface create -vserver svm_name -lif lif_name -role data -data-protocol fc-nvme -home-node home_node -home-port home_port`
+`network interface create -vserver SVM_name -lif lif_name -role data -data-protocol fc-nvme -home-node home_node -home-port home_port`
 
 
 
@@ -115,7 +115,7 @@ ONTAP 9.10.1
  a| 
 FC 或 TCP
  a| 
-`network interface create -vserver svm_name -lif lif_name -service-policy ｛ default-data-nve-tcp | default-data-nve-fc ｝ -home-node home_node -home-port home_port -status admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover_group -failover_group -sgroup -sover-enabled -dns -update`
+`network interface create -vserver SVM_name -lif lif_name -service-policy {default-data-nvme-tcp | default-data-nvme-fc} -home-node home_node -home-port home_port -status admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group failover_group -is-dns-update-enabled false`
 
 |===
 . 在 HA 配对节点上创建 NVMe/FC LIF ：
@@ -130,7 +130,7 @@ ONTAP 9.9.1 或更早版本
  a| 
 FC
  a| 
-`network interface create -vserver _svm_name_ -lif _lif_name_ -role data -data-protocol fc-nvme -home-node _home_node_-home-port _home_port_`
+`network interface create -vserver _SVM_name_ -lif _lif_name_ -role data -data-protocol fc-nvme -home-node _home_node_ -home-port _home_port_`
 
 
 
@@ -139,16 +139,16 @@ ONTAP 9.10.1 或更高版本
  a| 
 FC 或 TCP
  a| 
-`network interface create -vserver svm_name -lif lif_name -service-policy ｛ default-data-nve-tcp | default-data-nve-fc ｝ -home-node home_node -home-port home_port -status admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover_group -failover_group -sgroup -sover-enabled -dns -update`
+`network interface create -vserver SVM_name -lif lif_name -service-policy {default-data-nvme-tcp | default-data-nvme-fc} -home-node home_node -home-port home_port -status admin up -failover-policy disabled -firewall-policy data -auto-revert false -failover-group failover_group -is-dns-update-enabled false`
 
 |===
 . 验证是否已创建 NVMe/FC LIF ：
 +
-`network interface show -vserver _svm_name_`
+`network interface show -vserver _SVM_name_`
 
 . 在与 LIF 相同的节点上创建卷：
 +
-`vol create -vserver _svm_name_ -volume _vol_name_ -aggregate _aggregate_name_ -size _volume_size_`
+`vol create -vserver _SVM_name_ -volume _vol_name_ -aggregate _aggregate_name_ -size _volume_size_`
 
 +
 如果显示有关自动效率策略的警告消息，则可以安全地忽略此消息。

@@ -16,10 +16,10 @@ summary: 如果要将 LUN 或包含 LUN 的卷移动到同一集群中的另一�
 .步骤
 . 将目标节点及其配对节点添加到聚合或卷的报告节点列表中：
 +
-`lun mapping add-reporting-nodes -vserver _vserver_name_ -path _lun_path_ -igroup _igroup_name_ "-destination-aggregate _aggregate_name_-destination-volume _volume_name_]`
+`lun mapping add-reporting-nodes -vserver _vserver_name_ -path _lun_path_ -igroup _igroup_name_ [-destination-aggregate _aggregate_name_|-destination-volume _volume_name_]`
 
 +
-如果命名约定一致，则可以使用 ` * -igroup*` 而不是 `igroup` 来同时修改多个 LUN 映射。
+如果您的命名约定一致、则可以使用同时修改多个LUN映射 `*-igroup*` 而不是 `igroup`。
 
 . 重新扫描主机以发现新添加的路径。
 . 如果操作系统需要，请将新路径添加到多路径网络 I/O （ MPIO ）配置中。
@@ -38,5 +38,6 @@ summary: 如果要将 LUN 或包含 LUN 的卷移动到同一集群中的另一�
 
 . 删除主机操作系统的任何陈旧设备条目。
 . 根据需要更改任何多路径配置文件。
-. 重新扫描主机以验证是否删除了旧路径。+ 有关重新扫描主机的具体步骤，请参见主机文档。
+. 重新扫描主机以验证是否删除了旧路径。+
+有关重新扫描主机的具体步骤，请参见主机文档。
 

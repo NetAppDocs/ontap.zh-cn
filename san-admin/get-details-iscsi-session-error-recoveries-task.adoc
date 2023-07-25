@@ -16,14 +16,14 @@ summary: 通过提高 iSCSI 会话错误恢复级别，您可以接收有关 iSC
 .关于此任务
 默认情况下， ONTAP 配置为对 iSCSI 会话使用错误恢复级别 0 。如果您使用的启动程序符合错误恢复级别 1 或 2 的条件，则可以选择提高错误恢复级别。修改后的会话错误恢复级别仅会影响新创建的会话，而不会影响现有会话。
 
-从 ONTAP 9.4 开始， `iscsi show` 和 `iscsi modify` 命令不支持 `max-error-recovery-level` 选项。
+从ONTAP 9.4开始、 `max-error-recovery-level` 选项在中不受支持 `iscsi show` 和 `iscsi modify` 命令
 
 .步骤
 . 进入高级模式：
 +
 `set -privilege advanced`
 
-. 使用 `iscsi show` 命令验证当前设置。
+. 使用验证当前设置 `iscsi show` 命令：
 +
 `iscsi show -vserver vs3 -fields max-error-recovery-level`
 
@@ -34,7 +34,7 @@ vserver max-error-recovery-level
 ------- ------------------------
 vs3     0
 ----
-. 使用 `iscsi modify` 命令更改错误恢复级别。
+. 使用更改错误恢复级别 `iscsi modify` 命令：
 +
 `iscsi modify -vserver vs3 -max-error-recovery-level 2`
 

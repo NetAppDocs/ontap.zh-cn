@@ -69,13 +69,13 @@ NOTE: 从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自�
 .在现有卷上启用ARP
 . 修改现有卷以在学习模式下启用勒索软件保护：
 +
-`s安全防勒索软件卷 dry-run -volume _vol_name_ -vserver _svm_name_`
+`security anti-ransomware volume dry-run -volume _vol_name_ -vserver _svm_name_`
 
 +
 您还可以使用启用勒索软件保护 `volume modify` 命令：
 
 +
-`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransone-state dry-run`
+`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransomware-state dry-run`
 
 +
 如果您升级到ONTAP 9.13.1或更高版本、则会启用自适应学习、以便自动更改为活动状态。如果您不希望自动启用此行为、请在所有关联卷上的SVM级别更改此设置：
@@ -85,24 +85,24 @@ NOTE: 从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自�
 
 . 学习期结束后、如果尚未自动修改受保护卷以切换到活动模式、请将其修改为：
 +
-`s安全防勒索软件卷 enable -volume _vol_name_ -vserver _svm_name_`
+`security anti-ransomware volume enable -volume _vol_name_ -vserver _svm_name_`
 
 +
 您也可以使用 modify volume 命令切换到活动模式：
 
 +
-`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransone-state active`
+`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransomware-state active`
 
 . 验证卷的ARP状态。
 +
-`s安全性反勒索软件卷显示`
+`security anti-ransomware volume show`
 
 
 
 .在新卷上启用ARP
 . 在配置数据之前、创建一个启用了反勒索软件保护的新卷。
 +
-`volume create -volume _vol_name_ -vserver _svm_name_ -aggregate _aggr_name_ -size _nn_ -anti-ransonve-state dry-run -junction-path /_path_name_`
+`volume create -volume _vol_name_ -vserver _svm_name_  -aggregate _aggr_name_ -size _nn_ -anti-ransomware-state dry-run -junction-path /_path_name_`
 
 +
 如果您升级到ONTAP 9.13.1或更高版本、则会启用自适应学习、以便自动更改为活动状态。如果您不希望自动启用此行为、请在所有关联卷上的SVM级别更改此设置：
@@ -112,17 +112,17 @@ NOTE: 从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自�
 
 . 学习期结束后、如果尚未自动修改受保护卷以切换到活动模式、请将其修改为：
 +
-`s安全防勒索软件卷 enable -volume _vol_name_ -vserver _svm_name_`
+`security anti-ransomware volume enable -volume _vol_name_ -vserver _svm_name_`
 
 +
 您也可以使用 modify volume 命令切换到活动模式：
 
 +
-`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransone-state active`
+`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransomware-state active`
 
 . 验证卷的ARP状态。
 +
-`s安全性反勒索软件卷显示`
+`security anti-ransomware volume show`
 
 
 

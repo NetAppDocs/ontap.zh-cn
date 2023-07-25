@@ -11,7 +11,7 @@ summary: 您可以使用 volume qtree create 命令创建包含数据的 qtree �
 
 
 [role="lead"]
-您可以使用 `volume qtree create` 命令创建包含数据的 qtree 并指定其属性。
+您可以使用创建一个qtree以包含您的数据、并指定其属性 `volume qtree create` 命令：
 
 .您需要的内容
 * 要包含新 qtree 的 SVM 和卷必须已存在。
@@ -21,22 +21,22 @@ summary: 您可以使用 volume qtree create 命令创建包含数据的 qtree �
 .步骤
 . 创建 qtree ：
 +
-`volume qtree create -vserver _vserver_name_ ｛ -volume _volume_name_ -qtree _qtree_name_ | -qtree-path _qtree path_ ｝ -security-style unix （ -policy _export_policy_name_ ）`
+`volume qtree create -vserver _vserver_name_ { -volume _volume_name_ -qtree _qtree_name_ | -qtree-path _qtree path_ } -security-style unix [-policy _export_policy_name_]`
 
 +
-您可以将卷和 qtree 指定为单独的参数，也可以采用 ` /vol/_volume_name/_qtree_name_` 格式指定 qtree 路径参数。
+您可以将卷和qtree指定为单独的参数、也可以采用格式指定qtree路径参数 `/vol/_volume_name/_qtree_name_`。
 
 +
-默认情况下， qtree 会继承其父卷的导出策略，但可以将其配置为使用自己的导出策略。如果您计划使用现有导出策略，则可以在创建 qtree 时指定该策略。您也可以稍后使用 `volume qtree modify` 命令添加导出策略。
+默认情况下， qtree 会继承其父卷的导出策略，但可以将其配置为使用自己的导出策略。如果您计划使用现有导出策略，则可以在创建 qtree 时指定该策略。您也可以稍后使用添加导出策略 `volume qtree modify` 命令：
 
 . 验证是否已使用所需的接合路径创建 qtree ：
 +
-`volume qtree show -vserver _vserver_name_ ｛ -volume _volume_name_ -qtree _qtree_name_ | -qtree-path _qtree path_ ｝`
+`volume qtree show -vserver _vserver_name_ { -volume _volume_name_ -qtree _qtree_name_ | -qtree-path _qtree path_ }`
 
 
 
 .示例
-以下示例将在 SVM vs1.example.com 上创建一个名为 qt01 的 qtree ，其接合路径为 ` /vol/data1` ：
+以下示例将在SVM vs1.example.com上创建一个名为qt01的qtree、此qtree具有接合路径 `/vol/data1`：
 
 [listing]
 ----

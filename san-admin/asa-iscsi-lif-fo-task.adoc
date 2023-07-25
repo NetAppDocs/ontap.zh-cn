@@ -23,7 +23,7 @@ summary: '从全SAN阵列(ASA)平台上的ONTAP 9.11.1开始、iSCSI LIF故障�
 * iSCSI LIF的自动迁移是LIF故障转移和自动还原、在某些事件中会触发此功能、例如计划内或计划外故障转移、物理以太网链路关闭或节点从复制的数据库(RDB)仲裁中退出。
 +
 ** 将ASA HA对升级到ONTAP 9.11.1后、如果指定Storage VM中不存在iSCSI LIF、或者指定Storage VM中的所有现有iSCSI LIF已通过iSCSI LIF故障转移启用、则新创建的iSCSI LIF将自动启用此功能。
-** 对于在升级到ONTAP 9.11.1之前创建的iSCSI LIF、要使用iSCSI LIF故障转移功能、必须使用ONTAP 命令行界面启用它。(启用故障转移功能和自动还原功能意味着将故障转移策略更改为`sfo-partner-only`并将自动还原值指定为`true`。)
+** 对于在升级到ONTAP 9.11.1之前创建的iSCSI LIF、要使用iSCSI LIF故障转移功能、必须使用ONTAP 命令行界面启用它。(启用故障转移功能和自动还原功能意味着将故障转移策略更改为 `sfo-partner-only` 并将自动还原值指定为 `true`）
 +
 <<使用ONTAP 命令行界面管理iSCSI LIF>>
 
@@ -31,7 +31,7 @@ summary: '从全SAN阵列(ASA)平台上的ONTAP 9.11.1开始、iSCSI LIF故障�
 如果不在现有iSCSI LIF上启用iSCSI LIF故障转移、则在发生故障转移事件时、iSCSI LIF不会进行故障转移。
 
 +
-此外、如果在升级到ONTAP 9.11.1或更高版本后、某个Storage VM中的现有iSCSI LIF尚未启用iSCSI LIF故障转移功能、而您在同一Storage VM中创建了新的iSCSI LIF、 新的iSCSI LIF采用与Storage VM中现有iSCSI LIF相同的故障转移策略(`d已标记为`)。
+此外、如果在升级到ONTAP 9.11.1或更高版本后、Storage VM中的现有iSCSI LIF尚未启用iSCSI LIF故障转移功能、而您在同一Storage VM中创建了新的iSCSI LIF、则新的iSCSI LIF将采用相同的故障转移策略 (`disabled`)。
 
 
 
@@ -56,14 +56,14 @@ summary: '从全SAN阵列(ASA)平台上的ONTAP 9.11.1开始、iSCSI LIF故障�
 [role="Lead"]
 对于启用了iSCSI LIF故障转移(自动或手动)的LIF、适用以下规则。
 
-* 对于使用`data-iscsi`服务策略的LIF、failover-policy限制为`sfo-partner-only`、`local-only`和`disenabled`。
-* iSCSI LIF的故障转移策略设置为`sfo-partner-only`时、只能故障转移到HA配对节点。
-* 如果自动还原设置为`true`、并且LIF的主端口运行状况良好且能够托管LIF、则会自动还原LIF。
+* 对于使用的生命周期 `data-iscsi` 服务策略、则故障转移策略仅限于 `sfo-partner-only`， `local-only`，和 `disabled`。
+* 只有当iSCSI LUN的故障转移策略设置为时、它们才能故障转移到HA配对节点 `sfo-partner-only`。
+* 如果将自动还原设置为、则会自动还原此项 `true` 以及LIF的主端口运行状况良好且能够托管LIF的情况。
 * 在计划内或计划外节点接管时、被接管节点上的iSCSI LIF将故障转移到HA配对节点。LIF故障转移所使用的端口由VIF Manager确定。
 * 故障转移完成后、iSCSI LIF将正常运行。
-* 启动交还后、如果自动还原设置为`true`、则iSCSI LIF将还原回其主节点和端口。
-* 当托管一个或多个iSCSI LIF的端口上的以太网链路关闭时、VIF Manager会将LIF从关闭的端口迁移到同一广播域中的其他端口。新端口可以位于同一节点或其HA配对节点中。还原链路并将自动还原设置为`true`后、VIF Manager会将iSCSI LIF还原回其主节点和主端口。
-* 当某个节点退出复制的数据库(RDB)仲裁时、VIF Manager会将iSCSI LIF从仲裁不足的节点迁移到其HA配对节点。一旦节点恢复仲裁并将自动还原设置为`true`、VIF Manager就会将iSCSI LIF还原回其主节点和主端口。
+* 启动交还后、如果将自动还原设置为、则iSCSI LIF将还原回其主节点和端口 `true`。
+* 当托管一个或多个iSCSI LIF的端口上的以太网链路关闭时、VIF Manager会将LIF从关闭的端口迁移到同一广播域中的其他端口。新端口可以位于同一节点或其HA配对节点中。如果将自动还原设置为、则在链接还原后执行 `true`、VIF Manager会将iSCSI LUN还原回其主节点和主端口。
+* 当某个节点退出复制的数据库(RDB)仲裁时、VIF Manager会将iSCSI LIF从仲裁不足的节点迁移到其HA配对节点。当节点恢复仲裁且自动还原设置为时 `true`、VIF Manager会将iSCSI LUN还原回其主节点和主端口。
 
 
 
@@ -147,7 +147,9 @@ NOTE: 您可以通过选中此复选框来选择永久迁移iSCSI LIF。请注�
 | 如果您要 ... | 使用此命令 ... 
 
 
-| 创建iSCSI LIF | `network interface create -vserver _SVM_name_ -lif _iscsi_lif_ -service-policy default-data-blocks -data-protocol iscsi -home-node _node_name_ -home-port _port_name_ -address _IP_address_ -netmask _netmask_value_`如果需要、请参见 link:../networking/create_a_lif.html["创建 LIF"] 有关详细信息 ... 
+| 创建iSCSI LIF | `network interface create -vserver _SVM_name_ -lif _iscsi_lif_ -service-policy default-data-blocks -data-protocol iscsi -home-node _node_name_ -home-port _port_name_ -address _IP_address_ -netmask _netmask_value_`
+
+如果需要、请参见 link:../networking/create_a_lif.html["创建 LIF"] 有关详细信息 ... 
 
 
 | 验证是否已成功创建LIF | `network interface show -vserver _SVM_name_ -fields failover-policy,failover-group,auto-revert,is-home` 
@@ -156,13 +158,23 @@ NOTE: 您可以通过选中此复选框来选择永久迁移iSCSI LIF。请注�
 | 验证是否可以覆盖iSCSI LIF上的自动还原默认值 | `network interface modify -vserver _SVM_name_ -lif _iscsi_lif_ -auto-revert false` 
 
 
-| 对iSCSI LIF执行存储故障转移 | `storage failover takeover -ofnode _node_name_-option normal`您收到警告：`将启动接管。配对节点重新启动后、系统将自动启动交还。是否要继续？｛y/n｝：` a `y`响应显示其HA配对节点的接管消息。 
+| 对iSCSI LIF执行存储故障转移 | `storage failover takeover -ofnode _node_name_ -option normal`
+
+您会收到警告： `A takeover will be initiated. Once the partner node reboots, a giveback will be automatically initiated. Do you want to continue? {y/n}:`
+
+答 `y` 响应将显示其HA配对节点的接管消息。 
 
 
 | 为已有LIF启用iSCSI LIF故障转移功能 | 对于在将集群升级到ONTAP 9.11.1或更高版本之前创建的iSCSI LIF、您可以通过将故障转移策略修改为来启用iSCSI LIF故障转移功能 `sfo-partner-only` 并将自动还原功能修改为 `true`）：
-`network interface modify -vserver _SVM_name_ -lif _iscsi_lif_ –failover-policy sfo-partner-only -auto-revert true`通过指定-lif*并保持所有其他参数相同、可以在Storage VM中的所有iSCSI LIF上运行此命令。 
+
+`network interface modify -vserver _SVM_name_ -lif _iscsi_lif_ –failover-policy sfo-partner-only -auto-revert true`
+
+通过指定-lif*并保持所有其他参数相同、可以在Storage VM中的所有iSCSI LIF上运行此命令。 
 
 
 | 为已有LIF禁用iSCSI LIF故障转移功能 | 对于在将集群升级到ONTAP 9.11.1或更高版本之前创建的iSCSI LIF、您可以禁用iSCSI LIF故障转移功能和自动还原功能：
-`network interface modify -vserver _SVM_name_ -lif _iscsi_lif_ –failover-policy disabled -auto-revert false`通过指定-lif*并保持所有其他参数相同、可以在Storage VM中的所有iSCSI LIF上运行此命令。 
+
+`network interface modify -vserver _SVM_name_ -lif _iscsi_lif_ –failover-policy disabled -auto-revert false`
+
+通过指定-lif*并保持所有其他参数相同、可以在Storage VM中的所有iSCSI LIF上运行此命令。 
 |===

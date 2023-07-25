@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: setting up, aws, s3, cloud tier 
 summary: 如果您运行的是 ONTAP 9.2 或更高版本，则可以将 AWS S3 设置为 FabricPool 的云层。如果您运行的是 ONTAP 9.5 或更高版本，则可以为 FabricPool 设置 AWS 商用云服务（ C2S ）。 
 ---
-= 将 AWS S3 设置为云层
+= 将AWS S3设置为云层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -45,15 +45,15 @@ https://aws.amazon.com/s3/storage-classes/["Amazon Web Services （ AWS ）文�
 
 
 .步骤
-. 使用 `storage aggregate object-store config create` 命令和 ` provider-type` `AWS_S3` 参数指定 AWS S3 配置信息。
+. 使用指定AWS S3配置信息 `storage aggregate object-store config create` 命令 `-provider-type` `AWS_S3` 参数。
 +
-** 您可以使用 ` -auth-type` `cap` 参数获取 C2S 访问的凭据。
+** 您可以使用 `-auth-type` `CAP` 用于获取C2S访问凭据的参数。
 +
-使用 ` -auth-type` `cap` 参数时，必须使用 ` -cap-url` 参数指定完整 URL 以请求 C2S 访问的临时凭据。
+使用时 `-auth-type` `CAP` 参数、则必须使用 `-cap-url` 用于指定为C2S访问请求临时凭据的完整URL的参数。
 
-** 如果 ONTAP 无法使用提供的信息访问 AWS S3 ，则 `storage aggregate object-store config create` 命令将失败。
-** 您可以使用 ` -access-key` 参数指定用于授权 AWS S3 对象存储请求的访问密钥。
-** 您可以使用 ` -secret-password` 参数指定用于对 AWS S3 对象存储的请求进行身份验证的密码（机密访问密钥）。
+** 。 `storage aggregate object-store config create` 如果ONTAP无法使用提供的信息访问AWS S3、则命令将失败。
+** 您可以使用 `-access-key` 用于指定授权AWS S3对象存储请求的访问密钥的参数。
+** 您可以使用 `-secret-password` 用于指定用于向AWS S3对象存储发出身份验证请求的密码(机密访问密钥)的参数。
 ** 如果更改了 AWS S3 密码，则应立即更新存储在 ONTAP 中的相应密码。
 +
 这样， ONTAP 就可以无中断地访问 AWS S3 中的数据。
@@ -73,8 +73,8 @@ cluster1::> storage aggregate object-store config create -object-store-name my_c
 ----
 
 
-. 使用 `storage aggregate object-store config show` 命令显示并验证 AWS S3 配置信息。
+. 使用显示并验证AWS S3配置信息 `storage aggregate object-store config show` 命令：
 +
-使用 `storage aggregate object-store config modify` 命令可以修改 FabricPool 的 AWS S3 配置信息。
+。 `storage aggregate object-store config modify` 命令用于修改FabricPool的AWS S3配置信息。
 
 

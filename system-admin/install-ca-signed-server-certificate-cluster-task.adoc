@@ -14,13 +14,13 @@ summary: 要使 SSL 服务器能够将集群或 Storage Virtual Machine （ SVM 
 要使 SSL 服务器能够将集群或 Storage Virtual Machine （ SVM ）作为 SSL 客户端进行身份验证，您需要在集群或 SVM 上安装客户端类型的数字证书。然后，将 client-ca 证书提供给 SSL 服务器管理员，以便在服务器上安装。
 
 .您需要的内容
-您必须已在集群或 SVM 上安装类型为 `sserver-ca` 的 SSL 服务器根证书。
+您必须已使用在集群或SVM上安装SSL服务器的根证书 `server-ca` 证书类型。
 
 .步骤
-. 要使用自签名数字证书进行客户端身份验证，请使用 `security certificate create` 命令和 `type client` 参数。
+. 要使用自签名数字证书进行客户端身份验证、请使用 `security certificate create` 命令 `type client` 参数。
 . 要使用 CA 签名的数字证书进行客户端身份验证，请完成以下步骤：
 +
-.. 使用 security certificate `generate-csr` 命令生成数字证书签名请求（ CSR ）。
+.. 使用安全证书生成数字证书签名请求(CSR) `generate-csr` 命令：
 +
 ONTAP 将显示 CSR 输出，其中包括证书请求和私钥，并提醒您将输出复制到文件中以供将来参考。
 
@@ -31,7 +31,7 @@ ONTAP 将显示 CSR 输出，其中包括证书请求和私钥，并提醒您将
 +
 处理完您的请求后， CA 会向您发送已签名的数字证书。
 
-.. 使用带有 ` 类型客户端` 参数的 `security certificate install` 命令安装 CA 签名的证书。
+.. 使用安装CA签名证书 `security certificate install` 命令 `-type client` 参数。
 .. 出现提示时，输入证书和私钥，然后按 * 输入 * 。
 .. 出现提示时，输入任何其他根证书或中间证书，然后按 * 输入 * 。
 +
@@ -39,8 +39,8 @@ ONTAP 将显示 CSR 输出，其中包括证书请求和私钥，并提醒您将
 
 
 
-. 将集群或 SVM 的 `client-ca` 证书提供给 SSL 服务器的管理员，以便在服务器上安装。
+. 提供 `client-ca` 将集群或SVM的证书发给SSL服务器的管理员、以便在服务器上安装。
 +
-带有 ` -instance` 和 ` 类型 client-ca` 参数的 security certificate show 命令可显示 `client-ca` 证书信息。
+带有的security certificATE show命令 `-instance` 和 `-type client-ca` 参数显示 `client-ca` 证书信息。
 
 

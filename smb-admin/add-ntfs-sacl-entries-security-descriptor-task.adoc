@@ -18,7 +18,7 @@ summary: 向 NTFS 安全描述符添加 SACL （系统访问控制列表）访�
 
 如果安全描述符包含具有现有 ACE 的 SACL ，则该命令会将新 ACE 添加到 SACL 。如果安全描述符不包含 SACL ，则该命令将创建 SACL 并将新 ACE 添加到其中。
 
-您可以通过指定要审核在 ` 帐户` 参数中指定的帐户的成功或失败事件的权限来配置 SACL 条目。指定权限的方法有三种，这三种方法是互斥的：
+您可以通过为中指定的帐户指定要审核成功或失败事件的权限来配置SACL条目 `-account` 参数。指定权限的方法有三种，这三种方法是互斥的：
 
 * 权限
 * 高级权限
@@ -27,19 +27,19 @@ summary: 向 NTFS 安全描述符添加 SACL （系统访问控制列表）访�
 
 [NOTE]
 ====
-如果未指定 SACL 条目的权限，则默认设置为 `Full Control` 。
+如果未指定SACL条目的权限、则默认设置为 `Full Control`。
 
 ====
-您也可以选择使用 `apply to` 参数指定如何应用继承来自定义 SACL 条目。如果未指定此参数，则默认情况下会将此 SACL 条目应用于此文件夹，子文件夹和文件。
+您可以选择通过指定如何使用应用继承来自定义SACL条目 `apply to` 参数。如果未指定此参数，则默认情况下会将此 SACL 条目应用于此文件夹，子文件夹和文件。
 
 .步骤
-. 将 SACL 条目添加到安全描述符： `vserver security file-directory ntfs sacl add -vserver vserver_name -ntfs-sd sd_name -access-type ｛ failure_success ｝ -account name_or_SIDoptional_parameters`
+. 将SACL条目添加到安全描述符： `vserver security file-directory ntfs sacl add -vserver vserver_name -ntfs-sd SD_name -access-type {failure|success} -account name_or_SIDoptional_parameters`
 +
-`vserver security file-directory ntfs sacl add -ntfs-sd sd1 -access-type failure -account domain\joe -rights full-control -apply-to sis-folder -vserver vs1`
+`vserver security file-directory ntfs sacl add -ntfs-sd sd1 -access-type failure -account domain\joe -rights full-control -apply-to this-folder -vserver vs1`
 
-. 验证 SACL 条目是否正确： `vserver security file-directory ntfs sacl show -vserver vserver_name -ntfs-sd sd_name -access-type ｛ failure_success ｝ -account name_or_SID`
+. 验证SACL条目是否正确： `vserver security file-directory ntfs sacl show -vserver vserver_name -ntfs-sd SD_name -access-type {failure|success} -account name_or_SID`
 +
-`vserver security file-directory ntfs sacl show -vserver vs1 -ntfs-sd1 -access-type deny -account domain\joe`
+`vserver security file-directory ntfs sacl show -vserver vs1 -ntfs-sd sd1 -access-type deny -account domain\joe`
 
 +
 [listing]

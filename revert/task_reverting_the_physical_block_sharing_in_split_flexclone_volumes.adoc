@@ -16,7 +16,7 @@ summary: 如果已将 FlexClone 卷从其父卷拆分，则在从 ONTAP 9.4 或�
 此任务仅适用于在任何 FlexClone 卷上运行拆分的 AFF 系统。
 
 . 登录到高级权限级别： `set -privilege advanced`
-. 确定具有共享物理块的拆分 FlexClone 卷： `volume clone sharing-by-split show`
+. 确定包含共享物理块的拆分FlexClone卷： `volume clone sharing-by-split show`
 +
 [listing]
 ----
@@ -27,8 +27,8 @@ node1           vs1       vol_clone1    aggr1
 node2           vs2       vol_clone2    aggr2
 2 entries were displayed.
 ----
-. 撤消集群中所有拆分的 FlexClone 卷中的物理块共享： `volume clone sharing-by-split undo start-all`
-. 确认没有具有共享物理块的拆分 FlexClone 卷： `volume clone sharing-by-split show`
+. 撤消集群中所有拆分的FlexClone卷中的物理块共享： `volume clone sharing-by-split undo start-all`
+. 验证是否不存在包含共享物理块的拆分FlexClone卷： `volume clone sharing-by-split show`
 +
 [listing]
 ----

@@ -25,18 +25,18 @@ summary: 您可以使用一个或多个 KMIP 服务器来保护集群用于访�
 .步骤
 . 配置集群的密钥管理器连接：
 +
-` +security key-manager external enable -vserver admin_svm -key-servers host_name_ip_address ： port ， ... -client-cert client_certificate -server-ca-cert server_CA_certificates+`
+`+security key-manager external enable -vserver admin_SVM -key-servers host_name|IP_address:port,... -client-cert client_certificate -server-ca-cert server_CA_certificates+`
 
 +
 [NOTE]
 ====
-** 使用 `security key-manager external enable` 命令可替代 `security key-manager setup` 命令。您可以运行 `security key-manager external modify` 命令来更改外部密钥管理配置。有关完整的命令语法，请参见手册页。
+** 。 `security key-manager external enable` 命令用于替换 `security key-manager setup` 命令：您可以运行 `security key-manager external modify` 用于更改外部密钥管理配置的命令。有关完整的命令语法，请参见手册页。
 ** 在MetroCluster 环境中、如果要为管理SVM配置外部密钥管理、则必须重复 `security key-manager external enable` 命令。
 
 
 ====
 +
-以下命令可通过三个外部密钥服务器为 `cluster1` 启用外部密钥管理。第一个密钥服务器使用其主机名和端口指定，第二个密钥服务器使用 IP 地址和默认端口指定，第三个密钥服务器使用 IPv6 地址和端口指定：
+以下命令将为启用外部密钥管理 `cluster1` 使用三个外部密钥服务器。第一个密钥服务器使用其主机名和端口指定，第二个密钥服务器使用 IP 地址和默认端口指定，第三个密钥服务器使用 IPv6 地址和端口指定：
 
 +
 [listing]
@@ -45,12 +45,12 @@ clusterl::> security key-manager external enable -key-servers ks1.local:15696,10
 ----
 . 验证所有已配置的 KMIP 服务器是否均已连接：
 +
-`security key-manager external show-status -node node_name -vserver SVM -key-server host_name_ip_address ： port -key-server-status available_not-Responding_unknown`
+`security key-manager external show-status -node node_name -vserver SVM -key-server host_name|IP_address:port -key-server-status available|not-responding|unknown`
 
 +
 [NOTE]
 ====
-使用 `security key-manager external show-status` 命令可替换 `security key-manager show -status` 命令。有关完整的命令语法，请参见手册页。
+。 `security key-manager external show-status` 命令用于替换 `security key-manager show -status` 命令：有关完整的命令语法，请参见手册页。
 
 ====
 +

@@ -14,31 +14,32 @@ summary: 您可以监控 SMB 会话统计信息，并确定哪些已建立的会
 您可以监控 SMB 会话统计信息，并确定哪些已建立的会话已签名，哪些未签名。
 
 .关于此任务
-在高级权限级别使用 `statictics` 命令可提供 `smigned_sessions` 计数器，您可以使用该计数器监控已签名的 SMB 会话数。可以使用以下统计信息对象的 `scontrolled_sessions` 计数器：
+。 `statistics` 命令可在高级权限级别提供 `signed_sessions` 可用于监控已签名SMB会话数的计数器。。 `signed_sessions` 计数器可用于以下统计信息对象：
 
-* 使用 `CIFS` 可以监控所有 SMB 会话的 SMB 签名。
-* 使用 `smb1` 可以监控 SMB 1.0 会话的 SMB 签名。
-* `sMB2` 可用于监控 SMB 2.x 和 SMB 3.0 会话的 SMB 签名。
+* `cifs` 用于监控所有SMB会话的SMB签名。
+* `smb1` 用于监控SMB 1.0会话的SMB签名。
+* `smb2` 用于监控SMB 2.x和SMB 3.0会话的SMB签名。
 +
-SMB 3.0 统计信息包含在 `sMB2` 对象的输出中。
+SMB 3.0统计信息包括在的输出中 `smb2` 对象。
 
 
 
-如果要将已签名会话数与会话总数进行比较，可以将 `signed_sessions` 计数器的输出与 `established_sessions` 计数器的输出进行比较。
+如果要将已签名会话数与会话总数进行比较、可以比较的输出 `signed_sessions` 计数器与的输出 `established_sessions` 计数器。
 
 您必须先启动统计信息样本收集，然后才能查看生成的数据。如果不停止数据收集，您可以查看样本中的数据。停止数据收集可提供一个固定样本。如果不停止数据收集，则可以获取更新后的数据，以便与先前的查询进行比较。此比较可帮助您确定趋势。
 
 .步骤
-. 将权限级别设置为 advanced ： + `set -privilege advanced`
+. 将权限级别设置为高级：+
+`set -privilege advanced`
 . 开始数据收集：+
 `statistics start -object {cifs|smb1|smb2} -instance instance -sample-id _sample_ID_ [-node _node_name_]`
 +
-如果未指定 ` -sample-id` 参数，则该命令将为您生成一个示例标识符，并将此示例定义为 CLI 会话的默认示例。` -sample-id` 的值为文本字符串。如果您在同一命令行界面会话期间运行此命令，但未指定 ` -sample-id` 参数，则此命令将覆盖先前的默认样本。
+如果未指定 `-sample-id` 参数时、该命令将为您生成示例标识符、并将此示例定义为命令行界面会话的默认示例。的值 `-sample-id` 是文本字符串。如果您在同一命令行界面会话期间运行此命令、但未指定 `-sample-id` 参数、则此命令将覆盖先前的默认样本。
 
 +
 您也可以指定要收集统计信息的节点。如果未指定节点，则此示例将收集集群中所有节点的统计信息。
 
-. 使用 `satictics stop` 命令停止收集样本数据。
+. 使用 `statistics stop` 命令停止收集样本数据。
 . 查看 SMB 签名统计信息：
 +
 |===
@@ -48,20 +49,21 @@ SMB 3.0 统计信息包含在 `sMB2` 对象的输出中。
  a| 
 已签名的会话
  a| 
-`s如何使用 -sample-id sample_ID -counter signed_sessions|_node_name_ [-node _node_name_]`
+`show -sample-id sample_ID -counter signed_sessions|_node_name_ [-node _node_name_]`
 
 
 
  a| 
 已签名的会话和已建立的会话
  a| 
-`s如何使用 -sample-id _sample_ID_ -counter signed_sessions|established_sessions|_node_name_ [-node node_name]`
+`show -sample-id _sample_ID_ -counter signed_sessions|established_sessions|_node_name_ [-node node_name]`
 
 |===
 +
-如果要仅显示单个节点的信息，请指定可选的 ` 节点` 参数。
+如果要仅显示单个节点的信息、请指定可选 `-node` 参数。
 
-. 返回到管理权限级别： + `set -privilege admin`
+. 返回到管理权限级别：+
+`set -privilege admin`
 
 
 .示例

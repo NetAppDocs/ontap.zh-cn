@@ -11,7 +11,7 @@ summary: 您可以使用 vserver cifs create 命令在 SVM 上创建 SMB 服务�
 
 
 [role="lead"]
-您可以使用 `vserver cifs create` 命令在 SVM 上创建 SMB 服务器并指定其所属的工作组。
+您可以使用 `vserver cifs create` 命令以在SVM上创建SMB服务器并指定其所属的工作组。
 
 .开始之前
 您用于提供数据的 SVM 和 LIF 必须已配置为允许 SMB 协议。LIF 必须能够连接到 SVM 上配置的 DNS 服务器。
@@ -28,17 +28,17 @@ summary: 您可以使用 vserver cifs create 命令在 SVM 上创建 SMB 服务�
 * 卷快照服务（ VSS ）
 
 
-`vserver cifs` 手册页包含其他可选配置参数和命名要求。
+。 `vserver cifs` 手册页包含其他可选配置参数和命名要求。
 
 .步骤
-. 验证您的集群上是否已获得 SMB 许可： `ssystem license show -package cifs`
+. 验证集群上的SMB是否已获得许可： `system license show -package cifs`
 +
 如果不是，请联系您的销售代表。
 
 +
 如果 SMB 服务器仅用于身份验证，则不需要 CIFS 许可证。
 
-. 在工作组中创建 SMB 服务器： `vserver cifs create -vserver vserver_name -cifs-server cifs_server_name -workgroup workstorage_name [-comment text]`
+. 在工作组中创建SMB服务器： `vserver cifs create -vserver vserver_name -cifs-server cifs_server_name -workgroup workgroup_name [-comment text]`
 +
 以下命令会在工作组 "`workgroup01` " 中创建 SMB 服务器 " `sMB_server01` " ：
 
@@ -47,7 +47,7 @@ summary: 您可以使用 vserver cifs create 命令在 SVM 上创建 SMB 服务�
 ----
 cluster1::> vserver cifs create -vserver vs1.example.com -cifs-server SMB_SERVER01 -workgroup workgroup01
 ----
-. 使用 `vserver cifs show` 命令验证 SMB 服务器配置。
+. 使用验证SMB服务器配置 `vserver cifs show` 命令：
 +
 在以下示例中，命令输出显示已在工作组 "`workgroup01` " 的 SVM vs1.example.com 上创建名为 `sMB_server01` 的 SMB 服务器：
 
@@ -74,4 +74,4 @@ Default Site Used by LIFs Without Site Membership: -
 对于工作组中的 CIFS 服务器，您必须在 SVM 上创建本地用户以及可选的本地组。
 
 .相关信息
-link:../smb-admin/index.html["SMB 管理"]
+link:../smb-admin/index.html["SMB管理"]

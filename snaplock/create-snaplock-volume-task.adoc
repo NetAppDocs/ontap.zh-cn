@@ -2,7 +2,7 @@
 permalink: snaplock/create-snaplock-volume-task.html 
 sidebar: sidebar 
 keywords: snaplock, volume, shanpshot, copy, create, complianceclock, file, worm, compliance, enterprise 
-summary: '您必须为要提交到 WORM 状态的文件或 Snapshot 副本创建 SnapLock 卷。从 ONTAP 9.10.1 开始，无论聚合类型如何，您创建的任何卷都会默认创建为非 SnapLock 卷。您必须使用 ` -SnapLock-type` 选项通过指定 Compliance 或 Enterprise 作为 SnapLock 类型来显式创建 SnapLock 卷。默认情况下， SnapLock 类型设置为 `non-SnapLock` 。' 
+summary: '您必须为要提交到 WORM 状态的文件或 Snapshot 副本创建 SnapLock 卷。从 ONTAP 9.10.1 开始，无论聚合类型如何，您创建的任何卷都会默认创建为非 SnapLock 卷。您必须使用 `-snaplock-type` 通过指定"Compliance (合规性)"或"Enterprise (企业)"作为SnapLock类型来显式创建SnapLock卷的选项。默认情况下、SnapLock类型设置为 `non-snaplock`。' 
 ---
 = 创建并挂载SnapLock 卷
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: '您必须为要提交到 WORM 状态的文件或 Snapshot 副本创建
 
 
 [role="lead"]
-您必须为要提交到 WORM 状态的文件或 Snapshot 副本创建 SnapLock 卷。从 ONTAP 9.10.1 开始，无论聚合类型如何，您创建的任何卷都会默认创建为非 SnapLock 卷。您必须使用 ` -SnapLock-type` 选项通过指定 Compliance 或 Enterprise 作为 SnapLock 类型来显式创建 SnapLock 卷。默认情况下， SnapLock 类型设置为 `non-SnapLock` 。
+您必须为要提交到 WORM 状态的文件或 Snapshot 副本创建 SnapLock 卷。从 ONTAP 9.10.1 开始，无论聚合类型如何，您创建的任何卷都会默认创建为非 SnapLock 卷。您必须使用 `-snaplock-type` 通过指定"Compliance (合规性)"或"Enterprise (企业)"作为SnapLock类型来显式创建SnapLock卷的选项。默认情况下、SnapLock类型设置为 `non-snaplock`。
 
 .您需要的内容
 * SnapLock 聚合必须处于联机状态。
@@ -54,13 +54,13 @@ SnapLock卷不支持LUN。只有当在非SnapLock卷上创建的Snapshot副本�
 --
 . 创建 SnapLock 卷：
 +
-` * volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_* -SnapLock-type compliancy| 企业`
+`*volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_* -snaplock-type compliance|enterprise`
 
 +
-有关完整的选项列表，请参见命令手册页。以下选项不适用于 SnapLock 卷： ` -nvfail` ， ` -atime-update` ， ` -is-autobalance-eligible` ， ` -space-mgmt-try-first` 和 `vmalign` 。
+有关完整的选项列表，请参见命令手册页。以下选项不适用于SnapLock卷： `-nvfail`， `-atime-update`， `-is-autobalance-eligible`， `-space-mgmt-try-first`，和 `vmalign`。
 
 +
-以下命令将在 `vs1` 上创建一个名为 `vol1` on `aggr1` on` vs1 `的 SnapLock Compliance 卷：
+以下命令将创建SnapLock `Compliance` 名为的卷 `vol1` 开启 `aggr1` 开启 `vs1`：
 
 +
 [listing]
@@ -88,13 +88,13 @@ SnapLock 卷必须处于联机状态。
 .步骤
 . 挂载 SnapLock 卷：
 +
-` * volume mount -vserver _svm_name_ -volume _volume_name_ -junction-path _path_*`
+`*volume mount -vserver _SVM_name_ -volume _volume_name_ -junction-path _path_*`
 
 +
 有关完整的选项列表，请参见命令手册页。
 
 +
-以下命令会将名为 `vol1` 的 SnapLock 卷挂载到 `vs1` 命名空间中的接合路径 ` /sales` ：
+以下命令会挂载名为的SnapLock卷 `vol1` 连接到接合路径 `/sales` 在中 `vs1` 命名空间：
 
 +
 [listing]

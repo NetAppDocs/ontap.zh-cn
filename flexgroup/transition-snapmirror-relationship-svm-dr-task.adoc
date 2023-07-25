@@ -19,15 +19,15 @@ summary: 您可以通过过渡现有的 FlexGroup 卷 SnapMirror 关系来创建
 
 
 .步骤
-. 从 SnapMirror 目标重新同步 FlexGroup 级别的 SnapMirror 关系： `snapmirror resync`
-. 创建FlexGroup SVM DR SnapMirror关系。使用在FlexGroup 卷SnapMirror关系上配置的相同SnapMirror策略：`snapmirror create -destination-path dest_SVM：-source-path src_SVM：-identity-preserve true -policy MirrorAllSnapshots`
+. 从SnapMirror目标中、重新同步FlexGroup级别SnapMirror关系： `snapmirror resync`
+. 创建FlexGroup SVM DR SnapMirror关系。使用在FlexGroup卷SnapMirror关系上配置的相同SnapMirror策略： `snapmirror create -destination-path dest_svm: -source-path src_svm: -identity-preserve true -policy MirrorAllSnapshots`
 +
 [NOTE]
 ====
-创建复制关系时，您必须使用 `snapmirror create` 命令的 ` -identity-preserve true` 选项。
+您必须使用 `-identity-preserve true` 的选项 `snapmirror create` 命令。
 
 ====
-. 验证此关系是否已断开：`snapmirror show -destination-path dest_svm：-source-path src_svm：`
+. 验证此关系是否已断开： `snapmirror show -destination-path dest_svm: -source-path src_svm:`
 +
 [listing]
 ----
@@ -48,13 +48,13 @@ vserver stop -vserver fg_vs_renamed
 [Job 245] Job is queued: Vserver Stop fg_vs_renamed.
 [Job 245] Done
 ----
-. 重新同步SVM SnapMirror关系：`snapmirror resync -destination-path dest_svm：-source-path src_svm：`
+. 重新同步SVM SnapMirror关系： `snapmirror resync -destination-path dest_svm: -source-path src_svm:`
 +
 [listing]
 ----
 snapmirror resync -destination-path fg_vs_renamed: -source-path fg_vs:
 Warning: This Vserver has volumes which are the destination of FlexVol or FlexGroup SnapMirror relationships. A resync on the Vserver SnapMirror relationship will cause disruptions in data access
 ----
-. 验证 SVM DR 级别 SnapMirror 关系是否达到正常的空闲状态： `snapmirror show -expand`
-. 验证 FlexGroup SnapMirror 关系是否处于运行状况良好的状态： `snapmirror show`
+. 验证SVM灾难恢复级别SnapMirror关系是否处于正常闲置状态： `snapmirror show -expand`
+. 验证FlexGroup SnapMirror关系是否处于运行状况良好的状态： `snapmirror show`
 

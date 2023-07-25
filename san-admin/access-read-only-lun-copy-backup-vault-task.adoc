@@ -26,7 +26,7 @@ summary: 您可以从 SnapVault 备份中的最新 Snapshot 副本访问 LUN 的
 如果在从先前的 Snapshot 副本映射 LUN 的情况下向 SnapVault 二级卷添加了新的 Snapshot 副本，则映射的 LUN 的内容会发生更改。LUN 仍使用相同的标识符进行映射，但数据取自新的 Snapshot 副本。如果 LUN 大小发生变化，则某些主机会自动检测到大小变化； Windows 主机需要重新扫描磁盘才能检测到任何大小变化。
 
 .步骤
-. 运行 `lun show` 命令列出 SnapVault 二级卷中的可用 LUN 。
+. 运行 `lun show` 命令以列出SnapVault二级卷中的可用LUN。
 +
 在此示例中，您可以看到主卷 srcvolA 中的原始 LUN 以及 SnapVault 二级卷 dstvolB 中的副本：
 
@@ -46,7 +46,7 @@ vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
 
 6 entries were displayed.
 ----
-. 如果所需主机的 igroup 在包含 SnapVault 二级卷的 SVM 上尚不存在，请运行 `igroup create` 命令创建一个 igroup 。
+. 如果包含SnapVault二级卷的SVM上尚不存在所需主机的igrop、请运行 `igroup create` 命令以创建igroup。
 +
 此命令将为使用 iSCSI 协议的 Windows 主机创建一个 igroup ：
 
@@ -57,7 +57,7 @@ cluster::> igroup create -vserver vserverB -igroup temp_igroup
   -protocol iscsi -ostype windows
   -initiator iqn.1991-05.com.microsoft:hostA
 ----
-. 运行 `lun mapping create` 命令将所需的 LUN 副本映射到 igroup 。
+. 运行 `lun mapping create` 命令将所需的LUN副本映射到igrop。
 +
 [listing]
 ----

@@ -49,7 +49,7 @@ MetroCluster 软件更新操作步骤涉及一次升级或降级一个 DR 组。
 . 更新 DR 组 1 ：
 +
 .. 更新 node_A_1 和 node_B_1 。
-.. 更新 node_A_2 和 node_B_2 。
+.. 更新NODE_A_2和NODE_B_2。
 
 
 
@@ -59,13 +59,13 @@ MetroCluster 软件更新操作步骤涉及一次升级或降级一个 DR 组。
 . 更新 DR 组 1 ：
 +
 .. 更新 node_A_1 和 node_B_1 。
-.. 更新 node_A_2 和 node_B_2 。
+.. 更新NODE_A_2和NODE_B_2。
 
 
 . 更新 DR 组 2 ：
 +
-.. 更新 node_A_3 和 node_B_3 。
-.. 更新 node_A_4 和 node_B_4 。
+.. 更新NODE_A_3和NODE_B_3。
+.. 更新NODE_A_4和NODE_B_4。
 
 
 
@@ -84,7 +84,7 @@ MetroCluster 软件更新操作步骤涉及一次升级或降级一个 DR 组。
 
 image::../media/mcc_dr_groups_8_node.gif[八节点MetroCluster 配置图。]
 
-. 确定配置中的 DR 对： `MetroCluster node show -fields dr-partner`
+. 确定配置中的DR对： `metrocluster node show -fields dr-partner`
 +
 [listing]
 ----
@@ -100,13 +100,13 @@ image::../media/mcc_dr_groups_8_node.gif[八节点MetroCluster 配置图。]
 
  cluster_A::>
 ----
-. 将权限级别从 admin 设置为 advanced ，并在系统提示您继续时输入 * y* ： `set -privilege advanced`
+. 将权限级别从admin设置为advance,在系统提示您继续时输入*y*： `set -privilege advanced`
 +
-此时将显示高级提示符（` * >` ）。
+高级提示符 (`*>`)。
 
 . 确认每个节点上运行的 ONTAP 版本：
 +
-.. 确认 cluster_A 上的版本： `ssystem image show`
+.. 确认cluster-A上的版本： `system image show`
 +
 [listing]
 ----
@@ -124,7 +124,7 @@ image::../media/mcc_dr_groups_8_node.gif[八节点MetroCluster 配置图。]
 
  cluster_A::>
 ----
-.. 确认 cluster_B 上的版本： `ssystem image show`
+.. 确认cluster-B上的版本： `system image show`
 +
 [listing]
 ----
@@ -144,20 +144,20 @@ image::../media/mcc_dr_groups_8_node.gif[八节点MetroCluster 配置图。]
 ----
 
 
-. 触发 AutoSupport 通知： `AutoSupport invoke -node * -type all -message "staring_NDU"`
+. 触发 AutoSupport 通知： `autosupport invoke -node * -type all -message "Starting_NDU"`
 +
 此 AutoSupport 通知包括更新前的系统状态记录。如果更新过程出现问题，它会保存有用的故障排除信息。
 
 +
 如果集群未配置为发送 AutoSupport 消息，则通知的副本将保存在本地。
 
-. 对于第一组中的每个节点，将目标 ONTAP 软件映像设置为默认映像： `ssystem image modify ｛ -node nodename -iscurrent false ｝ -isdefault true`
+. 对于第一组中的每个节点、将目标ONTAP软件映像设置为默认映像： `system image modify {-node nodename -iscurrent false} -isdefault true`
 +
 此命令使用扩展查询将作为备用映像安装的目标软件映像更改为节点的默认映像。
 
 . 验证目标 ONTAP 软件映像是否设置为默认映像：
 +
-.. 验证 cluster_A 上的映像： `ssystem image show`
+.. 验证cluster-A上的映像： `system image show`
 +
 在以下示例中， image2 是新的 ONTAP 版本，并设置为第一组中每个节点上的默认映像：
 
@@ -177,7 +177,7 @@ image::../media/mcc_dr_groups_8_node.gif[八节点MetroCluster 配置图。]
 
  2 entries were displayed.
 ----
-.. 验证 cluster_B 上的映像： `ssystem image show`
+.. 验证cluster-B上的映像： `system image show`
 +
 以下示例显示目标版本已设置为第一组中每个节点上的默认映像：
 
@@ -199,7 +199,7 @@ image::../media/mcc_dr_groups_8_node.gif[八节点MetroCluster 配置图。]
 ----
 
 
-. 确定要升级的节点当前是否为每个节点的任何客户端提供两次服务： `ssystem node run -node target-node -command uptime`
+. 确定要升级的节点当前是否为每个节点的任何客户端提供两次服务： `system node run -node target-node -command uptime`
 +
 uptime 命令显示节点自上次启动以来对 NFS ， CIFS ， FC 和 iSCSI 客户端执行的操作总数。对于每个协议，您需要运行两次命令来确定操作计数是否在增加。如果它们不断增加，则表示节点当前正在为该协议的客户端提供服务。如果不增加，则节点当前不会为该协议的客户端提供服务。
 
@@ -233,7 +233,7 @@ uptime 命令显示节点自上次启动以来对 NFS ， CIFS ， FC 和 iSCSI 
 如果您已更新第一个 DR 组上的 ONTAP 软件，并且现在正在更新八节点 MetroCluster 配置中的第二个 DR 组，则在此任务中，您将更新 node_A_3 和 node_B_3 。
 
 . 如果启用了 MetroCluster Tiebreaker 软件，请将其禁用。
-. 对于 HA 对中的每个节点，禁用自动交还： `storage failover modify -node target-node -auto-giveback false`
+. 对于HA对中的每个节点、禁用自动交还： `storage failover modify -node target-node -auto-giveback false`
 +
 必须对 HA 对中的每个节点重复执行此命令。
 
@@ -257,7 +257,7 @@ uptime 命令显示节点自上次启动以来对 NFS ， CIFS ， FC 和 iSCSI 
 请勿指定 -option immediate 参数，因为要接管的节点需要正常接管才能启动到新软件映像。
 
 +
-.. 接管 cluster_A （ node_A_1 ）上的 DR 配对节点：``storage failover takeover -ofnode node_A_1``
+.. 接管cluster-A (NODE_A_1)上的DR配对节点：``storage failover takeover -ofnode node_A_1``
 +
 节点启动至 " 正在等待交还 " 状态。
 
@@ -287,7 +287,7 @@ NOTE: 如果启用了 AutoSupport ，则会发送一条 AutoSupport 消息，指
 请勿指定 -option immediate 参数，因为要接管的节点需要正常接管才能启动到新软件映像。
 
 +
-.. 接管 node_B_1 ： `storage failover takeover -ofnode node_B_1`
+.. 接管NODE_B_1： `storage failover takeover -ofnode node_B_1`
 +
 节点启动至 " 正在等待交还 " 状态。
 
@@ -326,14 +326,14 @@ NOTE: 如果启用了 AutoSupport ，则会发送一条 AutoSupport 消息，指
 将 MetroCluster IP 配置升级到 ONTAP 9.5 或更高版本后，聚合将在短时间内处于降级状态，然后再重新同步并返回到镜像状态。
 
 +
-.. 将聚合交还给 cluster_A 上的 DR 配对节点： `storage failover giveback – ofnode node_A_1`
-.. 将聚合交还给 cluster_B 上的 DR 配对节点： `storage failover giveback – ofnode node_B_1`
+.. 将聚合交还给cluster A上的DR配对节点： `storage failover giveback –ofnode node_A_1`
+.. 将聚合交还给cluster B上的DR配对节点： `storage failover giveback –ofnode node_B_1`
 +
 交还操作首先将根聚合返回到节点，然后在节点完成启动后，返回非根聚合。
 
 
 
-. 在两个集群上发出以下命令，以验证是否已返回所有聚合： `storage failover show-giveback`
+. 在两个集群上发出以下命令、以验证是否已返回所有聚合： `storage failover show-giveback`
 +
 如果 Giveback Status 字段指示没有要交还的聚合，则表示所有聚合均已返回。如果交还被否决，则该命令将显示交还进度以及否决了交还的子系统。
 
@@ -356,11 +356,11 @@ NOTE: 如果启用了 AutoSupport ，则会发送一条 AutoSupport 消息，指
 
 
 
-. 将权限级别从 admin 设置为 advanced ，并在系统提示您继续时输入 * y* ： `set -privilege advanced`
+. 将权限级别从admin设置为advance,在系统提示您继续时输入*y*： `set -privilege advanced`
 +
-此时将显示高级提示符（` * >` ）。
+高级提示符 (`*>`)。
 
-. 确认 cluster_A 上的版本： `ssystem image show`
+. 确认cluster-A上的版本： `system image show`
 +
 以下示例显示 System image2 应为 node_A_1 上的默认和当前版本：
 
@@ -381,7 +381,7 @@ NOTE: 如果启用了 AutoSupport ，则会发送一条 AutoSupport 消息，指
 
  cluster_A::>
 ----
-. 确认 cluster_B 上的版本： `ssystem image show`
+. 确认cluster-B上的版本： `system image show`
 +
 以下示例显示系统 image2 （ ONTAP 9.0.0 ）是 node_A_1 上的默认和当前版本：
 
@@ -412,7 +412,7 @@ NOTE: 如果启用了 AutoSupport ，则会发送一条 AutoSupport 消息，指
 
 您应已升级第一个 DR 对（ node_A_1 和 node_B_1 ）。
 
-在此任务中， node_A_2 和 node_B_2 已更新。
+在此任务中、将更新NODE_A_2和NODE_B_2。
 
 如果您已更新第一个 DR 组上的 ONTAP 软件，并且现在正在更新八节点 MetroCluster 配置中的第二个 DR 组，则在此任务中，您将更新 node_A_4 和 node_B_4 。
 
@@ -427,7 +427,7 @@ NOTE: 如果启用了 AutoSupport ，则会发送一条 AutoSupport 消息，指
 
 +
 
-NOTE: 从 ONTAP 9.0 升级到 ONTAP 9.1 或任何修补程序升级均不需要 `allow-version-mismatch` 选项。
+NOTE: 。 `allow-version-mismatch` 从ONTAP 9.0升级到ONTAP 9.1或任何修补程序升级都不需要此选项。
 
 +
 节点启动至 " 正在等待交还 " 状态。
@@ -465,16 +465,17 @@ node_A_2       node_A_1       -        Waiting for giveback (HA mailboxes)
 
 
  a| 
-ONTAP 9.2 或 ONTAP 9.1
+ONTAP 9.2或 ONTAP 9.1
  a| 
 `storage failover takeover -ofnode node_B_2`
 
 
 
  a| 
-ONTAP 9.0 或 Data ONTAP 8.3.x
+ONTAP 9.0或 Data ONTAP 8.3.x
  a| 
-`storage failover takeover -ofnode node_B_2 -option allow-version-mismatch` 注：从 ONTAP 9.0 升级到 ONTAP 9.1 或任何修补程序升级均不需要 `allow-version-mismatch` 选项。
+`storage failover takeover -ofnode node_B_2 -option allow-version-mismatch`
+注意： `allow-version-mismatch` 从ONTAP 9.0升级到ONTAP 9.1或任何修补程序升级都不需要此选项。
 
 |===
 
@@ -483,7 +484,8 @@ ONTAP 9.0 或 Data ONTAP 8.3.x
 
 节点启动至 " 正在等待交还 " 状态。
 
-+ 注意：如果启用了 AutoSupport ，则会发送一条 AutoSupport 消息，指示节点已超出集群仲裁。您可以安全地忽略此通知并继续升级。
++
+注意：如果启用了AutoSupport、则会发送AutoSupport消息、指示节点脱离集群仲裁关系。您可以安全地忽略此通知并继续升级。
 
 . 验证接管是否成功： `storage failover show`
 +
@@ -516,13 +518,13 @@ node_B_2       node_B_1       -        Waiting for giveback (HA mailboxes)
 
 
 
-. 将聚合交还给 cluster_A 上的 DR 配对节点： `storage failover giveback – ofnode node_A_2`
-. 将聚合交还给 cluster_B 上的 DR 配对节点： `storage failover giveback – ofnode node_B_2`
+. 将聚合交还给cluster A上的DR配对节点： `storage failover giveback –ofnode node_A_2`
+. 将聚合交还给cluster B上的DR配对节点： `storage failover giveback –ofnode node_B_2`
 +
 交还操作首先将根聚合返回到节点，然后在节点完成启动后，返回非根聚合。
 
 +
-.. 在两个集群上发出以下命令，以验证是否已返回所有聚合： `storage failover show-giveback`
+.. 在两个集群上发出以下命令、以验证是否已返回所有聚合： `storage failover show-giveback`
 +
 如果 Giveback Status 字段指示没有要交还的聚合，则表示所有聚合均已返回。如果交还被否决，则该命令将显示交还进度以及否决了交还的子系统。
 
@@ -533,17 +535,21 @@ node_B_2       node_B_1       -        Waiting for giveback (HA mailboxes)
 . 如有必要，请解决错误消息中所述的 " 从 `ve到` " 条件，确保已确定的任何操作均正常终止。
 . 重新输入 storage failover giveback 命令。
 +
-如果您决定覆盖 " `ve到` " 条件，请将 -override-vetoes 参数设置为 true 。。请至少等待八分钟，以确保满足以下条件： * 客户端多路径（如果已部署）已稳定。* 客户端将从交还期间发生的 I/O 暂停中恢复。
+如果您决定覆盖 " `ve到` " 条件，请将 -override-vetoes 参数设置为 true 。
+。至少等待八分钟，以确保满足以下条件：
+ **客户端多路径(如果已部署)已稳定下来。
+ * 客户端将从交还期间发生的 I/O 暂停中恢复。
 
 +
-+ 恢复时间特定于客户端，根据客户端应用程序的特征，可能需要超过八分钟。
++
+恢复时间特定于客户端，根据客户端应用程序的特征，可能需要超过八分钟。
 
 +
-.. 将权限级别从 admin 设置为 advanced ，并在系统提示您继续时输入 * y* ： `set -privilege advanced`
+.. 将权限级别从admin设置为advance,在系统提示您继续时输入*y*： `set -privilege advanced`
 +
-此时将显示高级提示符（` * >` ）。
+高级提示符 (`*>`)。
 
-.. 确认 cluster_A 上的版本： `ssystem image show`
+.. 确认cluster-A上的版本： `system image show`
 +
 以下示例显示系统 image2 （目标 ONTAP 映像）是 node_A_2 上的默认和当前版本：
 
@@ -564,9 +570,9 @@ node_A_2
 
 cluster_A::>
 ----
-.. 确认 cluster_B 上的版本： `ssystem image show`
+.. 确认cluster-B上的版本： `system image show`
 +
-以下示例显示系统 image2 （目标 ONTAP 映像）是 node_B_2 上的默认和当前版本：
+以下示例显示系统image2 (目标ONTAP映像)是NODE_B_2上的默认和当前版本：
 
 +
 [listing]
@@ -585,7 +591,7 @@ node_B_2
 
 cluster_A::>
 ----
-.. 对于 HA 对中的每个节点，启用自动交还： `storage failover modify -node target-node -auto-giveback true`
+.. 对于HA对中的每个节点、启用自动交还： `storage failover modify -node target-node -auto-giveback true`
 +
 必须对 HA 对中的每个节点重复执行此命令。
 

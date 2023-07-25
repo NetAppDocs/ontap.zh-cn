@@ -73,34 +73,34 @@ summary: 根据所使用的ONTAP 版本、您可能需要创建一个自定义RB
 在创建限制性角色之前需要执行此操作，以确保此角色仅对活动跟踪具有限制性：
 
 +
-`ssecurity login role create -cmddirname default -access all -role storageAdmin`
+`security login role create -cmddirname DEFAULT -access all -role storageAdmin`
 
 . 创建限制性角色：
 +
-`ssecurity login role create -cmddirname "volume file show-disk-usage" -access none -role storageAdmin`
+`security login role create -cmddirname "volume file show-disk-usage" -access none -role storageAdmin`
 
 . 授权角色访问 SVM 的 Web 服务：
 +
-** `rest` 用于 REST API 调用
-** `s安全性` 用于密码保护
-** `sysmgr` 用于 System Manager 访问
+** `rest` 用于REST API调用
+** `security` 用于密码保护
+** `sysmgr` 用于访问System Manager
 +
-`vserver services web access create -vserver _svm-name_-name_-name REST -role storageAdmin`
+`vserver services web access create -vserver _svm-name_ -name_ -name rest -role storageAdmin`
 
 +
-`vserver services web access create -vserver _svm-name_-name security -role storageAdmin`
+`vserver services web access create -vserver _svm-name_ -name security -role storageAdmin`
 
 +
-`vserver services web access create -vserver _svm-name_-name sysmgr -role storageAdmin`
+`vserver services web access create -vserver _svm-name_ -name sysmgr -role storageAdmin`
 
 
 
 . 创建用户。
 +
-您必须为要应用于用户的每个应用程序问题描述 一个不同的 create 命令。在同一用户上多次调用 create 只会将所有应用程序应用于该用户，而不会每次创建新用户。应用程序类型的 `http` 参数适用于 ONTAP REST API 和系统管理器。
+您必须为要应用于用户的每个应用程序问题描述 一个不同的 create 命令。在同一用户上多次调用 create 只会将所有应用程序应用于该用户，而不会每次创建新用户。。 `http` 应用程序类型的参数适用于ONTAP REST API和System Manager。
 
 +
-`ssecurity login create -user-or-group-name storageUser -authentication-method password -application http -role storageAdmin`
+`security login create -user-or-group-name storageUser -authentication-method password -application http -role storageAdmin`
 
 . 现在、您可以使用新的用户凭据登录到System Manager或使用ONTAP REST API访问文件系统分析数据。
 

@@ -16,25 +16,25 @@ summary: 创建数据卷后，您可以创建持续可用的共享，应用程�
 .步骤
 . 显示有关现有数据卷及其接合路径的信息：
 +
-` * volume show -vserver _vserver_name_ -junction*`
+`*volume show -vserver _vserver_name_ -junction*`
 
 . 创建持续可用的 SMB 共享：
 +
-` * vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path _path_ -share-properties oplocks ， continuous-available -symlink "" [-comment text]*`
+`*vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path _path_ -share-properties oplocks,continuously-available -symlink "" [-comment text]*`
 
 +
 ** 您可以选择向共享配置添加注释。
-** 默认情况下，在共享上配置脱机文件共享属性，并将其设置为 `manual` 。
-** ONTAP 使用 Windows 默认共享权限 `Everyone` / `Full Control` 创建共享。
+** 默认情况下、脱机文件共享属性在共享上配置、并设置为 `manual`。
+** ONTAP会使用的Windows默认共享权限创建共享 `Everyone` / `Full Control`。
 
 
 . 对共享配置工作表中的所有共享重复上述步骤。
-. 使用 `vserver cifs share show` 命令验证您的配置是否正确。
+. 使用验证您的配置是否正确 `vserver cifs share show` 命令：
 . 通过将驱动器映射到每个共享并使用 * Windows 属性 * 窗口配置文件权限，在持续可用的共享上配置 NTFS 文件权限。
 
 
 .示例
-以下命令会在 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 上创建名为 `data2` 的持续可用共享。通过将 ` -symlink` 参数设置为 ` ""` ，可以禁用符号链接：
+以下命令会在 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 上创建名为 `data2` 的持续可用共享。通过设置禁用符号链接 `-symlink` 参数设置为 `""`：
 
 [listing]
 ----

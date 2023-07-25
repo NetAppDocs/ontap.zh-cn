@@ -36,10 +36,12 @@ summary: 创建新的 S3 存储分段时，您可以立即将其保护到同一�
 .. 单击 * 存储 > 存储 VM* ，然后选择此 Storage VM 。
 .. 在 * 设置 * 选项卡中，单击 image:icon_pencil.gif["编辑图标"] 在 S3 磁贴中。
 .. 在 * 用户 * 选项卡中，验证是否存在 root 用户的访问密钥
-.. 如果没有，请单击 image:icon_kabob.gif["更多图标"] 在 * 根 * 旁边，单击 * 重新生成密钥 * 。如果已存在密钥，请勿重新生成该密钥。
+.. 如果没有，请单击 image:icon_kabob.gif["更多图标"] 在 * 根 * 旁边，单击 * 重新生成密钥 * 。
+如果已存在密钥，请勿重新生成该密钥。
 
 
-. 编辑源和目标 Storage VM 中的 Storage VM 以添加用户并将用户添加到组：单击 * 存储 > Storage VM* ，单击 Storage VM ，单击 * 设置 * ，然后单击 image:icon_pencil.gif["编辑图标"] 在 S3 下。
+. 编辑 Storage VM 以在源和目标 Storage VM 中添加用户并将用户添加到组：
+单击 * 存储 > Storage VM* ，单击此 Storage VM ，单击 * 设置 * ，然后单击 image:icon_pencil.gif["编辑图标"] 在 S3 下。
 +
 请参见 link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组"] 有关详细信息 ...
 
@@ -63,8 +65,8 @@ summary: 创建新的 S3 存储分段时，您可以立即将其保护到同一�
 .. 在 * 权限 * 下，单击 * 添加 * 。验证权限是可选的，但建议这样做。
 +
 *** * 主体 * 和 * 影响 * —选择与您的用户组设置对应的值，或者接受默认值。
-*** * 操作 * - 确保显示以下值： `GetObject ， PutObject ， DeleteObject ， ListBucketAcl ， GetObjectAcl ， ListBucketMultipartuplads ， ListMultipartu上传 部件`
-*** * 资源 * - 使用默认值 `` （ bucketname ， bucketname/* ）`` 或其他所需值
+*** *Actions*-确保显示以下值： `GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts`
+*** *Resaults*-使用默认值 ``(bucketname, bucketname/*)`` 或您需要的其他值
 +
 请参见 link:../task_object_provision_manage_bucket_access.html["管理用户对存储分段的访问权限"] 有关这些字段的详细信息，请参见。
 
@@ -101,33 +103,36 @@ summary: 创建新的 S3 存储分段时，您可以立即将其保护到同一�
 
 == 命令行界面操作步骤
 
-. 如果这是此 SVM 的第一个 S3 SnapMirror 关系，请验证源和目标 SVM 是否都存在根用户密钥，如果不存在根用户密钥，请重新生成这些密钥： `vserver object-store-server user show`
+. 如果这是此 SVM 的第一个 S3 SnapMirror 关系，请验证源和目标 SVM 是否都存在根用户密钥，如果没有，请重新生成这些密钥：
+`vserver object-store-server user show`
 +
-验证是否存在 root 用户的访问密钥。如果没有，请输入： `vserver object-store-server user re生成 密钥 -vserver _svm_name_ -user _root_`
+验证是否存在 root 用户的访问密钥。如果没有，请输入：
+`vserver object-store-server user regenerate-keys -vserver _svm_name_ -user _root_`
 
 +
 如果已存在密钥，请勿重新生成该密钥。
 
 . 在源和目标 SVM 中创建分段：
 +
-`vserver object-store-server bucket create -vserver svm_name -bucket bucket_name "-size _intege_[KB_MB|GB_TB_PB]] [-comment _text_] [_additional _options_]`
+`vserver object-store-server bucket create -vserver svm_name -bucket bucket_name [-size _integer_[KB|MB|GB|TB|PB]] [-comment _text_] [_additional_options_]`
 
 . 将访问规则添加到源和目标 SVM 的默认存储分段策略中：
 +
-`vserver object-store-server bucket policy add-statement -vserver _svm_name_ -buck_bucket_name_ -Effect ｛ allow_deny ｝ -action _object_store_actions_ -principal _user_and_group_name_ -resource _object_store_resources_[-SID _text_] [-index _intege_]`
+`vserver object-store-server bucket policy add-statement -vserver _svm_name_ -bucket _bucket_name_ -effect {allow|deny} -action _object_store_actions_ -principal _user_and_group_names_ -resource _object_store_resources_ [-sid _text_] [-index _integer_]`
 
 +
 ....
 src_cluster::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ....
-. 如果您现有的 S3 SnapMirror 策略不想使用默认策略，请创建一个： `snapmirror policy create -vserver svm_name -policy policy_name -type continuous （ -RPO _intege_） "-throttle _throttle_type_] （ -comment _text_] ）【 _Additional _options】`
+. 如果您没有 S3 SnapMirror 策略，并且不想使用默认策略，请创建该策略：
+`snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
 Parameters
 
 +
-** `continuous` — S3 SnapMirror 关系的唯一策略类型（必需）。
-** ` -RPO` —指定恢复点目标的时间，以秒为单位（可选）。
-** ` -throttle` —指定吞吐量 / 带宽的上限，以 KB/ 秒为单位（可选）。
+** `continuous` –S3 SnapMirror关系的唯一策略类型(必需)。
+** `-rpo` 指定恢复点目标的时间(以秒为单位)(可选)。
+** `-throttle` –指定吞吐量/带宽的上限(以千字节/秒为单位)(可选)。
 +
 .示例
 [listing]
@@ -138,14 +143,19 @@ src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -po
 
 . 在管理 SVM 上安装 CA 服务器证书：
 +
-.. 在管理 SVM 上安装对 _source_S3 服务器证书签名的 CA 证书： `security certificate install -type server-ca -vserver _admin_svm_ -ct-name _src_server_certificate_`
-.. 在管理 SVM 上安装签名 _destination_S3 服务器证书的 CA 证书： `security certificate install -type server-ca -vserver _admin_svm_ -cert -name _dest_server_certificate_` + 如果您使用的是由外部 CA 供应商签名的证书，则只需在管理 SVM 上安装此证书。
+.. 在管理SVM上安装用于对_sSource_ S3服务器的证书进行签名的CA证书：
+`security certificate install -type server-ca -vserver _admin_svm_ -cert-name _src_server_certificate_`
+.. 在管理SVM上安装用于对_deign_ S3服务器的证书进行签名的CA证书：
+`security certificate install -type server-ca -vserver _admin_svm_ -cert-name _dest_server_certificate_`
+ +
+如果您使用的是由外部CA供应商签名的证书、则只需在管理SVM上安装此证书即可。
 +
-有关详细信息，请参见 `security certificate install` 手册页。
+请参见 `security certificate install` 有关详细信息、请参见手册页。
 
 
 
-. 创建 S3 SnapMirror 关系： `snapmirror create -source-path _src_svm_name_ ： /buce/_bucket_name_ -destination-path _dest_peer_svm_name_ ： /bucket/_bucket_name_ ， ... ｝ 【 -policy policy_name】``
+. 创建S3 SnapMirror关系：
+`snapmirror create -source-path _src_svm_name_:/bucket/_bucket_name_ -destination-path _dest_peer_svm_name_:/bucket/_bucket_name_, ...} [-policy policy_name]``
 +
 您可以使用创建的策略或接受默认值。
 
@@ -153,5 +163,6 @@ src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -po
 ....
 src_cluster::> snapmirror create -source-path vs0-src:/bucket/test-bucket -destination-path vs1-dest:/vs1/bucket/test-bucket-mirror -policy test-policy
 ....
-. 验证镜像是否处于活动状态： `snapmirror show -policy-type continuous -fields status`
+. 验证镜像是否处于活动状态：
+`snapmirror show -policy-type continuous -fields status`
 

@@ -11,7 +11,7 @@ summary: 您可以使用 volume move start 命令通过移动现有卷来启用�
 
 
 [role="lead"]
-您可以使用 `volume move start` 命令通过移动现有卷来启用加密。在 ONTAP 9.2 及更早版本中，必须使用 `volume move start` 。您可以使用同一个聚合或不同的聚合。
+您可以使用 `volume move start` 命令以通过移动现有卷启用加密。您必须使用 `volume move start` 在ONTAP 9.2及更早版本中。您可以使用同一个聚合或不同的聚合。
 
 .您需要的内容
 要执行此任务，您必须是集群管理员，或者集群管理员已向其委派权限的 SVM 管理员。
@@ -19,9 +19,9 @@ summary: 您可以使用 volume move start 命令通过移动现有卷来启用�
 link:delegate-volume-encryption-svm-administrator-task.html["委派权限以运行 volume move 命令"]
 
 .关于此任务
-从 ONTAP 9.8 开始，您可以使用 `volume move start` 在 SnapLock 或 FlexGroup 卷上启用加密。
+从ONTAP 9.8开始、您可以使用 `volume move start` 在SnapLock或FlexGroup卷上启用加密。
 
-从 ONTAP 9.4 开始，如果在设置板载密钥管理器时启用 "`cc-mode` " ，则使用 `volume move start` 命令创建的卷会自动加密。您不需要指定 ` -encrypt-destination true` 。
+从ONTAP 9.4开始、如果在设置板载密钥管理器时启用"`cc-mode`"、则会显示使用创建的卷 `volume move start` 命令会自动加密。您无需指定 `-encrypt-destination true`。
 
 从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要移动的卷所在的聚合分配密钥。使用唯一密钥加密的卷称为 _NVE volume_ 。使用聚合级别密钥加密的卷称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
 
@@ -38,42 +38,42 @@ link:delegate-volume-encryption-svm-administrator-task.html["委派权限以运�
  a| 
 纯文本卷到 NVE 卷
  a| 
-`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination true`
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination true`
 
 
 
  a| 
 将 NVE 或纯文本卷连接到 NAE 卷（假设目标上启用了聚合级别加密）
  a| 
-`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-wing-aggr-key true`
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-with-aggr-key true`
 
 
 
  a| 
 NAE 卷到 NVE 卷
  a| 
-`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-wing-aggr-key false`
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-with-aggr-key false`
 
 
 
  a| 
 NAE 卷到纯文本卷
  a| 
-`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false -encrypt-wing-aggr-key false`
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false -encrypt-with-aggr-key false`
 
 
 
  a| 
-NVE 卷到纯文本卷
+NVE卷转换为纯文本卷
  a| 
-`volume move start -vserver svm_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false`
+`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false`
 
 |===
 +
 有关完整的命令语法，请参见命令手册页。
 
 +
-以下命令会将名为 `vol1` 的纯文本卷转换为 NVE 卷：
+以下命令将转换名为的纯文本卷 `vol1` 到NVE卷：
 
 +
 [listing]
@@ -81,7 +81,7 @@ NVE 卷到纯文本卷
 cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate aggr2 -encrypt-destination true
 ----
 +
-假设目标上启用了聚合级别加密，以下命令会将名为 `vol1` 的 NVE 或纯文本卷转换为 NAE 卷：
+假设在目标上启用了聚合级加密、则以下命令将转换名为的NVE或纯文本卷 `vol1` 到NAE卷：
 
 +
 [listing]
@@ -89,7 +89,7 @@ cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate a
 cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate aggr2 -encrypt-with-aggr-key true
 ----
 +
-以下命令会将名为 `vol2` 的 NAE 卷转换为 NVE 卷：
+以下命令将转换名为的NAE卷 `vol2` 到NVE卷：
 
 +
 [listing]
@@ -97,7 +97,7 @@ cluster1::> volume move start -vserver vs1 -volume vol1 -destination-aggregate a
 cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate aggr2 -encrypt-with-aggr-key false
 ----
 +
-以下命令会将名为 `vol2` 的 NAE 卷转换为纯文本卷：
+以下命令将转换名为的NAE卷 `vol2` 纯文本卷：
 
 +
 [listing]
@@ -105,7 +105,7 @@ cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate a
 cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate aggr2 -encrypt-destination false -encrypt-with-aggr-key false
 ----
 +
-以下命令会将名为 `vol2` 的 NVE 卷转换为纯文本卷：
+以下命令将转换名为的NVE卷 `vol2` 纯文本卷：
 
 +
 [listing]
@@ -114,16 +114,16 @@ cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate a
 ----
 . 查看集群卷的加密类型：
 +
-`volume show -fields encryption-type none|volume| aggregate`
+`volume show -fields encryption-type none|volume|aggregate`
 
 +
-ONTAP 9.6 及更高版本提供了 `encrypt-type` 字段。
+。 `encryption-type` 字段在ONTAP 9.6及更高版本中可用。
 
 +
 有关完整的命令语法，请参见命令手册页。
 
 +
-以下命令显示 `cluster2` 中的卷加密类型：
+以下命令显示中卷的加密类型 `cluster2`：
 
 +
 [listing]
@@ -144,7 +144,7 @@ vs3      vol3    aggregate
 有关完整的命令语法，请参见命令手册页。
 
 +
-以下命令将显示 `cluster2` 上的加密卷：
+以下命令将显示上的加密卷 `cluster2`：
 
 +
 [listing]

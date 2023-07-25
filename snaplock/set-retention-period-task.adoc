@@ -32,17 +32,17 @@ image::../media/retention.gif[retention]
 .了解默认保留期限
 SnapLock Compliance 或 Enterprise 卷具有四个保留期限：
 
-* 最短保留期限（ `m以` 为单位），默认值为 0
-* 最长保留期限（ `max` ），默认为 30 年
-* 默认保留期限，从 ONTAP 9.10.1 开始，合规模式和企业模式的默认保留期限均等于 `min` 。在 ONTAP 9.10.1 之前的 ONTAP 版本中，默认保留期限取决于模式：
+* 最短保留期限 (`min`)、默认值为0
+* 最长保留期限 (`max`)、默认值为30年
+* 默认保留期限、其中默认值等于 `min` 对于从ONTAP 9.10.1开始的合规模式和企业模式。在 ONTAP 9.10.1 之前的 ONTAP 版本中，默认保留期限取决于模式：
 +
-** 对于合规模式，默认值等于 `max` 。
-** 对于企业模式，默认值等于` 中的 `m。
+** 对于合规模式、默认值等于 `max`。
+** 对于企业模式、默认值等于 `min`。
 
 
 * 未指定保留期限。
 +
-从 ONTAP 9.8 开始，您可以将卷中文件的保留期限设置为 `unspecified` ，以便在设置绝对保留时间之前保留该文件。您可以将绝对保留时间设置为未指定的保留时间的文件，并将其恢复为绝对保留时间，前提是新的绝对保留时间晚于先前设置的绝对时间。
+从ONTAP 9.8开始、您可以将卷中文件的保留期限设置为 `unspecified`，以使文件在设置绝对保留时间之前得以保留。您可以将绝对保留时间设置为未指定的保留时间的文件，并将其恢复为绝对保留时间，前提是新的绝对保留时间晚于先前设置的绝对时间。
 
 +
 从ONTAP 9.12.1开始、保留期限设置为的WORM文件 `unspecified` 保证将保留期限设置为为为SnapLock 卷配置的最小保留期限。将文件保留期限更改为 `unspecified` 要达到绝对保留时间、指定的新保留时间必须大于文件上已设置的最小保留时间。
@@ -55,7 +55,7 @@ SnapLock Compliance 或 Enterprise 卷具有四个保留期限：
 
 == 设置默认保留期限
 
-您可以使用 `volume SnapLock modify` 命令为 SnapLock 卷上的文件设置默认保留期限。
+您可以使用 `volume snaplock modify` 命令为SnapLock卷上的文件设置默认保留期限。
 
 .您需要的内容
 SnapLock 卷必须处于联机状态。
@@ -148,9 +148,9 @@ months
 保留这些文件，直到设置了绝对保留期限为止。
 
 |===
-最大和最小保留期限的值和范围是相同的，但 `max` 和` in `m除外，这两种情况不适用。有关此任务的详细信息，请参见 link:set-retention-period-task.html["设置保留时间概述"]。
+最长和最短保留期限的值和范围相同、但除外 `max` 和 `min`，不适用。有关此任务的详细信息，请参见 link:set-retention-period-task.html["设置保留时间概述"]。
 
-您可以使用 `volume SnapLock show` 命令查看卷的保留期限设置。有关详细信息，请参见命令的手册页。
+您可以使用 `volume snaplock show` 命令以查看卷的保留期限设置。有关详细信息，请参见命令的手册页。
 
 [NOTE]
 ====
@@ -160,7 +160,7 @@ months
 .步骤
 . 为 SnapLock 卷上的文件设置默认保留期限：
 +
-` * volume SnapLock modify -vserver _svm_name_ -volume _volume_name_ -default-retention-period _default_retention_period_ -minimal-retention-period _min_retention_period_ -max-retention-period _max_retention_period_*`
+`*volume snaplock modify -vserver _SVM_name_ -volume _volume_name_ -default-retention-period _default_retention_period_ -minimum-retention-period _min_retention_period_ -maximum-retention-period _max_retention_period_*`
 
 +
 有关完整的选项列表，请参见命令手册页。
@@ -221,17 +221,17 @@ cluster1::> volume snaplock modify -vserver vs1 -volume vol1 -default-retention-
 您可以通过修改文件的上次访问时间来明确设置文件的保留时间。您可以通过 NFS 或 CIFS 使用任何合适的命令或程序来修改上次访问时间。
 
 .关于此任务
-将文件提交到 WORM 后，您可以延长但不能缩短保留时间。保留时间存储在文件的 `atime` 字段中。
+将文件提交到 WORM 后，您可以延长但不能缩短保留时间。保留时间存储在中 `atime` 字段。
 
 [NOTE]
 ====
-您不能将文件的保留时间显式设置为 `无限` 。只有在使用默认保留期限计算保留时间时，此值才可用。
+您不能将文件的保留时间显式设置为 `infinite`。只有在使用默认保留期限计算保留时间时，此值才可用。
 
 ====
 .步骤
 . 使用合适的命令或程序修改要设置保留时间的文件的上次访问时间。
 +
-在 UNIX Shell 中，使用以下命令将保留时间设置为 2020 年 11 月 21 日早上 6 ： 00在名为 `document.txt` 的文件上：
+在 UNIX Shell 中，使用以下命令将保留时间设置为 2020 年 11 月 21 日早上 6 ： 00在名为的文件上 `document.txt`：
 
 +
 [listing]
@@ -291,10 +291,10 @@ EBR 策略不能应用于合法保留下的文件。
 .步骤
 . 创建 EBR 策略：
 +
-` * SnapLock 事件保留策略 create -vserver _svm_name_ -name _policy_name_ -retention-period _retention_period_*`
+`*snaplock event-retention policy create -vserver _SVM_name_ -name _policy_name_ -retention-period _retention_period_*`
 
 +
-以下命令会在 `vs1` 上创建 EBR 策略 `emone_exit` ，保留期限为 10 年：
+以下命令将创建EBR策略 `employee_exit` 开启 `vs1` 保留期限为十年：
 
 +
 [listing]
@@ -303,10 +303,10 @@ cluster1::>snaplock event-retention policy create -vserver vs1 -name employee_ex
 ----
 . 应用 EBR 策略：
 +
-` * SnapLock 事件保留应用 -vserver _svm_name_ -name _policy_name_ -volume _volume_name_ -path _path_name_*`
+`*snaplock event-retention apply -vserver _SVM_name_ -name _policy_name_ -volume _volume_name_ -path _path_name_*`
 
 +
-以下命令会将 EBR 策略 `emple_exit` on `vs1` 应用于目录 `D 1` 中的所有文件：
+以下命令将应用EBR策略 `employee_exit` 开启 `vs1` 目录中的所有文件 `d1`：
 
 +
 [listing]

@@ -63,16 +63,16 @@ FabricPool 镜像为您提供了一种无缝替换数据存储的方法，它有
 `dns host create -vserver svm_name -address ip_address -hostname s3_server_name`
 
 |===
-. 使用 `storage aggregate object-store config create` 命令和 ` provider-type` `ontap_S3` 参数指定 ONTAP S3 配置信息。
+. 使用指定ONTAP S3配置信息 `storage aggregate object-store config create` 命令 `-provider-type` `ONTAP_S3` 参数。
 +
-** 如果本地 ONTAP 系统无法使用提供的信息访问 ONTAP S3 服务器，则 `storage aggregate object-store config create` 命令将失败。
-** 您可以使用 ` -access-key` 参数指定用于向 ONTAP S3 服务器授权请求的访问密钥。
-** 您可以使用 ` -secret-password` 参数指定用于对 ONTAP S3 服务器的请求进行身份验证的密码（机密访问密钥）。
+** 。 `storage aggregate object-store config create` 如果本地ONTAP系统无法使用提供的信息访问ONTAP S3服务器、则命令将失败。
+** 您可以使用 `-access-key` 用于指定用于授权ONTAP S3服务器请求的访问密钥的参数。
+** 您可以使用 `-secret-password` 用于指定用于向ONTAP S3服务器发出身份验证请求的密码(机密访问密钥)的参数。
 ** 如果更改了 ONTAP S3 服务器密码，则应立即更新本地 ONTAP 系统中存储的相应密码。
 +
 这样可以无中断地访问 ONTAP S3 对象存储中的数据。
 
-** 将 ` -is-certificate-validation-enabled` 参数设置为 `false` 会禁用 ONTAP S3 的证书检查。
+** 设置 `-is-certificate-validation-enabled` 参数设置为 `false` 禁用ONTAP S3的证书检查。
 
 
 +
@@ -83,9 +83,9 @@ cluster1::> storage aggregate object-store config create
 -container-name myS3container -access-key myS3key
 -secret-password myS3pass
 ----
-. 使用 `storage aggregate object-store config show` 命令显示并验证 ontap_S3 配置信息。
+. 使用显示并验证ONTAP S3配置信息 `storage aggregate object-store config show` 命令：
 +
-使用 `storage aggregate object-store config modify` 命令可以修改 FabricPool 的 `ontap_S3` 配置信息。
+。 `storage aggregate object-store config modify` 命令用于修改 `ONTAP_S3` FabricPool的配置信息。
 
 
 

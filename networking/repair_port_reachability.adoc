@@ -47,7 +47,8 @@ image:ontap_nm_image1.png["修复可访问性决策树"]
  a| 
 确定
  a| 
-此端口可通过第 2 层访问其分配的广播域。如果可访问性状态为 " 正常 " ，但存在 " 意外端口 " ，请考虑合并一个或多个广播域。有关详细信息，请参见以下 _unexpected ports_行 。
+此端口可通过第 2 层访问其分配的广播域。
+如果可访问性状态为 " 正常 " ，但存在 " 意外端口 " ，请考虑合并一个或多个广播域。有关详细信息，请参见以下 _unexpected ports_行 。
 
 如果可访问性状态为 " 正常 " ，但存在 " 无法访问的端口 " ，请考虑拆分一个或多个广播域。有关详细信息，请参见以下 _Unreachable ports_行 。
 
@@ -126,13 +127,13 @@ image:ontap_nm_image1.png["修复可访问性决策树"]
 
 如果将 LIF 的主端口移至另一个节点或将其清除，则此 LIF 将视为已 " 替换 " 。您可以使用以下命令查看这些已替换的 LIF ：
 
-`displaced interface show`
+`displaced-interface show`
 
 如果存在任何已替换的 LIF ，您必须：
 
 * 还原已替换 LIF 的主目录：
 +
-`displaced interface restore`
+`displaced-interface restore`
 
 * 手动设置 LIF 的主目录：
 +
@@ -140,7 +141,7 @@ image:ontap_nm_image1.png["修复可访问性决策树"]
 
 * 如果对 LIF 当前配置的主接口感到满意，请从 "removed-interface" 表中删除此条目：
 +
-`displaced interface delete`
+`displaced-interface delete`
 
 
 
@@ -150,17 +151,17 @@ image:ontap_nm_image1.png["修复可访问性决策树"]
 
 如果修复后的端口具有 VLAN ，则这些 VLAN 会自动删除，但也会记录为已 " 替换 " 。您可以查看以下已替换的 VLAN ：
 
-`displaced VLAN show`
+`displaced-vlans show`
 
 如果存在任何已替换的 VLAN ，您必须：
 
 * 将 VLAN 还原到其他端口：
 +
-`displaced VLAN restore`
+`displaced-vlans restore`
 
 * 从 "Displaced VLAN " 表中删除此条目：
 +
-`displaced -vlans delete`
+`displaced-vlans delete`
 
 
 

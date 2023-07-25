@@ -14,7 +14,8 @@ summary: 您可以使用集群设置向导在第一个节点上创建集群。�
 您可以使用集群设置向导在第一个节点上创建集群。此向导可帮助您配置连接节点的集群网络，创建集群管理 Storage Virtual Machine （ SVM ），添加功能许可证密钥以及为第一个节点创建节点管理接口。
 
 .开始之前
-* 您应已根据适用于您的平台型号的安装和设置说明安装新存储系统、并为其布线和加电。请参见 https://docs.netapp.com/us-en/ontap-systems/index.html["AFF 和 FAS 文档"]。
+* 您应已根据适用于您的平台型号的安装和设置说明安装新存储系统、并为其布线和加电。
+请参见 https://docs.netapp.com/us-en/ontap-systems/index.html["AFF 和 FAS 文档"]。
 * 应在集群的每个节点上配置集群网络接口、以便进行集群内通信。
 * 如果要在集群上配置IPv6、则应在基础管理控制器(BMC)上配置IPv6、以便可以使用SSH访问系统。
 
@@ -42,7 +43,7 @@ NOTE: 默认情况下， AutoSupport 处于启用状态。
 
 . 按照屏幕上的说明为节点分配 IP 地址。
 +
-从ONTAP 9.13.1开始、您可以为A800和FAS4700平台上的管理LUN分配IPv6地址。对于9.13.1之前的ONTAP版本或其他平台上的9.13.1及更高版本、您必须为管理LUN分配IPv4地址、然后在完成集群设置后转换为IPv6。
+从ONTAP 9.13.1开始、您可以为A800和FAS4700平台上的管理LUN分配IPv6地址。  对于9.13.1之前的ONTAP版本或其他平台上的9.13.1及更高版本、您必须为管理LUN分配IPv4地址、然后在完成集群设置后转换为IPv6。
 
 . 按 * 输入 * 继续。
 +
@@ -52,7 +53,7 @@ Do you want to create a new cluster or join an existing cluster? {create, join}:
 ----
 . 创建新集群： `create`
 . 接受系统默认值或输入您自己的值。
-. 设置完成后，登录到集群，并输入以下 ONTAP 命令行界面命令验证集群是否处于活动状态，以及第一个节点是否运行正常： `cluster show`
+. 设置完成后、输入ONTAP命令行界面命令登录到集群并验证集群是否处于活动状态、以及第一个节点是否运行正常： `cluster show`
 +
 以下示例显示了一个集群，其中第一个节点（ cluster1-01 ）运行状况良好且符合参与条件：
 
@@ -65,7 +66,7 @@ Node                  Health  Eligibility
 cluster1-01           true    true
 ----
 +
-您可以使用 `cluster setup` 命令访问集群设置向导以更改为管理 SVM 或节点 SVM 输入的任何值。
+您可以使用访问集群设置向导、以更改为管理SVM或节点SVM输入的任何值 `cluster setup` 命令：
 
 
 

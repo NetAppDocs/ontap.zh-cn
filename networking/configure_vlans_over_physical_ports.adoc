@@ -27,9 +27,9 @@ NOTE: 您不应在标识符与交换机的原生 VLAN 相同的网络接口上�
 
 
 
-== 创建 VLAN
+== 创建VLAN
 
-您可以使用System Manager或`network port vlan create`命令创建VLAN、以便在同一网络域中维护单独的广播域。
+您可以使用System Manager或创建VLAN、以便在同一网络域中维护单独的广播域 `network port vlan create` 命令：
 
 .开始之前
 确认已满足以下要求：
@@ -78,19 +78,20 @@ NOTE: 您不应在标识符与交换机的原生 VLAN 相同的网络接口上�
 --
 *使用命令行界面创建VLAN*
 
-在某些情况下、如果要在已降级的端口上创建VLAN端口而不更正硬件问题描述 或任何软件配置不当、则可以将`network port modify`命令的`-ignore-health-status`参数设置为`true`。
+在某些情况下、如果要在已降级的端口上创建VLAN端口、而不更正硬件问题描述或任何软件配置错误、则可以设置 `-ignore-health-status` 的参数 `network port modify` 命令作为 `true`。
 
 .步骤
-. 使用 `network port vlan create` 命令创建 VLAN 。
-. 创建 VLAN 时，必须指定 `vlan-name` 或 `port` 和 `vlan-id` 选项。VLAN 名称是端口（或接口组）名称和网络交换机 VLAN 标识符的组合，两者之间带有连字符。例如， `e0c-24` 和 `e1c-80` 是有效的 VLAN 名称。
+. 使用 `network port vlan create` 命令以创建VLAN。
+. 您必须指定 `vlan-name` 或 `port` 和 `vlan-id` 选项。
+VLAN 名称是端口（或接口组）名称和网络交换机 VLAN 标识符的组合，两者之间带有连字符。例如： `e0c-24` 和 `e1c-80` 是有效的VLAN名称。
 
 
-以下示例显示了如何在节点 `cluster-1-01` 上创建连接到网络端口 `e1c` 的 VLAN `e1c-80` ：
+以下示例显示了如何创建VLAN `e1c-80` 已连接到网络端口 `e1c` 在节点上 `cluster-1-01`：
 
 ....
 network port vlan create -node cluster-1-01 -vlan-name e1c-80
 ....
-从 ONTAP 9.8 开始， VLAN 会在创建后大约一分钟自动放置到相应的广播域中。如果您不希望 ONTAP 执行此操作，并且希望手动将 VLAN 置于广播域中，请在 `vlan create` 命令中指定 ` skip-broadcast-domain-placement` 参数。
+从 ONTAP 9.8 开始， VLAN 会在创建后大约一分钟自动放置到相应的广播域中。如果您不希望ONTAP执行此操作、而希望手动将VLAN置于广播域中、请指定 `-skip-broadcast-domain-placement` 参数作为的一部分 `vlan create` 命令：
 
 有关此命令的详细信息，请参见 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]。
 
@@ -119,7 +120,7 @@ network port vlan create -node cluster-1-01 -vlan-name e1c-80
 
 
 
-== 删除 VLAN
+== 删除VLAN
 
 在从插槽中删除 NIC 之前，您可能需要删除 VLAN 。删除 VLAN 时，它会自动从使用它的所有故障转移规则和组中删除。
 
@@ -149,9 +150,9 @@ network port vlan create -node cluster-1-01 -vlan-name e1c-80
 *使用命令行界面删除VLAN*
 
 .步骤
-使用 `network port vlan delete` 命令删除 VLAN 。
+使用 `network port vlan delete` 命令删除VLAN。
 
-以下示例显示了如何从节点 `cluster-1-01` 上的网络端口 `e1c` 中删除 VLAN `e1c-80` ：
+以下示例显示了如何删除VLAN `e1c-80` 从网络端口 `e1c` 在节点上 `cluster-1-01`：
 
 ....
 network port vlan delete -node cluster-1-01 -vlan-name e1c-80

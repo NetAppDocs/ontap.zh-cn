@@ -2,7 +2,7 @@
 permalink: smb-admin/enable-disable-aes-encryption-kerberos-task.html 
 sidebar: sidebar 
 keywords: advantage, security, kerberos-based, communication, aes-256, aes-128, aes, encryption, active, directory, ad, kdc, cifs, smb 
-summary: 要利用基于 Kerberos 的通信的最强安全性，您可以在 SMB 服务器上启用 AES-256 和 AES-128 加密。如果您不希望 SMB 服务器为与 Active Directory （ AD ） KDC 进行基于 Kerberos 的通信选择 AES 加密类型，则可以禁用 AES 加密。默认情况下， AES 加密处于禁用状态。 
+summary: '要利用基于Kerberos的通信的最强安全性、您可以在SMB服务器上启用AES-256和AES-128加密。如果不希望SMB服务器为与Active Directory (AD) KDC进行基于Kerberos的通信选择AES加密类型、则可以禁用AES加密。默认情况下， AES 加密处于禁用状态。' 
 ---
 = 为基于 Kerberos 的通信启用或禁用 AES 加密
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 要利用基于 Kerberos 的通信的最强安全性，您可以在 SMB
 
 
 [role="lead"]
-要利用基于 Kerberos 的通信的最强安全性，您可以在 SMB 服务器上启用 AES-256 和 AES-128 加密。如果您不希望 SMB 服务器为与 Active Directory （ AD ） KDC 进行基于 Kerberos 的通信选择 AES 加密类型，则可以禁用 AES 加密。默认情况下， AES 加密处于禁用状态。
+要利用基于Kerberos的通信的最强安全性、您可以在SMB服务器上启用AES-256和AES-128加密。如果不希望SMB服务器为与Active Directory (AD) KDC进行基于Kerberos的通信选择AES加密类型、则可以禁用AES加密。默认情况下， AES 加密处于禁用状态。
 
 .关于此任务
 从ONTAP 9.12.1开始、使用启用和禁用AES加密 `-advertised-enc-types` 选项、用于指定向AD KDC公布的加密类型。默认设置为 `rc4` 和 `des`、但如果指定了AES类型、则会启用AES加密。您还可以使用选项显式禁用较弱的RC4和DES加密类型。在早期的ONTAP 版本中、您必须使用 `-is-aes-encryption-enabled` 用于启用和禁用AES加密的选项、并且无法指定加密类型。
@@ -63,7 +63,7 @@ vserver  advertised-enc-types
 -------- --------------------
 vs1      aes-128,aes-256
 ----
-以下示例将为 SVM vs2 上的 SMB 服务器启用 AES 加密类型。系统会提示管理员输入包含 SMB 服务器的 OU 的管理 AD 凭据。
+以下示例为SVM VS2上的SMB服务器启用AES加密类型。系统会提示管理员输入包含SMB服务器的OU的管理AD凭据。
 
 [listing]
 ----
@@ -107,9 +107,9 @@ enabled
 `vserver cifs security modify -vserver vserver_name -is-aes-encryption-enabled false`
 
 |===
-. 验证是否已根据需要启用或禁用 AES 加密： `vserver cifs security show -vserver vserver_name -fields is-aes-encryption-enabled`
+. 验证是否已根据需要启用或禁用AES加密： `vserver cifs security show -vserver vserver_name -fields is-aes-encryption-enabled`
 +
-如果已启用 AES 加密，则 `is-AES-encrypt-enabled` 字段将显示 `true` ；如果已禁用 AES 加密，则显示 `false` 。
+。 `is-aes-encryption-enabled` 字段 `true` 如果启用了AES加密、则为和 `false` 如果已禁用。
 
 
 
@@ -126,7 +126,7 @@ vserver  is-aes-encryption-enabled
 -------- -------------------------
 vs1      true
 ----
-以下示例将为 SVM vs2 上的 SMB 服务器启用 AES 加密类型。系统会提示管理员输入包含 SMB 服务器的 OU 的管理 AD 凭据。
+以下示例为SVM VS2上的SMB服务器启用AES加密类型。系统会提示管理员输入包含SMB服务器的OU的管理AD凭据。
 
 [listing]
 ----

@@ -24,7 +24,8 @@ summary: 在升级集群前后，您应验证磁盘，聚合和卷的状态。
  a| 
 磁盘已损坏
  a| 
-.. 显示任何损坏的磁盘： `storage disk show -state broken`
+.. 显示任何损坏的磁盘：
+`storage disk show -state broken`
 .. 卸下或更换任何损坏的磁盘。
 
 
@@ -33,26 +34,33 @@ summary: 在升级集群前后，您应验证磁盘，聚合和卷的状态。
  a| 
 正在进行维护或重建的磁盘
  a| 
-.. 显示处于维护，待定或重建状态的所有磁盘： `storage disk show -state maintenance| pending" reconstructing`
+.. 显示处于维护，待定或重建状态的任何磁盘：
+`storage disk show -state maintenance|pending|reconstructing`
 .. 等待维护或重建操作完成，然后再继续。
 
 
 |===
-. 通过显示以下状态验证所有聚合是否处于联机状态： `storage aggregate show -state ！ online` 此命令显示 _not_ online 的聚合。在执行重大升级或还原之前和之后，所有聚合都必须处于联机状态。
+. 通过显示状态验证所有聚合是否均已联机：
+`storage aggregate show -state !online`
+此命令将显示 _not_ 联机的聚合。在执行重大升级或还原之前和之后，所有聚合都必须处于联机状态。
 +
 [listing]
 ----
 cluster1::> storage aggregate show -state !online
 There are no entries matching your query.
 ----
-. 通过显示任何 _not_ online 卷来验证所有卷是否已联机： `volume show -state ！ online` 执行重大升级或还原前后，所有卷都必须联机。
+. 通过显示任何 _not_ 联机的卷来验证所有卷是否均已联机：
+`volume show -state !online`
+在执行重大升级或还原之前和之后，所有卷都必须处于联机状态。
 +
 [listing]
 ----
 cluster1::> volume show -state !online
 There are no entries matching your query.
 ----
-. 验证没有不一致的卷：`volume show -is-inconsistent true`请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Volume_Showing_WAFL_Inconsistent["卷显示WAFL 不一致"] 有关如何处理不一致的卷的信息。
+. 验证是否没有不一致的卷：
+`volume show -is-inconsistent true`
+请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Volume_Showing_WAFL_Inconsistent["卷显示WAFL 不一致"] 有关如何处理不一致的卷的信息。
 
 
 .相关信息

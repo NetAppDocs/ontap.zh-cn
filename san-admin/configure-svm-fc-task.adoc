@@ -14,10 +14,10 @@ summary: 要为 FC 配置 Storage Virtual Machine （ SVM ），必须为 SVM �
 要为 FC 配置 Storage Virtual Machine （ SVM ），必须为 SVM 创建 LIF 并将 FC 协议分配给这些 LIF 。
 
 .开始之前
-您必须具有 FC 许可证，并且必须启用该许可证。如果未启用 FC 许可证，则 LIF 和 SVM 显示为联机，但运行状态为 `down` 。要使 LIF 和 SVM 正常运行，必须启用 FC 服务。要托管启动程序，必须对 SVM 中的所有 FC LIF 使用单个启动程序分区。
+您必须具有 FC 许可证，并且必须启用该许可证。如果未启用FC许可证、则LIF和SVM虽然显示为联机、但运行状态为 `down`。要使 LIF 和 SVM 正常运行，必须启用 FC 服务。要托管启动程序，必须对 SVM 中的所有 FC LIF 使用单个启动程序分区。
 
 .关于此任务
-对于使用 FC 协议提供数据的每个 SVM ， NetApp 至少支持每个节点一个 FC LIF 。每个节点必须使用两个 LIF ，并使用两个网络结构，每个节点连接一个 LIF 。这样可以在节点层和网络结构上实现冗余。
+对于使用 FC 协议提供数据的每个 SVM ， NetApp 至少支持每个节点一个 FC LIF 。  每个节点必须使用两个 LIF ，并使用两个网络结构，每个节点连接一个 LIF 。这样可以在节点层和网络结构上实现冗余。
 
 .步骤
 [role="tabbed-block"]
@@ -35,14 +35,16 @@ summary: 要为 FC 配置 Storage Virtual Machine （ SVM ），必须为 SVM �
 . 在System Manager中、单击*存储> Storage VM*、然后单击*添加*。
 . 输入Storage VM的名称。
 . 为*访问协议*选择* Fc*。
-. 单击*启用FC*。+自动分配FC端口。
+. 单击*启用FC*。
++自动分配FC端口。
 . 单击 * 保存 * 。
 
  a| 
 . 在 System Manager 中，单击 * 存储 > 存储 VM* 。
 . 单击要配置的Storage VM。
 . 单击*设置*选项卡、然后单击 image:icon_gear.gif[""] 靠近FC协议。
-. 单击*启用FC*、然后输入网络接口的IP地址和子网掩码。+自动分配FC端口。
+. 单击*启用FC*、然后输入网络接口的IP地址和子网掩码。
++自动分配FC端口。
 . 单击 * 保存 * 。
 
 
@@ -66,7 +68,7 @@ summary: 要为 FC 配置 Storage Virtual Machine （ SVM ），必须为 SVM �
 
 
 
-. 确认已创建 LIF ，并且其运行状态为 `online` ：
+. 确认已创建LIFs且其运行状态为 `online`：
 +
 `network interface show -vserver _vserver_name_ _lif_name_`
 

@@ -2,7 +2,7 @@
 permalink: nfs-admin/case-sensitivity-file-directory-multiprotocol-concept.html 
 sidebar: sidebar 
 keywords: case sensitivity, file, directory, name, multiprotocol, environment 
-summary: 对于 NFS 客户端，文件和目录名称区分大小写；对于 SMB 客户端，文件和目录名称不区分大小写，但保留大小写。您必须了解多协议环境的含义，以及在创建 SMB 共享时指定路径以及访问共享中的数据时可能需要执行的操作。 
+summary: 对于NFS客户端、文件和目录名称区分大小写；对于SMB客户端、文件和目录名称不区分大小写、但保留大小写。您必须了解多协议环境的含义，以及在创建 SMB 共享时指定路径以及访问共享中的数据时可能需要执行的操作。 
 ---
 = 在多协议环境中，文件和目录名称区分大小写
 :allow-uri-read: 
@@ -11,15 +11,15 @@ summary: 对于 NFS 客户端，文件和目录名称区分大小写；对于 SM
 
 
 [role="lead"]
-对于 NFS 客户端，文件和目录名称区分大小写；对于 SMB 客户端，文件和目录名称不区分大小写，但保留大小写。您必须了解多协议环境的含义，以及在创建 SMB 共享时指定路径以及访问共享中的数据时可能需要执行的操作。
+对于NFS客户端、文件和目录名称区分大小写；对于SMB客户端、文件和目录名称不区分大小写、但保留大小写。您必须了解多协议环境的含义，以及在创建 SMB 共享时指定路径以及访问共享中的数据时可能需要执行的操作。
 
-如果 SMB 客户端创建名为 `testdir` 的目录，则 SMB 和 NFS 客户端会将文件名显示为 `testdir` 。但是，如果 SMB 用户稍后尝试创建目录名称 `testdir` ，则不允许使用此名称，因为对于 SMB 客户端，此名称当前已存在。如果 NFS 用户稍后创建名为 `testdir` 的目录，则 NFS 和 SMB 客户端会以不同方式显示目录名称，如下所示：
+SMB客户端创建名为的目录时 `testdir`，SMB和NFS客户端都会将文件名显示为 `testdir`。但是、如果SMB用户稍后尝试创建目录名称 `TESTDIR`，则不允许使用该名称，因为SMB客户端当前已存在该名称。如果NFS用户稍后创建一个名为的目录 `TESTDIR`、NFS和SMB客户端显示目录名称的方式不同，如下所示：
 
-* 在 NFS 客户端上，创建时会看到这两个目录名称，例如 `testdir` 和 `testdir` ，因为目录名称区分大小写。
+* 例如、在NFS客户端上、您可以在创建这两个目录时看到这两个目录名称 `testdir` 和 `TESTDIR`，因为目录名区分大小写。
 * SMB 客户端使用 8.3 名称来区分这两个目录。一个目录具有基本文件名。为其他目录分配 8.3 文件名。
 +
-** 在 SMB 客户端上，您会看到 `testdir` 和 `TESTDI~1` 。
-** ONTAP 会创建 `TESTDI~1` 目录名称来区分这两个目录。
+** 在SMB客户端上、您会看到 `testdir` 和 `TESTDI~1`。
+** ONTAP将创建 `TESTDI~1` 用于区分这两个目录的目录名称。
 +
 在这种情况下，在 Storage Virtual Machine （ SVM ）上创建或修改共享时，指定共享路径时必须使用 8.3 名称。
 
@@ -27,13 +27,13 @@ summary: 对于 NFS 客户端，文件和目录名称区分大小写；对于 SM
 
 
 
-同样，对于文件，如果 SMB 客户端创建 `test.txt` ，则 SMB 和 NFS 客户端会将文件名显示为 `text.txt` 。但是，如果 SMB 用户稍后尝试创建 `Test.txt` ，则不允许使用此名称，因为对于 SMB 客户端，此名称当前已存在。如果 NFS 用户稍后创建一个名为 `Test.txt` 的文件，则 NFS 和 SMB 客户端会以不同的方式显示文件名，如下所示：
+同样、对于文件、如果SMB客户端创建 `test.txt`，SMB和NFS客户端都会将文件名显示为 `text.txt`。但是、如果SMB用户稍后尝试创建 `Test.txt`，则不允许使用该名称，因为SMB客户端当前已存在该名称。如果NFS用户稍后创建一个名为的文件 `Test.txt`、NFS和SMB客户端显示文件名的方式不同，如下所示：
 
-* 在 NFS 客户端上，您会在创建时看到这两个文件名 `test.txt` 和 `Test.txt` ，因为文件名区分大小写。
+* 在NFS客户端上、您会在创建时看到这两个文件名、 `test.txt` 和 `Test.txt`，因为文件名区分大小写。
 * SMB 客户端使用 8.3 名称来区分这两个文件。一个文件具有基本文件名。为其他文件分配 8.3 文件名。
 +
-** 在 SMB 客户端上，您会看到 `test.txt` 和 `test~1.TXT` 。
-** ONTAP 会创建 `test~1.TXT` 文件名来区分这两个文件。
+** 在SMB客户端上、您会看到 `test.txt` 和 `TEST~1.TXT`。
+** ONTAP将创建 `TEST~1.TXT` 用于区分这两个文件的文件名。
 
 
 

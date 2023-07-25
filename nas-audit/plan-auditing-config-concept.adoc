@@ -48,7 +48,7 @@ _SVM 名称 _
 
 要创建审核配置的 SVM 的名称。此 SVM 必须已存在。
  a| 
-` -vserver` `vserver_name`
+`-vserver` `vserver_name`
  a| 
 是的。
  a| 
@@ -70,7 +70,7 @@ _SVM 名称 _
 
 不能将 FlexCache 卷用作日志目标（ ONTAP 9.7 及更高版本）。
  a| 
-` - 目标` `文本`
+`-destination` `text`
  a| 
 是的。
  a| 
@@ -85,7 +85,7 @@ _SVM 名称 _
 指定要审核的事件的类别。可以审核以下事件类别：
 
 * 文件访问事件（ SMB 和 NFSv4 ）
-* SMB 登录和注销事件
+* SMB登录和注销事件
 * 中央访问策略暂存事件
 +
 中央访问策略暂存事件是从 Windows 2012 Active Directory 域开始提供的一个新的高级审核事件。中央访问策略暂存事件会记录有关对 Active Directory 中配置的中央访问策略所做更改的信息。
@@ -97,11 +97,11 @@ _SVM 名称 _
 * 授权策略更改事件
 
 
-默认情况下，审核文件访问以及 SMB 登录和注销事件。
+默认情况下会审核文件访问以及SMB登录和注销事件。
 
-* 注： * 要将 `cap-staging` 指定为事件类别， SVM 上必须存在 SMB 服务器。虽然您可以在审核配置中启用中央访问策略暂存，而无需在 SMB 服务器上启用动态访问控制，但只有在启用动态访问控制的情况下，才会生成中央访问策略暂存事件。动态访问控制可通过 SMB 服务器选项启用。默认情况下，不会启用此功能。
+*注意：*在指定之前 `cap-staging` 作为事件类别、SVM上必须存在SMB服务器。虽然您可以在审核配置中启用中央访问策略暂存、而无需在SMB服务器上启用动态访问控制、但只有在启用动态访问控制后、才会生成中央访问策略暂存事件。动态访问控制可通过SMB服务器选项启用。默认情况下，不会启用此功能。
  a| 
-` 事件` ｛`file-ops``` cifs-logon-logoff`` cifs-staging`` 文件共享`` 审核 - 策略更改`…` 用户帐户 `s安全组``授权 - 策略更改` ｝
+`-events` {`file-ops`|`cifs-logon-logoff`|`cap-staging`|`file-share`|`audit-policy-change`|`user-account`|`security-group`|`authorization-policy-change`｝
  a| 
 否
  a| 
@@ -112,9 +112,9 @@ _SVM 名称 _
  a| 
 日志文件输出格式 _
 
-确定审核日志的输出格式。输出格式可以是 ONTAP 专用的 `XML` 或 Microsoft Windows `evtx` 日志格式。默认情况下，输出格式为 `evtx` 。
+确定审核日志的输出格式。输出格式可以是特定于ONTAP的格式之一 `XML` 或Microsoft Windows `EVTX` 日志格式。默认情况下、输出格式为 `EVTX`。
  a| 
-` 格式` ｛`xml` ｝`evtx` ｝
+`-format` {`xml`|`evtx`｝
  a| 
 否
  a| 
@@ -125,11 +125,11 @@ _SVM 名称 _
  a| 
 日志文件轮换限制 _
 
-确定在将最旧的日志文件转出之前要保留的审核日志文件数。例如，如果输入值 `5` ，则会保留最后五个日志文件。
+确定在将最旧的日志文件转出之前要保留的审核日志文件数。例如、如果输入的值为 `5`，则会保留最后五个日志文件。
 
-值 `0` 表示所有日志文件均已保留。默认值为 0. 。
+的值 `0` 指示保留所有日志文件。默认值为0。
  a| 
-` -rotate-limit` `整型`
+`-rotate-limit` `integer`
  a| 
 否
  a| 
@@ -146,10 +146,10 @@ _SVM 名称 _
 
 * 默认日志大小为 100 MB 。
 * 如果要使用默认日志轮换方法和默认日志大小，则无需为日志轮换配置任何特定参数。
-* 如果要单独根据日志大小轮换审核日志，请使用以下命令取消设置 ` rotate-schedule-minute` 参数： `vserver audit modify -vserver vs0 -destination / -rotate-schedule-minute -`
+* 如果要仅根据日志大小轮换审核日志、请使用以下命令取消设置 `-rotate-schedule-minute` 参数： `vserver audit modify -vserver vs0 -destination / -rotate-schedule-minute -`
 
 
-如果不想使用默认日志大小，可以配置 ` -rotate-size` 参数以指定自定义日志大小。
+如果不想使用默认日志大小、则可以配置 `-rotate-size` 用于指定自定义日志大小的参数：
 
 [cols="40,30,10,10,10"]
 |===
@@ -163,7 +163,7 @@ _SVM 名称 _
 
 确定审核日志文件大小限制。
  a| 
-` -rotate-size` ｛`integer` [KB|MB|GB|TB|PB] ｝
+`-rotate-size` {`integer`[KB|MB|GB|TB|PB]｝
  a| 
 否
  a| 
@@ -174,21 +174,21 @@ _SVM 名称 _
 
 如果您选择根据计划轮换审核日志，则可以通过使用基于时间的轮换参数的任意组合来计划日志轮换。
 
-* 如果使用基于时间的轮换，则必须使用 ` -rotate-schedule-minute` 参数。
+* 如果使用基于时间的旋转、则 `-rotate-schedule-minute` 参数为必填项。
 * 所有其他基于时间的轮换参数均为可选参数。
 * 轮换计划使用所有与时间相关的值进行计算。
 +
-例如，如果仅指定 ` -rotate-schedule-minute` 参数，则会根据一周中所有几天指定的分钟数在一年中所有月份的所有时间内轮换审核日志文件。
+例如、如果仅指定 `-rotate-schedule-minute` 参数、审核日志文件将根据一周中所有日期指定的分钟数在一年中所有月份的所有时间内进行轮换。
 
-* 如果仅指定一个或两个基于时间的轮换参数（例如， ` rotate-schedule-month` 和 ` -rotate-schedule-minutes` ），则日志文件将根据您在一周中的所有日期，所有时间内指定的分钟值进行轮换，但仅限于指定的月份。
+* 如果您仅指定一个或两个基于时间的旋转参数(例如、 `-rotate-schedule-month` 和 `-rotate-schedule-minutes`)、日志文件将根据您在一周中的所有日期指定的分钟值进行轮换、在所有时间内、但仅在指定月份内。
 +
 例如，您可以指定在 1 月， 3 月和 8 月期间，在所有星期一，星期三和星期六的上午 10 ： 30 轮换审核日志
 
-* 如果为 ` -rotate-schedule-dayofweek` 和 ` -rotate-schedule-day` 指定值，则会将其单独考虑。
+* 指定这两者的值 `-rotate-schedule-dayofweek` 和 `-rotate-schedule-day`、它们会独立考虑。
 +
-例如，如果将 ` rotate-schedule-dayofweek` 指定为星期五，将 ` -rotate-schedule-day` 指定为 13 ，则审核日志将在指定月份的每个星期五和 13 日轮换，而不仅仅是在第 13 个星期五轮换。
+例如、如果指定 `-rotate-schedule-dayofweek` 作为星期五和 `-rotate-schedule-day` 如果为13、则审核日志将在每个星期五和指定月份的第13天轮换、而不仅仅是在每个星期五的第13天轮换。
 
-* 如果要单独根据计划轮换审核日志，请使用以下命令取消设置 ` rotate-size` 参数： `vserver audit modify -vserver vs0 -destination / -rotate-size -`
+* 如果要仅根据计划轮换审核日志、请使用以下命令取消设置 `-rotate-size` 参数： `vserver audit modify -vserver vs0 -destination / -rotate-size -`
 
 
 您可以使用以下可用审核参数列表来确定用于配置审核事件日志轮换计划的值：
@@ -205,9 +205,9 @@ _SVM 名称 _
 
 确定轮换审核日志的每月计划。
 
-有效值为 `January` 到 `DecMember` 和 `All` 。例如，您可以指定在 1 月， 3 月和 8 月期间轮换审核日志。
+有效值为 `January` 到 `December`，和 `all`。例如，您可以指定在 1 月， 3 月和 8 月期间轮换审核日志。
  a| 
-` -rotate-schedule-month` `chron_month`
+`-rotate-schedule-month` `chron_month`
  a| 
 否
  a| 
@@ -220,9 +220,9 @@ _SVM 名称 _
 
 确定轮换审核日志的每日（星期几）计划。
 
-有效值为 `Sunday` 到 `Saturday` 和 `all` 。例如，您可以指定在星期二和星期五或一周的所有日期轮换审核日志。
+有效值为 `Sunday` 到 `Saturday`，和 `all`。例如，您可以指定在星期二和星期五或一周的所有日期轮换审核日志。
  a| 
-` -rotate-schedule-dayofweek` `chron_dayofweek`
+`-rotate-schedule-dayofweek` `chron_dayofweek`
  a| 
 否
  a| 
@@ -235,9 +235,9 @@ _SVM 名称 _
 
 确定轮换审核日志的每月计划日期。
 
-有效值范围为 `1` 到 `31` 。例如，您可以指定在一个月的第 10 天和第 20 天或一个月的所有日期轮换审核日志。
+有效值范围为 `1` 到 `31`。例如，您可以指定在一个月的第 10 天和第 20 天或一个月的所有日期轮换审核日志。
  a| 
-` -rotate-schedule-day` `chron_dayofmonth`
+`-rotate-schedule-day` `chron_dayofmonth`
  a| 
 否
  a| 
@@ -250,9 +250,9 @@ _SVM 名称 _
 
 确定轮换审核日志的每小时计划。
 
-有效值范围为 `0` （午夜）到 `23` （晚上 11 ： 00 ）。指定 `all` 会每小时轮换一次审核日志。例如，您可以指定在 6 （早上 6 点）和 18 （下午 6 点）轮换审核日志。
+有效值范围为 `0` (午夜)至 `23` (晚上11：00)。指定 `all` 每小时轮换一次审核日志。例如，您可以指定在 6 （早上 6 点）和 18 （下午 6 点）轮换审核日志。
  a| 
-` -rotate-schedule-hour` `chron_hour`
+`-rotate-schedule-hour` `chron_hour`
  a| 
 否
  a| 
@@ -265,9 +265,9 @@ _SVM 名称 _
 
 确定轮换审核日志的分钟计划。
 
-有效值范围为 `0` 到 `59` 。例如，您可以指定在 30 分钟轮换审核日志。
+有效值范围为 `0` to `59`。例如，您可以指定在 30 分钟轮换审核日志。
  a| 
-` -rotate-schedule-minute` `chron_minute`
+`-rotate-schedule-minute` `chron_minute`
  a| 
 是，如果配置基于计划的日志轮换；否则，否
  a| 
@@ -276,4 +276,4 @@ _SVM 名称 _
 |===
 * 根据日志大小和计划轮换日志 *
 
-您可以选择根据日志大小和计划轮换日志文件，方法是将 ` rotate-size` 参数和基于时间的轮换参数设置为任意组合。例如：如果将 ` -rotate-size` 设置为 10 MB ，将 ` -rotate-schedule-minute` 设置为 15 ，则日志文件会在日志文件大小达到 10 MB 时或每小时的 15 分钟（以先发生的事件为准）轮换。
+您可以通过同时设置来选择根据日志大小和计划轮换日志文件 `-rotate-size` 参数和基于时间的旋转参数的任意组合。例如：if `-rotate-size` 设置为10 MB、然后 `-rotate-schedule-minute` 设置为15时、日志文件将在日志文件大小达到10 MB时或每小时的15分钟(以先发生的事件为准)轮换。

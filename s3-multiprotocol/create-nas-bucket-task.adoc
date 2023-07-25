@@ -2,7 +2,7 @@
 permalink: s3-multiprotocol/create-nas-bucket-task.html 
 sidebar: sidebar 
 keywords: s3, svm, bucket, object, server, versioning, protocol, filesystems, nas, directories 
-summary: S3 NAS存储分段是S3存储分段名称和NAS路径之间的映射。 
+summary: S3 NAS存储分段是S3存储分段名称和NAS路径之间的映射。  
 ---
 = 创建S3 NAS存储分段
 :allow-uri-read: 
@@ -32,10 +32,14 @@ S3 NAS存储分段是S3存储分段名称和NAS路径之间的映射。通过S3 
 
 由于S3 NAS的"分段"是映射而不是S3分段、因此标准S3分段的以下属性不适用于S3 NAS分段。
 
-* 配置S3 NAS分段时、系统会创建* aggr-list \ aggr-list-multiplier \ storage-service-level \ volume \ size \ exclude-aggr-list \ qos-policy-group*+不会创建任何卷或qtree。
-* *角色\ is -protected \ is -protected-on-ontap \ is -protected-on-clon*+ S3 NAS分段不使用S3 SnapMirror进行保护或镜像、而是使用在卷粒度级别提供的常规SnapMirror保护。
-* *版本控制状态*+ NAS卷通常采用Snapshot技术来保存不同的版本。但是、S3 NAS存储分段当前不支持版本控制。
-* 通过volume命令可为NAS卷提供*逻辑使用\对象计数*+等效统计信息。
+* *aggr-list \ aggr-list-multi倍 频\ storage-service-level \ volume \ size \ exex懦-aggr-list \ QoS-policy-group*+
+配置S3 NAS分段时、不会创建任何卷或qtree。
+* *角色\受-protre｝\受-proty-on-ONTAP保护\受-proty-on-Cloud保护*+
+S3 NAS分段不会使用S3 SnapMirror进行保护或镜像、而是会使用卷粒度级别的常规SnapMirror保护。
+* *版本控制状态*+
+NAS卷通常采用Snapshot技术来保存不同的版本。但是、S3 NAS存储分段当前不支持版本控制。
+* *逻辑使用\ object-count *+
+可通过volume命令为NAS卷提供等效统计信息。
 
 
 [role="tabbed-block"]
@@ -46,8 +50,10 @@ S3 NAS存储分段是S3存储分段名称和NAS路径之间的映射。通过S3 
 
 . 单击 * 存储 > 分段 * ，然后单击 * 添加 * 。
 . 输入S3 NAS存储分段的名称并选择Storage VM、不要输入大小、然后单击*更多选项*。
-. 输入有效的路径名称或单击浏览以从有效路径名称列表中进行选择。+输入有效的路径名后、与S3 NAS配置无关的选项将被隐藏。
-. 如果已将S3用户映射到NAS用户并创建了组、则可以配置其权限、然后单击*保存*。+在此步骤中配置权限之前、您必须已将S3用户映射到NAS用户。
+. 输入有效的路径名称或单击浏览以从有效路径名称列表中进行选择。+
+输入有效的路径名后、与S3 NAS配置无关的选项将被隐藏。
+. 如果已将S3用户映射到NAS用户并创建了组、则可以配置其权限、然后单击*保存*。+
+在此步骤中配置权限之前、您必须已将S3用户映射到NAS用户。
 
 
 否则、请单击*保存*以完成S3 NAS存储分段配置。

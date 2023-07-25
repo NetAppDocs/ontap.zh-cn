@@ -30,7 +30,7 @@ summary: 从 ONTAP 9.7 开始，您可以将 FlexVol 卷原位转换为 FlexGrou
 
 
 .步骤
-. 验证 FlexVol 卷是否联机： `volume show vol_name -volume-style-Extended ， state`
+. 验证FlexVol卷是否联机： `volume show vol_name -volume-style-extended,state`
 +
 [listing]
 ----
@@ -42,7 +42,7 @@ vs0     my_volume online flexvol
 . 验证是否可以无问题地转换 FlexVol 卷：
 +
 .. 登录到高级权限模式： `set -privilege advanced`
-.. 验证转换过程： `volume conversion start -vserver vs1 -volume FlexVol -check-only true`
+.. 验证转换过程： `volume conversion start -vserver vs1 -volume flexvol -check-only true`
 +
 在转换卷之前，必须更正所有错误。
 
@@ -67,7 +67,7 @@ Warning: Converting flexible volume "my_volume" in Vserver "vs0" to a FlexGroup
 Do you want to continue? {y|n}: y
 [Job 57] Job succeeded: success
 ----
-. 验证转换是否成功： `volume show vol_name -fields -volume-style-Extended ， state`
+. 验证转换是否成功： `volume show vol_name -fields -volume-style-extended,state`
 +
 [listing]
 ----

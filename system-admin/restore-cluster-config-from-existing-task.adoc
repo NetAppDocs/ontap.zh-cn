@@ -26,14 +26,14 @@ summary: 要在集群发生故障后从现有配置中还原集群配置，请�
 .步骤
 . 为每个 HA 对禁用存储故障转移：
 +
-` * 存储故障转移修改 -node _node_name_ -enabled false*`
+`*storage failover modify -node _node_name_ -enabled false*`
 
 +
 对于每个 HA 对，只需禁用一次存储故障转移。如果对某个节点禁用存储故障转移，则该节点的配对节点上也会禁用存储故障转移。
 
 . 暂停除恢复节点以外的每个节点：
 +
-` * 系统节点暂停 -node _node_name_ -reason "text"*`
+`*system node halt -node _node_name_ -reason "text"*`
 
 +
 [listing]
@@ -44,9 +44,9 @@ Warning: Are you sure you want to halt the node? {y|n}: y
 ----
 . 将权限级别设置为高级：
 +
-` * 设置 -privilege advanced*`
+`*set -privilege advanced*`
 
-. 在恢复节点上，使用 ` * system configuration recovery cluster recreate *` 命令重新创建集群。
+. 在恢复节点上、使用 `*system configuration recovery cluster recreate*` 命令以重新创建集群。
 +
 以下示例将使用恢复节点上存储的配置信息重新创建集群：
 
@@ -67,7 +67,7 @@ Do you want to continue? {y|n}: y
 
 . 如果要从配置备份文件重新创建集群，请验证集群恢复是否仍在进行中：
 +
-` * 系统配置恢复集群显示 *`
+`*system configuration recovery cluster show*`
 
 +
 如果要从运行状况良好的节点重新创建集群，则无需验证集群恢复状态。
@@ -87,7 +87,7 @@ cluster1::*> system configuration recovery cluster show
 +
 .. 从重新创建的集群上运行状况良好的节点中，重新加入目标节点：
 +
-` * 系统配置恢复集群重新加入 -node _node_name_*`
+`*system configuration recovery cluster rejoin -node _node_name_*`
 
 +
 此示例将 "`node2` " 目标节点重新加入重新创建的集群：
@@ -110,7 +110,7 @@ Do you want to continue? {y|n}: y
 
 .. 验证目标节点是否运行正常并已与集群中的其余节点形成仲裁：
 +
-` * cluster show -eligibility true*`
+`*cluster show -eligibility true*`
 
 +
 目标节点必须重新加入重新创建的集群，然后才能重新加入其他节点。
@@ -129,14 +129,14 @@ node1                true    true          false
 
 . 如果从配置备份文件重新创建集群，请将恢复状态设置为已完成：
 +
-` * 系统配置恢复集群 modify -recovery-status complete*`
+`*system configuration recovery cluster modify -recovery-status complete*`
 
 . 返回到管理权限级别：
 +
-` * 设置 -privilege admin*`
+`*set -privilege admin*`
 
-. 如果集群仅包含两个节点，请使用 ` * cluster ha modify*` 命令重新启用集群 HA 。
-. 使用 ` * storage failover modify*` 命令为每个 HA 对重新启用存储故障转移。
+. 如果集群仅包含两个节点、请使用 `*cluster ha modify*` 命令以重新启用集群HA。
+. 使用 `*storage failover modify*` 命令为每个HA对重新启用存储故障转移。
 
 
 .完成后

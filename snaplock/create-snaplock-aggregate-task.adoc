@@ -2,7 +2,7 @@
 permalink: snaplock/create-snaplock-aggregate-task.html 
 sidebar: sidebar 
 keywords: create, snaplock, aggregate, compliance, enterprise, mode, volumes 
-summary: '您可以使用卷 ` -SnapLock-type` 选项指定 Compliance 或 Enterprise SnapLock 卷类型。对于 ONTAP 9.10.1 之前的版本，必须创建单独的 SnapLock 聚合。从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。' 
+summary: '使用卷 `-snaplock-type` 用于指定Compliance或Enterprise SnapLock卷类型的选项。对于 ONTAP 9.10.1 之前的版本，必须创建单独的 SnapLock 聚合。从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。' 
 ---
 = 创建 SnapLock 聚合
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: '您可以使用卷 ` -SnapLock-type` 选项指定 Compliance 或 Enter
 
 
 [role="lead"]
-您可以使用卷 ` -SnapLock-type` 选项指定 Compliance 或 Enterprise SnapLock 卷类型。对于 ONTAP 9.10.1 之前的版本，必须创建单独的 SnapLock 聚合。从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。
+使用卷 `-snaplock-type` 用于指定Compliance或Enterprise SnapLock卷类型的选项。对于 ONTAP 9.10.1 之前的版本，必须创建单独的 SnapLock 聚合。从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。
 
 .您需要的内容
 * 您必须是集群管理员才能执行此任务。
@@ -41,13 +41,13 @@ summary: '您可以使用卷 ` -SnapLock-type` 选项指定 Compliance 或 Enter
 .步骤
 . 创建 SnapLock 聚合：
 +
-` * 存储聚合 create -aggregate _aggregate_name_ -node _node_name_ -diskcount _number_of_disks_-SnapLock-type compliance*`
+`*storage aggregate create -aggregate _aggregate_name_ -node _node_name_ -diskcount _number_of_disks_ -snaplock-type compliance|enterprise*`
 
 +
 命令的手册页包含完整的选项列表。
 
 +
-以下命令将创建一个名为 `aggr1` 的 SnapLock `Compliance` 聚合，其中三个磁盘位于 `node1` 上：
+以下命令将创建SnapLock `Compliance` 名为的聚合 `aggr1` 启用三个磁盘 `node1`：
 
 +
 [listing]

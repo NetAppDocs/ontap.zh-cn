@@ -35,23 +35,23 @@ summary: '示例将具体说明如何一次一步配置复制关系。您可以�
 .步骤
 . 在二级目标集群上，创建 `snapvault_secondary` 策略：
 +
-`cluster_secondary ：：：： > snapmirror policy create -policy snapvault_secondary -type vault -comment " 二级存储到存储级联的策略 " -vserver svm_secondary`
+`cluster_secondary::> snapmirror policy create -policy snapvault_secondary -type vault -comment “Policy on secondary for vault to vault cascade” -vserver svm_secondary`
 
 . 在二级目标集群上，为策略定义 `my-daily` 规则：
 +
-`cluster_secondary ：：： > snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-daily -keep 7 -vserver svm_secondary`
+`cluster_secondary::> snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-daily -keep 7 -vserver svm_secondary`
 
 . 在二级目标集群上，为策略定义 `my-weekly` 规则：
 +
-`cluster_secondary ：：：： > snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-weekly -keep 52 -vserver svm_secondary`
+`cluster_secondary::> snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-weekly -keep 52 -vserver svm_secondary`
 
 . 在二级目标集群上，为策略定义 `my-monthly` 规则：
 +
-`cluster_secondary ：：：： > snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-monthly -keep 180 -vserver svm_secondary`
+`cluster_secondary::> snapmirror policy add-rule -policy snapvault_secondary -snapmirror-label my-monthly -keep 180 -vserver svm_secondary`
 
 . 在二级目标集群上，验证策略：
 +
-`cluster_secondary ：：： > snapmirror policy show snapvault_secondary -instance`
+`cluster_secondary::> snapmirror policy show snapvault_secondary -instance`
 
 +
 [listing]
@@ -77,23 +77,23 @@ summary: '示例将具体说明如何一次一步配置复制关系。您可以�
 ----
 . 在二级目标集群上，创建与源集群的关系：
 +
-`cluster_secondary ：：： > snapmirror create -source-path svm_primary ： volA -destination-path svm_secondary ： volA -type XDP -schedule my_snapvault -policy snapvault_secondary`
+`cluster_secondary::> snapmirror create -source-path svm_primary:volA -destination-path svm_secondary:volA -type XDP -schedule my_snapvault -policy snapvault_secondary`
 
 . 在二级目标集群上，初始化与源集群的关系：
 +
-`cluster_secondary ：：： > snapmirror initialize -source-path svm_primary ： volA -destination-path svm_secondary ： volA`
+`cluster_secondary::> snapmirror initialize -source-path svm_primary:volA -destination-path svm_secondary:volA`
 
 . 在三级目标集群上，创建 `snapvault_tertiary` 策略：
 +
-`cluster_tertiary ：：： > snapmirror policy create -policy snapvault_tertiary -type vault -comment "Policy on tertiary for vault to vault caslate" -vserver svm_tertiary`
+`cluster_tertiary::> snapmirror policy create -policy snapvault_tertiary -type vault -comment “Policy on tertiary for vault to vault cascade” -vserver svm_tertiary`
 
 . 在三级目标集群上，为策略定义 `my-weekly` 规则：
 +
-`cluster_tertiary ：：： > snapmirror policy add-rule -policy snapvault_tertiary -snapmirror-label my-weekly -keep 250 -vserver svm_tertiary`
+`cluster_tertiary::> snapmirror policy add-rule -policy snapvault_tertiary -snapmirror-label my-weekly -keep 250 -vserver svm_tertiary`
 
 . 在三级目标集群上，验证策略：
 +
-`cluster_tertiary ：：： > snapmirror policy show snapvault_tertiary -instance`
+`cluster_tertiary::> snapmirror policy show snapvault_tertiary -instance`
 
 +
 [listing]
@@ -117,10 +117,10 @@ summary: '示例将具体说明如何一次一步配置复制关系。您可以�
 ----
 . 在三级目标集群上，创建与二级集群的关系：
 +
-`cluster_tertiary ：：： > snapmirror create -source-path svm_secondary ： volA -destination-path svm_tertiary ： volA -type XDP -schedule my_snapvault -policy snapvault_tertiary`
+`cluster_tertiary::> snapmirror create -source-path svm_secondary:volA -destination-path svm_tertiary:volA -type XDP -schedule my_snapvault -policy snapvault_tertiary`
 
 . 在三级目标集群上，初始化与二级集群的关系：
 +
-`cluster_tertiary ：：： > snapmirror initialize -source-path svm_secondary ： volA -destination-path svm_tertiary ： volA`
+`cluster_tertiary::> snapmirror initialize -source-path svm_secondary:volA -destination-path svm_tertiary:volA`
 
 

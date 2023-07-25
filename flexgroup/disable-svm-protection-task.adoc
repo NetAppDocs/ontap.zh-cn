@@ -11,15 +11,15 @@ summary: '如果 FlexGroup 卷上的 SVM DR 标志设置为 " 受保护 " ，则
 
 
 [role="lead"]
-如果 FlexGroup 卷上的 SVM DR 标志设置为 `protected` ，则可以将此标志设置为 unprotected ，以便在 FlexGroup 卷上禁用 SVM DR `protection` 。
+SVM DR标志设置为时 `protected` 在FlexGroup卷上、您可以将此标志设置为未受保护以禁用SVM DR `protection` 在FlexGroup卷上。
 
 .您需要的内容
 * 主节点和二级节点之间的 SVM DR 关系运行状况良好。
-* SVM DR 保护参数设置为 `protected` 。
+* SVM DR保护参数设置为 `protected`。
 
 
 .步骤
-. 使用 `volume modify` 命令将 FlexGroup 卷的 `vserver-dr-protection` 参数更改为 `unprotected` ，以禁用保护。
+. 使用禁用保护 `volume modify` 命令以更改 `vserver-dr-protection` FlexGroup卷的参数 `unprotected`。
 +
 [listing]
 ----
@@ -28,7 +28,7 @@ cluster2::> volume modify -vserver vs1 -volume fg_src -vserver-dr-protection unp
 [Job 5384] Steps completed: 4 of 4.
 cluster2::>
 ----
-. 更新二级站点的 SVM ： `snapmirror update -destination-path destination_svm_name ： -source-path Source_svm_name ：`
-. 验证 SnapMirror 关系是否运行正常： `snapmirror show`
-. 验证是否已删除 FlexGroup SnapMirror 关系： `snapmirror show -expand`
+. 更新二级站点上的SVM： `snapmirror update -destination-path destination_svm_name: -source-path Source_svm_name:`
+. 验证SnapMirror关系是否运行正常： `snapmirror show`
+. 验证是否已删除FlexGroup SnapMirror关系： `snapmirror show -expand`
 

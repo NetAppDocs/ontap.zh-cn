@@ -11,7 +11,7 @@ summary: 您可以使用 security login create 命令使管理员帐户能够使
 
 
 [role="lead"]
-您可以使用 `ssecurity login create` 命令使管理员帐户能够使用 SSH 公有密钥访问管理员或数据 SVM 。
+您可以使用 `security login create` 命令以使管理员帐户能够使用SSH公共密钥访问管理员或数据SVM。
 
 .您需要的内容
 您必须是集群管理员才能执行此任务。
@@ -24,12 +24,12 @@ xref:manage-public-key-authentication-concept.adoc[将公有密钥与用户帐�
 +
 您可以在启用帐户访问之前或之后执行此任务。
 
-* 如果您不确定要分配给登录帐户的访问控制角色，可以稍后使用 `ssecurity login modify` 命令添加此角色。
+* 如果您不确定要分配给登录帐户的访问控制角色、可以使用 `security login modify` 命令以稍后添加此角色。
 
 
-如果要在集群上启用FIPS模式、则必须使用支持的密钥类型重新配置不支持密钥算法的现有SSH公共密钥帐户。在启用FIPS之前、应重新配置这些帐户、否则管理员身份验证将失败。
+如果要在集群上启用FIPS模式、则必须使用支持的密钥类型重新配置不支持密钥算法的现有SSH公共密钥帐户。  在启用FIPS之前、应重新配置这些帐户、否则管理员身份验证将失败。
 
-下表显示了ONTAP SSH连接支持的主机密钥类型算法。这些密钥类型不适用于配置SSH公共身份验证。
+下表显示了ONTAP SSH连接支持的主机密钥类型算法。  这些密钥类型不适用于配置SSH公共身份验证。
 
 [cols="30,30,30"]
 |===
@@ -43,16 +43,25 @@ xref:manage-public-key-authentication-concept.adoc[将公有密钥与用户帐�
  a| 
 ECDSA-SHA2-nistp256
  a| 
-ECDSA-SHA2-nistp256 + RSA-SHA2-512 + RSA-SHA2-256 + Ssh-ed25519 + Ssh-DSS + Ssh-RSA
+ECDSA-SHA2-nistp256 +
+RSA-SHA2-512 +
+RSA-SHA2-256 +
+SSS-ed25519及更高
+SSS-DSS +
+SSS-RSA
 
 
 
  a| 
 9.10.1及更早版本
  a| 
-ECDSA-SHA2-nistp256 + ssh-ed25519
+ECDSA-SHA2-nistp256 +
+SSS-ed25519
  a| 
-ECDSA-SHA2-nistp256 + ssh-ed25519 + ssh-dss + ssh-rsa
+ECDSA-SHA2-nistp256 +
+SSS-ed25519及更高
+SSS-DSS +
+SSS-RSA
 
 |===
 
@@ -63,13 +72,13 @@ NOTE: 9.11.1删除了对SSH ed25519主机密钥算法的支持
 .步骤
 . 允许本地管理员帐户使用 SSH 公有密钥访问 SVM ：
 +
-`ssecurity login create -vserver _svm_name_ -user-or-group-name user_or_group_name -application _application_-authmethod _authentication_method _ -role _role_ -comment _comtion_`
+`security login create -vserver _SVM_name_ -user-or-group-name user_or_group_name -application _application_ -authmethod _authentication_method_ -role _role_ -comment _comment_`
 
 +
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
 
 +
-以下命令可使具有预定义的 `vsadmin-volume` 角色的 SVM 管理员帐户 `svmadmin1` 使用 SSH 公有密钥访问 SVM``engData1`` ：
+以下命令将启用SVM管理员帐户 `svmadmin1` 和预定义的 `vsadmin-volume` 访问SVM的角色``engData1`` 使用SSH公共密钥：
 
 +
 [listing]

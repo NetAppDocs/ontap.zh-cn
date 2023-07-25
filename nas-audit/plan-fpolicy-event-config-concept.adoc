@@ -38,9 +38,9 @@ FPolicy 可以监控 SMB ， NFSv3 和 NFSv4 文件访问操作。
 
 [NOTE]
 ====
-其中三个参数（` -protocol` ， ` -file-operations` ， ` -file-file-filters` ）相互依赖。以下组合适用于这三个参数：
+其中三个参数具有相关性 (`-protocol`， `-file-operations`， `-filters`）。以下组合适用于这三个参数：
 
-* 您可以指定 ` -protocol` 和 ` -file-operations` 参数。
+* 您可以指定 `-protocol` 和 `-file-operations` parameters
 * 您可以指定所有三个参数。
 * 您不能指定任何参数。
 
@@ -66,7 +66,7 @@ _SVM_
 
 每个 FPolicy 配置都在一个 SVM 中定义。为创建 FPolicy 策略配置而组合在一起的外部引擎，策略事件，策略范围和策略都必须与同一 SVM 相关联。
  a| 
-` -vserver` `vserver_name`
+`-vserver` `vserver_name`
 
 
 
@@ -85,31 +85,31 @@ _SVM_
 此名称可以包含以下 ASCII 范围字符的任意组合：
 
 * `a` 到 `z`
-* `A` 至 `Z`
+* `A` 到 `Z`
 * `0` 到 `9`
-* " ` _` " ， "` -` " 和 "` 。` "
+* " `_` "、"`-`", and "`.`Ω"
 
  a| 
-` 事件名称` `event_name`
+`-event-name` `event_name`
 
 
 
  a| 
 _ 协议 _
 
-指定要为 FPolicy 事件配置的协议。` 协议` 的列表可以包含以下值之一：
+指定要为 FPolicy 事件配置的协议。的列表 `-protocol` 可以包含以下值之一：
 
-* `CIFS`
-* `NFSv3`
-* `NFSv4`
+* `cifs`
+* `nfsv3`
+* `nfsv4`
 
 
 [NOTE]
 ====
-如果指定 ` -protocol` ，则必须在 ` -file-operations` 参数中指定有效值。协议版本发生变化时，有效值可能会发生变化。
+如果指定 `-protocol`则必须在中指定有效值 `-file-operations` 参数。协议版本发生变化时，有效值可能会发生变化。
 
 ==== a| 
-` 协议` `协议`
+`-protocol` `protocol`
 
 
 
@@ -118,111 +118,111 @@ _File operations_
 
 指定 FPolicy 事件的文件操作列表。
 
-此事件会使用 ` -protocol` 参数中指定的协议从所有客户端请求中检查此列表中指定的操作。您可以使用逗号分隔列表列出一个或多个文件操作。` file-operations` 的列表可以包含以下一个或多个值：
+此事件使用中指定的协议从所有客户端请求中检查此列表中指定的操作 `-protocol` 参数。您可以使用逗号分隔列表列出一个或多个文件操作。的列表 `-file-operations` 可以包含以下一个或多个值：
 
 * `close` 用于文件关闭操作
 * `create` 用于文件创建操作
-* `create-dir` 用于目录创建操作
+* `create-dir` 目录创建操作
 * `delete` 用于文件删除操作
-* `delete_dir` 用于目录删除操作
-* `getattr` 用于获取属性操作
-* `link` 表示链路操作
-* `lookup` 用于查找操作
-* `OPEN` 用于文件打开操作
+* `delete_dir` 目录删除操作
+* `getattr` 获取属性操作
+* `link` 用于链路操作
+* `lookup` 查找操作
+* `open` 用于文件打开操作
 * `read` 用于文件读取操作
 * `write` 用于文件写入操作
 * `rename` 用于文件重命名操作
-* `rename_dir` 用于目录重命名操作
+* `rename_dir` 目录重命名操作
 * `setattr` 用于设置属性操作
-* `symlink` 表示符号链接操作
+* `symlink` 符号链接操作
 
 
 [NOTE]
 ====
-如果指定 ` -file-operations` ，则必须在 ` -protocol` 参数中指定有效协议。
+如果指定 `-file-operations`，则必须在中指定有效的协议 `-protocol` 参数。
 
 ==== a| 
-` 文件操作` `file_operations` ， ...
+`-file-operations` `file_operations`、
 
 
 
  a| 
 _Filters_
 
-指定指定协议的给定文件操作的筛选器列表。` -filters` 参数中的值用于筛选客户端请求。此列表可以包括以下一项或多项：
+指定指定协议的给定文件操作的筛选器列表。中的值 `-filters` 参数用于筛选客户端请求。此列表可以包括以下一项或多项：
 
 [NOTE]
 ====
-如果指定 ` -filters` 参数，则还必须为 ` -file-operations` 和 ` -protocol` 参数指定有效值。
+如果指定 `-filters` 参数、则还必须为指定有效值 `-file-operations` 和 `-protocol` parameters
 
 ====
-* `monitor-ADS` 选项，用于筛选客户端对备用数据流的请求。
-* `close-with modification` 选项，用于筛选客户端请求，以便在修改后关闭。
-* `close-without modification` 选项，用于筛选客户端关闭请求而不进行修改。
-* `first-read` 选项，用于筛选客户端请求以进行首次读取。
-* `first-write` 选项，用于筛选客户端首次写入请求。
-* `offline-bit` 选项，用于筛选客户端请求以设置脱机位。
+* `monitor-ads` 用于筛选客户端对备用数据流的请求的选项。
+* `close-with-modification` 用于筛选客户端请求以关闭并修改的选项。
+* `close-without-modification` 用于筛选客户端请求以进行关闭而不进行修改的选项。
+* `first-read` 用于筛选客户端请求以进行首次读取的选项。
+* `first-write` 用于筛选客户端请求以进行首次写入的选项。
+* `offline-bit` 用于筛选脱机位集的客户端请求的选项。
 +
 设置此筛选器会使 FPolicy 服务器仅在访问脱机文件时收到通知。
 
-* `open-for-delete-intent` 选项，用于筛选客户端请求以删除意图打开。
+* `open-with-delete-intent` 用于筛选客户端请求的选项、以用于具有删除意图的OPEN。
 +
-设置此筛选器后，只有在尝试打开要删除的文件时， FPolicy 服务器才会收到通知。指定 `file_delete_on_close` 标志时，文件系统会使用此参数。
+设置此筛选器后，只有在尝试打开要删除的文件时， FPolicy 服务器才会收到通知。当时、文件系统会使用此选项 `FILE_DELETE_ON_CLOSE` 已指定标志。
 
-* `open-wan-write-intent` 用于筛选客户端请求以写入意图打开。
+* `open-with-write-intent` 用于筛选具有写入意图的OPEN客户端请求的选项。
 +
 设置此筛选器后，只有在尝试打开文件并在其中写入内容时， FPolicy 服务器才会收到通知。
 
-* `write-write-write-size-change` 选项，用于筛选客户端的写入请求并更改大小。
+* `write-with-size-change` 用于筛选客户端写入请求并更改大小的选项。
 
  a| 
-` 筛选器` `筛选器` ， ...
+`-filters` `filter`，...
 
 
 
  a| 
 _Filters_continued
 
-* `setattr-for-owner-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录的所有者。
-* `setattr-for-group-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录的组。
-* `setattr-for-sacl -change` 选项，用于筛选客户端 setattr 请求以更改文件或目录上的 SACL 。
+* `setattr-with-owner-change` 用于筛选客户端SETATTR更改文件或目录所有者的请求的选项。
+* `setattr-with-group-change` 用于筛选客户端SETATTR更改文件或目录组的请求的选项。
+* `setattr-with-sacl-change` 用于筛选客户端SETATTR更改文件或目录上的SACL请求的选项。
 +
-此筛选器仅适用于 SMB 和 NFSv4 协议。
+此筛选器仅适用于SMB和NFSv4协议。
 
-* `setattr-for-dacl-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录上的 DACL 。
+* `setattr-with-dacl-change` 用于筛选客户端SETATTR请求以更改文件或目录上的DACL的选项。
 +
-此筛选器仅适用于 SMB 和 NFSv4 协议。
+此筛选器仅适用于SMB和NFSv4协议。
 
-* `setattr-for-modify-time-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录的修改时间。
-* `setattr-for-access-time-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录的访问时间。
-* `setattr-for-creation-time-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录的创建时间。
+* `setattr-with-modify-time-change` 用于筛选客户端SETATTR请求以更改文件或目录的修改时间的选项。
+* `setattr-with-access-time-change` 用于筛选客户端setattr请求以更改文件或目录访问时间的选项。
+* `setattr-with-creation-time-change` 用于筛选客户端SETATTR请求以更改文件或目录的创建时间的选项。
 +
-此选项仅适用于 SMB 协议。
+此选项仅适用于SMB协议。
 
-* `setattr-for-mode-change` 选项，用于筛选客户端 setattr 请求以更改文件或目录上的模式位。
-* 用于筛选客户端 setattr 请求以更改文件大小的 `setattr-with -size-change` 选项。
-* `setattr-for-allocation-size-change` 选项，用于筛选客户端 setattr 请求以更改文件的分配大小。
+* `setattr-with-mode-change` 用于筛选客户端setattr请求以更改文件或目录上的模式位的选项。
+* `setattr-with-size-change` 用于筛选客户端setattr请求以更改文件大小的选项。
+* `setattr-with-allocation-size-change` 用于筛选客户端SETATTR请求以更改文件分配大小的选项。
 +
-此选项仅适用于 SMB 协议。
+此选项仅适用于SMB协议。
 
-* `exclude-directory` 选项，用于筛选客户端对目录操作的请求。
+* `exclude-directory` 用于筛选客户端目录操作请求的选项。
 +
 指定此筛选器后，不会监控目录操作。
 
 
  a| 
-` 筛选器` `筛选器` ， ...
+`-filters` `filter`，...
 
 
 
  a| 
 是否需要执行卷操作 _
 
-指定卷挂载和卸载操作是否需要监控。默认值为 `false` 。
+指定卷挂载和卸载操作是否需要监控。默认值为 `false`。
  a| 
-` -volume-operation` ｛`true` ｝`false` ｝
+`-volume-operation` {`true`|`false`｝
 
-` 筛选器` `筛选器` ， ...
+`-filters` `filter`，...
 
 
 

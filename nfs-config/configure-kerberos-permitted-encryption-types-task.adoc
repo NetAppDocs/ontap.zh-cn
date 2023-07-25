@@ -11,7 +11,7 @@ summary: 默认情况下， ONTAP 支持以下 NFS Kerberos 加密类型： DES 
 
 
 [role="lead"]
-默认情况下， ONTAP 支持以下 NFS Kerberos 加密类型： DES ， 3DES ， AES-128 和 AES-256 。您可以使用 `vserver nfs modify` 命令和 ` perfed-enc-types` 参数为每个 SVM 配置允许的加密类型，以满足特定环境的安全要求。
+默认情况下， ONTAP 支持以下 NFS Kerberos 加密类型： DES ， 3DES ， AES-128 和 AES-256 。您可以使用为每个SVM配置允许的加密类型、以满足特定环境的安全要求 `vserver nfs modify` 命令 `-permitted-enc-types` 参数。
 
 .关于此任务
 为了最大程度地实现客户端兼容性， ONTAP 默认同时支持弱 DES 和强 AES 加密。例如，这意味着，如果您要提高安全性，并且您的环境支持此安全性，则可以使用此操作步骤禁用 DES 和 3DES ，并要求客户端仅使用 AES 加密。
@@ -35,27 +35,43 @@ summary: 默认情况下， ONTAP 支持以下 NFS Kerberos 加密类型： DES 
  a| 
 DES 或 3DES
  a| 
-.. 配置 SVM 的 NFS Kerberos 允许的加密类型： + `vserver nfs modify -vserver _vserver_name_ -perfened-enc-types _encryption_types_`
+.. 配置SVM的NFS Kerberos允许的加密类型：
+ +
+`vserver nfs modify -vserver _vserver_name_ -permitted-enc-types _encryption_types_`
 +
 使用逗号分隔多种加密类型。
 
-.. 验证更改是否成功： + `vserver nfs show -vserver _vserver_name_ -fields permitted-enc-types`
+.. 验证更改是否成功：
+ +
+`vserver nfs show -vserver _vserver_name_ -fields permitted-enc-types`
 
 
 
 
  a| 
-AES-128 或 AES-256
+AES-128或AES-256
  a| 
-.. 确定启用了哪个 SVM 和 LIF Kerberos ： + `vserver nfs kerberos interface show`
-.. 在要修改其 NFS Kerberos 允许的加密类型的 SVM 上的所有 LIF 上禁用 Kerberos ： + `vserver nfs kerberos interface disable -lif _lif_name_`
-.. 配置 SVM 的 NFS Kerberos 允许的加密类型： + `vserver nfs modify -vserver _vserver_name_ -perfened-enc-types _encryption_types_`
+.. 确定启用了Kerberos的SVM和LIF：
+ +
+`vserver nfs kerberos interface show`
+.. 在要修改NFS Kerberos允许的加密类型的SVM上的所有SVM上禁用Kerberos：
+ +
+`vserver nfs kerberos interface disable -lif _lif_name_`
+.. 配置SVM的NFS Kerberos允许的加密类型：
+ +
+`vserver nfs modify -vserver _vserver_name_ -permitted-enc-types _encryption_types_`
 +
 使用逗号分隔多种加密类型。
 
-.. 验证更改是否成功： + `vserver nfs show -vserver _vserver_name_ -fields permitted-enc-types`
-.. 在 SVM 上的所有 LIF 上重新启用 Kerberos ： + `vserver nfs kerberos interface enable -lif _lif_name_ -SPN _service_principal 名称 _`
-.. 验证是否已在所有 LIF 上启用 Kerberos ： + `vserver nfs kerberos interface show`
+.. 验证更改是否成功：
+ +
+`vserver nfs show -vserver _vserver_name_ -fields permitted-enc-types`
+.. 在SVM上的所有SVM上重新启用Kerberos：
+ +
+`vserver nfs kerberos interface enable -lif _lif_name_ -spn _service_principal_name_`
+.. 验证是否已在所有生命周期管理器上启用Kerberos：
+ +
+`vserver nfs kerberos interface show`
 
 
 |===

@@ -11,21 +11,21 @@ summary: 您可以使用 volume move 命令对现有卷进行加密，移动加�
 
 
 [role="lead"]
-您可以使用 `volume move` 命令对现有卷进行加密，移动加密的卷或取消对卷的加密。集群管理员可以自行运行 `volume move` 命令，也可以将运行该命令的权限委派给 SVM 管理员。
+您可以使用 `volume move` 用于对现有卷进行加密、移动加密卷或取消卷加密的命令。集群管理员可以运行 `volume move` 命令本身、也可以将运行命令的权限委派给SVM管理员。
 
 .关于此任务
-默认情况下，系统会为 SVM 管理员分配 `vsadmin` 角色，该角色不包括卷移动权限。您必须将 `vsadmin-volume` 角色分配给 SVM 管理员，以使其能够运行 `volume move` 命令。
+默认情况下、系统会为SVM管理员分配 `vsadmin` 角色、不包括移动卷的权限。您必须分配 `vsadmin-volume` SVM管理员的角色、以使其能够运行 `volume move` 命令：
 
 .步骤
-. 委派权限运行 `volume move` 命令：
+. 委派运行的权限 `volume move` 命令：
 +
-`ssecurity login modify -vserver _svm_name_ -user-or-group-name _user_or_group_name_ -application _application_-authmethod _authentication_method _ -role _vsadmin-volume_s`
+`security login modify -vserver _SVM_name_ -user-or-group-name _user_or_group_name_ -application _application_ -authmethod _authentication_method_ -role _vsadmin-volume_`
 
 +
 有关完整的命令语法，请参见命令手册页。
 
 +
-以下命令授予 SVM 管理员运行 `volume move` 命令的权限。
+以下命令授予SVM管理员运行的权限 `volume move` 命令：
 
 +
 [listing]

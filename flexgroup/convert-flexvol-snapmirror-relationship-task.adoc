@@ -29,7 +29,7 @@ summary: 要在 ONTAP 中将 FlexVol 卷 SnapMirror 关系转换为 FlexGroup �
 只有异步 SnapMirror 关系才支持 FlexGroup 转换。
 
 .步骤
-. 验证 SnapMirror 关系是否运行正常： `snapmirror show`
+. 验证SnapMirror关系是否运行正常： `snapmirror show`
 +
 只能转换 XDP 类型的镜像关系。
 
@@ -57,7 +57,7 @@ vs0:src_xdp XDP  vs2:dst_xdp  Snapmirrored
 
 . 将目标 FlexVol 卷转换为 FlexGroup 卷。
 +
-.. 暂停 FlexVol SnapMirror 关系： `snapmirror quiesce -destination-path dest_svm ： dest_volume`
+.. 将FlexVol SnapMirror关系静用： `snapmirror quiesce -destination-path dest_svm:dest_volume`
 +
 [listing]
 ----
@@ -79,7 +79,7 @@ Then, re-establish the SnapMirror relationship using the "snapmirror resync" com
 ----
 
 
-. 将源 FlexVol 卷转换为 FlexGroup 卷： `volume conversion start -vserver src_svm_name -volume src_vol_name`
+. 将源FlexVol卷转换为FlexGroup卷： `volume conversion start -vserver src_svm_name -volume src_vol_name`
 +
 [listing]
 ----
@@ -92,7 +92,7 @@ Warning: Converting flexible volume "src_xdp" in Vserver "vs0" to a FlexGroup
 Do you want to continue? {y|n}: y
 [Job 57] Job succeeded: success
 ----
-. 重新同步此关系： `snapmirror resync -destination-path dest_svm_name ： dest_volume`
+. 重新同步此关系： `snapmirror resync -destination-path dest_svm_name:dest_volume`
 +
 [listing]
 ----

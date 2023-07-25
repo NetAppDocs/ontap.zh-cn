@@ -16,17 +16,17 @@ summary: 您可以显示有关打开的 SMB 文件的信息，包括 SMB 连接�
 .关于此任务
 您可以显示有关已建立的 SMB 会话上打开的文件的信息。如果需要确定 SMB 会话中特定文件的 SMB 会话信息，则显示的信息非常有用。
 
-例如，如果您有一个 SMB 会话，其中一些打开的文件在持续可用的保护下打开，而另一些文件在持续可用的保护下未打开（ `vserver cifs session show` command output 中的 ` continuous-available` 字段值为 `Partial` ）， 您可以使用此命令确定哪些文件不持续可用。
+例如、如果您有一个SMB会话、其中一些打开的文件已打开且具有持续可用的保护、而另一些文件未打开且具有持续可用的保护(的值 `-continuously-available` 字段输入 `vserver cifs session show` 命令输出为 `Partial`)、则可以使用此命令确定哪些文件不持续可用。
 
-您可以使用不带任何可选参数的 `vserver cifs session file show` 命令以摘要形式显示 Storage Virtual Machine （ SVM ）上已建立的 SMB 会话中所有打开文件的信息。
+您可以使用以摘要形式显示Storage Virtual Machine (SVM)上已建立的SMB会话上的所有打开文件的信息 `vserver cifs session file show` 命令、而不带任何可选参数。
 
 但是，在许多情况下，返回的输出量很大。您可以通过指定可选参数来自定义输出中显示的信息。如果您只想查看一小部分打开文件的信息，这将非常有用。
 
-* 您可以使用可选的 ` 字段` 参数显示所选字段的输出。
+* 您可以使用可选 `-fields` 用于显示所选字段的输出的参数。
 +
 您可以单独使用此参数，也可以与其他可选参数结合使用。
 
-* 您可以使用 ` -instance` 参数显示有关打开的 SMB 文件的详细信息。
+* 您可以使用 `-instance` 用于显示有关打开的SMB文件的详细信息的参数。
 +
 您可以单独使用此参数，也可以与其他可选参数结合使用。
 
@@ -42,79 +42,79 @@ summary: 您可以显示有关打开的 SMB 文件的信息，包括 SMB 连接�
  a| 
 以摘要形式显示在 SVM 上
  a| 
-` * vserver cifs session file show -vserver _vserver_name_*`
+`*vserver cifs session file show -vserver _vserver_name_*`
 
 
 
  a| 
 在指定节点上
  a| 
-` * vserver cifs session file show -vserver _vserver_name_ -node ｛ node_name_local ｝ *`
+`*vserver cifs session file show -vserver _vserver_name_ -node {node_name|local}*`
 
 
 
  a| 
 指定的文件 ID
  a| 
-` * vserver cifs session file show -vserver _vserver_name_ -file-id integer *`
+`*vserver cifs session file show -vserver _vserver_name_ -file-id integer*`
 
 
 
  a| 
 指定的 SMB 连接 ID
  a| 
-` * vserver cifs session file show -vserver _vserver_name_ -connection-id intege*`
+`*vserver cifs session file show -vserver _vserver_name_ -connection-id integer*`
 
 
 
  a| 
 指定的 SMB 会话 ID
  a| 
-` * vserver cifs session file show -vserver _vserver_name_ -session-id integer *`
+`*vserver cifs session file show -vserver _vserver_name_ -session-id integer*`
 
 
 
  a| 
 在指定的托管聚合上
  a| 
-` * vserver cifs session file show -vserver _vserver_name_ -hosing-aggregate _aggregate_name_*`
+`*vserver cifs session file show -vserver _vserver_name_ -hosting-aggregate _aggregate_name_*`
 
 
 
  a| 
 在指定卷上
  a| 
-` * vserver cifs session file show -vserver _vserver_name_ -hosing-volume _volume_name_*`
+`*vserver cifs session file show -vserver _vserver_name_ -hosting-volume _volume_name_*`
 
 
 
  a| 
 指定的 SMB 共享上
  a| 
-` * vserver cifs session file show -vserver _vserver_name_ -share _share_name_*`
+`*vserver cifs session file show -vserver _vserver_name_ -share _share_name_*`
 
 
 
  a| 
 指定的 SMB 路径上
  a| 
-` * vserver cifs session file show -vserver _vserver_name_ -path _path_*`
+`*vserver cifs session file show -vserver _vserver_name_ -path _path_*`
 
 
 
  a| 
 具有指定级别的持续可用保护
  a| 
-` * vserver cifs session file show -vserver _vserver_name_ -continuously-available _continuoused_available_status_*`
+`*vserver cifs session file show -vserver _vserver_name_ -continuously-available _continuously_available_status_*`
 
-` 持续可用` 的值可以是以下值之一：
+的值 `-continuously-available` 可以是以下选项之一：
 
-** `否`
-** `是`
+** `No`
+** `Yes`
 +
 [NOTE]
 ====
-如果持续可用状态为 `No` ，则表示这些打开的文件无法从接管和交还中无中断地恢复。它们也无法从高可用性关系中的合作伙伴之间的常规聚合重新定位中恢复。
+持续可用状态为 `No`，这意味着这些打开的文件无法从接管和恢复中无系统地恢复。它们也无法从高可用性关系中的合作伙伴之间的常规聚合重新定位中恢复。
 
 ====
 
@@ -124,16 +124,16 @@ summary: 您可以显示有关打开的 SMB 文件的信息，包括 SMB 连接�
  a| 
 具有指定的重新连接状态
  a| 
-` * vserver cifs session file show -vserver _vserver_name_ -reCONNECTED _reCONNECT_state_*`
+`*vserver cifs session file show -vserver _vserver_name_ -reconnected _reconnected_state_*`
 
-` 重新连接` 的值可以是以下值之一：
+的值 `-reconnected` 可以是以下选项之一：
 
-** `否`
-** `是`
+** `No`
+** `Yes`
 +
 [NOTE]
 ====
-如果重新连接状态为 `No` ，则在断开连接事件后，未重新连接打开的文件。这可能意味着文件从未断开连接，或者文件已断开连接且未成功重新连接。如果重新连接状态为 `Yes` ，则表示打开的文件在断开连接事件后成功重新连接。
+如果重新连接状态为 `No`，断开连接事件后打开的文件不会重新连接。这可能意味着文件从未断开连接，或者文件已断开连接且未成功重新连接。如果重新连接状态为 `Yes`，这意味着打开的文件在断开连接事件后成功重新连接。
 
 ====
 

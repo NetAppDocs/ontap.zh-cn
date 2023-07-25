@@ -24,21 +24,21 @@ ONTAP 提供了用于管理 SP 的命令，包括 SP 网络配置， SP 固件�
  a| 
 为 SP 启用 SP 自动网络配置以使用指定子网的 IPv4 或 IPv6 地址系列
  a| 
-`ssystem service-processor network auto-configuration enable`
+`system service-processor network auto-configuration enable`
 
 
 
  a| 
 为 SP 指定的子网的 IPv4 或 IPv6 地址系列禁用 SP 自动网络配置
  a| 
-`ssystem service-processor network auto-configuration disable`
+`system service-processor network auto-configuration disable`
 
 
 
  a| 
-显示 SP 自动网络配置
+显示SP自动网络配置
  a| 
-`ssystem service-processor network auto-configuration show`
+`system service-processor network auto-configuration show`
 
 
 
@@ -54,7 +54,7 @@ ONTAP 提供了用于管理 SP 的命令，包括 SP 网络配置， SP 固件�
 * SP 的网关 IP 地址
 
  a| 
-`ssystem service-processor network modify`
+`system service-processor network modify`
 
 
 
@@ -72,9 +72,9 @@ ONTAP 提供了用于管理 SP 的命令，包括 SP 网络配置， SP 固件�
 * SP 网络设置失败的原因
 
  a| 
-`ssystem service-processor network show`
+`system service-processor network show`
 
-要显示完整的 SP 网络详细信息，需要使用 ` -instance` 参数。
+要显示完整的SP网络详细信息、需要 `-instance` 参数。
 
 
 
@@ -85,7 +85,7 @@ ONTAP 提供了用于管理 SP 的命令，包括 SP 网络配置， SP 固件�
 * 启用或禁用 SP API 服务
 
  a| 
-`ssystem service-processor api-service modify`
+`system service-processor api-service modify`
 
 （高级权限级别）
 
@@ -94,7 +94,7 @@ ONTAP 提供了用于管理 SP 的命令，包括 SP 网络配置， SP 固件�
  a| 
 显示 SP API 服务配置
  a| 
-`ssystem service-processor api-service show`
+`system service-processor api-service show`
 
 （高级权限级别）
 
@@ -103,8 +103,8 @@ ONTAP 提供了用于管理 SP 的命令，包括 SP 网络配置， SP 固件�
  a| 
 续订 SP API 服务用于内部通信的 SSL 和 SSH 证书
  a| 
-* 对于 ONTAP 9.5 或更高版本： `ssystem service-processor api-service renew-internal-certificates`
-* 对于 ONTAP 9.4 或更早版本： `ssystem service-processor api-service renew-certificates`
+* 对于ONTAP 9.5或更高版本： `system service-processor api-service renew-internal-certificates`
+* 对于ONTAP 9.4或更早版本： `system service-processor api-service renew-certificates`
 +
 （高级权限级别）
 
@@ -127,16 +127,16 @@ ONTAP 提供了用于管理 SP 的命令，包括 SP 网络配置， SP 固件�
 * 固件自动更新是否已启用以及上次更新状态
 
  a| 
-`ssystem service-processor image show`
+`system service-processor image show`
 
-` -is-current` 参数表示当前启动 SP 的映像（主映像或备份映像），如果安装的固件版本为最新版本，则不会指示此映像。
+。 `-is-current` 参数表示当前用于启动SP的映像(主映像或备份映像)、如果安装的固件版本是最新版本、则不会显示此映像。
 
 
 
  a| 
 启用或禁用 SP 自动固件更新
  a| 
-`ssystem service-processor image modify`
+`system service-processor image modify`
 
 默认情况下，更新 ONTAP 或手动下载新版本的 SP 固件时， SP 固件会自动更新。建议不要禁用自动更新，因为这样做可能会导致 ONTAP 映像和 SP 固件映像之间的组合不理想或不符合要求。
 
@@ -145,11 +145,11 @@ ONTAP 提供了用于管理 SP 的命令，包括 SP 网络配置， SP 固件�
  a| 
 在节点上手动下载 SP 固件映像
  a| 
-`s系统节点映像获取`
+`system node image get`
 
 [NOTE]
 ====
-在运行 `ssystem node image` 命令之前，您必须将权限级别设置为 advanced （ `set -privilege advanced` ），并在系统提示您继续时输入 * y* 。
+在运行之前 `system node image` 命令、则必须将权限级别设置为高级 (`set -privilege advanced`)，在系统提示您继续时输入*y*。
 
 ====
 SP 固件映像随 ONTAP 一起打包。您无需手动下载 SP 固件，除非您要使用与 ONTAP 附带的 SP 固件版本不同的 SP 固件版本。
@@ -163,7 +163,7 @@ SP 固件映像随 ONTAP 一起打包。您无需手动下载 SP 固件，除非
 * 是否正在进行更新以及完成百分比
 
  a| 
-`ssystem service-processor image update-progress show`
+`system service-processor image update-progress show`
 
 |===
 
@@ -177,21 +177,21 @@ SP 固件映像随 ONTAP 一起打包。您无需手动下载 SP 固件，除非
  a| 
 仅向指定的 IP 地址授予 SP 访问权限
  a| 
-`ssystem service-processor ssh add-allowed-addresses`
+`system service-processor ssh add-allowed-addresses`
 
 
 
  a| 
 阻止指定的 IP 地址访问 SP
  a| 
-`ssystem service-processor ssh remove-allowed-addresses`
+`system service-processor ssh remove-allowed-addresses`
 
 
 
  a| 
 显示可访问 SP 的 IP 地址
  a| 
-`ssystem service-processor ssh show`
+`system service-processor ssh show`
 
 |===
 
@@ -213,28 +213,28 @@ SP 固件映像随 ONTAP 一起打包。您无需手动下载 SP 固件，除非
 * 是否启用 SP 固件自动更新
 
  a| 
-`ssystem service-processor show` 要显示完整的 SP 信息，需要使用 ` -instance` 参数。
+`system service-processor show` 显示完整的SP信息需要 `-instance` 参数。
 
 
 
  a| 
 重新启动节点上的SP
  a| 
-`ssystem service-processor reboot-sp`
+`system service-processor reboot-sp`
 
 
 
  a| 
 生成并发送一条 AutoSupport 消息，其中包含从指定节点收集的 SP 日志文件
  a| 
-`s系统节点 AutoSupport invoke-splog`
+`system node autosupport invoke-splog`
 
 
 
  a| 
 显示集群中收集的 SP 日志文件的分配映射，包括驻留在每个收集节点中的 SP 日志文件的序列号
  a| 
-`ssystem service-processor log show-allocations`
+`system service-processor log show-allocations`
 
 |===
 .相关信息

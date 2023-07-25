@@ -22,22 +22,22 @@ AD 域解析列表中的前三个服务器之一必须已启动并提供数据�
 
 ====
 .步骤
-. 请咨询 LDAP 管理员，以确定 `vserver services name-service ldap client create` 命令的适当配置值：
+. 请咨询LDAP管理员以确定的适当配置值 `vserver services name-service ldap client create` 命令：
 +
 .. 指定与 LDAP 服务器的基于域或基于地址的连接。
 +
-` -ad-domain` 和 ` -servers` 选项是互斥的。
+。 `-ad-domain` 和 `-servers` 选项不能同时使用。
 
 +
-*** 使用 ` -ad-domain` 选项在 Active Directory 域中启用 LDAP 服务器发现。
+*** 使用 `-ad-domain` 选项以在Active Directory域中启用LDAP服务器发现。
 +
-您可以使用 ` -preferred-ad-servers` 选项通过 IP 地址在逗号分隔列表中指定一个或多个首选 Active Directory 服务器。创建客户端后，您可以使用 `vserver services name-service ldap client modify` 命令修改此列表。
+您可以使用 `-preferred-ad-servers` 此选项可按IP地址在逗号分隔列表中指定一个或多个首选Active Directory服务器。创建客户端后、您可以使用修改此列表 `vserver services name-service ldap client modify` 命令：
 
-*** 使用 ` -servers` 选项以逗号分隔列表中的 IP 地址指定一个或多个 LDAP 服务器（ AD 或 UNIX ）。
+*** 使用 `-servers` 此选项可按IP地址在逗号分隔列表中指定一个或多个LDAP服务器(AD或UNIX)。
 +
 [NOTE]
 ====
-在 ONTAP 9.2 中， ` -servers` 选项已弃用。从 ONTAP 9.2 开始， ` -ldap-servers` 字段将取代 ` -servers` 字段。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
+。 `-servers` 选项在ONTAP 9.2中已弃用。从ONTAP 9.2开始、 `-ldap-servers` 字段将取代 `-servers` 字段。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
 
 ====
 
@@ -70,15 +70,15 @@ AD 域解析列表中的前三个服务器之一必须已启动并提供数据�
 
 .. 选择绑定值。
 +
-*** ` -min-bind-level ｛ anonymous ， simple ， sasl ｝` 指定最小绑定身份验证级别。
+*** `-min-bind-level {anonymous|simple|sasl}` 指定最低绑定身份验证级别。
 +
-默认值为 ` * 匿名 *` 。
+默认值为 `*anonymous*`。
 
-*** ` -bind-dn _ldap_dn_` 指定绑定用户。
+*** `-bind-dn _LDAP_DN_` 指定绑定用户。
 +
 对于 Active Directory 服务器，您必须在帐户（域 \ 用户）或主体（ user@domain.com ）表单中指定用户。否则，您必须以可分辨名称（ CN=user ， DC=domain ， DC=com ）形式指定用户。
 
-*** ` -bind-password _password_` 指定绑定密码。
+*** `-bind-password _password_` 指定绑定密码。
 
 
 .. 如果需要，选择会话安全选项。
@@ -86,21 +86,21 @@ AD 域解析列表中的前三个服务器之一必须已启动并提供数据�
 如果 LDAP 服务器需要，您可以启用 LDAP 签名和签章或基于 TLS 的 LDAP 。
 
 +
-*** ` -session-security ｛ none|sign|seal ｝`
+*** `--session-security {none|sign|seal}`
 +
-您可以启用签名（ `sign` ，数据完整性），签名和密封（ `seal` ，数据完整性和加密）或两者均不启用（`none` ，无签名或密封）。默认值为 `none` 。
+您可以启用签名 (`sign`、数据完整性)、签名和签章 (`seal`数据完整性和加密)、或者两者都不是  `none`，无签名或签章)。默认值为 `none`。
 
 +
-您还应设置 ` -min-bind-level` ｛ `sAsl` ｝ ，除非您希望在签名和签章绑定失败时绑定身份验证回退到 ` * 匿名 *` 或 ` * 简单 *` 。
+您还应设置 `-min-bind-level` {`sasl`}，除非您希望绑定身份验证回退到 `*anonymous*` 或 `*simple*` 签名和签章绑定失败时。
 
-*** ` -use-start-tls` ｛`true` ｝`false` ｝
+*** `-use-start-tls` {`true`|`false`｝
 +
-如果设置为 ` * true *` 且 LDAP 服务器支持此设置，则 LDAP 客户端将使用加密的 TLS 连接来连接到服务器。默认值为 ` * false *` 。要使用此选项，您必须安装 LDAP 服务器的自签名根 CA 证书。
+如果设置为 `*true*` 如果LDAP服务器支持此功能、则LDAP客户端将使用加密TLS连接连接到该服务器。默认值为 `*false*`。要使用此选项，您必须安装 LDAP 服务器的自签名根 CA 证书。
 
 +
 [NOTE]
 ====
-如果 SVM 已将 SMB 服务器添加到域中，而 LDAP 服务器是 SMB 服务器主域的域控制器之一，则可以使用 `vserver cifs security modify` 命令修改 ` session-security-for-ad-ldap` 选项。
+如果SVM已将SMB服务器添加到域中、并且LDAP服务器是SMB服务器主域的域控制器之一、则可以修改 `-session-security-for-ad-ldap` 选项 `vserver cifs security modify` 命令：
 
 ====
 
@@ -110,28 +110,28 @@ AD 域解析列表中的前三个服务器之一必须已启动并提供数据�
 建议使用默认值，但您必须向 LDAP 管理员确认这些值适合您的环境。
 
 +
-*** ` -port _port_` 指定 LDAP 服务器端口。
+*** `-port _port_` 指定LDAP服务器端口。
 +
-默认值为 `389` 。
+默认值为 `389`。
 
 +
 如果您计划使用 Start TLS 来保护 LDAP 连接，则必须使用默认端口 389 。启动 TLS 以 LDAP 默认端口 389 上的纯文本连接开头，然后该连接升级到 TLS 。如果更改此端口，则启动 TLS 将失败。
 
-*** ` -query-timeout _intege_` 指定查询超时（以秒为单位）。
+*** `-query-timeout _integer_` 指定查询超时(以秒为单位)。
 +
 允许的范围为 1 到 10 秒。默认值为 `3` 秒。
 
-*** ` -base-dn _ldap_dn_` 指定基本 DN 。
+*** `-base-dn _LDAP_DN_` 指定基础DN。
 +
-如果需要，可以输入多个值（例如，如果启用了 LDAP 转介跟踪）。默认值为 ` ""` （ root ）。
+如果需要，可以输入多个值（例如，如果启用了 LDAP 转介跟踪）。默认值为 `""` (root)。
 
-*** ` 基础范围` ｛`base` ｝`onelevel` `s` subtree ｝ 指定基本搜索范围。
+*** `-base-scope` {`base`|`onelevel`|`subtree`}指定基本搜索范围。
 +
-默认值为 `ssubtree` 。
+默认值为 `subtree`。
 
-*** ` -referral-enabled` ｛`true` ｝`false` ｝ 指定是否已启用 LDAP 转介跟踪。
+*** `-referral-enabled` {`true`|`false`}指定是否启用LDAP转介跟踪。
 +
-从 ONTAP 9.5 开始，如果主 LDAP 服务器返回 LDAP 转介响应，指示转介的 LDAP 服务器上存在所需记录，则 ONTAP LDAP 客户端可以将查找请求转介给其他 LDAP 服务器。默认值为 ` * false *` 。
+从 ONTAP 9.5 开始，如果主 LDAP 服务器返回 LDAP 转介响应，指示转介的 LDAP 服务器上存在所需记录，则 ONTAP LDAP 客户端可以将查找请求转介给其他 LDAP 服务器。默认值为 `*false*`。
 
 +
 要搜索转介 LDAP 服务器中的记录，必须在 LDAP 客户端配置中将转介记录的基础 DN 添加到基础 DN 中。
@@ -142,7 +142,7 @@ AD 域解析列表中的前三个服务器之一必须已启动并提供数据�
 
 . 在 SVM 上创建 LDAP 客户端配置：
 +
-`vserver services name-service ldap client create -vserver _vserver_name_ -client-config _client_config_name_ ｛ -servers _ldap_server_list_ - -ad-domain _ad_domain_ -preferred-ad-servers _preferred_ad_server_list_ -schema _schema_-port 389 -query-sase-timeout 3 -min-bind _bind_password_sport_sl_sfall_sport_sport_sport_sport_sport_sport_snone_snode_sf_sport_snode_sf_sport_sport_snode_sf_snode__sf_sport_sport_`
+`vserver services name-service ldap client create -vserver _vserver_name_ -client-config _client_config_name_ {-servers _LDAP_server_list_ | -ad-domain _ad_domain_ -preferred-ad-servers _preferred_ad_server_list_ -schema _schema_ -port 389 -query-timeout 3 -min-bind-level {anonymous|simple|sasl} -bind-dn _LDAP_DN_ -bind-password _password_ -base-dn _LDAP_DN_ -base-scope subtree -session-security {none|sign|seal} [-referral-enabled {true|false}]`
 
 +
 [NOTE]

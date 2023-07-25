@@ -45,17 +45,17 @@ vs1       clone1           40.73MB
 +
 .. 确定包含 FlexClone 卷及其父卷的聚合中的可用空间量：
 +
-`s存储聚合显示`
+`storage aggregate show`
 
 .. 如果所属聚合没有足够的可用空间，请向该聚合添加存储：
 +
-`s存储聚合附加磁盘`
+`storage aggregate add-disks`
 
 
 
 . 启动拆分操作：
 +
-`volume clone split start -vserver _vserver_name_-flexclone _clone_volume_name_`
+`volume clone split start -vserver _vserver_name_ -flexclone _clone_volume_name_`
 
 +
 以下示例显示了如何启动从父卷"`vol1`"拆分FlexClone卷"`clone1`"的过程：
@@ -71,7 +71,7 @@ Warning: Are you sure you want to split clone volume clone1 in Vserver vs1 ?
 ----
 . 监控 FlexClone 拆分操作的状态：
 +
-`volume clone split show -vserver _vserver_name_-flexclone _clone_volume_name_`
+`volume clone split show -vserver _vserver_name_ -flexclone _clone_volume_name_`
 
 +
 以下示例显示了 AFF 系统上的 FlexClone 拆分操作状态：
@@ -88,7 +88,7 @@ vs1       clone1        0         0       411247   153600         0        37
 ----
 . 验证拆分的卷是否不再是 FlexClone 卷：
 +
-`volume show -volume _volume_name_-fields _clone-volume_s`
+`volume show -volume _volume_name_ -fields clone-volume`
 
 +
 的值 `clone-volume` 对于非FlexClone卷、选项为"`false`"。

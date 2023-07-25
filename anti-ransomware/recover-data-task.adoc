@@ -39,7 +39,7 @@ NOTE: 如果发生勒索软件攻击、请参见知识库文章 link:https://kb.
 ====
 .System Manager
 --
-. 如果您要从早期Snapshot副本(而不是从ARP副本)还原数据、则必须执行以下操作以释放反勒索软件Snapshot锁定。如果要从ARP副本还原、则无需解除锁定、您可以跳过此步骤。
+. 如果您要从早期Snapshot副本(而不是从ARP副本)还原数据、则必须执行以下操作以释放反勒索软件Snapshot锁定。  如果要从ARP副本还原、则无需解除锁定、您可以跳过此步骤。
 +
 [cols="2"]
 |===
@@ -68,10 +68,10 @@ NOTE: 如果发生勒索软件攻击、请参见知识库文章 link:https://kb.
 --
 .命令行界面
 --
-. 如果您要从早期Snapshot副本(而不是从ARP副本)还原数据、则必须执行以下操作以释放反勒索软件Snapshot锁定。如果要从ARP副本还原、则无需解除锁定、您可以跳过此步骤。
+. 如果您要从早期Snapshot副本(而不是从ARP副本)还原数据、则必须执行以下操作以释放反勒索软件Snapshot锁定。  如果要从ARP副本还原、则无需解除锁定、您可以跳过此步骤。
 +
 
-NOTE: 只有在使用时、才需要在从早期Snapshot副本还原之前释放反勒索软件SnapLock `volume snap restore` 命令。如果使用Flex Clone、Single File Snap Restore或其他方法还原数据、则无需执行此操作。
+NOTE: 只有在使用时、才需要在从早期Snapshot副本还原之前释放反勒索软件SnapLock `volume snap restore` 命令。  如果使用Flex Clone、Single File Snap Restore或其他方法还原数据、则无需执行此操作。
 
 +
 [cols="2"]
@@ -84,7 +84,10 @@ NOTE: 只有在使用时、才需要在从早期Snapshot副本还原之前释放
 
 `anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
 
-使用以下参数之一确定扩展名： ` [-seq-no _intege_]` 可疑列表中文件的序列号。` （ -extension _text_ ，…） ]` 文件扩展名 ` -start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始和结束时间，格式为 "MM/DD/YYYY HH ： MM ： SS" 。
+使用以下参数之一标识扩展：
+`[-seq-no _integer_]` 可疑列表中的文件序列号。
+`[-extension _text_, … ]` 文件扩展名
+`[-start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始时间和结束时间、格式为"MM/DD/YYYY HH：MM：SS"。
  a| 
 要释放Snapshot锁定、必须先从ARP副本还原、然后再从早期的Snapshot副本还原。
 
@@ -93,10 +96,10 @@ NOTE: 只有在使用时、才需要在从早期Snapshot副本还原之前释放
 |===
 . 列出卷中的 Snapshot 副本：
 +
-`volume snapshot show -vserver _svm_ -volume _volum_`
+`volume snapshot show -vserver _SVM_ -volume _volume_`
 
 +
-以下示例显示了 `vol1` 中的 Snapshot 副本：
+以下示例显示了中的Snapshot副本 `vol1`：
 
 +
 [listing]
@@ -118,10 +121,10 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 . 从 Snapshot 副本还原卷的内容：
 +
-`volume snapshot restore -vserver _svm_ -volume _volume" -snapshot _snapshot_`
+`volume snapshot restore -vserver _SVM_ -volume _volume_ -snapshot _snapshot_`
 
 +
-以下示例将还原 `vol1` 的内容：
+以下示例将还原的内容 `vol1`：
 
 +
 [listing]

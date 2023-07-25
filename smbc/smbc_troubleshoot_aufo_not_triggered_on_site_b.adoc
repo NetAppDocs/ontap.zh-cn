@@ -18,7 +18,7 @@ summary: 站点 A 故障不会在站点 B 上触发计划外故障转移
 站点 A 故障不会在站点 B 上触发计划外故障转移
 
 .可能的发生原因 1：
-未配置调解器。要确定是否为发生原因，问题描述请在站点 B 集群上运行 `snapmirror mediator show` 命令。
+未配置调解器。要确定这是否为发生原因、请问题描述the `snapmirror mediator show` 命令。
 
 ....
 Cluster2::*> snapmirror mediator show
@@ -29,7 +29,7 @@ This table is currently empty.
 .解决方案 ：
 确保已在两个集群上配置调解器，并且状态为已连接且仲裁设置为 True 。
 
-.可能的发生原因 2：
+.可能的发生原因#2：
 SnapMirror 一致性组不同步。要确定这是否为发生原因，请查看事件日志以查看一致性组在站点 A 发生故障期间是否处于同步状态。
 
 ....
@@ -43,14 +43,14 @@ Time                Node             Severity      Event
 要在站点 B 上执行强制故障转移，请完成以下步骤
 
 . 从站点 B 取消映射属于一致性组的所有 LUN
-. 使用 `force` 选项删除 SnapMirror 一致性组关系。
-. 在一致性组成分卷上输入 `snapmirror break` 命令，将卷从 DP 转换为 R/W ，从而从站点 B 启用 I/O
+. 使用删除SnapMirror一致性组关系 `force` 选项
+. 输入 `snapmirror break` 命令将卷从DP转换为R/W、以启用站点B的I/O
 . 启动站点 A 节点以创建从站点 B 到站点 A 的零 RTO 关系
-. 释放站点 A 上具有 `relationship-info-only` 的一致性组，以保留通用 Snapshot 副本并取消映射属于一致性组的 LUN 。
+. 使用释放此一致性组 `relationship-info-only` 在站点A上保留通用Snapshot副本并取消映射属于一致性组的LUN。
 . 通过使用 Sync 策略或异步策略设置卷级别关系，将站点 A 上的卷从 R/W 转换为 DP 。
-. 问题描述 the `snapmirror resync` to synchronize the relationships.
+. 问题描述 `snapmirror resync` 同步关系。
 . 删除站点 A 上具有 Sync 策略的 SnapMirror 关系
-. 在站点 B 上使用 `relationship-info-only true` 释放带有 Sync 策略的 SnapMirror 关系
+. 使用释放具有Sync策略的SnapMirror关系 `relationship-info-only true` 在站点B上
 . 创建从站点 B 到站点 A 的一致性组关系
 . 从站点 A 执行一致性组重新同步，然后验证一致性组是否处于同步状态。
 . 重新扫描主机 LUN I/O 路径以还原 LUN 的所有路径。

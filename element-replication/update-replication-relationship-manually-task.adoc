@@ -14,12 +14,12 @@ summary: 如果更新因网络错误而失败，您可能需要手动更新复�
 如果更新因网络错误而失败，您可能需要手动更新复制关系。
 
 .关于此任务
-您必须以 ` _hostip ： //lun/_name_` 的形式指定元素源路径，其中 "`lun` " 是实际字符串 "`lun` " ， `name` 是 Element 卷的名称。
+您必须在表单中指定Element源路径 `_hostip:_/lun/_name_`，其中“`LUN`”是实际字符串“`LUN`”和 `name` 是Element卷的名称。
 
 .步骤
 . 手动更新复制关系：
 +
-`snapmirror update -source-path _hostip ： //lun/_name_ -destination-path _sVM ： volume__cluster ： //svm/volume_s`
+`snapmirror update -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -27,11 +27,11 @@ summary: 如果更新因网络错误而失败，您可能需要手动更新复�
 +
 [NOTE]
 ====
-如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 `snapmirror initialize` 重新初始化此关系。
+如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 ... `snapmirror initialize` 重新初始化此关系。
 
 ====
 +
-以下示例更新了 IP 地址 10.0.0.11 处的源卷 `0005` 和目标卷 `vola_dst` on `svm_backup` 之间的关系：
+以下示例将更新源卷之间的关系 `0005` IP地址10.0.0.11处的卷和目标卷 `volA_dst` 开启 `svm_backup`：
 
 +
 [listing]

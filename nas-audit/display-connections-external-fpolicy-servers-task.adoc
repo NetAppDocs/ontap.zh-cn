@@ -24,7 +24,7 @@ summary: 您可以显示有关与集群或指定 Storage Virtual Machine （ SVM
 
 除了显示有关集群或特定 SVM 上的 FPolicy 连接的信息之外，您还可以使用命令参数按其他条件筛选命令的输出。
 
-您可以指定 ` -instance` 参数以显示有关列出的策略的详细信息。或者，您也可以使用 ` 字段` 参数在命令输出中仅显示指示的字段。您可以输入 ` ？` 在 ` 字段` 参数之后查找可以使用的字段。
+您可以指定 `-instance` 用于显示有关列出策略的详细信息的参数。或者、您也可以使用 `-fields` 参数、以便在命令输出中仅显示指示的字段。您可以输入 `?` 之后 `-fields` 用于确定可以使用哪些字段的参数。
 
 .步骤
 . 使用相应的命令显示有关节点与 FPolicy 服务器之间连接状态的筛选信息：
@@ -39,7 +39,7 @@ summary: 您可以显示有关与集群或指定 Storage Virtual Machine （ SVM
  a| 
 您指定的
  a| 
-`vserver fpolicy show-engine -server ip_address`
+`vserver fpolicy show-engine -server IP_address`
 
 
 
@@ -64,10 +64,10 @@ summary: 您可以显示有关与集群或指定 Storage Virtual Machine （ SVM
 
 服务器状态可以是以下状态之一：
 
-** `已连接`
-** `d已断开连接`
-** `正在连接`
-** `d正在连接`
+** `connected`
+** `disconnected`
+** `connecting`
+** `disconnecting`
 
 
 
@@ -75,12 +75,12 @@ summary: 您可以显示有关与集群或指定 Storage Virtual Machine （ SVM
  a| 
 指定类型
  a| 
-`vserver fpolicy show-engine -server-type`
+`vserver fpolicy show-engine -server-type type`
 
 FPolicy 服务器类型可以是以下类型之一：
 
-** `主卷`
-** `s二等`
+** `primary`
+** `secondary`
 
 
 
@@ -88,16 +88,16 @@ FPolicy 服务器类型可以是以下类型之一：
  a| 
 已因指定原因断开连接的
  a| 
-`vserver fpolicy show-engine -disconnect -reason text`
+`vserver fpolicy show-engine -disconnect-reason text`
 
 断开连接的原因可能有多种。以下是断开连接的常见原因：
 
-** `d从命令行界面收到 isconnect 命令。`
-** `解析来自 FPolicy 服务器的通知响应时遇到错误。`
-** `FPolicy 握手失败。`
-** `sSL 握手失败。`
-** `与 FPolicy 服务器的 TCP 连接失败。`
-** `从 FPolicy 服务器收到的屏幕响应消息无效。`
+** `Disconnect command received from CLI.`
+** `Error encountered while parsing notification response from FPolicy server.`
+** `FPolicy Handshake failed.`
+** `SSL handshake failed.`
+** `TCP Connection to FPolicy server failed.`
+** `The screen response message received from the FPolicy server is not valid.`
 
 
 |===

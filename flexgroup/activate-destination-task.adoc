@@ -17,19 +17,19 @@ summary: 如果源 FlexGroup 卷由于数据损坏，意外删除或脱机状态
 您必须从目标集群执行此任务。
 
 .步骤
-. 禁用 FlexGroup 卷 SnapMirror 关系的未来传输： `snapmirror quiesce dest_sVM ： dest_flexgroup`
+. 禁用FlexGroup卷SnapMirror关系的未来传输： `snapmirror quiesce dest_svm:dest_flexgroup`
 +
 [listing]
 ----
 cluster2::> snapmirror quiesce -destination-path vsd:dst
 ----
-. 断开 FlexGroup 卷 SnapMirror 关系： `snapmirror break dest_sVM ： dest_flexgroup`
+. 中断FlexGroup卷SnapMirror关系： `snapmirror break dest_svm:dest_flexgroup`
 +
 [listing]
 ----
 cluster2::> snapmirror break -destination-path vsd:dst
 ----
-. 查看 SnapMirror 关系的状态： `snapmirror show -expand`
+. 查看SnapMirror关系的状态： `snapmirror show -expand`
 +
 [listing]
 ----
@@ -59,9 +59,9 @@ vss:s__0008 XDP  vsd:dst__0008  Broken-off
 ...
 ----
 +
-每个成分卷的 SnapMirror 关系状态为 `broken-off` 。
+每个成分卷的SnapMirror关系状态为 `Broken-off`。
 
-. 验证目标 FlexGroup 卷是否为读 / 写卷： `volume show -vserver svm_name`
+. 验证目标FlexGroup卷是否为读/写卷： `volume show -vserver svm_name`
 +
 [listing]
 ----

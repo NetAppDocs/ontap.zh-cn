@@ -2,7 +2,7 @@
 permalink: data-protection/create-smb-server-task.html 
 sidebar: sidebar 
 keywords: cifs, create, server 
-summary: 如果源 SVM 具有 SMB 配置，并且您选择将 identity-preserve 设置为 false ，则必须为目标 SVM 创建 SMB 服务器。某些 SMB 配置需要 SMB 服务器，例如在 SnapMirror 关系初始化期间共享。 
+summary: 如果源 SVM 具有 SMB 配置，并且您选择将 identity-preserve 设置为 false ，则必须为目标 SVM 创建 SMB 服务器。某些SMB配置需要SMB服务器、例如、在初始化SnapMirror关系期间共享。 
 ---
 = 仅 SMB ：创建 SMB 服务器
 :allow-uri-read: 
@@ -11,17 +11,17 @@ summary: 如果源 SVM 具有 SMB 配置，并且您选择将 identity-preserve 
 
 
 [role="lead"]
-如果源 SVM 具有 SMB 配置，并且您选择将 `identity-preserve` 设置为 `false` ，则必须为目标 SVM 创建 SMB 服务器。某些 SMB 配置需要 SMB 服务器，例如在 SnapMirror 关系初始化期间共享。
+如果源SVM具有SMB配置、并且您选择了设置 `identity-preserve` to `false`，则必须为目标SVM创建SMB服务器。某些SMB配置需要SMB服务器、例如、在初始化SnapMirror关系期间共享。
 
 .步骤
-. 使用 `vserver start` 命令启动目标 SVM 。
+. 使用启动目标SVM `vserver start` 命令：
 +
 [listing]
 ----
 destination_cluster::> vserver start -vserver dvs1
 [Job 30] Job succeeded: DONE
 ----
-. 使用 `vserver show` 命令验证目标 SVM 是否处于 `running` 状态，子类型是否为 `dp-destination` 。
+. 验证目标SVM是否位于中 `running` 状态和子类型为 `dp-destination` 使用 `vserver show` 命令：
 +
 [listing]
 ----
@@ -31,13 +31,13 @@ Vserver  Type    Subtype           State      State       Volume     Aggregate
 -------- ------- ----------       ---------- ----------- ---------- ----------
 dvs1     data    dp-destination    running    running       -         -
 ----
-. 使用 `network interface create` 命令创建 LIF 。
+. 使用创建LIF `network interface create` 命令：
 +
 [listing]
 ----
 destination_cluster::>network interface create -vserver dvs1 -lif NAS1 -role data -data-protocol cifs -home-node destination_cluster-01 -home-port a0a-101  -address 192.0.2.128 -netmask 255.255.255.128
 ----
-. 使用 `network route create` 命令创建路由。
+. 使用创建路由 `network route create` 命令：
 +
 [listing]
 ----
@@ -47,28 +47,28 @@ destination_cluster::>network route create -vserver dvs1 -destination 0.0.0.0/0
 +
 link:../networking/index.html["网络管理"]
 
-. 使用 `vserver services dns create` 命令配置 DNS 。
+. 使用配置DNS `vserver services dns create` 命令：
 +
 [listing]
 ----
 destination_cluster::>vserver services dns create -domains mydomain.example.com -vserver
 dvs1 -name-servers 192.0.2.128 -state enabled
 ----
-. 使用 `vserver cifs domain preferred-dc add` 命令添加首选域控制器。
+. 使用添加首选域控制器 `vserver cifs domain preferred-dc add` 命令：
 +
 [listing]
 ----
 destination_cluster::>vserver cifs domain preferred-dc add -vserver dvs1 -preferred-dc
 192.0.2.128 -domain mydomain.example.com
 ----
-. 使用 `vserver cifs create` 命令创建 SMB 服务器。
+. 使用创建SMB服务器 `vserver cifs create` 命令：
 +
 [listing]
 ----
 destination_cluster::>vserver cifs create -vserver dvs1 -domain mydomain.example.com
 -cifs-server CIFS1
 ----
-. 使用 `vserver stop` 命令停止目标 SVM 。
+. 使用停止目标SVM `vserver stop` 命令：
 +
 [listing]
 ----

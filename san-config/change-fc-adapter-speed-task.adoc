@@ -17,12 +17,12 @@ summary: 您应将适配器目标端口速度设置为与其连接的设备速�
 使用此适配器作为主端口的所有 LIF 都必须脱机。
 
 .关于此任务
-由于此任务包含集群中的所有 Storage Virtual Machine （ SVM ）和所有 LIF ，因此您必须使用 ` 主端口` 和 ` 主端口` 参数来限制此操作的范围。如果不使用这些参数，则操作适用场景 all LIF 将在集群中运行，这可能不是理想的做法。
+由于此任务包含集群中的所有Storage Virtual Machine (SVM)和所有SVM、因此您必须使用 `-home-port` 和 `-home-lif` 用于限制此操作范围的参数。如果不使用这些参数，则操作适用场景 all LIF 将在集群中运行，这可能不是理想的做法。
 
 .步骤
 . 使此适配器上的所有 LIF 脱机：
 +
-`network interface modify -vserver * -lif * ｛ -home-node node1 -home-port 0c ｝ -status-admin down`
+`network interface modify -vserver * -lif * { -home-node node1 -home-port 0c } -status-admin down`
 
 . 使适配器脱机：
 +
@@ -48,6 +48,6 @@ summary: 您应将适配器目标端口速度设置为与其连接的设备速�
 
 . 使适配器上的所有 LIF 联机：
 +
-`network interface modify -vserver * -lif * ｛ -home-node node1 -home-port 0c ｝ -status-admin up`
+`network interface modify -vserver * -lif * { -home-node node1 -home-port 0c } -status-admin up`
 
 

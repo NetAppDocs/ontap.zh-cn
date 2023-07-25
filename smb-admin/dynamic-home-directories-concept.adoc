@@ -23,18 +23,19 @@ summary: 通过 ONTAP 主目录，您可以配置一个 SMB 共享，该共享�
 共享名称可以使用以下动态名称：
 
 +
-** ` %w` （用户的 Windows 用户名）
-** ` %d` （用户的 Windows 域名）
-** ` %u` （用户映射的 UNIX 用户名）要使共享名称在所有主目录中都是唯一的，共享名称必须包含 ` %w` 或 ` %u` 变量。共享名称可以同时包含 ` %d` 和 ` %w` 变量（例如， ` %d` /` %w` ），也可以包含静态部分和可变部分（例如 home_`` %w`` ）。
+** `%w` (用户的Windows用户名)
+** `%d` (用户的Windows域名)
+**  `%u` (用户的映射UNIX用户名)
+要使共享名称在所有主目录中都是唯一的、共享名称必须包含/`%w` 或 `%u` 变量。共享名称可以同时包含 `%d` 和/`%w` 变量(例如、 `%d`/`%w`)、或者共享名称可以包含静态部分和可变部分(例如、HOME_/`%w`）。
 
 
 * * 共享路径 *
 +
-此路径是由共享定义的相对路径，因此与某个共享名称关联，并附加到每个搜索路径中，以便从 SVM 的根目录生成用户的整个主目录路径。它可以是静态的（例如， `home` ），动态的（例如， ` %w` ）或两者的组合（例如， `eng/%w` ）。
+此路径是由共享定义的相对路径，因此与某个共享名称关联，并附加到每个搜索路径中，以便从 SVM 的根目录生成用户的整个主目录路径。它可以是静态的(例如、 `home`)、动态(例如、 `%w`)或两者的组合(例如、 `eng/%w`）。
 
 * * 搜索路径 *
 +
-这是从 SVM 根目录开始的一组绝对路径，您可以指定这些绝对路径来指示 ONTAP 搜索主目录。您可以使用 `vserver cifs home-directory search-path add` 命令指定一个或多个搜索路径。如果指定了多个搜索路径，则 ONTAP 将按指定顺序尝试这些路径，直到找到有效路径为止。
+这是从 SVM 根目录开始的一组绝对路径，您可以指定这些绝对路径来指示 ONTAP 搜索主目录。您可以使用指定一个或多个搜索路径 `vserver cifs home-directory search-path add` 命令：如果指定了多个搜索路径，则 ONTAP 将按指定顺序尝试这些路径，直到找到有效路径为止。
 
 * * 目录 *
 +
@@ -48,23 +49,23 @@ summary: 通过 ONTAP 主目录，您可以配置一个 SMB 共享，该共享�
 * 用户域： acme
 * 用户名： jsmith
 * SVM 名称： vs1
-* 主目录共享名称 1 ： home_`` %w`` - 共享路径： ` %w`
-* 主目录共享名称 2 ： ` %w` - 共享路径： ` %d/%w`
-* 搜索路径 1 ： ` /vol0home/home`
-* 搜索路径 2 ： ` /vol1home/home`
-* 搜索路径 3 ： ` /vol2home/home`
-* 主目录： ` /vol1home/home/jsmith`
+* 主目录共享名称1：HOME_ `%w` -共享路径： `%w`
+* 主目录共享名称2： `%w` -共享路径： `%d/%w`
+* 搜索路径1： `/vol0home/home`
+* 搜索路径2： `/vol1home/home`
+* 搜索路径3： `/vol2home/home`
+* 主目录： `/vol1home/home/jsmith`
 
 
-场景 1 ：用户连接到 ` \\vs1\home_jsmith` 。这与第一个主目录共享名称匹配，并生成相对路径 `jsmith` 。现在， ONTAP 会通过按顺序检查每个搜索路径来搜索名为 `jsmith` 的目录：
+场景1：用户连接到 `\\vs1\home_jsmith`。这与第一个主目录共享名称匹配并生成相对路径 `jsmith`。现在、ONTAP将搜索名为的目录 `jsmith` 按顺序检查每个搜索路径：
 
-* ` /vol0home/home/jsmith` 不存在；继续搜索路径 2 。
-* ` /vol1home/home/jsmith` 存在；因此，不会检查搜索路径 3 ；用户现在已连接到其主目录。
+* `/vol0home/home/jsmith` 不存在；继续搜索路径2。
+* `/vol1home/home/jsmith` 存在；因此、不会检查搜索路径3；用户现在已连接到其主目录。
 
 
-场景 2 ：用户连接到 ` \\vs1\jsmith` 。这与第二个主目录共享名称匹配，并生成相对路径 `acme/jsmith` 。现在， ONTAP 会通过按顺序检查每个搜索路径来搜索名为 `acme/jsmith` 的目录：
+场景2：用户连接到 `\\vs1\jsmith`。这与第二个主目录共享名称匹配并生成相对路径 `acme/jsmith`。现在、ONTAP将搜索名为的目录 `acme/jsmith` 按顺序检查每个搜索路径：
 
-* ` /vol0home/home/acme/jsmith` 不存在；继续搜索路径 2 。
-* ` /vol1home/home/acme/jsmith` 不存在；继续搜索路径 3 。
-* ` /vol2home/home/acme/jsmith` 不存在；主目录不存在；因此连接失败。
+* `/vol0home/home/acme/jsmith` 不存在；继续搜索路径2。
+* `/vol1home/home/acme/jsmith` 不存在；继续搜索路径3。
+* `/vol2home/home/acme/jsmith` 不存在；主目录不存在；因此连接失败。
 

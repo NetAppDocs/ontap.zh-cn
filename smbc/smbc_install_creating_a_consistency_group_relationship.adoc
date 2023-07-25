@@ -32,11 +32,11 @@ NOTE: 此工作流可在 ONTAP 9.8 和 9.1.1 中为适用场景用户提供支�
 
 
 .关于此任务
-您必须从目标集群创建一致性组关系。您可以使用 `snapmirror create` 命令上的 `cg-item-mapings` 参数映射多达 12 个成分卷。
+您必须从目标集群创建一致性组关系。  您可以使用映射多达12个成分卷 `cg-item-mappings` 参数 `snapmirror create` 命令：
 
 .步骤
 . 创建一致性组和成分卷关系。此示例将创建两个一致性组：包含成分卷 vol1 和 vol2 的 CG_src 以及包含成分卷 vol1_dr 和 vol2_dr 的 CG_dist 。
 +
-`d目标：： > snapmirror create -source-path vs1_src ： /CG/cG_src -destination-path vs1_dst ： /CG_c_dst -cg-item-mappings vol_src1 ：@vol_dst1 ， vol_src2 ：@vol_dst2 -policy AutomatedFailover`
+`destination::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1,vol_src2:@vol_dst2 -policy AutomatedFailOver`
 
 

@@ -32,36 +32,36 @@ summary: 如果系统无法通过 SMTP 传送 AutoSupport 消息，您可以检�
 .步骤
 . 验证节点管理 LIF 的状态：
 +
-` * 网络接口 show -home-node local -role node-mgmt -fields vserver ， lif ， status-oper ， status-admin ， address ， role*`
+`*network interface show -home-node local -role node-mgmt -fields vserver,lif,status-oper,status-admin,address,role*`
 
 +
-`ststatus-oper` 和 `ststatus-admin` 字段应返回 `up` 。
+。 `status-oper` 和 `status-admin` 字段应返回 `up`。
 
 . 记录 SVM 名称， LIF 名称和 LIF IP 地址，以供日后使用。
 . 确保已启用并正确配置 DNS ：
 +
-` * vserver services name-service dns show*`
+`*vserver services name-service dns show*`
 
 . 显示配置为由 AutoSupport 使用的所有服务器：
 +
-` * 系统节点 AutoSupport show -fields mail-hosts*`
+`*system node autosupport show -fields mail-hosts*`
 
 +
 记录显示的所有服务器名称。
 
-. 对于上一步显示的每个服务器以及 `support.netapp.com` ，请确保此节点可以访问此服务器或 URL ：
+. 对于上一步显示的每个服务器、和 `support.netapp.com`下，确保节点可以访问服务器或URL：
 +
-` * 网络 traceroute -node local -destination _server_name_*`
+`*network traceroute -node local -destination _server_name_*`
 
 +
 如果其中任何一条路由无法正常运行，请使用大多数第三方网络客户端上的 "`traceroute` " 或 "`tracert` " 实用程序，尝试从与集群位于同一子网上且正常运行的主机执行相同的路由。这有助于您确定问题描述是位于网络配置还是集群配置中。
 
 . 登录到指定为邮件主机的主机，并确保它可以处理 SMTP 请求：
 +
-` * netstat -aan|grep 25*`
+`*netstat -aAn|grep 25*`
 
 +
-`25` 是侦听器 SMTP 端口号。
+`25` 是侦听器SMTP端口号。
 
 +
 此时将显示类似于以下文本的消息：
@@ -73,7 +73,7 @@ ff64878c tcp        0      0  *.25    *.*    LISTEN.
 ----
 . 从其他某个主机上，使用邮件主机的 SMTP 端口打开 Telnet 会话：
 +
-` * telnet _mailhost_ 25*`
+`*telnet _mailhost_ 25*`
 
 +
 此时将显示类似于以下文本的消息：
@@ -86,13 +86,13 @@ ff64878c tcp        0      0  *.25    *.*    LISTEN.
 ----
 . 在 telnet 提示符处，确保可以从邮件主机中继消息：
 +
-` * HELO_domain_name_*`
+`*HELO _domain_name_*`
 
 +
-` * 邮件发件人： _yor_email_address_*`
+`*MAIL FROM: _your_email_address_*`
 
 +
-` * RCPT 收件人： \autosupport@netapp.com *`
+`*RCPT TO: \autosupport@netapp.com*`
 
 +
 `domain_name` 是网络的域名。
@@ -102,13 +102,14 @@ ff64878c tcp        0      0  *.25    *.*    LISTEN.
 
 . 在 telnet 提示符处，发送一条测试消息：
 +
-` * 数据 *`
+`*DATA*`
 
 +
-` * 主题： testing*` ` * 这是一个 test*`
+`*SUBJECT: TESTING*`
+`*THIS IS A TEST*`
 
 +
-` * 。 *`
+`*.*`
 
 +
 [NOTE]
@@ -121,21 +122,21 @@ ff64878c tcp        0      0  *.25    *.*    LISTEN.
 
 . 从 ONTAP 命令行界面，将 AutoSupport 测试消息发送到您有权访问的可信电子邮件地址：
 +
-` * 系统节点 AutoSupport 调用 -node local -type test*`
+`*system node autosupport invoke -node local -type test*`
 
 . 查找尝试的序列号：
 +
-` * 系统节点 AutoSupport 历史记录显示 -node local -destination smtp*`
+`*system node autosupport history show -node local -destination smtp*`
 
 +
 根据时间戳查找尝试的序列号。这可能是最近一次尝试。
 
 . 显示测试消息尝试的错误：
 +
-` * 系统节点 AutoSupport history show -node local -seq-num seq_num -fields error*`
+`*system node autosupport history show -node local -seq-num seq_num -fields error*`
 
 +
-如果显示的错误为 `Login denied` ，则表示 SMTP 服务器不接受来自集群管理 LIF 的发送请求。如果您不想更改为使用 HTTPS 作为传输协议，请与站点网络管理员联系，以配置 SMTP 网关以处理此问题描述。
+如果显示的错误为 `Login denied`，则SMTP服务器不接受来自集群管理LIF的发送请求。如果您不想更改为使用 HTTPS 作为传输协议，请与站点网络管理员联系，以配置 SMTP 网关以处理此问题描述。
 
 +
 如果此测试成功，但发送到 mailto ： autosupport@netapp.com 的同一消息未成功，请确保在所有 SMTP 邮件主机上启用 SMTP 中继，或者使用 HTTPS 作为传输协议。

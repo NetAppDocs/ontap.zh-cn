@@ -11,10 +11,10 @@ summary: 您可以使用 volume efficiency modify 命令在卷级别控制 AFF �
 
 
 [role="lead"]
-您可以使用 `volume efficiency modify` 命令在卷级别控制 AFF 系统上的实时数据缩减。默认情况下， AFF 系统上的所有卷都会启用数据缩减。
+您可以使用在卷级别控制AFF系统上的实时数据缩减 `volume efficiency modify` 命令：默认情况下， AFF 系统上的所有卷都会启用数据缩减。
 
 .您需要的内容
-数据缩减要求将卷空间保证设置为 `none` 。这是 AFF 系统的默认设置。
+数据缩减要求将卷空间保证设置为 `none`。这是 AFF 系统的默认设置。
 
 [NOTE]
 ====
@@ -24,15 +24,15 @@ summary: 您可以使用 volume efficiency modify 命令在卷级别控制 AFF �
 .步骤
 . 验证卷的空间保证设置：
 +
-`volume show -vserver vserver_name -volume volume_name – fields space-guarantee`
+`volume show -vserver vserver_name -volume volume_name –fields space-guarantee`
 
 . 启用数据缩减：
 +
-`volume efficiency modify -vserver vserver_name -volume volume_name -data-compression true`
+`volume efficiency modify -vserver vserver_name -volume volume_name -data-compaction true`
 
 . 禁用数据缩减：
 +
-`volume efficiency modify -vserver vserver_name -volume volume_name -data-c缩减 false`
+`volume efficiency modify -vserver vserver_name -volume volume_name -data-compaction false`
 
 . 要显示数据缩减状态，请执行以下操作：
 +
@@ -41,4 +41,4 @@ summary: 您可以使用 volume efficiency modify 命令在卷级别控制 AFF �
 
 
 .示例
-`cluster1 ：：： > volume efficiency modify -vserver vs1 -volume vol1 -data-compression true` `cluster1 ：： > volume efficiency modify -vserver vs1 -volume vol1 -data-compression false`
+`cluster1::> volume efficiency modify -vserver vs1 -volume vol1 -data-compaction true` `cluster1::> volume efficiency modify -vserver vs1 -volume vol1 -data-compaction false`

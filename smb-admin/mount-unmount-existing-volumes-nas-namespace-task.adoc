@@ -18,7 +18,7 @@ summary: 必须先在 NAS 命名空间上挂载卷，然后才能配置 NAS 客�
 
 [NOTE]
 ====
-要停止 NAS 客户端对卷的访问，仅仅卸载卷是不够的。您必须使卷脱机或执行其他步骤以确保客户端文件句柄缓存失效。有关详细信息，请参见以下知识库文章： https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/NFSv3_clients_still_have_access_to_a_volume_after_being_removed_from_the_namespace_in_ONTAP[NFSv3 clients still have access to a volume after being removed from the namespace in ONTAP
+要停止 NAS 客户端对卷的访问，仅仅卸载卷是不够的。您必须使卷脱机或执行其他步骤以确保客户端文件句柄缓存失效。有关详细信息、请参见以下知识库文章：https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/NFSv3_clients_still_have_access_to_a_volume_after_being_removed_from_the_namespace_in_ONTAP[NFSv3客户端在从ONTAP的命名空间中删除后仍可访问卷]
 
 ====
 卸载卷并使其脱机时，卷中的数据不会丢失。此外，在卷上或在已卸载卷内的目录和接合点上创建的现有卷导出策略和 SMB 共享也会保留下来。如果重新挂载卸载的卷， NAS 客户端可以使用现有导出策略和 SMB 共享访问卷中包含的数据。
@@ -43,11 +43,11 @@ summary: 必须先在 NAS 命名空间上挂载卷，然后才能配置 NAS 客�
 `volume unmount -vserver _svm_name_ -volume _volume_name_ volume offline -vserver _svm_name_ -volume _volume_name_`
 
 |===
-. 验证卷是否处于所需的挂载状态： `volume show -vserver _vserver_name_ -volume _volume_name_ -fields state ， junction-path ， junction-active`
+. 验证卷是否处于所需的挂载状态： `volume show -vserver _vserver_name_ -volume _volume_name_ -fields state,junction-path,junction-active`
 
 
 .示例
-以下示例将位于 SVM vs1 上的名为 `sales` 的卷挂载到接合点 ` /sales` ：
+以下示例将SVM VS1上名为`sales`的卷挂载到接合点 `/sales`：
 
 [listing]
 ----

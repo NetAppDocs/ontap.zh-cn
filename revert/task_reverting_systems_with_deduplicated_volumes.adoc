@@ -19,16 +19,16 @@ summary: 在从任何版本的 ONTAP 9 还原之前，您必须确保卷包含�
 
 . 使用带有 -fields 选项的 volume efficiency show 命令查看卷上运行的效率操作的进度。
 +
-以下命令显示效率操作的进度： `volume efficiency show -fields vserver ， volume ， progress`
+以下命令显示效率操作的进度： `volume efficiency show -fields vserver,volume,progress`
 
 . 使用带有 -all 选项的 volume efficiency stop 命令停止所有活动的和排队等待的重复数据删除操作。
 +
-以下命令将停止卷 VolA 上的所有活动和排队重复数据删除操作： `volume efficiency stop -vserver vs1 -volume VolA -all`
+以下命令将停止卷VolA上所有处于活动状态的和排队等待的重复数据删除操作： `volume efficiency stop -vserver vs1 -volume VolA -all`
 
 . 使用 set -privilege advanced 命令以高级权限级别登录。
 . 使用带有 -version 选项的 volume efficiency revert-to 命令将卷的效率元数据降级到特定版本的 ONTAP 。
 +
-以下命令会将卷 VolA 上的效率元数据还原到 ONTAP 9.x ： `volume efficiency revert-to -vserver vs1 -volume VolA -version 9.x`
+以下命令将卷VolA上的效率元数据还原到ONTAP 9.x： `volume efficiency revert-to -vserver vs1 -volume VolA -version 9.x`
 
 +
 
@@ -36,13 +36,13 @@ NOTE: volume efficiency revert-to 命令将还原执行此命令的节点上的�
 
 . 使用带有 -op-status 选项的 volume efficiency show 命令监控降级进度。
 +
-以下命令可监控并显示降级状态： `volume efficiency show -vserver vs1 -op-status downgrading`
+以下命令可监控并显示降级状态： `volume efficiency show -vserver vs1 -op-status Downgrading`
 
 . 如果还原失败，请使用带有 -instance 选项的 volume efficiency show 命令查看还原失败的原因。
 +
-以下命令显示所有字段的详细信息： `volume efficiency show -vserver vs1 -volume vol1 - instance`
+以下命令显示有关所有字段的详细信息： `volume efficiency show -vserver vs1 -volume vol1 - instance`
 
-. 还原操作完成后，返回到管理权限级别： `set -privilege admin`
+. 还原操作完成后、返回到管理权限级别： `set -privilege admin`
 +
 link:../volumes/index.html["逻辑存储管理"]
 

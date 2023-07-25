@@ -121,7 +121,9 @@ Active Directory域
  a| 
 网络接口
  a| 
-对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
+对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。
+如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。
+您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
 
 
 
@@ -192,7 +194,9 @@ rules
  a| 
 网络接口
  a| 
-对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
+对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。
+如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。
+您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
 
 
 
@@ -214,7 +218,9 @@ rules
  a| 
 网络接口
  a| 
-对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
+对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。
+如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。
+您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
 
 
 
@@ -224,7 +230,7 @@ rules
 如果要管理Storage VM管理员帐户、请选中此复选框。选中后、指定用户名、密码、确认密码并指示是否要添加用于Storage VM管理的网络接口。
 
 |===
-. 如果选择*启用FC*、请完成以下配置：
+. 如果选择*Enable FC*，请完成以下配置：
 
 
 |===
@@ -280,7 +286,9 @@ rules
  a| 
 网络接口
  a| 
-对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
+对于为Storage VM配置的每个网络接口、请选择一个现有子网(如果至少存在一个子网)或指定*不使用子网*并填写* IP地址*和*子网掩码*字段。
+如果有用、请选中*对以下所有接口使用相同的子网掩码和网关*复选框。
+您可以允许系统自动选择主端口、也可以从列表中手动选择要使用的端口。
 
 
 
@@ -301,7 +309,7 @@ rules
 .步骤
 . 确定哪些聚合是包含 SVM 根卷的候选聚合。
 +
-`storage aggregate show -is-mroot false`
+`storage aggregate show -has-mroot false`
 
 +
 您必须选择至少具有 1 GB 可用空间的聚合来容纳根卷。如果要在 SVM 上配置 NAS 审核，则根聚合上必须至少有 3 GB 的额外可用空间，并在启用审核时使用额外空间来创建审核暂存卷。
@@ -313,7 +321,7 @@ NOTE: 如果已在现有 SVM 上启用 NAS 审核，则聚合的暂存卷将在�
 . 记录要在其中创建 SVM 根卷的聚合的名称。
 . 如果您计划在创建 SVM 时指定语言，但不知道要使用的值，请确定并记录要指定的语言值：
 +
-`vserver create -language ？`
+`vserver create -language ?`
 
 . 如果您计划在创建 SVM 时指定 Snapshot 策略，但不知道该策略的名称，请列出可用策略并确定并记录要使用的 Snapshot 策略的名称：
 +
@@ -325,14 +333,14 @@ NOTE: 如果已在现有 SVM 上启用 NAS 审核，则聚合的暂存卷将在�
 
 . 创建 SVM ：
 +
-`vserver create -vserver _vserver_name_-aggregate _aggregate_name_‑` rootvolume _root_volume_name_-rootvolume-security-style｛unix_ntfs| mixed｝｛-ipspace _ipspace_name_]｛-language <language>>｝【-snapshot-policy _snapshot_policy_name_]【-quota_policy_policy_name_>】【-quota_policy_comment_>】【-policy _comment_>
+`vserver create -vserver _vserver_name_ -aggregate _aggregate_name_ ‑rootvolume _root_volume_name_ -rootvolume-security-style {unix|ntfs|mixed} [-ipspace _IPspace_name_] [-language <language>] [-snapshot-policy _snapshot_policy_name_] [-quota-policy _quota_policy_name_] [-comment _comment_]`
 
 +
 ....
 vserver create -vserver vs1 -aggregate aggr3 -rootvolume vs1_root ‑rootvolume-security-style ntfs -ipspace ipspace1 -language en_US.UTF-8
 ....
 +
-` 作业 72] 作业成功： SVM 创建已完成`
+`[Job 72] Job succeeded: Vserver creation completed`
 
 . 验证 SVM 配置是否正确。
 +

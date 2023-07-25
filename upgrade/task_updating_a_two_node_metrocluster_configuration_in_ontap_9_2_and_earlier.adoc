@@ -15,23 +15,25 @@ summary: '对于双节点 MetroCluster 配置，您可以无中断地升级 ONTA
 
 此操作步骤仅适用于运行 ONTAP 9.2 或更早版本的双节点 MetroCluster 配置。
 
-+ 如果您使用的是四节点 MetroCluster 配置，请勿使用此操作步骤。
-
-+ 如果您的双节点 MetroCluster 配置运行的是 ONTAP 9.3 或更高版本，请执行 xref:task_upgrade_andu_sm.html[使用 System Manager 自动无中断升级]。
-
-. 将权限级别设置为高级，在系统提示您继续时输入 * y* ： `set -privilege advanced`
 +
-此时将显示高级提示符（` * >` ）。
+如果您使用的是四节点MetroCluster配置、请勿使用此操作步骤。
 
-. 在要升级的集群上，将新的 ONTAP 软件映像安装为默认映像： `ssystem node image update -package package_location -setdefault true -replace -package true`
++
+如果您的双节点MetroCluster配置运行ONTAP 9.3或更高版本、请执行 xref:task_upgrade_andu_sm.html[使用 System Manager 自动无中断升级]。
+
+. 将权限级别设置为高级，在系统提示您继续时输入*y*： `set -privilege advanced`
++
+高级提示符 (`*>`)。
+
+. 在要升级的集群上、将新的ONTAP软件映像安装为默认映像： `system node image update -package package_location -setdefault true -replace-package true`
 +
 [listing]
 ----
 cluster_B::*> system node image update -package http://www.example.com/NewImage.tgz -setdefault true -replace-package true
 ----
-. 验证目标软件映像是否设置为默认映像： `ssystem node image show`
+. 验证目标软件映像是否设置为默认映像： `system node image show`
 +
-以下示例显示 `NewImage` 设置为默认映像：
+以下示例显示了这一点 `NewImage` 设置为默认图像：
 
 +
 [listing]
@@ -45,9 +47,9 @@ node_B_1
          NewImage  true    false   Y.Y.Y                MM/DD/YYYY TIME
 2 entries were displayed.
 ----
-. 如果目标软件映像未设置为默认映像，请将其更改为： `ssystem image modify ｛ -node * -iscurrent false ｝ -isDefault true`
-. 验证所有集群 SVM 是否均处于运行状况： `MetroCluster SVM show`
-. 在未更新的集群上，启动协商切换： `MetroCluster switchover`
+. 如果目标软件映像未设置为默认映像、请进行更改： `system image modify {-node * -iscurrent false} -isdefault true`
+. 验证所有集群SVM是否均处于运行状况： `metrocluster vserver show`
+. 在未更新的集群上、启动协商切换： `metrocluster switchover`
 +
 此操作可能需要几分钟时间。您可以使用 MetroCluster operation show 命令验证切换是否已完成。
 
@@ -66,8 +68,8 @@ Warning: negotiated switchover is about to start. It will stop all the data
          cluster "cluster_B".
 Do you want to continue? {y|n}: y
 ----
-. 验证所有集群 SVM 是否均处于运行状况： `MetroCluster SVM show`
-. 重新同步 " `surving` " 集群上的数据聚合： `MetroCluster heal -phase aggregates`
+. 验证所有集群SVM是否均处于运行状况： `metrocluster vserver show`
+. `s"正在运行`"集群上的数据聚合： `metrocluster heal -phase aggregates`
 +
 将 MetroCluster IP 配置升级到 ONTAP 9.5 或更高版本后，聚合将在短时间内处于降级状态，然后再重新同步并返回到镜像状态。
 
@@ -77,7 +79,7 @@ Do you want to continue? {y|n}: y
 cluster_A::> metrocluster heal -phase aggregates
 [Job 130] Job succeeded: Heal Aggregates is successful.
 ----
-. 验证修复操作是否已成功完成： `MetroCluster operation show`
+. 验证修复操作是否已成功完成： `metrocluster operation show`
 +
 [listing]
 ----
@@ -88,14 +90,14 @@ Start Time: MM/DD/YYYY TIME
 End Time: MM/DD/YYYY TIME
 Errors: -
 ----
-. 重新同步 " `surving` " 集群上的根聚合： `MetroCluster heal -phase root-aggregates`
+. `s"正在运行`"集群上的根聚合： `metrocluster heal -phase root-aggregates`
 +
 [listing]
 ----
 cluster_A::> metrocluster heal -phase root-aggregates
 [Job 131] Job succeeded: Heal Root Aggregates is successful.
 ----
-. 验证修复操作是否已成功完成： `MetroCluster operation show`
+. 验证修复操作是否已成功完成： `metrocluster operation show`
 +
 [listing]
 ----
@@ -106,10 +108,10 @@ Start Time: MM/DD/YYYY TIME
 End Time: MM/DD/YYYY TIME
 Errors: -
 ----
-. 在已暂停的集群上，从 LOADER 提示符处启动节点： `boot_ontap`
-. 等待启动过程完成，然后验证所有集群 SVM 是否均处于运行状况： `MetroCluster SVM show`
-. 从 `surving` 集群执行切回： `MetroCluster switchback`
-. 验证切回是否已成功完成： `MetroCluster operation show`
+. 在暂停的集群上、从加载程序提示符启动节点： `boot_ontap`
+. 等待启动过程完成、然后验证所有集群SVM是否均处于运行状况： `metrocluster vserver show`
+. 从"`s`"集群执行切回： `metrocluster switchback`
+. 验证切回是否已成功完成： `metrocluster operation show`
 +
 [listing]
 ----
@@ -120,11 +122,11 @@ Start Time: MM/DD/YYYY TIME
 End Time: MM/DD/YYYY TIME
 Errors: -
 ----
-. 验证所有集群 SVM 是否均处于运行状况： `MetroCluster SVM show`
+. 验证所有集群SVM是否均处于运行状况： `metrocluster vserver show`
 . 对另一个集群重复上述所有步骤。
 . 验证 MetroCluster 配置是否运行正常：
 +
-.. 检查配置： `MetroCluster check run`
+.. 检查配置： `metrocluster check run`
 +
 [listing]
 ----
@@ -145,10 +147,10 @@ To check if the nodes are ready to do a switchover or switchback
 operation, run "metrocluster switchover -simulate" or "metrocluster
 switchback -simulate", respectively.
 ----
-.. 如果要查看更详细的结果，请使用 MetroCluster check run 命令： `MetroCluster check aggregate show``metrocluster check config-replication show``metrocluster check lif show``metrocluster check node show`
-.. 将权限级别设置为 advanced ： `set -privilege advanced`
-.. 模拟切换操作： `MetroCluster switchover -simulate`
-.. 查看切换模拟的结果： `MetroCluster operation show`
+.. 如果要查看更详细的结果、请使用MetroCluster check run命令：
+.. 将权限级别设置为高级： `set -privilege advanced`
+.. 模拟切换操作： `metrocluster switchover -simulate`
+.. 查看切换模拟的结果： `metrocluster operation show`
 +
 [listing]
 ----

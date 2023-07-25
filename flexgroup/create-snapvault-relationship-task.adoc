@@ -17,9 +17,9 @@ summary: 您可以配置 SnapVault 关系并为此关系分配 SnapVault 策略�
 您必须了解为 FlexGroup 卷创建 SnapVault 关系的注意事项。
 
 .步骤
-. 创建类型为 `DP` 的目标 FlexGroup 卷，该卷的成分卷数与源 FlexGroup 卷的成分卷数相同：
+. 创建类型为的目标FlexGroup卷 `DP` 与源FlexGroup卷的成分卷具有相同数量的成分卷：
 +
-.. 从源集群中，确定源 FlexGroup 卷中的成分卷数： `volume show -volume volume_name* -is-constituent true`
+.. 从源集群中、确定源FlexGroup卷中的成分卷数： `volume show -volume volume_name* -is-constituent true`
 +
 [listing]
 ----
@@ -36,7 +36,7 @@ vss       src__0006    aggr1        online     RW         25TB    10.64TB   57%
 vss       src__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
 ...
 ----
-.. 从目标集群中，创建类型为 `DP` 的目标 FlexGroup 卷，其成分卷数与源 FlexGroup 卷的成分卷数相同。
+.. 从目标集群中、创建类型为的目标FlexGroup卷 `DP` 与源FlexGroup卷具有相同数量的成分卷。
 +
 [listing]
 ----
@@ -46,7 +46,7 @@ Warning: The FlexGroup volume "dst" will be created with the following number of
 Do you want to continue? {y|n}: y
 [Job 766] Job succeeded: Successful
 ----
-.. 从目标集群中，验证目标 FlexGroup 卷中的成分卷数： `volume show -volume volume_name* -is-constituent true`
+.. 从目标集群中、验证目标FlexGroup卷中的成分卷数： `volume show -volume volume_name* -is-constituent true`
 +
 [listing]
 ----
@@ -65,12 +65,12 @@ vsd       dst__0007    Aggr_cmode   online     RW         25TB    10.63TB   57%
 ----
 
 
-. 创建作业计划： `job schedule cron create -name job_name -month month -dayofweek day_of_week -day day_of_month -hour -minute minute`
+. 创建作业计划： `job schedule cron create -name job_name -month month -dayofweek day_of_week -day day_of_month -hour hour -minute minute`
 +
-对于 ` - 月` ， ` - 天 / 周` 和 ` - 小时` ，您可以指定 `所有` 来分别按每月，一周中的一天和每小时运行作业。
+适用于 `-month`， `-dayofweek`，和 `-hour`，您可以指定 `all` 以分别每月、每周的某一天和每小时运行此作业。
 
 +
-以下示例将创建一个名为 `my_weekly` 的作业计划，该计划将在星期六凌晨 3 ： 00 运行：
+以下示例将创建一个名为的作业计划 `my_weekly` 在星期六凌晨3：00运行：
 
 +
 [listing]
@@ -79,23 +79,23 @@ cluster1::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour
 ----
 . 创建 SnapVault 策略，然后为 SnapVault 策略定义规则：
 +
-.. 为 SnapVault 关系创建类型为 `vault` 的自定义策略： `snapmirror policy create -vserver svm_name -policy policy_name -type vault`
-.. 为 SnapVault 策略定义一条规则，用于确定在初始化和更新操作期间传输哪些 Snapshot 副本： `snapmirror policy add-rule -vserver svm_name -policy policy_for_rule - snapmirror-label snapmirror-label -keep retention_count -schedule schedule`
+.. 创建类型为的自定义策略 `vault` 对于SnapVault关系： `snapmirror policy create -vserver svm_name -policy policy_name -type vault`
+.. 为SnapVault策略定义一条规则、用于确定在初始化和更新操作期间传输哪些Snapshot副本： `snapmirror policy add-rule -vserver svm_name -policy policy_for_rule - snapmirror-label snapmirror-label -keep retention_count -schedule schedule`
 
 
 +
-如果不创建自定义策略，则应为 SnapVault 关系指定 `XDPDefault` 策略。
+如果不创建自定义策略、则应指定 `XDPDefault` SnapVault关系的策略。
 
-. 创建 SnapVault 关系： `snapmirror create -source-path src_sVM ： src_flexgroup -destination-path dest_sVM ： dest_flexgroup -type XDP -schedule schedule_name -policy XDPDefault`
+. 创建SnapVault关系： `snapmirror create -source-path src_svm:src_flexgroup -destination-path dest_svm:dest_flexgroup -type XDP -schedule schedule_name -policy XDPDefault`
 +
-在 ONTAP 9.4 及更早版本中，如果未使用 `snapmirror create` 命令指定策略，则默认使用 `MirrorAllSnapshots` 策略。在 ONTAP 9.5 中，如果未使用 `snapmirror create` 命令指定策略，则默认使用 `MirrorAndVault` 策略。
+在ONTAP 9.4及更早版本中、如果未使用指定策略 `snapmirror create` 命令、 `MirrorAllSnapshots` 默认情况下会使用策略。在ONTAP 9.5中、如果未使用指定策略 `snapmirror create` 命令、 `MirrorAndVault` 默认情况下会使用策略。
 
 +
 [listing]
 ----
 cluster2::> snapmirror create -source-path vss:srcFG -destination-path vsd:dstFG -type XDP -schedule Daily -policy XDPDefault
 ----
-. 从目标集群中，通过执行基线传输来初始化 SnapVault 关系： `snapmirror initialize -destination-path dest_sVM ： dest_flexgroup`
+. 从目标集群中、通过执行基线传输来初始化SnapVault关系： `snapmirror initialize -destination-path dest_svm:dest_flexgroup`
 +
 [listing]
 ----

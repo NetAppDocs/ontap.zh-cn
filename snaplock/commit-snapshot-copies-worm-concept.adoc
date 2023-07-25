@@ -51,9 +51,9 @@ image::../media/snapvault-steps-clustered.gif[此图显示了用于初始化 Sna
 .步骤
 . 确定目标集群。
 . 在目标集群上、安装SnapLock 许可证并初始化ComplianceClock、如果您使用的是9.10.1之前的ONTAP 版本、请创建SnapLock 聚合、如中所述 xref:workflow-concept.html[SnapLock 工作流]。
-. 在目标集群上，创建类型为 `DP` 的 SnapLock 目标卷，该卷的大小等于或大于源卷：
+. 在目标集群上、创建类型为的SnapLock目标卷 `DP` 大小等于或大于源卷：
 +
-`* volume create -vserver _svm_name_-volume _volume_name_-aggregate _aggregate_name_-SnapLock-type compliancy|企业级类型DP -size _size_*`
+`*volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_ -snaplock-type compliance|enterprise -type DP -size _size_*`
 
 +
 [NOTE]
@@ -62,7 +62,7 @@ image::../media/snapvault-steps-clustered.gif[此图显示了用于初始化 Sna
 
 ====
 +
-以下命令会在聚合 `node01_aggr` 上创建一个名为 `dstvolB` in `SVM2` 的 2 GB SnapLock `Compliance` volume ：
+以下命令将创建一个2 GB的SnapLock `Compliance` 名为的卷 `dstvolB` 在中 `SVM2` 在聚合上 `node01_aggr`：
 
 +
 [listing]
@@ -78,7 +78,7 @@ cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -
 ====
 . xref:../data-protection/create-replication-relationship-task.adoc[创建新的复制关系] 在非 SnapLock 源和步骤 3 中创建的新 SnapLock 目标之间。
 +
-此示例将使用策略 `XDPDefault` 与目标 SnapLock 卷 `dstvolB` 创建一个新的 SnapMirror 关系，以便按每小时计划存储标记为 daily 和 weekly 的 Snapshot 副本：
+此示例将创建与目标SnapLock卷的新SnapMirror关系 `dstvolB` 使用的策略 `XDPDefault` 要按每小时计划存储标记为每天和每周的Snapshot副本、请执行以下操作：
 
 +
 [listing]
@@ -93,19 +93,19 @@ xref:../data-protection/create-custom-replication-policy-concept.adoc[创建自�
 ====
 . 在目标 SVM 上，初始化步骤 5 中创建的 SnapVault 关系：
 +
-` * snapmirror initialize -destination-path _destination_path_*`
+`*snapmirror initialize -destination-path _destination_path_*`
 
 +
-以下命令将初始化源卷 `srcvolA` on `SVM1` 与目标卷 `dstvolB` on `SVM2` 之间的关系：
+以下命令将初始化源卷之间的关系 `srcvolA` 开启 `SVM1` 和目标卷 `dstvolB` 开启 `SVM2`：
 
 +
 [listing]
 ----
 cluster2::> snapmirror initialize -destination-path SVM2:dstvolB
 ----
-. 初始化此关系并使其闲置后，在目标上使用 `snapshot show` 命令验证应用于复制的 SnapLock 副本的 Snapshot 到期时间。
+. 在该关系初始化并处于空闲状态后、使用 `snapshot show` 命令以验证应用于复制的SnapLock副本的Snapshot到期时间。
 +
-此示例列出了卷 `dstvolB` 上具有 SnapMirror 标签和 SnapLock 到期日期的 Snapshot 副本：
+此示例列出了卷上的Snapshot副本 `dstvolB` 具有SnapMirror标签和SnapLock到期日期的：
 
 +
 [listing]

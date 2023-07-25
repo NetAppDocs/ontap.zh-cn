@@ -21,14 +21,14 @@ summary: 您可以使用 ONTAP 命令行界面配置脱机文件支持，方法�
 
 
  a| 
-`无`
+`none`
  a| 
 禁止 Windows 客户端缓存此共享上的任何文件。
 
 
 
  a| 
-`m手动`
+`manual`
  a| 
 允许 Windows 客户端上的用户手动选择要缓存的文件。
 
@@ -42,7 +42,7 @@ summary: 您可以使用 ONTAP 命令行界面配置脱机文件支持，方法�
 
 
  a| 
-`计划`
+`programs`
  a| 
 允许 Windows 客户端缓存用户用于脱机访问的程序。即使共享可用，客户端也可以在脱机模式下使用缓存的程序文件。
 
@@ -59,21 +59,21 @@ summary: 您可以使用 ONTAP 命令行界面配置脱机文件支持，方法�
  a| 
 新的 SMB 共享
  a| 
-`vserver cifs share create -vserver vserver_name -share-name share_name -path path -offline-files ｛ none|manual_documents| 程序 ｝`
+`vserver cifs share create -vserver vserver_name -share-name share_name -path path -offline-files {none|manual|documents|programs}`
 
 
 
  a| 
 现有 SMB 共享
  a| 
-`vserver cifs share modify -vserver vserver_name -share-name share_name -offline-files ｛ none|manual_Documents|Programs ｝`
+`vserver cifs share modify -vserver vserver_name -share-name share_name -offline-files {none|manual|documents|programs}`
 
 |===
-. 验证 SMB 共享配置是否正确： `vserver cifs share show -vserver vserver_name -share-name share_name -instance`
+. 验证SMB共享配置是否正确： `vserver cifs share show -vserver vserver_name -share-name share_name -instance`
 
 
 .示例
-以下命令将创建一个名为 `data1` 的 SMB 共享，其中脱机文件设置为 `documents` ：
+以下命令将创建名为`data1`的SMB共享、其中脱机文件设置为 `documents`：
 
 [listing]
 ----
@@ -100,7 +100,7 @@ cluster1::> vserver cifs share show -vserver vs1 -share-name data1 -instance
 Maximum Tree Connections on Share: 4294967295
        UNIX Group for File Create: -
 ----
-以下命令可通过将脱机文件设置更改为 `manual` 并为文件和目录模式创建掩码添加值来修改名为 `data1` 的现有 SMB 共享：
+以下命令会通过将脱机文件设置更改为来修改名为`data1`的现有SMB共享 `manual` 并为文件和目录模式创建掩码添加值：
 
 [listing]
 ----

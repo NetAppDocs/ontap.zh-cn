@@ -32,7 +32,7 @@ Storage VM (SVM):: 与请求关联的SVM。此版本仅支持管理SVM。
 创建时间:: 创建请求的时间。
 批准时间:: 请求状态更改为"已批准"的时间。
 comment:: 与请求关联的任何注释。
-允许的用户:: 允许执行请求获得批准的受保护操作的用户列表。如果`users-permitted`为空、则具有适当权限的任何用户均可执行此操作。
+允许的用户:: 允许执行请求获得批准的受保护操作的用户列表。条件 `users-permitted` 为空、则具有适当权限的任何用户均可执行此操作。
 
 
 如果达到1000个请求的限制、或者已过期请求的到期时间超过8小时、则所有已过期或已执行的请求都会被删除。被否决的请求一旦标记为已过期、将被删除。
@@ -75,30 +75,31 @@ MAV管理员在此窗口中具有其他控件；他们可以批准、拒绝或�
  a| 
 批准请求
  a| 
-`s安全性多管理员验证请求批准_nn_`
+`security multi-admin-verify request approve _nn_`
 
 
 
  a| 
 否决请求
  a| 
-`s安全性多管理验证请求否决_nn_`
+`security multi-admin-verify request veto _nn_`
 
 
 
  a| 
 显示所有请求、待处理请求或单个请求
  a| 
-`s安全性多管理员验证请求｛show | show-pending｝[_nn_]｛-fields _field1_、_field2_...] `<-instance >｝
+`security multi-admin-verify request { show | show-pending } [_nn_]
+{ -fields _field1_[,_field2_...] |  [-instance ]  }`
 
-您可以显示队列中的所有请求、也可以仅显示待处理的请求。如果输入索引编号、则仅显示该索引编号的信息。您可以使用`字段`参数显示有关特定字段的信息、也可以使用`实例`参数显示有关所有字段的信息。
+您可以显示队列中的所有请求、也可以仅显示待处理的请求。如果输入索引编号、则仅显示该索引编号的信息。您可以显示有关特定字段的信息(使用 `-fields` 参数)或关于所有字段(使用 `-instance` 参数)。
 
 
 
  a| 
 删除请求
  a| 
-`s安全性多管理验证请求delete _nn_`
+`security multi-admin-verify request delete _nn_`
 
 |===
 

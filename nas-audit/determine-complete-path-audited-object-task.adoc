@@ -11,19 +11,19 @@ summary: 在审核记录的 <ObjectName> 标记中打印的对象路径包含卷
 
 
 [role="lead"]
-在审核记录的 ` <ObjectName>` 标记中打印的对象路径包含卷的名称（括号中）以及从所在卷的根目录开始的相对路径。如果要确定已审核对象的完整路径，包括接合路径，则必须执行某些步骤。
+打印在中的对象路径 `<ObjectName>` 审核记录的标记包含卷的名称(用圆括号括起)以及从所属卷的根目录开始的相对路径。如果要确定已审核对象的完整路径，包括接合路径，则必须执行某些步骤。
 
 .步骤
-. 查看审核事件中的 ` <ObjectName>` 标记，确定卷名称以及已审核对象的相对路径。
+. 通过查看来确定卷名称以及经过审核的对象的相对路径 `<ObjectName>` 审核事件中的标记。
 +
-在此示例中，卷名称为 `data1` ，文件的相对路径为 ` /dir1/file.txt` ：
+在此示例中、卷名称为`data1`、文件的相对路径为 `/dir1/file.txt`：
 
 +
-` <Data Name="ObjectName">` ` （ data1 ）； /dir1/file.txt` ` </Data>`
+`<Data Name="ObjectName">` `(data1);/dir1/file.txt` `</Data>`
 
 . 使用上一步中确定的卷名称，确定包含已审核对象的卷的接合路径：
 +
-在此示例中，卷名称为 `data1` ，包含已审核对象的卷的接合路径为 ` /data/data1` ：
+在此示例中、卷名称为`data1`、包含已审核对象的卷的接合路径为 `/data/data1`：
 
 +
 `volume show -junction -volume data1`
@@ -38,11 +38,11 @@ Vserver   Volume       Language Active    Junction Path     Path Source
 vs1       data1        en_US.UTF-8
                                 true      /data/data1       RW_volume
 ----
-. 通过将 ` <ObjectName>` 标记中的相对路径附加到卷的接合路径，确定已审核对象的完整路径。
+. 通过附加中的相对路径来确定经过审核的对象的完整路径 `<ObjectName>` 标记到卷的接合路径。
 +
 在此示例中，卷的接合路径为：
 
 +
-` /data/data1/dir1/file.text`
+`/data/data1/dir1/file.text`
 
 

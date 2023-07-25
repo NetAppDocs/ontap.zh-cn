@@ -13,65 +13,65 @@ summary: 在为 FabricPool 创建卷时，您可以选择指定分层策略。�
 [role="lead"]
 您可以通过直接在启用了 FabricPool 的聚合中创建新卷或将现有卷从另一个聚合移动到启用了 FabricPool 的聚合来向 FabricPool 添加卷。
 
-在为 FabricPool 创建卷时，您可以选择指定分层策略。如果未指定分层策略，则创建的卷将使用默认的 `snapshot-only` 分层策略。对于采用 `snapshot-only` 或 `auto` 分层策略的卷，您还可以指定分层最小冷却期。
+在为 FabricPool 创建卷时，您可以选择指定分层策略。如果未指定分层策略、则创建的卷将使用默认值 `snapshot-only` 层策略。用于具有的卷 `snapshot-only` 或 `auto` 分层策略中、您还可以指定分层最小冷却期。
 
 .您需要的内容
-* 要将卷设置为使用 `auto` 分层策略或指定分层最小冷却期，需要 ONTAP 9.4 或更高版本。
+* 设置要使用的卷 `auto` 如果要使用层策略或指定层最小冷却期、则需要使用ONTAP 9.4或更高版本。
 * 使用 FlexGroup 卷需要 ONTAP 9.5 或更高版本。
-* 要将卷设置为使用 `all` 分层策略，需要使用 ONTAP 9.6 或更高版本。
-* 要将卷设置为使用 ` -cloud retr检 索策略` 参数，需要使用 ONTAP 9.8 或更高版本。
+* 设置要使用的卷 `all` 层策略需要使用ONTAP 9.6或更高版本。
+* 设置要使用的卷 `-cloud-retrieval-policy` 参数需要ONTAP 9.8或更高版本。
 
 
 .步骤
-. 使用 `volume create` 命令为 FabricPool 创建新卷。
+. 使用为FabricPool创建新卷 `volume create` 命令：
 +
-** 使用 ` -tiering-policy` 可选参数可以指定卷的分层策略。
+** 。 `-tiering-policy` 可选参数用于指定卷的层策略。
 +
 您可以指定以下分层策略之一：
 
 +
-*** `snapshot-only` （默认）
+*** `snapshot-only` (默认)
 *** `auto`
-*** `全部`
-*** `备份` （已弃用）
-*** `无`
+*** `all`
+*** `backup` (已弃用)
+*** `none`
 +
 link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricPool 分层策略的类型"]
 
 
 
-** 使用 ` -cloud retr检 索策略` 可选参数，具有高级权限级别的集群管理员可以覆盖由分层策略控制的默认云迁移或检索行为。
+** 。 `-cloud-retrieval-policy` 可选参数可使具有高级权限级别的集群管理员覆盖由层策略控制的默认云迁移或检索行为。
 +
 您可以指定以下云检索策略之一：
 
 +
-*** `d默认`
+*** `default`
 +
-分层策略可确定要回退的数据，因此使用 `default` cloud retr检 索策略不会对云数据检索进行任何更改。这意味着此行为与 ONTAP 9.8 之前的版本相同：
+分层策略可确定要提取哪些数据、因此、使用的云数据检索不会发生任何更改 `default` 云检索策略。这意味着此行为与 ONTAP 9.8 之前的版本相同：
 
 +
-**** 如果分层策略为 `none` 或 `snapshot-only` ，则 `default` 表示将任何客户端驱动的数据读取从云层提取到性能层。
-**** 如果分层策略为 `auto` ，则会提取任何客户端驱动的随机读取，但不会提取顺序读取。
-**** 如果分层策略为 `all` ，则不会从云层提取任何客户端驱动的数据。
+**** 如果此层策略为 `none` 或 `snapshot-only`则"`default`"表示任何客户端驱动的数据读取都会从云层提取到性能层。
+**** 如果此层策略为 `auto`，则会提取任何客户端驱动的随机读取，而不是顺序读取。
+**** 如果此层策略为 `all` 然后、不会从云层提取任何客户端驱动的数据。
 
 
-*** `读写`
+*** `on-read`
 +
 所有客户端驱动的数据读取都会从云层提取到性能层。
 
-*** `从不`
+*** `never`
 +
 客户端驱动的数据不会从云层提取到性能层
 
-*** `促销`
+*** `promote`
 +
-**** 对于分层策略 `none` ，所有云数据都会从云层提取到性能层
-**** 对于分层策略 `snapshot-only` ，所有活动文件系统数据都会从云层提取到性能层。
+**** 用于层策略 `none`、所有云数据都会从云层提取到性能层
+**** 用于层策略 `snapshot-only`、则所有活动文件系统数据都会从云层提取到性能层。
 
 
 
 
-** 通过高级权限级别中的 ` 分层最小冷却天数` 可选参数，您可以为使用 `snapshot-only` 或 `auto` 分层策略的卷指定分层最小冷却期。
+** 。 `-tiering-minimum-cooling-days` 通过高级权限级别中的可选参数、您可以为使用的卷指定分层最小冷却期 `snapshot-only` 或 `auto` 层策略。
 +
 从 ONTAP 9.8 开始，您可以为分层最小冷却天数指定一个介于 2 到 183 之间的值。如果您使用的 ONTAP 版本早于 9.8 ，则可以为分层最小冷却天数指定一个介于 2 到 63 之间的值。
 
@@ -80,7 +80,7 @@ link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricP
 
 
 .为FabricPool 创建卷的示例
-以下示例将在启用了 FabricPool 的聚合中创建一个名为 `myFabricPool` 的卷，名为` yvol1 `m。分层策略设置为 `auto` ，分层最小冷却期设置为 45 天：
+以下示例将在启用了 FabricPool 的聚合中创建一个名为 `myFabricPool` 的卷，名为` yvol1 `m。此层策略将设置为 `auto` 分层最小冷却期设置为45天：
 
 [listing]
 ----

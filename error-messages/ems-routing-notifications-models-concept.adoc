@@ -11,27 +11,27 @@ summary: 在 ONTAP 9.0 之前的版本中，只能根据事件名称模式匹配
 
 
 [role="lead"]
-在 ONTAP 9.0 之前的版本中，只能根据事件名称模式匹配将 EMS 事件映射到事件目标。使用此模型的 ONTAP 命令集（`event destination` ， `event route` ）在最新版本的 ONTAP 中继续可用，但从 ONTAP 9.0 开始已弃用。
+在 ONTAP 9.0 之前的版本中，只能根据事件名称模式匹配将 EMS 事件映射到事件目标。ONTAP命令集 (`event destination`， `event route`)使用此模型的版本在最新版本的ONTAP中仍然可用、但从ONTAP 9.0开始已弃用。
 
-从 ONTAP 9.0 开始， ONTAP EMS 事件目标映射的最佳实践是，使用更具扩展性的事件筛选器模型，使用 `event filter` ， `event notification` 和 `event notification destination` 命令集对多个字段执行模式匹配。
+从ONTAP 9.0开始、ONTAP EMS事件目标映射的最佳实践是使用可扩展性更强的事件筛选器模型、在该模型中、可以使用对多个字段执行模式匹配 `event filter`， `event notification`，和 `event notification destination` 命令集。
 
-如果 EMS 映射是使用已弃用的命令配置的，则应更新映射以使用 `event filter` ， `event notification` 和 `event notification destination` 命令集。
+如果使用弃用的命令配置EMS映射、则应更新映射以使用 `event filter`， `event notification`，和 `event notification destination` 命令集。
 
 事件目标有两种类型：
 
 . * 系统生成的目标 * ：系统生成的事件目标有五个（默认为创建）
 +
-** `allenents`
+** `allevents`
 ** `asup`
-** `关键`
-** `传呼机`
-** `陷阱主机`
+** `criticals`
+** `pager`
+** `traphost`
 +
 系统生成的某些目标用于特殊目的。例如， asup 目标会将 CallHome.* 事件路由到 ONTAP 中的 AutoSupport 模块，以生成 AutoSupport 消息。
 
 
 
-. * 用户创建的目标 * ：使用 `event destination create` 命令手动创建这些目标。
+. *用户创建的目标*：这些目标是使用手动创建的 `event destination create` 命令：
 +
 [listing]
 ----
@@ -63,7 +63,7 @@ traphost         -                 -                  -                  false
 ----
 
 
-在已弃用的型号中， EMS 事件会使用 `event route add-destinations` 命令单独映射到目标。
+在已弃用的模型中、EMS事件会使用单独映射到目标 `event route add-destinations` 命令：
 
 [listing]
 ----

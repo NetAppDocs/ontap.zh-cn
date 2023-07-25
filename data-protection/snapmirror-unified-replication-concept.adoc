@@ -19,16 +19,16 @@ summary: SnapMirror 统一复制允许您在同一目标卷上配置灾难恢复
 
 与 SnapMirror 一样，统一数据保护会在您首次调用时执行基线传输。此关系的 SnapMirror 策略用于定义基线内容以及任何更新。
 
-默认统一数据保护策略 `MirrorAndVault` 下的基线传输会为源卷创建 Snapshot 副本，然后将该副本及其引用的数据块传输到目标卷。与存储归档一样，统一数据保护不会在基线中包含较早的 Snapshot 副本。
+默认统一数据保护策略下的基线传输 `MirrorAndVault` 为源卷创建Snapshot副本、然后将该副本及其引用的数据块传输到目标卷。与存储归档一样，统一数据保护不会在基线中包含较早的 Snapshot 副本。
 
 
 
 == 如何更新统一数据保护关系
 
-在 `MirrorAndVault` 策略的每次更新中， SnapMirror 都会为源卷创建一个 Snapshot 副本，并传输该 Snapshot 副本以及自上次更新以来创建的任何 Snapshot 副本，前提是它们的标签与 Snapshot 策略规则中定义的标签匹配。在 `MirrorAndVault` 策略的 `snapmirror policy show` 命令的以下输出中，请注意以下几点：
+在下的每次更新时 `MirrorAndVault` 策略中、SnapMirror将创建源卷的Snapshot副本、并传输该Snapshot副本以及自上次更新以来创建的任何Snapshot副本、前提是它们的标签与Snapshot策略规则中定义的标签匹配。在的以下输出中 `snapmirror policy show` 命令 `MirrorAndVault` 策略中、请注意以下事项：
 
-* `Create Snapshot` 为 "`true` " ，表示 `MirrorAndVault` 在 SnapMirror 更新关系时创建 Snapshot 副本。
-* `mirrorAndVault` 的规则为 `sm_created` ， `daily` 和 "`weekly` " ，表示 SnapMirror 创建的 Snapshot 副本以及源上具有匹配标签的 Snapshot 副本在 SnapMirror 更新关系时均会传输。
+* `Create Snapshot` 是"`true`"、表示 `MirrorAndVault` 在SnapMirror更新关系时创建Snapshot副本。
+* `MirrorAndVault` 具有规则"`sm_created`"、"`daily`"和"`Weekly`"、表示在SnapMirror更新关系时、将传输SnapMirror创建的Snapshot副本以及源上具有匹配标签的Snapshot副本。
 
 
 [listing]
@@ -59,7 +59,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAndVault -instance
 
 == Unified7year 策略
 
-预配置的 `Unified7year` 策略与 `MirrorAndVault` 的工作方式完全相同，只是第四条规则会传输每月 Snapshot 副本并将其保留七年。
+预配置的 `Unified7year` 策略的工作方式与完全相同 `MirrorAndVault`但第四条规则会传输每月Snapshot副本并将其保留七年。
 
 [listing]
 ----

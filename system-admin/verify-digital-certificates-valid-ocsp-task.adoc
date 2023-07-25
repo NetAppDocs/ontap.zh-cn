@@ -29,7 +29,7 @@ OCSP 支持以下应用程序：
 
 
 .步骤
-. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 将权限级别设置为高级： `set -privilege advanced`。
 . 要为特定 ONTAP 应用程序启用或禁用 OCSP 证书状态检查，请使用相应的命令。
 +
 |===
@@ -77,24 +77,24 @@ cluster::*> security config ocsp enable -app asup,ems
  a| 
 enabled
  a| 
-`s安全配置 OCSP enable`
+`security config ocsp enable`
 
-` 应用所有`
+`-app all`
 
 
 
  a| 
 已禁用
  a| 
-`s安全配置 OCSP disable`
+`security config ocsp disable`
 
-` 应用所有`
+`-app all`
 
 |===
 +
 启用后，所有应用程序都会收到签名响应，表示指定的证书正常，已撤销或未知。如果证书已被撤销，则应用程序将无法继续。如果应用程序无法从 OCSP 服务器收到响应，或者服务器无法访问，则应用程序将无法继续。
 
-. 使用 `security config OCSP show` 命令显示支持 OCSP 的所有应用程序及其支持状态。
+. 使用 `security config ocsp show` 命令以显示支持OCSP的所有应用程序及其支持状态。
 +
 [listing]
 ----

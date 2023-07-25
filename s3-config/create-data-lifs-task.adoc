@@ -14,35 +14,35 @@ summary: 如果创建了新的 SVM ，则为 S3 访问创建的专用 LIF 应为
 如果创建了新的 SVM ，则为 S3 访问创建的专用 LIF 应为数据 LIF 。
 
 .您需要的内容
-* 底层物理或逻辑网络端口必须已配置为管理 `up` 状态。
+* 底层物理或逻辑网络端口必须已配置为管理端口 `up` 状态。
 * 如果您计划使用子网名称为 LIF 分配 IP 地址和网络掩码值，则此子网必须已存在。
 +
-子网包含属于同一第 3 层子网的 IP 地址池。可以使用 `network subnet create` 命令创建这些子网。
+子网包含属于同一第 3 层子网的 IP 地址池。它们是使用创建的 `network subnet create` 命令：
 
 * LIF 服务策略必须已存在。
 
 
 .关于此任务
 * 您可以在同一网络端口上创建 IPv4 和 IPv6 LIF 。
-* 如果集群中有大量 LIF ，您可以使用 `network interface capacity show` 命令验证集群上支持的 LIF 容量，并使用 `network interface capacity details show` 命令验证每个节点上支持的 LIF 容量 （在高级权限级别）。
+* 如果集群中有大量LIF、则可以使用验证集群上支持的LIF容量 `network interface capacity show` 命令以及每个节点上支持的LIF容量 `network interface capacity details show` 命令(在高级权限级别)。
 * 如果要启用远程 FabricPool 容量（云）分层，则还必须配置集群间 LIF 。
 
 
 .步骤
 . 创建 LIF ：
 +
-`network interface create -vserver _svm_name_-lif _lif_name_-service-policy _service_policy_name_-home-node _node_name_-home-port _port_name_｛-address _ip_address_-netmask _ip_address_____--subnet-name _subnet_name_｝-firewall-policy data｛auto｝`
+`network interface create -vserver _svm_name_ -lif _lif_name_ -service-policy _service_policy_names_ -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _IP_address_ | -subnet-name _subnet_name_} -firewall-policy data -auto-revert {true|false}`
 
 +
-** ` -home-node` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的节点。
+** `-home-node` 是LIF返回到的节点 `network interface revert` 命令将在LIF上运行。
 +
-您还可以使用 ` -auto-revert` 选项指定 LIF 是否应自动还原到主节点和主端口。
+您还可以使用指定LIF是否应自动还原到主节点和主端口 `-auto-revert` 选项
 
-** ` 主端口` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的物理或逻辑端口。
-** 您可以使用 ` 地址` 和 ` 网络掩码` 选项指定 IP 地址，也可以使用 ` -subnet_name` 选项从子网进行分配。
+** `-home-port` 是LIF返回到的物理或逻辑端口 `network interface revert` 命令将在LIF上运行。
+** 您可以使用指定IP地址 `-address` 和 `-netmask` 选项、或者使用启用从子网分配 `-subnet_name` 选项
 ** 使用子网提供 IP 地址和网络掩码时，如果使用网关定义了子网，则在使用该子网创建 LIF 时，系统会自动向 SVM 添加指向该网关的默认路由。
-** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。`network route create` 手册页包含有关在 SVM 中创建静态路由的信息。
-** 对于 ` -firewall-policy` 选项，请使用与 LIF 角色相同的默认值 `data` 。
+** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。。 `network route create` 手册页包含有关在SVM中创建静态路由的信息。
+** 。 `-firewall-policy` 选项中、使用相同的默认值 `data` 作为LIF角色。
 +
 如果需要，您可以稍后创建和添加自定义防火墙策略。
 
@@ -50,26 +50,26 @@ summary: 如果创建了新的 SVM ，则为 S3 访问创建的专用 LIF 应为
 
 NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF服务策略。有关详细信息，请参见 link:../networking/configure_firewall_policies_for_lifs.html["为 LIF 配置防火墙策略"]。
 
-** 使用 ` -auto-revert` 可以指定在启动，更改管理数据库状态或建立网络连接等情况下数据 LIF 是否自动还原到其主节点。默认设置为 `false` ，但您可以根据环境中的网络管理策略将其设置为 `false` 。
-** ` -service-policy` 选项可指定您创建的数据和管理服务策略以及所需的任何其他策略。
+** `-auto-revert` 用于指定在启动、更改管理数据库状态或建立网络连接等情况下、数据LIF是否自动还原到其主节点。默认设置为 `false`，但您可以将其设置为 `false` 具体取决于您环境中的网络管理策略。
+** 。 `-service-policy` 选项用于指定您创建的数据和管理服务策略以及所需的任何其他策略。
 
 
-. 如果要在 ` 地址` 选项中分配 IPv6 地址：
+. 如果要在中分配IPv6地址 `-address` 选项：
 +
-.. 使用 `network ndp prefix show` 命令查看在各种接口上获取的 RA 前缀列表。
+.. 使用 `network ndp prefix show` 命令以查看在各种接口上获取的RA前缀列表。
 +
-可以在高级权限级别使用 `network ndp prefix show` 命令。
+。 `network ndp prefix show` 命令可在高级权限级别下使用。
 
-.. 使用格式 `prefix ：： id` 手动构建 IPv6 地址。
+.. 使用格式 `prefix:id` 手动构建IPv6地址。
 +
 `prefix` 是在各种接口上获取的前缀。
 
 +
-要派生 `id` ，请选择一个 64 位随机十六进制数。
+用于派生 `id`下，选择一个随机的64位十六进制数。
 
 
 
-. 使用 `network interface show` 命令验证是否已成功创建 LIF 。
+. 使用验证是否已成功创建LIF `network interface show` 命令：
 . 验证配置的 IP 地址是否可访问：
 +
 [cols="2*"]
@@ -80,12 +80,12 @@ NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF�
  a| 
 IPv4 地址
  a| 
-`网络 ping`
+`network ping`
 
 
 
  a| 
-IPv6 地址
+IPv6地址
  a| 
 `network ping6`
 
@@ -93,7 +93,7 @@ IPv6 地址
 
 
 .示例
-以下命令显示如何创建使用 `my-s3-policy` 服务策略分配的 S3 数据 LIF ：
+以下命令显示如何创建分配给的S3数据LIF `my-S3-policy` 服务策略：
 
 [listing]
 ----

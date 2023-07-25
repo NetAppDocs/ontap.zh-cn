@@ -13,7 +13,7 @@ summary: 只有在更改集群内容时才需要执行 LIF 移动，例如向集
 [role="lead"]
 只有在更改集群内容时才需要执行 LIF 移动，例如向集群添加节点或从集群中删除节点。如果执行 LIF 移动，则无需重新对 FC 网络结构进行分区，也无需在集群连接的主机与新目标接口之间创建新的 iSCSI 会话。
 
-您不能使用 `network interface move` 命令移动 SAN LIF 。必须通过以下方式执行 SAN LIF 移动：使 LIF 脱机，将 LIF 移动到其他主节点或端口，然后在新位置使其重新联机。非对称逻辑单元访问（ Asymmetric Logical Unit Access ， ALUA ）可在任何 ONTAP SAN 解决方案中提供冗余路径和自动路径选择。因此，当 LIF 脱机进行移动时， I/O 不会中断。主机只需重试，然后将 I/O 移动到另一个 LIF 即可。
+您不能使用移动SAN LIF `network interface move` 命令：必须通过以下方式执行 SAN LIF 移动：使 LIF 脱机，将 LIF 移动到其他主节点或端口，然后在新位置使其重新联机。非对称逻辑单元访问（ Asymmetric Logical Unit Access ， ALUA ）可在任何 ONTAP SAN 解决方案中提供冗余路径和自动路径选择。因此，当 LIF 脱机进行移动时， I/O 不会中断。主机只需重试，然后将 I/O 移动到另一个 LIF 即可。
 
 通过 LIF 移动，您可以无中断地执行以下操作：
 

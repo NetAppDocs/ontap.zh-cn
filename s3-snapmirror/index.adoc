@@ -65,11 +65,15 @@ S3 SnapMirror 支持扇出和级联关系。有关概述，请参见 link:../dat
 
 * ONTAP 版本
 源集群和目标集群上必须运行ONTAP 9.10.1或更高版本。
-* 在 ONTAP 源系统和目标系统上需要许可以下许可证包：
+* 许可
+ONTAP源系统和目标系统需要以下许可证包：
 +
-** 适用于 ONTAP S3 协议和存储的核心捆绑包。
-** 用于 S3 SnapMirror 的数据保护捆绑包，用于瞄准其他 NetApp 对象存储目标（ ONTAP S3 ， StorageGRID 和 Cloud Volumes ONTAP ）。
-** 适用于 S3 SnapMirror 的数据保护捆绑包和混合云捆绑包可用于目标第三方对象存储（ AWS S3 ）。
+** 核心软件包
+适用于ONTAP S3协议和存储。
+** 数据保护捆绑包
+S3 SnapMirror以其他NetApp对象存储目标(ONTAP S3、StorageGRID和Cloud Volumes ONTAP)为目标。
+** 数据保护包和混合云包
+用于通过S3 SnapMirror访问目标第三方对象存储(AWS S3)。
 
 
 * ONTAP S3
@@ -102,7 +106,8 @@ S3 SnapMirror 支持扇出和级联关系。有关概述，请参见 link:../dat
 
 
 
-* S3 SnapMirror 关系需要使用 root 用户密钥 Storage VM root 用户访问密钥；默认情况下， ONTAP 不会分配这些密钥。首次创建 S3 SnapMirror 关系时，您必须验证源和目标 Storage VM 上是否存在这些密钥，如果不存在，则重新生成这些密钥。如果需要重新生成这些密钥，则必须确保使用访问密钥和机密密钥对的所有客户端和所有 SnapMirror 对象存储配置都使用新密钥进行更新。
+* root用户密钥
+S3 SnapMirror关系需要Storage VM root用户访问密钥；默认情况下、ONTAP不会分配这些密钥。首次创建 S3 SnapMirror 关系时，您必须验证源和目标 Storage VM 上是否存在这些密钥，如果不存在，则重新生成这些密钥。如果需要重新生成这些密钥，则必须确保使用访问密钥和机密密钥对的所有客户端和所有 SnapMirror 对象存储配置都使用新密钥进行更新。
 
 
 有关 S3 服务器配置的信息，请参见以下主题：

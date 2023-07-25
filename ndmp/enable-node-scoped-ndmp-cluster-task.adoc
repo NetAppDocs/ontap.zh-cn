@@ -20,14 +20,14 @@ NOTE: 节点范围的NDMP在ONTAP 9中已弃用。
 在节点范围模式下使用NDMP时、必须按节点配置身份验证。有关详细信息，请参见 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/NDMP/How_to_configure_NDMP_authentication_in_the_%E2%80%98node-scope%E2%80%99_mode["知识库文章"如何在‘node-scope '模式下配置NDMP身份验证""^]。
 
 .步骤
-. 使用带有 `node-scope-mode` 参数的 `ssystem services ndmp` 命令启用节点范围的 NDMP 模式。
+. 使用启用节点范围的NDMP模式 `system services ndmp` 命令 `node-scope-mode` 参数。
 +
 [listing]
 ----
 cluster1::> system services ndmp node-scope-mode on
 NDMP node-scope-mode is enabled.
 ----
-. 使用 `ssystem services ndmp on` 命令在集群中的所有节点上启用 NDMP 服务。
+. 使用在集群中的所有节点上启用NDMP服务 `system services ndmp on` 命令：
 +
 使用通配符 "` *` " 可同时在所有节点上启用 NDMP 服务。
 
@@ -43,9 +43,9 @@ Please enter password:
 Confirm password:
 2 entries were modified.
 ----
-. 使用 `ssystem services ndmp modify` 命令禁用 ` -clear-text` 选项，以确保 NDMP 密码的安全通信。
+. 禁用 `-clear-text` 选项、用于通过使用安全通信NDMP密码 `system services ndmp modify` 命令：
 +
-使用通配符 "` *` " 会同时在所有节点上禁用 ` -clear-text` 选项。
+使用通配符"`*`" disables the `-clear-text` 选项。
 
 +
 [listing]
@@ -53,7 +53,7 @@ Confirm password:
 cluster1::> system services ndmp modify -node * -clear-text false
 2 entries were modified.
 ----
-. 使用 `ssystem services ndmp show` 命令验证是否已启用 NDMP 服务以及是否已禁用 ` -clear-text` 选项。
+. 验证是否已启用NDMP服务以及 `-clear-text` 选项已使用禁用 `system services ndmp show` 命令：
 +
 [listing]
 ----

@@ -13,7 +13,7 @@ summary: 您可以使用 job schedule cron create 命令创建复制作业计划
 [role="lead"]
 无论要将数据从 Element 复制到 ONTAP 还是从 ONTAP 复制到 Element ，都需要配置作业计划，指定策略以及创建和初始化关系。您可以使用默认策略或自定义策略。
 
-您可以使用 `job schedule cron create` 命令创建复制作业计划。作业计划用于确定 SnapMirror 何时自动更新分配了该计划的数据保护关系。
+您可以使用 `job schedule cron create` 命令以创建复制作业计划。作业计划用于确定 SnapMirror 何时自动更新分配了该计划的数据保护关系。
 
 .关于此任务
 您可以在创建数据保护关系时分配作业计划。如果不分配作业计划，则必须手动更新此关系。
@@ -24,16 +24,16 @@ summary: 您可以使用 job schedule cron create 命令创建复制作业计划
 `job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
 
 +
-对于 ` - 月` ， ` - 天 / 周` 和 ` - 小时` ，您可以指定 `所有` 来分别按每月，一周中的一天和每小时运行作业。
+适用于 `-month`， `-dayofweek`，和 `-hour`，您可以指定 `all` 以分别每月、每周的某一天和每小时运行此作业。
 
 +
 从 ONTAP 9.10.1 开始，您可以在作业计划中包含 Vserver ：
 
 +
-`job schedule cron create -name _job_name_ -vserver _vserver_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
+`job schedule cron create -name _job_name_ -vserver _Vserver_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
 
 +
-以下示例将创建一个名为 `my_weekly` 的作业计划，该计划将在星期六凌晨 3 ： 00 运行：
+以下示例将创建一个名为的作业计划 `my_weekly` 在星期六凌晨3：00运行：
 
 +
 [listing]

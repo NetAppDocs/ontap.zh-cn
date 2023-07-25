@@ -34,11 +34,11 @@ FabricPool 不支持 Blob 级别的分层。它也不支持分层到 Azure 的�
 FabricPool 目前不支持 Azure 堆栈，它是内部 Azure 服务。
 
 .步骤
-. 使用 `storage aggregate object-store config create` 命令和 ` provider-type` `Azure_Cloud` 参数指定 Azure Blob Storage 配置信息。
+. 使用指定Azure Blb存储配置信息 `storage aggregate object-store config create` 命令 `-provider-type` `Azure_Cloud` 参数。
 +
-** 如果 ONTAP 无法使用提供的信息访问 Azure Blob Storage ，则 `storage aggregate object-store config create` 命令将失败。
-** 您可以使用 ` -azure-account` 参数指定 Azure Blob Storage 帐户。
-** 您可以使用 ` -azure-private-key` 参数指定用于对 Azure Blob Storage 的请求进行身份验证的访问密钥。
+** 。 `storage aggregate object-store config create` 如果ONTAP无法使用提供的信息访问Azure Blb存储、则命令将失败。
+** 您可以使用 `-azure-account` 用于指定Azure Blb Storage帐户的参数。
+** 您可以使用 `-azure-private-key` 用于指定用于向Azure Blb Storage发出身份验证请求的访问密钥的参数。
 ** 如果更改了 Azure Blob Storage 密码，则应立即更新存储在 ONTAP 中的相应密码。
 +
 这样， ONTAP 就可以无中断地访问 Azure Blob 存储中的数据。
@@ -53,8 +53,8 @@ cluster1::> storage aggregate object-store config create
 -server blob.core.windows.net -container-name myAzureContainer
 -azure-account myAzureAcct -azure-private-key myAzureKey
 ----
-. 使用 `storage aggregate object-store config show` 命令显示并验证 Azure Blob Storage 配置信息。
+. 使用显示并验证Azure Blb存储配置信息 `storage aggregate object-store config show` 命令：
 +
-使用 `storage aggregate object-store config modify` 命令可以修改 FabricPool 的 Azure Blob 存储配置信息。
+。 `storage aggregate object-store config modify` 命令用于修改FabricPool的Azure Blb存储配置信息。
 
 

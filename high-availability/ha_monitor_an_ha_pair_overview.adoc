@@ -14,7 +14,7 @@ summary: 您可以使用 ONTAP 命令监控 HA 对的状态。
 
 
 [role="lead"]
-您可以使用 ONTAP 命令监控 HA 对的状态。如果发生接管，您还可以确定导致接管的原因。
+您可以使用 ONTAP 命令监控 HA 对的状态。如果发生接管、您还可以确定导致接管的原因。
 
 |===
 
@@ -22,37 +22,40 @@ summary: 您可以使用 ONTAP 命令监控 HA 对的状态。
 | 如果要检查 | 使用此命令 ... 
 
 
-| 是否已启用或已发生故障转移，或者当前无法进行故障转移的原因 | `s存储故障转移显示` 
+| 是否已启用或已发生故障转移，或者当前无法进行故障转移的原因 | `storage failover show` 
 
 
-| 查看启用了存储故障转移 HA 模式设置的节点您必须将此值设置为 ha ，此节点才能参与存储故障转移（ HA 对）配置。`non-ha` 值仅在独立或单节点集群配置中使用。 | `s存储故障转移 show -fields mode` 
+| 查看启用了存储故障转移HA模式设置的节点
+要使节点参与存储故障转移(HA对)配置、必须将此值设置为ha。
+。 `non-ha` 值仅用于独立或单节点集群配置。 | `storage failover show -fields mode` 
 
 
 | 是否已启用硬件辅助接管 | `storage failover hwassist show` 
 
 
-| 发生的硬件辅助接管事件的历史记录 | `s存储故障转移 hwassist 统计信息显示` 
+| 发生的硬件辅助接管事件的历史记录 | `storage failover hwassist stats show` 
 
 
 | 将配对节点的聚合移至执行接管的节点时的接管操作进度 | `storage failover show‑takeover` 
 
 
-| 交还操作在将聚合返回到配对节点方面的进度 | `s存储故障转移显示‑交还` 
+| 交还操作在将聚合返回到配对节点方面的进度 | `storage failover show‑giveback` 
 
 
-| 在接管或交还操作期间聚合是否为主聚合 | `aggregate show ‑fields home‑id ， owner‑id ， home‑name ， owner‑name ， is‑home` 
+| 在接管或交还操作期间聚合是否为主聚合 | `aggregate show ‑fields home‑id,owner‑id,home‑name,owner‑name,is‑home` 
 
 
 | 是否已启用集群 HA （仅适用于双节点集群） | `cluster ha show` 
 
 
-| HA 对中组件的 HA 状态（在使用 HA 状态的系统上） | `ha‑config show` 这是一个维护模式命令。 
+| HA 对中组件的 HA 状态（在使用 HA 状态的系统上） | `ha‑config show`
+这是一个维护模式命令。 
 |===
 
 
 == storage failover show-type 命令显示的节点状态
 
-以下列表介绍了 `storage failover show` 命令显示的节点状态。
+以下列表介绍了节点状态 `storage failover show` 命令。
 
 |===
 
@@ -72,7 +75,7 @@ HA 互连处于活动状态，可以向配对节点传输数据。已禁用配�
  a| 
 本地节点无法通过 HA 互连与配对节点交换信息。已将 SFO 聚合交还给配对节点，但配对备用磁盘仍归本地节点所有。
 
-* 有关详细信息，请运行 `storage failover show-giveback` 命令。
+* 运行 `storage failover show-giveback` 命令以了解更多信息。
 
 
 
@@ -141,7 +144,8 @@ HA 互连处于活动状态，可以向配对节点传输数据。已禁用配�
 
 
  a| 
-已连接到 partner_name 。先前的接管尝试因原因而中止。本地节点拥有一些配对节点的 SFO 聚合。重新接管配对节点，并将 `‑bypass-optimization` 参数设置为 true 以接管其余聚合，或者对配对节点执行问题描述交还以返回重新定位的聚合。
+已连接到 partner_name 。先前的接管尝试因原因而中止。本地节点拥有一些配对节点的 SFO 聚合。
+使用重新接管配对节点 `‑bypass-optimization` 参数设置为true可接管其余聚合、或者通过问题描述交还配对节点以返回重新定位的聚合。
  a| 
 HA 互连处于活动状态，可以向配对节点传输数据。由于 reason 下显示的原因，先前的接管尝试已中止。本地节点拥有其配对节点的某些 SFO 聚合。
 
@@ -151,7 +155,8 @@ HA 互连处于活动状态，可以向配对节点传输数据。由于 reason 
 
 
  a| 
-已连接到 partner_name 。先前的接管尝试已中止。本地节点拥有一些配对节点的 SFO 聚合。重新接管配对节点，并将 `‑bypass-optimization` 参数设置为 true 以接管其余聚合，或者对配对节点执行问题描述交还以返回重新定位的聚合。
+已连接到 partner_name 。先前的接管尝试已中止。本地节点拥有一些配对节点的 SFO 聚合。
+使用重新接管配对节点 `‑bypass-optimization` 参数设置为true可接管其余聚合、或者通过问题描述交还配对节点以返回重新定位的聚合。
  a| 
 HA 互连处于活动状态，可以向配对节点传输数据。先前的接管尝试已中止。本地节点拥有其配对节点的某些 SFO 聚合。
 
@@ -161,7 +166,8 @@ HA 互连处于活动状态，可以向配对节点传输数据。先前的接�
 
 
  a| 
-正在等待 partner_name 。先前的接管尝试因原因而中止。本地节点拥有一些配对节点的 SFO 聚合。重新接管配对节点并将 "‑bypass-optimization " 参数设置为 true 以接管其余聚合，或者对配对节点执行问题描述交还以返回重新定位的聚合。
+正在等待 partner_name 。先前的接管尝试因原因而中止。本地节点拥有一些配对节点的 SFO 聚合。
+重新接管配对节点并将 "‑bypass-optimization " 参数设置为 true 以接管其余聚合，或者对配对节点执行问题描述交还以返回重新定位的聚合。
  a| 
 本地节点无法通过 HA 互连与配对节点交换信息。由于 reason 下显示的原因，先前的接管尝试已中止。本地节点拥有其配对节点的某些 SFO 聚合。
 
@@ -171,7 +177,8 @@ HA 互连处于活动状态，可以向配对节点传输数据。先前的接�
 
 
  a| 
-正在等待 partner_name 。先前的接管尝试已中止。本地节点拥有一些配对节点的 SFO 聚合。重新接管配对节点并将 "‑bypass-optimization " 参数设置为 true 以接管其余聚合，或者对配对节点执行问题描述交还以返回重新定位的聚合。
+正在等待 partner_name 。先前的接管尝试已中止。本地节点拥有一些配对节点的 SFO 聚合。
+重新接管配对节点并将 "‑bypass-optimization " 参数设置为 true 以接管其余聚合，或者对配对节点执行问题描述交还以返回重新定位的聚合。
  a| 
 本地节点无法通过 HA 互连与配对节点交换信息。先前的接管尝试已中止。本地节点拥有其配对节点的某些 SFO 聚合。
 
@@ -225,9 +232,9 @@ HA 互连处于活动状态，可以向配对节点传输数据。配对节点�
  a| 
 先前在模块中交还失败：模块名称。自动交还将在秒数内启动。
  a| 
-先前在模块 module_name 中尝试交还失败。自动交还将在秒数内启动。
+先前在模块 module_name 中尝试交还失败。自动返回将在秒数内启动。
 
-* 有关详细信息，请运行 `storage failover show-giveback` 命令。
+* 运行 `storage failover show-giveback` 命令以了解更多信息。
 
 
 
@@ -285,7 +292,7 @@ HA 互连处于活动状态，可以向配对节点传输数据。系统正在�
  a| 
 无法执行存储故障转移。HA 模式选项配置为 non_ha 。
 
-* 您必须在 HA 对中的两个节点上运行 `storage failover modify ‑mode ha ‑node nodename` 命令，然后重新启动节点以启用 HA 功能。
+* 您必须运行 `storage failover modify ‑mode ha ‑node nodename` 命令、然后重新启动这些节点以启用HA功能。
 
 
 |===

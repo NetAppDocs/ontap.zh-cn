@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: multi-admin-verify/index.html 
 keywords: ontap, mav, RBAC, protected, operation, multi-admin, administrator, verification, approval, rules 
-summary: '从ONTAP 9.11.1开始、您可以使用多管理员验证(MAV)来确保只有在指定管理员批准后才能执行某些操作、例如删除卷或Snapshot副本。' 
+summary: '从ONTAP 9.11.1开始、您可以使用多管理员验证(MAV)来确保只有在指定管理员批准后才能执行某些操作、例如删除卷或Snapshot副本。 ' 
 ---
 = 多管理员验证概述
 :allow-uri-read: 
@@ -29,7 +29,7 @@ summary: '从ONTAP 9.11.1开始、您可以使用多管理员验证(MAV)来确�
 * 用户在批准后完成此操作。
 
 
-多管理员验证不适用于涉及大量自动化的卷或工作流、因为每个自动化任务都需要获得批准才能完成操作。如果要同时使用自动化和MAV、建议对特定的MAV操作使用查询。例如、您可以仅将`volume delete` MAV规则应用于不涉及自动化的卷、并且可以使用特定命名方案指定这些卷。
+多管理员验证不适用于涉及大量自动化的卷或工作流、因为每个自动化任务都需要获得批准才能完成操作。  如果要同时使用自动化和MAV、建议对特定的MAV操作使用查询。例如、您可以应用 `volume delete` MAV规则仅适用于不涉及自动化的卷、您可以使用特定命名方案来指定这些卷。
 
 
 NOTE: 如果您需要在未经MAV管理员批准的情况下禁用多管理员验证功能、请联系NetApp支持部门并提及以下知识库文章： https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_disable_Multi-Admin_Verification_if_MAV_admin_is_unavailable["如何在MAV管理不可用时禁用多管理员验证"^]。
@@ -49,19 +49,19 @@ MAV规则会根据基于角色的访问控制(Role-Based Access Control、RBAC)�
 
 启用多管理员验证后、系统定义的规则(也称为_Guard导轨规则)将建立一组MAV操作、以控制绕过MAV进程本身的风险。无法从规则表中删除这些操作。启用MAV后、使用星号(*)指定的操作在执行前需要一个或多个管理员的批准、但*显示*命令除外。
 
-* `s安全性多管理验证修改*`
+* `security multi-admin-verify modify*`
 +
 控制多管理员验证功能的配置。
 
-* `s安全性多管理员验证审批组`操作*
+* `security multi-admin-verify approval-group` 业务*
 +
 使用多管理员验证凭据控制管理员组中的成员资格。
 
-* `s安全性多管理验证规则`操作*
+* `security multi-admin-verify rule` 业务*
 +
 控制需要多管理员验证的一组命令。
 
-* `s安全性多管理验证请求`操作
+* `security multi-admin-verify request` operations
 +
 控制审批流程。
 
@@ -69,8 +69,8 @@ MAV规则会根据基于角色的访问控制(Role-Based Access Control、RBAC)�
 
 除了系统定义的命令之外、在启用多管理员验证时、以下命令也会默认受到保护、但您可以修改规则以取消对这些命令的保护。
 
-* `s安全登录密码`
-* `s安全登录解锁`
+* `security login password`
+* `security login unlock`
 * `set`
 
 
@@ -81,27 +81,27 @@ MAV规则会根据基于角色的访问控制(Role-Based Access Control、RBAC)�
 
 
  a| 
-`集群对等删除`
+`cluster peer delete`
 
 `event config modify`
 
-`s安全性登录 create`
+`security login create`
 
-`s安全登录删除`
+`security login delete`
 
-`ssecurity login modify`
+`security login modify`
 
-`s系统节点运行`
+`system node run`
 
-`s系统节点系统Shell`
+`system node systemshell`
 
 `volume delete`
 
-`卷FlexCache delete`
+`volume flexcache delete`
  a| 
 `volume snapshot autodelete modify`
 
-`卷快照删除`
+`volume snapshot delete`
 
 `volume snapshot policy add-schedule`
 
@@ -115,9 +115,9 @@ MAV规则会根据基于角色的访问控制(Role-Based Access Control、RBAC)�
 
 `volume snapshot policy remove-schedule`
 
-`卷快照还原`
+`volume snapshot restore`
 
-`Vserver peer delete`
+`vserver peer delete`
 
 |===
 从ONTAP 9.13.1开始、可以保护以下命令：
@@ -154,10 +154,11 @@ MAV管理员不能批准自己执行受保护操作的请求。因此：
 
 * 不应在仅包含一个管理员的集群上启用MAV。
 * 如果MAV组中只有一人、则该MAV管理员不能输入受保护的操作；常规管理员必须输入这些操作、而MAV管理员只能进行批准。
-* 如果您希望MAV管理员能够执行受保护的操作、则MAV管理员的数量必须大于所需批准的数量。例如、如果受保护操作需要两个批准、并且您希望MAV管理员执行这些批准、则MAV管理员组中必须有三个人。
+* 如果您希望MAV管理员能够执行受保护的操作、则MAV管理员的数量必须大于所需批准的数量。
+例如、如果受保护操作需要两个批准、并且您希望MAV管理员执行这些批准、则MAV管理员组中必须有三个人。
 
 
-MAV管理员可以通过电子邮件警报(使用EMS)接收批准请求、也可以查询请求队列。收到请求后、他们可以采取以下三种操作之一：
+MAV管理员可以通过电子邮件警报(使用EMS)接收批准请求、也可以查询请求队列。  收到请求后、他们可以采取以下三种操作之一：
 
 * 批准
 * 拒绝(否决)

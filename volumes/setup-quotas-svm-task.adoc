@@ -21,10 +21,10 @@ summary: 要在新的 Storage Virtual Machine （ SVM ，以前称为 Vserver �
 +
 [NOTE]
 ====
-您也可以使用 `volume quota policy create` 命令创建新策略。
+您也可以使用创建新策略 `volume quota policy create` 命令：
 
 ====
-. 使用 `volume quota policy rule create` 命令为 SVM 上的每个卷创建以下配额规则中的 _any_ ：
+. 使用 `volume quota policy rule create` 命令为SVM上的每个卷创建以下任意配额规则：
 +
 ** 所有用户的默认配额规则
 ** 适用于特定用户的显式配额规则
@@ -34,20 +34,20 @@ summary: 要在新的 Storage Virtual Machine （ SVM ，以前称为 Vserver �
 ** 特定 qtree 的显式配额规则
 
 
-. 使用 `volume quota policy rule show` 命令检查是否已正确配置配额规则。
-. 如果要使用新策略，请使用 `vserver modify` 命令将新策略分配给 SVM 。
-. 使用 `volume quota on` 命令初始化 SVM 上每个卷上的配额。
+. 使用 `volume quota policy rule show` 命令以检查是否已正确配置配额规则。
+. 如果您正在处理新策略、请使用 `vserver modify` 命令将新策略分配给SVM。
+. 使用 `volume quota on` 命令初始化SVM上每个卷的配额。
 +
 您可以通过以下方式监控初始化过程：
 
 +
-** 使用 `volume quota on` 命令时，您可以添加 ` -foreground` 参数以在前台运行 quota on 作业。（默认情况下，作业在后台运行。）
+** 使用时 `volume quota on` 命令中、您可以添加 `-foreground` 用于在前台运行配额启用作业的参数。（默认情况下，作业在后台运行。）
 +
-当作业在后台运行时，您可以使用 `job show` 命令监控其进度。
+当作业在后台运行时、您可以使用监控其进度 `job show` 命令：
 
-** 您可以使用 `volume quota show` 命令监控配额初始化的状态。
+** 您可以使用 `volume quota show` 命令以监控配额初始化的状态。
 
 
-. 使用 `volume quota show -instance` 命令检查初始化错误，例如无法初始化的配额规则。
-. 使用 `volume quota report` 命令显示配额报告，以确保强制实施的配额符合您的预期。
+. 使用 `volume quota show -instance` 用于检查初始化错误的命令、例如无法初始化的配额规则。
+. 使用 `volume quota report` 命令以显示配额报告、以确保强制实施的配额符合您的预期。
 

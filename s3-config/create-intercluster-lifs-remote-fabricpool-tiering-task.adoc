@@ -14,7 +14,7 @@ summary: 如果要使用 ONTAP S3 启用远程 FabricPool 容量（云）分层�
 如果要使用 ONTAP S3 启用远程 FabricPool 容量（云）分层，则必须配置集群间 LIF 。您可以在与数据网络共享的端口上配置集群间 LIF 。这样可以减少集群间网络连接所需的端口数量。
 
 .您需要的内容
-* 底层物理或逻辑网络端口必须已配置为管理 `up` 状态。
+* 底层物理或逻辑网络端口必须已配置为管理端口 `up` 状态。
 * LIF 服务策略必须已存在。
 
 
@@ -27,7 +27,7 @@ summary: 如果要使用 ONTAP S3 启用远程 FabricPool 容量（云）分层�
 `network port show`
 
 +
-以下示例显示了 `cluster01` 中的网络端口：
+以下示例显示了中的网络端口 `cluster01`：
 
 +
 [listing]
@@ -50,10 +50,10 @@ cluster01-02
 ----
 . 在系统 SVM 上创建集群间 LIF ：
 +
-`network interface create -vserver cluster -lif _LIF_name_-service-policy default-intercluster -home-node _node_-home-port _port_-address _port_ip_-netmask _netmask_`
+`network interface create -vserver Cluster -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_`
 
 +
-以下示例将创建集群间 LIF `cluster01_icl01` 和 `cluster01_icl02` ：
+以下示例将创建集群间生命周期 `cluster01_icl01` 和 `cluster01_icl02`：
 
 +
 [listing]
@@ -86,10 +86,10 @@ cluster01
 ----
 . 验证集群间 LIF 是否冗余：
 +
-`network interface show – service-policy default-intercluster -failover`
+`network interface show –service-policy default-intercluster -failover`
 
 +
-以下示例显示 `e0c` 端口上的集群间 LIF `cluster01_icl01` 和 `cluster01_icl02` 将故障转移到 `e0d` 端口。
+以下示例显示了集群间的生命周期 `cluster01_icl01` 和 `cluster01_icl02` 在上 `e0c` 端口将故障转移到 `e0d` 端口。
 
 +
 [listing]

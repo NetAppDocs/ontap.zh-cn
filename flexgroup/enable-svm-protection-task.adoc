@@ -11,15 +11,15 @@ summary: 如果 FlexGroup 卷上的 SVM DR 保护标志设置为 unprotected ，
 
 
 [role="lead"]
-如果 FlexGroup 卷上的 SVM DR 保护标志设置为 `unprotected` ，则可以将此标志设置为 `protected` 以启用 SVM DR 保护。
+SVM DR保护标志设置为时 `unprotected` 在FlexGroup卷上、您可以将此标志设置为 `protected` 以启用SVM DR保护。
 
 .您需要的内容
 * 主节点和二级节点之间的 SVM DR 关系运行状况良好。
-* SVM DR 保护参数设置为 `unprotected` 。
+* SVM DR保护参数设置为 `unprotected`。
 
 
 .步骤
-. 使用 `volume modify` 将 FlexGroup 卷的 `vserver-dr-protection` 参数更改为 `protected` ，以启用保护。
+. 使用启用保护 `volume modify` 以更改 `vserver-dr-protection` FlexGroup卷的参数 `protected`。
 +
 [listing]
 ----
@@ -28,13 +28,13 @@ cluster2::> volume modify -vserver vs1 -volume fg_src -vserver-dr-protection pro
 [Job 5384] Steps completed: 4 of 4.
 cluster2::>
 ----
-. 更新二级站点的 SVM ： `snapmirror update -destination-path destination_svm_name -source-path source_svm_name`
+. 更新二级站点上的SVM： `snapmirror update -destination-path destination_svm_name -source-path source_svm_name`
 +
 [listing]
 ----
 snapmirror update -destination-path vs1_dst: -source-path vs1:
 ----
-. 验证 SnapMirror 关系是否运行正常： `snapmirror show`
+. 验证SnapMirror关系是否运行正常： `snapmirror show`
 +
 [listing]
 ----
@@ -46,7 +46,7 @@ Path        Type  Path        State   Status         Progress  Healthy Updated
 vs1:        XDP  vs1_dst:     Snapmirrored
                                       Idle           -         true    -
 ----
-. 验证 FlexGroup SnapMirror 关系是否运行正常： `snapmirror show -expand`
+. 验证FlexGroup SnapMirror关系是否运行正常： `snapmirror show -expand`
 +
 [listing]
 ----

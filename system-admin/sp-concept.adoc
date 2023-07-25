@@ -26,7 +26,7 @@ SP 由备用电压供电，只要节点至少有一个电源提供输入电源�
 您可以从串行控制台访问 SP ，也可以从 SP 访问串行控制台。通过 SP ，您可以同时打开 SP 命令行界面会话和单独的控制台会话。
 
 +
-例如，当温度传感器变得极高或极低时， ONTAP 会触发 SP 以正常方式关闭主板。串行控制台不响应，但您仍可以在控制台上按 Ctrl-G 来访问 SP 命令行界面。然后，您可以从 SP 使用 `ssystem power on` 或 `ssystem power cycle` 命令打开节点电源或重新启动节点。
+例如，当温度传感器变得极高或极低时， ONTAP 会触发 SP 以正常方式关闭主板。串行控制台不响应，但您仍可以在控制台上按 Ctrl-G 来访问 SP 命令行界面。然后、您可以使用 `system power on` 或 `system power cycle` 从SP启动或重新启动节点的命令。
 
 * SP 可监控环境传感器并记录事件，以帮助您及时采取有效的服务措施。
 +
@@ -41,7 +41,7 @@ SP 还会记录启动进度，现场可更换单元（ FRU ）更改， ONTAP �
 +
 [NOTE]
 ====
-SP 不依赖于 `ssystem node AutoSupport modify` 命令的 ` -transport` 参数设置来发送通知。SP 仅使用简单邮件传输协议（ Simple Mail Transport Protocol ， SMTP ），并要求其主机的 AutoSupport 配置包含邮件主机信息。
+SP不依赖 `-transport` 的参数设置 `system node autosupport modify` 用于发送通知的命令。SP 仅使用简单邮件传输协议（ Simple Mail Transport Protocol ， SMTP ），并要求其主机的 AutoSupport 配置包含邮件主机信息。
 
 ====
 +
@@ -57,7 +57,7 @@ SEL 包含以下信息：
 +
 ** SP 检测到的硬件事件，例如，有关电源，电压或其他组件的传感器状态
 ** SP 检测到的错误—例如通信错误，风扇故障或内存或 CPU 错误
-** 节点发送给 SP 的关键软件事件，例如，因发出 SP `ssystem reset` 或 `ssystem power cycle` 命令而发生的崩溃，通信故障，启动故障或用户触发的 " `down system` "
+** 节点发送给SP的关键软件事件，例如崩溃、通信故障、启动失败或用户因发出SP而触发的“`d自有系统`” `system reset` 或 `system power cycle` 命令
 
 
 * 无论管理员是否已登录或连接到串行控制台， SP 都会监控该控制台。

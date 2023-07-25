@@ -21,7 +21,9 @@ FlexCache 卷始终是 FlexGroup 卷，而不是 FlexVol 卷。
 .步骤
 . 如果要创建的 FlexCache 卷位于其他集群中，请创建集群对等关系：
 +
-.. 在目标集群上、创建与数据保护源集群的对等关系：+`cluster peer create -generate-passphrase -offer-expiration MM/DD/YYYY HH：MM：SS|1...7days|1...168小时-peer-addrs _peer_LIF_IP_-initial-allowed-vserver-peers _SVM_name_、IPSpace`
+.. 在目标集群上、创建与数据保护源集群的对等关系：
+ +
+`cluster peer create -generate-passphrase -offer-expiration MM/DD/YYYY HH:MM:SS|1...7days|1...168hours -peer-addrs _peer_LIF_IPs_ -initial-allowed-vserver-peers _svm_name_,..|* -ipspace _ipspace_name_`
 +
 从 ONTAP 9.6 开始，默认情况下，在创建集群对等关系时会启用 TLS 加密。支持使用 TLS 加密在初始卷和 FlexCache 卷之间进行集群间通信。如果需要，您还可以为集群对等关系禁用 TLS 加密。
 
@@ -38,7 +40,9 @@ cluster02::> cluster peer create -generate-passphrase -offer-expiration 2days -i
 
 Warning: make a note of the passphrase - it cannot be displayed again.
 ----
-.. 在源集群上、向目标集群验证源集群的身份：+`cluster peer create -peer-addrs _peer_LIF_IPs_-ipspace _ipspace_`
+.. 在源集群上，将源集群身份验证到目标集群：
+ +
+`cluster peer create -peer-addrs _peer_LIF_IPs_ -ipspace _ipspace_`
 +
 [listing]
 ----
@@ -54,9 +58,11 @@ Clusters cluster02 and cluster01 are peered.
 ----
 
 
-. 如果 FlexCache 卷与原始卷位于不同的 SVM 中，请使用 `FlexCache` 作为应用程序创建 SVM 对等关系：
+. 如果FlexCache卷与原始卷位于不同的SVM中、请使用创建SVM对等关系 `flexcache` 作为应用程序：
 +
-.. 如果SVM位于其他集群中、请为对等SVM创建SVM权限：+`vserver peer permission create -peer-cluster _cluster_name_-vserver _svm-name_-applications FlexCache`
+.. 如果SVM位于不同集群中、请为对等SVM创建SVM权限：
+ +
+`vserver peer permission create -peer-cluster _cluster_name_ -vserver _svm-name_ -applications flexcache`
 +
 以下示例说明了如何创建适用于所有本地 SVM 的 SVM 对等权限：
 
@@ -69,12 +75,14 @@ Warning: This Vserver peer permission applies to all local Vservers. After that 
 "vserver peer accept" command required for Vserver peer relationship creation request
 from peer cluster "cluster2" with any of the local Vservers. Do you want to continue? {y|n}: y
 ----
-.. 创建SVM对等关系：+`vserver peer create -vserver local_sVM -peer-vserver _remote_svm_-peer-cluster _cluster_name_-applications FlexCache`
+.. 创建SVM对等关系：
+ +
+`vserver peer create -vserver local_SVM -peer-vserver _remote_SVM_ -peer-cluster _cluster_name_ -applications flexcache`
 
 
 . 创建 FlexCache 卷：
 +
-`volume FlexCache create -vserver _cache_svm_-volume _cache_vol_name_-auto-provision-as FlexGroup -size _vol_size_-original-vserver _original_svm_-original-volume _original_vol_name_`
+`volume flexcache create -vserver _cache_svm_ -volume _cache_vol_name_ -auto-provision-as flexgroup -size _vol_size_ -origin-vserver _origin_svm_ -origin-volume _origin_vol_name_`
 
 +
 以下示例将创建一个 FlexCache 卷并自动选择要配置的现有聚合：
@@ -96,7 +104,9 @@ cluster1::> flexcache create -vserver vs34 -volume fc4 -aggr-list aggr34,aggr43 
 ----
 . 验证 FlexCache 卷和原始卷的 FlexCache 关系。
 +
-.. 查看集群中的 FlexCache 关系： + `volume FlexCache show`
+.. 查看集群中的FlexCache关系：
+ +
+`volume flexcache show`
 +
 [listing]
 ----
@@ -105,7 +115,9 @@ Vserver Volume      Size       Origin-Vserver Origin-Volume Origin-Cluster
 ------- ----------- ---------- -------------- ------------- --------------
 vs_1    fc1         160MB      vs_1           vol_1           cluster1
 ----
-.. 查看原始集群中的所有 FlexCache 关系： + `volume FlexCache origin show-Cache`
+.. 查看初始集群中的所有FlexCache关系：
+ +
+`volume flexcache origin show-caches`
 +
 [listing]
 ----

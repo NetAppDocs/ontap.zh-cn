@@ -11,18 +11,18 @@ summary: 默认情况下，会复制源 SVM 的所有 RW 数据卷。如果您�
 
 
 [role="lead"]
-默认情况下，会复制源 SVM 的所有 RW 数据卷。如果您不想保护源 SVM 上的所有卷，可以使用 `volume modify` 命令的 ` -vserver-dr-protection unprotected` 选项从 SVM 复制中排除卷。
+默认情况下，会复制源 SVM 的所有 RW 数据卷。如果您不想保护源SVM上的所有卷、则可以使用 `-vserver-dr-protection unprotected` 的选项 `volume modify` 用于从SVM复制中排除卷的命令。
 
 .步骤
 . 从 SVM 复制中排除卷：
 +
-`volume modify -vserver _svm_ -volume _volume" -vserver-dr-protection unprotected`
+`volume modify -vserver _SVM_ -volume _volume_ -vserver-dr-protection unprotected`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将卷 `vola_src` 从 SVM 复制中排除：
+以下示例将排除此卷 `volA_src` 从SVM复制：
 
 +
 [listing]
@@ -33,10 +33,10 @@ cluster_src::> volume modify -vserver SVM1 -volume volA_src -vserver-dr-protecti
 如果稍后要在最初排除的 SVM 复制中包含卷，请运行以下命令：
 
 +
-`volume modify -vserver _svm_ -volume _volume" -vserver-dr-protection protected`
+`volume modify -vserver _SVM_ -volume _volume_ -vserver-dr-protection protected`
 
 +
-以下示例包括 SVM 复制中的卷 `vola_src` ：
+以下示例包括卷 `volA_src` 在SVM复制中：
 
 +
 [listing]

@@ -2,7 +2,7 @@
 permalink: data-protection/update-load-sharing-mirror-set-task.html 
 sidebar: sidebar 
 keywords: update, loaad-sharing, mirror, relationship, LSM, manual update 
-summary: '在 SVM 中的某个卷挂载或卸载之后，以及在包含 `junction-path`选项的 `volume create` 操作期间， SVM 根卷的负载共享镜像（ LSM ）关系会自动更新。如果您希望在下次计划更新之前更新 LSM 关系，可以手动更新该关系。' 
+summary: '挂载或卸载SVM中的卷之后以及期间、系统会自动为SVM根卷更新负载共享镜像(LSM)关系 `volume create` 包含`j结对 路径`选项的操作。如果您希望在下次计划更新之前更新 LSM 关系，可以手动更新该关系。' 
 ---
 = 更新负载共享镜像关系
 :allow-uri-read: 
@@ -11,22 +11,22 @@ summary: '在 SVM 中的某个卷挂载或卸载之后，以及在包含 `juncti
 
 
 [role="lead"]
-在 SVM 中的某个卷挂载或卸载之后，以及在包含 `junction-path`选项的 `volume create` 操作期间， SVM 根卷的负载共享镜像（ LSM ）关系会自动更新。如果您希望在下次计划更新之前更新 LSM 关系，可以手动更新该关系。
+挂载或卸载SVM中的卷之后以及期间、系统会自动为SVM根卷更新负载共享镜像(LSM)关系 `volume create` 包含`j结对 路径`选项的操作。如果您希望在下次计划更新之前更新 LSM 关系，可以手动更新该关系。
 
 在以下情况下，负载共享镜像关系会自动更新：
 
 * 现在是进行计划内更新的时候了
 * 对 SVM 根卷中的卷执行挂载或卸载操作
-* 发出 `volume create` 命令，其中包含 `juntion-path` 选项
+* 答 `volume create` 发出的命令包含 `juntion-path` 选项
 
 
 .步骤
 . 手动更新负载共享镜像关系：
 +
-`snapmirror update-ls-set -source-path _svm ： volume_|_cluster ： //svm/volume_s`
+`snapmirror update-ls-set -source-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
-以下示例更新了根卷 `svm1_root` 的负载共享镜像关系：
+以下示例将更新根卷的负载共享镜像关系 `svm1_root`：
 
 +
 [listing]

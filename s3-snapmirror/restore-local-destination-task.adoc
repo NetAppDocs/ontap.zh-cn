@@ -24,7 +24,7 @@ summary: 如果源存储分段中的数据丢失或损坏，您可以通过从�
 .关于此任务
 您可以将目标存储分段还原到现有存储分段或新存储分段。还原操作的目标存储分段必须大于目标存储分段的逻辑已用空间。
 
-如果您使用现有存储分段，则在启动还原操作时，此存储分段必须为空。还原不会 " 回滚 " 某个存储分段，而是会使用先前的内容填充一个空存储分段。
+如果您使用现有存储分段，则在启动还原操作时，此存储分段必须为空。  还原不会 " 回滚 " 某个存储分段，而是会使用先前的内容填充一个空存储分段。
 
 必须从远程集群启动还原操作。
 
@@ -51,7 +51,8 @@ summary: 如果源存储分段中的数据丢失或损坏，您可以通过从�
 ** 要还原到 * 新存储分段 * ，请输入以下值：
 +
 *** 用于托管新存储分段的集群和 Storage VM 。
-*** 新存储分段的名称，容量和性能服务级别。请参见 link:../s3-config/storage-service-definitions-reference.html["存储服务级别"] 有关详细信息 ...
+*** 新存储分段的名称，容量和性能服务级别。
+请参见 link:../s3-config/storage-service-definitions-reference.html["存储服务级别"] 有关详细信息 ...
 *** 目标 S3 服务器 CA 证书的内容。
 
 
@@ -66,7 +67,8 @@ summary: 如果源存储分段中的数据丢失或损坏，您可以通过从�
 == 命令行界面操作步骤
 
 . 如果要还原到新存储分段，请创建新存储分段。有关详细信息，请参见 link:create-cloud-backup-new-bucket-task.html["为新存储分段（云目标）创建备份关系"]。
-. 为目标存储分段启动还原操作： `snapmirror restore -source-path _svm_name_ ： /bucket/_bucket_name_ -destination-path _svm_name_ ： /bucket/_bucket_name_`
+. 为目标存储分段启动还原操作：
+`snapmirror restore -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _svm_name_:/bucket/_bucket_name_`
 
 
 .示例

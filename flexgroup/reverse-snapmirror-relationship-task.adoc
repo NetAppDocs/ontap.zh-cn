@@ -16,16 +16,16 @@ summary: 如果灾难禁用了 SnapMirror 关系中的源 FlexGroup 卷，则可
 .关于此任务
 在执行重新同步之前，目标卷上的任何活动配额规则都将被停用，并且配额规则将被删除。
 
-重新同步操作完成后，您可以使用 `volume quota policy rule create` 和 `volume quota modify` 命令创建和重新激活配额规则。
+您可以使用 `volume quota policy rule create` 和 `volume quota modify` 用于在重新同步操作完成后创建和重新激活配额规则的命令。
 
 .步骤
-. 在初始目标 FlexGroup 卷上，删除源 FlexGroup 卷与目标 FlexGroup 卷之间的数据保护镜像关系： `snapmirror delete -destination-path svm_name ： volume_name`
+. 在初始目标FlexGroup卷上、删除源FlexGroup卷与目标FlexGroup卷之间的数据保护镜像关系： `snapmirror delete -destination-path svm_name:volume_name`
 +
 [listing]
 ----
 cluster2::> snapmirror delete -destination-path vsd:dst
 ----
-. 在原始源 FlexGroup 卷上，从源 FlexGroup 卷中删除关系信息： `snapmirror release -destination-path svm_name ： volume_name -relationship-info-only`
+. 在初始源FlexGroup卷上、从源FlexGroup卷中删除关系信息： `snapmirror release -destination-path svm_name:volume_name -relationship-info-only`
 +
 删除 SnapMirror 关系后，必须先从源 FlexGroup 卷中删除关系信息，然后再尝试重新同步操作。
 
@@ -34,19 +34,19 @@ cluster2::> snapmirror delete -destination-path vsd:dst
 ----
 cluster1::> snapmirror release -destination-path vsd:dst -relationship-info-only true
 ----
-. 在新的目标 FlexGroup 卷上，创建镜像关系： `snapmirror create -source-path src_svm_name ： volume_name -destination-path dst_svm_name ： volume_name -type XDP -policy MirrorAllSnapshots`
+. 在新的目标FlexGroup卷上、创建镜像关系： `snapmirror create -source-path src_svm_name:volume_name -destination-path dst_svm_name:volume_name -type XDP -policy MirrorAllSnapshots`
 +
 [listing]
 ----
 cluster1::> snapmirror create -source-path vsd:dst -destination-path vss:src -type XDP -policy MirrorAllSnapshots
 ----
-. 在新的目标 FlexGroup 卷上，重新同步源 FlexGroup ： `snapmirror resync -source-path svm_name ： volume_name`
+. 在新的目标FlexGroup卷上、重新同步源FlexGroup： `snapmirror resync -source-path svm_name:volume_name`
 +
 [listing]
 ----
 cluster1::> snapmirror resync -source-path vsd:dst
 ----
-. 监控 SnapMirror 传输： `snapmirror show -expand`
+. 监控SnapMirror传输： `snapmirror show -expand`
 +
 [listing]
 ----
@@ -76,6 +76,6 @@ vsd:dst__0008 XDP  vss:src__0008  Snapmirrored
 ...
 ----
 +
-每个成分卷的 SnapMirror 关系状态显示为 `Snapmirrored` ，表示重新同步已成功。
+每个成分卷的SnapMirror关系状态显示为 `Snapmirrored` 这表示重新同步已成功。
 
 

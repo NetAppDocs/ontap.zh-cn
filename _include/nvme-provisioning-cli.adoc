@@ -5,46 +5,46 @@
 .步骤
 . 验证是否已为 NVMe 配置 SVM ：
 +
-`vserver show -vserver _svm_name_ -fields allowed-protocols`
+`vserver show -vserver _SVM_name_ -fields allowed-protocols`
 
 +
-`NVMe` 应显示在 `allowed-protocols` 列下。
+`NVMe` 应显示在下 `allowed-protocols` 列。
 
 . 创建 NVMe 命名空间：
 +
-`vserver nvme namespace create -vserver _svm_name_ -path _path_ -size _size_of_namespace_-ostype _os_type_`
+`vserver nvme namespace create -vserver _SVM_name_ -path _path_ -size _size_of_namespace_ -ostype _OS_type_`
 
 . 创建 NVMe 子系统：
 +
-`vserver nvme subsystem create -vserver _svm_name_ -subsystem _name_of_subsystem_ -ostype _os_type_`
+`vserver nvme subsystem create -vserver _SVM_name_ -subsystem _name_of_subsystem_ -ostype _OS_type_`
 
 +
 NVMe 子系统名称区分大小写。必须包含1到96个字符。允许使用特殊字符。
 
 . 验证是否已创建子系统：
 +
-`vserver nvme subsystem show -vserver _svm_name_`
+`vserver nvme subsystem show -vserver _SVM_name_`
 
 +
-`NVMe` 子系统应显示在 `Ssubsystem` 列下。
+。 `nvme` 子系统应显示在下 `Subsystem` 列。
 
 . 从主机获取 NQN 。
 . 将主机 NQN 添加到子系统：
 +
-`vserver nvme subsystem host add -vserver _svm_name_ -subsystem _subsystem_name_ -host-nqn _Host_NQN_ ： subsystem._subsystem_name_`
+`vserver nvme subsystem host add -vserver _SVM_name_ -subsystem _subsystem_name_ -host-nqn _Host_NQN_:subsystem._subsystem_name_`
 
 . 将命名空间映射到子系统：
 +
-`vserver nvme subsystem map add -vserver _svm_name_ -subsystem _subsystem_name_ -path _path_`
+`vserver nvme subsystem map add -vserver _SVM_name_ -subsystem _subsystem_name_ -path _path_`
 
 +
 一个命名空间只能映射到一个子系统。
 
 . 验证命名空间是否已映射到子系统：
 +
-`vserver nvme namespace show -vserver _svm_name_ -instance`
+`vserver nvme namespace show -vserver _SVM_name_ -instance`
 
 +
-子系统应列为 `Attached subsystem` 。
+此子系统应列为 `Attached subsystem`。
 
 

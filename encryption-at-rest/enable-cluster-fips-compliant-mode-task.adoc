@@ -11,7 +11,7 @@ summary: 您可以将 security config modify 命令与 -is-fips-enabled 选项�
 
 
 [role="lead"]
-您可以使用 `security config modify` 命令和 -`is-fips-enabled` 选项为传输中的数据启用集群范围 FIPS 兼容模式。这样做会强制集群在连接到 KMIP 服务器时在 FIPS 模式下使用 OpenSSL 。
+您可以使用 `security config modify` 命令 -`is-fips-enabled` 用于为传输中的数据启用集群范围FIPS兼容模式的选项。这样做会强制集群在连接到 KMIP 服务器时在 FIPS 模式下使用 OpenSSL 。
 
 .开始之前
 * 存储控制器必须配置为 FIPS 兼容模式。
@@ -30,7 +30,7 @@ summary: 您可以将 security config modify 命令与 -is-fips-enabled 选项�
 
 . 验证是否支持 TLSv1.2 ：
 +
-`ssecurityconfig show -supported protocols`
+`security config show -supported-protocols`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -48,7 +48,7 @@ SSL       false      TLSv1.2, TLSv1.1, TLSv1 ALL:!LOW:         yes
 ----
 . 启用集群范围 FIPS 兼容模式：
 +
-`security config modify -is-fips-enabled true -interface ssl`
+`security config modify -is-fips-enabled true -interface SSL`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -56,7 +56,7 @@ SSL       false      TLSv1.2, TLSv1.1, TLSv1 ALL:!LOW:         yes
 . 手动重新启动集群节点。
 . 验证是否已启用集群范围 FIPS 兼容模式：
 +
-`s安全性配置显示`
+`security config show`
 
 +
 [listing]

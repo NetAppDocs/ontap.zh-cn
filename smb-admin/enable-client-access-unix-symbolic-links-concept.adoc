@@ -13,7 +13,7 @@ summary: 符号链接是在 UNIX 环境中创建的文件，其中包含对其�
 [role="lead"]
 符号链接是在 UNIX 环境中创建的文件，其中包含对其他文件或目录的引用。如果客户端访问符号链接，则会将客户端重定向到该符号链接所引用的目标文件或目录。ONTAP 支持相对符号链接和绝对符号链接，包括 Widelink （与本地文件系统外部目标的绝对链接）。
 
-通过 ONTAP ， SMB 客户端可以访问在 SVM 上配置的 UNIX 符号链接。此功能是可选的，您可以使用 `vserver cifs share create` 命令的 ` -symlink-properties` 选项并使用以下设置之一在每个共享上进行配置：
+通过 ONTAP ， SMB 客户端可以访问在 SVM 上配置的 UNIX 符号链接。此功能是可选的、您可以使用为每个共享配置此功能 `-symlink-properties` 的选项 `vserver cifs share create` 命令、并使用以下设置之一：
 
 * 已启用，具有读 / 写访问权限
 * 启用，具有只读访问权限
@@ -40,7 +40,7 @@ summary: 符号链接是在 UNIX 环境中创建的文件，其中包含对其�
 
 * * 使用重新解析点选项启用 Widelink 支持 *
 +
-在 ONTAP 9 中，默认情况下会启用 ` -is-use-use-unctions. as-reparse-points-enabled` 选项。并非所有 SMB 客户端都支持 Widelink ，因此，启用信息的选项可按协议版本进行配置，从而允许管理员同时支持受支持和不受支持的 SMB 客户端。在 ONTAP 9.2 及更高版本中，您必须为使用 Widelink 访问共享的每个客户端协议启用选项 ` -widelink-as-reparse-point-versions` ；默认为 SMB1 。在早期版本中，仅报告使用默认 SMB1 访问的 Widelink ，而使用 SMB2 或 SMB3 的系统无法访问 Widelink 。
+。 `-is-use-junctions-as-reparse-points-enabled` 选项在ONTAP 9中默认处于启用状态。并非所有 SMB 客户端都支持 Widelink ，因此，启用信息的选项可按协议版本进行配置，从而允许管理员同时支持受支持和不受支持的 SMB 客户端。在ONTAP 9.2及更高版本中、必须启用选项 `-widelink-as-reparse-point-versions` 对于使用widelink访问共享的每个客户端协议、默认值为smb1。在早期版本中，仅报告使用默认 SMB1 访问的 Widelink ，而使用 SMB2 或 SMB3 的系统无法访问 Widelink 。
 
 
 

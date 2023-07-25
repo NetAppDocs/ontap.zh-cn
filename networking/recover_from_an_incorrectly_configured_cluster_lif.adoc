@@ -17,13 +17,13 @@ summary: 如何识别和更正配置不当的集群
 如果集群网络已连接到交换机，则无法创建集群，但集群 IP 空间中配置的所有端口并非都能访问集群 IP 空间中配置的其他端口。
 
 .关于此任务
-在有交换机的集群中，如果在错误的端口上配置了集群网络接口（ LIF ），或者集群端口连接到错误的网络，则 `cluster create` 命令可能会失败，并显示以下错误：
+在有交换机集群中、如果集群网络接口(LIF)配置在错误的端口上、或者如果集群端口连接到错误的网络、则为 `cluster create` 命令可能会失败并显示以下错误：
 
 ....
 Not all local cluster ports have reachability to one another.
 Use the "network port reachability show -detail" command for more details.
 ....
-`network port show` 命令的结果可能会显示已向集群 IP 空间添加多个端口，因为这些端口连接到配置了集群 LIF 的端口。但是， `network port` `reachability show -detail` 命令的结果显示了哪些端口无法彼此连接。
+的结果 `network port show` 命令可能会显示已向集群IP空间添加多个端口、因为这些端口连接到配置了集群LIF的端口。但是、的结果 `network port` `reachability show -detail` 命令可显示哪些端口之间没有连接。
 
 要从配置了集群 LIF 的其他端口无法访问的端口上配置的集群 LIF 进行恢复，请执行以下步骤：
 

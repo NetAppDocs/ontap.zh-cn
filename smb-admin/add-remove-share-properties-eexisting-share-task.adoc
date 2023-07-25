@@ -25,9 +25,9 @@ summary: 您可以通过添加或删除共享属性来自定义现有 SMB 共享
 新添加的属性将附加到现有共享属性列表中。
 
 * 如果为已应用于共享的共享属性指定新值，则新指定的值将替换原始值。
-* 您不能使用 `vserver cifs share properties add` 命令删除共享属性。
+* 您不能使用删除共享属性 `vserver cifs share properties add` 命令：
 +
-您可以使用 `vserver cifs share properties remove` 命令删除共享属性。
+您可以使用 `vserver cifs share properties remove` 命令以删除共享属性。
 
 
 
@@ -47,21 +47,21 @@ summary: 您可以通过添加或删除共享属性来自定义现有 SMB 共享
  a| 
 添加共享属性
  a| 
-` +vserver cifs share properties add -vserver _vserver_name_ -share-name _share_name_ -share-properties _properties_ ， ...+`
+`+vserver cifs share properties add -vserver _vserver_name_ -share-name _share_name_ -share-properties _properties_,...+`
 
 
 
  a| 
 删除共享属性
  a| 
-` +vserver cifs share properties remove -vserver _vserver_name_ -share-name _share_name_ -share-properties _properties_ ， ...+`
+`+vserver cifs share properties remove -vserver _vserver_name_ -share-name _share_name_ -share-properties _properties_,...+`
 
 |===
 . 验证共享属性设置： `vserver cifs share show -vserver vserver_name -share-name share_name`
 
 
 .示例
-以下命令会将 `showsnapshot` share 属性添加到 SVM vs1 上名为 `share1` 的共享中：
+以下命令将添加 `showsnapshot` 将共享属性分配给SVM VS1上名为`shre1`的共享：
 
 [listing]
 ----
@@ -75,7 +75,7 @@ vs1        share1  /share1   oplocks      -          Everyone / Full Control
                              changenotify
                              showsnapshot
 ----
-以下命令将从 SVM vs1 上名为 `share2` 的共享中删除 `browable` share 属性：
+以下命令将删除 `browsable` SVM VS1上名为`shre2`的共享中的共享属性：
 
 [listing]
 ----

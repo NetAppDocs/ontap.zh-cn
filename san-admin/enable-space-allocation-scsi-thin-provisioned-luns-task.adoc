@@ -11,17 +11,17 @@ summary: 如果将 space-allocation 选项设置为 enabled ，则当卷空间�
 
 
 [role="lead"]
-如果将 `space -allocation` 选项设置为 `enabled` ，则 ONTAP 会在卷空间不足且卷中的 LUN 无法接受写入时通知主机。此选项还允许 ONTAP 在主机删除数据时自动回收空间。
+如果您设置了 `space-allocation` 选项 `enabled`中的LUN无法接受写入时，ONTAP会通知主机。此选项还允许 ONTAP 在主机删除数据时自动回收空间。
 
 .关于此任务
-默认情况下， `spage-allocation` 选项设置为 `d已标记` ，您必须使 LUN 脱机才能启用空间分配。启用空间分配后，必须在主机上执行发现，主机才能识别已启用空间分配。
+。 `space-allocation` 选项设置为 `disabled` 默认情况下、您必须使LUN脱机才能启用空间分配。启用空间分配后，必须在主机上执行发现，主机才能识别已启用空间分配。
 
 .步骤
 . 使LUN脱机。
 +
 `lun modify -vserver vserver_name -volume volume_name -lun lun_name -state offline`
 
-. 将 ` -space-allocation` 参数设置为 `enabled` ：
+. 设置 `-space-allocation` 参数设置为 `enabled`：
 +
 `lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled`
 
@@ -33,5 +33,5 @@ summary: 如果将 space-allocation 选项设置为 enabled ，则当卷空间�
 +
 `lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -state online`
 
-. 在主机上，重新扫描所有磁盘，以确保正确发现对 ` -space-allocation` 选项所做的更改。
+. 在主机上、重新扫描所有磁盘、以确保对所做的更改 `-space-allocation` 已正确发现选项。
 

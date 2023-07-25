@@ -15,29 +15,29 @@ summary: 许可证是一个或多个软件授权的记录。在 ONTAP 8.2 到 ON
 
 从 ONTAP 9.10.1 开始，所有许可证均以 NLFS 的形式提供。根据您的购买情况， nlf 许可证可以启用一个或多个 ONTAP 功能。您可以通过搜索系统（控制器）序列号从 NetApp 支持站点检索 NLF 许可证。
 
-您可以在 NetApp 支持站点的 * 我的支持 * > * 软件许可证 * 下找到初始或附加软件订单的许可证（需要登录）。有关许可证更换的详细信息、请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/AFF_Series/Post_Motherboard_Replacement_Process_to_update_Licensing_on_a_AFF_FAS_system["主板更换后的流程、用于更新AFF/FAS系统上的许可"]。
+您可以在 NetApp 支持站点的 *我的支持* > *软件许可证* 下找到初始或附加软件订单的许可证（需要登录）。有关许可证更换的详细信息、请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/AFF_Series/Post_Motherboard_Replacement_Process_to_update_Licensing_on_a_AFF_FAS_system["主板更换后的流程、用于更新AFF/FAS系统上的许可"]。
 
 使用 ONTAP ，您可以通过以下方式管理功能许可证：
 
-* 显示有关已安装许可证的信息（ `ssystem license show` ）
-* 在集群上显示需要许可证的软件包及其当前许可证状态（ `ssystem license status show` ）
-* 从您指定序列号的集群或节点中删除许可证（ `ssystem license delete` ）
-* 显示或删除已过期或未使用的许可证（ `s系统许可证清理` ）
+* 显示有关已安装许可证的信息 (`system license show`）
+* 显示集群上需要许可证的软件包及其当前许可证状态 (`system license status show`）
+* 从您指定序列号的集群或节点中删除许可证 (`system license delete`）
+* 显示或删除已过期或未使用的许可证 (`system license clean-up`）
 
 
 通过 ONTAP ，您可以通过以下方式监控功能使用情况和许可证授权风险：
 
-* 按节点显示集群中功能使用情况的摘要（ `ssystem feature-usage show-summary` ）
+* 按节点显示集群中的功能使用情况摘要 (`system feature-usage show-summary`）
 +
 此摘要包含计数器信息，例如使用某个功能的周数以及上次使用该功能的日期和时间。
 
-* 按节点和每周显示集群中的功能使用状态（ `ssystem feature-usage show-history` ）
+* 按节点和每周显示集群中的功能使用情况状态 (`system feature-usage show-history`）
 +
-功能使用状态可以是 `not-used` ， `configured` 或 `in-use` 。如果使用情况信息不可用，则状态将显示 `not-available` 。
+功能使用状态可以是 `not-used`， `configured`或 `in-use`。如果使用情况信息不可用、则状态显示 `not-available`。
 
-* 显示每个许可证包的许可证授权风险状态（ `ssystem license entitlement-risk show` ）
+* 显示每个许可证包的许可证授权风险状态 (`system license entitlement-risk show`）
 +
-风险状态可以是 `low` ， `medium` ， `high` ， `unlicensed` 或 `unknown` 。风险状态也会显示在 AutoSupport 消息中。许可证授权风险不适用于基本许可证包。
+风险状态可以是 `low`， `medium`， `high`， `unlicensed`或 `unknown`。风险状态也会显示在 AutoSupport 消息中。许可证授权风险不适用于基本许可证包。
 
 +
 许可证授权风险会使用多种因素进行评估，这些因素可能包括但不限于以下因素：
@@ -45,14 +45,15 @@ summary: 许可证是一个或多个软件授权的记录。在 ONTAP 8.2 到 ON
 +
 ** 每个软件包的许可状态
 ** 每个许可证的类型，到期状态以及整个集群中许可证的统一性
-** 与许可证包关联的功能的使用如果评估过程确定集群存在许可证授权风险，则命令输出还会建议更正操作。
+** 与许可证包关联的功能的使用情况
+如果评估过程确定集群存在许可证授权风险、则命令输出还会建议更正操作。
 
 
 
 
 [NOTE]
 ====
-注意： ONTAP 9.10.1 还支持使用 System Manager 或命令行界面使用 28 个字符的许可证密钥。但是，如果为某个功能安装了 NLF 许可证，则不能为同一功能安装 28 个字符的许可证密钥。有关使用 System Manager 安装 NLFS 或许可证密钥的信息，请参见 " 启用新功能 " 。
+注：ONTAP 9.10.1还支持使用System Manager或命令行界面创建28个字符的许可证密钥。但是，如果为某个功能安装了 NLF 许可证，则不能为同一功能安装 28 个字符的许可证密钥。有关使用 System Manager 安装 NLFS 或许可证密钥的信息，请参见 " 启用新功能 " 。
 
 ====
 .相关信息

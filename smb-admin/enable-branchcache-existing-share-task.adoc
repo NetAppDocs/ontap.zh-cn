@@ -11,36 +11,36 @@ summary: 您可以通过将 BranchCache 共享属性添加到现有共享属性�
 
 
 [role="lead"]
-您可以通过将 `BranchCache` share 属性添加到现有共享属性列表来在现有 SMB 共享上启用 BranchCache 。
+您可以通过添加在现有SMB共享上启用anchCache `branchcache` 共享属性到现有共享属性列表。
 
 .关于此任务
 * 如果在 SMB 共享上启用了 BranchCache ，则该共享必须将脱机文件配置设置为手动缓存。
 +
 如果现有共享的脱机文件设置未设置为手动缓存，则必须通过修改共享对其进行配置。
 
-* 即使未在 Storage Virtual Machine （ SVM ）上配置和启用 BranchCache ，也可以在共享上设置 `BranchCache` 属性。
+* 您可以设置 `branchcache` 属性、即使未在Storage Virtual Machine (SVM)上配置和启用了anchCache也是如此。
 +
 但是，如果您希望共享提供缓存的内容，则必须在 SVM 上配置并启用 BranchCache 。
 
-* 将 `BranchCache` share 属性添加到共享时，现有共享设置和共享属性将保留下来。
+* 添加时 `branchcache` 共享属性保留到共享、现有共享设置和共享属性。
 +
-BranchCache 共享属性将添加到现有共享属性列表中。有关使用 `vserver cifs share properties add` 命令的详细信息，请参见手册页。
+BranchCache 共享属性将添加到现有共享属性列表中。有关使用的详细信息、请参见 `vserver cifs share properties add` 命令、请参见手册页。
 
 
 
 .步骤
 . 如有必要，请配置脱机文件共享设置以进行手动缓存：
 +
-.. 使用 `vserver cifs share show` 命令确定脱机文件共享设置。
-.. 如果脱机文件共享设置未设置为 manual ，请将其更改为所需的值： `vserver cifs share modify -vserver vserver_name -share-name share_name -offline-files manual`
+.. 使用确定脱机文件共享设置 `vserver cifs share show` 命令：
+.. 如果脱机文件共享设置未设置为手动、请将其更改为所需值： `vserver cifs share modify -vserver vserver_name -share-name share_name -offline-files manual`
 
 
-. 在现有 SMB 共享上启用 BranchCache ： `vserver cifs share properties add -vserver vserver_name -share-name share_name -share-properties BranchCache`
-. 验证是否已在 SMB 共享上设置 BranchCache 共享属性： `vserver cifs share show -vserver vserver_name -share-name share_name`
+. 在现有SMB共享上启用anchCache： `vserver cifs share properties add -vserver vserver_name -share-name share_name -share-properties branchcache`
+. 验证是否已在SMB共享上设置了anchCache共享属性： `vserver cifs share show -vserver vserver_name -share-name share_name`
 
 
 .示例
-以下命令会在 SVM vs1 上路径为 ` /data2` 的名为 `data2` 的现有 SMB 共享上启用 BranchCache ：
+以下命令将在名为`data2`的现有SMB共享上使用路径启用anchCache `/data2` 在SVM VS1上：
 
 [listing]
 ----

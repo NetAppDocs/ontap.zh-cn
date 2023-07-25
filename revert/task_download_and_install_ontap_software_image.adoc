@@ -34,8 +34,8 @@ summary: 您必须先下载 ONTAP 软件，然后才能进行安装。
 .. 在中找到目标 ONTAP 软件 link:http://mysupport.netapp.com/NOW/cgi-bin/software["软件下载"] NetApp 支持站点的区域。
 .. 复制软件映像。
 +
-*** 对于 ONTAP 9.3 或更早版本，请将软件映像（例如 93_q_image.tgz ）从 NetApp 支持站点复制到 HTTP 服务器或 FTP 服务器上要提供此映像的目录。
-*** 对于 ONTAP 9.4 或更高版本，请将软件映像（例如 97_q_image.tgz ）从 NetApp 支持站点复制到要从中提供此映像的 HTTP 服务器或 FTP 服务器上的目录或本地文件夹。
+*** 对于 ONTAP 9.3 或更早版本，请将软件映像（例如 93_q_image.tgz）从 NetApp 支持站点复制到 HTTP 服务器或 FTP 服务器上要提供此映像的目录。
+*** 对于 ONTAP 9.4 或更高版本，请将软件映像（例如 97_q_image.tgz）从 NetApp 支持站点复制到要从中提供此映像的 HTTP 服务器或 FTP 服务器上的目录或本地文件夹。
 
 
 
@@ -53,27 +53,27 @@ summary: 您必须先下载 ONTAP 软件，然后才能进行安装。
 如果使用适用于受限国家或地区的 ONTAP 软件映像降级或还原采用 NetApp 卷加密的系统，则系统将崩溃，您将无法访问卷。
 
 +
-.. 将权限级别设置为高级，在系统提示您继续时输入 * y* ： `set -privilege advanced`
+.. 将权限级别设置为高级，在系统提示您继续时输入*y*： `set -privilege advanced`
 +
-此时将显示高级提示符（` * >` ）。
+高级提示符 (`*>`)。
 
 .. 在节点上安装软件映像。
 +
 此命令可同时在所有节点上下载并安装软件映像。要一次在每个节点上下载并安装一个映像，请勿指定 -background 参数。
 
 +
-*** 如果要降级或还原非 MetroCluster 配置或双节点 MetroCluster 配置：``ssystem node image update -node * -package location -replace -package true -setdefault true -background true``
+*** 如果要降级或还原非MetroCluster配置或双节点MetroCluster配置：``system node image update -node * -package location -replace-package true -setdefault true -background true``
 +
 此命令使用扩展查询将作为备用映像安装的目标软件映像更改为节点的默认映像。
 
-*** 如果您要对四节点或八节点 MetroCluster 配置进行降级或还原，则必须问题描述在两个集群上运行以下命令： `ssystem node image update -node * -package location -replace -package true -background true -setdefault false`
+*** 如果要降级或还原四节点或八节点MetroCluster配置、则必须在两个集群上问题描述以下命令： `system node image update -node * -package location -replace-package true true -background true -setdefault false`
 +
 此命令使用扩展查询来更改目标软件映像，该映像作为备用映像安装在每个节点上。
 
 
 
-.. 出现提示时，输入 `y` 继续。
-.. 验证是否已在每个节点上下载并安装软件映像： `ssystem node image show-update-progress -node *`
+.. 输入 ... `y` 出现提示时继续。
+.. 验证软件映像是否已下载并安装在每个节点上： `system node image show-update-progress -node *`
 +
 此命令将显示软件映像下载和安装的当前状态。您应继续运行此命令，直到所有节点都报告 Run Status 为 Exited ，并报告 Exit Status 为 Success 为止。
 

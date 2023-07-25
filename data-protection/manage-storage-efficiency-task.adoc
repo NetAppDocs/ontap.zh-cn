@@ -22,9 +22,9 @@ https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM
 
 
 .关于此任务
-您可以使用 `volume efficiency show` 命令确定是否已在卷上启用效率。有关详细信息，请参见手册页。
+您可以使用 `volume efficiency show` 命令以确定是否已在卷上启用效率。有关详细信息，请参见手册页。
 
-您可以通过查看 SnapMirror 审核日志并找到传输问题描述来检查 SnapMirror 是否保持存储效率。如果传输问题描述显示 `transfer_desc=Logical Transfer` ，则 SnapMirror 不会保持存储效率。如果传输问题描述显示 `transfer_desc=Logical Transfer with Storage Efficiency` ，则 SnapMirror 将保持存储效率。例如：
+您可以通过查看 SnapMirror 审核日志并找到传输问题描述来检查 SnapMirror 是否保持存储效率。如果显示传输问题描述 `transfer_desc=Logical Transfer`、SnapMirror不会保持存储效率。如果显示传输问题描述 `transfer_desc=Logical Transfer with Storage Efficiency`、SnapMirror正在保持存储效率。例如：
 
 [listing]
 ----
@@ -36,7 +36,7 @@ Fri May 22 02:13:02 CDT 2020 ScheduledUpdate[May 22 02:12:00]:cc0fbc29-b665-11e5
 
 从 ONTAP 9.3 开始，在将目标卷设为可写后， AFF 系统对存储效率设置的管理方式与 FAS 系统不同：
 
-* 使用 `snapmirror break` 命令使目标卷可写后，卷上的缓存策略会自动设置为 "`auto` " （默认值）。
+* 使用将目标卷设置为可写之后 `snapmirror break` 命令时、卷上的缓存策略会自动设置为"`auto`"(默认值)。
 +
 [NOTE]
 ====
@@ -54,7 +54,7 @@ Fri May 22 02:13:02 CDT 2020 ScheduledUpdate[May 22 02:12:00]:cc0fbc29-b665-11e5
 .步骤
 . 更新复制关系并重新启用存储效率：
 +
-`snapmirror update -source-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -enable-storage-efficiency true`
+`snapmirror update -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ... -enable-storage-efficiency true`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -62,11 +62,11 @@ Fri May 22 02:13:02 CDT 2020 ScheduledUpdate[May 22 02:12:00]:cc0fbc29-b665-11e5
 +
 [NOTE]
 ====
-您必须从目标 SVM 或目标集群运行此命令。如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 `snapmirror initialize` 重新初始化此关系。
+您必须从目标 SVM 或目标集群运行此命令。如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 ... `snapmirror initialize` 重新初始化此关系。
 
 ====
 +
-以下示例更新了源卷 `volA` on `svm1` 与目标卷 `vola_dst` on `svm_backup` 之间的关系，并重新启用存储效率：
+以下示例将更新源卷之间的关系 `volA` 开启 `svm1` 和目标卷 `volA_dst` 开启 `svm_backup`并重新启用存储效率：
 
 +
 [listing]

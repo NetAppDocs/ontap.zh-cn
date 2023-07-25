@@ -30,7 +30,7 @@ summary: '如果在出厂时将HA对配置为使用根数据分区、则数据�
 
 . 查看数据分区的当前所有权：
 +
-`s存储聚合 show-spare-disks`
+`storage aggregate show-spare-disks`
 
 +
 输出显示、一半的数据分区属于一个节点、一半属于另一个节点。所有数据分区都应为备用分区。
@@ -76,7 +76,7 @@ Original Owner: cluster1-02
 
 . 对于将成为被动节点的节点所拥有的每个数据分区，将其分配给主动节点：
 +
-`s存储磁盘 assign -force -data true -owner _active_node_name_ -disk _disk_name_`
+`storage disk assign -force -data true -owner _active_node_name_ -disk _disk_name_`
 
 +
 您不需要将分区包含在磁盘名称中。
@@ -132,7 +132,7 @@ Original Owner: cluster1-02
 
 . 创建数据聚合，至少保留一个数据分区作为备用分区：
 +
-`s存储聚合 create _new_aggr_name_ -diskcount _number_of_partitions_ -node _active_node_name_`
+`storage aggregate create _new_aggr_name_ -diskcount _number_of_partitions_ -node _active_node_name_`
 
 +
 此时将创建数据聚合，并归活动节点所有。

@@ -102,7 +102,8 @@ NOTE: MTU值应与连接到该网络的所有设备匹配。请注意、e0M端�
 
 * 在 SVM 上创建 LIF 时，您可以指定子网的名称，而不是提供 IP 地址和子网。
 * 由于子网可以使用默认网关进行配置，因此在创建 SVM 时，不必单独创建默认网关。
-* 广播域可以包含一个或多个子网。您可以通过将多个子网与 IP 空间的广播域关联来配置位于不同子网上的 SVM LIF 。
+* 广播域可以包含一个或多个子网。
+您可以通过将多个子网与 IP 空间的广播域关联来配置位于不同子网上的 SVM LIF 。
 * 每个子网都必须包含不与分配给同一 IP 空间中其他子网的 IP 地址重叠的 IP 地址。
 * 您可以为 SVM 数据 LIF 分配特定的 IP 地址，并为 SVM 创建默认网关，而不是使用子网。
 
@@ -160,7 +161,9 @@ Subnet name
  a| 
 IP 地址范围
 
-* 您可以指定 IP 地址范围或特定 IP 地址。例如，您可以指定一个范围，例如： `192.168.1.1-192.168.1.100 ， 192.168.1.112 ， 192.168.1.145`
+* 您可以指定 IP 地址范围或特定 IP 地址。
+例如，您可以指定一个范围，例如：
+`192.168.1.1-192.168.1.100, 192.168.1.112, 192.168.1.145`
 * 如果未指定 IP 地址范围，则指定子网中的整个 IP 地址范围可分配给 LIF 。
 
 | 否 |  
@@ -177,7 +180,7 @@ IP 地址范围
 |===
 
 
-== SVM 配置
+== SVM配置
 
 您可以使用 SVM 为客户端和主机提供数据。
 
@@ -238,13 +241,14 @@ SVM 语言设置
 
 * SVM 及其卷使用的默认语言。
 * 如果未指定默认语言，则默认 SVM 语言将设置为 * 。 C.UTF-8 * 。
-* SVM 语言设置用于确定用于显示 SVM 中所有 NAS 卷的文件名和数据的字符集。您可以在创建 SVM 后修改此语言。
+* SVM 语言设置用于确定用于显示 SVM 中所有 NAS 卷的文件名和数据的字符集。
+您可以在创建 SVM 后修改此语言。
 
 | 否 |  
 |===
 
 
-== LIF 配置
+== LIF配置
 
 SVM 通过一个或多个网络逻辑接口（ LIF ）向客户端和主机提供数据。
 
@@ -265,9 +269,10 @@ SVM name
  a| 
 LIF 名称
 
-* LIF 的名称。
+* LIF的名称。
 * 您可以为每个节点分配多个数据 LIF ，并且可以为集群中的任何节点分配 LIF ，前提是该节点具有可用的数据端口。
-* 要提供冗余，应为每个数据子网至少创建两个数据 LIF ，并为分配给特定子网的 LIF 分配不同节点上的主端口。* 重要说明： * 如果要将 SMB 服务器配置为通过 SMB 托管 Hyper-V 或 SQL Server 以实现无中断运行解决方案，则 SVM 必须在集群中的每个节点上至少具有一个数据 LIF 。
+* 要提供冗余，应为每个数据子网至少创建两个数据 LIF ，并为分配给特定子网的 LIF 分配不同节点上的主端口。
+* 重要说明： * 如果要将 SMB 服务器配置为通过 SMB 托管 Hyper-V 或 SQL Server 以实现无中断运行解决方案，则 SVM 必须在集群中的每个节点上至少具有一个数据 LIF 。
 
 | 是的。 |  
 
@@ -278,17 +283,23 @@ LIF 角色
 * LIF 的角色。
 * 数据 LIF 分配有数据角色。
 
-| 是，已从 ONTAP 9.6 弃用 | 数据 
+| 是的。
+从ONTAP 9.6中弃用 | 数据 
 
 
-| LIF 的服务策略服务策略。服务策略定义了哪些网络服务可以使用 LIF 。内置服务和服务策略可用于管理数据和系统 SVM 上的数据和管理流量。 | 是，从 ONTAP 9.6 开始 |  
+| 服务策略
+LIF的服务策略。
+
+服务策略定义了哪些网络服务可以使用 LIF 。内置服务和服务策略可用于管理数据和系统 SVM 上的数据和管理流量。 | 是的。
+从ONTAP 9.6开始 |  
 
 
  a| 
 允许的协议
 
 * 可使用 LIF 的协议。
-* 默认情况下，允许 SMB ， NFS 和 FlexCache 。通过 FlexCache 协议，可以在运行 7- 模式 Data ONTAP 的系统上将卷用作 FlexCache 卷的初始卷。
+* 默认情况下，允许 SMB ， NFS 和 FlexCache 。
+通过 FlexCache 协议，可以在运行 7- 模式 Data ONTAP 的系统上将卷用作 FlexCache 卷的初始卷。
 
 
 
@@ -324,7 +335,7 @@ Subnet name
 |===
 
 
-== DNS 配置
+== DNS配置
 
 在创建 NFS 或 SMB 服务器之前，必须在 SVM 上配置 DNS 。
 
@@ -351,7 +362,14 @@ DNS domain name
 | 是的。 |  
 
 
-| DNS 服务器的 IP 地址 * 将为 NFS 或 SMB 服务器提供名称解析的 DNS 服务器的 IP 地址列表。* 列出的 DNS 服务器必须包含为 SMB 服务器要加入的域查找 Active Directory LDAP 服务器和域控制器所需的服务位置记录（ SRV ）。SRV 记录用于将服务名称映射到提供该服务的服务器的 DNS 计算机名称。如果 ONTAP 无法通过本地 DNS 查询获取服务位置记录，则 SMB 服务器创建将失败。确保 ONTAP 可以找到 Active Directory SRV 记录的最简单方法是将 Active Directory 集成的 DNS 服务器配置为 SVM DNS 服务器。您可以使用非 Active Directory 集成的 DNS 服务器，前提是 DNS 管理员已手动将 SRV 记录添加到包含 Active Directory 域控制器信息的 DNS 区域。* 有关 Active Directory 集成的 SRV 记录的信息，请参见主题 link:http://technet.microsoft.com/library/cc759550(WS.10).aspx["Microsoft TechNet 上适用于 Active Directory 的 DNS 支持的工作原理"^]。 | 是的。 |  
+| DNS服务器的IP地址
+
+*要为NFS或SMB服务器提供名称解析的DNS服务器的IP地址列表。
+* 列出的 DNS 服务器必须包含为 SMB 服务器要加入的域查找 Active Directory LDAP 服务器和域控制器所需的服务位置记录（ SRV ）。
+SRV 记录用于将服务名称映射到提供该服务的服务器的 DNS 计算机名称。如果 ONTAP 无法通过本地 DNS 查询获取服务位置记录，则 SMB 服务器创建将失败。
+确保 ONTAP 可以找到 Active Directory SRV 记录的最简单方法是将 Active Directory 集成的 DNS 服务器配置为 SVM DNS 服务器。
+您可以使用非 Active Directory 集成的 DNS 服务器，前提是 DNS 管理员已手动将 SRV 记录添加到包含 Active Directory 域控制器信息的 DNS 区域。
+* 有关 Active Directory 集成的 SRV 记录的信息，请参见主题 link:http://technet.microsoft.com/library/cc759550(WS.10).aspx["Microsoft TechNet 上适用于 Active Directory 的 DNS 支持的工作原理"^]。 | 是的。 |  
 |===
 
 

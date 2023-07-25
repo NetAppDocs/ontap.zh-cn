@@ -30,10 +30,11 @@ summary: '您可以将磁盘添加到本地层(聚合)、以便为其关联卷�
 您可以通过添加容量磁盘向本地层添加容量。
 
 
-NOTE: 从ONTAP 9.12.1开始、您可以使用System Manager查看本地层的已提交容量、以确定本地层是否需要额外容量。请参见 link:../concept_capacity_measurements_in_sm.html["在 System Manager 中监控容量"]。
+NOTE: 从ONTAP 9.12.1开始、您可以使用System Manager查看本地层的已提交容量、以确定本地层是否需要额外容量。  请参见  link:../concept_capacity_measurements_in_sm.html["在 System Manager 中监控容量"]。
 
 .关于此任务
-只有在安装了 ONTAP 9.8 或更高版本的情况下，才能执行此任务。如果您安装的是早期版本的ONTAP 、请参阅标签为"System Manager (ONTAP 9.7及更早版本)"的选项卡(或部分)。
+只有在安装了 ONTAP 9.8 或更高版本的情况下，才能执行此任务。  如果您安装的是早期版本的ONTAP、请参阅标有"System Manager (ONTAP 9.7及更早版本)"的选项卡(或部分)
+"。
 
 .步骤
 . 单击 * 存储 > 层 * 。
@@ -55,7 +56,7 @@ NOTE: 如果没有可添加的备用磁盘，则不会显示 * 添加容量 * �
  a| 
 ONTAP 9.8、9.9或9.10.1
  a| 
-.. 如果节点包含多个存储层，请选择要添加到本地层的磁盘数。否则，如果节点仅包含一个存储层，则会自动估计添加的容量。
+.. 如果节点包含多个存储层，请选择要添加到本地层的磁盘数。  否则，如果节点仅包含一个存储层，则会自动估计添加的容量。
 .. 单击 * 添加 * 。
 
 
@@ -65,7 +66,7 @@ ONTAP 9.8、9.9或9.10.1
 从ONTAP 9.11.1开始
  a| 
 .. 选择磁盘类型和磁盘数量。
-.. 如果要向新RAID组添加磁盘、请选中此复选框。此时将显示RAID分配。
+.. 如果要向新RAID组添加磁盘、请选中此复选框。  此时将显示RAID分配。
 .. 单击 * 保存 * 。
 
 
@@ -112,7 +113,7 @@ NOTE: 您应添加与聚合中的其他磁盘大小相同的磁盘。
 配置分区时，您必须确保节点中没有同时包含两个分区的驱动器作为备用驱动器。否则，如果节点发生控制器中断，则可能无法向技术支持提供有关此问题的宝贵信息（核心文件）。
 
 
-NOTE: 请勿使用 `disklist` 命令扩展聚合。这可能会导致发生原因分区错位。
+NOTE: 请勿使用 `disklist` 命令以扩展聚合。这可能会导致发生原因分区错位。
 
 .步骤
 . 显示拥有聚合的系统上的可用备用存储：
@@ -120,7 +121,7 @@ NOTE: 请勿使用 `disklist` 命令扩展聚合。这可能会导致发生原�
 `storage aggregate show-spare-disks -original-owner _node_name_`
 
 +
-您可以使用 ` -is-disk-shared` 参数仅显示已分区的驱动器或仅显示未分区的驱动器。
+您可以使用 `-is-disk-shared` 参数、用于仅显示已分区的驱动器或未分区的驱动器。
 
 +
 [listing]
@@ -200,13 +201,13 @@ Aggregate capacity available for volume use would be increased by 1.83TB.
 `storage aggregate add-disks -aggregate _aggr_name_ -raidgroup new -diskcount _number_of_disks_or_partitions_`
 
 +
-创建 Flash Pool 聚合时，如果要使用与聚合不同的校验和添加磁盘，或者要向混合校验和聚合添加磁盘，则必须使用 ` -checksumstyle` 参数。
+创建Flash Pool聚合时、如果要添加的磁盘与聚合的校验和不同、或者要向混合校验和聚合添加磁盘、则必须使用 `-checksumstyle` 参数。
 
 +
-如果要向 Flash Pool 聚合添加磁盘，则必须使用 ` -disktype` 参数指定磁盘类型。
+如果要向Flash Pool聚合添加磁盘、则必须使用 `-disktype` 参数以指定磁盘类型。
 
 +
-您可以使用 ` -disksize` 参数指定要添加的磁盘的大小。仅会选择大小约为指定大小的磁盘以添加到聚合中。
+您可以使用 `-disksize` 用于指定要添加的磁盘大小的参数。仅会选择大小约为指定大小的磁盘以添加到聚合中。
 
 +
 [listing]

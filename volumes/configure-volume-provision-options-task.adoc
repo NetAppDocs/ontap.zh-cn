@@ -14,26 +14,26 @@ summary: 您可以为卷配置精简配置，厚配置或半厚配置。
 您可以为卷配置精简配置，厚配置或半厚配置。
 
 .关于此任务
-将 ` -space-slo` 选项设置为 `thick` 可确保：
+设置 `-space-slo` 选项 `thick` 确保满足以下要求：
 
-* 整个卷会在聚合中预先分配。您不能使用 `volume create` 或 `volume modify` 命令配置卷的 ` -space-guarantee` 选项。
-* 覆盖所需空间的 100% 为预留空间。您不能使用 `volume modify` 命令配置卷的 ` -fractional-reserve` 选项
+* 整个卷会在聚合中预先分配。您不能使用 `volume create` 或 `volume modify` 命令以配置卷的 `-space-guarantee` 选项
+* 覆盖所需空间的 100% 为预留空间。您不能使用 `volume modify` 命令以配置卷的 `-fractional-reserve` 选项
 
 
-将 ` -space-slo` 选项设置为 `sEMI-thick` 可确保：
+设置 `-space-slo` 选项 `semi-thick` 确保满足以下要求：
 
-* 整个卷会在聚合中预先分配。您不能使用 `volume create` 或 `volume modify` 命令配置卷的 ` -space-guarantee` 选项。
-* 不会为覆盖预留任何空间。您可以使用 `volume modify` 命令配置卷的 ` -fractional-reserve` 选项。
+* 整个卷会在聚合中预先分配。您不能使用 `volume create` 或 `volume modify` 命令以配置卷的 `-space-guarantee` 选项
+* 不会为覆盖预留任何空间。您可以使用 `volume modify` 命令以配置卷的 `-fractional-reserve` 选项
 * 已启用 Snapshot 副本自动删除。
 
 
 .步骤
 . 配置卷配置选项：
 +
-`volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -space-slo none| thick | semi-thick -space-guarantee none| volume`
+`volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -space-slo none|thick|semi-thick -space-guarantee none|volume`
 
 +
-对于 AFF 系统和非 AFF DP 卷， ` -space-guarantee` 选项默认为 `none` 。否则，默认为 `volume` 。对于现有 FlexVol 卷，请使用 `volume modify` 命令配置配置选项。
+。 `-space-guarantee` 选项默认为 `none` 适用于AFF系统和非AFDP卷。否则、默认为 `volume`。对于现有FlexVol卷、请使用 `volume modify` 命令以配置配置选项。
 
 +
 以下命令将在 SVM vs1 上配置 vol1 以进行精简配置：

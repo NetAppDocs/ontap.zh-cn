@@ -11,7 +11,8 @@ summary: '如果ONTAP 为自动添加本地层(使用自动配置创建聚合)�
 
 
 [role="lead"]
-如果ONTAP 为自动添加本地层(使用自动配置创建聚合)提供的最佳实践建议适用于您的环境、则您可以接受此建议并让ONTAP 添加本地层。
+如果ONTAP提供的最佳实践建议允许自动添加本地层(使用自动配置创建聚合)
+适用于您的环境、您可以接受此建议并让ONTAP添加本地层。
 
 您遵循的过程取决于您使用的界面—System Manager或CLI。
 
@@ -23,7 +24,7 @@ summary: '如果ONTAP 为自动添加本地层(使用自动配置创建聚合)�
 
 .步骤
 . 在 System Manager 中，单击 * 存储 > 层 * 。
-. 在*层*页面中、单击 image:icon-add-local-tier.png["添加本地层图标"] 要创建新的本地层、请执行以下操作：
+. 在*层*页面中、单击 image:icon-add-local-tier.png["添加本地层图标"]  要创建新的本地层、请执行以下操作：
 +
 "*添加本地层*"页面显示了可在节点上创建的建议本地层数以及可用存储。
 
@@ -72,7 +73,7 @@ System Manager从ONTAP 9.8开始显示以下信息：
 
 
 |===
-. 【第5步- OKM-encrypt]](可选)：如果已安装板载密钥管理器、则可以对其进行加密配置。选中*为板载密钥管理器配置加密*复选框。
+. [[步骤5-OKM-加密]](可选)：如果已安装板载密钥管理器、则可以对其进行加密配置。  选中*为板载密钥管理器配置加密*复选框。
 +
 .. 输入密码短语。
 .. 再次输入密码短语进行确认。
@@ -88,15 +89,15 @@ System Manager从ONTAP 9.8开始显示以下信息：
 --
 *使用命令行界面创建具有自动配置功能的聚合*
 
-您可以运行`storage aggregate auto-provisione`命令来生成聚合布局建议。然后，您可以在查看并批准 ONTAP 建议后创建聚合。
+运行 `storage aggregate auto-provision` 命令以生成聚合布局建议。然后，您可以在查看并批准 ONTAP 建议后创建聚合。
 
 .您需要的内容
 集群上必须运行 ONTAP 9.2 或更高版本。
 
 .关于此任务
-使用 `storage aggregate auto-provisione` 命令生成的默认摘要列出了建议创建的聚合，包括名称和可用大小。您可以查看此列表，并在出现提示时确定是否要创建建议的聚合。
+使用生成的默认摘要 `storage aggregate auto-provision` 命令可列出建议创建的聚合、包括名称和可用大小。您可以查看此列表，并在出现提示时确定是否要创建建议的聚合。
 
-您也可以使用 ` -verbose` 选项显示详细摘要，该选项将显示以下报告：
+您还可以使用显示详细摘要 `-verbose` 选项、其中显示以下报告：
 
 * 要创建的新聚合的每个节点摘要，已发现的备用磁盘以及创建聚合后的剩余备用磁盘和分区
 * 要创建的新数据聚合以及要使用的磁盘和分区数
@@ -104,16 +105,16 @@ System Manager从ONTAP 9.8开始显示以下信息：
 * 有关创建聚合后剩余的备用磁盘和分区的详细信息
 
 
-如果您熟悉自动配置方法，并且您的环境已准备妥当，则可以使用 ` skip-confirmation` 选项创建建议的聚合，而无需显示和确认。`storage aggregate auto-provisione` 命令不受 CLI session ` confirmations` 设置的影响。
+如果您熟悉自动配置方法、并且您的环境已做好正确准备、则可以使用 `-skip-confirmation` 选项、用于创建建议的聚合、而不进行显示和确认。。 `storage aggregate auto-provision` 命令不受命令行界面会话的影响 `-confirmations` 设置。
 
 。[`storage aggregate auto-provision` 手册页^]包含有关聚合布局建议的详细信息。
 
 .步骤
-. 使用所需的显示选项运行 `storage aggregate auto-provisione` 命令。
+. 运行 `storage aggregate auto-provision` 命令以及所需的显示选项。
 +
 ** 无选项：显示标准摘要
-** ` 详细` 选项：显示详细摘要
-** ` skip-confirmation` option ：创建建议的聚合，而不显示或确认
+** `-verbose` 选项：显示详细摘要
+** `-skip-confirmation` 选项：创建建议的聚合而不显示或确认
 
 
 . 执行以下步骤之一：

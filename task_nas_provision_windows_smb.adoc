@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: task_nas_provision_windows_smb.html 
 keywords: nas, windows, servers, provision, cifs, share access permissions, share access properties, hyper-v over smb, sql server over smb 
-summary: 使用 System Manager 创建卷以使用 SMB 协议为 Windows 服务器提供存储，此功能在 ONTAP 9.7 及更高版本的 ONTAP 9 中提供。 
+summary: 使用System Manager创建卷、以便使用SMB协议为Windows服务器提供存储、此功能适用于ONTAP 9.7及更高版本的ONTAP 9。 
 ---
 = 使用 SMB 为 Windows 服务器配置 NAS 存储
 :toc: macro
@@ -21,9 +21,9 @@ summary: 使用 System Manager 创建卷以使用 SMB 协议为 Windows 服务�
 [role="lead"]
 使用 ONTAP 9.7 及更高版本提供的 System Manager 创建卷以使用 SMB 协议为 Windows 服务器提供存储。
 
-此操作步骤会在上创建新卷 link:task_nas_enable_windows_smb.html["已启用 SMB 的现有 Storage VM"] 并为卷根目录（ / ）目录创建共享。您可以在配置卷或指定自定义配置时接受系统默认值。在初始 SMB 配置后，您还可以创建其他共享并修改其属性。
+此操作步骤会在上创建新卷 link:task_nas_enable_windows_smb.html["已启用SMB的现有Storage VM"] 并为卷根目录（ / ）目录创建共享。您可以在配置卷或指定自定义配置时接受系统默认值。在初始 SMB 配置后，您还可以创建其他共享并修改其属性。
 
-您可以创建 FlexVol 卷，也可以为具有高性能要求的大型文件系统创建 FlexGroup 卷。另请参见 link:task_nas_provision_flexgroup.html["使用 FlexGroup 卷为大型文件系统配置 NAS 存储"]。
+您可以创建 FlexVol 卷，也可以为具有高性能要求的大型文件系统创建 FlexGroup 卷。  另请参见 link:task_nas_provision_flexgroup.html["使用 FlexGroup 卷为大型文件系统配置 NAS 存储"]。
 
 您也可以将此卷的规格保存到 Ansible 攻略手册中。有关详细信息，请访问 link:task_admin_use_ansible_playbooks_add_edit_volumes_luns.html["使用 Ansible 攻略手册添加或编辑卷或 LUN"]。
 
@@ -39,18 +39,18 @@ summary: 使用 System Manager 创建卷以使用 SMB 协议为 Windows 服务�
 .. 单击 * 存储 > 卷 * ，然后单击 * 添加 * 。
 .. 输入名称，选择 Storage VM 并输入大小。
 +
-仅列出配置了 SMB 协议的 Storage VM 。如果只有一个配置了 SMB 协议的 Storage VM 可用，则不会显示 * Storage VM* 字段。
+仅会列出配置了SMB协议的Storage VM。如果只有一个配置了SMB协议的Storage VM可用、则不会显示* Storage VM*字段。
 
 +
 *** 如果此时选择*保存*，则System Manager将使用系统默认值创建和添加FlexVol卷。
-*** 您可以选择*更多选项*自定义卷配置以启用授权、服务质量和数据保护等服务。请参见 <<自定义卷配置>>，然后返回此处完成以下步骤。
+*** 您可以选择*更多选项*自定义卷配置以启用授权、服务质量和数据保护等服务。  请参见 <<自定义卷配置>>，然后返回此处完成以下步骤。
 
 
 
 
 . 【工作流中的步骤2-compl-prov-win、步骤2】切换到Windows客户端以验证共享是否可访问。
 +
-.. 在 Windows 资源管理器中，按以下格式将驱动器映射到共享： ` +\\_SMB_SERVER_Name__Share_Name_+`
+.. 在Windows资源管理器中、按以下格式将驱动器映射到共享： `+\\_SMB_Server_Name__Share_Name_+`
 .. 在新创建的驱动器上，创建一个测试文件，向该文件写入文本，然后删除该文件。
 
 
@@ -129,7 +129,10 @@ summary: 使用 System Manager 创建卷以使用 SMB 协议为 Windows 服务�
 如果先前在 * 性能服务级别 * 下选择了 * 手动放置 * ，则此选项不可用。否则，默认情况下，您要添加的卷将成为 FlexVol 卷。
 
 +
-* 如果先前在 * 性能服务级别 * 下选择了 * 手动放置 * ，则此选项不可用。否则，默认情况下，您要添加的卷将成为 FlexVol 卷。* 对配置了卷的协议的访问权限。* 使用 SnapMirror 进行数据保护（本地或远程），然后从下拉列表中指定目标集群的保护策略和设置。* 单击 * 保存 * 以创建卷并将其添加到集群和 Storage VM 。
+* 如果先前在 * 性能服务级别 * 下选择了 * 手动放置 * ，则此选项不可用。否则，默认情况下，您要添加的卷将成为 FlexVol 卷。
+* 对配置了卷的协议的访问权限。
+* 使用 SnapMirror 进行数据保护（本地或远程），然后从下拉列表中指定目标集群的保护策略和设置。
+* 单击 * 保存 * 以创建卷并将其添加到集群和 Storage VM 。
 
 
 
@@ -154,7 +157,7 @@ summary: 使用 System Manager 创建卷以使用 SMB 协议为 Windows 服务�
 
 * FlexGroup 卷（选择 * 在集群中分布卷数据 * ）。
 +
-如果先前在 * 性能服务级别 * 下选择了 * 手动放置 * ，则此选项不可用。否则，默认情况下，您要添加的卷将成为 FlexVol 卷。
+如果先前在 * 性能服务级别 * 下选择了 * 手动放置 * ，则此选项不可用。   否则，默认情况下，您要添加的卷将成为 FlexVol 卷。
 
 * 配置了卷的协议的访问权限。
 * 使用 SnapMirror （本地或远程）保护数据，然后从下拉列表中指定目标集群的保护策略和设置。
@@ -174,8 +177,8 @@ NOTE: 保存卷后，返回到 <<step2-compl-prov-win>> 使用 SMB 完成 Window
 | 执行此任务的对象 | 请参见 ... 
 
 
-| System Manager 经典版（ ONTAP 9.7 及更早版本） | link:https://docs.netapp.com/us-en/ontap-sm-classic/smb-config/index.html["SMB 配置概述"^] 
+| System Manager 经典版（ ONTAP 9.7 及更早版本） | link:https://docs.netapp.com/us-en/ontap-sm-classic/smb-config/index.html["SMB配置概述"^] 
 
 
-| ONTAP 命令行界面 | link:smb-config/index.html["使用命令行界面概述 SMB 配置"] 
+| ONTAP 命令行界面 | link:smb-config/index.html["使用命令行界面概述SMB配置"] 
 |===

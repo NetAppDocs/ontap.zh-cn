@@ -15,13 +15,13 @@ summary: 如果已将网络组加载到 Storage Virtual Machine \ （ SVM\ ）�
 
 link:../nfs-admin/index.html["NFS 管理"] 包含有关网络组以及从 URI 加载它们的详细信息。
 
-. 将权限级别设置为 advanced ： `set -privilege advanced`
-. 显示每个 SVM 的网络组状态： `vserver services netgroup status`
-. 验证对于每个 SVM ，每个节点显示的网络组文件哈希值是否相同： `vserver services name-service netgroup status`
+. 将权限级别设置为高级： `set -privilege advanced`
+. 显示每个SVM的网络组状态： `vserver services netgroup status`
+. 验证对于每个SVM、每个节点是否显示相同的网络组文件哈希值： `vserver services name-service netgroup status`
 +
 如果是这种情况，您可以跳过下一步，继续升级或还原。否则，请继续执行下一步。
 
-. 在集群的任一节点上，手动加载网络组文件： `vserver services netgroup load -vserver vserver_name -source uri`
+. 在集群的任一节点上、手动加载网络组文件： `vserver services netgroup load -vserver vserver_name -source uri`
 +
 此命令将下载所有节点上的网络组文件。如果节点上已存在网络组文件，则该文件将被覆盖。
 

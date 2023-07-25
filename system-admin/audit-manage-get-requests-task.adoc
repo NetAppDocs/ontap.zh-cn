@@ -11,7 +11,7 @@ summary: '虽然默认情况下会记录设置请求、但不会记录获取请�
 
 
 [role="lead"]
-虽然默认情况下会记录设置请求、但不会记录获取请求。但是、您可以控制从ONTAP HTML (`-HttpGet`)、ONTAP 命令行界面(`-cliget`)或ONTAP API (`-ontapiget`)发送的获取请求是否记录在文件中。
+虽然默认情况下会记录设置请求、但不会记录获取请求。但是、您可以控制是否从ONTAP HTML发送GET请求 (`-httpget`)、ONTAP命令行界面 (`-cliget`)或ONTAP API (`-ontapiget`)将记录在文件中。
 
 您可以从ONTAP 命令行界面修改审核日志记录设置、并从ONTAP 9.11.1开始从System Manager修改。
 
@@ -26,8 +26,10 @@ summary: '虽然默认情况下会记录设置请求、但不会记录获取请�
 --
 .命令行界面
 --
-* 要指定应将来自ONTAP 命令行界面或API的获取请求记录在审核日志(audit.log文件)中、除了默认设置请求之外、还应输入：+`sSecurity audit modify (-cliget｛onlonset｝)](-HttpGet｛onlon\off｝))](-ontapiget｛on|off｝)`
-* 要显示当前设置、请输入：+`ssecurityaudit show`
+* 要指定应将来自ONTAP命令行界面或API的获取请求记录在审核日志(audit.log文件)中、除了默认设置请求之外、还应输入：+
+`security audit modify [-cliget {on|off}][-httpget {on|off}][-ontapiget {on|off}]`
+* 要显示当前设置、请输入：+
+`security audit show`
 
 
 有关详细信息、请参见手册页。

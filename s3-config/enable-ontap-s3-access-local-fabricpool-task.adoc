@@ -14,7 +14,7 @@ summary: 要将 ONTAP S3 用作本地 FabricPool 容量层，您必须根据创�
 要将 ONTAP S3 用作本地 FabricPool 容量层，您必须根据创建的存储分段定义对象存储，然后将对象存储附加到性能层聚合以创建 FabricPool 。
 
 .开始之前
-您必须具有 ONTAP S3 服务器名称和存储分段名称，并且 S3 服务器必须已使用集群 LIF （带有 ` -vserver Cluster` 参数）创建。
+您必须具有ONTAP S3服务器名称和存储分段名称、并且S3服务器必须已使用集群LUN (使用 `-vserver Cluster` 参数)。
 
 .关于此任务
 对象存储配置包含有关本地容量层的信息，包括 S3 服务器和存储分段名称以及身份验证要求。
@@ -26,13 +26,13 @@ summary: 要将 ONTAP S3 用作本地 FabricPool 容量层，您必须根据创�
 .步骤
 . 为本地容量层创建对象存储：
 +
-`storage aggregate object-store config create -object-store-name _store_name_-ipspace cluster -provider-type ontap_s3 -server _s3_server_name_-container-name _bucket_name_-access-key _access_key_-secret-password password password`
+`storage aggregate object-store config create -object-store-name _store_name_ -ipspace Cluster -provider-type ONTAP_S3 -server _S3_server_name_ -container-name _bucket_name_ -access-key _access_key_ -secret-password password`
 
 +
-** ` 容器名称` 是您创建的 S3 存储分段。
-** ` -access-key` 参数用于授权对 ONTAP S3 服务器的请求。
-** ` -secret-password` 参数（机密访问密钥）用于对 ONTAP S3 服务器的请求进行身份验证。
-** 您可以将 ` is-certificate-validation-enabled` 参数设置为 `false` 以禁用 ONTAP S3 的证书检查。
+** 。 `-container-name` 是您创建的S3存储分段。
+** 。 `-access-key` 参数用于授权向ONTAP S3服务器发出的请求。
+** 。 `-secret-password` 参数(机密访问密钥)用于对向ONTAP S3服务器发出的请求进行身份验证。
+** 您可以设置 `-is-certificate-validation-enabled` 参数设置为 `false` 禁用ONTAP S3的证书检查。
 
 
 +
@@ -52,10 +52,10 @@ cluster1::> storage aggregate object-store config create
 
 . 将对象存储附加到聚合：
 +
-`storage aggregate object-store attach -aggregate _aggr_name_-object-store-name _store_name_`
+`storage aggregate object-store attach -aggregate _aggr_name_ -object-store-name _store_name_`
 
 +
-您可以使用`allow-flexgroup * true*`选项附加包含FlexGroup 卷成分卷的聚合。
+您可以使用 `allow-flexgroup *true*` 用于附加包含FlexGroup卷成分卷的聚合的选项。
 
 +
 [listing]

@@ -17,7 +17,7 @@ summary: 您必须确定用于在节点和备份应用程序之间建立数据�
 NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF服务策略。有关详细信息，请参见 link:../networking/configure_firewall_policies_for_lifs.html["为 LIF 配置防火墙策略"]。
 
 .步骤
-. 使用带有 ` -role` 参数的 `network interface show` 命令确定节点上托管的集群间 LIF 。
+. 使用确定节点上托管的集群间LIF `network interface show` 命令 `-role` 参数。
 +
 [listing]
 ----
@@ -31,7 +31,7 @@ cluster1    IC2        up/up      192.0.2.68/24      cluster1-2    e0b     true
 ----
 . 确保已为集群间 LIF 上的 NDMP 启用防火墙策略：
 +
-.. 使用 `ssystem services firewall policy show` 命令验证是否已为 NDMP 启用防火墙策略。
+.. 使用验证是否已为NDMP启用防火墙策略 `system services firewall policy show` 命令：
 +
 以下命令显示集群间 LIF 的防火墙策略：
 
@@ -53,7 +53,7 @@ cluster1    intercluster dns        -
                          telnet     -
 9 entries were displayed.
 ----
-.. 如果未启用防火墙策略，请使用带有 ` -service` 参数的 `ssystem services firewall policy modify` 命令启用防火墙策略。
+.. 如果未启用防火墙策略、请使用启用防火墙策略 `system services firewall policy modify` 命令 `-service` 参数。
 +
 以下命令将为集群间 LIF 启用防火墙策略：
 
@@ -66,7 +66,7 @@ cluster1::> system services firewall policy modify -vserver cluster1 -policy int
 
 . 确保已为集群间 LIF 正确设置故障转移策略：
 +
-.. 使用 `network interface show -failover` 命令验证集群间 LIF 的故障转移策略是否设置为 `local-only` 。
+.. 验证集群间CIFs的故障转移策略是否设置为 `local-only` 使用 `network interface show -failover` 命令：
 +
 [listing]
 ----
@@ -84,7 +84,7 @@ cluster1-1  cluster1-1_mgmt1 cluster1-1:e0m    local-only    Default
                                                     Failover Targets:
                                                     .......
 ----
-.. 如果未正确设置故障转移策略，请使用带有 ` failover-policy` 参数的 `network interface modify` 命令修改故障转移策略。
+.. 如果未正确设置故障转移策略、请使用修改此故障转移策略 `network interface modify` 命令 `-failover-policy` 参数。
 +
 [listing]
 ----

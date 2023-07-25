@@ -13,13 +13,13 @@ summary: 在创建 SMB 共享之前，您必须了解共享路径和共享属性
 [role="lead"]
 在创建 SMB 共享之前，您必须了解共享路径和共享属性的要求，尤其是主目录的要求。
 
-创建 SMB 共享需要指定客户端要访问的目录路径结构（在 `vserver cifs share create` 命令中使用 ` -path` 选项）。目录路径对应于您在 SVM 命名空间中创建的卷或 qtree 的接合路径。在创建共享之前，必须存在目录路径和相应的接合路径。
+创建SMB共享需要指定目录路径结构(使用 `-path` 选项 `vserver cifs share create` 命令)。目录路径对应于您在 SVM 命名空间中创建的卷或 qtree 的接合路径。在创建共享之前，必须存在目录路径和相应的接合路径。
 
 共享路径具有以下要求：
 
 * 目录路径名称的长度最多可以包含 255 个字符。
-* 如果路径名称中有空格，则必须将整个字符串置于引号中（例如， ` /new volume/mount here"` ）。
-* 如果共享的 UNC 路径（` \\servername\sharename\filepath` ）包含超过 256 个字符（不包括 UNC 路径中的初始 "` \\` " ），则 Windows 属性框中的 * 安全性 * 选项卡不可用。
+* 如果路径名称中有空格、则必须将整个字符串置于引号中(例如、 `"/new volume/mount here"`）。
+* 如果为UNC路径 (`\\servername\sharename\filepath`)的字符数超过256个(不包括UNC路径中的初始"`\\`")，则Windows属性框中的*Security*选项卡不可用。
 +
 这是 Windows 客户端问题描述，而不是 ONTAP 问题描述。要避免此问题描述，请勿使用超过 256 个字符的 UNC 路径创建共享。
 
@@ -27,12 +27,12 @@ summary: 在创建 SMB 共享之前，您必须了解共享路径和共享属性
 
 可以更改共享属性默认值：
 
-* 所有共享的默认初始属性为 `oplocks` ， `browable` ， `changenotify` 和 `sHow-previous-versions` 。
+* 所有共享的默认初始属性为 `oplocks`， `browsable`， `changenotify`，和 `show-previous-versions`。
 * 可以选择在创建共享时指定共享属性。
 +
-但是，如果在创建共享时指定了共享属性，则不会使用默认值。如果在创建共享时使用 ` -share-properties` 参数，则必须使用逗号分隔列表指定要应用于共享的所有共享属性。
+但是，如果在创建共享时指定了共享属性，则不会使用默认值。如果您使用 `-share-properties` 参数创建共享时、必须使用逗号分隔列表指定要应用于共享的所有共享属性。
 
-* 要指定主目录共享，请使用 `homedirectory` 属性。
+* 要指定主目录共享、请使用 `homedirectory` 属性。
 +
 通过此功能，您可以配置一个共享，该共享可根据连接到它的用户和一组变量映射到不同的目录。您无需为每个用户创建单独的共享，而是使用一些主目录参数配置一个共享，以定义用户在入口点（共享）与其主目录（ SVM 上的目录）之间的关系。
 
@@ -46,12 +46,12 @@ summary: 在创建 SMB 共享之前，您必须了解共享路径和共享属性
 
 主目录共享具有以下要求：
 
-* 在创建 SMB 主目录之前，必须使用 `vserver cifs home-directory search-path add` 命令至少添加一个主目录搜索路径。
-* 使用 ` -share-properties` 参数上的 `homedirectory` 值指定的主目录共享必须在共享名称中包含 ` %w` （ Windows 用户名）动态变量。
+* 在创建SMB主目录之前、必须使用至少添加一个主目录搜索路径 `vserver cifs home-directory search-path add` 命令：
+* 由的值指定的主目录共享 `homedirectory` 在上 `-share-properties` 参数必须包含 `%w` (Windows用户名)共享名称中的动态变量。
 +
-此外，共享名称还可以包含 ` %d` （域名）动态变量（例如， ` %d/%w` ）或共享名称中的静态部分（例如， `home1_%w` ）。
+此外、共享名称还可以包含 `%d` (域名)动态变量(例如 `%d/%w`)或共享名称中的静态部分(例如、 `home1_%w`）。
 
-* 如果管理员或用户使用共享连接到其他用户的主目录（使用 `vserver cifs home-directory modify` 命令的选项），则动态共享名称模式前面必须有一个颚化符（`~` ）。
+* 如果管理员或用户使用共享连接到其他用户的主目录(使用的选项) `vserver cifs home-directory modify` 命令)、则动态共享名称模式必须前面带有波形符号 (`~`）。
 
 
-link:../smb-admin/index.html["SMB 管理"] 和 `Vserver cifs share` 手册页具有追加信息。
+link:../smb-admin/index.html["SMB管理"] 和 `vserver cifs share` 手册页包含追加信息。

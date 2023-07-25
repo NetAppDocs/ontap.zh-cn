@@ -21,11 +21,11 @@ summary: 如果将 FlexVol 卷配置为自动删除 FlexClone 文件和 FlexClon
 
 [NOTE]
 ====
-如果将卷上的 `commitment` level 设置为 `try` 或 `disrupt` ，则可以通过对这些克隆禁用自动删除来单独保留特定的 FlexClone 文件或 FlexClone LUN 。但是，如果将卷上的 `commitment` level 设置为 `destroy` ，并且销毁列表包括 `lun_clone ， file_clone` ，则卷设置将覆盖克隆设置，并且无论克隆的自动删除设置如何，所有 FlexClone 文件和 FlexClone LUN 都可以被删除。
+如果您设置了 `commitment` 将卷上的级别调到 `try` 或 `disrupt`，您可以通过禁用特定FlexClone文件或FlexClone LUN的自动删除来单独保留这些克隆。但是、如果您设置了 `commitment` 将卷上的级别调到 `destroy` 销毁列表包括 `lun_clone,file_clone`、卷设置将覆盖克隆设置、无论克隆的自动删除设置如何、所有FlexClone文件和FlexClone LUN均可删除。
 
 ====
 .步骤
-. 使用 `volume file clone autodelete` 命令防止自动删除特定的 FlexClone 文件或 FlexClone LUN 。
+. 使用防止自动删除特定FlexClone文件或FlexClone LUN `volume file clone autodelete` 命令：
 +
 以下示例显示了如何为 vol1 中包含的 FlexClone LUN lun1_clone 禁用自动删除：
 
@@ -37,7 +37,7 @@ cluster1::> volume file clone autodelete -vserver vs1 -volume vol1 -clone-path l
 +
 无法自动删除已禁用自动删除的 FlexClone 文件或 FlexClone LUN 以回收卷上的空间。
 
-. 使用 `volume file clone show-autodelete` 命令验证是否已为 FlexClone 文件或 FlexClone LUN 禁用自动删除。
+. 使用验证是否已为FlexClone文件或FlexClone LUN禁用自动删除 `volume file clone show-autodelete` 命令：
 +
 以下示例显示了 FlexClone LUN lun1_clone 的自动删除为 false ：
 

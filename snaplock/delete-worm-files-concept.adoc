@@ -11,7 +11,8 @@ summary: 您可以使用特权删除功能在保留期限内删除企业模式WO
 
 
 [role="lead"]
-您可以使用特权删除功能在保留期限内删除企业模式WORM文件。在使用此功能之前、您必须先创建SnapLock 管理员帐户、然后使用该帐户启用此功能。
+您可以使用特权删除功能在保留期限内删除企业模式WORM文件。
+在使用此功能之前、您必须先创建SnapLock 管理员帐户、然后使用该帐户启用此功能。
 
 
 
@@ -27,10 +28,10 @@ summary: 您可以使用特权删除功能在保留期限内删除企业模式WO
 .步骤
 . 创建具有 SnapLock 管理员角色的 SVM 管理员帐户：
 +
-` * security login create -vserver _svm_name_ -user-or-group-name _user_or_group_name_ -application _application_-authmethod _authentication_method _ -role _role_ -comment _comtion_*`
+`*security login create -vserver _SVM_name_ -user-or-group-name _user_or_group_name_ -application _application_ -authmethod _authentication_method_ -role _role_ -comment _comment_*`
 
 +
-以下命令使用密码启用具有预定义的 `vsadmin-SnapLock` 角色的 SVM 管理员帐户 `SnapLockAdmin` 以访问 `SVM1` ：
+以下命令将启用SVM管理员帐户 `SnapLockAdmin` 和预定义的 `vsadmin-snaplock` 要访问的角色 `SVM1` 使用密码：
 
 +
 [listing]
@@ -46,20 +47,20 @@ cluster1::> security login create -vserver SVM1 -user-or-group-name SnapLockAdmi
 您必须在包含要删除的 WORM 文件的 Enterprise 卷上显式启用特权删除功能。
 
 .关于此任务
-` -privileged-delete` 选项的值可确定是否启用了特权删除。可能的值包括 `enabled` ， `disabled"` 和 `permanenty-disabled` 。
+的值 `-privileged-delete` 选项用于确定是否启用特权删除。可能值为 `enabled`， `disabled`，和 `permanently-disabled`。
 
 [NOTE]
 ====
-`永久禁用` 是终端状态。在将此状态设置为 `永久禁用` 后，您无法在此卷上启用特权删除。
+ `permanently-disabled` 是终端状态。将状态设置为后、您将无法对卷启用特权删除 `permanently-disabled`。
 
 ====
 .步骤
 . 为 SnapLock 企业卷启用特权删除：
 +
-` * 卷 SnapLock modify -vserver _svm_name_ -volume _volume_name_ -privileged-delete disabled" 已启用 | 永久禁用 *`
+`*volume snaplock modify -vserver _SVM_name_ -volume _volume_name_ -privileged-delete disabled|enabled|permanently-disabled*`
 
 +
-以下命令将为 Enterprise 卷 `dataVol` on `SVM1` 启用特权删除功能：
+以下命令将为Enterprise卷启用特权删除功能 `dataVol` 开启 `SVM1`：
 
 +
 [listing]
@@ -80,15 +81,15 @@ SVM1::> volume snaplock modify -vserver SVM1 -volume dataVol -privileged-delete 
 
 
 .关于此任务
-您不能使用特权删除操作删除已过期的 WORM 文件。您可以使用 `volume file retention show` 命令查看要删除的 WORM 文件的保留时间。有关详细信息，请参见命令的手册页。
+您不能使用特权删除操作删除已过期的 WORM 文件。您可以使用 `volume file retention show` 命令以查看要删除的WORM文件的保留时间。有关详细信息，请参见命令的手册页。
 
 .步骤
 . 删除企业卷上的 WORM 文件：
 +
-` * 卷文件 privileged-delete -vserver _svm_name_ -file _file_path_*`
+`*volume file privileged-delete -vserver _SVM_name_ -file _file_path_*`
 
 +
-以下命令会删除 SVM``SVM1`` 上的文件 ` /vol/dataVol/F1` ：
+以下命令将删除此文件 `/vol/dataVol/f1` 在SVM上``SVM1``：
 
 +
 [listing]

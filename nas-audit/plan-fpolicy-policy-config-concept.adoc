@@ -40,7 +40,7 @@ _SVM 名称 _
 
 指定要在其中创建 FPolicy 策略的 SVM 的名称。
  a| 
-` -vserver` `vserver_name`
+`-vserver` `vserver_name`
  a| 
 是的。
  a| 
@@ -63,12 +63,12 @@ _SVM 名称 _
 此名称可以包含以下 ASCII 范围字符的任意组合：
 
 * `a` 到 `z`
-* `A` 至 `Z`
+* `A` 到 `Z`
 * `0` 到 `9`
-* "` _` " ， "` -` " 和 "` 。` "
+* "`_`"、"`-`", and "`.`Ω"
 
  a| 
-` 策略名称` `policy_name`
+`-policy-name` `policy_name`
  a| 
 是的。
  a| 
@@ -87,7 +87,7 @@ _SVM 名称 _
 * 事件必须已存在。
 
  a| 
-` 事件` `event_name` ， ...
+`-events` `event_name`，...
  a| 
 是的。
  a| 
@@ -102,15 +102,15 @@ _SVM 名称 _
 
 * 外部引擎包含节点向 FPolicy 服务器发送通知所需的信息。
 * 您可以将 FPolicy 配置为使用 ONTAP 原生外部引擎进行简单文件阻止，或者使用配置为使用外部 FPolicy 服务器（ FPolicy 服务器）的外部引擎进行更复杂的文件阻止和文件管理。
-* 如果要使用原生外部引擎，则不能为此参数指定值，也可以指定 `原生` 作为值。
+* 如果要使用本机外部引擎、则不能为此参数指定值、也可以指定 `native` 作为值。
 * 如果要使用 FPolicy 服务器，外部引擎的配置必须已存在。
 
  a| 
-` 引擎` `enginer_name`
+`-engine` `engine_name`
  a| 
 是（除非策略使用内部 ONTAP 原生引擎）
  a| 
-`原生`
+`native`
 
 
 
@@ -120,11 +120,11 @@ _Is mandatory screening required_
 指定是否需要强制文件访问筛选。
 
 * 强制筛选设置用于确定在所有主服务器和二级服务器均已关闭或在给定超时期限内未从 FPolicy 服务器收到响应时对文件访问事件采取的操作。
-* 如果设置为 `true` ，则会拒绝文件访问事件。
-* 如果设置为 `false` ，则允许发生文件访问事件。
+* 设置为时 `true`，文件访问事件被拒绝。
+* 设置为时 `false`，则允许文件访问事件。
 
  a| 
-` -is-mandatory` ｛`true` ｝`false` ｝
+`-is-mandatory` {`true`|`false`｝
  a| 
 否
  a| 
@@ -139,15 +139,15 @@ _allow privileged access_
 
 如果已配置，则 FPolicy 服务器可以使用特权数据连接从 SVM 的根目录访问包含受监控数据的文件。
 
-要进行有权限的数据访问，必须在集群上获得 SMB 的许可，并且必须将用于连接到 FPolicy 服务器的所有数据 LIF 配置为将 `CIFS` 作为允许的协议之一。
+要进行有权限的数据访问、必须在集群上获得SMB的许可、并且必须将用于连接到FPolicy服务器的所有数据SIFs配置为具有 `cifs` 作为允许的协议之一。
 
 如果要将策略配置为允许特权访问，则还必须为希望 FPolicy 服务器用于特权访问的帐户指定用户名。
  a| 
-` -allow-privileged-access` ｛`yes` ｝`no` ｝
+`-allow-privileged-access` {`yes`|`no`｝
  a| 
 否（除非启用直通读取）
  a| 
-`否`
+`no`
 
 
 
@@ -157,10 +157,10 @@ _allow privileged access_
 指定 FPolicy 服务器用于特权数据访问的帐户的用户名。
 
 * 此参数的值应采用 `domain\user name` 格式。
-* 如果将 ` -allow-privileged-access` 设置为 `no` ，则会忽略为此参数设置的任何值。
+* 条件 `-allow-privileged-access` 设置为 `no`，则会忽略为此参数设置的任何值。
 
  a| 
-` -privileged-user-name` `user_name`
+`-privileged-user-name` `user_name`
  a| 
 否（除非启用了特权访问）
  a| 
@@ -181,7 +181,7 @@ _allow passthrough-read_
 * 如果要配置直通读取，则还必须将策略配置为允许特权访问。
 
  a| 
-` -is-passthrough-read-enabled` ｛`true` ｝`false` ｝
+`-is-passthrough-read-enabled` {`true`|`false`｝
  a| 
 否
  a| 

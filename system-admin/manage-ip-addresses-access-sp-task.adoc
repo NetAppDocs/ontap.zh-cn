@@ -14,17 +14,17 @@ summary: 默认情况下， SP 接受来自任何 IP 地址的管理主机的 SS
 默认情况下， SP 接受来自任何 IP 地址的管理主机的 SSH 连接请求。您可以将 SP 配置为仅接受来自具有指定 IP 地址的管理主机的 SSH 连接请求。所做的更改将应用于对集群中任何节点的 SP 的 SSH 访问。
 
 .步骤
-. 使用带有 ` allowed-addresses` 参数的 `ssystem service-processor ssh add-allowed-addresses` 命令将 SP 访问权限仅授予您指定的 IP 地址。
+. 使用仅为指定的IP地址授予SP访问权限 `system service-processor ssh add-allowed-addresses` 命令 `-allowed-addresses` 参数。
 +
-** 必须以 `address` /`netmask` 的格式指定 ` allowed-addresses` 参数的值，并且多个 `address` /`netmask` 对必须用逗号分隔，例如， `10.98.150.10/24 ， FD20 ： 8b1e ： b255 ： c09b ：：：：： /64` 。
+** 的值 `-allowed-addresses` 参数必须以的格式指定 `address`/`netmask`和多个 `address`/`netmask` 对之间必须以逗号分隔、例如 `10.98.150.10/24, fd20:8b1e:b255:c09b::/64`。
 +
-将 ` allowed-addresses` 参数设置为 `0.0.0.0/0 ，：：： /0` 可使所有 IP 地址都能访问 SP （默认值）。
+设置 `-allowed-addresses` 参数设置为 `0.0.0.0/0, ::/0` 启用所有IP地址以访问SP (默认值)。
 
-** 如果通过仅允许您指定的 IP 地址访问 SP 来更改默认值，则 ONTAP 会提示您确认是否希望指定的 IP 地址替换 "`allow all` " 默认设置（`0.0.0.0/0 ，：：：： /0` ）。
-** system service-processor ssh show` 命令可显示可访问 SP 的 IP 地址。 `s
+** 如果通过将SP访问限制为仅指定的IP地址来更改默认值、则ONTAP会提示您确认是否希望使用指定的IP地址来替换"`allow all`"默认设置 (`0.0.0.0/0, ::/0`）。
+** 。 `system service-processor ssh show` 命令可显示可访问SP的IP地址。
 
 
-. 如果要阻止指定的 IP 地址访问 SP ，请使用带有 ` allowed-addresses` 参数的 `ssystem service-processor ssh remove-allowed-addresses` 命令。
+. 如果要阻止指定IP地址访问SP、请使用 `system service-processor ssh remove-allowed-addresses` 命令 `-allowed-addresses` 参数。
 +
 如果您阻止所有 IP 地址访问 SP ，则无法从任何管理主机访问 SP 。
 

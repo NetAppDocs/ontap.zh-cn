@@ -13,21 +13,21 @@ summary: 您需要先使目标卷可写，然后才能将数据从该卷提供�
 [role="lead"]
 如果因发生灾难而禁用了 SnapMirror 灾难恢复关系中的主站点，则可以从目标卷提供数据，而不会造成任何中断。在主站点恢复服务后，您可以重新激活源卷。
 
-您需要先使目标卷可写，然后才能将数据从该卷提供给客户端。您可以使用 `snapmirror quiesce` 命令停止向目标的计划传输，使用 `snapmirror abort` 命令停止正在进行的传输，使用 `snapmirror break` 命令使目标可写。
+您需要先使目标卷可写，然后才能将数据从该卷提供给客户端。您可以使用 `snapmirror quiesce` 命令以停止向目标(即)进行的计划传输 `snapmirror abort` 命令以停止正在进行的传输、以及 `snapmirror break` 命令以使目标可写。
 
 .关于此任务
-您必须以 ` _hostip ： //lun/_name_` 的形式指定元素源路径，其中 "`lun` " 是实际字符串 "`lun` " ， `name` 是 Element 卷的名称。
+您必须在表单中指定Element源路径 `_hostip:_/lun/_name_`，其中“`LUN`”是实际字符串“`LUN`”和 `name` 是Element卷的名称。
 
 .步骤
 . 停止向目标进行的计划传输：
 +
-`snapmirror quiesce -source-path _hostip ： //lun/_name_ -destination-path _sVM ： volume__cluster ： //svm/volume_s`
+`snapmirror quiesce -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将停止 IP 地址 10.0.0.11 处的源卷 `0005` 和目标卷 `vola_dst` on `svm_backup` 之间的计划传输：
+以下示例将停止源卷之间的计划传输 `0005` IP地址10.0.0.11处的卷和目标卷 `volA_dst` 开启 `svm_backup`：
 
 +
 [listing]
@@ -36,13 +36,13 @@ cluster_dst::> snapmirror quiesce -source-path 10.0.0.11:/lun/0005 -destination-
 ----
 . 停止正在向目标传输的数据：
 +
-`snapmirror abort -source-path _hostip ： //lun/_name_ -destination-path _sVM ： volume__cluster ： //svm/volume_`
+`snapmirror abort -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将停止 IP 地址 10.0.0.11 处的源卷 `0005` 和目标卷 `vola_dst` on `svm_backup` 之间的当前传输：
+以下示例将停止源卷之间正在进行的传输 `0005` IP地址10.0.0.11处的卷和目标卷 `volA_dst` 开启 `svm_backup`：
 
 +
 [listing]
@@ -51,13 +51,13 @@ cluster_dst::> snapmirror abort -source-path 10.0.0.11:/lun/0005 -destination-pa
 ----
 . 中断 SnapMirror 灾难恢复关系：
 +
-`snapmirror break -source-path _hostip ： //lun/_name_ -destination-path _sVM ： volume___cluster ： //svm/volume_s`
+`snapmirror break -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将中断 IP 地址 10.0.0.11 处的源卷 `0005` 和目标卷 `vola_dst` on `svm_backup` 和目标卷 `vola_dst` on `svm_backup` 之间的关系：
+以下示例将中断源卷之间的关系 `0005` IP地址10.0.0.11处的卷和目标卷 `volA_dst` 开启 `svm_backup` 和目标卷 `volA_dst` 开启 `svm_backup`：
 
 +
 [listing]

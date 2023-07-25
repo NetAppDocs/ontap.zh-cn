@@ -17,37 +17,38 @@ summary: 创建 FPolicy 策略时，您需要将一个外部引擎以及一个�
 * 应填写 FPolicy 策略工作表。
 * 如果您计划配置策略以使用 FPolicy 服务器，则外部引擎必须存在。
 * 您计划与 FPolicy 策略关联的至少一个 FPolicy 事件必须存在。
-* 如果要配置有权限的数据访问， SVM 上必须存在 SMB 服务器。
+* 如果要配置有权限的数据访问、SVM上必须存在SMB服务器。
 
 
 .步骤
 . 创建 FPolicy 策略：
 +
-`vserver fpolicy policy create -vserver-name vserver_name -policy-name policy_name -engine enginer_name -events event_name ， ... ｛ -is-mandatory ｛ true_false ｝ ] ｛ -allow-privileged-access ｛ yes_no ｝ ] ｛ -privileged-user-name domain\user_name] ｛ -is-passthrough-read-enabled ｛ true_false ｝ ]`
+`vserver fpolicy policy create -vserver-name vserver_name -policy-name policy_name -engine engine_name -events event_name,... [-is-mandatory {true|false}] [-allow-privileged-access {yes|no}] [-privileged-user-name domain\user_name] [-is-passthrough-read-enabled {true|false}]`
 
 +
 ** 您可以将一个或多个事件添加到 FPolicy 策略中。
 ** 默认情况下，强制筛选处于启用状态。
-** 如果要通过将 ` -allow-privileged-access` 参数设置为 `yes` 来允许特权访问，则还必须为特权访问配置一个特权用户名。
-** 如果要通过将 ` -is-passthrough-read-enabled` 参数设置为 `true` 来配置直通读取，则还必须配置有权限的数据访问。
+** 如果要通过设置来允许特权访问 `-allow-privileged-access` 参数设置为 `yes`，您还必须为特权访问配置特权用户名。
+** 如果要通过设置来配置直通读取 `-is-passthrough-read-enabled` 参数设置为 `true`，您还必须配置有权限的数据访问。
 +
-以下命令将创建一个名为 "`policy1` " 的策略，该策略会将事件命名为 "`EVENT1` " ，并将外部引擎命名为 "`Engine1` " 。此策略会在策略配置中使用默认值： `vserver fpolicy policy create -vserver vs1.example.com -policy-name policy1 -events EVENT1 -engine Engine1`
+以下命令将创建一个名为 "`policy1` " 的策略，该策略会将事件命名为 "`EVENT1` " ，并将外部引擎命名为 "`Engine1` " 。此策略在策略配置中使用默认值：
+`vserver fpolicy policy create -vserver vs1.example.com -policy-name policy1 -events event1 -engine engine1`
 
 +
 以下命令将创建一个名为 "`policy2` " 的策略，其中包含名为 "`event2` " 的事件以及名为 "`engine2` " 的外部引擎。此策略配置为使用指定的用户名进行特权访问。已启用直通读取：
 
 +
-`vserver fpolicy policy create -vserver vs1.example.com -policy-name policy2 -events event2 -engine engine2 -allow-privileged-access yes ‑privileged-user-name example\archive_Acct -is-passthrough-read-enabled true`
+`vserver fpolicy policy create -vserver vs1.example.com -policy-name policy2 -events event2 -engine engine2 -allow-privileged-access yes ‑privileged-user-name example\archive_acct -is-passthrough-read-enabled true`
 
 +
 以下命令将创建一个名为 "`native1` " 的策略，该策略与名为 "`event3` " 的事件关联。此策略使用原生引擎并在策略配置中使用默认值：
 
 +
-`vserver fpolicy policy create -vserver vs1.example.com -policy-name native1 -events event3 -engine 原生`
+`vserver fpolicy policy create -vserver vs1.example.com -policy-name native1 -events event3 -engine native`
 
 
 
-. 使用 `vserver fpolicy policy show` 命令验证 FPolicy 配置。
+. 使用验证FPolicy策略配置 `vserver fpolicy policy show` 命令：
 +
 以下命令显示有关已配置的三个 FPolicy 策略的信息，其中包括以下信息：
 
@@ -56,7 +57,8 @@ summary: 创建 FPolicy 策略时，您需要将一个外部引擎以及一个�
 ** 与策略关联的外部引擎
 ** 与策略关联的事件
 ** 是否需要强制筛查
-** 是否需要特权访问 `vserver fpolicy policy show`
+** 是否需要特权访问
+`vserver fpolicy policy show`
 
 
 +

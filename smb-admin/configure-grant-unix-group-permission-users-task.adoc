@@ -2,19 +2,19 @@
 permalink: smb-admin/configure-grant-unix-group-permission-users-task.html 
 sidebar: sidebar 
 keywords: configure, grant, group, permission, access, file, directories, directory, incoming, cifs, ownder, configure the grant unix group permission to smb users 
-summary: 您可以配置此选项，以授予组访问文件或目录的权限，即使传入的 SMB 用户不是文件的所有者也是如此。 
+summary: 您可以将此选项配置为授予组访问文件或目录的权限、即使传入的SMB用户不是文件的所有者也是如此。 
 ---
-= 配置向 SMB 用户授予 UNIX 组权限
+= 配置向SMB用户授予UNIX组权限
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以配置此选项，以授予组访问文件或目录的权限，即使传入的 SMB 用户不是文件的所有者也是如此。
+您可以将此选项配置为授予组访问文件或目录的权限、即使传入的SMB用户不是文件的所有者也是如此。
 
 .步骤
-. 将权限级别设置为 advanced ： `set -privilege advanced`
+. 将权限级别设置为高级： `set -privilege advanced`
 . 根据需要配置授予 UNIX 组权限：
 +
 |===
@@ -24,16 +24,16 @@ summary: 您可以配置此选项，以授予组访问文件或目录的权限�
  a| 
 启用对文件或目录的访问以获取组权限，即使用户不是文件的所有者也是如此
  a| 
-`vserver cifs options modify – grant-unix-group-perms-to Others true`
+`vserver cifs options modify –grant-unix-group-perms-to-others true`
 
 
 
  a| 
 禁用对文件或目录的访问以获取组权限，即使用户不是文件的所有者也是如此
  a| 
-`vserver cifs options modify – grant-unix-group-perms-to -thers false`
+`vserver cifs options modify –grant-unix-group-perms-to-others false`
 
 |===
-. 验证此选项是否设置为所需的值： `vserver cifs options show – fields grant-unix-group-perms-o-thers`
+. 验证此选项是否设置为所需值： `vserver cifs options show –fields grant-unix-group-perms-to-others`
 . 返回到管理权限级别： `set -privilege admin`
 

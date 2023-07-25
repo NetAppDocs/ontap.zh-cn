@@ -34,7 +34,7 @@ summary: 通过 NFS 配置工作表，您可以收集为客户端设置 NFS 访�
 
 * 用于创建 SVM* 的参数
 
-如果要创建新的 SVM ，请在 `vserver create` 命令中提供这些值。
+您可以在中提供这些值 `vserver create` 命令。
 
 |===
 
@@ -43,7 +43,7 @@ summary: 通过 NFS 配置工作表，您可以收集为客户端设置 NFS 访�
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 您为新 SVM 提供的名称，可以是完全限定域名（ FQDN ），也可以遵循在集群中强制实施唯一 SVM 名称的其他约定。
  a| 
@@ -51,7 +51,7 @@ summary: 通过 NFS 配置工作表，您可以收集为客户端设置 NFS 访�
 
 
  a| 
-` 聚合`
+`-aggregate`
  a| 
 集群中具有足够空间来容纳新 NFS 存储容量的聚合的名称。
  a| 
@@ -59,7 +59,7 @@ summary: 通过 NFS 配置工作表，您可以收集为客户端设置 NFS 访�
 
 
  a| 
-` -rootvolume`
+`-rootvolume`
  a| 
 为 SVM 根卷提供的唯一名称。
  a| 
@@ -67,16 +67,16 @@ summary: 通过 NFS 配置工作表，您可以收集为客户端设置 NFS 访�
 
 
  a| 
-` -rootvolume-security-style`
+`-rootvolume-security-style`
  a| 
 对 SVM 使用 UNIX 安全模式。
  a| 
-`UNIX`
+`unix`
 
 
 
  a| 
-` 语言`
+`-language`
  a| 
 在此工作流中使用默认语言设置。
  a| 
@@ -85,7 +85,7 @@ summary: 通过 NFS 配置工作表，您可以收集为客户端设置 NFS 访�
 
 
  a| 
-`IP 空间`
+`ipspace`
  a| 
 IP 空间是 Storage Virtual Machine （ SVM ）所在的不同 IP 地址空间。
  a| 
@@ -93,7 +93,7 @@ IP 空间是 Storage Virtual Machine （ SVM ）所在的不同 IP 地址空间�
 |===
 * 用于创建 NFS 服务器的参数 *
 
-在创建新 NFS 服务器并指定支持的 NFS 版本时，您可以在 `vserver nfs create` 命令中提供这些值。
+您可以在中提供这些值 `vserver nfs create` 命令。
 
 如果要启用 NFSv4 或更高版本，则应使用 LDAP 来提高安全性。
 
@@ -104,18 +104,18 @@ IP 空间是 Storage Virtual Machine （ SVM ）所在的不同 IP 地址空间�
 
 
  a| 
-` -v3` ， ` -v4.0` ， ` -v4.1` ， ` -v4.1-pNFS`
+`-v3`， `-v4.0`， `-v4.1`， `-v4.1-pnfs`
  a| 
 根据需要启用 NFS 版本。
 
 
-NOTE: 启用`v4.1`后、ONTAP 9.8及更高版本也支持v4.2。
+NOTE: ONTAP 9.8及更高版本也支持v4.2 `v4.1` 已启用。
  a| 
 
 
 
  a| 
-` -v4-id-domain`
+`-v4-id-domain`
  a| 
 ID 映射域名。
  a| 
@@ -123,7 +123,7 @@ ID 映射域名。
 
 
  a| 
-` -v4-numeric-ids`
+`-v4-numeric-ids`
  a| 
 支持数字所有者 ID （已启用或已禁用）。
  a| 
@@ -131,7 +131,7 @@ ID 映射域名。
 |===
 * 用于创建 LIF* 的参数
 
-在创建 LIF 时，您可以使用 `network interface create` 命令提供这些值。
+您可以在中提供这些值 `network interface create` 命令。
 
 如果您使用的是 Kerberos ，则应在多个 LIF 上启用 Kerberos 。
 
@@ -142,7 +142,7 @@ ID 映射域名。
 
 
  a| 
-` - lif`
+`-lif`
  a| 
 为新 LIF 提供的名称。
  a| 
@@ -150,7 +150,7 @@ ID 映射域名。
 
 
  a| 
-` - 角色`
+`-role`
  a| 
 在此工作流中使用数据 LIF 角色。
  a| 
@@ -159,32 +159,32 @@ ID 映射域名。
 
 
  a| 
-` 数据协议`
+`-data-protocol`
  a| 
 在此工作流中仅使用 NFS 协议。
  a| 
-`NFS`
+`nfs`
 
 
 
  a| 
-` 主节点`
+`-home-node`
  a| 
-在 LIF 上运行 `network interface revert` 命令时， LIF 返回到的节点。
- a| 
-
-
-
- a| 
-` 主端口`
- a| 
-在 LIF 上运行 `network interface revert` 命令时， LIF 返回到的端口或接口组。
+LIF返回到的节点 `network interface revert` 命令将在LIF上运行。
  a| 
 
 
 
  a| 
-` 地址`
+`-home-port`
+ a| 
+LIF返回到的端口或接口组 `network interface revert` 命令将在LIF上运行。
+ a| 
+
+
+
+ a| 
+`-address`
  a| 
 集群上要由新 LIF 用于数据访问的 IPv4 或 IPv6 地址。
  a| 
@@ -192,7 +192,7 @@ ID 映射域名。
 
 
  a| 
-` 网络掩码`
+`-netmask`
  a| 
 LIF 的网络掩码和网关。
  a| 
@@ -200,15 +200,15 @@ LIF 的网络掩码和网关。
 
 
  a| 
-` 子网`
+`-subnet`
  a| 
-IP 地址池。用于代替 ` 地址` 和 ` 网络掩码` 自动分配地址和网络掩码。
+IP 地址池。已使用、而不是 `-address` 和 `-netmask` 自动分配地址和网络掩码。
  a| 
 
 
 
  a| 
-` 防火墙策略`
+`-firewall-policy`
  a| 
 在此工作流中使用默认数据防火墙策略。
  a| 
@@ -217,7 +217,7 @@ IP 地址池。用于代替 ` 地址` 和 ` 网络掩码` 自动分配地址和�
 |===
 * 用于 DNS 主机名解析的参数 *
 
-在配置 DNS 时，您可以使用 `vserver services name-service dns create` 命令提供这些值。
+您可以在中提供这些值 `vserver services name-service dns create` 命令。
 
 |===
 
@@ -226,7 +226,7 @@ IP 地址池。用于代替 ` 地址` 和 ` 网络掩码` 自动分配地址和�
 
 
  a| 
-` 域`
+`-domains`
  a| 
 最多五个 DNS 域名。
  a| 
@@ -234,7 +234,7 @@ IP 地址池。用于代替 ` 地址` 和 ` 网络掩码` 自动分配地址和�
 
 
  a| 
-` 名称服务器`
+`-name-servers`
  a| 
 每个 DNS 名称服务器最多三个 IP 地址。
  a| 
@@ -246,12 +246,12 @@ IP 地址池。用于代替 ` 地址` 和 ` 网络掩码` 自动分配地址和�
 
 * 用于创建本地用户的参数 *
 
-如果要创建本地用户，请使用 `vserver services name-service unix-user create` 命令提供这些值。如果要通过从统一资源标识符（ Uniform Resource Identifier ， URI ）加载包含 UNIX 用户的文件来配置本地用户，则无需手动指定这些值。
+如果要创建本地用户、请使用提供以下值 `vserver services name-service unix-user create` 命令：如果要通过从统一资源标识符（ Uniform Resource Identifier ， URI ）加载包含 UNIX 用户的文件来配置本地用户，则无需手动指定这些值。
 
 |===
 
 
-|  | 用户名 ` （ -user ）` | 用户 ID ` （ -id ）` | 组 ID ` （ -primary-gid ）` | 全名 ` （ -full-name ）` 
+|  | 用户名 `(-user)` | 用户 ID `(-id)` | 组 ID `(-primary-gid)` | 全名 `(-full-name)` 
 
 
  a| 
@@ -313,12 +313,12 @@ John Miller
 |===
 * 用于创建本地组的参数 *
 
-如果要创建本地组，请使用 `vserver services name-service unix-group create` 命令提供这些值。如果要通过从 URI 加载包含 UNIX 组的文件来配置本地组，则无需手动指定这些值。
+如果要创建本地组、请使用提供以下值 `vserver services name-service unix-group create` 命令：如果要通过从 URI 加载包含 UNIX 组的文件来配置本地组，则无需手动指定这些值。
 
 |===
 
 
-|  | 组名称（` -name` ） | 组 ID （` -id` ） 
+|  | 组名称 (`-name`） | 组 ID (`-id`） 
 
 
  a| 
@@ -366,11 +366,11 @@ John Miller
 |===
 * 用于 NIS* 的参数
 
-您可以使用 `vserver services name-service nis-domain create` 命令提供这些值。
+您可以在中提供这些值 `vserver services name-service nis-domain create` 命令：
 
 [NOTE]
 ====
-从 ONTAP 9.2 开始，字段 ` -nis-servers` 将取代字段 ` -servers` 。此新字段可以使用 NIS 服务器的主机名或 IP 地址。
+从ONTAP 9.2开始、此字段为 `-nis-servers` 替换字段 `-servers`。此新字段可以使用NIS服务器的主机名或IP地址。
 
 ====
 |===
@@ -380,7 +380,7 @@ John Miller
 
 
  a| 
-` 域`
+`-domain`
  a| 
 SVM 将用于名称查找的 NIS 域。
  a| 
@@ -388,7 +388,7 @@ SVM 将用于名称查找的 NIS 域。
 
 
  a| 
-` - 主动`
+`-active`
  a| 
 活动的 NIS 域服务器。
  a| 
@@ -397,7 +397,7 @@ SVM 将用于名称查找的 NIS 域。
 
 
  a| 
-` 服务器`
+`-servers`
  a| 
 ONTAP 9.0 和 9.1 ： NIS 域配置使用的一个或多个 NIS 服务器 IP 地址。
  a| 
@@ -405,7 +405,7 @@ ONTAP 9.0 和 9.1 ： NIS 域配置使用的一个或多个 NIS 服务器 IP 地
 
 
  a| 
-` nis-servers`
+`-nis-servers`
  a| 
 ONTAP 9.2 ：域配置所使用的 NIS 服务器的 IP 地址和主机名列表，以英文逗号分隔。
  a| 
@@ -413,13 +413,13 @@ ONTAP 9.2 ：域配置所使用的 NIS 服务器的 IP 地址和主机名列表�
 |===
 LDAP 的 * 参数 *
 
-您可以在 `vserver services name-service ldap client create` 命令中提供这些值。
+您可以在中提供这些值 `vserver services name-service ldap client create` 命令：
 
-您还需要一个自签名根 CA 证书 ` .pem` 文件。
+您还需要自签名根CA证书 `.pem` 文件
 
 [NOTE]
 ====
-从 ONTAP 9.2 开始，字段 ` -ldap-servers` 将取代字段 ` -servers` 。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
+从ONTAP 9.2开始、此字段为 `-ldap-servers` 替换字段 `-servers`。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
 
 ====
 |===
@@ -427,7 +427,7 @@ LDAP 的 * 参数 *
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要为其创建 LDAP 客户端配置的 SVM 的名称。
  a| 
@@ -435,7 +435,7 @@ LDAP 的 * 参数 *
 
 
  a| 
-` 客户端配置`
+`-client-config`
  a| 
 为新 LDAP 客户端配置分配的名称。
  a| 
@@ -443,7 +443,7 @@ LDAP 的 * 参数 *
 
 
  a| 
-` 服务器`
+`-servers`
  a| 
 ONTAP 9.0 和 9.1 ：一个或多个 LDAP 服务器，按 IP 地址列出，以逗号分隔。
  a| 
@@ -451,7 +451,7 @@ ONTAP 9.0 和 9.1 ：一个或多个 LDAP 服务器，按 IP 地址列出，以�
 
 
  a| 
-` LDAP 服务器`
+`-ldap-servers`
  a| 
 ONTAP 9.2 ： LDAP 服务器的 IP 地址和主机名列表，以英文逗号分隔。
  a| 
@@ -459,24 +459,24 @@ ONTAP 9.2 ： LDAP 服务器的 IP 地址和主机名列表，以英文逗号分
 
 
  a| 
-` 查询超时`
+`-query-timeout`
  a| 
-对此工作流使用默认 `3` 秒。
+使用默认值 `3` 秒。
  a| 
 `3`
 
 
 
  a| 
-` -min-bind-level`
+`-min-bind-level`
  a| 
-最小绑定身份验证级别。默认值为 `anonymous` 。如果配置了签名和密封，则必须将设置为 `sAsl` 。
+最小绑定身份验证级别。默认值为 `anonymous`。必须设置为 `sasl` 如果配置了签名和签章。
  a| 
 
 
 
  a| 
-` 首选 AD 服务器`
+`-preferred-ad-servers`
  a| 
 一个或多个首选 Active Directory 服务器，按 IP 地址列出，以逗号分隔。
  a| 
@@ -484,7 +484,7 @@ ONTAP 9.2 ： LDAP 服务器的 IP 地址和主机名列表，以英文逗号分
 
 
  a| 
-` -ad-domain`
+`-ad-domain`
  a| 
 Active Directory 域。
  a| 
@@ -492,7 +492,7 @@ Active Directory 域。
 
 
  a| 
-` 架构`
+`-schema`
  a| 
 要使用的模式模板。您可以使用默认模式或自定义模式。
  a| 
@@ -500,16 +500,16 @@ Active Directory 域。
 
 
  a| 
-` 端口`
+`-port`
  a| 
-在此工作流中使用默认 LDAP 服务器端口 `389` 。
+使用默认LDAP服务器端口 `389` 。
  a| 
 `389`
 
 
 
  a| 
-` 绑定 DN`
+`-bind-dn`
  a| 
 绑定用户可分辨名称。
  a| 
@@ -517,40 +517,40 @@ Active Directory 域。
 
 
  a| 
-` 基础 DN`
+`-base-dn`
  a| 
-基本可分辨名称。默认值为 ` ""` （ root ）。
- a| 
-
-
-
- a| 
-` 基础范围`
- a| 
-对此工作流使用默认基础搜索范围 `ssubnet` 。
- a| 
-`ssubnet`
-
-
-
- a| 
-` 会话安全性`
- a| 
-启用 LDAP 签名或签名和签章。默认值为 `none` 。
+基本可分辨名称。默认值为 `""` (root)。
  a| 
 
 
 
  a| 
-` -use-start-tls`
+`-base-scope`
  a| 
-启用基于 TLS 的 LDAP 。默认值为 `false` 。
+使用默认的基本搜索范围 `subnet` 。
+ a| 
+`subnet`
+
+
+
+ a| 
+`-session-security`
+ a| 
+启用 LDAP 签名或签名和签章。默认值为 `none`。
+ a| 
+
+
+
+ a| 
+`-use-start-tls`
+ a| 
+启用基于 TLS 的 LDAP 。默认值为 `false`。
  a| 
 
 |===
 * 用于 Kerberos 身份验证的参数 *
 
-您可以在 `vserver nfs kerberos realm create` 命令中提供这些值。根据您使用 Microsoft Active Directory 作为密钥分发中心（ Key Distribution Center ， KDC ）服务器，还是使用 MIT 或其他 UNIX KDC 服务器，某些值会有所不同。
+您可以在中提供这些值 `vserver nfs kerberos realm create` 命令：根据您使用 Microsoft Active Directory 作为密钥分发中心（ Key Distribution Center ， KDC ）服务器，还是使用 MIT 或其他 UNIX KDC 服务器，某些值会有所不同。
 
 |===
 
@@ -559,7 +559,7 @@ Active Directory 域。
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要与 KDC 通信的 SVM 。
  a| 
@@ -567,7 +567,7 @@ Active Directory 域。
 
 
  a| 
-` 域`
+`-realm`
  a| 
 Kerberos 域。
  a| 
@@ -575,7 +575,7 @@ Kerberos 域。
 
 
  a| 
-` 时钟偏差`
+`-clock-skew`
  a| 
 客户端和服务器之间允许的时钟偏差。
  a| 
@@ -583,7 +583,7 @@ Kerberos 域。
 
 
  a| 
-` -kD-IP`
+`-kdc-ip`
  a| 
 KDC IP 地址。
  a| 
@@ -591,7 +591,7 @@ KDC IP 地址。
 
 
  a| 
-` -kdc 端口`
+`-kdc-port`
  a| 
 KDC 端口号。
  a| 
@@ -599,7 +599,7 @@ KDC 端口号。
 
 
  a| 
-` -AdServer-name`
+`-adserver-name`
  a| 
 仅限 Microsoft KDC ： AD 服务器名称。
  a| 
@@ -607,7 +607,7 @@ KDC 端口号。
 
 
  a| 
-` -AdServer-IP`
+`-adserver-ip`
  a| 
 仅限 Microsoft KDC ： AD 服务器 IP 地址。
  a| 
@@ -615,7 +615,7 @@ KDC 端口号。
 
 
  a| 
-` -adminserver-IP`
+`-adminserver-ip`
  a| 
 仅限 UNIX KDC ：管理服务器 IP 地址。
  a| 
@@ -623,7 +623,7 @@ KDC 端口号。
 
 
  a| 
-` 管理服务器端口`
+`-adminserver-port`
  a| 
 仅限 UNIX KDC ：管理服务器端口号。
  a| 
@@ -631,7 +631,7 @@ KDC 端口号。
 
 
  a| 
-` 密码服务器 -IP`
+`-passwordserver-ip`
  a| 
 仅限 UNIX KDC ：密码服务器 IP 地址。
  a| 
@@ -639,7 +639,7 @@ KDC 端口号。
 
 
  a| 
-` 密码服务器端口`
+`-passwordserver-port`
  a| 
 仅限 UNIX KDC ：密码服务器端口。
  a| 
@@ -647,22 +647,22 @@ KDC 端口号。
 
 
  a| 
-` -kdc 供应商`
+`-kdc-vendor`
  a| 
 KDC 供应商。
  a| 
-｛ `Microsoft` | `其他` ｝
+｛ `Microsoft` 我们可以为您提供 `Other` ｝
 
 
 
  a| 
-` 注释`
+`-comment`
  a| 
 任何所需注释。
  a| 
 
 |===
-您可以在 `vserver nfs kerberos interface enable` 命令中提供这些值。
+您可以在中提供这些值 `vserver nfs kerberos interface enable` 命令：
 
 |===
 
@@ -671,7 +671,7 @@ KDC 供应商。
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要为其创建 Kerberos 配置的 SVM 的名称。
  a| 
@@ -679,7 +679,7 @@ KDC 供应商。
 
 
  a| 
-` - lif`
+`-lif`
  a| 
 要启用 Kerberos 的数据 LIF 。您可以在多个 LIF 上启用 Kerberos 。
  a| 
@@ -687,7 +687,7 @@ KDC 供应商。
 
 
  a| 
-` -SPN`
+`-spn`
  a| 
 服务主体名称（ SPN ）
  a| 
@@ -695,15 +695,15 @@ KDC 供应商。
 
 
  a| 
-` 允许的类型`
+`-permitted-enc-types`
  a| 
-基于 NFS 的 Kerberos 允许的加密类型； `AES-256` ，具体取决于客户端功能。
+基于NFS的Kerberos允许的加密类型； `aes-256` 建议使用、具体取决于客户端功能。
  a| 
 
 
 
  a| 
-` 管理员用户名`
+`-admin-username`
  a| 
 用于直接从 KDC 检索 SPN 机密密钥的 KDC 管理员凭据。密码为必填项
  a| 
@@ -711,7 +711,7 @@ KDC 供应商。
 
 
  a| 
-` -keytab-uri`
+`-keytab-uri`
  a| 
 如果您没有 KDC 管理员凭据，则为 KDC 中包含 SPN 密钥的 keytab 文件。
  a| 
@@ -719,7 +719,7 @@ KDC 供应商。
 
 
  a| 
-` -ou`
+`-ou`
  a| 
 使用域为 Microsoft KDC 启用 Kerberos 时，要在其中创建 Microsoft Active Directory 服务器帐户的组织单位（ OU ）。
  a| 
@@ -731,7 +731,7 @@ KDC 供应商。
 
 * 用于创建导出策略和规则的参数 *
 
-您可以在 `vserver export-policy create` 命令中提供这些值。
+您可以在中提供这些值 `vserver export-policy create` 命令：
 
 |===
 
@@ -740,7 +740,7 @@ KDC 供应商。
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要托管新卷的 SVM 的名称。
  a| 
@@ -748,13 +748,13 @@ KDC 供应商。
 
 
  a| 
-` 策略名称`
+`-policyname`
  a| 
 为新导出策略提供的名称。
  a| 
 
 |===
-您可以使用 `vserver export-policy rule create` 命令为每个规则提供这些值。
+您可以使用为每个规则提供以下值 `vserver export-policy rule create` 命令：
 
 |===
 
@@ -763,7 +763,7 @@ KDC 供应商。
 
 
  a| 
-` - 客户端匹配`
+`-clientmatch`
  a| 
 客户端匹配规范。
  a| 
@@ -771,7 +771,7 @@ KDC 供应商。
 
 
  a| 
-` 规则索引`
+`-ruleindex`
  a| 
 导出规则在规则列表中的位置。
  a| 
@@ -779,16 +779,16 @@ KDC 供应商。
 
 
  a| 
-` 协议`
+`-protocol`
  a| 
 在此工作流中使用 NFS 。
  a| 
-`NFS`
+`nfs`
 
 
 
  a| 
-`` - rorule
+`-rorule`
  a| 
 只读访问的身份验证方法。
  a| 
@@ -796,7 +796,7 @@ KDC 供应商。
 
 
  a| 
-` rwrule`
+`-rwrule`
  a| 
 读写访问的身份验证方法。
  a| 
@@ -804,7 +804,7 @@ KDC 供应商。
 
 
  a| 
-` 超级用户`
+`-superuser`
  a| 
 用于超级用户访问的身份验证方法。
  a| 
@@ -812,7 +812,7 @@ KDC 供应商。
 
 
  a| 
-` - anon`
+`-anon`
  a| 
 匿名用户映射到的用户 ID 。
  a| 
@@ -823,7 +823,7 @@ KDC 供应商。
 |===
 
 
-| ` * —规则索引 *` | ` * - 客户端匹配 *` | ` * — rorule*` | ` * -rwrule*` | ` * - 超级用户 *` | ` * - anon*` 
+| `*-ruleindex*` | `*-clientmatch*` | `*-rorule*` | `*-rwrule*` | `*-superuser*` | `*-anon*` 
 
 
  a| 
@@ -833,11 +833,11 @@ KDC 供应商。
  a| 
 任意
  a| 
-krb5
+krb5.
  a| 
 系统
  a| 
-65534
+6554
 
 
 
@@ -892,7 +892,7 @@ krb5
 |===
 用于创建卷的 * 参数 *
 
-如果要创建卷而不是 qtree ，则可以在 `volume create` 命令中提供这些值。
+您可以在中提供这些值 `volume create` 命令。
 
 |===
 
@@ -901,7 +901,7 @@ krb5
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要托管新卷的新 SVM 或现有 SVM 的名称。
  a| 
@@ -909,7 +909,7 @@ krb5
 
 
  a| 
-` 卷`
+`-volume`
  a| 
 为新卷提供的唯一描述性名称。
  a| 
@@ -917,7 +917,7 @@ krb5
 
 
  a| 
-` 聚合`
+`-aggregate`
  a| 
 集群中具有足够空间来容纳新 NFS 卷的聚合的名称。
  a| 
@@ -925,7 +925,7 @@ krb5
 
 
  a| 
-` 大小`
+`-size`
  a| 
 为新卷的大小提供的整数。
  a| 
@@ -933,7 +933,7 @@ krb5
 
 
  a| 
-` 用户`
+`-user`
  a| 
 设置为卷根所有者的用户的名称或 ID 。
  a| 
@@ -941,7 +941,7 @@ krb5
 
 
  a| 
-` 组`
+`-group`
  a| 
 设置为卷根所有者的组的名称或 ID 。
  a| 
@@ -949,16 +949,16 @@ krb5
 
 
  a| 
-` 安全模式`
+`--security-style`
  a| 
 对此工作流使用 UNIX 安全模式。
  a| 
-`UNIX`
+`unix`
 
 
 
  a| 
-` 接合路径`
+`-junction-path`
  a| 
 根（ / ）下要挂载新卷的位置。
  a| 
@@ -966,7 +966,7 @@ krb5
 
 
  a| 
-` - 导出 - 策略`
+`-export-policy`
  a| 
 如果您计划使用现有导出策略，则可以在创建卷时输入其名称。
  a| 
@@ -974,7 +974,7 @@ krb5
 |===
 用于创建 qtree* 的 * 参数
 
-如果要创建 qtree 而不是卷，则可以在 `volume qtree create` 命令中提供这些值。
+您可以在中提供这些值 `volume qtree create` 命令。
 
 |===
 
@@ -983,7 +983,7 @@ krb5
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 包含 qtree 的卷所在 SVM 的名称。
  a| 
@@ -991,7 +991,7 @@ krb5
 
 
  a| 
-` 卷`
+`-volume`
  a| 
 要包含新 qtree 的卷的名称。
  a| 
@@ -999,7 +999,7 @@ krb5
 
 
  a| 
-` qtree`
+`-qtree`
  a| 
 为新 qtree 提供的唯一描述性名称，不超过 64 个字符。
  a| 
@@ -1007,15 +1007,15 @@ krb5
 
 
  a| 
-` qtree-path`
+`-qtree-path`
  a| 
-可以指定格式为 ` /vol/_volume_name/qtree_name_\>` 的 qtree 路径参数，而不是将卷和 qtree 指定为单独的参数。
+格式的qtree路径参数 `/vol/_volume_name/qtree_name_\>` 可以指定、而不是将卷和qtree指定为单独的参数。
  a| 
 
 
 
  a| 
-` -unix-permissions`
+`-unix-permissions`
  a| 
 可选： qtree 的 UNIX 权限。
  a| 
@@ -1023,7 +1023,7 @@ krb5
 
 
  a| 
-` - 导出 - 策略`
+`-export-policy`
  a| 
 如果您计划使用现有导出策略，则可以在创建 qtree 时输入其名称。
  a| 

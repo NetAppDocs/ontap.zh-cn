@@ -22,7 +22,7 @@ summary: 您可以在专用端口上配置集群间 LIF 。这样做通常会增
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例显示了 `cluster01` 中的网络端口：
+以下示例显示了中的网络端口 `cluster01`：
 
 +
 [listing]
@@ -49,13 +49,13 @@ cluster01-02
 ----
 . 确定哪些端口可专用于集群间通信：
 +
-`network interface show -fields home-port ， curr-port`
+`network interface show -fields home-port,curr-port`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例显示未为端口 `e0e` 和 `e0f` 分配 LIF ：
+以下示例显示了这些端口 `e0e` 和 `e0f` 尚未分配的生命周期：
 
 +
 [listing]
@@ -77,10 +77,10 @@ cluster01
 ----
 . 为专用端口创建故障转移组：
 +
-`network interface failover-groups create -vserver _system_svm_ -failover-group _failover_group_ -targets _physical_or_logical_ports_`
+`network interface failover-groups create -vserver _system_SVM_ -failover-group _failover_group_ -targets _physical _or_logical_ports_`
 
 +
-以下示例将端口 `e0e` 和 `e0f` 分配给系统 SVM `cluster01` 上的故障转移组 `intercluster01` ：
+以下示例将分配端口 `e0e` 和 `e0f` 故障转移组 `intercluster01` 在系统SVM上 `cluster01`：
 
 +
 [listing]
@@ -126,21 +126,21 @@ cluster01
  a| 
 * 在 ONTAP 9.6 及更高版本中： *
  a| 
-`network interface create -vserver _system_svm_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_-home-port _port_ -address _port_ip_ -netmask _netmask_ -failover-group _failover_group_`
+`network interface create -vserver _system_SVM_ -lif _LIF_name_ -service-policy default-intercluster -home-node _node_ -home- port _port_ -address _port_IP_ -netmask _netmask_ -failover-group _failover_group_`
 
 
 
  a| 
 * 在 ONTAP 9.5 及更早版本中： *
  a| 
-`network interface create -vserver _system_svm_ -lif _LIF_name_ -role intercluster -home-node _node_-home-port _port_ -address _port_ip_ -netmask _netmask_ -failover-group _failover_group_`
+`network interface create -vserver _system_SVM_ -lif _LIF_name_ -role intercluster -home-node _node_ -home-port _port_ -address _port_IP_ -netmask _netmask_ -failover-group _failover_group_`
 
 |===
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将在故障转移组 `intercluster01` 中创建集群间 LIF `cluster01_icl01` 和 `cluster01_icl02` ：
+以下示例将创建集群间生命周期 `cluster01_icl01` 和 `cluster01_icl02` 在故障转移组中 `intercluster01`：
 
 +
 [listing]
@@ -211,7 +211,7 @@ cluster01
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例显示 SVM``e0e`` 端口上的集群间 LIF `cluster01_icl01` 和 `cluster01_icl02` 将故障转移到 `e0f` 端口。
+以下示例显示了集群间的生命周期 `cluster01_icl01` 和 `cluster01_icl02` 在SVM上``e0e`` 端口将故障转移到 `e0f` 端口。
 
 +
 [listing]

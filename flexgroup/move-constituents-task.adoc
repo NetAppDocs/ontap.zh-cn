@@ -73,12 +73,12 @@ Validation succeeded.
 卷移动操作将作为后台进程运行。
 
 +
-从 ONTAP 9.5 开始，您可以将 FlexGroup 卷成分卷从网络结构池移动到非网络结构池，反之亦然，方法是将 ` -allow-mixed-aggr-types` 参数设置为 `true` 。默认情况下， ` -allow-mixed-aggr-types` 选项设置为 `false` 。
+从ONTAP 9.5开始、您可以通过设置将FlexGroup卷成分卷从Fabric Pool移动到非Fabric Pool、反之亦然 `-allow-mixed-aggr-types` 参数设置为 `true`。默认情况下、 `-allow-mixed-aggr-types` 选项设置为 `false`。
 
 +
 [NOTE]
 ====
-您不能使用 `volume move` 命令在 FlexGroup 卷上启用加密。
+您不能使用 `volume move` 用于在FlexGroup卷上启用加密的命令。
 
 ====
 +
@@ -89,7 +89,7 @@ cluster1::> volume move start -vserver vs2 -volume fg1_002 -destination-aggregat
 +
 [NOTE]
 ====
-如果卷移动操作因活动的 SnapMirror 操作而失败，则应使用 `snapmirror abort -h` 命令中止 SnapMirror 操作。在某些情况下， SnapMirror 中止操作也可能失败。在这种情况下，您应中止卷移动操作并稍后重试。
+如果卷移动操作因活动的SnapMirror操作而失败、则应使用中止SnapMirror操作 `snapmirror abort -h` 命令：     在某些情况下， SnapMirror 中止操作也可能失败。在这种情况下，您应中止卷移动操作并稍后重试。
 
 ====
 . 验证卷移动操作的状态：

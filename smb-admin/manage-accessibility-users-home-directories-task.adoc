@@ -23,21 +23,21 @@ Storage Virtual Machine （ SVM ）上的主目录共享必须使用前面带有
  a| 
 ｛ tiLde ｝ %d ｛ tiLde ｝ %w
  a| 
-`net use * ｛ c反 斜杠 ｝ ｛ c反 斜杠 ｝ IP 地址 ｛ c反 斜杠 ｝ ｛ tide ｝ 域 ｛ tide ｝ 用户 /u ：凭据`
+`net use * {backslash}{backslash}IPaddress{backslash}{tilde}domain{tilde}user/u:credentials`
 
 
 
  a| 
 ｛ tiLde ｝ %w
  a| 
-`net use * ｛ c反 斜杠 ｝ ｛ c反 斜杠 ｝ IP 地址 ｛ c反 斜杠 ｝ ｛ tide ｝ user/u ： credentials`
+`net use * {backslash}{backslash}IPaddress{backslash}{tilde}user/u:credentials`
 
 
 
  a| 
 ｛ tide ｝ abc ｛ tide ｝ %w
  a| 
-`net use * ｛ c反 斜杠 ｝ ｛ cabalern ｝ IP 地址 ｛ cabalern ｝ abc ｛ tide ｝ user_u ： credentials`
+`net use * {backslash}{backslash}IPaddress{backslash}abc{tilde}user/u:credentials`
 
 |===
 .步骤
@@ -47,19 +47,26 @@ Storage Virtual Machine （ SVM ）上的主目录共享必须使用前面带有
 | 如果要启用或禁用对用户主目录的访问 ... | 输入以下内容 ... 
 
 
-| Windows 管理员 | `vserver cifs home-directory modify -vserver _vserver_name_ -is-home-dirs-access-for-admin-enabled ｛ true ｛ vbar ｝ false ｝` 默认值为 `true` 。 
+| Windows 管理员 | `vserver cifs home-directory modify -vserver _vserver_name_ -is-home-dirs-access-for-admin-enabled {true{vbar}false}`
+默认值为 `true`。 
 
 
 | 任何用户（公有访问）  a| 
-.. 将权限级别设置为 advanced ： + `set -privilege advanced`
-.. 启用或禁用访问： `vserver cifs home-directory modify -vserver _vserver_name_ -is-home-dirs-access-for-public-enabled ｛ true_false ｝` + 默认值为 `false` 。
-.. 返回到管理权限级别： + `set -privilege admin`
+.. 将权限级别设置为高级：+
+`set -privilege advanced`
+.. 启用或禁用访问： `vserver cifs home-directory modify -vserver _vserver_name_ -is-home-dirs-access-for-public-enabled {true|false}` +
+默认值为 `false`。
+.. 返回到管理权限级别：+
+`set -privilege admin`
 
 
 |===
 
 
-以下示例允许公有访问用户的主目录： + `set -privilege advanced` + `vserver cifs home-directory modify -vserver vs1 -is-home-dirs-access-for-public-enabled true` + `set -privilege admin`
+以下示例将启用对用户主目录的公共访问：+
+`set -privilege advanced` +
+`vserver cifs home-directory modify -vserver vs1 -is-home-dirs-access-for-public-enabled true` +
+`set -privilege admin`
 
 .相关信息
 xref:display-user-home-directory-path-task.adoc[显示有关 SMB 用户主目录路径的信息]

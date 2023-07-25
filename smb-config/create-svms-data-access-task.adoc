@@ -2,7 +2,7 @@
 permalink: smb-config/create-svms-data-access-task.html 
 sidebar: sidebar 
 keywords: svm, cluster, data, access, smb, client, create, create an svm 
-summary: 如果集群中尚未至少有一个 SVM 来为 SMB 客户端提供数据访问，则必须创建一个 SVM 。 
+summary: 如果集群中还没有至少一个SVM来为SMB客户端提供数据访问、则必须创建一个SVM。 
 ---
 = 创建 SVM ：
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 如果集群中尚未至少有一个 SVM 来为 SMB 客户端提供数�
 
 
 [role="lead"]
-如果集群中尚未至少有一个 SVM 来为 SMB 客户端提供数据访问，则必须创建一个 SVM 。
+如果集群中还没有至少一个SVM来为SMB客户端提供数据访问、则必须创建一个SVM。
 
 .开始之前
 * 从ONTAP 9.13.1开始、您可以为Storage VM设置最大容量。您还可以在SVM接近阈值容量级别时配置警报。有关详细信息，请参见 xref:../system-admin/manage-svm-capacity.html[管理SVM容量]。
@@ -20,17 +20,17 @@ summary: 如果集群中尚未至少有一个 SVM 来为 SMB 客户端提供数�
 .步骤
 . 创建 SVM ： `vserver create -vserver _svm_name_ -rootvolume _root_volume_name_ -aggregate _aggregate_name_ -rootvolume-security-style ntfs -language C.UTF-8 -ipspace _ipspace_name_`
 +
-** 对 ` -rootvolume-security-style` 选项使用 NTFS 设置。
-** 使用默认 C.UTF-8 ` -language` 选项。
-** `IPSpace` 设置为可选设置。
+** 对使用NTFS设置 `-rootvolume-security-style` 选项
+** 使用默认C.UTF-8 `-language` 选项
+** 。 `ipspace` 设置是可选的。
 
 
 . 验证新创建的 SVM 的配置和状态： `vserver show -vserver _vserver_name_`
 +
-`允许的协议` 字段必须包含 CIFS 。您可以稍后编辑此列表。
+。 `Allowed Protocols` 字段必须包含CIFS。您可以稍后编辑此列表。
 
 +
-`vserver Operational State` 字段必须显示 `running` state 。如果显示 `initializing` 状态，则表示某些中间操作（例如创建根卷）失败，您必须删除 SVM 并重新创建它。
+。 `Vserver Operational State` 字段必须显示 `running` 状态。如果显示 `initializing` 状态、表示某些中间操作(如创建根卷)失败、您必须删除SVM并重新创建它。
 
 
 
@@ -45,7 +45,7 @@ cluster1::> vserver create -vserver vs1.example.com -rootvolume root_vs1 -aggreg
 [Job 2059] Job succeeded:
 Vserver creation completed
 ----
-以下命令显示创建的 SVM 的根卷为 1 GB ，并且已自动启动且处于 `running` 状态。根卷具有一个默认导出策略，该策略不包含任何规则，因此根卷在创建时不会导出。
+以下命令显示已创建根卷为1 GB的SVM、并且此SVM已自动启动并位于中 `running` 状态。根卷具有一个默认导出策略，该策略不包含任何规则，因此根卷在创建时不会导出。
 
 [listing]
 ----

@@ -23,7 +23,7 @@ summary: '在将现有本地层(聚合)转换为Flash Pool本地层之前、您�
 
 . 如果您需要确定现有本地层(聚合)是否适合转换为Flash Pool聚合、请确定聚合中的磁盘在高峰负载期间的繁忙程度、以及这对延迟的影响：
 +
-`satictics show-periodic -object disk ： raid_group -instance _raid_group_name_ -counter disk_busium_user_read_latency -interval 1 -迭 代 60`
+`statistics show-periodic -object disk:raid_group -instance _raid_group_name_ -counter disk_busy|user_read_latency -interval 1 -iterations 60`
 
 +
 您可以确定通过添加 Flash Pool 缓存来减少延迟对于此聚合是否有意义。
@@ -32,7 +32,7 @@ summary: '在将现有本地层(聚合)转换为Flash Pool本地层之前、您�
 以下命令显示聚合 "`aggr1` " 中第一个 RAID 组的统计信息：
 
 +
-`satictics show-periodic -object disk ： raid_group -instance /aggr1/plex0/rg0 -counter disk_busy ； user_read_latency -interval 1 -xiations 60`
+`statistics show-periodic -object disk:raid_group -instance /aggr1/plex0/rg0 -counter disk_busy|user_read_latency -interval 1 -iterations 60`
 
 . 启动自动化工作负载分析器（ AWA ）：
 +
@@ -54,9 +54,9 @@ AWA 将开始收集与指定聚合关联的卷的工作负载数据。
 
 . 显示工作负载分析：
 +
-`storage automated-working-set-analyzer show -node _node_name_-instance`
+`storage automated-working-set-analyzer show -node _node_name_ -instance`
 
-. 停止 AWA ：
+. 停止AWA：
 +
 `storage automated-working-set-analyzer stop _node_name_`
 

@@ -11,15 +11,15 @@ summary: 从 ONTAP 9.7 开始， ONTAP 支持使用 keytab 文件对 Active Dire
 
 
 [role="lead"]
-从 ONTAP 9.7 开始， ONTAP 支持使用 keytab 文件对 Active Directory （ AD ）服务器进行 SVM 身份验证。AD 管理员会生成一个 keytab 文件，并将其作为统一资源标识符（ Uniform Resource Identifier ， URI ）提供给 ONTAP 管理员，当 `vserver cifs` 命令需要对 AD 域进行 Kerberos 身份验证时，会提供此文件。
+从 ONTAP 9.7 开始， ONTAP 支持使用 keytab 文件对 Active Directory （ AD ）服务器进行 SVM 身份验证。AD管理员生成一个keytab文件、并将其作为统一资源标识符(URI)提供给ONTAP管理员 `vserver cifs` 命令要求对AD域进行Kerberos身份验证。
 
-AD 管理员可以使用标准 Windows Server `ktpass` 命令创建 keytab 文件。此命令应在需要进行身份验证的主域上运行。只能使用 `ktpass` 命令为主域用户生成 keytab 文件；不支持使用受信任域用户生成的密钥。
+AD管理员可以使用标准Windows Server创建keytab文件 `ktpass` 命令：此命令应在需要进行身份验证的主域上运行。。 `ktpass` 命令只能用于为主域用户生成keytab文件；不支持使用受信任域用户生成的密钥。
 
 系统会为特定 ONTAP 管理员用户生成 keytab 文件。只要管理员用户的密码不更改，为特定加密类型和域生成的密钥就不会更改。因此，每当更改管理员用户的密码时，都需要一个新的 keytab 文件。
 
 支持以下加密类型：
 
-* AES256-SHA1
+* ES256-SHA1
 * DES-CBC-MD5
 +
 [NOTE]

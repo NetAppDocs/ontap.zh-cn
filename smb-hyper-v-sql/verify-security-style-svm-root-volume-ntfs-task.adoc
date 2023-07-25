@@ -15,21 +15,21 @@ summary: 要确保通过 SMB 成功执行 Hyper-V 和 SQL Server 无中断操作
 
 .关于此任务
 * 您可以在创建 SVM 时指定根卷的安全模式。
-* 如果创建 SVM 时根卷未设置为 NTFS 安全模式，则可以稍后使用 `volume modify` 命令更改安全模式。
+* 如果创建SVM时未将根卷设置为NTFS安全模式、则可以稍后使用更改安全模式 `volume modify` 命令：
 
 
 .步骤
 . 确定 SVM 根卷的当前安全模式：
 +
-` * volume show -vserver _vserver_name_ -fields vserver ， volume ， security-style*`
+`*volume show -vserver _vserver_name_ -fields vserver,volume,security-style*`
 
 . 如果根卷不是 NTFS 安全模式卷，请将安全模式更改为 NTFS ：
 +
-` * volume modify -vserver _vserver_name_ -volume root_volume_name -security-style ntf*`
+`*volume modify -vserver _vserver_name_ -volume root_volume_name -security-style ntfs*`
 
 . 验证 SVM 根卷是否设置为 NTFS 安全模式：
 +
-` * volume show -vserver _vserver_name_ -fields vserver ， volume ， security-style*`
+`*volume show -vserver _vserver_name_ -fields vserver,volume,security-style*`
 
 
 

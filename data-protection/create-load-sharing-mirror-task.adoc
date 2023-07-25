@@ -26,19 +26,19 @@ summary: 您应为集群中的每个根卷创建负载共享镜像（ LSM ）。
 .步骤
 . 为 LSM 创建目标卷：
 +
-`volume create -vserver _svm_ -volume volume -aggregate _aggregate_ -type DP -size`
+`volume create -vserver _SVM_ -volume volume -aggregate _aggregate_ -type DP -size size`
 
 +
 目标卷的大小应等于或大于根卷。
 
 +
-最佳做法是，使用后缀（例如 ` _root` 和 ` _m1` ）来命名根卷和目标卷。
+最佳做法是、为根卷和目标卷命名时使用后缀、例如 `_root` 和 `_m1`。
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将在 `cluster_src` 中为根卷 `svm1_root` 创建一个负载共享镜像卷：
+以下示例将为根卷创建负载共享镜像卷 `svm1_root` 在中 `cluster_src`：
 
 +
 [listing]
@@ -48,13 +48,13 @@ cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -siz
 . 创建复制作业计划，如中所述 link:create-replication-job-schedule-task.html["创建复制作业计划"]。
 . 在 SVM 根卷和 LSM 的目标卷之间创建负载共享镜像关系：
 +
-`snapmirror create -source-path _sVM ： volume___cluster ： //svm/volume_-destination-path _sVM ： volume___cluster ： //svm/volume_-type LS -schedule _schedule_`
+`snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _SVM:volume_|_cluster://SVM/volume_ -type LS -schedule _schedule_`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将在根卷 `svm1_root` 和负载共享镜像卷 `svm1_m1` 之间创建负载共享镜像关系：
+以下示例将在根卷之间创建负载共享镜像关系 `svm1_root` 和负载共享镜像卷 `svm1_m1`：
 
 +
 [listing]
@@ -62,11 +62,11 @@ cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -siz
 cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path svm1:svm1_m1 -type LS -schedule hourly
 ----
 +
-负载共享镜像的类型属性将从 `DP` 更改为 `LS` 。
+负载共享镜像的类型属性将从更改为 `DP` to `LS`。
 
 . 初始化负载共享镜像：
 +
-`snapmirror initialize-ls-set -source-path _svm ： volume_|_cluster ： //svm/volume_`
+`snapmirror initialize-ls-set -source-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
 初始化可能非常耗时。您可能希望在非高峰时段运行基线传输。
@@ -75,7 +75,7 @@ cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path s
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将初始化根卷 `svm1_root` 的负载共享镜像：
+以下示例将初始化根卷的负载共享镜像 `svm1_root`：
 
 +
 [listing]

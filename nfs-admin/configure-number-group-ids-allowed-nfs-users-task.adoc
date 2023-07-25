@@ -16,7 +16,7 @@ summary: 默认情况下，在使用 Kerberos \ （ RPCSEC_GSS ）身份验证�
 .关于此任务
 如果用户凭据中的组 ID 超过默认数量，则其余组 ID 将被截断，并且用户在尝试从存储系统访问文件时可能会收到错误。您应将每个 SVM 的最大组数设置为表示环境中最大组数的数字。
 
-下表显示了 `vserver nfs modify` 命令的两个参数，用于确定三种示例配置中的最大组 ID 数：
+下表显示了的两个参数 `vserver nfs modify` 用于确定三个示例配置中组ID最大数量的命令：
 
 [cols="40,30,30"]
 |===
@@ -26,13 +26,13 @@ summary: 默认情况下，在使用 Kerberos \ （ RPCSEC_GSS ）身份验证�
 
 
  a| 
-` 扩展组限制`
+`-extended-groups-limit`
 
-` -auth-sys-extended-groups`
+`-auth-sys-extended-groups`
  a| 
 `32`
 
-`d已标记`
+`disabled`
 
 这些是默认设置。
  a| 
@@ -43,32 +43,32 @@ AUTH_SYS ： 16
 
 
  a| 
-` 扩展组限制`
+`-extended-groups-limit`
 
-` -auth-sys-extended-groups`
+`-auth-sys-extended-groups`
  a| 
 `256`
 
-`d已标记`
+`disabled`
  a| 
-RPCSEC_GSS ： 256
+RPCSEC_GSS：256
 
 AUTH_SYS ： 16
 
 
 
  a| 
-` 扩展组限制`
+`-extended-groups-limit`
 
-` -auth-sys-extended-groups`
+`-auth-sys-extended-groups`
  a| 
 `512`
 
-`已启用`
+`enabled`
  a| 
-RPCSEC_GSS ： 512
+RPCSEC_GSS：512
 
-AUTH_SYS ： 512
+auth_SYS：512
 
 |===
 [NOTE]
@@ -92,17 +92,17 @@ AUTH_SYS ： 512
  a| 
 仅适用于 RPCSEC_GSS ，并保持 AUTH_SYS 设置为默认值 16
  a| 
-` +vserver nfs modify -vserver vserver_name -extended-groups-limit ｛ 32-1024 ｝ -auth-sys-extended-groups disabled+`
+`+vserver nfs modify -vserver vserver_name -extended-groups-limit {32-1024} -auth-sys-extended-groups disabled+`
 
 
 
  a| 
 适用于 RPCSEC_GSS 和 AUTH_SYS
  a| 
-` +vserver nfs modify -vserver vserver_name -extended-groups-limit ｛ 32-1024 ｝ -auth-sys-extended-groups enabled+`
+`+vserver nfs modify -vserver vserver_name -extended-groups-limit {32-1024} -auth-sys-extended-groups enabled+`
 
 |===
-. 验证 ` -extended-groups-limit` 值并验证 AUTH_SYS 是否正在使用扩展组： `vserver nfs show -vserver vserver_name -fields auth-sys-extended-groups ， extended-groups-limit`
+. 验证 `-extended-groups-limit` 值并验证AUTH _SYS是否正在使用扩展组： `vserver nfs show -vserver vserver_name -fields auth-sys-extended-groups,extended-groups-limit`
 . 返回到管理权限级别：
 +
 `set -privilege admin`

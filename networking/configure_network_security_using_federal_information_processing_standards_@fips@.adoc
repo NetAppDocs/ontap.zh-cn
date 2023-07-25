@@ -21,7 +21,7 @@ summary: 所有 SSL 连接均符合联邦信息处理标准（ FIPS ） 140-2
 * TLSv1.3 (从ONTAP 9.11.1开始)
 * TLSv1.2
 * TLSv1.1
-* TLSv1
+* TLSv1.
 
 
 启用 SSL FIPS 模式后，从 ONTAP 到外部客户端或 ONTAP 外部服务器组件的 SSL 通信将使用 FIPS 兼容的 SSL 加密。
@@ -42,23 +42,29 @@ summary: 所有 SSL 连接均符合联邦信息处理标准（ FIPS ） 140-2
  a| 
 ECDSA-SHA2-nistp256
  a| 
-RSA-SHA2-512 + RSA-SHA2-256 + ssh-ed25519 + ssh-dss + ssh-rsa
+RSA-SHA2-512 +
+RSA-SHA2-256 +
+SSS-ed25519及更高
+SSS-DSS +
+SSS-RSA
 
 
 
  a| 
 9.10.1及更早版本
  a| 
-ECDSA-SHA2-nistp256 + ssh-ed25519
+ECDSA-SHA2-nistp256 +
+SSS-ed25519
  a| 
-SSH/DSS + SSH/RSA
+SSS-DSS +
+SSS-RSA
 
 |===
 在启用 FIPS 之前，必须使用支持的密钥类型重新配置不具有受支持密钥算法的现有 SSH 公有密钥帐户，否则管理员身份验证将失败。
 
 有关详细信息，请参见 link:../authentication/enable-ssh-public-key-accounts-task.html["启用 SSH 公有密钥帐户"]。
 
-有关 SSL FIPS 模式配置的详细信息，请参见 `security config modify` 手册页。
+有关SSL FIPS模式配置的详细信息、请参见 `security config modify` 手册页。
 
 
 
@@ -74,11 +80,11 @@ NOTE: 启用FIPS后、您不能安装或创建RSA密钥长度为4096的证书。
 +
 `set -privilege advanced`
 
-. 启用 FIPS ：
+. 启用FIPS：
 +
-`security config modify -interface ssl -is-fips-enabled true`
+`security config modify -interface SSL -is-fips-enabled true`
 
-. 当系统提示您继续时，输入 `y`
+. 当系统提示您继续时、输入 `y`
 . 如果您运行的是 ONTAP 9.8 或更早版本，请逐个手动重新启动集群中的每个节点。从 ONTAP 9.1.1 开始，不需要重新启动。
 
 
@@ -107,9 +113,9 @@ Do you want to continue? {y|n}: y
 
 . 通过键入以下命令禁用 FIPS ：
 +
-`security config modify -interface ssl -is-fips-enabled false`
+`security config modify -interface SSL -is-fips-enabled false`
 
-. 当系统提示您继续时，输入 `y` 。
+. 当系统提示您继续时、输入 `y`。
 . 如果您运行的是 ONTAP 9.8 或更早版本，请手动重新启动集群中的每个节点。从 ONTAP 9.1.1 开始，不需要重新启动。
 
 
@@ -138,7 +144,7 @@ Do you want to continue? {y|n}: y
 
 . 查看当前合规状态：
 +
-`s安全性配置显示`
+`security config show`
 
 
 

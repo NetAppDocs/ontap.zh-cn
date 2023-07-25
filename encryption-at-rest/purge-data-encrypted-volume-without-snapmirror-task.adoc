@@ -19,7 +19,7 @@ summary: '从 ONTAP 9.4 开始，您可以使用安全清除功能在启用了 N
 
 
 .关于此任务
-完成安全清除可能需要几分钟到数小时，具体取决于已删除文件中的数据量。您可以使用 `volume encryption secure — purge show` 命令查看操作状态。您可以使用 `volume encryption secure — purge abort` 命令终止此操作。
+完成安全清除可能需要几分钟到数小时，具体取决于已删除文件中的数据量。您可以使用 `volume encryption secure-purge show` 命令以查看操作状态。您可以使用 `volume encryption secure-purge abort` 命令以终止操作。
 
 [NOTE]
 ====
@@ -39,14 +39,14 @@ summary: '从 ONTAP 9.4 开始，您可以使用安全清除功能在启用了 N
 
 . 如果要安全清除的文件位于快照中，请删除这些快照：
 +
-`snapshot delete -vserver svm_name -volume vol_name -snapshot`
+`snapshot delete -vserver SVM_name -volume vol_name -snapshot`
 
 . 安全清除已删除的文件：
 +
-`volume encryption sure-purge start -vserver svm_name -volume volume_name`
+`volume encryption secure-purge start -vserver SVM_name -volume volume_name`
 
 +
-以下命令可安全清除 SVM``vs1`` 上的 `vol1` 上的已删除文件：
+以下命令可安全清除上已删除的文件 `vol1` 在SVM上``vs1``：
 
 +
 [listing]
@@ -55,6 +55,6 @@ cluster1::> volume encryption secure-purge start -vserver vs1 -volume vol1
 ----
 . 验证安全清除操作的状态：
 +
-`volume encryption secure — purge show`
+`volume encryption secure-purge show`
 
 

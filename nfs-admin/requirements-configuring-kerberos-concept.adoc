@@ -31,7 +31,7 @@ summary: 在系统上使用 NFS 配置 Kerberos 之前，您必须验证网络�
 您必须使用密钥分发中心（ KDC ）设置有效的 Kerberos ，例如基于 Windows Active Directory 的 Kerberos 或 MIT Kerberos 。
 
 +
-NFS 服务器必须使用 `NFS` 作为其计算机主体的主要组件。
+NFS服务器必须使用 `nfs` 作为其机器主体的主要组件。
 
 * 目录服务
 +
@@ -53,7 +53,7 @@ NFS 服务器必须使用 `NFS` 作为其计算机主体的主要组件。
 
 
 
-== NFS 客户端要求
+== NFS客户端要求
 
 * NFS
 +
@@ -73,12 +73,12 @@ AES-256 可提供最强大的安全性。
 
 ** 启用 TGT 通信最安全的加密类型。
 ** 已正确配置 Kerberos 域。
-** 已启用 GSS 。
+** 已启用GSS。
 +
 使用计算机凭据时：
 
-** 请勿使用 ` -n` 参数运行 `GSSD` 。
-** 请勿以 root 用户身份运行 `kinit` 。
+** 请勿运行 `gssd` 使用 `-n` 参数。
+** 请勿运行 `kinit` 以root用户身份。
 
 
 * 每个客户端都必须使用最新且更新的操作系统版本。
@@ -95,7 +95,7 @@ AES-256 可提供最强大的安全性。
 
 * 主机和域信息
 +
-每个客户端的 ` /etc/hosts` 和 ` /etc/resolv.conf` 文件必须分别包含正确的主机名和 DNS 信息。
+每个客户端的 `/etc/hosts` 和 `/etc/resolv.conf` 文件必须分别包含正确的主机名和DNS信息。
 
 * keytab 文件
 +
@@ -112,7 +112,7 @@ AES-256 可提供最强大的安全性。
 +
 存储系统必须安装有效的 NFS 许可证。
 
-* CIFS 许可证
+* CIFS许可证
 +
 CIFS 许可证是可选的。只有在使用多协议名称映射时检查 Windows 凭据才需要此功能。在严格的纯 UNIX 环境中不需要此功能。
 
@@ -132,9 +132,9 @@ CIFS 许可证是可选的。只有在使用多协议名称映射时检查 Windo
 +
 为了获得最强的安全性，您必须将 NFS 服务器配置为仅允许对 Kerberos 进行 AES-256 加密。
 
-* SMB 服务器
+* SMB服务器
 +
-如果您运行的是多协议环境，则必须已在 SVM 上配置 SMB 。多协议名称映射需要 SMB 服务器。
+如果您运行的是多协议环境、则必须事先在SVM上配置SMB。多协议名称映射需要SMB服务器。
 
 * Volumes
 +
@@ -174,7 +174,7 @@ root 或 ID 0
  a| 
 UNIX 权限
  a| 
-777.
+777
 
 |===
 +
@@ -210,7 +210,7 @@ pcuser
 65534 （在创建 SVM 时由 ONTAP 自动创建）
 
 |===
-* UNIX 用户
+* UNIX用户
 +
 SVM 必须配置以下 UNIX 用户：
 
@@ -236,9 +236,9 @@ NFS 客户端用户 SPN 的第一个组件用作用户。
  a| 
 pcuser
  a| 
-65534
+6554
  a| 
-65534
+6554
  a| 
 使用NFS和CIFS多协议时需要此参数
 
@@ -261,7 +261,7 @@ root
 
 * 导出策略和规则
 +
-您必须已为导出策略配置根卷和数据卷以及 qtree 所需的导出规则。如果通过 Kerberos 访问 SVM 的所有卷，则可以将根卷的导出规则选项 ` -rorule` ， ` -rwrule` 和 ` -superuser` 设置为 `krb5` ， `krb5i` 或 `krb5p` 。
+您必须已为导出策略配置根卷和数据卷以及 qtree 所需的导出规则。如果通过Kerberos访问SVM的所有卷、则可以设置导出规则选项 `-rorule`， `-rwrule`，和 `-superuser` 根卷的 `krb5` ， `krb5i`或 `krb5p`。
 
 * Kerberos-UNIX 名称映射
 +

@@ -11,10 +11,10 @@ summary: 要确定转介的 SMB 连接数，您可以使用 statistics 命令监
 
 
 [role="lead"]
-要确定转介的 SMB 连接数，您可以使用 `statitics` 命令监控自动节点转介活动。通过监控转介，您可以确定自动转介在托管共享的节点上查找连接的范围，以及是否应重新分布数据 LIF 以更好地在本地访问 CIFS 服务器上的共享。
+要确定转介的SMB连接数、您可以使用监控自动节点转介活动 `statistics` 命令：通过监控转介，您可以确定自动转介在托管共享的节点上查找连接的范围，以及是否应重新分布数据 LIF 以更好地在本地访问 CIFS 服务器上的共享。
 
 .关于此任务
-`cifs` 对象在高级权限级别提供了多个计数器，这些计数器在监控 SMB 自动节点转介时很有用：
+。 `cifs` 对象在高级权限级别提供了多个计数器、这些计数器在监控SMB自动节点转介时很有用：
 
 * `node_referral_issued`
 +
@@ -38,30 +38,30 @@ summary: 要确定转介的 SMB 连接数，您可以使用 statistics 命令监
 
 [NOTE]
 ====
-要评估和使用从 `satictics` 命令收集的信息，您应了解客户端在环境中的分布情况。
+评估和使用从收集的信息 `statistics` 命令中、您应了解客户端在环境中的分布情况。
 
 ====
 .步骤
-. 将权限级别设置为 advanced ： `set -privilege advanced`
-. 使用 `statitics` 命令查看自动节点转介统计信息。
+. 将权限级别设置为高级： `set -privilege advanced`
+. 使用查看自动节点转介统计信息 `statistics` 命令：
 +
 此示例通过收集和查看采样时间段的数据来查看自动节点转介统计信息：
 
 +
-.. 开始收集： `satictics start -object cifs -instance vs1 -sample-id sample1`
+.. 开始收集： `statistics start -object cifs -instance vs1 -sample-id sample1`
 +
 [listing]
 ----
 Statistics collection is being started for Sample-id: sample1
 ----
 .. 等待所需的收集时间过去。
-.. 停止收集： `statists stop -sample-id sample1`
+.. 停止收集： `statistics stop -sample-id sample1`
 +
 [listing]
 ----
 Statistics collection is being stopped for Sample-id: sample1
 ----
-.. 查看自动节点转介统计信息： `statictics show -sample-id sample1 -counter * node*`
+.. 查看自动节点转介统计信息： `statistics show -sample-id sample1 -counter *node*`
 +
 [listing]
 ----

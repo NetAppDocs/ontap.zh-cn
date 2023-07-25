@@ -30,7 +30,7 @@ summary: 绕过遍历检查是一种用户权限（也称为权限），用于�
 
 您可以使用 ONTAP 命令行界面或使用此用户权限配置 Active Directory 组策略来配置绕过遍历检查。
 
-`SeChangeNotifyPrivilege` 权限控制是否允许用户绕过遍历检查。
+。 `SeChangeNotifyPrivilege` 权限控制是否允许用户绕过遍历检查。
 
 * 通过将其添加到 SVM 上的本地 SMB 用户或组或域用户或组，可以绕过遍历检查。
 * 从 SVM 上的本地 SMB 用户或组或域用户或组中删除该文件将禁止绕过遍历检查。
@@ -42,20 +42,20 @@ summary: 绕过遍历检查是一种用户权限（也称为权限），用于�
 * `BUILTIN\Power Users`
 * `BUILTIN\Backup Operators`
 * `BUILTIN\Users`
-* `每个人`
+* `Everyone`
 
 
 如果您不希望允许其中一个组的成员绕过遍历检查，则必须从该组中删除此权限。
 
 在使用命令行界面为 SVM 上的本地 SMB 用户和组配置绕过遍历检查时，必须牢记以下几点：
 
-* 如果要允许自定义本地或域组的成员绕过遍历检查，则必须将 `SeChangeNotifyPrivilege` 权限添加到该组。
-* 如果要允许单个本地或域用户绕过遍历检查，并且该用户不是具有此权限的组的成员，则可以将 `SeChangeNotifyPrivilege` 权限添加到该用户帐户。
-* 您可以随时删除 `SeChangeNotifyPrivilege` 权限，从而为本地或域用户或组禁用绕过遍历检查。
+* 如果要允许自定义本地或域组的成员绕过遍历检查、则必须添加 `SeChangeNotifyPrivilege` 权限。
+* 如果要允许单个本地或域用户绕过遍历检查、而该用户不是具有该权限的组的成员、则可以添加 `SeChangeNotifyPrivilege` 权限。
+* 您可以通过删除来禁用本地或域用户或组绕过遍历检查 `SeChangeNotifyPrivilege` 随时享受特权。
 +
 [NOTE]
 ====
-要对指定的本地或域用户或组禁用绕过遍历检查，您还必须从 `Everyone` 组中删除 `SeChangeNotifyPrivilege` 权限。
+要为指定的本地或域用户或组禁用绕过访问程序检查、还必须删除 `SeChangeNotifyPrivilege` 特权 `Everyone` 组。
 
 ====
 

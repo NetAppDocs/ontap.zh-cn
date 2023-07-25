@@ -14,12 +14,12 @@ summary: 您可以将卷之间的复制关系转换为卷所属的 Storage Virtu
 您可以将卷之间的复制关系转换为卷所属的 Storage Virtual Machine （ SVM ）之间的复制关系，但前提是要复制源上的每个卷（根卷除外）。 并且源上的每个卷（包括根卷）与目标上的卷具有相同的名称。
 
 .关于此任务
-如果 SnapMirror 关系处于闲置状态，请在必要时使用 `volume rename` 命令重命名目标卷。
+使用 `volume rename` 命令、以便根据需要重命名目标卷。
 
 .步骤
 . 从目标 SVM 或目标集群运行以下命令，以重新同步源卷和目标卷：
 +
-`snapmirror resync -source-path _SVM ： volume_ -destination-path _SVM ： volume_ -type DP_XDP -schedule _schedule_ -policy _policy_`
+`snapmirror resync -source-path _SVM:volume_ -destination-path _SVM:volume_ -type DP|XDP -schedule _schedule_ -policy _policy_`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -31,7 +31,7 @@ summary: 您可以将卷之间的复制关系转换为卷所属的 Storage Virtu
 
 ====
 +
-以下示例将重新同步源卷 `volA` on `svm1` 与目标卷 `volA` on `svm_backup` 之间的关系：
+以下示例将重新同步源卷之间的关系 `volA` 开启 `svm1` 和目标卷 `volA` 开启 `svm_backup`：
 
 +
 [listing]
@@ -40,17 +40,17 @@ cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_ba
 ----
 . 在源和目标 SVM 之间创建 SVM 复制关系，如中所述 link:replicate-entire-svm-config-task.html["复制 SVM 配置"]。
 +
-创建复制关系时，您必须使用 `snapmirror create` 命令的 ` -identity-preserve true` 选项。
+您必须使用 `-identity-preserve true` 的选项 `snapmirror create` 命令。
 
 . 停止目标 SVM ：
 +
-`vserver stop -vserver _svm_`
+`vserver stop -vserver _SVM_`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将停止目标 SVM `sVM_backup` ：
+以下示例将停止目标SVM `svm_backup`：
 
 +
 [listing]
@@ -59,7 +59,7 @@ cluster_dst::> vserver stop svm_backup
 ----
 . 从目标 SVM 或目标集群运行以下命令，以重新同步源和目标 SVM ：
 +
-`snapmirror resync -source-path _svm_ ： -destination-path _svm_ ： -type dp_xDP -schedule _schedule_ -policy _policy_`
+`snapmirror resync -source-path _SVM_: -destination-path _SVM_: -type DP|XDP -schedule _schedule_ -policy _policy_`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -67,13 +67,13 @@ cluster_dst::> vserver stop svm_backup
 +
 [NOTE]
 ====
-您必须在 ` 源路径` 和 ` 目标路径` 选项中的 SVM 名称后面输入冒号（：）。请参见以下示例。
+您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
 虽然重新同步不需要基线传输，但它可能非常耗时。您可能希望在非高峰时段运行重新同步。
 
 ====
 +
-以下示例将重新同步源 SVM `svm1` 和目标 SVM `svm_backup` 之间的关系：
+以下示例将重新同步源SVM之间的关系 `svm1` 和目标SVM `svm_backup`：
 
 +
 [listing]

@@ -78,14 +78,15 @@ NOTE: 从ONTAP 9.13.1开始、如果使用MAV保护ARP设置、则清除可疑�
 
 
 
-| 潜在勒索软件攻击 | 应对攻击并还原受保护的数据。然后单击*更新*和*清除可疑文件类型*以记录您的决定并恢复正常ARP监控。+如果还原了整个卷、则不需要清除任何可疑文件类型。 
+| 潜在勒索软件攻击 | 应对攻击并还原受保护的数据。然后单击*更新*和*清除可疑文件类型*以记录您的决定并恢复正常ARP监控。+
+如果还原了整个卷、则不需要清除任何可疑文件类型。 
 |===
 --
 .命令行界面
 --
 . 收到可疑勒索软件攻击的通知后，请验证此攻击的时间和严重性：
 +
-`sSecurity anti-ranson勒索 软件 volume show -vserver _svm_name_ -volume _vol_name_`
+`security anti-ransomware volume show -vserver _svm_name_ -volume _vol_name_`
 
 +
 示例输出：
@@ -107,13 +108,13 @@ Number of Attacks: 1
 
 . 生成攻击报告并记下输出位置：
 +
-`s安全防勒索软件卷攻击 generate-report -volume _vol_name_ -dest-path _file_location_ /`
+`security anti-ransomware volume attack generate-report -volume _vol_name_ -dest-path _file_location_/`
 
 +
 示例输出：
 
 +
-`Report "report_file_vs0_vol1_14-08-2021_01-21-08" available at path "vs0 ： vol1/"`
+`Report "report_file_vs0_vol1_14-09-2021_01-21-08" available at path "vs0:vol1/"`
 
 . 在管理客户端系统上查看报告。例如：
 +
@@ -132,17 +133,23 @@ Number of Attacks: 1
 `anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
 
 +
-使用以下参数之一确定扩展名： ` [-seq-no _intege_]` 可疑列表中文件的序列号。` （ -extension _text_ ，…） ]` 文件扩展名 ` -start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始和结束时间，格式为 "MM/DD/YYYY HH ： MM ： SS" 。
+使用以下参数之一标识扩展：
+`[-seq-no _integer_]` 可疑列表中的文件序列号。
+`[-extension _text_, … ]` 文件扩展名
+`[-start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始时间和结束时间、格式为"MM/DD/YYYY HH：MM：SS"。
 
 ** 潜在的勒索软件攻击
 +
 应对攻击、然后 link:../anti-ransomware/recover-data-task.html["从ARP创建的备份快照恢复数据"]。恢复数据后、输入以下命令记录您的决定并恢复正常ARP监控：
 
 +
-`反勒索软件卷攻击 clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive false`
+`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive false`
 
 +
-使用以下参数之一来确定扩展名： ` （ -seq-no _intege_）` 可疑列表中文件的序列号 ` （ -extension _text_ ，…） ]` 文件扩展名 ` -start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始和结束时间，格式为 "MM/DD/YYYY HH ： MM ： SS" 。
+使用以下参数之一标识扩展：
+`[-seq-no _integer_]` 可疑列表中的文件序列号
+`[-extension _text_, … ]` 文件扩展名
+`[-start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始时间和结束时间、格式为"MM/DD/YYYY HH：MM：SS"。
 
 +
 如果还原了整个卷、则不需要清除任何可疑文件类型。系统将删除ARP创建的备份快照、并清除攻击报告。

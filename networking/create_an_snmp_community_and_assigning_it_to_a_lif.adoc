@@ -16,7 +16,7 @@ summary: 创建一个 SNMP 社区，用作管理工作站和 SVM 之间的身份
 [role="lead"]
 使用 SNMPv1 和 SNMPv2c 时，您可以创建 SNMP 社区，作为管理工作站和 Storage Virtual Machine （ SVM ）之间的身份验证机制。
 
-通过在数据 SVM 中创建 SNMP 社区，您可以对数据 LIF 执行 `snmpwalk` 和 `snmpget` 等命令。
+通过在数据SVM中创建SNMP社区、您可以执行等命令 `snmpwalk` 和 `snmpget` 在数据生命周期中。
 
 .关于此任务
 * 在新安装的 ONTAP 中， SNMPv1 和 SNMPv2c 默认处于禁用状态。
@@ -24,20 +24,20 @@ summary: 创建一个 SNMP 社区，用作管理工作站和 SVM 之间的身份
 创建 SNMP 社区后， SNMPv1 和 SNMPv2c 将处于启用状态。
 
 * ONTAP 支持只读社区。
-* 默认情况下，分配给数据 LIF 的 " 数据 " 防火墙策略会将 SNMP 服务设置为 `deny` 。
+* 默认情况下、分配给数据"LIF"的"数据"防火墙策略会将SNMP服务设置为 `deny`。
 +
-在为数据 SVM 创建 SNMP 用户时，您必须创建一个新的防火墙策略，并将 SNMP 服务设置为 `allow` 。
+您必须创建一个新的防火墙策略、并将SNMP服务设置为 `allow` 为数据SVM创建SNMP用户时。
 
 +
 
 NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF服务策略。有关详细信息，请参见 link:../networking/configure_firewall_policies_for_lifs.html["为 LIF 配置防火墙策略"]。
 
 * 您可以为管理 SVM 和数据 SVM 的 SNMPv1 和 SNMPv2c 用户创建 SNMP 社区。
-* 由于 SVM 不是 SNMP 标准的一部分，因此对数据 LIF 的查询必须包含 NetApp 根 OID （ 1.3.6.1.4.1.789 ），例如， `snmpwalk -v 2c -c snmpNFS 10.238.19.14 1.3.6.1.4.1.789` 。
+* 由于SVM不是SNMP标准的一部分、因此对数据NetApp的查询必须包括SVM根OID (1.3.6.1.4.1.789)、例如 `snmpwalk -v 2c -c snmpNFS 10.238.19.14 1.3.6.1.4.1.789`。
 
 
 .步骤
-. 使用 `ssystem snmp community add` 命令创建 SNMP 社区。以下命令显示如何在管理 SVM cluster-1 中创建 SNMP 社区：
+. 使用创建SNMP社区 `system snmp community add` 命令：以下命令显示如何在管理 SVM cluster-1 中创建 SNMP 社区：
 +
 ....
 system snmp community add -type ro -community-name comty1 -vserver cluster-1
@@ -61,7 +61,7 @@ rocomty1
 vs1
 rocomty2
 ....
-. 使用 `ssystem services firewall policy` `show` 命令检查 "data" 防火墙策略中是否允许 SNMP 作为服务。
+. 使用检查"data"防火墙策略中是否允许SNMP作为服务 `system services firewall policy` `show` 命令：
 +
 以下命令显示默认 "data" 防火墙策略中不允许使用 SNMP 服务（仅 "mgmt" 防火墙策略中允许使用 SNMP 服务）：
 
@@ -91,9 +91,9 @@ cluster-1
                      snmp       0.0.0.0/0
                      ssh        0.0.0.0/0
 ....
-. 使用 `ssystem services firewall policy create` 命令创建一个新的防火墙策略，以允许使用 `snmp` 服务进行访问。
+. 使用创建允许访问的新防火墙策略 `snmp` 服务 `system services firewall policy create` 命令：
 +
-以下命令将创建一个名为 "data1" 的新数据防火墙策略，该策略允许使用 `snmp`
+以下命令将创建一个名为data1的新数据防火墙策略、此策略允许使用 `snmp`
 
 +
 ....

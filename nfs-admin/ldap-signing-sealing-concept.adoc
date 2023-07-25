@@ -2,7 +2,7 @@
 permalink: nfs-admin/ldap-signing-sealing-concept.html 
 sidebar: sidebar 
 keywords: ldap, sign, seal, concept 
-summary: 从 ONTAP 9 开始，您可以配置签名和签章，以便对 Active Directory （ AD ）服务器的查询启用 LDAP 会话安全性。您必须在 Storage Virtual Machine （ SVM ）上配置 NFS 服务器安全设置，使其与 LDAP 服务器上的设置相对应。 
+summary: '从 ONTAP 9 开始，您可以配置签名和签章，以便对 Active Directory （ AD ）服务器的查询启用 LDAP 会话安全性。您必须将Storage Virtual Machine (SVM)上的NFS服务器安全设置配置为与LDAP服务器上的安全设置相对应。' 
 ---
 = LDAP 签名和签章概念
 :allow-uri-read: 
@@ -11,8 +11,8 @@ summary: 从 ONTAP 9 开始，您可以配置签名和签章，以便对 Active 
 
 
 [role="lead"]
-从 ONTAP 9 开始，您可以配置签名和签章，以便对 Active Directory （ AD ）服务器的查询启用 LDAP 会话安全性。您必须在 Storage Virtual Machine （ SVM ）上配置 NFS 服务器安全设置，使其与 LDAP 服务器上的设置相对应。
+从 ONTAP 9 开始，您可以配置签名和签章，以便对 Active Directory （ AD ）服务器的查询启用 LDAP 会话安全性。您必须将Storage Virtual Machine (SVM)上的NFS服务器安全设置配置为与LDAP服务器上的安全设置相对应。
 
-签名可使用密钥技术确认 LDAP 有效负载数据的完整性。密封功能对 LDAP 有效负载数据进行加密，以避免以明文形式传输敏感信息。"_LDAP 安全级别 _ " 选项指示 LDAP 流量是需要签名，签名和签章，还是两者都不需要。默认值为 `none` 。测试
+签名可使用密钥技术确认 LDAP 有效负载数据的完整性。密封功能对 LDAP 有效负载数据进行加密，以避免以明文形式传输敏感信息。"_LDAP 安全级别 _ " 选项指示 LDAP 流量是需要签名，签名和签章，还是两者都不需要。默认值为 `none`。测试
 
-使用 `vserver cifs security modify` 命令的 ` -session-security-for-ad-ldap` 选项，在 SVM 上启用 SMB 流量的 LDAP 签名和密封。
+已使用在SVM上启用SMB流量的LDAP签名和签章 `-session-security-for-ad-ldap` 选项 `vserver cifs security modify` 命令：

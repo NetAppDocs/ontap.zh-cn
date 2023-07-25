@@ -16,37 +16,37 @@ summary: 要支持无中断运行，必须将 Hyper-V 和 SQL Server SMB 共享�
 .关于此任务
 您必须验证以下两个共享参数是否设置正确：
 
-* ` -offline-files` 参数设置为 `manual` （默认值）或 `none` 。
+* 。 `-offline-files` 参数设置为任一 `manual` (默认值)或 `none`。
 * 必须禁用符号链接。
 
 
 要实现正确的无中断运行，必须设置以下共享属性：
 
-* `持续可用`
-* `机会锁`
+* `continuously-available`
+* `oplocks`
 
 
 不能设置以下共享属性：
 
-* `主目录`
-* `attribtecache`
-* `BranchCache`
-* `基于访问的枚举`
+* `homedirectory`
+* `attributecache`
+* `branchcache`
+* `access-based-enumeration`
 
 
 .步骤
-. 验证脱机文件是否设置为 `manual` 或 `disabled` 且符号链接是否已禁用：
+. 验证脱机文件是否设置为 `manual` 或 `disabled` 并禁用符号链接：
 +
-` * vserver cifs shares show -vserver _vserver_name_*`
+`*vserver cifs shares show -vserver _vserver_name_*`
 
 . 验证 SMB 共享是否已配置为持续可用性：
 +
-` * vserver cifs shares properties show -vserver _vserver_name_*`
+`*vserver cifs shares properties show -vserver _vserver_name_*`
 
 
 
 .示例
-以下示例显示了 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 上名为 `share1` 的共享的共享设置。脱机文件设置为 `manual` ，符号链接被禁用（在 `Symlink Properties` 字段输出中通过连字符指定）：
+以下示例显示了 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 上名为 `share1` 的共享的共享设置。脱机文件设置为 `manual` 和符号链接已禁用(在中使用连字符指定) `Symlink Properties` 字段输出)：
 
 [listing]
 ----

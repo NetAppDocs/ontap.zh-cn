@@ -19,9 +19,9 @@ summary: 从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记�
 
 
 .关于此任务
-* SAML 身份验证仅适用于 `http` 和 `ontapi` 应用程序。
+* SAML身份验证仅适用于 `http` 和 `ontapi` 应用程序。
 +
-以下 Web 服务使用 `http` 和 `ontapi` 应用程序：服务处理器基础架构， ONTAP API 或 System Manager 。
+。 `http` 和 `ontapi` 应用程序由以下Web服务使用：服务处理器基础架构、ONTAP API或System Manager。
 
 * SAML 身份验证仅适用于访问管理 SVM 。
 
@@ -29,13 +29,13 @@ summary: 从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记�
 .步骤
 . 创建 SAML 配置，以便 ONTAP 可以访问 IdP 元数据：
 +
-`sSAML security-sp create -idP-uri idp_uri -sp-host ontap_host_name`
+`security saml-sp create -idp-uri idp_uri -sp-host ontap_host_name`
 
 +
-`IdP_uri` 是可从中下载 IdP 元数据的 IdP 主机的 FTP 或 HTTP 地址。
+`idp_uri` 是可从中下载IdP元数据的IdP主机的FTP或HTTP地址。
 
 +
-`ontap_host_name` 是 SAML 服务提供程序主机的主机名或 IP 地址，在本例中为 ONTAP 系统。默认情况下，使用集群管理 LIF 的 IP 地址。
+`ontap_host_name` 是SAML服务提供程序主机的主机名或IP地址、此处为ONTAP系统。默认情况下，使用集群管理 LIF 的 IP 地址。
 
 +
 您可以选择提供 ONTAP 服务器证书信息。默认情况下，使用 ONTAP Web 服务器证书信息。
@@ -62,20 +62,22 @@ Configure the IdP and Data ONTAP users for the same directory server domain to e
 
 . 启用 SAML 配置：
 +
-`sSAML security-sp modify -is-enabled true`
+`security saml-sp modify -is-enabled true`
 
 +
-系统会自动为访问 `http` 或 `ontapi` 应用程序的任何现有用户配置 SAML 身份验证。
+访问的任何现有用户 `http` 或 `ontapi` 系统会自动为应用程序配置SAML身份验证。
 
-. 如果要在配置 SAML 后为 `http` 或 `ontapi` 应用程序创建用户，请指定 SAML 作为新用户的身份验证方法。
+. 如果要为创建用户 `http` 或 `ontapi` 应用程序在配置SAML后、指定SAML作为新用户的身份验证方法。
 +
-.. 使用 SAML 身份验证为新用户创建登录方法： `ssecurity login create -user-or-group-name user_name -application [http ： ontapi] -authentication-method SAML -vserver svm_name`
+.. 使用SAML身份验证为新用户创建登录方法： `security login create -user-or-group-name user_name -application [http | ontapi] -authentication-method saml -vserver svm_name`
 +
 [listing]
 ----
 cluster_12::> security login create -user-or-group-name admin1 -application http -authentication-method saml -vserver  cluster_12
 ----
-.. 验证是否已创建用户条目： + `ssecurity login show`
+.. 验证是否已创建此用户条目：
+ +
+`security login show`
 +
 [listing]
 ----

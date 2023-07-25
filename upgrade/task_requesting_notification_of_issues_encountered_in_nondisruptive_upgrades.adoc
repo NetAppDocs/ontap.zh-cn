@@ -24,9 +24,9 @@ NOTE: 如果集群未配置为发送 AutoSupport 消息，则通知的副本将�
 
 . 请求通知在无中断升级中遇到的问题。
 +
-link:../error-messages/index.html["EMS 配置"]
+link:../error-messages/index.html["EMS配置"]
 
-. 在启动无中断升级之前，如果在此集群上启用了 AutoSupport ，请通过调用 AutoSupport 消息禁止自动创建案例。如果此集群上未启用 AutoSupport ，请忽略此步骤： `ssystem node AutoSupport invoke -node * -type all -message MAINT=xh`
+. 在启动无中断升级之前，如果在此集群上启用了 AutoSupport ，请通过调用 AutoSupport 消息禁止自动创建案例。如果此集群未启用AutoSupport、请忽略此步骤： `system node autosupport invoke -node * -type all -message MAINT=xh`
 +
 x 表示维护时段的持续时间，以小时为单位。
 
@@ -42,7 +42,7 @@ NOTE: 此消息将通知此维护任务的技术支持，以便在维护窗口�
 ----
 cluster::*> system node autosupport invoke -node * -type all -message MAINT=2h
 ----
-. 无中断升级后，通过调用 AutoSupport 消息重新启用自动创建案例： `ssystem node AutoSupport invoke -node * -type all -message MAINT=end`
+. 无中断升级后、通过调用AutoSupport消息重新启用自动创建案例： `system node autosupport invoke -node * -type all -message MAINT=END`
 +
 命令将重新启用自动创建案例：
 
@@ -56,4 +56,4 @@ cluster::*> system node autosupport invoke -node * -type all -message MAINT=END
 .相关信息
 http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9命令"^]
 
-link:../error-messages/index.html["EMS 配置"]
+link:../error-messages/index.html["EMS配置"]

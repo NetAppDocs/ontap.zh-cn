@@ -47,7 +47,7 @@ HA 对中的两个节点都以物理方式连接到彼此的磁盘或阵列 LUN 
 .步骤
 . 查看节点上的聚合以确认要移动的聚合，并确保它们处于联机状态良好：
 +
-`storage aggregate show -node _source-nod_`
+`storage aggregate show -node _source-node_`
 
 +
 以下命令显示了集群中四个节点上的六个聚合。所有聚合均已联机。Node1 和 Node3 形成一个 HA 对， Node2 和 Node4 形成一个 HA 对。
@@ -74,7 +74,7 @@ aggr_5     239.0GB   239.0GB    0% online       4 node4  raid_dp,
 ----
 . 使用问题描述命令启动聚合重新定位：
 +
-`s存储聚合重新定位start -aggregate-list _aggregate-1_、_aggregate-2_… -node _source-nod_-destination _destination-nod_`
+`storage aggregate relocation start -aggregate-list _aggregate-1_, _aggregate-2_... -node _source-node_ -destination _destination-node_`
 
 +
 以下命令将聚合 aggr_1 和 aggr_2 从 Node1 移动到 Node3 。Node3 是 Node1 的 HA 配对节点。聚合只能在 HA 对中移动。
@@ -86,9 +86,9 @@ cluster::> storage aggregate relocation start -aggregate-list aggr_1, aggr_2 -no
 Run the storage aggregate relocation show command to check relocation status.
 node1::storage aggregate>
 ----
-. 使用 `storage aggregate relocation show` 命令监控聚合重新定位的进度：
+. 使用监控聚合重新定位的进度 `storage aggregate relocation show` 命令：
 +
-`storage aggregate relocation show -node _source-nod_`
+`storage aggregate relocation show -node _source-node_`
 
 +
 以下命令显示要移动到 node3 的聚合的进度：

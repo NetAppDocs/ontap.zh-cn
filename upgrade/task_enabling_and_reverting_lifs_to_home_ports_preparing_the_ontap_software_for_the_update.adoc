@@ -15,7 +15,7 @@ summary: 在重新启动期间，某些 LIF 可能已迁移到其分配的故障
 
 network interface revert 命令会将当前不在主端口上的 LIF 还原到其主端口，前提是主端口正常运行。创建 LIF 时会指定 LIF 的主端口；您可以使用 network interface show 命令确定 LIF 的主端口。
 
-. 显示所有 LIF 的状态： `network interface show`
+. 显示所有LIF的状态： `network interface show`
 +
 此示例显示 Storage Virtual Machine （ SVM ）的所有 LIF 的状态。
 
@@ -40,14 +40,14 @@ vs0
 +
 如果任何 LIF 的状态为 Admin 状态为 down 或状态为 false ，请继续执行下一步。
 
-. 启用数据 LIF ： `network interface modify ｛ -role data ｝ -status-admin up`
+. 启用数据生命周期： `network interface modify {-role data} -status-admin up`
 +
 [listing]
 ----
 cluster1::> network interface modify {-role data} -status-admin up
 8 entries were modified.
 ----
-. 将 LIF 还原到其主端口： `network interface revert *`
+. 将LIF还原到其主端口： `network interface revert *`
 +
 此命令会将所有 LIF 还原回其主端口。
 
@@ -57,7 +57,7 @@ cluster1::> network interface modify {-role data} -status-admin up
 cluster1::> network interface revert *
 8 entries were acted on.
 ----
-. 确认所有 LIF 均位于其主端口： `network interface show`
+. 验证所有的SIFs是否都位于其主端口中： `network interface show`
 +
 此示例显示 SVM vs0 的所有 LIF 均位于其主端口上。
 

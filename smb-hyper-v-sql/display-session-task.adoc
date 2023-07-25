@@ -16,12 +16,12 @@ summary: 您可以显示有关已建立的 SMB 会话的信息，包括 SMB 连�
 .关于此任务
 您可以摘要形式显示 SVM 上所有会话的信息。但是，在许多情况下，返回的输出量很大。您可以通过指定可选参数来自定义输出中显示的信息：
 
-* 您可以使用可选的 ` 字段` 参数显示有关所选字段的输出。
+* 您可以使用可选 `-fields` 用于显示有关所选字段的输出的参数。
 +
-您可以输入 ` 字段？` 以确定可以使用的字段。
+您可以输入 `-fields ?` 以确定您可以使用哪些字段。
 
-* 您可以使用 ` -instance` 参数显示有关已建立的 SMB 会话的详细信息。
-* 您可以单独使用 ` 字段` 参数或 ` 实例` 参数，也可以与其他可选参数结合使用。
+* 您可以使用 `-instance` 用于显示有关已建立SMB会话的详细信息的参数。
+* 您可以使用 `-fields` 参数或 `-instance` 参数单独使用或与其他可选参数结合使用。
 
 
 .步骤
@@ -35,58 +35,58 @@ summary: 您可以显示有关已建立的 SMB 会话的信息，包括 SMB 连�
  a| 
 SVM 上的所有会话的摘要形式
  a| 
-` * vserver cifs session show -vserver _vserver_name_*`
+`*vserver cifs session show -vserver _vserver_name_*`
 
 
 
  a| 
 指定的连接 ID
  a| 
-` * vserver cifs session show -vserver _vserver_name_ -connection-id intege*`
+`*vserver cifs session show -vserver _vserver_name_ -connection-id integer*`
 
 
 
  a| 
 指定的工作站 IP 地址
  a| 
-` * vserver cifs session show -vserver _vserver_name_ -address _workstation_ip_address_*`
+`*vserver cifs session show -vserver _vserver_name_ -address _workstation_IP_address_*`
 
 
 
  a| 
 指定的 LIF IP 地址
  a| 
-` * vserver cifs session show -vserver _vserver_name_ -lif-address _LIF_IP_address_*`
+`*vserver cifs session show -vserver _vserver_name_ -lif-address _LIF_IP_address_*`
 
 
 
  a| 
 在指定节点上
  a| 
-` * vserver cifs session show -vserver _vserver_name_ -node ｛ node_name_local ｝ *`
+`*vserver cifs session show -vserver _vserver_name_ -node {node_name|local}*`
 
 
 
  a| 
 指定的 Windows 用户
  a| 
-` * vserver cifs session show -vserver _vserver_name_ -windows-user _user_name_*`
+`*vserver cifs session show -vserver _vserver_name_ -windows-user _user_name_*`
 
-`user_name` 的格式为 ` [ 域 ]\user` 。
+的格式 `user_name` 为 `[domain]\user`。
 
 
 
  a| 
 使用指定的身份验证机制
  a| 
-` * vserver cifs session show -vserver _vserver_name_ -auth-mechanism authentication_mechanism*`
+`*vserver cifs session show -vserver _vserver_name_ -auth-mechanism authentication_mechanism*`
 
-` -auth-` 的值可以是以下值之一：
+的值 `-auth-mechanism` 可以是以下选项之一：
 
 ** `NTLMv1`
 ** `NTLMv2`
 ** `Kerberos`
-** `匿名`
+** `Anonymous`
 
 
 
@@ -94,19 +94,19 @@ SVM 上的所有会话的摘要形式
  a| 
 使用指定的协议版本
  a| 
-` * vserver cifs session show -vserver _vserver_name_ -protocol-version protocol_version*`
+`*vserver cifs session show -vserver _vserver_name_ -protocol-version protocol_version*`
 
-` 协议版本` 的值可以是以下值之一：
+的值 `-protocol-version` 可以是以下选项之一：
 
-** `sMB1`
-** `sMB2`
-** `sMB2_1`
-** `sMB3`
-** `sMB3_1`
+** `SMB1`
+** `SMB2`
+** `SMB2_1`
+** `SMB3`
+** `SMB3_1`
 +
 [NOTE]
 ====
-持续可用的保护和 SMB 多通道仅适用于 SMB 3.0 及更高版本的会话。要在所有符合条件的会话中查看其状态，您应指定此参数，并将值设置为 `SMB3` 或更高版本。
+持续可用的保护和 SMB 多通道仅适用于 SMB 3.0 及更高版本的会话。要查看其在所有符合条件的会话中的状态、应指定此参数并将值设置为 `SMB3` 或更高版本。
 
 ====
 
@@ -116,18 +116,18 @@ SVM 上的所有会话的摘要形式
  a| 
 具有指定级别的持续可用保护
  a| 
-` * vserver cifs session show -vserver _vserver_name_ -continuously-available _continuously_available_protection_level_*`
+`*vserver cifs session show -vserver _vserver_name_ -continuously-available _continuously_available_protection_level_*`
 
-` 持续可用` 的值可以是以下值之一：
+的值 `-continuously-available` 可以是以下选项之一：
 
-** `否`
-** `是`
-** `部分`
+** `No`
+** `Yes`
+** `Partial`
 
 
 [NOTE]
 ====
-如果持续可用状态为 `Partial` ，则表示会话至少包含一个打开的持续可用文件，但会话中的某些文件未打开且具有持续可用的保护。您可以使用 `vserver cifs sessions file show` 命令来确定已建立会话中的哪些文件未通过持续可用的保护打开。
+持续可用状态为 `Partial`，这意味着会话至少包含一个打开的持续可用文件，但会话中的某些文件未使用持续可用保护打开。您可以使用 `vserver cifs sessions file show` 命令、用于确定已建立会话中哪些文件未在持续可用的保护下打开。
 
 ====
 
@@ -135,7 +135,7 @@ SVM 上的所有会话的摘要形式
  a| 
 具有指定的 SMB 签名会话状态
  a| 
-` * vserver cifs session show -vserver _vserver_name_ -is-session-signed ｛ true ｛ vbar ｝ false ｝ *`
+`*vserver cifs session show -vserver _vserver_name_ -is-session-signed {true{vbar}false}*`
 
 |===
 

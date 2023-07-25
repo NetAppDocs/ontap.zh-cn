@@ -12,7 +12,7 @@ summary: 如果客户端因名称服务问题而遇到访问失败，您可以�
 
 
 [role="lead"]
-如果客户端因名称服务问题而出现访问失败，您可以使用 `vserver services name-service getxxbyyy` 命令系列手动执行各种名称服务查找，并检查查找的详细信息和结果以帮助进行故障排除。
+当客户端因名称服务问题而遇到访问失败时、您可以使用 `vserver services name-service getxxbyyy` 命令系列、用于手动执行各种名称服务查找并检查查找的详细信息和结果、以帮助进行故障排除。
 
 .关于此任务
 * 对于每个命令，您可以指定以下内容：
@@ -44,7 +44,7 @@ summary: 如果客户端因名称服务问题而遇到访问失败，您可以�
  a| 
 主机名的IP地址
  a| 
-`vserver services name-service getxxbyyy getaddrinfo``vserver services name-service getxxbyyy gethostbyname`(仅限IPv4地址)
+`vserver services name-service getxxbyyy getaddrinfo`     `vserver services name-service getxxbyyy gethostbyname` (仅限IPv4地址)
 
 
 
@@ -72,21 +72,22 @@ summary: 如果客户端因名称服务问题而遇到访问失败，您可以�
  a| 
 IP地址的主机名
  a| 
-`vserver services name-service getxxbyyy getnameinfo``vserver services name-service getxxbyyy gethostbyaddr`(仅限IPv4地址)
+`vserver services name-service getxxbyyy getnameinfo`     `vserver services name-service getxxbyyy gethostbyaddr` (仅限IPv4地址)
 
 
 
  a| 
 按用户名显示用户信息
  a| 
-`vserver services name-service getxxbyyy getpwbyname`您可以通过将`-use-rbac`参数指定为`true`来测试RBAC用户的名称解析。
+`vserver services name-service getxxbyyy getpwbyname`     您可以通过指定来测试RBAC用户的名称解析 `-use-rbac` 参数为 `true`。
 
 
 
  a| 
 按用户ID显示用户信息
  a| 
-`vserver services name-service getxxbyyy getpwbyuid`您可以通过将`-use-rbac`参数指定为`true`来测试RBAC用户的名称解析。
+`vserver services name-service getxxbyyy getpwbyuid`
+您可以通过指定来测试RBAC用户的名称解析 `-use-rbac` 参数为 `true`。
 
 
 
@@ -100,7 +101,7 @@ IP地址的主机名
  a| 
 使用netgroup-by-host搜索的客户端的网络组成员资格
  a| 
-`vserver services name-service getxxbyyy netgrpbhost`
+`vserver services name-service getxxbyyy netgrpbyhost`
 
 |===
 以下示例显示了通过尝试获取主机acast1.eng.example.com的IP地址来对SVM vs1执行的DNS查找测试：
@@ -159,7 +160,7 @@ dnshost0 is a member of lnetgroup136
  a| 
 主机名或 IP 地址查找失败或生成的结果不正确
  a| 
-DNS 配置
+DNS配置
 
 
 
@@ -183,7 +184,7 @@ LOOKUP 查询的源不正确
  a| 
 主机名查找失败或超时，并且 DNS 服务器无法解析 DNS 短名称（例如 host1 ）
  a| 
-用于顶级域(TLD)查询的DNS配置。您可以使用`vserver services name-service dns modify`命令的`-is-tld-query-enabled false`选项禁用TLD查询。
+用于顶级域(TLD)查询的DNS配置。您可以使用禁用LD查询 `-is-tld-query-enabled false` 选项 `vserver services name-service dns modify` 命令：
 
 |===
 

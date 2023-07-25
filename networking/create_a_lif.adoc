@@ -20,7 +20,7 @@ LIF (网络接口)是与物理或逻辑端口关联的IP地址。如果组件出
 * 底层物理或逻辑网络端口必须已配置为管理启动状态。
 * 如果您计划使用子网名称为 LIF 分配 IP 地址和网络掩码值，则此子网必须已存在。
 +
-子网包含属于同一第 3 层子网的 IP 地址池。它们是使用System Manager或`network subnet create`命令创建的。
+子网包含属于同一第 3 层子网的 IP 地址池。它们是使用System Manager或创建的 `network subnet create` 命令：
 
 * 用于指定 LIF 处理的流量类型的机制已发生更改。对于 ONTAP 9.5 及更早版本， LIF 使用角色指定要处理的流量类型。从 ONTAP 9.6 开始， LIF 使用服务策略指定要处理的流量类型。
 
@@ -37,7 +37,7 @@ LIF (网络接口)是与物理或逻辑端口关联的IP地址。如果组件出
 * 如果集群中存在大量LIF、则可以验证集群上支持的LIF容量：
 +
 ** System Manager：从ONTAP 9.12.0开始、查看网络接口网格上的吞吐量。
-** CLI：使用`network interface capacity show`命令以及每个节点上支持的LIF容量、方法是使用`network interface capacity details show`命令(在高级权限级别)。
+** 命令行界面：使用 `network interface capacity show` 命令以及每个节点上支持的LIF容量 `network interface capacity details show` 命令(在高级权限级别)。
 
 
 * 从 ONTAP 9.7 开始，如果同一子网中已存在 SVM 的其他 LIF ，则无需指定 LIF 的主端口。ONTAP 会自动在与已在同一子网中配置的其他 LIF 位于同一广播域的指定主节点上选择一个随机端口。
@@ -57,10 +57,10 @@ LIF (网络接口)是与物理或逻辑端口关联的IP地址。如果组件出
 * 从ONTAP 9.10.1开始、将显示 `network interface` CLI命令包括 `-rdma-protocols` 基于RDMA的NFS配置的参数。从ONTAP 9.12.1开始、System Manager支持为基于RDMA的NFS配置创建网络接口。有关详细信息，请参见 xref:../nfs-rdma/configure-lifs-task.html[通过RDMA为NFS配置LIF]。
 * 从ONTAP 9.11.1开始、iSCSI LIF故障转移功能可在所有SAN阵列(ASA)平台上使用。
 +
-iSCSI LIF故障转移会自动启用(故障转移策略设置为`sfo-partner-only`、自动还原值设置为`true`) 在新创建的iSCSI LIF上、如果指定SVM中不存在iSCSI LIF、或者指定SVM中的所有现有iSCSI LIF已通过iSCSI LIF故障转移启用。
+系统会自动启用iSCSI LIF故障转移(故障转移策略设置为) `sfo-partner-only` 自动还原值设置为 `true`)在新创建的iSCSI LIF上(如果指定SVM中不存在iSCSI LIF、或者指定SVM中的所有现有iSCSI LIF均已启用iSCSI LIF故障转移)。
 
 +
-如果在升级到ONTAP 9.11.1或更高版本后、SVM中的现有iSCSI LIF尚未启用iSCSI LIF故障转移功能、而您在同一SVM中创建了新的iSCSI LIF、 新的iSCSI LIF采用与SVM中现有iSCSI LIF相同的故障转移策略(`d已标记为`)。
+如果在升级到ONTAP 9.11.1或更高版本后、某个SVM中存在未启用iSCSI LIF故障转移功能的现有iSCSI LIF、而您又在同一SVM中创建了新的iSCSI LIF、则新的iSCSI LIF将采用相同的故障转移策略 (`disabled`)。
 
 +
 link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故障转移"]
@@ -123,35 +123,36 @@ link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故
 network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port port_name {-address _IP_address_ - netmask _Netmask_value_ | -subnet-name _subnet_name_} -firewall- policy _policy_ -auto-revert {true|false}
 ....
 +
-** ` -home-node` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的节点。
+** `-home-node` 是LIF返回到的节点 `network interface revert` 命令将在LIF上运行。
 +
 您还可以使用 -auto-revert 选项指定 LIF 是否应自动还原到主节点和主端口。
 
-** ` 主端口` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的物理或逻辑端口。
-** 您可以使用 ` 地址` 和 ` 网络掩码` 选项指定 IP 地址，也可以使用 ` -subnet_name` 选项从子网进行分配。
+** `-home-port` 是LIF返回到的物理或逻辑端口 `network interface revert` 命令将在LIF上运行。
+** 您可以使用指定IP地址 `-address` 和 `-netmask` 选项、或者使用启用从子网分配 `-subnet_name` 选项
 ** 使用子网提供 IP 地址和网络掩码时，如果使用网关定义了子网，则在使用该子网创建 LIF 时，系统会自动向 SVM 添加指向该网关的默认路由。
-** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。`network route create` 手册页包含有关在 SVM 中创建静态路由的信息。
-** 使用`-auto-revert`可以指定在启动、更改管理数据库状态或建立网络连接等情况下数据LIF是否自动还原到其主节点。默认设置为 `false` ，但您可以根据环境中的网络管理策略将其设置为 `true` 。
-** ` -service-policy` 从 ONTAP 9.5 开始，您可以使用 ` -service-policy` 选项为 LIF 分配服务策略。为 LIF 指定服务策略时，将使用该策略为 LIF 构建默认角色，故障转移策略和数据协议列表。在 ONTAP 9.5 中，只有集群间和 BGP 对等服务才支持服务策略。在 ONTAP 9.6 中，您可以为多个数据和管理服务创建服务策略。
-** 使用`-data-protocol`可以创建支持FCP或NVMe/FC协议的LIF。创建 IP LIF 时不需要此选项。
+** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。。 `network route create` 手册页包含有关在SVM中创建静态路由的信息。
+** `-auto-revert` 用于指定在启动、更改管理数据库状态或建立网络连接等情况下、数据LIF是否自动还原到其主节点。默认设置为 `false`，但您可以将其设置为 `true` 具体取决于您环境中的网络管理策略。
+**  `-service-policy` 从ONTAP 9.5开始、您可以使用为LIF分配服务策略 `-service-policy` 选项
+为 LIF 指定服务策略时，将使用该策略为 LIF 构建默认角色，故障转移策略和数据协议列表。在 ONTAP 9.5 中，只有集群间和 BGP 对等服务才支持服务策略。在 ONTAP 9.6 中，您可以为多个数据和管理服务创建服务策略。
+** `-data-protocol` 用于创建支持FCP或NVMe/FC协议的LIF。创建 IP LIF 时不需要此选项。
 
 
 . *可选*：在-address选项中分配IPv6地址：
 +
 .. 使用 network ndp prefix show 命令查看在各种接口上获取的 RA 前缀列表。
 +
-可以在高级权限级别使用 `network ndp prefix show` 命令。
+。 `network ndp prefix show` 命令可在高级权限级别下使用。
 
-.. 使用格式 `prefix ：： id` 手动构建 IPv6 地址。
+.. 使用格式 `prefix::id` 手动构建IPv6地址。
 +
 `prefix` 是在各种接口上获取的前缀。
 
 +
-要派生 `id` ，请选择一个 64 位随机十六进制数。
+用于派生 `id`下，选择一个随机的64位十六进制数。
 
 
 
-. 使用`network interface show`命令验证是否已创建LIF。
+. 使用验证是否已创建LIF `network interface show` 命令：
 . 验证配置的 IP 地址是否可访问：
 
 
@@ -164,10 +165,10 @@ network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _se
 | IPv4 地址 | 网络 ping 
 
 
-| IPv6 地址 | 网络 ping6. 
+| IPv6地址 | 网络 ping6. 
 |===
 .示例
-以下命令将创建一个 LIF ，并使用 ` 地址` 和 ` 网络掩码` 参数指定 IP 地址和网络掩码值：
+以下命令将使用创建LIF并指定IP地址和网络掩码值 `-address` 和 `-netmask` 参数：
 
 ....
 network interface create -vserver vs1.example.com -lif datalif1 -service-policy default-data-files -home-node node-4 -home-port e1c -address 192.0.2.145 -netmask 255.255.255.0 -auto-revert true
@@ -177,7 +178,7 @@ network interface create -vserver vs1.example.com -lif datalif1 -service-policy 
 ....
 network interface create -vserver vs3.example.com -lif datalif3 -service-policy default-data-files -home-node node-3 -home-port e1c -subnet-name client1_sub - auto-revert true
 ....
-以下命令将创建 NVMe/FC LIF 并指定 `NVMe-fc` 数据协议：
+以下命令将创建NVMe/FC LIF并指定 `nvme-fc` 数据协议：
 
 ....
 network interface create -vserver vs1.example.com -lif datalif1 -data-protocol nvme-fc -home-node node-4 -home-port 1c -address 192.0.2.145 -netmask 255.255.255.0 -auto-revert true

@@ -2,36 +2,36 @@
 permalink: smb-config/verify-protocol-enabled-task.html 
 sidebar: sidebar 
 keywords: configure, smb, svm, verify, protocol, enable, verify that the smb protocol is enabled on the svm 
-summary: 在 SVM 上配置和使用 SMB 之前，必须验证是否已启用此协议。 
+summary: 要在SVM上配置和使用SMB、必须先验证协议是否已启用。 
 ---
-= 验证是否已在 SVM 上启用 SMB 协议
+= 验证是否已在SVM上启用SMB协议
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在 SVM 上配置和使用 SMB 之前，必须验证是否已启用此协议。
+要在SVM上配置和使用SMB、必须先验证协议是否已启用。
 
 .关于此任务
-此操作通常在 SVM 设置期间完成，但如果您在设置期间未启用此协议，则可以稍后使用 `vserver add-protocols` 命令启用它。
+此操作通常在SVM设置期间完成、但如果您在设置期间未启用此协议、则可以稍后使用启用它 `vserver add-protocols` 命令：
 
 [NOTE]
 ====
 创建 LIF 后，您不能在该 LIF 中添加或删除协议。
 
 ====
-您也可以使用 `vserver remove-protocols` 命令在 SVM 上禁用协议。
+您还可以使用在SVM上禁用协议 `vserver remove-protocols` 命令：
 
 .步骤
 . 检查 SVM 当前已启用和禁用的协议： `vserver show -vserver vserver_name -protocols`
 +
-您也可以使用 `vserver show-protocols` 命令查看集群中所有 SVM 上当前已启用的协议。
+您也可以使用 `vserver show-protocols` 命令以查看集群中所有SVM上当前已启用的协议。
 
 . 如有必要，启用或禁用协议：
 +
-** 要启用 SMB 协议： `vserver add-protocols -vserver vserver_name -protocols cifs`
-** 要禁用协议： ` +vserver remove-protocols -vserver vserver_name -protocols protocol_name[ ， protocol_name ， ...]+`
+** 启用SMB协议： `vserver add-protocols -vserver vserver_name -protocols cifs`
+** 禁用协议： `+vserver remove-protocols -vserver vserver_name -protocols protocol_name[,protocol_name,...]+`
 
 
 . 确认已启用和禁用的协议已正确更新： `vserver show -vserver vserver_name -protocols`
@@ -47,7 +47,7 @@ Vserver           Allowed Protocols         Disallowed Protocols
 -----------       ----------------------    -----------------------
 vs1.example.com   cifs                       nfs, fcp, iscsi, ndmp
 ----
-以下命令允许通过 SMB 访问，方法是将 `cifs` 添加到 SVM vs1 上已启用的协议列表中：
+以下命令可通过添加来允许通过SMB进行访问 `cifs` 到SVM VS1上已启用的协议列表：
 
 [listing]
 ----

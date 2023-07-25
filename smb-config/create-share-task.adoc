@@ -17,19 +17,19 @@ summary: 您必须先创建 SMB 共享，然后才能与 SMB 客户端共享 SMB
 在创建共享之前，卷或 qtree 的目录路径必须位于 SVM 命名空间中。
 
 .关于此任务
-创建共享时，默认共享 ACL （默认共享权限）为 `Everyone / Full Control` 。测试对共享的访问后，您应删除默认共享 ACL 并将其替换为更安全的替代 ACL 。
+创建共享时、默认共享ACL (默认共享权限)为 `Everyone / Full Control`。测试对共享的访问后，您应删除默认共享 ACL 并将其替换为更安全的替代 ACL 。
 
 .步骤
 . 如有必要，为共享创建目录路径结构。
 +
-`vserver cifs share create` 命令会在创建共享期间检查 ` 路径` 选项中指定的路径。如果指定路径不存在，则命令将失败。
+。 `vserver cifs share create` 命令会检查中指定的路径 `-path` 选项。如果指定路径不存在，则命令将失败。
 
-. 创建与指定 SVM 关联的 SMB 共享： ` +vserver cifs share create -vserver vserver_name -share-name share_name -path path -share-properties share_properties ， ...] 其他属性【注释文本】 +`
+. 创建与指定SVM关联的SMB共享： `+vserver cifs share create -vserver vserver_name -share-name share_name -path path [-share-properties share_properties,...] [other_attributes] [-comment text]+`
 . 验证是否已创建共享：``vserver cifs share show -share-name share_name``
 
 
 .示例
-以下命令会在 SVM `vs1.example.com` 上创建名为 `SHARE1` 的 SMB 共享。其目录路径为 ` /users` ，它是使用默认属性创建的。
+以下命令将在SVM上创建名为`SHARE1`的SMB共享 `vs1.example.com`。其目录路径为 `/users`，并使用默认属性创建。
 
 [listing]
 ----

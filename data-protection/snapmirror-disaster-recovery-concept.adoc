@@ -49,7 +49,7 @@ link:../snaplock/index.html["使用 SnapLock 技术实现归档和合规性"]
 
 首次调用 SnapMirror 时，它会执行从源卷到目标卷的 _baseline transfer_ 。此关系的 _snapmirror policy_ 用于定义基线内容以及任何更新。
 
-默认 SnapMirror 策略 `MirrorAllSnapshots` 下的基线传输涉及以下步骤：
+默认SnapMirror策略下的基线传输 `MirrorAllSnapshots` 包括以下步骤：
 
 * 为源卷创建 Snapshot 副本。
 * 将 Snapshot 副本及其引用的所有数据块传输到目标卷。
@@ -62,10 +62,10 @@ link:../snaplock/index.html["使用 SnapLock 技术实现归档和合规性"]
 
 更新是异步的，遵循您配置的计划。保留会镜像源上的 Snapshot 策略。
 
-在 `MirrorAllSnapshots` 策略进行的每次更新中， SnapMirror 都会为源卷创建一个 Snapshot 副本，并传输该 Snapshot 副本以及自上次更新以来创建的任何 Snapshot 副本。在 `MirrorAllSnapshots` 策略的 `snapmirror policy show` 命令的以下输出中，请注意以下几点：
+在下的每次更新时 `MirrorAllSnapshots` 策略中、SnapMirror将创建源卷的Snapshot副本、并传输该Snapshot副本以及自上次更新以来创建的任何Snapshot副本。在的以下输出中 `snapmirror policy show` 命令 `MirrorAllSnapshots` 策略中、请注意以下事项：
 
-* `Create Snapshot` 为 "`true` " ，表示 `MirrorAllSnapshots` 会在 SnapMirror 更新关系时创建 Snapshot 副本。
-* `mirrorAllSnapshots` 具有规则 " `sm_created` " 和 "`all_source_snapshots` " ，表示 SnapMirror 创建的 Snapshot 副本以及自上次更新以来创建的任何 Snapshot 副本都会在 SnapMirror 更新关系时传输。
+* `Create Snapshot` 是"`true`"、表示 `MirrorAllSnapshots` 在SnapMirror更新关系时创建Snapshot副本。
+* `MirrorAllSnapshots` 具有规则"`sm_created`"和"`all_ssource_Snapshot`"、表示在SnapMirror更新关系时、将传输SnapMirror创建的Snapshot副本以及自上次更新以来创建的任何Snapshot副本。
 
 
 [listing]
@@ -95,7 +95,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAllSnapshots -instance
 
 == MirrorLatest 策略
 
-预配置的 `MirrorLatest` 策略的工作方式与 `MirrorAllSnapshots` 完全相同，只是在初始化和更新时仅传输 SnapMirror 创建的 Snapshot 副本。
+预配置的 `MirrorLatest` 策略的工作方式与完全相同 `MirrorAllSnapshots`，不同之处在于初始化和更新时仅传输由SnapMirror创建的Snapshot副本。
 
 [listing]
 ----

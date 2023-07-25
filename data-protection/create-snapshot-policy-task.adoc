@@ -11,7 +11,7 @@ summary: 'Snapshot 策略用于指定何时创建 Snapshot 副本，要保留的
 
 
 [role="lead"]
-Snapshot 策略用于指定何时创建 Snapshot 副本，要保留的副本数量以及如何为其命名。例如，系统可能会在每天中午 12 ： 10 创建一个 Snapshot 副本，保留两个最新副本并将其命名为 " `daily.` timestamp_` 。` " 一个 Snapshot 策略最多可包含五个作业计划。
+Snapshot 策略用于指定何时创建 Snapshot 副本，要保留的副本数量以及如何为其命名。例如、系统可能会在每天中午12：10创建一个Snapshot副本、保留两个最新副本、并将其命名为`daily..`_timestamp_`.`Ω" 一个Snapshot策略最多可包含五个作业计划。
 
 .关于此任务
 默认情况下， ONTAP 通过在作业计划名称后附加时间戳来构成 Snapshot 副本的名称：
@@ -24,15 +24,15 @@ hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
 ----
 如果愿意，可以用前缀替换作业计划名称。
 
-`snapmirror-label` 选项用于 SnapMirror 复制。有关详细信息，请参见 link:define-rule-policy-task.html["为策略定义规则"]。
+。 `snapmirror-label` 选项用于SnapMirror复制。有关详细信息，请参见 link:define-rule-policy-task.html["为策略定义规则"]。
 
 .步骤
 . 创建快照策略
 +
-`volume snapshot policy create -vserver _svm_ -policy _policy_name_ -enabled true_false -schedule1 _schedule1_name_ -count1 _copies_to_retain_ -prefix1 _snapshot_prefix_ -snapmirror-label1 _snapshot_label_ ... -schedule1 _schedule5_name_ -count5 _copies_to_retain_-prefix5 _snapshot_prefix_ -snapmirror-label5 _snapshot_label_`
+`volume snapshot policy create -vserver _SVM_ -policy _policy_name_ -enabled true|false -schedule1 _schedule1_name_ -count1 _copies_to_retain_ -prefix1 _snapshot_prefix_ -snapmirror-label1 _snapshot_label_ ... -schedule1 _schedule5_name_ -count5 _copies_to_retain_-prefix5 _snapshot_prefix_ -snapmirror-label5 _snapshot_label_`
 
 +
-以下示例将创建一个名为 `snap_policy_daily` 的 Snapshot 策略，该策略按照 `daily` 计划运行。此策略最多包含五个 Snapshot 副本，每个副本的名称均为 `daily` 。` timestamp_` 和 SnapMirror 标签 `daily` ：
+以下示例将创建一个名为的Snapshot策略 `snap_policy_daily` 运行在上 `daily` 计划。此策略最多包含五个Snapshot副本、每个副本都具有相应的名称 `daily`.`_timestamp_` 和SnapMirror标签 `daily`：
 
 +
 [listing]

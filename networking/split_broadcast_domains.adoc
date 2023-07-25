@@ -16,7 +16,7 @@ summary: 拆分广播域，以便将 ONTAP 9.8 及更高版本的配置与物理
 [role="lead"]
 如果通过物理网络连接或交换机配置更改了网络端口可访问性， 先前在一个广播域中配置的一组网络端口已分区为两个不同的可访问性集，您可以拆分一个广播域，以便将 ONTAP 配置与物理网络拓扑同步。
 
-要确定某个网络端口广播域是否已分区为多个可访问性集，请使用 `network port reachability show -details` 命令并注意哪些端口未彼此连接（ " 无法访问的端口 " ）。通常，无法访问的端口列表定义了在确认物理和交换机配置准确无误后应拆分为另一个广播域的一组端口。
+要确定网络端口广播域是否已分区为多个可访问性集、请使用 `network port reachability show -details` 命令并注意哪些端口之间没有连接("无法访问的端口")。通常、在确认物理和交换机配置准确之后、无法访问的端口列表定义了应拆分为另一个广播域的端口集。
 
 .步骤
 将广播域拆分为两个广播域：
@@ -24,7 +24,7 @@ summary: 拆分广播域，以便将 ONTAP 9.8 及更高版本的配置与物理
 ....
 network port broadcast-domain split -ipspace <ipspace_name> -broadcast-domain <broadcast_domain_name> -new-broadcast-domain <broadcast_domain_name> -ports <node:port,node:port>
 ....
-* `ipspace_name` 是广播域所在 IP 空间的名称。
+* `ipspace_name` 是广播域所在IP空间的名称。
 * -`broadcast-domain` 是要拆分的广播域的名称。
 * -`new-broadcast-domain` 是要创建的新广播域的名称。
 * -`ports` 是要添加到新广播域的节点名称和端口。

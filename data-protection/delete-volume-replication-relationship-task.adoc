@@ -11,15 +11,15 @@ summary: 您可以使用 snapmirror delete 和 snapmirror release 命令删除�
 
 
 [role="lead"]
-您可以使用 `snapmirror delete` 和 `snapmirror release` 命令删除卷复制关系。然后，您可以手动删除不需要的目标卷。
+您可以使用 `snapmirror delete` 和 `snapmirror release` 用于删除卷复制关系的命令。然后，您可以手动删除不需要的目标卷。
 
 .关于此任务
-使用 `snapmirror release` 命令可从源中删除 SnapMirror 创建的任何 Snapshot 副本。您可以使用 ` -relationship-info-only` 选项保留 Snapshot 副本。
+。 `snapmirror release` 命令将从源中删除SnapMirror创建的任何Snapshot副本。您可以使用 `-relationship-info-only` 选项以保留Snapshot副本。
 
 .步骤
 . 暂停复制关系：
 +
-`snapmirror quiesce -destination-path _svm ： volume_|_cluster ： //svm/volume_`
+`snapmirror quiesce -destination-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
 [listing]
@@ -28,7 +28,7 @@ cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
 . (可选)如果您要求目标卷为读/写卷、请中断复制关系。如果您计划删除目标卷或不需要对卷进行读/写、则可以跳过此步骤：
 +
-`snapmirror break -source-path SVM ： volume| cluster ： //svm/ volume ，…​ -destination-path SVM ： volume| cluster ： //svm/ volume ，…​`
+`snapmirror break -source-path SVM:volume|cluster://SVM/volume, …​ -destination-path SVM:volume|cluster://SVM/volume, …​`
 
 +
 [listing]
@@ -37,7 +37,7 @@ cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_bac
 ----
 . 删除复制关系：
 +
-`snapmirror delete -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
+`snapmirror delete -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -49,7 +49,7 @@ cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_bac
 
 ====
 +
-以下示例将删除源卷 `vola` on `svm1` 与目标卷 `vola_dst` on `svm_backup` 之间的关系：
+以下示例将删除源卷之间的关系 `volA` 开启 `svm1` 和目标卷 `volA_dst` 开启 `svm_backup`：
 
 +
 [listing]
@@ -58,7 +58,7 @@ cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_ba
 ----
 . 从源 SVM 释放复制关系信息：
 +
-`snapmirror release -source-path _svm ： volume___cluster ： //svm/volume_ ， ... -destination-path _sVM ： volume_|_cluster ： //svm/volume_ ， ...`
+`snapmirror release -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -70,7 +70,7 @@ cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_ba
 
 ====
 +
-以下示例将从源 SVM `svm1` 释放指定复制关系的信息：
+以下示例将从源SVM释放指定复制关系的信息 `svm1`：
 
 +
 [listing]

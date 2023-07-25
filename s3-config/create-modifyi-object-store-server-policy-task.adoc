@@ -31,7 +31,7 @@ NOTE: 使用对象存储服务器策略时，您可以在组定义中指定主�
 
 您也可以创建新的自定义策略，然后为新用户和组添加新语句，或者修改现有语句的属性。有关更多选项、请参见 `vserver object-store-server policy` link:https://docs.netapp.com/us-en/ontap-cli-9131/index.html["命令参考"^]。
 
-从ONTAP 9.9.1及更高版本开始、如果您计划在ONTAP S3服务器上支持AWS客户端对象标记功能、则需要允许使用存储分段或组策略执行操作`GetObjectTagging`、`PutObjectTagging`和`DDeleteObjectTagging`。
+从ONTAP 9.9.1及更高版本开始、如果您计划在ONTAP S3服务器上支持AWS客户端对象标记功能、请执行以下操作 `GetObjectTagging`， `PutObjectTagging`，和 `DeleteObjectTagging` 需要允许使用存储分段或组策略。
 
 您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
 
@@ -54,7 +54,8 @@ NOTE: 使用对象存储服务器策略时，您可以在组定义中指定主�
 *** group ：授予访问权限的组。
 *** 影响：允许或拒绝对一个或多个组的访问。
 *** 操作：给定组的一个或多个分段中允许的操作。
-*** 资源：授予或拒绝访问权限的一个或多个分段中的对象的路径和名称。例如：
+*** 资源：授予或拒绝访问权限的一个或多个分段中的对象的路径和名称。
+例如：
 +
 **** *** 授予对 Storage VM 中所有分段的访问权限。
 **** * bucketname* 和 * bucketname/* 授予对特定存储分段中所有对象的访问权限。
@@ -76,11 +77,11 @@ NOTE: 使用对象存储服务器策略时，您可以在组定义中指定主�
 .步骤
 . 创建对象存储服务器策略：
 +
-`vserver object-store-server policy create -vserver _svm_name_-policy _policy_name_[-comment _text_]`
+`vserver object-store-server policy create -vserver _svm_name_ -policy _policy_name_ [-comment _text_]`
 
 . 为策略创建语句：
 +
-`vserver object-store-server policy statement create -vserver _svm_name_-policy _policy_name_-effect｛allow_deny｝-action _object_store_actions_-resource _object_store_resources_[-SID text]`
+`vserver object-store-server policy statement create -vserver _svm_name_ -policy _policy_name_ -effect {allow|deny} -action _object_store_actions_ -resource _object_store_resources_ [-sid text]`
 
 +
 以下参数用于定义访问权限：
@@ -91,30 +92,30 @@ NOTE: 使用对象存储服务器策略时，您可以在组定义中指定主�
 
 
  a| 
-` 效果`
+`-effect`
  a| 
 该语句可能允许或拒绝访问
 
 
 
  a| 
-` 操作`
+`-action`
  a| 
-您可以指定 ` *` 表示所有操作，也可以指定包含以下一项或多项操作的列表： `GetObject ， PutObject ， DeleteObject ， ListBucket ， GetBucketAcl ， GetObjectAcl ， ListAllMyBucketMultipartu上传 ，` 和 `ListMultipartu上传 部件` 。
+您可以指定 `*` 表示所有操作、或者包含以下一项或多项的列表： `GetObject, PutObject, DeleteObject, ListBucket,GetBucketAcl, GetObjectAcl, ListAllMyBuckets, ListBucketMultipartUploads,` 和 `ListMultipartUploadParts`。
 
 
 
  a| 
-` 资源`
+`-resource`
  a| 
-分段及其包含的任何对象。通配符 ` *` 和 ` ？` 可用于形成用于指定资源的正则表达式。
+分段及其包含的任何对象。通配符 `*` 和 `?` 可用于形成用于指定资源的正则表达式。
 
 |===
 +
-您也可以使用 ` -SID` 选项指定文本字符串作为注释。
+您可以选择使用指定文本字符串作为注释 `-sid` 选项
 
 +
-默认情况下，新的语句将添加到语句列表的末尾，并按顺序进行处理。稍后添加或修改语句时，您可以选择修改语句的 ` 索引` 设置以更改处理顺序。
+默认情况下，新的语句将添加到语句列表的末尾，并按顺序进行处理。以后添加或修改语句时、您可以选择修改该语句的 `-index` 设置以更改处理顺序。
 
 
 

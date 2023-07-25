@@ -13,11 +13,11 @@ summary: '您可以确定哪些FlexVol 卷在本地层(聚合)中使用的空间
 [role="lead"]
 您可以确定哪些FlexVol 卷在本地层(聚合)中使用的空间最多、以及具体确定卷中使用的功能。
 
-`volume show-footprint` 命令可提供有关卷占用空间或卷在所属聚合中的空间使用情况的信息。
+。 `volume show-footprint` 命令可提供有关卷占用空间或卷在所属聚合中的空间使用量的信息。
 
-`volume show-footprint` 命令可显示有关聚合中每个卷（包括脱机卷）的空间使用量的详细信息。此命令可弥补 `volume show-space` 和 `aggregate show-space` 命令输出之间的差距。所有百分比均按聚合大小的百分比计算。
+。 `volume show-footprint` 命令可显示有关聚合中每个卷(包括脱机卷)的空间使用量详细信息。此命令可弥补输出之间的差距 `volume show-space` 和 `aggregate show-space` 命令所有百分比均按聚合大小的百分比计算。
 
-以下示例显示了名为 testvol 的卷的 `volume show-footprint` 命令输出：
+以下示例显示了 `volume show-footprint` 名为testvol的卷的命令输出：
 
 ....
 cluster1::> volume show-footprint testvol
@@ -33,7 +33,7 @@ cluster1::> volume show-footprint testvol
       Delayed Frees                           1.36MB       0%
       Total Footprint                         2.01GB      76%
 ....
-下表介绍了 `volume show-footprint` 命令输出中的一些关键行，以及您可以执行哪些操作来尝试通过该功能减少空间使用量：
+下表介绍了的输出中的一些关键行 `volume show-footprint` 命令以及您可以执行哪些操作来减少此功能的空间使用量：
 
 |===
 
@@ -42,7 +42,7 @@ cluster1::> volume show-footprint testvol
 
 
  a| 
-`卷数据占用空间`
+`Volume Data Footprint`
  a| 
 活动文件系统中卷数据在所属聚合中使用的总空间量，以及卷的 Snapshot 副本使用的空间量。此行不包括预留空间。
  a| 
@@ -53,16 +53,16 @@ cluster1::> volume show-footprint testvol
 
 
  a| 
-`卷保证`
+`Volume Guarantee`
  a| 
 聚合中的卷为将来写入而预留的空间量。预留的空间量取决于卷的保证类型。
  a| 
-将卷的保证类型更改为 `none` 。
+将卷的保证类型更改为 `none`。
 
 
 
  a| 
-`灵活卷元数据`
+`Flexible Volume Metadata`
  a| 
 卷的元数据文件在聚合中使用的总空间量。
  a| 
@@ -71,16 +71,16 @@ cluster1::> volume show-footprint testvol
 
 
  a| 
-`d自由`
+`Delayed Frees`
  a| 
-ONTAP 用于提高性能的块，不能立即释放这些块。对于 SnapMirror 目标，此行的值为 `0` ，不会显示。
+ONTAP 用于提高性能的块，不能立即释放这些块。对于SnapMirror目标、此行的值为 `0` 不会显示和。
  a| 
 没有直接的控制方法。
 
 
 
  a| 
-`文件操作元数据`
+`File Operation Metadata`
  a| 
 为文件操作元数据预留的总空间量。
  a| 
@@ -89,7 +89,7 @@ ONTAP 用于提高性能的块，不能立即释放这些块。对于 SnapMirror
 
 
  a| 
-`总占用空间`
+`Total Footprint`
  a| 
 卷在聚合中使用的总空间量。它是所有行的总和。
  a| 

@@ -18,7 +18,7 @@ summary: '在启用多管理员验证(MAV)之前、您必须创建一个管理�
 
 MAV功能可支持现有的基于角色的访问控制(Role-Based Access Control、RBAC)设置。潜在的MAV管理员必须具有足够的权限来执行受保护的操作、才能将其添加到MAV管理员组。 link:../authentication/create-svm-user-accounts-task.html["了解有关RBAC的更多信息。"]
 
-您可以将MAV配置为向MAV管理员发出批准请求待处理的警报。要执行此操作、您必须配置电子邮件通知、尤其是`Mail from`和`Mail Server`参数、或者您也可以清除这些参数以禁用通知。如果没有电子邮件警报、MAV管理员必须手动检查批准队列。
+您可以将MAV配置为向MAV管理员发出批准请求待处理的警报。为此，您必须配置电子邮件通知，特别是 `Mail From` 和 `Mail Server` 参数--或者，您可以清除这些参数以禁用通知。如果没有电子邮件警报、MAV管理员必须手动检查批准队列。
 
 
 
@@ -42,7 +42,8 @@ MAV功能可支持现有的基于角色的访问控制(Role-Based Access Control
 . 创建或修改MAV批准组：
 +
 .. 单击*集群>设置。*
-.. 单击 image:icon_arrow.gif["蓝色箭头图标"] 在*安全性*部分中的*多管理员批准*旁边。(此时将显示 image:icon_gear.gif["齿轮图标"] 如果尚未配置MAV、则显示图标。)
+.. 单击 image:icon_arrow.gif["蓝色箭头图标"] 在*安全性*部分中的*多管理员批准*旁边。
+(此时将显示 image:icon_gear.gif["齿轮图标"] 如果尚未配置MAV、则显示图标。)
 +
 *** name：输入组名称。
 *** 审批者：从用户列表中选择审批者。
@@ -60,7 +61,7 @@ MAV功能可支持现有的基于角色的访问控制(Role-Based Access Control
 
 == 命令行界面操作步骤
 
-. 验证是否已为`Mail from`和`Mail Server`参数设置了值。输入 ...
+. 验证是否已为设置值 `Mail From` 和 `Mail Server` parameters输入 ...
 +
 `event config show`
 
@@ -81,7 +82,7 @@ cluster01::> event config show
 要配置这些参数、请输入：
 
 +
-`event config modify -mail-from _email_address_-mail-server _server_name_`
+`event config modify -mail-from _email_address_ -mail-server _server_name_`
 
 . 确定要接收多管理员验证的管理员
 +
@@ -91,17 +92,17 @@ cluster01::> event config show
 
 
 | 显示当前管理员  a| 
-`ssecurity login show`
+`security login show`
 
 
 
 | 修改当前管理员的凭据  a| 
-`ssecurity login modify _<参数>_`
+`security login modify _<parameters>_`
 
 
 
 | 创建新的管理员帐户  a| 
-`ssecurity login create -user-or-group-name _admin_name_-application ssh -authentication-method password`
+`security login create -user-or-group-name _admin_name_ -application ssh -authentication-method password`
 
 |===
 . 创建MAV批准组：
@@ -109,10 +110,10 @@ cluster01::> event config show
 `security multi-admin-verify approval-group create [ -vserver _svm_name_] -name _group_name_ -approvers _approver1_[,_approver2_…] [[-email _address1_], _address1_...]`
 
 +
-** `-vserver`—此版本仅支持管理SVM。
-** `名称`—MAV组名称、最多64个字符。
-** `批准者`—一个或多个批准者的列表。
-** `电子邮件`—在创建、批准、否决或执行请求时通知的一个或多个电子邮件地址。
+** `-vserver` -此版本仅支持管理SVM。
+** `-name` - MAV组名称，最多64个字符。
+** `-approvers` -一个或多个审批人的列表。
+** `-email` -创建、批准、否决或执行请求时通知的一个或多个电子邮件地址。
 +
 *示例：*以下命令将创建一个包含两个成员和关联电子邮件地址的MAV组。
 
@@ -150,16 +151,16 @@ svm-1    mav-grp1   pavan,julia      email pavan@myfirm.com,julia@myfirm.com
 
 
 | 修改组特征或修改现有成员信息  a| 
-`security multi-admin-verify Approval group modify [_parameters_]`
+`security multi-admin-verify approval-group modify [_parameters_]`
 
 
 
 | 添加或删除成员  a| 
-`s安全性多管理员验证批准组替换项为"-vserver _svm_name_]-name _group_name_[-perverant-to_add _approver1_、_approver2_…]]…`…
+`security multi-admin-verify approval-group replace [-vserver _svm_name_] -name _group_name_ [-approvers-to-add _approver1_[,_approver2_…]][-approvers-to-remove _approver1_[,_approver2_…]]`
 
 
 
 | 删除组  a| 
-`security multi-admin-verify Approval -group delete "-vserver _svm_name_]-name _group_name_`
+`security multi-admin-verify approval-group delete [-vserver _svm_name_] -name _group_name_`
 
 |===

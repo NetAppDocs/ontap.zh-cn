@@ -23,7 +23,7 @@ summary: 如果需要从 SnapVault 备份还原卷中的一个或多个 LUN ，�
 
 .步骤
 . 停止卷中所有 LUN 的 I/O 。
-. 运行 `snapmirror show` 命令验证包含 SnapVault 二级卷的二级卷。
+. 运行 `snapmirror show` 命令以验证包含SnapVault二级卷的二级卷。
 +
 [listing]
 ----
@@ -37,7 +37,7 @@ vserverA:srcvolA
                         Snapmirrored
                                 Idle       -         true    -
 ----
-. 运行 `volume snapshot show` 命令以确定要从中还原的 Snapshot 副本。
+. 运行 `volume snapshot show` 命令以确定要从中还原的Snapshot副本。
 +
 [listing]
 ----
@@ -51,7 +51,7 @@ vserverB
                  snap1.2013-02-10_0015 valid  112KB     0%    0%
                  snap2.2013-02-11_0010  valid  164KB     0%    0%
 ----
-. 运行 `snapmirror restore` 命令并指定 ` -source-snapshot` 选项以指定要使用的 Snapshot 副本。
+. 运行 `snapmirror restore` 命令并指定 `-source-snapshot` 用于指定要使用的Snapshot副本的选项。
 +
 为还原指定的目标是要还原到的原始卷。
 
@@ -76,7 +76,7 @@ Do you want to continue? {y|n}: y
 
 在以下示例中，创建 Snapshot 副本后，名为 LUN_D 的 LUN 添加到卷中。从 Snapshot 副本还原整个卷后， lun_D 不再显示。
 
-在 `lun show` 命令输出中，您可以看到主卷 srcvolA 中的 LUN 以及这些 LUN 在 SnapVault 二级卷 dstvolB 中的只读副本。SnapVault 备份中没有 LUN_D 的副本。
+在中 `lun show` 命令输出中、您可以查看主卷srcvolA中的LUN以及这些LUN在SnapVault二级卷dstvolB中的只读副本。SnapVault 备份中没有 LUN_D 的副本。
 
 [listing]
 ----

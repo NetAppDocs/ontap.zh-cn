@@ -41,36 +41,36 @@ NOTE: 从具有SM-BC关系的一致性组中删除卷会造成系统中断、您
 
 . 验证源集群和目标集群上的源卷和目标卷之间是否存在通用 Snapshot 副本：
 +
-`ssource ：： >snapshot show -vserver vs1_src -volume vol_src3 -snapshot snapmirror*`
+`source::>snapshot show -vserver vs1_src -volume vol_src3 -snapshot snapmirror*`
 
 +
-`d目标：： >snapshot show -vserver vs1_dst -volume vol_dst3 -snapshot snapmirror*`
+`destination::>snapshot show -vserver vs1_dst -volume vol_dst3 -snapshot snapmirror*`
 
 . 如果不存在通用 Snapshot 副本，请创建并初始化 FlexVol SnapMirror 关系：
 +
-`d目标：： >snapmirror initialize -source-path vs1_src ： vol_src3 -destination-path vs1_dst ： vol_dst3`
+`destination::>snapmirror initialize -source-path vs1_src:vol_src3 -destination-path vs1_dst:vol_dst3`
 
 . 删除零 RTO 一致性组关系：
 +
-`d目标：： >snapmirror delete -destination-path vs1_dst ： vol_dst3`
+`destination::>snapmirror delete -destination-path vs1_dst:vol_dst3`
 
 . 释放源 SnapMirror 关系并保留通用 Snapshot 副本：
 +
-`ssource ：：： >snapmirror release -relationship-info-only true -destination-path vs1_dst ： vol_dst3`
+`source::>snapmirror release -relationship-info-only true -destination-path vs1_dst:vol_dst3`
 
 . 取消映射 LUN 并删除现有一致性组关系：
 +
-`d目标：： >lun mapping delete -vserver vs1_dst -path <lun_path> -igroup <igroup_name>`
+`destination::>lun mapping delete -vserver vs1_dst -path <lun_path> -igroup <igroup_name>`
 
 +
 
 NOTE: 目标 LUN 将取消映射，而主副本上的 LUN 将继续为主机 I/O 提供服务
 
 +
-`d目标： >snapmirror delete -destination-path vs1_dst ： /CG/CG_DST`
+`destination::>snapmirror delete -destination-path vs1_dst:/cg/cg_dst`
 
 +
-`ssource ：：： >snapmirror release -destination-path vs1_dst ： /CG/CG_dst -relationship-info-only true`
+`source::>snapmirror release -destination-path vs1_dst:/cg/cg_dst -relationship-info-only true`
 
 . **如果使用的是ONTAP 9.10.1到9.13.0**，请删除并重新创建源上具有正确构成的一致性组。按照中的步骤进行操作 xref:../consistency-groups/delete-task.html[删除一致性组] 然后 xref:../consistency-groups/configure-task.html[配置一个一致性组]。在ONTAP 9.10.1及更高版本中、您必须在System Manager中或使用ONTAP REST API执行删除和创建操作；没有命令行界面操作步骤。
 +
@@ -78,11 +78,11 @@ NOTE: 目标 LUN 将取消映射，而主副本上的 LUN 将继续为主机 I/O
 
 . 在目标上使用新的构成创建新的一致性组：
 +
-`d目标：：： >snapmirror create -source-path vs1_src ： /CG/cG_src -destination-path vs1_dst ： /CG_c_dst -cg-item-mappings vol_src1 ：@vol_dst1 ， vol_src2 ：@vol_dst2 ， vol_src3 ：@vol_dst3`
+`destination::>snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1, vol_src2:@vol_dst2, vol_src3:@vol_dst3`
 
 . 重新同步零 RTO 一致性组关系以确保其处于同步状态：
 +
-`d目标：： >snapmirror resync -destination-path vs1_dst ： /CG/CG_DST`
+`destination::>snapmirror resync -destination-path vs1_dst:/cg/cg_dst`
 
 . 重新映射步骤 5 中未映射的 LUN ：
 +

@@ -66,13 +66,13 @@ sync-mirror
 .步骤
 . 创建自定义复制策略：
 +
-`snapmirror policy create -vserver _svm_ -policy _policy_ -type async-mirror_vault_mirror_strict-sync-mirror_sync-mirror -comment _comtion_ -tr尝试 _transfer_try_-transfer-priority low_normal -is-network-compression-enabled true_false`
+`snapmirror policy create -vserver _SVM_ -policy _policy_ -type async-mirror|vault|mirror-vault|strict-sync-mirror|sync-mirror -comment _comment_ -tries _transfer_tries_ -transfer-priority low|normal -is-network-compression-enabled true|false`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-从 ONTAP 9.5 开始，您可以使用 ` -common-snapshot-schedule` 参数指定为 SnapMirror 同步关系创建通用 Snapshot 副本计划的计划。默认情况下， SnapMirror 同步关系的通用 Snapshot 副本计划为一小时。您可以为 SnapMirror 同步关系的 Snapshot 副本计划指定一个介于 30 分钟到两小时之间的值。
+从ONTAP 9.5开始、您可以使用指定为SnapMirror同步关系创建通用Snapshot副本计划的计划 `-common-snapshot-schedule` 参数。默认情况下， SnapMirror 同步关系的通用 Snapshot 副本计划为一小时。您可以为 SnapMirror 同步关系的 Snapshot 副本计划指定一个介于 30 分钟到两小时之间的值。
 
 +
 以下示例将为 SnapMirror 灾难恢复创建一个自定义复制策略，以便为数据传输启用网络压缩：
@@ -111,4 +111,4 @@ cluster_dst::> snapmirror policy create -vserver svm1 -policy my_strictsync -typ
 .完成后
 对于 "`vault` " 和 " `mirror-vault` " 策略类型，您必须定义规则来确定初始化和更新期间传输的 Snapshot 副本。
 
-使用 `snapmirror policy show` 命令验证是否已创建 SnapMirror 策略。有关完整的命令语法，请参见手册页。
+使用 `snapmirror policy show` 命令以验证是否已创建SnapMirror策略。有关完整的命令语法，请参见手册页。

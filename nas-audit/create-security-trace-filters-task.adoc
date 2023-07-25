@@ -24,7 +24,7 @@ vserver security trace filter create 命令需要两个参数：
 
 
  a| 
-` -vserver` `vserver_name`
+`-vserver` `vserver_name`
  a| 
 _SVM 名称 _
 
@@ -33,7 +33,7 @@ _SVM 名称 _
 
 
  a| 
-` 索引` `index_number`
+`-index` `index_number`
  a| 
 筛选索引号 _
 
@@ -50,16 +50,16 @@ _SVM 名称 _
 
 
  a| 
-` 客户端 IP` `IP_Address`
+`-client-ip` `IP_Address`
  a| 
 此筛选器指定用户从中访问 SVM 的 IP 地址。
 
 
 
  a| 
-` 路径` `路径`
+`-path` `path`
  a| 
-此筛选器指定要应用权限跟踪筛选器的路径。` -path` 的值可以使用以下格式之一：
+此筛选器指定要应用权限跟踪筛选器的路径。的值 `-path` 可以使用以下格式之一：
 
 * 从共享或导出的根目录开始的完整路径
 * 相对于共享根的部分路径
@@ -70,7 +70,7 @@ _SVM 名称 _
 
 
  a| 
-` -windows-name` `win_user_name` 或 ` -unix-name``unix_user_name`
+`-windows-name` `win_user_name` 或 `-unix-name``unix_user_name`
  a| 
 您可以指定要跟踪其访问请求的 Windows 用户名或 UNIX 用户名。用户名变量不区分大小写。您不能在同一筛选器中同时指定 Windows 用户名和 UNIX 用户名。
 
@@ -82,21 +82,21 @@ _SVM 名称 _
 
 
  a| 
-` -trace-allow` ｛`yes` ｝`no` ｝
+`-trace-allow` {`yes`|`no`｝
  a| 
-对于安全跟踪筛选器，始终会启用对拒绝事件的跟踪。您可以选择跟踪允许事件。要跟踪允许事件，请将此参数设置为 `yes` 。
+对于安全跟踪筛选器，始终会启用对拒绝事件的跟踪。您可以选择跟踪允许事件。要跟踪允许事件、请将此参数设置为 `yes`。
 
 
 
  a| 
-` 已启用` ｛`已启用` `d已启用` 已禁用 ｝
+`-enabled` {`enabled`|`disabled`｝
  a| 
 您可以启用或禁用安全跟踪筛选器。默认情况下，安全跟踪筛选器处于启用状态。
 
 
 
  a| 
-` 时间启用` `整型`
+`-time-enabled` `integer`
  a| 
 您可以为筛选器指定超时时间，超过此超时时间后将其禁用。
 
@@ -119,7 +119,7 @@ _SVM 名称 _
 
 
 .示例
-以下命令将为从 IP 地址 10.10.10.7 访问共享路径为 ` \\server\share1\dir1\dir2\file.txt` 的文件的任何用户创建安全跟踪筛选器。此筛选器会为 ` -path` 选项使用一个完整路径。用于访问数据的客户端 IP 地址为 10.10.10.7 。筛选器在 30 分钟后超时：
+以下命令将为使用共享路径访问文件的任何用户创建安全跟踪筛选器 `\\server\share1\dir1\dir2\file.txt` 从IP地址10.10.10.7。筛选器将使用的完整路径 `-path` 选项用于访问数据的客户端 IP 地址为 10.10.10.7 。筛选器在 30 分钟后超时：
 
 [listing]
 ----
@@ -129,7 +129,7 @@ Vserver  Index   Client-IP            Path            Trace-Allow  Windows-Name
 -------- -----  -----------  ----------------------   -----------  -------------
 vs1        1    10.10.10.7   /dir1/dir2/file.txt          no       -
 ----
-以下命令使用 ` 路径` 选项的相对路径创建安全跟踪筛选器。此筛选器会跟踪名为 "`Joe` " 的 Windows 用户的访问权限。Joe 正在访问共享路径为 ` \\server\share1\dir1\dir2\file.txt` 的文件。筛选器跟踪允许和拒绝事件：
+以下命令使用的相对路径创建安全跟踪筛选器 `-path` 选项此筛选器会跟踪名为 "`Joe` " 的 Windows 用户的访问权限。Joe正在访问具有共享路径的文件 `\\server\share1\dir1\dir2\file.txt`。筛选器跟踪允许和拒绝事件：
 
 [listing]
 ----

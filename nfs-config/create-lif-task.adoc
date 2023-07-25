@@ -14,10 +14,10 @@ summary: LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出
 LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障，则 LIF 可以故障转移到或迁移到其他物理端口，从而继续与网络通信。
 
 .您需要的内容
-* 底层物理或逻辑网络端口必须已配置为管理 `up` 状态。
+* 底层物理或逻辑网络端口必须已配置为管理端口 `up` 状态。
 * 如果您计划使用子网名称为 LIF 分配 IP 地址和网络掩码值，则此子网必须已存在。
 +
-子网包含属于同一第 3 层子网的 IP 地址池。可以使用 `network subnet create` 命令创建这些子网。
+子网包含属于同一第 3 层子网的 IP 地址池。它们是使用创建的 `network subnet create` 命令：
 
 * 用于指定 LIF 处理的流量类型的机制已发生更改。对于 ONTAP 9.5 及更早版本， LIF 使用角色指定要处理的流量类型。从 ONTAP 9.6 开始， LIF 使用服务策略指定要处理的流量类型。
 
@@ -25,7 +25,7 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
 .关于此任务
 * 您可以在同一网络端口上创建 IPv4 和 IPv6 LIF 。
 * 如果您使用的是 Kerberos 身份验证，请在多个 LIF 上启用 Kerberos 。
-* 如果集群中有大量 LIF ，您可以使用 `network interface capacity show` 命令验证集群上支持的 LIF 容量，并使用 `network interface capacity details show` 命令验证每个节点上支持的 LIF 容量 （在高级权限级别）。
+* 如果集群中有大量LIF、则可以使用验证集群上支持的LIF容量 `network interface capacity show` 命令以及每个节点上支持的LIF容量 `network interface capacity details show` 命令(在高级权限级别)。
 * 从 ONTAP 9.7 开始，如果同一子网中已存在 SVM 的其他 LIF ，则无需指定 LIF 的主端口。ONTAP 会自动在与已在同一子网中配置的其他 LIF 位于同一广播域的指定主节点上选择一个随机端口。
 
 
@@ -41,7 +41,7 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
 .步骤
 . 创建 LIF ：
 +
-`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ ｛ -address _ip_address_ -netmask _ip_address_ _ _ _ _ _ _ _ _ - subnet-name _subnet_subnet_name_ ｝ -firewall-policy data -auto-true ｛ revert ｝`
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _IP_address_ | -subnet-name _subnet_name_} -firewall-policy data -auto-revert {true|false}`
 
 +
 |===
@@ -53,31 +53,31 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
  a| 
 * ONTAP 9.5 及更早版本 *
  a| 
-`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ ｛ -address _ip_address_ -netmask _ip_address_ _ _ _ _ _ _ _ _ - subnet-name _subnet_subnet_name_ ｝ -firewall-policy data -auto-true ｛ revert ｝`
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _IP_address_ | -subnet-name _subnet_name_} -firewall-policy data -auto-revert {true|false}`
 
 
 
  a| 
 * ONTAP 9.6 及更高版本 *
  a| 
-`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ ｛ -address _ip_address_ -netmask _ip_address_ _ _ _ _ _ _ _ _ - subnet-name _subnet_subnet_name_ ｝ -firewall-policy data -auto-true ｛ revert ｝`
+`network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _IP_address_ | -subnet-name _subnet_name_} -firewall-policy data -auto-revert {true|false}`
 
 |===
 +
-** 使用服务策略（从 ONTAP 9.6 开始）创建 LIF 时，不需要 ` -role` 参数。
-** 必须在创建 LIF 时指定 ` -data-protocol` 参数，如果稍后不销毁并重新创建数据 LIF ，则无法修改此参数。
+** 。 `-role` 使用服务策略创建LIF时不需要参数(从ONTAP 9.6开始)。
+** 。 `-data-protocol` 必须在创建LIF时指定参数、如果不销毁并重新创建数据LIF、则以后无法修改此参数。
 +
-使用服务策略（从 ONTAP 9.6 开始）创建 LIF 时，不需要 ` -data-protocol` 参数。
+。 `-data-protocol` 使用服务策略创建LIF时不需要参数(从ONTAP 9.6开始)。
 
-** ` -home-node` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的节点。
+** `-home-node` 是LIF返回到的节点 `network interface revert` 命令将在LIF上运行。
 +
-您还可以使用 ` -auto-revert` 选项指定 LIF 是否应自动还原到主节点和主端口。
+您还可以使用指定LIF是否应自动还原到主节点和主端口 `-auto-revert` 选项
 
-** ` 主端口` 是在 LIF 上运行 `network interface revert` 命令时 LIF 返回到的物理或逻辑端口。
-** 您可以使用 ` 地址` 和 ` 网络掩码` 选项指定 IP 地址，也可以使用 ` -subnet_name` 选项从子网进行分配。
+** `-home-port` 是LIF返回到的物理或逻辑端口 `network interface revert` 命令将在LIF上运行。
+** 您可以使用指定IP地址 `-address` 和 `-netmask` 选项、或者使用启用从子网分配 `-subnet_name` 选项
 ** 使用子网提供 IP 地址和网络掩码时，如果使用网关定义了子网，则在使用该子网创建 LIF 时，系统会自动向 SVM 添加指向该网关的默认路由。
-** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。`network route create` 手册页包含有关在 SVM 中创建静态路由的信息。
-** 对于 ` -firewall-policy` 选项，请使用与 LIF 角色相同的默认值 `data` 。
+** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。。 `network route create` 手册页包含有关在SVM中创建静态路由的信息。
+** 。 `-firewall-policy` 选项中、使用相同的默认值 `data` 作为LIF角色。
 +
 如果需要，您可以稍后创建和添加自定义防火墙策略。
 
@@ -85,10 +85,10 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
 
 NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF服务策略。有关详细信息，请参见 link:../networking/configure_firewall_policies_for_lifs.html["为 LIF 配置防火墙策略"]。
 
-** 使用 ` -auto-revert` 可以指定在启动，更改管理数据库状态或建立网络连接等情况下数据 LIF 是否自动还原到其主节点。默认设置为 `false` ，但您可以根据环境中的网络管理策略将其设置为 `false` 。
+** `-auto-revert` 用于指定在启动、更改管理数据库状态或建立网络连接等情况下、数据LIF是否自动还原到其主节点。默认设置为 `false`，但您可以将其设置为 `false` 具体取决于您环境中的网络管理策略。
 
 
-. 使用 `network interface show` 命令验证是否已成功创建 LIF 。
+. 使用验证是否已成功创建LIF `network interface show` 命令：
 . 验证配置的 IP 地址是否可访问：
 +
 |===
@@ -100,12 +100,12 @@ NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF�
  a| 
 IPv4 地址
  a| 
-`网络 ping`
+`network ping`
 
 
 
  a| 
-IPv6 地址
+IPv6地址
  a| 
 `network ping6`
 
@@ -117,7 +117,7 @@ IPv6 地址
 
 
 .示例
-以下命令将创建一个 LIF ，并使用 ` 地址` 和 ` 网络掩码` 参数指定 IP 地址和网络掩码值：
+以下命令将使用创建LIF并指定IP地址和网络掩码值 `-address` 和 `-netmask` 参数：
 
 [listing]
 ----
@@ -155,7 +155,7 @@ vs3.example.com
             datalif4     up/up    2001::2/64       node-2       e0c     true
 5 entries were displayed.
 ----
-以下命令显示如何创建使用 `default-data-files` 服务策略分配的 NAS 数据 LIF ：
+以下命令显示如何创建分配给的NAS数据LIF `default-data-files` 服务策略：
 
 [listing]
 ----

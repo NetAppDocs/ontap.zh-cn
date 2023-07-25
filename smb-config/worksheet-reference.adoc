@@ -2,27 +2,27 @@
 permalink: smb-config/worksheet-reference.html 
 sidebar: sidebar 
 keywords: smb, configuration, worksheet, enable, collect, require, information, access, client, worksheet, gather, cifs, worksheet for gathering SMB configuration information 
-summary: 通过 SMB 配置工作表，您可以收集为客户端设置 SMB 访问所需的信息。 
+summary: 通过SMB配置工作表、您可以收集为客户端设置SMB访问所需的信息。 
 ---
-= 用于收集 SMB 配置信息的工作表
+= 用于收集SMB配置信息的工作表
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-通过 SMB 配置工作表，您可以收集为客户端设置 SMB 访问所需的信息。
+通过SMB配置工作表、您可以收集为客户端设置SMB访问所需的信息。
 
 您应完成工作表的一个或两个部分，具体取决于您决定在何处配置存储：
 
 * 如果要配置对 SVM 的 SMB 访问，则应完成这两个部分。
 +
-xref:configure-access-svm-task.adoc[配置对 SVM 的 SMB 访问]
+xref:configure-access-svm-task.adoc[配置对SVM的SMB访问]
 
 +
 xref:configure-client-access-shared-storage-concept.adoc[配置 SMB 客户端对共享存储的访问]
 
-* 如果要向启用了 SMB 的 SVM 添加存储容量，则应仅完成第二部分。
+* 如果要向启用了SMB的SVM添加存储容量、则只应完成第二部分。
 +
 xref:configure-client-access-shared-storage-concept.adoc[配置 SMB 客户端对共享存储的访问]
 
@@ -32,18 +32,18 @@ xref:configure-client-access-shared-storage-concept.adoc[配置 SMB 客户端对
 
 
 
-== 配置对 SVM 的 SMB 访问
+== 配置对SVM的SMB访问
 
 * 用于创建 SVM* 的参数
 
-如果要创建新的 SVM ，请在 `vserver create` 命令中提供这些值。
+您可以在中提供这些值 `vserver create` 命令。
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 您为新 SVM 提供的名称，可以是完全限定域名（ FQDN ），也可以遵循在集群中强制实施唯一 SVM 名称的其他约定。
  a| 
@@ -51,15 +51,15 @@ xref:configure-client-access-shared-storage-concept.adoc[配置 SMB 客户端对
 
 
  a| 
-` 聚合`
+`-aggregate`
  a| 
-集群中具有足够空间来容纳新 SMB 存储容量的聚合的名称。
+集群中具有足够空间来容纳新SMB存储容量的聚合的名称。
  a| 
 
 
 
  a| 
-` -rootvolume`
+`-rootvolume`
  a| 
 为 SVM 根卷提供的唯一名称。
  a| 
@@ -67,16 +67,16 @@ xref:configure-client-access-shared-storage-concept.adoc[配置 SMB 客户端对
 
 
  a| 
-` -rootvolume-security-style`
+`-rootvolume-security-style`
  a| 
-对 SVM 使用 NTFS 安全模式。
+对SVM使用NTFS安全模式。
  a| 
-`NTFS`
+`ntfs`
 
 
 
  a| 
-` 语言`
+`-language`
  a| 
 在此工作流中使用默认语言设置。
  a| 
@@ -85,7 +85,7 @@ xref:configure-client-access-shared-storage-concept.adoc[配置 SMB 客户端对
 
 
  a| 
-`IP 空间`
+`ipspace`
  a| 
 可选： IP 空间是 SVM 所在的不同 IP 地址空间。
  a| 
@@ -93,14 +93,14 @@ xref:configure-client-access-shared-storage-concept.adoc[配置 SMB 客户端对
 |===
 * 用于创建 LIF* 的参数
 
-在创建 LIF 时，您可以使用 `network interface create` 命令提供这些值。
+您可以在中提供这些值 `network interface create` 命令。
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` - lif`
+`-lif`
  a| 
 为新 LIF 提供的名称。
  a| 
@@ -108,7 +108,7 @@ xref:configure-client-access-shared-storage-concept.adoc[配置 SMB 客户端对
 
 
  a| 
-` - 角色`
+`-role`
  a| 
 在此工作流中使用数据 LIF 角色。
  a| 
@@ -117,32 +117,32 @@ xref:configure-client-access-shared-storage-concept.adoc[配置 SMB 客户端对
 
 
  a| 
-` 数据协议`
+`-data-protocol`
  a| 
-在此工作流中仅使用 SMB 协议。
+在此工作流中仅使用SMB协议。
  a| 
-`CIFS`
+`cifs`
 
 
 
  a| 
-` 主节点`
+`-home-node`
  a| 
-在 LIF 上运行 `network interface revert` 命令时， LIF 返回到的节点。
- a| 
-
-
-
- a| 
-` 主端口`
- a| 
-在 LIF 上运行 `network interface revert` 命令时， LIF 返回到的端口或接口组。
+LIF返回到的节点 `network interface revert` 命令将在LIF上运行。
  a| 
 
 
 
  a| 
-` 地址`
+`-home-port`
+ a| 
+LIF返回到的端口或接口组 `network interface revert` 命令将在LIF上运行。
+ a| 
+
+
+
+ a| 
+`-address`
  a| 
 集群上要由新 LIF 用于数据访问的 IPv4 或 IPv6 地址。
  a| 
@@ -150,7 +150,7 @@ xref:configure-client-access-shared-storage-concept.adoc[配置 SMB 客户端对
 
 
  a| 
-` 网络掩码`
+`-netmask`
  a| 
 LIF 的网络掩码和网关。
  a| 
@@ -158,15 +158,15 @@ LIF 的网络掩码和网关。
 
 
  a| 
-` 子网`
+`-subnet`
  a| 
-IP 地址池。用于代替 ` 地址` 和 ` 网络掩码` 自动分配地址和网络掩码。
+IP 地址池。已使用、而不是 `-address` 和 `-netmask` 自动分配地址和网络掩码。
  a| 
 
 
 
  a| 
-` 防火墙策略`
+`-firewall-policy`
  a| 
 在此工作流中使用默认数据防火墙策略。
  a| 
@@ -175,22 +175,22 @@ IP 地址池。用于代替 ` 地址` 和 ` 网络掩码` 自动分配地址和�
 
 
  a| 
-` 自动还原`
+`-auto-revert`
  a| 
-可选：指定数据 LIF 是在启动时还是在其他情况下自动还原到其主节点。默认设置为 `false` 。
+可选：指定数据 LIF 是在启动时还是在其他情况下自动还原到其主节点。默认设置为 `false`。
  a| 
 
 |===
 * 用于 DNS 主机名解析的参数 *
 
-在配置 DNS 时，您可以使用 `vserver services name-service dns create` 命令提供这些值。
+您可以在中提供这些值 `vserver services name-service dns create` 命令。
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` 域`
+`-domains`
  a| 
 最多五个 DNS 域名。
  a| 
@@ -198,7 +198,7 @@ IP 地址池。用于代替 ` 地址` 和 ` 网络掩码` 自动分配地址和�
 
 
  a| 
-` 名称服务器`
+`-name-servers`
  a| 
 每个 DNS 名称服务器最多三个 IP 地址。
  a| 
@@ -210,14 +210,14 @@ IP 地址池。用于代替 ` 地址` 和 ` 网络掩码` 自动分配地址和�
 
 * 时间服务配置的参数 *
 
-在配置时间服务时，您可以使用 `cluster time-service ntp server create` 命令提供这些值。
+您可以在中提供这些值 `cluster time-service ntp server create` 命令。
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` 服务器`
+`-server`
  a| 
 Active Directory 域的 NTP 服务器的主机名或 IP 地址。
  a| 
@@ -225,14 +225,14 @@ Active Directory 域的 NTP 服务器的主机名或 IP 地址。
 |===
 * 用于在 Active Directory 域中创建 SMB 服务器的参数 *
 
-在创建新的 SMB 服务器并指定域信息时，您可以使用 `vserver cifs create` 命令提供这些值。
+您可以在中提供这些值 `vserver cifs create` 命令。
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要在其中创建 SMB 服务器的 SVM 的名称。
  a| 
@@ -240,7 +240,7 @@ Active Directory 域的 NTP 服务器的主机名或 IP 地址。
 
 
  a| 
-` -cifs-server`
+`-cifs-server`
  a| 
 SMB 服务器的名称（最多 15 个字符）。
  a| 
@@ -248,7 +248,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 域`
+`-domain`
  a| 
 要与 SMB 服务器关联的 Active Directory 域的完全限定域名（ FQDN ）。
  a| 
@@ -256,7 +256,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` -ou`
+`-ou`
  a| 
 可选： Active Directory 域中要与 SMB 服务器关联的组织单位。默认情况下，此参数设置为 CN=Computers 。
  a| 
@@ -264,7 +264,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` -netbios-aliases`
+`-netbios-aliases`
  a| 
 可选： NetBIOS 别名列表，这些别名是 SMB 服务器名称的备用名称。
  a| 
@@ -272,7 +272,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 注释`
+`-comment`
  a| 
 可选：服务器的文本注释。在网络上浏览服务器时， Windows 客户端可以看到此 SMB 服务器问题描述。
  a| 
@@ -284,14 +284,14 @@ SMB 服务器的名称（最多 15 个字符）。
 
 * 用于在工作组中创建 SMB 服务器的参数 *
 
-在创建新的 SMB 服务器并指定支持的 SMB 版本时，您可以在 `vserver cifs create` 命令中提供这些值。
+您可以在中提供这些值 `vserver cifs create` 命令。
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要在其中创建 SMB 服务器的 SVM 的名称。
  a| 
@@ -299,7 +299,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` -cifs-server`
+`-cifs-server`
  a| 
 SMB 服务器的名称（最多 15 个字符）。
  a| 
@@ -307,7 +307,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 工作组`
+`-workgroup`
  a| 
 工作组的名称（最多 15 个字符）。
  a| 
@@ -315,7 +315,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 注释`
+`-comment`
  a| 
 可选：服务器的文本注释。在网络上浏览服务器时， Windows 客户端可以看到此 SMB 服务器问题描述。
  a| 
@@ -323,14 +323,14 @@ SMB 服务器的名称（最多 15 个字符）。
 |===
 * 用于创建本地用户的参数 *
 
-在创建本地用户时，您可以使用 `vserver cifs users-and-groups local-user create` 命令提供这些值。它们对于工作组中的 SMB 服务器是必需的，在 AD 域中是可选的。
+您可以在创建本地用户时使用提供以下值 `vserver cifs users-and-groups local-user create` 命令：它们对于工作组中的 SMB 服务器是必需的，在 AD 域中是可选的。
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要在其中创建本地用户的 SVM 的名称。
  a| 
@@ -338,7 +338,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 用户名`
+`-user-name`
  a| 
 本地用户的名称（最多 20 个字符）。
  a| 
@@ -346,7 +346,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 全名`
+`-full-name`
  a| 
 可选：用户的全名。如果全名包含空格，请将全名用双引号括起来。
  a| 
@@ -354,7 +354,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 问题描述`
+`-description`
  a| 
 可选：本地用户的问题描述。如果问题描述包含空格，请将参数用引号括起来。
  a| 
@@ -362,7 +362,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` -is-account-disabled`
+`-is-account-disabled`
  a| 
 可选：指定用户帐户是启用还是禁用。如果未指定此参数，则默认为启用用户帐户。
  a| 
@@ -370,14 +370,14 @@ SMB 服务器的名称（最多 15 个字符）。
 |===
 * 用于创建本地组的参数 *
 
-在创建本地组时，您可以使用 `vserver cifs users-and-groups local-group create` 命令提供这些值。对于 AD 域和工作组中的 SMB 服务器，它们是可选的。
+您可以在创建本地组时使用提供以下值 `vserver cifs users-and-groups local-group create` 命令：对于 AD 域和工作组中的 SMB 服务器，它们是可选的。
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要在其中创建本地组的 SVM 的名称。
  a| 
@@ -385,7 +385,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 组名称`
+`-group-name`
  a| 
 本地组的名称（最多 256 个字符）。
  a| 
@@ -393,7 +393,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 问题描述`
+`-description`
  a| 
 可选：本地组的问题描述。如果问题描述包含空格，请将参数用引号括起来。
  a| 
@@ -401,18 +401,18 @@ SMB 服务器的名称（最多 15 个字符）。
 |===
 
 
-== 向启用了 SMB 的 SVM 添加存储容量
+== 向启用了SMB的SVM添加存储容量
 
 用于创建卷的 * 参数 *
 
-如果要创建卷而不是 qtree ，则可以在 `volume create` 命令中提供这些值。
+您可以在中提供这些值 `volume create` 命令。
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要托管新卷的新 SVM 或现有 SVM 的名称。
  a| 
@@ -420,7 +420,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 卷`
+`-volume`
  a| 
 为新卷提供的唯一描述性名称。
  a| 
@@ -428,15 +428,15 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 聚合`
+`-aggregate`
  a| 
-集群中具有足够空间来容纳新 SMB 卷的聚合的名称。
+集群中为新SMB卷提供足够空间的聚合的名称。
  a| 
 
 
 
  a| 
-` 大小`
+`-size`
  a| 
 为新卷的大小提供的整数。
  a| 
@@ -444,16 +444,16 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 安全模式`
+`-security-style`
  a| 
-对此工作流使用 NTFS 安全模式。
+对此工作流使用NTFS安全模式。
  a| 
-`NTFS`
+`ntfs`
 
 
 
  a| 
-` 接合路径`
+`-junction-path`
  a| 
 根（ / ）下要挂载新卷的位置。
  a| 
@@ -461,14 +461,14 @@ SMB 服务器的名称（最多 15 个字符）。
 |===
 用于创建 qtree* 的 * 参数
 
-如果要创建 qtree 而不是卷，则可以在 `volume qtree create` 命令中提供这些值。
+您可以在中提供这些值 `volume qtree create` 命令。
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 包含 qtree 的卷所在 SVM 的名称。
  a| 
@@ -476,7 +476,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 卷`
+`-volume`
  a| 
 要包含新 qtree 的卷的名称。
  a| 
@@ -484,7 +484,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` qtree`
+`-qtree`
  a| 
 为新 qtree 提供的唯一描述性名称，不超过 64 个字符。
  a| 
@@ -492,22 +492,22 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` qtree-path`
+`-qtree-path`
  a| 
-可以指定格式为 ` /vol/volume_name/qtree_name\>` 的 qtree 路径参数，而不是将卷和 qtree 指定为单独的参数。
+格式的qtree路径参数 `/vol/volume_name/qtree_name\>` 可以指定、而不是将卷和qtree指定为单独的参数。
  a| 
 
 |===
 * 用于创建 SMB 共享的参数 *
 
-您可以在 `vserver cifs share create` 命令中提供这些值。
+您可以在中提供这些值 `vserver cifs share create` 命令：
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要在其中创建 SMB 共享的 SVM 的名称。
  a| 
@@ -515,7 +515,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 共享名称`
+`-share-name`
  a| 
 要创建的 SMB 共享的名称（最多 256 个字符）。
  a| 
@@ -523,7 +523,7 @@ SMB 服务器的名称（最多 15 个字符）。
 
 
  a| 
-` 路径`
+`-path`
  a| 
 SMB 共享路径的名称（最多 256 个字符）。在创建共享之前，此路径必须存在于卷中。
  a| 
@@ -531,15 +531,15 @@ SMB 共享路径的名称（最多 256 个字符）。在创建共享之前，�
 
 
  a| 
-` 共享属性`
+`-share-properties`
  a| 
-可选：共享属性列表。默认设置为 `oplocks` ， `browable` ， `changenotify` 和 `sHow-previous-versions` 。
+可选：共享属性列表。默认设置为 `oplocks`， `browsable`， `changenotify`，和 `show-previous-versions`。
  a| 
 
 
 
  a| 
-` 注释`
+`-comment`
  a| 
 可选：服务器的文本注释（最多 256 个字符）。在网络上浏览时， Windows 客户端可以看到此 SMB 共享问题描述。
  a| 
@@ -547,14 +547,14 @@ SMB 共享路径的名称（最多 256 个字符）。在创建共享之前，�
 |===
 * 用于创建 SMB 共享访问控制列表（ ACL ）的参数 *
 
-您可以使用 `vserver cifs share access-control create` 命令提供这些值。
+您可以在中提供这些值 `vserver cifs share access-control create` 命令：
 
 |===
 | 字段 | Description | 您的价值 
 
 
  a| 
-` -vserver`
+`-vserver`
  a| 
 要在其中创建 SMB ACL 的 SVM 的名称。
  a| 
@@ -562,7 +562,7 @@ SMB 共享路径的名称（最多 256 个字符）。在创建共享之前，�
 
 
  a| 
-` 共享`
+`-share`
  a| 
 要创建的 SMB 共享的名称。
  a| 
@@ -570,16 +570,16 @@ SMB 共享路径的名称（最多 256 个字符）。在创建共享之前，�
 
 
  a| 
-` 用户组类型`
+`-user-group-type`
  a| 
 要添加到共享 ACL 的用户或组的类型。默认类型为 `windows`
  a| 
-`窗口`
+`windows`
 
 
 
  a| 
-` 用户或组`
+`-user-or-group`
  a| 
 要添加到共享 ACL 的用户或组。如果指定用户名，则必须使用 `domain\username` 格式包含用户的域。
  a| 
@@ -587,10 +587,10 @@ SMB 共享路径的名称（最多 256 个字符）。在创建共享之前，�
 
 
  a| 
-` 权限`
+`-permission`
  a| 
 指定用户或组的权限。
  a| 
-` _ 无访问权限 _ 读取 _ 更改 _ 完全控制 ]`
+`[ No_access | Read | Change | Full_Control ]`
 
 |===

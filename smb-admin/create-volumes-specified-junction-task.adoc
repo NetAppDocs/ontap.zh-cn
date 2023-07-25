@@ -24,7 +24,7 @@ summary: 您可以在创建数据卷时指定接合点。生成的卷会自动�
 
 ====
 .步骤
-. 创建具有接合点的卷： `volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size ｛ integer ｛ KB_MB|GB_TB_PB] ｝ -security-style ｛ ntfs|unix_mixed ｝ -junction-path _junction_path_`
+. 创建具有接合点的卷： `volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {integer[KB|MB|GB|TB|PB]} -security-style {ntfs|unix|mixed} -junction-path _junction_path_`
 +
 接合路径必须以根（ / ）开头，并且可以同时包含目录和接合卷。接合路径不需要包含卷的名称。接合路径与卷名称无关。
 
@@ -32,16 +32,16 @@ summary: 您可以在创建数据卷时指定接合点。生成的卷会自动�
 指定卷安全模式是可选的。如果未指定安全模式，则 ONTAP 将使用应用于 Storage Virtual Machine （ SVM ）根卷的相同安全模式创建卷。但是，根卷的安全模式可能不是要应用于您创建的数据卷的安全模式。建议您在创建卷时指定安全模式，以最大程度地减少难以解决的文件访问问题。
 
 +
-接合路径不区分大小写； ` /ENG` 与 ` /eng` 相同。如果创建 CIFS 共享， Windows 会将接合路径视为区分大小写。例如，如果接合为 ` /ENG` ，则 CIFS 共享的路径必须以 ` /ENG` 开头，而不是以 ` /eng` 开头。
+接合路径不区分大小写； `/ENG` 与相同 `/eng`。如果创建 CIFS 共享， Windows 会将接合路径视为区分大小写。例如、如果接合为 `/ENG`，则CIFS共享的路径必须以开头 `/ENG`，不是 `/eng`。
 
 +
-您可以使用许多可选参数自定义数据卷。要了解有关这些命令的详细信息，请参见 `volume create` 命令的手册页。
+您可以使用许多可选参数自定义数据卷。要了解有关它们的详细信息、请参见的手册页 `volume create` 命令：
 
 . 验证是否已使用所需的接合点创建卷： `volume show -vserver _vserver_name_ -volume _volume_name_ -junction`
 
 
 .示例
-以下示例将在 SVM vs1 上创建一个名为 "`home4` " 的卷，该卷的接合路径为 ` /eng/home` ：
+以下示例将在` SVM VS1上创建一个具有接合路径的名为"`home"的卷 `/eng/home`：
 
 [listing]
 ----

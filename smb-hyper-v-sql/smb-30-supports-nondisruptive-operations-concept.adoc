@@ -11,7 +11,7 @@ summary: SMB 3.0 提供了关键功能，支持通过 SMB 共享对 Hyper-V 和 
 
 
 [role="lead"]
-SMB 3.0 提供了关键功能，支持通过 SMB 共享对 Hyper-V 和 SQL Server 执行无中断操作。这包括 `持续可用` 共享属性和一种称为 _persistent handlow_ 的文件句柄，可使 SMB 客户端回收文件打开状态并透明地重新建立 SMB 连接。
+SMB 3.0 提供了关键功能，支持通过 SMB 共享对 Hyper-V 和 SQL Server 执行无中断操作。其中包括 `continuously-available` 共享属性和一种称为_PER持 式句柄_的文件句柄类型、该句柄允许SMB客户端回收文件打开状态并透明地重新建立SMB连接。
 
 对于连接到具有持续可用共享属性集的共享的支持 SMB 3.0 的客户端，可以将永久性句柄授予这些客户端。如果 SMB 会话已断开连接，则 CIFS 服务器会保留有关永久性句柄状态的信息。在允许客户端重新连接的 60 秒期间， CIFS 服务器会阻止其他客户端请求，从而允许具有永久性句柄的客户端在网络断开连接后回收句柄。具有永久性句柄的客户端可以使用 Storage Virtual Machine （ SVM ）上的一个数据 LIF 进行重新连接，方法是通过同一个 LIF 或不同的 LIF 进行重新连接。
 

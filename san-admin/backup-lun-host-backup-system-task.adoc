@@ -21,19 +21,19 @@ summary: 您可以使用 Snapshot 副本中的克隆 LUN 作为主机备份系�
 +
 您可以使用主机操作系统提供的命令，也可以使用适用于 Windows 的 SnapDrive 或适用于 UNIX 的 SnapDrive 。您也可以选择将此步骤加入 SAN 备份预处理脚本。
 
-. 使用 `volume snapshot create` 命令为生产 LUN 创建 Snapshot 副本。
+. 使用 `volume snapshot create` 命令创建生产LUN的Snapshot副本。
 +
 `volume snapshot create -vserver vs0 -volume vol3 -snapshot vol3_snapshot -comment "Single snapshot" -foreground false`
 
-. 使用 `volume file clone create` 命令创建生产 LUN 的克隆。
+. 使用 `volume file clone create` 命令创建生产LUN的克隆。
 +
 `volume file clone create -vserver vs3 -volume vol3 -source-path lun1 -snapshot-name snap_vol3 -destination-path lun1_backup`
 
-. 使用 `lun igroup create` 命令创建包含备份服务器 WWPN 的 igroup 。
+. 使用 `lun igroup create` 命令以创建包含备份服务器WWPN的igrop。
 +
-`lun igroup create -vserver vs3 -igroup igroup3 -protocol fc -ostype windows -initiator 10 ： 00 ： 00 ： 00 ： c9 ： 73 ： 5b ： 91`
+`lun igroup create -vserver vs3 -igroup igroup3 -protocol fc -ostype windows -initiator 10:00:00:00:c9:73:5b:91`
 
-. 使用 `lun mapping create` 命令将您在步骤 3 中创建的 LUN 克隆映射到备份主机。
+. 使用 `lun mapping create` 命令将步骤3中创建的LUN克隆映射到备份主机。
 +
 `lun mapping create -vserver vs3 -volume vol3 -lun lun1_backup -igroup igroup3`
 
@@ -45,15 +45,15 @@ summary: 您可以使用 Snapshot 副本中的克隆 LUN 作为主机备份系�
 您可以选择将此步骤加入到 SAN 备份应用程序的后处理脚本中。
 
 . 使用 SAN 备份应用程序将 LUN 克隆中的数据从备份主机备份到磁带。
-. 使用 `lun modify` 命令使 LUN 克隆脱机。
+. 使用 `lun modify` 命令使LUN克隆脱机。
 +
 `lun modify -vserver vs3 -path /vol/vol3/lun1_backup -state offline`
 
-. 使用 `lun delete` 删除 LUN 克隆。
+. 使用 `lun delete` 删除LUN克隆。
 +
 `lun delete -vserver vs3 -volume vol3 -lun lun1_backup`
 
-. 使用 `volume snapshot delete` 命令删除 Snapshot 副本。
+. 使用 `volume snapshot delete` 命令以删除Snapshot副本。
 +
 `volume snapshot delete -vserver vs3 -volume vol3 -snapshot vol3_snapshot`
 

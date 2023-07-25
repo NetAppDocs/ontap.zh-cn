@@ -33,10 +33,10 @@ summary: 使用 SnapMirror Business Continuity 解决方案时，还存在一些
 | ONTAP 9.8-9.9.1 | 5. 
 
 
-| ONTAP 9.10.1 | 20 
+| ONTAP 9.10.1 | 20. 
 
 
-| ONTAP 9.11.1及更高版本 | 50 
+| ONTAP 9.11.1及更高版本 | 50. 
 |===
 
 
@@ -74,7 +74,7 @@ summary: 使用 SnapMirror Business Continuity 解决方案时，还存在一些
 | SM-BC 关系中的对象限制 | 计数 
 
 
-| 每个卷的 LUN 数 | 256 
+| 每个卷的 LUN 数 | 256. 
 
 
 | 每个节点的 LUN 映射数 | 2048 
@@ -83,7 +83,7 @@ summary: 使用 SnapMirror Business Continuity 解决方案时，还存在一些
 | 每个集群的 LUN 映射数 | 4096 
 
 
-| 每个 SVM 的 LIF （至少有一个卷处于 SM-BC 关系） | 256 
+| 每个 SVM 的 LIF （至少有一个卷处于 SM-BC 关系） | 256. 
 
 
 | 每个节点的集群间 LIF | 4. 
@@ -155,18 +155,18 @@ SM-BC支持分层策略为"无"、"快照"或"自动"的FabricPool 聚合上的�
 
 === SM-BC 配置的 Solaris 主机设置建议
 
-从 ONTAP 9.10.1 开始， SM-BC 支持 Solaris 11.4 。要确保在SM-BC环境中发生计划外站点故障转移切换时Solaris客户端应用程序不会造成中断、您必须使用`f_tpgs`参数配置Solaris 11.4主机。
+从 ONTAP 9.10.1 开始， SM-BC 支持 Solaris 11.4 。要确保在SM-BC环境中发生计划外站点故障转移切换时Solaris客户端应用程序无中断、您必须使用配置Solaris 11.4主机 `f_tpgs` 参数。
 
 按照以下步骤配置 override 参数：
 
-. 为连接到主机的 NetApp 存储类型创建配置文件 ` /etc/driver/drv/scsi_vhci.conf` ，并输入类似于以下内容的条目：
+. 创建配置文件 `/etc/driver/drv/scsi_vhci.conf` 对于连接到主机的NetApp存储类型、此条目类似于以下内容：
 +
 [listing]
 ----
 scsi-vhci-failover-override =
 "NETAPP  LUN","f_tpgs"
 ----
-. 使用 `devprop` 和 `mdb` 命令验证是否已成功应用覆盖：
+. 使用 ... `devprop` 和 `mdb` 用于验证是否已成功应用覆盖的命令：
 +
 [listing]
 ----
@@ -182,4 +182,5 @@ svl_fops_name = 0xa00298d69e0 "conf f_tpgs"
 
 
 
-NOTE: 应用 `scsI-vhcI-failover-override` 后， `conf` 将添加到 `svl_fPS_name` 中。有关追加信息以及对默认设置的建议更改，请参阅 NetApp 知识库文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Solaris_Host_support_recommended_settings_in_SnapMirror_Business_Continuity_(SM-BC)_configuration["Solaris 主机支持 SnapMirror 业务连续性（ SM-BC ）配置中的建议设置"]。
+NOTE: `conf` 将添加到中 `svl_fops_name` 当 `scsi-vhci-failover-override` 已应用。
+有关追加信息以及对默认设置的建议更改，请参阅 NetApp 知识库文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Solaris_Host_support_recommended_settings_in_SnapMirror_Business_Continuity_(SM-BC)_configuration["Solaris 主机支持 SnapMirror 业务连续性（ SM-BC ）配置中的建议设置"]。

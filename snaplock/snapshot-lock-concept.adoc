@@ -26,7 +26,7 @@ summary: 从ONTAP 9.12.1开始、您可以在非SnapLock卷上锁定Snapshot副�
 有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap/snaplock/initialize-complianceclock-task.html["初始化Compliance时钟"]。
 
 * 在卷上启用Snapshot锁定后、您可以将集群升级到ONTAP 9.12.1之后的ONTAP 版本； 但是、在所有锁定的Snapshot副本均已达到其到期日期并被删除以及Snapshot副本锁定被禁用之前、您无法还原到早期版本的ONTAP。
-* 锁定Snapshot后、卷到期时间将设置为Snapshot副本的到期时间。如果锁定了多个Snapshot副本、则卷到期时间将反映所有Snapshot副本中的最长到期时间。
+* 锁定Snapshot后、卷到期时间将设置为Snapshot副本的到期时间。如果锁定了多个Snapshot副本、则卷到期时间将是所有Snapshot副本中最长的到期时间。
 * 锁定的Snapshot副本的保留期限优先于Snapshot副本保留计数、这意味着、如果锁定的Snapshot副本的Snapshot副本保留期限未过期、则不会遵守保留计数限制。
 * 在SnapMirror关系中、您可以对镜像-存储策略规则设置保留期限、如果目标卷启用了Snapshot副本锁定、则会对复制到目标的Snapshot副本应用保留期限。保留期限优先于保留数量；例如、即使超过保留数量、尚未过期的Snapshot副本也将被保留。
 * 您可以重命名非SnapLock卷上的Snapshot副本。只有当策略为MirrorAllSnapshots时、SnapMirror关系的主卷上的Snapshot重命名操作才会反映在二级卷上。对于其他策略类型、更新期间不会传播已重命名的Snapshot副本。

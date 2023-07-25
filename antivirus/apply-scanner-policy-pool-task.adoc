@@ -21,14 +21,14 @@ summary: 扫描程序策略用于确定扫描程序池是否处于活动状态�
 .步骤
 . 应用扫描程序策略：
 +
-`vserver vscan scanner-pool apply-policy -vserver data_svm -scanner-pool scanner_pool -scanner-policy primary|secondary` idle -cluster cluster_to_apply_policy_on
+`vserver vscan scanner-pool apply-policy -vserver data_SVM -scanner-pool scanner_pool -scanner-policy primary|secondary|idle -cluster cluster_to_apply_policy_on`
 
 +
 扫描程序策略可以具有以下值之一：
 
 +
 ** `Primary` 指定扫描程序池处于活动状态。
-** `secondary` 指定，只有在主扫描程序池中的 Vscan 服务器均未连接时，扫描程序池才处于活动状态。
+** `Secondary` 指定只有在主扫描程序池中没有Vscan服务器连接时扫描程序池才处于活动状态。
 ** `Idle` 指定扫描程序池处于非活动状态。
 
 
@@ -42,13 +42,13 @@ cluster1::> vserver vscan scanner-pool apply-policy -vserver vs1 -scanner-pool S
 ----
 . 验证扫描程序池是否处于活动状态：
 +
-`vserver vscan scanner-pool show -vserver data_svm_cluster_admin_sVM -scanner-pool scanner_pool`
+`vserver vscan scanner-pool show -vserver data_SVM|cluster_admin_SVM -scanner-pool scanner_pool`
 
 +
 有关完整的选项列表，请参见命令手册页。
 
 +
-以下命令显示 `SP` 扫描程序池的详细信息：
+以下命令将显示的详细信息 `SP` 扫描程序池：
 
 +
 [listing]
@@ -66,6 +66,6 @@ List of Host Names of Allowed Vscan Servers: 1.1.1.1, vmwin204-27.fsct.nb
                    List of Privileged Users: cifs\u1, cifs\u2
 ----
 +
-您可以使用 `vserver vscan scanner-pool show-active` 命令查看 SVM 上的活动扫描程序池。有关完整的命令语法，请参见命令的手册页。
+您可以使用 `vserver vscan scanner-pool show-active` 命令以查看SVM上的活动扫描程序池。有关完整的命令语法，请参见命令的手册页。
 
 

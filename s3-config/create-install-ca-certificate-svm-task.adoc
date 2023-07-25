@@ -22,18 +22,18 @@ summary: 要启用从 S3 客户端到启用了 S3 的 SVM 的 HTTPS 流量，需
 
 link:../authentication/index.html["管理员身份验证和 RBAC"]
 
-有关其他配置选项，请参见 `s安全性证书` 手册页。
+请参见 `security certificate` 其他配置选项的手册页。
 
 .步骤
 . 创建自签名数字证书：
 +
-`s安全证书create -vserver _svm_name_-type root-ca -common-name _ca_ct_name_`
+`security certificate create -vserver _svm_name_ -type root-ca -common-name _ca_cert_name_`
 
 +
-` 类型 root-ca` 选项可创建并安装自签名数字证书，以便通过充当证书颁发机构（ CA ）对其他证书进行签名。
+。 `-type root-ca` 选项用于创建并安装自签名数字证书、以便通过充当证书颁发机构(CA)对其他证书进行签名。
 
 +
-` -common-name` 选项将创建 SVM 的证书颁发机构（ Certificate Authority ， CA ）名称，并在生成证书的完整名称时使用该名称。
+。 `-common-name` 选项将创建SVM的证书颁发机构(Certificate Authority、CA)名称、并在生成证书的完整名称时使用。
 
 +
 默认证书大小为 2048 位。
@@ -53,10 +53,10 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 生成证书签名请求：
 +
-`s安全证书generate-csr -common-name _s3_server_name_[Additional _options]`
+`security certificate generate-csr -common-name _s3_server_name_ [additional_options]`
 
 +
-签名请求的 ` -common-name` 参数必须为 S3 服务器名称（ FQDN ）。
+。 `-common-name` 签名请求的参数必须是S3服务器名称(FQDN)。
 
 +
 如果需要，您可以提供 SVM 的位置和其他详细信息。
@@ -66,14 +66,14 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 使用 SVM_CA 对 CSR 签名以生成 S3 服务器的证书：
 +
-`s安全证书符号-vserver _svm_name_-ca _ca_ct_name_-ca-serial _ca_ct_serial _number_[additional _options]`
+`security certificate sign -vserver _svm_name_ -ca _ca_cert_name_ -ca-serial _ca_cert_serial_number_ [additional_options]`
 
 +
 输入您在先前步骤中使用的命令选项：
 
 +
-** ` -ca` —您在步骤 1 中输入的 CA 的公用名。
-** ` -ca-serial` —步骤 1 中的 CA 序列号。例如，如果 CA 证书名称为 svm1_ca_159D1587CE21E9D4_svm1_ca ，则序列号为 159D1587CE21E9d4 。
+** `-ca` --您在步骤1中输入的CA的公用名。
+** `-ca-serial` --步骤1中的CA序列号。例如，如果 CA 证书名称为 svm1_ca_159D1587CE21E9D4_svm1_ca ，则序列号为 159D1587CE21E9d4 。
 
 
 +
@@ -100,7 +100,7 @@ The certificate's generated name for reference: svm1_ca_159D1587CE21E9D4_svm1_ca
 
 . 获取公有密钥证书：
 +
-`security certificate show -vserver _svm_name_-common-name _ca_ct_name_-type root-ca -instance`
+`security certificate show -vserver _svm_name_ -common-name _ca_cert_name_ -type root-ca -instance`
 
 +
 保存公有密钥证书以供稍后的客户端配置使用。

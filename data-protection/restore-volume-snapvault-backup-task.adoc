@@ -26,22 +26,22 @@ summary: 您可以从 SnapMirror 目标卷中的 Snapshot 副本还原整个卷�
 * 空数据保护卷，在这种情况下， SnapMirror 会执行 _baseline restore" ，其中指定的 Snapshot 副本及其引用的所有数据块都会传输到源卷。
 
 
-还原卷的内容会造成系统中断。还原操作正在运行时， SnapVault 主卷上不得运行 SMB 流量。
+还原卷的内容会造成系统中断。还原操作正在运行时、SnapVault主卷上不能运行SMB流量。
 
 如果还原操作的目标卷已启用数据压缩，而源卷未启用数据压缩，请在目标卷上禁用数据压缩。还原操作完成后，您需要重新启用数据压缩。
 
-在执行还原之前，为目标卷定义的任何配额规则都将被停用。还原操作完成后，您可以使用 `volume quota modify` 命令重新激活配额规则。
+在执行还原之前，为目标卷定义的任何配额规则都将被停用。您可以使用 `volume quota modify` 命令以在还原操作完成后重新激活配额规则。
 
 .步骤
 . 列出目标卷中的 Snapshot 副本：
 +
-`volume snapshot show -vserver _svm_ -volume _volum_`
+`volume snapshot show -vserver _SVM_ -volume _volume_`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例显示了 `vserverB ： secondary1` 目标上的 Snapshot 副本：
+以下示例显示了上的Snapshot副本 `vserverB:secondary1` 目标：
 
 +
 [listing]
@@ -63,7 +63,7 @@ vserverB    secondary1  hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 . 从 SnapMirror 目标卷中的 Snapshot 副本还原卷的内容：
 +
-`snapmirror restore -source-path _SVM ： volume_|_cluster ： //svm/volume_ ， ... -destination-path _svm ： volume_|_cluster ： //svm/volume_ ， ... -source-snapshot _snapshot_`
+`snapmirror restore -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ... -source-snapshot _snapshot_`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -75,7 +75,7 @@ vserverB    secondary1  hourly.2013-01-25_0005  valid   224KB     0%    0%
 
 ====
 +
-以下命令将从原始目标卷 `secondary1` 中的 Snapshot 副本 `daily.2013-01-25_0010` 还原原始源卷 `primary1` 的内容：
+以下命令将还原初始源卷的内容 `primary1` 从Snapshot副本 `daily.2013-01-25_0010` 在初始目标卷中 `secondary1`：
 
 +
 [listing]

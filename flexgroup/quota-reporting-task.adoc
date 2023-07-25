@@ -33,7 +33,7 @@ summary: 在 ONTAP 9.4 及更早版本中，只能出于报告目的而对 FlexG
 * 在 ONTAP 9.5 中，无法在 SnapMirror 关系的目标 FlexGroup 卷上创建或激活配额规则。
 * 在配额初始化期间、不会强制实施配额、并且在配额初始化之后不会收到违反配额的通知。
 +
-要检查配额初始化期间是否违反了配额、可以使用`volume quota report`命令。
+要检查配额初始化期间是否违反了配额、您可以使用 `volume quota report` 命令：
 
 
 
@@ -128,7 +128,7 @@ qtree 名称
 您可以使用这些示例了解如何在 ONTAP 9.5 及更高版本中配置具有限制的配额。
 
 .示例 1 ：强制实施具有磁盘限制的配额规则
-. 您应创建类型为 `user` 的配额策略规则，其中应包含可实现的软磁盘限制和硬盘限制。
+. 您应创建类型为的配额策略规则 `user` 具有可实现的软磁盘限制和硬磁盘限制。
 +
 [listing]
 ----
@@ -174,7 +174,7 @@ FG                 user    *         800GB    1TB      0       -   *
 达到硬盘限制后，配额策略规则目标（在此情况下为 user ）将被阻止向文件写入更多数据。
 
 .示例 2 ：对多个用户强制实施配额规则
-. 您应创建类型为 `user` 的配额策略规则，其中在配额目标中指定了多个用户（ UNIX 用户， SMB 用户或两者的组合），并且该规则同时具有可实现的软磁盘限制和硬盘限制。
+. 您应创建类型为的配额策略规则 `user`，其中在配额目标中指定了多个用户(UNIX用户、SMB用户或两者的组合)，并且规则同时具有可实现的软磁盘限制和硬磁盘限制。
 +
 [listing]
 ----
@@ -236,9 +236,9 @@ FG                 user    rdavis,ABCCORP\RobertDavis  0B  1TB  0  -   rdavis,AB
 达到硬盘限制后，配额目标中列出的用户将被阻止向这些文件写入更多数据。
 
 .示例 3 ：在启用了用户映射的情况下强制实施配额
-. 您应创建类型为 `user` 的配额策略规则，指定一个 UNIX 用户或 Windows 用户作为配额目标，并将 `user-mapping` 设置为 `on` ，同时创建具有可实现的软磁盘限制和硬盘限制的规则。
+. 您应创建类型为的配额策略规则 `user`下，使用指定UNIX用户或Windows用户作为配额目标 `user-mapping` 设置为 `on`，并创建同时具有可实现的软磁盘限制和硬磁盘限制的规则。
 +
-必须先使用 `vserver name-mapping create` 命令配置 UNIX 和 Windows 用户之间的映射。
+UNIX和Windows用户之间的映射必须在早期使用进行配置 `vserver name-mapping create` 命令：
 
 +
 [listing]
@@ -301,7 +301,7 @@ FG                 user    rdavis,ABCCORP\RobertDavis  0B  1TB  0  -   rdavis
 达到硬盘限制后，配额目标中列出的用户及其相应的 Windows 或 UNIX 用户都将被阻止向文件写入更多数据。
 
 .示例 4 ：启用配额时验证 qtree 大小
-. 您应创建类型为 `tree` 的配额策略规则，该规则同时具有可实现的软磁盘限制和硬盘限制。
+. 您应创建类型为的配额策略规则 `tree` 并且规则同时具有可实现的软磁盘限制和硬磁盘限制。
 +
 [listing]
 ----
@@ -344,7 +344,7 @@ FG tree_4118314302 tree 1 30.35GB 48GB 14 20 tree_4118314302
 
 
 
-. 在 NFS 客户端中，使用 `df` 命令查看总空间使用量，可用空间和已用空间。
+. 在NFS客户端中、使用 `df` 命令以查看总空间使用量、可用空间和已用空间。
 +
 [listing]
 ----
@@ -357,7 +357,8 @@ Filesystem 1M-blocks Used Available Use% Mounted on
 
 +
 ** 总空间使用量 = 树的硬限制
-** 可用空间 = 硬限制减去无硬限制的 qtree 空间使用量，空间使用量通过 NFS 客户端计算得出，如下所示：
+** 可用空间=硬限制减去qtree空间使用量
+如果没有硬限制、则会按如下方式从NFS客户端计算空间使用量：
 ** 空间使用量 = 配额使用量
 ** 总空间 = 卷中的配额使用量和物理可用空间之和
 
@@ -379,13 +380,13 @@ Filesystem 1M-blocks Used Available Use% Mounted on
 == 在 FlexGroup 卷上应用规则和限制
 
 .步骤
-. 为目标创建配额规则： `volume quota policy rule create -vserver vs0 -policy-name quota_policy_limit_the_rule -volume flexgroup_vol -type ｛ tree_user_group ｝ -target target_for_rule -qtree qtree_name （ -disk-limit hard_disk_limit_size] ）【 -file-limit hard_soft_limit_file_limit_sy_limit_soft _reshold_file_limit_sy_reshold_file_limit_reshold_sfet_sfet_soft _res_reshold_reshold_reshold_file_reshold_file_limit_soft _sy_reshold_reshold_file_reshold_`
+. 为目标创建配额规则： `volume quota policy rule create -vserver vs0 -policy-name quota_policy_of_the_rule -volume flexgroup_vol -type {tree|user|group} -target target_for_rule -qtree qtree_name [-disk-limit hard_disk_limit_size] [-file-limit hard_limit_number_of_files] [-threshold threshold_disk_limit_size] [-soft-disk-limit soft_disk_limit_size] [-soft-file-limit soft_limit_number_of_files]`
 +
-** 在 ONTAP 9.2 和 ONTAP 9.1 中， FlexGroup 卷的配额目标类型只能为 `user` 或 `group` 。
+** 在ONTAP 9.2和ONTAP 9.1中、配额目标类型只能是 `user` 或 `group` 适用于FlexGroup卷。
 +
 ONTAP 9.2 和 ONTAP 9.1 中的 FlexGroup 卷不支持树配额类型。
 
-** 在 ONTAP 9.3 及更高版本中， FlexGroup 卷的配额目标类型可以是 `user` ， `group` 或 `tree` 。
+** 在ONTAP 9.3及更高版本中、配额目标类型可以是 `user`， `group`或 `tree` 适用于FlexGroup卷。
 ** 为 FlexGroup 卷创建配额规则时，不支持将路径作为目标。
 ** 从 ONTAP 9.5 开始，您可以为 FlexGroup 卷指定硬盘限制，硬文件限制，软磁盘限制，软文件限制和阈值限制配额。
 +
@@ -407,7 +408,7 @@ cluster1::> volume quota policy rule create -vserver vs0 -policy-name quota_poli
 ----
 cluster1::> volume quota policy rule create -policy-name default -vserver vs0 -volume fg1 -type tree -target "qtree1"
 ----
-. 激活指定 FlexGroup 卷的配额： `volume quota on -vserver svm_name -volume flexgroup_vol -foreground true`
+. 激活指定FlexGroup卷的配额： `volume quota on -vserver svm_name -volume flexgroup_vol -foreground true`
 
 
 [listing]
@@ -417,7 +418,7 @@ cluster1::> volume quota on -vserver vs0 -volume fg1 -foreground true
 . 监控配额初始化的状态： `volume quota show -vserver svm_name`
 
 
-FlexGroup 卷可能会显示 `m已复制` 状态，这表示所有成分卷尚未处于相同状态。
+FlexGroup卷可能会显示 `mixed` 状态、表示所有成分卷尚未处于相同状态。
 
 [listing]
 ----
@@ -429,9 +430,9 @@ vs0        fg1           initializing         95%
 vs0        vol1          off                   -
 2 entries were displayed.
 ----
-. 查看具有活动配额的 FlexGroup 卷的配额报告： `volume quota report -vserver svm_name -volume flexgroup_vol`
+. 查看具有活动配额的FlexGroup卷的配额报告： `volume quota report -vserver svm_name -volume flexgroup_vol`
 +
-您不能使用 `volume quota report` 命令为 FlexGroup 卷指定路径。
+不能使用指定路径 `volume quota report` 命令FlexGroup。
 
 +
 以下示例显示了 FlexGroup 卷 fg1 的用户配额：

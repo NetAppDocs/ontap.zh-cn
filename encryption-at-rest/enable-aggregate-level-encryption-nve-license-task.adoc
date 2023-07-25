@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: enabling, aggregate-level, encryption, nve, ve license, license 
 summary: 从 ONTAP 9.7 开始，如果您拥有 VE 许可证以及板载或外部密钥管理，则新创建的聚合和卷会默认加密。从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要加密的卷的所属聚合分配密钥。默认情况下，您在聚合中创建的卷会进行加密。对卷进行加密时，您可以覆盖默认值。 
 ---
-= 使用 VE 许可证启用聚合级别加密
+= 使用VE许可证启用聚合级加密
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -64,7 +64,7 @@ NAE 聚合不支持纯文本卷。
 有关完整的命令语法，请参见手册页。
 
 +
-以下命令会对 `aggr1` 启用聚合级别加密：
+以下命令将在上启用聚合级别加密 `aggr1`：
 
 +
 ** ONTAP 9.7 或更高版本
@@ -83,13 +83,13 @@ cluster1::> storage aggregate create -aggregate aggr1 -encrypt-with-aggr-key tru
 
 . 验证是否已为聚合启用加密：
 +
-`storage aggregate show -fields encrypt-with aggr-key`
+`storage aggregate show -fields encrypt-with-aggr-key`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下命令验证是否已为 `aggr1` 启用加密：
+以下命令将对此进行验证 `aggr1` 已启用加密：
 
 +
 [listing]
@@ -104,6 +104,6 @@ aggr1                true
 
 
 .完成后
-运行 `volume create` 命令创建加密卷。
+运行 `volume create` 命令以创建加密卷。
 
 如果您使用 KMIP 服务器存储节点的加密密钥，则在对卷进行加密时， ONTAP 会自动 "`推送` " 加密密钥到服务器。

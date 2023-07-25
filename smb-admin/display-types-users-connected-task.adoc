@@ -16,7 +16,7 @@ summary: 您可以显示有关通过 SMB 会话连接的用户类型的信息。
 .关于此任务
 以下类型的用户可以通过 SMB 会话进行连接：
 
-* `本地用户`
+* `local-user`
 +
 以本地 CIFS 用户身份进行身份验证
 
@@ -24,18 +24,18 @@ summary: 您可以显示有关通过 SMB 会话连接的用户类型的信息。
 +
 以域用户身份进行身份验证（从 CIFS 服务器的主域或受信任域）
 
-* `来宾用户`
+* `guest-user`
 +
 以来宾用户身份进行身份验证
 
-* `匿名用户`
+* `anonymous-user`
 +
 以匿名或空用户身份进行身份验证
 
 
 
 .步骤
-. 确定通过 SMB 会话连接的用户类型： `vserver cifs session show -vserver _vserver_name_ -windows-user _windows_user_name_ -fields windows-user ， address ， lif-address ， user-type`
+. 确定通过SMB会话连接的用户类型： `vserver cifs session show -vserver _vserver_name_ -windows-user _windows_user_name_ -fields windows-user,address,lif-address,user-type`
 +
 |===
 | 要显示已建立会话的用户类型信息 ... | 输入以下命令 ... 
@@ -44,14 +44,14 @@ summary: 您可以显示有关通过 SMB 会话连接的用户类型的信息。
  a| 
 具有指定用户类型的所有会话
  a| 
-`vserver cifs session show -vserver _vserver_name_ -user-type ｛ local-user| domain-user| guest-user| anonymous -user ｝`
+`vserver cifs session show -vserver _vserver_name_ -user-type {local-user|domain-user|guest-user|anonymous-user}`
 
 
 
  a| 
 用于特定用户
  a| 
-`vserver cifs session show -vserver _vserver_name_ -windows-user _windows_user_name_ -fields windows-user ， address ， lif-address ， user-type`
+`vserver cifs session show -vserver _vserver_name_ -windows-user _windows_user_name_ -fields windows-user,address,lif-address,user-type`
 
 |===
 

@@ -38,11 +38,11 @@ summary: '本文介绍如何将LIF (网络接口)配置为支持RDMA。'
 .步骤
 . 创建 LIF ：
 +
-`` network interface create -vserver _svm_name_-lif _lif_name_-service-policy _service_policy_name_-home-node _node_name_-home-port _port_name_｛-address _ip_address_-netmask _netmask_value___- subnet-name _subnet_name_｝-firewall-policy _rma_policy_name_｛auto-name_-ma_auto-name_｝-netma_auto-policy_modma__sma__sma_-netma_
+`network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _netmask_value_ | -subnet-name _subnet_name_} -firewall-policy _policy_name_ -auto-revert {true|false} -rdma-protocols roce`
 
 +
 ** 服务策略必须为 default-data-files 或包含 data-nfs 网络接口服务的自定义策略。
-** ` -rdma-protocols` 参数接受列表，默认为空。将 `` 值添加为值时，只能在支持 RoCE 卸载的端口上配置 LIF ，从而影响机器人 LIF 迁移和故障转移。
+** 。 `-rdma-protocols` 参数接受默认为空的列表。时间 `roce` 作为一种价值、只能在支持RoCE卸载的端口上配置LIF、从而影响爬虫程序LIF迁移和故障转移。
 
 
 
@@ -70,10 +70,10 @@ summary: '本文介绍如何将LIF (网络接口)配置为支持RDMA。'
 --
 .命令行界面
 --
-. 您可以使用 `network interface show` 命令检查 LIF 的状态。服务策略必须包含 data-nfs 网络接口服务。` RDMA-protocols` 列表应包含 `roce` 。如果上述任一条件不正确，请修改 LIF 。
+. 您可以使用检查您的生命周期管理器的状态 `network interface show` 命令：服务策略必须包含 data-nfs 网络接口服务。。 `-rdma-protocols` 列表应包括 `roce`。如果上述任一条件不正确，请修改 LIF 。
 . 要修改 LIF ，请运行：
 +
-`` network interface modify vserver _svm_name_-lif _lif_name_-service-policy _service_policy_name_-home-node _node_name_-home-port _port_name_｛-address _ip_address_-netmask _netmask_value___--subnet-name _subnet_name_-firewall-policy _policy_roce_name_-sma_auto-name_
+`network interface modify vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _netmask_value_ | -subnet-name _subnet_name_} -firewall-policy _policy_name_ -auto-revert {true|false} -rdma-protocols roce`
 
 
 

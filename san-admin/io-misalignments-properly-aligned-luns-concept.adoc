@@ -31,16 +31,16 @@ image::../media/bsag-cmode-lbpb.gif[BSAG cmode lbpb]
 
 == 使用 LUN 操作系统类型实现 I/O 对齐
 
-要使用操作系统分区方案实现 I/O 对齐，应使用与您的操作系统最匹配的建议 ONTAP LUN `ostype` 值。
+要使用操作系统分区方案实现I/O对齐、应使用建议的ONTAP LUN `ostype` 与您的操作系统最匹配的值。
 
-主机操作系统采用的分区方案是导致 I/O 错位的一个主要因素。某些 ONTAP LUN `ostype` 值使用称为 "`prefix` " 的特殊偏移，以使主机操作系统使用的默认分区方案保持对齐。
+主机操作系统采用的分区方案是导致 I/O 错位的一个主要因素。某些ONTAP LUN `ostype` 这些值使用一个称为"`前缀`"的特殊偏移、以便对齐主机操作系统使用的默认分区方案。
 
 [NOTE]
 ====
-在某些情况下，可能需要使用自定义分区表来实现 I/O 对齐。但是，对于 "`prefix` " 值大于 `0` 的 `ostype` 值，自定义分区可能会创建错位的 I/O
+在某些情况下，可能需要使用自定义分区表来实现 I/O 对齐。但是、对于 `ostype` "`前缀`"值大于的值 `0`，则自定义分区可能会产生错位的I/O
 
 ====
-应根据您的操作系统使用下表中的 lun `ostype` 值。
+LUN `ostype` 应根据您的操作系统使用下表中的值。
 
 [cols="4*"]
 |===
@@ -48,9 +48,9 @@ image::../media/bsag-cmode-lbpb.gif[BSAG cmode lbpb]
 
 
  a| 
-`窗口`
+`windows`
  a| 
-32,256
+32、256
  a| 
 63.
  a| 
@@ -61,9 +61,9 @@ Windows 2000 ， 2003 （ MBR 格式）
  a| 
 `windows_gpt`
  a| 
-17,408
+17,408.
  a| 
-34
+34.
  a| 
 Windows 2003 （ GPT 格式）
 
@@ -81,7 +81,7 @@ Windows 2008 及更高版本
 
 
  a| 
-`Linux`
+`linux`
  a| 
 0
  a| 
@@ -92,7 +92,7 @@ Windows 2008 及更高版本
 
 
  a| 
-`Xen`
+`xen`
  a| 
 0
  a| 
@@ -103,7 +103,7 @@ Citrix XenServer
 
 
  a| 
-`VMware`
+`vmware`
  a| 
 0
  a| 
@@ -127,16 +127,16 @@ Solaris
  a| 
 `solaris_efi`
  a| 
-17,408
+17,408.
  a| 
-34
+34.
  a| 
 Solaris
 
 
 
  a| 
-`HPUX`
+`hpux`
  a| 
 0
  a| 
@@ -147,7 +147,7 @@ HP-UX
 
 
  a| 
-`AIX`
+`aix`
  a| 
 0
  a| 
@@ -168,7 +168,7 @@ Linux 分发版提供了多种使用 LUN 的方法，包括将 LUN 用作数据�
 
 == Solaris LUN 的特殊 I/O 对齐注意事项
 
-在确定是否应使用 `solaris` ostype 或 `solaris_efi` ostype 时，需要考虑各种因素。
+在确定是否应使用时、您需要考虑各种因素 `solaris` ostype或 `solaris_efi` ostype。
 
 请参见 http://mysupport.netapp.com/documentation/productlibrary/index.html?productID=61343["《 Solaris Host Utilities 安装和管理指南》"^] 了解详细信息。
 
@@ -176,7 +176,7 @@ Linux 分发版提供了多种使用 LUN 的方法，包括将 LUN 用作数据�
 
 == ESX 启动 LUN 报告不对齐
 
-ONTAP 通常会将用作 ESX 启动 LUN 的 LUN 报告为未对齐。ESX 会在启动 LUN 上创建多个分区，因此很难对齐。ESX 启动 LUN 不对齐通常不会造成性能问题，因为不对齐的 I/O 总量很小。假设已使用 VMware `ostype` 正确配置 LUN ，则无需执行任何操作。
+ONTAP 通常会将用作 ESX 启动 LUN 的 LUN 报告为未对齐。ESX 会在启动 LUN 上创建多个分区，因此很难对齐。ESX 启动 LUN 不对齐通常不会造成性能问题，因为不对齐的 I/O 总量很小。假设已使用VMware正确配置LUN `ostype`，不需要执行任何操作。
 
 .相关信息
 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/Virtual_Storage_Console_for_VMware_vSphere/Guest_VM_file_system_partition%2F%2Fdisk_alignment_for_VMware_vSphere["适用于 VMware vSphere ，其他虚拟环境和 NetApp 存储系统的子虚拟机文件系统分区 / 磁盘对齐"]

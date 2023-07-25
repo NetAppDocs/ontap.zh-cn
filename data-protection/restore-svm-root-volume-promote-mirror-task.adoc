@@ -23,13 +23,13 @@ summary: 如果根卷永久不可用，您可以提升负载共享镜像（ LSM 
 
 . 提升 LSM 卷：
 +
-`snapmirror promote -destination-path _svm ： volume_|_cluster ： //svm/volume_`
+`snapmirror promote -destination-path _SVM:volume_|_cluster://SVM/volume_`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将卷 `svm1_m2` 提升为新的 SVM 根卷：
+以下示例将提升此卷 `svm1_m2` 作为新SVM根卷：
 
 +
 [listing]
@@ -44,7 +44,7 @@ Warning: Promote will delete the offline read-write volume
 Do you want to continue? {y|n}: y
 ----
 +
-输入 `y` 。ONTAP 会将 LSM 卷设为读 / 写卷，如果可以访问原始根卷，则会将其删除。
+输入 ... `y`。ONTAP 会将 LSM 卷设为读 / 写卷，如果可以访问原始根卷，则会将其删除。
 
 +
 [NOTE]
@@ -58,10 +58,10 @@ Do you want to continue? {y|n}: y
 
 . 按照根卷使用的命名约定重命名已提升的卷：
 +
-`volume rename -vserver _svm_ -volume _volume_-newname _new_name_`
+`volume rename -vserver _SVM_ -volume _volume_ -newname _new_name_`
 
 +
-以下示例将提升的卷 `svm1_m2` 重命名为 `svm1_root` ：
+以下示例将重命名已提升的卷 `svm1_m2` 和名称 `svm1_root`：
 
 +
 [listing]

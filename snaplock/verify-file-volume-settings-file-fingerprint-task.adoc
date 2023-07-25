@@ -11,12 +11,12 @@ summary: 您可以使用 volume file fingerprint start 和 volume file fingerpri
 
 
 [role="lead"]
-您可以使用 `volume file fingerprint start` 和 `volume file fingerprint dump` 命令查看有关文件和卷的关键信息，包括文件类型（常规， WORM 或可附加 WORM ），卷到期日期等。
+您可以使用 `volume file fingerprint start` 和 `volume file fingerprint dump` 用于查看有关文件和卷的关键信息的命令、包括文件类型(常规、WORM或WORM可附加)、卷到期日期等。
 
 .步骤
 . 生成文件指纹：
 +
-` * 卷文件指纹 start -vserver _svm_name_ -file _file_path_*`
+`*volume file fingerprint start -vserver _SVM_name_ -file _file_path_*`
 
 +
 [listing]
@@ -25,17 +25,17 @@ svm1::> volume file fingerprint start -vserver svm1 -file /vol/sle/vol/f1
 File fingerprint operation is queued. Run "volume file fingerprint show -session-id 16842791" to view the fingerprint session status.
 ----
 +
-命令将生成一个会话 ID ，您可以将其用作 `volume file fingerprint dump` 命令的输入。
+此命令将生成一个会话ID、您可以使用此ID作为的输入 `volume file fingerprint dump` 命令：
 
 +
 [NOTE]
 ====
-您可以使用带有会话 ID 的 `volume file fingerprint show` 命令来监控指纹操作的进度。在尝试显示指纹之前，请确保操作已完成。
+您可以使用 `volume file fingerprint show` 带有会话ID的命令、用于监控指纹操作的进度。在尝试显示指纹之前，请确保操作已完成。
 
 ====
 . 显示文件的指纹：
 +
-` * 卷文件指纹转储 -session-id _session_ID_*`
+`*volume file fingerprint dump -session-id _session_ID_*`
 
 +
 [listing]

@@ -19,12 +19,12 @@ summary: 在升级到目标 ONTAP 版本之前，您必须使用 SSLv3 配置 LD
 +
 否则，请勿继续操作。您应将 LDAP 服务器升级到支持 TLS 的版本。
 
-. 检查哪些 ONTAP LDAP 客户端配置已启用基于 SSL/TLS 的 LDAP ： `vserver services name-service ldap client show`
+. 检查哪些ONTAP LDAP客户端配置已启用基于SSL/TLS的LDAP： `vserver services name-service ldap client show`
 +
 如果没有，则可以跳过其余步骤。但是，为了提高安全性，您应考虑使用基于 TLS 的 LDAP 。
 
-. 对于每个 LDAP 客户端配置，禁止 SSL 强制使用 TLS ： `vserver services name-service ldap client modify -vserver vserver_name -client-config ldap_client_config_name -allow-ssl false`
-. 验证是否不再允许任何 LDAP 客户端使用 SSL ： `vserver services name-service ldap client show`
+. 对于每个LDAP客户端配置、禁止SSL强制使用TLS： `vserver services name-service ldap client modify -vserver vserver_name -client-config ldap_client_config_name -allow-ssl false`
+. 验证是否不再允许任何LDAP客户端使用SSL： `vserver services name-service ldap client show`
 
 
 .相关信息

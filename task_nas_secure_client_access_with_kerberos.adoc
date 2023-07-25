@@ -30,7 +30,7 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["使用 Kerberos 确�
 .步骤
 . 在 ONTAP 命令行中，为 Storage VM 根卷设置 UNIX 权限。
 +
-.. 显示 Storage VM 根卷上的相关权限： `volume show -volume _root_vol_name_-fields user ， group ， unix-permissions`
+.. 显示Storage VM根卷上的相关权限： `volume show -volume _root_vol_name_-fields user,group,unix-permissions`
 +
 Storage VM 的根卷必须具有以下配置：
 
@@ -48,7 +48,7 @@ Storage VM 的根卷必须具有以下配置：
 
 | UNIX 权限 | 755 
 |===
-.. 如果未显示这些值，请使用 `volume modify` 命令对其进行更新。
+.. 如果未显示这些值、请使用 `volume modify` 命令进行更新。
 
 
 . 设置 Storage VM 根卷的用户权限。
@@ -71,7 +71,7 @@ Storage VM 的根卷必须具有以下配置：
 +
 * 注： * 如果 NFS 客户端用户的 SPN 存在 Kerberos - UNIX 名称映射，则不需要 NFS 用户；请参见第 5 步。
 
-.. 如果未显示这些值，请使用 `vserver services name-service unix-user modify` 命令对其进行更新。
+.. 如果未显示这些值、请使用 `vserver services name-service unix-user modify` 命令进行更新。
 
 
 . 设置 Storage VM 根卷的组权限。
@@ -91,7 +91,7 @@ Storage VM 的根卷必须具有以下配置：
 
 | root | 0 
 |===
-.. 如果未显示这些值，请使用 `vserver services name-service unix-group modify` 命令对其进行更新。
+.. 如果未显示这些值、请使用 `vserver services name-service unix-group modify` 命令进行更新。
 
 
 . 切换到 System Manager 以配置 Kerberos
@@ -112,7 +112,7 @@ Storage VM 的根卷必须具有以下配置：
 
 . 如果需要，可将 Kerberos 主体名称与本地用户名之间的映射添加到其中。
 +
-.. 单击 * 存储 > 存储 VM* 并选择此 Storage VM 。
+.. 单击*存储> Storage VM*并选择Storage VM。
 .. 单击 * 设置 * ，然后单击 image:icon_arrow.gif["箭头"] 在 * 名称映射 * 下。
 .. 在 * Kerberos 到 UNIX* 下，使用正则表达式添加模式和替换项。
 

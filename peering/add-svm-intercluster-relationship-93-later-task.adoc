@@ -11,7 +11,7 @@ summary: 如果在配置集群对等关系后创建 SVM ，则需要手动为此
 
 
 [role="lead"]
-如果在配置集群对等关系后创建 SVM ，则需要手动为此 SVM 添加对等关系。您可以使用 `vserver peer create` 命令在 SVM 之间创建对等关系。创建对等关系后，您可以在远程集群上运行 `vserver peer accept` 来授权对等关系。
+如果在配置集群对等关系后创建 SVM ，则需要手动为此 SVM 添加对等关系。您可以使用 `vserver peer create` 命令在SVM之间创建对等关系。创建对等关系后、您可以运行 `vserver peer accept` 以授权对等关系。
 
 .开始之前
 源集群和目标集群必须建立对等关系。
@@ -19,15 +19,15 @@ summary: 如果在配置集群对等关系后创建 SVM ，则需要手动为此
 .关于此任务
 您可以在同一集群中的 SVM 之间创建对等关系，以便进行本地数据备份。有关详细信息，请参见 `vserver peer create` 手册页。
 
-管理员有时会使用 `vserver peer reject` 命令拒绝建议的 SVM 对等关系。如果 SVM 之间的关系处于 `re已注入` 状态，则必须先删除此关系，然后才能创建新关系。有关详细信息，请参见 `vserver peer delete` 手册页。
+管理员偶尔会使用 `vserver peer reject` 命令以拒绝建议的SVM对等关系。如果SVM之间的关系位于中 `rejected` 状态、则必须先删除此关系、然后才能创建新关系。有关详细信息，请参见 `vserver peer delete` 手册页。
 
 .步骤
 . 在数据保护源集群上，与数据保护目标集群上的 SVM 创建对等关系：
 +
-`vserver peer create -vserver _local_svm_ -peer-vserver _remote_svm_ -applications snapmirror_file-copy_lun-copy -peer-cluster _remote_cluster_`
+`vserver peer create -vserver _local_SVM_ -peer-vserver _remote_SVM_ -applications snapmirror|file-copy|lun-copy -peer-cluster _remote_cluster_`
 
 +
-以下示例将在本地 SVM``pvs1`` 和远程 SVM``vs1`` 之间创建对等关系
+以下示例将在本地SVM之间创建对等关系``pvs1`` 和远程SVM``vs1``
 
 +
 [listing]
@@ -52,7 +52,7 @@ vs1 -applications snapmirror -peer-cluster cluster01
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例显示 SVM``pvs1`` 和 SVM``vs1`` 之间的对等关系已启动：
+以下示例显示了SVM之间的对等关系``pvs1`` 和SVM``vs1`` 已启动：
 
 +
 [listing]
@@ -71,7 +71,7 @@ pvs1        vs1         initiated   Cluster02       snapmirror
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例列出了 `cluster02` 的待定对等关系：
+以下示例列出了的待定对等关系 `cluster02`：
 
 +
 [listing]
@@ -85,13 +85,13 @@ vs1                pvs1               pending
 ----
 . 在数据保护目标集群上，授权待定对等关系：
 +
-`vserver peer accept -vserver _local_svm_ -peer-vserver _remote_svm_`
+`vserver peer accept -vserver _local_SVM_ -peer-vserver _remote_SVM_`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例授权本地 SVM `vs1` 与远程 SVM `pvs1` 之间的对等关系：
+以下示例将授权本地SVM之间的对等关系 `vs1` 和远程SVM `pvs1`：
 
 +
 [listing]

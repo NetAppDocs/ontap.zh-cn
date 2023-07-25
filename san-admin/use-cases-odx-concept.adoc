@@ -39,7 +39,7 @@ summary: 您应了解在 SVM 上使用 ODX 的使用情形，以便确定 ODX �
 
 * 集群间
 +
-源 LUN 和目标 LUN 位于集群中不同节点上的不同卷上。此功能仅适用于 SAN ，不适用于 SMB 。
+源 LUN 和目标 LUN 位于集群中不同节点上的不同卷上。只有SAN支持此功能、SMB不支持此功能。
 
 
 
@@ -75,8 +75,8 @@ summary: 您应了解在 SVM 上使用 ODX 的使用情形，以便确定 ODX �
 
 使用 ODX 功能时，系统的每个卷中都存在 ODX 系统文件。这些文件可以对 ODX 传输期间使用的数据进行时间点表示。以下系统文件位于包含 LUN 或将数据卸载到的文件的每个卷的根级别：
 
-* ` .copy-oflad` （隐藏目录）
-* ` 。` `` （隐藏的 .copy-oflad 目录下的文件）
+* `.copy-offload` (隐藏目录)
+* `.tokens` (文件位于隐藏的下 `.copy-offload` 目录)
 
 
-您可以使用 `copy-oflad delete-t令牌 -path dir_path -node _node_name_` 命令删除包含 ODX 文件的 qtree 。
+您可以使用 `copy-offload delete-tokens -path dir_path -node _node_name_` 用于删除包含ODX文件的qtree的命令。

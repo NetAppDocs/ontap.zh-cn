@@ -19,11 +19,11 @@ summary: 在还原到早期的 ONTAP 版本之前，您必须禁用所有 Snapsh
 * 在 ONTAP 8.3.x 中创建的任何数据保护镜像关系
 * 如果在 ONTAP 8.3.x 中重新创建了集群，则为所有数据保护镜像关系
 +
-.. 为所有数据 SVM 禁用 Snapshot 副本策略： `volume snapshot policy modify -vserver * -enabled false`
+.. 对所有数据SVM禁用Snapshot副本策略： `volume snapshot policy modify -vserver * -enabled false`
 .. 为每个节点的聚合禁用 Snapshot 副本策略：
 +
 ... 使用 run-nodenameaggr status 命令确定节点的聚合。
-... 为每个聚合禁用 Snapshot 副本策略： `run -node nodename aggr options aggr_name nosnap on`
+... 为每个聚合禁用Snapshot副本策略： `run -node nodename aggr options aggr_name nosnap on`
 ... 对其余每个节点重复此步骤。
 
 
@@ -42,15 +42,15 @@ vs1::> run -node node1 vol status
            vol0 online          raid_dp, flex     root, nvfail=on
                                 64-bit
 ----
-... 在根卷上禁用 Snapshot 副本策略： `run -node nodename vol options root_volume_name nosnap on`
+... 在根卷上禁用Snapshot副本策略： `run -node nodename vol options root_volume_name nosnap on`
 ... 对其余每个节点重复此步骤。
 
 
 .. 删除升级到当前版本后创建的所有 Snapshot 副本：
 +
-... 将权限级别设置为 advanced ： `set -privilege advanced`
+... 将权限级别设置为高级： `set -privilege advanced`
 ... 禁用快照：``snapshot policy modify -vserver * -enabled false``
-... 删除节点的较新版本 Snapshot 副本： `volume snapshot prepare-for-revert -node nodename`
+... 删除节点的较新版本Snapshot副本： `volume snapshot prepare-for-revert -node nodename`
 +
 此命令将删除每个数据卷，根聚合和根卷上的较新版本 Snapshot 副本。
 
@@ -65,9 +65,9 @@ cluster1::*> volume snapshot prepare-for-revert -node node1
 Warning: This command will delete all Snapshot copies that have the format used by the current version of ONTAP. It will fail if any Snapshot copy polices are enabled, or
          if any Snapshot copies have an owner. Continue? {y|n}: y
 ----
-... 验证是否已删除 Snapshot 副本： `volume snapshot show -node nodename`
+... 验证是否已删除Snapshot副本： `volume snapshot show -node nodename`
 +
-如果仍存在任何较新版本的 Snapshot 副本，请强制将其删除： `volume snapshot delete ｛ -fs-version 9.0 -node nodename -is-constituent true ｝ -ignore-owners -force`
+如果仍然存在任何较新版本的Snapshot副本、请强制将其删除： `volume snapshot delete {-fs-version 9.0 -node nodename -is-constituent true} -ignore-owners -force`
 
 ... 对其余每个节点重复此步骤 c 。
 ... 返回到管理权限级别： `set -privilege admin`

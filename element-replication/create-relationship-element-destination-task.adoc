@@ -19,7 +19,7 @@ summary: 从 ONTAP 9.4 开始，您可以使用 SnapMirror 将在 ONTAP 源上�
 
 
 .关于此任务
-您必须以 ` _hostip ： //lun/_name_` 的形式指定元素目标路径，其中 "`lun` " 是实际字符串 "`lun` " ， `name` 是 Element 卷的名称。
+您必须在表单中指定Element目标路径 `_hostip:_/lun/_name_`，其中“`LUN`”是实际字符串“`LUN`”和 `name` 是Element卷的名称。
 
 复制规则如下：
 
@@ -35,13 +35,13 @@ summary: 从 ONTAP 9.4 开始，您可以使用 SnapMirror 将在 ONTAP 源上�
 .步骤
 . 创建从 ONTAP 源到 Element 目标的复制关系：
 +
-`snapmirror create -source-path _SVM ： volume___cluster ： //svm/volume_-destination-path _hostip ： //lun/_name_ -type XDP -schedule schedule -policy _policy_`
+`snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _hostip:_/lun/_name_ -type XDP -schedule schedule -policy _policy_`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下示例将使用默认的 `MirrorLatest` 策略创建 SnapMirror 灾难恢复关系：
+以下示例将使用默认值创建SnapMirror灾难恢复关系 `MirrorLatest` 策略：
 
 +
 [listing]
@@ -49,7 +49,7 @@ summary: 从 ONTAP 9.4 开始，您可以使用 SnapMirror 将在 ONTAP 源上�
 cluster_dst::> snapmirror create -source-path svm_1:volA_dst -destination-path 10.0.0.11:/lun/0005 -type XDP -schedule my_daily -policy MirrorLatest
 ----
 +
-以下示例将使用自定义 `my_mirror` 策略创建 SnapMirror DR 关系：
+以下示例将使用自定义创建SnapMirror灾难恢复关系 `my_mirror` 策略：
 
 +
 [listing]
@@ -59,4 +59,4 @@ cluster_dst::> snapmirror create -source-path svm_1:volA_dst -destination-path 1
 
 
 .完成后
-使用 `snapmirror show` 命令验证是否已创建 SnapMirror 关系。有关完整的命令语法，请参见手册页。
+使用 `snapmirror show` 命令以验证是否已创建SnapMirror关系。有关完整的命令语法，请参见手册页。

@@ -11,18 +11,18 @@ summary: 您可以使用ONTAP 命令行界面、系统管理器或Web浏览器�
 
 
 [role="lead"]
-您可以使用ONTAP 命令行界面、System Manager或Web浏览器显示集群的`或mroot/etc/log/mlog/audit.log`文件的内容。
+您可以显示集群的内容 `/mroot/etc/log/mlog/audit.log` 使用ONTAP命令行界面、系统管理器或Web浏览器访问文件。
 
 集群的日志文件条目包括以下内容：
 
 时间:: 日志条目时间戳。
-应用程序:: 用于连接到集群的应用程序。可能值的示例包括`internal、console、ssh、http、ontapi、 SNMP、rsh、telnet、`和`sservice-processor`。
+应用程序:: 用于连接到集群的应用程序。可能值的示例包括 `internal, console, ssh, http, ontapi, snmp, rsh, telnet,` 和 `service-processor`。
 用户:: 远程用户的用户名。
-State:: `s请求的当前状态、可以是"无访问"、"待定"、"`"或"`"错误`。
+State:: 审核请求的当前状态、可能为 `success, pending,` 或 `error`。
 message:: 一个可选字段、其中可能包含有关命令状态的错误或追加信息。
 会话ID:: 接收请求时使用的会话ID。每个SSH _session_都分配有一个会话ID、而每个HTTP、ONTAPI或SNMP _request_都分配有一个唯一的会话ID。
-存储 VM:: 用户连接到的SVM。
-范围:: 如果请求位于数据存储VM上、则显示`sVM`；否则显示`cluster`。
+Storage VM:: 用户连接到的SVM。
+范围:: 显示 `svm` 请求位于数据Storage VM上时；否则显示 `cluster`。
 命令ID:: 在CLI会话上收到的每个命令的ID。这样、您就可以关联请求和响应。ZAPI、HTTP和SNMP请求没有命令ID。
 
 
@@ -32,21 +32,25 @@ message:: 一个可选字段、其中可能包含有关命令状态的错误或�
 ====
 .System Manager
 --
-* 要显示清单、请选择*事件和作业>审核日志*。+每个列都具有用于筛选、排序、搜索、显示和清单类别的控件。清单详细信息可作为Excel工作簿下载。
-* 要设置筛选器、请单击右上角的*筛选器*按钮、然后选择所需字段。+您还可以通过单击会话ID链接来查看发生故障的会话中执行的所有命令。
+* 要显示清单、请选择*事件和作业>审核日志*。+
+每列都有用于筛选、排序、搜索、显示和清单类别的控件。清单详细信息可作为Excel工作簿下载。
+* 要设置过滤器，请单击右上角的*Filter*按钮，然后选择所需的字段。+
+您还可以通过单击会话ID链接来查看在发生故障的会话中执行的所有命令。
 
 
 --
 .命令行界面
 --
-要显示从集群中多个节点合并的审核条目、请输入：+`ssecurityaudit log show _[参数]_`
+要显示从集群中的多个节点合并的审核条目、请输入：+
+`security audit log show _[parameters]_`
 
-您可以使用 `ssecurityaudit log show` 命令显示集群中单个节点或多个节点合并的审核条目。您还可以使用 Web 浏览器在单个节点上显示 ` /mroot/etc/log/mlog` 目录的内容。有关详细信息，请参见手册页。
+您可以使用 `security audit log show` 命令以显示集群中单个节点或多个节点合并的节点的审核条目。您还可以显示的内容 `/mroot/etc/log/mlog` 目录。
+有关详细信息，请参见手册页。
 
 --
 .Web 浏览器
 --
-您可以使用Web浏览器在单个节点上显示`/mroot/etc/log/mlog`目录的内容。 link:accessg-node-log-core-dump-mib-files-task.html["了解如何使用Web浏览器访问节点的日志、核心转储和MIB文件"]。
+您可以显示的内容 `/mroot/etc/log/mlog` 目录。 link:accessg-node-log-core-dump-mib-files-task.html["了解如何使用Web浏览器访问节点的日志、核心转储和MIB文件"]。
 
 --
 ====

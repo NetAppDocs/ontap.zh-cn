@@ -25,27 +25,27 @@ summary: 您可以使用自适应 QoS 策略组自动将吞吐量上限或下限
 
 吞吐量限制与存储对象大小的比率取决于以下字段的交互：
 
-* `expected-IOPS` 是每个已分配 TB-GB 的最小预期 IOPS 。
+* `expected-iops` 是每分配的TB|GB的最小预期IOPS。
 +
 [NOTE]
 ====
-`只能在 AFF 平台上保证预期 IOPS` 。只有当分层策略设置为 " 无 " 且云中没有块时， FabricPool 才会保证 `expected-IOPS` 。对于未建立 SnapMirror 同步关系的卷，可以保证 `expected-IOPS` 。
+ `expected-iops` 仅在AFF平台上提供担保。 `expected-iops` 只有当层策略设置为"无"且云中没有任何块时、才保证适用于FabricPool。 `expected-iops` 保证适用于不属于SnapMirror同步关系的卷。
 
 ====
-* `peak-IOPS` 是每个已分配或已使用 TB-GB 的最大可能 IOPS 。
-* `expected-IOPS-allocation` 指定预期 IOPS 是使用已分配空间（默认值）还是已用空间。
+* `peak-iops` 是已分配或已使用的每TB|GB可能的最大IOPS。
+* `expected-iops-allocation` 指定是将已分配空间(默认值)还是已用空间用于预期IOPS。
 +
 [NOTE]
 ====
-`expected-IOPS-allocation` 适用于 ONTAP 9.5 及更高版本。ONTAP 9.4 及更早版本不支持此功能。
+`expected-iops-allocation` 适用于ONTAP 9.5及更高版本。ONTAP 9.4 及更早版本不支持此功能。
 
 ====
-* `peak-IOPS-allocation` 指定是将已分配空间还是已用空间（默认值）用于 `peak-IOPS` 。
-* `ab绝对 最小 IOPS` 是绝对最小 IOPS 数。您可以对非常小的存储对象使用此字段。当 `abory-min-IOPS` 大于计算得出的 `expected-IOPS` 时，它会同时覆盖 `peak-IOPS` 和 / 或 `expected-IOPS` 。
+* `peak-iops-allocation` 指定是将已分配空间用于还是将已用空间(默认值)用于 `peak-iops`。
+*  `absolute-min-iops` 是绝对最小IOPS数。您可以对非常小的存储对象使用此字段。它会同时覆盖这两者 `peak-iops` 和 / 或 `expected-iops` 时间 `absolute-min-iops` 大于计算得出的 `expected-iops`。
 +
-例如，如果将 `expected-IOPS` 设置为 1 ， 000 IOPS/TB ，并且卷大小小于 1 GB ，则计算的 `expected-IOPS` 将为一个百分比 IOP 。计算得出的 `峰值 IOPS` 将是更小的比例。您可以通过将 `abisy-min-IOPS` 设置为实际值来避免这种情况。
+例如、如果您设置了 `expected-iops` 计算得出的值为1、000 IOS/TB、并且卷大小小于1 GB `expected-iops` 将是部分IOP。计算的 `peak-iops` 将是一个更小的比例。您可以通过设置来避免此问题 `absolute-min-iops` 以获得实际价值。
 
-* `block-size` 指定应用程序 I/O 块大小。默认值为 32 K 。有效值为 8K ， 16K ， 32K ， 64K ，任意。any 表示不强制实施块大小。
+* `block-size` 指定应用程序I/O块大小。默认值为 32 K 。有效值为 8K ， 16K ， 32K ， 64K ，任意。any 表示不强制实施块大小。
 
 
 可用的三个默认自适应 QoS 策略组如下表所示。您可以将这些策略组直接应用于卷。
@@ -57,29 +57,29 @@ summary: 您可以使用自适应 QoS 策略组自动将吞吐量上限或下限
 
 
  a| 
-`至高`
+`extreme`
  a| 
-6,144
+6、144
  a| 
-12,288
+12、288
  a| 
 1000
 
 
 
  a| 
-`性能`
+`performance`
  a| 
 2 ， 048
  a| 
-4,096
+4、096
  a| 
 500
 
 
 
  a| 
-`值`
+`value`
  a| 
 128.
  a| 
@@ -109,7 +109,7 @@ SVM 到策略组
 
 
  a| 
-LUN 到策略组
+将LUN分配给策略组
  a| 
 将包含 LUN 的卷或 SVM 分配给策略组
 
@@ -124,7 +124,7 @@ LUN 到策略组
 .步骤
 . 创建自适应 QoS 策略组：
 +
-`qos adaptive-policy-group create -policy group _policy_group_ -vserver _svm_ -expected-IOPS _number_of_IOPS_/TB_GB -pease-IOPS _number_of_IOPS_/TB_GB -expected-IOPS-allocation-space lused-space -pease-IOPS- allocation allocated-space| used-space| used-space -used-space - used-space - used-space - used-space - used -space - space- used -space - space- used -space - space- space- space- space- space`
+`qos adaptive-policy-group create -policy group _policy_group_ -vserver _SVM_ -expected-iops _number_of_iops_/TB|GB -peak-iops _number_of_iops_/TB|GB -expected-iops-allocation-space|used-space -peak-iops-allocation allocated-space|used-space -absolute-min-iops _number_of_iops_ -block-size 8K|16K|32K|64K|ANY`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -132,11 +132,11 @@ LUN 到策略组
 +
 [NOTE]
 ====
-ONTAP 9.5 及更高版本中提供了 ` -expected-IOPS-allocation` 和 ` -block-size` 。ONTAP 9.4 及更早版本不支持这些选项。
+`-expected-iops-allocation` 和 `-block-size` 适用于ONTAP 9.5及更高版本。ONTAP 9.4 及更早版本不支持这些选项。
 
 ====
 +
-以下命令将创建自适应 QoS 策略组 `adpg-app1` ，其中 ` -expected-IOPS` 设置为 300 IOPS/TB ， ` -peak-IOPS` 设置为 1 ， 000 IOPS/TB ， ` -peak-IOPS-allocation` 设置为 `used-space` ， ` -abrey-min-IOPS` 设置为 50 IOPS ：
+以下命令将创建自适应QoS策略组 `adpg-app1` 使用 `-expected-iops` 设置为300 IOS/TB、 `-peak-iops` 设置为1、000 IOS/TB、 `-peak-iops-allocation` 设置为 `used-space`，和 `-absolute-min-iops` 设置为50 IOPS：
 
 +
 [listing]
@@ -145,13 +145,13 @@ cluster1::> qos adaptive-policy-group create -policy group adpg-app1 -vserver vs
 ----
 . 将自适应 QoS 策略组应用于卷：
 +
-`volume create -vserver SVM -volume _volume_-aggregate _aggregate_ -size _number_of_TB_GB -qos-adaptive-policy-group _policy_group_`
+`volume create -vserver SVM -volume _volume_ -aggregate _aggregate_ -size _number_of_ TB|GB -qos-adaptive-policy-group _policy_group_`
 
 +
 有关完整的命令语法，请参见手册页。
 
 +
-以下命令会将自适应 QoS 策略组 `adpg-app1` 应用于卷 `app1` ：
+以下命令将应用自适应QoS策略组 `adpg-app1` 到卷 `app1`：
 
 +
 [listing]
@@ -159,7 +159,7 @@ cluster1::> qos adaptive-policy-group create -policy group adpg-app1 -vserver vs
 cluster1::> volume create -vserver vs1 -volume app1 -aggregate aggr1 -size 2TB -qos-adaptive-policy-group adpg-app1
 ----
 +
-以下命令会将默认的自适应 QoS 策略组 `至` 至新卷 `app4` 和现有卷 `app5` 。为策略组适用场景 volumes `app4` 和 `app5` 分别定义的吞吐量上限：
+以下命令将应用默认自适应QoS策略组 `extreme` 到新卷 `app4` 和到现有卷 `app5`。为策略组适用场景卷定义的吞吐量上限 `app4` 和 `app5` 单独：
 
 +
 [listing]

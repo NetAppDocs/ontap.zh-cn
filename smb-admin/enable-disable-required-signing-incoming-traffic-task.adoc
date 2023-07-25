@@ -28,11 +28,11 @@ summary: 您可以通过启用所需的 SMB 签名来强制实施客户端对 SM
 
 
 ====
-设置 Storage Virtual Machine （ SVM ）灾难恢复关系时，为 `snapmirror create` 命令的 ` -identity-preserve` 选项选择的值将确定复制到目标 SVM 中的配置详细信息。
+在设置Storage Virtual Machine (SVM)灾难恢复关系时、是为选择的值 `-identity-preserve` 的选项 `snapmirror create` 命令用于确定复制到目标SVM中的配置详细信息。
 
-如果将 ` -identity-preserve` 选项设置为 `true` （ ID-preserve ），则 SMB 签名安全设置将复制到目标。
+如果您设置了 `-identity-preserve` 选项 `true` (ID保留)、则SMB签名安全设置将复制到目标。
 
-如果将 ` -identity-preserve` 选项设置为 `false` （ non-ID-preserve ），则 SMB 签名安全设置不会复制到目标。在这种情况下，目标上的 CIFS 服务器安全设置将设置为默认值。如果已在源 SVM 上启用所需的 SMB 签名，则必须在目标 SVM 上手动启用所需的 SMB 签名。
+如果您设置了 `-identity-preserve` 选项 `false` (非ID保留)、则SMB签名安全设置不会复制到目标。在这种情况下，目标上的 CIFS 服务器安全设置将设置为默认值。如果已在源 SVM 上启用所需的 SMB 签名，则必须在目标 SVM 上手动启用所需的 SMB 签名。
 
 .步骤
 . 执行以下操作之一：
@@ -54,7 +54,7 @@ enabled
 `vserver cifs security modify -vserver _vserver_name_ -is-signing-required false`
 
 |===
-. 通过确定以下命令输出中的 `is signing required` 字段中的值是否设置为所需值来验证所需的 SMB 签名已启用或禁用： `vserver cifs security show -vserver _vserver_name_ -fields is-signing-required`
+. 通过确定中的值来验证是否已启用或禁用所需的SMB签名 `Is Signing Required` 字段设置为所需值： `vserver cifs security show -vserver _vserver_name_ -fields is-signing-required`
 
 
 .示例

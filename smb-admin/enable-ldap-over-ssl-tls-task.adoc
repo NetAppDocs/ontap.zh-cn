@@ -2,7 +2,7 @@
 permalink: smb-admin/enable-ldap-over-ssl-tls-task.html 
 sidebar: sidebar 
 keywords: cifs, smb, server, tls, secure, communication, active, directory, ldap, security, enable ldap over tls on the cifs server 
-summary: 在 SMB 服务器使用 TLS 与 Active Directory LDAP 服务器进行安全通信之前，您必须修改 SMB 服务器安全设置以启用基于 TLS 的 LDAP 。 
+summary: 在SMB服务器使用TLS与Active Directory LDAP服务器进行安全通信之前、您必须修改SMB服务器安全设置以启用基于TLS的LDAP。 
 ---
 = 在服务器上启用基于 TLS 的 LDAP
 :allow-uri-read: 
@@ -11,9 +11,9 @@ summary: 在 SMB 服务器使用 TLS 与 Active Directory LDAP 服务器进行�
 
 
 [role="lead"]
-在 SMB 服务器使用 TLS 与 Active Directory LDAP 服务器进行安全通信之前，您必须修改 SMB 服务器安全设置以启用基于 TLS 的 LDAP 。
+在SMB服务器使用TLS与Active Directory LDAP服务器进行安全通信之前、您必须修改SMB服务器安全设置以启用基于TLS的LDAP。
 
-从 ONTAP 9.10.1 开始，默认情况下， Active Directory （ AD ）和名称服务 LDAP 连接均支持 LDAP 通道绑定。只有在启用了 Start-TLS 或 LDAPS 且会话安全设置为 sign 或 seal 的情况下， ONTAP 才会尝试使用 LDAP 连接进行通道绑定。要禁用或重新启用与AD服务器的LDAP通道绑定、请在`vserver cifs security modify`命令中使用`-try-channel-binding for-ad-ldap`参数。
+从 ONTAP 9.10.1 开始，默认情况下， Active Directory （ AD ）和名称服务 LDAP 连接均支持 LDAP 通道绑定。只有在启用了 Start-TLS 或 LDAPS 且会话安全设置为 sign 或 seal 的情况下， ONTAP 才会尝试使用 LDAP 连接进行通道绑定。要禁用或重新启用与AD服务器的LDAP通道绑定、请使用 `-try-channel-binding-for-ad-ldap` 参数 `vserver cifs security modify` 命令：
 
 要了解更多信息、请参见：
 
@@ -22,12 +22,12 @@ summary: 在 SMB 服务器使用 TLS 与 Active Directory LDAP 服务器进行�
 
 
 .步骤
-. 配置允许与 Active Directory LDAP 服务器进行安全 LDAP 通信的 SMB 服务器安全设置： `vserver cifs security modify -vserver _vserver_name_ -use-start-tls-for-ad-ldap true`
-. 验证基于 TLS 的 LDAP 安全设置是否设置为 `true` ： `vserver cifs security show -vserver _vserver_name_`
+. 配置SMB服务器安全设置、以允许与Active Directory LDAP服务器进行安全LDAP通信： `vserver cifs security modify -vserver _vserver_name_ -use-start-tls-for-ad-ldap true`
+. 验证基于TLS的LDAP安全设置是否设置为 `true`： `vserver cifs security show -vserver _vserver_name_`
 +
 [NOTE]
 ====
-如果 SVM 使用同一个 LDAP 服务器来查询名称映射或其他 UNIX 信息（例如用户，组和网络组），则还必须使用 `vserver services name-service ldap client modify` 命令修改 ` use-start-tls` 选项。
+如果SVM使用同一个LDAP服务器来查询名称映射或其他UNIX信息(例如用户、组和网络组)、则还必须修改 `-use-start-tls` 选项 `vserver services name-service ldap client modify` 命令：
 
 ====
 

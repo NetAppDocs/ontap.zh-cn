@@ -17,22 +17,22 @@ summary: 您可以在 FlexGroup 卷上同时或单独运行重复数据删除和
 FlexGroup 卷必须处于联机状态。
 
 .步骤
-. 在 FlexGroup 卷上启用存储效率： `volume efficiency on -vserver svm_name -volume volume_name`
+. 在FlexGroup卷上启用存储效率： `volume efficiency on -vserver svm_name -volume volume_name`
 +
 FlexGroup 卷的所有成分卷都启用了存储效率操作。
 
 +
 如果在卷上启用存储效率后扩展 FlexGroup 卷，则新成分卷会自动启用存储效率。
 
-. 使用 `volume efficiency modify` 命令在 FlexGroup 卷上启用所需的存储效率操作。
+. 使用在FlexGroup卷上启用所需的存储效率操作 `volume efficiency modify` 命令：
 +
 您可以在 FlexGroup 卷上启用实时重复数据删除，后处理重复数据删除，实时压缩和后处理压缩。您还可以设置压缩类型（二级或自适应），并为 FlexGroup 卷指定计划或效率策略。
 
-. 如果未使用计划或效率策略运行存储效率操作，请启动效率操作： `volume efficiency start -vserver svm_name -volume volume_name`
+. 如果未使用计划或效率策略运行存储效率操作、请启动效率操作： `volume efficiency start -vserver svm_name -volume volume_name`
 +
 如果在卷上启用了重复数据删除和数据压缩，则先运行数据压缩，然后再运行重复数据删除。如果 FlexGroup 卷上已有任何效率操作处于活动状态，则此命令将失败。
 
-. 验证在 FlexGroup 卷上启用的效率操作： `volume efficiency show -vserver svm_name -volume volume_name`
+. 验证在FlexGroup卷上启用的效率操作： `volume efficiency show -vserver svm_name -volume volume_name`
 +
 [listing]
 ----

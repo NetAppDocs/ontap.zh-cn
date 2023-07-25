@@ -14,19 +14,19 @@ summary: 如果您希望 ONTAP 将访问具有 UNIX 文件安全性的卷或 qtr
 如果您希望 ONTAP 将访问具有 UNIX 文件安全性的卷或 qtree 上的数据的 SMB 用户视为属于同一 UNIX 组，则可以使用强制组共享设置创建 SMB 共享。
 
 .步骤
-. 创建 SMB 共享： `vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path path -force-group-for-create _unix_group_name_`
+. 创建SMB共享： `vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path path -force-group-for-create _UNIX_group_name_`
 +
-如果共享的 UNC 路径（` \\servername\sharename\filepath` ）包含超过 256 个字符（不包括 UNC 路径中的初始 "`` \\`` " ），则 Windows 属性框中的 * 安全性 * 选项卡不可用。这是 Windows 客户端问题描述，而不是 ONTAP 问题描述。要避免此问题描述，请勿使用超过 256 个字符的 UNC 路径创建共享。
+如果为UNC路径 (`\\servername\sharename\filepath`)包含超过256个字符(不包括初始"``\\``")，则Windows属性框中的*Security*选项卡不可用。这是 Windows 客户端问题描述，而不是 ONTAP 问题描述。要避免此问题描述，请勿使用超过 256 个字符的 UNC 路径创建共享。
 
 +
-如果要在创建共享后删除 force-group ，您可以随时修改共享并指定一个空字符串（ "" ）作为 ` force-group-for-create` 参数的值。如果通过修改共享来删除 force-group ，则此共享的所有现有连接仍将使用先前设置的 force-group 作为主 GID 。
+如果要在创建共享后删除强制组、则可以随时修改共享并指定空字符串("")作为的值 `-force-group-for-create` 参数。如果通过修改共享来删除 force-group ，则此共享的所有现有连接仍将使用先前设置的 force-group 作为主 GID 。
 
 
 
 .示例
-以下命令将创建一个 "`webPages` " 共享，该共享可通过 Web 上的 ` /corp/companyinfo` 目录访问，其中 SMB 用户创建的所有文件都将分配给 webgroup1 组：
+以下命令将创建一个"`webpages`"共享、此共享可通过中的Web进行访问 `/corp/companyinfo` 将SMB用户创建的所有文件分配给webgroup1组的目录：
 
-`vserver cifs share create -vserver vs1 -share-name webPages -path /corp/companyinfo -force-group-for-create webgroup1`
+`vserver cifs share create -vserver vs1 -share-name webpages -path /corp/companyinfo -force-group-for-create webgroup1`
 
 .相关信息
 xref:optimize-user-access-force-group-share-concept.adoc[使用强制组共享设置优化 SMB 用户访问]

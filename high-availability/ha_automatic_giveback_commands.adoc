@@ -27,16 +27,16 @@ summary: 自动交还命令
 
 默认设置为 true 。
  a| 
-`s存储故障转移修改 ‑node _nodename_ ‑auto‑giveback true`
+`storage failover modify ‑node _nodename_ ‑auto‑giveback true`
 
 
 
  a| 
 禁用自动交还。默认设置为 true 。
 
-* 注意： * 将此参数设置为 false 不会禁用在发生崩溃时接管后自动交还；必须通过将 `‑auto‑giveback‑after‑panic` 参数设置为 false 来禁用在发生崩溃时接管后自动交还。
+*注意：*将此参数设置为false不会禁用崩溃时接管后自动交还；必须通过设置来禁用崩溃时接管后自动交还 `‑auto‑giveback‑after‑panic` 参数设置为false。
  a| 
-`s存储故障转移修改 ‑node _nodename_ ‑auto‑giveback false`
+`storage failover modify ‑node _nodename_ ‑auto‑giveback false`
 
 
 
@@ -50,7 +50,7 @@ summary: 自动交还命令
  a| 
 将自动交还延迟指定的秒数（默认值为 600 ）。此选项用于确定在执行自动交还之前节点仍处于接管状态的最短时间。
  a| 
-`s存储故障转移修改 ‑node _nodename_ ‑delay‑seconds _seconds_`
+`storage failover modify ‑node _nodename_ ‑delay‑seconds _seconds_`
 
 |===
 
@@ -59,7 +59,7 @@ summary: 自动交还命令
 
 自动交还的操作取决于您如何配置 storage failover modify 命令的参数。
 
-下表列出了适用于非崩溃引起的接管事件的`storage failover modify`命令参数的默认设置。
+下表列出了的默认设置 `storage failover modify` 适用于非崩溃引起的接管事件的命令参数。
 
 |===
 
@@ -68,37 +68,37 @@ summary: 自动交还命令
 
 
  a| 
-` 自动交还 _true_ _ _ _ _ false_`
+`-auto-giveback _true_ | _false_`
  a| 
-` _ true _`
+`_true_`
 
 
 
  a| 
-` - 延迟 - 秒 _intege_ （秒）`
+`-delay-seconds _integer_ (seconds)`
  a| 
 600
 
 
 
  a| 
-` -onreboot _tru_ _ _ _ _ _false_`
+`-onreboot _true_ | _false_`
  a| 
-` _ true _`
+`_true_`
 
 |===
-下表介绍了 ` -onreboot` 和 ` -auto-giveback` 参数的组合如何影响非崩溃引起的接管事件的自动交还。
+下表介绍了的组合方式 `-onreboot` 和 `-auto-giveback` 参数会影响非崩溃引起的接管事件的自动交还。
 
 |===
 
 
-| `s存储故障转移修改` 使用的参数 | 接管的发生原因 | 是否发生自动交还？ 
+| `storage failover modify` 使用的参数 | 接管的发生原因 | 是否发生自动交还？ 
 
 
  a| 
-` -onreboot _tru_`
+`-onreboot _true_`
 
-` 自动交还 _tru_`
+`-auto-giveback _true_`
 | reboot 命令 | 是的。 
 
 
@@ -106,9 +106,9 @@ summary: 自动交还命令
 
 
  a| 
-` -onreboot _tru_`
+`-onreboot _true_`
 
-` 自动交还 _false_`
+`-auto-giveback _false_`
 | reboot 命令 | 是的。 
 
 
@@ -116,33 +116,34 @@ summary: 自动交还命令
 
 
  a| 
-` -onreboot _false_`
+`-onreboot _false_`
 
-` 自动交还 _tru_`
-| reboot 命令 | 不适用在这种情况下，不会发生接管 
+`-auto-giveback _true_`
+| reboot 命令 | 不适用
+在这种情况下、不会发生接管 
 
 
 | halt 命令，或者从服务处理器发出的重新启动操作 | 是的。 
 
 
  a| 
-` -onreboot _false_`
+`-onreboot _false_`
 
-` 自动交还 _false_`
+`-auto-giveback _false_`
 | reboot 命令 | 否 
 
 
 | halt 命令，或者从服务处理器发出的重新启动操作 | 否 
 |===
-` -auto-giveback` 参数用于控制崩溃后的交还以及所有其他自动接管。如果将 ` -onreboot` 参数设置为 `true` 而由于重新启动而发生接管，则无论 ` -auto-giveback` 参数是否设置为 `true` ，系统始终会执行自动交还。
+。 `-auto-giveback` 参数用于控制崩溃后的交还以及所有其他自动接管。如果 `-onreboot` 参数设置为 `true` 而接管是由于重新启动而发生的、则无论是否、都会始终执行自动交还 `-auto-giveback` 参数设置为 `true`。
 
-` -onreboot` 参数适用场景将重新启动并暂停从 ONTAP 发出的命令。如果将 ` -onreboot` 参数设置为 false ，则在节点重新启动时不会发生接管。因此，无论 ` -auto-giveback` 参数是否设置为 true ，都不会发生自动交还。发生客户端中断。
+。 `-onreboot` 参数适用场景重新启动并暂停ONTAP发出的命令。当 `-onreboot` 参数设置为false、则在节点重新启动时不会发生接管。因此、无论是否存在、都无法进行自动交还 `-auto-giveback` 参数设置为true。发生客户端中断。
 
 
 
 == 适用于崩溃情况的自动交还参数组合的影响。
 
-下表列出了适用于崩溃情况的 `storage failover modify` 命令参数：
+下表列出了 `storage failover modify` 适用于崩溃情况的命令参数：
 
 |===
 
@@ -151,54 +152,63 @@ summary: 自动交还命令
 
 
  a| 
-` -onpanic _true _ false_`
+`-onpanic _true | false_`
  a| 
-` _ true _`
+`_true_`
 
 
 
  a| 
-` -auto-giveback-after-panic _true _ false_`
+`-auto-giveback-after-panic _true | false_`
 
 （权限：高级）
  a| 
-` _ true _`
+`_true_`
 
 
 
  a| 
-` 自动交还 _true _ false _`
+`-auto-giveback _true | false_`
  a| 
-` _ true _`
+`_true_`
 
 |===
-下表介绍了 `storage failover modify` 命令的参数组合如何影响崩溃情况下的自动交还。
+下表介绍了的参数组合方式 `storage failover modify` 命令会影响崩溃情况下的自动交还。
 
 [cols="60,40"]
 |===
 
 
-| `s存储故障转移` 使用的参数 | 崩溃后是否发生自动交还？ 
+| `storage failover` 使用的参数 | 崩溃后是否发生自动交还？ 
 
 
-| ` -onpanic true` ` auto-giveback true` ` -auto-giveback-after-panic true` | 是的。 
+| `-onpanic true`
+`-auto-giveback true`
+`-auto-giveback-after-panic true` | 是的。 
 
 
-| ` -onpanic true` ` auto-giveback true` ` -auto-giveback-after-panic false` | 是的。 
+| `-onpanic true`
+`-auto-giveback true`
+`-auto-giveback-after-panic false` | 是的。 
 
 
-| ` -onpanic true` ` auto-giveback false` ` -auto-giveback-after-panic true` | 是的。 
+| `-onpanic true`
+`-auto-giveback false`
+`-auto-giveback-after-panic true` | 是的。 
 
 
-| ` -onpanic true` ` auto-giveback false` ` -auto-giveback-after-panic false` | 否 
+| `-onpanic true`
+`-auto-giveback false`
+`-auto-giveback-after-panic false` | 否 
 
 
-| ` -onpanic false` 如果 ` -onpanic` 设置为 `false` ，则不会发生接管 / 交还，无论为 ` -auto-giveback` 或 ` -auto-giveback-after-panic` 设置的值如何 | 否 
+| `-onpanic false`
+条件 `-onpanic` 设置为 `false`、则无论为设置的值如何、都不会发生接管/返回 `-auto-giveback` 或 `-auto-giveback-after-panic` | 否 
 |===
 
-NOTE: 接管可能是由与崩溃无关的故障引起的。如果节点与其配对节点之间的通信丢失、则会出现_failure_、也称为_Heartbeat los_。如果因故障而发生接管、交还将由控制 `-onfailure` 参数、而不是 `-auto-giveback-after-panic parameter`。
+NOTE: 接管可能是由与崩溃无关的故障引起的。  如果节点与其配对节点之间的通信丢失、则会出现_failure_、也称为_Heartbeat los_。如果因故障而发生接管、交还将由控制 `-onfailure` 参数、而不是 `-auto-giveback-after-panic parameter`。
 
 
-NOTE: 当节点崩溃时、它会向其配对节点发送崩溃数据包。如果配对节点由于任何原因未收到崩溃数据包、则此崩溃可能会被误解为故障。如果未收到崩溃数据包、配对节点只知道通信已丢失、并且不知道发生崩溃。在这种情况下、配对节点会将通信丢失视为故障而不是崩溃、交还由控制 `-onfailure` 参数(而不是 `-auto-giveback-after-panic parameter`）。
+NOTE: 当节点崩溃时、它会向其配对节点发送崩溃数据包。  如果配对节点由于任何原因未收到崩溃数据包、则此崩溃可能会被误解为故障。  如果未收到崩溃数据包、配对节点只知道通信已丢失、并且不知道发生崩溃。  在这种情况下、配对节点会将通信丢失视为故障而不是崩溃、交还由控制 `-onfailure` 参数(而不是 `-auto-giveback-after-panic parameter`）。
 
 有关所有的详细信息、请参见 `storage failover modify` 参数、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131/storage-failover-modify.html["ONTAP 手册页"]。

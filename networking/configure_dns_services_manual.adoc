@@ -19,15 +19,15 @@ summary: 在创建 NFS 或 SMB 服务器之前，为 SVM 配置 DNS 服务
 .关于此任务
 Active Directory 集成的 DNS 服务器包含域 LDAP 和域控制器服务器的服务位置记录（ SRV ）。如果 SVM 找不到 Active Directory LDAP 服务器和域控制器，则 NFS 或 SMB 服务器设置将失败。
 
-SVM 使用 hosts 名称服务 ns-switch 数据库确定要使用的名称服务以及查找有关主机的信息的顺序。主机数据库支持的两个名称服务为 `files` 和 `dns` 。
+SVM 使用 hosts 名称服务 ns-switch 数据库确定要使用的名称服务以及查找有关主机的信息的顺序。主机数据库支持的两种名称服务为 `files` 和 `dns`。
 
-在创建 SMB 服务器之前，您必须确保 `dns` 是其中一个源。
+您必须确保这一点 `dns` 是创建SMB服务器之前的源之一。
 
 
 NOTE: 要查看 mgwd 进程和 SecD 进程的 DNS 名称服务统计信息，请使用统计信息 UI 。
 
 .步骤
-. 确定 `hosts` name services 数据库的当前配置。
+. 确定的当前配置 `hosts` 名称服务数据库。
 +
 在此示例中， hosts 名称服务数据库使用默认设置。
 
@@ -47,7 +47,7 @@ Name Service Switch Database: hosts
 在此示例中， hosts 数据库配置为按此顺序使用 DNS 和本地文件。
 
 +
-`vserver services name-service _ns-switch_ modify -vserver _vs1_ -database _hosts_ -sources _dns ， files_`
+`vserver services name-service _ns-switch_ modify -vserver _vs1_ -database _hosts_ -sources _dns,files_`
 
 .. 验证名称服务配置是否正确。
 +
@@ -57,11 +57,11 @@ Name Service Switch Database: hosts
 
 . 配置 DNS 服务。
 +
-`vserver services name-service dns create -vserver _vs1_ -domains _example.com,example2.com_ -name-servers _10.0.0.5010.0.0.51_`
+`vserver services name-service dns create -vserver _vs1_ -domains _example.com,example2.com_ -name-servers _10.0.0.50,10.0.0.51_`
 
 +
 
-NOTE: vserver services `name-service dns create` 命令会执行自动配置验证，如果 ONTAP 无法与名称服务器联系，则会报告错误消息。
+NOTE: Vserver服务 `name-service dns create` 命令会执行自动配置验证、并在ONTAP无法联系名称服务器时报告错误消息。
 
 . 验证 DNS 配置是否正确以及服务是否已启用。
 +
@@ -97,7 +97,7 @@ vs1      10.0.0.51    up      Response time (msec): 2
 .关于此任务
 指定的完全限定域名（ FQDN ）必须是唯一的：
 
-* 对于 NFS ，在 `vserver services name-service dns dynamic-update` 命令的一部分在 ` -vserver-fqdn` 中指定的值将成为 LIF 的注册 FQDN 。
+* 对于NFS、是在中指定的值 `-vserver-fqdn` 作为的一部分 `vserver services name-service dns dynamic-update` 命令将成为为这些生命周期管理器注册的FQDN。
 * 对于 SMB ，指定为 CIFS 服务器 NetBIOS 名称和 CIFS 服务器完全限定域名的值将成为 LIF 的注册 FQDN 。这在 ONTAP 中是不可配置的。在以下情形中， LIF FQDN 为 CIFS_VS1.EXAMPLE.COM":
 +
 ....
@@ -124,13 +124,13 @@ NOTE: 要避免不符合 DDNS 更新的 RFC 规则的 SVM FQDN 配置失败，�
 .步骤
 . 在 SVM 上配置 DDNS ：
 +
-`vserver services name-service dns dynamic-update modify -vserver _vserver_name_ -is- enabled _true_[-use-secure ｛ true_false ｝ -vserver-fqdn _fqdn_used_for_dns_updates_`
+`vserver services name-service dns dynamic-update modify -vserver _vserver_name_ -is- enabled _true_ [-use-secure {true|false} -vserver-fqdn _FQDN_used_for_DNS_updates_`
 
 +
-`vserver services name-service dns dynamic-update modify -vserver _vs1_ -is-enabled _tru_ - use-secure _tru_ -vserver-fqdn _vs1.example.com_`
+`vserver services name-service dns dynamic-update modify -vserver _vs1_ -is-enabled _true_ - use-secure _true_ -vserver-fqdn _vs1.example.com_`
 
 +
-星号不能用作自定义 FQDN 的一部分。例如， ` ｛ asterisk ｝ .netapp.com` 无效。
+星号不能用作自定义 FQDN 的一部分。例如： `{asterisk}.netapp.com` 无效。
 
 . 验证 DDNS 配置是否正确：
 +

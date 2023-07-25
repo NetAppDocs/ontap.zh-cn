@@ -33,14 +33,14 @@ SMB 会话中同时连接的数量取决于您部署的 NIC ：
 
 您还可以修改以下参数（高级权限）：
 
-* *` -max-connections-per-session` *
+* *`-max-connections-per-session`*
 +
 每个多通道会话允许的最大连接数。默认值为 32 个连接。
 
 +
 如果要启用比默认连接更多的连接，则必须对客户端配置进行类似的调整，该配置的默认连接数也为 32 个。
 
-* *` -max-lifs-per-session` *
+* *`-max-lifs-per-session`*
 +
 每个多通道会话公布的最大网络接口数。默认值为 256 个网络接口。
 
@@ -49,19 +49,19 @@ SMB 会话中同时连接的数量取决于您部署的 NIC ：
 .步骤
 . 将权限级别设置为高级：
 +
-` * 设置 -privilege advanced*`
+`*set -privilege advanced*`
 
 . 在 SMB 服务器上启用 SMB 多通道：
 +
-` * vserver cifs options modify -vserver _vserver_name_ -is-m多 通道启用的 true*`
+`*vserver cifs options modify -vserver _vserver_name_ -is-multichannel-enabled true*`
 
 . 验证 ONTAP 是否正在报告 SMB 多通道会话：
 +
-` * Vserver cifs session show options*`
+`*vserver cifs session show options*`
 
 . 返回到管理权限级别：
 +
-` * 设置 -privilege admin*`
+`*set -privilege admin*`
 
 
 

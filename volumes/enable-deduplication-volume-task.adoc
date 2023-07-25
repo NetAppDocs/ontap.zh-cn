@@ -24,29 +24,29 @@ summary: 您可以在 FlexVol 卷上启用重复数据删除以提高存储效�
 
 ====
 .选项
-* 使用 `volume efficiency on` 命令启用后处理重复数据删除。
+* 使用 `volume efficiency on` 命令以启用后处理重复数据删除。
 +
 以下命令将在卷 VolA 上启用后处理重复数据删除：
 
 +
-`-vserver vs1 -volume VolA 上的卷效率`
+`volume efficiency on -vserver vs1 -volume VolA`
 
-* 使用 `volume efficiency on` 命令，然后使用 `volume efficiency modify` 命令，并将 ` inline-deduplication` 选项设置为 `true` ，以启用后处理重复数据删除和实时重复数据删除。
+* 使用 `volume efficiency on` 命令、然后是 `volume efficiency modify` 命令 `-inline-deduplication` 选项设置为 `true` 同时启用后处理重复数据删除和实时重复数据删除。
 +
 以下命令会在卷 VolA 上同时启用后处理重复数据删除和实时重复数据删除：
 
 +
-`-vserver vs1 -volume VolA 上的卷效率`
+`volume efficiency on -vserver vs1 -volume VolA`
 
 +
 `volume efficiency modify -vserver vs1 -volume VolA -inline-dedupe true`
 
-* 使用 `volume efficiency on` 命令，然后使用 `volume efficiency modify` 命令，并将 ` inline-deduplication` 选项设置为 `true` ，将 ` -policy` 选项设置为 `inline-only` ，以便仅启用实时重复数据删除。
+* 使用 `volume efficiency on` 命令、然后是 `volume efficiency modify` 命令 `-inline-deduplication` 选项设置为 `true` 和 `-policy` 选项设置为 `inline-only` 仅启用实时重复数据删除。
 +
 以下命令仅对卷 VolA 启用实时重复数据删除：
 
 +
-`-vserver vs1 -volume VolA 上的卷效率`
+`volume efficiency on -vserver vs1 -volume VolA`
 
 +
 `volume efficiency modify -vserver vs1 -volume VolA -policy inline-only -inline-dedupe true`
@@ -54,4 +54,5 @@ summary: 您可以在 FlexVol 卷上启用重复数据删除以提高存储效�
 
 
 .完成后
-查看卷效率设置以验证此设置是否已更改： `volume efficiency show -instance`
+通过查看卷效率设置来验证设置是否已更改：
+`volume efficiency show -instance`

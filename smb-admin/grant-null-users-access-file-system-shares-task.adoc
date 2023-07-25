@@ -14,7 +14,7 @@ summary: 您可以通过分配空会话客户端要使用的组并记录空会�
 您可以通过分配空会话客户端要使用的组并记录空会话客户端的 IP 地址以添加到允许使用空会话访问数据的客户端列表，从而允许空会话客户端访问存储系统资源。
 
 .步骤
-. 使用 `vserver name-mapping create` 命令使用 IP 限定符将空用户映射到任何有效的 Windows 用户。
+. 使用 `vserver name-mapping create` 命令、用于将空用户映射到任何有效的Windows用户、并使用IP限定符。
 +
 以下命令使用有效主机名 google.com 将空用户映射到 user1 ：
 
@@ -31,7 +31,7 @@ vserver name-mapping create –direction win-unix  -position 1 –pattern “ANO
 ----
 vserver name-mapping create –direction win-unix  -position 2 –pattern “ANONYMOUS LOGON” –replacement user1 –address 10.238.2.54/32
 ----
-. 使用 `vserver name-mapping show` 命令确认名称映射。
+. 使用 `vserver name-mapping show` 命令以确认名称映射。
 +
 [listing]
 ----
@@ -44,7 +44,7 @@ Position Hostname         IP Address/Mask
 1       -                 10.72.40.83/32      Pattern: anonymous logon
                                           Replacement: user1
 ----
-. 使用 `vserver cifs options modify – win-name-for-null-user` 命令将 Windows 成员资格分配给空用户。
+. 使用 `vserver cifs options modify –win-name-for-null-user` 用于将Windows成员资格分配给空用户的命令。
 +
 只有当空用户具有有效的名称映射时，此选项才适用。
 
@@ -53,7 +53,7 @@ Position Hostname         IP Address/Mask
 ----
 vserver cifs options modify -win-name-for-null-user user1
 ----
-. 使用 `vserver cifs options show` 命令确认将空用户映射到 Windows 用户或组。
+. 使用 `vserver cifs options show` 命令以确认将空用户映射到Windows用户或组。
 +
 [listing]
 ----

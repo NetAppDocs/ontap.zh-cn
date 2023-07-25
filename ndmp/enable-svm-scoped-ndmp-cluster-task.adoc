@@ -20,21 +20,21 @@ DMA 必须支持 CAB 扩展。
 关闭节点范围的 NDMP 模式将在集群上启用 SVM 范围的 NDMP 模式。
 
 .步骤
-. 使用带有 `node-scope-mode` 参数的 `ssystem services ndmp` 命令启用 SVM 范围的 NDMP 模式。
+. 使用启用SVM范围的NDMP模式 `system services ndmp` 命令 `node-scope-mode` 参数。
 +
 [listing]
 ----
 cluster1::> system services ndmp node-scope-mode off
 NDMP node-scope-mode is disabled.
 ----
-. 使用 `vserver services ndmp on` 命令在管理 SVM 上启用 NDMP 服务。
+. 使用在管理SVM上启用NDMP服务 `vserver services ndmp on` 命令：
 +
 [listing]
 ----
 cluster1::> vserver services ndmp on -vserver cluster1
 ----
 +
-默认情况下，身份验证类型设置为 `质询` ，纯文本身份验证处于禁用状态。
+身份验证类型设置为 `challenge` 默认情况下、纯文本身份验证处于禁用状态。
 
 +
 [NOTE]
@@ -42,7 +42,7 @@ cluster1::> vserver services ndmp on -vserver cluster1
 要实现安全通信，您应禁用纯文本身份验证。
 
 ====
-. 使用 `vserver services ndmp show` 命令验证是否已启用 NDMP 服务。
+. 使用验证是否已启用NDMP服务 `vserver services ndmp show` 命令：
 +
 [listing]
 ----

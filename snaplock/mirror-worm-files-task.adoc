@@ -18,7 +18,7 @@ summary: 您可以使用 SnapMirror 将 WORM 文件复制到其他地理位置�
 
 .关于此任务
 * 从 ONTAP 9.5 开始，您可以使用 XDP （扩展数据保护）类型的 SnapMirror 关系复制 WORM 文件，而不是使用 DP （数据保护）类型的关系。XDP 模式与 ONTAP 版本无关，并且能够区分存储在同一块中的文件，从而更容易重新同步复制的 Compliance 模式卷。有关如何将现有 DP 类型关系转换为 XDP 类型关系的信息，请参见 link:../data-protection/index.html["数据保护"]。
-* 如果 SnapLock 确定 Compliance 模式卷的 DP 类型 SnapMirror 关系将导致数据丢失，则对该关系执行重新同步操作将失败。如果重新同步操作失败，您可以使用 `volume clone create` 命令克隆目标卷。然后，您可以将源卷与克隆重新同步。
+* 如果 SnapLock 确定 Compliance 模式卷的 DP 类型 SnapMirror 关系将导致数据丢失，则对该关系执行重新同步操作将失败。如果重新同步操作失败、您可以使用 `volume clone create` 命令创建目标卷的克隆。然后，您可以将源卷与克隆重新同步。
 * SnapLock 兼容卷之间的 XDP 类型的 SnapMirror 关系支持在中断后重新同步，即使在中断后目标上的数据与源上的数据发生了差异也是如此。
 +
 在重新同步时，如果检测到源目标与通用快照之间存在数据差异，则会在目标上创建一个新快照以捕获此差异。新快照和通用快照都将锁定，并保留如下所示的保留时间：
@@ -72,16 +72,16 @@ image::../media/snapmirror_steps_clustered.png[此图显示了用于初始化 Sn
 --
 . 确定目标集群。
 . 在目标集群上、安装SnapLock 许可证、初始化ComplianceClock、如果您使用的是ONTAP 9.10.1之前的版本、请创建SnapLock 聚合。
-. 在目标集群上，创建类型为 `DP` 的 SnapLock 目标卷，该卷大小等于或大于源卷：
+. 在目标集群上、创建类型为的SnapLock目标卷 `DP` 大小等于或大于源卷：
 +
-`* volume create -vserver _svm_name_-volume _volume_name_-aggregate _aggregate_name_-SnapLock-type compliancy|企业级类型DP -size _size_*`
+`*volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_ -snaplock-type compliance|enterprise -type DP -size _size_*`
 
 +
 
 NOTE: 从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。您可以使用volume -SnapLock-type选项指定Compliance或Enterprise SnapLock 卷类型。在ONTAP 9.10.1之前的ONTAP 版本中、SnapLock 模式-合规性或企业-是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。
 
 +
-以下命令会在聚合 `node01_aggr` 上创建一个名为 `dstvolB` in `SVM2` 的 2 GB SnapLock `Compliance` volume ：
+以下命令将创建一个2 GB的SnapLock `Compliance` 名为的卷 `dstvolB` 在中 `SVM2` 在聚合上 `node01_aggr`：
 
 +
 [listing]
@@ -90,10 +90,10 @@ cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -
 ----
 . 在目标 SVM 上，创建 SnapMirror 策略：
 +
-` * snapmirror policy create -vserver _svm_name_ -policy _policy_name_*`
+`*snapmirror policy create -vserver _SVM_name_ -policy _policy_name_*`
 
 +
-以下命令将创建 SVM 范围的策略 `SVM1-mirror` ：
+以下命令将创建SVM范围的策略 `SVM1-mirror`：
 
 +
 [listing]
@@ -102,10 +102,10 @@ SVM2::> snapmirror policy create -vserver SVM2 -policy SVM1-mirror
 ----
 . 在目标 SVM 上，创建 SnapMirror 计划：
 +
-` * 作业计划 cron create -name _schedule_name_ -dayofweek _day_of_week_ -hour _hour_ -minute _minute_*`
+`*job schedule cron create -name _schedule_name_ -dayofweek _day_of_week_ -hour _hour_ -minute _minute_*`
 
 +
-以下命令将创建名为 `weekendcron` 的 SnapMirror 计划：
+以下命令将创建一个名为的SnapMirror计划 `weekendcron`：
 
 +
 [listing]
@@ -114,10 +114,10 @@ SVM2::> job schedule cron create -name weekendcron -dayofweek "Saturday, Sunday"
 ----
 . 在目标 SVM 上，创建 SnapMirror 关系：
 +
-` * snapmirror create -source-path _source_path_ -destination-path _destination_path_ -type XDP_dp -policy _policy_name_ -schedule _schedule_name_*`
+`*snapmirror create -source-path _source_path_ -destination-path _destination_path_ -type XDP|DP -policy _policy_name_ -schedule _schedule_name_*`
 
 +
-以下命令会在源卷 `srcvolA` on `SVM1` 和目标卷 `dstvolB` on `SVM2` 之间创建 SnapMirror 关系，并分配策略 `SVM1-mirror` 和计划 `weekendcron` ：
+以下命令将在源卷之间创建SnapMirror关系 `srcvolA` 开启 `SVM1` 和目标卷 `dstvolB` 开启 `SVM2`，并分配策略 `SVM1-mirror` 和计划 `weekendcron`：
 
 +
 [listing]
@@ -130,13 +130,13 @@ NOTE: XDP 类型可在 ONTAP 9.5 及更高版本中使用。您必须在 ONTAP 9
 
 . 在目标 SVM 上，初始化 SnapMirror 关系：
 +
-` * snapmirror initialize -destination-path _destination_path_*`
+`*snapmirror initialize -destination-path _destination_path_*`
 
 +
 初始化过程会向目标卷执行 _baseline transfer_ 。SnapMirror 为源卷创建 Snapshot 副本，然后将该副本及其引用的所有数据块传输到目标卷。它还会将源卷上的任何其他 Snapshot 副本传输到目标卷。
 
 +
-以下命令将初始化源卷 `srcvolA` on `SVM1` 与目标卷 `dstvolB` on `SVM2` 之间的关系：
+以下命令将初始化源卷之间的关系 `srcvolA` 开启 `SVM1` 和目标卷 `dstvolB` 开启 `SVM2`：
 
 +
 [listing]

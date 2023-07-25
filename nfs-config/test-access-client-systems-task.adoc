@@ -21,7 +21,7 @@ summary: 在验证对新存储对象的 NFS 访问之后，您应登录到 NFS �
 .步骤
 . 在集群上，验证托管新卷的 LIF 的 IP 地址：
 +
-`network interface show – vserver _svm_name_`
+`network interface show –vserver _svm_name_`
 
 . 以 root 用户身份登录到管理主机客户端系统。
 . 将目录更改为挂载文件夹：
@@ -30,9 +30,15 @@ summary: 在验证对新存储对象的 NFS 访问之后，您应登录到 NFS �
 
 . 使用 SVM 的 IP 地址创建并挂载新文件夹：
 +
-.. 创建新文件夹： + `mkdir /mnt/_folder_`
-.. 将新卷挂载到此新目录： + `mount -t nfs -o hard _ipAddress_ ： /_volume_name_ /mnt/_folder_`
-.. 将目录更改为新文件夹： + `cd _folder_`
+.. 创建新文件夹：
+ +
+`mkdir /mnt/_folder_`
+.. 将新卷挂载到此新目录：
+ +
+`mount -t nfs -o hard _IPAddress_:/_volume_name_ /mnt/_folder_`
+.. 将目录更改为新文件夹：
+ +
+`cd _folder_`
 +
 以下命令将创建一个名为 test1 的文件夹，并在 test1 挂载文件夹的 192.0.2.130 IP 地址处挂载 vol1 卷，然后更改为新的 test1 目录：
 
@@ -47,15 +53,27 @@ host# cd /mnt/test1
 
 . 创建一个新文件，验证该文件是否存在并向其写入文本：
 +
-.. 创建测试文件： + `touch _filename_`
-.. 验证文件是否存在： + `ls -l _filename_`
-.. 输入： + `cat >_filename_`
+.. 创建测试文件：
+ +
+`touch _filename_`
+.. 验证文件是否存在：
+ +
+`ls -l _filename_`
+.. 输入 ...
+ +
+`cat > _filename_`
 +
 键入一些文本，然后按 Ctrl+D 将文本写入测试文件。
 
-.. 显示测试文件的内容。+ `cat _filename_`
-.. 删除测试文件： + `rm _filename_`
-.. 返回父目录： + `cd ..`
+.. 显示测试文件的内容。
+ +
+`cat _filename_`
+.. 删除测试文件：
+ +
+`rm _filename_`
+.. 返回到父目录：
+ +
+`cd ..`
 +
 [listing]
 ----

@@ -17,7 +17,7 @@ summary: 创建网络端口故障转移组会在链路发生故障时自动将 L
 您可以创建网络端口的故障转移组，以便在 LIF 的当前端口发生链路故障时， LIF 可以自动迁移到其他端口。这样，系统就可以将网络流量重新路由到集群中的其他可用端口。
 
 .关于此任务
-您可以使用 `network interface failover-groups create` 命令创建组并向组添加端口。
+您可以使用 `network interface failover-groups create` 命令以创建组并向组中添加端口。
 
 * 添加到故障转移组的端口可以是网络端口， VLAN 或接口组（ ifgrp ）。
 * 添加到故障转移组的所有端口必须属于同一广播域。
@@ -31,9 +31,10 @@ summary: 创建网络端口故障转移组会在链路发生故障时自动将 L
 
 `network interface failover-groups create -vserver _vserver_name_ -failover-group _failover_group_name_ -targets _ports_list_`
 
-* ` _vserver_name_` 是可使用故障转移组的 SVM 的名称。
-* ` failover_group_name_` 是要创建的故障转移组的名称。
-* ` ports_list_` 是要添加到故障转移组的端口列表。添加的端口格式为 _node_name> ： <port_number>_ ，例如 node1 ： e0c 。
+* `_vserver_name_` 是可使用故障转移组的SVM的名称。
+* `_failover_group_name_` 是要创建的故障转移组的名称。
+* `_ports_list_` 是要添加到故障转移组的端口列表。
+添加的端口格式为 _node_name> ： <port_number>_ ，例如 node1 ： e0c 。
 
 
 以下命令将为 SVM vs3 创建故障转移组 fg3 并添加两个端口：

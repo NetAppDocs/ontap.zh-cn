@@ -25,12 +25,12 @@ summary: '您可以手动将文件提交到WORM (一次写入、多次读取)、
 
 
 .关于此任务
-执行命令或程序时，卷 ComplianceClock 时间将写入文件的 `ctime` 字段。ComplianceClock 时间用于确定何时达到文件的保留时间。
+卷ComplianceClockTime将写入 `ctime` 执行命令或程序时的文件字段。ComplianceClock 时间用于确定何时达到文件的保留时间。
 
 .步骤
 . 使用合适的命令或程序将文件的读写属性更改为只读。
 +
-在 UNIX Shell 中，使用以下命令将名为 `document.txt` 的文件设置为只读：
+在UNIX Shell中、使用以下命令创建一个名为的文件 `document.txt` 只读：
 
 +
 [listing]
@@ -38,7 +38,7 @@ summary: '您可以手动将文件提交到WORM (一次写入、多次读取)、
 chmod -w document.txt
 ----
 +
-在 Windows Shell 中，使用以下命令将名为 `document.txt` 的文件设置为只读：
+在Windows Shell中、使用以下命令创建一个名为的文件 `document.txt` 只读：
 
 +
 [listing]
@@ -51,7 +51,8 @@ attrib +r document.txt
 
 == 自动将文件提交到WORM
 
-使用 SnapLock 自动提交功能，您可以自动将文件提交到 WORM 。如果文件在自动提交期限内未发生更改、则自动提交功能会将SnapLock 卷上的文件提交到WORM状态。默认情况下、自动提交功能处于禁用状态。
+使用 SnapLock 自动提交功能，您可以自动将文件提交到 WORM 。如果文件在自动提交期限内未发生更改、则自动提交功能会将文件提交到SnapLock卷上的WORM状态
+持续时间。默认情况下、自动提交功能处于禁用状态。
 
 .您需要的内容
 * 要自动提交的文件必须驻留在 SnapLock 卷上。
@@ -134,13 +135,13 @@ months
 .步骤
 . SnapLock 卷上的自动提交文件到 WORM ：
 +
-` * 卷 SnapLock modify -vserver _svm_name_ -volume _volume_name_ -autosit-period _autoscommit_period_*`
+`*volume snaplock modify -vserver _SVM_name_ -volume _volume_name_ -autocommit-period _autocommit_period_*`
 
 +
 有关完整的选项列表，请参见命令手册页。
 
 +
-以下命令会自动提交 SVM vs1 卷 `vol1` 上的文件，前提是这些文件在 5 小时内保持不变：
+以下命令会自动提交卷上的文件 `vol1` SVM VS1、前提是文件在5小时内保持不变：
 
 +
 [listing]
@@ -170,7 +171,7 @@ WORM 可附加文件必须驻留在 SnapLock 卷上。
 .步骤
 . 使用合适的命令或程序创建具有所需保留时间的零长度文件。
 +
-在 UNIX Shell 中，使用以下命令将保留时间设置为 2020 年 11 月 21 日早上 6 ： 00在名为 `document.txt` 的零长度文件上：
+在 UNIX Shell 中，使用以下命令将保留时间设置为 2020 年 11 月 21 日早上 6 ： 00在名为的零长度文件上 `document.txt`：
 
 +
 [listing]
@@ -179,7 +180,7 @@ touch -a -t 202011210600 document.txt
 ----
 . 使用合适的命令或程序将文件的读写属性更改为只读。
 +
-在 UNIX Shell 中，使用以下命令将名为 `document.txt` 的文件设置为只读：
+在UNIX Shell中、使用以下命令创建一个名为的文件 `document.txt` 只读：
 
 +
 [listing]
@@ -194,7 +195,7 @@ chmod 444 document.txt
 
 ====
 +
-在 UNIX Shell 中，使用以下命令使名为 `document.txt` 的文件可写：
+在UNIX Shell中、使用以下命令创建一个名为的文件 `document.txt` 可写：
 
 +
 [listing]
@@ -203,7 +204,7 @@ chmod 777 document.txt
 ----
 . 使用合适的命令或程序开始向文件写入数据。
 +
-在 UNIX Shell 中，使用以下命令将数据写入 `document.txt` ：
+在UNIX Shell中、使用以下命令向写入数据 `document.txt`：
 
 +
 [listing]
@@ -240,15 +241,15 @@ SnapLock 审核日志卷不支持 VAM 。
 
 ====
 .步骤
-. 启用 VAM ：
+. 启用VAM：
 +
-` * volume SnapLock modify -vserver _svm_name_ -volume _volume_name_ -is-volume-apping-mode-enabled true*`
+`*volume snaplock modify -vserver _SVM_name_ -volume _volume_name_ -is-volume-append-mode-enabled true|false*`
 
 +
 有关完整的选项列表，请参见命令手册页。
 
 +
-以下命令将在 SVM``vs1`` 的卷 `vol1` 上启用 VAM ：
+以下命令将在卷上启用VAM `vol1` SVM``vs1``：
 
 +
 [listing]

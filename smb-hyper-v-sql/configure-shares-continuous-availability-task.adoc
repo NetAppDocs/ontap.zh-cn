@@ -16,76 +16,76 @@ summary: 您可以修改现有共享，使其成为持续可用的共享， Hype
 .关于此任务
 如果现有共享具有以下特征，则不能使用该共享作为持续可用的共享，以便通过 SMB 与应用程序服务器进行无中断操作：
 
-* 如果在该共享上设置了 `homedirectory` share 属性
+* 如果 `homedirectory` 共享属性已在该共享上设置
 * 如果共享包含已启用的符号链接或 Widelink
 * 如果共享包含位于共享根目录下的接合卷
 
 
 您必须验证以下两个共享参数是否设置正确：
 
-* ` -offline-files` 参数设置为 `manual` （默认值）或 `none` 。
+* 。 `-offline-files` 参数设置为任一 `manual` (默认值)或 `none`。
 * 必须禁用符号链接。
 
 
 必须配置以下共享属性：
 
-* `持续可用`
-* `机会锁`
+* `continuously-available`
+* `oplocks`
 
 
 不得设置以下共享属性。如果它们位于当前共享属性列表中，则需要从持续可用的共享中删除它们：
 
-* `attribtecache`
-* `BranchCache`
+* `attributecache`
+* `branchcache`
 
 
 .步骤
 . 显示当前共享参数设置和当前已配置共享属性列表：
 +
-` * vserver cifs share show -vserver _vserver_name_ -share-name _share_name_*`
+`*vserver cifs share show -vserver _vserver_name_ -share-name _share_name_*`
 
-. 如有必要，请使用 `vserver cifs share properties modify` 命令修改共享参数以禁用符号链接并将脱机文件设置为手动。
+. 如有必要、请使用修改共享参数以禁用符号链接、并将脱机文件设置为手动 `vserver cifs share properties modify` 命令：
 +
-您可以通过将 ` -symlink` 参数的值设置为 ` ""` 来禁用符号链接。
-
-+
-** 您可以通过将 ` -symlink` 参数的值设置为 ` ""` 来禁用符号链接。
-** 您可以通过指定 `manual` 将 ` offline-files` 参数设置为正确的设置。
-
-
-. 添加 `continuously-available` share 属性，如果需要，还可以添加 `oplocks` share 属性：
-+
-` * vserver cifs share properties add -vserver _vserver_name_ -share-name _share_name_ -share-properties continuously-available[ ， oplock]*`
+您可以通过设置的值来禁用符号链接 `-symlink` 参数设置为 `""`。
 
 +
-如果尚未设置 `oplocks` share 属性，则必须将其与 `continuously-available` share 属性一起添加。
+** 您可以通过设置的值来禁用符号链接 `-symlink` 参数设置为 `""`。
+** 您可以设置 `-offline-files` 参数到正确的设置 `manual`。
+
+
+. 添加 `continuously-available` 共享属性、如果需要、还包括 `oplocks` 共享属性：
++
+`*vserver cifs share properties add -vserver _vserver_name_ -share-name _share_name_ -share-properties continuously-available[,oplock]*`
+
++
+如果 `oplocks` 尚未设置共享属性、必须将其与一起添加 `continuously-available` 共享属性。
 
 . 删除持续可用的共享不支持的任何共享属性：
 +
-` * vserver cifs share properties remove -vserver _vserver_name_ -share-name _share_name_ -share-properties properties[ ， ...]*`
+`*vserver cifs share properties remove -vserver _vserver_name_ -share-name _share_name_ -share-properties properties[,...]*`
 
 +
 您可以通过使用逗号分隔列表指定共享属性来删除一个或多个共享属性。
 
-. 验证是否已正确设置 ` 符号链接` 和 ` 脱机文件` 参数：
+. 验证是否已 `-symlink` 和 `-offline-files` 参数设置正确：
 +
-` * vserver cifs share show -vserver _vserver_name_ -share-name _share_name_ -fields symlink-properties ， offline-files*`
+`*vserver cifs share show -vserver _vserver_name_ -share-name _share_name_ -fields symlink-properties,offline-files*`
 
 . 验证已配置的共享属性列表是否正确：
 +
-` * vserver cifs shares properties show -vserver _vserver_name_ -share-name share_name*`
+`*vserver cifs shares properties show -vserver _vserver_name_ -share-name share_name*`
 
 
 
 .示例
 以下示例说明如何在 Storage Virtual Machine （ SVM ） vs1 上为 NDOS 配置一个名为 `share1` 的现有共享，并使用 SMB 上的应用程序服务器：
 
-* 通过将 ` -symlink` 参数设置为 "" ，可以在共享上禁用符号链接。
-* 将 ` -offline-file` 参数修改为 `manual` 。
-* 此时， `continuously-available` share 属性将添加到共享中。
-* `oplocks` share 属性已在共享属性列表中，因此不需要添加。
-* 此时将从共享中删除 `attributeache` share 属性。
-* 对于通过 SMB 与应用程序服务器共享的 NDOS 持续可用共享， `browable` share 属性是可选的，并保留为共享属性之一。
+* 通过设置在共享上禁用符号链接 `-symlink` 将参数设置为""。
+* 。 `-offline-file` 参数已修改并设置为 `manual`。
+* 。 `continuously-available` 共享属性将添加到共享中。
+* 。 `oplocks` 共享属性已在共享属性列表中、因此无需添加。
+* 。 `attributecache` 共享属性将从共享中删除。
+* 。 `browsable` 对于在SMB上使用应用程序服务器的NDO中使用的持续可用共享、共享属性是可选的、并保留为共享属性之一。
 
 
 [listing]

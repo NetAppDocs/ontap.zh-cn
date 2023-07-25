@@ -42,10 +42,10 @@ summary: 不需要或建议手动从广播域添加和删除端口
 | 端口的 IP 空间将更新为广播域的 IP 空间值。 | 这些端口将移至 " 默认 "IP 空间，而不具有广播域属性。 
 |===
 
-NOTE: 如果使用 `network port ifgrp remove-port` 命令删除接口组的最后一个成员端口，则会导致从广播域中删除接口组端口，因为广播域中不允许使用空接口组端口。
+NOTE: 如果使用删除接口组的最后一个成员端口 `network port ifgrp remove-port` 命令中、则会导致接口组端口从广播域中删除、因为广播域中不允许使用空接口组端口。
 
 .步骤
-. 使用 `network port show` 命令显示当前已分配或未分配给广播域的端口。
+. 使用显示当前已分配或未分配给广播域的端口 `network port show` 命令：
 . 在广播域中添加或删除网络端口：
 +
 [cols="40,60"]
@@ -58,7 +58,7 @@ NOTE: 如果使用 `network port ifgrp remove-port` 命令删除接口组的最�
  a| 
 向广播域添加端口
  a| 
-`网络端口 broadcast-domain add-ports`
+`network port broadcast-domain add-ports`
 
 
 
@@ -78,12 +78,12 @@ NOTE: 如果使用 `network port ifgrp remove-port` 命令删除接口组的最�
 
 以下命令会将节点 cluster-1-01 上的端口 e0g 和节点 cluster-1-02 上的端口 e0g 添加到默认 IP 空间中的广播域 bcast1 ：
 
-`cluster-1 ：：： > 网络端口 broadcast-domain add-ports -broadcast-domain bcast1 -ports cluster-1-01 ： e0g ， cluster1-02 ： e0g`
+`cluster-1::> network port broadcast-domain add-ports -broadcast-domain bcast1 -ports cluster-1-01:e0g,cluster1-02:e0g`
 
 以下命令会将两个集群端口添加到集群 IP 空间中的广播域集群：
 
-`cluster-1 ：：： > 网络端口 broadcast-domain add-ports -broadcast-domain Cluster -ports cluster-2-03 ： e0f ， cluster2-04 ： e0f -IPSpace Cluster`
+`cluster-1::> network port broadcast-domain add-ports -broadcast-domain Cluster -ports cluster-2-03:e0f,cluster2-04:e0f -ipspace Cluster`
 
 以下命令将从默认 IP 空间的广播域 bcast1 中删除节点 cluster1-01 上的端口 e0e ：
 
-`cluster-1 ：：： > network port broadcast-domain remove-ports -broadcast-domain bcast1 -ports cluster-1-01 ： e0e`
+`cluster-1::> network port broadcast-domain remove-ports -broadcast-domain bcast1 -ports cluster-1-01:e0e`

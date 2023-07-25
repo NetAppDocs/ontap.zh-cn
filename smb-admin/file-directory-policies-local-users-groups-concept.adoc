@@ -49,9 +49,9 @@ Vserver      User Name                Full Name      Description
 vs1_dst      CIFS1_DST\Administrator                 Built-in administrator account
 vs1_dst      CIFS1_DST\user1          -              -
 ----
-即使本地用户和组名称在本地用户和组数据库中自动更改，本地用户或组名称也不会在文件目录策略配置（使用 `vserver security file-directory` 命令系列在命令行界面上配置的策略）中自动更改。
+即使本地用户和组名称会在本地用户和组数据库中自动更改、但本地用户或组名称不会在文件目录策略配置(使用在命令行界面上配置的策略)中自动更改 `vserver security file-directory` 命令系列)。
 
-例如，对于 "`vs1` " ，如果您配置了一个 DACL 条目，其中 ` 帐户` 参数设置为 "`CIFS1\user1` " ，则不会自动更改目标 SVM 上的设置以反映目标的 CIFS 服务器名称。
+例如、对于"`VS1`"、如果您在中配置了DACL条目 `-account` 参数设置为"`CIFS1\user1`"、则此设置不会在目标SVM上自动更改、以反映目标的CIFS服务器名称。
 
 [listing]
 ----
@@ -75,7 +75,7 @@ Vserver: vs1_dst
     --------------   -------  -------            -----------
     **CIFS1**\user1          allow    full-control      this-folder
 ----
-您必须使用 `vserver security file-directory modify` 命令手动将 CIFS 服务器名称更改为目标 CIFS 服务器名称。
+您必须使用 `vserver security file-directory modify` 用于手动将CIFS服务器名称更改为目标CIFS服务器名称的命令。
 
 
 
@@ -85,15 +85,15 @@ Vserver: vs1_dst
 
 * 安全描述符
 +
-您可以选择指定安全描述符的所有者以及安全描述符所有者的主组。如果安全描述符对所有者和主组条目使用本地用户或组，则必须修改安全描述符，以便在帐户名称中使用目标 SVM 。您可以使用 `vserver security file-directory ntfs modify` 命令对帐户名称进行任何必要的更改。
+您可以选择指定安全描述符的所有者以及安全描述符所有者的主组。如果安全描述符对所有者和主组条目使用本地用户或组，则必须修改安全描述符，以便在帐户名称中使用目标 SVM 。您可以使用 `vserver security file-directory ntfs modify` 命令以对帐户名称进行任何必要的更改。
 
 * DACL 条目
 +
 每个 DACL 条目都必须与一个帐户相关联。您必须修改任何使用本地用户或组帐户的 DACL ，才能使用目标 SVM 名称。由于您无法修改现有 DACL 条目的帐户名称，因此必须从安全描述符中删除任何具有本地用户或组的 DACL 条目，使用更正后的目标帐户名称创建新的 DACL 条目，并将这些新的 DACL 条目与相应的安全描述符关联。
 
-* SACL 条目
+* SACL条目
 +
-每个 SACL 条目都必须与一个帐户相关联。您必须修改任何使用本地用户或组帐户的 SACL ，以使用目标 SVM 名称。由于您无法修改现有 SACL 条目的帐户名称，因此必须从安全描述符中删除任何具有本地用户或组的 SACL 条目，使用更正后的目标帐户名称创建新的 SACL 条目，并将这些新的 SACL 条目与相应的安全描述符相关联。
+每个SACL条目都必须与一个帐户关联。您必须修改任何使用本地用户或组帐户的 SACL ，以使用目标 SVM 名称。由于您无法修改现有 SACL 条目的帐户名称，因此必须从安全描述符中删除任何具有本地用户或组的 SACL 条目，使用更正后的目标帐户名称创建新的 SACL 条目，并将这些新的 SACL 条目与相应的安全描述符相关联。
 
 
 

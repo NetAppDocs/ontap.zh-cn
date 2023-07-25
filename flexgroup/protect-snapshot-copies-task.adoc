@@ -19,7 +19,7 @@ summary: 您可以创建 Snapshot 策略来自动管理 Snapshot 副本的创建
 
 
 
-NOTE: 从 ONTAP 9.8 开始，适用于 FlexGroup 卷的 `volume snapshot show` 命令会使用逻辑块报告 Snapshot 副本大小，而不是计算最小拥有的块。这种新的大小计算方法可能会使 Snapshot 副本大小比早期版本的 ONTAP 中的计算更大。
+NOTE: 从ONTAP 9.8开始、 `volume snapshot show` 用于FlexGroup卷的命令使用逻辑块报告Snapshot副本大小、而不是计算拥有的最小块。这种新的大小计算方法可能会使 Snapshot 副本大小比早期版本的 ONTAP 中的计算更大。
 
 .步骤
 . 创建 Snapshot 策略或手动创建 Snapshot 副本：
@@ -38,7 +38,7 @@ NOTE: 从 ONTAP 9.8 开始，适用于 FlexGroup 卷的 `volume snapshot show` �
 
 NOTE: 与 FlexGroup 卷的 Snapshot 策略关联的计划的间隔必须大于 30 分钟。
 
-创建 FlexGroup 卷时， `default` Snapshot 策略将应用于 FlexGroup 卷。
+创建FlexGroup卷时、 `default` Snapshot策略将应用于FlexGroup卷。
 
 
 
@@ -55,7 +55,7 @@ NOTE: 为 FlexGroup 卷创建 Snapshot 副本后，您将无法修改 Snapshot �
 
 创建 Snapshot 副本时，客户端对 FlexGroup 卷的访问会暂时暂停。
 
-. 验证是否为 FlexGroup 卷创建了有效的 Snapshot 副本： `volume snapshot show -volume volume_name -fields state`
+. 验证是否为FlexGroup卷创建了有效的Snapshot副本： `volume snapshot show -volume volume_name -fields state`
 +
 [listing]
 ----
@@ -64,7 +64,7 @@ vserver volume snapshot               state
 ------- ------ ---------------------- -----
 fg_vs   fg     hourly.2016-08-23_0505 valid
 ----
-. 查看 FlexGroup 卷成分卷的 Snapshot 副本： `volume snapshot show -is-constituent true`
+. 查看FlexGroup卷的成分卷的Snapshot副本： `volume snapshot show -is-constituent true`
 +
 [listing]
 ----

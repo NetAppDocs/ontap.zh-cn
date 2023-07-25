@@ -20,25 +20,25 @@ summary: 与手动配置 SP 网络相比，最好启用 SP 以使用自动网络
 ====
 * 要用于 SP 自动网络配置的子网必须已在集群中定义，并且与 SP 网络接口不存在资源冲突。
 +
-`network subnet show` 命令可显示集群的子网信息。
+。 `network subnet show` 命令可显示集群的子网信息。
 
 +
-仅网络 LIF 支持用于强制子网关联的参数（ `network subnet` 命令的 ` force-update-lif-associations` 参数），而 SP 网络接口不支持此参数。
+用于强制子网关联的参数( `-force-update-lif-associations` 的参数 `network subnet` 命令)仅在网络生命周期管理器上受支持、而在SP网络接口上不受支持。
 
 * 如果要对 SP 使用 IPv6 连接，则必须已为 ONTAP 配置并启用 IPv6 。
 +
-`network options ipv6 show` 命令可显示 ONTAP 的 IPv6 设置的当前状态。
+。 `network options ipv6 show` 命令可显示ONTAP的IPv6设置的当前状态。
 
 
 
 .步骤
-. 使用 `ssystem service-processor network auto-configuration enable` 命令指定要 SP 使用的子网的 IPv4 或 IPv6 地址系列和名称。
-. 使用 `ssystem service-processor network auto-configuration show` 命令显示 SP 自动网络配置。
-. 如果您随后要为所有仲裁节点禁用或重新启用 SP IPv4 或 IPv6 网络接口，请使用 `ssystem service-processor network modify` 命令和 ` address-family` [`IPv4` |`IPv6` ] 和 ` enable` （`true` ）`` 参数。
+. 使用为希望SP使用的子网指定IPv4或IPv6地址系列和名称 `system service-processor network auto-configuration enable` 命令：
+. 使用显示SP自动网络配置 `system service-processor network auto-configuration show` 命令：
+. 如果您随后要为处于仲裁状态的所有节点禁用或重新启用SP IPv4或IPv6网络接口、请使用 `system service-processor network modify` 命令 `-address-family` [`IPv4`|`IPv6`]和 `-enable` [`true`|`false`]参数。
 +
 启用 SP 自动网络配置后，您无法修改仲裁节点的 SP IP 地址。您只能启用或禁用 SP IPv4 或 IPv6 网络接口。
 
 +
-如果某个节点超出仲裁范围，您可以通过从该节点运行 `ssystem service-processor network modify` 并确认要覆盖该节点的 SP 自动网络配置来修改该节点的 SP 网络配置，包括 SP IP 地址。但是，当节点加入仲裁时，将根据指定子网对节点进行 SP 自动重新配置。
+如果某个节点超出仲裁范围、您可以通过运行来修改该节点的SP网络配置、包括SP IP地址 `system service-processor network modify` 并确认您要覆盖此节点的SP自动网络配置。但是，当节点加入仲裁时，将根据指定子网对节点进行 SP 自动重新配置。
 
 

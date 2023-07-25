@@ -11,7 +11,7 @@ summary: 手动刷新导出策略缓存（ vserver export-policy cache flush ）
 
 
 [role="lead"]
-ONTAP 使用多个导出策略缓存来存储与导出策略相关的信息，以加快访问速度。手动刷新导出策略缓存（`vserver export-policy cache flush` ）会删除可能过时的信息，并强制 ONTAP 从相应的外部资源检索当前信息。这有助于解决与客户端访问 NFS 导出相关的各种问题。
+ONTAP 使用多个导出策略缓存来存储与导出策略相关的信息，以加快访问速度。手动转储导出策略缓存 (`vserver export-policy cache flush`)删除可能过时的信息并强制ONTAP从相应的外部资源检索当前信息。这有助于解决与客户端访问 NFS 导出相关的各种问题。
 
 .关于此任务
 由于以下原因，导出策略缓存信息可能已过时：
@@ -40,7 +40,7 @@ ONTAP 使用多个导出策略缓存来存储与导出策略相关的信息，�
  a| 
 导出策略规则访问缓存
  a| 
-`vserver export-policy cache flush -vserver vserver_name -cache access` 您可以使用可选的 ` 节点` 参数来指定要刷新访问缓存的节点。
+`vserver export-policy cache flush -vserver vserver_name -cache access`     您可以包括可选 `-node` 参数以指定要转储访问缓存的节点。
 
 
 
@@ -54,7 +54,7 @@ ONTAP 使用多个导出策略缓存来存储与导出策略相关的信息，�
  a| 
 网络组缓存
  a| 
-`vserver export-policy cache flush -vserver vserver_name -cache netgroup` 处理网络组需要大量资源。只有在尝试解析因网络组陈旧而导致的客户端访问问题描述时，才应刷新网络组缓存。
+`vserver export-policy cache flush -vserver vserver_name -cache netgroup`     处理网络组需要大量资源。只有在尝试解析因网络组陈旧而导致的客户端访问问题描述时，才应刷新网络组缓存。
 
 
 
@@ -74,7 +74,7 @@ showmount 缓存
  a| 
 导出策略规则访问缓存
  a| 
-`vserver export-policy cache flush -vserver vserver_name -cache access` 您可以使用可选的 ` 节点` 参数来指定要刷新访问缓存的节点。
+`vserver export-policy cache flush -vserver vserver_name -cache access`     您可以包括可选 `-node` 参数以指定要转储访问缓存的节点。
 
 
 
@@ -88,7 +88,7 @@ showmount 缓存
  a| 
 网络组缓存
  a| 
-`vserver services name-service cache netgroups ip-etgroup delete-all` `vserver services name-service cache netgroups members delete-all` 处理网络组占用大量资源。只有在尝试解析因网络组陈旧而导致的客户端访问问题描述时，才应刷新网络组缓存。
+`vserver services name-service cache netgroups ip-to-netgroup delete-all` `vserver services name-service cache netgroups members delete-all`     处理网络组需要大量资源。只有在尝试解析因网络组陈旧而导致的客户端访问问题描述时，才应刷新网络组缓存。
 
 
 

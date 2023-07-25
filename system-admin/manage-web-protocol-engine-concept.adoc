@@ -16,8 +16,9 @@ summary: 您可以在集群上配置 Web 协议引擎，以控制是否允许 We
 
 您可以通过以下方式在集群级别管理 Web 协议引擎：
 
-* 您可以使用带有 ` -external` 参数的 `ssystem services web modify` 命令指定远程客户端是否可以使用 HTTP 或 HTTPS 访问 Web 服务内容。
-* 您可以使用 `ssecurityconfig modify` 命令和 ` supported -protocol` 参数来指定是否应使用 SSLv3 进行安全 Web 访问。默认情况下， SSLv3 处于禁用状态。传输层安全 1.0 （ TLSv1.0 ）已启用，可以根据需要将其禁用。
+* 您可以使用指定远程客户端是否可以使用HTTP或HTTPS访问Web服务内容 `system services web modify` 命令 `-external` 参数。
+* 您可以使用指定是否应使用SSLv3进行安全Web访问 `security config modify` 命令 `-supported-protocol` 参数。
+默认情况下， SSLv3 处于禁用状态。传输层安全 1.0 （ TLSv1.0 ）已启用，可以根据需要将其禁用。
 * 您可以为集群范围控制平面 Web 服务接口启用联邦信息处理标准（ Federal Information Processing Standard ， FIPS ） 140-2 合规模式。
 +
 [NOTE]
@@ -26,7 +27,8 @@ summary: 您可以在集群上配置 Web 协议引擎，以控制是否允许 We
 
 ====
 +
-** *禁用FIPS 140-2合规模式*时、您可以启用FIPS 140-2合规模式、方法是将`security config modify`命令的`is-fips-enabled`参数设置为`true`、然后使用`security config show`命令确认联机状态。
+** * 禁用 FIPS 140-2 合规模式 *
+您可以通过设置来启用FIPS 140-2合规模式 `is-fips-enabled` 参数设置为 `true` 。 `security config modify` 命令、然后使用 `security config show` 命令以确认联机状态。
 ** * 启用 FIPS 140-2 合规模式 *
 +
 *** 从ONTAP 9.11.1开始、TLSv1、TLSv1.1和SSLv3将被禁用、只有TSLv1.2和TSLv1.3保持启用状态。它会影响ONTAP 9内部和外部的其他系统和通信。如果启用FIPS 140-2合规模式、然后再禁用、TLSv1、TLSv1.1和SSLv3将保持禁用状态。TLSv.1或TLSv1.3将保持启用状态、具体取决于先前的配置。
@@ -35,7 +37,7 @@ summary: 您可以在集群上配置 Web 协议引擎，以控制是否允许 We
 
 
 
-* 您可以使用 `ssystem security config show` 命令显示集群范围安全性的配置。
+* 您可以使用显示集群范围安全性的配置 `system security config show` 命令：
 
 
 如果启用了防火墙，则必须将用于 Web 服务的逻辑接口（ LIF ）的防火墙策略设置为允许 HTTP 或 HTTPS 访问。

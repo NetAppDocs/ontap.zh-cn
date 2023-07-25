@@ -15,17 +15,17 @@ summary: 如果您在 ONTAP 9.2 或更早版本上使用 NetApp 存储加密 \ �
 
 . 验证 NSE 驱动器是否已解锁，打开并设置为默认的制造安全 ID 0x0 ：
 +
-`s存储加密磁盘 show -disk*`
+`storage encryption disk show -disk*`
 
 . 进入高级权限模式：
 +
 `set -privilege advanced`
 
-. 使用默认的制造安全 ID 0x0 将 FIPS 密钥分配给自加密磁盘（ SED ）： `storage encryption disk modify -fips-key-id 0x0 -disk *`
-. 验证是否已完成将 FIPS 密钥分配给所有磁盘： `storage encryption disk show-status`
-. 验证所有磁盘的 * 模式 * 是否已设置为 data ： `storage encryption disk show`
-. 查看已配置的 KMIP 服务器： `security key-manager show`
-. 删除已配置的 KMIP 服务器： `security key-manager delete -address kmip_ip_address`
+. 使用默认的制造安全ID 0x0将FIPS密钥分配给自加密磁盘(SED)： `storage encryption disk modify -fips-key-id 0x0 -disk *`
+. 验证是否已完成为所有磁盘分配FIPS密钥： `storage encryption disk show-status`
+. 验证所有磁盘的*模式*是否已设置为data： `storage encryption disk show`
+. 查看已配置的KMIP服务器： `security key-manager show`
+. 删除已配置的KMIP服务器： `security key-manager delete -address kmip_ip_address`
 . 删除外部密钥管理器配置：``security key-manager delete-kmip-config``
 +
 

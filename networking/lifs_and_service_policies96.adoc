@@ -16,7 +16,8 @@ summary: 为 LIF 分配服务策略以指定支持的流量
 [role="lead"]
 您可以将服务策略(而不是LIF角色或防火墙策略)分配给LIF、以确定LIF支持的流量类型。服务策略定义 LIF 支持的一组网络服务。ONTAP 提供了一组可与 LIF 关联的内置服务策略。
 
-您可以使用以下命令显示服务策略及其详细信息： `network interface service-policy show`
+您可以使用以下命令显示服务策略及其详细信息：
+`network interface service-policy show`
 
 
 
@@ -24,7 +25,7 @@ summary: 为 LIF 分配服务策略以指定支持的流量
 
 管理 SVM 和任何系统 SVM 都包含可用于该 SVM 中 LIF 的服务策略，包括管理和集群间 LIF 。创建 IP 空间时，系统会自动创建这些策略。
 
-下表列出了自ONTAP 9.12.1之日系统SVM中LIF的内置策略。对于其他版本，使用以下命令显示服务策略及其详细信息：
+下表列出了截至ONTAP 9.12.1的系统SVM中的内置的LUN策略。对于其他版本，使用以下命令显示服务策略及其详细信息：
 
 `network interface service-policy show`
 
@@ -42,7 +43,8 @@ default-intercluster
  a| 
 集群间
  a| 
-由传输集群间流量的 LIF 使用。注意： ONTAP 9.5 提供了名称为 net-intercluster service policy 的服务集群间核心。
+由传输集群间流量的 LIF 使用。
+注意： ONTAP 9.5 提供了名称为 net-intercluster service policy 的服务集群间核心。
 
 
 
@@ -53,7 +55,8 @@ default-route-announce
  a| 
 -
  a| 
-由传输 BGP 对等连接的 LIF 使用注：可从 ONTAP 9.5 获得，名称为 net-route-announce 服务策略。
+由传输BGP对等连接的生命周期管理器使用
+注意：从ONTAP 9.5开始提供、名称为net-route-n탻 늼 服务策略。
 
 
 
@@ -64,7 +67,8 @@ management-core、management-https、management-http、management-ssh、manageme
  a| 
 node-mgmt 或 cluster-mgmt
  a| 
-使用此系统范围的管理策略创建系统SVM所拥有的节点和集群范围的管理LIF。这些LIF可用于到DNS、AD、LDAP或NIS服务器的出站连接、以及一些附加连接、以支持代表整个系统运行的应用程序。从ONTAP 9.12.1开始、您可以使用 `management-log-forwarding` 用于控制用于将审核日志转发到远程系统日志服务器的LIF的服务。
+使用此系统范围的管理策略创建系统SVM所拥有的节点和集群范围的管理LIF。这些LIF可用于到DNS、AD、LDAP或NIS服务器的出站连接、以及一些附加连接、以支持代表整个系统运行的应用程序。
+从ONTAP 9.12.1开始、您可以使用 `management-log-forwarding` 用于控制用于将审核日志转发到远程系统日志服务器的LIF的服务。
 
 |===
 下表列出了自ONTAP 9.11.1之日LIF可在系统SVM上使用的服务：
@@ -108,7 +112,7 @@ management-http
  a| 
 -
  a| 
-用于 HTTP 管理访问的服务
+用于HTTP管理访问的服务
 
 
 
@@ -117,7 +121,7 @@ management-https
  a| 
 -
  a| 
-用于 HTTPS 管理访问的服务
+用于HTTPS管理访问的服务
 
 
 
@@ -162,7 +166,8 @@ management-ntp-client
  a| 
 -
  a| 
-在ONTAP 9.10.1中引入。用于 NTP 客户端访问的服务。
+在ONTAP 9.10.1中引入。
+用于 NTP 客户端访问的服务。
 
 
 
@@ -171,7 +176,8 @@ management-ntp-server
  a| 
 -
  a| 
-在ONTAP 9.11.1中引入。用于 NTP 服务器管理访问的服务
+在ONTAP 9.11.1中推出。
+用于 NTP 服务器管理访问的服务
 
 
 
@@ -216,7 +222,8 @@ management-log-forwarding
  a| 
 -
  a| 
-在ONTAP 9.12.1中引入。用于审核日志转发的服务
+在ONTAP 9.12.1中推出。
+用于审核日志转发的服务
 
 |===
 
@@ -313,7 +320,8 @@ management-http
  a| 
 -
  a| 
-在ONTAP 9.10.1 HTTP管理访问服务中引入
+在ONTAP 9.10.1中推出
+用于HTTP管理访问的服务
 
 
 
@@ -322,7 +330,7 @@ management-https
  a| 
 -
  a| 
-用于 HTTPS 管理访问的服务
+用于HTTPS管理访问的服务
 
 
 
@@ -340,7 +348,8 @@ management-snmp-server
  a| 
 -
  a| 
-ONTAP 9.10.1中引入了用于SNMP服务器管理访问的服务
+在ONTAP 9.10.1中推出
+用于SNMP服务器管理访问的服务
 
 
 
@@ -367,7 +376,7 @@ NFS 数据服务
  a| 
 -
  a| 
-CIFS 数据服务
+CIFS数据服务
 
 
 
@@ -394,7 +403,8 @@ backup-ndmp-control
  a| 
 -
  a| 
-ONTAP 9.10.1中引入了备份NDMP控制数据服务
+在ONTAP 9.10.1中推出
+备份 NDMP 控制数据服务
 
 
 
@@ -403,7 +413,8 @@ data-ds-server
  a| 
 -
  a| 
-在ONTAP 9.10.1 DNS服务器数据服务中引入
+在ONTAP 9.10.1中推出
+DNS 服务器数据服务
 
 
 
@@ -421,7 +432,8 @@ data-NVMe-tcp
  a| 
 仅主端口
  a| 
-在ONTAP 9.10.1 NVMe TCP数据服务中引入
+在ONTAP 9.10.1中推出
+NVMe TCP 数据服务
 
 
 
@@ -495,14 +507,14 @@ management-ad-client
 | management-ldap-client  a| 
 -
  a| 
-从ONTAP 9.11.1开始、ONTAP 为与外部LDAP服务器的出站连接提供LDAP客户端服务。
+从ONTAP 9.11.1开始、ONTAP为与外部LDAP服务器的出站连接提供LDAP客户端服务。
 
 
 
 | management-nis-client  a| 
 -
  a| 
-从ONTAP 9.11.1开始、ONTAP 为与外部NIS服务器的出站连接提供NIS客户端服务。
+从ONTAP 9.11.1开始、ONTAP为与外部NIS服务器的出站连接提供NIS客户端服务。
 
 
 

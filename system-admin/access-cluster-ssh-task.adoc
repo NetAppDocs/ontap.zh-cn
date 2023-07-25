@@ -2,33 +2,33 @@
 permalink: system-admin/access-cluster-ssh-task.html 
 sidebar: sidebar 
 keywords: access, ssh, cluster, administrative, task 
-summary: 您可以通过问题描述向集群发送 SSH 请求来执行管理任务。默认情况下， SSH 处于启用状态。 
+summary: 您可以通过向集群发出问题描述SSH请求来执行管理任务。默认情况下、SSH处于启用状态。 
 ---
-= 使用 SSH 访问集群
+= 使用SSH访问集群
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以通过问题描述向集群发送 SSH 请求来执行管理任务。默认情况下， SSH 处于启用状态。
+您可以通过向集群发出问题描述SSH请求来执行管理任务。默认情况下、SSH处于启用状态。
 
 .您需要的内容
-* 您必须已将用户帐户配置为使用 `ssh` 作为访问方法。
+* 您必须具有配置为使用的用户帐户 `ssh` 作为访问方法。
 +
 。 `-application` 的参数 `security login` 命令用于指定用户帐户的访问方法。。 `security login` https://review.docs.netapp.com/us-en/ontap-cli-9131_main/security-login-create.html#description["手册页"^] 包含追加信息。
 
-* 如果您使用 Active Directory （ AD ）域用户帐户访问集群，则必须已通过启用了 CIFS 的 Storage Virtual Machine （ SVM ）为集群设置身份验证通道。 此外，您的 AD 域用户帐户还必须使用 `ssh` 作为访问方法，并使用 `domain` 作为身份验证方法添加到集群中。
+* 如果您使用Active Directory (AD)域用户帐户访问集群、则必须已通过启用了CIFS的Storage Virtual Machine (SVM)为集群设置身份验证通道、并且您的AD域用户帐户也必须已通过添加到集群中 `ssh` 作为一种访问方法、然后 `domain` 作为身份验证方法。
 * 如果使用 IPv6 连接，则必须已在集群上配置并启用 IPv6 ，并且防火墙策略必须已配置 IPv6 地址。
 +
-`network options ipv6 show` 命令可显示是否已启用 IPv6 。`sservices firewall policy show` 命令可显示防火墙策略。
+。 `network options ipv6 show` 命令用于显示是否已启用IPv6。。 `system services firewall policy show` 命令可显示防火墙策略。
 
 
 
 .关于此任务
 * 您必须使用 OpenSSH 5.7 或更高版本的客户端。
 * 仅支持 SSH v2 协议；不支持 SSH v1 。
-* ONTAP 最多支持每个节点 64 个并发 SSH 会话。
+* ONTAP支持每个节点最多64个并发SSH会话。
 +
 如果集群管理 LIF 驻留在节点上，则它与节点管理 LIF 共享此限制。
 
@@ -57,19 +57,19 @@ AD 用户名和域名不区分大小写。但是， ONTAP 用户名区分大小�
 
 
 .步骤
-. 在管理主机中，以以下格式之一输入 `ssh` 命令：
+. 从管理主机输入 `ssh` 命令、格式为以下之一：
 +
-** ` * ssh _username@hostname_or_IP_ [_command_]*`
-** ` * ssh -l _username hostname_or_IP_ [_command_]*`
+** `*ssh _username@hostname_or_IP_ [_command_]*`
+** `*ssh -l _username hostname_or_IP_ [_command_]*`
 
 
 
 
-如果您使用的是 AD 域用户帐户，则必须以 ` _domainname\\AD_accountName_` （域名后使用双反斜杠）或 ` "_domainname\AD_accountname_"` （用双引号括起来，域名后使用单反斜杠）的格式指定 ` _username_` 。
+如果您使用的是AD域用户帐户、则必须指定 `_username_` 格式为 `_domainname\\AD_accountname_` (域名后使用双反斜斜槽)或 `"_domainname\AD_accountname_"` (用双引号括起来、域名后加一个反斜杠)。
 
-` hostname_or_IP_` 是集群管理 LIF 或节点管理 LIF 的主机名或 IP 地址。建议使用集群管理 LIF 。您可以使用 IPv4 或 IPv6 地址。
+`_hostname_or_IP_` 是集群管理LIF或节点管理LIF的主机名或IP地址。建议使用集群管理 LIF 。您可以使用 IPv4 或 IPv6 地址。
 
-SSH 交互式会话不需要 ` _command_` 。
+`_command_` SSH交互式会话不需要。
 
 .SSH请求示例
 以下示例显示了名为 "`Joe` " 的用户帐户如何通过问题描述处理 SSH 请求来访问集群管理 LIF 为 10.72.137.28 的集群：

@@ -2,7 +2,7 @@
 permalink: authentication/setup-ssh-multifactor-authentication-task.html 
 sidebar: sidebar 
 keywords: enable, ssh, multifactor authentication, mfa, hardware authentication device 
-summary: '通过多因素身份验证(MFA)、您可以要求用户提供两种身份验证方法来登录到管理员或数据SVM、从而增强安全性。' 
+summary: '通过多因素身份验证(MFA)、您可以要求用户提供两种身份验证方法来登录到管理员或数据SVM、从而增强安全性。 ' 
 ---
 = 启用多因素身份验证
 :allow-uri-read: 
@@ -15,7 +15,7 @@ summary: '通过多因素身份验证(MFA)、您可以要求用户提供两种�
 
 .关于此任务
 * 您必须是集群管理员才能执行此任务。
-* 如果您不确定要分配给登录帐户的访问控制角色，可以稍后使用 `ssecurity login modify` 命令添加此角色。
+* 如果您不确定要分配给登录帐户的访问控制角色、可以使用 `security login modify` 命令以稍后添加此角色。
 +
 link:modify-role-assigned-administrator-task.html["修改分配给管理员的角色"]
 
@@ -42,7 +42,7 @@ link:manage-public-key-authentication-concept.html["将公有密钥与用户帐�
 security login create -vserver <svm_name> -user-or-group-name <user_name> -application ssh -authentication-method <password|publickey> -role admin -second-authentication-method <password|publickey>
 ----
 +
-以下命令要求具有预定义 `admin` 角色的 SVM 管理员帐户 `admin2` 使用 SSH 公有密钥和用户密码登录到 SVM``engData1`` ：
+以下命令需要SVM管理员帐户 `admin2` 和预定义的 `admin` 用于登录到SVM的角色``engData1`` 使用SSH公共密钥和用户密码：
 
 +
 [listing]
@@ -61,7 +61,7 @@ Warning: To use public-key authentication, you must create a public key for user
 
 从ONTAP 9.13.1开始、您可以通过要求本地用户同时使用SSH公共密钥或用户密码以及基于时间的一次性密码(TOTP)登录到管理员或数据SVM来增强安全性。使用TOTP为帐户启用MFA后、本地用户必须登录到 link:configure-local-account-mfa-totp-task.html["完成配置"]。
 
-TOTP是一种计算机算法、使用当前时间生成一次性密码。如果使用TOTP、则它始终是继SSH公共密钥或用户密码之后的第二种身份验证形式。
+TOTP是一种计算机算法、使用当前时间生成一次性密码。  如果使用TOTP、则它始终是继SSH公共密钥或用户密码之后的第二种身份验证形式。
 
 .开始之前
 您必须是存储管理员才能执行这些任务。

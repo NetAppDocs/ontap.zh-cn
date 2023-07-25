@@ -41,7 +41,7 @@ summary: 暂存文件上的审核记录大小不能大于 32 KB 。
 
 * 如果审核记录的大小过大（超过 32 KB ），则不会创建审核记录，而审核子系统会生成类似于以下内容的事件管理系统（ EMS ）消息：
 +
-`文件服务审核子系统未通过操作或截断了审核记录，因为该记录大于 max_audit_record_size 值。Vserver UUUUID=%s ， event_id=%u ， size=%u`
+`File Services Auditing subsystem failed the operation or truncated an audit record because it was greater than max_audit_record_size value. Vserver UUID=%s, event_id=%u, size=%u`
 
 +
 如果保证审核，则文件操作将失败，因为无法创建其审核记录。
@@ -49,6 +49,6 @@ summary: 暂存文件上的审核记录大小不能大于 32 KB 。
 * 如果审核记录的大小超过 9 ， 999 字节，则会显示与上述相同的 EMS 消息。此时将创建一个部分审核记录，其中缺少较大的密钥值。
 * 如果审核记录超过 2 ， 000 个字符，则会显示以下错误消息，而不是实际值：
 +
-`此字段的值太长，无法显示。`
+`The value of this field was too long to display.`
 
 

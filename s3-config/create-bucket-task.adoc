@@ -30,9 +30,10 @@ S3 对象保留在 _bages_ 中—它们不嵌套为其他目录内某个目录�
 ** 您可以选择手动选择必须在其中创建存储分段和包含的 FlexGroup 卷的聚合，然后指定每个聚合上的成分卷数。添加其他分段时：
 +
 *** 如果为新存储分段指定聚合和成分卷，则会为新存储分段创建新的 FlexGroup 。
-*** 如果不为新存储分段指定聚合和成分卷，则新存储分段将添加到现有 FlexGroup 中。请参见 xref:../flexgroup/index.html[FlexGroup 卷管理] 有关详细信息 ...
+*** 如果不为新存储分段指定聚合和成分卷，则新存储分段将添加到现有 FlexGroup 中。
+请参见 xref:../flexgroup/index.html[FlexGroup 卷管理] 有关详细信息 ...
 +
-在创建存储分段时指定聚合和成分卷时，不会应用任何 QoS 策略组，默认或自定义。您可以稍后使用 `vserver object-store-server bucket modify` 命令执行此操作。
+在创建存储分段时指定聚合和成分卷时，不会应用任何 QoS 策略组，默认或自定义。您可以稍后使用执行此操作 `vserver object-store-server bucket modify` 命令：
 
 
 
@@ -54,7 +55,7 @@ link:storage-service-definitions-reference.html["存储服务定义"]
 
 link:../performance-admin/index.html["性能管理"]
 
-有关其他配置和显示选项，请参见 `vserver object-store-server bucket` 手册页。
+请参见 `vserver object-store-server bucket` 有关其他配置和显示选项的手册页。
 
 
 
@@ -64,13 +65,13 @@ link:../performance-admin/index.html["性能管理"]
 ====
 .命令行界面
 --
-. 如果您计划自行选择聚合和 FlexGroup 组件，请将权限级别设置为高级（否则，管理权限级别就足够了）： `set -privilege advanced`
+. 如果您计划自己选择聚合和FlexGroup组件、请将权限级别设置为高级(否则、管理权限级别就足够了)： `set -privilege advanced`
 . 创建存储分段：
 +
-`vserver object-store-server bucket create -vserver _svm_name_ -buck_bucket_name_ [-size integer [KB|MB|GB_TB]] [-comment text] [Additional _options]`
+`vserver object-store-server bucket create -vserver _svm_name_ -bucket _bucket_name_ [-size integer[KB|MB|GB|TB|PB]] [-comment text] [additional_options]`
 
 +
-如果要配置本地分层， SVM 名称可以是数据 SVM 或 `Cluster` （系统 SVM 名称）。
+SVM名称可以是数据SVM或 `Cluster` (系统SVM名称)。
 
 +
 如果未指定任何选项，则 ONTAP 将创建一个 5 GB 的存储分段，并将服务级别设置为系统可用的最高级别。
@@ -81,11 +82,11 @@ link:../performance-admin/index.html["性能管理"]
 +
 ** 服务级别
 +
-使用以下值之一包括 ` -storage-service-level` 选项： `value` ， `performance` 或 `至高` 。
+包括 `-storage-service-level` 具有以下值之一的选项： `value`， `performance`或 `extreme`。
 
 ** 分层
 +
-包括 ` used-as capacity-tier true` 选项。
+包括 `-used-as-capacity-tier true` 选项
 
 
 
@@ -93,22 +94,22 @@ link:../performance-admin/index.html["性能管理"]
 如果要指定用于创建底层 FlexGroup 卷的聚合，请使用以下选项：
 
 +
-** ` -aggr-list` 参数指定要用于 FlexGroup 卷成分卷的聚合列表。
+** 。 `-aggr-list` 参数用于指定要用于FlexGroup卷成分卷的聚合列表。
 +
 列表中的每个条目都会在指定聚合上创建一个成分卷。您可以多次指定一个聚合，以便在该聚合上创建多个成分卷。
 
 +
 为了在整个 FlexGroup 卷中保持性能一致，所有聚合都必须使用相同的磁盘类型和 RAID 组配置。
 
-** ` -aggr-list-multiplier` 参数指定在创建 FlexGroup 卷时使用 ` -aggr-list` 参数在列出的聚合上迭代的次数。
+** 。 `-aggr-list-multiplier` 参数用于指定迭代随一起列出的聚合的次数 `-aggr-list` 参数FlexGroup。
 +
-` -aggr-list-multiplier` 参数的默认值为 4 。
+的默认值 `-aggr-list-multiplier` 参数为4。
 
 
 
 . 根据需要添加 QoS 策略组：
 +
-`vserver object-store-server bucket modify -buck_bucket_name_ -qos-policy-group _qos_policy_group_`
+`vserver object-store-server bucket modify -bucket _bucket_name_ -qos-policy-group _qos_policy_group_`
 
 . 验证存储分段创建：
 +

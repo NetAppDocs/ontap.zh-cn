@@ -11,10 +11,10 @@ summary: 您可以使用 volume create 命令创建卷并指定其接合点和�
 
 
 [role="lead"]
-您可以使用 `volume create` 命令创建卷并指定其接合点和其他属性。
+您可以使用创建卷并指定其接合点和其他属性 `volume create` 命令：
 
 .关于此任务
-卷必须包含 _junction path_ ，才能使其数据可供客户端使用。您可以在创建新卷时指定接合路径。如果在创建卷时未指定接合路径，则必须使用 `volume mount` 命令在 SVM 命名空间中 _mount_ 卷。
+卷必须包含 _junction path_ ，才能使其数据可供客户端使用。您可以在创建新卷时指定接合路径。如果在创建卷时未指定接合路径、则必须使用_mount_在SVM命名空间中挂载此卷 `volume mount` 命令：
 
 .开始之前
 * 应设置并运行NFS。
@@ -31,24 +31,25 @@ summary: 您可以使用 volume create 命令创建卷并指定其接合点和�
 `volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {_integer_[KB|MB|GB|TB|PB]} -security-style unix -user _user_name_or_number_ -group _group_name_or_number_ -junction-path _junction_path_ [-policy _export_policy_name_]`
 
 +
-` junction-path` 选项如下：
+的选项 `-junction-path` 包括：
 
 +
-** 直接位于 root 用户下，例如 ` /_new_vol_`
+** 直接位于root下、例如、 `/_new_vol_`
 +
 您可以创建一个新卷并指定将其直接挂载到 SVM 根卷。
 
-** 在现有目录下，例如， ` /_existing_dir/new_vol_`
+** 在现有目录下、例如、 `/_existing_dir/new_vol_`
 +
 您可以创建一个新卷并指定将其挂载到现有层次结构中的现有卷，以目录的形式表示。
 
 
 
 +
-如果要在新目录（新卷下的新层次结构）中创建卷，例如， ` _/new_dir/new_vol_` ，则必须先创建一个接合到 SVM 根卷的新父卷。然后，您将在新父卷的接合路径（新目录）中创建新的子卷。
+例如、如果要在新目录(在新卷下的新层次结构中)中创建卷、 `_/new_dir/new_vol_`然后，必须先创建一个与SVM根卷连接的新父卷。然后，您将在新父卷的接合路径（新目录）中创建新的子卷。
 
 +
-+ 如果您计划使用现有导出策略，则可以在创建卷时指定该策略。您也可以稍后使用 `volume modify` 命令添加导出策略。
++
+如果您计划使用现有导出策略、则可以在创建卷时指定此策略。您也可以稍后使用添加导出策略 `volume modify` 命令：
 
 . 验证是否已使用所需的接合点创建卷：
 +
@@ -57,7 +58,7 @@ summary: 您可以使用 volume create 命令创建卷并指定其接合点和�
 
 
 .示例
-以下命令将在 SVM vs1.example.com 和聚合 aggr1 上创建一个名为 users1 的新卷。新卷可从 ` /users` 获得。此卷的大小为 750 GB ，其卷保证类型为 volume （默认值）。
+以下命令将在 SVM vs1.example.com 和聚合 aggr1 上创建一个名为 users1 的新卷。新卷可通过访问 `/users`。此卷的大小为 750 GB ，其卷保证类型为 volume （默认值）。
 
 [listing]
 ----
@@ -70,7 +71,7 @@ Vserver           Volume  Active   Junction Path   Path Source
 ----------------- ------- -------- --------------- -----------
 vs1.example.com   users1  true     /users          RW_volume
 ----
-以下命令会在 SVM vs1.example.com 和聚合 "aggr1" 上创建一个名为 "home4" 的新卷。` SVM 的命名空间中已存在目录` /eng/ ` ，新卷可从` /eng/home ` 访问，该目录将成为` /eng/ 命名空间的主目录。此卷的大小为 750 GB ，其卷保证类型为 `volume` （默认为）。
+以下命令会在 SVM vs1.example.com 和聚合 "aggr1" 上创建一个名为 "home4" 的新卷。目录 `/eng/` 已位于VS1 SVM的命名空间中、新卷可通过访问 `/eng/home`，将成为的主目录 `/eng/` 命名空间。此卷的大小为750 GB、其卷保证类型为 `volume` (默认情况下)。
 
 [listing]
 ----

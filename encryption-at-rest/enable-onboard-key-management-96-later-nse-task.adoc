@@ -25,13 +25,13 @@ link:delete-key-management-database-task.html["从外部密钥管理过渡到板
 
 
 .关于此任务
-每次向集群添加节点时，您都必须运行 `security key-manager on板 载 enable` 命令。在 MetroCluster 配置中，您必须先在本地集群上运行 `security key-manager 板载 enable` ，然后在远程集群上运行 `security key-manager 板载同步` ，并在每个集群上使用相同的密码短语。
+您必须运行 `security key-manager onboard enable` 命令。在MetroCluster配置中、您必须运行 `security key-manager onboard enable` 首先在本地集群上运行 `security key-manager onboard sync` 在远程集群上、在每个上使用相同的密码短语。
 
-默认情况下，重新启动节点时不需要输入密钥管理器密码短语。除 MetroCluster 之外，您可以使用 `cc-mode-enabled" 选项` 要求用户在重新启动后输入密码短语。
+默认情况下，重新启动节点时不需要输入密钥管理器密码短语。除了在MetroCluster中、您可以使用 `cc-mode-enabled=yes` 选项、要求用户在重新启动后输入密码短语。
 
 [NOTE]
 ====
-在通用标准模式（`cc-mode-enabled"` ）下启用板载密钥管理器后，系统行为将通过以下方式进行更改：
+在通用标准模式下启用板载密钥管理器时 (`cc-mode-enabled=yes`)、系统行为将通过以下方式进行更改：
 
 * 在通用标准模式下运行时，系统会监控连续失败的集群密码短语尝试。
 +
@@ -52,12 +52,12 @@ upgrade 命令可通过检查各种数字签名来验证映像内容是否未被
 .步骤
 . 启动密钥管理器设置命令：
 +
-`security key-manager on板 载 enable -cc-mode-enabled yes|no`
+`security key-manager onboard enable -cc-mode-enabled yes|no`
 
 +
 [NOTE]
 ====
-将 `cc-mode-enabled"` 设置为要求用户在重新启动后输入密钥管理器密码短语。MetroCluster 配置不支持 ` - cc-mode-enabled` 选项。`security key-manager on板 载 enable` 命令可替代 `security key-manager setup` 命令。
+设置 `cc-mode-enabled=yes` 要求用户在重新启动后输入密钥管理器密码短语。。 `- cc-mode-enabled` 选项在MetroCluster配置中不受支持。    。 `security key-manager onboard enable` 命令用于替换 `security key-manager setup` 命令：
 
 ====
 +
@@ -81,16 +81,16 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 . 在密码短语确认提示符处，重新输入密码短语。
 . 验证是否已创建身份验证密钥：
 +
-`sSecurity key-manager key query -node node`
+`security key-manager key query -node node`
 
 +
 [NOTE]
 ====
-使用 `security key-manager key query` 命令可替换 `security key-manager query key` 命令。有关完整的命令语法，请参见手册页。
+。 `security key-manager key query` 命令用于替换 `security key-manager query key` 命令：有关完整的命令语法，请参见手册页。
 
 ====
 +
-以下示例验证是否已为 `cluster1` 创建身份验证密钥：
+以下示例将验证是否已为创建身份验证密钥 `cluster1`：
 
 +
 [listing]

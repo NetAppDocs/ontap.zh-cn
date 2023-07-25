@@ -19,12 +19,12 @@ summary: 通过为 SMB 共享创建访问控制列表（ ACL ）来配置共享�
 .关于此任务
 您可以使用本地或域 Windows 用户名或组名称配置共享级 ACL 。
 
-在创建新 ACL 之前，应删除默认共享 ACL `Everyone / Full Control` ，这会带来安全风险。
+在创建新ACL之前、应删除默认共享ACL `Everyone / Full Control`，这会带来安全风险。
 
 在工作组模式下，本地域名为 SMB 服务器名称。
 
 .步骤
-. 删除默认共享 ACL ：``vserver cifs share access-control delete -vserver _vserver_name_ -share _share_name_ -user-or-group everyone``
+. 删除默认共享ACL：``vserver cifs share access-control delete -vserver _vserver_name_ -share _share_name_ -user-or-group everyone``
 . 配置新 ACL ：
 +
 |===
@@ -34,21 +34,21 @@ summary: 通过为 SMB 共享创建访问控制列表（ ACL ）来配置共享�
  a| 
 Windows 用户
  a| 
-`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _windows_domain_name\\user_name_ -permission access_right`
+`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _Windows_domain_name\\user_name_ -permission access_right`
 
 
 
  a| 
 Windows 组
  a| 
-`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _windows_group_name_ -permission access_right`
+`vserver cifs share access-control create -vserver _vserver_name_ -share _share_name_ -user-group-type windows -user-or-group _Windows_group_name_ -permission access_right`
 
 |===
-. 使用 `vserver cifs share access-control show` 命令验证应用于共享的 ACL 是否正确。
+. 使用验证应用于共享的ACL是否正确 `vserver cifs share access-control show` 命令：
 
 
 .示例
-以下命令为 "`vs1.example.com`"SVM: 上的 `sSales` 共享向 `SSales` Windows 组提供 `Change` 权限
+以下命令提供 `Change` 对"`vs1.example.com`"SVM:上"`s``"共享的"`SSales Team " Windows组的权限
 
 [listing]
 ----
@@ -61,7 +61,7 @@ Vserver          Name        Name                    Type        Permission
 vs1.example.com  c$          BUILTIN\Administrators  windows     Full_Control
 vs1.example.com  sales       DOMAIN\"Sales Team"     windows     Change
 ----
-以下命令为 ``vs1` SVM 上的 `datavol5` 共享向名为 "`Tiger Team` " 的本地 Windows 组提供 `Change` 权限，并为名为 `Sual_Control` 的本地 Windows 用户提供权限` ：
+以下命令提供 `Change` 对名为"`Tiger Team`"和的本地Windows组的权限 `Full_Control` `Svs1` SVM上的`datavol5`共享的本地Windows用户"` ue Chang`"的权限：
 
 [listing]
 ----

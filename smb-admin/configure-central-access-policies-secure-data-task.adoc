@@ -25,22 +25,22 @@ summary: 要使用中央访问策略保护对 CIFS 服务器上数据的访问�
 http://technet.microsoft.com/library/["Microsoft TechNet 库"]
 
 .步骤
-. 如果尚未使用 `vserver cifs options modify` 命令启用动态访问控制，请在 SVM 上启用动态访问控制。
+. 如果尚未使用启用动态访问控制、请在SVM上启用它 `vserver cifs options modify` 命令：
 +
-`vserver cifs options modify -vserver vs1 -is-dDAC enabled true`
+`vserver cifs options modify -vserver vs1 -is-dac-enabled true`
 
-. 如果尚未使用 `vserver cifs group-policy modify` 命令启用 CIFS 服务器上的组策略对象（ GPO ），请启用它们。
+. 如果尚未使用启用组策略对象(GPO)、请在CIFS服务器上启用它们 `vserver cifs group-policy modify` 命令：
 +
 `vserver cifs group-policy modify -vserver vs1 -status enabled`
 
 . 在 Active Directory 上创建中央访问规则和中央访问策略。
 . 创建组策略对象（ GPO ）以在 Active Directory 上部署中央访问策略。
 . 将 GPO 应用于 CIFS 服务器计算机帐户所在的容器。
-. 使用 `vserver cifs group-policy update` 命令手动更新应用于 CIFS 服务器的 GPO 。
+. 使用手动更新应用于CIFS服务器的GPO `vserver cifs group-policy update` 命令：
 +
 `vserver cifs group-policy update -vserver vs1`
 
-. 使用 `vserver cifs group-policy show-applied` 命令验证 GPO 中央访问策略是否应用于 CIFS 服务器上的资源。
+. 使用验证是否已将GPO中央访问策略应用于CIFS服务器上的资源 `vserver cifs group-policy show-applied` 命令：
 +
 以下示例显示默认域策略具有两个应用于 CIFS 服务器的中央访问策略：
 

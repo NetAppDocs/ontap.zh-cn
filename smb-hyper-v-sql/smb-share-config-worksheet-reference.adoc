@@ -30,17 +30,17 @@ summary: 使用此工作表可记录在为 SQL Server 和基于 SMB 的 Hyper-V 
 您必须配置以下两个共享属性：
 
 +
-** `机会锁`
-** `持续可用`
+** `oplocks`
+** `continuously-available`
 
 
 
 
 不能设置以下共享属性：
 
-* `主目录属性缓存`
-* `BranchCache`
-* `基于访问的枚举`
+* `homedirectory attributecache`
+* `branchcache`
+* `access-based-enumeration`
 +
 [NOTE]
 ====
@@ -48,7 +48,7 @@ summary: 使用此工作表可记录在为 SQL Server 和基于 SMB 的 Hyper-V 
 
 ====
 +
-** 必须禁用符号链接（ ` -symlink-properties` 参数的值必须为空 ["] ）。
+** 必须禁用符号链接(的值 `-symlink-properties` 参数必须为空[""])。
 
 
 
@@ -61,7 +61,7 @@ summary: 使用此工作表可记录在为 SQL Server 和基于 SMB 的 Hyper-V 
 
 在创建数据库目录结构时， SQL Server 无法跨越接合。您不应为包含接合点的 SQL Server 创建共享路径。
 
-例如，根据所示的命名空间，如果要将虚拟机文件或数据库文件存储在卷 "`vol1` " ， "`vol2` " ， "`vol3` " 和 "`vol4` " 上，则应在以下路径为应用程序服务器创建共享： ` /data1/vol1` ， ` /data1/vol2` ， vol2 ` /vol2`` 和 vol4 ` 。
+例如、在显示的命名空间中、如果要将虚拟机文件或数据库文件存储在卷"`vol1`"、"`vol2`"、"`vol3`"和"`vol4`"上、则应在以下路径为应用程序服务器创建共享： `/data1/vol1`， `/data1/vol2`， `/data2/vol3`，和 `/data2/vol4`。
 
 [listing]
 ----
@@ -78,7 +78,7 @@ vs1     vol4          true     /data2/vol4          RW_volume
 ----
 [NOTE]
 ====
-尽管您可以在 ` /data1` 和 ` /data2` 路径上创建共享以进行管理管理，但您不能将应用程序服务器配置为使用这些共享来存储数据。
+但您可以在上创建共享 `/data1` 和 `/data2` 用于管理管理的路径、则不能将应用程序服务器配置为使用这些共享来存储数据。
 
 ====
 
@@ -96,37 +96,37 @@ _Volume 1 ： SMB 共享名称和路径 _
 
 
  a| 
-_Volume 2 ： SMB 共享名称和路径 _
+_Volume 2：SMB共享名称和路径_
  a| 
 
 
 
  a| 
-_Volume 3 ： SMB 共享名称和路径 _
+_Volume 3：SMB共享名称和路径_
  a| 
 
 
 
  a| 
-_Volume 4 ： SMB 共享名称和路径 _
+_Volume 4：SMB共享名称和路径_
  a| 
 
 
 
  a| 
-_Volume 5 ： SMB 共享名称和路径 _
+_Volume 5：SMB共享名称和路径_
  a| 
 
 
 
  a| 
-_Volume 6 ： SMB 共享名称和路径 _
+_Volume 6：SMB共享名称和路径_
  a| 
 
 
 
  a| 
-_Volume 7 ： SMB 共享名称和路径 _
+_Volume 7：SMB共享名称和路径_
  a| 
 
 

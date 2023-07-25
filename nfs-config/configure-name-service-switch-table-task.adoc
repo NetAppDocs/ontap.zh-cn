@@ -19,19 +19,19 @@ summary: 您必须正确配置名称服务切换表，以使 ONTAP 能够查询�
 如果您计划使用网络组，则网络组中指定的所有 IPv6 地址都必须按照 RFC 5952 中的说明进行缩短和压缩。
 
 .关于此任务
-请勿包含未使用的信息源。例如，如果您的环境未使用 NIS ，请勿指定 ` 源 nis` 选项。
+请勿包含未使用的信息源。例如、如果您的环境未使用NIS、请勿指定 `-sources nis` 选项
 
 .步骤
 . 将必要的条目添加到名称服务切换表：
 +
-`vserver services name-service ns-switch create -vserver _vserver_name_ -database _database_name_ -sources _source_name_`
+`vserver services name-service ns-switch create -vserver _vserver_name_ -database _database_name_ -sources _source_names_`
 
 . 验证名称服务切换表是否包含所需顺序的预期条目：
 +
 `vserver services name-service ns-switch show -vserver _vserver_name_`
 
 +
-如果要进行任何更正，必须使用 `vserver services name-service ns-switch modify` 或 `vserver services name-service ns-switch delete` 命令。
+如果要进行任何更正、必须使用 `vserver services name-service ns-switch modify` 或 `vserver services name-service ns-switch delete` 命令
 
 
 

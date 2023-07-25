@@ -11,18 +11,18 @@ summary: 除了在 SVM 中手动创建单个本地 UNIX 用户之外，您还可
 
 
 [role="lead"]
-除了在 SVM 中手动创建单个本地 UNIX 用户之外，您还可以通过统一资源标识符（ Uniform Resource Identifier ， URI ）（`vserver services name-service unix-user load-from-uri` ）将本地 UNIX 用户列表加载到 SVM 中来简化此任务。
+除了在SVM中手动创建单个本地UNIX用户之外、您还可以通过统一资源标识符(URI)将本地UNIX用户列表加载到SVM中、从而简化此任务。 (`vserver services name-service unix-user load-from-uri`）。
 
 .步骤
 . 创建一个包含要加载的本地 UNIX 用户列表的文件。
 +
-此文件必须包含 UNIX ` /etc/passwd` 格式的用户信息：
+文件必须包含UNIX中的用户信息 `/etc/passwd` 格式：
 
 +
-` 用户名：密码： user_ID ： Group_ID ： full_name_`
+`_user_name: password: user_ID: group_ID: full_name_`
 
 +
-此命令会丢弃 ` _password_` 字段的值以及 ` Full_name_` 字段（` _HOME_DIRECTORY_` 和 ` _shell_` ）后面的字段值。
+命令将丢弃的值 `_password_` 字段以及后面字段的值 `_full_name_` 字段 (`_home_directory_` 和 `_shell_`）。
 
 +
 支持的最大文件大小为 2.5 MB 。
@@ -41,15 +41,15 @@ summary: 除了在 SVM 中手动创建单个本地 UNIX 用户之外，您还可
 
 . 从 URI 将包含本地 UNIX 用户列表的文件加载到 SVM 中：
 +
-`vserver services name-service unix-user load-from-uri -vserver _vserver_name_ -uri ｛ ftp_http_FTPS_https ｝ ： //_uri_ -overwrite ｛ true_false ｝`
+`vserver services name-service unix-user load-from-uri -vserver _vserver_name_ -uri {ftp|http|ftps|https}://_uri_ -overwrite {true|false}`
 
 +
-` 覆盖` ｛`true` ｝`false` ｝ 指定是否覆盖条目。默认值为 `false` 。
+`-overwrite` {`true` `false`}指定是否覆盖条目。默认值为 `false`。
 
 
 
 .示例
-以下命令会将 URI ` +ftp://ftp.example.com/passwd+` 中的本地 UNIX 用户列表加载到名为 vs1 的 SVM 中。SVM 上的现有用户不会被 URI 中的信息覆盖。
+以下命令将从URI加载本地UNIX用户列表 `+ftp://ftp.example.com/passwd+` 到名为VS1的SVM中。SVM 上的现有用户不会被 URI 中的信息覆盖。
 
 [listing]
 ----

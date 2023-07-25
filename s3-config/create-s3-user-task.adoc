@@ -20,7 +20,7 @@ summary: 要限制与授权客户端的连接，所有 ONTAP 对象存储都需�
 .关于此任务
 可以为 S3 用户授予对 SVM 中任何存储分段的访问权限，但不能在多个 SVM 中访问此存储分段的权限。
 
-创建 S3 用户时，将生成访问密钥和机密密钥。必须与用户共享它们以及对象存储的 FQDN 和存储分段名称。可以使用 `vserver object-store-server user show` 命令显示 S3 用户的密钥。
+创建 S3 用户时，将生成访问密钥和机密密钥。必须与用户共享它们以及对象存储的 FQDN 和存储分段名称。S3用户密钥可与一起显示 `vserver object-store-server user show` 命令：
 
 您可以在存储分段策略或对象服务器策略中为 S3 用户授予特定访问权限。
 
@@ -33,7 +33,8 @@ summary: 要限制与授权客户端的连接，所有 ONTAP 对象存储都需�
 ====
 .命令行界面
 --
-. 创建S3用户：`vserver object-store-server user create -vserver _svm_name_-user _user_name_[-comment _text_]`
+. 创建 S3 用户：
+`vserver object-store-server user create -vserver _svm_name_ -user _user_name_ [-comment _text_]`
 . 请务必保存访问密钥和机密密钥，从 S3 客户端访问时需要使用这些密钥。
 
 

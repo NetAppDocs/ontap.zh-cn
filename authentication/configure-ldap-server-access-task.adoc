@@ -11,7 +11,7 @@ summary: 您必须先配置对 SVM 的 LDAP 服务器访问，然后 LDAP 帐户
 
 
 [role="lead"]
-您必须先配置对 SVM 的 LDAP 服务器访问，然后 LDAP 帐户才能访问 SVM 。您可以使用 `vserver services name-service ldap client create` 命令在 SVM 上创建 LDAP 客户端配置。然后，您可以使用 `vserver services name-service ldap create` 命令将 LDAP 客户端配置与 SVM 相关联。
+您必须先配置对 SVM 的 LDAP 服务器访问，然后 LDAP 帐户才能访问 SVM 。您可以使用 `vserver services name-service ldap client create` 命令以在SVM上创建LDAP客户端配置。然后、您可以使用 `vserver services name-service ldap create` 命令将LDAP客户端配置与SVM关联。
 
 .您需要的内容
 * 您必须已安装 link:install-ca-signed-server-digital-certificate-task.html["CA 签名的服务器数字证书"] 在 SVM 上。
@@ -29,12 +29,12 @@ summary: 您必须先配置对 SVM 的 LDAP 服务器访问，然后 LDAP 帐户
 
 除非另有要求，否则最好使用默认模式。如果是，您可以通过复制默认模式并修改副本来创建自己的模式。有关详细信息，请参见以下文档。
 
-* link:../nfs-config/index.html["NFS 配置"]
+* link:../nfs-config/index.html["NFS配置"]
 * https://www.netapp.com/pdf.html?item=/media/19423-tr-4835.pdf["NetApp 技术报告 4835 ：《如何在 ONTAP 中配置 LDAP 》"^]
 
 
 .步骤
-. 在 SVM 上创建 LDAP 客户端配置： `vserver services name-service ldap client create -vserver svm_name -client-config client_configuration -servers ldap_server_IPs -schema -use-start-tls true_false`
+. 在SVM上创建LDAP客户端配置： `vserver services name-service ldap client create -vserver SVM_name -client-config client_configuration -servers LDAP_server_IPs -schema schema -use-start-tls true|false`
 +
 [NOTE]
 ====
@@ -45,7 +45,7 @@ summary: 您必须先配置对 SVM 的 LDAP 服务器访问，然后 LDAP 帐户
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
 
 +
-以下命令会在 SVM``engData`` 上创建一个名为 `corp` 的 LDAP 客户端配置。客户端使用 IP 地址 `172.160.0.100` 和 `172.16.0.101` 匿名绑定到 LDAP 服务器。客户端使用 `RFC-2307` 架构进行 LDAP 查询。客户端与服务器之间的通信使用 Start TLS 进行加密。
+以下命令将创建一个名为的LDAP客户端配置 `corp` 在SVM上``engData``。客户端使用IP地址匿名绑定到LDAP服务器 `172.160.0.100` 和 `172.16.0.101`。客户端使用 `RFC-2307` 用于进行LDAP查询的模式。客户端与服务器之间的通信使用 Start TLS 进行加密。
 
 +
 [listing]
@@ -56,15 +56,15 @@ cluster1::>vserver services name-service ldap client create
 +
 [NOTE]
 ====
-从 ONTAP 9.2 开始，字段 ` -ldap-servers` 将取代字段 ` -servers` 。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
+从ONTAP 9.2开始、此字段为 `-ldap-servers` 替换字段 `-servers`。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
 
 ====
-. 将 LDAP 客户端配置与 SVM 关联： `vserver services name-service ldap create -vserver svm_name -client-config client_configuration -client-enabled true_false`
+. 将LDAP客户端配置与SVM相关联： `vserver services name-service ldap create -vserver SVM_name -client-config client_configuration -client-enabled true|false`
 +
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
 
 +
-以下命令会将 LDAP 客户端配置 `corp` 与 SVM``engData`` 关联，并在 SVM 上启用 LDAP 客户端。
+以下命令将关联LDAP客户端配置 `corp` 使用SVM``engData``，并在SVM上启用LDAP客户端。
 
 +
 [listing]
@@ -74,7 +74,7 @@ cluster1::>vserver services name-service ldap create -vserver engData -client-co
 +
 [NOTE]
 ====
-从 ONTAP 9.2 开始， `vserver services name-service ldap create` 命令将执行自动配置验证，如果 ONTAP 无法与名称服务器联系，则会报告错误消息。
+从ONTAP 9.2开始、 `vserver services name-service ldap create` 命令会执行自动配置验证、并在ONTAP无法联系名称服务器时报告错误消息。
 
 ====
 . 使用 vserver services name-service ldap check 命令验证名称服务器的状态。

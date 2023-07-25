@@ -14,14 +14,19 @@ summary: SM-BC 支持扇出配置。在 SM-BC 端点上进行故障转移后，�
 [role="lead"]
 支持 SM-BC xref:../data-protection/supported-deployment-config-concept.html[扇出配置]。您的源卷可以镜像到一个SM-BC目标端点以及一个或多个异步SnapMirror关系。
 
-`MirrorAllSnapshots`策略以及从ONTAP 9.11.1开始的`MirrorAndVault`策略支持扇出配置。从ONTAP 9.11.1开始、`XDPDefault`策略不支持SM-BC中的扇出配置。
+支持扇出配置 `MirrorAllSnapshots` 策略、以及从ONTAP 9.11.1开始的 `MirrorAndVault` 策略。从ONTAP 9.11.1开始、SM-BC中的扇出配置不受支持 `XDPDefault` 策略。
 
 如果在 SM-BC 目标上发生故障转移，异步 SnapMirror 目标将变得不正常，您必须通过删除并重新创建与异步 SnapMirror 端点的关系来手动还原保护。
 
 .在扇出配置中恢复保护
-. 验证故障转移是否已成功完成： `snapmirror failover show`
-. 在异步 SnapMirror 端点上，删除扇出端点： `snapmirror delete -destination-path _destination_path_`
-. 在第三个站点上，在新的 SM-BC 主卷和异步扇出目标卷之间创建异步 SnapMirror 关系： `snapmirror create -source-path _source_path_ -destination-path _destination_path_ -policy MirrorAllSnapshots -schedule _schedule_`
-. 重新同步此关系： `snapMirror resync -destination-path _destination_path_`
-. 验证关系状态和运行状况： `snapmirror show`
+. 验证故障转移是否已成功完成：
+`snapmirror failover show`
+. 在异步SnapMirror端点上、删除扇出端点：
+`snapmirror delete -destination-path _destination_path_`
+. 在第三个站点上、在新的SM-BC主卷和异步扇出目标卷之间创建异步SnapMirror关系：
+`snapmirror create -source-path _source_path_ -destination-path _destination_path_ -policy MirrorAllSnapshots -schedule _schedule_`
+. 重新同步此关系：
+`SnapMirror resync -destination-path _destination_path_`
+. 验证关系状态和运行状况：
+`snapmirror show`
 

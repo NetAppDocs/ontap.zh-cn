@@ -22,14 +22,14 @@ summary: 在为客户端配置 S3 存储之前，您必须确保现有聚合中�
 * https://www.netapp.com/pdf.html?item=/media/17251-tr4571apdf.pdf["NetApp 技术报告 4571-A ：《 NetApp ONTAP FlexGroup 卷最佳实践》"^]
 
 
-如果您要从Cloud Volumes ONTAP 提供存储分段、强烈建议您手动选择底层聚合、以确保它们仅使用一个节点。使用这两个节点的聚合可能会影响性能、因为这些节点将位于不同地理位置的可用性区域中、因此容易受到延迟问题的影响。了解相关信息 link:create-bucket-task.html["为Cloud Volumes ONTAP 创建存储分段"]。
+如果您要从Cloud Volumes ONTAP 提供存储分段、强烈建议您手动选择底层聚合、以确保它们仅使用一个节点。使用这两个节点的聚合可能会影响性能、因为这些节点将位于不同地理位置的可用性区域中、因此容易受到延迟问题的影响。  了解相关信息 link:create-bucket-task.html["为Cloud Volumes ONTAP 创建存储分段"]。
 
 您可以使用 ONTAP S3 服务器创建本地 FabricPool 容量层，即与性能层位于同一集群中。例如，如果您将 SSD 磁盘连接到一个 HA 对，而您希望将 _c冷 _ 数据分层到另一个 HA 对中的 HDD 磁盘，则此功能可能很有用。因此，在本使用情形中， S3 服务器和包含本地容量层的存储分段应与性能层位于不同的 HA 对中。单节点和双节点集群不支持本地分层。
 
 .步骤
 . 显示现有聚合中的可用空间：
 +
-`s存储聚合显示`
+`storage aggregate show`
 
 +
 如果聚合具有足够的空间或所需的节点位置、请记录其名称以用于S3配置。
@@ -54,5 +54,5 @@ aggr_5     239.0GB   239.0GB   95% online       4 node4  raid_dp,
                                                          normal
 6 entries were displayed.
 ----
-. 如果没有具有足够空间或所需节点位置的聚合、请使用`storage aggregate add-disks`命令向现有聚合添加磁盘、或者使用`storage aggregate create`命令创建新聚合。
+. 如果没有具有足够空间的聚合或所需节点位置、请使用向现有聚合添加磁盘 `storage aggregate add-disks` 命令、或者使用创建新聚合 `storage aggregate create` 命令：
 

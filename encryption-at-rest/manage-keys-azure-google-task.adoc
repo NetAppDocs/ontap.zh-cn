@@ -69,9 +69,13 @@ AWS KMS、AKV和Cloud KMS可用于保护 link:configure-netapp-volume-encryption
 .Azure 酒店
 --
 .在ONTAP SVM上启用Azure密钥存储
-. 开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令 `cluster show` 检查此问题。
-. 将权限级别设置为 advanced `set -priv advanced`
-. 在 SVM 上启用 AKV `sSecurity key-manager external azure enable -client-id _client_id_ -tenant-id _tenant_id_ -name -key-id _key_id_ -authentication-method ｛ certificate_client-secret ｝` 出现提示时，输入 Azure 帐户中的客户端证书或客户端密钥。
+. 开始之前，您需要从 Azure 帐户获取适当的身份验证凭据，即客户端密钥或证书。
+此外，还必须确保集群中的所有节点运行状况良好。您可以使用命令来检查此情况 `cluster show`。
+. 将权限级别设置为高级
+`set -priv advanced`
+. 在SVM上启用AKV
+`security key-manager external azure enable -client-id _client_id_ -tenant-id _tenant_id_ -name -key-id _key_id_ -authentication-method {certificate|client-secret}`
+出现提示时，输入 Azure 帐户的客户端证书或客户端密钥。
 . 验证是否已正确启用AKV：
 `security key-manager external azure show vserver _svm_name_`
 如果服务可访问性不正常、请通过数据SVM LIF建立与AKV密钥管理服务的连接。
@@ -97,7 +101,8 @@ AWS KMS、AKV和Cloud KMS可用于保护 link:configure-netapp-volume-encryption
 --
 ====
 如果已为数据SVM配置一个或多个加密卷、并且相应的NVE密钥由管理SVM板载密钥管理器管理、则这些密钥应迁移到外部密钥管理服务。要使用命令行界面执行此操作、请运行以下命令：
-`security key-manager key migrate -from-Vserver _admin_SVM_ -to-Vserver _data_SVM_`只有在成功迁移数据SVM的所有NVE密钥之后、才能为租户的数据SVM创建新的加密卷。
+`security key-manager key migrate -from-Vserver _admin_SVM_ -to-Vserver _data_SVM_`
+只有在成功迁移数据SVM的所有NVE密钥之后、才能为租户的数据SVM创建新的加密卷。
 
 .相关信息
 * link:https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-ontap/task-encrypting-volumes.html["使用适用于Cloud Volumes ONTAP的NetApp加密解决方案加密卷"^]

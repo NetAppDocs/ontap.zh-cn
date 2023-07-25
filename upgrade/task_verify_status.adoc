@@ -27,7 +27,7 @@ summary: 各种配置设置可能会影响集群升级准备情况。
 
 如果您计划执行中断升级，则无需验证 HA 状态，因为此升级方法不需要存储故障转移。
 
-. 验证是否已为每个 HA 对启用存储故障转移并可进行此操作： `storage failover show`
+. 验证是否已为每个HA对启用并可执行存储故障转移： `storage failover show`
 +
 此示例显示 node0 和 node1 上已启用并可执行存储故障转移：
 
@@ -45,7 +45,7 @@ node1          node0          true     Connected to node0
 +
 如有必要，您可以使用 storage failover modify 命令启用存储故障转移。
 
-. 如果集群仅包含两个节点（一个 HA 对），请验证是否已配置集群 HA ： `cluster ha show`
+. 如果集群仅包含两个节点(一个HA对)、请验证是否已配置集群HA： `cluster ha show`
 +
 此示例显示已配置集群 HA ：
 
@@ -68,9 +68,9 @@ High Availability Configured: true
 
 如果您要从 ONTAP 9.1 或更早版本升级，则此任务不适用。
 
-. 检查 LDAP 状态： `ldap check -vserver vserver_name`
-. 如果 LDAP 状态为 down ，请将其修改为： `ldap client modify -client-config ldap_client -ldap-servers ip_address`
-. 验证 LDAP 状态是否为 up ： `ldap check -vserver vserver_name`
+. 检查LDAP状态： `ldap check -vserver vserver_name`
+. 如果LDAP状态为down、请对其进行修改： `ldap client modify -client-config LDAP_client -ldap-servers ip_address`
+. 验证LDAP状态是否为up： `ldap check -vserver vserver_name`
 
 
 
@@ -81,10 +81,10 @@ High Availability Configured: true
 
 如果您要从 ONTAP 9.1 或更早版本升级，则此任务不适用。
 
-. 检查 DNS 服务器的状态： `dns check -vserver vserver_name`
+. 检查DNS服务器的状态： `dns check -vserver vserver_name`
 +
 up 状态表示服务正在运行。关闭状态表示服务未运行。
 
-. 如果 DNS 服务器已关闭，请修改它： `dns modify -vserver vserver_name -domains domain_name -name-servers name_server_ipaddress`
+. 如果DNS服务器已关闭、请对其进行修改： `dns modify -vserver vserver_name -domains domain_name -name-servers name_server_ipaddress`
 . 验证 DNS 服务器的状态是否为已启动。
 
