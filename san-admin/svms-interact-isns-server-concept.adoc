@@ -1,28 +1,8 @@
 ---
 permalink: san-admin/svms-interact-isns-server-concept.html 
-sidebar: sidebar 
-keywords: how, svms, interact, isns, server 
-summary: iSNS 服务器通过 SVM 管理 LIF 与每个 Storage Virtual Machine （ SVM ）进行通信。管理 LIF 会将所有 iSCSI 目标节点名称，别名和门户信息注册到特定 SVM 的 iSNS 服务中。 
+redirect: ontap/san-admin/isns-concept.html 
 ---
-= SVM 如何与 iSNS 服务器交互
+= 
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
 
-[role="lead"]
-iSNS 服务器通过 SVM 管理 LIF 与每个 Storage Virtual Machine （ SVM ）进行通信。管理 LIF 会将所有 iSCSI 目标节点名称，别名和门户信息注册到特定 SVM 的 iSNS 服务中。
-
-在以下示例中， SVM vs1 使用 SVM 管理 LIF vs1_mgmt_lif 向 iSNS 服务器注册。在 iSNS 注册期间， SVM 会通过 SVM 管理 LIF 将所有 iSCSI LIF 发送到 iSNS 服务器。iSNS 注册完成后， iSNS 服务器将列出 vs1 中为 iSCSI 提供服务的所有 LIF 。如果集群包含多个 SVM ，则每个 SVM 都必须分别向 iSNS 服务器注册才能使用 iSNS 服务。
-
-image::../media/bsag_c-mode_iSNS_register.png[BSAG c 模式 iSNS 注册]
-
-在下一个示例中， iSNS 服务器完成目标注册后，主机 A 可以通过 iSNS 服务器发现 vs1 的所有 LIF ，如步骤 1 中所示。主机 A 完成对 vs1 LIF 的发现后，主机 A 可以与 vs1 中的任何 LIF 建立连接，如步骤 2 所示。在 VS2 的管理 LIF vs2_mgmt_LIF 向 iSNS 服务器注册之前，主机 A 无法识别 VS2 中的任何 LIF 。
-
-image::../media/bsag_c-mode_iSNS_connect.png[BSAG c 模式 iSNS 连接]
-
-但是，如果定义了接口访问列表，则主机只能使用接口访问列表中定义的 LIF 来访问目标。
-
-初始配置 iSNS 后，当 SVM 配置设置发生更改时， ONTAP 会自动更新 iSNS 服务器。
-
-从更改配置到 ONTAP 向 iSNS 服务器发送更新之间可能会出现几分钟的延迟。强制立即更新iSNS服务器上的iSNS信息： `vserver iscsi isns update`

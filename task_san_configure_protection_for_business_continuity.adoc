@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: task_san_configure_protection_for_business_continuity.html 
-keywords: netapp, ontap, System Manager, LUNs, source cluster, protect, protection, storage VM, volume, volumes, source, destination, cluster, IOPS activity 
-summary: 为业务连续性配置保护涉及选择 ONTAP 源集群上的 LUN 并将其添加到一致性组。从源集群上的浏览器打开 System Manager ，开始为业务连续性配置保护。 
+keywords: SM-BC, snapmirror business continuity, consistency group, remote protection, 9.8, 9.9.1, destination 
+summary: 为业务连续性配置保护涉及选择 ONTAP 源集群上的 LUN 并将其添加到一致性组。 
 ---
-= 配置业务连续性保护
+= 利用SnapMirror业务连续性建立保护
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -19,25 +19,71 @@ summary: 为业务连续性配置保护涉及选择 ONTAP 源集群上的 LUN �
 
 
 [role="lead"]
-为业务连续性配置保护涉及选择 ONTAP 源集群上的 LUN 并将其添加到一致性组。从源集群上的浏览器打开 System Manager ，开始为业务连续性配置保护。
+使用SnapMirror业务连续性配置保护涉及在ONTAP源集群上选择LUN并将其添加到一致性组。
 
-此工作流专为 ONTAP 9.8 和 9.9 设计。从 ONTAP 9.10.1 开始，建议先创建一致性组，然后使用 SM-BC 作为远程保护。
+.开始之前
+* 您必须具有SnapMirror同步许可证。
+* 您必须是集群或 Storage VM 管理员。
+* 一致性组中的所有成分卷都必须位于一个Storage VM (SVM)中。
++
+** LUN 可以驻留在不同的卷上。
 
 
-
-== 关于此任务
-
-* LUN 必须位于同一个 Storage VM 上。
-* LUN 可以驻留在不同的卷上。
 * 源集群和目标集群不能相同。
+* 您不能在ASA集群和非ASA集群之间建立SM-BC一致性组关系。
 * 对于集群对等关系， SM-BC 需要默认 IP 空间。不支持自定义 IP 空间。
+* 一致性组的名称必须是唯一的。
+* 二级(目标)集群上的卷类型必须为DP。
+* 主SVM和二级SVM必须处于对等关系中。
 
 
 .步骤
-. 选择要保护的 LUN 并将其添加到保护组： * 保护 > 概述 > 保护业务连续性 > 保护 LUN* 。
-. 在源集群上选择一个或多个要保护的 LUN 。
+您可以使用ONTAP命令行界面或系统管理器配置一致性组。
+
+从ONTAP 9.10.1开始、ONTAP在System Manager中提供了一个一致性组端点和菜单、用于提供其他管理实用程序。如果使用的是ONTAP 9.10.1或更高版本、请参见 link:../consistency-groups/configure-task.html["配置一致性组"] 然后 link:../consistency-groups/protect-task.html["配置保护"] 创建SM-BC关系。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 在主集群上、导航到*保护>概述>保护以实现业务连续性>保护LUN*。
+. 选择要保护的LUN并将其添加到保护组。
 . 选择目标集群和 SVM 。
 . 默认情况下会选中 * 初始化关系 * 。单击 * 保存 * 开始保护。
 . 转至 * 信息板 > 性能 * 以验证 LUN 的 IOPS 活动。
 . 在目标集群上，使用 System Manager 验证对业务连续性关系的保护是否同步： * 保护 > 关系 * 。
 
+
+--
+.命令行界面
+--
+. 从目标集群创建一致性组关系。
+`d目标：：> SnapMirror create -ssource-path _ssource-path_-target-path _destination path_-cG-item-appings _volume-paths_-policy _policy-name_
++
+您最多可以使用映射12个成分卷 `cg-item-mappings` 参数 `snapmirror create` 命令：
+
++
+以下示例将创建两个一致性组： `cg_src_ on the source with `vol1` 和 `vol2` 和镜像目标一致性组、 `cg_dst`。
+
++
+`destination::> snapmirror create -source-path vs1_src:/cg/cg_src -destination-path vs1_dst:/cg/cg_dst -cg-item-mappings vol_src1:@vol_dst1,vol_src2:@vol_dst2 -policy AutomatedFailOver`
+
+. 从目标集群中、初始化一致性组。
++
+`destination::>snapmirror initialize -destination-path _destination-consistency-group_`
+
+. 确认初始化操作已成功完成。状态应为 `InSync`。
++
+`snapmirror show`
+
+. 在每个集群上、创建一个igrop、以便将LUN映射到应用程序主机上的启动程序。
+`lun igroup create -igroup _name_ -protocol _fcp|iscsi_ -ostype _os_ -initiator _initiator_name_`
+. 在每个集群上、将LUN映射到igrop：
++
+`lun map -path _path_name_ -igroup _igroup_name_`
+
+. 使用验证LUN映射是否已成功完成 `lun map` 命令：然后、您可以在应用程序主机上发现新的LUN。
+
+
+--
+====

@@ -1,11 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: smbc/smbc_admin_upgrade_and_revert_considerations.html 
-keywords: SM-BC, SMBC, upgrade, revert, ONTAP 
-summary: 您应了解升级和还原 SM-BC 配置的要求。 
+keywords: upgrade, revert, ONTAP 
+summary: 升级或还原ONTAP会影响SM-BC关系、尤其是在迁移到ONTAP 9.8或更高版本或者9.7及更早版本时。 
 ---
-= SM-BC 升级和还原注意事项
-:hardbreaks:
+= 使用SM-BC升级和还原ONTAP
 :allow-uri-read: 
 :nofooter: 
 :icons: font
@@ -14,36 +13,41 @@ summary: 您应了解升级和还原 SM-BC 配置的要求。
 
 
 [role="lead"]
-您应了解升级和还原 SM-BC 配置的要求。
+从ONTAP 9.8开始、支持SnapMirror业务连续性(SM-BC)。升级和还原ONTAP集群会影响SM-BC关系、具体取决于要升级或还原到的ONTAP版本。
 
 
 
-== 升级
+== 升级 ONTAP
 
 在配置和使用 SM-BC 之前，您必须将源集群和目标集群上的所有节点升级到 ONTAP 9.8 或更高版本。
-link:link:../upgrade/index.html["在 ONTAP 集群上更新软件"]
+link:link:../upgrade/index.html["升级ONTAP集群上的软件"]
+
+
+NOTE: 。 `snapmirror quiesce` 和 `snampirror resume` SM-BC不支持命令。
+
+将集群从9.8或9.9.1升级到9.10.1时、ONTAP会在源和目标上为SM-BC关系创建新的一致性组。可以在System Manager中的**一致性组**选项下管理这些API，也可以将ONTAP REST API与一致性组端点结合使用。
+
+
+
+== 从ONTAP 9.10.1还原到ONTAP 9.9.1
+
+要将关系从 9.10.1 还原到 9.9.1 ，必须先删除 SM-BC 关系，然后再删除 9.10.1 一致性组实例。无法删除具有活动SM-BC关系的一致性组。在 9.9.1 或更早版本中升级到 9.10.1 且先前与另一个智能容器或企业应用程序关联的任何 FlexVol 卷将在还原时不再关联。删除一致性组不会删除成分卷或卷粒度快照。请参见 link:../consistency-groups/delete-task.html["删除一致性组"] 有关ONTAP 9.10.1及更高版本中此任务的详细信息、请参见。
+
+
+
+== 从ONTAP 9.8还原到ONTAP 9.7
 
 
 NOTE: 混合 ONTAP 9.7 和 ONTAP 9.8 集群不支持 SM-BC 。
 
-将集群从 9.8 或 9.9.1 升级到 9.10.1 会在源和目标上为 SM-BC 关系创建新的一致性组。
-
-
-
-== 从 ONTAP 9.10.1 还原到 ONTAP 9.9.1
-
-要将关系从 9.10.1 还原到 9.9.1 ，必须先删除 SM-BC 关系，然后再删除 9.10.1 一致性组实例。无法删除具有活动 SMBC 关系的一致性组。在 9.9.1 或更早版本中升级到 9.10.1 且先前与另一个智能容器或企业应用程序关联的任何 FlexVol 卷将在还原时不再关联。删除一致性组不会删除成分卷或卷粒度快照。请参见 link:../consistency-groups/delete-task.html["删除一致性组"] 有关此任务的详细信息，请参见。
-
-
-
-== 从 ONTAP 9.8 还原到 ONTAP 9.7
-
 从 ONTAP 9.8 还原到 ONTAP 9.7 时，必须注意以下事项：
 
-* 如果集群托管的是 SM-BC 目标，则在中断并删除此关系之前，不允许还原到 ONTAP 9.7 。
-* 如果集群托管的是 SM-BC 源，则在释放此关系之前，不允许还原到 ONTAP 9.7 。
+* 如果集群托管SM-BC目标、则在中断并删除此关系之前、不允许还原到ONTAP 9.7。
+* 如果集群托管SM-BC源、则在释放此关系之前、不允许还原到ONTAP 9.7。
 * 还原到 ONTAP 9.7 之前，必须删除用户创建的所有自定义 SM-BC SnapMirror 策略。
 
+
+要满足这些要求、请参见 link:smbc_admin_removing_an_smbc_configuration.html["删除 SM-BC 配置"]。
 
 .步骤
 . 从 SM-BC 关系中的一个集群执行还原检查：

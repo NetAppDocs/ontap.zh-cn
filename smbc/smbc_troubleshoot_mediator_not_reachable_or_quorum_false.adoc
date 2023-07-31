@@ -4,7 +4,7 @@ permalink: smbc/smbc_troubleshoot_mediator_not_reachable_or_quorum_false.html
 keywords: troubleshooting, SM-BC, SMBC, Mediator, quorum, quorum status, failover, network 
 summary: 执行 snapmirror failover start 命令后， snapmirror failover show 命令的输出将显示一条消息，指示未配置调解器。 
 ---
-= 调解器不可访问或调解器仲裁状态为 false
+= ONTAP调解器不可访问或调解器仲裁状态为false
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -17,7 +17,7 @@ summary: 执行 snapmirror failover start 命令后， snapmirror failover show 
 [role="lead"]
 执行后 `snapmirror failover start` 命令、即的输出 `snapmirror failover show` 命令显示一条消息、指示未配置调解器。
 
-请参见 link:smbc_install_initialize_the_ontap_mediator.html#["初始化 ONTAP 调解器"]。
+请参见 link:smbc_install_confirm_ontap_cluster.html#initialize-the-ontap-mediator-for-smbc["初始化 ONTAP 调解器"]。
 
 ....
 Cluster1::> snapmirror failover show
@@ -31,7 +31,7 @@ vs0:/cg/cg vs1:/cg/cg planned failed 10/1/2020 10/1/2020 SnapMirror failover can
 未配置调解器或存在网络连接问题。
 
 .解决方案 ：
-如果未配置调解器，则必须先配置调解器，然后才能建立 SM-BC 关系。修复任何网络连接问题。使用 snapmirror mediator show 命令确保源站点和目标站点上已连接调解器且仲裁状态为 true 。
+如果未配置ONTAP调解器、则必须先配置ONTAP调解器、然后才能建立SM-BC关系。修复任何网络连接问题。使用 snapmirror mediator show 命令确保源站点和目标站点上已连接调解器且仲裁状态为 true 。有关详细信息，请参见 xref:smbc_install_confirm_ontap_cluster.html[配置ONTAP调解器]。
 
 ....
 cluster::> snapmirror mediator show

@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: smbc/smbc_install_confirm_ontap_cluster.html 
-keywords: SM-BC, SMBC, ONTAP, cluster, configure, peering, volume, SVM, SAN, LIFs, map, igroup, discover 
-summary: 您应确保已正确配置源和目标集群。 
+keywords: SM-BC, SMBC, cluster, peering, ONTAP Mediator, initialize 
+summary: SM-BC要求您安装并初始化ONTAP调解器、并确保集群对等正确无误。 
 ---
-= 安装 ONTAP 调解器服务并确认 ONTAP 集群配置
+= 配置ONTAP调解器和集群以实现SnapMirror业务连续性
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,20 +14,39 @@ summary: 您应确保已正确配置源和目标集群。
 
 
 [role="lead"]
-您应确保已正确配置源和目标集群。
+SnapMirror业务连续性(SM-BC)利用对等集群来确保在发生故障转移时数据可用。ONTAP调解器是确保业务连续性的关键资源、可监控每个集群的运行状况。要配置SM-BC、必须先安装ONTAP调解器、并确保主集群和二级集群配置正确。
 
-.关于此任务
+安装ONTAP调解器并配置集群后、必须执行此操作 <<initialize-the-ontap-mediator>> 用于SM-BC的ONTAP调解器。您必须这样做 xref:../task_san_configure_protection_for_business_continuity.html[创建、初始化和映射SM-BC的一致性组]
+
+
+
+== ONTAP 调解器
+
+ONTAP 调解器为 SM-BC 关系中的 ONTAP 集群建立仲裁。它会在检测到故障时协调自动故障转移、从而确定哪个集群充当主集群、并确保数据往返于正确的目标。
+
+.ONTAP 调解器的前提条件
+* ONTAP 调解器包括自己的一组前提条件。在安装调解器之前，必须满足这些前提条件。
++
+有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["准备安装 ONTAP 调解器服务"^]。
+
+* 默认情况下， ONTAP 调解器通过 TCP 端口 31784 提供服务。您应确保 ONTAP 集群和调解器之间的端口 31784 已打开且可用。
+
+
+
+
+== 安装ONTAP调解器并确认集群配置
+
 继续执行以下每个步骤。对于每个步骤，您都应确认已执行特定配置。使用每个步骤后面的链接根据需要获取更多信息。
 
 .步骤
 . 请先安装 ONTAP 调解器服务，然后再确保源集群和目标集群配置正确。
 +
-xref:../mediator/index.html[ONTAP 调解器服务]
+xref:../mediator/index.html[准备安装或升级ONTAP 调解器服务]
 
 . 确认集群之间存在集群对等关系。
 +
 
-NOTE: 对于集群对等关系， SM-BC 需要默认 IP 空间。不支持自定义 IP 空间。
+NOTE: 对于集群对等关系， SM-BC 需要默认 IP 空间。不支持自定义IP空间。
 
 +
 xref:../task_dp_prepare_mirror.html[配置对等关系]
@@ -51,9 +70,72 @@ link:../san-admin/lifs-cluster-concept.html["集群 SAN 环境中 LIF 的注意�
 +
 link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-4B666C44-694A-48A3-B0A9-517FA7FD2502.html?cp=13_6_4_0["创建 LIF"^]
 
-. 确认已创建必要的 LUN 并将其映射到 igroup ， igroup 用于将 LUN 映射到应用程序主机上的启动程序。
+. 确认已创建必要的LUN并将其映射到igrop、igrop用于将LUN映射到应用程序主机上的启动程序。
 +
 xref:../san-admin/create-luns-mapping-igroups-task.html[创建 LUN 并映射 igroup]
 
 . 重新扫描应用程序主机以发现任何新的 LUN 。
 
+
+
+
+== 初始化SM-BC的ONTAP调解器
+
+安装ONTAP调解器并确认集群配置后、必须初始化ONTAP调解器以进行集群监控。您可以使用System Manager或ONTAP命令行界面初始化ONTAP调解器。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+使用System Manager、您可以配置ONTAP调解器服务器以实现自动故障转移。如果您尚未将自签名 SSL 和 CA 替换为经过第三方验证的 SSL 证书和 CA ，也可以将其替换为。
+
+.步骤
+. 导航到 * 保护 > 概述 > 调解器 > 配置 * 。
+. 选择*Add*，然后输入以下ONTAP调解器服务器信息：
++
+** IPv4 地址
+** Username
+** Password
+** 证书
+
+
+
+
+--
+.命令行界面
+--
+您可以使用ONTAP命令行界面从主集群或二级集群初始化ONTAP调解器。问题描述时 `mediator add` 命令时、ONTAP调解器会自动添加到另一个集群上。
+
+.步骤
+. 在其中一个集群上初始化调解器：
++
+`snapmirror mediator add -mediator-address IP_Address -peer-cluster cluster_name -username user_name`
+
++
+* 示例 *
+
++
+....
+cluster1::> snapmirror mediator add -mediator-address 192.168.10.1 -peer-cluster cluster2 -username mediatoradmin
+Notice: Enter the mediator password.
+
+Enter the password: ******
+Enter the password again: ******
+....
+. 检查调解器配置的状态：
++
+`snapmirror mediator show`
+
++
+....
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+192.168.10.1     cluster-2        connected         true
+....
++
+`Quorum Status` 指示SnapMirror一致性组关系是否与调解器同步；状态为 `true` 表示同步成功。
+
+
+
+--
+====

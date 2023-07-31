@@ -14,22 +14,22 @@ summary: 为了确保数据持续安全和加密，即使在传输期间， ONTA
 
 
 [role="lead"]
-从 ONTAP 9.8 开始， ONTAP 在传输模式下使用 IPsec 协议，以确保数据持续安全和加密，即使在传输过程中也是如此。IPsec 为所有 IP 流量提供数据加密，包括 NFS ， iSCSI 和 SMB 协议。IPsec 为 iSCSI 流量提供了唯一的传输加密选项。
+ONTAP在传输模式下使用互联网协议安全性(Internet Protocol Security、IPsec)来确保数据持续安全和加密、即使在传输过程中也是如此。IPsec 为所有 IP 流量提供数据加密，包括 NFS ， iSCSI 和 SMB 协议。
 
-从ONTAP 9.1.1开始、IPsec使用的加密算法已通过FIPS 140-2验证。这些算法由ONTAP 中的NetApp加密模块生成、该模块执行FIPS 140-2验证。
+从ONTAP 9.12.1开始、MetroCluster IP和MetroCluster 光纤连接配置支持前端主机协议IPsec。
+MetroCluster 集群中的IPsec支持仅限于前端主机流量、MetroCluster 集群间LIF不支持。
 
 从 ONTAP 9.10.1 开始，您可以使用预共享密钥（ PSK ）或证书通过 IPsec 进行身份验证。以前， IPsec 仅支持 PSK 。
 
-从ONTAP 9.12.1开始、MetroCluster IP和MetroCluster 光纤连接配置支持前端主机协议IPsec。
+从ONTAP 9.1.1开始、IPsec使用的加密算法已通过FIPS 140-2验证。这些算法由ONTAP 中的NetApp加密模块生成、该模块执行FIPS 140-2验证。
 
-* MetroCluster 集群中的IPsec支持仅限于前端主机流量、MetroCluster 集群间LIF不支持。
-
+从ONTAP 9.8开始、ONTAP支持在传输模式下使用IPsec。
 
 配置 IPsec 后，客户端和 ONTAP 之间的网络流量将通过预防措施得到保护，以防止重放和中间人（ MIM ）攻击。
 
 对于 NetApp SnapMirror 和集群对等流量加密，仍然建议使用集群对等加密（ Cluster peering encryption ， CPE ）和传输层安全（ Transport Layer Security ， TLS ）而不是通过 IPsec 进行，以便通过线缆进行安全传输。这是因为 TLS 的性能优于 IPsec 。
 
-在集群上启用了 IPsec 功能时，网络需要使用安全策略数据库（ SPD ）条目来匹配要保护的流量，并指定保护详细信息（例如密码套件和身份验证方法），然后才能使流量流动。每个客户端上也需要相应的 SPD 条目。对于 PSK 和认证身份验证方法，都需要 SPD 要求。
+在集群上启用了 IPsec 功能时，网络需要使用安全策略数据库（ SPD ）条目来匹配要保护的流量，并指定保护详细信息（例如密码套件和身份验证方法），然后才能使流量流动。每个客户端上也需要相应的 SPD 条目。
 
 
 
@@ -60,13 +60,13 @@ summary: 为了确保数据持续安全和加密，即使在传输期间， ONTA
 
 
 
-== 准备通过证书身份验证创建 IPsec 策略
+== 准备使用证书身份验证创建IPsec策略
 
-如果您仅使用预共享密钥 PSK 进行身份验证，而不使用证书身份验证，则可以跳过此步骤。
+如果您仅使用预共享密钥(PSK)进行身份验证、而不使用证书身份验证、则可以跳过此步骤。
 
-在创建使用证书进行身份验证的 IPsec 策略之前，必须确保满足以下前提条件：
+在创建使用证书进行身份验证的IPsec策略之前，必须验证是否满足以下前提条件：
 
-* ONTAP 和客户端都必须安装另一方的 CA 证书，以便最终实体（ ONTAP 或客户端）证书可由双方进行验证
+* ONTAP和客户端都必须安装另一方的CA证书、以使最终实体(ONTAP或客户端)证书可由双方验证
 * 系统会为参与此策略的 ONTAP LIF 安装证书
 
 
@@ -74,18 +74,24 @@ summary: 为了确保数据持续安全和加密，即使在传输期间， ONTA
 NOTE: ONTAP LIF 可以共享证书。不需要在证书和 LIF 之间进行一对一映射。
 
 .步骤
-. 您必须将相互身份验证期间使用的所有 CA 证书（包括 ONTAP 端和客户端 CA ）安装到 ONTAP 证书管理中，除非已安装此证书（如 ONTAP 自签名根 CA ）。
+. 将在相互身份验证期间使用的所有CA证书(包括ONTAP端和客户端CA)安装到ONTAP证书管理中、除非已安装(例如ONTAP自签名根CA)。
++
 *命令示例*
 `cluster::> security certificate install -vserver svm_name -type server-ca -cert-name my_ca_cert`
-. 要确保在身份验证期间安装的 CA 位于 ONTAP CA 搜索路径中，请使用 "security IPsec ca-certificate add" 命令将 证书管理 CA 添加到 IPsec 模块中。
+
+. 要确保安装的CA在身份验证期间位于IPsec CA搜索路径内、请使用将ONTAP证书管理CA添加到IPsec模块 `security ipsec ca-certificate add` 命令：
++
 *命令示例*
 `cluster::> security ipsec ca-certificate add -vserver svm_name -ca-certs my_ca_cert`
+
 . 创建并安装一个证书以供 ONTAP LIF 使用。此证书的颁发者 CA 必须已安装到 ONTAP 并添加到 IPsec 中。
++
 *命令示例*
 `cluster::> security certificate install -vserver svm_name -type server -cert-name my_nfs_server_cert`
 
 
-有关 ONTAP 中证书的详细信息，请参见 ONTAP 9 文档中的 security certificate 命令。
+
+有关ONTAP中证书的详细信息，请参见ONTAP 9文档中的security certificates命令。
 
 
 
@@ -102,14 +108,18 @@ NOTE: ONTAP LIF 可以共享证书。不需要在证书和 LIF 之间进行一�
 
 NOTE: 客户端必须使用预共享密钥（ psk ）支持 Internet 密钥交换版本 2 （ IKEv2 ）。
 
-.. 可选。选择上层协议(UDP、TCP、ICMP等) )、本地端口号以及要保护的远程端口号。相应的参数为 `protocols`， `local-ports` 和 `remote-ports` 。
+.. 可选。选择细化的流量参数、例如上层协议(UDP、TCP、ICMP等) )、本地端口号和用于保护流量的远程端口号。相应的参数为 `protocols`， `local-ports` 和 `remote-ports` 。
 +
 跳过此步骤可保护 ONTAP IP 地址和客户端 IP 地址之间的所有流量。默认情况下，保护所有流量。
 
-.. 为输入PSK或PKI `auth-method` 所需身份验证方法的参数。
+.. 为输入PSK或公共密钥基础架构(PKI) `auth-method` 所需身份验证方法的参数。
 +
-... 如果输入了一个 psk ，则在完成所有其他可选参数后，按 <ENTER> 以提示输入并验证预共享密钥。
-... 如果输入PKI、则还需要输入 `cert-name`， `local-identity`， `remote-identity` parameters如果远程端证书的身份未知、或者如果需要多个客户端身份、请输入特殊词语 `ANYTHING`。
+... 如果输入PSK、请包含参数、然后按<enter>显示提示、以输入并验证预共享密钥。
++
+
+NOTE: `local-identity` 和 `remote-identity` 如果主机和客户端均使用strong、并且未为主机或客户端选择通配符策略、则参数为可选参数。
+
+... 如果输入PKI、则还需要输入 `cert-name`， `local-identity`， `remote-identity` parameters如果远程端证书标识未知、或者如果需要多个客户端标识、请输入特殊标识 `ANYTHING`。
 
 
 
@@ -117,25 +127,27 @@ NOTE: 客户端必须使用预共享密钥（ psk ）支持 Internet 密钥交�
 
 
 ....
-security ipsec policy create -vserver <vs1> -name <test34> -local-ip-subnets <192.168.134.34/32> -remote-ip-subnets <192.168.134.44/32>
+security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168.134.34/32 -remote-ip-subnets 192.168.134.44/32
 Enter the preshared key for IPsec Policy _test34_ on Vserver _vs1_:
 ....
 ....
 security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168.134.34/32 -remote-ip-subnets 192.168.134.44/32 -local-ports 2049 -protocols tcp -auth-method PKI -cert-name my_nfs_server_cert -local-identity CN=netapp.ipsec.lif1.vs0 -remote-identity ANYTHING
 ....
-只有在 ONTAP 和客户端设置了匹配的 IPsec 策略，并且两端都具有身份验证凭据（ PSk 或证书）之后， IP 流量才能在客户端和服务器之间流动。有关详细信息，请参见客户端的 IPsec 配置。
+只有在ONTAP和客户端都设置了匹配的IPsec策略并且身份验证凭据(PSK或证书)在两端都到位之后、IP流量才能在客户端和服务器之间流动。有关详细信息、请参见客户端IPsec配置。
 
 
 
 == 使用 IPsec 身份
 
-对于预共享密钥身份验证方法，除非 IPsec 客户端（如 LibresWAN ）需要，否则身份是可选的。对于 PKI/ 证书身份验证方法，本地和远程身份都是必需的。这些标识用于指定在每一方的证书中认证的身份以及在验证过程中使用的身份。如果远程身份未知或可能是多个不同的身份、请使用特殊身份 `ANYTHING`。
+对于预共享密钥身份验证方法、如果主机和客户端都使用strong、并且未为主机或客户端选择通配符策略、则本地和远程标识是可选的。
+
+对于 PKI/ 证书身份验证方法，本地和远程身份都是必需的。这些身份用于指定在每一方的证书中进行认证并在验证过程中使用的身份。如果远程身份未知或可能是多个不同的身份、请使用特殊身份 `ANYTHING`。
 
 .关于此任务
 在 ONTAP 中，标识是通过修改 SPD 条目或在创建 SPD 策略期间指定的。SPD 可以是 IP 地址或字符串格式的标识名称。
 
 .步骤
-要修改现有 SPD 的身份设置，请使用以下命令：
+要修改现有SPD标识设置、请使用以下命令：
 
 `security ipsec policy modify`
 
@@ -172,9 +184,9 @@ NOTE: 在子网配置中使用单个策略条目时，该子网中的 IPsec 客�
 
 +
 .步骤
-.. 使用以下命令之一为多个客户端配置 IPsec ：
+.. 使用以下命令之一为多个客户端配置IPsec。
 +
-... 如果使用 * 子网配置 * 支持多个 IPsec 客户端：
+... 如果使用*subnetconfiguration (子网配置)*支持多个IPsec客户端：
 +
 `security ipsec policy create -vserver _vserver_name_ -name _policy_name_ -local-ip-subnets _IPsec_IP_address/32_ -remote-ip-subnets _IP_address/subnet_ -local-identity _local_id_ -remote-identity _remote_id_`
 
@@ -182,7 +194,7 @@ NOTE: 在子网配置中使用单个策略条目时，该子网中的 IPsec 客�
 .命令示例
 `security ipsec policy create -vserver _vs1_ -name _subnet134_ -local-ip-subnets _192.168.134.34/32_ -remote-ip-subnets _192.168.134.0/24_ -local-identity _ontap_side_identity_ -remote-identity _client_side_identity_`
 
-... 如果使用 * 允许所有客户端配置 * 来支持多个 IPsec 客户端：
+... 如果使用*允许所有客户端配置*支持多个IPsec客户端：
 +
 `security ipsec policy create -vserver _vserver_name_ -name _policy_name_ -local-ip-subnets _IPsec_IP_address/32_ -remote-ip-subnets _0.0.0.0/0_ -local-ports _port_number_ -local-identity _local_id_ -remote-identity _remote_id_`
 

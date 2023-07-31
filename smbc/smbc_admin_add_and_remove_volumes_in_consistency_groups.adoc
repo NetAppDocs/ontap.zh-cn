@@ -4,7 +4,7 @@ permalink: smbc/smbc_admin_add_and_remove_volumes_in_consistency_groups.html
 keywords: SM-BC, SMBC, volume, consistency group, remove volume, add volume 
 summary: 如果要通过添加或删除卷来更改一致性组的构成，则必须先删除原始关系，然后使用新的构成重新创建一致性组。 
 ---
-= 在一致性组中添加和删除卷
+= 向一致性组添加或删除卷
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,32 +14,36 @@ summary: 如果要通过添加或删除卷来更改一致性组的构成，则�
 
 
 [role="lead"]
-在活动SM-BC关系中添加和删除卷取决于您使用的ONTAP 版本。
+随着应用程序工作负载要求的变化、您可能需要在一致性组中添加或删除卷、以确保业务连续性。在活动SM-BC关系中添加和删除卷的过程取决于您使用的ONTAP版本。
+
+在大多数情况下、此过程会造成系统中断、需要中断SnapMirror关系、修改一致性组、然后恢复保护。从ONTAP 9.13.1开始、向具有活动SM-BC关系的一致性组添加卷将是一项无中断操作。
 
 .关于此任务
-在ONTAP 9.8到9.9.1中、您可以使用ONTAP 命令行界面向一致性组添加或删除卷。
+* 在ONTAP 9.8到9.9.1中、您可以使用ONTAP 命令行界面向一致性组添加或删除卷。
+* 从 ONTAP 9.10.1 开始，建议您进行管理 link:../consistency-groups/index.html["一致性组"] 通过 System Manager 或使用 ONTAP REST API 。
++
+如果要通过添加或删除卷来更改一致性组的构成，则必须先删除原始关系，然后使用新的构成重新创建一致性组。
 
-从 ONTAP 9.10.1 开始，建议您进行管理 link:../consistency-groups/index.html["一致性组"] 通过 System Manager 或使用 ONTAP REST API 。如果要通过添加或删除卷来更改一致性组的构成，则必须先删除原始关系，然后使用新的构成重新创建一致性组。
+* 从ONTAP 9.13.1开始、您可以从源或目标无系统地向具有活动SM-BC关系的一致性组添加卷。
++
+删除卷会造成系统中断。您必须先中断SnapMirror关系、然后才能继续删除卷。
 
-从ONTAP 9.13.1开始、您可以从源或目标无系统地向具有活动SM-BC关系的一致性组添加卷。
 
-
-NOTE: 从具有SM-BC关系的一致性组中删除卷会造成系统中断、您必须先中断SnapMirror关系、然后再继续此操作。
 
 [role="tabbed-block"]
 ====
 .ONTAP 9.8-9.13.0
 --
 .开始之前
-* 如果一致性组处于 "INSYNC" 状态，则不允许更改成分组合。
+* 当一致性组位于中时、您无法开始修改该一致性组 `InSync` 状态。
 * 目标卷的类型应为 DP 。
 * 为扩展一致性组而添加的新卷必须在源卷和目标卷之间具有一对通用 Snapshot 副本。
 
 
 .步骤
-此操作步骤假定端点 vs1_src ： /CG/CG_src 和 vs1_dst ： /CG/cG_dst 之间存在两个一致性组关系： vol_src1 <-> vol_dst1 和 vol_src2 <-> vol_dst2 。
+两个卷映射中显示的示例： `vol_src1` <--> `vol_dst1` 和 `vol_src2` <--> `vol_dst2`，在端点之间的一致性组关系中 `vs1_src:/cg/cg_src` 和 `vs1_dst:/cg/cg_dst`。
 
-. 验证源集群和目标集群上的源卷和目标卷之间是否存在通用 Snapshot 副本：
+. 在源集群和目标集群上、使用命令验证源集群和目标集群之间是否存在通用Snapshot `snapshot show -vserver _svm_name_ -volume _volume_name_ -snapshot _snapmirror_`
 +
 `source::>snapshot show -vserver vs1_src -volume vol_src3 -snapshot snapmirror*`
 
@@ -50,7 +54,7 @@ NOTE: 从具有SM-BC关系的一致性组中删除卷会造成系统中断、您
 +
 `destination::>snapmirror initialize -source-path vs1_src:vol_src3 -destination-path vs1_dst:vol_dst3`
 
-. 删除零 RTO 一致性组关系：
+. 删除一致性组关系：
 +
 `destination::>snapmirror delete -destination-path vs1_dst:vol_dst3`
 
