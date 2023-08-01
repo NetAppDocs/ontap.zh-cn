@@ -41,7 +41,7 @@ summary: '混合版本的ONTAP集群由运行两个不同主要ONTAP版本(例�
 
 | ONTAP 9.7或更低版本 | 7天 
 |===
-* 从ONTAP 9.8开始、混合版本的ONTAP集群最多可跨越4个主要版本。例如、混合版本的ONTAP集群可以包含运行ONTAP 9.8和9.12.1的节点、也可以包含运行ONTAP 9.9.1和9.13.1的节点。不支持包含运行ONTAP 9.8和9.13.1的节点的混合版本ONTAP集群、因为该混合版本集群跨越5个主要版本。
+* 从ONTAP 9.8开始、混合版本的ONTAP集群最多可跨越5个主要版本。例如、混合版本的ONTAP集群可以包含运行ONTAP 9.8和9.12.1的节点、也可以包含运行ONTAP 9.9.1和9.13.1的节点。不支持包含运行ONTAP 9.8和9.13.1的节点的混合版本ONTAP集群、因为该混合版本集群跨越6个主要版本。
 
 
 
@@ -60,15 +60,19 @@ summary: '混合版本的ONTAP集群由运行两个不同主要ONTAP版本(例�
 
 理想情况下、您应将所有现有节点升级到计划添加到集群的节点所需的最低ONTAP版本。但是、如果由于某些现有节点不支持更高版本的ONTAP而无法做到这一点、则在升级过程中、您需要在有限的时间内进入混合版本状态。如果您的节点不支持新控制器所需的最低ONTAP版本、则应执行以下操作：
 
-. link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升级"] 集群中支持新控制器所需的最低ONTAP版本的任何节点。
+. link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升级"] 不支持新控制器所需的最低ONTAP版本到其所支持的最高ONTAP版本的节点。
++
+例如、如果您的FAS8000运行的是ONTAP 9.5、而您要添加运行ONTAP 9.12.1的新C系列平台、则应将FAS8000升级到ONTAP 9.8 (这是它支持的最大ONTAP版本)。
+
 . 将新节点添加到集群中。
 +
 使用ONTAP命令cluster `add-node -allow-mixed-version-join` 以加入新节点。
 
 . 将无法升级的任何节点中的数据迁移到运行更高ONTAP版本的节点。
 . link:https://docs.netapp.com/us-en/ontap/system-admin/remov-nodes-cluster-concept.html["从集群中删除不受支持的节点"^]。
+. link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_methods.html["升级"] 将集群中的其余节点升级到与新节点版本相同的版本。
 +
-使用ONTAP命令cluster `remove-node -skip-last-low-version-node-check` 以删除这些节点。(在ONTAP 9.3及更早版本中、使用 `cluster unjoin -skip-last-low-version-node-check` 命令。)
+(可选)将整个集群(包括新节点)升级到 link:https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU2["最新建议的修补程序版本"] 新节点上运行的ONTAP版本。
 
 
 
