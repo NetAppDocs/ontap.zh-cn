@@ -35,9 +35,9 @@ image::../media/metrocluster.gif[显示MetroCluster 从站点B提供数据的图
 
 请注意，使用 SyncMirror 镜像的聚合所需的存储容量是未镜像聚合的两倍。每个丛所需的磁盘数与其镜像的丛所需的磁盘数相同。例如，要镜像 1 ， 440 GB 的聚合，需要 2 ， 880 GB 的磁盘空间，每个丛需要 1 ， 440 GB 。
 
-[NOTE]
-====
-SyncMirror 也可用于 FlexArray 虚拟化实施。
+借助SyncMirror、建议您为镜像聚合至少保留20%的可用空间、以获得最佳存储性能和可用性。虽然建议对非镜像聚合使用10%的空间、但文件系统可以使用额外的10%空间来吸收增量更改。由于ONTAP采用基于Snapshot的写时复制架构、增量更改可提高镜像聚合的空间利用率。不遵守这些最佳实践可能会对SyncMirror重新同步性能产生负面影响、进而间接影响非共享云部署的NDU和MetroCluster部署的切回等运营工作流。
 
-====
+
+NOTE: SyncMirror 也可用于 FlexArray 虚拟化实施。
+
 |===

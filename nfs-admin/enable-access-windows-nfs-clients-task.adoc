@@ -13,18 +13,21 @@ summary: ONTAP 支持从 Windows NFSv3 客户端访问文件。这意味着，�
 [role="lead"]
 ONTAP 支持从 Windows NFSv3 客户端访问文件。这意味着，运行支持 NFSv3 的 Windows 操作系统的客户端现在可以访问集群上 NFSv3 导出上的文件。要成功使用此功能，您必须正确配置 Storage Virtual Machine （ SVM ）并了解某些要求和限制。
 
-.您需要的内容
-必须在 SVM 上启用 NFSv3 。
-
 .关于此任务
 默认情况下， Windows NFSv3 客户端支持处于禁用状态。
+
+.开始之前
+必须在 SVM 上启用 NFSv3 。
 
 .步骤
 . 启用 Windows NFSv3 客户端支持：
 +
-`vserver nfs modify -vserver vserver_name -v3-ms-dos-client enabled`
+`vserver nfs modify -vserver _svm_name_ -v3-ms-dos-client enabled`
 
-. 在支持Windows NFSv3客户端的所有SVM上、禁用 `-enable-ejukebox` 和 `-v3-connection-drop` 参数： `vserver nfs modify -vserver vserver_name -enable-ejukebox false -v3-connection-drop disabled`
+. 在支持Windows NFSv3客户端的所有SVM上、禁用 `-enable-ejukebox` 和 `-v3-connection-drop` 参数：
++
+`vserver nfs modify -vserver vserver_name -enable-ejukebox false -v3-connection-drop disabled`
+
 +
 Windows NFSv3 客户端现在可以在存储系统上挂载导出。
 
