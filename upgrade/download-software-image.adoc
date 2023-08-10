@@ -1,0 +1,57 @@
+---
+permalink: upgrade/download-software-image.html 
+sidebar: sidebar 
+keywords: ontap, software, image, download, downloading, upgrade 
+summary: 在升级ONTAP之前、您必须先从NetApp 支持站点 下载ONTAP软件。 
+---
+= 下载ONTAP软件映像
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在升级ONTAP之前、您必须先从NetApp 支持站点 下载目标ONTAP软件映像。根据您的ONTAP版本、您可以将ONTAP软件下载到网络上的HTTPS、HTTP或FTP服务器或本地文件夹。
+
+[cols="2"]
+|===
+| 如果您正在运行 ... | 您可以将映像下载到此位置... 
+
+
+| ONTAP 9.6 及更高版本  a| 
+* HTTPS服务器+
+服务器的CA证书必须安装在本地系统上。
+* 本地文件夹
+* HTTP 或 FTP 服务器
+
+
+
+
+| ONTAP 9.4及更高版本  a| 
+* 本地文件夹
+* HTTP 或 FTP 服务器
+
+
+
+
+| ONTAP 9.0及更高版本 | HTTP 或 FTP 服务器 
+|===
+.关于此任务
+* 如果您要使用执行自动无中断升级 link:concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级路径"]，则需要下载升级所需的中间ONTAP版本和目标ONTAP版本的软件包。  例如、如果要从ONTAP 9.8升级到ONTAP 9.13.1,则必须下载适用于ONTAP 9.12.1的软件包和适用于ONTAP 9.13.1.的软件包。  请参见 link:concept_upgrade_paths.html#supported-upgrade-paths-for-on-premises-ontap-and-ontap-select["支持的升级路径"] 确定您的特定升级是否需要下载中间软件包。
+* 如果要将使用 NetApp 卷加密的系统升级到 ONTAP 9.5 或更高版本，则必须下载适用于非受限国家或地区的 ONTAP 软件映像，其中包括 NetApp 卷加密。
++
+如果使用适用于受限国家或地区的 ONTAP 软件映像升级采用 NetApp 卷加密的系统，则系统将崩溃，您将无法访问卷。
+
+* 您无需为固件下载单独的软件包。集群的固件更新包含在ONTAP软件升级包中、并会复制到每个节点的启动设备。然后、在升级过程中安装新固件。
+
+
+.步骤
+. 在中找到目标 ONTAP 软件 link:https://mysupport.netapp.com/site/products/all/details/ontap9/downloads-tab["软件下载"] NetApp 支持站点的区域。
++
+对于ONTAP Select 升级、请选择* ONTAP Select 节点升级*。
+
+. 将软件映像（例如 97_q_image.tgz ）复制到相应位置。
++
+根据您的 ONTAP 版本，此位置将是 HTTP ， HTTPS 或 FTP 服务器的目录，此映像将从该目录提供给本地系统或存储系统上的本地文件夹。
+
+

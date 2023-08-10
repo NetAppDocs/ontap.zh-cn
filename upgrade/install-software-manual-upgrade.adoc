@@ -1,0 +1,85 @@
+---
+permalink: upgrade/install-software-manual-upgrade.html 
+sidebar: sidebar 
+keywords: ontap, software, image, download, downloading, install, installing 
+summary: 下载ONTAP软件包进行升级后、必须在本地安装该软件包、然后才能开始升级 
+---
+= 安装ONTAP软件包以手动升级
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+下载ONTAP软件包进行升级后、必须在本地安装该软件包、然后才能开始升级。
+
+.步骤
+. 将权限级别设置为高级，在系统提示您继续时输入*y*： `set -privilege advanced`
++
+高级提示符 (`*>`)。
+
+. 安装映像。
++
+[cols="2"]
+|===
+| 配置 | 使用此命令 ... 
+
+
+ a| 
+** 非MetroCluster
+** 双节点MetroCluster
+
+ a| 
+`system node image update -node * -package _location_ -replace-package true -setdefault true -background true`
+
+_location_can 是 Web 服务器或本地文件夹，具体取决于 ONTAP 版本。请参见 `system node image update` 有关详细信息、请参见手册页。
+
+此命令会同时在所有节点上安装软件映像。要一次在每个节点上安装一个映像、请勿指定 `-background` 参数。
+
+
+
+ a| 
+** 4节点MetroCluster
+** 8节点MetroCluster配置
+
+ a| 
+`system node image update -node * -package location -replace-package true -background true -setdefault false`
+
+您必须在两个集群上执行此命令问题描述。
+
+此命令使用扩展查询来更改目标软件映像，该映像作为备用映像安装在每个节点上。
+
+|===
+. 输入 ... `y` 出现提示时继续。
+. 验证是否已在每个节点上安装软件映像。
++
+`system node image show-update-progress -node *`
+
++
+此命令可显示软件映像安装的当前状态。您应继续运行此命令，直到所有节点报告 * 运行状态 * 为 * 已退出 * ， * 退出状态 * 为 * 成功 * 。
+
++
+system node image update 命令可能会失败并显示错误或警告消息。解决任何错误或警告后，您可以再次运行此命令。
+
++
+此示例显示了已在两个节点上成功安装软件映像的双节点集群：
+
++
+[listing]
+----
+cluster1::*> system node image show-update-progress -node *
+There is no update/install in progress
+Status of most recent operation:
+        Run Status:     Exited
+        Exit Status:    Success
+        Phase:          Run Script
+        Exit Message:   After a clean shutdown, image2 will be set as the default boot image on node0.
+There is no update/install in progress
+Status of most recent operation:
+        Run Status:     Exited
+        Exit Status:    Success
+        Phase:          Run Script
+        Exit Message:   After a clean shutdown, image2 will be set as the default boot image on node1.
+2 entries were acted on.
+----
+
