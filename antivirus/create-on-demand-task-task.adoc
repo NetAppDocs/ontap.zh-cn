@@ -1,8 +1,8 @@
 ---
 permalink: antivirus/create-on-demand-task-task.html 
 sidebar: sidebar 
-keywords: create, on-demand, task 
-summary: 按需任务定义了按需扫描的范围。您可以指定要扫描的文件的最大大小，要包含在扫描中的文件的扩展名和路径，以及要从扫描中排除的文件的扩展名和路径。默认情况下会扫描子目录中的文件。 
+keywords: create, on-demand, task, vserver vscan 
+summary: 按需任务定义了按需扫描的范围。您可以指定要扫描的文件的最大大小，要包含在扫描中的文件的扩展名和路径，以及要从扫描中排除的文件的扩展名和路径。 
 ---
 = 创建按需任务
 :allow-uri-read: 
@@ -11,17 +11,21 @@ summary: 按需任务定义了按需扫描的范围。您可以指定要扫描�
 
 
 [role="lead"]
-按需任务定义了按需扫描的范围。您可以指定要扫描的文件的最大大小，要包含在扫描中的文件的扩展名和路径，以及要从扫描中排除的文件的扩展名和路径。默认情况下会扫描子目录中的文件。
+按需任务定义按需病毒扫描的范围。您可以指定要扫描的文件的最大大小，要包含在扫描中的文件的扩展名和路径，以及要从扫描中排除的文件的扩展名和路径。默认情况下会扫描子目录中的文件。
 
 .关于此任务
 * 每个SVM最多可以有十(10)个按需任务、但只能有一个处于活动状态。
 * 按需任务会创建一个报告、其中包含与扫描相关的统计信息。可通过命令或下载任务在定义的位置创建的报告文件来访问此报告。
 
 
+.开始之前
+* 您必须拥有 xref:create-on-access-policy-task.html[已创建实时策略]。此策略可以是默认策略、也可以是用户创建的策略。如果没有实时策略、则无法启用扫描。
+
+
 .步骤
 . 创建按需任务：
 +
-`vserver vscan on-demand-task create -vserver data_SVM -task-name task_name -scan-paths paths_of_files_to_scan -report-directory report_directory_path -report-expiry-time expiration_time_for_report -schedule cron_schedule -max-file-size max_size_of_files_to_scan -paths-to-exclude paths_of_files_to_exclude -file-ext-to-exclude extensions_of_files_to_exclude -file-ext-to-include extensions_of_files_to_include -scan-files-with-no-ext true|false -directory-recursion true|false`
+`vserver vscan on-demand-task create -vserver _data_SVM_ -task-name _task_name_ -scan-paths _paths_of_files_to_scan_ -report-directory _report_directory_path_ -report-expiry-time _expiration_time_for_report_ -schedule cron_schedule -max-file-size _max_size_of_files_to_scan_ -paths-to-exclude _paths_ -file-ext-to-exclude _file_extensions_ -file-ext-to-include _file_extensions_ -scan-files-with-no-ext true|false -directory-recursion true|false`
 
 +
 ** 。 `-file-ext-to-exclude` 设置将覆盖 `-file-ext-to-include` 设置。
@@ -29,10 +33,10 @@ summary: 按需任务定义了按需扫描的范围。您可以指定要扫描�
 
 
 +
-有关完整的选项列表，请参见命令手册页。
+有关完整的选项列表、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131/vserver-vscan-on-demand-task-create.html["命令参考"^]。
 
 +
-以下命令将创建一个名为的按需任务 `Task1` 在上 ``vs1``SVM：
+以下命令将创建一个名为的按需任务 `Task1` 在`VS1`s虚拟机上：
 
 +
 [listing]

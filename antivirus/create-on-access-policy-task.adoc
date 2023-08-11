@@ -34,6 +34,7 @@ summary: 实时策略用于定义实时扫描的范围。您可以为单个 SVM 
 ** 验证是否在同一策略中指定了所有排除项、因为一次只能启用一个策略。NetApp强烈建议使用在防病毒引擎中指定的一组相同排除项。
 
 
+* 需要使用实时策略 xref:create-on-demand-task-task.html[按需扫描]。要避免对进行实时扫描、您应设置 `-scan-files-with-no-ext` 设置为false、然后 `-file-ext-to-exclude` 至*以排除所有扩展名。
 
 
 .步骤
@@ -53,7 +54,7 @@ summary: 实时策略用于定义实时扫描的范围。您可以为单个 SVM 
 ----
 cluster1::> vserver vscan on-access-policy create -vserver vs1 -policy-name Policy1 -protocol CIFS -filters scan-ro-volume -max-file-size 3GB -file-ext-to-include “mp*”,"tx*" -file-ext-to-exclude "mp3","txt" -scan-files-with-no-ext false -paths-to-exclude "\vol\a b\","\vol\a,b\"
 ----
-. 验证是否已创建实时策略： `vserver vscan on-access-policy show -instance _data_SVM|cluster_admin_SVM_ -policy-name policy_name`
+. 验证是否已创建实时策略： `vserver vscan on-access-policy show -instance _data_SVM|cluster_admin_SVM_ -policy-name _name_`
 +
 有关完整的选项列表，请参见命令手册页。
 
