@@ -1,0 +1,97 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/manage-parameters-task.html 
+keywords: anti-ransomware overview, ransomware, security, modify, security anti-ransomware attack, parameters 
+summary: 从ONTAP 9.11.1开始、可以根据工作负载修改自主防兰软件保护检测参数。 
+---
+= 管理ARP攻击检测参数
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+从ONTAP 9.11.1开始、您可以修改已启用自动勒索软件保护的特定卷上的勒索软件检测参数、并将已知激增报告为正常文件活动。根据您的特定卷工作负载调整检测参数有助于提高报告的准确性。
+
+
+
+== 攻击检测的工作原理
+
+当自动防兰软件保护(ARP)处于学习模式时、它会为卷行为制定基线值。它们分别是熵、文件扩展名以及从ONTAP 9.11.1开始的IOPS。这些基线用于评估勒索软件威胁。有关这些条件的详细信息、请参见 xref:index.html#what-arp-detects[ARP检测到的内容]。
+
+在ONTAP 9.10.1中、如果ARP同时检测到以下两种情况、则会发出警告：
+
+* 先前在卷中未发现20个以上具有文件扩展名的文件
+* 高熵数据
+
+
+从ONTAP 9.11.1开始、如果满足_only一个条件、ARP将发出威胁警告。例如、如果在24小时内观察到20个以上的文件具有以前在卷中未观察到的文件扩展名、则ARP会将此类文件归类为所观察到的熵的威胁_thw考虑_。(24小时和20个文件值为默认值、可以进行修改。)
+
+某些卷和工作负载需要使用不同的检测参数。例如、启用了ARP的卷可能会托管多种类型的文件扩展名、在这种情况下、您可能需要将前所未见文件扩展名的阈值计数修改为大于默认值20的数字、或者禁用基于前所未见文件扩展名的警告。从ONTAP 9.11.1开始、您可以修改攻击检测参数、使其更适合您的特定工作负载。
+
+
+
+== 修改攻击检测参数
+
+根据启用了ARP的卷的预期行为、您可能需要修改攻击检测参数。
+
+.步骤
+. 查看现有攻击检测参数：
++
+`security anti-ransomware volume attack-detection-parameters show -vserver _svm_name_ -volume _volume_name_`
+
++
+....
+security anti-ransomware volume attack-detection-parameters show -vserver vs1 -volume vol1
+                                             Vserver Name : vs1
+                                              Volume Name : vol1
+            Is Detection Based on High Entropy Data Rate? : true
+  Is Detection Based on Never Seen before File Extension? : true
+                  Is Detection Based on File Create Rate? : true
+                  Is Detection Based on File Rename Rate? : true
+                  Is Detection Based on File Delete Rate? : true
+           Is Detection Relaxing Popular File Extensions? : true
+                High Entropy Data Surge Notify Percentage : 100
+                 File Create Rate Surge Notify Percentage : 100
+                 File Rename Rate Surge Notify Percentage : 100
+                 File Delete Rate Surge Notify Percentage : 100
+ Never Seen before File Extensions Count Notify Threshold : 20
+       Never Seen before File Extensions Duration in Hour : 24
+....
+. 使用显示的所有字段均可使用布尔值或整数值进行可订。要修改字段、请使用 `security anti-ransomware volume attack-detection-parameters modify` 命令：
++
+有关完整的参数列表、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131/security-anti-ransomware-volume-attack-detection-parameters-modify.html["ONTAP 命令参考"^]。
+
+
+
+
+
+== 报告已知电涌
+
+即使在活动模式下、ARP也会继续修改检测参数的基线值。如果您知道音量活动中的电涌(一次性电涌或新正常值的电涌)，您应该将其报告为安全。手动将这些激增报告为安全状态有助于提高ARP威胁评估的准确性。
+
+.一次性电涌
+. 如果在已知情况下发生一次性激增、而您希望ARP在未来情况下报告类似的激增、请从工作负载行为中清除该激增：
++
+`security anti-ransomware volume workload-behavior clear-surge -vserver _svm_name_ -volume _volume_name_`
+
+
+
+.修改基线喘振
+. 如果报告的浪涌应视为正常应用行为、则报告此浪涌以修改基线浪涌值。
++
+`security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver _svm_name_ -volume _volume_name_`
+
+
+
+.更多信息
+* link:https://kb.netapp.com/onprem/ontap/da/NAS/Understanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot["了解自动防兰索防攻击和自动防兰索防快照"^]
+

@@ -19,7 +19,7 @@ summary: '从ONTAP 9.11.1开始、您可以控制自动勒索软件保护(ARP) S
 
 
 [role="lead"]
-从ONTAP 9.11.1开始、您可以使用命令行界面控制自动勒索软件保护(ARP) Snapshot副本的数量和保留期限、这些副本是针对可疑勒索软件攻击自动生成的。
+从ONTAP 9.11.1开始、您可以使用命令行界面控制在发生可疑勒索软件攻击时自动生成的自动勒索软件保护(Ransomware Protection、ARP) Snapshot副本的数量和保留期限。
 
 
 
@@ -31,6 +31,11 @@ arw.snap.max.count:: 指定在任何给定时间卷中可以存在的最大ARP S
 arw.snap.create.interval.hours:: 指定ARP Snapshot副本之间的间隔(以小时为单位)。如果怀疑发生攻击、而先前创建的副本早于此指定间隔、则会创建一个新的Snapshot副本。
 arw.snap.normal.retain.interval.hours:: 指定保留ARP Snapshot副本的持续时间(以小时为单位)。当ARP Snapshot副本变为旧副本时、将删除在最新副本之前为达到此期限而创建的任何其他ARP Snapshot副本。任何ARP Snapshot副本都不能早于此持续时间。
 arw.snap.max.retain.interval.days:: 指定可以保留ARP Snapshot副本的最长持续时间(以天为单位)。如果卷上未报告任何早于此持续时间的ARP Snapshot副本攻击、则此副本将被删除。
+
+
+
+NOTE: 如果检测到中等威胁、则会忽略ARP Snapshot的最大保留间隔。在威胁发生之前创建的Snapshot将一直保留、直到将威胁标记为误报为止。标记为误报后、卷上的所有其他ARP Snapshot也将被删除。
+
 arw.snap.create.interval.hours.post.max.count:: 指定卷已达到最大ARP Snapshot副本数时两个ARP Snapshot副本之间的间隔(以小时为单位)。达到最大数量后、将删除ARP Snapshot副本、以便为新副本腾出空间。可以使用此选项降低新的ARP Snapshot副本创建速度、以保留旧副本。如果卷已包含最大数量的ARP Snapshot副本、则此选项中指定的时间间隔将用于下次创建ARP Snapshot副本、而不是arw.snap.create.interval.hours。
 arw.surge.snap.interval.days:: 指定ARP激增Snapshot副本之间的间隔(以天为单位)。如果IO流量激增、并且上次创建的ARP Snapshot副本早于此指定间隔、则会创建一个新的ARP Snapshot激增副本。此选项还指定保留ARP浪涌Snapshot副本的持续时间(以天为单位)。
 

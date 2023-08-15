@@ -19,18 +19,19 @@ summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版
 
 
 [role="lead"]
-自动防软件功能的可用性取决于您使用的ONTAP 版本。
+从ONTAP 9.10.1开始、可为NAS工作负载提供自主资源保护。在部署ARP之前、您应了解建议的用途和支持的配置以及对性能的影响。
 
 
 
 == 支持和不支持的配置
 
-ONTAP 平台支持：
-
-* 从ONTAP 9.10.1开始、所有内部ONTAP 系统均可使用自动勒索软件保护(ARP)功能。
+在决定使用ARP时、请务必确保卷的工作负载适合ARP并满足所需的系统配置。
 
 
-合适的工作负载：
+
+=== 合适的工作负载
+
+ARP适用于：
 
 * NFS 存储上的数据库
 * Windows 或 Linux 主目录
@@ -39,55 +40,49 @@ ONTAP 平台支持：
 
 * 图像和视频
 +
-例如，医疗保健记录和电子设计自动化（ Electronic Design Automation ， EDA ）数据。
+例如、医疗保健记录和电子设计自动化(Electronic Design Automation、EDA)数据
 
 
 
-从ONTAP 9.12.1开始、ARP可用于以下配置：
-
-* 使用SnapMirror保护的卷
-* 使用SnapMirror进行保护的SVM
-* 已启用SVM进行迁移(SVM数据移动性)
 
 
-不适合的工作负载：
+=== 不适合的工作负载
 
-* 文件创建或删除频率较高的工作负载（几秒内就有数十万个文件；例如，测试 / 开发工作负载）
-* ARP取决于能否识别文件创建、重命名或删除活动异常激增的情况。如果应用程序本身是文件活动的源，则无法有效地将其与勒索软件活动区分开来
+ARP不适用于：
+
+* 文件创建或删除频率较高的工作负载(几秒钟内即可创建数十万个文件；例如测试/开发工作负载)
+* ARP的威胁检测取决于其识别文件创建、重命名或删除活动异常激增的能力。如果应用程序本身是文件活动的源、则无法有效地将其与勒索软件活动区分开来。
 * 应用程序或主机对数据进行加密的工作负载
 ARP取决于将传入数据区分为已加密或未加密。如果应用程序本身正在对数据进行加密，则此功能的有效性将会降低。但是、该功能仍可根据文件活动(删除、覆盖或创建、或者使用新文件扩展名创建或重命名)和文件类型来工作。
 
 
-不支持的系统配置：
-
-* SAN 环境
-* ONTAP S3 环境
-* NFS 上的 VMDK
 
 
-卷要求：
+=== 支持的配置
 
-* 容量不足 100%
-* 接合路径必须处于活动状态
+从ONTAP 9.10.1开始、可对内部ONTAP系统中的NFS和SMB卷使用ARP。
 
+以下ONTAP版本支持其他配置和卷类型：
 
-不支持的卷类型：
-
-* 使卷脱机
-* 受限卷
-* SnapLock 卷
-* FlexGroup 卷(从ONTAP 9.13.1开始、支持FlexGroup 卷)
-* FlexCache卷(原始FlexVol卷支持ARP、但缓存卷不支持ARP)
-* Storage VM的根卷
-* SnapMirror 同步
-* SAN-only volumes
-* 已停止Storage VM的卷
+|===
+|  | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
 
 
+| 使用异步SnapMirror保护的卷 | X | X |  |  
 
 
-== SnapMirror和ARP互操作性
+| 使用异步SnapMirror保护SVM | X | X |  |  
 
+
+| 为数据迁移启用了SVM | X | X |  |  
+
+
+| FlexGroup 卷 | X |  |  |  
+
+
+| 多管理员验证 | X |  |  |  
+|===
+.SnapMirror和ARP互操作性
 从ONTAP 9.12.1开始、异步SnapMirror目标卷支持ARP。SnapMirror同步**不支持ARP。
 
 如果SnapMirror源卷已启用ARP、则SnapMirror目标卷会自动获取源卷的ARP配置状态(学习、已启用等)、ARP培训数据以及ARP创建的Snapshot。无需显式启用。
@@ -95,6 +90,58 @@ ARP取决于将传入数据区分为已加密或未加密。如果应用程序�
 虽然目标卷包含只读(Read Only、RO) Snapshot副本、但不会对其数据执行ARP处理。但是、当SnapMirror目标卷转换为读写(rw)时、将自动在RW转换的目标卷上启用ARP。除了已记录在源卷上的内容之外、目标卷不需要任何其他学习操作步骤。
 
 在ONTAP 9.10.1和9.11.1中、SnapMirror不会将ARP配置状态、培训数据和Snapshot副本从源卷传输到目标卷。因此、在将SnapMirror目标卷转换为RW后、必须在转换后的学习模式下明确启用目标卷上的ARP。
+
+.基于NFS的VMDK的ARP
+[%collapsible]
+====
+如果您计划在基于NFS的VMDK配置中使用ARP、则ARP保护会受到一些限制。ARP可在NFS配置的VDMK中提供保护、但不建议对VM中具有高熵文件的工作负载使用此保护。
+
+.虚拟机外部的更改
+如果新扩展进入加密卷、或者文件扩展名发生更改、ARP可以检测VM外部NFS卷上的文件扩展名更改。可检测到的文件扩展名更改包括：
+
+* vmx
+* vmxf
+* vmdk
+* -fl.vmdk
+* .NVRAM
+* .vmm
+* vms
+* vmsn
+* .vswp
+* vmss
+* .log
+* -\#.log
+
+
+.虚拟机内部的更改
+如果勒索软件攻击以虚拟机为目标、而虚拟机内部的文件在未在虚拟机外部进行更改的情况下发生更改、则在虚拟机的默认熵较低(例如.txt、.DOCX或.mp4文件)时、ARP会检测到威胁。在此情况下、虽然ARP会创建一个保护性Snapshot、但它不会生成威胁警报、因为虚拟机外部的文件扩展名未被篡改。
+
+默认情况下、如果文件的熵较高(例如.gzip或受密码保护的文件)、则ARP将检测不到基线熵的变化、因此无法检测到威胁。
+
+====
+
+
+=== 不支持的配置
+
+以下系统配置不支持ARP：
+
+* ONTAP S3 环境
+* SAN 环境
+
+
+ARP不支持以下卷配置：
+
+* FlexGroup卷(在ONTAP 9.10.1到9.12.1中。从ONTAP 9.131开始、支持FlexGroup卷)
+* FlexCache卷(原始FlexVol卷支持ARP、但缓存卷不支持ARP)
+* 使卷脱机
+* SAN-only volumes
+* SnapLock 卷
+* SnapMirror 同步
+* 异步SnapMirror (在ONTAP 9.10.1到9.12.1中。从ONTAP 9.12.1开始、支持异步SnapMirror。有关详细信息，请参见 <<SnapMirror>>）
+* 受限卷
+* Storage VM的根卷
+* 已停止Storage VM的卷
+
 
 
 

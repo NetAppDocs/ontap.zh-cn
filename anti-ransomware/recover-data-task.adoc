@@ -21,16 +21,8 @@ summary: 当反勒索软件检测到潜在攻击时，系统会创建名为 Anti
 [role="lead"]
 当自主勒索软件保护(ARP)检测到潜在攻击时、系统会创建名为"Anti勒索软件_backup"的Snapshot副本。您可以从这些ARP副本或其他Snapshot副本还原数据。
 
-
-NOTE: 如果发生勒索软件攻击、请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Ransomware_prevention_and_recovery_in_ONTAP["ONTAP 中的勒索软件预防和恢复"^] 用于追加信息 的恢复和未来缓解。
-
 .关于此任务
 如果卷具有 SnapMirror 关系，请在从 Snapshot 副本还原后立即手动复制卷的所有镜像副本。否则，可能会导致镜像副本不可用，必须删除并重新创建这些副本。
-
-.开始之前
-* 已启用ARP
-* 来自潜在勒索软件攻击的报告
-
 
 .步骤
 您可以使用System Manager或ONTAP 命令行界面还原数据。
@@ -39,7 +31,7 @@ NOTE: 如果发生勒索软件攻击、请参见知识库文章 link:https://kb.
 ====
 .System Manager
 --
-. 如果您要从早期Snapshot副本(而不是从ARP副本)还原数据、则必须执行以下操作以释放反勒索软件Snapshot锁定。  如果要从ARP副本还原、则无需解除锁定、您可以跳过此步骤。
+. 如果要从早期的Snapshot副本而不是ARP副本还原数据、则必须释放防勒索软件Snapshot锁定。如果要从ARP副本还原、则无需解除锁定、您可以跳过此步骤。
 +
 [cols="2"]
 |===
@@ -47,10 +39,10 @@ NOTE: 如果发生勒索软件攻击、请参见知识库文章 link:https://kb.
 
 
  a| 
-.. 单击 * 存储 > 卷 * 。
-.. 选择*安全性*、然后单击*查看可疑文件类型*
+.. 选择 * 存储 > 卷 * 。
+.. 选择*安全性*，然后选择*查看可疑文件类型*
 .. 将这些文件标记为"Falseal"。
-.. 单击*更新*并*清除可疑文件类型*
+.. 选择*更新*和*清除可疑文件类型*
 
  a| 
 要释放Snapshot锁定、必须先从ARP副本还原、然后再从早期的Snapshot副本还原。
@@ -60,9 +52,9 @@ NOTE: 如果发生勒索软件攻击、请参见知识库文章 link:https://kb.
 |===
 . 显示卷中的Snapshot副本：
 +
-单击*存储>卷*、选择卷、然后单击* Snapshot副本*。
+选择*存储>卷*，然后选择卷和*Snapshot副本*。
 
-. 单击 image:icon_kabob.gif["菜单选项"] 在要还原的 Snapshot 副本旁边，选择 * 还原 * 。
+. 选择 ... image:icon_kabob.gif["菜单选项"] 在要还原的Snapshot副本旁边，然后选择*Restore*。
 
 
 --
@@ -135,3 +127,6 @@ cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.20
 
 --
 ====
+.更多信息
+* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Ransomware_prevention_and_recovery_in_ONTAP["知识库文章：ONTAP中的勒索软件预防和恢复"^]
+

@@ -18,16 +18,20 @@ summary: 从 ONTAP 9.5 开始，通过支持 4 字节 UTF-8 编码名称，可�
 * 您必须通过以下方式之一创建新卷：
 * 设置音量 `-language` 显式选项： `volume create -language utf8mb4 {…}`
 * 继承卷 `-language` 使用选项创建或修改的SVM中的选项： `vserver [create|modify] -language utf8mb4 {…}``volume create {…}`
-* 您不能修改现有卷以支持 utf8mb4 ；您必须创建一个新的 utf8mb4 就绪卷，然后使用基于客户端的复制工具迁移数据。
+* 在ONTAP 9.6之前的版本中、您不能修改现有卷以支持utf8mb4；您必须创建一个新的utf8mb4就绪卷、然后使用基于客户端的复制工具迁移数据。
 +
 您可以更新 SVM 以获得 utf8mb4 支持，但现有卷会保留其原始语言代码。
 
 +
-[NOTE]
-====
-当前不支持包含 4 字节 UTF-8 字符的 LUN 名称。
+如果您使用的是ONTAP 9.7P1或更高版本、则可以根据支持请求修改utf8mb4的现有卷。有关详细信息，请参见 link:https://kb.netapp.com/onprem/ontap/da/NAS/Can_the_volume_language_be_changed_after_creation_in_ONTAP["在ONTAP中创建卷后是否可以更改卷语言？"^]。
 
-====
+
+
++
+
+
+NOTE: 当前不支持包含 4 字节 UTF-8 字符的 LUN 名称。
+
 * Unicode 字符数据通常在使用 16 位 Unicode 转换格式（ UTF-16 ）的 Windows 文件系统应用程序和使用 8 位 Unicode 转换格式（ UTF-8 ）的 NFS 文件系统中表示。
 +
 在 ONTAP 9.5 之前的版本中，由 Windows 客户端创建的名称（包括 UTF-16 补充字符）会正确显示给其他 Windows 客户端，但对于 NFS 客户端，这些名称未正确转换为 UTF-8 。同样，对于 Windows 客户端，已创建的 NFS 客户端使用 UTF-8 补充字符的名称也未正确转换为 UTF-16 。
@@ -44,10 +48,8 @@ summary: 从 ONTAP 9.5 开始，通过支持 4 字节 UTF-8 编码名称，可�
 * qtree 名称可以包含 Unicode 格式的多字节字符，例如日语和中文字符。
 * 在 ONTAP 9.5 之前的版本中，仅支持 BMP 字符（即，可以用 3 个字节表示的字符）。
 +
-[NOTE]
-====
-在 ONTAP 9.5 之前的版本中， qtree 父卷的接合路径可以包含带有 Unicode 字符的 qtree 和目录名称。。 `volume show` 命令可在父卷具有UTF-8语言设置时正确显示这些名称。但是，如果父卷语言不是 UTF-8 语言设置之一，则会使用数字 NFS 备用名称显示接合路径的某些部分。
 
-====
+NOTE: 在 ONTAP 9.5 之前的版本中， qtree 父卷的接合路径可以包含带有 Unicode 字符的 qtree 和目录名称。。 `volume show` 命令可在父卷具有UTF-8语言设置时正确显示这些名称。但是，如果父卷语言不是 UTF-8 语言设置之一，则会使用数字 NFS 备用名称显示接合路径的某些部分。
+
 * 在 9.5 及更高版本中，如果 qtree 位于启用了 utf8mb4 的卷中，则 qtree 名称中支持 4 字节字符。
 

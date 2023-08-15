@@ -104,11 +104,11 @@ ARP有两种模式：
 
 启用ARP后、它将在学习模式下运行。在学习模式下、ONTAP 系统会根据上述分析区域(熵、文件扩展名类型和文件IOPS)开发警报配置文件。在学习模式下运行ARP并有足够的时间来评估工作负载特征后、您可以切换到活动模式并开始保护数据。一旦ARP切换到活动模式、ONTAP 将创建ARP快照、以便在检测到威胁时保护数据。
 
-建议您将ARP保留在学习模式下至少30天、但您可以随时切换到活动模式。过早切换可能会导致误报过多。从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自动执行交换机操作、这可能会在30天之前发生。
+建议您将ARP保留在学习模式下至少30天、但您可以随时切换到活动模式。切换过早可能会导致误报过多。从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自动执行交换机操作、这可能会在30天之前发生。
 
 在活动模式下、如果文件扩展名被标记为异常、则应评估警报。您可以对警报采取措施来保护您的数据、也可以将警报标记为误报。将误报标记为后、ONTAP 将更新ARP警报配置文件、以便以后不会标记文件扩展名。命令 `security anti-ransomware volume workload-behavior show` 显示在卷中检测到的文件扩展名。(如果您在学习模式早期运行此命令、并且此命令显示了文件类型的准确表示、则不应将此数据用作迁移到活动模式的基础、因为ONTAP仍在收集其他指标。)
 
-从ONTAP 9.11.1开始、您可以使用自定义ARP的检测参数 `security anti-ransomware volume attack-detection-parameters modify` 命令：例如、如果您希望在卷中使用多种新文件类型、则可以对前所未见的文件类型禁用警报。有关此命令的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131/security-anti-ransomware-volume-attack-detection-parameters-modify.html["ONTAP 命令参考"^]。
+从ONTAP 9.11.1开始、您可以自定义ARP的检测参数。有关详细信息，请参见 xref:manage-parameters-task.html[管理ARP攻击检测参数]。
 
 
 
@@ -119,14 +119,14 @@ ARP有两种模式：
 * **低**：首次在卷中观察到新文件扩展名时，将分配此扩展名。
 * **中等**：观察到多个文件具有相同的"从未见过"文件扩展名。
 +
-** 在ONTAP 9.10.1中、升级到"中等"的阈值为100个或更多文件。从ONTAP 9.11.1开始、可以自定义文件数量；其默认值为20。
+** 在ONTAP 9.10.1中、升级到"中等"的阈值为100个或更多文件。从ONTAP 9.11.1开始、文件数量可进行编辑；其默认值为20。
 
 
 
 
-如果攻击概率较低、则表示ONTAP检测到一种错误、并将在后台为卷创建一个Snapshot、以创建可能的最佳恢复点。例如、ARP Snapshot可通过其名称进行标识 `Anti_ransomware_backup.2022-12-20_1248`，并使用标记 `anti-ransomware-backup`。
+在威胁较低的情况下、ONTAP会检测到一个非正常情况、并为卷创建一个Snapshot、以创建可能的最佳恢复点。ARP Snapshot使用 `anti-ransomware-backup` 标记和可通过其名称进行标识、例如 `Anti_ransomware_backup.2022-12-20_1248`。
 
-在ONTAP运行分析报告以确定此非正常情况是否与勒索软件配置文件匹配后、此威胁会升级为中等。系统会记录处于较低级别的威胁、但ONTAP 不会发送有关较低威胁的警报。当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
+在ONTAP运行分析报告以确定此非正常情况是否与勒索软件配置文件匹配后、此威胁会升级为中等。系统管理器的**事件**部分会记录并显示处于较低级别的威胁，但ONTAP不会发送有关较低威胁的警报。当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
 
 您可以在System Manager的**事件**部分中或使用查看有关威胁的信息，而不受威胁级别的限制 `security anti-ransomware volume show -vserver _svm_name_` 命令：
 
