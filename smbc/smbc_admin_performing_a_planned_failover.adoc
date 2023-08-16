@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: smbc/smbc_admin_performing_a_planned_failover.html 
-keywords: SM-BC, SMBC, testing failover, planned failover, maintenance, Mediator, quorum 
+keywords: SM-BC, testing failover, planned failover, maintenance, quorum 
 summary: 您可以执行计划内故障转移以测试灾难恢复配置或对主集群执行维护。 
 ---
 = 执行计划内故障转移
@@ -32,7 +32,15 @@ summary: 您可以执行计划内故障转移以测试灾难恢复配置或对�
 
 [role="tabbed-block"]
 ====
-.ONTAP 命令行界面
+.System Manager
+--
+. 在System Manager中，选择**保护>概述>关系**。
+. 确定要故障转移的SM-BC关系。在其名称旁边、选择 `...` 在关系的名称旁边，选择**故障转移**。
+. 要监控故障转移的状态、请使用 `snapmirror failover show` 在ONTAP命令行界面中。
+
+
+--
+.命令行界面
 --
 . 从目标集群中、启动故障转移操作：
 +
@@ -46,14 +54,6 @@ summary: 您可以执行计划内故障转移以测试灾难恢复配置或对�
 +
 `destination::>snapmirror show`
 
-
-
---
-.System Manager
---
-. 在System Manager中，选择**保护>概述>关系**。
-. 确定要故障转移的SM-BC关系。在其名称旁边、选择 `...` 在关系的名称旁边，选择**故障转移**。
-. 要监控故障转移的状态、请使用 `snapmirror failover show` 在ONTAP命令行界面中。
 
 
 --

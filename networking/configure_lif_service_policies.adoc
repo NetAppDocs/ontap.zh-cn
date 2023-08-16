@@ -229,9 +229,10 @@ cluster1::> network interface modify -vserver cluster1 -lif lif1 -service-policy
 
 使用 `network interface service-policy` 用于管理LIF服务策略的命令。
 
+.开始之前
+修改活动SnapMirror关系中LIF的服务策略会中断复制计划。如果将LIF从集群间转换为非集群间(或反之)、则这些更改不会复制到对等集群。要在修改LIF服务策略后更新对等集群、请先执行 `snapmirror abort` 操作 xref:../data-protection/resynchronize-relationship-task.html[重新同步复制关系]。
+
 |===
-
-
 | 如果您要 ... | 使用此命令 ... 
 
 
