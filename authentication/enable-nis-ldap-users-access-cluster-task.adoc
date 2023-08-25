@@ -1,7 +1,7 @@
 ---
 permalink: authentication/enable-nis-ldap-users-access-cluster-task.html 
 sidebar: sidebar 
-keywords: configure, ldap, nis, server access 
+keywords: configure, ldap, nis, server access, create, name, service, switch 
 summary: 您必须先配置对 SVM 的 LDAP 或 NIS 服务器访问，然后 LDAP 或 NIS 帐户才能访问 SVM 。通过交换机功能，您可以使用 LDAP 或 NIS 作为备用名称服务源。 
 ---
 = 配置 LDAP 或 NIS 服务器访问概述
@@ -12,3 +12,164 @@ summary: 您必须先配置对 SVM 的 LDAP 或 NIS 服务器访问，然后 LDA
 
 [role="lead"]
 您必须先配置对 SVM 的 LDAP 或 NIS 服务器访问，然后 LDAP 或 NIS 帐户才能访问 SVM 。通过交换机功能，您可以使用 LDAP 或 NIS 作为备用名称服务源。
+
+
+
+== 配置 LDAP 服务器访问
+
+您必须先配置对 SVM 的 LDAP 服务器访问，然后 LDAP 帐户才能访问 SVM 。您可以使用 `vserver services name-service ldap client create` 命令以在SVM上创建LDAP客户端配置。然后、您可以使用 `vserver services name-service ldap create` 命令将LDAP客户端配置与SVM关联。
+
+.您需要的内容
+* 您必须已安装 link:install-ca-signed-server-digital-certificate-task.html["CA 签名的服务器数字证书"] 在 SVM 上。
+* 要执行此任务，您必须是集群或 SVM 管理员。
+
+
+.关于此任务
+大多数 LDAP 服务器都可以使用 ONTAP 提供的默认模式：
+
+* MS-AD-BIS （大多数 Windows 2012 及更高版本 AD 服务器的首选架构）
+* AD-IDMU （ Windows 2008 ， Windows 2012 及更高版本的 AD 服务器）
+* AD-SFU （ Windows 2003 及更早版本的 AD 服务器）
+* RFC-2307 （ UNIX LDAP 服务器）
+
+
+除非另有要求，否则最好使用默认模式。如果是，您可以通过复制默认模式并修改副本来创建自己的模式。有关详细信息，请参见以下文档。
+
+* link:../nfs-config/index.html["NFS配置"]
+* https://www.netapp.com/pdf.html?item=/media/19423-tr-4835.pdf["NetApp 技术报告 4835 ：《如何在 ONTAP 中配置 LDAP 》"^]
+
+
+.步骤
+. 在SVM上创建LDAP客户端配置：
++
+`vserver services name-service ldap client create -vserver SVM_name -client-config client_configuration -servers LDAP_server_IPs -schema schema -use-start-tls true|false`
+
++
+[NOTE]
+====
+仅支持使用启动 TLS 访问数据 SVM 。不支持访问管理 SVM 。
+
+====
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+以下命令会在SVM"`engData`"上创建名为"`corp`"的LDAP客户端配置。客户端使用IP地址172.160.0.100和172.16.0.101匿名绑定到LDAP服务器。客户端使用RFC 2307模式进行LDAP查询。客户端与服务器之间的通信使用 Start TLS 进行加密。
+
++
+[listing]
+----
+cluster1::> vserver services name-service ldap client create
+-vserver engData -client-config corp -servers 172.16.0.100,172.16.0.101 -schema RFC-2307 -use-start-tls true
+----
++
+[NOTE]
+====
+从ONTAP 9.2开始、此字段为 `-ldap-servers` 替换字段 `-servers`。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
+
+====
+. 将LDAP客户端配置与SVM相关联： `vserver services name-service ldap create -vserver SVM_name -client-config client_configuration -client-enabled true|false`
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+以下命令将关联LDAP客户端配置 `corp` 使用SVM``engData``，并在SVM上启用LDAP客户端。
+
++
+[listing]
+----
+cluster1::>vserver services name-service ldap create -vserver engData -client-config corp -client-enabled true
+----
++
+[NOTE]
+====
+从ONTAP 9.2开始、 `vserver services name-service ldap create` 命令会执行自动配置验证、并在ONTAP无法联系名称服务器时报告错误消息。
+
+====
+. 使用 vserver services name-service ldap check 命令验证名称服务器的状态。
++
+以下命令将验证 SVM vs0 上的 LDAP 服务器。
+
++
+[listing]
+----
+cluster1::> vserver services name-service ldap check -vserver vs0
+
+| Vserver: vs0                                                |
+| Client Configuration Name: c1                               |
+| LDAP Status: up                                             |
+| LDAP Status Details: Successfully connected to LDAP server "10.11.12.13".                                              |
+----
++
+从 ONTAP 9.2 开始，可以使用 name service check 命令。
+
+
+
+
+
+== 配置NIS服务器访问
+
+您必须先配置对SVM的NIS服务器访问权限、然后NIS帐户才能访问SVM。您可以使用 `vserver services name-service nis-domain create` 命令以在SVM上创建NIS域配置。
+
+.您需要的内容
+* 在 SVM 上配置 NIS 域之前，所有已配置的服务器都必须可用且可访问。
+* 要执行此任务，您必须是集群或 SVM 管理员。
+
+
+.关于此任务
+您可以创建多个 NIS 域。只能将一个NIS域设置为 `active` 一次。
+
+.步骤
+. 在SVM上创建NIS域配置：
++
+`vserver services name-service nis-domain create -vserver SVM_name -domain client_configuration -active true|false -nis-servers NIS_server_IPs`
+
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+[NOTE]
+====
+从ONTAP 9.2开始、此字段为 `-nis-servers` 替换字段 `-servers`。此新字段可以使用NIS服务器的主机名或IP地址。
+
+====
++
+以下命令会在SVM"`engData`"上创建NIS域配置。NIS域"`nisdomain`"在创建时处于活动状态、并与IP地址为192.0.2.180的NIS服务器进行通信。
+
++
+[listing]
+----
+cluster1::>vserver services name-service nis-domain create
+-vserver engData -domain nisdomain -active true -nis-servers 192.0.2.180
+----
+
+
+
+
+== 创建名称服务切换
+
+通过名称服务切换功能，您可以使用 LDAP 或 NIS 作为备用名称服务源。您可以使用 `vserver services name-service ns-switch modify` 命令以指定名称服务源的查找顺序。
+
+.您需要的内容
+* 您必须已配置 LDAP 和 NIS 服务器访问。
+* 要执行此任务，您必须是集群管理员或 SVM 管理员。
+
+
+.步骤
+. 指定名称服务源的查找顺序：
++
+`vserver services name-service ns-switch modify -vserver SVM_name -database name_service_switch_database -sources name_service_source_order`
+
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+以下命令为SVM"`engData`"上的"`passwd`"数据库指定LDAP和NIS名称服务源的查找顺序。
+
++
+[listing]
+----
+cluster1::>vserver services name-service ns-switch
+modify -vserver engData -database passwd -source files ldap,nis
+----
+

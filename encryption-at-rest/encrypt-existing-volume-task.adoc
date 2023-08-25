@@ -1,16 +1,100 @@
 ---
 permalink: encryption-at-rest/encrypt-existing-volume-task.html 
 sidebar: sidebar 
-keywords: enabling, encryption, existing, volume, volume move start, command 
-summary: 您可以使用 volume move start 命令通过移动现有卷来启用加密。必须在 ONTAP 9.2 及更早版本中使用 volume move start 。您可以使用同一个聚合或不同的聚合。 
+keywords: enabling, encryption, existing, volume, volume move start, command, volume encryption conversion start 
+summary: 您可以使用以下两种方法之一在现有卷上启用加密：使用volume mMove start命令或使用volume Encryption conversion start命令。 
 ---
-= 使用 volume move start 命令在现有卷上启用加密
+= 对现有卷启用加密
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
 
 [role="lead"]
+您可以使用以下两种方法之一在现有卷上启用加密(&D) `volume move start command` 或使用 `volume encryption conversion start` 命令：
+
+.关于此任务
+* 从ONTAP 9.3开始、您可以使用 `volume encryption conversion start` 命令以"原位"加密现有卷、而无需将卷移动到其他位置。或者、您也可以使用 `volume move start` 命令：
+* 对于ONTAP 9.2及更早版本、只能使用 `volume move start` 命令以通过移动现有卷启用加密。
+
+
+
+
+== 使用 volume encryption conversion start 命令在现有卷上启用加密
+
+从ONTAP 9.3开始、您可以使用 `volume encryption conversion start` 命令以"原位"加密现有卷、而无需将卷移动到其他位置。
+
+启动转换操作后、必须完成该操作。如果您在操作期间遇到性能问题描述、则可以运行 `volume encryption conversion pause` 命令以暂停操作、以及 `volume encryption conversion resume` 命令以恢复操作。
+
+[NOTE]
+====
+您无法使用 `volume encryption conversion start` 转换SnapLock卷。
+
+====
+.步骤
+. 在现有卷上启用加密：
++
+`volume encryption conversion start -vserver SVM_name -volume volume_name`
+
++
+有关整个命令语法、请参见命令的手册页。
+
++
+以下命令将对现有卷启用加密 `vol1`：
+
++
+[listing]
+----
+cluster1::> volume encryption conversion start -vserver vs1 -volume vol1
+----
++
+系统会为卷创建加密密钥。卷上的数据已加密。
+
+. 验证转换操作的状态：
++
+`volume encryption conversion show`
+
++
+有关整个命令语法、请参见命令的手册页。
+
++
+以下命令显示转换操作的状态：
+
++
+[listing]
+----
+cluster1::> volume encryption conversion show
+
+Vserver   Volume   Start Time           Status
+-------   ------   ------------------   ---------------------------
+vs1       vol1     9/18/2017 17:51:41   Phase 2 of 2 is in progress.
+----
+. 转换操作完成后、验证卷是否已启用加密：
++
+`volume show -is-encrypted true`
+
++
+有关整个命令语法、请参见命令的手册页。
+
++
+以下命令将显示上的加密卷 `cluster1`：
+
++
+[listing]
+----
+cluster1::> volume show -is-encrypted true
+
+Vserver  Volume  Aggregate  State  Type  Size  Available  Used
+-------  ------  ---------  -----  ----  -----  --------- ----
+vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
+----
+
+
+.结果
+如果您使用 KMIP 服务器存储节点的加密密钥，则在对卷进行加密时， ONTAP 会自动 "`推送` " 加密密钥到服务器。
+
+
+
+== 使用 volume move start 命令在现有卷上启用加密
+
 您可以使用 `volume move start` 命令以通过移动现有卷启用加密。您必须使用 `volume move start` 在ONTAP 9.2及更早版本中。您可以使用同一个聚合或不同的聚合。
 
 .您需要的内容
@@ -19,11 +103,10 @@ summary: 您可以使用 volume move start 命令通过移动现有卷来启用�
 link:delegate-volume-encryption-svm-administrator-task.html["委派权限以运行 volume move 命令"]
 
 .关于此任务
-从ONTAP 9.8开始、您可以使用 `volume move start` 在SnapLock或FlexGroup卷上启用加密。
+* 从ONTAP 9.8开始、您可以使用 `volume move start` 在SnapLock或FlexGroup卷上启用加密。
+* 从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要移动的卷所在的聚合分配密钥。使用唯一密钥加密的卷称为 _NVE volume_ 。使用聚合级别密钥加密的卷称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
+* 从ONTAP 9.4开始、如果在设置板载密钥管理器时启用"`cc-mode`"、则会显示使用创建的卷 `volume move start` 命令会自动加密。您无需指定 `-encrypt-destination true`。
 
-从ONTAP 9.4开始、如果在设置板载密钥管理器时启用"`cc-mode`"、则会显示使用创建的卷 `volume move start` 命令会自动加密。您无需指定 `-encrypt-destination true`。
-
-从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要移动的卷所在的聚合分配密钥。使用唯一密钥加密的卷称为 _NVE volume_ 。使用聚合级别密钥加密的卷称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
 
 .步骤
 . 移动现有卷并指定是否在卷上启用加密：
@@ -70,7 +153,7 @@ NVE卷转换为纯文本卷
 
 |===
 +
-有关完整的命令语法，请参见命令手册页。
+有关整个命令语法、请参见命令的手册页。
 
 +
 以下命令将转换名为的纯文本卷 `vol1` 到NVE卷：
@@ -120,7 +203,7 @@ cluster1::> volume move start -vserver vs1 -volume vol2 -destination-aggregate a
 。 `encryption-type` 字段在ONTAP 9.6及更高版本中可用。
 
 +
-有关完整的命令语法，请参见命令手册页。
+有关整个命令语法、请参见命令的手册页。
 
 +
 以下命令显示中卷的加密类型 `cluster2`：
@@ -141,7 +224,7 @@ vs3      vol3    aggregate
 `volume show -is-encrypted true`
 
 +
-有关完整的命令语法，请参见命令手册页。
+有关整个命令语法、请参见命令的手册页。
 
 +
 以下命令将显示上的加密卷 `cluster2`：

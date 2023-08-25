@@ -1,7 +1,7 @@
 ---
 permalink: authentication/install-server-certificate-cluster-svm-ssl-server-task.html 
 sidebar: sidebar 
-keywords: generate, install, ca-signed, server, certificate 
+keywords: generate, install, ca-signed, server, certificate, csr, signing request, signed 
 summary: 在生产系统上，最佳做法是安装 CA 签名的数字证书，以便将集群或 SVM 作为 SSL 服务器进行身份验证。您可以使用 security certificate generate-csr 命令生成证书签名请求（ CSR ），并使用 security certificate install 命令安装从证书颁发机构收到的证书。 
 ---
 = 生成并安装 CA 签名的服务器证书概述
@@ -12,3 +12,150 @@ summary: 在生产系统上，最佳做法是安装 CA 签名的数字证书，�
 
 [role="lead"]
 在生产系统上，最佳做法是安装 CA 签名的数字证书，以便将集群或 SVM 作为 SSL 服务器进行身份验证。您可以使用 `security certificate generate-csr` 用于生成证书签名请求(CSR)的命令、以及 `security certificate install` 命令以安装从证书颁发机构收到的回退证书。
+
+
+
+== 生成证书签名请求
+
+您可以使用 `security certificate generate-csr` 用于生成证书签名请求(CSR)的命令。处理请求后，证书颁发机构（ CA ）会向您发送签名数字证书。
+
+.您需要的内容
+要执行此任务，您必须是集群或 SVM 管理员。
+
+.步骤
+. 生成 CSR
++
+`security certificate generate-csr -common-name FQDN_or_common_name -size 512|1024|1536|2048 -country country -state state -locality locality -organization organization -unit unit -email-addr email_of_contact -hash-function SHA1|SHA256|MD5`
+
++
+以下命令将使用一个2048位专用密钥创建一个CSR、该密钥由"__LW_AT__`` 25256`"散列函数生成、供一家公司的"`sit `S"部门中的"` oftware `s "组使用、该公司的自定义公用名为" erver1.companyname.com`"、位于美国加利福尼亚州的森尼韦尔。SVM联系人管理员的电子邮件地址为"`web@example.com`"。系统将在输出中显示 CSR 和私钥。
+
++
+.创建CSR的示例
+[%collapsible]
+====
+[listing]
+----
+cluster1::>security certificate generate-csr -common-name server1.companyname.com -size 2048 -country US -state California -locality Sunnyvale -organization IT -unit Software -email-addr web@example.com -hash-function SHA256
+
+Certificate Signing Request :
+-----BEGIN CERTIFICATE REQUEST-----
+MIIBGjCBxQIBADBgMRQwEgYDVQQDEwtleGFtcGxlLmNvbTELMAkGA1UEBhMCVVMx
+CTAHBgNVBAgTADEJMAcGA1UEBxMAMQkwBwYDVQQKEwAxCTAHBgNVBAsTADEPMA0G
+CSqGSIb3DQEJARYAMFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAPXFanNoJApT1nzS
+xOcxixqImRRGZCR7tVmTYyqPSuTvfhVtwDJbmXuj6U3a1woUsb13wfEvQnHVFNci
+2ninsJ8CAwEAAaAAMA0GCSqGSIb3DQEBCwUAA0EA6EagLfso5+4g+ejiRKKTUPQO
+UqOUEoKuvxhOvPC2w7b//fNSFsFHvXloqEOhYECn/NX9h8mbphCoM5YZ4OfnKw==
+-----END CERTIFICATE REQUEST-----
+
+
+Private Key :
+-----BEGIN RSA PRIVATE KEY-----
+MIIBOwIBAAJBAPXFanNoJApT1nzSxOcxixqImRRGZCR7tVmTYyqPSuTvfhVtwDJb
+mXuj6U3a1woUsb13wfEvQnHVFNci2ninsJ8CAwEAAQJAWt2AO+bW3FKezEuIrQlu
+KoMyRYK455wtMk8BrOyJfhYsB20B28eifjJvRWdTOBEav99M7cEzgPv+p5kaZTTM
+gQIhAPsp+j1hrUXSRj979LIJJY0sNez397i7ViFXWQScx/ehAiEA+oDbOooWlVvu
+xj4aitxVBu6ByVckYU8LbsfeRNsZwD8CIQCbZ1/ENvmlJ/P7N9Exj2NCtEYxd0Q5
+cwBZ5NfZeMBpwQIhAPk0KWQSLadGfsKO077itF+h9FGFNHbtuNTrVq4vPW3nAiAA
+peMBQgEv28y2r8D4dkYzxcXmjzJluUSZSZ9c/wS6fA==
+-----END RSA PRIVATE KEY-----
+
+Note: Please keep a copy of your certificate request and private key for future reference.
+----
+====
+. 复制 CSR 输出中的证书请求，并以电子形式（如电子邮件）将其发送到可信的第三方 CA 进行签名。
++
+处理完您的请求后， CA 会向您发送已签名的数字证书。您应保留一份私钥和 CA 签名数字证书的副本。
+
+
+
+
+
+== 安装 CA 签名的服务器证书
+
+您可以使用 `security certificate install` 命令以在SVM上安装CA签名的服务器证书。ONTAP 会提示您输入证书颁发机构（ CA ）根证书和中间证书，这些证书构成服务器证书的证书链。
+
+.您需要的内容
+要执行此任务，您必须是集群或 SVM 管理员。
+
+.步骤
+. 安装CA签名的服务器证书：
++
+`security certificate install -vserver SVM_name -type certificate_type`
+
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+[NOTE]
+====
+ONTAP 会提示您输入 CA 根证书和中间证书，以构成服务器证书的证书链。此链从颁发服务器证书的 CA 的证书开始，最多可以包含 CA 的根证书。如果缺少任何中间证书，则会导致服务器证书安装失败。
+
+====
++
+以下命令将在SVM"`engData2`"上安装CA签名的服务器证书和中间证书。
+
++
+.安装CA签名服务器证书中间证书的示例
+[%collapsible]
+====
+[listing]
+----
+cluster1::>security certificate install -vserver engData2 -type server
+Please enter Certificate: Press <Enter> when done
+-----BEGIN CERTIFICATE-----
+MIIB8TCCAZugAwIBAwIBADANBgkqhkiG9w0BAQQFADBfMRMwEQYDVQQDEwpuZXRh
+cHAuY29tMQswCQYDVQQGEwJVUzEJMAcGA1UECBMAMQkwBwYDVQQHEwAxCTAHBgNV
+BAoTADEJMAcGA1UECxMAMQ8wDQYJKoZIhvcNAQkBFgAwHhcNMTAwNDI2MTk0OTI4
+WhcNMTAwNTI2MTk0OTI4WjBfMRMwEQYDVQQDEwpuZXRhcHAuY29tMQswCQYDVQQG
+EwJVUzEJMAcGA1UECBMAMQkwBwYDVQQHEwAxCTAHBgNVBAoTADEJMAcGA1UECxMA
+MQ8wDQYJKoZIhvcNAQkBFgAwXDANBgkqhkiG9w0BAQEFAANLADBIAkEAyXrK2sry
+-----END CERTIFICATE-----
+
+
+Please enter Private Key: Press <Enter> when done
+-----BEGIN RSA PRIVATE KEY-----
+MIIBPAIBAAJBAMl6ytrK8nQj82UsWeHOeT8gk0BPX+Y5MLycsUdXA7hXhumHNpvF
+C61X2G32Sx8VEa1th94tx+vOEzq+UaqHlt0CAwEAAQJBAMZjDWlgmlm3qIr/n8VT
+PFnnZnbVcXVM7OtbUsgPKw+QCCh9dF1jmuQKeDr+wUMWknlDeGrfhILpzfJGHrLJ
+z7UCIQDr8d3gOG71UyX+BbFmo/N0uAKjS2cvUU+Y8a8pDxGLLwIhANqa99SuSl8U
+DiPvdaKTj6+EcGuXfCXz+G0rfgTZK8uzAiEAr1mnrfYC8KwE9k7A0ylRzBLdUwK9
+AvuJDn+/z+H1Bd0CIQDD93P/xpaJETNz53Au49VE5Jba/Jugckrbosd/lSd7nQIg
+aEMAzt6qHHT4mndi8Bo8sDGedG2SKx6Qbn2IpuNZ7rc=
+-----END RSA PRIVATE KEY-----
+
+Do you want to continue entering root and/or intermediate certificates {y|n}: y
+
+Please enter Intermediate Certificate: Press <Enter> when done
+-----BEGIN CERTIFICATE-----
+MIIE+zCCBGSgAwIBAgICAQ0wDQYJKoZIhvcNAQEFBQAwgbsxJDAiBgNVBAcTG1Zh
+bGlDZXJ0IFZhbGlkYXRpb24gTmV0d29yazEXMBUGA1UEChMOVmFsaUNlcnQsIElu
+Yy4xNTAzBgNVBAsTLFZhbGlDZXJ0IENsYXNzIDIgUG9saWN5IFZhbGlkYXRpb24g
+QXV0aG9yaXR5MSEwHwYDVQQDExhodHRwOi8vd3d3LnZhbGljZXJ0LmNvbS8xIDAe
+BgkqhkiG9w0BCQEWEWluZm9AdmFsaWNlcnQuY29tMB4XDTA0MDYyOTE3MDYyMFoX
+DTI0MDYyOTE3MDYyMFowYzELMAkGA1UEBhMCVVMxITAfBgNVBAoTGFRoZSBHbyBE
+YWRkeSBHcm91cCwgSW5jLjExMC8GA1UECxMoR28gRGFkZHkgQ2xhc3MgMiBDZXJ0
+-----END CERTIFICATE-----
+
+
+Do you want to continue entering root and/or intermediate certificates {y|n}: y
+
+Please enter Intermediate Certificate: Press <Enter> when done
+-----BEGIN CERTIFICATE-----
+MIIC5zCCAlACAQEwDQYJKoZIhvcNAQEFBQAwgbsxJDAiBgNVBAcTG1ZhbGlDZXJ0
+IFZhbGlkYXRpb24gTmV0d29yazEXMBUGA1UEChMOVmFsaUNlcnQsIEluYy4xNTAz
+BgNVBAsTLFZhbGlDZXJ0IENsYXNzIDIgUG9saWN5IFZhbGlkYXRpb24gQXV0aG9y
+aXR5MSEwHwYDVQQDExhodHRwOi8vd3d3LnZhbGljZXJ0LmNvbS8xIDAeBgkqhkiG
+9w0BCQEWEWluZm9AdmFsaWNlcnQuY29tMB4XDTk5MDYyNjAwMTk1NFoXDTE5MDYy
+NjAwMTk1NFowgbsxJDAiBgNVBAcTG1ZhbGlDZXJ0IFZhbGlkYXRpb24gTmV0d29y
+azEXMBUGA1UEChMOVmFsaUNlcnQsIEluYy4xNTAzBgNVBAsTLFZhbGlDZXJ0IENs
+YXNzIDIgUG9saWN5IFZhbGlkYXRpb24gQXV0aG9yaXR5MSEwHwYDVQQDExhodHRw
+-----END CERTIFICATE-----
+
+
+Do you want to continue entering root and/or intermediate certificates {y|n}: n
+
+You should keep a copy of the private key and the CA-signed digital certificate for future reference.
+----
+====
+

@@ -1,7 +1,7 @@
 ---
 permalink: system-admin/different-shells-cli-commands-concept-cluster-admin.html 
 sidebar: sidebar 
-keywords: diag, secd, different, shells, cli, commands, cluster, administrators, clustershell, nodeshell, systemshell 
+keywords: diag, secd, different, shells, cli, commands, cluster, administrators, clustershell, nodeshell, systemshell, display, list, help 
 summary: 集群为 CLI 命令提供了三种不同的 shell ： clustershell ， nodeshell 和 systemshell 。这些 shell 的用途各不相同，它们各自具有不同的命令集。 
 ---
 = 关于 CLI 命令的不同 shell 概述（仅限集群管理员）
@@ -32,3 +32,73 @@ nobeshell命令行界面帮助(由触发) `?` 或 `help` )显示可用的nokeshe
 systemshell 和关联的 `dIAG` 帐户用于低级别诊断。其访问权限需要诊断权限级别，并且仅供技术支持执行故障排除任务时使用。
 
 
+
+
+
+== 访问 clustershell 中的 nodeshell 命令和选项
+
+可以通过 nodeshell 访问 nodeshell 命令和选项：
+
+`system node run –node _nodename_`
+
+许多常用的 nodeshell 命令和选项会通过通道连接到 clustershell 或以别名方式连接到 clustershell ，也可以从 clustershell 执行。
+
+您可以使用访问集群Shell中支持的nedeshell选项 `vserver options clustershell` 命令：要查看这些选项，您可以执行以下操作之一：
+
+* 使用查询CListershell命令行界面 `vserver options -vserver _nodename_or_clustername_ -option-name ?`
+* 访问 `vserver options` 使用的集群Shell命令行界面中的手册页 `man vserver options`
+
+
+如果在 clustershell 中输入 nodeshell 或原有命令或选项，并且此命令或选项具有等效的 clustershell 命令，则 ONTAP 会通知您要使用的 clustershell 命令。
+
+如果您输入的 nodeshell 或原有命令或选项在 clustershell 中不受支持，则 ONTAP 会通知您此命令或选项的 "`not supported` " 状态。
+
+
+
+== 显示可用的 nodeshell 命令
+
+您可以使用 nodeshell 中的命令行界面帮助获取可用的 nodeshell 命令列表。
+
+.步骤
+. 要访问 nodeshell ，请在 clustershell 的系统提示符处输入以下命令：
++
+`*system node run -node {_nodename_|local}*`
+
++
+`local` 是用于访问集群的节点。
+
++
+[NOTE]
+====
+。 `system node run` 命令具有别名命令、 `run`。
+
+====
+. 在 nodeshell 中输入以下命令以查看可用的 nodeshell 命令列表：
++
+`*[_commandname_] help*`
+
++
+ `_commandname_` 是要显示其可用性的命令的名称。如果不包括 `_commandname_`，则CLI将显示所有可用的nobeshell命令。
+
++
+您可以输入 `exit` 或者、键入Ctrl-d返回到CListershell命令行界面。
+
+
+
+.显示可用nodeshell命令的示例
+以下示例将访问名为node2的节点的nodehell并显示nodehell命令的信息 `environment`：
+
+[listing]
+----
+cluster1::> system node run -node node2
+Type 'exit' or 'Ctrl-D' to return to the CLI
+
+node2> environment help
+Usage: environment status |
+     [status] [shelf [<adapter>[.<shelf-number>]]] |
+     [status] [shelf_log] |
+     [status] [shelf_stats] |
+     [status] [shelf_power_status] |
+     [status] [chassis [all | list-sensors | Temperature | PSU 1 |
+     PSU 2 | Voltage | SYS FAN | NVRAM6-temperature-3 | NVRAM6-battery-3]]
+----

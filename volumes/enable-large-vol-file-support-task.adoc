@@ -1,0 +1,59 @@
+---
+permalink: volumes/enable-large-vol-file-support-task.html 
+sidebar: sidebar 
+keywords: create, modify, volume, large file, large volume 
+summary: 您可以在创建新卷时启用对大型卷和文件的支持、也可以修改现有卷。 
+---
+= 支持大卷和大文件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.12.1 P2开始、您可以创建新卷或修改现有卷、以支持最大卷大小为300 TB和最大文件(LUN)大小为128 TB。
+
+.开始之前
+* 集群上已安装ONTAP 9.12.1 P2或更高版本。
+* 您是集群或SVM管理员。
+
+
+
+
+== 创建新卷
+
+.步骤
+. 创建启用了大卷和文件支持的卷：
++
+`volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -is-large-size-enabled true`
+
+
+
+.示例
+以下示例将创建一个启用了大卷和文件大小支持的新卷。
+
+[listing]
+----
+volume create -vserver vs1 -volume big_vol1 -aggregate aggr1 -is-large-size-enabled true
+----
+
+
+== 修改现有卷
+
+. 修改卷以启用大型卷和文件支持：
++
+`volume modify -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_ -is-large-size-enabled true`
+
+
+
+.示例
+以下示例将修改现有卷以支持较大的卷和文件大小。
+
+[listing]
+----
+volume modify -vserver vs2 -volume data_vol -aggregate aggr1 -is-large-size-enabled true
+----
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap/volumes/create-volume-task.html["创建卷"]
+* link:https://docs.netapp.com/us-en/ontap-cli-9131/["命令参考"]
+

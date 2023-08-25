@@ -14,14 +14,14 @@ summary: 必须先在 NAS 命名空间上挂载卷，然后才能配置 NAS 客�
 必须先在 NAS 命名空间上挂载卷，然后才能配置 NAS 客户端对 Storage Virtual Machine （ SVM ）卷中所含数据的访问。如果卷当前未挂载，则可以将其挂载到接合点。您也可以卸载卷。
 
 .关于此任务
-如果卸载卷并使其脱机，则 NAS 客户端将无法访问接合点内的所有数据，包括已卸载卷的命名空间中包含接合点的卷中的数据。
+如果卸载某个卷并使其脱机、则NAS客户端将无法访问该接合点中的所有数据、包括接合点位于已卸载卷的命名空间中的卷中的数据。
 
 [NOTE]
 ====
-要停止 NAS 客户端对卷的访问，仅仅卸载卷是不够的。您必须使卷脱机或执行其他步骤以确保客户端文件句柄缓存失效。有关详细信息、请参见以下知识库文章：https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/NFSv3_clients_still_have_access_to_a_volume_after_being_removed_from_the_namespace_in_ONTAP[NFSv3客户端在从ONTAP的命名空间中删除后仍可访问卷]
+要停止 NAS 客户端对卷的访问，仅仅卸载卷是不够的。您必须使此卷脱机、或者采取其他步骤确保客户端文件句柄缓存失效。有关详细信息，请参见以下知识库文章： https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/NFSv3_clients_still_have_access_to_a_volume_after_being_removed_from_the_namespace_in_ONTAP["从 ONTAP 的命名空间中删除卷后， NFSv3 客户端仍可访问该卷"]
 
 ====
-卸载卷并使其脱机时，卷中的数据不会丢失。此外，在卷上或在已卸载卷内的目录和接合点上创建的现有卷导出策略和 SMB 共享也会保留下来。如果重新挂载卸载的卷， NAS 客户端可以使用现有导出策略和 SMB 共享访问卷中包含的数据。
+卸载卷并使其脱机后、卷中的数据不会丢失。此外，在卷上或在已卸载卷内的目录和接合点上创建的现有卷导出策略和 SMB 共享也会保留下来。如果重新挂载卸载的卷， NAS 客户端可以使用现有导出策略和 SMB 共享访问卷中包含的数据。
 
 .步骤
 . 执行所需的操作：
@@ -40,14 +40,19 @@ summary: 必须先在 NAS 命名空间上挂载卷，然后才能配置 NAS 客�
  a| 
 卸载卷
  a| 
-`volume unmount -vserver _svm_name_ -volume _volume_name_ volume offline -vserver _svm_name_ -volume _volume_name_`
+`volume unmount -vserver _svm_name_ -volume _volume_name_`
+
+`volume offline -vserver _svm_name_ -volume _volume_name_`
 
 |===
-. 验证卷是否处于所需的挂载状态： `volume show -vserver _vserver_name_ -volume _volume_name_ -fields state,junction-path,junction-active`
+. 验证卷是否处于所需的挂载状态：
++
+`volume show -vserver _svm_name_ -volume _volume_name_ -fields state,junction-path,junction-active`
+
 
 
 .示例
-以下示例将SVM VS1上名为`sales`的卷挂载到接合点 `/sales`：
+以下示例将位于SVM"`VS1`"上名为` ales `s的卷挂载到接合点"`/sales`"：
 
 [listing]
 ----
@@ -61,7 +66,7 @@ vs1       data       online    /data           true
 vs1       home4      online    /eng/home       true
 vs1       sales      online    /sales          true
 ----
-以下示例将卸载 SVM vs1 上名为 `data` 的卷并使其脱机：
+以下示例将卸载位于SVM"`VS1`"上的名为"`data`"的卷并使其脱机：
 
 [listing]
 ----

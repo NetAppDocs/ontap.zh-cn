@@ -1,10 +1,10 @@
 ---
 permalink: nas-audit/fpolicy-external-fpolicy-servers-concept.html 
 sidebar: sidebar 
-keywords: fpolicy, works, external fpolicy servers 
+keywords: fpolicy, works, external fpolicy servers, privileged data access, channels, synchronous communication, connection, credentials, super user 
 summary: 在 Storage Virtual Machine （ SVM ）上配置并启用 FPolicy 后， FPolicy 将在 SVM 参与的每个节点上运行。FPolicy 负责与外部 FPolicy 服务器（ FPolicy 服务器）建立和维护连接，处理通知以及管理与 FPolicy 服务器之间的通知消息。 
 ---
-= FPolicy 如何与外部 FPolicy 服务器配合使用概述
+= FPolicy 如何与外部 FPolicy 服务器配合使用
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -21,3 +21,73 @@ summary: 在 Storage Virtual Machine （ SVM ）上配置并启用 FPolicy 后�
 * 通过经过身份验证的会话向 FPolicy 服务器发送通知。
 * 管理由 FPolicy 服务器建立的直通读取数据连接，以便在启用直通读取时为客户端请求提供服务。
 
+
+
+
+== 如何使用控制通道进行 FPolicy 通信
+
+FPolicy 会从 Storage Virtual Machine （ SVM ）上参与的每个节点的数据 LIF 启动与外部 FPolicy 服务器的控制通道连接。FPolicy 使用控制通道传输文件通知；因此，根据 SVM 拓扑， FPolicy 服务器可能会看到多个控制通道连接。
+
+
+
+== 如何将有权限的数据访问通道用于同步通信
+
+对于同步使用情形， FPolicy 服务器会通过特权数据访问路径访问驻留在 Storage Virtual Machine （ SVM ）上的数据。通过特权路径进行访问会将整个文件系统公开给 FPolicy 服务器。它可以访问数据文件来收集信息，扫描文件，读取文件或写入文件。
+
+由于外部 FPolicy 服务器可以通过有权限的数据通道从 SVM 的根目录访问整个文件系统，因此有权限的数据通道连接必须安全。
+
+
+
+== FPolicy 连接凭据如何用于有权限的数据访问通道
+
+FPolicy 服务器使用随 FPolicy 配置一起保存的特定 Windows 用户凭据来与集群节点建立有权限的数据访问连接。SMB 是唯一支持建立有权限的数据访问通道连接的协议。
+
+如果 FPolicy 服务器需要特权数据访问，则必须满足以下条件：
+
+* 集群上必须启用SMB许可证。
+* FPolicy 服务器必须在 FPolicy 配置中配置的凭据下运行。
+
+
+建立数据通道连接时， FPolicy 会使用凭据作为指定的 Windows 用户名。通过管理共享 ontap_admin$ 进行数据访问。
+
+
+
+== 为有权限的数据访问授予超级用户凭据的含义
+
+ONTAP 使用在 FPolicy 配置中配置的 IP 地址和用户凭据的组合向 FPolicy 服务器授予超级用户凭据。
+
+当 FPolicy 服务器访问数据时，超级用户状态会授予以下权限：
+
+* 避免权限检查
++
+用户可避免检查文件和目录访问。
+
+* 特殊锁定权限
++
+无论现有锁定如何， ONTAP 都允许对任何文件进行读取，写入或修改访问。如果 FPolicy 服务器对文件执行字节范围锁定，则会立即删除文件上的现有锁定。
+
+* 绕过任何 FPolicy 检查
++
+访问不会生成任何 FPolicy 通知。
+
+
+
+
+
+== FPolicy 如何管理策略处理
+
+可能会为 Storage Virtual Machine （ SVM ）分配多个 FPolicy 策略；每个策略的优先级各不相同。要在 SVM 上创建适当的 FPolicy 配置，请务必了解 FPolicy 如何管理策略处理。
+
+系统会对每个文件访问请求进行初始评估，以确定哪些策略正在监控此事件。如果是受监控事件，则有关受监控事件的信息以及相关策略将传递到 FPolicy ，并在其中对其进行评估。系统将按分配的优先级顺序评估每个策略。
+
+配置策略时，应考虑以下建议：
+
+* 如果您希望某个策略始终在评估其他策略之前进行评估，请为该策略配置较高的优先级。
+* 如果对受监控事件成功执行请求的文件访问操作是根据另一策略评估文件请求的前提条件，请为控制第一个文件操作成功或失败的策略指定较高的优先级。
++
+例如，如果一个策略管理 FPolicy 文件归档和还原功能，而另一个策略管理联机文件的文件访问操作， 管理文件还原的策略必须具有较高的优先级，以便在允许第二个策略管理的操作之前还原文件。
+
+* 如果要评估可能应用于文件访问操作的所有策略，请为同步策略指定较低的优先级。
+
+
+您可以通过修改策略序列号对现有策略的策略优先级重新排序。但是，要让 FPolicy 根据修改后的优先级顺序评估策略，您必须禁用并重新启用此策略并使用修改后的序列号。

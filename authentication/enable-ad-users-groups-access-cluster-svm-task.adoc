@@ -1,7 +1,7 @@
 ---
 permalink: authentication/enable-ad-users-groups-access-cluster-svm-task.html 
 sidebar: sidebar 
-keywords: configure, active directory, domain, controller access 
+keywords: configure, active directory, domain, controller access, authentication tunnel, SMB server, create, svm, computer, account, domain, cifs server 
 summary: 您必须先配置 AD 域控制器对集群或 SVM 的访问， AD 帐户才能访问 SVM 。如果您已为数据 SVM 配置 SMB 服务器，则可以将 SVM 配置为用于对集群进行 AD 访问的网关或通道。如果尚未配置 SMB 服务器，则可以在 AD 域上为 SVM 创建计算机帐户。 
 ---
 = 配置 Active Directory 域控制器访问概述
@@ -11,7 +11,7 @@ summary: 您必须先配置 AD 域控制器对集群或 SVM 的访问， AD 帐�
 
 
 [role="lead"]
-您必须先配置 AD 域控制器对集群或 SVM 的访问， AD 帐户才能访问 SVM 。如果您已为数据SVM配置SMB服务器、则可以将此SVM配置为网关或_tannel"、以便对集群进行AD访问。如果尚未配置SMB服务器、则可以在AD域上为SVM创建计算机帐户。
+您必须先配置 AD 域控制器对集群或 SVM 的访问， AD 帐户才能访问 SVM 。如果您已为数据SVM配置SMB服务器、则可以将此SVM配置为网关或_tannel"、以便对集群进行AD访问。如果尚未配置 SMB 服务器，则可以在 AD 域上为 SVM 创建计算机帐户。
 
 ONTAP 支持以下域控制器身份验证服务：
 
@@ -38,6 +38,83 @@ ONTAP 支持以下会话密钥算法来实现安全的网络登录连接：
 
 `cifs security modify -vserver vs1 -aes-enabled-for-netlogon-channel true`
 
-默认值为 `false`。
+默认值为"`false`"。
 
 在 9.10.1 之前的 ONTAP 版本中，如果域控制器对安全网络登录服务强制实施 AES ，则连接将失败。在这些版本中，必须将域控制器配置为接受与 ONTAP 的强密钥连接。
+
+
+
+== 配置身份验证通道
+
+如果已为数据SVM配置SMB服务器、则可以使用 `security login domain-tunnel create` 命令将SVM配置为网关或_tannel"、以便对集群进行AD访问。
+
+.您需要的内容
+* 您必须已为数据SVM配置SMB服务器。
+* 您必须已启用 AD 域用户帐户才能访问集群的管理 SVM 。
+* 您必须是集群管理员才能执行此任务。
+
+
+从 ONTAP 9.10.1 开始，如果您有用于 AD 访问的 SVM 网关（域通道），则在 AD 域中禁用 NTLM 后，您可以使用 Kerberos 进行管理员身份验证。在早期版本中， SVM 网关的管理员身份验证不支持 Kerberos 。默认情况下，此功能可用；不需要任何配置。
+
+.注意
+始终先尝试 Kerberos 身份验证。如果发生故障，则会尝试 NTLM 身份验证。
+
+.步骤
+. 将启用了SMB的数据SVM配置为身份验证通道、以便AD域控制器能够访问集群：
++
+`security login domain-tunnel create -vserver SVM_name`
+
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+[NOTE]
+====
+要对用户进行身份验证，必须运行 SVM 。
+
+====
++
+以下命令会将启用了SMB的数据SVM"`engData`"配置为身份验证通道。
+
++
+[listing]
+----
+cluster1::>security login domain-tunnel create -vserver engData
+----
+
+
+
+
+== 在域上创建 SVM 计算机帐户
+
+如果尚未为数据SVM配置SMB服务器、则可以使用 `vserver active-directory create` 命令为域中的SVM创建计算机帐户。
+
+.您需要的内容
+要执行此任务，您必须是集群或 SVM 管理员。
+
+.关于此任务
+输入后 `vserver active-directory create` 命令时、系统会提示您提供AD用户帐户的凭据、该帐户具有足够的权限、可以将计算机添加到域中的指定组织单位。帐户的密码不能为空。
+
+.步骤
+. 在 AD 域上为 SVM 创建计算机帐户：
++
+`vserver active-directory create -vserver _SVM_name_ -account-name _NetBIOS_account_name_ -domain _domain_ -ou _organizational_unit_`
+
++
+有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
+
++
+以下命令会在域"`example.com`" for SVM"`engData`"上创建一个名为"`ADSERVER1`"的计算机帐户。输入命令后，系统将提示您输入 AD 用户帐户凭据。
+
++
+[listing]
+----
+cluster1::>vserver active-directory create -vserver engData -account-name ADSERVER1 -domain example.com
+
+In order to create an Active Directory machine account, you must supply the name and password of a Windows account with sufficient privileges to add computers to the "CN=Computers" container within the "example.com" domain.
+
+Enter the user name: Administrator
+
+Enter the password:
+----
+
