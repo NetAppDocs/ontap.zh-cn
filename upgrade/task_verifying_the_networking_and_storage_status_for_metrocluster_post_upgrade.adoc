@@ -4,16 +4,21 @@ sidebar: sidebar
 keywords: ontap, post, after, upgrade, verify, networking, storage, status, metrocluster, mcc 
 summary: 在 MetroCluster 配置中执行更新前后，您应验证每个集群的 LIF ，聚合和卷的状态。 
 ---
-= 验证 MetroCluster 配置的网络连接和存储状态
+= 在ONTAP升级后验证MetroCluster配置的网络连接和存储状态
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在 MetroCluster 配置中执行更新后，您应验证每个集群的 LIF ，聚合和卷的状态。
+在MetroCluster配置中升级ONTAP集群后、您应验证每个集群的LUN、聚合和卷的状态。
 
-. 验证LIF状态： `network interface show`
+. 验证LIF状态：
++
+[source, cli]
+----
+network interface show
+----
 +
 在正常操作下，源 SVM 的 LIF 的管理状态必须为 up ，并且位于其主节点上。目标 SVM 的 LIF 不需要启动或位于其主节点上。在切换中，所有 LIF 的管理状态均为 up ，但无需位于其主节点上。
 
@@ -43,7 +48,12 @@ cluster1-01
 
 27 entries were displayed.
 ----
-. 验证聚合的状态： `storage aggregate show -state !online`
+. 验证聚合的状态：
++
+[source, cli]
+----
+storage aggregate show -state !online
+----
 +
 此命令将显示所有处于 _not_ 联机状态的聚合。在正常操作下，位于本地站点的所有聚合都必须处于联机状态。但是，如果 MetroCluster 配置处于切换状态，则允许灾难恢复站点上的根聚合脱机。
 
@@ -75,7 +85,12 @@ aggr0_b2
                                                                    degraded
 2 entries were displayed.
 ----
-. 验证卷的状态： `volume show -state !online`
+. 验证卷的状态：
++
+[source, cli]
+----
+volume show -state !online
+----
 +
 此命令将显示所有处于 _not_ 联机状态的卷。
 
@@ -102,7 +117,12 @@ vs2-mc    vol3         aggr1_b1     -          RW            -          -     -
 vs2-mc    vol4         aggr1_b1     -          RW            -          -     -
 5 entries were displayed.
 ----
-. 验证是否没有不一致的卷： `volume show -is-inconsistent true`
+. 验证是否没有不一致的卷：
++
+[source, cli]
+----
+volume show -is-inconsistent true
+----
 +
 请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Volume_Showing_WAFL_Inconsistent["卷显示WAFL 不一致"] 有关如何处理不一致的卷的信息。
 

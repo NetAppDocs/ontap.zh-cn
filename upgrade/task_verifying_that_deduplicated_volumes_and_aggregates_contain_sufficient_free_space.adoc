@@ -11,12 +11,23 @@ summary: 在升级 ONTAP 之前，您必须验证任何已进行重复数据删�
 
 
 [role="lead"]
-在升级 ONTAP 之前，您必须验证任何已进行重复数据删除的卷及其所在的聚合是否具有足够的可用空间来容纳重复数据删除元数据。如果可用空间不足，则在 ONTAP 升级完成后将禁用重复数据删除。
+在升级ONTAP之前、您必须验证任何经过重复数据删除的卷及其所在聚合是否具有足够的可用空间来容纳重复数据删除元数据。如果可用空间不足，则在 ONTAP 升级完成后将禁用重复数据删除。
 
 每个经过重复数据删除的卷必须至少包含 4% 的可用空间。包含经过重复数据删除的卷的每个聚合必须至少包含 3% 的可用空间。
 
-. 确定哪些卷已进行重复数据删除： `volume efficiency show`
-. 确定您确定的每个卷上的可用空间： `vol show -vserver Vserver_name -volume volume_name -fields volume, size, used, available, percent-used, junction-path`
+.步骤
+. 确定哪些卷已进行重复数据删除：
++
+[source, cli]
+----
+volume efficiency show
+----
+. 确定您确定的每个卷上的可用空间：
++
+[source, cli]
+----
+vol show -vserver Vserver_name -volume volume_name -fields volume, size, used, available, percent-used, junction-path
+----
 +
 每个经过重复数据删除的卷的已用容量不得超过 96% 。如有必要，您可以增加超过此容量的任何卷的大小。
 
@@ -35,7 +46,12 @@ cluster1-01 vol0   22.99GB -             14.11GB      7.73GB 35%
 cluster1-02 vol0   22.99GB -             12.97GB      8.87GB    40%
 2 entries were displayed.
 ----
-. 确定包含经过重复数据删除的卷的每个聚合上的可用空间： `aggr show -aggregate aggregate_name -fields aggregate, size, usedsize, availsize, percent-used`
+. 确定包含经过重复数据删除的卷的每个聚合上的可用空间：
++
+[source, cli]
+----
+aggr show -aggregate aggregate_name -fields aggregate, size, usedsize, availsize, percent-used
+----
 +
 每个聚合的已用容量不得超过 97% 。如有必要，您可以增加超过此容量的任何聚合的大小。
 

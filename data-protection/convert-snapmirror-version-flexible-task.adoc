@@ -11,10 +11,9 @@ summary: 您可以轻松地将现有 DP 类型关系转换为 XDP ，以利用�
 
 
 [role="lead"]
-您可以轻松地将现有 DP 类型关系转换为 XDP ，以利用版本灵活的 SnapMirror 。
+如果要升级到ONTAP 9.12.1或更高版本、则必须在升级之前将DP类型关系转换为XDP。ONTAP 9.12.1及更高版本不支持DP类型关系。您可以轻松地将现有 DP 类型关系转换为 XDP ，以利用版本灵活的 SnapMirror 。
 
 .关于此任务
-* 如果要升级到ONTAP 9.12.1或更高版本、则必须在升级之前将DP类型关系转换为XDP。ONTAP 9.12.1及更高版本不支持DP类型关系。
 * SnapMirror 不会自动将现有的 DP 类型关系转换为 XDP 。要转换此关系，您需要中断并删除现有关系，创建新的 XDP 关系并重新同步此关系。有关背景信息，请参见 link:version-flexible-snapmirror-default-concept.html["XDP 取代 DP 作为 SnapMirror 默认设置"]。
 * 在规划转换时，您应了解 XDP SnapMirror 关系的后台准备和数据仓库阶段可能需要很长时间。在较长的一段时间内， SnapMirror 关系报告状态 " 正在准备 " 的情况并不少见。
 
@@ -27,8 +26,10 @@ summary: 您可以轻松地将现有 DP 类型关系转换为 XDP ，以利用�
 .步骤
 . 在目标集群中、确保SnapMirror关系类型为DP、镜像状态为SnapMirrored、关系状态为Idle且关系运行状况良好：
 +
-`snapmirror show -destination-path _SVM:volume_|_cluster://SVM/volume_`
-
+[source, cli]
+----
+snapmirror show -destination-path _SVM:volume_|_cluster://SVM/volume_
+----
 +
 以下示例显示了的输出 `snapmirror show` 命令：
 
@@ -63,8 +64,10 @@ Healthy: true
 ====
 . 在源卷和目标卷中、确保两个卷都具有通用Snapshot副本：
 +
-`volume snapshot show -vserver _SVM_ -volume _volume_`
-
+[source, cli]
+----
+volume snapshot show -vserver _SVM_ -volume _volume_
+----
 +
 以下示例显示了 `volume snapshot show` 源卷和目标卷的输出：
 
@@ -110,10 +113,12 @@ snapmirror.10af643c-32d1-11e3-954b-123478563412_2147484682.2014-06-27_100026
 ----
 . 要确保计划的更新不会在转换期间运行、请暂停现有的DP类型关系：
 +
-`snapmirror quiesce -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
-
+[source, cli]
+----
+snapmirror quiesce -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...
+----
 +
-有关完整的命令语法，请参见手册页。
+有关完整的命令语法，请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131//snapmirror-quiesce.html["手册页"^]。
 
 +
 [NOTE]
@@ -131,10 +136,12 @@ cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
 . 中断现有的 DP 类型关系：
 +
-`snapmirror break -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
-
+[source, cli]
+----
+snapmirror break -destination-path _SVM:volume_|_cluster://SVM/volume_, ...
+----
 +
-有关完整的命令语法，请参见手册页。
+有关完整的命令语法，请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131//snapmirror-break.html["手册页"^]。
 
 +
 [NOTE]
@@ -164,10 +171,12 @@ cluster_dst::> volume snapshot autodelete modify -vserver svm_backup -volume vol
 ----
 . 删除现有 DP 类型关系：
 +
-`snapmirror delete -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
-
+[source, cli]
+----
+snapmirror delete -destination-path _SVM:volume_|_cluster://SVM/volume_, ...
+----
 +
-有关完整的命令语法，请参见手册页。
+有关完整的命令语法，请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131//snapmirror-delete.html["手册页"^]。
 
 +
 [NOTE]
@@ -185,8 +194,10 @@ cluster_dst::> snapmirror delete -destination-path svm_backup:volA_dst
 ----
 . 您可以使用中保留的输出 `snapmirror show` 用于创建新XDP类型关系的命令：
 +
-`snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ... -type XDP -schedule _schedule_ -policy _policy_`
-
+[source, cli]
+----
+snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ... -type XDP -schedule _schedule_ -policy _policy_
+----
 +
 新关系必须使用相同的源卷和目标卷。有关完整的命令语法，请参见手册页。
 
@@ -207,10 +218,12 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 ----
 . 重新同步源卷和目标卷：
 +
-`snapmirror resync -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...`
-
+[source, cli]
+----
+snapmirror resync -source-path _SVM:volume_|_cluster://SVM/volume_, ... -destination-path _SVM:volume_|_cluster://SVM/volume_, ...
+----
 +
-要缩短重新同步时间、您可以使用 `-quick-resync` 选项、但您应注意、存储效率节省可能会丢失。有关完整的命令语法、请参见手册页： link:https://docs.netapp.com/us-en/ontap-cli-9131/snapmirror-resync.html#parameters.html["snapmirror resync命令"]。
+要缩短重新同步时间、您可以使用 `-quick-resync` 选项、但您应注意、存储效率节省可能会丢失。有关完整的命令语法、请参见手册页： link:https://docs.netapp.com/us-en/ontap-cli-9131/snapmirror-resync.html#parameters.html["snapmirror resync命令"^]。
 
 +
 [NOTE]
@@ -228,11 +241,13 @@ cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_ba
 ----
 . 如果您禁用了Snapshot副本自动删除、请重新启用它：
 +
-`volume snapshot autodelete modify -vserver _SVM_ -volume _volume_ -enabled true`
-
+[source, cli]
+----
+volume snapshot autodelete modify -vserver _SVM_ -volume _volume_ -enabled true
+----
 
 
 .完成后
-. 使用 `snapmirror show` 命令以验证是否已创建SnapMirror关系。有关完整的命令语法，请参见手册页。
-. 一旦SnapMirror XDP目标卷开始按照SnapMirror策略的定义更新Snapshot副本、您就可以使用的输出 `snapmirror list-destinations` 命令以显示新的SnapMirror XDP关系。
+. 使用 `snapmirror show` 命令以验证是否已创建SnapMirror关系。
+. 一旦SnapMirror XDP目标卷开始按照SnapMirror策略的定义更新Snapshot副本、请使用的输出 `snapmirror list-destinations` 命令以显示新的SnapMirror XDP关系。
 

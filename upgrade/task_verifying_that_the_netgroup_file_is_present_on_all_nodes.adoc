@@ -4,25 +4,47 @@ sidebar: sidebar
 keywords: ontap, upgrade, verifying, verify, netgroup file, present, nodes 
 summary: 如果已将网络组加载到 Storage Virtual Machine \ （ SVM\ ）中，则在升级或还原之前，必须验证每个节点上是否存在网络组文件。如果节点上缺少网络组文件，则发生原因升级或还原可能会失败。 
 ---
-= 验证所有节点上是否存在网络组文件
+= 在ONTAP升级或还原之前、验证所有节点上是否存在网络组文件
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果已将网络组加载到 Storage Virtual Machine （ SVM ）中，则在升级或还原之前，必须验证每个节点上是否存在网络组文件。如果节点上缺少网络组文件，则发生原因升级或还原可能会失败。
+在升级或还原ONTAP之前、如果已将网络组加载到Storage Virtual Machine (SVM)中、则必须验证每个节点上是否存在网络组文件。如果节点上缺少网络组文件，则发生原因升级或还原可能会失败。
 
-link:../nfs-admin/index.html["NFS 管理"] 包含有关网络组以及从 URI 加载它们的详细信息。
-
-. 将权限级别设置为高级： `set -privilege advanced`
-. 显示每个SVM的网络组状态： `vserver services netgroup status`
-. 验证对于每个SVM、每个节点是否显示相同的网络组文件哈希值： `vserver services name-service netgroup status`
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 显示每个SVM的网络组状态：
++
+[source, cli]
+----
+vserver services netgroup status
+----
+. 验证对于每个SVM、每个节点是否显示相同的网络组文件哈希值：
++
+[source, cli]
+----
+vserver services name-service netgroup status
+----
 +
 如果是这种情况，您可以跳过下一步，继续升级或还原。否则，请继续执行下一步。
 
-. 在集群的任一节点上、手动加载网络组文件： `vserver services netgroup load -vserver vserver_name -source uri`
+. 在集群的任一节点上、手动加载网络组文件：
++
+[source, cli]
+----
+vserver services netgroup load -vserver vserver_name -source uri
+----
 +
 此命令将下载所有节点上的网络组文件。如果节点上已存在网络组文件，则该文件将被覆盖。
 
 
+
+.相关信息
+link:../nfs-config/work-netgroups-task.html["使用网络组"]

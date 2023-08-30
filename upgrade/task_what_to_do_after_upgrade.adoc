@@ -4,11 +4,29 @@ sidebar: sidebar
 keywords: ontap, upgrade, plan, planning, upgrade, how, post-checks 
 summary: 升级 ONTAP 软件后，您应执行多项任务来验证集群是否就绪。 
 ---
-= 升级后要执行的操作
+= ONTAP升级后要执行的操作
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-升级 ONTAP 软件后，您应执行多项任务来验证集群是否就绪。
+升级ONTAP后、您应执行几项任务来验证集群是否就绪。
+
+. link:task_verify_cluster_after_upgrade.html["验证集群"]。
++
+升级ONTAP后、您应验证集群版本、集群运行状况和存储运行状况。如果您使用的是 MetroCluster FC 配置，则还需要验证集群是否已启用自动计划外切换。
+
+. link:task_enabling_and_reverting_lifs_to_home_ports_post_upgrade.html["验证所有的SIFs是否都位于主端口上"]。
++
+在重新启动期间，某些 LIF 可能已迁移到其分配的故障转移端口。升级集群后，您必须启用并还原不在其主端口上的任何 LIF 。
+
+. 验证 link:concept_special_configurations_post_checks.html["特殊注意事项"] 特定于您的集群。
++
+如果集群上存在某些配置、您可能需要在升级后执行其他步骤。
+
+. link:concept_when_you_need_to_update_the_disk_qualification_package.html["更新磁盘认证包(DQP)"]。
++
+在 ONTAP 升级过程中，不会更新 DQP 。
+
+

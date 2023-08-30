@@ -4,21 +4,58 @@ sidebar: sidebar
 keywords: ontap, upgrade, snapmirror, operations, quisce 
 summary: 建议在执行无中断 ONTAP 升级之前暂停 SnapMirror 操作。 
 ---
-= 准备 SnapMirror 关系以实现无中断升级
+= 准备SnapMirror关系以进行ONTAP升级
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-建议在执行无中断 ONTAP 升级之前暂停 SnapMirror 操作。
+在运行SnapMirror的集群上升级ONTAP之前、必须先对包含目标卷的每个节点静音SnapMirror操作、并且每个对等SVM在集群中都必须具有唯一的名称。最佳做法是、为每个SVM使用唯一的完全限定域名(FQDN)、例如、"n ü`dataVerser.HQ`"或"n `mirrorVserver.Offsite`"。
 
+此外、还应注意、如果要升级具有DP SnapMirror关系的集群、则必须先升级目标节点、然后再升级源节点。
+
+
+
+== 在升级ONTAP之前、请将SnapMirror操作置于静修状态
+
+要防止SnapMirror传输失败、必须将SnapMirror操作静用。或者、您也可以先在特定目标卷上静音SnapMirror传输、并升级所属目标节点、然后再升级源节点、以便所有其他目标卷的SnapMirror传输可以继续进行。下表介绍了暂停 SnapMirror 操作的两个选项。
+
+[cols="3*"]
+|===
+| 选项 | Description | 是否先升级目标节点，再升级源节点？ 
+
+
+ a| 
+在 NDU 期间暂停 SnapMirror 操作（无中断升级）。
+ a| 
+在 SnapMirror 环境中，最简单的升级方法是暂停所有 SnapMirror 操作，执行升级，然后恢复 SnapMirror 操作。但是，在整个 NDU 期间不会发生任何 SnapMirror 传输。如果集群中的节点彼此镜像卷，则必须使用此方法。
+ a| 
+不可以，可以按任意顺序升级节点。
+
+
+
+ a| 
+一次暂停一个目标卷的 SnapMirror 操作。
+ a| 
+您可以暂停特定目标卷的 SnapMirror 传输，升级包含目标卷的节点（或 HA 对），升级包含源卷的节点（或 HA 对），然后恢复目标卷的 SnapMirror 传输。通过使用此方法，可以在升级包含原始目标卷和源卷的节点时继续所有其他目标卷的 SnapMirror 传输。
+ a| 
+是的。
+
+|===
 .步骤
-. 使用 `snapmirror show` 用于确定每个SnapMirror关系的目标路径的命令。
+. 确定每个SnapMirror关系的目标路径：
++
+[source, cli]
+----
+snapmirror show
+----
 . 对于每个目标卷、暂停未来的SnapMirror传输：
 +
-`snapmirror quiesce -destination-path destination`
-
+[source, cli]
+----
+snapmirror quiesce -destination-path destination
+----
 +
 如果SnapMirror关系没有活动传输、则此命令会将其状态设置为"已暂停"。如果此关系具有活动传输、则状态将设置为"正在暂停"、直到传输完成、然后状态将变为"已暂停"。
 
@@ -71,6 +108,3 @@ There are no entries matching your query.
 
 |===
 
-
-.相关信息
-xref:concept_upgrade_requirements_for_snapmirror.adoc[SnapMirror 的升级要求]

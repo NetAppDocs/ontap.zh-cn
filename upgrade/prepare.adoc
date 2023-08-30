@@ -1,0 +1,43 @@
+---
+permalink: upgrade/prepare.html 
+sidebar: sidebar 
+keywords: upgrade, ontap, prepare, preparation, before you upgrade, plan, upgrade overview, upgrade summary 
+summary: 准备ONTAP软件升级 
+---
+= 准备ONTAP升级
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+正确准备ONTAP升级有助于您在开始升级过程之前识别和缓解潜在的升级风险或阻止因素。在升级准备期间、您还可以确定在升级之前可能需要考虑的任何特殊注意事项。例如、如果集群上启用了SSL FIPS模式、而管理员帐户使用SSH公共密钥进行身份验证、则您需要验证目标ONTAP版本是否支持此主机密钥算法。
+
+您应执行以下操作以准备升级：
+
+. link:choose-target-version.html["选择目标ONTAP版本"]。
+. 查看 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 发行说明》"^] 目标版本。
++
+"升级注意事项"一节介绍了在升级到新版本之前应注意的潜在问题。"新增功能"和"已知问题和限制"部分介绍了升级到新版本后的新系统行为。
+
+. link:confirm-configuration.html["确认您的硬件配置是否支持ONTAP"]。
++
+您的硬件平台、集群管理交换机和MetroCluster IP交换机必须支持目标版本。  如果您的集群针对SAN进行了配置、则必须完全支持SAN配置。
+
+. link:task_check_for_common_configuration_errors_using_config_advisor.html["使用Active IQ Config Advisor验证是否没有常见配置错误。"]
+. 查看支持的ONTAP link:concept_upgrade_paths.html#supported-upgrade-paths-for-on-premises-ontap-and-ontap-select["升级路径"] 确定您是否可以执行直接升级、或者是否需要分阶段完成升级。
+. link:create-upgrade-plan.html["创建升级计划"]。
++
+如果您拥有的有效SupportEdge合同 link:https://aiq.netapp.com/["Active IQ Digital Advisor"^]，请使用Upgrade Advisor规划升级。  如果您无权访问Active IQ数字顾问、请创建您自己的升级计划。
+
+. link:task_verifying_the_lif_failover_configuration.html["验证LIF故障转移配置"]。
++
+在执行升级之前、您需要验证是否已正确配置集群的故障转移策略和故障转移组。
+
+. link:concept_verify_svm_routing.html["验证SVM路由配置"]。
+. link:special-considerations.html["验证特殊注意事项"] 。
++
+如果集群上存在某些配置、则在开始ONTAP软件升级之前、需要执行一些特定操作。
+
+. link:concept_how_firmware_is_updated_during_upgrade.html["重新启动SP或BMC"]。
+

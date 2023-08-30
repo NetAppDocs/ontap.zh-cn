@@ -21,10 +21,8 @@ summary: 您可以无中断地更新集群上的 ONTAP 版本。
 [role="lead"]
 您可以使用命令行界面（ CLI ）验证集群是否可以无中断升级，在每个节点上安装目标 ONTAP 映像，然后在后台执行升级。
 
-升级后，您应验证集群版本，集群运行状况和存储运行状况。
 
-
-NOTE: 如果您使用的是 MetroCluster FC 配置，则还需要验证集群是否已启用自动计划外切换。
+NOTE: 如果要在MetroCluster FC配置中升级ONTAP、则还需要验证集群是否已启用自动计划外切换。
 
 如果您不打算监控升级过程的进度，则最好这样做 link:task_requesting_notification_of_issues_encountered_in_nondisruptive_upgrades.html["请求可能需要手动干预的错误的 EMS 通知"]。
 
@@ -74,7 +72,7 @@ Package download completed.
 Package processing completed.
 ----
 +
-如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，下载升级所需的ONTAP中间版本的软件包，然后使用同一命令下载目标ONTAP版本的软件包。  例如、如果要从9.8升级到9.13.1、则应下载适用于ONTAP 9.12.1的软件包、然后使用同一命令下载适用于9.13.1的软件包。
+如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，您还需要下载升级所需的ONTAP中间版本的软件包。例如、如果要从9.8升级到9.13.1、则需要下载适用于ONTAP 9.12.1的软件包、然后使用同一命令下载适用于9.13.1.的软件包。
 
 . 验证集群软件包存储库中是否存在软件包：
 +
@@ -97,7 +95,7 @@ Package Version  Package Build Time
 cluster image validate -version package_version_number
 ----
 +
-** 如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，使用目标ONATP软件包进行验证。  您无需单独验证中间升级映像。  例如、如果要从9.8升级到9.13.1、则应使用9.13.1软件包进行验证。您不需要单独验证9.12.1软件包。
+** 如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，使用目标ONTAP软件包进行验证。  您无需单独验证中间升级映像。  例如、如果要从9.8升级到9.13.1、则应使用9.13.1软件包进行验证。您不需要单独验证9.12.1软件包。
 ** 如果要升级双节点或四节点 MetroCluster 配置，则必须在两个集群上运行此命令，然后才能继续。
 +
 [listing]
@@ -256,6 +254,9 @@ cluster image show-update-progress
 cluster image resume-update
 ----
 
+
+.完成后
+link:task_what_to_do_after_upgrade.html["执行升级后检查"]。
 
 .相关信息
 * https://aiq.netapp.com/["启动 Active IQ"]
