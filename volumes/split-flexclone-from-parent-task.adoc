@@ -2,7 +2,7 @@
 permalink: volumes/split-flexclone-from-parent-task.html 
 sidebar: sidebar 
 keywords: split, flexclone, volume, parent, volume, clone 
-summary: 如果您希望读/写FlexClone卷具有自己的磁盘空间、而不是使用其父卷的磁盘空间、则可以将FlexClone卷从其父卷中拆分出来。 
+summary: 您可以将FlexClone卷从其父卷中拆分出来、使克隆成为普通FlexVol卷。 
 ---
 = 将 FlexClone 卷从其父卷拆分
 :allow-uri-read: 
@@ -11,17 +11,30 @@ summary: 如果您希望读/写FlexClone卷具有自己的磁盘空间、而不�
 
 
 [role="lead"]
-如果您希望读/写FlexClone卷具有自己的磁盘空间、而不是使用其父卷的磁盘空间、则可以将FlexClone卷从其父卷中拆分出来。
+您可以将FlexClone卷从其父卷中拆分出来、使克隆成为普通FlexVol卷。
+
+克隆拆分操作在后台进行。拆分期间、可以访问克隆和父级上的数据。从ONTAP 9.4开始、可保留空间效率。拆分过程仅更新元数据、并且所需的IO极少。不会复制任何数据块。
 
 .关于此任务
-将FlexClone卷与其父卷拆分可能会导致在所属聚合上预留更多空间。如果您没有足够的权限来查看聚合中的可用空间，则必须与存储管理员联系，确认聚合中有足够的空间来完成拆分操作。
+* 在拆分操作期间、无法创建FlexClone卷的新Snapshot副本。
+* 如果FlexClone卷属于数据保护关系或属于负载共享镜像、则不能将其从父卷中拆分。
+* 如果在拆分过程中将FlexClone卷脱机、则拆分操作将暂停；将FlexClone卷恢复联机后、拆分操作将恢复。
+* 拆分后、父FlexVol卷和克隆都需要分配由其卷保证确定的完整空间。
+* 从父卷拆分FlexClone卷后、这两个卷将无法重新加入。
+* 从 ONTAP 9.4 开始，对于 AFF 系统上的非保证卷， FlexClone 卷的拆分操作会共享物理块，而不会复制数据。因此、在ONTAP 9.4及更高版本中、在AFF系统上拆分FlexClone卷比在其他FAS系统上拆分FlexClone卷更快。在 AFF 系统上改进的 FlexClone 拆分操作具有以下优势：
++
+** 从父级拆分克隆后，存储效率会保留下来。
+** 不会删除现有 Snapshot 副本。
+** 操作速度更快。
+** FlexClone 卷可以从克隆层次结构中的任意位置拆分。
 
-从 ONTAP 9.4 开始，对于 AFF 系统上的非保证卷， FlexClone 卷的拆分操作会共享物理块，而不会复制数据。因此、在ONTAP 9.4及更高版本中、在AFF系统上拆分FlexClone卷比在其他FAS系统上拆分FlexClone卷更快。在 AFF 系统上改进的 FlexClone 拆分操作具有以下优势：
 
-* 从父级拆分克隆后，存储效率会保留下来。
-* 不会删除现有 Snapshot 副本。
-* 操作速度更快。
-* FlexClone 卷可以从克隆层次结构中的任意位置拆分。
+
+
+.开始之前
+* 您必须是集群管理员。
+* 拆分操作开始时、FlexClone卷必须处于联机状态。
+* 要成功拆分父卷、此父卷必须联机。
 
 
 .步骤
