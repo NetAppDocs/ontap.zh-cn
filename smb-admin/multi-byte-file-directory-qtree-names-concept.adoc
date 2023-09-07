@@ -15,16 +15,20 @@ summary: 从 ONTAP 9.5 开始，通过支持 4 字节 UTF-8 编码名称，可�
 
 为了支持4字节UTF-8编码名称、为提供了一个新的_utf8mb4_语言代码 `vserver` 和 `volume` 命令系列。
 
-* 您必须通过以下方式之一创建新卷：
+您必须通过以下方式之一创建新卷：
+
 * 设置音量 `-language` 显式选项： `volume create -language utf8mb4 {…}`
 * 继承卷 `-language` 使用选项创建或修改的SVM中的选项： `vserver [create|modify] -language utf8mb4 {…}``volume create {…}`
-* 在ONTAP 9.6之前的版本中、您不能修改现有卷以支持utf8mb4；您必须创建一个新的utf8mb4就绪卷、然后使用基于客户端的复制工具迁移数据。
+* 在ONTAP 9.6及更早版本中、您不能修改现有卷以支持utf8mb4；您必须创建一个新的utf8mb4就绪卷、然后使用基于客户端的复制工具迁移数据。
 +
 您可以更新 SVM 以获得 utf8mb4 支持，但现有卷会保留其原始语言代码。
 
 +
 如果您使用的是ONTAP 9.7P1或更高版本、则可以根据支持请求修改utf8mb4的现有卷。有关详细信息，请参见 link:https://kb.netapp.com/onprem/ontap/da/NAS/Can_the_volume_language_be_changed_after_creation_in_ONTAP["在ONTAP中创建卷后是否可以更改卷语言？"^]。
 
+
+
+* 从ONTAP 9.8开始、您可以使用 `[-language <Language code>]` 用于将卷语言从*。UTF-8更改为utf8mb4的参数。要更改卷的语言、请联系 link:http://mysupport.netapp.com/["NetApp 支持"^]。
 
 
 

@@ -21,20 +21,16 @@ FlexVol 卷可以包含的文件数量上限。了解卷包含的文件数有助
 .步骤
 . 要显示卷的索引节点使用情况，请输入以下命令：
 +
-`df -i volume_name`
-
-+
-您可以省略卷名称；在这种情况下， ONTAP 将显示集群中所有卷的索引节点使用量。您还可以指定 Storage Virtual Machine （ SVM ），以便仅查看该 SVM 上的卷。
-
+[source, cli]
+----
+volume show -vserver <SVM_name> -volume <volume_name> -fields files
+----
 
 
 .示例
 [listing]
 ----
-cm320c-rst::> df -i -vserver vs1
-Filesystem               iused      ifree  %iused  Mounted on
-/vol/cifs_test/            105       2928      3%  /home
-/vol/root/                  98        468     17%  ---
-/vol/vola/                 103      12047      0%  /nfsv4
-3 entries were displayed.
+cluster1::*> volume show -vserver vs1 -volume vol1 -fields files
+Vserver Name: vs1
+Files Used (for user-visible data): 98
 ----
