@@ -20,10 +20,7 @@ summary: 您应熟悉有关使用 FabricPool 的一些注意事项和要求。
 * 要使用 FabricPool ，必须至少运行 ONTAP 9.2 。
 * 您必须运行 ONTAP 9.4 或更高版本才能使用以下 FabricPool 功能：
 +
-** 。 `auto` 层策略
-+
-link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricPool 分层策略的类型"]
-
+** 。 `auto` link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["层策略"]
 ** 指定分层最小冷却期
 ** 非活动数据报告(IDR)
 ** 使用适用于云的 Microsoft Azure Blob Storage 作为 FabricPool 的云层
@@ -131,7 +128,7 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
 
 * 您计划使用的对象存储 "`bucket` " （容器）必须已设置，必须至少具有 10 GB 的存储空间，并且不能重命名。
 * 使用 FabricPool 的 HA 对需要集群间 LIF 与对象存储进行通信。
-* 连接对象存储分段后，您无法将其与 FabricPool 配置断开。
+* 在附加云层后、您无法将其从本地层中分离；但是、您可以使用 link:https://docs.netapp.com/us-en/ontap/fabricpool/create-mirror-task.html["FabricPool镜像"] 将本地层附加到其他云层。
 * 如果使用吞吐量下限(QoS最小值)、则必须将卷上的分层策略设置为 `none` 才能将聚合附加到FabricPool。
 +
 其他分层策略会阻止将聚合附加到 FabricPool 。启用FabricPool后、QoS策略不会强制实施吞吐量下限。
