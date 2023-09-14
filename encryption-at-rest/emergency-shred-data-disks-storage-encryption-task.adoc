@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: sanitize, fips, drive, sed, psid, physical secure ID, nrd plus, emergency 
 summary: 在发生安全紧急情况时，您可以立即阻止访问 FIPS 驱动器或 SED ，即使存储系统或 KMIP 服务器没有电源也是如此。 
 ---
-= 对 FIPS 驱动器或 SED 上的数据进行紧急粉碎
+= 紧急粉碎FIPS驱动器或SED上的数据
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,7 +13,7 @@ summary: 在发生安全紧急情况时，您可以立即阻止访问 FIPS 驱�
 [role="lead"]
 在发生安全紧急情况时，您可以立即阻止访问 FIPS 驱动器或 SED ，即使存储系统或 KMIP 服务器没有电源也是如此。
 
-.您需要的内容
+.开始之前
 * 如果您使用的 KMIP 服务器没有电源，则必须为 KMIP 服务器配置一个易于销毁的身份验证项（例如，智能卡或 USB 驱动器）。
 * 您必须是集群管理员才能执行此任务。
 
@@ -51,11 +51,9 @@ summary: 在发生安全紧急情况时，您可以立即阻止访问 FIPS 驱�
 
 
 +
-[NOTE]
-====
-。 `disk encrypt sanitize` 和 `disk encrypt destroy` 命令仅保留用于维护模式。这些命令必须在每个 HA 节点上运行，并且不适用于损坏的磁盘。
 
-====
+NOTE: 。 `disk encrypt sanitize` 和 `disk encrypt destroy` 命令仅保留用于维护模式。这些命令必须在每个 HA 节点上运行，并且不适用于损坏的磁盘。
+
 .. 对配对节点重复上述步骤。
 这会使存储系统处于永久禁用状态，并擦除所有数据。要再次使用系统，必须重新配置它。
 

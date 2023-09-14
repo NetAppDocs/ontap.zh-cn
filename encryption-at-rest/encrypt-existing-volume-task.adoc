@@ -24,11 +24,9 @@ summary: 您可以使用以下两种方法之一在现有卷上启用加密：�
 
 启动转换操作后、必须完成该操作。如果您在操作期间遇到性能问题描述、则可以运行 `volume encryption conversion pause` 命令以暂停操作、以及 `volume encryption conversion resume` 命令以恢复操作。
 
-[NOTE]
-====
-您无法使用 `volume encryption conversion start` 转换SnapLock卷。
 
-====
+NOTE: 您不能使用 `volume encryption conversion start` 转换SnapLock卷。
+
 .步骤
 . 在现有卷上启用加密：
 +
@@ -97,16 +95,16 @@ vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
 
 您可以使用 `volume move start` 命令以通过移动现有卷启用加密。您必须使用 `volume move start` 在ONTAP 9.2及更早版本中。您可以使用同一个聚合或不同的聚合。
 
-.您需要的内容
-要执行此任务，您必须是集群管理员，或者集群管理员已向其委派权限的 SVM 管理员。
-
-link:delegate-volume-encryption-svm-administrator-task.html["委派权限以运行 volume move 命令"]
-
 .关于此任务
 * 从ONTAP 9.8开始、您可以使用 `volume move start` 在SnapLock或FlexGroup卷上启用加密。
 * 从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要移动的卷所在的聚合分配密钥。使用唯一密钥加密的卷称为 _NVE volume_ 。使用聚合级别密钥加密的卷称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
 * 从ONTAP 9.4开始、如果在设置板载密钥管理器时启用"`cc-mode`"、则会显示使用创建的卷 `volume move start` 命令会自动加密。您无需指定 `-encrypt-destination true`。
 
+
+.开始之前
+要执行此任务，您必须是集群管理员，或者集群管理员已向其委派权限的 SVM 管理员。
+
+link:delegate-volume-encryption-svm-administrator-task.html["委派权限以运行 volume move 命令"]
 
 .步骤
 . 移动现有卷并指定是否在卷上启用加密：

@@ -13,18 +13,15 @@ summary: 您可以使用 volume delete 命令删除加密的卷。
 [role="lead"]
 您可以使用 `volume delete` 命令以删除加密卷。
 
-.您需要的内容
-* 要执行此任务，您必须是集群管理员，或者集群管理员已向其委派权限的 SVM 管理员。
-+
-link:delegate-volume-encryption-svm-administrator-task.html["委派权限以运行 volume move 命令"]
-
+.开始之前
+* 您必须是集群管理员才能执行此任务。或者、您也可以是集群管理员已向其委派权限的SVM管理员。有关详细信息，请参见 link:delegate-volume-encryption-svm-administrator-task.html["委派运行卷移动命令的权限"]。
 * 卷必须处于脱机状态。
 
 
 .步骤
 . 删除加密卷：
 +
-`volume delete -vserver SVM_name -volume volume_name`
+`volume delete -vserver _SVM_name_ -volume _volume_name_`
 
 +
 有关完整的命令语法，请参见命令手册页。
@@ -51,6 +48,6 @@ cluster1::> volume delete -vserver vs1 -volume vol1
 .完成后
 您可以使用 `volume recovery-queue` 命令以在发出后的保留期限内恢复已删除的卷 `volume delete` 命令：
 
-`volume recovery-queue SVM_name -volume volume_name`
+`volume recovery-queue _SVM_name_ -volume _volume_name_`
 
 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_use_the_Volume_Recovery_Queue["如何使用卷恢复功能"]

@@ -11,63 +11,62 @@ summary: 从ONTAP 9.8开始、支持使用NFSv4.2协议来访问启用了NFSv4.2
 
 
 [role="lead"]
-从ONTAP 9.8开始、支持使用NFSv4.2协议来访问启用了NFSv4.2的客户端。
+从ONTAP 9.8开始、ONTAP支持NFSv4.2协议、以允许已启用NFSv4.2的客户端访问。
 
-在ONTAP 9.9.1及更高版本中、默认情况下会启用NFSv4.2。在ONTAP 9.8中、您可以通过指定来启用v4.2 `-v4.1` 选项并将其设置为 `enabled` 在Storage Virtual Machine (SVM)上创建NFS服务器时。启用 NFSv4.1 还可以使客户端在挂载为 v4.2 时使用 NFSv4.1 功能。
+在ONTAP 9.9.1及更高版本中、默认情况下会启用NFSv4.2。在ONTAP 9.8中、需要通过指定手动启用v4.2 `-v4.1` 选项并将其设置为 `enabled` 在Storage Virtual Machine (SVM)上创建NFS服务器时。启用 NFSv4.1 还可以使客户端在挂载为 v4.2 时使用 NFSv4.1 功能。
 
-支持以下 NFSv4.2 可选功能：
+连续几个ONTAP版本都扩展了对NFSv4.2可选功能的支持。
 
 [cols="2*"]
 |===
-| 功能 | 支持的起始位置为... 
+| 开头为 ... | NFSv4.2的可选功能包括... 
 
 
- a| 
-标记为NFS的强制访问控制(MAC)
- a| 
-ONTAP 9.9.1
+| ONTAP 9.12.1  a| 
+* NFS扩展属性
+* 稀疏文件
+* 空间预留
 
 
 
- a| 
-NFS扩展属性
- a| 
-ONTAP 9.12.1
 
+| ONTAP 9.9.1 | 标记为NFS的强制访问控制(MAC) 
 |===
-在更高版本的 ONTAP 中，将添加其他 NFSv4.2 可选功能。
 
 
-
-== 启用 NFS v4.2 安全标签
+== NFS v4.2安全标签
 
 从 ONTAP 9.1.1 开始，可以启用 NFS 安全标签。默认情况下，它们处于禁用状态。
 
 对于 NFS v4.2 安全标签， ONTAP NFS 服务器可识别强制访问控制（ MAC ），存储和检索客户端发送的 sec_label 属性。
 
-有关详细信息，请参见 link:https://tools.ietf.org/html/rfc7204["RFC 7240"^]
+有关详细信息，请参见 link:https://tools.ietf.org/html/rfc7204["RFC 7240"^]。
 
 从ONTAP 9.12.1开始、NDMP转储操作支持NFS v4.2安全标签。如果在早期版本中的文件或目录上遇到安全标签、则转储将失败。
 
 .步骤
 . 将权限设置更改为高级：
 +
-``set -privilege advanced``
-
+[source, cli]
+----
+set -privilege advanced
+----
 . 启用安全标签：
 +
-``vserver nfs modify -vserver _svm_name_ -v4.2-seclabel enabled``
+[source, cli]
+----
+vserver nfs modify -vserver _svm_name_ -v4.2-seclabel enabled
+----
 
 
 
 
-
-== 启用NFS扩展属性
+== NFS扩展属性
 
 从ONTAP 9.12.1开始、默认情况下会启用NFS扩展属性(xattrs)。
 
-扩展属性是定义的标准NFS属性 https://tools.ietf.org/html/rfc8276["RFC 8276"^] 并在现代NFS客户端中启用。它们可用于将用户定义的元数据附加到文件系统对象、并且在高级安全部署中很有用。
+扩展属性是定义的标准NFS属性 https://tools.ietf.org/html/rfc8276["RFC 8276"^] 并在现代NFS客户端中启用。它们可用于将用户定义的元数据附加到文件系统对象、并且对高级安全部署很有兴趣。
 
 NDMP转储操作当前不支持NFS扩展属性。如果文件或目录遇到扩展属性、转储将继续进行、但不会备份这些文件或目录上的扩展属性。
 
-如果需要禁用扩展属性、请使用 ``vserver nfs modify -v4.2-xattrs disabled`` 命令：
+如果需要禁用扩展属性、请使用 `vserver nfs modify -v4.2-xattrs disabled` 命令：

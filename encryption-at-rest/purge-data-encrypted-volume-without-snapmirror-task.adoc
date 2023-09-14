@@ -13,19 +13,17 @@ summary: '从 ONTAP 9.4 开始，您可以使用安全清除功能在启用了 N
 [role="lead"]
 从 ONTAP 9.4 开始，您可以使用安全清除功能在启用了 NVE 的卷上无中断地生成 " `scrub` " 数据。
 
-.您需要的内容
+.关于此任务
+完成安全清除可能需要几分钟到数小时，具体取决于已删除文件中的数据量。您可以使用 `volume encryption secure-purge show` 命令以查看操作状态。您可以使用 `volume encryption secure-purge abort` 命令以终止操作。
+
+
+NOTE: 要在 SAN 主机上执行安全清除，您必须删除包含要清除的文件的整个 LUN ，或者您必须能够在 LUN 中为属于要清除的文件的块打孔。如果无法删除 LUN ，或者主机操作系统不支持 LUN 中的打孔，则无法执行安全清除。
+
+.开始之前
 * 您必须是集群管理员才能执行此任务。
 * 此任务需要高级权限。
 
 
-.关于此任务
-完成安全清除可能需要几分钟到数小时，具体取决于已删除文件中的数据量。您可以使用 `volume encryption secure-purge show` 命令以查看操作状态。您可以使用 `volume encryption secure-purge abort` 命令以终止操作。
-
-[NOTE]
-====
-要在 SAN 主机上执行安全清除，您必须删除包含要清除的文件的整个 LUN ，或者您必须能够在 LUN 中为属于要清除的文件的块打孔。如果无法删除 LUN ，或者主机操作系统不支持 LUN 中的打孔，则无法执行安全清除。
-
-====
 .步骤
 . 删除要安全清除的文件或 LUN 。
 +
@@ -39,11 +37,11 @@ summary: '从 ONTAP 9.4 开始，您可以使用安全清除功能在启用了 N
 
 . 如果要安全清除的文件位于快照中，请删除这些快照：
 +
-`snapshot delete -vserver SVM_name -volume vol_name -snapshot`
+`snapshot delete -vserver _SVM_name_ -volume _volume_name_ -snapshot`
 
 . 安全清除已删除的文件：
 +
-`volume encryption secure-purge start -vserver SVM_name -volume volume_name`
+`volume encryption secure-purge start -vserver _SVM_name_ -volume _volume_name_`
 
 +
 以下命令可安全清除上已删除的文件 `vol1` 在SVM上``vs1``：

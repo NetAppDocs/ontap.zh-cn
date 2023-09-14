@@ -13,7 +13,7 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异�
 [role="lead"]
 从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异步 SnapMirror 关系且已启用 NVE 的卷上无中断地传输 " `scrub` " 数据。
 
-.您需要的内容
+.开始之前
 * 您必须是集群管理员才能执行此任务。
 * 此任务需要高级权限。
 
@@ -21,13 +21,11 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异�
 .关于此任务
 完成安全清除可能需要几分钟到数小时，具体取决于已删除文件中的数据量。您可以使用 `volume encryption secure-purge show` 命令以查看操作状态。您可以使用 `volume encryption secure-purge abort` 命令以终止操作。
 
-[NOTE]
-====
-要在 SAN 主机上执行安全清除，您必须删除包含要清除的文件的整个 LUN ，或者您必须能够在 LUN 中为属于要清除的文件的块打孔。如果无法删除 LUN ，或者主机操作系统不支持 LUN 中的打孔，则无法执行安全清除。
 
-====
+NOTE: 要在 SAN 主机上执行安全清除，您必须删除包含要清除的文件的整个 LUN ，或者您必须能够在 LUN 中为属于要清除的文件的块打孔。如果无法删除 LUN ，或者主机操作系统不支持 LUN 中的打孔，则无法执行安全清除。
+
 .步骤
-. 在存储系统上，更改为高级权限级别：
+. 在存储系统上、切换到高级权限级别：
 +
 `set -privilege advanced`
 
@@ -39,24 +37,24 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异�
 
 . 准备异步关系中要安全清除的目标卷：
 +
-`volume encryption secure-purge start -vserver SVM_name -volume volume_name -prepare true`
+`volume encryption secure-purge start -vserver _SVM_name_ -volume _volume_name_ -prepare true`
 
 +
 对异步 SnapMirror 关系中的每个卷重复此步骤。
 
 . 如果要安全清除的文件位于 Snapshot 副本中，请删除 Snapshot 副本：
 +
-`snapshot delete -vserver SVM_name -volume vol_name -snapshot`
+`snapshot delete -vserver _SVM_name_ -volume _volume_name_ -snapshot`
 
 . 如果要安全清除的文件位于基本 Snapshot 副本中，请执行以下操作：
 +
 .. 在异步 SnapMirror 关系中的目标卷上创建 Snapshot 副本：
 +
-`volume snapshot create -snapshot snapshot_name -vserver SVM_name -volume vol_name`
+`volume snapshot create -snapshot snapshot_name -vserver _SVM_name_ -volume _volume_name_`
 
 .. 更新 SnapMirror 以将基本 Snapshot 副本向前移动：
 +
-`snapmirror update -source-snapshot snapshot_name -destination-path destination_path`
+`snapmirror update -source-snapshot _snapshot_name_ -destination-path _destination_path_`
 
 +
 对异步 SnapMirror 关系中的每个卷重复此步骤。
@@ -67,15 +65,15 @@ summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异�
 
 .. 验证是否存在基本Snapshot副本：
  +
-`snapshot show -vserver SVM_name -volume vol_name``
+`snapshot show -vserver _SVM_name_ -volume _volume_name_`
 .. 删除基本Snapshot副本：
  +
-`snapshot delete -vserver SVM_name -volume vol_name -snapshot snapshot`
+`snapshot delete -vserver _svm_name_ -volume _volume_name_ -snapshot snapshot`
 
 
 . 安全清除已删除的文件：
 +
-`volume encryption secure-purge start -vserver SVM_name -volume volume_name`
+`volume encryption secure-purge start -vserver _svm_name_ -volume _volume_name_`
 
 +
 对异步 SnapMirror 关系中的每个卷重复此步骤。

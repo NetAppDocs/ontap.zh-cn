@@ -22,7 +22,7 @@ summary: 通过创建集群为外部密钥管理服务器提供更多支持。
 
 == 开始之前
 
-* link:install-ssl-certificates-hardware-task.html["已为SVM启用KMIP密钥管理"]。
+* link:install-ssl-certificates-hardware-task.html["必须为SVM启用KMIP密钥管理"]。
 * 此过程仅支持使用KMIP的密钥服务器。有关支持的密钥服务器列表、请查看 link:http://mysupport.netapp.com/matrix/["NetApp 互操作性表工具"^]。
 * 集群中的所有节点都必须运行ONTAP 9.11.1或更高版本。
 * 服务器的顺序列出中的参数 `-secondary-key-servers` 参数反映外部密钥管理(KMIP)服务器的访问顺序。
@@ -39,19 +39,19 @@ summary: 通过创建集群为外部密钥管理服务器提供更多支持。
 .将主密钥服务器和二级密钥服务器添加到SVM
 --
 . 确认尚未为集群启用密钥管理：
-`security key-manager external show -vserver _vserver_name_`
+`security key-manager external show -vserver _svm_name_`
 如果SVM已启用最多四个主密钥服务器、则必须先删除其中一个现有主密钥服务器、然后再添加新的主密钥服务器。
 . 启用主密钥管理器：
-`security key-manager external enable -vserver _vserver_name_ -key-servers _server_ip_ -client-cert _client_cert_name_ -server-ca-certs _server_ca_cert_names_`
+`security key-manager external enable -vserver _svm_name_ -key-servers _server_ip_ -client-cert _client_cert_name_ -server-ca-certs _server_ca_cert_names_`
 . 修改主密钥服务器以添加二级密钥服务器。。 `-secondary-key-servers` 参数可接受最多包含三个密钥服务器的逗号分隔列表。
-`security key-manager external modify-server -vserver _vserver_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
+`security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
 
 
 --
 .将二级密钥服务器添加到现有主密钥服务器
 --
 . 修改主密钥服务器以添加二级密钥服务器。。 `-secondary-key-servers` 参数可接受最多包含三个密钥服务器的逗号分隔列表。
-`security key-manager external modify-server -vserver _vserver_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
+`security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
 有关二级密钥服务器的详细信息、请参见  <<mod-secondary>>。
 
 
@@ -65,7 +65,7 @@ summary: 通过创建集群为外部密钥管理服务器提供更多支持。
 
 
 
-=== 转换主密钥服务器和二级密钥服务器
+=== 转换主密钥服务器和辅助密钥服务器
 
 要将主密钥服务器转换为二级密钥服务器、必须先使用将其从SVM中删除 `security key-manager external remove-servers` 命令：
 

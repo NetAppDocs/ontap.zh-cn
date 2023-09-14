@@ -4,16 +4,92 @@ sidebar: sidebar
 keywords: nvme, namespaces, considerations, provisioning 
 summary: NVMe支持因您的ONTAP 版本、平台和配置而异。 
 ---
-= NVMe支持和限制
+= NVMe配置、支持和限制
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
+从ONTAP 9.4开始、 link:https://docs.netapp.com/us-en/ontap/san-admin/manage-nvme-concept.html["非易失性内存标准(NVMe)"] 协议可用于SAN环境。FC-NVMe 与传统 FC 网络采用相同的物理设置和分区实践，但与 FC-SCSI 相比，它可以提供更大的带宽，增加 IOPS 并减少延迟。
+
 NVMe支持和限制因您的ONTAP版本、平台和配置而异。有关特定配置的详细信息、请参见 link:https://imt.netapp.com/matrix/["NetApp 互操作性表工具"]。
 
-协议支持
+
+
+== Configuration
+
+* 您可以使用单个网络结构或多网络结构为具有单个节点或HA对的NVMe配置进行设置。
+* 您应该为每个支持 SAN 的 SVM 配置一个管理 LIF 。
+* 除嵌入式刀片式交换机外，不支持使用异构 FC 交换机网络结构。
++
+上列出了特定例外情况 link:https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"^]。
+
+* 级联，部分网状，全网状，核心边缘和导向器网络结构都是将 FC 交换机连接到网络结构的行业标准方法，并且均受支持。
++
+一个网络结构可以包含一个或多个交换机，存储控制器可以连接到多个交换机。
+
+
+
+
+
+== 功能
+
+根据您的ONTAP版本、支持以下NVMe功能。
+
+[cols="2*"]
+|===
+
+
+| 从ONTAP 开始... | NVMe支持 
+
+
+| 9.12.1.  a| 
+NVMe/FC上的4节点MetroCluster IP配置。
+* 9.12.1之前的MetroCluster不支持NVMe配置。
+* NVMe/TCP不支持MetroCluster配置。
+
+
+
+| 9.10.1. | xref:../nvme/resize-namespace-task.html[调整命名空间大小] 
+
+
+| 9.9.1.  a| 
+* 在同一个卷上同时存在多个空间和LUN。
+
+
+
+
+| 9.8.  a| 
+* 协议共存
++
+SCSI、NAS和NVMe协议可以位于同一Storage Virtual Machine (SVM)上。
+
++
+在ONTAP 9.8之前的版本中、NVMe可以是SVM上的唯一协议。
+*
+
+
+
+
+
+| 9.6.  a| 
+* 512字节块和4096字节块、用于存储这些字节数
++
+默认值为 4096 。只有当主机操作系统不支持 4096 字节块时，才应使用 512 。
+
+* 使用映射的卷空间移动
+
+
+
+
+| 9.5. | 多路径HA对故障转移/交还。 
+|===
+
+
+== 协议
+
+支持以下NVMe协议。
 
 [cols="3*"]
 |===
@@ -32,18 +108,13 @@ NVMe支持和限制因您的ONTAP版本、平台和配置而异。有关特定�
 
 
 
-== 平台和配置支持和限制
+== 每个集群的平台和节点数
 
-支持NVMe/FC和NVMe/TCP协议、如下所示。  只有使用32 Gb FC HBA的以下平台才支持NVMe/FC。
-
-[NOTE]
-====
-* 从ONTAP 9.12.1开始、NVMe/FC支持4节点MetroCluster IP配置。
-* NVMe/TCP不支持MetroCluster配置。
-* 9.12.1之前的NVMe不支持MetroCluster 配置。
+支持NVMe/FC和NVMe/TCP协议、如下所示。
 
 
-====
+NOTE: 使用32 Gb FC HBA的以下平台支持NVMe/FC。
+
 [cols="3*"]
 |===
 
@@ -69,35 +140,9 @@ NVMe支持和限制因您的ONTAP版本、平台和配置而异。有关特定�
 |===
 
 
-== 命名空间支持和限制
+== 命名空间
 
-NVMe命名空间支持因您的ONTAP版本而异。
-
-[cols="2*"]
-|===
-
-
-| 从ONTAP 开始... | NVMe命名源支持... 
-
-
-| 9.10.1. | xref:../nvme/resize-namespace-task.html[调整大小]
-
-ONTAP 9.10.1 之前的版本不支持调整命名空间大小。 
-
-
-| 9.8. | LUN和空间可以在同一个卷上混合使用。 
-
-
-| 9.6.  a| 
-* 512字节块和4096字节块
-+
-默认值为 4096 。只有当主机操作系统不支持 4096 字节块时，才应使用 512 。
-
-* 使用映射的卷空间移动
-
-
-|===
-此外、在使用NVMe命名时间时、您应注意以下事项：
+使用NVMe命名时间时、您应注意以下事项：
 
 * 如果 LUN 中的数据丢失，则无法从命名空间还原数据，反之亦然。
 * 命名空间的空间保证与所属卷的空间保证相同。
@@ -105,9 +150,6 @@ ONTAP 9.10.1 之前的版本不支持调整命名空间大小。
 * 命名空间不支持以下内容：
 +
 ** 正在重命名
-+
-您不能重命名命名空间。
-
 ** 卷间移动
 ** 卷间副本
 ** 按需复制
@@ -117,26 +159,17 @@ ONTAP 9.10.1 之前的版本不支持调整命名空间大小。
 
 
 
-== 多路径 HA 对故障转移 / 交还
-
-从ONTAP 9.5开始、NVMe支持多路径HA对故障转移/交还。
-
-
-
 == 其他限制
 
-* NVMe 配置不支持以下 ONTAP 功能：
+.NVMe 配置不支持以下 ONTAP 功能：
+* 同步
+* Virtual Storage Console
 +
-** 同步
-** Virtual Storage Console
+.. 以下内容仅适用于运行 ONTAP 9.4 的节点：
 
 
-* 以下内容仅适用于运行 ONTAP 9.4 的节点：
-+
-** NVMe LIF 和命名空间必须托管在同一节点上。
-** 必须先创建 NVMe 服务，然后才能创建 NVMe LIF 。
-
-
+* NVMe LIF 和命名空间必须托管在同一节点上。
+* 必须先创建 NVMe 服务，然后才能创建 NVMe LIF 。
 
 
 请参见 https://hwu.netapp.com["NetApp Hardware Universe"^] 有关 NVMe 限制的完整列表。
