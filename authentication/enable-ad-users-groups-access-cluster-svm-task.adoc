@@ -48,7 +48,7 @@ ONTAP 支持以下会话密钥算法来实现安全的网络登录连接：
 
 如果已为数据SVM配置SMB服务器、则可以使用 `security login domain-tunnel create` 命令将SVM配置为网关或_tannel"、以便对集群进行AD访问。
 
-.您需要的内容
+.开始之前
 * 您必须已为数据SVM配置SMB服务器。
 * 您必须已启用 AD 域用户帐户才能访问集群的管理 SVM 。
 * 您必须是集群管理员才能执行此任务。
@@ -56,8 +56,8 @@ ONTAP 支持以下会话密钥算法来实现安全的网络登录连接：
 
 从 ONTAP 9.10.1 开始，如果您有用于 AD 访问的 SVM 网关（域通道），则在 AD 域中禁用 NTLM 后，您可以使用 Kerberos 进行管理员身份验证。在早期版本中， SVM 网关的管理员身份验证不支持 Kerberos 。默认情况下，此功能可用；不需要任何配置。
 
-.注意
-始终先尝试 Kerberos 身份验证。如果发生故障，则会尝试 NTLM 身份验证。
+
+NOTE: 始终先尝试 Kerberos 身份验证。如果发生故障，则会尝试 NTLM 身份验证。
 
 .步骤
 . 将启用了SMB的数据SVM配置为身份验证通道、以便AD域控制器能够访问集群：
@@ -89,11 +89,11 @@ cluster1::>security login domain-tunnel create -vserver engData
 
 如果尚未为数据SVM配置SMB服务器、则可以使用 `vserver active-directory create` 命令为域中的SVM创建计算机帐户。
 
-.您需要的内容
-要执行此任务，您必须是集群或 SVM 管理员。
-
 .关于此任务
 输入后 `vserver active-directory create` 命令时、系统会提示您提供AD用户帐户的凭据、该帐户具有足够的权限、可以将计算机添加到域中的指定组织单位。帐户的密码不能为空。
+
+.开始之前
+要执行此任务，您必须是集群或 SVM 管理员。
 
 .步骤
 . 在 AD 域上为 SVM 创建计算机帐户：
