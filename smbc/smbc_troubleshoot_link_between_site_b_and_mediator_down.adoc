@@ -14,7 +14,7 @@ summary: 从站点 B 建立的调解器连接显示为无法访问。
 
 
 [role="lead"]
-要检查ONTAP调解器的连接、请使用 `snapmirror mediator show` 命令：如果连接状态为 " 无法访问 " ，并且站点 B 无法访问站点 B ，则您将获得类似于以下内容的输出。按照解决方案 中的步骤还原连接
+要检查ONTAP调解器的连接、请使用 `snapmirror mediator show` 命令：如果连接状态不可访问、并且站点B无法访问站点A、则会显示一个类似于以下内容的输出。按照解决方案 中的步骤还原连接
 
 ....
 cluster::*> snapmirror mediator show
@@ -41,20 +41,18 @@ Peer Cluster Name         Cluster Serial Number Availability   Authentication
 C1_cluster 			  1-80-000011           Unavailable    ok
 ....
 .解决方案
-强制执行故障转移以启用站点 B 的 I/O ，然后从站点 B 到站点 A 建立零 RTO 关系
-
-要在站点 B 上执行强制故障转移，请完成以下步骤
+强制执行故障转移以启用站点 B 的 I/O ，然后从站点 B 到站点 A 建立零 RTO 关系要在站点 B 上执行强制故障转移，请完成以下步骤
 
 . 从站点 B 取消映射属于一致性组的所有 LUN
 . 使用 force 选项删除 SnapMirror 一致性组关系。
-. 在一致性组成分卷上输入 snapmirror break 命令，将卷从 DP 转换为 RW ，以便从站点 B 启用 I/O
+. 在一致性组成分卷上输入SnapMirror中断命令、将卷从DP转换为RW、以便从站点B启用I/O
 . 启动站点 A 节点以创建从站点 B 到站点 A 的零 RTO 关系
 . 释放站点 A 上具有 relationship-info-only 的一致性组，以保留通用 Snapshot 副本并取消映射属于此一致性组的 LUN 。
 . 通过使用 Sync 策略或异步策略设置卷级别关系，将站点 A 上的卷从 RW 转换为 DP 。
-. 通过问题描述重新同步 SnapMirror 以同步关系。
+. 问题描述 `snapmirror resync` 命令以同步关系。
 . 删除站点 A 上的同步 SnapMirror 关系策略
 . 在站点 B 上使用 relationship-info-only true 释放带有 Sync 策略的 SnapMirror 关系
-. 创建从站点 B 到站点 A 的一致性组关系
-. 从站点 A 执行一致性组重新同步，然后验证一致性组是否处于同步状态。
-. 重新扫描主机 LUN I/O 路径以还原 LUN 的所有路径。
+. 在站点B与站点A之间创建一致性组关系
+. 从源集群重新同步此一致性组。验证一致性组状态是否为同步。
+. 重新扫描主机LUN I/O路径以还原LUN的所有路径。
 
