@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: system manager, external key manager, configure external key manager, migrate keys, store keys, authentication keys, encryption keys 
 summary: 从ONTAP 9.13.1开始、您可以使用System Manager管理外部密钥管理器来存储和管理身份验证和加密密钥。 
 ---
-= 管理外部密钥管理器
+= 使用System Manager管理外部密钥管理器
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -27,7 +27,6 @@ summary: 从ONTAP 9.13.1开始、您可以使用System Manager管理外部密钥
 
 == 配置外部密钥管理器
 
-.开始之前
 要为Storage VM添加外部密钥管理器、您应在为Storage VM配置网络接口时添加可选网关。如果创建的Storage VM没有网络路由、则必须为外部密钥管理器明确创建路由。请参见 link:../networking/create_a_lif.html["创建LIF (网络接口)"]。
 
 .步骤
@@ -56,7 +55,7 @@ summary: 从ONTAP 9.13.1开始、您可以使用System Manager管理外部密钥
  a| 
 *存储*>*层*
  a| 
-单击*+添加本地层*。选中标有"配置密钥管理器"的复选框。选择*外部密钥管理器*。
+选择*+添加本地层*。选中标有"配置密钥管理器"的复选框。选择*外部密钥管理器*。
 
 
 
@@ -74,19 +73,19 @@ summary: 从ONTAP 9.13.1开始、您可以使用System Manager管理外部密钥
  a| 
 *存储*>*存储VM*
  a| 
-选择 Storage VM 。单击*Settings*选项卡。在*安全性*下的*加密*部分中，选择 image:icon_gear_blue_bg.png["设置图标"]。
+选择 Storage VM 。选择*Settings*选项卡。在*安全性*下的*加密*部分中，选择 image:icon_gear_blue_bg.png["设置图标"]。
 
 |===
-. 要添加主密钥服务器、请单击 image:icon_add.gif["+Add"]，然后填写“* IP地址或主机名*”和“*端口*”字段。
+. 要添加主密钥服务器、请选择 image:icon_add.gif["+Add"]，然后填写“* IP地址或主机名*”和“*端口*”字段。
 . 已安装的现有证书列在*KMIP服务器CA证书*和*KMIP客户端证书*字段中。  您可以执行以下任一操作：
 +
-** 单击 image:icon_dropdown_arrow.gif["下拉箭头"] 选择要映射到密钥管理器的已安装证书。(可以选择多个服务CA证书、但只能选择一个客户端证书。)
+** 选择 ... image:icon_dropdown_arrow.gif["下拉箭头"] 选择要映射到密钥管理器的已安装证书。(可以选择多个服务CA证书、但只能选择一个客户端证书。)
 ** 选择*添加新证书*以添加尚未安装的证书并将其映射到外部密钥管理器。
-** 单击 image:icon-x-close.gif["X"] 旁边的证书名称可删除不想映射到外部密钥管理器的已安装证书。
+** 选择 ... image:icon-x-close.gif["X"] 旁边的证书名称可删除不想映射到外部密钥管理器的已安装证书。
 
 
-. 要添加辅助密钥服务器，请单击*辅助密钥服务器*列中的*Add*，并提供其详细信息。
-. 单击*Save*完成配置。
+. 要添加辅助密钥服务器，请在*辅助密钥服务器*列中选择*Add*，并提供其详细信息。
+. 选择*保存*以完成配置。
 
 
 
@@ -119,13 +118,13 @@ Storage VM范围外部密钥管理器
  a| 
 *存储*>*存储VM*
  a| 
-选择 Storage VM 。单击*Settings*选项卡。在*安全性*下的*加密*部分中，选择 image:icon_kabob.gif["\" 串器 \" 图标"]，然后选择*编辑外部密钥管理器*。
+选择 Storage VM 。选择*Settings*选项卡。在*安全性*下的*加密*部分中，选择 image:icon_kabob.gif["\" 串器 \" 图标"]，然后选择*编辑外部密钥管理器*。
 
 |===
 . 现有密钥服务器列在*密钥服务器*表中。您可以执行以下操作：
 +
-** 单击以添加新密钥服务器 image:icon_add.gif["+Add"]。
-** 单击以删除密钥服务器 image:icon_kabob.gif["\" 串器 \" 图标"] 位于包含密钥服务器名称的表单元格的末尾。与该主密钥服务器关联的辅助密钥服务器也会从配置中删除。
+** 通过选择添加新密钥服务器 image:icon_add.gif["+Add"]。
+** 通过选择删除密钥服务器 image:icon_kabob.gif["\" 串器 \" 图标"] 位于包含密钥服务器名称的表单元格的末尾。与该主密钥服务器关联的辅助密钥服务器也会从配置中删除。
 
 
 
@@ -160,7 +159,7 @@ Storage VM范围外部密钥管理器
  a| 
 *存储*>*存储VM*
  a| 
-选择 Storage VM 。单击*Settings*选项卡。在*安全性*下的*加密*部分中，选择 image:icon_kabob.gif["\" 串器 \" 图标"]，然后选择*删除外部密钥管理器*。
+选择 Storage VM 。选择*Settings*选项卡。在*安全性*下的*加密*部分中，选择 image:icon_kabob.gif["\" 串器 \" 图标"]，然后选择*删除外部密钥管理器*。
 
 |===
 

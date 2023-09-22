@@ -42,7 +42,7 @@ summary: 您必须先配置对 SVM 的 LDAP 或 NIS 服务器访问，然后 LDA
 .步骤
 . 在SVM上创建LDAP客户端配置：
 +
-`vserver services name-service ldap client create -vserver SVM_name -client-config client_configuration -servers LDAP_server_IPs -schema schema -use-start-tls true|false`
+`vserver services name-service ldap client create -vserver _SVM_name_ -client-config _client_configuration_ -servers _LDAP_server_IPs_ -schema _schema_ -use-start-tls true|false`
 
 +
 
@@ -64,7 +64,7 @@ cluster1::> vserver services name-service ldap client create
 
 NOTE: 从ONTAP 9.2开始、此字段为 `-ldap-servers` 替换字段 `-servers`。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
 
-. 将LDAP客户端配置与SVM相关联： `vserver services name-service ldap create -vserver SVM_name -client-config client_configuration -client-enabled true|false`
+. 将LDAP客户端配置与SVM相关联： `vserver services name-service ldap create -vserver _SVM_name_ -client-config _client_configuration_ -client-enabled true|false`
 +
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
 
@@ -116,7 +116,7 @@ cluster1::> vserver services name-service ldap check -vserver vs0
 .步骤
 . 在SVM上创建NIS域配置：
 +
-`vserver services name-service nis-domain create -vserver SVM_name -domain client_configuration -active true|false -nis-servers NIS_server_IPs`
+`vserver services name-service nis-domain create -vserver _SVM_name_ -domain client_configuration -active true|false -nis-servers _NIS_server_IPs_`
 
 +
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
@@ -150,7 +150,7 @@ cluster1::>vserver services name-service nis-domain create
 .步骤
 . 指定名称服务源的查找顺序：
 +
-`vserver services name-service ns-switch modify -vserver SVM_name -database name_service_switch_database -sources name_service_source_order`
+`vserver services name-service ns-switch modify -vserver _SVM_name_ -database _name_service_switch_database_ -sources _name_service_source_order_`
 
 +
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
