@@ -28,8 +28,13 @@ LSM不适用于单个HA集群、因此应针对多个HA对集群进行配置、�
 .步骤
 . 为 LSM 创建目标卷：
 +
-`volume create -vserver _SVM_ -volume volume -aggregate _aggregate_ -type DP -size size`
+在运行此命令之前、必须将尖括号中的变量替换为所需的值。
 
++
+[source, cli]
+----
+volume create -vserver <SVM> -volume <volume> -aggregate <aggregate> -type DP -size <size>
+----
 +
 目标卷的大小应等于或大于根卷。
 
@@ -47,11 +52,16 @@ LSM不适用于单个HA集群、因此应针对多个HA对集群进行配置、�
 ----
 cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -size 1gb -state online -type DP
 ----
-. 创建复制作业计划，如中所述 link:create-replication-job-schedule-task.html["创建复制作业计划"]。
+. link:create-replication-job-schedule-task.html["创建复制作业计划"]。
 . 在 SVM 根卷和 LSM 的目标卷之间创建负载共享镜像关系：
 +
-`snapmirror create -source-path _SVM:volume_|_cluster://SVM/volume_ -destination-path _SVM:volume_|_cluster://SVM/volume_ -type LS -schedule _schedule_`
+在运行此命令之前、必须将尖括号中的变量替换为所需的值。
 
++
+[source, cli]
+----
+snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume> -type LS -schedule <schedule>
+----
 +
 有关完整的命令语法，请参见手册页。
 
@@ -68,8 +78,13 @@ cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path s
 
 . 初始化负载共享镜像：
 +
-`snapmirror initialize-ls-set -source-path _SVM:volume_|_cluster://SVM/volume_`
+在运行此命令之前、必须将尖括号中的变量替换为所需的值。
 
++
+[source, cli]
+----
+snapmirror initialize-ls-set -source-path <SVM:volume>
+----
 +
 初始化可能非常耗时。您可能希望在非高峰时段运行基线传输。
 

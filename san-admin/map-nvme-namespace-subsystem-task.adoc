@@ -19,19 +19,25 @@ summary: 使用 NVMe 时，必须将命名空间映射到子系统。
 . 从主机获取 NQN 。
 . 将主机 NQN 添加到子系统：
 +
-`vserver nvme subsystem host add -vserver _SVM_name_ -subsystem _subsystem_name_ -host-nqn _Host_NQN_:subsystem._subsystem_name_`
-
+[source, cli]
+----
+vserver nvme subsystem host add -vserver <SVM_name> -subsystem <subsystem_name> -host-nqn <Host_NQN_:subsystem._subsystem_name>
+----
 . 将命名空间映射到子系统：
 +
-`vserver nvme subsystem map add -vserver _SVM_name_ -subsystem _subsystem_name_ -path _path_`
-
+[source, cli]
+----
+vserver nvme subsystem map add -vserver <SVM_name> -subsystem <subsystem_name> -path <path>
+----
 +
 一个命名空间只能映射到一个子系统。
 
 . 验证命名空间是否已映射到子系统：
 +
-`vserver nvme namespace show -vserver _SVM_name_ -instance`
-
+[source, cli]
+----
+vserver nvme namespace show -vserver <SVM_name> -instance
+----
 +
 此子系统应列为 `Attached subsystem`。
 

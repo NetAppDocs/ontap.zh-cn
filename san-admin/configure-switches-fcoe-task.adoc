@@ -27,27 +27,29 @@ summary: 您必须先为交换机配置 FCoE ，然后才能在现有以太网�
 
 .步骤
 . 使用交换机文档为交换机配置 FCoE 。
-. 使用 `dcb show` 命令以验证是否已正确配置集群中每个节点的DCB设置。
+. 验证是否已正确配置集群中每个节点的DCB设置。
 +
-`run -node node1 -command dcb show`
-
+[source, cli]
+----
+run -node node1 -command dcb show
+----
 +
 在交换机上配置 DCB 设置。如果设置不正确，请参见交换机文档。
 
-. 使用 `fcp adapter show` 命令以验证FC目标端口联机状态为时FCoE登录是否正常 `true`。
+. 验证FC目标端口联机状态为时FCoE登录是否正常 `true`。
 +
-`cluster1::> fcp adapter show -fields node,adapter,status,state,speed,fabric-established,physical-protocol`
-
+[sourc]
+----
+fcp adapter show -fields node,adapter,status,state,speed,fabric-established,physical-protocol
+----
 +
 FC目标端口联机状态为 `false`，请参阅交换机文档。
 
 
 
 .相关信息
-https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"^]
+* https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"^]
+* http://www.netapp.com/us/media/tr-3800.pdf["NetApp 技术报告 3800 ：《以太网光纤通道（ FCoE ）端到端部署指南》"^]
+* http://www.cisco.com/en/US/products/ps5989/products_installation_and_configuration_guides_list.html["《 Cisco MDS 9000 NX-OS 和 SAN-OS 软件配置指南》"]
+* http://www.brocade.com/products/all/index.page["Brocade 产品"]
 
-http://www.netapp.com/us/media/tr-3800.pdf["NetApp 技术报告 3800 ：《以太网光纤通道（ FCoE ）端到端部署指南》"^]
-
-http://www.cisco.com/en/US/products/ps5989/products_installation_and_configuration_guides_list.html["《 Cisco MDS 9000 NX-OS 和 SAN-OS 软件配置指南》"]
-
-http://www.brocade.com/products/all/index.page["Brocade 产品"]

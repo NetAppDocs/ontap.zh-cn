@@ -65,6 +65,10 @@ summary: 从ONTAP 9.12.1开始、您可以通过无中断地将文件从FlexGrou
 +
 从ONTAP 9.13.1开始、可以在各个非二极管之间复制自主防兰软件保护、以实现中断和无中断重新平衡操作。
 
+* ONTAP S3
++
+ONTAP S3 FlexGroup卷不支持FlexGroup重新平衡、此类卷不会像NAS FlexGroup卷那样受到不平衡的影响。
+
 
 
 
@@ -83,13 +87,13 @@ summary: 从ONTAP 9.12.1开始、您可以通过无中断地将文件从FlexGrou
 * 在使用启动FlexGroup 重新平衡时自动设置 `volume rebalance` 命令
 
 
+.步骤
 您可以使用ONTAP System Manager或ONTAP 命令行界面管理FlexGroup 重新平衡。
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
-.步骤
 . 导航到*存储>卷*并找到要重新平衡的FlexGroup 卷。
 . 选择 ... image:icon_dropdown_arrow.gif["显示详细信息图标"] 以查看卷详细信息。
 . 选择*重新平衡*。
@@ -100,7 +104,6 @@ summary: 从ONTAP 9.12.1开始、您可以通过无中断地将文件从FlexGrou
 --
 .命令行界面
 --
-.步骤
 . 启动自动重新平衡： `volume rebalance start -vserver _SVM_name_ -volume _volume_name_`
 +
 您也可以指定以下选项：
@@ -148,7 +151,6 @@ volume rebalance start -vserver vs0 -volume fg1
 ====
 .System Manager
 --
-.步骤
 . 导航到*存储>卷*并找到要重新平衡的FlexGroup 卷。
 . 选择 ... image:icon_dropdown_arrow.gif["显示详细信息图标"] 以查看卷详细信息。
 . 选择*重新平衡*。
@@ -158,7 +160,6 @@ volume rebalance start -vserver vs0 -volume fg1
 --
 .命令行界面
 --
-.步骤
 . 修改自动重新平衡： `volume rebalance modify -vserver _SVM_name_ -volume _volume_name_`
 +
 您可以指定以下一个或多个选项：
@@ -198,7 +199,6 @@ volume rebalance start -vserver vs0 -volume fg1
 ====
 .System Manager
 --
-.步骤
 . 导航到*存储>卷*并找到FlexGroup 卷。
 . 选择 ... image:icon_dropdown_arrow.gif["显示详细信息图标"] 以查看卷详细信息。
 . 选择*停止重新平衡*。
@@ -207,7 +207,6 @@ volume rebalance start -vserver vs0 -volume fg1
 --
 .命令行界面
 --
-.步骤
 . 停止FlexGroup 重新平衡： `volume rebalance stop -vserver _SVM_name_ -volume _volume_name_`
 
 
@@ -223,7 +222,6 @@ volume rebalance start -vserver vs0 -volume fg1
 ====
 .System Manager
 --
-.步骤
 . 导航到*存储>卷*并找到FlexGroup 卷。
 . 选择 ... image:icon_dropdown_arrow.gif["显示详细信息图标"] 以查看FlexGroup 详细信息。
 . 详细信息窗格底部附近会显示* FlexGroup Balance Status*。
@@ -233,7 +231,6 @@ volume rebalance start -vserver vs0 -volume fg1
 --
 .命令行界面
 --
-.步骤
 . 查看FlexGroup 重新平衡操作的状态： `volume rebalance show`
 +
 重新平衡状态示例：
