@@ -45,7 +45,10 @@ C1_cluster 			  1-80-000011           Unavailable    ok
 
 . 从站点 B 取消映射属于一致性组的所有 LUN
 . 使用 force 选项删除 SnapMirror 一致性组关系。
-. 在一致性组成分卷上输入SnapMirror中断命令、将卷从DP转换为RW、以便从站点B启用I/O
+. 输入SnapMirror中断命令 (`snapmirror break -destination_path _svm_:_volume_`)以将卷从DP转换为RW、从而启用站点B的I/O
++
+您必须为一致性组中的每个关系使用问题描述命令。例如、如果一致性组中有三个卷、则需要对每个卷使用问题描述命令。
+
 . 启动站点 A 节点以创建从站点 B 到站点 A 的零 RTO 关系
 . 释放站点 A 上具有 relationship-info-only 的一致性组，以保留通用 Snapshot 副本并取消映射属于此一致性组的 LUN 。
 . 通过使用 Sync 策略或异步策略设置卷级别关系，将站点 A 上的卷从 RW 转换为 DP 。
