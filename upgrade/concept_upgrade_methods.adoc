@@ -4,111 +4,66 @@ sidebar: sidebar
 keywords: upgrade, methods, andu, ndu, automated, automatic, system manager, cli, nondisruptive, disruptive 
 summary: 升级方法取决于您的配置。  如果可用，则首选使用 System Manager 进行自动无中断升级（ ANDU ）。 
 ---
-= ONTAP升级方法
+= ONTAP软件升级方法
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-升级方法（无中断或中断，自动或手动）取决于您的配置。  使用System Manager自动无中断升级(ANDU)是首选方法、它支持大多数配置。
+您可以使用系统管理自动升级ONTAP软件。或者、您也可以使用ONTAP命令行界面(CLI)执行自动或手动升级。用于升级ONTAP的方法取决于您的配置、当前ONTAP版本以及集群中的节点数。NetApp建议使用System Manager执行自动升级、除非您的配置需要使用其他方法。例如、如果您的MetroCluster配置包含4个节点且运行ONTAP 9.3或更高版本、则应使用System Manager执行自动升级(有时称为自动无中断升级或ANDU)。如果您的MetroCluster配置包含8个节点且运行ONTAP 9.2或更早版本、则应使用命令行界面执行手动升级。
 
-*无中断升级*+
-无中断升级可利用ONTAP的高可用性(HA)故障转移技术、确保集群在升级期间继续提供数据。无中断升级过程有两种。
+可以使用滚动升级过程或批量升级过程执行升级。两者都是无中断的。
 
-* _Batch _更新+
-在批量更新中、集群会分为多批、每批包含多个HA对。  在第一批中，一半节点会升级，其次是其 HA 配对节点。然后，对其余批重复此过程。
-* _roll_更新+
-在滚动更新中、节点将脱机并进行升级、而其配对节点将接管其存储。节点升级完成后，配对节点会将控制权交还给原始所属节点，此过程将在配对节点上重复执行。每个附加 HA 对都会按顺序进行升级，直到所有 HA 对都运行目标版本为止。+
-*注意：*在软件行业中、术语_rolling upgrade经常用于不会中断发生原因服务的软件升级、因此通常与"无中断升级"同义。在 ONTAP 9 升级中， _rolling update_ 是可用于无中断升级的过程之一。
+.ONTAP滚动升级
+在滚动升级过程中、节点将脱机并进行升级、而其配对节点将接管其存储。节点升级完成后、配对节点会将控制权交还给原始所属节点、并在配对节点上重复此过程。每个附加 HA 对都会按顺序进行升级，直到所有 HA 对都运行目标版本为止。对于少于8个节点的集群、默认情况下会执行滚动升级过程。
 
+.ONTAP批量升级
+在批量升级过程中、集群会分为多批、每批包含多个HA对。在第一批中，一半节点会升级，其次是其 HA 配对节点。然后，对其余批重复此过程。对于包含8个或更多节点的集群、默认执行批量升级过程。
 
-可以使用 _Automated 或 _manual_ 方法执行无中断升级。
-
-* * 自动无中断升级（ ANDU ） *
-+
-** 管理员启动 ANDU 时， ONTAP 会自动在每个节点上安装目标 ONTAP 映像，验证集群组件以确保集群可以无中断升级，然后在后台执行批量或滚动更新。
-+
-*** 对于包含 8 个或更多节点的集群，默认情况下会进行批量更新。
-*** 对于节点数少于 8 个的集群，默认为滚动更新。对于具有 8 个或更多节点的集群，也可以明确选择滚动更新。
-
-
-** 可以使用 System Manager 或 ONTAP 命令行界面（ CLI ）执行 ANDU 。如果适用于您的配置，则建议使用 System Manager 进行升级。
-
-
-* * 手动无中断升级 *
-+
-** 管理员必须手动确认每个节点上的集群组件的升级准备情况，然后在前台手动执行滚动更新过程步骤。
-** 使用 ONTAP 命令行界面执行手动无中断升级。
-** 只有在您的配置不支持 ANDU 时，才应使用手动方法。
+对于自动升级、ONTAP会自动在每个节点上安装目标ONTAP映像、并验证集群组件以确保集群可以无中断升级、然后根据节点数量在后台执行批量升级或滚动升级。对于手动升级、管理员手动确认集群中的每个节点均已做好升级准备、然后执行步骤以执行滚动升级。
 
 
 
+== 根据配置推荐的ONTAP升级方法
 
-*中断升级*+
-在中断升级中、系统会对每个HA对禁用存储故障转移、然后逐个重新启动每个节点。与无中断升级相比，执行中断升级的速度更快，完成操作所需的步骤更少。但是，除非您可以在升级期间使集群脱机，否则不应执行中断升级。如果您在 SAN 环境中运行，则在执行中断升级之前，应准备关闭或暂停所有 SAN 客户端。使用 ONTAP 命令行界面执行中断升级。
+您的配置支持的升级方法将按建议用法的顺序列出。
+
+[cols="4"]
+|===
+| Configuration | ONTAP 版本 | 节点数 | 建议的升级方法 
 
 
-
-== 非 MetroCluster 配置的方法
-
-具有 2 个或更多节点的集群可以使用以下任一升级方法，这些方法按建议使用顺序列出。
-
+| 标准 | 9.0或更高版本 | 2个或更多  a| 
 * xref:task_upgrade_andu_sm.html[使用 System Manager 实现自动化无中断]
 * xref:task_upgrade_andu_cli.html[使用命令行界面自动实现无中断]
-* xref:task_upgrade_nondisruptive_manual_cli.html[手动无中断]
-* xref:task_updating_an_ontap_cluster_disruptively.html[手动中断]
-
-
-尽管建议使用自动化方法，但单节点集群必须使用其中一种中断方法。
-
-* xref:task_upgrade_disruptive_automated_cli.html[自动化中断]
-* xref:task_updating_an_ontap_cluster_disruptively.html[手动中断]
 
 
 
 
-== MetroCluster 配置方法
-
-每个配置可用的升级方法按建议使用顺序列出。
-
-[cols="3*"]
-|===
-| ONTAP 版本 | 节点数 | 升级方法 
+| 标准 | 9.0或更高版本 | 单个 | xref:task_upgrade_disruptive_automated_cli.html[自动化中断] 
 
 
-| 9.3或更高版本 | 2 ， 4  a| 
+| MetroCluster | 9.3或更高版本 | 8.  a| 
+* xref:task_upgrade_andu_cli.html[使用命令行界面自动实现无中断]
+* xref:task_updating_a_four_or_eight_node_mcc.html[使用命令行界面手动为4节点或8节点MetroCluster无中断运行]
+
+
+
+
+| MetroCluster | 9.3或更高版本 | 2 ， 4  a| 
 * xref:task_upgrade_andu_sm.html[使用 System Manager 实现自动化无中断]
 * xref:task_upgrade_andu_cli.html[使用命令行界面自动实现无中断]
-* xref:task_updating_an_ontap_cluster_disruptively.html[手动中断]
 
 
 
 
-| 9.3或更高版本 | 8.  a| 
-* xref:task_upgrade_andu_cli.html[使用命令行界面自动实现无中断]
-* xref:task_updating_a_four_or_eight_node_mcc.html[手动无中断]
-* xref:task_updating_an_ontap_cluster_disruptively.html[手动中断]
+| MetroCluster | 9.2 或更早版本 | 4 ， 8. | xref:task_updating_a_four_or_eight_node_mcc.html[使用命令行界面手动为4节点或8节点MetroCluster无中断运行] 
 
 
-
-
-| 9.2 或更早版本 | 2.  a| 
-* xref:task_updating_a_two_node_metrocluster_configuration_in_ontap_9_2_and_earlier.html[手动无中断(适用于双节点集群)]
-* xref:task_updating_an_ontap_cluster_disruptively.html[使用 CLI 手动中断]
-
-
-
-
-| 9.2 或更早版本 | 4 ， 8.  a| 
-* xref:task_updating_a_four_or_eight_node_mcc.html[手动无中断]
-* xref:task_updating_an_ontap_cluster_disruptively.html[手动中断]
-
-
-
-
-| 9.0或更高版本 | 4 ， 8 （仅限修补程序） | xref:task_upgrade_andu_sm.html[使用 System Manager 实现自动化无中断] 
-
-
-| 9.2 或更早版本 | 2 ， 4 ， 8 （仅限修补程序） | xref:task_upgrade_andu_sm.html[使用 System Manager 实现自动化无中断] 
+| MetroCluster | 9.2 或更早版本 | 2. | xref:task_updating_a_two_node_metrocluster_configuration_in_ontap_9_2_and_earlier.html[使用命令行界面为双节点MetroCluster手动无中断运行] 
 |===
+无论配置如何、对于所有修补程序升级、建议使用System Manager进行ANDU升级。
+
+
+NOTE: 答 xref:task_updating_an_ontap_cluster_disruptively.html[手动中断升级] 可在任何配置上执行。  但是，除非您可以在升级期间使集群脱机，否则不应执行中断升级。如果您在 SAN 环境中运行，则在执行中断升级之前，应准备关闭或暂停所有 SAN 客户端。使用 ONTAP 命令行界面执行中断升级。

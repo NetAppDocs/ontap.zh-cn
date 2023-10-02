@@ -19,7 +19,7 @@ summary: 从 ONTAP 9.10.1 开始，您可以使用熟悉的 SnapMirror 镜像和
 
 
 [role="lead"]
-从 ONTAP 9.10.1 开始，您可以使用熟悉的 SnapMirror 镜像和备份功能来保护 ONTAP S3 对象存储中的存储分段。此外，与标准 SnapMirror 不同， S3 SnapMirror 可以具有非 NetApp 目标。
+从ONTAP 9.10.1开始、您可以使用SnapMirror镜像和备份功能保护ONTAP S3对象存储中的分段。与标准SnapMirror不同、S3 SnapMirror支持镜像和备份到非NetApp目标、如AWS S3。
 
 S3 SnapMirror 支持从 ONTAP S3 存储分段到以下目标的活动镜像和备份层：
 
@@ -44,20 +44,15 @@ ONTAP S3
 | AWS S3 |  | image:status-enabled-perf-config.gif["复选标记"] 
 
 
-| 适用于 Azure 的 Cloud Volumes ONTAP
-(从ONTAP 9.0.0开始) | image:status-enabled-perf-config.gif["复选标记"] | image:status-enabled-perf-config.gif["复选标记"] 
+| 适用于 Azure 的 Cloud Volumes ONTAP | image:status-enabled-perf-config.gif["复选标记"] | image:status-enabled-perf-config.gif["复选标记"] 
 
 
-| 适用于 AWS 的 Cloud Volumes ONTAP
-(从ONTAP 9.11.0开始) | image:status-enabled-perf-config.gif["复选标记"] | image:status-enabled-perf-config.gif["复选标记"] 
+| 适用于 AWS 的 Cloud Volumes ONTAP | image:status-enabled-perf-config.gif["复选标记"] | image:status-enabled-perf-config.gif["复选标记"] 
 
 
-| 适用于 Google Cloud 的 Cloud Volumes ONTAP
-(从ONTAP 9.12.0开始) | image:status-enabled-perf-config.gif["复选标记"] | image:status-enabled-perf-config.gif["复选标记"] 
+| 适用于 Google Cloud 的 Cloud Volumes ONTAP | image:status-enabled-perf-config.gif["复选标记"] | image:status-enabled-perf-config.gif["复选标记"] 
 |===
 您可以保护 ONTAP S3 服务器上的现有存储分段，也可以在立即启用数据保护的情况下创建新存储分段。
-
-S3 SnapMirror 支持扇出和级联关系。有关概述，请参见 link:../data-protection/supported-deployment-config-concept.html["扇出和级联数据保护部署"]。
 
 
 
@@ -73,7 +68,7 @@ ONTAP源系统和目标系统需要以下许可证包：
 ** 数据保护捆绑包
 S3 SnapMirror以其他NetApp对象存储目标(ONTAP S3、StorageGRID和Cloud Volumes ONTAP)为目标。
 ** 数据保护包和混合云包
-用于通过S3 SnapMirror访问目标第三方对象存储(AWS S3)。
+S3 SnapMirror到第三方对象存储(包括AWS S3)。
 
 
 * ONTAP S3
@@ -124,6 +119,14 @@ S3 SnapMirror关系需要Storage VM root用户访问密钥；默认情况下、O
 
 
 
+== 控制对S3存储分段的访问
+
+S3 SnapMirror 支持扇出和级联关系。有关概述、请参见扇出和级联数据保护部署。
+
+S3 SnapMirror不支持f扇 入部署(多个源分段与单个目标分段之间的数据保护关系)。S3 SnapMirror 支持从多个集群到一个二级集群的多个存储分段镜像，但每个源存储分段在二级集群上必须有自己的目标存储分段。
+
+
+
 == S3 SnapMirror 注意事项和限制
 
 创建新存储分段时，您可以通过创建用户和组来控制访问。有关详细信息，请参见以下主题：
@@ -131,12 +134,4 @@ S3 SnapMirror关系需要Storage VM root用户访问密钥；默认情况下、O
 * link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组（ System Manager ）"]
 * link:../s3-config/create-s3-user-task.html["创建 S3 用户（命令行界面）"]
 * link:../s3-config/create-modify-groups-task.html["创建或修改 S3 组（命令行界面）"]
-
-
-当前 S3 SnapMirror 版本不支持以下标准 SnapMirror 功能：
-
-* 扇入部署（多个源存储分段和单个目标存储分段之间的数据保护关系）
-+
-S3 SnapMirror 支持从多个集群到一个二级集群的多个存储分段镜像，但每个源存储分段在二级集群上必须有自己的目标存储分段。
-
 
