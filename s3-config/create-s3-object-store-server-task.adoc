@@ -31,6 +31,32 @@ ONTAP 对象存储服务器将数据作为 S3 对象进行管理，而不是由 
 .步骤
 [role="tabbed-block"]
 ====
+.System Manager
+--
+如果要将S3服务器添加到现有Storage VM、请使用此操作步骤。要将S3服务器添加到新的Storage VM、请参见 link:create-svm-s3-task.html["为S3创建存储SVM"]。
+
+您应准备为接口角色数据输入IP地址。
+
+. 在现有Storage VM上启用S3。
++
+.. 选择Storage VM：单击*存储> Storage VM*、选择一个Storage VM、单击*设置*、然后单击 image:icon_gear.gif["设置图标"] 在 * S3 下。
+.. 单击 * 启用 S3* ，然后输入 S3 服务器名称。
+.. 选择证书类型。
++
+无论选择系统生成的证书还是您自己的证书之一，客户端访问都需要此证书。
+
+.. 输入网络接口。
+
+
+. 如果选择了系统生成的证书，则在确认创建新 Storage VM 后，您将看到证书信息。单击 * 下载 * 并保存以供客户端访问。
++
+** 不会再显示此机密密钥。
+** 如果您再次需要证书信息：单击 * 存储 > 存储 VM* ，选择 Storage VM ，然后单击 * 设置 * 。
+
+
+
+
+--
 .命令行界面
 --
 . 创建 S3 服务器：
@@ -76,31 +102,5 @@ cluster1::> vserver object-store-server show
              Certificate for HTTPS Connections: svm1_ca
                                        Comment: Server comment
 ----
---
-.System Manager
---
-如果要将S3服务器添加到现有Storage VM、请使用此操作步骤。要将S3服务器添加到新的Storage VM、请参见 link:create-svm-s3-task.html["为S3创建存储SVM"]。
-
-您应准备为接口角色数据输入IP地址。
-
-. 在现有Storage VM上启用S3。
-+
-.. 选择Storage VM：单击*存储> Storage VM*、选择一个Storage VM、单击*设置*、然后单击 image:icon_gear.gif["设置图标"] 在 * S3 下。
-.. 单击 * 启用 S3* ，然后输入 S3 服务器名称。
-.. 选择证书类型。
-+
-无论选择系统生成的证书还是您自己的证书之一，客户端访问都需要此证书。
-
-.. 输入网络接口。
-
-
-. 如果选择了系统生成的证书，则在确认创建新 Storage VM 后，您将看到证书信息。单击 * 下载 * 并保存以供客户端访问。
-+
-** 不会再显示此机密密钥。
-** 如果您再次需要证书信息：单击 * 存储 > 存储 VM* ，选择 Storage VM ，然后单击 * 设置 * 。
-
-
-
-
 --
 ====

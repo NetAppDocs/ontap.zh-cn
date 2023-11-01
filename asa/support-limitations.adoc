@@ -1,10 +1,10 @@
 ---
 permalink: asa/support-limitations.html 
 sidebar: sidebar 
-keywords: all san array, asa, san, array, software, configuration, configure, configuring, setup, set up, limitations, restrictions, nvme, mcc ip, persistent ports, host, settings, utilities, ways to identify 
-summary: 使用 System Manager 按照以下过程配置全 SAN 阵列。 
+keywords: all flash san array, asa, san, array, software, configuration, configure, configuring, setup, set up, limitations, restrictions, nvme, mcc ip, persistent ports, host, settings, utilities, ways to identify 
+summary: '纯闪存SAN阵列(ASA)配置限制和支持因ONTAP版本而异。' 
 ---
-= 所有SAN阵列配置限制和支持
+= 纯闪存SAN阵列配置限制和支持
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -19,7 +19,7 @@ summary: 使用 System Manager 按照以下过程配置全 SAN 阵列。
 
 
 [role="lead"]
-ASA 配置限制和支持因ONTAP 版本而异。
+纯闪存SAN阵列(ASA)配置限制和支持因ONTAP版本而异。
 
 有关支持的配置限制的最新详细信息、请参见 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
@@ -66,7 +66,7 @@ ASA 配置限制和支持因ONTAP 版本而异。
 
 == 支持永久性端口
 
-从 ONTAP 9.8 开始，默认情况下，配置为使用 FC 协议的所有 SAN 阵列（ ASA ）都会启用永久性端口。永久性端口仅适用于 FC ，并且需要使用全球通用端口名称（ WWPN ）标识的区域成员资格。
+从ONTAP 9.8开始、默认情况下、配置为使用FC协议的纯闪存SAN阵列(ASAS)上会启用永久性端口。永久性端口仅适用于 FC ，并且需要使用全球通用端口名称（ WWPN ）标识的区域成员资格。
 
 永久性端口可通过在 HA 配对节点的相应物理端口上创建影子 LIF 来减少接管的影响。接管节点后，配对节点上的影子 LIF 将采用原始 LIF 的标识，包括 WWPN 。在被接管节点的路径状态更改为故障之前，影子 LIF 将显示为主机 MPIO 堆栈的主动 / 优化路径，并且 I/O 将发生移动。这样可以减少 I/O 中断，因为即使在存储故障转移操作期间，主机也始终可以看到相同数量的目标路径。
 

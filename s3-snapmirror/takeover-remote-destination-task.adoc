@@ -28,20 +28,19 @@ summary: 如果源存储分段中的数据不可用，您可以中断 SnapMirror
 
 接管操作必须从远程集群启动。
 
-
-
-== System Manager 操作步骤
-
+[role="tabbed-block"]
+====
+.System Manager
+--
 从不可用的存储分段进行故障转移并开始提供数据：
 
 . 单击 * 保护 > 关系 * ，然后选择 * S3 SnapMirror* 。
 . 单击 image:icon_kabob.gif["更多图标"]，选择 * 故障转移 * ，然后单击 * 故障转移 * 。
 
 
-
-
-== 命令行界面操作步骤
-
+--
+.命令行界面
+--
 . 为目标存储分段启动故障转移操作：
 `snapmirror failover start -destination-path _svm_name_:/bucket/_bucket_name_`
 . 验证故障转移操作的状态：
@@ -53,3 +52,6 @@ summary: 如果源存储分段中的数据不可用，您可以中断 SnapMirror
 dest_cluster::> snapmirror failover start -destination-path dest_svm1:/bucket/test-bucket-mirror
 ----
 
+
+--
+====
