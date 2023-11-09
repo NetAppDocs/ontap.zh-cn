@@ -11,7 +11,7 @@ summary: 如果您已为NAS数据配置了S3客户端访问、并且从ONTAP 9.1
 
 
 [role="lead"]
-如果您已为NAS数据配置了S3客户端访问、并且从ONTAP 9.12.1或更高版本还原到ONTAP 9.11.1或更早版本、则必须删除NAS存储分段配置、并且必须在还原之前删除任何名称映射(S3用户到Windows或Unix用户)。
+如果已为NAS数据配置S3客户端访问、则在从ONTAP 9.12.1或更高版本还原到ONTAP 9.11.1或更早版本之前、应使用ONTAP命令行界面(CLI)删除NAS存储分段配置并删除任何名称映射 (S3用户到Windows或Unix用户)。
 
 .关于此任务
 以下任务将在还原过程的后台完成。
@@ -22,30 +22,29 @@ summary: 如果您已为NAS数据配置了S3客户端访问、并且从ONTAP 9.1
 * 删除所有已配置的S3服务器的任何default-unix-user和default-windows-user值。
 
 
-[role="tabbed-block"]
-====
-.System Manager
---
-. 删除S3 NAS存储分段配置。+
-单击*存储>分段*、然后单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"] 对于每个已配置的S3 NAS存储分段、单击*删除*。
-. 删除UNIX或Windows客户端(或两者)的本地名称映射。
+.步骤
+. 删除S3 NAS存储分段配置：
 +
-.. 单击*存储>分段*、然后选择启用了S3/NAS的Storage VM。
-.. 选择*设置*、然后单击 image:../media/icon_arrow.gif["右箭头"] 在*名称映射*中(在*主机用户和组*下)。
-.. 在* S3到Windows *或* S3到UNIX图块*(或两者)中、单击 image:../media/icon_kabob.gif["\" 串器 \" 图标"] 对于每个已配置的映射、单击*删除*。
+[source, cli]
+----
+vserver object-store-server bucket delete -vserver _svm_name_ -bucket _s3_nas_bucket_name_
+----
+. 删除UNIX的名称映射：
++
+[source, cli]
+----
+vserver name-mapping delete -vserver _svm_name_ -direction s3-unix
+----
+. 删除Windows的名称映射：
++
+[source, cli]
+----
+vserver name-mapping delete -vserver _svm_name_ -direction s3-win
+----
+. 从SVM中删除S3协议：
++
+[source, cli]
+----
+vserver remove-protocols -vserver <svm_name> -protocols s3
+----
 
-
-
-
---
-.命令行界面
---
-. 删除S3 NAS存储分段配置。+
-`vserver object-store-server bucket delete -vserver _svm_name_ -bucket _s3_nas_bucket_name_`
-. 删除名称映射。+
-`vserver name-mapping delete -vserver _svm_name_ -direction s3-unix` +
-`vserver name-mapping delete -vserver _svm_name_ -direction s3-win`
-
-
---
-====
