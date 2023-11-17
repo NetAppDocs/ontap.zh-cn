@@ -1,0 +1,347 @@
+---
+sidebar: sidebar 
+permalink: upgrade/automated-upgrade-task.html 
+keywords: netapp, ontap, automate, automatic, automated, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
+summary: 您可以无中断地更新集群上的 ONTAP 版本。 
+---
+= 自动化无中断ONTAP升级
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+执行自动升级时、ONTAP会自动在每个节点上安装目标ONTAP映像、并验证集群是否可以成功升级、然后执行任一 xref:concept_upgrade_methods.html[批量升级或滚动升级] 根据集群中的节点数在后台运行。
+
+如果您的配置支持此功能、则应使用System Manager执行自动升级。  如果您的配置不支持使用System Manager自动升级、则可以使用ONTAP命令行界面(CLI)执行自动升级。
+
+
+IMPORTANT: 修改的设置 `storage failover modify-auto-giveback` 自动无中断升级(andu)开始之前的命令选项不会对升级过程产生任何影响。在更新所需的接管 / 交还期间， andu 进程会忽略此选项的任何预设值。例如、设置 `-autogiveback` 在开始andu之前设置为false不会中断交还前的自动升级。
+
+.开始之前
+* 您应该 link:prepare.html["准备升级"]。
+* 您应该 link:download-software-image.html["下载ONTAP软件映像"] 目标ONTAP版本。
++
+如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，您需要下载特定所需的两个ONTAP映像 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#supported-upgrade-paths["升级路径"]。
+
+* 对于每个 HA 对，每个节点应在同一广播域上具有一个或多个端口。
++
+如果您有8个或更多节点、则会在自动无中断升级中使用批量升级方法。  在 ONTAP 9.7 及更早版本中，如果使用批处理方法，则 LIF 会迁移到要升级的节点的 HA 配对节点。  如果配对节点在同一广播域中没有任何端口、则LIF迁移将失败。
+
++
+在ONTAP 9.8及更高版本中、如果使用批处理方法、则LIF会迁移到另一个批处理组。
+
+* 如果要升级MetroCluster FC配置中的ONTAP、则应启用集群以自动执行计划外切换。
+* 如果您不打算监控升级过程的进度、则应这样做 link:task_requesting_notification_of_issues_encountered_in_nondisruptive_upgrades.html["请求可能需要手动干预的错误的 EMS 通知"]。
+
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 验证ONTAP目标映像：
++
+
+NOTE: 如果要升级MetroCluster配置、则应验证集群A、然后对集群B重复此验证过程
+
++
+.. 根据您运行的 ONTAP 版本，执行以下步骤之一：
++
+|===
+
+
+| 如果您正在运行 ... | 执行此操作 ... 
+
+
+| ONTAP 9.8或更高版本  a| 
+单击 * 集群 > 概述 * 。
+
+
+
+| ONTAP 9.5 ， 9.6 和 9.7  a| 
+单击 * 配置 * > * 集群 * > * 更新 * 。
+
+
+
+| ONTAP 9.4 或更早版本  a| 
+单击 * 配置 * > * 集群更新 * 。
+
+|===
+.. 在 * 概述 * 窗格的右角，单击 image:icon_kabob.gif["菜单图标"]。
+.. 单击 * ONTAP Update* 。
+.. 在*Cluster Update*选项卡中，添加新映像或选择可用映像。
++
+|===
+
+
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+从本地文件夹添加新的软件映像
+
+您应该已经拥有了 link:download-software-image.html["已下载映像"] 到本地客户端。
+ a| 
+... 在*可用软件映像*下，单击*从本地添加*。
+... 浏览到保存软件映像的位置，选择该映像，然后单击 * 打开 * 。
+
+
+
+
+ a| 
+从HTTP或FTP服务器添加新的软件映像
+ a| 
+... 单击 * 从服务器添加 * 。
+... 在*添加新的软件映像*对话框中，输入从NetApp 支持站点 下载ONTAP软件映像的HTTP或FTP服务器的URL。
++
+对于匿名 FTP ，必须在中指定 URL ftp://anonymous@ftpserver[] 格式。
+
+... 单击 * 添加 * 。
+
+
+
+
+ a| 
+选择一个可用映像
+ a| 
+从列出的映像中选择一个。
+
+|===
+.. 单击*Validation*运行升级前验证检查。
++
+如果在验证期间发现任何错误或警告、则会显示这些错误或警告以及更正操作列表。您必须先解决所有错误、然后才能继续升级。  最好同时解决警告问题。
+
+
+
+. 单击 * 下一步 * 。
+. 单击 * 更新 * 。
++
+此时将再次执行验证。系统将显示任何剩余错误或警告以及更正操作列表。  必须先更正错误、然后才能继续升级。  如果验证完成后出现警告，请更正警告或选择*更新为警告*。
+
++
+
+NOTE: 默认情况下、ONTAP使用 link:concept_upgrade_methods.html["批量升级过程"] 升级包含八个或更多节点的集群。  从ONTAP 9.10.1开始、如果愿意、您可以选择*一次更新一个HA对*以覆盖默认值、并使用滚动升级过程使集群一次升级一个HA对。
+
++
+对于节点数超过2的MetroCluster配置、两个站点的HA对会同时启动ONTAP升级过程。  对于双节点MetroCluster配置、首先在未启动升级的站点上启动升级。第一个升级完全完成后、将开始对其余站点进行升级。
+
+. 如果升级因错误而暂停、请单击错误消息以查看详细信息、然后更正错误和 link:resume-upgrade-after-andu-error.html["继续升级"]。
+
+
+.完成后
+成功完成升级后、节点将重新启动、您将重定向到System Manager登录页面。如果节点重新启动需要很长时间、则应刷新浏览器。
+
+--
+.命令行界面
+--
+. 验证ONTAP目标软件映像
++
+
+NOTE: 如果要升级MetroCluster配置、则应先在集群A上执行以下步骤、然后在集群B上执行相同的步骤
+
++
+.. 删除先前的 ONTAP 软件包：
++
+[source, cli]
+----
+cluster image package delete -version previous_ONTAP_Version
+----
+.. 将目标ONTAP软件映像加载到集群软件包存储库：
++
+[source, cli]
+----
+cluster image package get -url location
+----
++
+[listing]
+----
+cluster1::> cluster image package get -url http://www.example.com/software/9.13.1/image.tgz
+
+Package download completed.
+Package processing completed.
+----
++
+如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，您还需要加载升级所需的ONTAP中间版本的软件包。例如、如果要从9.8升级到9.13.1、则需要加载适用于ONTAP 9.12.1的软件包、然后使用同一命令加载适用于9.13.1.的软件包。
+
+.. 验证集群软件包存储库中是否存在软件包：
++
+[source, cli]
+----
+cluster image package show-repository
+----
++
+[listing]
+----
+cluster1::> cluster image package show-repository
+Package Version  Package Build Time
+---------------- ------------------
+9.13.1              MM/DD/YYYY 10:32:15
+----
+.. 执行自动升级前检查：
++
+[source, cli]
+----
+cluster image validate -version package_version_number
+----
++
+如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，只需使用目标ONTAP软件包进行验证即可。  您无需单独验证中间升级映像。  例如、如果要从9.8升级到9.13.1、请使用9.13.1软件包进行验证。您不需要单独验证9.12.1软件包。
+
++
+[listing]
+----
+cluster1::> cluster image validate -version 9.13.1
+
+WARNING: There are additional manual upgrade validation checks that must be performed after these automated validation checks have completed...
+----
+.. 监控验证进度：
++
+[source, cli]
+----
+cluster image show-update-progress
+----
+.. 完成验证确定的所有必需操作。
+
+
+. 生成软件升级估计值：
++
+[source, cli]
+----
+cluster image update -version package_version_number -estimate-only
+----
++
+
+NOTE: 如果要升级MetroCluster配置、则可以在集群A或集群B上运行此命令  您不需要在两个集群上都运行它。
+
++
+软件升级估计会显示有关要更新的每个组件的详细信息、以及估计的升级持续时间。
+
+. 执行软件升级：
++
+[source, cli]
+----
+cluster image update -version package_version_number
+----
++
+** 如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，请使用packue_version_number的目标ONTAP版本。例如、如果要从ONTAP 9.8升级到9.13.1、请使用9.13.1作为packing_version_number。
+** 默认情况下、ONTAP使用 link:concept_upgrade_methods.html["批量升级过程"] 升级包含八个或更多节点的集群。  如果愿意、您可以使用 `-force-rolling` 参数以覆盖默认过程、并使用滚动升级过程使集群一次升级一个节点。
+** 完成每次接管和交还后，升级将等待 8 分钟，以使客户端应用程序能够从接管和交还期间发生的 I/O 暂停中恢复。如果您的环境需要更多或更少的时间来实现客户端稳定、则可以使用 `-stabilize-minutes` 用于指定不同稳定时间量的参数。
+** 对于包含4个以上节点的MetroCluster配置、自动升级会同时在两个站点的HA对上启动。  对于双节点MetroCluster配置、升级将在未启动升级的站点上开始。第一个升级完全完成后、将开始对其余站点进行升级。
+
+
++
+[listing]
+----
+cluster1::> cluster image update -version 9.13.1
+
+Starting validation for this update. Please wait..
+
+It can take several minutes to complete validation...
+
+WARNING: There are additional manual upgrade validation checks...
+
+Pre-update Check      Status     Error-Action
+--------------------- ---------- --------------------------------------------
+...
+20 entries were displayed
+
+Would you like to proceed with update ? {y|n}: y
+Starting update...
+
+cluster-1::>
+----
+. 显示集群更新进度：
++
+[source, cli]
+----
+cluster image show-update-progress
+----
++
+如果要升级4节点或8节点MetroCluster配置、请 `cluster image show-update-progress` command仅显示运行命令的节点的进度。您必须在每个节点上运行命令才能查看各个节点的进度。
+
+. 验证是否已在每个节点上成功完成升级。
++
+[source, cli]
+----
+cluster image show-update-progress
+----
++
+[listing]
+----
+cluster1::> cluster image show-update-progress
+
+                                             Estimated         Elapsed
+Update Phase         Status                   Duration        Duration
+-------------------- ----------------- --------------- ---------------
+Pre-update checks    completed                00:10:00        00:02:07
+Data ONTAP updates   completed                01:31:00        01:39:00
+Post-update checks   completed                00:10:00        00:02:00
+3 entries were displayed.
+
+Updated nodes: node0, node1.
+----
+. 触发 AutoSupport 通知：
++
+[source, cli]
+----
+autosupport invoke -node * -type all -message "Finishing_NDU"
+----
++
+如果集群未配置为发送 AutoSupport 消息，则通知的副本将保存在本地。
+
+. 如果要升级MetroCluster FC配置、请验证集群是否已启用自动计划外切换。
++
+
+NOTE: 如果要升级标准配置或MetroCluster IP配置、则无需执行此步骤。
+
++
+.. 检查是否已启用自动计划外切换：
++
+[source, cli]
+----
+metrocluster show
+----
++
+如果启用了自动计划外切换，则命令输出中将显示以下语句：
+
++
+....
+AUSO Failure Domain    auso-on-cluster-disaster
+....
+.. 如果输出中未显示该语句，请启用自动计划外切换：
++
+[source, cli]
+----
+metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster
+----
+.. 验证是否已启用自动计划外切换：
++
+[source, cli]
+----
+metrocluster show
+----
+
+
+
+
+--
+====
+
+
+== 视频：轻松升级
+
+了解 ONTAP 9.8 中 System Manager 简化的 ONTAP 升级功能。
+
+video::xwwX8vrrmIk[youtube,width=848,height=480]
+.相关信息
+* https://aiq.netapp.com/["启动 Active IQ"]
+* https://docs.netapp.com/us-en/active-iq/["Active IQ 文档"]
+

@@ -19,20 +19,16 @@ summary: 您可以无中断地更新集群上的 ONTAP 版本。
 
 
 [role="lead"]
+对于自动升级、ONTAP会自动在每个节点上安装目标ONTAP映像、并验证集群组件以确保集群可以无中断升级、然后执行 xref:concept_upgrade_methods.html[批量升级或滚动升级] 根据节点数量在后台运行。
+
 您可以使用命令行界面（ CLI ）验证集群是否可以无中断升级，在每个节点上安装目标 ONTAP 映像，然后在后台执行升级。
 
 
 NOTE: 如果您不打算监控升级过程的进度，则最好这样做 link:task_requesting_notification_of_issues_encountered_in_nondisruptive_upgrades.html["请求可能需要手动干预的错误的 EMS 通知"]。
 
 .开始之前
-* 您应启动 Active IQ 数字顾问。
-+
-Active IQ Digital Advisor 的 Upgrade Advisor 组件可帮助您规划成功的升级。
-
-+
-Active IQ Digital Advisor 会向所有与 *SupportEdge* 签有有效合同的 NetApp 客户提供数据驱动型洞察和建议（功能因产品和支持层而异）。
-
-* 您必须满足升级准备要求。
+* 您应该 link:prepare.html["准备升级"]。
+* 您应该 link:download-software-image.html["下载ONTAP软件映像"] 目标ONTAP版本。
 * 对于每个 HA 对，每个节点应在同一广播域上具有一个或多个端口。
 +
 如果您有8个或更多节点、则会在自动无中断升级中使用批量升级方法。  在 ONTAP 9.7 及更早版本中，如果使用批处理方法，则 LIF 会迁移到要升级的节点的 HA 配对节点。  如果配对节点在同一广播域中没有任何端口，则 LIF 迁移将失败。
@@ -44,19 +40,23 @@ Active IQ Digital Advisor 会向所有与 *SupportEdge* 签有有效合同的 Ne
 * 如果要升级MetroCluster FC配置中的ONTAP、则应启用集群以自动执行计划外切换。
 
 
-.关于此任务
-。 `cluster image validate` 命令会检查集群组件以验证升级是否可以无中断完成、然后提供每个检查的状态以及执行软件升级之前必须执行的任何必要操作。
-
 
 NOTE: 修改的设置 `storage failover modify-auto-giveback` 自动无中断升级(andu)开始之前的命令选项不会对升级过程产生任何影响。在更新所需的接管 / 交还期间， andu 进程会忽略此选项的任何预设值。例如、设置 `-autogiveback` 在开始andu之前设置为false不会中断交还前的自动升级。
 
+
+
+== 第1步：将目标ONTAP软件映像加载到集群软件包存储库中
+
+要开始ONTAP软件升级过程、您必须在集群软件包存储库中提供目标ONTAP软件映像。
+
+.步骤
 . 删除先前的 ONTAP 软件包：
 +
 [source, cli]
 ----
 cluster image package delete -version previous_ONTAP_Version
 ----
-. 下载目标 ONTAP 软件包：
+. 将目标ONTAP软件映像加载到集群软件包存储库：
 +
 [source, cli]
 ----
@@ -71,7 +71,7 @@ Package download completed.
 Package processing completed.
 ----
 +
-如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，您还需要下载升级所需的ONTAP中间版本的软件包。例如、如果要从9.8升级到9.13.1、则需要下载适用于ONTAP 9.12.1的软件包、然后使用同一命令下载适用于9.13.1.的软件包。
+如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，您还需要加载升级所需的ONTAP中间版本的软件包。例如、如果要从9.8升级到9.13.1、则需要加载适用于ONTAP 9.12.1的软件包、然后使用同一命令加载适用于9.13.1.的软件包。
 
 . 验证集群软件包存储库中是否存在软件包：
 +
@@ -87,7 +87,15 @@ Package Version  Package Build Time
 ---------------- ------------------
 9.13.1              MM/DD/YYYY 10:32:15
 ----
-. 验证集群是否已做好无中断升级的准备：
+
+
+
+
+== 第2步：执行自动升级前检查
+
+(可选)在自动升级ONTAP软件之前、您可以使用 `cluster image validate` 命令以验证集群是否可以成功升级。  。 `cluster image validate` 命令会对集群组件运行一系列检查、然后提供一系列已执行的特定验证以及在继续升级之前需要采取的任何更正操作。
+
+. 执行自动升级前检查：
 +
 [source, cli]
 ----
@@ -112,6 +120,12 @@ WARNING: There are additional manual upgrade validation checks that must be perf
 cluster image show-update-progress
 ----
 . 完成验证确定的所有必需操作。
+
+
+
+
+== 第3步：升级ONTAP软件
+
 . 生成软件升级估计值：
 +
 [source, cli]
@@ -232,34 +246,6 @@ metrocluster show
 
 
 
-
-
-
-== 在自动升级过程中出现错误后恢复升级（使用命令行界面）
-
-如果自动升级因错误而暂停，您可以解决此错误并恢复自动升级，也可以取消自动升级并手动完成此过程。如果选择继续自动升级，请勿手动执行任何升级步骤。
-
-.关于此任务
-如果要手动完成升级、请使用 `cluster image cancel-update` 命令以取消自动过程并手动继续。如果要继续自动升级，请完成以下步骤。
-
-.步骤
-. 查看升级错误：
-+
-[source, cli]
-----
-cluster image show-update-progress
-----
-. 解决此错误。
-. 恢复更新：
-+
-[source, cli]
-----
-cluster image resume-update
-----
-
-
-.完成后
-link:task_what_to_do_after_upgrade.html["执行升级后检查"]。
 
 .相关信息
 * https://aiq.netapp.com/["启动 Active IQ"]

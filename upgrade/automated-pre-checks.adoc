@@ -1,0 +1,185 @@
+---
+sidebar: sidebar 
+permalink: upgrade/automated-pre-checks.html 
+keywords: netapp, ontap, automate, automatic, automated, upgrade, nondisruptive, nondisruptively, non-disruptive update, nondisruptive upgrade, upgrade a cluster, shift workload between clusters, hardware platform, configuration, software image, update, update ONTAP, update software, ndu 
+summary: 您可以无中断地更新集群上的 ONTAP 版本。 
+---
+= 在计划内升级之前、执行ONTAP自动升级前检查
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+:toc-position: content
+
+
+[role="lead"]
+您不必在升级ONTAP软件的过程中执行ONTAP自动升级预检查。  独立于ONTAP自动升级过程执行升级前检查、可以查看对集群执行的检查、并提供开始实际升级之前应更正的任何错误或警告列表。  例如、假设您希望在计划在两周后进行的维护期间升级ONTAP软件。  在等待计划日期时、您可以在维护时段之前运行自动升级预检查并采取任何必要的更正操作。  这样可以降低在开始升级后出现意外配置错误的风险。
+
+如果您已准备好开始ONTAP软件升级、则无需执行此操作步骤。  您应遵循 link:automated-upgrade-task.html["自动升级过程"]，包括执行自动升级预检查。
+
+
+NOTE: 对于MetroCluster配置、应先在集群A上执行这些步骤、然后在集群B上执行相同的步骤
+
+.开始之前
+您应该 link:download-software-image.html["下载目标ONTAP软件映像"]。
+
+对执行自动升级预检查 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，您只需要下载目标ONTAP版本的软件包。  在开始实际升级之前、您不需要加载中间ONTAP版本。  例如、如果要对从9.8升级到9.13.1的过程执行自动升级前检查、则需要下载ONTAP 9.13.1.的软件包。  您无需下载ONTAP 9.12.1的软件包。
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 验证ONTAP目标映像：
++
+
+NOTE: 如果要升级MetroCluster配置、则应验证集群A、然后对集群B重复此验证过程
+
++
+.. 根据您运行的 ONTAP 版本，执行以下步骤之一：
++
+|===
+
+
+| 如果您正在运行 ... | 执行此操作 ... 
+
+
+| ONTAP 9.8或更高版本  a| 
+单击 * 集群 > 概述 * 。
+
+
+
+| ONTAP 9.5 ， 9.6 和 9.7  a| 
+单击 * 配置 * > * 集群 * > * 更新 * 。
+
+
+
+| ONTAP 9.4 或更早版本  a| 
+单击 * 配置 * > * 集群更新 * 。
+
+|===
+.. 在 * 概述 * 窗格的右角，单击 image:icon_kabob.gif["菜单图标"]。
+.. 单击 * ONTAP Update* 。
+.. 在*Cluster Update*选项卡中，添加新映像或选择可用映像。
++
+|===
+
+
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+从本地文件夹添加新的软件映像
+
+您应该已经拥有了 link:download-software-image.html["已下载映像"] 到本地客户端。
+ a| 
+... 在*可用软件映像*下，单击*从本地添加*。
+... 浏览到保存软件映像的位置，选择该映像，然后单击 * 打开 * 。
+
+
+
+
+ a| 
+从HTTP或FTP服务器添加新的软件映像
+ a| 
+... 单击 * 从服务器添加 * 。
+... 在*添加新的软件映像*对话框中，输入从NetApp 支持站点 下载ONTAP软件映像的HTTP或FTP服务器的URL。
++
+对于匿名 FTP ，必须在中指定 URL ftp://anonymous@ftpserver[] 格式。
+
+... 单击 * 添加 * 。
+
+
+
+
+ a| 
+选择一个可用映像
+ a| 
+从列出的映像中选择一个。
+
+|===
+.. 单击*Validation*运行升级前验证检查。
++
+如果在验证期间发现任何错误或警告、则会显示这些错误或警告以及更正操作列表。您必须先解决所有错误、然后才能继续升级。  最好同时解决警告问题。
+
+
+
+
+
+--
+.命令行界面
+--
+. 将目标ONTAP软件映像加载到集群软件包存储库：
++
+[source, cli]
+----
+cluster image package get -url location
+----
++
+[listing]
+----
+cluster1::> cluster image package get -url http://www.example.com/software/9.13.1/image.tgz
+
+Package download completed.
+Package processing completed.
+----
+. 验证集群软件包存储库中是否存在软件包：
++
+[source, cli]
+----
+cluster image package show-repository
+----
++
+[listing]
+----
+cluster1::> cluster image package show-repository
+Package Version  Package Build Time
+---------------- ------------------
+9.13.1              MM/DD/YYYY 10:32:15
+----
+. 执行自动升级前检查：
++
+[source, cli]
+----
+cluster image validate -version package_version_number -show-validation-details true
+----
++
+
+NOTE: 如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，使用目标ONTAP软件包进行验证。  您无需单独验证中间升级映像。  例如、如果要从9.8升级到9.13.1、则应使用9.13.1软件包进行验证。您不需要单独验证9.12.1软件包。
+
++
+[listing]
+----
+cluster1::> cluster image validate -version 9.13.1 -show-validation-details true
+
+It can take several minutes to complete validation...
+Pre-update Check       Status      Error-Action
+---------------------  ---------   -------------------------------------------
+CIFS status            OK
+Cluster health status  OK
+Clsuter quorum status  OK
+Disk status            OK
+High Availability      OK
+status
+LIF status             OK
+LIFs on home node      OK
+MetroCluster           OK
+configuration status
+SnapMirror status      OK
+Overall Status         OK
+10 entries were displayed.
+
+----
++
+此时将显示一个完整的自动升级预检查列表、以及在开始升级过程之前应解决的任何错误或警告。
+
+
+
+--
+====
