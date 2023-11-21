@@ -15,36 +15,50 @@ summary: 要限制与授权客户端的连接，所有 ONTAP 对象存储都需�
 要限制与授权客户端的连接，所有 ONTAP 对象存储都需要用户授权。
 
 .开始之前。
-必须已存在启用 S3 的 SVM 。
+已启用S3的Storage VM必须已存在。
 
 .关于此任务
-可以为 S3 用户授予对 SVM 中任何存储分段的访问权限，但不能在多个 SVM 中访问此存储分段的权限。
-
-创建 S3 用户时，将生成访问密钥和机密密钥。必须与用户共享它们以及对象存储的 FQDN 和存储分段名称。S3用户密钥可与一起显示 `vserver object-store-server user show` 命令：
+可以为S3用户授予对Storage VM中任何存储分段的访问权限。创建S3用户时、还会为此用户生成访问密钥和机密密钥。应与用户共享它们以及对象存储的FQDN和分段名称。可以使用查看S3用户密钥 `vserver object-store-server user show` 命令：
 
 您可以在存储分段策略或对象服务器策略中为 S3 用户授予特定访问权限。
 
 [NOTE]
 ====
-创建对象存储服务器时，将创建一个 root 用户（ UID 0 ），这是一个有权访问所有存储分段的有权限用户。最好创建具有特定权限的管理员用户角色，而不是将 ONTAP S3 作为 root 用户进行管理。
+创建新的对象存储服务器时、ONTAP会创建一个root用户(UID 0)、该用户是有权访问所有分段的特权用户。NetApp建议创建具有特定权限的管理员用户角色、而不是将ONTAP S3作为root用户进行管理。
 
 ====
 [role="tabbed-block"]
 ====
-.System Manager
---
-. 编辑 Storage VM ：单击 * 存储 > Storage VM* ，单击此 Storage VM ，单击 * 设置 * ，然后单击 image:icon_pencil.gif["铅笔图标"] 在 S3 下。
-. 添加用户：单击 * 用户 * ，然后单击 * 添加 * 。
-. 输入名称并单击 * 保存 * 。
-. 请务必保存访问密钥和机密密钥，从 S3 客户端访问时需要使用这些密钥。
-
-
---
 .命令行界面
 --
 . 创建 S3 用户：
-`vserver object-store-server user create -vserver _svm_name_ -user _user_name_ [-comment _text_]`
-. 请务必保存访问密钥和机密密钥，从 S3 客户端访问时需要使用这些密钥。
+`vserver object-store-server user create -vserver svm_name -user user_name -comment [-comment text] -key-time-to-live time`
++
+** 添加注释是可选的。
+** 从ONTAP 9.14.1开始、您可以在中定义密钥的有效期 `-key-time-to-live` 参数。您可以按此格式添加保留期限、以指示访问密钥到期前的期限： `P[<integer>D]T[<integer>H][<integer>M][<integer>S] | P<integer>W`
+例如、如果要输入一天、两小时、三分钟和四秒的保留期限、请将值输入为 `P1DT2H3M4S`。除非指定、否则密钥的有效期不定。
++
+以下示例将创建一个名为的用户 `sm_user1` 在Storage VM上 `vs0`，密钥保留期限为一周。
+
++
+[listing]
+----
+vserver object-store-server user create -vserver vs0 -user sm_user1 -key-time-to-live P1W
+----
+
+
+. 请务必保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
+
+
+--
+.System Manager
+--
+. 单击 * 存储 > 存储 VM* 。选择需要添加用户的Storage VM、选择*设置*、然后单击 image:icon_pencil.gif["铅笔图标"] 在 S3 下。
+. 要添加用户，请单击*用户>添加*。
+. 输入用户的名称。
+. 从ONTAP 9.14.1开始、您可以指定为用户创建的访问密钥的保留期限。您可以指定密钥自动过期的保留期限(以天、小时、分钟或秒为单位)。默认情况下、该值设置为 `0` 这表示密钥无限期有效。
+. 单击 * 保存 * 。此时将创建用户、并为该用户生成访问密钥和机密密钥。
+. 下载或保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
 
 
 --

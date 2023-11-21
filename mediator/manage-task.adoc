@@ -1,7 +1,7 @@
 ---
 permalink: mediator/manage-task.html 
 sidebar: sidebar 
-keywords: mediator, username, password, change, uninstall 
+keywords: mediator, service, username, user name, password, change, uninstall, self-signed certificate, self signed certificate, regenerate, stop mediator service, uninstall scst 
 summary: 安装 ONTAP 调解器服务后，您可能需要更改用户名或密码。您还可以卸载ONTAP调解器服务。 
 ---
 = 管理 ONTAP 调解器服务
@@ -358,4 +358,46 @@ _module-filename_
  + Remove successful.
  [root@mediator-host ~]#
 ....
+
+
+
+
+== 重新生成临时自签名证书
+
+.关于此任务
+* 您可以在安装了ONTAP调解器服务的Linux主机上执行此任务。
+* 只有在安装ONTAP调解器后、由于主机的主机名或IP地址发生更改、生成的自签名证书已废弃时、才能执行此任务。
+* 在临时自签名证书被可信的第三方证书替换后、您不能使用此任务重新生成证书。  如果没有自签名证书、则发生原因此操作步骤将失败。
+
+
+.步骤
+要为当前主机重新生成新的临时自签名证书、请执行以下步骤：
+
+. 重新启动ONTAP调解器：
++
+`./make_self_signed_certs.sh overwrite`
+
++
+[listing]
+----
+[root@xyz000123456 ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
+[root@xyz000123456 server_config]# ./make_self_signed_certs.sh overwrite
+
+Adding Subject Alternative Names to the self-signed server certificate
+#
+# OpenSSL example configuration file.
+Generating self-signed certificates
+Generating RSA private key, 4096 bit long modulus (2 primes)
+..................................................................................................................................................................++++
+........................................................++++
+e is 65537 (0x010001)
+Generating a RSA private key
+................................................++++
+.............................................................................................................................................++++
+writing new private key to 'ontap_mediator_server.key'
+-----
+Signature ok
+subject=C = US, ST = California, L = San Jose, O = "NetApp, Inc.", OU = ONTAP Core Software, CN = ONTAP Mediator, emailAddress = support@netapp.com
+Getting CA Private Key
+----
 

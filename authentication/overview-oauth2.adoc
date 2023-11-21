@@ -1,0 +1,149 @@
+---
+sidebar: sidebar 
+permalink: authentication/overview-oauth2.html 
+keywords: oauth 2.0, oauth2, access token, bearer token, authentication, authorization, mutual tls, mtls, adfs, auth0, oidc 
+summary: '从ONTAP 9.14开始、您可以选择使用开放授权(OAuth2.0)框架控制对ONTAP集群的访问。您可以使用任何ONTAP管理界面配置此功能、包括ONTAP命令行界面、System Manager和REST API。但是、只有当客户端使用REST API访问ONTAP时、才能应用OAuth2.0授权和访问控制决策。' 
+---
+= ONTAP OAuth2.0实施概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+从ONTAP 9.14开始、您可以选择使用开放授权(OAuth2.0)框架控制对ONTAP集群的访问。您可以使用任何ONTAP管理界面配置此功能、包括ONTAP命令行界面、System Manager和REST API。但是、只有当客户端使用REST API访问ONTAP时、才能应用OAuth2.0授权和访问控制决策。
+
+
+NOTE: OAuth2.0支持是在ONTAP 9.14.0中首次推出的、因此其可用性取决于您使用的ONTAP版本。请参见 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 发行说明》"^] 有关详细信息 ...
+
+
+
+== 功能和优势
+
+下面将介绍在ONTAP中使用OAuth2.0的主要功能和优势。
+
+.支持OAuth2.0标准
+OAuth2.0是行业标准授权框架。它用于使用签名访问令牌限制和控制对受保护资源的访问。使用OAuth2.0有几个好处：
+
+* 授权配置有许多选项
+* 切勿泄露客户端凭据(包括密码)
+* 根据您的配置、令牌可以设置为过期
+* 非常适合与REST API结合使用
+
+
+.已通过多个常见授权服务器的测试
+ONTAP实施旨在与任何符合OAuth2.0标准的授权服务器兼容。它已通过以下常见服务器或服务的测试、包括：
+
+* auth0
+* Active Directory联合身份验证服务(ADFS)
+* Keyloak
+
+
+.支持多个并发授权服务器
+一个ONTAP集群最多可以定义八个授权服务器。这样、您就可以灵活地满足各种安全环境的需求。
+
+.与REST角色集成
+ONTAP授权决定最终取决于分配给用户或组的REST角色。这些角色或作为独立范围在访问令牌中承载、或基于本地ONTAP定义以及Active Directory或LDAP组。
+
+.用于使用受发件人限制的访问令牌的选项
+您可以将ONTAP和授权服务器配置为使用相互传输层安全(MTLS)、以增强客户端身份验证。它可以保证OAuth2.0访问令牌仅供最初颁发给的客户端使用。此功能支持并符合多项常见的安全建议、包括由FAPI和miter制定的安全建议。
+
+
+
+== 实施和配置
+
+概括地说、在开始使用时、您应该考虑OAuth2.0实施和配置的几个方面。
+
+.ONTAP中的OAuth2.0实体
+OAuth2.0授权框架定义了多个实体、这些实体可以映射到数据中心或网络中的真实或虚拟元素。下表显示了OAuth2.0实体及其对ONTAP的适应性。
+
+[cols="30,70"]
+|===
+| OAuth2.0实体 | Description 
+
+
+| 资源 | 提供通过内部ONTAP命令访问ONTAP资源的REST API端点。 
+
+
+| 资源所有者 | 默认情况下、创建或拥有受保护资源的ONTAP集群用户。 
+
+
+| 资源服务器 | ONTAP集群中受保护资源的主机。 
+
+
+| 客户端 | 代表资源所有者或在获得资源所有者权限的情况下请求访问REST API端点的应用程序。 
+
+
+| 授权服务器 | 通常是一个专用服务器、负责颁发访问令牌并强制实施管理策略。 
+|===
+.核心ONTAP配置
+您需要将ONTAP集群配置为启用并使用OAuth2.0。这包括建立与授权服务器的连接以及定义所需的ONTAP授权配置。您可以使用任何管理界面执行此配置、其中包括：
+
+* ONTAP 命令行界面
+* System Manager
+* ONTAP REST API
+
+
+.环境和支持服务
+除了ONTAP定义之外、您还需要配置授权服务器。如果您使用的是组到角色映射、则还需要配置Active Directory组或LDAP等效项。
+
+.支持的ONTAP客户端
+从ONTAP 9.14开始、REST API客户端可以使用OAuth2.0访问ONTAP。在发出REST API调用之前、您需要从授权服务器获取访问令牌。然后、客户端使用HTTP授权请求标头将此令牌作为_p承载 令牌_传递到ONTAP集群。根据所需的安全级别、您还可以在客户端创建和安装证书、以使用基于MTLS的受发件人限制的令牌。
+
+
+
+== 选定术语
+
+当您开始探索使用ONTAP部署OAuth2.0时、熟悉其中的一些术语会很有帮助。请参见 link:../authentication/overview-oauth2.html#additional-resources["其他资源"] 有关OAuth2.0的详细信息的链接。
+
+访问令牌:: 由授权服务器发出的令牌、由OAuth2.0客户端应用程序使用它来发出访问受保护资源的请求。
+JSON Web令牌:: 用于格式化访问令牌的标准。JSON用于以紧凑格式表示OAuth2.0索赔、索赔分为三个主要部分。
+受发件人限制的访问令牌:: 一项基于相互传输层安全(MTLS)协议的可选功能。通过在令牌中使用额外的确认声明、可确保访问令牌仅供最初发出访问令牌的客户端使用。
+JSON Web密钥集:: JWKS是ONTAP用来验证客户端提供的JWT令牌 的公共密钥集合。通常、授权服务器会通过专用URI提供这些密钥集。
+范围:: 范围提供了一种限制或控制应用程序对受保护资源(如ONTAP REST API)的访问的方法。它们在访问令牌中以字符串表示。
+ONTAP REST角色:: REST角色是在ONTAP 9.6中引入的、是ONTAP RBAC框架的核心部分。这些角色与ONTAP仍支持的早期传统角色不同。ONTAP中的OAuth2.0实施仅支持REST角色。
+HTTP授权标头:: HTTP请求中包含的标头、用于在执行REST API调用时标识客户端和关联权限。根据身份验证和授权的执行方式、可以选择多种模式或实施方式。在向ONTAP提供OAuth2.0访问令牌时、此令牌标识为_承载 令牌_。
+HTTP基本身份验证:: ONTAP仍支持早期的HTTP身份验证技术。纯文本凭据(用户名和密码)与冒号串联在一起、并以base64进行编码。该字符串将放置在授权请求标头中并发送到服务器。
+FAPI:: OpenID Foundation的一个工作组、为金融行业提供协议、数据架构和安全建议。API最初称为财务级API。
+斜接:: 一家私营非营利公司、为美国空军和美国政府提供技术和安全指导。
+
+
+
+
+== 其他资源
+
+下文提供了若干额外资源。您应查看这些站点以获取有关OAuth2.0和相关标准的更多信息。
+
+.协议和标准
+* https://www.rfc-editor.org/info/rfc6749["RFC 6749：《OAuth2.0授权框架》"^]
+* https://www.rfc-editor.org/info/rfc7519["RFC 7519：JSON Web令牌(JWTs)"^]
+* https://www.rfc-editor.org/info/rfc7523["RFC 7523：《用于OAuth2.0客户端身份验证和授权授予的JSON Web令牌(JWT, Web令牌)配置文件》"^]
+* https://www.rfc-editor.org/info/rfc7662["RFC 7662：OAuth2.0令牌自省"^]
+* https://www.rfc-editor.org/info/rfc7800["RFC报废：JWT的拥有证明密钥"^]
+* https://www.rfc-editor.org/info/rfc8705["RFC 8705：《OAuth2.0相互TLS客户端身份验证和受证书制约的访问令牌》"^]
+
+
+.组织
+* https://openid.net["OpenID Foundation"^]
+* https://openid.net/wg/fapi["FAPI工作组"^]
+* https://www.mitre.org["斜接"^]
+* https://www.iana.org/assignments/jwt/jwt.xhtml["IANA - JWT"^]
+
+
+.产品和服务
+* https://auth0.com["auth0"^]
+* https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview["ADFS概述"^]
+* https://www.keycloak.org["Keyloak"^]
+
+
+.其他工具和实用程序
+* https://jwt.io["验证0的Jwt"^]
+* https://www.openssl.org["OpenSSL"^]
+
+
+.NetApp文档和资源
+* https://docs.netapp.com/us-en/ontap-automation["ONTAP自动化"^] 文档。
+

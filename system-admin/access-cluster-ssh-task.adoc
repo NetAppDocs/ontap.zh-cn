@@ -16,9 +16,9 @@ summary: 您可以通过向集群发出问题描述SSH请求来执行管理任�
 .您需要的内容
 * 您必须具有配置为使用的用户帐户 `ssh` 作为访问方法。
 +
-。 `-application` 的参数 `security login` 命令用于指定用户帐户的访问方法。。 `security login` https://review.docs.netapp.com/us-en/ontap-cli-9131_main/security-login-create.html#description["手册页"^] 包含追加信息。
+。 `-application` 的参数 `security login` 命令用于指定用户帐户的访问方法。。 `security login` https://review.docs.netapp.com/us-en/ontap-cli-9141_main/security-login-create.html#description["手册页"^] 包含追加信息。
 
-* 如果您使用Active Directory (AD)域用户帐户访问集群、则必须已通过启用了CIFS的Storage Virtual Machine (SVM)为集群设置身份验证通道、并且您的AD域用户帐户也必须已通过添加到集群中 `ssh` 作为一种访问方法、然后 `domain` 作为身份验证方法。
+* 如果您使用Active Directory (AD)域用户帐户访问集群、则必须已通过启用了CIFS的Storage VM为集群设置身份验证通道、并且您的AD域用户帐户也必须已通过添加到集群中 `ssh` 作为一种访问方法、然后 `domain` 作为身份验证方法。
 * 如果使用 IPv6 连接，则必须已在集群上配置并启用 IPv6 ，并且防火墙策略必须已配置 IPv6 地址。
 +
 。 `network options ipv6 show` 命令用于显示是否已启用IPv6。。 `system services firewall policy show` 命令可显示防火墙策略。
@@ -54,6 +54,7 @@ AD 用户名和域名不区分大小写。但是， ONTAP 用户名区分大小�
 
 * 从ONTAP 9.4开始、您可以执行此操作 link:../authentication/grant-access-nis-ldap-user-accounts-task.html["启用SSH多因素身份验证"^] LDAP和NIS远程用户。
 * 从ONTAP 9.13.1开始、您可以选择在SSH身份验证过程中添加证书验证、以增强登录安全性。为此、 link:../authentication/manage-ssh-public-keys-and-certificates.html["将X.509证书与公共密钥相关联"^] 帐户使用的。如果使用SSH公共密钥和X.509证书登录、则ONTAP会在使用SSH公共密钥进行身份验证之前检查X.509证书的有效性。如果此证书已过期或已撤销、则会拒绝SSH登录、并且SSH公共密钥会自动禁用。
+* 从ONTAP 9.14.1开始、您可以选择在SSH身份验证过程中添加Cisco双因素身份验证、以增强登录安全性。启用Cisco Duo身份验证后首次登录时、用户需要注册一个设备、以用作SSH会话的身份验证程序。请参见 link:../authentication/configure-cisco-duo-mfa-task.html["为SSH登录配置Cisco Duo 2FA"^] 有关为ONTAP配置Cisco双核SSH身份验证的详细信息、请参见。
 
 
 .步骤

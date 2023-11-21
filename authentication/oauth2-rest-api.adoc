@@ -1,0 +1,82 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-rest-api.html 
+keywords: acquire token, curl, rest api call, keycloak 
+summary: ONTAP中的OAuth2.0实施支持REST API客户端应用程序。您可以使用cURL对简单的REST API调用进行问题描述、以便开始使用OAuth2.0。 
+---
+= 使用OAuth2.0对REST API调用执行问题描述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+ONTAP中的OAuth2.0实施支持REST API客户端应用程序。您可以使用cURL对简单的REST API调用进行问题描述、以便开始使用OAuth2.0。以下示例将检索ONTAP集群版本。
+
+
+
+== 开始之前
+
+您必须为ONTAP集群配置并启用OAuth2.0功能。其中包括定义授权服务器。
+
+
+
+== 第1步：获取访问令牌
+
+您需要获取用于REST API调用的访问令牌。令牌请求在ONTAP之外执行、确切的操作步骤取决于授权服务器及其配置。您可以通过Web浏览器、使用CURL命令或使用编程语言来请求令牌。
+
+为了便于说明、下面提供了一个示例、说明如何使用CURL从Key斗 篷请求访问令牌。
+
+.Keyloak示例
+[source, curl]
+----
+curl --request POST \
+--location 'https://superzap.dev.netapp.com:8443/realms/peterson/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'client_id=dp-client-1' \
+--data-urlencode 'grant_type=client_credentials' \
+--data-urlencode 'client_secret=5iTUf9QKLGxAoYa1iR33vlD5A2xq09V7'
+----
+您应复制并保存返回的令牌。
+
+
+
+== 第2步：对REST API调用执行问题描述操作
+
+获得有效的访问令牌后、您可以使用带有访问令牌的cURL命令对问题描述A REST API调用进行访问。
+
+.参数和变量
+下表介绍了cURL示例中的两个变量。
+
+[cols="25,75"]
+|===
+| 变量 | Description 
+
+
+| $FQDN_IP | ONTAP管理LIF的完全限定域名或IP地址。 
+
+
+| $access_令牌 | 授权服务器发出的OAuth2.0访问令牌。 
+|===
+您应先在Bash Shell环境中设置这些变量、然后再执行此CURL示例。例如、在Linux命令行界面中键入以下命令以设置和显示FQDN变量：
+
+[listing]
+----
+FQDN_IP=172.14.31.224
+echo $FQDN_IP
+172.14.31.224
+----
+在本地bash shell中定义了这两个变量后、您可以复制此URL命令并将其粘贴到命令行界面中。按*Enter*键替换变量并问题描述命令。
+
+.curl 示例
+[source, curl]
+----
+curl --request GET \
+--location "https://$FQDN_IP/api/cluster?fields=version" \
+--include \
+--header "Accept: */*" \
+--header "Authorization: Bearer $ACCESS_TOKEN"
+----

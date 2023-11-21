@@ -29,7 +29,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
  a| 
 `-vserver`
  a| 
-帐户访问的 SVM 的名称。默认值为集群的管理 SVM 的名称。
+帐户访问的Storage VM的名称。默认值为集群的管理Storage VM的名称。
  a| 
 
 
@@ -45,7 +45,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
  a| 
 `-application`
  a| 
-用于访问 SVM 的应用程序：
+用于访问Storage VM的应用程序：
 
 * `http`
 * `ontapi`
@@ -87,8 +87,8 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
  a| 
 分配给帐户的访问控制角色：
 
-* 对于集群(管理SVM)、默认值为 `admin`。
-* 对于数据SVM、默认值为 `vsadmin`。
+* 对于集群(管理Storage VM)、默认值为 `admin`。
+* 对于数据Storage VM、默认值为 `vsadmin`。
 
  a| 
 
@@ -113,18 +113,12 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
  a| 
 `-second-authentication-method`
  a| 
-在 * ONTAP 9.3* 中进行多因素身份验证时使用的第二种身份验证方法：
+多因素身份验证的第二种身份验证方法：
 
 * `none` 如果不使用多因素身份验证、则为默认值
 * `publickey` 用于公共密钥身份验证 `authmethod` 是password或nsswitch
 * `password` 用于用户密码身份验证 `authmethod` 是公共密钥
 * `nsswitch` 当auth方法 为publickey时用于用户密码身份验证
-+
-[NOTE]
-====
-从ONTAP 9.4开始、支持nsswitch。
-
-====
 
 
 身份验证顺序始终是公有密钥和密码。
@@ -136,6 +130,106 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 `-is-ldap-fastbind`
  a| 
 从ONTAP 9.11.1开始、如果设置为true、则会为nsswitch身份验证启用LDAP快速绑定；默认值为false。要使用LDAP快速绑定、请 `-authentication-method` 值必须设置为 `nsswitch`。 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["了解用于nsswitch身份验证的LDAP快速绑定。"]
+ a| 
+
+|===
+
+
+== 配置Cisco Duo安全信息
+
+您可以在中提供这些值 `security login duo create` 命令。
+
+[cols="3*"]
+|===
+
+
+| 字段 | Description | 您的价值 
+
+
+ a| 
+`-vserver`
+ a| 
+要应用Duo身份验证设置的Storage VM (在ONTAP命令行界面中称为Vserver)。
+ a| 
+
+
+
+ a| 
+`-integration-key`
+ a| 
+您的集成密钥、在向Duo注册SSH应用程序时获得。
+ a| 
+
+
+
+ a| 
+`-secret-key`
+ a| 
+您的机密密钥、在向Duo注册SSH应用程序时获得。
+ a| 
+
+
+
+ a| 
+`-api-host`
+ a| 
+向Duo注册SSH应用程序时获得的API主机名。例如：
+
+[listing]
+----
+api-<HOSTNAME>.duosecurity.com
+---- a| 
+
+
+
+ a| 
+`-fail-mode`
+ a| 
+如果出现服务或配置错误、导致无法进行Duo身份验证、则操作将失败 `safe` (允许访问)或 `secure` (拒绝访问)。默认值为 `safe`，这意味着如果Duo身份验证因诸如Duo API服务器不可访问等错误而失败，则会绕过它。
+ a| 
+
+
+
+ a| 
+`-http-proxy`
+ a| 
+使用指定的HTTP代理。如果HTTP代理需要身份验证、请在代理URL中包含凭据。例如：
+
+[listing]
+----
+http-proxy=http://username:password@proxy.example.org:8080
+---- a| 
+
+
+
+ a| 
+`-autopush`
+ a| 
+两者之一 `true` 或 `false`。默认值为 `false`。条件 `true`，Duo会自动向用户的电话发送推入登录请求，如果推入不可用，则恢复到电话呼叫。请注意、这会有效地禁用密码身份验证。条件 `false`，则系统将提示用户选择一种身份验证方法。
+
+配置时 `autopush = true`，我们建议设置 `max-prompts = 1`。
+ a| 
+
+
+
+ a| 
+`-max-prompts`
+ a| 
+如果用户无法通过第二个因素进行身份验证、Duo会提示用户再次进行身份验证。此选项设置Duo拒绝访问前显示的最大提示数。必须为 `1`， `2`或 `3`。默认值为 `1`。
+
+例如、何时 `max-prompts = 1`，则用户需要在第一个提示符处成功进行身份验证，而如果 `max-prompts = 2`，如果用户在初始提示符处输入的信息不正确，则会再次提示他/她进行身份验证。
+
+配置时 `autopush = true`，我们建议设置 `max-prompts = 1`。
+
+为了获得最佳体验、仅使用公共密钥身份验证的用户将始终拥有 `max-prompts` 设置为 `1`。
+ a| 
+
+
+
+ a| 
+`-enabled`
+ a| 
+启用Duo双重身份验证。设置为 `true` 默认情况下。启用后、在SSH登录期间会根据配置的参数强制实施Duo双重身份验证。禁用Duo时(设置为 `false`)、则会忽略Duo身份验证。
  a| 
 
 |===
@@ -155,7 +249,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
  a| 
 `-vserver`
  a| 
-（可选）与角色关联的 SVM 的名称。
+(可选)与角色关联的Storage VM的名称(在ONTAP命令行界面中称为Vserver)。
  a| 
 
 
@@ -221,7 +315,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
  a| 
 `-vserver`
  a| 
-（可选）帐户访问的 SVM 的名称。
+(可选)帐户访问的Storage VM的名称。
  a| 
 
 
@@ -312,7 +406,7 @@ OpenSSH 公有密钥。您应将密钥用双引号（ " ）括起来。
  a| 
 `-country`
  a| 
-SVM 的国家 / 地区，采用双字母代码。默认值为 `US`。有关代码列表，请参见手册页。
+Storage VM所在的国家/地区、以双字母代码表示。默认值为 `US`。有关代码列表，请参见手册页。
  a| 
 
 
@@ -320,7 +414,7 @@ SVM 的国家 / 地区，采用双字母代码。默认值为 `US`。有关代�
  a| 
 `-state`
  a| 
-SVM 的省 / 自治区 / 直辖市。
+Storage VM的州或省。
  a| 
 
 
@@ -328,7 +422,7 @@ SVM 的省 / 自治区 / 直辖市。
  a| 
 `-locality`
  a| 
-SVM 的位置。
+Storage VM的位置。
  a| 
 
 
@@ -336,7 +430,7 @@ SVM 的位置。
  a| 
 `-organization`
  a| 
-SVM 的组织结构。
+Storage VM的组织。
  a| 
 
 
@@ -344,7 +438,7 @@ SVM 的组织结构。
  a| 
 `-unit`
  a| 
-SVM 组织中的单位。
+Storage VM组织中的单位。
  a| 
 
 
@@ -352,7 +446,7 @@ SVM 组织中的单位。
  a| 
 `-email-addr`
  a| 
-SVM 的联系管理员的电子邮件地址。
+Storage VM的联系人管理员的电子邮件地址。
  a| 
 
 
@@ -364,7 +458,7 @@ SVM 的联系管理员的电子邮件地址。
  a| 
 
 |===
-您可以在中提供这些值 `security certificate install` 命令、以便在将集群或SVM作为SSL服务器进行身份验证时使用的CA签名数字证书。下表仅显示与帐户配置相关的选项。
+您可以在中提供这些值 `security certificate install` 命令。下表仅显示与帐户配置相关的选项。
 
 [cols="3*"]
 |===
@@ -376,7 +470,7 @@ SVM 的联系管理员的电子邮件地址。
  a| 
 `-vserver`
  a| 
-要安装证书的 SVM 的名称。
+要安装证书的Storage VM的名称。
  a| 
 
 
@@ -410,7 +504,7 @@ SVM 的联系管理员的电子邮件地址。
  a| 
 `-vserver`
  a| 
-已配置 SMB 服务器的 SVM 的名称。
+已配置SMB服务器的Storage VM的名称。
  a| 
 
 |===
@@ -426,7 +520,7 @@ SVM 的联系管理员的电子邮件地址。
  a| 
 `-vserver`
  a| 
-要为其创建 Active Directory 计算机帐户的 SVM 的名称。
+要创建Active Directory计算机帐户的Storage VM的名称。
  a| 
 
 
@@ -460,11 +554,6 @@ SVM 的联系管理员的电子邮件地址。
 
 您可以在中提供这些值 `vserver services name-service ldap client create` 命令。
 
-[NOTE]
-====
-从ONTAP 9.2开始、 `-ldap-servers` 字段将取代 `-servers` 字段。此新字段可以使用主机名或 IP 地址作为 LDAP 服务器的值。
-
-====
 下表仅显示与帐户配置相关的选项：
 
 [cols="3*"]
@@ -477,7 +566,7 @@ SVM 的联系管理员的电子邮件地址。
  a| 
 `-vserver`
  a| 
-客户端配置的 SVM 的名称。
+客户端配置中的Storage VM的名称。
  a| 
 
 
@@ -491,17 +580,9 @@ SVM 的联系管理员的电子邮件地址。
 
 
  a| 
-`-servers`
- a| 
-* ONTAP 9.0 ， 9.1* ：客户端连接到的 LDAP 服务器的 IP 地址列表，以英文逗号分隔。
- a| 
-
-
-
- a| 
 `-ldap-servers`
  a| 
-* ONTAP 9.2 * ：以英文逗号分隔的列表，其中列出了客户端所连接的 LDAP 服务器的 IP 地址和主机名。
+客户端所连接的LDAP服务器的IP地址和主机名列表、以英文逗号分隔。
  a| 
 
 
@@ -521,7 +602,7 @@ SVM 的联系管理员的电子邮件地址。
 
 [NOTE]
 ====
-仅支持使用启动 TLS 访问数据 SVM 。不支持访问管理 SVM 。
+仅支持使用Start TLS访问数据Storage VM。不支持访问管理Storage VM。
 
 ==== a| 
 
@@ -538,7 +619,7 @@ SVM 的联系管理员的电子邮件地址。
  a| 
 `-vserver`
  a| 
-要与客户端配置关联的 SVM 的名称。
+要与客户端配置关联的Storage VM的名称。
  a| 
 
 
@@ -554,17 +635,12 @@ SVM 的联系管理员的电子邮件地址。
  a| 
 `-client-enabled`
  a| 
-SVM是否可以使用LDAP客户端配置 (`true` 或 `false`）。
+Storage VM是否可以使用LDAP客户端配置 (`true` 或 `false`）。
  a| 
 
 |===
 您可以在中提供这些值 `vserver services name-service nis-domain create` 命令。
 
-[NOTE]
-====
-从ONTAP 9.2开始、 `-nis-servers` 字段将取代 `-servers` 字段。此新字段可以使用主机名或IP地址作为NIS服务器的值。
-
-====
 [cols="3*"]
 |===
 
@@ -575,7 +651,7 @@ SVM是否可以使用LDAP客户端配置 (`true` 或 `false`）。
  a| 
 `-vserver`
  a| 
-要创建域配置的 SVM 的名称。
+要在其中创建域配置的Storage VM的名称。
  a| 
 
 
@@ -607,7 +683,7 @@ SVM是否可以使用LDAP客户端配置 (`true` 或 `false`）。
  a| 
 `-nis-servers`
  a| 
-* ONTAP 9.2 * ：域配置所使用的 NIS 服务器的 IP 地址和主机名的逗号分隔列表。
+域配置所使用的NIS服务器的IP地址和主机名的逗号分隔列表。
  a| 
 
 |===
@@ -623,7 +699,7 @@ SVM是否可以使用LDAP客户端配置 (`true` 或 `false`）。
  a| 
 `-vserver`
  a| 
-要配置名称服务查找顺序的 SVM 的名称。
+要配置名称服务查找顺序的Storage VM的名称。
  a| 
 
 

@@ -1,0 +1,105 @@
+---
+permalink: nfs-trunking/update-network-task.html 
+sidebar: sidebar 
+keywords: NFS, servers, network, prepare, NFS trunking, LIF, trunking group, NIC 
+summary: 要利用NFS中继、您需要在每个中继连接的两个或更多NIC上驻留多个生命周期。 
+---
+= 更新网络以进行中继
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+NFSv4.1中继要求中继组中的LUN位于同一节点上、并且主端口位于同一节点上。所有的LUN都应配置在同一节点上的故障转移组中。
+
+.关于此任务
+LIS和NIC的一对一映射可获得最大的性能提升、但启用中继并不需要。
+
+可以有多个故障转移组、但中继的故障转移组必须仅包含中继组中的这些LUN。
+
+在故障转移组中添加或删除连接(和底层NIC)时、您应随时调整中继故障转移组。
+
+.开始之前
+* 要创建故障转移组、您必须知道与NIC关联的端口名称。
+* 这些端口必须都位于同一节点上。
+
+
+.步骤
+. 验证您计划使用的网络端口的名称和状态：
++
+`network port show`
+
+. 创建中继故障转移组或修改现有中继故障转移组：
++
+`network interface failover-groups create -vserver _svm_name_ -failover-group _failover_group_name_ -targets _ports_list_`
+
++
+`network interface failover-groups modify -vserver _svm_name_ -failover-group _failover_group_name_ -targets _ports_list_`
+
++
+
+NOTE: 虽然不要求具有故障转移组、但强烈建议这样做。
+
++
+** `_svm_name_` 是包含NFS服务器的SVM的名称。
+** `_ports_list_` 是要添加到故障转移组的端口列表。
++
+端口将以格式添加 `_node_name:port_number_`，例如， `node1:e0c`。
+
++
+以下命令将创建故障转移组 `fg3` 对于SVM VS1、添加了三个端口：
+
++
+`network interface failover-groups create -vserver vs1 -failover-group fg3 -targets cluster1-01:e0c,cluster1-01:e0d,cluster1-01:e0e`
+
++
+了解更多信息 link:../networking/configure_failover_groups_and_policies_for_lifs_overview.html["故障转移组。"]
+
+
+
+. 根据需要为中继组成员创建其他的LUN：
++
+`network interface create -vserver _svm_name_ -lif _lif_name_ -home-node _node_name_ -home-port _port_name_ -address _IP_address_ -netmask _IP_address_ [-service-policy _policy_] [-auto-revert {true|false}]`
+
++
+** `-home-node` -在对LIF运行network interface还原命令时、LIF返回到的节点。
++
+您可以使用指定LIF是否应自动还原到主节点和主端口 `-auto-revert` 选项
+
+** `-home-port` 是对LIF运行network interface还原命令时LIF返回到的物理或逻辑端口。
+** 您可以使用指定IP地址 `-address` 和 `-netmask` 选项
+** 手动分配IP地址(不使用子网)时、如果其他IP子网上有客户端或域控制器、则可能需要配置网关的默认路由。network route create手册页包含有关在SVM中创建静态路由的信息。
+** `-service-policy` - LIF的服务策略。如果未指定策略、则会自动分配默认策略。使用 `network interface service-policy show` 命令以查看可用的服务策略。
+** `-auto-revert` 指定在启动、更改管理数据库状态或建立网络连接等情况下、数据LIF是否自动还原到其主节点。*默认设置为false*，但您可以根据环境中的网络管理策略将其设置为true。
++
+对中继组中所需的每个附加LIF重复此步骤。
+
++
+以下命令将在节点"cluster-1_01 "的端口e0c上为SVM VS1创建l1-A：
+
++
+`network interface create -vserver vs1 -lif lif-A -service-policy default-intercluster -home-node cluster1_01 -home-port e0c -address 192.0.2.0`
+
++
+了解更多信息 link:../networking/create_lifs.html["创建LIF。"]
+
+
+
+. 验证是否已创建这些生命周期：
++
+`network interface show`
+
+. 验证配置的 IP 地址是否可访问：
++
+[cols="25,75"]
+|===
+| 要验证 ... | 使用 ... 
+
+
+| IPv4 地址 | `network ping` 
+
+
+| IPv6地址 | `network ping6` 
+|===
+

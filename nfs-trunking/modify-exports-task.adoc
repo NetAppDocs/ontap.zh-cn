@@ -1,0 +1,53 @@
+---
+permalink: nfs-trunking/modify-exports-task.html 
+sidebar: sidebar 
+keywords: NFS, servers, network, NFS trunking, NIC, export, policies, rule, Linux, VMware, datastores, client 
+summary: 要使客户端能够利用现有数据共享的中继、您可能需要修改导出策略和规则及其所连接的卷。 
+---
+= 修改数据导出以供客户端访问
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要使客户端能够利用现有数据共享的中继、您可能需要修改导出策略和规则及其所连接的卷。Linux客户端和VMware数据存储库具有不同的导出要求。
+
+客户端导出要求：
+
+* Linux客户端必须为每个中继连接(即每个LIF)具有单独的挂载和单独的挂载点。
++
+如果要升级到ONTAP 9.14.1、并且已导出卷、则可以继续在中继组中使用该卷。
+
+* VMware客户端只需要为一个已导出的卷创建一个挂载点、并指定多个生命周期。
++
+VMware客户端需要在导出策略中具有root访问权限。
+
+
+
+.步骤
+. 验证现有导出策略是否已到位：
++
+`vserver export-policy show`
+
+. 验证现有导出策略规则是否适用于中继配置：
++
+`vserver export-policy rule show -policyname _policy_name_`
+
++
+特别是、请验证 `-clientmatch` 参数可正确标识要挂载导出的具有中继功能的Linux或VMware客户端。
+
++
+如果需要进行调整、请使用修改规则 `vserver export-policy rule modify` 命令或创建新规则：
+
++
+`vserver export-policy rule create -vserver _svm_name_ -policyname _policy_name_ -ruleindex integer -protocol nfs4 -clientmatch { text | "text,text,…" } -rorule _security_type_ -rwrule _security_type_ -superuser _security_type_ -anon _user_ID_`
+
++
+了解更多信息 link:../nfs-config/add-rule-export-policy-task.html["正在创建导出规则。"]
+
+. 验证现有导出的卷是否联机：
++
+`volume show -vserver _svm_name_`
+
+

@@ -1,0 +1,213 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-authorization.html 
+keywords: scopes, self-contained scopes, active directory, ldap, rest role, local users, groups 
+summary: 您可以通过多个选项自定义ONTAP客户端授权。授权决策最终取决于访问令牌中包含或派生的ONTAP REST角色。 
+---
+= ONTAP客户端授权选项
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以通过多个选项自定义ONTAP客户端授权。授权决策最终取决于访问令牌中包含或派生的ONTAP REST角色。
+
+
+CAUTION: 您只能使用 link:../authentication/overview-oauth2.html#selected-terminology["ONTAP REST角色"] 为OAuth2.0配置授权时。不支持早期的ONTAP传统角色。
+
+
+
+== 简介
+
+ONTAP中的OAuth2.0实施灵活可靠、可为您提供保护ONTAP环境所需的选项。概括地说、用于定义ONTAP客户端授权的主要配置类别有三个。这些配置选项不能同时使用。
+
+ONTAP会根据您的配置应用最合适的选项。请参见 link:../authentication/oauth2-authorization.html#how-ontap-determines-access["ONTAP如何确定访问"] 有关ONTAP如何处理配置定义以做出访问决策的详细信息。
+
+.OAuth2.0自包含范围
+这些范围包含一个或多个自定义REST角色、每个角色封装在一个字符串中。它们与ONTAP角色定义无关。您需要在授权服务器上定义这些范围字符串。
+
+.本地ONTAP专用的REST角色和用户
+根据您的配置、可以使用本地ONTAP标识定义来制定访问决策。选项包括：
+
+* 单个命名的REST角色
+* 将用户名与本地ONTAP用户匹配
+
+
+指定角色的作用域语法为*ONTAP角色<URL-encoded-ONTAP-role-name>。例如、如果角色为"admin"、则范围字符串将为"ONTAP角色-admin"。
+
+.Active Directory或LDAP组
+如果检查了本地ONTAP定义、但无法做出访问决定、则会使用Active Directory ("域")或LDAP ("nsswitch")组。可以通过以下两种方式之一指定组信息：
+
+* OAuth2.0范围字符串
++
+支持使用客户端凭据流的机密应用程序、其中没有具有组成员资格的用户。此范围应命名为*ONTAP组-*ONTAP <URL-encoded-ONTAP-group-name>。例如、如果组为"developing"、则范围字符串将为"ONTAP组-developing"。
+
+* 在"组"索赔中
++
+这适用于ADFS使用资源所有者(密码授予)流颁发的访问令牌。
+
+
+
+
+
+== 独立的OAuth2.0范围
+
+自包含范围是指访问令牌中包含的字符串。每个角色都是一个完整的自定义角色定义、其中包括ONTAP做出访问决策所需的一切。此范围与ONTAP本身定义的任何REST角色是分开的、并与之不同。
+
+
+
+=== 范围字符串的格式
+
+在基本级别、范围表示为连续字符串、由六个冒号分隔值组成。范围字符串中使用的参数如下所述。
+
+
+
+==== ONTAP文字
+
+范围必须以文字值开头 `ontap` 小写。此操作会将范围标识为特定于ONTAP的范围。
+
+
+
+==== 集群
+
+此选项用于定义将哪个ONTAP集群范围设置为适用场景。这些值可以包括：
+
+* 集群UUID
++
+标识单个集群。
+
+* 星号(***)
++
+指示适用场景all集群的范围。
+
+
+
+您可以使用ONTAP命令行界面命令 `cluster identity show` 以显示集群的UUID。如果未指定、则范围为适用场景all集群。
+
+
+
+==== Role
+
+自身作用域中包含的REST角色的名称。ONTAP不会检查此值、也不会将其与定义给ONTAP的任何现有REST角色匹配。此名称用于日志记录。
+
+
+
+==== 访问级别
+
+此值指示在范围中使用API端点时应用于客户端应用程序的访问级别。下表介绍了六个可能的值。
+
+[cols="25,75"]
+|===
+| 访问级别 | Description 
+
+
+| 无 | 拒绝对指定端点的所有访问。 
+
+
+| -readonly | 仅允许使用GET进行读取访问。 
+
+
+| read_create | 允许读取访问以及使用POST创建新资源实例。 
+
+
+| read_modify | 允许读取访问以及使用修补程序更新现有资源的功能。 
+
+
+| read_create_modify | 允许除删除以外的所有访问。允许的操作包括GET (读取)、POST (创建)和patch (更新)。 
+
+
+| 全部 | 允许完全访问。 
+|===
+
+
+==== SVM
+
+集群中SVM的名称(范围为适用场景)。使用***值(星号)表示所有SVM。
+
+
+CAUTION: ONTAP 9.14.1不完全支持此功能。您可以忽略SVM参数并使用星号作为占位符。查看 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 发行说明》"^] 以检查未来是否支持SVM。
+
+
+
+==== REST API URI
+
+指向一个资源或一组相关资源的完整或部分路径。字符串必须以开头 `/api`。如果未指定值、则会将范围限定为适用场景集群中的所有ONTAP端点。
+
+
+
+=== 范围示例
+
+以下是一些独立范围的示例。
+
+ONTAP：*：joes-Role：read_cree_Modify：*：/API/cluster:: 为分配了此角色的用户提供对的读取、创建和修改访问权限 `/cluster` 端点。
+
+
+
+
+=== CLI管理工具
+
+为了使独立范围的管理更轻松、更不容易出错、ONTAP提供了命令行界面命令 `security oauth2 scope` 根据输入参数生成范围字符串。
+
+命令 `security oauth2 scope` 根据您的输入、有两个用例：
+
+* CLI参数以限定字符串范围
++
+您可以使用此版本的命令根据输入参数生成范围字符串。
+
+* 作用域字符串到CLI参数
++
+您可以使用此版本的命令根据输入范围字符串生成命令参数。
+
+
+
+.示例
+以下示例将生成一个范围字符串、其输出包含在以下命令示例后面。定义适用场景all Clusters。
+
+[source, cli]
+----
+security oauth2 scope cli-to-scope -role joes-role -access readonly -api /api/cluster
+----
+`ontap:*:joes-role:readonly:*:/api/cluster`
+
+
+
+== ONTAP如何确定访问
+
+要正确设计和实施OAuth2.0、您需要了解ONTAP如何使用您的授权配置来决定客户端的访问。
+
+.第1步：独立的范围
+如果访问令牌包含任何自包含范围、则ONTAP会首先检查这些范围。如果没有独立范围、请转至步骤2。
+
+如果存在一个或多个自包含范围，ONTAP将应用每个范围，直到可以明确地作出*ALLOW或*deny*决定为止。如果做出明确的决定、则处理将结束。
+
+如果ONTAP无法做出明确的访问决定、请继续执行步骤2。
+
+.第2步：检查本地角色标志
+ONTAP将检查标志的值 `use-local-roles-if-present`。对于定义为ONTAP的每个授权服务器、此标志的值会单独设置。
+
+* 如果值为 `true` 继续执行步骤3。
+* 如果值为 `false` 处理结束、访问被拒绝。
+
+
+.第3步：命名ONTAP REST角色
+如果访问令牌包含一个命名的REST角色、则ONTAP将使用该角色来决定访问权限。这始终会导致*ALLOW或*deny*决定和处理结束。
+
+如果没有已命名的REST角色或未找到此角色、请继续执行步骤4。
+
+.第4步：本地ONTAP用户
+从访问令牌中提取用户名、并尝试将其与本地ONTAP用户匹配。
+
+如果匹配了本地ONTAP用户、则ONTAP将使用为该用户定义的角色来决定访问权限。这始终会导致*ALLOW或*deny*决定和处理结束。
+
+如果本地ONTAP用户不匹配或访问令牌中没有用户名、请继续执行步骤5。
+
+.第5步：组到角色映射
+从访问令牌中提取组、并尝试将其与组匹配。这些组使用Active Directory或等效的LDAP服务器进行定义。
+
+如果存在组匹配项、ONTAP将使用为组定义的角色来决定访问权限。这始终会导致*ALLOW或*deny*决定和处理结束。
+
+如果没有组匹配项或访问令牌中没有组、则会拒绝访问并结束处理。

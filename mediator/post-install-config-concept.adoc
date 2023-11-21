@@ -31,8 +31,14 @@ ONTAP 调解器服务器支持多种可配置的安全设置。  所有设置的
 
 `systemctl restart ontap_mediator`
 
+
+
+== 修改ONTAP调解器属性
+
 可以配置以下属性：
-注意：中的其他默认值 `ontap_mediator.config.yaml` 不应修改。
+
+
+NOTE: 中的其他默认值 `ontap_mediator.config.yaml` 不应修改。
 
 * *用于安装第三方SSL证书以替代默认自签名证书的设置*
 +
@@ -98,4 +104,37 @@ password_nonletter_chars: 2    # min. non-letter characters (digits, specials, a
 ....
 low_space_threshold_mib: 10
 ....
+* *用于控制RESERT_LOG_SPACE的设置。*
++
+默认情况下、ONTAP调解器服务器会为日志创建单独的磁盘空间。  安装程序会创建一个新的固定大小文件、其中总磁盘空间为700 MB、将明确用于调解器日志记录。
+
++
+要禁用此功能并使用默认磁盘空间、请执行以下步骤：
+
++
+--
+.. 将以下文件中的RESERT_LOG_SPACE值从"`1`"更改为"`0`"：
++
+`/opt/netapp/lib/ontap_mediator/tools/mediator_env`
+
+.. 重新启动调解器：
++
+... `cat /opt/netapp/lib/ontap_mediator/tools/mediator_env | grep "RESERVE_LOG_SPACE"`
++
+....
+RESERVE_LOG_SPACE=0
+....
+... `systemctl restart ontap_mediator`
+
+
+
+
+--
++
+要重新启用此功能、请将值从"`0`"更改为"`1`"、然后重新启动调解器。
+
++
+
+NOTE: 在磁盘空间之间切换不会清除现有日志。  之前的所有日志都会进行备份、然后在切换并重新启动调解器后移至当前磁盘空间。
+
 

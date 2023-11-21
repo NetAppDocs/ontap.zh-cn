@@ -1,0 +1,40 @@
+---
+permalink: nas-audit/persistent-stores.html 
+sidebar: sidebar 
+keywords: overview, persistent store, fpolicy 
+summary: 从ONTAP 9.14.1开始、您可以通过FPolicy设置永久性存储、以捕获SVM中异步非强制策略的文件访问事件。永久性存储有助于将客户端I/O处理与FPolicy通知处理分离、以减少客户端延迟。不支持同步和异步强制配置。 
+---
+= FPolicy持久存储
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.14.1开始、您可以通过FPolicy设置永久性存储、以捕获SVM中异步非强制策略的文件访问事件。永久性存储有助于将客户端I/O处理与FPolicy通知处理分离、以减少客户端延迟。不支持同步(强制或非强制)和异步强制配置。
+
+此功能仅在FPolicy外部模式下可用。您使用的合作伙伴应用程序需要支持此功能。您应与合作伙伴合作、确保此FPolicy配置受支持。
+
+
+
+== 最佳实践
+
+集群管理员需要在启用了FPolicy的每个SVM上为永久性存储配置一个卷。配置后、永久性存储将捕获所有匹配的FPolicy事件、这些事件将在FPolicy管道中进行进一步处理并发送到外部服务器。
+
+如果发生意外重新启动或FPolicy被禁用并再次启用、则持久存储将保持上次收到事件时的状态。接管操作完成后、配对节点将存储和处理新事件。在执行了恢复操作之后、永久性存储将恢复处理节点接管发生后可能仍存在的任何未处理事件。实时事件的优先级高于不经过处理的事件。
+
+如果永久性存储卷从同一SVM中的一个节点移至另一个节点、则尚未处理的通知也将移至新节点。您需要重新运行 `fpolicy persistent-store create` 命令、以确保将待定通知传送到外部服务器。
+
+永久性存储卷会按SVM进行设置。对于每个启用了FPolicy的SVM、您需要创建一个永久性存储卷。
+
+在包含预期Fpolicy监控的最大流量的生命周期的节点上创建永久性存储卷。
+
+如果持久性存储中累积的通知超过所配置卷的大小、FPolicy将开始删除传入通知并显示相应的EMS消息。
+
+创建卷时指定的永久性存储卷名称和接合路径应匹配。
+
+将Snapshot策略设置为 `none` 而不是 `default`。这是为了确保不会意外还原快照而导致当前事件丢失、并防止可能发生重复的事件处理。
+
+使持久存储卷无法用于外部用户协议访问(CIFS或NFS)、以避免意外损坏或删除保留的事件记录。为此、在启用FPolicy后、请在ONTAP中卸载卷以删除接合路径、这样用户协议访问就无法访问该路径。
+
+有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap/nas-audit/create-persistent-stores.html["创建持久性存储"]。

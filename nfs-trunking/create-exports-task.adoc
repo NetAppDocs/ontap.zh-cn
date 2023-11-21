@@ -1,0 +1,65 @@
+---
+permalink: nfs-trunking/create-exports-task.html 
+sidebar: sidebar 
+keywords: servers, network, NFS trunking, NIC, export policies, rule, Linux, VMware, datastores, client 
+summary: 要为客户端提供对数据共享的访问权限、您必须创建一个或多个卷、并且此卷的导出策略必须至少具有一个规则。 
+---
+= 导出数据以供客户端访问
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要为客户端提供对数据共享的访问权限、您必须创建一个或多个卷、并且此卷的导出策略必须至少具有一个规则。
+
+客户端导出要求：
+
+* Linux客户端必须为每个中继连接(即每个LIF)具有单独的挂载和单独的挂载点。
+* VMware客户端只需要为一个已导出的卷创建一个挂载点、并指定多个生命周期。
++
+VMware客户端需要在导出策略中具有root访问权限。
+
+
+
+.步骤
+. 创建导出策略
++
+`vserver export-policy create -vserver _svm_name_ -policyname _policy_name_`
+
++
+策略名称最长可为 256 个字符。
+
+. 验证是否已创建导出策略：
++
+`vserver export-policy show -policyname _policy_name_`
+
++
+.示例
+以下命令将在名为 vs1 的 SVM 上创建并验证是否已创建名为 exp1 的导出策略：
+
++
+`vs1::> vserver export-policy create -vserver vs1 -policyname exp1`
+
+. 创建导出规则并将其添加到现有导出策略：
++
+`vserver export-policy rule create -vserver _svm_name_ -policyname _policy_name_ -ruleindex _integer_ -protocol nfs4 -clientmatch { _text | "text,text,…"_ } -rorule _security_type_ -rwrule _security_type_ -superuser _security_type_ -anon _user_ID_`
+
++
+。 `-clientmatch` 参数应标识要挂载导出的具有中继功能的Linux或VMware客户端。
+
++
+了解更多信息 link:../nfs-config/add-rule-export-policy-task.html["正在创建导出规则。"]
+
+. 创建具有接合点的卷：
++
+`volume create -vserver _svm_name_ -volume _volume_name_ -aggregate _aggregate_name_-size {integer[KB|MB|GB|TB|PB]} -security-style unix -user _user_name_or_number_ -group _group_name_or_number_ -junction-path _junction_path_ -policy _export_policy_name_`
+
++
+了解相关信息 link:../nfs-config/create-volume-task.html["正在创建卷。"]
+
+. 验证是否已使用所需的接合点创建卷：
++
+`volume show -vserver _svm_name_ -volume _volume_name_ -junction-path`
+
+

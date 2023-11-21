@@ -99,8 +99,9 @@ vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
 
 .关于此任务
 * 从ONTAP 9.8开始、您可以使用 `volume move start` 在SnapLock或FlexGroup卷上启用加密。
-* 从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要移动的卷所在的聚合分配密钥。使用唯一密钥加密的卷称为 _NVE volume_ 。使用聚合级别密钥加密的卷称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
 * 从ONTAP 9.4开始、如果在设置板载密钥管理器时启用"`cc-mode`"、则会显示使用创建的卷 `volume move start` 命令会自动加密。您无需指定 `-encrypt-destination true`。
+* 从 ONTAP 9.6 开始，您可以使用聚合级别的加密为要移动的卷所在的聚合分配密钥。使用唯一密钥加密的卷称为_NVE卷_(表示它使用NetApp卷加密)。使用聚合级别密钥加密的卷称为 _NAE volume_ （适用于 NetApp 聚合加密）。NAE 聚合不支持纯文本卷。
+* 从ONTAP 9.14.1开始、您可以使用NVE对SVM根卷进行加密。有关详细信息，请参见 xref:configure-nve-svm-root-task.html[在SVM根卷上配置NetApp卷加密]。
 
 
 .开始之前
@@ -121,35 +122,35 @@ link:delegate-volume-encryption-svm-administrator-task.html["委派权限以运�
  a| 
 纯文本卷到 NVE 卷
  a| 
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination true`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -encrypt-destination true`
 
 
 
  a| 
 将 NVE 或纯文本卷连接到 NAE 卷（假设目标上启用了聚合级别加密）
  a| 
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-with-aggr-key true`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -encrypt-with-aggr-key true`
 
 
 
  a| 
 NAE 卷到 NVE 卷
  a| 
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-with-aggr-key false`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -encrypt-with-aggr-key false`
 
 
 
  a| 
 NAE 卷到纯文本卷
  a| 
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false -encrypt-with-aggr-key false`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -encrypt-destination false -encrypt-with-aggr-key false`
 
 
 
  a| 
 NVE卷转换为纯文本卷
  a| 
-`volume move start -vserver SVM_name -volume volume_name -destination-aggregate aggregate_name -encrypt-destination false`
+`volume move start -vserver _SVM_name_ -volume _volume_name_ -destination-aggregate _aggregate_name_ -encrypt-destination false`
 
 |===
 +
@@ -241,4 +242,4 @@ vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
 
 
 .结果
-如果您使用 KMIP 服务器存储节点的加密密钥，则在对卷进行加密时， ONTAP 会自动 "`推送` " 加密密钥到服务器。
+如果您使用KMIP服务器存储节点的加密密钥、则在对卷进行加密时、ONTAP会自动将加密密钥推送到服务器。

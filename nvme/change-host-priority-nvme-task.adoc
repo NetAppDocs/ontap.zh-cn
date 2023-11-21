@@ -1,0 +1,43 @@
+---
+permalink: nvme/change-host-priority-nvme-task.html 
+sidebar: sidebar 
+keywords: manage, nvme, host, priority, regular, high priority, allocate more I/O, allocate, higher, i/o, queue counts, queue-depths, queue, depth 
+summary: 从ONTAP 9.14.1开始、您可以启用NVM子系统、以确定特定主机的资源分配优先级。 
+---
+= 更改NVMe主机优先级
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.14.1开始、您可以对NVMe子系统进行配置、以确定特定主机的资源分配优先级。默认情况下、将主机添加到子系统时、系统会为其分配常规优先级。分配了高优先级的主机将分配更大的I/O队列计数和队列深度。
+
+您可以使用ONTAP命令行界面(CLI)手动将默认优先级从常规更改为高。  要更改分配给主机的优先级、您必须从子系统中删除该主机、然后将其重新添加。
+
+.步骤
+. 验证主机优先级是否设置为常规：
++
+[source, cli]
+----
+vserver nvme show-host-priority
+----
+. 从子系统中删除主机：
++
+[source, cli]
+----
+vserver nvme subsystem host remove –vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
+. 验证是否已从子系统中删除此主机：
++
+[source, cli]
+----
+vserver nvme subsystem host show
+----
+. 将主机重新添加到具有高优先级的子系统：
++
+[source, cli]
+----
+vserver nvme subsystem host add -vserver <SVM_name> -subsystem <subsystem_name> -host-nqn <Host_NQN_:subsystem._subsystem_name> -priority high
+----
+

@@ -1,0 +1,59 @@
+---
+permalink: nfs-trunking/create-server-task.html 
+sidebar: sidebar 
+keywords: NFS, servers, create, NFS trunking, enabled, multipathing, svm 
+summary: 从ONTAP 9.14.1开始、可以在运行v4.1或更高版本的NFS服务器上启用中继。创建NFS服务器时、默认情况下会启用NFSv4.1及更高版本。 
+---
+= 创建启用了中继的NFS服务器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.14.1开始、可以在NFS服务器上启用中继。创建NFS服务器时、默认情况下会启用NFSv4.1。
+
+.开始之前
+SVM必须：
+
+* 有足够的存储作为后盾、可满足客户端数据要求。
+* 已为NFS启用。
+* 专用于NFS中继。不应在其上配置任何其他客户端。
+
+
+.步骤
+. 如果不存在合适的SVM、请创建一个：
++
+`vserver create -vserver _svm_name_ -rootvolume _root_volume_name_ -aggregate _aggregate_name_ -rootvolume-security-style unix -language C.UTF-8`
+
+. 验证新创建的 SVM 的配置和状态：
++
+`vserver show -vserver _svm_name_`
+
++
+了解更多信息 link:../nfs-config/create-svms-data-access-task.html["创建SVM。"]
+
+. 创建NFS服务器：
++
+`vserver nfs create -vserver _svm_name_ -v3 disabled -v4.0 disabled -v4.1 enabled -v4.1-trunking enabled -v4-id-domain _my_domain.com_`
+
+. 验证 NFS 是否正在运行：
++
+`vserver nfs status -vserver _svm_name_`
+
+. 验证是否已根据需要配置 NFS ：
++
+`vserver nfs show -vserver _svm_name_`
+
++
+了解更多信息 link:../nfs-config/create-server-task.html["NFS服务器配置。"]
+
+
+
+.完成后
+根据需要配置以下服务：
+
+* link:../nfs-config/configure-dns-host-name-resolution-task.html["DNS"]
+* link:../nfs-config/using-ldap-concept.html["LDAP"]
+* link:../nfs-config/kerberos-nfs-strong-security-concept.html["Kerberos"]
+

@@ -15,7 +15,7 @@ summary: 创建一个分层一致性组，用于管理大型应用程序工作�
 
 分层一致性组具有一个父级，最多可包含五个单独的一致性组。分层一致性组可以支持在一致性组或单个卷之间使用不同的本地 Snapshot 策略。如果您使用的是远程保护策略、则该策略将适用于整个分层一致性组(父级和子级)。
 
-从ONTAP 9.13.1开始、您可以执行此操作 xref:modify-geometry-task.html[修改一致性组的几何结构] 和 xref:modify-task.html[在子一致性组之间移动卷]。
+从ONTAP 9.13.1.开始、您可以执行此操作 xref:modify-geometry-task.html[修改一致性组的几何结构] 和 xref:modify-task.html[在子一致性组之间移动卷]。
 
 有关一致性组的对象限制，请参见 xref:limits.html[一致性组的对象限制]。
 
@@ -25,6 +25,10 @@ summary: 创建一个分层一致性组，用于管理大型应用程序工作�
 
 创建分层一致性组时、您可以使用新的LUN填充该组。从ONTAP 9.13.1开始、您还可以使用新的NVMe命名空间和NAS卷。
 
+[role="tabbed-block"]
+====
+.System Manager
+--
 .步骤
 . 选择 * 存储 > 一致性组 * 。
 . 选择*+Add*，然后选择存储对象的协议。
@@ -33,7 +37,7 @@ summary: 创建一个分层一致性组，用于管理大型应用程序工作�
 
 . 为一致性组命名。指定卷或LUN的数量以及每个卷或LUN的容量。
 +
-.. **应用程序类型*：如果使用的是ONTAP 9.12.1或更高版本、请选择应用程序类型。如果未选择任何值、则默认情况下会为一致性组分配类型为"*其他"*。了解有关标记一致性的更多信息 xref:index.html#application-and-component-tags[应用程序和组件标记]。如果您计划使用远程保护策略，则必须选择*OTHE*。
+.. **应用程序类型*：如果使用的是ONTAP 9.12.1或更高版本、请选择应用程序类型。如果未选择任何值、则默认情况下会为一致性组分配类型为"*其他"*。了解有关标记一致性的更多信息 xref:modify-tags-task.html[应用程序和组件标记]。如果您计划使用远程保护策略，则必须选择*OTHE*。
 
 
 . 选择主机操作系统和 LUN 格式。输入主机启动程序信息。
@@ -51,12 +55,33 @@ summary: 创建一个分层一致性组，用于管理大型应用程序工作�
 . 返回到一致性组主菜单以确认已创建一致性组，该菜单将在 ONTAP 作业完成后显示。如果您设置了保护策略，请查看相应策略（远程或本地）下的内容，该策略应显示一个绿色屏蔽并带有复选标记。
 
 
+--
+.命令行界面
+--
+从ONTAP 9.14.1开始、您可以使用命令行界面创建新的分层一致性组。
+
+.步骤
+. 使用创建新一致性组 `consistency-group create` 命令：
++
+。 `volume-count` 参数用于设置每个子一致性组中的卷数。您可以创建最多包含五个子一致性组的父一致性组。
+
++
+`consistency-group create -vserver _SVM_name_ -consistency-group _consistency_group_name_ -parent-consistency-group _parent_consistency_group_name_ -cg-count _number_of_child_consistency_groups_ -volume _volume_prefix_ -volume-count _number_ -size _size_ -export-policy _policy_name_ -storage-service extreme`
+
+
+
+--
+====
 
 
 == 使用现有卷创建分层一致性组
 
 您可以将现有卷组织为分层一致性组。
 
+[role="tabbed-block"]
+====
+.System Manager
+--
 .步骤
 . 选择 * 存储 > 一致性组 * 。
 . 选择*+添加*、然后选择*使用现有卷*。
@@ -74,6 +99,21 @@ summary: 创建一个分层一致性组，用于管理大型应用程序工作�
 . 返回到一致性组主菜单以确认已创建一致性组，该菜单将在 ONTAP 作业完成后显示。如果您选择了保护策略、请从菜单中选择一致性组以确认其设置正确；在相应的策略类型下、您将看到一个绿色屏蔽、其中带有复选标记。
 
 
+--
+.命令行界面
+--
+从ONTAP 9.14.1开始、您可以使用命令行界面创建分层一致性组。
+
+.步骤
+. 配置新的父一致性组并将卷分配给新的子一致性组：
++
+`consistency-group create -vserver _svm_name_ -consistency-group _child_consistency_group_name_ -parent-consistency-group _parent_consistency_group_name_ -volumes _volume_names_`
+
+. 输入 ... `y` 确认要创建新的父一致性组和子一致性组。
+
+
+--
+====
 .后续步骤
 * xref:xref:modify-geometry-task.html[修改一致性组的几何结构]
 * xref:modify-task.html[修改一致性组]

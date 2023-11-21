@@ -1,0 +1,98 @@
+---
+permalink: manage-nodes-sm-task.html 
+sidebar: sidebar 
+keywords: system manager, nodes, add, cluster, expansion, node join, expand, rename node, cluster size, cluster configuration, reboot, take over, give back 
+summary: 您可以使用System Manager向集群添加节点并对其进行重命名。  您还可以重新启动、接管和交还节点。 
+---
+= 使用System Manager管理节点
+:toc: macro
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toc: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+:toc-position: content
+
+
+[role="lead"]
+您可以使用System Manager向集群添加节点并对其进行重命名。  您还可以重新启动、接管和交还节点。
+
+
+
+== 向集群添加节点
+
+您可以通过添加新节点来增加集群的大小和功能。
+
+.开始之前
+您应已使用缆线将新节点连接到集群。
+
+.关于此任务
+在ONTAP 9.7或ONTAP 9.8及更高版本中使用System Manager有单独的过程。
+
+[role="tabbed-block"]
+====
+.ONTAP 9.8及更高版本的操作步骤
+--
+*使用System Manager向集群添加节点(ONTAP 9.8及更高版本)*
+
+.步骤
+. 选择 * 集群 > 概述 * 。
++
+新控制器显示为连接到集群网络但不在集群中的节点。
+
+. 选择 * 添加 * 。
++
+** 节点将添加到集群中。
+** 存储是隐式分配的。
+
+
+
+
+--
+.ONTAP 9.7操作步骤
+--
+*使用System Manager向集群添加节点(ONTAP 9.7)*
+
+.步骤
+. 选择*(返回经典版)*。
+. 选择*配置>集群扩展*。
++
+System Manager 会自动发现新节点。
+
+. 选择*切换到新体验*。
+. 选择*Cluster > Overview*以查看新节点。
+
+
+--
+====
+
+
+== 重新启动、接管和交还节点
+
+重新启动之前、应将节点的工作负载切换到其HA配对节点(接管)。
+
+
+NOTE: 您不能使用System Manager关闭(暂停)节点；必须使用CLI命令。此外、如果节点已暂停、则需要使用命令行界面命令将其恢复联机。  请参见 link:system-admin/start-stop-storage-system-concept.html["启动或停止节点概述"]。
+
+.步骤
+. 选择 * 集群 > 概述 * 。
+. 在*N节点*下，选择 image:icon_kabob.gif["菜单图标"]。
+. 选择节点并选择所需操作。
+
+
+
+
+== 重命名节点
+
+从ONTAP 9.14.1开始、您可以从集群概述页面重命名节点。
+
+.步骤
+. 选择*Cluster*。  此时将显示集群概述页面。
+. 向下滚动到*N节点*部分。
+. 在要重命名的节点旁边、选择 image:icon_kabob.gif["菜单图标"]，然后选择*Rename*。
+. 修改节点名称，然后选择*Rename*。
+

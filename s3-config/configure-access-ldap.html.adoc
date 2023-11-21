@@ -1,0 +1,91 @@
+---
+permalink: s3-config/configure-access-ldap.html 
+sidebar: sidebar 
+keywords: generate, ldap, s3, access keys, secret keys using API 
+summary: S3用户可以使用API重新生成用于访问S3客户端的密钥。 
+---
+= 配置外部目录服务的S3访问
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.14.1开始、外部目录服务已与ONTAP S3对象存储集成。这种集成通过外部目录服务简化了用户和访问管理。
+
+您可以为属于外部目录服务的用户组提供对ONTAP对象存储环境的访问权限。轻型目录访问协议(LDAP)是一个用于与目录服务(如Active Directory)通信的接口、这些服务为身份和访问管理(IAM)提供数据库和服务。要提供访问权限、您需要在ONTAP S3环境中配置LDAP组。配置访问权限后、组成员将有权访问ONTAP S3存储分段。有关LDAP的信息、请参见 link:../nfs-config/using-ldap-concept.html["LDAP 使用概述"]。
+
+您还可以将Active Directory用户组配置为快速绑定模式、以便验证用户凭据、并通过LDAP连接对第三方和开源S3应用程序进行身份验证。
+
+.开始之前
+在配置LDAP组并为组访问启用快速绑定模式之前、请确保满足以下要求：
+
+. 已创建一个包含S3服务器且已启用S3的Storage VM。请参见 link:../s3-config/create-svm-s3-task.html["为 S3 创建 SVM"]。
+. 已在此Storage VM中创建存储分段。请参见 link:../s3-config/create-bucket-task.html["创建存储分段"]。
+. 已在Storage VM上配置DNS。请参见 link:../networking/configure_dns_services_manual.html["配置 DNS 服务"]。
+. 此Storage VM上安装了LDAP服务器的自签名根证书颁发机构(CA)证书。请参见 link:../nfs-config/install-self-signed-root-ca-certificate-svm-task.html["在 SVM 上安装自签名根 CA 证书"]。
+. LDAP客户端在SVM上配置为启用TLS。请参见 link:../nfs-config/create-ldap-client-config-task.html["创建 LDAP 客户端配置"] 和 link:../nfs-config/enable-ldap-svms-task.html["请将LDAP客户端配置与SVM关联以了解相关信息"]。
+
+
+
+
+== 配置外部目录服务的S3访问
+
+. 指定LDAP作为组的SVM的_name service database _、并将密码指定给LDAP：
++
+[listing]
+----
+ns-switch modify -vserver <vserver-name> -database group -sources files,ldap
+ns-switch modify -vserver <vserver-name> -database passwd -sources files,ldap
+----
++
+有关此命令的详细信息、请参见 `vserver services name-service ns-switch modify` 命令：
+
+. 使用创建对象存储分段策略语句 `principal` 设置为要授予访问权限的LDAP组：
++
+[listing]
+----
+object-store-server bucket policy statement create -bucket <bucket-name> -effect allow -principal nasgroup/<ldap-group-name> -resource <bucket-name>, <bucket-name>/*
+----
++
+示例：以下示例将为创建存储分段策略语句 `buck1`。此策略允许对LDAP组进行访问 `group1` 资源(存储分段及其对象) `buck1`。
+
++
+[listing]
+----
+vserver object-store-server bucket policy add-statement -bucket buck1 -effect allow -action
+GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts, ListBucketVersions,GetObjectTagging,PutObjectTagging,DeleteObjectTagging,GetBucketVersioning,PutBucketVersioning -principal nasgroup/group1 -resource buck1, buck1/*
+----
+. 验证LDAP组中的用户 `group1` 能够从S3客户端执行S3操作。
+
+
+
+
+== 使用LDAP快速绑定模式进行身份验证
+
+. 指定LDAP作为组的SVM的_name service database _、并将密码指定给LDAP：
++
+[listing]
+----
+ns-switch modify -vserver <vserver-name> -database group -sources files,ldap
+ns-switch modify -vserver <vserver-name> -database passwd -sources files,ldap
+----
++
+有关此命令的详细信息、请参见 `vserver services name-service ns-switch modify` 命令：
+
+. 确保访问S3存储分段的LDAP用户具有存储分段策略中定义的权限。有关详细信息，请参见 link:../s3-config/create-modify-bucket-policy-task.html["修改存储分段策略"]。
+. 验证LDAP组中的用户是否可以执行以下操作：
++
+.. 在S3客户端上按以下格式配置访问密钥：
+`"NTAPFASBIND" + base64-encode(user-name:password)`
+示例 `"NTAPFASTBIND"` + base64-encode (LDAPUser：password)、这将导致出现此问题
+                      `NTAPFASTBINDbGRhcHVzZXI6cGFzc3dvcmQ=`
++
+
+NOTE: S3客户端可能会提示输入机密密钥。如果没有机密密钥、则可以输入任何至少包含16个字符的密码。
+
+.. 从用户拥有权限的S3客户端执行基本S3操作。
+
+
+

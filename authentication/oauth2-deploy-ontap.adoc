@@ -1,0 +1,178 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-deploy-ontap.html 
+keywords: certificate, install certificate, enable, enable oauth2 
+summary: 部署核心OAuth2.0功能主要包括三个步骤。 
+---
+= 在ONTAP中部署OAuth2.0
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+部署核心OAuth2.0功能主要包括三个步骤。
+
+
+
+== 开始之前
+
+在配置ONTAP之前、您必须为OAuth2.0部署做准备。例如、您需要评估授权服务器、包括其证书的签名方式以及是否位于防火墙之后。请参见 link:../authentication/oauth2-prepare.html["准备使用ONTAP部署OAuth2.0"] 有关详细信息 ...
+
+
+
+== 第1步：安装身份验证服务器证书
+
+ONTAP包含大量预安装的根CA证书。因此、在许多情况下、ONTAP将立即识别授权服务器的证书、而无需进行额外配置。但是、根据授权服务器证书的签名方式、您可能需要安装根CA证书和任何中间证书。
+
+如果需要、请按照下面提供的说明安装证书。您应在集群级别安装所有必需的证书。
+
+根据您访问ONTAP的方式选择正确的操作步骤。
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 在System Manager中、选择*集群*>*设置*。
+. 向下滚动到*Security*部分。
+. 单击*Certificates*旁边的*->*。
+. 在“*可信证书颁发机构*”选项卡下，单击“*添加*”。
+. 单击*Import*并选择证书文件。
+. 完成环境的配置参数。
+. 单击 * 添加 * 。
+
+
+--
+.命令行界面
+--
+. 开始安装：
++
+`security certificate install -type server-ca`
+
+. 查找以下控制台消息：
++
+`Please enter Certificate: Press <Enter> when done`
+
+. 使用文本编辑器打开证书文件。
+. 复制整个证书、包括以下行：
++
+`-----BEGIN CERTIFICATE-----`
+
++
+`-----END CERTIFICATE-----`
+
+. 在命令提示符后、将证书粘贴到终端中。
+. 按*Enter*键完成安装。
+. 使用以下方法之一确认已安装证书：
++
+`security certificate show-user-installed`
+
++
+`security certificate show`
+
+
+
+--
+====
+
+
+== 第2步：配置授权服务器
+
+您需要为ONTAP至少定义一个授权服务器。您应根据配置和部署计划选择参数值。请查看 link:../authentication/oauth2-deployment-scenarios.html["OAuth2部署方案"] 以确定您的配置所需的确切参数。
+
+
+TIP: 要修改授权服务器定义，您可以删除现有定义并创建新定义。
+
+下面提供的示例基于第一个简单部署方案、部署方案位于 link:../authentication/oauth2-deployment-scenarios.html#local-validation["本地验证"]。自包含范围不需要代理即可使用。
+
+根据您访问ONTAP的方式选择正确的操作步骤。命令行界面操作步骤使用符号变量、您需要在发出命令之前替换这些变量。
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 在System Manager中、选择*集群*>*设置*。
+. 向下滚动到*Security*部分。
+. 单击*OAuth2.0 authorizes*旁边的*+*。
+. 选择*更多选项*。
+. 为您的部署提供所需的值、例如：
++
+** Name
+** 应用程序(http)
+** 提供程序JWKS URI
+** 颁发者URI
+
+
+. 单击 * 添加 * 。
+
+
+--
+.命令行界面
+--
+. 重新创建定义：
++
+[source, cli]
+----
+security oauth2 client create -config-name <NAME> -provider-jwks-uri <URI_JWKS> -application http -issuer <URI_ISSUER>
+----
++
+例如：
+
++
+[listing]
+----
+security oauth2 client create \
+-config-name auth0 \
+-provider-jwks-uri https://superzap.dev.netapp.com:8443/realms/my-realm/protocol/openid-connect/certs \
+-application http \
+-issuer https://superzap.dev.netapp.com:8443/realms/my-realm
+----
+
+
+--
+====
+
+
+== 第3步：启用OAuth2.0
+
+最后一步是启用OAuth2.0。这是ONTAP集群的全局设置。
+
+
+CAUTION: 在确认ONTAP、授权服务器和任何支持服务均已正确配置之前、请勿启用OAuth2.0处理。
+
+根据您访问ONTAP的方式选择正确的操作步骤。
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 在System Manager中、选择*集群*>*设置*。
+. 向下滚动到*安全性部分*。
+. 单击*OAuth2.0 authorizes*旁边的*->*。
+. 启用*OAuth2.0授权*。
+
+
+--
+.命令行界面
+--
+. 启用OAuth2.0：
++
+`security oauth2 modify -enabled true`
+
+. 确认已启用OAuth2.0：
++
+[listing]
+----
+security oauth2 show
+Is OAuth 2.0 Enabled: true
+----
+
+
+--
+====

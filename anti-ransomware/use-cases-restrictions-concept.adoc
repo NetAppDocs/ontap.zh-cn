@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: anti-ransomware/use-cases-restrictions-concept.html 
 keywords: anti-ransomware workloads, anti-ransomware requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations, arp 
-summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版本将支持其他环境。 
+summary: NAS工作负载支持ARP。它最适合NFS存储上的数据库、Windows或Linux主目录以及视频和图像工作负载。 
 ---
 = 自主勒索软件保护使用情形和注意事项
 :toc: macro
@@ -14,12 +14,12 @@ summary: 在当前版本中，勒索软件保护最适合 NAS 环境。未来版
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../media/
 :toc-position: content
 
 
 [role="lead"]
-从ONTAP 9.10.1开始、可为NAS工作负载提供自主资源保护。在部署ARP之前、您应了解建议的用途和支持的配置以及对性能的影响。
+从ONTAP 9.10.1开始、可为NAS工作负载提供自主关系统软件保护(ARP)。在部署ARP之前、您应了解建议的用途和支持的配置以及对性能的影响。
 
 
 
@@ -65,22 +65,22 @@ ARP取决于将传入数据区分为已加密或未加密。如果应用程序�
 以下ONTAP版本支持其他配置和卷类型：
 
 |===
-|  | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
+|  | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
 
 
-| 使用异步SnapMirror保护的卷 | X | X |  |  
+| 使用异步SnapMirror保护的卷 | ✓ | ✓ | ✓ |  |  
 
 
-| 使用异步SnapMirror保护SVM | X | X |  |  
+| 使用异步SnapMirror保护SVM | ✓ | ✓ | ✓ |  |  
 
 
-| 为数据迁移启用了SVM | X | X |  |  
+| 为数据迁移启用了SVM | ✓ | ✓ | ✓ |  |  
 
 
-| FlexGroup 卷 | X |  |  |  
+| FlexGroup 卷 | ✓ | ✓ |  |  |  
 
 
-| 多管理员验证 | X |  |  |  
+| 多管理员验证 | ✓ | ✓ |  |  |  
 |===
 .SnapMirror和ARP互操作性
 从ONTAP 9.12.1开始、异步SnapMirror目标卷支持ARP。SnapMirror同步**不支持ARP。
@@ -137,7 +137,7 @@ ARP不支持以下卷配置：
 * SAN-only volumes
 * SnapLock 卷
 * SnapMirror 同步
-* 异步SnapMirror (在ONTAP 9.10.1到9.12.1中。从ONTAP 9.12.1开始、支持异步SnapMirror。有关详细信息，请参见 <<snapmirror>>）
+* 异步SnapMirror (仅在ONTAP 9.10.1和9.11.1中不受支持。从ONTAP 9.12.1开始、支持异步SnapMirror。有关详细信息，请参见 <<snapmirror>>）
 * 受限卷
 * Storage VM的根卷
 * 已停止Storage VM的卷
@@ -165,8 +165,15 @@ ARP不支持以下卷配置：
 
 
 
-== 对受自动防兰功能保护的卷进行多管理员验证(ARP)
+== 使用ARP保护的卷进行多管理员验证
 
 从ONTAP 9.13.1开始、您可以使用ARP启用多管理员验证(MAV)、以提高安全性。MAV可确保至少需要两个或更多经过身份验证的管理员在受保护的卷上关闭ARP、暂停ARP或将可疑攻击标记为误报。了解操作方法 link:../multi-admin-verify/enable-disable-task.html["为受ARP保护的卷启用MAV"^]。
 
 您需要为MAV组定义管理员并为创建MAV规则 `security anti-ransomware volume disable`， `security anti-ransomware volume pause`，和 `security anti-ransomware volume attack clear-suspect` 要保护的ARP命令。MAV组中的每个管理员都必须批准每个新规则请求和 link:../multi-admin-verify/enable-disable-task.html["再次添加MAV规则"^] 在MAV设置中。
+
+从ONTAP 9.14.1开始、ARP提供有关创建ARP快照和观察新文件扩展名的警报。默认情况下、这些事件的警报处于禁用状态。可以在卷或SVM级别设置警报。您可以使用在SVM级别创建MAV规则 `security anti-ransomware vserver event-log modify` 或在卷级别使用 `security anti-ransomware volume event-log modify`。
+
+.后续步骤
+* link:enable-task.html["启用自主勒索软件保护"]
+* link:../multi-admin-verify/enable-disable-task.html["为受ARP保护的卷启用MAV"]
+

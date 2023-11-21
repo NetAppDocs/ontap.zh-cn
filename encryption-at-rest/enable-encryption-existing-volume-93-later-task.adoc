@@ -1,0 +1,84 @@
+---
+permalink: encryption-at-rest/enable-encryption-existing-volume-93-later-task.html 
+sidebar: sidebar 
+keywords: enabling, encryption, existing, volume encryption conversion start, command 
+summary: '从ONTAP 9.3开始、您可以使用volume Encryption conversion start命令对现有卷启用"原位"加密、而无需将卷移动到其他位置。' 
+---
+= 使用 volume encryption conversion start 命令在现有卷上启用加密
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.3开始、您可以使用 `volume encryption conversion start` 命令以"原位"加密现有卷、而无需将卷移动到其他位置。
+
+.关于此任务
+启动转换操作后，该操作必须完成。如果您在操作期间遇到性能问题描述、则可以运行 `volume encryption conversion pause` 命令以暂停操作、以及 `volume encryption conversion resume` 命令以恢复操作。
+
+从ONTAP 9.14.1开始、您可以使用 `volume encryption conversion start` 在SVM根卷上。有关详细信息，请参见 xref:configure-nve-svm-root-task.html[在SVM根卷上配置NetApp卷加密]。
+
+
+NOTE: 您不能使用 `volume encryption conversion start` 转换SnapLock卷。
+
+.步骤
+. 在现有卷上启用加密：
++
+`volume encryption conversion start -vserver _svm_name_ -volume _volume_name_`
+
++
+有关完整的命令语法，请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131//volume-encryption-conversion-start.html["命令参考"^]。
+
++
+以下命令将对现有卷启用加密 `vol1`：
+
++
+[listing]
+----
+cluster1::> volume encryption conversion start -vserver vs1 -volume vol1
+----
++
+系统会为卷创建加密密钥。卷上的数据已加密。
+
+. 验证转换操作的状态：
++
+`volume encryption conversion show`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令显示转换操作的状态：
+
++
+[listing]
+----
+cluster1::> volume encryption conversion show
+
+Vserver   Volume   Start Time           Status
+-------   ------   ------------------   ---------------------------
+vs1       vol1     9/18/2017 17:51:41   Phase 2 of 2 is in progress.
+----
+. 转换操作完成后，验证卷是否已启用加密：
++
+`volume show -is-encrypted true`
+
++
+有关完整的命令语法，请参见命令手册页。
+
++
+以下命令将显示上的加密卷 `cluster1`：
+
++
+[listing]
+----
+cluster1::> volume show -is-encrypted true
+
+Vserver  Volume  Aggregate  State  Type  Size  Available  Used
+-------  ------  ---------  -----  ----  -----  --------- ----
+vs1      vol1    aggr2     online    RW  200GB    160.0GB  20%
+----
+
+
+.结果
+如果您使用KMIP服务器存储节点的加密密钥、则在对卷进行加密时、ONTAP会自动将加密密钥推送到服务器。

@@ -64,7 +64,12 @@ summary: 您可以随时开始保护现有的 S3 存储分段；例如，如果�
 .. 在 * 权限 * 选项卡中，单击 image:icon_pencil.gif["编辑图标"] *编辑*，然后单击*权限*下的*添加*。
 +
 *** * 主体和影响 * ：选择与您的用户组设置对应的值，或者接受默认值。
-*** *操作*：确保显示以下值： `GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts`
+*** *操作*：确保显示以下值：
++
+[listing]
+----
+GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts
+----
 *** *Resaults*：使用默认值 `(_bucketname, bucketname_/*)` 或您需要的其他值。
 +
 请参见 link:../task_object_provision_manage_bucket_access.html[" 管理用户对存储分段的访问权限"] 有关这些字段的详细信息，请参见。
@@ -95,13 +100,17 @@ summary: 您可以随时开始保护现有的 S3 存储分段；例如，如果�
 
 
 
+. 选中 * 如果您使用的是由外部 CA 供应商签名的证书，请在目标 * 上使用相同的证书。
+. 如果单击 * 目标设置 * ，您还可以输入自己的值来替代存储分段名称，容量和性能服务级别的默认值。
+. 单击 * 保存 * 。现有存储分段将镜像到目标Storage VM中的新存储分段。
 
 
-选中 * 如果您使用的是由外部 CA 供应商签名的证书，请在目标 * 上使用相同的证书。
+.备份锁定的铲斗
+从ONTAP 9.14.1开始、您可以备份锁定的S3存储分段并根据需要进行还原。
 
-如果单击 * 目标设置 * ，您还可以输入自己的值来替代存储分段名称，容量和性能服务级别的默认值。
+在为新存储分段或现有存储分段定义保护设置时、您可以在目标存储分段上启用对象锁定、但前提是源集群和目标集群运行ONTAP 9.14.1或更高版本、并且源存储分段上启用了对象锁定。源分段的对象锁定模式和锁定保留期限将适用于目标分段上复制的对象。您也可以在*目标设置*部分中为目标存储分段定义不同的锁定保留期限。此保留期限也适用于从源存储分段和S3接口复制的任何非锁定对象。
 
-单击 * 保存 * 时，现有存储分段将镜像到目标 Storage VM 中的新存储分段。
+有关如何在存储分段上启用对象锁定的信息、请参见 link:../s3-config/create-bucket-task.html["创建存储分段"]。
 
 --
 .命令行界面

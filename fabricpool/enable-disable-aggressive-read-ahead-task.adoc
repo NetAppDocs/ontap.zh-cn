@@ -1,0 +1,87 @@
+---
+permalink: fabricpool/enable-disable-aggressive-read-ahead-task.html 
+bar: sidebar 
+keywords: creating, volume, fabricpool, aggressive read ahead, enable, on prem, on premises, disable 
+summary: '从ONTAP 9.14.1开始、您可以对FabricPools中支持媒体和娱乐(例如电影流工作负载)的卷启用和禁用主动预读模式。' 
+---
+= 启用和禁用主动预读模式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.14.1开始、您可以对FabricPools中支持媒体和娱乐(例如电影流工作负载)的卷启用和禁用主动预读模式。ONTAP 9.14.1在支持FabricPool的所有内部平台上提供主动预读模式。默认情况下、此功能处于禁用状态。
+
+.关于此任务
+。 `aggressive-readahead-mode` 命令有两个选项：
+
+* `none`：已禁用预读。
+* `file_prefetch`：系统会在客户端应用程序之前将整个文件读取到内存中。
+
+
+.开始之前
+* 您应该是集群或SVM管理员。
+* 您必须处于高级权限级别。
+
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 创建卷并启用云写入模式：
++
+[source, cli]
+----
+volume create -volume <volume name>  -aggressive-readahead-mode <none|file_prefetch>
+----
++
+以下示例将创建一个名为vol1的卷、并使用file_prefetch选项启用主动预读：
+
++
+[listing]
+----
+volume create -volume vol1 -aggressive-readahead-mode file_prefetch
+----
+
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 修改卷以禁用主动预读模式：
++
+[source, cli]
+----
+volume modify -volume <volume name>  -aggressive-readahead-mode none
+----
++
+以下示例将修改名为vol1的卷以禁用主动预读模式：
+
++
+[listing]
+----
+volume modify -volume vol1 -aggressive-readahead-mode none
+----
+
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 修改卷以禁用主动预读模式：
++
+[source, cli]
+----
+volume show -fields aggressive-readahead-mode
+----
+

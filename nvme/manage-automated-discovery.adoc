@@ -1,0 +1,68 @@
+---
+permalink: nvme/manage-automated-discovery.html 
+sidebar: sidebar 
+keywords: nvme, tcp, nvme/tcp, disable, automated, discovery, controllers 
+summary: 从ONTAP 9.13.1开始、在基于IP的网络结构中、使用NVMe/TCP协议自动发现控制器。  
+---
+= 管理NVMe/TCP控制器的主机自动发现
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.14.1开始、在基于IP的网络结构中、使用NVMe/TCP协议自动发现控制器。
+
+
+
+== 启用NVMe/TCP控制器的自动主机发现
+
+如果您之前禁用了自动主机发现、但需求发生了变化、则可以重新启用它。
+
+.步骤
+. 进入高级权限模式：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 启用自动发现：
++
+[source, cli]
+----
+vserver nvme modify -vserver <vserver_name> -mdns-service-discovery-enabled true
+----
+. 验证是否已启用NVMe/TCP控制器的自动发现。
++
+[source, cli]
+----
+vserver nvme show
+----
+
+
+
+
+== 禁用NVMe/TCP控制器的主机自动发现
+
+如果您不需要主机自动发现NVMe/TCP控制器、并且在网络上检测到不需要的多播流量、则应禁用此功能。
+
+.步骤
+. 进入高级权限模式：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 禁用自动发现：
++
+[source, cli]
+----
+vserver nvme modify -vserver <vserver_name> -mdns-service-discovery-enabled false
+----
+. 验证是否已禁用NVMe/TCP控制器的自动发现。
++
+[source, cli]
+----
+vserver nvme show
+----
+

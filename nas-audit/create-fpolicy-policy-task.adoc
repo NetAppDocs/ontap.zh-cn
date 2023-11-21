@@ -18,12 +18,16 @@ summary: 创建 FPolicy 策略时，您需要将一个外部引擎以及一个�
 * 如果您计划配置策略以使用 FPolicy 服务器，则外部引擎必须存在。
 * 您计划与 FPolicy 策略关联的至少一个 FPolicy 事件必须存在。
 * 如果要配置有权限的数据访问、SVM上必须存在SMB服务器。
+* 要为策略配置永久性存储，引擎类型必须为*async*，策略必须为*non-man强制*。
++
+有关详细信息，请参见 link:create-persistent-stores.html["创建持久性存储"]。
+
 
 
 .步骤
 . 创建 FPolicy 策略：
 +
-`vserver fpolicy policy create -vserver-name vserver_name -policy-name policy_name -engine engine_name -events event_name,... [-is-mandatory {true|false}] [-allow-privileged-access {yes|no}] [-privileged-user-name domain\user_name] [-is-passthrough-read-enabled {true|false}]`
+`vserver fpolicy policy create -vserver-name vserver_name -policy-name policy_name -engine engine_name -events event_name, [-persistent-store PS_name] [-is-mandatory {true|false}] [-allow-privileged-access {yes|no}] [-privileged-user-name domain\user_name] [-is-passthrough-read-enabled {true|false}]`
 
 +
 ** 您可以将一个或多个事件添加到 FPolicy 策略中。

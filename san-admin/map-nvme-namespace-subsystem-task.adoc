@@ -11,9 +11,15 @@ summary: 使用 NVMe 时，必须将命名空间映射到子系统。
 
 
 [role="lead"]
-此操作步骤 使用ONTAP 命令行界面将现有NVMe命名空间映射到现有NVMe子系统。
+通过将NVMe命名空间映射到子系统、可以从主机访问数据。  您可以在配置存储时将NVMe命名空间映射到子系统、也可以在配置存储后进行映射。
 
-您的命名空间和子系统应已创建。  如果需要创建命名空间和子系统、请参见 link:create-nvme-namespace-subsystem-task.html["配置 NVMe 存储"]。
+从ONTAP 9.14.1开始、您可以确定特定主机的资源分配优先级。默认情况下、将主机添加到NVMe子系统时、会为其指定常规优先级。您可以使用ONTAP命令行界面(CLI)手动将默认优先级从常规更改为高。  分配了高优先级的主机将分配更大的I/O队列计数和队列深度。
+
+
+NOTE: 如果要为已添加到ONTAP 9.131或更早版本的子系统中的主机指定高优先级、可以执行此操作 xref:../nvme/change-host-priority-nvme-task.html[更改主机优先级]。
+
+.开始之前
+您的命名空间和子系统应已创建。如果需要创建命名空间和子系统、请参见 link:create-nvme-namespace-subsystem-task.html["配置 NVMe 存储"]。
 
 .步骤
 . 从主机获取 NQN 。
@@ -23,6 +29,9 @@ summary: 使用 NVMe 时，必须将命名空间映射到子系统。
 ----
 vserver nvme subsystem host add -vserver <SVM_name> -subsystem <subsystem_name> -host-nqn <Host_NQN_:subsystem._subsystem_name>
 ----
++
+如果要将主机的默认优先级从常规更改为高、请使用 `-priority high` 选项此选项从ONTAP 9.14.1开始提供。
+
 . 将命名空间映射到子系统：
 +
 [source, cli]

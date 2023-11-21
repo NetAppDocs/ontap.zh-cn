@@ -1,7 +1,7 @@
 ---
 permalink: concepts/client-access-storage-concept.html 
 sidebar: sidebar 
-keywords: client authentication, authorization 
+keywords: client authentication, authorization, oauth 2.0, oauth2 
 summary: ONTAP 通过向可信源验证客户端计算机和用户的身份来对其进行身份验证。ONTAP 通过将用户凭据与文件或目录上配置的权限进行比较，授权用户访问文件或目录。 
 ---
 = 客户端身份验证和授权
@@ -61,3 +61,11 @@ ONTAP 会评估三个安全级别，以确定实体是否有权对 SVM 上的文
 表示存储对象的文件或目录具有原生文件级安全性。您可以从客户端设置文件级安全性。无论使用 SMB 还是 NFS 访问数据，文件权限都是有效的。
 
 
+
+
+
+== OAuth2.0与ONTAP REST API客户端
+
+从ONTAP 9.14开始、可支持开放授权(OAuth2.0)框架。当客户端使用REST API访问ONTAP时、您只能使用OAuth2.0进行授权和控制访问决策。但是、您可以使用任何ONTAP管理界面(包括命令行界面、System Manager和REST API)配置和启用此功能。
+
+标准OAuth2.0功能与多个常用授权服务器一起受支持。您可以使用基于相互TLS的受发件人限制的访问令牌进一步增强ONTAP安全性。此外、还提供了多种授权选项、包括独立范围以及与ONTAP REST角色和本地用户定义的集成。请参见 link:../authentication/overview-oauth2.html["ONTAP OAuth2.0实施概述"] 有关详细信息 ...

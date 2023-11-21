@@ -1,0 +1,73 @@
+---
+permalink: encryption-at-rest/configure-nve-svm-root-task.html 
+keywords: volume encryption, nve, svm root, encrypt 
+summary: NetApp 卷加密（ NVE ）是一种基于软件的技术，用于一次对一个卷上的空闲数据进行加密。从ONTAP 9.14.1开始、您可以在SVM根上配置NVE。 
+---
+= 在SVM根卷上配置NetApp卷加密
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.14.1开始、您可以在Storage VM (SVM)根卷上启用NetApp卷加密(NVE)。使用NVE时、根卷会使用唯一密钥进行加密、从而提高SVM的安全性。
+
+.关于此任务
+只有在创建SVM之后、才能在SVM根卷上启用NVE。
+
+.开始之前
+* SVM根卷不能位于使用NetApp聚合加密(NAE)加密的聚合上。
+* 您必须已使用板载密钥管理器或外部密钥管理器启用加密。
+* 必须运行ONTAP 9.14.1或更高版本。
+* 要迁移包含使用NVE加密的根卷的SVM、您必须在迁移完成后将SVM根卷转换为纯文本卷、然后对SVM根卷重新加密。
++
+** 如果SVM迁移的目标聚合使用NAE、则默认情况下、根卷会继承NAE。
+
+
+* 如果SVM处于SVM灾难恢复关系中：
++
+** 镜像SVM上的加密设置不会复制到目标。如果在源或目标上启用NVE、则必须在镜像的SVM根卷上单独启用NVE。
+** 如果目标集群中的所有聚合都使用NAE、则SVM根卷将使用NAE。
+
+
+
+
+.步骤
+您可以使用ONTAP命令行界面或System Manager在SVM根卷上启用NVE。
+
+[role="tabbed-block"]
+====
+.命令行界面
+--
+您可以在SVM根卷上原位启用NVE、也可以通过在聚合之间移动卷来启用NVE。
+
+.对根卷进行原位加密
+. 将根卷转换为加密卷：
++
+`volume encryption conversion start -vserver _svm_name_ -volume _volume_`
+
+. 确认加密成功。。 `volume show -encryption-type volume` 显示使用NVE的所有卷的列表。
+
+
+.通过移动SVM根卷对其进行加密
+. 启动卷移动：
++
+`volume move start -vserver _svm_name_ -volume _volume_ -destination-aggregate _aggregate_ -encrypt-with-aggr-key false -encrypt-destination true`
+
++
+有关的详细信息、请参见 `volume move`，请参阅 xref:../volumes/move-volume-task.html[移动卷]。
+
+. 确认 `volume move` 操作成功、使用 `volume move show` 命令：。 `volume show -encryption-type volume` 显示使用NVE的所有卷的列表。
+
+
+--
+.System Manager
+--
+. 导航到**存储**>**卷**。
+. 在要加密的SVM根卷的名称旁边、选择 image:icon_kabob.gif["三个垂直点"] 然后**编辑**。
+. 在**存储和优化**标题下，选择**启用加密**。
+. 选择**保存**。
+
+
+--
+====

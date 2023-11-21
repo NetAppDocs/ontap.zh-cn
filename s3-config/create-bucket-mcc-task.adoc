@@ -1,0 +1,149 @@
+---
+permalink: s3-config/create-bucket-mcc-task.html 
+sidebar: sidebar 
+keywords: s3, bucket, system manager, metrocluster, unmirrored, mirrored, aggregate 
+summary: 从ONTAP 9.14.1开始、您可以在MetroCluster FC和IP配置中的镜像或未镜像聚合上配置分段。 
+---
+= 在MetroCluster配置中的镜像或未镜像聚合上创建分段
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.14.1开始、您可以在MetroCluster FC和IP配置中的镜像或未镜像聚合上配置分段。
+
+.关于此任务
+* 默认情况下、存储分段配置在镜像聚合上。
+* 与中所述的配置准则相同 link:create-bucket-task.html["创建存储分段"] 适用于在MetroCluster环境中创建存储分段。
+* MetroCluster环境*不*支持以下S3对象存储功能：
++
+** S3 SnapMirror
+** S3存储分段生命周期管理
+** *兼容*模式下的S3对象锁定
++
+
+NOTE: 支持*监管*模式下的S3对象锁定。
+
+** 本地FabricPool层
+
+
+
+
+.开始之前
+包含 S3 服务器的 SVM 必须已存在。
+
+
+
+== 创建存储分段的过程
+
+[role="tabbed-block"]
+====
+.命令行界面
+--
+. 如果您计划自己选择聚合和FlexGroup组件、请将权限级别设置为高级(否则、管理权限级别就足够了)： `set -privilege advanced`
+. 创建存储分段：
++
+`vserver object-store-server bucket create -vserver <svm_name> -bucket <bucket_name> [-size integer[KB|MB|GB|TB|PB]] [-use-mirrored-aggregates true/false]`
+
++
+设置 `-use-mirrored-aggregates` 选项 `true` 或 `false` 具体取决于您要使用镜像聚合还是未镜像聚合。
+
++
+
+NOTE: 默认情况下、 `-use-mirrored-aggregates` 选项设置为 `true`。
+
++
+** SVM名称必须是数据SVM。
+** 如果未指定任何选项，则 ONTAP 将创建一个 5 GB 的存储分段，并将服务级别设置为系统可用的最高级别。
+** 如果您希望 ONTAP 根据性能或使用情况创建存储分段，请使用以下选项之一：
++
+*** 服务级别
++
+包括 `-storage-service-level` 具有以下值之一的选项： `value`， `performance`或 `extreme`。
+
+*** 分层
++
+包括 `-used-as-capacity-tier true` 选项
+
+
+
+** 如果要指定用于创建底层 FlexGroup 卷的聚合，请使用以下选项：
++
+*** 。 `-aggr-list` 参数用于指定要用于FlexGroup卷成分卷的聚合列表。
++
+列表中的每个条目都会在指定聚合上创建一个成分卷。您可以多次指定一个聚合，以便在该聚合上创建多个成分卷。
+
++
+为了在整个 FlexGroup 卷中保持性能一致，所有聚合都必须使用相同的磁盘类型和 RAID 组配置。
+
+*** 。 `-aggr-list-multiplier` 参数用于指定迭代随一起列出的聚合的次数 `-aggr-list` 参数FlexGroup。
++
+的默认值 `-aggr-list-multiplier` 参数为4。
+
+
+
+
+
+. 根据需要添加 QoS 策略组：
++
+`vserver object-store-server bucket modify -bucket _bucket_name_ -qos-policy-group _qos_policy_group_`
+
+. 验证存储分段创建：
++
+`vserver object-store-server bucket show [-instance]`
+
+
+
+.示例
+以下示例将在镜像聚合上为SVM VS1创建大小为1 TB的分段：
+
+[listing]
+----
+cluster-1::*> vserver object-store-server bucket create -vserver svm1.example.com -bucket testbucket  -size 1TB -use-mirrored-aggregates true
+----
+--
+.System Manager
+--
+. 在启用了 S3 的 Storage VM 上添加新存储分段。
++
+.. 单击 * 存储 > 分段 * ，然后单击 * 添加 * 。
+.. 输入名称，选择 Storage VM 并输入大小。
++
+默认情况下、存储分段配置在镜像聚合上。如果要在未镜像聚合上创建存储分段，请选择*更多选项*，然后取消选中*保护*下的*使用SyncMirror层*复选框，如下图所示：
+
++
+image:../media/SM_create_bucket_MCC.png["System Manager MetroCluster存储分段创建"]
+
++
+*** 如果此时单击 * 保存 * ，则会使用以下默认设置创建一个存储分段：
++
+**** 除非任何组策略已生效，否则不会向任何用户授予对存储分段的访问权限。
++
+
+NOTE: 您不应使用 S3 root 用户管理 ONTAP 对象存储并共享其权限，因为它对对象存储具有无限制的访问权限。而是使用您分配的管理权限创建一个用户或组。
+
+**** 系统可用性最高的服务质量（性能）级别。
+
+
+*** 您可以在配置存储分段时单击 * 更多选项 * 来配置用户权限和性能级别，也可以稍后修改这些设置。
++
+**** 在使用 * 更多选项 * 配置用户和组权限之前，您必须已创建用户和组。
+**** 如果要使用 S3 对象存储进行 FabricPool 分层，请考虑选择 * 用于分层 * （使用低成本介质，为分层数据提供最佳性能），而不是性能服务级别。
+
+
+
+
+
+
+. 在 S3 客户端应用程序（另一个 ONTAP 系统或外部第三方应用程序）上，输入以下命令验证对新存储分段的访问：
++
+** S3 服务器 CA 证书。
+** 用户的访问密钥和机密密钥。
+** S3 服务器 FQDN 名称和存储分段名称。
+
+
+
+
+--
+====

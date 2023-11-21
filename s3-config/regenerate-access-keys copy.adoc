@@ -1,0 +1,47 @@
+---
+permalink: s3-config/regenerate-access-keys.html 
+sidebar: sidebar 
+keywords: regenerate, s3, access keys, secret keys 
+summary: 可以重新生成用于访问S3客户端的密钥、并更改其有效性。 
+---
+= 重新生成密钥并修改其保留期限
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+创建用户时、系统会自动为该用户生成用于S3客户端访问的访问密钥和机密密钥。如果某个密钥已过期或泄露、您可以为用户重新生成密钥。
+
+有关生成访问密钥的信息、请参见 link:../s3-config/create-s3-user-task.html["创建 S3 用户"]。
+
+[role="tabbed-block"]
+====
+.命令行界面
+--
+. 通过运行为用户重新生成访问和机密密钥 `vserver object-store-server user regenerate-keys` 命令：
+. 默认情况下、生成的密钥无限期有效。从9.14.1开始、您可以修改其保留期限、超过此期限、密钥将自动过期。您可以按以下格式添加保留期限： `P[<integer>D]T[<integer>H][<integer>M][<integer>S] | P<integer>W`
+例如、如果要输入一天、两小时、三分钟和四秒的保留期限、请将值输入为 `P1DT2H3M4S`。
++
+[listing]
+----
+vserver object-store-server user regenerate-keys -vserver svm_name -user user -key-time-to-live 0
+----
+. 保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
+
+
+--
+.System Manager
+--
+. 单击 * 存储 > 存储 VM* ，然后选择此 Storage VM 。
+. 在 * 设置 * 选项卡中，单击 image:icon_pencil.gif["编辑图标"] 在 * S3 * 区块中。
+. 在*USERS*选项卡中，确认没有访问密钥，或者该密钥已过期。
+. 如果需要重新生成密钥、请单击 image:icon_kabob.gif["更多图标"] 单击用户旁边的*重新生成密钥*。
+. 默认情况下、生成的密钥的有效期不定。从9.14.1开始、您可以修改其保留期限、超过此期限、密钥将自动过期。输入保留期限、以天、小时、分钟或秒为单位。
+. 单击 * 保存 * 。此时将重新生成密钥。对密钥保留期限所做的任何更改都将立即生效。
+. 下载或保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
+
+
+--
+====

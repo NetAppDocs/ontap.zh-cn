@@ -1,7 +1,7 @@
 ---
 permalink: encryption-at-rest/configure-netapp-volume-encryption-concept.html 
 sidebar: sidebar 
-keywords: configure, netapp, volume encryption, nve, aggregate-level, support details, data encryption, encrypt data at rest, storage encryption, key 
+keywords: volume encryption, nve, aggregate-level, support details, data encryption, encrypt data at rest, storage encryption, key 
 summary: NetApp 卷加密（ NVE ）是一种基于软件的技术，用于一次对一个卷上的空闲数据进行加密。只有存储系统可以访问的加密密钥可确保在底层设备被重新利用，退回，放置在不当位置或被盗时无法读取卷数据。 
 ---
 = 配置 NetApp 卷加密概述
@@ -25,15 +25,14 @@ NetApp 卷加密（ NVE ）是一种基于软件的技术，用于一次对一�
 
 从 ONTAP 9.7 开始，如果您拥有卷加密（ Volume Encryption ， VE ）许可证并使用板载或外部密钥管理器，则默认情况下会启用聚合和卷加密。每当配置外部或板载密钥管理器时，为全新聚合和全新卷配置空闲数据加密的方式都会发生变化。默认情况下，全新聚合将启用 NetApp 聚合加密（ NAE ）。默认情况下，不属于 NAE 聚合的全新卷将启用 NetApp 卷加密（ NVE ）。如果使用多租户密钥管理为数据存储虚拟机（ SVM ）配置了自己的密钥管理器，则为该 SVM 创建的卷将自动配置 NVE 。
 
-您可以对新卷或现有卷启用加密。NVE 支持所有存储效率功能，包括重复数据删除和数据压缩。
+您可以对新卷或现有卷启用加密。NVE 支持所有存储效率功能，包括重复数据删除和数据压缩。从ONTAP 9.14.1开始、您可以执行此操作 xref:/configure-nve-svm-root-task.html[在现有SVM根卷上启用NVE]。
 
 
 NOTE: 如果您使用的是 SnapLock ，则只能对新的空 SnapLock 卷启用加密。您不能在现有 SnapLock 卷上启用加密。
 
 您可以在任何类型的聚合（ HDD ， SSD ，混合，阵列 LUN ）上使用任何 RAID 类型以及任何受支持的 ONTAP 实施（包括 ONTAP Select ）中使用 NVE 。您还可以将 NVE 与基于硬件的加密结合使用，在 `d自加密驱动器上 " 双重加密` " 数据。
 
-
-NOTE: AFF A220 ， AFF A800 ， FAS2720 ， FAS2750 及更高版本的系统会将核心转储存储在其启动设备上。在这些系统上启用 NVE 后，核心转储也会进行加密。
+启用NVE后、核心转储也会进行加密。
 
 
 
@@ -72,7 +71,7 @@ NVE 和 NAE 卷可以同时位于同一聚合上。默认情况下，在聚合�
 
 * 您可以使用 _cluster scopter_ 为集群中的所有 SVM 配置外部密钥管理。集群管理员可以访问存储在服务器上的每个密钥。
 * 从 ONTAP 9.6 开始，您可以使用 _SVM scopter_ 为集群中的指定 SVM 配置外部密钥管理。这最适合多租户环境，其中每个租户都使用不同的 SVM （或一组 SVM ）来提供数据。只有给定租户的 SVM 管理员才能访问该租户的密钥。
-* 从 ONTAP 9.10.1 开始，您可以使用 xref:manage-keys-azure-google-task.html[Azure 密钥存储和 Google Cloud KMS] 仅保护数据 SVM 的 NVE 密钥。
+* 从 ONTAP 9.10.1 开始，您可以使用 xref:manage-keys-azure-google-task.html[Azure 密钥存储和 Google Cloud KMS] 仅保护数据SVM的NVE密钥。从9.12.0开始、此功能可用于AWS的KMS。
 
 
 您可以在同一集群中使用这两个范围。如果为 SVM 配置了密钥管理服务器，则 ONTAP 仅使用这些服务器来保护密钥。否则， ONTAP 将使用为集群配置的密钥管理服务器来保护密钥。
@@ -144,7 +143,7 @@ RAID0 ， RAID4 ， RAID-DP ， RAID-TEC 。
  a| 
 Volumes
  a| 
-数据卷和现有根卷。您不能对 SVM 根卷或 MetroCluster 元数据卷上的数据进行加密。
+数据卷和现有SVM根卷。您不能对MetroCluster元数据卷上的数据进行加密。在9.14.1之前的ONTAP版本中、不能使用NVE对SVM根卷上的数据进行加密。从ONTAP 9.14.1开始、ONTAP支持 xref:configure-nve-svm-root-task.html[SVM根卷上的NVE]。
 
 
 

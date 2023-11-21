@@ -1,0 +1,48 @@
+---
+permalink: nfs-trunking/client-mount-task.html 
+sidebar: sidebar 
+keywords: NFS, servers, network, NFS trunking, data shares, Linux, VMware, mounts 
+summary: 支持中继的Linux和VMware客户端可以从启用了中继的ONTAP NFS服务器挂载卷或数据共享。 
+---
+= 创建客户端挂载
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+支持中继的Linux和VMware客户端可以从启用了中继的ONTAP NFSv4.1服务器挂载卷或数据共享。
+
+在客户端上输入mount命令时、必须为中继组中的每个LIF输入IP地址。
+
+了解相关信息 link:index.html#supported-clients["支持的客户端"]。
+
+[role="tabbed-block"]
+====
+.Linux客户端要求
+--
+中继组中的每个连接都需要一个单独的挂载点。
+
+使用类似以下内容的命令挂载导出的卷：
+
+`mount lif1_ip:/vol-test /mnt/test1 -o vers=4.1,max_connect=16`
+
+`mount lif2_ip:/vol-test /mnt/test2 -o vers=4.1,max_connect=16`
+
+版本 (`vers`)值应为 `4.1` 或更高版本。
+
+。 `max_connect` 值对应于中继组中的连接数。
+
+--
+.VMware客户端要求
+--
+需要使用mount语句、其中包含中继组中每个连接的IP地址。
+
+使用类似以下内容的命令挂载导出的数据存储库：
+
+`#esxcli storage nfs41 -H lif1_ip, lif2_ip -s /mnt/sh are1 -v nfs41share`
+
+。 `-H` 值对应于中继组中的连接。
+
+--
+====

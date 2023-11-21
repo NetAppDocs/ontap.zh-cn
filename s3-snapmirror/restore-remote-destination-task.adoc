@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: s3-snapmirror/restore-remote-destination-task.html 
 keywords: restore a bucket from the destination storage VM remote cluster, source bucket data lost or corrupt, snapmirror restore, restore data, restore to destination bucket, remote cluster, snapmirror restore back up, snapmirror, bucket, restore to new bucket, storage vm, snapmirror data loss 
-summary: 如果源存储分段中的数据丢失或损坏，您可以通过从目标存储分段还原来重新填充数据。 
+summary: 如果源存储分段中的数据丢失或损坏、您可以通过从目标存储分段还原来重新填充数据。 
 ---
 = 从目标 Storage VM （远程集群）还原存储分段
 :toc: macro
@@ -19,10 +19,10 @@ summary: 如果源存储分段中的数据丢失或损坏，您可以通过从�
 
 
 [role="lead"]
-如果源存储分段中的数据丢失或损坏，您可以通过从目标存储分段还原来重新填充数据。
+如果源存储分段中的数据丢失或损坏、您可以通过从目标存储分段还原对象来重新填充数据。
 
 .关于此任务
-您可以将目标存储分段还原到现有存储分段或新存储分段。还原操作的目标存储分段必须大于目标存储分段的逻辑已用空间。
+您可以将目标存储分段还原到现有存储分段或新存储分段。还原操作的目标分段必须大于目标分段的逻辑已用空间。
 
 如果您使用现有存储分段，则在启动还原操作时，此存储分段必须为空。  还原不会 " 回滚 " 某个存储分段，而是会使用先前的内容填充一个空存储分段。
 
@@ -32,7 +32,7 @@ summary: 如果源存储分段中的数据丢失或损坏，您可以通过从�
 ====
 .System Manager
 --
-还原备份数据：
+还原已备份的数据：
 
 . 单击 * 保护 > 关系 * ，然后选择 * S3 SnapMirror* 。
 . 单击 image:icon_kabob.gif["更多图标"] 然后选择 * 还原 * 。
@@ -48,7 +48,7 @@ summary: 如果源存储分段中的数据丢失或损坏，您可以通过从�
 ** 要还原到 * 新存储分段 * ，请输入以下值：
 +
 *** 用于托管新存储分段的集群和 Storage VM 。
-*** 新存储分段的名称，容量和性能服务级别。
+*** 新存储分段的名称、容量和性能服务级别。
 请参见 link:../s3-config/storage-service-definitions-reference.html["存储服务级别"] 有关详细信息 ...
 *** _destination_S3 服务器 CA 证书的内容。
 
@@ -59,10 +59,20 @@ summary: 如果源存储分段中的数据丢失或损坏，您可以通过从�
 . 单击 * 保护 > 关系 * 以监控还原进度。
 
 
+.恢复锁定的存储分段
+从ONTAP 9.14.1开始、您可以备份锁定的存储分段并根据需要进行还原。
+
+您可以将对象锁定分段还原到新的或现有分段。在以下情况下、您可以选择对象锁定分段作为目标：
+
+* *还原到新存储分段*：启用对象锁定后、可以通过创建同时启用对象锁定的存储分段来还原存储分段。还原锁定的存储分段时、系统会复制原始存储分段的对象锁定模式和保留期限。您还可以为新存储分段定义不同的锁定保留期限。此保留期限适用于来自其他源的未锁定对象。
+* *还原到现有存储分段*：只要在现有存储分段上启用了版本控制和类似的对象锁定模式、便可将对象锁定存储分段还原到现有存储分段。保留原始存储分段的保留期限。
+* *还原未锁定的存储分段*：即使存储分段未启用对象锁定、您也可以将其还原到源集群上已启用对象锁定的存储分段。还原存储分段时、所有未锁定的对象都将被锁定、并且目标存储分段的保留模式和使用期限将适用于这些对象。
+
+
 --
 .命令行界面
 --
-. 如果要还原到新存储分段，请创建新存储分段。有关详细信息，请参见 link:create-cloud-backup-new-bucket-task.html["为新存储分段（云目标）创建备份关系"]。
+. 创建新的目标存储分段以进行还原。有关详细信息，请参见 link:create-cloud-backup-new-bucket-task.html["为新存储分段（云目标）创建备份关系"]。
 . 为目标存储分段启动还原操作：
 `snapmirror restore -source-path _svm_name_:/bucket/_bucket_name_  -destination-path _svm_name_:/bucket/_bucket_name_`
 

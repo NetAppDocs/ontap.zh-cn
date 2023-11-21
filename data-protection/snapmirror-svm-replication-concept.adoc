@@ -1,7 +1,7 @@
 ---
 permalink: data-protection/snapmirror-svm-replication-concept.html 
 sidebar: sidebar 
-keywords: understand, snapmirror, svm, replication, SVM DR storage limits 
+keywords: understand, snapmirror, svm, replication, SVM disaster recovery storage limits 
 summary: 您可以使用 SnapMirror 在 SVM 之间创建数据保护关系。在这种类型的数据保护关系中，系统会复制 SVM 的全部或部分配置，从 NFS 导出和 SMB 共享到 RBAC ，以及 SVM 所拥有的卷中的数据。 
 ---
 = 关于 SnapMirror SVM 复制
@@ -27,7 +27,7 @@ summary: 您可以使用 SnapMirror 在 SVM 之间创建数据保护关系。在
 ** 在正常计划的操作，更新和重新同步期间，源到目标之间不会覆盖这些卷
 ** 在中断操作期间不会删除这些文件。
 ** 在执行翻转重新同步操作期间，不会删除这些文件。
-在使用 ONTAP 9.9.1 及更高版本的镜像存储策略配置 SVM DR 关系时，此策略的行为如下：
+在使用ONTAP 9.9.1及更高版本的镜像存储策略配置SVM灾难关系时、此策略的行为如下：
 ** 源上用户定义的 Snapshot 副本策略不会复制到目标。
 ** 系统定义的 Snapshot 副本策略不会复制到目标。
 ** 与用户和系统定义的 Snapshot 策略的卷关联不会复制到目标。
@@ -107,7 +107,7 @@ MirrorAndVault （统一复制）
 
 [NOTE]
 ====
-SVM 复制不支持与版本无关的功能。在SVM DR配置中、目标SVM必须与源SVM集群运行相同ONTAP 版本的集群上、以支持故障转移和故障恢复操作。
+SVM 复制不支持与版本无关的功能。在SVM灾难恢复配置中、目标SVM必须位于与源SVM集群运行相同ONTAP版本的集群上、才能支持故障转移和故障恢复操作。
 
 ====
 link:compatible-ontap-versions-snapmirror-concept.html["SnapMirror 关系的兼容 ONTAP 版本"]
@@ -120,7 +120,7 @@ SVM 复制关系的内容取决于以下字段的交互：
 
 * 。 `-identity-preserve true` 的选项 `snapmirror create` 命令可复制整个SVM配置。
 +
-。 `-identity-preserve false` 选项仅复制SVM的卷、身份验证和授权配置以及中列出的协议和名称服务设置 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在 SVM DR 关系中复制的配置"]。
+。 `-identity-preserve false` 选项仅复制SVM的卷、身份验证和授权配置以及中列出的协议和名称服务设置 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-dr-relationships["在SVM灾难恢复关系中复制的配置"]。
 
 * 。 `-discard-configs network` 的选项 `snapmirror policy create` 此命令会从SVM复制中排除LIP和相关网络设置、以便在源和目标SVM位于不同子网的情况下使用。
 * 。 `-vserver-dr-protection unprotected` 的选项 `volume modify` 命令会从SVM复制中排除指定的卷。
@@ -142,9 +142,21 @@ SVM 复制关系的内容取决于以下字段的交互：
 
 
  a| 
+部署类型
+ a| 
+* 单个源到单个目标
+* 从 ONTAP 9.4 开始，扇出。您只能扇出到两个目标。
++
+默认情况下，每个源 SVM 仅允许一个 -identity-preserve true 关系。
+
+
+
+
+
+ a| 
 关系类型
  a| 
-* SnapMirror 灾难恢复
+* SnapMirror灾难恢复
 * 从 ONTAP 9.2 开始， SnapMirror 统一复制
 
 
@@ -158,25 +170,6 @@ SVM 复制关系的内容取决于以下字段的交互：
 
 
  a| 
-不受版本限制
- a| 
-不支持
-
-
-
- a| 
-部署类型
- a| 
-* 单个源到单个目标
-* 从 ONTAP 9.4 开始，扇出。您只能扇出到两个目标。
-+
-默认情况下，每个源 SVM 仅允许一个 -identity-preserve true 关系。
-
-
-
-
-
- a| 
 自主勒索软件保护
  a| 
 * 从ONTAP 9.12.1开始支持。有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap/anti-ransomware/index.html["自主勒索软件保护"]
@@ -185,13 +178,9 @@ SVM 复制关系的内容取决于以下字段的交互：
 
 
  a| 
-卷加密
+一致性组异步支持
  a| 
-* 源上的加密卷会在目标上进行加密。
-* 必须在目标上配置板载密钥管理器或 KMIP 服务器。
-* 在目标上生成新的加密密钥。
-* 如果目标不包含支持卷 .encryption 的节点，则复制会成功，但目标卷不会加密。
-
+从ONTAP 9.14.1开始、如果存在一致性组、则最多支持32个SVM灾难恢复关系。请参见 link:https://docs.netapp.com/us-en/ontap/consistency-groups/protect-task.html["保护一致性组"] 和 link:https://docs.netapp.com/us-en/ontap/consistency-groups/limits.html["一致性组限制"] 有关详细信息 ...
 
 
 
@@ -205,41 +194,66 @@ FabricPool
  a| 
 MetroCluster
  a| 
-从ONTAP 9.11.1开始、MetroCluster 配置中SVM DR关系的两端都可以作为其他SVM DR配置的源。
+从ONTAP 9.11.1开始、MetroCluster配置中SVM灾难恢复关系的两端均可用作其他SVM灾难恢复配置的源。
 
 从 ONTAP 9.5 开始， MetroCluster 配置支持 SnapMirror SVM 复制。
 
-* MetroCluster 配置不能是 SVM DR 关系的目标。
-* 只有 MetroCluster 配置中的活动 SVM 才能成为 SVM DR 关系的源。
+* MetroCluster配置不能是SVM灾难恢复关系的目标。
+* 只有 MetroCluster 配置中的活动 SVM 才能成为 SVM 灾难恢复关系的源。
 +
 源可以是切换前的 sync-source SVM ，也可以是切换后的 sync-destination SVM 。
 
-* 当 MetroCluster 配置处于稳定状态时， MetroCluster sync-destination SVM 不能作为 SVM DR 关系的源，因为卷未联机。
-* 如果 sync-source SVM 是 SVM DR 关系的源，则源 SVM DR 关系信息将复制到 MetroCluster 配对节点。
-* 在切换和切回过程中，复制到 SVM DR 目标可能会失败。
+* 当 MetroCluster 配置处于稳定状态时， MetroCluster sync-destination SVM 不能作为 SVM 灾难恢复关系的源，因为卷未联机。
+* 如果同步源SVM是SVM灾难恢复关系的源、则源SVM灾难恢复关系信息将复制到MetroCluster配对节点。
+* 在切换和切回过程中、复制到SVM灾难恢复目标可能会失败。
 +
-但是，切换或切回过程完成后，下一次 SVM DR 计划更新将成功。
+但是、在切换或切回过程完成后、下一次SVM灾难恢复计划的更新将成功。
 
 
+
+
+
+ a| 
+一致性组
+ a| 
+从ONTAP 9.14.1开始支持。有关详细信息，请参见 xref:../consistency-groups/protect.html[保护一致性组]。
 
 
 
  a| 
 ONTAP S3
  a| 
-SVM DR 不支持。
+SVM灾难恢复不支持。
 
 
 
  a| 
 SnapMirror 同步
  a| 
-SVM DR 不支持。
+SVM灾难恢复不支持。
+
+
+
+ a| 
+不受版本限制
+ a| 
+不支持
+
+
+
+ a| 
+卷加密
+ a| 
+* 源上的加密卷会在目标上进行加密。
+* 必须在目标上配置板载密钥管理器或 KMIP 服务器。
+* 在目标上生成新的加密密钥。
+* 如果目标不包含支持卷 .encryption 的节点，则复制会成功，但目标卷不会加密。
+
 
 |===
 
 
-== 在 SVM DR 关系中复制的配置
+== 在SVM灾难恢复关系中复制的配置
 
 下表显示了的交互 `snapmirror create -identity-preserve` 选项和 `snapmirror policy create -discard-configs network` 选项：
 
@@ -857,9 +871,9 @@ v3 用户
 |===
 
 
-== SVM DR存储限制
+== SVM灾难恢复存储限制
 
-下表显示了每个存储对象支持的建议最大卷数和SVM DR关系数。您应注意、限制通常取决于平台。请参见 link:https://hwu.netapp.com/["Hardware Universe"^] 了解特定配置的限制。
+下表显示了建议的每个存储对象支持的最大卷数和SVM灾难恢复关系数。您应注意、限制通常取决于平台。请参见 link:https://hwu.netapp.com/["Hardware Universe"^] 了解特定配置的限制。
 
 [cols="2*"]
 |===
@@ -885,6 +899,6 @@ HA对
  a| 
 集群
  a| 
-128个SVM DR关系
+128个SVM灾难关系
 
 |===

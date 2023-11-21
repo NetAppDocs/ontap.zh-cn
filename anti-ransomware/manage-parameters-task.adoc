@@ -4,7 +4,7 @@ permalink: anti-ransomware/manage-parameters-task.html
 keywords: anti-ransomware overview, ransomware, security, modify, security anti-ransomware attack, parameters 
 summary: 从ONTAP 9.11.1开始、可以根据工作负载修改自主防兰软件保护检测参数。 
 ---
-= 管理ARP攻击检测参数
+= 管理自主防系统攻击检测参数
 :toc: macro
 :hardbreaks:
 :toclevels: 1
@@ -14,7 +14,7 @@ summary: 从ONTAP 9.11.1开始、可以根据工作负载修改自主防兰软�
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../media/
 :toc-position: content
 
 
@@ -29,11 +29,13 @@ summary: 从ONTAP 9.11.1开始、可以根据工作负载修改自主防兰软�
 
 在ONTAP 9.10.1中、如果ARP同时检测到以下两种情况、则会发出警告：
 
-* 先前在卷中未发现20个以上具有文件扩展名的文件
+* 超过20个文件、其文件扩展名先前未在卷中发现
 * 高熵数据
 
 
 从ONTAP 9.11.1开始、如果满足_only一个条件、ARP将发出威胁警告。例如、如果在24小时内观察到20个以上的文件具有以前在卷中未观察到的文件扩展名、则ARP会将此类文件归类为所观察到的熵的威胁_thw考虑_。(24小时和20个文件值为默认值、可以进行修改。)
+
+从ONTAP 9.14.1开始、您可以在ARP发现新文件扩展名以及创建快照时配置警报。有关详细信息，请参见 <<modify-alerts>>
 
 某些卷和工作负载需要使用不同的检测参数。例如、启用了ARP的卷可能会托管多种类型的文件扩展名、在这种情况下、您可能需要将前所未见文件扩展名的阈值计数修改为大于默认值20的数字、或者禁用基于前所未见文件扩展名的警告。从ONTAP 9.11.1开始、您可以修改攻击检测参数、使其更适合您的特定工作负载。
 
@@ -78,7 +80,7 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 
 即使在活动模式下、ARP也会继续修改检测参数的基线值。如果您知道音量活动中的电涌(一次性电涌或新正常值的电涌)，您应该将其报告为安全。手动将这些激增报告为安全状态有助于提高ARP威胁评估的准确性。
 
-.一次性电涌
+.报告一次性电涌
 . 如果在已知情况下发生一次性激增、而您希望ARP在未来情况下报告类似的激增、请从工作负载行为中清除该激增：
 +
 `security anti-ransomware volume workload-behavior clear-surge -vserver _svm_name_ -volume _volume_name_`
@@ -92,6 +94,67 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 
 
 
+
+
+== 配置ARP警报
+
+从ONTAP 9.14.1开始、您可以使用ARP为两个ARP事件指定警报：
+
+* 观察卷上的新文件扩展名
+* 创建ARP快照
+
+
+可以在单个卷上或为整个SVM设置这两个事件的警报。如果为SVM启用警报、则只有在启用警报之后创建的卷才会继承警报设置。默认情况下、任何卷都不会启用警报。
+
+事件警报可通过多管理员验证进行控制。有关详细信息，请参见 xref:use-cases-restrictions-concept.html#multi-admin-verification-with-volumes-protected-with-ARP[使用ARP保护的卷进行多管理员验证]。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+.为卷设置警报
+. 导航到**卷**。选择要修改设置的单个卷。
+. 选择**安全性**选项卡，然后选择**事件安全性设置**。
+. 要接收有关**检测到新文件扩展名**和**已创建的异常快照**的警报，请选择**严重性**标题下的下拉菜单。将设置从**不生成事件**修改为**通知**。
+. 选择**保存**。
+
+
+.为SVM设置警报
+. 导航到** Storage VM**，然后选择要为其启用设置的SVM。
+. 在“**安全**”标题下，找到“**反勒索软件**卡”。选择 ... image:../media/icon_kabob.gif["三点"] 然后**编辑Ranson要 程序事件严重性**。
+. 要接收有关**检测到新文件扩展名**和**已创建的异常快照**的警报，请选择**严重性**标题下的下拉菜单。将设置从**不生成事件**修改为**通知**。
+. 选择**保存**。
+
+
+--
+.命令行界面
+--
+.为卷设置警报
+* 要为新文件扩展名设置警报、请执行以下操作：
++
+`security anti-ransomware volume event-log modify -vserver _svm_name_ -is-enabled-on-new-file-extension-seen true`
+
+* 要为创建ARP Snapshot设置警报、请执行以下操作：
++
+`security anti-ransomware volume event-log modify -vserver _svm_name_ -is-enabled-on-snapshot-copy-creation true`
+
+* 使用确认设置 `anti-ransomware volume event-log show` 命令：
+
+
+.为SVM设置警报
+* 要为新文件扩展名设置警报、请执行以下操作：
++
+`security anti-ransomware vserver event-log modify -vserver _svm_name_ -is-enabled-on-new-file-extension-seen true`
+
+* 要为创建ARP Snapshot设置警报、请执行以下操作：
++
+`security anti-ransomware vserver event-log modify -vserver _svm_name_ -is-enabled-on-snapshot-copy-creation true`
+
+* 使用确认设置 `security anti-ransomware vserver event-log show` 命令：
+
+
+--
+====
 .更多信息
 * link:https://kb.netapp.com/onprem/ontap/da/NAS/Understanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot["了解自动防兰索防攻击和自动防兰索防快照"^]
 

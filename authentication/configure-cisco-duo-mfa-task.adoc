@@ -1,0 +1,243 @@
+---
+permalink: authentication/configure-cisco-duo-mfa-task.html 
+sidebar: sidebar 
+keywords: enable, ssh, multifactor authentication, mfa, 2fa, hardware authentication device, Cisco, Duo 
+summary: '要通过适用于SSH的Cisco Duo进行双因素身份验证(2FA)来提高帐户安全性、您必须配置SSH以供Cisco Duo使用。' 
+---
+= 为SSH登录配置Cisco Duo 2FA
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.14.1开始、您可以将ONTAP配置为在SSH登录期间使用Cisco Duo进行双重身份验证(2FA)。您可以在集群级别配置Duo、并默认配置IT适用场景所有用户帐户。或者、您也可以在Storage VM (以前称为Vserver)级别配置Duo、在这种情况下、它仅适用于该Storage VM的用户。如果您启用并配置Duo、它将作为一种附加的身份验证方法、对所有用户的现有方法进行补充。
+
+如果您为SSH登录启用Duo身份验证、用户下次使用SSH登录时需要注册设备。有关注册信息，请参阅Cisco Duo https://guide.duo.com/add-device["注册文档"^]。
+
+您可以使用ONTAP命令行界面对Cisco Duo执行以下任务：
+
+* <<配置Cisco Duo>>
+* <<更改Cisco Duo配置>>
+* <<删除Cisco Duo配置>>
+* <<查看Cisco Duo配置>>
+* <<删除Duo组>>
+* <<查看Duo组>>
+* <<为用户绕过Duo身份验证>>
+
+
+
+
+== 配置Cisco Duo
+
+您可以使用为整个集群或特定Storage VM (在ONTAP命令行界面中称为Vserver)创建Cisco Duo配置 `security login duo create` 命令：执行此操作时、系统会为此集群或Storage VM启用Cisco Duo SSH登录。
+
+.步骤
+. 登录到Cisco Duo管理面板。
+. 转到*应用程序> UNIX应用程序*。
+. 记录您的集成密钥、机密密钥和API主机名。
+. 使用SSH登录到您的ONTAP帐户。
+. 为此Storage VM启用Cisco Duo身份验证、将环境中的信息替换为方括号中的值：
++
+[source, cli]
+----
+security login duo create \
+-vserver <STORAGE_VM_NAME> \
+-integration-key <INTEGRATION_KEY> \
+-secret-key <SECRET_KEY> \
+-apihost <API_HOSTNAME>
+----
++
+有关此命令所需参数和可选参数的详细信息、请参阅 link:config-worksheets-reference.html["用于管理员身份验证和 RBAC 配置的工作表"^]。
+
+
+
+
+
+== 更改Cisco Duo配置
+
+您可以更改Cisco Duo对用户进行身份验证的方式(例如、提供的身份验证提示数或使用的HTTP代理)。如果需要更改Storage VM (在ONTAP命令行界面中称为Vserver)的Cisco Duo配置、可以使用 `security login duo modify` 命令：
+
+.步骤
+. 登录到Cisco Duo管理面板。
+. 转到*应用程序> UNIX应用程序*。
+. 记录您的集成密钥、机密密钥和API主机名。
+. 使用SSH登录到您的ONTAP帐户。
+. 更改此Storage VM的Cisco Duo配置、将您环境中的更新信息替换为方括号中的值：
++
+[source, cli]
+----
+security login duo modify \
+-vserver <STORAGE_VM_NAME> \
+-integration-key <INTEGRATION_KEY> \
+-secret-key <SECRET_KEY> \
+-apihost <API_HOSTNAME> \
+-pushinfo true|false \
+-http-proxy <HTTP_PROXY_URL> \
+-autopush true|false \
+-prompts 1|2|3 \
+-max-unenrolled-logins <NUM_LOGINS> \
+-is-enabled true|false \
+-fail-mode safe|secure
+----
+
+
+
+
+== 删除Cisco Duo配置
+
+您可以删除Cisco Duo配置、这样SSH用户无需在登录时使用Duo进行身份验证。要删除Storage VM (在ONTAP命令行界面中称为Vserver)的Cisco Duo配置、您可以使用 `security login duo delete` 命令：
+
+.步骤
+. 使用SSH登录到您的ONTAP帐户。
+. 删除此Storage VM的Cisco Duo配置、将您的Storage VM名称替换为 `<STORAGE_VM_NAME>`：
++
+[source, cli]
+----
+security login duo delete  -vserver <STORAGE_VM_NAME>
+----
++
+此操作将永久删除此Storage VM的Cisco Duo配置。
+
+
+
+
+
+== 查看Cisco Duo配置
+
+您可以使用查看Storage VM (在ONTAP命令行界面中称为Vserver)的现有Cisco Duo配置 `security login duo show` 命令：
+
+.步骤
+. 使用SSH登录到您的ONTAP帐户。
+. 显示了此Storage VM的Cisco Duo配置。(可选)您可以使用 `vserver` 参数以指定Storage VM、并将Storage VM名称替换为 `<STORAGE_VM_NAME>`：
++
+[source, cli]
+----
+security login duo show -vserver <STORAGE_VM_NAME>
+----
++
+您应看到类似于以下内容的输出：
+
++
+[source, cli]
+----
+Vserver: testcluster
+Enabled: true
+
+Status: ok
+INTEGRATION-KEY: DI89811J9JWMJCCO7IOH
+SKEY SHA Fingerprint:
+b79ffa4b1c50b1c747fbacdb34g671d4814
+API Host: api-host.duosecurity.com
+Autopush: true
+Push info: true
+Failmode: safe
+Http-proxy: 192.168.0.1:3128
+Prompts: 1
+Comments: -
+----
+
+
+
+
+== 创建Duo组
+
+您可以指示Cisco Duo在Duo身份验证过程中仅包括特定Active Directory、LDAP或本地用户组中的用户。如果您创建Duo组、则只会提示该组中的用户进行Duo身份验证。您可以使用创建Duo组 `security login duo group create` 命令：创建组时、您可以选择从Duo身份验证过程中排除该组中的特定用户。
+
+.步骤
+. 使用SSH登录到您的ONTAP帐户。
+. 创建Duo组、将环境中的信息替换为方括号中的值。如果省略 `-vserver` 参数、则在集群级别创建组：
++
+[source, cli]
+----
+security login duo group create -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME> -exclude-users <USER1, USER2>
+----
++
+Duo组的名称必须与Active Directory、LDAP或本地组匹配。使用可选指定的用户 `-exclude-users` 参数不会包含在Duo身份验证过程中。
+
+
+
+
+
+== 查看Duo组
+
+您可以使用查看现有Cisco Duo组条目 `security login duo group show` 命令：
+
+.步骤
+. 使用SSH登录到您的ONTAP帐户。
+. 显示Duo组条目、将环境中的信息替换为方括号中的值。如果省略 `-vserver` 参数中、组将在集群级别显示：
++
+[source, cli]
+----
+security login duo group show -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME> -exclude-users <USER1, USER2>
+----
++
+Duo组的名称必须与Active Directory、LDAP或本地组匹配。使用可选指定的用户 `-exclude-users` 参数将不会显示。
+
+
+
+
+
+== 删除Duo组
+
+您可以使用删除Duo组条目 `security login duo group delete` 命令：如果删除组、则该组中的用户将不再包括在Duo身份验证过程中。
+
+.步骤
+. 使用SSH登录到您的ONTAP帐户。
+. 删除Duo组条目、将环境中的信息替换为方括号中的值。如果省略 `-vserver` 参数、则组将在集群级别删除：
++
+[source, cli]
+----
+security login duo group delete -vserver <STORAGE_VM_NAME> -group-name <GROUP_NAME>
+----
++
+Duo组的名称必须与Active Directory、LDAP或本地组匹配。
+
+
+
+
+
+== 为用户绕过Duo身份验证
+
+您可以从Duo SSH身份验证过程中排除所有用户或特定用户。
+
+
+
+=== 排除所有Duo用户
+
+您可以为所有用户禁用Cisco Duo SSH身份验证。
+
+.步骤
+. 使用SSH登录到您的ONTAP帐户。
+. 为SSH用户禁用Cisco Duo身份验证、并将Vserver名称替换为 `<STORAGE_VM_NAME>`：
++
+[source, cli]
+----
+security login duo -vserver <STORAGE_VM_NAME> -is-duo-enabled-false
+----
+
+
+
+
+=== 排除Duo组用户
+
+您可以从Duo SSH身份验证过程中排除属于Duo组的某些用户。
+
+.步骤
+. 使用SSH登录到您的ONTAP帐户。
+. 为组中的特定用户禁用Cisco Duo身份验证。将组名称和要排除的用户列表替换为方括号中的值：
++
+[source, cli]
+----
+security login group modify -group-name <GROUP_NAME> -exclude-users <USER1, USER2>
+----
++
+Duo组的名称必须与Active Directory、LDAP或本地组匹配。使用指定的用户 `-exclude-users` 参数不会包含在Duo身份验证过程中。
+
+
+
+
+
+=== 排除本地Duo用户
+
+您可以使用Cisco Duo管理面板排除特定本地用户使用Duo身份验证。有关说明，请参见 https://duo.com/docs/administration-users#changing-user-status["Cisco Duo文档"^]。

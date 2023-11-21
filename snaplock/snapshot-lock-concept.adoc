@@ -15,6 +15,8 @@ summary: 从ONTAP 9.12.1开始、您可以在非SnapLock卷上锁定Snapshot副�
 
 您可以使用SnapLock 合规时钟功能在指定时间段内锁定Snapshot副本、以便在达到到期时间之前无法删除这些副本。锁定Snapshot副本可防止数据被篡改、防止他们受到勒索软件威胁。如果卷受到勒索软件攻击的影响、您可以使用锁定的Snapshot副本恢复数据。
 
+从ONTAP 9.14.1开始、Snapshot副本锁定支持在SnapLock存储目标和非SnapLock SnapMirror目标卷上长期保留Snapshot副本。可通过使用与关联的SnapMirror策略规则设置保留期限来启用Snapshot副本锁定 xref:Modify an existing policy to apply long-term retention[现有策略标签]。此规则将覆盖在卷上设置的默认保留期限。如果SnapMirror标签没有关联的保留期限、则使用卷的默认保留期限。
+
 .防篡改Snapshot副本的要求和注意事项
 * 如果使用的是ONTAP命令行界面、则集群中的所有节点都必须运行ONTAP 9.12.1或更高版本。如果使用的是System Manager、则所有节点都必须运行ONTAP 9.13.1或更高版本。
 * link:https://docs.netapp.com/us-en/ontap/snaplock/install-license-task.html["集群上必须安装SnapLock许可证"]。
@@ -284,3 +286,22 @@ cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot sna
 
 --
 ====
+
+
+=== 修改现有策略以应用长期保留
+
+从ONTAP 9.14.1开始、您可以通过添加规则来设置Snapshot副本的长期保留来修改现有SnapMirror策略。此规则用于覆盖SnapLock存储目标和非SnapLock SnapMirror目标卷上的默认卷保留期限。
+
+. 向现有SnapMirror策略添加规则：
++
+`snapmirror policy add-rule -vserver <SVM name> -policy <policy name> -snapmirror-label <label name> -keep <number of Snapshot copies> -retention-period [<integer> days|months|years]`
+
++
+以下示例将创建一个规则、将保留期限应用于名为"LockVault"的现有策略：
+
++
+[listing]
+----
+snapmirror policy add-rule -vserver vs1 -policy lockvault -snapmirror-label test1 -keep 10 -retention-period "6 months"
+----
+

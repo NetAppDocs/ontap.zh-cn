@@ -11,9 +11,9 @@ summary: 在 ONTAP 中启用某个功能可能会占用您不知道的空间，�
 
 
 [role="lead"]
-在 ONTAP 中启用某个功能可能会占用您不知道的空间，或者占用的空间可能会超过预期。ONTAP 可通过从三个视角查看空间来帮助您确定空间的使用情况：卷，卷在聚合中的占用空间以及聚合。
+在ONTAP中启用某个功能可能会占用比预期更多的空间。ONTAP 可通过从三个视角查看空间来帮助您确定空间的使用情况：卷，卷在聚合中的占用空间以及聚合。
 
-由于卷，聚合或这两者的组合占用空间或空间不足，卷可能会用尽空间。通过从不同角度查看面向功能的空间使用情况细分，您可以评估哪些功能可能需要调整或关闭，或者采取其他操作（例如增加聚合或卷的大小）。
+由于卷，聚合或这两者的组合占用空间或空间不足，卷可能会用尽空间。通过从不同角度查看面向功能的空间使用情况细分、您可以评估您可能需要调整或关闭哪些功能、或者是否应采取其他操作(例如增加聚合或卷的大小)。
 
 您可以从以下任一视角查看空间使用情况详细信息：
 
@@ -22,14 +22,17 @@ summary: 在 ONTAP 中启用某个功能可能会占用您不知道的空间，�
 此视角提供了有关卷中空间使用量的详细信息，包括 Snapshot 副本的使用量。
 
 +
-您可以使用查看卷的空间使用量 `volume show-space` 命令：
+使用 `volume show-space` 命令以查看卷的空间使用量。
+
++
+从ONTAP 9.14.1开始、适用于具有的卷 xref:enable-temperature-sensitive-efficiency-concept.html[温度敏感型存储效率(T(SSE))] 已启用、表示报告的卷上已用空间量 `volume show-space -physical used` command包含通过T(SSE)实现的空间节省。
 
 * 卷在聚合中的占用空间
 +
 此视角提供了有关每个卷在所属聚合中使用的空间量的详细信息，包括卷的元数据。
 
 +
-您可以使用查看卷在聚合中的占用空间 `volume show-footprint` 命令：
+使用 `volume show-footprint` 命令以查看卷在聚合中的占用空间。
 
 * 聚合的空间使用量
 +
@@ -39,16 +42,16 @@ summary: 在 ONTAP 中启用某个功能可能会占用您不知道的空间，�
 WAFL 会将总磁盘空间的10%预留给聚合级别的元数据和性能。  用于维护聚合中的卷的空间将从WAFL 预留中出来、并且无法更改。
 
 +
-从ONTAP 9.12.1及更高版本开始、对于全闪存FAS (AFF)和FAS500f平台、超过30 TB的聚合的WAFL 预留将从10%减少到5%、从而增加聚合中的可用空间。
+从ONTAP 9.12.1开始、对于AFF平台和FAS500f平台、大于30 TB的聚合的WAFL预留从10%减少到5%。  从ONTAP 9.14.1开始、所有FAS平台上的精简适用场景聚合都相同、从而使聚合中的可用空间增加5%。
 
 +
-您可以使用查看聚合的空间使用量 `storage aggregate show-space` 命令：
+使用 `storage aggregate show-space` 命令以查看聚合的空间使用量。
 
 
 
 磁带备份和重复数据删除等某些功能会使用空间来存储卷中的元数据以及直接从聚合中获取的元数据。从卷和卷占用空间的角度来看，这些功能显示的空间使用量不同。
 
 .相关信息
-link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Space_Usage["基于知识的文章：空间使用量"]
+* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/Space_Usage["知识库文章：空间使用量"]
+* link:https://www.netapp.com/blog/free-up-storage-capacity-upgrade-ontap/["升级到ONTAP 9.12.1可释放5%的存储容量"]
 
-link:https://www.netapp.com/blog/free-up-storage-capacity-upgrade-ontap/["升级到ONTAP 9.12.1可释放5%的存储容量"]

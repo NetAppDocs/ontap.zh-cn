@@ -1,0 +1,59 @@
+---
+permalink: consistency-groups/modify-tags-task.html 
+sidebar: sidebar 
+keywords: consistency groups, application tag, sql, oracle, component tag 
+summary: 应用程序和组件标记是一种管理工具、可用于筛选和标识一致性组中的不同工作负载。 
+---
+= 修改应用程序和组件标记
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.12.1开始、一致性组支持组件和应用程序标记。应用程序和组件标记是一种管理工具、可用于筛选和标识一致性组中的不同工作负载。
+
+.关于此任务
+一致性组提供两种类型的标记：
+
+* "*应用程序标记"*：这些标记适用于单个和父一致性组。应用程序标记可为MongoDB、Oracle或SQL Server等工作负载提供标签。一致性组的默认应用程序标记为"其他"。
+* **组件标记*：分层一致性组中的子级具有组件标记、而不是应用程序标记。组件标记的选项为"data"、"logs"或"other"。默认值为"其他"。
+
+
+您可以在创建一致性组时或创建一致性组之后应用标记。
+
+
+IMPORTANT: 如果一致性组具有SM-BC关系、则必须使用*其他*作为应用程序或组件标记。
+
+.步骤
+从ONTAP 9.12.1开始、您可以使用System Manager修改应用程序和组件标记。从ONTAP 9.14.1开始、您可以使用ONTAP命令行界面修改应用程序和组件标记。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择 * 存储 > 一致性组 * 。
+. 选择要修改其标记的一致性组。选择 image:icon_kabob.gif["三个堆叠点"] 然后在一致性组的名称旁边选择*Edit*。
+. 在下拉菜单中、选择适当的应用程序或组件标记。
+. 选择 * 保存 * 。
+
+
+--
+.命令行界面
+--
+从ONTAP 9.14.1开始、您可以使用ONTAP命令行界面修改现有一致性组的应用程序或组件标记。
+
+.修改应用程序标记
+. 应用程序标记接受有限数量的预设字符串。要查看可接受的字符串列表、请运行以下命令：
+`consistency-group modify -vserver _svm_name_ -consistency-group _consistency_group_ -application-type ?`
+. 从输出中选择适当的字符串、即修改一致性组：
+`consistency-group modify -vserver _svm_name_ -consistency-group _consistency_group_ -application-type application_type`
+
+
+.修改组件标记
+. 修改组件类型。组件类型可以是数据、日志或其他。如果您使用的是SM-BC、则必须为"OT他 人"。
+`consistency-group modify -vserver _svm_ -consistency-group _child_consistency_group_ -parent-consistency-group _parent_consistency_group_ -application-component-type [data|logs|other]`
+
+
+--
+====

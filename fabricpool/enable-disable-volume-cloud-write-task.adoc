@@ -1,0 +1,104 @@
+---
+permalink: fabricpool/enable-disable-volume-cloud-write-task.html 
+sidebar: sidebar 
+keywords: creating, volume, fabricpool, cloud write, enable, disable 
+summary: 从ONTAP 9.14.1开始、您可以在FabricPool中的新卷或现有卷上启用和禁用云写入模式、以允许NFS客户端将数据直接写入云。 
+---
+= 启用和禁用卷以直接写入云
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.14.1开始、您可以在FabricPool中的新卷或现有卷上启用和禁用云写入模式、以使NFS客户端可以直接将数据写入云、而无需等待分层扫描。SMB客户端仍会写入已启用云写入的卷中的性能层。默认情况下、云写入模式处于禁用状态。
+
+对于迁移等情况、云写入模式非常有用、例如、向集群传输的数据量超过集群在本地层上支持的数据量。如果没有云写入模式、则在迁移期间会先传输少量数据、然后再进行分层、再进行传输和分层、直到迁移完成为止。使用云写入模式时、不再需要这种类型的管理、因为数据永远不会传输到本地层。
+
+.开始之前
+* 您应该是集群或SVM管理员。
+* 您必须处于高级权限级别。
+* 此卷必须为读写类型的卷。
+* 卷必须具有all层策略。
+
+
+
+
+== 在创建卷期间启用云写入
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 创建卷并启用云写入模式：
++
+[source, cli]
+----
+volume create -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <local tier name>
+----
++
+以下示例将在FabricPool本地层(aggr1)上创建一个名为vol1且已启用云写入的卷：
+
++
+[listing]
+----
+volume create -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
+----
+
+
+
+
+== 在现有卷上启用云写入
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 修改卷以启用云写入模式：
++
+[source, cli]
+----
+volume modify -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <local tier name>
+----
++
+以下示例将修改FabricPool本地层(aggr1)上启用了云写入的卷vol1：
+
++
+[listing]
+----
+volume modify -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
+----
+
+
+
+
+== 禁用卷上的云写入
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 禁用云写入模式：
++
+[source, cli]
+----
+volume modify -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <aggregate name>
+----
++
+以下示例将创建一个名为vol1且已启用云写入的卷：
+
++
+[listing]
+----
+volume modify -volume vol1 -is-cloud-write-enabled false -aggregate aggr1
+----
+

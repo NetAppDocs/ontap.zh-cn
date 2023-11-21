@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: anti-ransomware/index.html 
 keywords: ransomware, security, autonomous protection, arp, detect, detection, threat, attack, suspect, anti-ransomware, entropy, abnormal volume activity, antiransomware, extension conformity, ransomware protection strategy 
-summary: '从ONTAP 9.10.1开始、自动勒索软件保护(ARP)功能使用NAS (NFS和SMB)环境中的工作负载分析功能主动检测并警告可能指示勒索软件攻击的异常活动。' 
+summary: 自主勒索软件保护可通过NAS环境中的工作负载分析来检测可能是勒索软件攻击的异常活动并发出警告。 
 ---
 = 自主勒索软件保护概述
 :toc: macro
@@ -27,7 +27,7 @@ summary: '从ONTAP 9.10.1开始、自动勒索软件保护(ARP)功能使用NAS (
 
 == 许可证和支持
 
-ARP需要一个许可证、根据您使用的ONTAP 版本不同、该许可证也会有所不同：
+ARP需要许可证。ARP可用于 link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and_later_licensing_overview["ONTAP One许可证"^]。如果您没有ONTAP One许可证、则可以使用其他许可证、具体取决于您的ONTAP版本。
 
 [cols="2*"]
 |===
@@ -51,7 +51,7 @@ MT_EK_Mgmt (多租户密钥管理)
 * 如果您要从ONTAP 9.11.1或更高版本还原到ONTAP 9.10.1、并且已使用防勒索软件许可证启用ARP、则会看到一条警告消息、可能需要重新配置ARP。 link:../revert/anti-ransomware-license-task.html["了解还原ARP的相关信息"]。
 
 
-您可以使用ONTAP 系统管理器或ONTAP 命令行界面按卷配置ARP。
+您可以使用System Manager或ONTAP命令行界面按卷配置ARP。
 
 
 
@@ -69,15 +69,7 @@ MT_EK_Mgmt (多租户密钥管理)
 
 == ARP检测到的内容
 
-勒索软件攻击有两种：
-
-* 通过加密数据拒绝为文件提供服务。
-除非支付了勒索费用，否则攻击者将无法访问此数据。
-* 敏感专有数据被盗。
-攻击者威胁要将此数据释放到公有域，除非支付了勒索。
-
-
-ARP利用反勒索软件检测机制解决第一种类型、该机制基于：
+ARP旨在防止攻击者在支付赎金之前扣留数据的拒绝服务攻击。ARP提供基于以下方面的反勒索软件检测：
 
 * 将传入数据标识为加密或纯文本。
 * 分析，用于检测
@@ -89,8 +81,10 @@ ARP利用反勒索软件检测机制解决第一种类型、该机制基于：
 
 
 
+在对少量文件进行加密后、ARP可以检测到大多数勒索软件攻击的蔓延、并自动采取措施保护数据、并提醒您可疑攻击正在发生。
 
-NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索软件攻击的安全。虽然攻击可能无法检测到、但如果防病毒软件未能检测到入侵、则NetApp ARP会作为一个重要的额外防御层。在对少量文件进行加密后、ARP可以检测到大多数勒索软件攻击的蔓延、并自动采取措施保护数据、并提醒您可疑攻击正在发生。
+
+NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索软件攻击的安全。虽然攻击可能无法检测到、但如果防病毒软件未能检测到入侵、ARP则会作为一个重要的额外防御层。
 
 
 
@@ -98,8 +92,8 @@ NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索�
 
 ARP有两种模式：
 
-. 学习
-. 活动
+. 记忆(或"试运行"模式)
+. 活动(或"已启用"模式)
 
 
 启用ARP后、它将在学习模式下运行。在学习模式下、ONTAP 系统会根据上述分析区域(熵、文件扩展名类型和文件IOPS)开发警报配置文件。在学习模式下运行ARP并有足够的时间来评估工作负载特征后、您可以切换到活动模式并开始保护数据。一旦ARP切换到活动模式、ONTAP 将创建ARP快照、以便在检测到威胁时保护数据。
@@ -116,7 +110,7 @@ ARP有两种模式：
 
 在主动模式下、ARP根据根据所学分析测量的传入数据评估威胁概率。当ARP检测到威胁时、将分配一个度量值：
 
-* **低**：首次在卷中观察到新文件扩展名时，将分配此扩展名。
+* **低**：检测到卷中存在异常的最早时间(例如，在卷中观察到新的文件扩展名)。
 * **中等**：观察到多个文件具有相同的"从未见过"文件扩展名。
 +
 ** 在ONTAP 9.10.1中、升级到"中等"的阈值为100个或更多文件。从ONTAP 9.11.1开始、文件数量可进行编辑；其默认值为20。
@@ -124,11 +118,11 @@ ARP有两种模式：
 
 
 
-在威胁较低的情况下、ONTAP会检测到一个非正常情况、并为卷创建一个Snapshot、以创建可能的最佳恢复点。ARP Snapshot使用 `anti-ransomware-backup` 标记和可通过其名称进行标识、例如 `Anti_ransomware_backup.2022-12-20_1248`。
+在威胁较低的情况下、ONTAP会检测到一个非正常情况、并为卷创建一个Snapshot、以创建最佳恢复点。ARP Snapshot使用 `anti-ransomware-backup` 标记和可通过其名称进行标识、例如 `Anti_ransomware_backup.2022-12-20_1248`。
 
-在ONTAP运行分析报告以确定此非正常情况是否与勒索软件配置文件匹配后、此威胁会升级为中等。系统管理器的**事件**部分会记录并显示处于较低级别的威胁，但ONTAP不会发送有关较低威胁的警报。当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
+在ONTAP运行分析报告以确定此非正常情况是否与勒索软件配置文件匹配后、此威胁会升级为中等。系统会在System Manager的**事件**部分中记录并显示处于较低级别的威胁。当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。ONTAP不会发送有关低威胁的警报、但您可以发送警报 xref:manage-parameters-task.html#modify-arp-alerts[修改警报设置] 从ONTAP 9.14.1开始。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
 
-您可以在System Manager的**事件**部分中或使用查看有关威胁的信息，而不受威胁级别的限制 `security anti-ransomware volume show -vserver _svm_name_` 命令：
+您可以在System Manager的**事件**部分中或使用查看有关威胁的信息，而不受威胁级别的限制 `security anti-ransomware volume show` 命令：
 
 ARP快照至少保留两天。从ONTAP 9.11.1开始、您可以修改保留设置。有关详细信息，请参见 xref:modify-automatic-shapshot-options-task.html[修改Snapshot副本的选项]。
 

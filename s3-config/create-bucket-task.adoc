@@ -14,14 +14,14 @@ summary: S3 对象保留在 _bages_ 中—它们不嵌套为其他目录内某�
 S3 对象保留在 _bages_ 中—它们不嵌套为其他目录内某个目录内的文件。
 
 .开始之前
-包含 S3 服务器的 SVM 必须已存在。
+包含S3服务器的Storage VM必须已存在。
 
 .关于此任务
 对于CLI、在创建存储分段时、您有两个配置选项：
 
 * Let ONTAP Select the underlying aggregates and FlexGroup components （默认）
 +
-** ONTAP 会通过自动选择聚合来为第一个存储分段创建和配置 FlexGroup 卷。它将自动选择可用于您的平台的最高服务级别，或者您也可以指定存储服务级别。稍后在 SVM 中添加的任何其他分段都将具有相同的底层 FlexGroup 卷。
+** ONTAP 会通过自动选择聚合来为第一个存储分段创建和配置 FlexGroup 卷。它将自动选择可用于您的平台的最高服务级别，或者您也可以指定存储服务级别。稍后在Storage VM中添加的任何其他分段都将具有相同的底层FlexGroup卷。
 ** 或者，您也可以指定存储分层是否会使用存储分段，在这种情况下， ONTAP 会尝试选择低成本介质，以便为分层数据提供最佳性能。
 
 
@@ -41,74 +41,35 @@ S3 对象保留在 _bages_ 中—它们不嵌套为其他目录内某个目录�
 
 
 
+从ONTAP 9.14.1开始、您可以执行此操作 link:create-bucket-mcc-task.html["在MetroCluster配置中的镜像或未镜像聚合上创建分段"]。
+
 *注意：*如果您正在从Cloud Volumes ONTAP 提供存储分段、则应使用命令行界面操作步骤。强烈建议您手动选择底层聚合、以确保它们仅使用一个节点。使用这两个节点的聚合可能会影响性能、因为这些节点将位于不同地理位置的可用性区域中、因此容易受到延迟问题的影响。
 
 存储服务级别是预定义的自适应服务质量（ QoS ）策略组，具有 _value_ ， _performage_ 和 _Extreme 默认级别。您还可以定义自定义 QoS 策略组并将其应用于存储分段，而不是默认存储服务级别之一。
 
 从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
 
-link:storage-service-definitions-reference.html["存储服务定义"]
+有关存储服务定义的详细信息、请参见 link:storage-service-definitions-reference.html["存储服务定义"]
 
-如果要配置本地容量分层，请在数据 SVM 中创建分段和用户，而不是在 S3 服务器所在的系统 SVM 中创建。
+如果要配置本地容量分层、则需要在数据Storage VM中创建存储分段和用户、而不是在S3服务器所在的系统Storage VM中创建存储分段和用户。
 
 要进行远程客户端访问，您必须在启用了 S3 的 Storage VM 中配置存储分段。如果在未启用 S3 的 Storage VM 中创建存储分段，则此分段仅可用于本地分层。
 
-link:../performance-admin/index.html["性能管理"]
+有关性能管理的详细信息、请参见 link:../performance-admin/index.html["性能管理"]
 
 请参见 `vserver object-store-server bucket` 有关其他配置和显示选项的手册页。
 
 
 
-== 创建存储分段的过程
+== 使用ONTAP命令行界面创建S3存储分段
 
-[role="tabbed-block"]
-====
-.System Manager
---
-. 在启用了 S3 的 Storage VM 上添加新存储分段。
-+
-.. 单击 * 存储 > 分段 * ，然后单击 * 添加 * 。
-.. 输入名称，选择 Storage VM 并输入大小。
-+
-*** 如果此时单击 * 保存 * ，则会使用以下默认设置创建一个存储分段：
-+
-**** 除非任何组策略已生效，否则不会向任何用户授予对存储分段的访问权限。
-+
-
-NOTE: 您不应使用 S3 root 用户管理 ONTAP 对象存储并共享其权限，因为它对对象存储具有无限制的访问权限。而是使用您分配的管理权限创建一个用户或组。
-
-**** 系统可用性最高的服务质量（性能）级别。
-
-
-*** 您可以在配置存储分段时单击 * 更多选项 * 来配置用户权限和性能级别，也可以稍后修改这些设置。
-+
-**** 在使用 * 更多选项 * 配置用户和组权限之前，您必须已创建用户和组。
-**** 如果要使用 S3 对象存储进行 FabricPool 分层，请考虑选择 * 用于分层 * （使用低成本介质，为分层数据提供最佳性能），而不是性能服务级别。
-
-
-
-
-
-
-. 在 S3 客户端应用程序（另一个 ONTAP 系统或外部第三方应用程序）上，输入以下命令验证对新存储分段的访问：
-+
-** S3 服务器 CA 证书。
-** 用户的访问密钥和机密密钥。
-** S3 服务器 FQDN 名称和存储分段名称。
-
-
-
-
---
-.命令行界面
---
 . 如果您计划自己选择聚合和FlexGroup组件、请将权限级别设置为高级(否则、管理权限级别就足够了)： `set -privilege advanced`
 . 创建存储分段：
 +
 `vserver object-store-server bucket create -vserver _svm_name_ -bucket _bucket_name_ [-size integer[KB|MB|GB|TB|PB]] [-comment text] [additional_options]`
 
 +
-SVM名称可以是数据SVM或 `Cluster` (系统SVM名称)。
+Storage VM名称可以是数据Storage VM或 `Cluster` (系统Storage VM名称)。
 
 +
 如果未指定任何选项，则 ONTAP 将创建一个 5 GB 的存储分段，并将服务级别设置为系统可用的最高级别。
@@ -155,11 +116,74 @@ SVM名称可以是数据SVM或 `Cluster` (系统SVM名称)。
 
 
 .示例
-以下示例将为大小为 1 TB 的 SVM vs1 创建一个分段并指定聚合：
+以下示例将为大小为1 TB的Storage VM VS1创建一个分段并指定聚合：
 
 [listing]
 ----
 cluster-1::*> vserver object-store-server bucket create -vserver svm1.example.com -bucket testbucket -aggr-list aggr1 -size 1TB
 ----
---
-====
+
+
+== 使用System Manager创建S3存储分段
+
+. 在启用了 S3 的 Storage VM 上添加新存储分段。
++
+.. 单击 * 存储 > 分段 * ，然后单击 * 添加 * 。
+.. 输入名称，选择 Storage VM 并输入大小。
++
+*** 如果此时单击 * 保存 * ，则会使用以下默认设置创建一个存储分段：
++
+**** 除非任何组策略已生效，否则不会向任何用户授予对存储分段的访问权限。
++
+
+NOTE: 您不应使用 S3 root 用户管理 ONTAP 对象存储并共享其权限，因为它对对象存储具有无限制的访问权限。而是使用您分配的管理权限创建一个用户或组。
+
+**** 系统可用性最高的服务质量（性能）级别。
+
+
+*** 单击*Save*以使用这些默认值创建分段。
+
+
+
+
+
+
+
+
+=== 配置其他权限和限制
+
+您可以在配置存储分段时单击*More Options (*更多选项*)来配置对象锁定、用户权限和性能级别设置，也可以稍后修改这些设置。
+
+如果要使用 S3 对象存储进行 FabricPool 分层，请考虑选择 * 用于分层 * （使用低成本介质，为分层数据提供最佳性能），而不是性能服务级别。
+
+如果要为对象启用版本控制以便稍后恢复，请选择*Enable Versioning*。如果要在存储分段上启用对象锁定、则默认情况下会启用版本控制。有关对象版本控制的信息、请参见 https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html["在适用于Amazon的S3存储分段中使用版本控制"]。
+
+从9.14.1开始、S3存储分段支持对象锁定。如果要保护存储分段中的对象不被删除或覆盖，请选择*启用对象锁定*。锁定可以在所有或特定版本的对象上启用、并且只能在为集群节点初始化SnapLock Compliance时钟时才启用。请按照以下步骤操作：
+
+. 如果未在集群的任何节点上初始化SnapLock Compliance时钟，则会显示*初 始化SnapLock Compliance Clock*按钮。单击*初始化SnapLock Compliance Clock*以初始化集群节点上的SnapLock Compliance时钟。
+. 选择*监管*模式可激活基于时间的锁定，该锁定允许对对象具有_Write Once, Read M众多(WORM)_权限。即使在_监管_模式下、具有特定权限的管理员用户也可以删除这些对象。
+. 如果要对对象指定更严格的删除和更新规则，请选择*Compliance模式。在此对象锁定模式下、对象只能在指定保留期限结束后过期。除非指定保留期限、否则对象将无限期保持锁定状态。
+. 如果希望锁定在特定时间段内有效、请指定锁定的保留期限(以天或年为单位)。
++
+
+NOTE: 锁定适用于分版本和非分版本S3分段。对象锁定不适用于NAS对象。
+
+
+
+您可以为存储分段配置保护和权限设置以及性能服务级别。
+
+
+NOTE: 在配置权限之前、您必须已创建用户和组。
+
+有关信息，请参见 link:../s3-snapmirror/create-remote-mirror-new-bucket-task.html#system-manager-procedure["为新存储分段创建镜像"]。
+
+
+
+=== 验证对存储分段的访问
+
+在S3^应用程序(无论是ONTAP S3还是外部第三^方应用程序)上、您可以输入以下命令来验证您对新创建存储分段的访问权限：
+
+* S3 服务器 CA 证书。
+* 用户的访问密钥和机密密钥。
+* S3 服务器 FQDN 名称和存储分段名称。
+
