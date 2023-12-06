@@ -1,25 +1,41 @@
 ---
 permalink: flexcache/index.html 
 sidebar: sidebar 
-keywords: flexcache, volumes, faster, data, access, configure, manage, volues 
+keywords: flexcache, volumes, faster, data, access, configure, manage, overview, origin volumes 
 summary: 您可以配置和管理 FlexCache 卷以加速数据访问。 
 ---
-= 使用命令行界面进行 FlexCache 卷管理概述
+= FlexCache概述
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以配置和管理 FlexCache 卷以加速数据访问。
+NetApp FlexCache技术可加快读取密集型工作负载的数据访问速度、降低WAN延迟并降低WAN带宽成本、尤其是在客户端需要重复访问相同数据的情况下。创建FlexCache卷时、您需要为已有(初始)卷创建远程缓存、该卷仅包含初始卷的活动访问数据(热数据)。
 
-如果满足以下条件，请使用以下过程配置 FlexCache 卷：
+当FlexCache卷收到对其包含的热数据的读取请求时、其响应速度会快于初始卷、因为数据不需要传输到客户端。  如果FlexCache卷收到读取不常读取的数据(冷数据)的请求、则它会从初始卷检索所需的数据、然后在处理客户端请求之前存储这些数据。然后、该数据的后续读取请求将直接从FlexCache卷提供服务。在第一次请求后、数据不再需要在网络中传输、也不再需要从负载过重的系统提供。  例如、假设您的集群在一个用于访问频繁请求的数据的单一访问点遇到瓶颈。  您可以在集群中使用FlexCache卷为热数据提供多个挂载点、从而减少瓶颈并提高性能。另一个示例是、假设您需要减少从多个集群访问的卷的网络流量。您可以使用FlexCache卷在网络中的各个集群之间分发来自初始卷的热数据。  这样可以为用户提供更近的访问点、从而减少WAN流量。
 
-* 您运行的是ONTAP 9.5或更高版本。
-* 您希望使用 ONTAP 命令行界面（ CLI ），而不是 System Manager 或自动化脚本编写工具。
-* 您希望使用最佳实践，而不是浏览每个可用选项。
-+
-有关命令语法的详细信息，请参见 CLI 帮助和 ONTAP 手册页。
+您还可以使用FlexCache技术提高云和混合云环境中的性能。FlexCache卷可以将数据从内部数据中心缓存到云、从而帮助您将工作负载过渡到混合云。  您还可以使用FlexCache卷将数据从一个云提供商缓存到另一个云提供商或同一个云提供商的两个区域之间、从而消除云孤岛。
 
-* 您拥有集群管理员权限，而不是 SVM 管理员权限。
+从 ONTAP 9.10.1 开始，您可以 link:global-file-locking-task.html["启用全局文件锁定"] 所有FlexCache卷。全局文件锁定可防止用户访问已由其他用户打开的文件。  然后、对初始卷的更新会同时分发到所有FlexCache卷。
 
+从ONTAP 9.9.1开始、FlexCache卷会维护一个未找到文件的列表。  这样，当客户端搜索不存在的文件时，就无需向源发送多个调用，从而有助于减少网络流量。
+
+其他的列表 link:supported-unsupported-features-concept.html["FlexCache卷及其原始卷支持的功能"]还提供了按ONTAP版本列出的受支持协议。
+
+您可以在中了解有关ONTAP FlexCache技术架构的更多信息 link:https://www.netapp.com/pdf.html?item=/media/7336-tr4743.pdf["TR-4743 ： FlexCache in ONTAP"]。
+
+
+
+== 视频
+
+
+
+=== FlexCache 如何降低全局数据的 WAN 延迟和读取时间
+
+video::rbbH0l74RWc[youtube,width=848,height=480]
+
+
+=== 了解 ONTAP FlexCache 的性能优势！
+
+video::bWi1-8Ydkpg[youtube,width=848,height=480]

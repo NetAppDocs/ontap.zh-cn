@@ -14,16 +14,60 @@ summary: 您可以在同一集群中创建 FlexCache 卷，以提高访问热对
 您可以在同一集群中创建 FlexCache 卷，以提高访问热对象时的性能。如果数据中心位于不同位置，则可以在远程集群上创建 FlexCache 卷，以加快数据访问速度。
 
 .关于此任务
-FlexCache 卷始终是 FlexGroup 卷，而不是 FlexVol 卷。
+从ONTAP 9.5开始、FlexCache支持将FlexVol卷用作初始卷、并将FlexGroup卷用作FlexCache卷。  从ONTAP 9.7开始、支持将FlexVol卷和FlexGroup卷作为初始卷。
 
-从 ONTAP 9.7 开始， FlexGroup 卷在 FlexCache 关系的初始位置也受支持。
+.开始之前
+* 您必须运行ONTAP 9.5或更高版本
+* 如果您运行的是ONTAP 9.6或更早版本、则必须执行此操作 link:add-license-task.html["添加FlexCache许可证"]。
++
+ONTAP 9.7或更高版本不需要FlexCache许可证。
+
+
+
+
+NOTE: HA 对使用时 link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/support-storage-encryption-concept.html["加密 SAS 或 NVMe 驱动器（ SED ， NSE ， FIPS ）"]，您必须按照主题中的说明进行操作 link:https://docs.netapp.com/us-en/ontap/encryption-at-rest/return-seds-unprotected-mode-task.html["将 FIPS 驱动器或 SED 恢复到未受保护的模式"] 初始化系统之前 HA 对中的所有驱动器（启动选项 4 或 9 ）。如果不这样做，则在重新利用驱动器时，可能会导致未来数据丢失。
 
 .步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 如果FlexCache卷与初始卷位于不同的集群上、请创建集群对等关系：
++
+.. 在本地集群中，单击 * 保护 > 概述 * 。
+.. 展开*Intercluster Settings*，单击*Add Network Interfaces*并为集群添加集群间网络接口。
++
+在远程集群上重复此步骤。
+
+.. 在远程集群中，单击 * 保护 > 概述 * 。单击 image:icon_kabob.gif["菜单选项图标"] 在 Cluster peers 部分中，单击 * 生成密码短语 * 。
+.. 复制生成的密码短语并将其粘贴到本地集群中。
+.. 在本地集群中的集群对等方下，单击 * 对等集群 * 并对本地和远程集群建立对等关系。
+
+
+. 如果FlexCache卷与初始卷位于同一集群中、但位于不同的SVM中、请创建类型为FlexCache的集群间SVM对等关系：
++
+在Storage VM对等方下、单击 image:icon_kabob.gif["菜单选项图标"] 然后，使用 * 对等 Storage VM* 对等 Storage VM 。
+
+. 选择 * 存储 > 卷 * 。
+. 选择 * 添加 * 。
+. 选择*更多选项*，然后选择*为远程卷添加缓存*。
++
+.. 如果您运行的是 ONTAP 9.8 或更高版本，并且要禁用 QoS 或选择自定义 QoS 策略，请单击 * 更多选项 * ，然后在 * 存储和优化 * 下选择 * 性能服务级别 * 。
+
+
+
+
+--
+.命令行界面
+--
 . 如果要创建的 FlexCache 卷位于其他集群中，请创建集群对等关系：
 +
 .. 在目标集群上、创建与数据保护源集群的对等关系：
- +
-`cluster peer create -generate-passphrase -offer-expiration MM/DD/YYYY HH:MM:SS|1...7days|1...168hours -peer-addrs _peer_LIF_IPs_ -initial-allowed-vserver-peers _svm_name_,..|* -ipspace _ipspace_name_`
++
+[source, cli]
+----
+cluster peer create -generate-passphrase -offer-expiration MM/DD/YYYY HH:MM:SS|1...7days|1...168hours -peer-addrs <peer_LIF_IPs> -initial-allowed-vserver-peers <svm_name>,..|* -ipspace <ipspace_name>
+----
 +
 从 ONTAP 9.6 开始，默认情况下，在创建集群对等关系时会启用 TLS 加密。支持使用 TLS 加密在初始卷和 FlexCache 卷之间进行集群间通信。如果需要，您还可以为集群对等关系禁用 TLS 加密。
 
@@ -41,8 +85,11 @@ cluster02::> cluster peer create -generate-passphrase -offer-expiration 2days -i
 Warning: make a note of the passphrase - it cannot be displayed again.
 ----
 .. 在源集群上，将源集群身份验证到目标集群：
- +
-`cluster peer create -peer-addrs _peer_LIF_IPs_ -ipspace _ipspace_`
++
+[source, cli]
+----
+cluster peer create -peer-addrs <peer_LIF_IPs> -ipspace <ipspace>
+----
 +
 [listing]
 ----
@@ -61,8 +108,11 @@ Clusters cluster02 and cluster01 are peered.
 . 如果FlexCache卷与原始卷位于不同的SVM中、请使用创建SVM对等关系 `flexcache` 作为应用程序：
 +
 .. 如果SVM位于不同集群中、请为对等SVM创建SVM权限：
- +
-`vserver peer permission create -peer-cluster _cluster_name_ -vserver _svm-name_ -applications flexcache`
++
+[source, cli]
+----
+vserver peer permission create -peer-cluster <cluster_name> -vserver <svm-name> -applications flexcache
+----
 +
 以下示例说明了如何创建适用于所有本地 SVM 的 SVM 对等权限：
 
@@ -76,14 +126,19 @@ Warning: This Vserver peer permission applies to all local Vservers. After that 
 from peer cluster "cluster2" with any of the local Vservers. Do you want to continue? {y|n}: y
 ----
 .. 创建SVM对等关系：
- +
-`vserver peer create -vserver local_SVM -peer-vserver _remote_SVM_ -peer-cluster _cluster_name_ -applications flexcache`
++
+[source, cli]
+----
+vserver peer create -vserver <local_SVM> -peer-vserver <remote_SVM> -peer-cluster <cluster_name> -applications flexcache
+----
 
 
 . 创建 FlexCache 卷：
 +
-`volume flexcache create -vserver _cache_svm_ -volume _cache_vol_name_ -auto-provision-as flexgroup -size _vol_size_ -origin-vserver _origin_svm_ -origin-volume _origin_vol_name_`
-
+[source, cli]
+----
+volume flexcache create -vserver <cache_svm> -volume <cache_vol_name> -auto-provision-as flexgroup -size <vol_size> -origin-vserver <origin_svm> -origin-volume <origin_vol_name>
+----
 +
 以下示例将创建一个 FlexCache 卷并自动选择要配置的现有聚合：
 
@@ -105,8 +160,11 @@ cluster1::> flexcache create -vserver vs34 -volume fc4 -aggr-list aggr34,aggr43 
 . 验证 FlexCache 卷和原始卷的 FlexCache 关系。
 +
 .. 查看集群中的FlexCache关系：
- +
-`volume flexcache show`
++
+[source, cli]
+----
+volume flexcache show
+----
 +
 [listing]
 ----
@@ -132,6 +190,8 @@ vs_1           vol_1           vs_1             fc1            cluster1
 
 
 
+--
+====
 
 
 == 结果
@@ -140,5 +200,3 @@ vs_1           vol_1           vs_1             fc1            cluster1
 
 .相关信息
 link:../peering/index.html["集群和 SVM 对等"]
-
-http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9命令"^]

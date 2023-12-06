@@ -2,7 +2,7 @@
 permalink: flexcache/supported-unsupported-features-concept.html 
 sidebar: sidebar 
 keywords: supported, unsupported, features, flexcache, volumes 
-summary: 您必须了解 FlexCache 卷及其原始卷支持的功能。 
+summary: FlexCache初始卷和FlexCache卷支持的功能和协议会有所不同。 
 ---
 = FlexCache 卷支持和不支持的功能
 :allow-uri-read: 
@@ -11,7 +11,64 @@ summary: 您必须了解 FlexCache 卷及其原始卷支持的功能。
 
 
 [role="lead"]
-您必须了解 FlexCache 卷及其原始卷支持的功能。
+从ONTAP 9.5开始、您可以配置FlexCache卷。  支持将FlexVol卷用作初始卷、并将FlexGroup卷用作FlexCache卷。  从ONTAP 9.7开始、支持将FlexVol卷和FlexGroup卷作为初始卷。  初始卷和FlexCache卷支持的功能和协议会有所不同。
+
+
+
+== 支持的协议
+
+|===
+
+
+| 协议 | 是否在原始卷上受支持？ | 是否在 FlexCache 卷上受支持？ 
+
+
+ a| 
+NFSv3
+ a| 
+是的。
+ a| 
+是的。
+
+
+
+ a| 
+NFSv4
+ a| 
+是的。
+
+要使用NFSv4.x协议访问缓存卷、初始集群和缓存集群都必须使用ONTAP 9.10.1或更高版本。初始集群和FlexCache集群可以具有不同的ONTAP版本、但两者都应为ONTAP 9.10.1及更高版本、例如、初始集群可以具有ONTAP 9.10.1、而缓存可以具有ONTAP 9.11.1。
+ a| 
+是的。
+
+从ONTAP 9.10.1开始支持。
+
+要使用NFSv4.x协议访问缓存卷、初始集群和缓存集群都必须使用ONTAP 9.10.1或更高版本。初始集群和FlexCache集群可以具有不同的ONTAP版本、但两者都应为ONTAP 9.10.1及更高版本、例如、初始集群可以具有ONTAP 9.10.1、而缓存可以具有ONTAP 9.11.1。
+
+
+
+ a| 
+NFSv4.2
+ a| 
+是的。
+ a| 
+否
+
+
+
+ a| 
+SMB
+ a| 
+是的。
+ a| 
+是的。
+
+从 ONTAP 9.8 开始支持。
+
+|===
+
+
+== 支持的功能
 
 |===
 
@@ -213,39 +270,6 @@ NetApp 卷加密（ NVE ）
 
 
  a| 
-NFSv3
- a| 
-是的。
- a| 
-是的。
-
-
-
- a| 
-NFSv4
- a| 
-是的。
-
-要使用NFSv4.x协议访问缓存卷、初始集群和缓存集群都必须使用ONTAP 9.10.1或更高版本。初始集群和FlexCache集群可以具有不同的ONTAP版本、但两者都应为ONTAP 9.10.1及更高版本、例如、初始集群可以具有ONTAP 9.10.1、而缓存可以具有ONTAP 9.11.1。
- a| 
-是的。
-
-从ONTAP 9.10.1开始支持。
-
-要使用NFSv4.x协议访问缓存卷、初始集群和缓存集群都必须使用ONTAP 9.10.1或更高版本。初始集群和FlexCache集群可以具有不同的ONTAP版本、但两者都应为ONTAP 9.10.1及更高版本、例如、初始集群可以具有ONTAP 9.10.1、而缓存可以具有ONTAP 9.11.1。
-
-
-
- a| 
-NFSv4.2
- a| 
-是的。
- a| 
-否
-
-
-
- a| 
 ONTAP S3
  a| 
 是的。
@@ -269,7 +293,9 @@ NOTE: FlexCache 卷不支持文件级 QoS 。
  a| 
 qtree
  a| 
-是的。从ONTAP 9.6开始、您可以创建和修改qtrees。在源上创建的qtrees可在缓存上访问。
+是的。
+
+从ONTAP 9.6开始、您可以创建和修改qtrees。在源上创建的qtrees可在缓存上访问。
  a| 
 否
 
@@ -278,23 +304,16 @@ qtree
  a| 
 配额
  a| 
-是的。从ONTAP 9.6开始、支持对用户和组在FlexCache原始卷上强制实施配额。
+是的。
+
+从ONTAP 9.6开始、支持对用户和组在FlexCache原始卷上强制实施配额。
  a| 
-否使用FlexCache writearound模式(默认模式)时、缓存上的写入将转发到初始卷。配额在源站强制实施。
+否
+
+使用FlexCache writearound模式(默认模式)时、缓存上的写入将转发到初始卷。配额在源站强制实施。
 
 
 NOTE: 从 ONTAP 9.6 开始， FlexCache 卷支持远程配额（ rquota ）。
-
-
-
- a| 
-SMB
- a| 
-是的。
- a| 
-是的。
-
-从 ONTAP 9.8 开始支持。
 
 
 
@@ -436,3 +455,5 @@ FlexCache 卷可以位于主 SVM 中，但不能位于辅 SVM 中。主 SVM 中�
 否
 
 |===
+
+NOTE: 在 ONTAP 9 9.5 之前的版本中，原始 FlexVol 卷只能为在运行 7- 模式 Data ONTAP 8.2.x 的系统上创建的 FlexCache 卷提供数据。从 ONTAP 9.5 开始，原始 FlexVol 卷还可以为 ONTAP 9 系统上的 FlexCache 卷提供数据。有关从7-模式FlexCache迁移到ONTAP 9 FlexCache的信息、请参见 link:https://www.netapp.com/pdf.html?item=/media/7336-tr4743pdf.pdf["NetApp技术报告4743：《ONTAP中的FlexCache》"]。
