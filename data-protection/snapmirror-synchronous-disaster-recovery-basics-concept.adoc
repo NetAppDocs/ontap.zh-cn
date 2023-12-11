@@ -40,6 +40,19 @@ AFF
 
 
  a| 
+ASA
+ a| 
+80
+ a| 
+160
+ a| 
+200
+ a| 
+400
+
+
+
+ a| 
 FAS
  a| 
 40.
@@ -68,56 +81,98 @@ ONTAP Select
 
 == 支持的功能
 
-ONTAP 9.12.1仅支持在AFF/ASA平台上执行无中断SnapMirror同步操作(NDO)。通过对无中断运行的支持、您无需计划停机时间即可执行许多常见维护任务。支持的操作包括接管和交还以及卷移动、前提是两个集群中的每个集群都有一个节点运行正常。
+下表列出了SnapMirror同步支持的功能以及支持的ONTAP版本。
 
-ONTAP 9.10.1中的SnapMirror同步技术支持以下功能；前提是源集群和目标集群中的所有节点都运行ONTAP 9.10.1：
-
-* NFSv4.2
-* NVMe/TCP
+[cols="3,1,4"]
+|===
 
 
-在 ONTAP 9.5 及更高版本中， SnapMirror 同步技术支持在延迟不超过 10 毫秒的所有网络上使用 NFSv3 ， FC 和 iSCSI 协议。
-
-SnapMirror同步支持FabricPool 聚合上的源卷和目标卷、其分层策略为无、快照或自动。不能将FabricPool 聚合中的目标卷设置为所有分层策略。
-
-ONTAP 9.7 中的 SnapMirror 同步技术支持以下功能：
-
-* 复制应用程序创建的 Snapshot 副本
-如果在创建时为Snapshot副本标记了相应的标签 `snapshot create` 操作：在静音应用程序后、SnapMirror同步会使用命令行界面或ONTAP API复制用户创建的或使用外部脚本创建的Snapshot副本。不会复制使用 Snapshot 策略创建的计划 Snapshot 副本。有关复制应用程序创建的Snapshot副本的详细信息、请参见知识库文章： link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_replicate_application_created_snapshots_with_SnapMirror_Synchronous["如何使用SnapMirror同步复制应用程序创建的快照"^]。
-* FC-NVMe
-* LUN 克隆和 NVMe 命名空间克隆
-此外，还支持由应用程序创建的 Snapshot 副本提供支持的 LUN 克隆。
+| 功能 | 支持先发布 | 追加信息 
 
 
-ONTAP 9.6 中的 SnapMirror 同步技术支持以下功能；前提是源集群和目标集群中的所有节点都运行 ONTAP 9.6 ：
-
-* SVM 灾难恢复
-+
-** SnapMirror 同步源也可以是 SVM DR 源，例如，使用 SM-S 作为一个分支，使用 SVM DR 作为另一个分支的扇出配置。
-** SnapMirror 同步源不能是 SVM 灾难恢复目标，因为 SM-S 不支持级联 DP 源。
-在目标集群中执行 SVM DR 反转重新同步之前，必须释放同步关系。
-** SnapMirror 同步目标不能是 SVM DR 源，因为 SVM DR 不支持复制 DP 卷。
-如果对同步源执行反转重新同步，则 SVM DR 将排除目标集群中的 DP 卷。
+| SnapMirror 同步关系的主卷上的防病毒 | ONTAP 9.6 |  
 
 
-* NFSv4.0和NFSv4.1
-* SMB 2.0或更高版本
-* 混合协议访问(NFSv3和SMB)
-* SnapMirror 同步关系的主卷上的防病毒
-* SnapMirror 同步关系的主卷上的硬配额或软配额
-配额规则不会复制到目标；因此，配额数据库不会复制到目标。
-* SnapMirror 同步关系的主卷上的 FPolicy
-* SnapMirror 同步镜像 - 镜像级联
-SnapMirror 同步关系的目标卷中的关系必须是异步 SnapMirror 关系。
-* NAS 的源卷和目标卷之间的时间戳奇偶校验
-如果已从 ONTAP 9.5 升级到 ONTAP 9.6 ，则仅会为源卷中的任何新文件和修改后的文件复制时间戳。源卷中现有文件的时间戳未同步。
-* 取消高元数据操作频率限制
-* 使用 TLS 1.2 加密确保传输中敏感数据的安全性
-* 克隆自动删除
+| 应用程序创建的Snapshot副本复制 | ONTAP 9.7 | 如果在创建时为Snapshot副本标记了相应的标签 `snapshot create` 操作：在静音应用程序后、SnapMirror同步会使用命令行界面或ONTAP API复制用户创建的或使用外部脚本创建的Snapshot副本。不会复制使用 Snapshot 策略创建的计划 Snapshot 副本。有关复制应用程序创建的Snapshot副本的详细信息、请参见知识库文章： link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_replicate_application_created_snapshots_with_SnapMirror_Synchronous["如何使用SnapMirror同步复制应用程序创建的快照"^]。 
 
 
-从ONTAP 9.13.1开始、SnapMirror同步支持NDMP。源集群和目标集群都必须运行ONTAP 9.13.1或更高版本、才能将NDMP与SnapMirror同步结合使用。有关详细信息，请参见 xref:../tape-backup/transfer-data-ndmpcopy-task.html[使用NDMP副本传输数据]。
+| 克隆自动删除 | ONTAP 9.6 |  
 
+
+| SnapMirror同步源和目标支持分层策略为无、快照或自动的FabricPool聚合。 | ONTAP 9.5 | 不能将FabricPool 聚合中的目标卷设置为所有分层策略。 
+
+
+| FC | ONTAP 9.5 | 延迟不超过10毫秒的所有网络 
+
+
+| FC-NVMe | ONTAP 9.7 |  
+
+
+| SnapMirror 同步关系的主卷上的 FPolicy | ONTAP 9.6 |  
+
+
+| SnapMirror同步关系的主卷上的硬配额和软配额 | ONTAP 9.6 | 配额规则不会复制到目标；因此，配额数据库不会复制到目标。 
+
+
+| iSCSI | ONTAP 9.5 |  
+
+
+| LUN 克隆和 NVMe 命名空间克隆 | ONTAP 9.7 |  
+
+
+| 由应用程序创建的Snapshot副本提供后备支持的LUN克隆 | ONTAP 9.7 |  
+
+
+| 混合协议访问(NFS v3和SMB) | ONTAP 9.6 |  
+
+
+| NDMP还原 | ONTAP 9.13.1 | 源集群和目标集群都必须运行ONTAP 9.13.1或更高版本、才能将NDMP与SnapMirror同步结合使用。有关详细信息，请参见 xref:../tape-backup/transfer-data-ndmpcopy-task.html[使用NDMP副本传输数据]。 
+
+
+| 无中断SnapMirror同步操作(Nond-破坏性SnapMirror Synchron步 数、NDo)、仅适用于AF/ASA平台。 | ONTAP 9.12.1 | 通过对无中断运行的支持、您无需计划停机时间即可执行许多常见维护任务。支持的操作包括接管和交还以及卷移动、前提是两个集群中的每个集群都有一个节点运行正常。 
+
+
+| NFS v4.2 | ONTAP 9.10.1 |  
+
+
+| NFS v4.3 | ONTAP 9.5 |  
+
+
+| NFS v4.0 | ONTAP 9.6 |  
+
+
+| NFS v4.1 | ONTAP 9.6 |  
+
+
+| NVMe/TCP | 9.10.1. |  
+
+
+| 取消高元数据操作频率限制 | ONTAP 9.6 |  
+
+
+| 使用 TLS 1.2 加密确保传输中敏感数据的安全性 | ONTAP 9.6 |  
+
+
+| 单个文件和部分文件还原 | ONTAP 9.13.1 |  
+
+
+| SMB 2.0或更高版本 | ONTAP 9.6 |  
+
+
+| SnapMirror 同步镜像 - 镜像级联 | ONTAP 9.6 | SnapMirror 同步关系的目标卷中的关系必须是异步 SnapMirror 关系。 
+
+
+| SVM 灾难恢复 | ONTAP 9.6 | * SnapMirror同步源也可以是SVM灾难恢复源、例如、以SnapMirror同步为一个分支、以SVM灾难恢复为另一个分支的扇出配置。
+
+* SnapMirror同步源不能是SVM灾难恢复目标、因为SnapMirror同步不支持级联数据保护源。
+在目标集群中执行SVM灾难恢复反转重新同步之前、您必须释放同步关系。
+
+* SnapMirror同步目标不能是SVM灾难恢复源、因为SVM灾难恢复不支持复制DP卷。
+同步源的反转重新同步将导致SVM灾难恢复、并排除目标集群中的DP卷。 
+
+
+| NAS 的源卷和目标卷之间的时间戳奇偶校验 | ONTAP 9.6 | 如果已从 ONTAP 9.5 升级到 ONTAP 9.6 ，则仅会为源卷中的任何新文件和修改后的文件复制时间戳。源卷中现有文件的时间戳未同步。 
+|===
 
 
 == 不支持的功能
@@ -137,11 +192,11 @@ SnapMirror 同步关系的目标卷中的关系必须是异步 SnapMirror 关系
 同一个卷或 SVM 不支持 LUN 和 NVMe 命名空间。
 * SnapCenter
 * SnapLock 卷
-* SnapRestore
 * 防篡改Snapshot副本
 * 使用目标卷上的转储和 SMTape 进行磁带备份或还原
 * 基于磁带还原到源卷
 * 源卷的吞吐量下限（ QoS 最小值）
+* Volume SnapRestore
 * VVOL
 
 
