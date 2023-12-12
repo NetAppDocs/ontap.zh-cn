@@ -34,10 +34,6 @@ summary: 将 LIF 迁移到集群中同一节点或不同节点上的其他端口
 +
 迁移iSCSI LIF仅限于主节点或HA配对节点上的端口。
 
-+
-您也可以使用System Manager迁移iSCSI LIF。
-link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故障转移"]
-
 * 如果您的平台不是运行ONTAP 9.11.1或更高版本的纯闪存SAN阵列(ASA)平台、则无法将iSCSI LUN从一个节点迁移到另一个节点。
 +
 要解决此限制，您必须在目标节点上创建 iSCSI LIF 。了解相关信息 link:../san-admin/asa-iscsi-lif-fo-task.html#manage-iscsi-lifs-using-the-ontap-cli["创建iSCSI LIF"]。
@@ -62,6 +58,14 @@ link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故
 .步骤
 . 选择*网络>概述>网络接口*。
 . 选择 ... image:icon_kabob.gif["键盘图标"] 要更改的网络接口旁边的*> Migrate *。
++
+
+NOTE: 对于iSCSI LIF、在*迁移接口*对话框中、选择HA配对节点的目标节点和端口。
+
++
+如果要永久迁移iSCSI LIF、请选中此复选框。iSCSI LIF必须处于脱机状态、才能进行永久迁移。此外、永久迁移iSCSI LIF后、它将无法撤消。没有还原选项。
+
+. 单击 * 迁移 * 。
 . 保存所做的更改。
 
 
