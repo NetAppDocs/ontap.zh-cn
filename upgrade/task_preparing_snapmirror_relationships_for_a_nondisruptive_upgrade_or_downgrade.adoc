@@ -2,7 +2,7 @@
 permalink: upgrade/task_preparing_snapmirror_relationships_for_a_nondisruptive_upgrade_or_downgrade.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, snapmirror, operations, quisce 
-summary: 建议在执行无中断 ONTAP 升级之前暂停 SnapMirror 操作。 
+summary: 在升级ONTAP之前、您需要先静修SnapMirror操作、并且每个对等SVM必须在集群中具有唯一的名称 
 ---
 = 准备SnapMirror关系以进行ONTAP升级
 :allow-uri-read: 
@@ -19,7 +19,7 @@ summary: 建议在执行无中断 ONTAP 升级之前暂停 SnapMirror 操作。
 
 == 在升级ONTAP之前、请将SnapMirror操作置于静修状态
 
-要防止SnapMirror传输失败、必须将SnapMirror操作静用。或者、您也可以先在特定目标卷上静音SnapMirror传输、并升级所属目标节点、然后再升级源节点、以便所有其他目标卷的SnapMirror传输可以继续进行。下表介绍了暂停 SnapMirror 操作的两个选项。
+要防止SnapMirror传输失败、您必须在升级ONTAP之前将SnapMirror操作置于静修状态。或者、您也可以先在特定目标卷上静音SnapMirror传输、并升级所属目标节点、然后再升级源节点、以便所有其他目标卷的SnapMirror传输可以继续进行。下表介绍了暂停 SnapMirror 操作的两个选项。
 
 [cols="3*"]
 |===
@@ -69,8 +69,10 @@ cluster1::> snapmirror quiesce -destination-path vs0.example.com:vol1
 ----
 . 验证所有SnapMirror关系是否已暂停：
 +
-`snapmirror show -status !Quiesced`
-
+[source, cli]
+----
+snapmirror show -status !Quiesced
+----
 +
 此命令将显示已暂停的任何 SnapMirror 关系。
 

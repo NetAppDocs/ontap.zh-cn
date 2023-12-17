@@ -2,7 +2,7 @@
 permalink: smb-config/verify-enabled-versions-task.html 
 sidebar: sidebar 
 keywords: ontap, release, smb, version, enable, default, connection, client, domain, controller, controller, verify, support, functionality, environment, verify enabled smb versions, can smb1 be enabled in ontap 9 
-summary: ONTAP 9 版本可确定默认情况下为与客户端和域控制器的连接启用的 SMB 版本。您应验证 SMB 服务器是否支持环境中所需的客户端和功能。 
+summary: 默认情况下、在ONTAP 9.0及更高版本中、SMB 2.0处于启用状态。  根据您的ONTAP版本、SMB 1.0默认处于启用状态 
 ---
 = 验证已启用的 SMB 版本
 :allow-uri-read: 
@@ -35,34 +35,76 @@ ONTAP 9 版本可确定默认情况下为与客户端和域控制器的连接启
 link:../smb-admin/index.html["SMB管理"] 包含有关支持的 SMB 版本和功能的详细信息。
 
 .步骤
-. 将权限级别设置为高级： `set -privilege advanced`
-. 验证启用了哪些SMB版本： `vserver cifs options show`
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 验证启用了哪些SMB版本：
++
+[source, cli]
+----
+vserver cifs options show
+----
 +
 您可以向下滚动列表以查看为客户端连接启用的 SMB 版本，如果要在 AD 域中配置 SMB 服务器，则可以查看为 AD 域连接启用的 SMB 版本。
 
 . 根据需要为客户端连接启用或禁用 SMB 协议：
 +
-** 启用SMB版本： `vserver cifs options modify -vserver vserver_name smb_version true`
-** 禁用SMB版本： `vserver cifs options modify -vserver vserver_name smb_version false`
+** 启用SMB版本：
++
+[source, cli]
+----
+vserver cifs options modify -vserver vserver_name smb_version true
+----
+** 禁用SMB版本：
++
+[source, cli]
+----
+vserver cifs options modify -vserver vserver_name smb_version false
+----
++
 的可能值 `smb_version`：
-** `-smb1-enabled`
-** `-smb2-enabled`
-** `-smb3-enabled`
-** `-smb31-enabled`
-以下命令将在SVM vs1.example.com上启用SMB 3.1：
+
++
+*** `-smb1-enabled`
+*** `-smb2-enabled`
+*** `-smb3-enabled`
+*** `-smb31-enabled`
+
+
 
 
 +
+以下命令将在SVM vs1.example.com上启用SMB 3.1：
+
+
+
 [listing]
 ----
-
 cluster1::*> vserver cifs options modify -vserver vs1.example.com -smb31-enabled true
 ----
 . 如果 SMB 服务器位于 Active Directory 域中，请根据需要为 DC 连接启用或禁用 SMB 协议：
 +
-** 启用SMB版本： `vserver cifs security modify -vserver vserver_name -smb2-enabled-for-dc-connections true`
-** 禁用SMB版本： `vserver cifs security modify -vserver vserver_name -smb2-enabled-for-dc-connections false`
+** 启用SMB版本：
++
+[source, cli]
+----
+vserver cifs security modify -vserver vserver_name -smb2-enabled-for-dc-connections true
+----
+** 禁用SMB版本：
++
+[source, cli]
+----
+vserver cifs security modify -vserver vserver_name -smb2-enabled-for-dc-connections false
+----
 
 
-. 返回到管理权限级别： `set -privilege admin`
+. 返回到管理权限级别：
++
+[source, cli]
+----
+set -privilege admin
+----
 

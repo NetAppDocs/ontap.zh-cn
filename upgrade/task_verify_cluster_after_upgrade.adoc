@@ -2,7 +2,7 @@
 permalink: upgrade/task_verify_cluster_after_upgrade.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, upgrade, verify, status, health, post, after 
-summary: 升级后，您应验证集群。 
+summary: 升级ONTAP后、请验证集群版本、集群运行状况和存储运行状况。  对于MetroCluster FC配置、验证是否已启用自动计划外切换。 
 ---
 = 升级ONTAP后验证集群
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 升级后，您应验证集群。
 
 
 [role="lead"]
-升级ONTAP后、您应验证集群版本、集群运行状况和存储运行状况。  如果集群采用MetroCluster FC配置、则还需要验证是否已启用自动计划外切换。
+升级ONTAP后、请验证集群版本、集群运行状况和存储运行状况。  对于MetroCluster FC配置、还应验证集群是否已启用自动计划外切换。
 
 
 
@@ -23,12 +23,16 @@ summary: 升级后，您应验证集群。
 
 . 验证集群版本是否为目标 ONTAP 版本：
 +
-`version`
-
+[source, cli]
+----
+version
+----
 . 如果集群版本不是目标ONTAP版本、则应验证所有节点的升级状态：
 +
-`system node upgrade-revert show`
-
+[source, cli]
+----
+system node upgrade-revert show
+----
 
 
 
@@ -39,8 +43,10 @@ summary: 升级后，您应验证集群。
 
 . 验证集群中的节点是否已联机且符合加入集群的条件：
 +
-`cluster show`
-
+[source, cli]
+----
+cluster show
+----
 +
 [listing]
 ----
@@ -55,8 +61,10 @@ node1                 true    true
 
 . 将权限级别设置为高级：
 +
-`set -privilege advanced`
-
+[source, cli]
+----
+set -privilege advanced
+----
 . 验证每个 RDB 进程的配置详细信息。
 +
 ** 每个节点的关系数据库 epoch 和数据库 epochs 应匹配。
@@ -115,7 +123,12 @@ node2     vldb     154      154      14847    node0     secondary
 node3     vldb     154      154      14847    node0     secondary
 4 entries were displayed.
 ----
-. 如果您在 SAN 环境中运行，请验证每个节点是否处于 SAN 仲裁状态： `cluster kernel-service show`
+. 如果您在 SAN 环境中运行，请验证每个节点是否处于 SAN 仲裁状态：
++
+[source, cli]
+----
+cluster kernel-service show
+----
 +
 [listing]
 ----
@@ -138,15 +151,15 @@ link:../system-admin/index.html["系统管理"]
 
 如果集群采用MetroCluster FC配置、则应在升级ONTAP后验证是否已启用自动计划外切换。
 
-.关于此任务
-
-NOTE: 仅对 MetroCluster FC 配置执行此操作步骤 。  如果您使用的是 MetroCluster IP 配置，请跳过此操作步骤 。
+如果您使用的是 MetroCluster IP 配置，请跳过此操作步骤 。
 
 .步骤
 . 检查是否已启用自动计划外切换：
 +
-`metrocluster show`
-
+[source, cli]
+----
+metrocluster show
+----
 +
 如果启用了自动计划外切换，则命令输出中将显示以下语句：
 
@@ -157,9 +170,16 @@ AUSO Failure Domain  auso-on-cluster-disaster
 ----
 . 如果未显示此语句，请启用自动计划外切换：
 +
-`metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster`
-
-. 重复步骤 1 ，验证是否已启用自动计划外切换。
+[source, cli]
+----
+metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster
+----
+. 验证是否已启用自动计划外切换：
++
+[source, cli]
+----
+metrocluster show
+----
 
 
 .相关信息

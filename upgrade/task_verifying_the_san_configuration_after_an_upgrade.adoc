@@ -2,7 +2,7 @@
 permalink: upgrade/task_verifying_the_san_configuration_after_an_upgrade.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, post, after, san, verify 
-summary: 如果要在 SAN 环境中升级，则在升级后，您应验证在升级成功重新连接到 LIF 之前连接到 LIF 的每个启动程序。 
+summary: 在ONTAP升级后、在SAN环境中、验证在升级之前连接到LIF的每个启动程序是否已成功重新连接到LIF 
 ---
 = 升级后验证 SAN 配置
 :allow-uri-read: 
@@ -26,14 +26,18 @@ summary: 如果要在 SAN 环境中升级，则在升级后，您应验证在升
  a| 
 iSCSI
  a| 
-`iscsi initiator show -fields igroup,initiator-name,tpgroup`
-
+[source, cli]
+----
+iscsi initiator show -fields igroup,initiator-name,tpgroup
+----
 
 
  a| 
 FC
  a| 
-`fcp initiator show -fields igroup,wwpn,lif`
-
+[source, cli]
+----
+fcp initiator show -fields igroup,wwpn,lif
+----
 |===
 

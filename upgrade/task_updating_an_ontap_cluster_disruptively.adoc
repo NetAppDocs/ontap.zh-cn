@@ -2,7 +2,7 @@
 permalink: upgrade/task_updating_an_ontap_cluster_disruptively.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, disruptively 
-summary: 如果您可以使集群脱机以升级到新的 ONTAP 版本，则可以使用中断升级方法。此方法包括几个步骤：为每个 HA 对禁用存储故障转移，重新启动集群中的每个节点，然后重新启用存储故障转移。 
+summary: 如果您可以使集群脱机以升级到新的 ONTAP 版本，则可以使用中断升级方法。 
 ---
 = 使用命令行界面手动执行中断ONTAP升级
 :allow-uri-read: 
@@ -22,15 +22,31 @@ summary: 如果您可以使集群脱机以升级到新的 ONTAP 版本，则可�
 
 在中断升级中，需要停机，因为每个 HA 对都禁用了存储故障转移，并且每个节点都会更新。禁用存储故障转移后，每个节点将充当单节点集群；也就是说，只要系统需要重新启动，与该节点关联的系统服务就会中断。
 
-. 将权限级别从admin设置为advance,在系统提示您继续时输入*y*： `set -privilege advanced`
+.步骤
+. 将权限级别从admin设置为advance,在系统提示您继续时输入*y*：
++
+[source, cli]
+----
+set -privilege advanced
+----
 +
 高级提示符 (`*>`)。
 
-. 将新的ONTAP软件映像设置为默认映像： `system image modify {-node * -iscurrent false} -isdefault true`
+. 将新的ONTAP软件映像设置为默认映像：
++
+[source, cli]
+----
+system image modify {-node * -iscurrent false} -isdefault true
+----
 +
 此命令使用扩展查询将目标 ONTAP 软件映像（作为备用映像安装）更改为每个节点的默认映像。
 
-. 验证新的ONTAP软件映像是否设置为默认映像： `system image show`
+. 验证新的ONTAP软件映像是否设置为默认映像：
++
+[source, cli]
+----
+system image show
+----
 +
 在以下示例中，映像 2 是新的 ONTAP 版本，并设置为两个节点上的默认映像：
 
@@ -81,7 +97,12 @@ node1
 为集群中的每个HA对禁用存储故障转移： `storage failover modify -node * -enabled false`
 
 |===
-. 重新启动集群中的节点： `system node reboot -node nodename -ignore-quorum-warnings`
+. 重新启动集群中的节点：
++
+[source, cli]
+----
+system node reboot -node nodename -ignore-quorum-warnings
+----
 +
 
 IMPORTANT: 请勿一次重新启动多个节点。
@@ -89,11 +110,21 @@ IMPORTANT: 请勿一次重新启动多个节点。
 +
 节点将启动新的 ONTAP 映像。此时将显示 ONTAP 登录提示，指示重新启动过程已完成。
 
-. 使用新的ONTAP 映像重新启动节点或一组节点后、将权限级别设置为高级： `set -privilege advanced`
+. 使用新的ONTAP 映像重新启动节点或一组节点后、将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
 +
 在系统提示您继续时、输入*
 
-. 确认新软件正在运行： `system node image show`
+. 确认新软件正在运行：
++
+[source, cli]
+----
+system node image show
+----
 +
 在以下示例中， image1 是新的 ONTAP 版本，并设置为 node0 上的当前版本：
 
@@ -114,18 +145,43 @@ node1
 ----
 . 验证升级是否已成功完成：
 +
-.. 将权限级别设置为高级： `set -privilege advanced`
-.. 验证每个节点的升级状态是否为complete： `system node upgrade-revert show -node nodename`
+.. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+.. 验证每个节点的升级状态是否为complete：
++
+[source, cli]
+----
+system node upgrade-revert show -node nodename
+----
 +
 此状态应列为已完成。
 
 +
 如果状态为未完成、 link:http://mysupport.netapp.com/["请联系NetApp支持部门"] 立即。
 
-.. 返回到管理权限级别： `set -privilege admin`
+.. 返回到管理权限级别：
++
+[source, cli]
+----
+set -privilege admin
+----
 
 
-. 对其他每个节点重复步骤 2 到 7 。
-. 如果集群包含两个或更多节点、请为集群中的每个HA对启用存储故障转移： `storage failover modify -node * -enabled true`
-. 如果集群仅包含两个节点、请启用集群高可用性： `cluster ha modify -configured true`
+. 对其他每个节点重复步骤2到8。
+. 如果集群包含两个或更多节点、请为集群中的每个HA对启用存储故障转移：
++
+[source, cli]
+----
+storage failover modify -node * -enabled true
+----
+. 如果集群仅包含两个节点、请启用集群高可用性：
++
+[source, cli]
+----
+cluster ha modify -configured true
+----
 

@@ -2,87 +2,45 @@
 permalink: upgrade/task_enabling_and_reverting_lifs_to_home_ports_post_upgrade.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, after, post, enable, enabling, revert, reverting, lifs, home, ports 
-summary: 在重新启动期间，某些 LIF 可能已迁移到其分配的故障转移端口。在升级集群前后，您必须启用并还原不在其主端口上的任何 LIF 。 
+summary: 在升级重新启动期间、可能会将某些生命周期管理器迁移到为其分配的故障转移端口。升级后、请启用并还原不在其主端口上的生命周期管理器。 
 ---
-= 升级后，验证所有 LIF 是否位于主端口上
+= 升级ONTAP后、验证所有的LUN是否都位于主端口上
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在重新启动期间，某些 LIF 可能已迁移到其分配的故障转移端口。升级集群后，您必须启用并还原不在其主端口上的任何 LIF 。
+在ONTAP升级过程中进行重新启动期间、某些LUN可能会从其主端口迁移到为其分配的故障转移端口。升级后、您需要启用并还原不在主端口上的任何Sifs。
 
-network interface revert 命令会将当前不在主端口上的 LIF 还原到其主端口，前提是主端口正常运行。创建 LIF 时会指定 LIF 的主端口；您可以使用 network interface show 命令确定 LIF 的主端口。
+.步骤
+. 显示所有LIF的状态：
++
+[source, cli]
+----
+network interface show -fields home-port,curr-port
+----
++
+对于任何LIF，如果*Status Admin*为"down (已关闭)"或*is home *为"false (错误)"，请继续执行下一步。
 
-. 显示所有LIF的状态： `network interface show -fields home-port,curr-port`
+. 启用数据生命周期：
 +
-此示例显示 Storage Virtual Machine （ SVM ）的所有 LIF 的状态。
-
+[source, cli]
+----
+network interface modify {-role data} -status-admin up
+----
+. 将LIF还原到其主端口：
 +
-[listing]
+[source, cli]
 ----
-cluster1::> network interface show -fields home-port,curr-port
-vserver                          lif       home-port curr-port
--------------------------------- --------- --------- ---------
-C1_sti96-vsim-ucs539g_1622463615 clus_mgmt e0d       e0d
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539g_cluster_mgmt_inet6 e0d e0d
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539g_mgmt1 e0c e0c
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539g_mgmt1_inet6 e0c e0c
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539h_cluster_mgmt_inet6 e0d e0d
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539h_mgmt1 e0c e0c
-C1_sti96-vsim-ucs539g_1622463615 sti96-vsim-ucs539h_mgmt1_inet6 e0c e0c
-Cluster                          sti96-vsim-ucs539g_clus1 e0a e0a
-Cluster                          sti96-vsim-ucs539g_clus2 e0b e0b
-Cluster                          sti96-vsim-ucs539h_clus1 e0a e0a
-Cluster                          sti96-vsim-ucs539h_clus2 e0b e0b
-vs0                              sti96-vsim-ucs539g_data1 e0d e0d
-vs0                              sti96-vsim-ucs539g_data1_inet6 e0d e0d
-vs0                              sti96-vsim-ucs539g_data2 e0e e0e
-vs0                              sti96-vsim-ucs539g_data2_inet6 e0e e0e
-vs0                              sti96-vsim-ucs539g_data3 e0f e0f
-vs0                              sti96-vsim-ucs539g_data3_inet6 e0f e0f
-vs0                              sti96-vsim-ucs539g_data4 e0d e0d
-vs0                              sti96-vsim-ucs539g_data4_inet6 e0d e0d
-vs0                              sti96-vsim-ucs539g_data5 e0e e0e
-vs0                              sti96-vsim-ucs539g_data5_inet6 e0e e0e
-vs0                              sti96-vsim-ucs539g_data6 e0f e0f
-vs0                              sti96-vsim-ucs539g_data6_inet6 e0f e0f
-vs0                              sti96-vsim-ucs539h_data1 e0d e0d
-vs0                              sti96-vsim-ucs539h_data1_inet6 e0d e0d
-vs0                              sti96-vsim-ucs539h_data2 e0e e0e
-vs0                              sti96-vsim-ucs539h_data2_inet6 e0e e0e
-vs0                              sti96-vsim-ucs539h_data3 e0f e0f
-vs0                              sti96-vsim-ucs539h_data3_inet6 e0f e0f
-vs0                              sti96-vsim-ucs539h_data4 e0d e0d
-vs0                              sti96-vsim-ucs539h_data4_inet6 e0d e0d
-vs0                              sti96-vsim-ucs539h_data5 e0e e0e
-vs0                              sti96-vsim-ucs539h_data5_inet6 e0e e0e
-vs0                              sti96-vsim-ucs539h_data6 e0f e0f
-vs0                              sti96-vsim-ucs539h_data6_inet6 e0f e0f
-35 entries were displayed.
+network interface revert *
 ----
+. 验证所有的SIFs是否都位于其主端口中：
 +
-如果任何 LIF 的状态为 "Down" 或状态为 "false" ，请继续执行下一步。
-
-. 启用数据生命周期： `network interface modify {-role data} -status-admin up`
-+
-[listing]
+[source, cli]
 ----
-cluster1::> network interface modify {-role data} -status-admin up
-8 entries were modified.
+network interface show
 ----
-. 将LIF还原到其主端口： `network interface revert *`
-+
-此命令会将所有 LIF 还原回其主端口。
-
-+
-[listing]
-----
-cluster1::> network interface revert *
-8 entries were acted on.
-----
-. 验证所有的SIFs是否都位于其主端口中： `network interface show`
 +
 此示例显示 SVM vs0 的所有 LIF 均位于其主端口上。
 
