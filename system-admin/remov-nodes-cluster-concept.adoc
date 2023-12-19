@@ -65,31 +65,60 @@ NOTE: 在从集群中删除节点之前、用户必须无法访问连接到该�
 .步骤
 . 将权限级别更改为高级：
 +
-`*set -privilege advanced*`
-
-. 验证集群上的节点是否持有epsilon：
-+
-`*cluster show -epsilon true*`
-
-+
-.. 如果节点持有epsilon、请将其资格更改为false。
-+
-`*cluster modify -node <node_name> -eligibility false*`
-
-
-
-. 如果要删除的节点是当前主节点、请通过将主节点的集群资格更改为来选择集群中的另一个节点作为主节点 `false`：
-+
-`*cluster modify –eligibility false*`
-
-+
-主节点是指包含 " `mGMT` " ， "`VLDB` " ， "`vifmgr` " ， "`bcomd` " 和 "`crs` " 等进程的节点。。 `cluster ring show` 高级命令可显示当前主节点。
-
-+
-[listing]
+[source, cli]
 ----
-cluster::*> cluster modify -node node1 -eligibility false
+set -privilege advanced
 ----
+. 验证集群上的节点是否持有eps龙：
++
+[source, cli]
+----
+cluster show -epsilon true
+----
+. 如果集群上的某个节点持有eps龙、而该节点将要退出、请将eps龙 移至不会退出的节点：
++
+.. 从要断开连接的节点移动ep西 普龙
++
+[source, cli]
+----
+cluster modify -node <name_of_node_to_be_unjoined> -epsilon false
+----
+.. 将Epsilon移动到不会断开连接的节点：
++
+[source, cli]
+----
+cluster modify -node <node_name> -epsilon true
+----
+
+
+. 确定当前主节点：
++
+[source, cli]
+----
+cluster ring show
+----
++
+主节点是指包含 " `mGMT` " ， "`VLDB` " ， "`vifmgr` " ， "`bcomd` " 和 "`crs` " 等进程的节点。
+
+. 如果要删除的节点是当前主节点、请选择集群中的另一个节点作为主节点：
++
+.. 使当前主节点无资格加入集群：
++
+[source, cli]
+----
+cluster modify – node <node_name> -eligibility false
+----
++
+当主节点不再符合条件时、集群仲裁会将其余一个节点选为新主节点。
+
+.. 使上一个主节点有资格重新加入集群：
++
+[source, cli]
+----
+cluster modify – node <node_name> -eligibility true
+----
+
+
 . 登录到要删除的节点以外的远程节点管理LIF或集群管理LIF。
 . 从集群中删除节点。
 +
@@ -100,15 +129,19 @@ cluster::*> cluster modify -node node1 -eligibility false
  a| 
 ONTAP 9.3
  a| 
-`*cluster unjoin*`
-
+[source, cli]
+----
+cluster unjoin
+----
 
 
  a| 
 ONTAP 9.4及更高版本
  a| 
-`*cluster remove-node*`
-
+[source, cli]
+----
+cluster remove-node*
+----
 |===
 +
 如果您使用的是混合版本集群、并且要删除最后一个较低版本的节点、请使用 `-skip-last-low-version-node-check` 参数。
@@ -134,13 +167,15 @@ ONTAP 9.4及更高版本
 . 如果要重新利用节点，请擦除节点配置并初始化所有磁盘：
 +
 .. 在启动过程中，当系统提示时，按 Ctrl-C 显示启动菜单。
-.. 选择启动菜单选项 * （ 4 ） Clean configuration and initialize all disks* 。
+.. 选择启动菜单选项(4) Clean configuration and初始化所有磁盘。
 
 
 . 返回到管理员权限级别：
 +
-`*set -privilege admin*`
-
+[source, cli]
+----
+set -privilege admin
+----
 . 重复上述步骤，从集群中删除故障转移配对节点。
 
 
