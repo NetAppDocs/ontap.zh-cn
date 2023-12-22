@@ -1,0 +1,110 @@
+---
+permalink: antivirus/install-ontap-antivirus-connector-task.html 
+sidebar: sidebar 
+keywords: install, ontap, task, antivirus connector 
+summary: 在Vscan服务器上安装ONTAP防病毒连接器、以提供运行ONTAP的系统与Vscan服务器之间的通信。 
+---
+= 安装ONTAP防病毒连接器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在Vscan服务器上安装ONTAP防病毒连接器、以启用运行ONTAP的系统与Vscan服务器之间的通信。安装ONTAP防病毒连接器后、防病毒软件可以与一个或多个Storage Virtual Machine (SVM)进行通信。
+
+.关于此任务
+* 请参见 link:https://docs.netapp.com/us-en/ontap/antivirus/vscan-partner-solutions.html["Vscan合作伙伴解决方案"^] 页面、了解有关支持的协议、防病毒供应商软件版本、ONTAP版本、互操作性要求和Windows服务器的信息。
+* 必须安装.NET 4.5.1或更高版本。
+* ONTAP防病毒连接器可以在虚拟机上运行。但是、为了获得最佳性能、NetApp建议使用专用虚拟机进行防病毒扫描。
+* 必须在要安装和运行ONTAP防病毒连接器的Windows服务器上启用SMB 2.0。
+
+
+.开始之前
+* 从支持站点下载ONTAP防病毒连接器安装文件、并将其保存到硬盘驱动器上的目录中。
+* 确认您满足安装ONTAP防病毒连接器的要求。
+* 验证您是否具有安装防病毒连接器的管理员权限。
+
+
+.步骤
+. 运行相应的安装文件以启动防病毒连接器安装向导。
+. 选择_Next_。此时将打开目标文件夹对话框。
+. 选择_Next_将防病毒连接器安装到列出的文件夹中，或选择_Change_to install to a next folder。
+. 此时将打开ONTAP AV Connector Windows服务凭据对话框。
+. 输入您的Windows服务凭据或选择*Add*以选择用户。对于ONTAP系统、此用户必须是有效的域用户、并且必须位于SVM的扫描程序池配置中。
+. 选择 * 下一步 * 。此时将打开准备安装程序对话框。
+. 选择*Install*开始安装，或者如果要对设置进行任何更改，选择*Back*。
+此时将打开一个状态框，并显示安装进度，然后显示InstallShield向导已完成对话框。
+. 如果要继续配置ONTAP管理或数据、请选中配置ONTAP LUN复选框。
+要使用此Vscan服务器、必须至少配置一个ONTAP管理或数据LIF。
+. 如果要查看安装日志，请选中显示*Windows Installer log*复选框。
+. 选择*完成*以结束安装并关闭InstallShield向导。
+配置ONTAP Lifs*图标保存在桌面上以配置ONTAP Lifs。
+. 将SVM添加到防病毒连接器。
+您可以通过添加ONTAP管理LIF (轮询以检索数据LIF列表)或直接配置一个或多个数据LIF来将SVM添加到防病毒连接器。
+如果配置了ONTAP管理LIF、则还必须提供轮询信息和ONTAP管理员帐户凭据。
++
+** 验证是否已为启用管理LIF或SVM的IP地址 `management-https`。仅在配置数据生命周期时、不需要执行此操作。
+** 验证是否已为HTTP应用程序创建用户帐户、并分配了对具有(至少是只读)访问权限的角色 `/api/network/ip/interfaces` REST API。
+有关创建用户的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131//security-login-role-create.html["创建安全登录角色"^] 和 link:https://docs.netapp.com/us-en/ontap-cli-9131//security-login-create.html["创建安全登录"^] ONTAP手册页。
+
+
+
+
+
+NOTE: 您还可以通过为管理SVM添加身份验证通道SVM来使用域用户作为帐户。有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131//security-login-domain-tunnel-create.html["安全登录域通道创建"^] ONTAP手册页或使用 `/api/security/acccounts` 和 `/api/security/roles` 用于配置管理员帐户和角色的REST API。
+
+.步骤
+. 右键单击完成防病毒连接器安装时保存在桌面上的*配置ONTAP Lifs*图标，然后选择*以管理员身份运行*。
+. 在配置ONTAP LUN对话框中、选择首选配置类型、然后执行以下操作：
++
+[cols="35,65"]
+|===
+
+
+| 要创建此类型的LIF... | 执行以下步骤 ... 
+
+
+ a| 
+数据 LIF
+ a| 
+.. 将"Role"设置为"data"
+.. 将"data protocol (数据协议)"设置为"CIFS (CIFS)"
+.. 将"Firewall policy"设置为"data"
+.. 将"service policy"设置为"default-data-files"
+
+
+
+
+ a| 
+管理LIF
+ a| 
+.. 将"Role*设置为"data"
+.. 将"data protocol (数据协议)"设置为"none (无)"
+.. 将"Firewall policy"设置为"mgmt"
+.. 将"service policy"设置为"default-management "
+
+
+|===
++
+了解更多信息 link:https://docs.netapp.com/us-en/ontap/networking/create_a_lif.html["正在创建LIF"^]。
+
++
+创建LIF后、输入要添加的SVM的数据或管理LIF或IP地址。您也可以输入集群管理LIF。如果指定集群管理LIF、则该集群中提供SMB的所有SVM都可以使用Vscan服务器。
+
++
+[NOTE]
+====
+如果Vscan服务器需要Kerberos身份验证、则每个SVM数据LIF都必须具有唯一的DNS名称、并且您必须将该名称注册为Windows Active Directory中的服务器主体名称(SPN)。如果没有为每个数据LIF提供唯一的DNS名称或将其注册为SPN、则Vscan服务器将使用NT LAN Manager机制进行身份验证。如果在连接Vscan服务器后添加或修改DNS名称和SPN、则必须在Vscan服务器上重新启动防病毒连接器服务以应用更改。
+
+====
+. 要配置管理LIF、请输入轮询持续时间(以秒为单位)。轮询持续时间是指防病毒连接器检查SVM或集群LIF配置是否发生更改的频率。默认轮询间隔为60秒。
+. 输入ONTAP管理员帐户名称和密码以配置管理LIF。
+. 单击*Test*以检查连接并验证身份验证。仅验证管理LIF配置的身份验证。
+. 单击*更新*将LIF添加到要轮询或连接到的LIF列表中。
+. 单击*保存*以保存与注册表的连接。
+. 如果要将连接列表导出到注册表导入或注册表导出文件，请单击*Export*。
+如果多个Vscan服务器使用一组相同的管理或数据生命周期、则此功能非常有用。
+
+
+请参见 link:configure-ontap-antivirus-connector-task.html["配置ONTAP防病毒连接器页面"] 了解配置选项。

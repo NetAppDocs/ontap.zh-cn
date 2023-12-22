@@ -1,0 +1,307 @@
+---
+permalink: antivirus/configure-ontap-antivirus-connector-task.html 
+sidebar: sidebar 
+keywords: 'configure, antivirus connector, task, SVM"s, connections' 
+summary: '您必须通过输入ONTAP管理LIF、轮询信息和ONTAP管理员帐户凭据或仅输入数据LIF来配置防病毒连接器、以指定要连接到的一个或多个Storage Virtual Machine (SVM)。' 
+---
+= 配置ONTAP防病毒连接器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过输入ONTAP管理LIF、轮询信息和ONTAP管理员帐户凭据或仅输入数据LIF、配置ONTAP防病毒连接器以指定要连接到的一个或多个Storage Virtual Machine (SVM)。您还可以修改SVM连接的详细信息或删除SVM连接。默认情况下、如果配置了ONTAP管理LIF、ONTAP防病毒连接器将使用REST API检索数据LIF列表。
+
+
+
+== 修改SVM连接的详细信息
+
+您可以通过修改ONTAP管理LIF和轮询信息来更新已添加到防病毒连接器的Storage Virtual Machine (SVM)连接的详细信息。添加数据LUN后、您将无法对其进行更新。要更新数据LIF、您必须先将其删除、然后使用新的LIF或IP地址重新添加。
+
+.开始之前
+验证是否已为HTTP应用程序创建用户帐户、并分配了对具有(至少是只读)访问权限的角色 `/api/network/ip/interfaces` REST API。
+有关创建用户的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131//security-login-role-create.html#description["创建安全登录角色"^] 和 link:https://docs.netapp.com/us-en/ontap-cli-9131//security-login-create.html["创建安全登录"^] 命令
+您还可以通过为管理SVM添加身份验证通道SVM来使用域用户作为帐户。
+有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131//security-login-domain-tunnel-create.html["安全登录域通道创建"] ONTAP手册页。
+
+.步骤
+. 右键单击完成防病毒连接器安装时保存在桌面上的*配置ONTAP Lifs*图标，然后选择*以管理员身份运行*。此时将打开配置ONTAP LUN对话框。
+. 选择SVM IP地址，然后单击*Update*。
+. 根据需要更新此信息。
+. 单击*保存*以更新注册表中的连接详细信息。
+. 如果要将连接列表导出到注册表导入或注册表导出文件，请单击*Export*。
+如果多个Vscan服务器使用一组相同的管理或数据生命周期、则此功能非常有用。
+
+
+
+
+== 从防病毒连接器中删除SVM连接
+
+如果您不再需要SVM连接、可以将其删除。
+
+.步骤
+. 右键单击完成防病毒连接器安装时保存在桌面上的*配置ONTAP Lifs*图标，然后选择*以管理员身份运行*。此时将打开配置ONTAP LUN对话框。
+. 选择一个或多个SVM IP地址，然后单击*Remove*。
+. 单击*保存*以更新注册表中的连接详细信息。
+. 如果要将连接列表导出到注册表导入或注册表导出文件，请单击*Export*。
+如果多个Vscan服务器使用一组相同的管理或数据生命周期、则此功能非常有用。
+
+
+
+
+== 故障排除
+
+.开始之前
+在此操作步骤中创建注册表值时、请使用右侧窗格。
+
+您可以启用或禁用防病毒连接器日志以进行诊断。默认情况下、这些日志处于禁用状态。为了提高性能、您应禁用防病毒连接器日志、并仅在发生严重事件时启用这些日志。
+
+.步骤
+. 选择*Start*，在搜索框中键入“regedit”，然后选择 `regedit.exe` 在程序列表中。
+. 在*Registry Editor*中，找到ONTAP防病毒连接器的以下项：
+`HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Data ONTAP\Clustered Data ONTAP Antivirus Connector\v1.0`
+. 通过提供下表所示的类型、名称和值来创建注册表值：
++
+|===
+
+
+| Type | Name | 值 
+
+
+ a| 
+string
+ a| 
+迹线
+ a| 
+C：\avshim.log
+
+|===
++
+此注册表值可以是任何其他有效路径。
+
+. 通过提供下表所示的类型、名称、值和日志记录信息、创建另一个注册表值：
++
+|===
+
+
+| Type | Name | 关键日志记录 | 中间日志记录 | 详细日志记录 
+
+
+ a| 
+DWORD
+ a| 
+Tracellevel
+ a| 
+1.
+ a| 
+2或3
+ a| 
+4.
+
+|===
++
+这将启用按照步骤3中的TracePath提供的路径值保存的防病毒连接器日志。
+
+. 通过删除在步骤3和4中创建的注册表值来禁用防病毒连接器日志。
+. 创建另一个类型为"multi_SZ"且名称为"LogRotation"(不带引号)的注册表值。在"LogRotation"中、
+提供"logFileSize：1"作为轮换大小的条目(其中1表示1MB)、并在下一行中提供"logFileCount：5"作为
+旋转限值条目(5为限值)。
++
+[NOTE]
+====
+这些值是可选的。如果未提供、则会分别使用默认值20 MB和10个文件作为轮换大小和轮换限制。提供的整数值不提供小数值或小数值。如果提供的值高于默认值、则会改用默认值。
+
+====
+. 要禁用用户配置的日志轮换、请删除您在步骤6中创建的注册表值。
+
+
+
+
+== 可自定义的横幅
+
+自定义横幅允许您在_Configure ONTAP LIF API_窗口中放置具有法律约束力的声明和系统访问免责声明。
+
+.步骤
+. 通过更新中的内容来修改默认横幅 `banner.txt` 文件、然后保存所做的更改。
+要查看横幅中反映的更改、必须重新打开配置ONTAP LIF API窗口。
+
+
+
+
+== 启用扩展条例模式
+
+您可以启用和禁用扩展法令(EO)模式以确保安全操作。
+
+.步骤
+. 选择*Start*，在搜索框中键入“regedit”，然后选择 `regedit.exe` 在程序列表中。
+. 在*Registry Editor*中，找到ONTAP防病毒连接器的以下项：
+`HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Data ONTAP\Clustered Data ONTAP Antivirus Connector\v1.0`
+. 在右侧窗格中、创建名为"EO_Mode"(不带引号)且值为"1"(不带引号)的新注册表值"DWORD"、以启用"EO模式"或值"0"(不带引号)禁用"EO模式"。
+
+
+
+NOTE: 默认情况下、如果是 `EO_Mode` 缺少注册表条目、已禁用EO模式。启用EO模式后、必须同时配置外部系统日志服务器和相互证书身份验证。
+
+
+
+== 配置外部系统日志服务器
+
+.开始之前
+请注意、在此操作步骤中创建注册表值时、请使用右侧窗格。
+
+.步骤
+. 选择*Start*，在搜索框中键入“regedit”，然后选择 `regedit.exe` 在程序列表中。
+. 在*Registry Editor*中，为系统日志配置的ONTAP防病毒连接器创建以下项：
+`HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Data ONTAP\Clustered Data ONTAP Antivirus Connector\v1.0\syslog`
+. 通过提供类型、名称和值来创建注册表值、如下表所示：
++
+|===
+
+
+| Type | Name | 价值 
+
+
+ a| 
+DWORD
+ a| 
+syslog_enabled
+ a| 
+1或0
+
+|===
++
+请注意、使用"1"值启用系统日志、使用"0"值禁用系统日志。
+
+. 通过提供下表所示的信息创建另一个注册表值：
++
+|===
+
+
+| Type | Name 
+
+
+ a| 
+REG_SZ
+ a| 
+syslog_host
+
+|===
++
+为值字段提供系统日志主机IP地址或域名。
+
+. 通过提供下表所示的信息创建另一个注册表值：
++
+|===
+
+
+| Type | Name 
+
+
+ a| 
+REG_SZ
+ a| 
+syslog_port
+
+|===
++
+在Value字段中提供运行系统日志服务器的端口号。
+
+. 通过提供下表所示的信息创建另一个注册表值：
++
+|===
+
+
+| Type | Name 
+
+
+ a| 
+REG_SZ
+ a| 
+syslog_protocol
+
+|===
++
+在值字段中输入系统日志服务器上使用的协议、即"TCP"或"UDP"。
+
+. 通过提供下表所示的信息创建另一个注册表值：
++
+|===
+
+
+| Type | Name | Log_Rert | log_notice | LOG_INFO | log_ddebug 
+
+
+ a| 
+DWORD
+ a| 
+syslog_level
+ a| 
+2.
+ a| 
+5.
+ a| 
+6.
+ a| 
+7.
+
+|===
+. 通过提供下表所示的信息创建另一个注册表值：
++
+|===
+
+
+| Type | Name | 价值 
+
+
+ a| 
+DWORD
+ a| 
+syslog_tls.
+ a| 
+1或0
+
+|===
+
+
+请注意、"1"值将启用采用传输层安全(Transport Layer Security、TLS)的系统日志、而"0"值将禁用采用TLS的系统日志。
+
+
+
+=== 确保已配置的外部系统日志服务器平稳运行
+
+* 如果密钥不存在或具有空值：
++
+** 协议默认为"TCP"。
+** 对于纯"TCP/UDP"、此端口默认为"514"；对于TLS、此端口默认为"6514"。
+** 系统日志级别默认为5 (log_notice)。
+
+
+* 您可以通过验证是否已启用系统日志来确认是否已启用 `syslog_enabled` 值为"1"。当 `syslog_enabled` 值为"1"、无论是否启用了EO模式、您都应该能够登录到已配置的远程服务器。
+* 如果将EO模式设置为"1"、则更改 `syslog_enabled` 值从"1"到"0"、适用以下条件：
++
+** 如果未在EO模式下启用系统日志、则无法启动此服务。
+** 如果系统以稳定状态运行、则会显示一条警告、指出无法在EO模式下禁用系统日志、并且系统日志会强制设置为"1"、您可以在注册表中看到此信息。如果发生这种情况、您应先禁用EO模式、然后再禁用系统日志。
+
+
+* 如果在启用了EO模式和系统日志后、系统日志服务器无法成功运行、则该服务将停止运行。出现此问题的原因可能如下：
++
+** 配置的syslog_host无效或未配置。
+** 配置的协议无效、而不是UDP或TCP。
+** 端口号无效。
+
+
+* 对于TCP或基于TCP的TLS配置、如果服务器未侦听IP端口、则连接将失败、服务将关闭。
+
+
+
+
+== 配置X.509相互证书身份验证
+
+对于管理路径中防病毒连接器和ONTAP之间的安全套接字层(SSL)通信、可以使用基于X.509证书的相互身份验证。如果启用了EO模式、但未找到证书、AV Connector将终止。在防病毒连接器上执行以下操作步骤：
+
+.步骤
+. 防病毒连接器在其运行安装目录的目录路径中搜索NetApp服务器的防病毒连接器客户端证书和证书颁发机构(CA)证书。将证书复制到此固定目录路径中。
+. 以PKCS12格式嵌入客户端证书及其私钥、并将其命名为"AV_client.p12"。
+. 确保用于对NetApp服务器的证书签名的CA证书(以及任何中间签名颁发机构、直到根CA)采用隐私增强邮件(PEM)格式且名为"ONTAP CA。pEM"。将其放在防病毒连接器安装目录中。在NetApp ONTAP系统上、安装用于将ONTAP中的防病毒连接器客户端证书作为"client-ca"类型证书进行签名的CA证书(以及直到根CA的任何中间签名颁发机构)。
+
