@@ -11,14 +11,14 @@ summary: 如果您希望 ONTAP 访问环境中的外部 LDAP 服务器，则必�
 
 
 [role="lead"]
-如果您希望 ONTAP 访问环境中的外部 LDAP 服务器，则必须先在存储系统上设置 LDAP 客户端。
+如果您希望ONTAP访问您环境中的外部LDAP或Active Directory服务、则需要先在存储系统上设置LDAP客户端。
 
 .您需要的内容
-AD 域解析列表中的前三个服务器之一必须已启动并提供数据。否则，此任务将失败。
+Active Directory域解析列表中前三个服务器之一必须已启动并提供数据。否则，此任务将失败。
 
 [NOTE]
 ====
-有多个服务器，其中有两个以上的服务器在任意时间点关闭。
+有多个服务器、其中在任意时间点有两个以上的服务器停机。
 
 ====
 .步骤
@@ -31,13 +31,15 @@ AD 域解析列表中的前三个服务器之一必须已启动并提供数据�
 +
 *** 使用 `-ad-domain` 选项以在Active Directory域中启用LDAP服务器发现。
 +
-您可以使用 `-preferred-ad-servers` 此选项可按IP地址在逗号分隔列表中指定一个或多个首选Active Directory服务器。创建客户端后、您可以使用修改此列表 `vserver services name-service ldap client modify` 命令：
+**** 您可以使用 `-restrict-discovery-to-site` 用于将LDAP服务器发现限制为指定域的CIFS默认站点的选项。如果使用此选项、则还需要使用指定CIFS默认站点 `-default-site`。
 
-*** 使用 `-servers` 此选项可按IP地址在逗号分隔列表中指定一个或多个LDAP服务器(AD或UNIX)。
+
+*** 您可以使用 `-preferred-ad-servers` 此选项可按IP地址在逗号分隔列表中指定一个或多个首选Active Directory服务器。创建客户端后、您可以使用修改此列表 `vserver services name-service ldap client modify` 命令：
+*** 使用 `-servers` 可选择通过IP地址在逗号分隔列表中指定一个或多个LDAP服务器(Active Directory或UNIX)。
 +
 [NOTE]
 ====
-。 `-servers` 选项在ONTAP 9.2中已弃用。从ONTAP 9.2开始、 `-ldap-servers` 字段将取代 `-servers` 字段。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
+。 `-servers` 选项在ONTAP 9.2中已弃用。从ONTAP 9.2开始、 `-ldap-servers` 字段将取代 `-servers` 字段。此字段可以使用LDAP服务器的主机名或IP地址。
 
 ====
 
@@ -100,7 +102,7 @@ AD 域解析列表中的前三个服务器之一必须已启动并提供数据�
 +
 [NOTE]
 ====
-如果SVM已将SMB服务器添加到域中、并且LDAP服务器是SMB服务器主域的域控制器之一、则可以修改 `-session-security-for-ad-ldap` 选项 `vserver cifs security modify` 命令：
+如果Storage VM已将SMB服务器添加到域中、并且LDAP服务器是SMB服务器主域的域控制器之一、则可以修改 `-session-security-for-ad-ldap` 选项 `vserver cifs security modify` 命令：
 
 ====
 
@@ -140,14 +142,14 @@ AD 域解析列表中的前三个服务器之一必须已启动并提供数据�
 
 
 
-. 在 SVM 上创建 LDAP 客户端配置：
+. 在Storage VM上创建LDAP客户端配置：
 +
-`vserver services name-service ldap client create -vserver _vserver_name_ -client-config _client_config_name_ {-servers _LDAP_server_list_ | -ad-domain _ad_domain_ -preferred-ad-servers _preferred_ad_server_list_ -schema _schema_ -port 389 -query-timeout 3 -min-bind-level {anonymous|simple|sasl} -bind-dn _LDAP_DN_ -bind-password _password_ -base-dn _LDAP_DN_ -base-scope subtree -session-security {none|sign|seal} [-referral-enabled {true|false}]`
+`vserver services name-service ldap client create -vserver _vserver_name_ -client-config _client_config_name_ {-servers _LDAP_server_list_ | -ad-domain _ad_domain_} -preferred-ad-servers _preferred_ad_server_list_ -restrict-discovery-to-site {true|false} -default-site _CIFS_default_site_ -schema _schema_ -port 389 -query-timeout 3 -min-bind-level {anonymous|simple|sasl} -bind-dn _LDAP_DN_ -bind-password _password_ -base-dn _LDAP_DN_ -base-scope subtree -session-security {none|sign|seal} [-referral-enabled {true|false}]`
 
 +
 [NOTE]
 ====
-在创建 LDAP 客户端配置时，必须提供 SVM 名称。
+创建LDAP客户端配置时、必须提供Storage VM名称。
 
 ====
 . 验证是否已成功创建 LDAP 客户端配置：
@@ -157,31 +159,31 @@ AD 域解析列表中的前三个服务器之一必须已启动并提供数据�
 
 
 .示例
-以下命令将为 SVM vs1 创建一个名为 ldap1 的新 LDAP 客户端配置，以便与用于 LDAP 的 Active Directory 服务器配合使用：
+以下命令将为Storage VM VS1创建一个名为ldap1的新LDAP客户端配置、以便与适用于LDAP的Active Directory服务器配合使用：
 
 [listing]
 ----
-cluster1::> vserver services name-service ldap client create -vserver vs1 -client-config ldapclient1 –ad-domain addomain.example.com -schema AD-SFU -port 389 -query-timeout 3 -min-bind-level simple -base-dn DC=addomain,DC=example,DC=com -base-scope subtree -preferred-ad-servers 172.17.32.100
+cluster1::> vserver services name-service ldap client create -vserver vs1 -client-config ldapclient1 -ad-domain addomain.example.com -schema AD-SFU -port 389 -query-timeout 3 -min-bind-level simple -base-dn DC=addomain,DC=example,DC=com -base-scope subtree -preferred-ad-servers 172.17.32.100
 ----
-以下命令将为 SVM vs1 创建一个名为 ldap1 的新 LDAP 客户端配置，以便与需要签名和签章的 LDAP 的 Active Directory 服务器配合使用：
+以下命令将为Storage VM VS1创建一个名为ldap1的新LDAP客户端配置、以便与需要签名和签章的LDAP的Active Directory服务器配合使用、并且LDAP服务器发现仅限于指定域的特定站点：
 
 [listing]
 ----
-cluster1::> vserver services name-service ldap client create -vserver vs1 -client-config ldapclient1 –ad-domain addomain.example.com -schema AD-SFU -port 389 -query-timeout 3 -min-bind-level sasl -base-dn DC=addomain,DC=example,DC=com -base-scope subtree -preferred-ad-servers 172.17.32.100 -session-security seal
+cluster1::> vserver services name-service ldap client create -vserver vs1 -client-config ldapclient1 -ad-domain addomain.example.com -restrict-discovery-to-site true -default-site cifsdefaultsite.com -schema AD-SFU -port 389 -query-timeout 3 -min-bind-level sasl -base-dn DC=addomain,DC=example,DC=com -base-scope subtree -preferred-ad-servers 172.17.32.100 -session-security seal
 ----
-以下命令将为 SVM vs1 创建一个名为 ldap1 的新 LDAP 客户端配置，以便在需要 LDAP 转介跟踪的情况下使用 Active Directory 服务器：
+以下命令将为Storage VM VS1创建一个名为ldap1的新LDAP客户端配置、以便与需要LDAP转介跟踪的LDAP Active Directory服务器配合使用：
 
 [listing]
 ----
-cluster1::> vserver services name-service ldap client create -vserver vs1 -client-config ldapclient1 –ad-domain addomain.example.com -schema AD-SFU -port 389 -query-timeout 3 -min-bind-level sasl -base-dn "DC=adbasedomain,DC=example1,DC=com; DC=adrefdomain,DC=example2,DC=com" -base-scope subtree -preferred-ad-servers 172.17.32.100 -referral-enabled true
+cluster1::> vserver services name-service ldap client create -vserver vs1 -client-config ldapclient1 -ad-domain addomain.example.com -schema AD-SFU -port 389 -query-timeout 3 -min-bind-level sasl -base-dn "DC=adbasedomain,DC=example1,DC=com; DC=adrefdomain,DC=example2,DC=com" -base-scope subtree -preferred-ad-servers 172.17.32.100 -referral-enabled true
 ----
-以下命令通过指定基本 DN 来修改 SVM vs1 的 LDAP 客户端配置 ldap1 ：
+以下命令通过指定基础DN来修改Storage VM VS1的LDAP客户端配置ldap1：
 
 [listing]
 ----
 cluster1::> vserver services name-service ldap client modify -vserver vs1 -client-config ldap1 -base-dn CN=Users,DC=addomain,DC=example,DC=com
 ----
-以下命令通过启用转介跟踪来修改 SVM vs1 的 LDAP 客户端配置 ldap1 ：
+以下命令通过启用转介跟踪来修改Storage VM VS1的LDAP客户端配置ldap1：
 
 [listing]
 ----
