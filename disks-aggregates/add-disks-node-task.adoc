@@ -13,15 +13,21 @@ summary: '您可以向节点或磁盘架添加驱动器、以增加热备用磁�
 [role="lead"]
 您可以向节点或磁盘架添加驱动器、以增加热备用磁盘数量或向本地层(聚合)添加空间。
 
-.关于此任务
-您的平台必须支持要添加的驱动器。
-
-https://hwu.netapp.com/["NetApp Hardware Universe"^]
+.开始之前
+您的平台必须支持要添加的驱动器。您可以使用进行确认 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
 应在一个操作步骤中添加的最小驱动器数为 6 个。添加单个驱动器可能会降低性能。
 
-.步骤
-. 请查看 NetApp 支持站点以获取较新的驱动器和磁盘架固件以及磁盘认证包文件。
+.NetApp Hardware Universe的步骤
+. 在**产品**下拉菜单中，选择您的硬件配置
+. 选择您的平台。
+. 选择正在运行的ONTAP版本，然后**显示结果**。
+. 在图形下方，选择**单击此处查看备用视图**。选择与您的配置匹配的视图。
+图像：../media/hardicy-uance-os-Filter.png[Hardware宇宙操作系统筛选器菜单]
+
+
+.安装驱动器的步骤
+. 检查 link:https://mysupport.netapp.com/site/["NetApp 支持站点"^] 更新的驱动器和磁盘架固件以及磁盘认证包文件。
 +
 如果您的节点或磁盘架没有最新版本，请在安装新驱动器之前对其进行更新。
 
@@ -36,7 +42,7 @@ https://hwu.netapp.com/["NetApp Hardware Universe"^]
 NOTE: 用于添加驱动器的正确插槽因平台型号和 ONTAP 版本而异。在某些情况下，您需要按顺序向特定插槽添加驱动器。例如，在 AFF A800 中，您可以按特定间隔添加驱动器，而集群中的插槽为空。而在 AFF A220 中，您可以向从外向磁盘架中间运行的下一个空插槽添加新驱动器。
 
 +
-请参见 https://hwu.netapp.com/["NetApp Hardware Universe"^] 确定适合您的配置的正确插槽。
+请参阅**开始之前**中的步骤，在中为您的配置确定正确的插槽 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
 . 插入新驱动器：
 +
@@ -56,7 +62,7 @@ When the drive's activity LED is solid, it means that the drive has power.When t
 . 识别完所有新驱动器后、验证是否已添加这些驱动器并正确指定其所有权。
 
 
-.步骤
+.确认安装的步骤
 . 显示磁盘列表：
 +
 `storage aggregate show-spare-disks`
@@ -64,7 +70,7 @@ When the drive's activity LED is solid, it means that the drive has power.When t
 +
 您应看到新驱动器，它们属于正确的节点。
 
-. 可选(仅限ONTAP 9.3及更早版本)：将新添加的驱动器置零：
+. **(可选)(仅适用于ONTAP 9.3及更早版本)，**将新添加的驱动器置零：
 +
 `storage disk zerospares`
 
