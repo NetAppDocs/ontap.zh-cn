@@ -13,9 +13,26 @@ summary: 从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记�
 [role="lead"]
 从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记语言（ SAML ）身份验证。配置并启用 SAML 身份验证后，用户将通过外部身份提供程序（ Identity Provider ， IdP ）进行身份验证，而不是 Active Directory 和 LDAP 等目录服务提供程序进行身份验证。
 
-.您需要的内容
-* 您必须已为 SAML 身份验证配置 IdP 。
-* 您必须具有 IdP URI 。
+
+
+== 启用 SAML 身份验证
+
+要使用System Manager或命令行界面启用SAML身份验证、请执行以下步骤。如果集群运行的是ONTAP 9.7或更早版本、则需要遵循的System Manager步骤有所不同。请参阅系统上提供的System Manager联机帮助。
+
+
+NOTE: 启用SAML身份验证后、只有远程用户才能访问System Manager图形用户界面。启用 SAML 身份验证后，本地用户无法访问 System Manager 图形用户界面。
+
+image:workflow_security_mfa_setup.gif["使用 SAML 设置多因素身份验证的任务工作流图"]
+
+.开始之前
+* 必须配置计划用于远程身份验证的 IdP 。
++
+[NOTE]
+====
+请参见您配置的 IdP 提供的文档。
+
+====
+* 您必须具有 IdP 的 URI 。
 
 
 .关于此任务
@@ -42,7 +59,34 @@ summary: 从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记�
 * Shibboleth
 
 
+根据您的环境执行以下步骤：
+
 .步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 单击 * 集群 > 设置 * 。
+. 单击 * SAML 身份验证 * 旁边的 image:icon_gear.gif["齿轮图标"]。
+. 确保选中 * 启用 SAML 身份验证 * 复选框。
+. 输入 IdP URI 的 URL （包括 "https://"[]）。
+. 根据需要修改主机系统地址。
+. 确保使用的证书正确：
++
+** 如果您的系统只映射了一个类型为 "server" 的证书，则该证书将被视为默认证书，不会显示。
+** 如果您的系统使用多个证书映射为类型 "server" ，则会显示其中一个证书。  要选择其他证书，请单击 * 更改 * 。
+
+
+. 单击 * 保存 * 。此时将显示一个确认窗口，其中包含已自动复制到剪贴板的元数据信息。
+. 转到指定的 IdP 系统，然后从剪贴板复制元数据以更新系统元数据。
+. 返回到确认窗口（在 System Manager 中）并选中复选框 * 我已使用主机 URI 或元数据配置 IdP * 。
+. 单击 * 注销 * 以启用基于 SAML 的身份验证。  IdP 系统将显示身份验证屏幕。
+. 在 IdP 系统中，输入基于 SAML 的凭据。验证凭据后，您将转到 System Manager 主页。
+
+
+--
+.命令行界面
+--
 . 创建 SAML 配置，以便 ONTAP 可以访问 IdP 元数据：
 +
 `*security saml-sp create -idp-uri _idp_uri_ -sp-host _ontap_host_name_*`
@@ -122,16 +166,29 @@ admin1         http        password      backup           no     none
 
 
 
+--
+====
 
 
 == 禁用 SAML 身份验证
 
 如果要停止使用外部身份提供程序（ IdP ）对 Web 用户进行身份验证，则可以禁用 SAML 身份验证。禁用 SAML 身份验证后，将使用已配置的目录服务提供程序（例如 Active Directory 和 LDAP ）进行身份验证。
 
-.您需要的内容
-您必须从控制台登录。
+根据您的环境执行以下步骤：
 
 .步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 单击 * 集群 > 设置 * 。
+. 在 * SAML 身份验证 * 下，单击 * 已启用 * 切换按钮。
+. _可 选_：您也可以单击  image:icon_gear.gif["齿轮图标"] 选中 * SAML 身份验证 * 旁边的 * 启用 SAML 身份验证 * 复选框。
+
+
+--
+.命令行界面
+--
 . 禁用 SAML 身份验证
 +
 `*security saml-sp modify -is-enabled false*`
@@ -142,6 +199,8 @@ admin1         http        password      backup           no     none
 
 
 
+--
+====
 
 
 == 对 SAML 配置问题进行故障排除
