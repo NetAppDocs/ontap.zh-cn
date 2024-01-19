@@ -61,31 +61,32 @@ ONTAP 对象存储服务器将数据作为 S3 对象进行管理，而不是由 
 --
 . 创建 S3 服务器：
 +
-`vserver object-store-server create -vserver _svm_name_ -object-store-server _s3_server_fqdn_ -certificate-name _s3_server_name_ -comment _text_ [additional_options]`
+`vserver object-store-server create -vserver _svm_name_ -object-store-server _s3_server_fqdn_ -certificate-name _server_certificate_name_ -comment _text_ [additional_options]`
 
 +
 您可以在创建 S3 服务器时或以后任何时间指定其他选项。
 
 +
-** SVM名称可以是数据SVM或 `Cluster` (系统SVM名称)。
+** 如果要配置本地分层、则SVM名称可以是数据SVM或系统SVM (集群)名称。
+** 证书名称应是服务器证书的名称(最终用户证书或叶证书)、而不是服务器CA证书(中间CA证书或根CA证书)。
 ** 默认情况下， HTTPS 在端口 443 上处于启用状态。您可以使用更改端口号 `-secure-listener-port` 选项
 +
-启用 HTTPS 后，要与 SSL/TLS 正确集成，需要 CA 证书。
+启用HTTPS后、要与SSL/TLS正确集成、需要CA证书。
 
-** 默认情况下， HTTP 处于禁用状态；启用后，服务器将侦听端口 80 。您可以使用启用它 `-is-http-enabled` 选项或使用更改端口号 `-listener-port` 选项
+** 默认情况下、HTTP处于禁用状态。启用后、服务器将侦听端口80。您可以使用启用它 `-is-http-enabled` 选项、或者使用更改端口号 `-listener-port` 选项
 +
-启用 HTTP 后，所有请求和响应都将通过网络以明文形式发送。
+启用HTTP后、请求和响应将以明文形式通过网络发送。
 
 
 
-. 验证是否已根据需要配置 S3 ：
+. 验证是否已配置S3：
 +
 `vserver object-store-server show`
 
 
 
 .示例
-以下命令将验证所有对象存储服务器的配置值：
+此命令将验证所有对象存储服务器的配置值：
 
 [listing]
 ----

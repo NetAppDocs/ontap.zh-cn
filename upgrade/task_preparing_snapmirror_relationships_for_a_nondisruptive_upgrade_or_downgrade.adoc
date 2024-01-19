@@ -4,20 +4,17 @@ sidebar: sidebar
 keywords: ontap, upgrade, snapmirror, operations, quisce 
 summary: 在升级ONTAP之前、您需要先静修SnapMirror操作、并且每个对等SVM必须在集群中具有唯一的名称 
 ---
-= 准备SnapMirror关系以进行ONTAP升级
+= 升级ONTAP之前、请将SnapMirror DP操作置于静修状态
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在运行SnapMirror的集群上升级ONTAP之前、必须先对包含目标卷的每个节点静音SnapMirror操作、并且每个对等SVM在集群中都必须具有唯一的名称。最佳做法是、为每个SVM使用唯一的完全限定域名(FQDN)、例如、"n ü`dataVerser.HQ`"或"n `mirrorVserver.Offsite`"。
-
-此外、还应注意、如果要升级具有DP SnapMirror关系的集群、则必须先升级目标节点、然后再升级源节点。
+在采用SnapMirror数据保护(DP)的集群上升级ONTAP之前、必须先为包含目标卷的每个节点静音SnapMirror操作、并且每个对等SVM在集群中都必须具有唯一的名称。最佳做法是、为每个SVM使用唯一的完全限定域名(FQDN)、例如、"n ü`dataVerser.HQ`"或"n `mirrorVserver.Offsite`"。
 
 
-
-== 在升级ONTAP之前、请将SnapMirror操作置于静修状态
+NOTE: 对于具有SnapMirror扩展数据保护(XDP)的集群、无需静噪SnapMirror操作。
 
 要防止SnapMirror传输失败、您必须在升级ONTAP之前将SnapMirror操作置于静修状态。或者、您也可以先在特定目标卷上静音SnapMirror传输、并升级所属目标节点、然后再升级源节点、以便所有其他目标卷的SnapMirror传输可以继续进行。下表介绍了暂停 SnapMirror 操作的两个选项。
 

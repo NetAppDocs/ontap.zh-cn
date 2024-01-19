@@ -17,17 +17,29 @@ S3 对象保留在 _bages_ 中—它们不嵌套为其他目录内某个目录�
 包含S3服务器的Storage VM必须已存在。
 
 .关于此任务
-对于CLI、在创建存储分段时、您有两个配置选项：
-
-* Let ONTAP Select the underlying aggregates and FlexGroup components （默认）
+* 从ONTAP 9.14.1开始、在S3 FlexGroup卷上创建存储分段时、已启用自动调整大小功能。这样可以避免在现有和新FlexGroup卷上创建存储分段期间分配过多的容量。根据以下准则、FlexGroup卷的大小将调整为所需的最小大小。所需的最小大小为FlexGroup卷中所有S3分段的总大小。
 +
-** ONTAP 会通过自动选择聚合来为第一个存储分段创建和配置 FlexGroup 卷。它将自动选择可用于您的平台的最高服务级别，或者您也可以指定存储服务级别。稍后在Storage VM中添加的任何其他分段都将具有相同的底层FlexGroup卷。
-** 或者，您也可以指定存储分层是否会使用存储分段，在这种情况下， ONTAP 会尝试选择低成本介质，以便为分层数据提供最佳性能。
+** 从ONTAP 9.14.1开始、如果在创建新存储分段时创建了S3 FlexGroup卷、则会使用所需的最小大小创建FlexGroup卷。
+** 如果S3 FlexGroup卷是在ONTAP 9.14.1之前创建的、则在ONTAP 9.14.1之后创建或删除的第一个分段会将FlexGroup卷大小调整为所需的最小大小。
+** 如果S3 FlexGroup卷是在ONTAP 9.14.1之前创建的、并且已达到所需的最小大小、则在ONTAP 9.14.1之后创建或删除存储分段时、S3 FlexGroup卷的大小将保持不变。
 
 
-* 您可以选择底层聚合和 FlexGroup 组件（需要高级权限命令选项）
+* 存储服务级别是预定义的自适应服务质量（ QoS ）策略组，具有 _value_ ， _performage_ 和 _Extreme 默认级别。您还可以定义自定义 QoS 策略组并将其应用于存储分段，而不是默认存储服务级别之一。有关存储服务定义的详细信息、请参见 link:storage-service-definitions-reference.html["存储服务定义"]。有关性能管理的详细信息、请参见 link:../performance-admin/index.html["性能管理"]。
+从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
+
+
+* 如果要配置本地容量分层、则需要在数据Storage VM中创建存储分段和用户、而不是在S3服务器所在的系统Storage VM中创建存储分段和用户。
+* 要进行远程客户端访问，您必须在启用了 S3 的 Storage VM 中配置存储分段。如果在未启用 S3 的 Storage VM 中创建存储分段，则此分段仅可用于本地分层。
+* 从ONTAP 9.14.1开始、您可以执行此操作 link:create-bucket-mcc-task.html["在MetroCluster配置中的镜像或未镜像聚合上创建分段"]。
+* 对于CLI、在创建存储分段时、您有两个配置选项：
 +
-** 您可以选择手动选择必须在其中创建存储分段和包含的 FlexGroup 卷的聚合，然后指定每个聚合上的成分卷数。添加其他分段时：
+** Let ONTAP Select the underlying aggregates and FlexGroup components （默认）
++
+*** ONTAP 会通过自动选择聚合来为第一个存储分段创建和配置 FlexGroup 卷。它将自动选择可用于您的平台的最高服务级别，或者您也可以指定存储服务级别。稍后在Storage VM中添加的任何其他分段都将具有相同的底层FlexGroup卷。
+*** 或者，您也可以指定存储分层是否会使用存储分段，在这种情况下， ONTAP 会尝试选择低成本介质，以便为分层数据提供最佳性能。
+
+
+** 您可以选择底层聚合和FlexGroup组件(需要高级权限命令选项)：您可以选择手动选择必须创建存储分段和所属FlexGroup卷的聚合、然后指定每个聚合上的成分卷数。添加其他分段时：
 +
 *** 如果为新存储分段指定聚合和成分卷，则会为新存储分段创建新的 FlexGroup 。
 *** 如果不为新存储分段指定聚合和成分卷，则新存储分段将添加到现有 FlexGroup 中。
@@ -35,29 +47,17 @@ S3 对象保留在 _bages_ 中—它们不嵌套为其他目录内某个目录�
 +
 在创建存储分段时指定聚合和成分卷时，不会应用任何 QoS 策略组，默认或自定义。您可以稍后使用执行此操作 `vserver object-store-server bucket modify` 命令：
 
++
+请参见 link:https://docs.netapp.com/us-en/ontap-cli-9141/vserver-object-store-server-show.html["vserver object-store-server bucket modify"] 有关详细信息 ...
 
-
-
-
-
-
-从ONTAP 9.14.1开始、您可以执行此操作 link:create-bucket-mcc-task.html["在MetroCluster配置中的镜像或未镜像聚合上创建分段"]。
-
++
 *注意：*如果您正在从Cloud Volumes ONTAP 提供存储分段、则应使用命令行界面操作步骤。强烈建议您手动选择底层聚合、以确保它们仅使用一个节点。使用这两个节点的聚合可能会影响性能、因为这些节点将位于不同地理位置的可用性区域中、因此容易受到延迟问题的影响。
 
-存储服务级别是预定义的自适应服务质量（ QoS ）策略组，具有 _value_ ， _performage_ 和 _Extreme 默认级别。您还可以定义自定义 QoS 策略组并将其应用于存储分段，而不是默认存储服务级别之一。
 
-从 ONTAP 9.8 开始，在配置存储时，默认情况下会启用 QoS 。您可以在配置过程中或稍后时间禁用 QoS 或选择自定义 QoS 策略。
 
-有关存储服务定义的详细信息、请参见 link:storage-service-definitions-reference.html["存储服务定义"]
 
-如果要配置本地容量分层、则需要在数据Storage VM中创建存储分段和用户、而不是在S3服务器所在的系统Storage VM中创建存储分段和用户。
 
-要进行远程客户端访问，您必须在启用了 S3 的 Storage VM 中配置存储分段。如果在未启用 S3 的 Storage VM 中创建存储分段，则此分段仅可用于本地分层。
 
-有关性能管理的详细信息、请参见 link:../performance-admin/index.html["性能管理"]
-
-请参见 `vserver object-store-server bucket` 有关其他配置和显示选项的手册页。
 
 
 
@@ -116,7 +116,7 @@ Storage VM名称可以是数据Storage VM或 `Cluster` (系统Storage VM名称)�
 
 
 .示例
-以下示例将为大小为1 TB的Storage VM VS1创建一个分段并指定聚合：
+以下示例将为Storage VM创建存储分段 `vs1` 大小 `1TB` 并指定聚合：
 
 [listing]
 ----
@@ -181,7 +181,7 @@ NOTE: 在配置权限之前、您必须已创建用户和组。
 
 === 验证对存储分段的访问
 
-在S3^应用程序(无论是ONTAP S3还是外部第三^方应用程序)上、您可以输入以下命令来验证您对新创建存储分段的访问权限：
+在S3客户端应用程序(无论是ONTAP S3还是外部第三方应用程序)上、您可以输入以下命令来验证您对新创建存储分段的访问权限：
 
 * S3 服务器 CA 证书。
 * 用户的访问密钥和机密密钥。
