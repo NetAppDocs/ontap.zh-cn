@@ -13,7 +13,12 @@ summary: '您可以在由HDD RAID组组成的现有本地层上启用Flash Pool�
 [role="lead"]
 您可以在由HDD RAID组组成的现有本地层上启用Flash Pool本地层(聚合)功能、然后将一个或多个SSD RAID组添加到该本地层来创建Flash Pool本地层(聚合)。这会导致该本地层出现两组RAID组：SSD RAID组(SSD缓存)和HDD RAID组。
 
-.您需要的内容
+.关于此任务
+将SSD缓存添加到本地层以创建Flash Pool本地层后、您无法删除此SSD缓存将本地层转换回其原始配置。
+
+默认情况下， SSD 缓存的 RAID 级别与 HDD RAID 组的 RAID 级别相同。您可以通过在添加第一个SSD RAID组时指定"`RAIDType`"选项来覆盖此默认选择。
+
+.开始之前
 * 您必须已确定一个由HDD组成的有效本地层以转换为Flash Pool本地层。
 * 您必须已确定与本地层关联的卷的写入缓存资格、并已完成解决资格问题所需的所有步骤。
 * 您必须已确定要添加的SSD、并且这些SSD必须归要创建Flash Pool本地层的节点所有。
@@ -27,10 +32,8 @@ summary: '您可以在由HDD RAID组组成的现有本地层上启用Flash Pool�
 * 您必须已熟悉Flash Pool本地层的配置要求。
 
 
-.关于此任务
-将SSD缓存添加到本地层以创建Flash Pool本地层后、您无法删除此SSD缓存将本地层转换回其原始配置。
-
-默认情况下， SSD 缓存的 RAID 级别与 HDD RAID 组的 RAID 级别相同。您可以通过在添加第一个SSD RAID组时指定"`RAIDType`"选项来覆盖此默认选择。
+.步骤
+您可以使用System Manager或ONTAP命令行界面创建FlashPool聚合。
 
 [role="tabbed-block"]
 ====
@@ -39,14 +42,14 @@ summary: '您可以在由HDD RAID组组成的现有本地层上启用Flash Pool�
 从ONTAP 9.12.1开始、您可以使用System Manager使用物理SSD创建Flash Pool本地层。
 
 .步骤
-. 单击*存储>层*并选择现有的本地HDD存储层。
-. 单击 image:icon_kabob.gif["kabob 图标"] 并选择*添加Flash Pool Cache*。
-. 选择使用专用SSD作为缓存。
+. 选择*存储>层*，然后选择现有的本地HDD存储层。
+. 选择 ... image:icon_kabob.gif["kabob 图标"] 然后选择*添加Flash Pool缓存*。
+. 选择**使用专用SSD作为缓存**。
 . 选择磁盘类型和磁盘数量。
 . 选择RAID类型。
-. 单击 * 保存 * 。
-. 找到存储层并单击 image:icon_kabob.gif["kabob 图标"]。
-. 选择*更多详细信息*并验证Flash Pool是否显示为*已启用*。
+. 选择 * 保存 * 。
+. 找到存储层、然后选择 image:icon_kabob.gif["kabob 图标"]。
+. 选择*更多详细信息*。验证Flash Pool是否显示为*已启用*。
 
 
 --

@@ -13,15 +13,6 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 [role="lead"]
 您可以使用板载密钥管理器保护集群用于访问加密数据的密钥。您必须在访问加密卷或自加密磁盘的每个集群上启用板载密钥管理器。
 
-.您需要的内容
-* 如果将NSE或NVE与外部密钥管理(KMIP)服务器结合使用、则必须事先删除外部密钥管理器数据库。
-+
-link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
-
-* 您必须是集群管理员才能执行此任务。
-* 在配置板载密钥管理器之前，您必须配置 MetroCluster 环境。
-
-
 .关于此任务
 您必须运行 `security key-manager setup` 命令。
 
@@ -35,11 +26,18 @@ link:delete-key-management-database-task.html["从外部密钥管理过渡到板
 
 对于NVE (如果已设置) `-enable-cc-mode yes`、使用创建的卷 `volume create` 和 `volume move start` 命令会自动加密。适用于 `volume create`，则无需指定 `-encrypt true`。适用于 `volume move start`，则无需指定 `-encrypt-destination true`。
 
-[NOTE]
-====
-密码短语尝试失败后，必须重新启动节点。
 
-====
+NOTE: 密码短语尝试失败后，必须重新启动节点。
+
+.开始之前
+* 如果将NSE或NVE与外部密钥管理(KMIP)服务器结合使用、则必须事先删除外部密钥管理器数据库。
++
+link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
+
+* 您必须是集群管理员才能执行此任务。
+* 在配置板载密钥管理器之前，您必须配置 MetroCluster 环境。
+
+
 .步骤
 . 启动密钥管理器设置：
 +

@@ -15,15 +15,6 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 
 您可以使用板载密钥管理器保护集群用于访问加密数据的密钥。您必须在访问加密卷或自加密磁盘的每个集群上启用板载密钥管理器。
 
-.您需要的内容
-* 如果将 NSE 与外部密钥管理（ KMIP ）服务器结合使用，则必须已删除外部密钥管理器数据库。
-+
-link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
-
-* 您必须是集群管理员才能执行此任务。
-* 在配置板载密钥管理器之前，您必须先配置 MetroCluster 环境。
-
-
 .关于此任务
 您必须运行 `security key-manager onboard enable` 命令。在MetroCluster配置中、您必须运行 `security key-manager onboard enable` 首先在本地集群上运行 `security key-manager onboard sync` 在远程集群上、在每个上使用相同的密码短语。
 
@@ -44,22 +35,27 @@ upgrade 命令可通过检查各种数字签名来验证映像内容是否未被
 
 
 ====
-[NOTE]
-====
-板载密钥管理器将密钥存储在易失性内存中。系统重新启动或暂停后，易失性内存内容将被清除。在正常运行条件下，系统暂停后，易失性内存内容将在 30 秒内清除。
 
-====
+NOTE: 板载密钥管理器将密钥存储在易失性内存中。系统重新启动或暂停后，易失性内存内容将被清除。在正常运行条件下，系统暂停后，易失性内存内容将在 30 秒内清除。
+
+.开始之前
+* 如果将 NSE 与外部密钥管理（ KMIP ）服务器结合使用，则必须已删除外部密钥管理器数据库。
++
+link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
+
+* 您必须是集群管理员才能执行此任务。
+* 在配置板载密钥管理器之前，您必须先配置 MetroCluster 环境。
+
+
 .步骤
 . 启动密钥管理器设置命令：
 +
 `security key-manager onboard enable -cc-mode-enabled yes|no`
 
 +
-[NOTE]
-====
-设置 `cc-mode-enabled=yes` 要求用户在重新启动后输入密钥管理器密码短语。。 `- cc-mode-enabled` 选项在MetroCluster配置中不受支持。    。 `security key-manager onboard enable` 命令用于替换 `security key-manager setup` 命令：
 
-====
+NOTE: 设置 `cc-mode-enabled=yes` 要求用户在重新启动后输入密钥管理器密码短语。。 `- cc-mode-enabled` 选项在MetroCluster配置中不受支持。    。 `security key-manager onboard enable` 命令用于替换 `security key-manager setup` 命令：
+
 +
 以下示例将在 cluster1 上启动密钥管理器设置命令，而无需在每次重新启动后输入密码短语：
 
@@ -73,22 +69,18 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 ----
 . 在密码短语提示符处，输入 32 到 256 个字符的密码短语，或者对于 "`cc-mode` " ，输入 64 到 256 个字符的密码短语。
 +
-[NOTE]
-====
-如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置操作再次显示密码短语提示之前会有五秒的延迟。
 
-====
+NOTE: 如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置操作再次显示密码短语提示之前会有五秒的延迟。
+
 . 在密码短语确认提示符处，重新输入密码短语。
 . 验证是否已创建身份验证密钥：
 +
 `security key-manager key query -node node`
 
 +
-[NOTE]
-====
-。 `security key-manager key query` 命令用于替换 `security key-manager query key` 命令：有关完整的命令语法，请参见手册页。
 
-====
+NOTE: 。 `security key-manager key query` 命令用于替换 `security key-manager query key` 命令：有关完整的命令语法，请参见手册页。
+
 +
 以下示例将验证是否已为创建身份验证密钥 `cluster1`：
 

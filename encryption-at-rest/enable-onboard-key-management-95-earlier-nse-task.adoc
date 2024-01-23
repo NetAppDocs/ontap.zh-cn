@@ -15,15 +15,6 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 
 您可以使用板载密钥管理器保护集群用于访问加密数据的密钥。您必须在访问加密卷或自加密磁盘的每个集群上启用板载密钥管理器。
 
-.您需要的内容
-* 如果将 NSE 与外部密钥管理（ KMIP ）服务器结合使用，则必须已删除外部密钥管理器数据库。
-+
-link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
-
-* 您必须是集群管理员才能执行此任务。
-* 在配置板载密钥管理器之前，您必须先配置 MetroCluster 环境。
-
-
 .关于此任务
 您必须运行 `security key-manager setup` 命令。
 
@@ -37,22 +28,27 @@ link:delete-key-management-database-task.html["从外部密钥管理过渡到板
 
 对于NVE (如果已设置) `-enable-cc-mode yes`、使用创建的卷 `volume create` 和 `volume move start` 命令会自动加密。适用于 `volume create`，则无需指定 `-encrypt true`。适用于 `volume move start`，则无需指定 `-encrypt-destination true`。
 
-[NOTE]
-====
-密码短语尝试失败后，必须重新启动节点。
 
-====
+NOTE: 密码短语尝试失败后，必须重新启动节点。
+
+.开始之前
+* 如果将 NSE 与外部密钥管理（ KMIP ）服务器结合使用，则必须已删除外部密钥管理器数据库。
++
+link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
+
+* 您必须是集群管理员才能执行此任务。
+* 在配置板载密钥管理器之前，您必须先配置 MetroCluster 环境。
+
+
 .步骤
 . 启动密钥管理器设置：
 +
 `security key-manager setup -enable-cc-mode yes|no`
 
 +
-[NOTE]
-====
-从ONTAP 9.4开始、您可以使用 `-enable-cc-mode yes` 此选项要求用户在重新启动后输入密钥管理器密码短语。对于NVE (如果已设置) `-enable-cc-mode yes`、使用创建的卷 `volume create` 和 `volume move start` 命令会自动加密。
 
-====
+NOTE: 从ONTAP 9.4开始、您可以使用 `-enable-cc-mode yes` 此选项要求用户在重新启动后输入密钥管理器密码短语。对于NVE (如果已设置) `-enable-cc-mode yes`、使用创建的卷 `volume create` 和 `volume move start` 命令会自动加密。
+
 +
 以下示例将开始在 cluster1 上设置密钥管理器，而无需在每次重新启动后输入密码短语：
 
@@ -72,11 +68,9 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 . 输入 ... `yes` 在提示符处配置板载密钥管理。
 . 在密码短语提示符处，输入 32 到 256 个字符的密码短语，或者对于 "`cc-mode` " ，输入 64 到 256 个字符的密码短语。
 +
-[NOTE]
-====
-如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置操作再次显示密码短语提示之前会有五秒的延迟。
 
-====
+NOTE: 如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置操作再次显示密码短语提示之前会有五秒的延迟。
+
 . 在密码短语确认提示符处，重新输入密码短语。
 . 验证是否已为所有节点配置密钥：
 +

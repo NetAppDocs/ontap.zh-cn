@@ -26,9 +26,6 @@ summary: 您可以轻松地将现有 DP 类型关系转换为 XDP ，以利用�
 .步骤
 . 在目标集群中、确保SnapMirror关系类型为DP、镜像状态为SnapMirrored、关系状态为Idle且关系运行状况良好：
 +
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
-
-+
 [source, cli]
 ----
 snapmirror show -destination-path <SVM:volume>
@@ -66,9 +63,6 @@ Healthy: true
 
 ====
 . 在源卷和目标卷中、确保两个卷都具有通用Snapshot副本：
-+
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
-
 +
 [source, cli]
 ----
@@ -119,9 +113,6 @@ snapmirror.10af643c-32d1-11e3-954b-123478563412_2147484682.2014-06-27_100026
 ----
 . 要确保计划的更新不会在转换期间运行、请暂停现有的DP类型关系：
 +
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
-
-+
 [source, cli]
 ----
 snapmirror quiesce -source-path <SVM:volume> -destination-path <SVM:volume>
@@ -144,9 +135,6 @@ snapmirror quiesce -source-path <SVM:volume> -destination-path <SVM:volume>
 cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
 . 中断现有的 DP 类型关系：
-+
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
-
 +
 [source, cli]
 ----
@@ -185,9 +173,6 @@ cluster_dst::> volume snapshot autodelete modify -vserver svm_backup -volume vol
 ----
 . 删除现有 DP 类型关系：
 +
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
-
-+
 [source, cli]
 ----
 snapmirror delete -destination-path <SVM:volume>
@@ -209,10 +194,21 @@ snapmirror delete -destination-path <SVM:volume>
 ----
 cluster_dst::> snapmirror delete -destination-path svm_backup:volA_dst
 ----
-. 您可以使用中保留的输出 `snapmirror show` 用于创建新XDP类型关系的命令：
+. 释放源上的初始SVM灾难恢复关系：
 +
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
+[source, cli]
+----
+snapmirror release -destination-path <SVM:volume> -relationship-info-only true
+----
++
+以下示例将释放SVM灾难恢复关系：
 
++
+[listing]
+----
+cluster_src::> snapmirror release -destination-path svm_backup:volA_dst -relationship-info-only true
+----
+. 您可以使用中保留的输出 `snapmirror show` 用于创建新XDP类型关系的命令：
 +
 [source, cli]
 ----
@@ -238,9 +234,6 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 ----
 . 重新同步源卷和目标卷：
 +
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
-
-+
 [source, cli]
 ----
 snapmirror resync -source-path <SVM:volume> -destination-path <SVM:volume>
@@ -263,9 +256,6 @@ snapmirror resync -source-path <SVM:volume> -destination-path <SVM:volume>
 cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
 . 如果您禁用了Snapshot副本自动删除、请重新启用它：
-+
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
-
 +
 [source, cli]
 ----
