@@ -17,22 +17,34 @@ summary: 默认情况下，在 ONTAP 9.6 或更高版本中创建的所有对等
 . 在目标集群上，修改与源集群的通信，以停止使用集群对等加密：
 +
 ** 要删除加密、但保持身份验证、请输入：
- +
-`cluster peer modify _source_cluster_ -auth-status-admin use-authentication -encryption none`
++
+[source, cli]
+----
+cluster peer modify _source_cluster_ -auth-status-admin use-authentication -encryption-protocol-proposed none
+----
 ** 要删除加密和身份验证、请输入：
- +
-`cluster peer modify _source_cluster_ -auth-status no-authentication`
++
+[source, cli]
+----
+cluster peer modify _source_cluster_ -auth-status no-authentication
+----
 
 
 . 出现提示时，输入密码短语。
 . 在源集群上，禁用与目标集群通信的加密：
 +
 ** 要删除加密、但保持身份验证、请输入：
- +
-`cluster peer modify _destination_cluster_ -auth-status-admin use-authentication -encrypt none`
++
+[source, cli]
+----
+cluster peer modify _destination_cluster_ -auth-status-admin use-authentication -encryption-protocol-proposed none
+----
 ** 要删除加密和身份验证、请输入：
- +
-`cluster peer modify _destination_cluster_ -auth-status no-authentication`
++
+[source, cli]
+----
+cluster peer modify _destination_cluster_ -auth-status no-authentication
+----
 
 
 . 出现提示时，输入在目标集群上输入的同一密码短语。
