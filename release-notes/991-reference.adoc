@@ -1,0 +1,259 @@
+---
+permalink: release-notes/991-reference.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.9.1' 
+summary: 了解ONTAP 9.9.1中提供的新功能。 
+---
+= ONTAP 9.9.1中的新增功能
+:allow-uri-read: 
+
+
+[role="lead"]
+了解ONTAP 9.9.1中提供的新功能。
+
+有关早期ONTAP 9版本、硬件平台和交换机支持、已知问题和限制的详细信息、请参阅_link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]_。您必须使用NetApp帐户登录或创建NetApp帐户才能访问ONTAP 9发行说明_。
+
+要升级到最新版本的ONTAP、请参见 xref:../upgrade/prepare.html[准备升级ONTAP]。
+
+
+
+== 数据保护
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| link:../snaplock/index.html["在SnapLock卷和聚合上支持存储效率"] | SnapLock卷和聚合的存储效率功能已进行扩展、包括数据缩减、跨卷重复数据删除、自适应数据压缩和TSSE (温度敏感型存储效率)、可为WORM数据节省更多空间。 
+
+
+| link:../data-protection/snapmirror-svm-replication-concept.html["支持在SVM DR源和目标上配置不同的Snapshot策略"] | SVM DR配置可以使用镜像存储策略在源和目标上配置不同的Snapshot策略、并且目标上的策略不会被源上的策略覆盖。 
+
+
+| link:../data-protection/snapmirror-licensing-concept.html["System Manager支持SnapMirror Cloud"] | 现在、System Manager支持SnapMirror Cloud。 
+
+
+| xref:../nas-audit/enable-disable-auditing-svms-task.html[已启用审核的SVM] | 集群中支持的已启用审核的SVM的最大数量已从50个增加到400个。 
+
+
+| xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html[SnapMirror 同步] | 每个HA对支持的最大SnapMirror同步端点数量已从80增加到160。 
+
+
+| xref:../flexgroup/create-snapmirror-relationship-task.html[FlexGroup SnapMirror拓扑] | FlexGroup卷支持两个或更多扇出关系；例如A→B、A→C与FlexVol卷一样、FlexGroup扇出最多支持8个扇出支脚、并级联到两个级别；例如A→B→C 
+|===
+
+
+== 文件访问协议
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| link:../nfs-config/using-ldap-concept.html["LDAP转介跟踪增强功能"] | LDAP转介跟踪支持LDAP签名和签章、加密TLS连接以及通过LAPS端口636进行通信。 
+
+
+| link:../nfs-admin/ldaps-concept.html["任何端口均支持LDAP"] | LdAPS可以在任何端口上配置、但端口636仍为默认端口。 
+
+
+| link:../nfs-admin/supported-versions-clients-reference.html["默认情况下、NFSv4.x版本处于启用状态"] | 默认情况下、NFSv4.0、NFSv4.1和NFSv4.2处于启用状态。 
+
+
+| link:../nfs-admin/enable-nfsv42-security-labels-task.html["标记为NFSv4.2支持"] | 如果启用了NFSv4.2、则支持标记为NFS的强制访问控制(Mandatory-Access Control、MAC)。通过此功能、ONTAP NFS服务器可识别MAC、并可存储和检索客户端发送的sec_label"属性。 
+|===
+
+
+== MetroCluster
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_considerations_layer_3.html["第3层共享链路的IP支持"^] | MetroCluster IP配置可通过IP路由(第3层)后端连接来实施。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_install_and_cable_the_mcc_components.html["支持8节点集群"^] | IP和光纤连接配置支持永久8节点集群。此外、AFF ASA平台还支持8节点MCC IP配置。 
+|===
+要了解MetroCluster配置的平台和交换机配置增强功能、请参见_link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]_。
+
+
+
+== 网络和安全协议
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+link:../networking/network_features_by_release.html["集群故障恢复能力"]
+ a| 
+* 双节点无交换机集群的端口监控和避免(以前仅在有交换机配置中提供)
+* 当节点无法通过其集群网络提供数据时、自动进行节点故障转移
+* 可显示哪些集群路径出现数据包丢失的新工具
+
+
+
+
+ a| 
+link:../networking/configure_virtual_ip_@vip@_lifs.html["虚拟IP (VIP) LIF扩展"]
+ a| 
+* 边界网关协议(BGP)的自治系统编号(ASN)支持4字节非负整数。
+* 多出口鉴别器(MED)支持高级路由选择、并支持路径优先级划分。MED是BGP更新消息中的可选属性。
+* VIP BGP 使用 BGP 对等分组提供默认路由自动化，以简化配置。
+
+
+|===
+
+
+== S3对象存储
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| link:../s3-config/enable-client-access-from-s3-app-task.html["S3元数据和标记支持"] | ONTAP S3服务器为S3客户端和应用程序提供了增强的自动化功能、并支持用户定义的对象元数据和对象标记。 
+|===
+
+
+== SAN
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../san-migration/task_checking_supported_configurations_for_fli_using_san_lun_migrate_app.html[外部LUN导入(FLI)] | NetApp 支持站点 上的SAN LUN迁移应用程序可用于对FLI互操作性表中未列出的外部阵列进行资格认定。 
+
+
+| xref:../san-config/host-support-multipathing-concept.html[NVMe-oF远程路径访问] | 如果在故障转移过程中丢失直接路径访问、则远程I/O允许系统故障转移到远程路径并继续进行数据访问。 
+
+
+| xref:../task_asa_software_configuration.html#asa-limitations-and-restrictions[在ASAS上支持12节点集群] | AFF ASA配置支持12节点集群。ASA集群可以混合使用各种ASA系统类型。 
+
+
+| xref:../task_asa_software_configuration.html#asa-limitations-and-restrictions[ASAS上的NVMe-oF协议] | AFF ASA系统也支持NVMe-oF协议。 
+
+
+ a| 
+ a| 
+* xref:../task_san_create_nested_igroup.html[您可以创建一个由现有igroup组成的igroup]。
+* 您可以将问题描述添加到用作igrop或主机启动程序别名的igro1或主机启动程序。
+* xref:../task_san_map_igroups_to_multiple_luns.html[您可以同时将igroub映射到两个或更多LUN。]
+
+
+
+
+| xref:../san-admin/storage-virtualization-vmware-copy-offload-concept.html[提高单个LUN的性能] | AFF的单个LUN性能已显著提高、因此非常适合简化虚拟环境中的部署。例如、A800可提供多达400%的随机读取IOPS。 
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../system-admin/configure-saml-authentication-task.html[支持在登录到System Manager时使用Cisco Duo进行多因素身份验证]  a| 
+从ONTAP 9.9.1P3开始、您可以将Cisco Duo配置为SAML身份提供程序(IdP)、使用户能够在登录到System Manager时使用Cisco Duo进行身份验证。
+
+|===
+
+
+== 存储效率
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../concept_nas_file_system_analytics_overview.html[System Manager中的文件系统分析(File System Analytics、FSA)管理增强功能] | FSA为搜索和筛选以及根据FSA建议采取措施提供了额外的System Manager功能。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-cli-991/volume-modify.html["将卷的文件数设置为最大值"^] | 使用volume参数自动设置文件最大值 `-files-set-maximum`，无需监控文件限制。 
+
+
+| xref:../flexcache/accelerate-data-access-concept.html[支持负查找缓存] | 在FlexCache卷上缓存"file not found (找不到文件)"错误、以减少因调用源卷而导致的网络流量。 
+
+
+| xref:../flexcache/supported-unsupported-features-concept.html[FlexCache灾难恢复] | 可将客户端从一个缓存无中断迁移到另一个缓存。 
+
+
+| xref:../flexgroup/supported-unsupported-config-concept.html[为FlexGroup卷提供SnapMirror级联和扇出支持] | 支持FlexGroup卷的SnapMirror级联和SnapMirror扇出关系。 
+
+
+| xref:../flexgroup/supported-unsupported-config-concept.html[为FlexGroup卷提供SVM灾难恢复支持] | 对FlexGroup卷的SVM灾难恢复支持可通过使用SnapMirror复制和同步SVM的配置和数据来提供冗余。 
+
+
+| xref:../flexgroup/supported-unsupported-config-concept.html[为FlexGroup卷提供逻辑空间报告和强制实施支持] | 您可以显示和限制FlexGroup卷用户占用的逻辑空间量。 
+
+
+| xref:../smb-config/configure-client-access-shared-storage-concept.html[qtrees中的SMB访问支持] | 支持对启用了SMB的FlexVol和FlexGroup卷中的qtrees进行SMB访问。 
+|===
+
+
+== System Manager
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../task_admin_monitor_risks.html[System Manager将显示Active IQ报告的风险] | 使用System Manager链接到NetApp Active IQ、该链接可报告降低风险并提高存储环境性能和效率的机会。 
+
+
+| xref:../task_san_provision_linux.html[手动分配本地层] | System Manager用户可以在创建和添加卷和LUN时手动分配本地层。 
+
+
+| xref:../task_nas_manage_directories_files.html[快速删除目录] | 可以在System Manager中使用低延迟快速目录删除功能删除目录。 
+
+
+| xref:../task_admin_use_ansible_playbooks_add_edit_volumes_luns.html[生成《Ands处理 手册》] | System Manager用户可以从用户界面为一些选定工作流生成《Ans可 操作手册》、并可在自动化工具中使用这些手册重复添加或编辑卷或LUN。 
+
+
+| xref:../task_admin_troubleshoot_hardware_problems.html[硬件可视化] | 硬件可视化功能首次在ONTAP 9.8中推出、现在支持所有AFF平台。 
+
+
+| xref:../task_admin_troubleshoot_hardware_problems.html[Active IQ 集成] | System Manager用户可以查看与集群关联的支持案例并进行下载。他们还可以复制在NetApp 支持站点 上提交新支持案例所需的集群详细信息。System Manager用户可以从Active IQ收到警报、以便在有新固件更新可用时向其发出通知。然后、他们可以使用System Manager下载并上传固件映像。 
+
+
+| xref:../task_cloud_backup_data_using_cbs.html[Cloud Manager集成] | System Manager用户可以设置保护、以便使用Cloud Backup Service将数据备份到公共云端点。 
+
+
+| xref:../task_dp_configure_mirror.html[数据保护配置工作流增强功能] | System Manager用户可以在设置数据保护时手动为SnapMirror目标和igroup名称命名。 
+
+
+| xref:../concept_admin_viewing_managing_network.html[增强了网络端口管理] | 网络接口页面增强了显示和管理其主端口上的接口的功能。 
+
+
+| 系统管理增强功能  a| 
+* xref:../task_san_create_nested_igroup.html[支持嵌套式igroup]
+* xref:../task_san_map_igroups_to_multiple_luns.html[在一个任务中将多个LUN映射到一个igrou、并可在此过程中使用WWPN别名进行筛选。]
+* xref:../task_admin_troubleshoot_hardware_problems.html[在创建NVMe-oF LIF期间、您不再需要在两个控制器上选择相同的端口。]
+* xref:../task_admin_troubleshoot_hardware_problems.html[使用每个端口的切换按钮禁用FC端口。]
+
+
+
+
+ a| 
+xref:../task_dp_configure_snapshot.html[改进了在System Manager中显示有关Snapshot副本的信息的功能]
+ a| 
+* System Manager用户可以查看Snapshot副本的大小和SnapMirror标签。
+* 如果禁用Snapshot副本、则Snapshot副本预留会设置为零。
+
+
+
+
+| 改进了System Manager中有关存储层的容量和位置信息的显示  a| 
+* xref:../concept_admin_viewing_managing_network.html[新的**层**列用于标识每个卷所在的本地层(聚合)。]
+* xref:../concept_capacity_measurements_in_sm.htmll[System Manager会显示集群级别和本地层(聚合)级别的已用物理容量以及已用逻辑容量。]
+* xref:../concept_admin_viewing_managing_network.html[新的容量显示字段可用于监控容量、跟踪接近容量或未充分利用的卷。]
+
+
+
+
+| xref:../task_cp_dashboard_tour.html[在System Manager中显示EMS紧急警报以及其他错误和警告] | 24小时内收到的EMS警报数量以及其他错误和警告均显示在System Manager的"运行状况"卡中。 
+|===

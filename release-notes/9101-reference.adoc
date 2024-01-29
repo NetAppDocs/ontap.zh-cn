@@ -1,0 +1,221 @@
+---
+permalink: release-notes/9101-reference.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.10.1' 
+summary: 了解ONTAP 9.10.1中提供的新功能。 
+---
+= ONTAP 9.10.1中的新增功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解ONTAP 9.10.1中提供的新功能。
+
+有关早期ONTAP 9版本、硬件平台和交换机支持、已知问题和限制的详细信息、请参阅_link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]_。您必须使用NetApp帐户登录或创建NetApp帐户才能访问ONTAP 9发行说明_。
+
+要升级ONTAP、请参见 xref:../upgrade/prepare.html[准备升级ONTAP]。
+
+
+
+== 数据保护
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../snaplock/set-retention-period-task.html[将SnapLock保留期限设置为100年] | 在ONTAP 9.10.1之前的版本中、支持的最长保留时间为2071年1月19日。从ONTAP 9.10.1开始、SnapLock企业版和合规性支持的保留期限最长为3058年10月26日、保留期限最长为100年。延长保留日期时、旧策略会自动转换。 
+
+
+| xref:../snaplock/set-retention-period-task.html[可以在同一聚合上创建SnapLock卷和非SnapLock卷] | 从ONTAP 9.10.1开始、SnapLock卷和非SnapLock卷可以位于同一聚合中、因此不再需要为SnapLock卷创建单独的SnapLock聚合。 
+
+
+| xref:../consistency-groups/index.html[一致性组] | 将卷和LUN放在一致性组中、以管理存储卷的策略和写入顺序保真度、从而实现快照恢复。 
+
+
+| xref:../concepts/snapmirror-cloud-backups-object-store-concept.html[使用公共云对备份进行归档] | SnapMirror云支持将ONTAP备份分层到AWS和MS Azure中成本较低的公共云对象存储类、以实现长期保留。 
+
+
+| xref:../authentication/enable-ad-users-groups-access-cluster-svm-task.html[AES支持安全Netlogon通道通信] | 如果使用Netlogon身份验证服务连接到Windows域控制器、则可以使用高级加密标准(Advanced Encryption Standard、AES)进行安全通道通信。 
+
+
+| xref:../authentication/configure-authentication-tunnel-task.html[用于SMB域通道身份验证的Kerberos] | 除了NTLM之外、Kerberos身份验证还可用于ONTAP管理的域通道身份验证。这样、可以使用Active Directory凭据更安全地登录到ONTAP命令行界面和System Manager图形用户界面。 
+|===
+
+
+== 文件访问协议
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../nfs-rdma/index.html[基于RDMA的NFS (仅限NVIDIA)] | 基于 RDMA 的 NFS 利用 RDMA 适配器，可以在存储系统内存和主机系统内存之间直接复制数据，从而避免 CPU 中断和开销。通过基于RDMA的NFS、可以在具有受支持NVIDIA GPU的主机上使用NVIDIA GPUDirect存储处理GPU加速的工作负载。 
+|===
+
+
+== MetroCluster
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_modify_ip_netmask_gateway_properties.html["在MetroCluster IP配置中配置第3层MetroCluster IP地址"^] | 您可以编辑第3层配置中节点的MetroCluster IP地址、网络掩码和网关。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_upgrade_controllers_in_a_four_node_fc_mcc_us_switchover_and_switchback_mcc_fc_4n_cu.html["简化了MetroCluster FC配置中节点的控制器升级"^] | 通过切换和切回执行升级过程的升级操作步骤已得到简化。 
+|===
+要了解MetroCluster配置的平台和交换机配置增强功能、请参见_link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]_。
+
+
+
+== 网络和安全协议
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../concepts/rdma-concept.html[RDMA集群互连] | 借助A400或ASA A400存储系统和X1151A集群NIC、您可以利用RDMA处理集群内流量、加快多节点集群中的高性能工作负载的处理速度 
+
+
+| xref:../networking/network_features_by_release.html[在系统SVM中将LIF的状态admin设置为down之前、需要进行确认]  a| 
+这样可以防止意外关闭对集群正常运行至关重要的LUN。如果您有脚本在命令行界面上调用此行为、则必须更新这些脚本以说明确认步骤。
+
+
+
+| xref:../networking/network_features_by_release.html[针对网络布线问题的自动检测和修复建议] | 检测到端口可访问性问题描述后， ONTAP 系统管理器建议执行修复操作以解决此问题描述。 
+
+
+| xref:../networking/network_features_by_release.html[Internet协议安全(IPsec)证书] | 除了用于身份验证的证书之外，IPsec策略还支持预共享密钥(PSK)。 
+
+
+| xref:../networking/network_features_by_release.html[LIF 服务策略] | 防火墙策略已弃用、并已替换为LIF服务策略。此外、还添加了一个新的NTP LIF服务策略、用于更好地控制哪些LIF用于出站NTP请求。 
+|===
+
+
+== S3对象存储
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../s3-snapmirror/index.html[S3对象数据保护、备份和灾难恢复] | S3 SnapMirror可为ONTAP S3对象存储提供数据保护服务、包括镜像到ONTAP S3配置的分段以及向NetApp和非NetApp目标进行分段备份。 
+
+
+| xref:../s3-audit/index.html[S3审核] | 您可以审核ONTAP S3环境中的数据和管理事件。S3 审核功能与现有 NAS 审核功能类似， S3 和 NAS 审核可以同时位于集群中。 
+|===
+
+
+== SAN
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../nvme/resize-namespace-task.html[NVMe 命名空间] | 您可以使用ONTAP命令行界面增加或减小命名空间的大小。您可以使用System Manager增加命名空间的大小。 
+
+
+| xref:../concept_nvme_provision_overview.html[为TCP提供NVMe协议支持] | 非易失性内存标准(NVMe)协议可通过TCP网络用于SAN环境。 
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../anti-ransomware/index.html[自主勒索软件保护] | 在NAS环境中进行工作负载分析后、Autonomous Ransomware Protection会就可能指示勒索软件攻击的异常活动向您发出警报。除了现有的计划内Snapshot副本保护之外、自动防病毒保护还会在检测到攻击时创建自动Snapshot备份。 
+
+
+| xref:../encryption-at-rest/manage-keys-azure-google-task.html[加密密钥管理] | 使用Azure密钥存储和Google云平台密钥管理服务来存储、保护和利用ONTAP密钥、从而简化密钥管理和访问。 
+|===
+
+
+== 存储效率
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../volumes/enable-temperature-sensitive-efficiency-concept.html[对温度敏感的存储效率] | 您可以在新的或现有的AFF卷上使用"默认"模式或"高效"模式启用对温度敏感的存储效率。 
+
+
+| xref:../task_nas_file_system_analytics_view.html[使用文件系统分析(File System Analytics、FSA)跟踪热对象的活动] | 为了改进系统性能评估、FSA可以确定流量和吞吐量最多的热对象：文件、目录、用户和客户端。 
+
+
+| xref:../flexcache/global-file-locking-task.html[全局文件读取锁定] | 在所有缓存和源站之间从一个点启用读取锁定；迁移中受影响的文章。 
+
+
+| xref:../flexcache/supported-unsupported-features-concept.html[NFSv4支持FlexCache] | FlexCache卷支持NFSv4协议；迁移过程中受影响的文章。 
+
+
+| xref:../flexgroup/supported-unsupported-config-concept.html[从现有FlexGroup卷创建克隆] | 您可以使用现有FlexGroup卷创建FlexClone卷。 
+
+
+| xref:../flexgroup/supported-unsupported-config-concept.html[将FlexVol卷转换为SVM灾难恢复源中的FlexGroup] | 您可以将FlexVol卷转换为SVM灾难恢复源中的FlexGroup卷。 
+
+
+| xref:../svm-migrate/index.html[能够在集群之间无干扰地移动SVM] | 您可以在物理AFF集群之间将SVM从源重新定位到目标、以实现负载平衡、性能提升、设备升级和数据中心迁移。 
+|===
+
+
+== System Manager
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../task_admin_view_submit_support_cases.html[在System Manager日志中启用性能遥测日志记录] | 如果管理员在使用System Manager时遇到性能问题、可以启用遥测日志记录、然后联系支持部门分析问题描述。 
+
+
+| xref:../system-admin/manage-licenses-concept.html[NetApp许可证文件] | 所有许可证密钥都以NetApp许可证文件的形式提供、而不是单独提供28个字符的许可证密钥、因此可以使用一个文件来许可多个功能。 
+
+
+| xref:../task_admin_update_firmware.html[自动更新固件] | System Manager管理员可以将ONTAP配置为自动更新固件。 
+
+
+| xref:../task_admin_monitor_risks.html[查看风险缓解建议并确认Active IQ报告的风险] | System Manager用户可以查看Active IQ报告的风险、并查看有关降低风险的建议。从9.10.1开始、用户还可以确认风险。 
+
+
+| xref:../error-messages/configure-ems-events-send-email-task.html[配置管理员接收EMS事件通知] | System Manager管理员可以配置事件管理系统(Event Management System、EMS)事件通知的发送方式、以便在系统问题需要引起注意时收到通知。 
+
+
+| xref:../authentication/manage-certificates-sm-task.html[管理证书] | System Manager管理员可以管理可信证书颁发机构、客户端/服务器证书和本地(板载)证书颁发机构。 
+
+
+| xref:../concept_capacity_measurements_in_sm.html[使用System Manager可查看容量的历史使用情况并预测未来的容量需求] | 通过Active IQ与System Manager的集成、管理员可以查看有关集群容量使用历史趋势的数据。 
+
+
+| xref:../task_cloud_backup_data_using_cbs.html[使用System Manager通过Cloud Backup Service将数据备份到StorageGRID] | 作为Cloud Backup Service管理员、如果您在内部部署了Cloud Manager、则可以备份到StorageGRID。您还可以将Cloud Backup Service与AWS或Azure结合使用来归档对象。 
+
+
+| 可用性增强功能  a| 
+从ONTAP 9.10.1开始、您可以：
+
+* 将QoS策略分配给LUN、而不是父卷(VMware、Linux、Windows)
+* 编辑 LUN QoS 策略组
+* 移动 LUN
+* 使 LUN 脱机
+* 执行滚动ONTAP映像升级
+* 创建端口集并将其绑定到igrop
+* 针对网络布线问题的自动检测和修复建议
+* 启用或禁用客户端对 Snapshot 副本目录的访问
+* 在删除 Snapshot 副本之前计算可回收空间
+* 访问SMB共享中持续可用的字段更改
+* 使用更准确的显示单位查看容量测量值
+* 管理Windows和Linux的主机专用用户和组
+* 管理AutoSupport设置
+* 将调整卷大小作为单独的操作
+
+
+|===

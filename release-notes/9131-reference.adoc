@@ -1,0 +1,195 @@
+---
+permalink: release-notes/9131-reference.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.13.1' 
+summary: 了解ONTAP 9.13.1.中提供的新功能 
+---
+= ONTAP 9.13.1.中的新增功能
+:allow-uri-read: 
+
+
+[role="lead"]
+了解ONTAP 9.13.1.中提供的新功能。
+
+有关早期ONTAP 9版本、硬件平台和交换机支持、已知问题和限制的详细信息、请参阅_link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]_。您必须使用NetApp帐户登录或创建NetApp帐户才能访问ONTAP 9发行说明_。
+
+要升级ONTAP、请参见 xref:../upgrade/prepare.html[准备升级ONTAP]。
+
+
+
+== 数据保护
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| link:../snaplock/index.html#multi-admin-verification-mav-support.md["多管理员验证"]  a| 
+集群管理员可以明确为集群启用多管理员验证、以便在执行某些SnapLock操作之前需要获得仲裁批准。+
+
+
+
+| link:../consistency-groups/index.html["增强了对一致性组管理的支持、包括卷移动和几何结构"]  a| 
+您可以在一致性组之间移动卷、修改分层一致性组的几何结构以及深入了解一致性组的容量。System Manager支持使用新的NAS卷或NVMe命名空间创建一致性组。
+
+
+
+| link:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html["使用SnapMirror同步执行NDMP还原"] | SnapMirror同步支持NDMP还原。 
+
+
+| 利用SnapMirror业务连续性进行NDMP和无中断一致性组扩展 | 您可以 link:../smbc/smbc_admin_add_and_remove_volumes_in_consistency_groups.html["无干扰地将卷添加到具有活动SM-BC关系的一致性组"] 和 link:../smbc/supported-configurations-reference.html#ndmp-restore["利用SM-BC的NDMP还原"]。 
+
+
+| link:link:../consistency-groups/protect-task.html#configure-asynchronous-snapmirror-protection["使用单个一致性组的异步SnapMirror"] | 一致性组支持异步SnapMirror配置、从而可以存储单个一致性组的SnapMirror备份。 
+|===
+
+
+== 文件访问协议
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| link:../nfs-admin/manage-nfsv4-storepool-controls-task.html["NFSv4.x存储池支持"] | 少数客户端使用的NFSv4.x存储池资源过多、导致其他NFSv4.x客户端因NFSv4.x存储池资源不可用而被阻止。您可以选择拒绝和阻止在其环境中使用大量NFSv4.x存储资源的客户端。 
+|===
+
+
+== MetroCluster
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/transition/concept_nondisruptively_transitioning_from_a_four_node_mcc_fc_to_a_mcc_ip_configuration.html["使用MetroCluster IP和以太网连接存储的共享交换机从MetroCluster FC过渡到MetroCluster IP"^] | 您可以使用共享交换机从MetroCluster FC无故障过渡到MetroCluster IP配置(ONTAP 9.8及更高版本)。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/transition/concept_nondisruptively_transitioning_from_a_four_node_mcc_fc_to_a_mcc_ip_configuration.html["从八节点MetroCluster FC配置无中断过渡到MetroCluster IP配置"^] | 您可以无系统地将工作负载和数据从现有八节点MetroCluster FC配置过渡到新的MetroCluster IP配置。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_upgrade_controllers_system_control_commands_in_a_four_node_mcc_ip.html["通过切换和切回升级四节点MetroCluster IP配置"^] | 使用切换和切回升级四节点MetroCluster IP配置中的控制器 `system controller replace` 命令 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_considerations_mediator.html#interoperability-of-ontap-mediator-with-other-applications-and-appliances["在环境关闭时触发调解器辅助的自动计划外切换(MAUSO)"^] | 如果一个站点因环境关闭而正常关闭、则会触发MAUSO。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/upgrade/task_refresh_4n_mcc_ip.html["支持八节点MetroCluster IP配置"^] | 您可以通过将八节点MetroCluster IP配置扩展为临时十二节点配置、然后删除旧的DR组来升级该配置中的控制器和存储。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/maintain/task_replace_an_ip_switch.html["将MetroCluster IP配置转换为共享存储MetroCluster交换机配置"^] | 您可以将MetroCluster IP配置转换为共享存储MetroCluster交换机配置。 
+|===
+要了解MetroCluster配置的平台和交换机配置增强功能、请参见_link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]_。
+
+
+
+== 网络和安全协议
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| 增加了数据LIF限制 | ONTAP通过提高HA对和集群的数据LIF扩展限制来提高灵活性。 
+
+
+| 包含SSH公共密钥的X.509证书 | 使用ONTAP、您可以将帐户的X.509证书与SSH公共密钥关联起来、从而为您提供在SSH登录时进行证书到期和吊销检查的额外安全性。 
+
+
+| 在A800和FAS4700平台上设置集群期间使用IPv6 | 在A800和FAS4700平台上、您可以使用ONTAP命令行界面在纯IPv6网络环境中创建和配置新集群。 
+
+
+| xref:../authentication/grant-access-active-directory-users-groups-task.html[使用Active Directory进行SSH公共密钥身份验证] | 您可以使用SSH公共密钥作为Active Directory (AD)用户的主要身份验证方法、也可以在AD用户之后使用SSH公共密钥作为辅助身份验证方法。 
+
+
+| xref:../authentication/setup-ssh-multifactor-authentication-task.html#enable-mfa-with-totp[使用TOTP (基于时间的一次性密码)进行多因素身份验证] | 使用基于时间的一次性密码(TOTP)设置具有多因素身份验证的本地用户帐户。TOTP始终用作第二种身份验证方法。您可以使用SSH公共密钥或用户密码作为主要身份验证方法。 
+
+
+| xref:../nas-audit/create-fpolicy-event-task.html[FPolicy文件访问失败通知] | FPolicy支持针对访问被拒绝事件发出通知。系统会针对因缺少权限而导致文件操作失败生成通知、其中包括：因NTFS权限而失败、因Unix模式位而失败以及因NFSv4 ACL而失败。 
+|===
+
+
+== S3对象存储
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../s3-config/create-bucket-lifecycle-rule-task.html[S3存储分段生命周期管理] | S3对象到期操作用于定义存储分段中的对象何时到期。通过此功能、您可以管理对象版本、从而满足保留要求并有效管理整体S3对象存储。 
+|===
+
+
+== SAN
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:..san-admin/create-nvme-namespace-subsystem-task.html[AIX主机上的NVMe/FC] | ONTAP在AIX主机上支持NVMe/FC协议。请参见 link:https://mysupport.netapp.com/matrix/["NetApp互操作性工具"^] 了解支持的配置。 
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 功能 | Description 
+
+
+| xref:../anti-ransomware/index.html[自主勒索软件保护]  a| 
+* 多管理员验证功能、具有自主防兰软件保护功能
+* 从学习模式自动过渡到活动模式
+* FlexGroup支持
+
+
+|===
+
+
+== 存储效率
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| System Manager中主数据精简率报告的变化  a| 
+System Manager中显示的主数据精简率在计算中不再包括Snapshot副本空间节省。它仅描述已用逻辑空间与已用物理空间之间的比率。在早期版本的ONTAP中、主数据精简率具有显著的Snapshot副本空间精简优势。
+因此、在升级到ONTAP 9.131时、您会发现报告的主存储比明显较低。您仍然可以在**容量**详细信息视图中查看Snapshot副本的数据精简率。
+
+
+
+| xref:../volumes/enable-temperature-sensitive-efficiency-concept.html[对温度敏感的存储效率] | 对温度敏感的存储效率可添加连续物理块的顺序打包、以提高存储效率。系统升级到ONTAP 9.13.1.后、启用了对温度敏感的存储效率的卷将自动启用顺序打包。 
+
+
+| 逻辑空间强制实施 | SnapMirror目标上支持强制实施逻辑空间。 
+
+
+| xref:../volumes/manage-svm-capacity.html[Storage VM容量限制支持] | 您可以设置Storage VM (SVM)的容量限制、并在SVM接近百分比阈值时启用警报。 
+
+
+| xref:../performance-admin/guarantee-throughput-qos-task.html[自适应QoS策略模板] | 通过自适应QoS策略模板、您可以在SVM级别设置吞吐量下限。 
+|===
+
+
+== System Manager
+
+从ONTAP 9.12.1开始、System Manager与BlueXP集成在一起。了解更多信息 xref:../sysmgr-integration-bluexp-concept.html[System Manager与BlueXP集成]。
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| 主数据精简率报告的变化  a| 
+System Manager中显示的主数据精简率在计算中不再包括Snapshot副本空间节省。它仅描述已用逻辑空间与已用物理空间之间的比率。在早期版本的ONTAP中、主数据精简率具有显著的Snapshot副本空间精简优势。
+因此、在升级到ONTAP 9.131时、您会发现报告的主存储比明显较低。您仍然可以在容量详细信息视图中查看Snapshot副本的数据精简率。
+
+
+
+| xref:../snaplock/snapshot-lock-concept.html#enable-snapshot-copy-locking-when-creating-a-volume[防篡改Snapshot副本锁定] | 您可以使用System Manager锁定非SnapLock卷上的Snapshot副本、以防止勒索软件攻击。 
+
+
+| xref:../encryption-at-rest/manage-external-key-managers-sm-task.html[支持管理外部密钥管理器] | 您可以使用System Manager管理外部密钥管理器、以存储和管理身份验证和加密密钥。 
+|===

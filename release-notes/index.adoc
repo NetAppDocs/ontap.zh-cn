@@ -1,0 +1,244 @@
+---
+permalink: release-notes/index.html 
+sidebar: sidebar 
+keywords: release notes, new features 
+summary: 了解ONTAP 9中提供的新功能。 
+---
+= ONTAP 9版本亮点
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 9数据管理软件的每个版本都提供了一些新增功能和增强功能、可提高ONTAP中的功能、易管理性、性能和安全性。
+
+您可以在此页面上找到最新ONTAP 9版本的突出显示新增功能、也可以使用侧栏导航到特定的ONTAP 9版本、了解最新ONTAP版本中的所有增强功能。
+
+有关早期ONTAP 9版本、硬件平台和交换机支持、已知问题和限制的详细信息、请参阅_link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]_。您必须使用NetApp帐户登录或创建NetApp帐户才能访问ONTAP 9发行说明_。
+
+要升级到最新版本的ONTAP、请参见 xref:../upgrade/prepare.html[升级到最新版本的ONTAP] 和 xref:../upgrade/when-to-upgrade.html[何时应升级ONTAP？]
+
+
+
+== ONTAP 9.14.1亮点
+
+ONTAP 9.14.1在FabricPool、反勒索软件保护、OAuth.等领域提供了新的增强功能。有关新增功能和增强功能的完整列表、请参见 xref:9141-reference.adoc[ONTAP 9.14.1中的新增功能]。
+
+* xref:../volumes/determine-space-usage-volume-aggregate-concept.html[WAFL预留减少]
++
+ONTAP 9.14.1通过减少容量为30 TB或更多的聚合上的WAFL预留、可使FAS和Cloud Volumes ONTAP系统上的可用空间立即增加5%。
+
+* xref:../fabricpool/enable-disable-volume-cloud-write-task.html[FabricPool增强功能]
++
+FabricPool增加了 xref:../fabricpool/enable-disable-aggressive-read-ahead-task.html[读取性能] 并支持直接写入云、通过将冷数据移至成本较低的存储层、降低空间不足的风险并降低存储成本。
+
+* link:../authentication/oauth2-deploy-ontap.html["支持OAuth2.0"]
++
+ONTAP支持OAuth2.0框架、可使用System Manager进行配置。借助OAuth2.0、您可以安全地访问ONTAP for automation Framework、而无需创建用户ID和密码或将其暴露给纯文本脚本和操作手册。
+
+* link:../anti-ransomware/manage-parameters-task.html["自动防兰森(ARP)增强功能"]
++
+利用ARP、您可以更好地控制事件安全性、从而调整创建警报的条件、并减少误报的可能性。
+
+* xref:../data-protection/create-delete-snapmirror-failover-test-task.html[System Manager中的SnapMirror灾难恢复预演]
++
+System Manager提供了一个简单的工作流、用于在远程位置轻松测试灾难恢复并在测试后进行清理。通过此功能、可以更轻松、更频繁地进行测试、并提高对恢复时间目标的信心。
+
+* xref::../s3-config/index.html[S3对象锁定支持]
++
+ONTAP S3支持object-lock api命令、用于防止使用S3写入ONTAP的数据被删除
+使用标准S3 API命令和确保重要数据在适当的时间内受到保护。
+
+* xref:../assign-tags-cluster-task.html[集群] 和 xref:../assign-tags-volumes-task.html[volume] 标记
++
+向卷和集群添加元数据标记、以便在数据从内部迁移到云以及反向迁移时跟踪这些数据。
+
+
+
+
+
+== ONTAP 9.13.1.亮点
+
+ONTAP 9.13.1在反勒索软件保护、一致性组、服务质量、租户容量管理等方面提供了新增和增强功能。有关新增功能和增强功能的完整列表、请参见 xref:9131-reference.adoc[ONTAP 9.13.1.中的新增功能]。
+
+* 自主防兰森(ARP)增强功能：
++
+** xref:../anti-ransomware/enable-default-task.adoc[自动启用]
++
+借助ONTAP 9.13.1, ARP在拥有足够的学习数据后自动从训练模式转入生产模式,管理员无需在30天期限后启用它。
+
+** xref:../anti-ransomware/use-cases-restrictions-concept.html#multi-admin-verification-with-volumes-protected-with-arp[支持多管理员验证]
++
+多管理员验证支持ARP禁用命令、以确保任何管理员都无法禁用ARP、从而使数据暴露于潜在的勒索软件攻击之下。
+
+** xref:../anti-ransomware/use-cases-restrictions-concept.html[FlexGroup支持]
++
+从ONTAP 9.13.1.开始、ARP支持FlexGroup。ARP可以监控和保护跨越集群中多个卷和节点的FlexGroup、甚至可以使用ARP保护最大的数据集。
+
+
+
+* xref:../consistency-groups/index.html[System Manager中一致性组的性能和容量监控]
++
+性能和容量监控可提供每个一致性组的详细信息、使您能够快速发现和报告应用程序级别的潜在问题、而不仅仅是数据对象级别的问题。
+
+* xref:../volumes/manage-svm-capacity.html[租户容量管理]
++
+多租户客户和服务提供商可以在每个SVM上设置容量限制、使租户可以执行自助式配置、而不会有一个租户过度占用集群容量的风险。
+
+* xref:../performance-admin/adaptive-policy-template-task.html[服务质量上限和下限]
++
+ONTAP 9.13.1允许您将卷、LUN或文件等对象分组到组中、并分配QoS上限(最大IOPS)或下限(最小IOPS)、从而提高应用程序性能预期。
+
+
+
+
+
+== ONTAP 9.12.1亮点
+
+ONTAP 9.12.1可在安全性强化、保留、性能等方面提供新的和增强的功能。有关新增功能和增强功能的完整列表、请参见 xref:9121.adoc[ONTAP 9.12.1中的新增功能]。
+
+* xref:../snaplock/snapshot-lock-concept.html[防篡改快照]
++
+借助SnapLock技术、可以防止源或目标上的Snapshot副本被删除。
+
++
+保护主存储和二级存储上的快照、防止勒索软件攻击者或恶意管理员删除、从而保留更多恢复点。
+
+* xref:../anti-ransomware/index.html[自主勒索软件保护(ARP)增强功能]
++
+根据已对主存储完成的筛选模型、立即在二级存储上启用智能自主勒索软件保护。
+
++
+故障转移后、立即识别二级存储上的潜在勒索软件攻击。系统会立即为开始受到影响的数据创建Snapshot、并通知管理员、从而帮助阻止攻击并增强恢复能力。
+
+* xref:../nas-audit/plan-fpolicy-event-config-concept.html[fpolicy]
++
+一键激活ONTAP FPolicy以自动阻止已知恶意文件经过简化的激活有助于防止使用常见已知文件扩展名的典型勒索软件攻击。
+
+* xref:../system-admin/ontap-implements-audit-logging-concept.html[安全强化：防篡改保留日志记录]
++
+ONTAP中的防篡改保留日志记录为被入侵的管理员帐户提供保藏不能隐藏恶意操作。如果系统不了解相关信息、则无法更改或删除管理员和用户历史记录。
+
++
+记录并审核所有管理操作(无论其来源)、确保捕获所有影响数据的操作。每当系统审核日志被篡改时、系统都会生成警报、以任何方式通知管理员所做的更改。
+
+* xref:../authentication/setup-ssh-multifactor-authentication-task.html[安全强化：扩展了多因素身份验证]
++
+适用于命令行界面(SSH)的多因素身份验证(MFA)支持Yukikkey物理硬件令牌设备、确保攻击者无法使用被盗凭据或被入侵的客户端系统访问ONTAP系统。System Manager支持使用Cisco Duo作为MFA。
+
+* 文件-对象双重性(多协议访问)
++
+通过文件-对象双重性、可以对已具有NAS协议访问权限的同一数据源进行本机S3协议读写访问。您可以从同一数据源以文件或对象的形式并发访问存储、从而无需为不同协议(S3或NAS)使用的数据创建重复副本、例如用于使用对象数据的分析。
+
+* xref:../flexgroup/manage-flexgroup-rebalance-task.html[FlexGroup 重新平衡]
++
+如果FlexGroup成分卷变得不平衡、则可以通过无系统地重新平衡和管理FlexGroup
+CLI、REST API和System Manager。为了获得最佳性能、FlexGroup中的成分卷成员应均匀分布其已用容量。
+
+* 存储容量增强功能
++
+WAFL空间预留已显著减少、每个聚合的可用容量可增加多达400 TiB。
+
+
+
+
+
+== ONTAP 9.11.1亮点
+
+ONTAP 9.11.1在安全性、保留、性能等方面提供了新的增强功能。有关新增功能和增强功能的完整列表、请参见 xref:9111-reference.adoc[ONTAP 9.11.1中的新增功能]。
+
+* xref:../multi-admin-verify/index.html[多管理员验证]
++
+多管理员验证(MAV)是行业首创的本机验证方法、需要对删除Snapshot或卷等敏感管理任务进行多次批准。实施MAV所需的批准可防止恶意攻击和意外更改数据。
+
+* xref:../anti-ransomware/index.html[增强了自动防兰森功能]
++
+自动勒索软件保护(ARP)使用机器学习更精细地检测勒索软件威胁、使您能够快速识别威胁、并在发生违规时加快恢复速度。
+
+* xref:../flexgroup/supported-unsupported-config-concept.html#features-supported-beginning-with-ontap-9-11-1[FlexGroup卷的SnapLock合规性]
++
+通过WORM文件锁定来保护数据、使其无法更改或删除、从而为电子设计自动化以及媒体和娱乐等工作负载保护多PB数据集。
+
+* xref:../flexgroup/fast-directory-delete-asynchronous-task.html[异步目录删除]
++
+在ONTAP 9.11.1中、文件删除在ONTAP系统的后台进行、这样您可以轻松删除大型目录、同时消除对主机I/O的性能和延迟影响
+
+* xref:../s3-config/index.html[S3增强功能]
++
+利用ONTAP简化和扩展S3的对象数据管理功能、在存储分段级别增加API端点和对象版本控制、从而可以将多个版本的对象存储在同一存储分段中。
+
+* System Manager 增强功能
++
+System Manager可通过高级功能优化存储资源并改进审核管理。这些更新包括管理和配置存储聚合的增强功能、对系统分析的增强可见性以及FAS系统的硬件可视化。
+
+
+
+
+
+== ONTAP 9.10.1亮点
+
+ONTAP 9.10.1在安全强化、性能分析、NVMe协议支持和对象存储备份选项方面提供了一些新增功能和增强功能。有关新增功能和增强功能的完整列表、请参见 xref:91-1-reference.adoc[ONTAP 9.10.1中的新增功能]。
+
+* xref:../anti-ransomware/index.html[自主勒索软件保护]
++
+自动勒索软件保护会自动为卷创建Snapshot副本、并在检测到异常活动时向管理员发出警报、使您能够快速检测勒索软件攻击并更快地恢复。
+
+* System Manager 增强功能
++
+除了提供与NetApp Active IQ数字顾问、BlueXP和证书管理的新集成之外、System Manager还会自动下载磁盘、磁盘架、服务处理器的固件更新。这些增强功能可简化管理并保持业务连续性。
+
+* xref:../concept_nas_file_system_analytics_overview.html[文件系统分析增强功能]
++
+文件系统分析提供了额外的遥测功能、用于确定文件共享中排名前几位的文件、目录和用户、使您能够确定工作负载性能问题、从而改进QoS的资源规划和实施。
+
+* xref:../nvme/support-limitations.html[为AFF系统提供基于TCP的NVMe (NVMe/TCP)支持]
++
+如果在现有以太网网络上使用NVMe/TCP、则可以在AFF系统上为企业级SAN和现代工作负载实现高性能并降低TCO。
+
+* xref:../nvme/support-limitations.html[为NetApp FAS系统提供基于光纤通道的NVMe (NVMe/FC)支持]
++
+在混合阵列上使用NVMe/FC协议、可以统一迁移到NVMe。
+
+* xref:../s3-snapmirror/index.html[适用于对象存储的本机混合云备份]
++
+利用您选择的对象存储目标保护ONTAP S3数据。使用SnapMirror复制通过StorageGRID备份到内部存储、通过Amazon S3备份到云或NetApp AFF和FAS系统上的另一个ONTAP S3存储分段。
+
+* xref:../flexcache/global-file-locking-task.html[使用FlexCache进行全局文件锁定]
++
+使用FlexCache进行全局文件锁定、确保在源站源文件更新期间缓存位置的文件一致性。此增强功能可在源站到缓存关系中为需要增强锁定的工作负载启用独占文件读取锁定。
+
+
+
+
+
+== ONTAP 9.9.1亮点
+
+ONTAP 9.91.1在存储效率、多因素身份验证、灾难恢复等方面提供了新的和增强的功能。有关新增功能和增强功能的完整列表、请参见 xref:991-reference.adoc[ONTAP 9.9.1中的新增功能]。
+
+* 增强了CLI远程访问管理的安全性
++
+对SHA512和SSH A512密码哈希的支持可保护管理员帐户凭据免受试图获取系统访问权限的恶意攻击者的攻击。
+
+* link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_install_and_cable_the_mcc_components.html["MetroCluster IP增强功能：支持8节点集群"^]
++
+新限制是上一个限制的两倍、可支持MetroCluster配置并实现持续数据可用性。
+
+* xref:../smbc/index.html[SnapMirror业务连续性增强功能]
++
+为NAS工作负载的大型数据容器提供更多复制选项、用于备份和灾难恢复。
+
+* xref:../san-admin/storage-virtualization-vmware-copy-offload-concept.html[提高SAN性能]
++
+为单个LUN应用程序(如VMware数据存储库)提供高达四倍的SAN性能、以便您可以在SAN环境中实现高性能。
+
+* xref:../task_cloud_backup_data_using_cbs.html[适用于混合云的新对象存储选项]
++
+支持使用StorageGRID作为NetApp Cloud Backup Service的目标、以简化和自动备份内部ONTAP数据。
+
+
+
+.后续步骤
+* xref:../upgrade/prepare.html[升级到最新版本的ONTAP]
+* xref:../upgrade/when-to-upgrade.html[何时应升级ONTAP？]
+
