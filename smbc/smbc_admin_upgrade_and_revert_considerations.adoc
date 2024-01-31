@@ -17,15 +17,25 @@ summary: 升级或还原ONTAP会影响SM-BC关系、尤其是在迁移到ONTAP 9
 
 
 
-== 升级 ONTAP
+== 使用SM-BC升级ONTAP
 
-在配置和使用 SM-BC 之前，您必须将源集群和目标集群上的所有节点升级到 ONTAP 9.8 或更高版本。
-xref:../upgrade/index.html[升级ONTAP集群上的软件]
+要使用SM-BC、源集群和目标集群上的所有节点都必须运行ONTAP 9.8或更高版本。
+
+在升级具有活动SM-BC关系的ONTAP时、您应使用 xref:../upgrade/automated-upgrade-task.html[自动化无中断升级(ANDU)]。使用ANDU可确保SM-BC关系在升级过程中保持同步且运行状况良好。
+
+没有为ONTAP升级准备SM-BC部署的配置步骤。但是、建议您在升级前后检查：
+
+* SM-BC关系处于同步状态。
+* 事件日志中没有与SnapMirror相关的错误。
+* 调解器在两个集群中均处于联机状态且运行状况良好。
+* 所有主机均可正确查看所有路径以保护LUN。
+
+
+
+NOTE: 在将集群从ONTAP 9.8或9.9.1升级到ONTAP 9.10.1及更高版本时、ONTAP会创建新的 xref:../consistency-groups/index.html[一致性组] 无论是源集群还是目标集群、都可以使用System Manager配置SM-BC关系。
 
 
 NOTE: 。 `snapmirror quiesce` 和 `snampirror resume` SM-BC不支持命令。
-
-将集群从9.8或9.9.1升级到9.10.1时、ONTAP会在源和目标上为SM-BC关系创建新的一致性组。可以在System Manager中的**一致性组**选项下管理这些API，也可以将ONTAP REST API与一致性组端点结合使用。
 
 
 
