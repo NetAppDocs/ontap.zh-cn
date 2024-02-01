@@ -71,11 +71,11 @@ summary: 在开始审核文件和目录事件之前，必须在 Storage Virtual 
 ----
 cluster1::> vserver audit create -vserver vs1 -destination /audit_log -rotate-size 200MB
 ----
-以下示例将创建一个审核配置、该配置使用基于大小的轮换来审核文件操作以及SMB登录和注销事件(默认设置)。日志格式为 `EVTX` (默认值)。日志文件大小限制为 `100 MB` (默认值)、日志轮换限制为 `5`：
+以下示例将创建一个审核配置、该配置使用基于大小的轮换来审核文件操作以及SMB登录和注销事件(默认设置)。日志格式为 `EVTX` (默认值)。日志存储在中 `/cifs_event_logs` 目录。日志文件大小限制为 `100 MB` (默认值)、日志轮换限制为 `5`：
 
 [listing]
 ----
-cluster1::> vserver audit create -vserver vs1 -destination /audit_log -rotate-limit 5
+cluster1::> vserver audit create -vserver vs1 -destination /cifs_event_logs -rotate-limit 5
 ----
 以下示例将创建一个审核配置，该配置使用基于时间的轮换来审核文件操作， CIFS 登录和注销事件以及中央访问策略暂存事件。日志格式为 `EVTX` (默认值)。审核日志每月在中午 12 ： 30 轮换一次在一周的所有日期。日志轮换限制为 `5`：
 
