@@ -16,6 +16,10 @@ summary: 从 ONTAP 9.5 开始，至少具有 16 GB 内存的所有 FAS 和 AFF �
 
 此功能可满足金融，医疗保健以及其他需要零数据丢失的监管行业中同步复制的法规和国家要求。
 
+
+
+== 允许执行SnapMirror同步操作
+
 每个 HA 对的 SnapMirror 同步复制操作数限制取决于控制器型号。
 
 下表列出了根据平台类型和ONTAP 版本、每个HA对允许的SnapMirror同步操作数。
@@ -115,6 +119,12 @@ ONTAP Select
 
 
 | SnapMirror同步关系的主卷上的硬配额和软配额 | ONTAP 9.6 | 配额规则不会复制到目标；因此，配额数据库不会复制到目标。 
+
+
+| 集群内同步关系 | ONTAP 9.13.1P6. | 源卷和目标卷必须位于不同的SVM中。
+如果将源卷和目标卷放置在不同的HA对上、则可提供高可用性。
+如果整个集群发生故障、则在恢复集群之前无法访问卷。
+集群内SnapMirror同步关系会增加并发的整体限制 xref:SnapMirror Synchronous operations allowed[每个HA对的关系]。 
 
 
 | iSCSI | ONTAP 9.5 |  
