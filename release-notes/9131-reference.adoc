@@ -25,7 +25,7 @@ summary: 了解ONTAP 9.13.1.中提供的新功能
 
 
 | link:../snaplock/index.html#multi-admin-verification-mav-support["多管理员验证"]  a| 
-集群管理员可以明确为集群启用多管理员验证、以便在执行某些SnapLock操作之前需要获得仲裁批准。+
+集群管理员可以明确为集群启用多管理员验证、以便在执行某些SnapLock操作之前需要获得仲裁批准。
 
 
 
@@ -37,10 +37,14 @@ summary: 了解ONTAP 9.13.1.中提供的新功能
 | link:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html["使用SnapMirror同步执行NDMP还原"] | SnapMirror同步支持NDMP还原。 
 
 
-| 利用SnapMirror业务连续性进行NDMP和无中断一致性组扩展 | 您可以 link:../smbc/smbc_admin_add_and_remove_volumes_in_consistency_groups.html["无干扰地将卷添加到具有活动SM-BC关系的一致性组"] 和 link:../smbc/supported-configurations-reference.html#ndmp-restore["利用SM-BC的NDMP还原"]。 
+| SnapMirror业务连续性(SM-BC)增强功能  a| 
+* link:../smbc/smbc_admin_add_and_remove_volumes_in_consistency_groups.html["无干扰地将卷添加到具有活动SM-BC关系的一致性组。"]
+* link:../smbc/supported-configurations-reference.html#ndmp-restore["利用SM-BC的NDMP还原"]。
 
 
-| link:link:../consistency-groups/protect-task.html#configure-asynchronous-snapmirror-protection["使用单个一致性组的异步SnapMirror"] | 一致性组支持异步SnapMirror配置、从而可以存储单个一致性组的SnapMirror备份。 
+
+
+| link:link:../consistency-groups/protect-task.html#configure-asynchronous-snapmirror-protection["通过单个一致性组支持异步SnapMirror"] | 一致性组支持异步SnapMirror配置、从而可以存储单个一致性组的SnapMirror备份。 
 |===
 
 
@@ -99,7 +103,7 @@ summary: 了解ONTAP 9.13.1.中提供的新功能
 | 包含SSH公共密钥的X.509证书 | 使用ONTAP、您可以将帐户的X.509证书与SSH公共密钥关联起来、从而为您提供在SSH登录时进行证书到期和吊销检查的额外安全性。 
 
 
-| 在A800和FAS4700平台上设置集群期间使用IPv6 | 在A800和FAS4700平台上、您可以使用ONTAP命令行界面在纯IPv6网络环境中创建和配置新集群。 
+| 在A800和FAS4700平台上设置集群期间支持IPv6 | 在A800和FAS4700平台上、您可以使用ONTAP命令行界面在纯IPv6网络环境中创建和配置新集群。 
 
 
 | xref:../authentication/grant-access-active-directory-users-groups-task.html[使用Active Directory进行SSH公共密钥身份验证] | 您可以使用SSH公共密钥作为Active Directory (AD)用户的主要身份验证方法、也可以在AD用户之后使用SSH公共密钥作为辅助身份验证方法。 
@@ -130,7 +134,7 @@ summary: 了解ONTAP 9.13.1.中提供的新功能
 | 更新 | Description 
 
 
-| xref:..san-admin/create-nvme-namespace-subsystem-task.html[AIX主机上的NVMe/FC] | ONTAP在AIX主机上支持NVMe/FC协议。请参见 link:https://mysupport.netapp.com/matrix/["NetApp互操作性工具"^] 了解支持的配置。 
+| xref:..san-admin/create-nvme-namespace-subsystem-task.html[支持在AIX主机上使用NVMe/FC] | ONTAP在AIX主机上支持NVMe/FC协议。请参见 link:https://mysupport.netapp.com/matrix/["NetApp互操作性工具"^] 了解支持的配置。 
 |===
 
 
@@ -142,11 +146,20 @@ summary: 了解ONTAP 9.13.1.中提供的新功能
 
 
 | xref:../anti-ransomware/index.html[自主勒索软件保护]  a| 
-* 多管理员验证功能、具有自主防兰软件保护功能
-* 从学习模式自动过渡到活动模式
-* FlexGroup支持
+* xref:../use-cases-restrictions-concept.html#multi-admin-verification-with-volumes-protected-with-arp[多管理员验证功能、具有自主防兰软件保护功能]
+* xref:../anti-ransomware/enable-default-task.html[从学习模式自动过渡到活动模式]
+* xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurations[FlexGroup支持]包括对FlexGroup卷和操作(包括扩展FlexGroup卷、FlexVol到FlexGroup的转换、FlexGroup重新平衡)的分析和报告。
 
 
+
+
+| xref:../authentication/setup-ssh-multifactor-authentication-task.html#enable-mfa-with-totp[使用TOTP (基于时间的一次性密码)进行多因素身份验证] | 使用基于时间的一次性密码(TOTP)设置具有多因素身份验证的本地用户帐户。TOTP始终用作第二种身份验证方法。您可以使用SSH公共密钥或用户密码作为主要身份验证方法。 
+
+
+| xref:../authentication/grant-access-active-directory-users-groups-task.html[使用Active Directory进行SSH公共密钥身份验证] | 您可以使用SSH公共密钥作为Active Directory (AD)用户的主要身份验证方法、也可以在AD用户之后使用SSH公共密钥作为辅助身份验证方法。 
+
+
+| 包含SSH公共密钥的X.509证书 | 使用ONTAP、您可以将帐户的X.509证书与SSH公共密钥关联起来、从而为您提供在SSH登录时进行证书到期和吊销检查的额外安全性。 
 |===
 
 
@@ -170,9 +183,52 @@ System Manager中显示的主数据精简率在计算中不再包括Snapshot副�
 
 
 | xref:../volumes/manage-svm-capacity.html[Storage VM容量限制支持] | 您可以设置Storage VM (SVM)的容量限制、并在SVM接近百分比阈值时启用警报。 
+|===
+
+
+== 存储资源管理增强功能
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| 增加最大的Inode数 | 即使卷增长到680 GB以上、ONTAP也会继续自动添加节点(按每32 KB卷空间1个节点的速率)。ONTAP将继续添加Inode、直到达到最大值2、147、483、332为止。 
+
+
+| xref:../volumes/create-flexclone-task.html#create-a-flexclone-volume-of-a-flexvol-or-flexgroup[支持在创建FlexClone期间指定SnapLock类型] | 在创建读/写卷的FlexClone时、您可以指定三种SnapLock类型之一、即合规、企业或非SnapLock。 
+
+
+| xref:..//task_nas_file_system_analytics_enable.html#modify[默认情况下启用文件系统分析] | 将文件系统分析设置为在新卷上默认启用。 
+
+
+| xref:../flexgroup/create-svm-disaster-recovery-relationship-task.html[SVM灾难恢复扇出与FlexGroup卷的关系]  a| 
+删除了使用FlexGroup卷的SVM DR的扇出限制。
+采用FlexGroup的SVM DR支持对八个站点建立SnapMirror扇出关系。
+
+
+
+| xref:../flexgroup/manage-flexgroup-rebalance-task.html[单个FlexGroup重新平衡操作] | 您可以将单个FlexGroup重新平衡操作计划为在指定的未来日期和时间开始。 
+
+
+| xref:../fabricpool/benefits-storage-tiers-concept.html[FabricPool读取性能] | FabricPool可为驻留在云中的数据和层吞吐量的单流和多流工作负载提供更高的顺序读取性能。这种改进可以将更高的获取和放置速率发送到后端对象存储。如果您有内部对象存储、则应考虑对象存储服务的性能余量、并确定是否可能需要限制FabricPool放置。 
 
 
 | xref:../performance-admin/guarantee-throughput-qos-task.html[自适应QoS策略模板] | 通过自适应QoS策略模板、您可以在SVM级别设置吞吐量下限。 
+|===
+
+
+== SVM管理增强功能
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../svm-migrate/index.html[SVM 数据移动性] | 增加了对迁移最多包含200个卷的SVM的支持。 
+
+
+| 支持重新创建SVM目录 | 新的CLI命令 `debug vserver refresh-vserver-dir -node _node_name_` 重新创建缺少的目录和文件。有关详细信息和命令语法、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9131/["《ONTAP命令参考》"^]。 
 |===
 
 
@@ -194,5 +250,12 @@ System Manager中显示的主数据精简率在计算中不再包括Snapshot副�
 | xref:../snaplock/snapshot-lock-concept.html#enable-snapshot-copy-locking-when-creating-a-volume[防篡改Snapshot副本锁定] | 您可以使用System Manager锁定非SnapLock卷上的Snapshot副本、以防止勒索软件攻击。 
 
 
-| xref:../encryption-at-rest/manage-external-key-managers-sm-task.html[支持管理外部密钥管理器] | 您可以使用System Manager管理外部密钥管理器、以存储和管理身份验证和加密密钥。 
+| xref:../encryption-at-rest/manage-external-key-managers-sm-task.html[支持外部密钥管理器] | 您可以使用System Manager管理外部密钥管理器、以存储和管理身份验证和加密密钥。 
+
+
+| xref:../task_admin_troubleshoot_hardware_problems.html[对硬件问题进行故障排除]  a| 
+System Manager用户可以在"硬件"页面中查看其他硬件平台的可视化描述、包括ASA平台和AFF C系列平台。
+AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系列平台。
+可视化功能可识别平台的问题或顾虑、为用户提供对硬件问题进行故障排除的快速方法。
+
 |===

@@ -29,9 +29,6 @@ summary: 了解ONTAP 9.11.1中提供的新功能。
 | xref:../encryption-at-rest/configure-cluster-key-server-task.html[集群外部密钥服务器] | 为提供集群模式KMIP服务器解决方案的NetApp合作伙伴添加了集群模式外部密钥管理服务器支持。这样便可添加主KMIP服务器和二级KMIP服务器、以防止加密密钥数据重复。有关支持的合作伙伴、请参见 link:https://imt.netapp.com/matrix/#welcome["互操作性表工具"^]。 
 
 
-| xref:../snaplock/snaplock-concept.html[SnapLock支持FlexGroup卷] | SnapLock支持存储在FlexGroup卷上的数据。FlexGroup卷支持在SnapLock合规性和SnapLock企业模式下可用。SnapLock不支持对FlexGroup卷执行以下操作：SnapLock for SnapVault、基于事件的保留和合法保留。 
-
-
 | xref:../task_dp_create_custom_data_protection_policies.html[System Manager中的SnapMirror异步策略]  a| 
 在保护卷和Storage VM时、您可以使用System Manager添加预创建的和自定义的镜像和存储策略、显示原有策略以及覆盖保护策略中定义的传输计划。您还可以使用System Manager编辑卷和Storage VM保护关系。
 
@@ -160,7 +157,21 @@ ONTAP API支持以下操作： `CreateBucket`， `DeleteBucket`， `DeleteObject
 | xref:../volumes/view-footprint-savings-task.html[查看节省的物理空间] | 如果在卷上启用了对温度敏感的存储效率、则可以使用volume show-Footprint命令显示节省的物理占用空间。 
 
 
-| xref:../file-system-analytics/activity-tracking-task.html[使用文件系统分析(File System Analytics、FSA)跟踪热对象的活动] | 活动跟踪在SVM级别进行聚合、用于跟踪读/写IOPS和吞吐量、以便对数据提供即时且可指导行动的洞察力。 
+| xref:../flexgroup/supported-unsupported-config-concept.html[SnapLock支持FlexGroup卷] | SnapLock支持存储在FlexGroup卷上的数据。FlexGroup卷支持在SnapLock合规性和SnapLock企业模式下可用。 
+
+
+| xref:../svm-migrate/index.html[SVM 数据移动性] | 将支持的AFF阵列数量增加到三个、并在源和目标都运行ONTAP 9.11.1或更高版本时增加了对SnapMirror关系的支持。此外、还引入了外部密钥管理(KMIP)、可用于云和内部安装。 
+|===
+
+
+== 存储资源管理增强功能
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../file-system-analytics/activity-tracking-task.html[在文件系统分析中、在SVM级别跟踪活动] | 活动跟踪在SVM级别进行聚合、用于跟踪读/写IOPS和吞吐量、以便对数据提供即时且可指导行动的洞察力。 
 
 
 | xref:../flexcache/enable-file-access-time-updates-task.html[启用文件访问时间更新] | 启用后、只有当当前访问时间超过用户指定的持续时间时、访问时间才会在FlexCache初始卷上更新。 
@@ -169,7 +180,15 @@ ONTAP API支持以下操作： `CreateBucket`， `DeleteBucket`， `DeleteObject
 | xref:../flexgroup/manage-client-async-dir-delete-task.html[异步目录删除] | 如果存储管理员向NFS和SMB客户端授予对卷的权限、则它们可以使用异步删除。启用async delete后、Linux客户端可以使用mv命令、Windows客户端可以使用rename命令删除目录并将其移动到隐藏目录 `.ontaptrashbin` 目录。 
 
 
-| xref:../flexgroup/supported-unsupported-config-concept.html[SnapLock支持FlexGroup卷] | SnapLock支持存储在FlexGroup卷上的数据。FlexGroup卷支持在SnapLock合规性和SnapLock企业模式下可用。 
+| xref:../snaplock/snaplock-concept.html[SnapLock支持FlexGroup卷] | SnapLock支持存储在FlexGroup卷上的数据。FlexGroup卷支持在SnapLock合规性和SnapLock企业模式下可用。SnapLock不支持对FlexGroup卷执行以下操作：SnapLock for SnapVault、基于事件的保留和合法保留。 
+|===
+
+
+== SVM管理增强功能
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
 
 
 | xref:../svm-migrate/index.html[SVM 数据移动性] | 将支持的AFF阵列数量增加到三个、并在源和目标都运行ONTAP 9.11.1或更高版本时增加了对SnapMirror关系的支持。此外、还引入了外部密钥管理(KMIP)、可用于云和内部安装。 
