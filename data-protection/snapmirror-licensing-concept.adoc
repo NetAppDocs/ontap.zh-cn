@@ -11,13 +11,13 @@ summary: 从 ONTAP 9.3 开始，简化了在 ONTAP 实例之间复制的许可�
 
 
 [role="lead"]
-从 ONTAP 9.3 开始，简化了在 ONTAP 实例之间复制的许可。在 ONTAP 9 版本中， SnapMirror 许可证既支持存储关系，也支持镜像关系。现在，用户可以购买 SnapMirror 许可证，以便在备份和灾难恢复用例中支持 ONTAP 复制。
+从 ONTAP 9.3 开始，简化了在 ONTAP 实例之间复制的许可。在 ONTAP 9 版本中， SnapMirror 许可证既支持存储关系，也支持镜像关系。在备份和灾难恢复使用情形下、您可以使用SnapMirror许可证来支持ONTAP复制。
 
-在 ONTAP 9.3 之前的版本中，我们提供了两个许可证来支持不同的复制使用情形。要在 ONTAP 实例之间配置 _vaults_ 关系，需要 SnapVault 许可证，在这些实例中， DP 实例可以保留更多的 Snapshot 副本，以支持保留时间较长的备份使用情形。要在 ONTAP 实例之间配置 _mirror_ 关系，需要一个 SnapMirror 许可证，其中每个 ONTAP 实例都会保留相同数量的 Snapshot 副本（即 _mirror_ 映像），以支持可能发生集群故障转移的灾难恢复使用情形。SnapVault 8.x 和 9.x 版本可以继续使用和支持 SnapMirror 和 ONTAP 许可证。
+在ONTAP 9.3之前的版本中、需要单独的SnapVault许可证才能在ONTAP实例之间配置_vault_关系、在这种情况下、DP实例可以保留更多的Snapshot副本、以支持保留时间更长的备份用例。 此外、还需要一个SnapMirror许可证来配置ONTAP实例之间的_镜像_关系、其中每个ONTAP实例将维护相同数量的Snapshot副本(即_镜像_映像)、以支持灾难恢复用例、从而实现集群故障转移。ONTAP 8.x和9.x版本仍会继续使用和支持SnapMirror和SnapVault许可证。
 
-SnapVault 许可证将继续运行，并且在 ONTAP 8.x 和 9.x 版本中均受支持，但不再销售。SnapMirror 许可证仍然可用，可以代替 SnapVault 使用，并可用于镜像和存储配置。
+虽然SnapVault许可证仍可继续运行、并且ONTAP 8.x和9.x版本均支持此许可证、但SnapMirror许可证可用于替代SnapVault许可证、并可用于镜像和存储配置。
 
-对于 ONTAP 异步复制，从 ONTAP 9.3 开始，使用一个统一复制引擎来配置扩展数据保护模式（ Extended Data Protection Mode ， XDP ）策略，其中可以为镜像策略，存储策略或镜像 - 存储策略配置 SnapMirror 许可证。源集群和目标集群都需要 SnapMirror 许可证。如果已安装 SnapVault 许可证，则不需要 SnapMirror 许可证。SnapMirror异步永久许可证包含在数据保护包中、您可以为ONTAP 集群购买该许可证。数据保护捆绑包价格基于集群的原始容量。
+对于 ONTAP 异步复制，从 ONTAP 9.3 开始，使用一个统一复制引擎来配置扩展数据保护模式（ Extended Data Protection Mode ， XDP ）策略，其中可以为镜像策略，存储策略或镜像 - 存储策略配置 SnapMirror 许可证。源集群和目标集群都需要 SnapMirror 许可证。如果已安装 SnapVault 许可证，则不需要 SnapMirror 许可证。SnapMirror异步永久许可证包含在新AFF和FAS系统上安装的ONTAP One软件套件中。
 
 数据保护配置限制可通过多种因素来确定，包括您的 ONTAP 版本，硬件平台和安装的许可证。有关详细信息，请参见 https://hwu.netapp.com/["Hardware Universe"^]。
 
@@ -29,10 +29,10 @@ SnapVault 许可证将继续运行，并且在 ONTAP 8.x 和 9.x 版本中均受
 
 * 源集群和目标集群都需要 SnapMirror 同步许可证。
 +
-SnapMirror 同步许可证随超值包或数据保护包一起启用。
+SnapMirror同步许可证是的一部分 https://docs.netapp.com/us-en/ontap/system-admin/manage-licenses-concept.html["ONTAP One许可证套件"]。
 
 +
-如果您的系统是在 2019 年 6 月之前随超值包或闪存捆绑包一起购买的，您可以从 NetApp 支持站点下载 NetApp 主密钥以获取所需的 SnapMirror 同步许可证： https://mysupport.netapp.com/NOW/knowledge/docs/olio/guides/master_lickey/["主许可证密钥"]
+如果您的系统是在 2019 年 6 月之前随超值包或闪存捆绑包一起购买的，您可以从 NetApp 支持站点下载 NetApp 主密钥以获取所需的 SnapMirror 同步许可证： https://mysupport.netapp.com/NOW/knowledge/docs/olio/guides/master_lickey/["主许可证密钥"]。
 
 * 源集群和目标集群都需要 SnapMirror 许可证。
 
@@ -41,354 +41,22 @@ SnapMirror 同步许可证随超值包或数据保护包一起启用。
 
 == SnapMirror Cloud 许可证
 
-从 ONTAP 9.8 开始， SnapMirror 云许可证可将 Snapshot 副本从 ONTAP 实例异步复制到对象存储端点。可以使用内部对象存储以及 S3 和 S3 兼容的公有云对象存储服务来配置复制目标。支持从 ONTAP 系统到预先限定的对象存储目标的 SnapMirror 云关系。ONTAP 9.8 批准的对象存储目标包括 ONTAP S3 ， StorageGRID ， AWS S3 Standard ， S3 Standard-IA 和 S3 One Zone-IA ， Microsoft Azure Blob Premium ，热和冷存储以及 GCP Standard 和 Nearline 存储。
+从 ONTAP 9.8 开始， SnapMirror 云许可证可将 Snapshot 副本从 ONTAP 实例异步复制到对象存储端点。可以使用内部对象存储以及 S3 和 S3 兼容的公有云对象存储服务来配置复制目标。支持从 ONTAP 系统到预先限定的对象存储目标的 SnapMirror 云关系。
 
-SnapMirror Cloud 不能作为独立许可证提供，只能在购买混合云捆绑包时使用。混合云捆绑包是一种基于期限的订阅许可证、按容量定价。每个ONTAP 集群只需要一个许可证。容量是指受SnapMirror Cloud保护的任何卷中的"已用"容量(而不是原始容量)。用户将根据SnapMirror Cloud备份的集群上卷的总已用容量购买此许可证。截至2021年10月、混合云捆绑包仅包含SnapMirror云许可证(以前的混合云捆绑包包含FabricPool 许可证、此许可证已从该捆绑包中删除、自2021年10月起生效)。除了SnapMirror Cloud之外、还需要async SnapMirror许可证、并且只有在购买数据保护包时才提供此许可证。
+SnapMirror Cloud不能作为独立许可证提供。每个ONTAP 集群只需要一个许可证。除了SnapMirror Cloud许可证之外、还需要异步SnapMirror许可证。
 
 创建 SnapMirror 云关系需要以下许可证：
 
-* 要直接复制到对象存储端点、需要SnapMirror许可证(通过数据保护捆绑包购买或通过超值包购买)和SnapMirror云许可证(通过混合云捆绑包购买)。
+* SnapMirror许可证和SnapMirror Cloud许可证、用于直接复制到对象存储端点。
 * 配置多策略复制工作流（例如，磁盘到磁盘到云）时，所有 ONTAP 实例都需要 SnapMirror 许可证，而仅直接复制到对象存储端点的源集群需要 SnapMirror 云许可证。
 
 
-SnapMirror Cloud 是一种最终用户许可证，可以从 NetApp 或经批准的 NetApp 经销商合作伙伴购买。SnapMirror 云许可证可提供最终用户授权，但不会启用异步 ONTAP 来复制对象存储。要为 SnapMirror 云调用 ONTAP API ，需要从授权应用程序获得唯一的 API 密钥。用于编排 SnapMirror Cloud 复制的授权和许可应用程序包括 System Manager ，也可从多个第三方应用程序提供商处获得。这些授权应用程序将嵌入唯一的 API 密钥以调用 ONTAP API 。要编排和启用 SnapMirror Cloud 复制，需要结合使用 SnapMirror Cloud 最终用户许可证和授权的第三方备份应用程序。
-
-从 ONTAP 9.1.1 开始，您可以使用 System Manager 进行 SnapMirror 云复制。有关详细信息，请参见 https://docs.netapp.com/us-en/ontap/task_dp_back_up_to_cloud.html["备份到云"]。
+从ONTAP 9.9.1开始、您可以执行此操作 https://docs.netapp.com/us-en/ontap/task_dp_back_up_to_cloud.html["使用System Manager进行SnapMirror云复制"]。
 
 NetApp 网站上发布了经授权的 SnapMirror Cloud 第三方应用程序列表。
 
+不再销售数据保护优化型(Data Protection Optimized[DPO])许可证、当前平台不支持DPO；但是、如果您在受支持的平台上安装了DPO许可证、NetApp将继续提供支持、直到该平台终止提供为止。
 
+DPO不随ONTAP One许可证包提供、如果系统上安装了ONTAP One许可证、则无法升级到DPO许可证包。
 
-== 数据保护优化(DPO)
-
-从 ONTAP 9.1 开始， FAS8200 附带了新的 ONTAP 数据保护功能，作为称为数据保护包的解决方案的一部分。此新硬件和软件包包含一个新的 DP_Optimized （ DPO ）许可证，可为二级工作负载提供独特的 ONTAP 功能。随着 ONTAP 9.3 的推出， DPO 许可证将每个节点的卷数从 1 ， 000 个增加到 1 ， 500 个。ONTAP 9.3 还引入了基于 FAS2620 配置的数据保护包新配置。
-
-DPO 许可证专为 ONTAP 集群而设计，这些集群将专用于作为 SnapMirror 复制的二级目标。除了增加 DPO 控制器上每个节点的最大卷数之外， DPO 许可证还修改了控制器 QoS 设置，以支持更大的复制流量，而不会影响应用程序 I/O因此，不应在支持应用程序 I/O 的集群上安装 DPO 许可证，因为应用程序性能会受到影响。之后，基于 FAS8200 和 FAS2620 的数据保护捆绑包将作为解决方案提供，并根据客户环境提供了可编程的免费许可证。购买解决方案捆绑包时，将为复制到 DPO 二级系统的部分较旧集群提供免费的 SnapMirror 许可证。虽然数据保护解决方案集群需要 DPO 许可证，但会为以下平台列表中的主集群提供免费的 SnapMirror 许可证。未包含在此列表中的主集群需要购买 SnapMirror 许可证。DPO硬件和软件包基于FAS2620和FAS8200系统、这两个系统均为EOA状态、并且不再可用。
-
-* FAS3000系列
-* FAS6000系列
-* FAS8000系列
-
-
-
-
-== 数据保护优化（ DPO ）许可证
-
-ONTAP 9.1 和 9.3 中引入的数据保护硬件和软件解决方案捆绑包仅基于 FAS8200 和 FAS2620 。随着这些平台的成熟以及新平台的推出，支持二级复制用例中 ONTAP 功能的新请求也随之增加。因此、2018年11月在ONTAP 9.5版中引入了一个新的独立DPO许可证。
-
-FAS 和 AFF 平台均支持独立的 DPO 许可证，您可以在购买时预配置新集群或作为现场软件升级添加到已部署的集群中。由于这些新的DPO许可证不是硬件和软件解决方案 捆绑包的一部分、因此价格较低、并且未为主集群提供免费的SnapMirror许可证。配置了按需 DPO 许可证的二级集群还必须购买 SnapMirror 许可证，并且复制到 DPO 二级集群的所有主集群都必须购买 SnapMirror 许可证。
-
-DPO 在多个 ONTAP 版本中提供了其他 ONTAP 功能。
-
-[cols="6*"]
-|===
-
-
-| 功能 | 9.3. | 9.4. | 9.5. | 9.6. | 9.7+ 
-
-
-| 最大卷数 / 节点数  a| 
-1500
- a| 
-1500
- a| 
-1500
- a| 
-1500/2500
- a| 
-1500/2500
-
-
-
- a| 
-并发重新复制会话数上限
- a| 
-100
- a| 
-200
- a| 
-200
- a| 
-200
- a| 
-200
-
-
-
- a| 
-工作负载偏差 *
- a| 
-客户端应用程序
- a| 
-应用程序 /SM
- a| 
-SnapMirror
- a| 
-SnapMirror
- a| 
-SnapMirror
-
-
-
- a| 
-HDD 的跨卷聚合重复数据删除
- a| 
-否
- a| 
-是的。
- a| 
-是的。
- a| 
-是的。
- a| 
-是的。
-
-|===
-* 有关 SnapMirror 回退（工作负载偏差）功能优先级的详细信息：
-* 客户端：集群 I/O 优先级设置为客户端工作负载（生产应用程序），而不是 SnapMirror 流量。
-* 平等：对于生产应用程序， SnapMirror 复制请求的优先级与 I/O 同等。
-* SnapMirror ：对于生产应用程序，所有 SnapMirror I/O 请求的优先级都高于 I/O 。
-
-
-* 表 1 ： ONTAP 版本中每个节点的最大 FlexVolumes*
-
-[cols="7*"]
-|===
-
-
-|  | 9.3--9.5 ，不带 DPO | 采用 DPO 的 9.3-9.5 | 9.6 不带 DPO | 采用 DPO 的 9.6 | 9.7-9.9.1 ，不使用 DPO | 使用 DPO 时为 9.7-9.9.1.9.1 
-
-
- a| 
-FAS2620
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-FAS2650
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-FAS2720
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-FAS2750
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-A200
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-A220
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-1500
-
-
-
- a| 
-FAS8200/8300
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-1000
- a| 
-2500
-
-
-
- a| 
-A300
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-2500
- a| 
-2500
-
-
-
- a| 
-A400
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-2500
- a| 
-2500
-
-
-
- a| 
-FAS8700/9000
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-1000
- a| 
-2500
-
-
-
- a| 
-a700
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-2500
- a| 
-2500
-
-
-
- a| 
-A700s
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-2500
- a| 
-2500
-
-
-
- a| 
-A800
- a| 
-1000
- a| 
-1500
- a| 
-1000
- a| 
-2500
- a| 
-2500
- a| 
-2500
-
-|===
-有关您的配置支持的最新最大 FlexVol 卷数，请参见 https://hwu.netapp.com/["Hardware Universe"^]。
-
-
-
-== 所有新 DPO 安装的注意事项
-
-* 启用后，无法禁用或撤消 DPO 许可证功能。
-* 安装 DPO 许可证需要重新启动 ONTAP 或进行故障转移才能启用。
-* DPO 解决方案适用于二级存储工作负载； DPO 集群上的应用程序工作负载性能可能会受到影响
-* 选定的 NetApp 存储平台型号列表支持 DPO 许可证。
-* DPO 功能因 ONTAP 版本而异。请参见兼容性表以供参考。
-* 新的FAS 和AFF 系统不符合DPO要求。无法为上述未列出的集群购买DPO许可证。
-
+有关支持的平台的信息、请参见 https://hwu.netapp.com/["Hardware Universe"^]。

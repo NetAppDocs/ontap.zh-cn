@@ -1,39 +1,46 @@
 ---
 permalink: data-protection/install-snapmirror-cloud-license-task.html 
 sidebar: sidebar 
-keywords: install, snapmirror, cloud, license, asynchronous, replicate, replication, snapshot 
-summary: 从 ONTAP 9.8 开始， SnapMirror Cloud 可提供从 ONTAP 到对象存储端点的异步 Snapshot 副本复制。SnapMirror 云关系只能使用经过预先认证的第三方备份应用程序进行配置。要将 ONTAP 配置为对象存储复制，配置为复制到对象存储端点的 ONTAP 源集群需要 SnapMirror 和 SnapMirror 云许可证。 
+keywords: install, snapmirror, cloud, license, api, s3, ontap one, asynchronous, replicate, replication, snapshot 
+summary: SnapMirror云关系可以使用经过预先认证的第三方备份应用程序进行编排。从ONTAP 9.9.1开始、您还可以使用System Manager编排SnapMirror云复制。使用System Manager编排内部ONTAP以创建对象存储备份时、需要SnapMirror和SnapMirror云容量许可证。您还需要申请并安装SnapMirror Cloud API许可证。 
 ---
-= 安装 SnapMirror Cloud 许可证
+= 安装SnapMirror Cloud许可证
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从 ONTAP 9.8 开始， SnapMirror Cloud 可提供从 ONTAP 到对象存储端点的异步快照复制。SnapMirror 云关系只能使用经过预先认证的第三方备份应用程序进行配置。要将 ONTAP 配置为对象存储复制，配置为复制到对象存储端点的 ONTAP 源集群需要 SnapMirror 和 SnapMirror 云许可证。
+SnapMirror云关系可以使用经过预先认证的第三方备份应用程序进行编排。从ONTAP 9.9.1开始、您还可以使用System Manager编排SnapMirror云复制。使用System Manager编排内部ONTAP以创建对象存储备份时、需要SnapMirror和SnapMirror云容量许可证。您还需要申请并安装SnapMirror Cloud API许可证。
 
 .关于此任务
-SnapMirror Cloud 许可证是一个单实例集群范围许可证，这意味着无需在集群中的每个节点上安装。它是一种基于期限的许可证，可强制实施期限和备份容量。除了此最终用户许可证之外， SnapMirror 云还需要经过授权和批准的备份应用程序来配置和调用 ONTAP API 以进行复制。要使用 SnapMirror Cloud 复制，必须同时拥有 SnapMirror Cloud 最终用户许可证和授权应用程序。
+SnapMirror云和S3 SnapMirror许可证是集群许可证、而不是节点许可证、因此它们是随ONTAP One许可证包一起提供的。这些许可证包含在单独的ONTAP One兼容性包中。如果要启用SnapMirror Cloud、则需要请求此捆绑包。
 
-SnapMirror Cloud 许可证是通过购买混合云捆绑包获得的，该捆绑包可以按 1 TB 或 3 年的增量购买。混合云捆绑包包含 SnapMirror Cloud 的许可证。每个许可证都有一个唯一的序列号。混合云捆绑包的购买基于容量，其中混合云捆绑包的已购买容量将应用于 SnapMirror Cloud 许可证。
-
-可以使用 ONTAP 命令行或 System Manager 在集群上安装 SnapMirror 云许可证。
+此外、System Manager将SnapMirror云备份编排到对象存储需要SnapMirror Cloud API密钥。此API许可证是一种单实例集群范围许可证、这意味着不需要在集群中的每个节点上都安装它。
 
 .步骤
-. 从 NetApp 支持站点下载适用于 SnapMirror Cloud 的两个 NetApp 许可证文件 (NLF)。
-+
-https://mysupport.netapp.com/site/global/dashboard["NetApp 支持"]
+您需要申请并下载ONTAP One兼容包和SnapMirror云API许可证、然后使用System Manager进行安装。
 
-. 使用 System Manager 将 SnapMirror Cloud NLF 文件上传到集群：
+. 找到并记录要获得许可的集群的集群UUID。
 +
-.. 单击 * 配置 * > * 许可证 * 。
-.. 在 * 集群设置 * 窗格中，单击 * 许可证 * 。
-.. 在 * 软件包 * 窗口中，单击 * 添加 * 。
-.. 在 * 添加许可证包 * 对话框中，单击 * 选择文件 * 以选择下载的 NLF ，然后单击 * 添加 * 将文件上传到集群。
+在提交为集群订购ONTAP One兼容性包的请求时、需要提供集群UUID。
+
+. 请联系您的NetApp销售团队并申请ONTAP One兼容性包。
+. 按照NetApp 支持站点 上提供的说明申请SnapMirror云API许可证。
++
+link:https://mysupport.netapp.com/site/tools/snapmirror-cloud-api-key["请求SnapMirror Cloud API许可证密钥"^]
+
+. 收到并下载许可证文件后、请使用System Manager将ONTAP云兼容性NLF和SnapMirror云API NLF上传到集群：
++
+.. 单击 * 集群 > 设置 * 。
+.. 在*Settings*窗口中，单击*Licenses*。
+.. 在*许可证*窗口中，单击 image:icon_add.gif["添加图标"]。
+.. 在 * 添加许可证 * 对话框中，单击 * 浏览 * 以选择下载的 NLF ，然后单击 * 添加 * 将文件上传到集群。
 
 
 
 
 .相关信息
+https://docs.netapp.com/us-en/ontap/task_dp_back_up_to_cloud.html#add-a-cloud-object-store["使用 SnapMirror 将数据备份到云"]
+
 http://mysupport.netapp.com/licenses["NetApp 软件许可证搜索"]

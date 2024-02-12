@@ -26,21 +26,29 @@ ONTAP 支持以下会话密钥算法来实现安全的网络登录连接：
 |===
 
 
-| 会话密钥算法 | 可在中使用 
+| 会话密钥算法 | 可用开头为... 
 
 
-| HMAC-SHA256 ，基于高级加密标准（ AES ） | ONTAP 9.10.1 及更高版本 
+| HMAC-SHA256 ，基于高级加密标准（ AES ）
+
+如果集群运行的是ONTAP 9.9.1或更早版本、并且域控制器对安全Netlogon服务强制实施AES、则连接将失败。在这种情况下、您需要重新配置域控制器、以接受与ONTAP的强密钥连接。 | ONTAP 9.10.1 
 
 
 | DES 和 HMAC-MD5 （设置了强密钥时） | 所有 ONTAP 9 版本 
 |===
-如果要在 ONTAP 9.10.1 及更高版本中建立网络登录安全通道期间使用 AES 会话密钥，则必须使用以下命令启用它们：
+如果要在建立Netlogon安全通道期间使用AES会话密钥、则需要验证是否已在SVM上启用AES。
 
-`cifs security modify -vserver vs1 -aes-enabled-for-netlogon-channel true`
+* 从ONTAP 9.14.1开始、创建SVM时会默认启用AES、您无需修改SVM的安全设置、即可在Netlogon安全通道建立期间使用AES会话密钥。
+* 在ONTAP 9.10.1到9.13.1中、创建SVM时、AES默认处于禁用状态。您需要使用以下命令启用AES：
++
+[listing]
+----
+cifs security modify -vserver vs1 -aes-enabled-for-netlogon-channel true
+----
 
-默认值为"`false`"。
 
-在 9.10.1 之前的 ONTAP 版本中，如果域控制器对安全网络登录服务强制实施 AES ，则连接将失败。在这些版本中，必须将域控制器配置为接受与 ONTAP 的强密钥连接。
+
+NOTE: 升级到ONTAP 9.14.1或更高版本时、使用旧版ONTAP创建的现有SVM的AES设置不会自动更改。要在这些SVM上启用AES、您仍需要更新此设置的值。
 
 
 

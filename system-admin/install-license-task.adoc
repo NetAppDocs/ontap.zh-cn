@@ -1,0 +1,68 @@
+---
+permalink: system-admin/install-license-task.html 
+sidebar: sidebar 
+keywords: install, license, enable, add, record, ontap one, software, entitlement, keys, codes, cluster, administrator, nlf 
+summary: '您可以使用System Manager安装NetApp许可证文件和许可证密钥(这是安装NLFS的首选方法)、也可以使用ONTAP命令行界面安装许可证密钥。在ONTAP 9.10.1及更高版本中、使用NetApp许可证文件(NLL)启用功能；在ONTAP 9.10.1之前的版本中、使用许可证密钥启用ONTAP功能。 ' 
+---
+= 安装ONTAP许可证
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用System Manager安装NetApp许可证文件和许可证密钥(这是安装NLFS的首选方法)、也可以使用ONTAP命令行界面安装许可证密钥。在ONTAP 9.10.1及更高版本中、使用NetApp许可证文件(NLL)启用功能；在ONTAP 9.10.1之前的版本中、使用许可证密钥启用ONTAP功能。
+
+.步骤
+如果您已下载NetApp许可证文件或许可证密钥、则可以使用System Manager或ONTAP命令行界面安装NLFS和28个字符的许可证密钥。
+
+[role="tabbed-block"]
+====
+.System Manager - ONTAP 9.8及更高版本
+--
+. 选择*集群>设置*。
+. 在“*许可证*”下，选择 image:icon_arrow.gif["箭头图标"]。
+. 选择 * 浏览 * 。选择您下载的NetApp许可证文件。
+. 如果要添加许可证密钥，请选择 * 使用 28 个字符的许可证密钥 * 并输入这些密钥。
+
+
+--
+.System Manager—ONTAP 9.7及更早版本
+--
+. 选择*配置>集群>许可证*。
+. 在“*许可证*”下，选择 image:icon_arrow.gif["箭头图标"]。
+. 在 * 软件包 * 窗口中，单击 * 添加 * 。
+. 在 * 添加许可证包 * 对话框中，单击 * 选择文件 * 以选择下载的 NetApp 许可证文件，然后单击 * 添加 * 将文件上传到集群。
+
+
+--
+.命令行界面
+--
+. 添加一个或多个许可证密钥：
++
+[source, cli]
+----
+system license add
+----
++
+以下示例将从本地节点"/mroot/etc/lic_file"安装许可证(如果此文件位于此位置)：
+
++
+[listing]
+----
+cluster1::> system license add -use-license-file true
+----
++
+以下示例将密钥为AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA和BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB的许可证列表添加到集群中：
+
++
+[listing]
+----
+cluster1::> system license add -license-code AAAAAAAAAAAAAAAAAAAAAAAAAAAA, BBBBBBBBBBBBBBBBBBBBBBBBBBBB
+----
+
+
+--
+====
+.相关信息
+https://docs.netapp.com/us-en/ontap-cli-9141/system-license-add.html["system license add命令的手册页"]。

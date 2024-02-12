@@ -1,0 +1,130 @@
+---
+permalink: system-admin/manage-license-task.html 
+sidebar: sidebar 
+keywords: manage, license, delete, view, record, software, entitlement, keys, codes, cluster, administrator, nlf 
+summary: 您可以使用System Manager或ONTAP命令行界面管理系统上安装的许可证、包括查看许可证状态、许可证序列号以及删除许可证。 
+---
+= 管理ONTAP许可证(仅限集群管理员)
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用System Manager或ONTAP命令行界面管理系统上安装的许可证、包括查看许可证序列号、检查许可证状态以及删除许可证。
+
+
+
+== 查看有关许可证的详细信息
+
+.步骤
+如何查看有关许可证的详细信息取决于您使用的ONTAP版本以及使用的是System Manager还是ONTAP命令行界面。
+
+[role="tabbed-block"]
+====
+.System Manager - ONTAP 9.8及更高版本
+--
+. 要查看有关特定功能许可证的详细信息，请选择*Cluster > Settings*。
+. 在“*许可证*”下，选择 image:icon_arrow.gif["箭头图标"]。
+. 选择*功能*。
+. 找到要查看并选择的许可功能 image:icon_dropdown_arrow.gif["展开图标"] 以查看许可证详细信息。
+
+
+--
+.System Manager—ONTAP 9.7及更早版本
+--
+. 选择*配置>集群>许可证*。
+. 在 * 许可证 * 窗口中，执行相应的操作：
+. 单击 * 详细信息 * 选项卡。
+
+
+--
+.命令行界面
+--
+. 显示有关已安装许可证的详细信息：
++
+[source, cli]
+----
+system license show
+----
+
+
+--
+====
+
+
+== 删除许可证
+
+[role="tabbed-block"]
+====
+.System Manager - ONTAP 9.8及更高版本
+--
+. 要删除许可证，请选择*Cluster > Settings*。
+. 在“*许可证*”下，选择 image:icon_arrow.gif["箭头图标"]。
+. 选择*功能*。
+. 选择要删除的许可功能，然后选择*Delete leg特性 密钥*。
+
+
+--
+.System Manager—ONTAP 9.7及更早版本
+--
+. 选择*配置>集群>许可证*。
+. 在 * 许可证 * 窗口中，执行相应的操作：
++
+|===
+| 如果您要 ... | 执行此操作 ... 
+
+
+ a| 
+删除节点上的特定许可证包或主许可证
+ a| 
+单击 * 详细信息 * 选项卡。
+
+
+
+ a| 
+删除集群中所有节点上的特定许可证包
+ a| 
+单击 * 软件包 * 选项卡。
+
+|===
+. 选择要删除的软件许可证包，然后单击 * 删除 * 。
++
+一次只能删除一个许可证包。
+
+. 选中确认复选框，然后单击 * 删除 * 。
+
+
+--
+.命令行界面
+--
+. 删除许可证：
++
+[source, cli]
+----
+system license delete
+----
++
+以下示例将从集群中删除名为CIFS且序列号为1-81-0000000000000000000123456的许可证：
+
++
+[listing]
+----
+cluster1::> system license delete -serial-number 1-81-0000000000000000000123456 -package CIFS
+----
++
+以下示例将从集群中删除序列号为123456789的已安装许可证核心捆绑包下的所有许可证：
+
++
+[listing]
+----
+cluster1::> system license delete { -serial-number 123456789 -installed-license "Core Bundle" }
+----
+
+
+--
+====
+.相关信息
+https://docs.netapp.com/us-en/ontap/system-admin/commands-manage-feature-licenses-reference.html["用于管理许可证的ONTAP命令行界面命令"]
+
+https://docs.netapp.com/us-en/ontap/concepts/manual-pages.html["ONTAP 9命令"^]

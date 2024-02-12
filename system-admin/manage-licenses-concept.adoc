@@ -1,66 +1,143 @@
 ---
 permalink: system-admin/manage-licenses-concept.html 
 sidebar: sidebar 
-keywords: manage, license, enable, add, record, software, entitlement, keys, codes, risk, usage, cluster, administrator, nlf 
-summary: 许可证是一个或多个软件授权的记录。在 ONTAP 8.2 到 ONTAP 9.1.1 中，许可证以 28 个字符串的形式提供，每个 ONTAP 功能有一个密钥。ONTAP 9.2 中引入了一种新的许可证格式，称为 NetApp 许可证文件（ NLF ），该格式仅适用于集群范围的功能，例如 FabricPool 。 
+keywords: manage, license, ontap one, enable, add, record, software, entitlement, keys, codes, risk, usage, cluster, administrator, nlf 
+summary: '许可证是一个或多个软件授权的记录。在 ONTAP 8.2 到 ONTAP 9.1.1 中，许可证以 28 个字符串的形式提供，每个 ONTAP 功能有一个密钥。ONTAP 9.2引入了一种称为NetApp许可证文件(NLL)的新许可证格式、仅适用于集群范围的功能。' 
 ---
-= 管理许可证概述（仅限集群管理员）
+= ONTAP许可概述
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-许可证是一个或多个软件授权的记录。在 ONTAP 8.2 到 ONTAP 9.1.1 中，许可证密钥以 28 个字符串的形式提供，每个 ONTAP 功能有一个密钥。ONTAP 9.2 中引入了一种新的许可证密钥格式，称为 NetApp 许可证文件（ NLF ），该格式仅适用于集群范围的功能，例如 FabricPool 。
-
-从 ONTAP 9.10.1 开始，所有许可证均以 NLFS 的形式提供。根据您的购买情况， nlf 许可证可以启用一个或多个 ONTAP 功能。您可以通过搜索系统（控制器）序列号从 NetApp 支持站点检索 NLF 许可证。
-
-您可以在 NetApp 支持站点的 *我的支持* > *软件许可证* 下找到初始或附加软件订单的许可证（需要登录）。有关许可证更换的详细信息、请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Flash_Storage/AFF_Series/Post_Motherboard_Replacement_Process_to_update_Licensing_on_a_AFF_FAS_system["主板更换后的流程、用于更新AFF/FAS系统上的许可"]。
-
-使用 ONTAP ，您可以通过以下方式管理功能许可证：
-
-* 显示有关已安装许可证的信息 (`system license show`）
-* 显示集群上需要许可证的软件包及其当前许可证状态 (`system license status show`）
-* 从您指定序列号的集群或节点中删除许可证 (`system license delete`）
-* 显示或删除已过期或未使用的许可证 (`system license clean-up`）
-
-
-通过 ONTAP ，您可以通过以下方式监控功能使用情况和许可证授权风险：
-
-* 按节点显示集群中的功能使用情况摘要 (`system feature-usage show-summary`）
-+
-此摘要包含计数器信息，例如使用某个功能的周数以及上次使用该功能的日期和时间。
-
-* 按节点和每周显示集群中的功能使用情况状态 (`system feature-usage show-history`）
-+
-功能使用状态可以是 `not-used`， `configured`或 `in-use`。如果使用情况信息不可用、则状态显示 `not-available`。
-
-* 显示每个许可证包的许可证授权风险状态 (`system license entitlement-risk show`）
-+
-风险状态可以是 `low`， `medium`， `high`， `unlicensed`或 `unknown`。风险状态也会显示在 AutoSupport 消息中。许可证授权风险不适用于基本许可证包。
-
-+
-许可证授权风险会使用多种因素进行评估，这些因素可能包括但不限于以下因素：
-
-+
-** 每个软件包的许可状态
-** 每个许可证的类型，到期状态以及整个集群中许可证的统一性
-** 与许可证包关联的功能的使用情况
-如果评估过程确定集群存在许可证授权风险、则命令输出还会建议更正操作。
+许可证是一个或多个软件授权的记录。从ONTAP 9.10.1开始、所有许可证均以NetApp许可证文件(NLG)的形式提供、NLG是一个支持多项功能的文件。  从2023年5月开始、所有AFF系统(A系列和C系列)和FAS系统都随ONTAP One软件套件或ONTAP基础软件套件一起销售、每个套件都作为一个NLL提供、以替代ONTAP 9.10.1中首次推出的单独NLL软件包。
 
 
 
+== ONTAP One附带的许可证
+
+ONTAP One包含所有可用的许可功能。它包含以前的Core捆绑包、数据保护捆绑包、安全与合规性捆绑包、混合云捆绑包和加密捆绑包的内容组合、如表所示。加密在受限国家/地区不可用。
+
+|===
+
+
+| 以前的捆绑包名称 | 包括ONTAP密钥 
+
+
+.5+| 核心包 | FlexClone 
+
+
+| SnapRestore 
+
+
+| NFS、SMB、S3 
+
+
+| FC、iSCSI 
+
+
+| NVMe-oF 
+
+
+.3+| 安全性与合规性包 | 自主勒索软件保护 
+
+
+| MTKM 
+
+
+| SnapLock 
+
+
+.3+| 数据保护包 | SnapMirror (异步、同步、业务连续性) 
+
+
+| SnapCenter 
+
+
+| 适用于NetApp目标的S3 SnapMirror 
+
+
+.2+| 混合云捆绑包 | SnapMirror 云 
+
+
+| 适用于非NetApp目标的S3 SnapMirror 
+
+
+.2+| 加密包 | NetApp 卷加密 
+
+
+| 可信平台模块 
+|===
+
+
+== ONTAP One不提供许可证
+
+ONTAP One不包括NetApp的任何云交付服务、包括以下服务：
+
+* BlueXP层
+* Cloud Insights
+* BlueXP备份
+* 数据监管
+
+
+
+
+== 适用于现有系统的ONTAP One
+
+如果您的现有系统当前受NetApp支持、但尚未升级到ONTAP One、则这些系统上的现有许可证仍然有效、并继续按预期工作。例如、如果已在现有系统上安装了SnapMirror许可证、则无需升级到ONTAP One即可获得新的SnapMirror许可证。但是、如果现有系统上未安装SnapMirror许可证、则获取该许可证的唯一方法是升级到ONTAP One、但需额外付费。
+
+从2023年6月开始、使用28个字符许可证密钥的ONTAP系统也可以 link:https://kb.netapp.com/onprem/ontap/os/How_to_get_an_ONTAP_One_license_when_the_system_has_28_character_keys["升级到ONTAP One或ONTAP基本兼容包"]。
+
+
+
+== ONTAP Base附带的许可证
+
+ONTAP Base是一个可选软件套件、可替代适用于ONTAP系统的ONTAP One。它适用于不需要数据保护技术(如SnapMirror和SnapCenter)以及安全功能(如自动防软件)的特定使用情形、例如专用测试或开发环境的非生产系统。无法向ONTAP Base添加其他许可证。如果您需要SnapMirror等其他许可证、则必须升级到ONTAP One。
+
+|===
+
+
+| 以前的捆绑包名称 | 包括ONTAP密钥 
+
+
+.5+| 核心包 | FlexClone 
+
+
+| SnapRestore 
+
+
+| NFS、SMB、S3 
+
+
+| FC、iSCSI 
+
+
+| NVMe-oF 
+
+
+.3+| 加密包 | NetApp 卷加密 
+
+
+| 可信平台模块 
+
+
+| 空闲数据加密 
+|===
+
+
+== 其他许可证交付方法
+
+在 ONTAP 8.2 到 ONTAP 9.1.1 中，许可证密钥以 28 个字符串的形式提供，每个 ONTAP 功能有一个密钥。如果您使用的是ONTAP 8.2到ONTAP 9.9.1、则可以使用ONTAP命令行界面安装许可证密钥。
 
 [NOTE]
 ====
-注：ONTAP 9.10.1还支持使用System Manager或命令行界面创建28个字符的许可证密钥。但是，如果为某个功能安装了 NLF 许可证，则不能为同一功能安装 28 个字符的许可证密钥。有关使用 System Manager 安装 NLFS 或许可证密钥的信息，请参见 " 启用新功能 " 。
+ONTAP 9.10.1支持使用System Manager或命令行界面安装28个字符的许可证密钥。但是、如果为某个功能安装了NLL许可证、则不能在同一功能的NetApp许可证文件上安装28个字符的许可证密钥。有关使用System Manager安装NLFS或许可证密钥的信息、请参阅 link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["安装ONTAP许可证"]。
 
 ====
 .相关信息
-https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_are_Data_ONTAP_8.2_and_8.3_licensing_overview_and_references%3F["什么是 Data ONTAP 8.2 和 8.3 许可概述和参考？"^]
+https://kb.netapp.com/onprem/ontap/os/How_to_get_an_ONTAP_One_license_when_the_system_has_NLFs_already["如何在系统已具有NLFS时获取ONTAP One许可证"]
 
-https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_verify_Data_ONTAP_Software_Entitlements_and_related_License_Keys_using_the_Support_Site["如何使用支持站点验证 Data ONTAP 软件授权和相关许可证密钥"^]
+https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_verify_Data_ONTAP_Software_Entitlements_and_related_License_Keys_using_the_Support_Site["如何使用支持站点验证ONTAP软件授权和相关许可证密钥"^]
 
-https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/FAQ%3A_Licensing_updates_in_Data_ONTAP_9.2["常见问题解答： Data ONTAP 9.2 中的许可更新"^]
-
-http://mysupport.netapp.com/licensing/ontapentitlementriskstatus["NetApp ： Data ONTAP 授权风险状态"^]
+http://mysupport.netapp.com/licensing/ontapentitlementriskstatus["NetApp：ONTAP授权风险状态"^]
