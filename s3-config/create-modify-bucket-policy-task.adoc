@@ -117,7 +117,7 @@ cluster1::> vserver object-store-server bucket policy statement create -vserver 
 ----
 cluster1::> vserver object-store-server bucket policy statement create -vserver svm1.example.com -bucket bucket1 -effect allow -action GetObject,PutObject,DeleteObject,ListBucket -principal group/group1 -resource bucket1/* -sid "fullAccessForGroup1"
 ----
-从ONTAP 9.14.1开始、您可以为存储分段策略指定变量。以下示例将为Storage VM创建对象存储服务器分段策略语句 `svm1` 和 `bucket1`和指定 `${aws:username}` 作为策略资源的变量。评估策略时、策略变量将替换为请求上下文用户名、并且可以按照为该用户配置的方式执行策略操作。例如、在评估以下策略语句时、 `${aws:username}` 替换为执行S3操作的用户。如果是用户 `user1` 执行此操作时、该用户将被授予访问权限 `bucket1` 作为 `bucket1/user1/*`。
+从ONTAP 9.14.1开始、您可以为分段策略指定变量。以下示例将为Storage VM创建服务器分段策略语句 `svm1` 和 `bucket1`和指定 `${aws:username}` 作为策略资源的变量。评估策略时、策略变量将替换为请求上下文用户名、并且可以按照为该用户配置的方式执行策略操作。例如、在评估以下策略语句时、 `${aws:username}` 替换为执行S3操作的用户。如果是用户 `user1` 执行此操作时、该用户将被授予访问权限 `bucket1` 作为 `bucket1/user1/*`。
 
 [listing]
 ----

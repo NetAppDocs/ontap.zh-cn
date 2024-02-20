@@ -15,7 +15,7 @@ summary: '您可以创建多管理员验证(MAV)规则来指定需要批准的�
 
 任何具有适当RBAC功能的管理员都可以在启用MAV之前创建规则、但启用MAV后、对规则集进行的任何修改都需要获得MAV批准。
 
-从ONTAP 9.11.1开始、您可以为以下命令创建规则。
+从ONTAP 9.11.1开始、您可以创建规则来保护以下命令。
 
 [cols="2*"]
 |===
@@ -61,21 +61,29 @@ summary: '您可以创建多管理员验证(MAV)规则来指定需要批准的�
 `vserver peer delete`
 
 |===
-从ONTAP 9.13.1开始、您可以为以下命令创建规则：
+从ONTAP 9.13.1开始、您可以创建规则来保护以下命令：
 
 * `volume snaplock modify`
 
 
-此外、启用MAV后、以下命令会默认受到保护、但您可以修改规则以取消对这些命令的保护。
+从ONTAP 9.14.1开始、您可以创建规则来保护以下命令：
+
+* `volume recovery-query modify`
+* `volume recovery-query purge`
+* `volume recovery-query purge-all`
+* `vserver modify`
+
+
+除了系统定义的命令之外、在启用多管理员验证时、以下命令也会默认受到保护、但您可以修改规则以取消对这些命令的保护。
 
 * `security login password`
 * `security login unlock`
 * `set`
 
 
-MAV system-default命令的规则– `security multi-admin-verify` 命令—不能更改。
+MAV system-default命令的规则、即 `security multi-admin-verify` link:../multi-admin-verify/index.html#how-multi-admin-verification-works["命令"]，无法更改。
 
-创建规则时、您可以选择指定 `-query` 选项、用于将请求限制为命令功能的一部分。例如、在默认的set命令中、 `-query` 设置为 `-privilege diag`，表示只有在指定-PRILEGE diag时才会为set命令生成请求。
+创建规则时、您可以选择指定 `-query` 选项、用于将请求限制为命令功能的一部分。例如、在默认的set命令中、 `-query` 设置为 `-privilege diag`，表示只有在以下情况下才会为set命令生成请求 `-privilege diag` 已指定。
 
 [listing]
 ----
@@ -138,11 +146,11 @@ NOTE: 全部 `security multi-admin-verify rule` 命令执行前需要MAV管理�
 
 
 | 修改当前管理员的凭据  a| 
-`security login modify _<parameters>_`
+`security login modify <parameters>`
 
 *示例*：要删除根卷、需要获得以下规则的批准。
 
-`security multi-admin-verify rule create  -operation "volume delete" -query "-vserver vs0`
+`security multi-admin-verify rule create  -operation "volume delete" -query "-vserver vs0"`
 
 
 

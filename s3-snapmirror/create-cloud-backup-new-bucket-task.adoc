@@ -18,7 +18,7 @@ summary: '创建新的S3存储分段时、您可以立即将其备份到对象�
 [role="lead"]
 创建新的S3存储分段时、您可以立即将其备份到对象存储提供程序(可以是StorageGRID系统或Amazon S3部署)上的S3 SnapMirror目标分段。
 
-.您将需要什么
+.开始之前
 * 您拥有对象存储提供程序的有效帐户凭据和配置信息。
 * 已在源系统上配置集群间网络接口和 IP 空间。
 * •源Storage VM的DNS配置必须能够解析目标的FQDN。
@@ -74,7 +74,12 @@ summary: '创建新的S3存储分段时、您可以立即将其备份到对象�
 .. 在 * 权限 * 下，单击 * 添加 * 。验证权限是可选的，但建议这样做。
 +
 *** * 主体 * 和 * 影响 * —选择与您的用户组设置对应的值或接受默认值。
-*** *Actions*-确保显示以下值： `GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts`
+*** *Actions*-确保显示以下值：
++
+[listing]
+----
+`GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts`
+----
 *** *Resaults*-使用默认值 `_(bucketname, bucketname/*)` 或您需要的其他值。
 +
 请参见 link:../task_object_provision_manage_bucket_access.html["管理用户对存储分段的访问权限"] 有关这些字段的详细信息，请参见。
@@ -149,7 +154,7 @@ src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-
 `snapmirror create -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _object_store_name_:/objstore -policy _policy_name_`
 +
 Parameters
-* `-destination-path` –您在上一步中创建的对象存储名称和固定值 `objstore`。
+* `-destination-path` -您在上一步中创建的对象存储名称和固定值 `objstore`。
   +
 您可以使用创建的策略或接受默认值。
 

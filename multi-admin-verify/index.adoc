@@ -47,9 +47,13 @@ NOTE: 如果您需要在未经MAV管理员批准的情况下禁用多管理员�
 
 MAV规则会根据基于角色的访问控制(Role-Based Access Control、RBAC)规则进行评估。因此、执行或批准受保护操作的管理员必须已拥有这些操作的最低RBAC特权。 link:../authentication/manage-access-control-roles-concept.html["了解有关RBAC的更多信息。"]
 
+
+
+=== 系统定义的规则
+
 启用多管理员验证后、系统定义的规则(也称为_Guard导轨规则)将建立一组MAV操作、以控制绕过MAV进程本身的风险。无法从规则表中删除这些操作。启用MAV后、使用星号(*)指定的操作在执行前需要一个或多个管理员的批准、但*显示*命令除外。
 
-* `security multi-admin-verify modify*`
+* `security multi-admin-verify modify` 操作*
 +
 控制多管理员验证功能的配置。
 
@@ -66,6 +70,10 @@ MAV规则会根据基于角色的访问控制(Role-Based Access Control、RBAC)�
 控制审批流程。
 
 
+
+
+
+=== 受规则保护的命令
 
 除了系统定义的命令之外、在启用多管理员验证时、以下命令也会默认受到保护、但您可以修改规则以取消对这些命令的保护。
 
@@ -123,6 +131,22 @@ MAV规则会根据基于角色的访问控制(Role-Based Access Control、RBAC)�
 从ONTAP 9.13.1开始、可以保护以下命令：
 
 * `volume snaplock modify`
+
+
+从ONTAP 9.14.1开始、可以保护以下命令：
+
+* `volume recovery-query modify`
+* `volume recovery-query purge`
+* `volume recovery-query purge-all`
+* `vserver modify`
+
+
+从ONTAP 9.13.1开始、可以保护以下命令：
+
+* `volume snaplock modify`
+* `security anti-ransomware volume attack clear-suspect`
+* `security anti-ransomware volume disable`
+* `security anti-ransomware volume pause`
 
 
 
