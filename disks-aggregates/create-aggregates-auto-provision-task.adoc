@@ -14,14 +14,13 @@ summary: '如果ONTAP 为自动添加本地层(使用自动配置创建聚合)�
 如果ONTAP提供的最佳实践建议允许自动添加本地层(使用自动配置创建聚合)
 适用于您的环境、您可以接受此建议并让ONTAP添加本地层。
 
-您遵循的过程取决于您使用的界面—System Manager或CLI。
+.开始之前
+磁盘必须归节点所有、才能在本地层(聚合)中使用。  如果集群未配置为使用自动磁盘所有权分配、则必须执行此操作 link:manual-assign-disks-ownership-prep-task.html["手动分配所有权"]。
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
-*使用System Manager自动添加本地层*
-
 .步骤
 . 在 System Manager 中，单击 * 存储 > 层 * 。
 . 在*层*页面中、单击 image:icon-add-local-tier.png["添加本地层图标"]  要创建新的本地层、请执行以下操作：
@@ -87,8 +86,6 @@ System Manager从ONTAP 9.8开始显示以下信息：
 --
 .命令行界面
 --
-*使用命令行界面创建具有自动配置功能的聚合*
-
 运行 `storage aggregate auto-provision` 命令以生成聚合布局建议。然后，您可以在查看并批准 ONTAP 建议后创建聚合。
 
 .您需要的内容

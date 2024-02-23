@@ -13,13 +13,16 @@ summary: NVMe支持因您的ONTAP 版本、平台和配置而异。
 [role="lead"]
 从ONTAP 9.4开始、 link:https://docs.netapp.com/us-en/ontap/san-admin/manage-nvme-concept.html["非易失性内存标准(NVMe)"] 协议可用于SAN环境。FC-NVMe 与传统 FC 网络采用相同的物理设置和分区实践，但与 FC-SCSI 相比，它可以提供更大的带宽，增加 IOPS 并减少延迟。
 
-NVMe支持和限制因您的ONTAP版本、平台和配置而异。有关特定配置的详细信息、请参见 link:https://imt.netapp.com/matrix/["NetApp 互操作性表工具"]。
+NVMe支持和限制因您的ONTAP版本、平台和配置而异。有关特定配置的详细信息、请参见 link:https://imt.netapp.com/matrix/["NetApp 互操作性表工具"]。有关支持的限制、请参见 link:https://hwu.netapp.com/["Hardware Universe"^]。
+
+
+NOTE: 每个集群的最大节点数在Hardware Universe中的*支持的平台混合*下可用。
 
 
 
 == Configuration
 
-* 您可以使用单个网络结构或多网络结构为具有单个节点或HA对的NVMe配置进行设置。
+* 您可以使用单个网络结构或多网络结构设置NVMe配置。
 * 您应该为每个支持 SAN 的 SVM 配置一个管理 LIF 。
 * 除嵌入式刀片式交换机外，不支持使用异构 FC 交换机网络结构。
 +
@@ -110,39 +113,6 @@ SCSI、NAS和NVMe协议可以位于同一Storage Virtual Machine (SVM)上。
 
 
 
-== 每个集群的平台和节点数
-
-支持NVMe/FC和NVMe/TCP协议、如下所示。
-
-
-NOTE: 使用32 Gb FC HBA的以下平台支持NVMe/FC。
-
-[cols="3*"]
-|===
-
-
-| 从ONTAP 开始... | 平台 | 每个集群的最大节点数 
-
-
-| 9.12.1.  a| 
-* FAS
-* AFF
-* ASA
-
-| 12. 
-
-
-| 9.9.1.  a| 
-* AFF
-* ASA
-
-| 4. 
-
-
-| 9.4. | 仅限AFF | 4. 
-|===
-
-
 == 命名空间
 
 使用NVMe命名时间时、您应注意以下事项：
@@ -173,8 +143,6 @@ NOTE: 使用32 Gb FC HBA的以下平台支持NVMe/FC。
 * NVMe LIF 和命名空间必须托管在同一节点上。
 * 必须先创建 NVMe 服务，然后才能创建 NVMe LIF 。
 
-
-请参见 https://hwu.netapp.com["NetApp Hardware Universe"^] 有关 NVMe 限制的完整列表。
 
 .相关信息
 link:https://www.netapp.com/pdf.html?item=/media/10680-tr4080.pdf["现代SAN的最佳实践"]
