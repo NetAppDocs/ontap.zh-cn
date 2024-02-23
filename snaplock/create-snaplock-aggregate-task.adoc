@@ -15,8 +15,8 @@ summary: '使用卷 `-snaplock-type` 用于指定Compliance或Enterprise SnapLoc
 
 .开始之前
 * 您必须是集群管理员才能执行此任务。
-* 节点上必须安装 SnapLock 许可证。
-* 必须初始化节点上的 ComplianceClock 。
+* SnapLock link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["必须安装许可证"] 在节点上。
+* link:https://docs.netapp.com/us-en/ontap/snaplock/initialize-complianceclock-task.html["必须初始化节点上的Compliance时钟"]。
 * 如果已将磁盘分区为 "`root` " ， " `data1` " 和 " `data2` " ，则必须确保备用磁盘可用。
 
 
@@ -41,8 +41,10 @@ summary: '使用卷 `-snaplock-type` 用于指定Compliance或Enterprise SnapLoc
 .步骤
 . 创建 SnapLock 聚合：
 +
-`*storage aggregate create -aggregate _aggregate_name_ -node _node_name_ -diskcount _number_of_disks_ -snaplock-type compliance|enterprise*`
-
+[source, cli]
+----
+storage aggregate create -aggregate <aggregate_name> -node <node_name> -diskcount <number_of_disks> -snaplock-type <compliance|enterprise>
+----
 +
 命令的手册页包含完整的选项列表。
 

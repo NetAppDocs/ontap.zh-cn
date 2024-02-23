@@ -15,8 +15,8 @@ summary: '您必须为要提交到 WORM 状态的文件或 Snapshot 副本创建
 
 .您需要的内容
 * SnapLock 聚合必须处于联机状态。
-* 节点上必须安装 SnapLock 许可证。
-* 必须初始化节点上的 ComplianceClock 。
+* SnapLock link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["必须安装许可证"] 在节点上。
+* link:https://docs.netapp.com/us-en/ontap/snaplock/initialize-complianceclock-task.html["必须初始化节点上的Compliance时钟"]。
 
 
 .关于此任务
@@ -54,8 +54,10 @@ SnapLock卷不支持LUN。只有当在非SnapLock卷上创建的Snapshot副本�
 --
 . 创建 SnapLock 卷：
 +
-`*volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_* -snaplock-type compliance|enterprise`
-
+[source, cli]
+----
+volume create -vserver <SVM_name> -volume <volume_name> -aggregate <aggregate_name> -snaplock-type <compliance|enterprise>
+----
 +
 有关完整的选项列表，请参见命令手册页。以下选项不适用于SnapLock卷： `-nvfail`， `-atime-update`， `-is-autobalance-eligible`， `-space-mgmt-try-first`，和 `vmalign`。
 

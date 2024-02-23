@@ -116,7 +116,7 @@ NOTE:  从AFF 集群迁移到包含混合聚合的FAS 集群时、自动卷放�
 
 * 您必须是集群管理员。
 * link:https://docs.netapp.com/us-en/ontap/peering/create-cluster-relationship-93-later-task.html["源集群和目标集群必须彼此建立对等关系"^]。
-* 源集群和目标集群必须安装SnapMirror同步许可证。
+* 源集群和目标集群必须采用SnapMirror同步 link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["已安装许可证"]。
 * 源集群中的所有节点都必须运行ONTAP 9.10.1或更高版本。有关特定的ONTAP阵列控制器支持、请参见 link:https://hwu.netapp.com/["Hardware Universe"^]。
 * 源集群中的所有节点都必须运行相同版本的ONTAP。
 * 目标集群中的所有节点都必须运行相同版本的ONTAP。
@@ -387,30 +387,4 @@ SMB迁移会造成系统中断、需要在迁移后刷新客户端。
 
 
 | 从Snapshot副本还原文件 | 允许 | 允许 | 不支持 
-|===
-下表根据迁移状态显示了正在迁移的SVM中支持的文件操作：
-
-[cols="2,1,1,1"]
-|===
-
-
-| 文件操作 3+| SVM迁移状态 
-
-
-|  | 正在进行 * | *已暂停* | * 转换 * 
-
-
-| 异步删除 | 不允许 | 不允许 | 不支持 
-
-
-| 克隆创建/删除/拆分 | 允许 | 允许 | 不支持 
-
-
-| 复制修改/销毁 | 不允许 | 不允许 | 不支持 
-
-
-| 移动 | 不允许 | 不允许 | 不支持 
-
-
-| 预留 | 允许 | 允许 | 不支持 
 |===
