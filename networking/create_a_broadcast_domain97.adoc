@@ -4,7 +4,7 @@ permalink: networking/create_a_broadcast_domain97.html
 keywords: create, creation, creating, add, adding, broadcast, domain, create a broadcast domain, broadcast domains group network ports in the cluster that belong to the same layer 2 network 
 summary: 广播域对集群中属于同一第 2 层网络的网络端口进行分组 
 ---
-= 创建广播域
+= 创建广播域(ONTAP 9.7及更早版本)
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,14 +14,21 @@ summary: 广播域对集群中属于同一第 2 层网络的网络端口进行�
 
 
 [role="lead"]
-在 ONTAP 9.7 及更早版本中，您可以创建一个广播域，以便对集群中属于同一第 2 层网络的网络端口进行分组。然后， SVM 可以使用这些端口。
+在 ONTAP 9.7 及更早版本中，您可以创建一个广播域，以便对集群中属于同一第 2 层网络的网络端口进行分组。然后， SVM 可以使用这些端口。您必须为自定义 IP 空间创建广播域。在 IP 空间中创建的 SVM 使用广播域中的端口。
+
+
+NOTE: 此任务与 ONTAP 9.0 - 9.7 相关，而不是与 ONTAP 9.8 相关。
 
 .开始之前
+您必须是集群管理员才能执行此任务。
+
 从 ONTAP 9.8 开始，在集群创建或加入操作期间会自动创建广播域。如果您运行的是 ONTAP 9.8 或更高版本，则不需要执行这些步骤。
 
 在 ONTAP 9.7 及更早版本中，计划添加到广播域的端口不能属于另一个广播域。
 
 .关于此任务
+LIF 故障转移到的端口必须是 LIF 故障转移组的成员。创建广播域时， ONTAP 会自动创建同名的故障转移组。故障转移组包含分配给广播域的所有端口。
+
 * 所有广播域名在 IP 空间中必须是唯一的。
 * 添加到广播域的端口可以是物理网络端口， VLAN 或接口组（ ifgrp ）。
 * 如果要使用的端口属于另一个广播域、但未使用、请使用 `network port broadcast-domain remove-ports` 命令以从现有广播域中删除端口。

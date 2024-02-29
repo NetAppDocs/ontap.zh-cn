@@ -4,7 +4,7 @@ permalink: networking/workflow__nas_path_failover_overview_auto.html
 keywords: introducing, introduction, overview, workflow, nas path, failover, fail, over, workflow for nas path failover, nas path failover overview, nas failover workflow diagram, multipathing 
 summary: ONTAP 9.8 及更高版本的 NAS 路径故障转移配置 
 ---
-= 概述
+= 工作流(ONTAP 9.8及更高版本)
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -22,3 +22,27 @@ image:Workflow_NAS_failover.png["NAS 故障转移工作流图"]
 
 
 NOTE: SAN LIF 不会迁移（除非您在链路出现故障后手动移动）。相反，主机上的多路径技术会将流量转移到其他 LIF 。有关详细信息，请参见 link:../san-admin/index.html["SAN 管理"^]。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["一个"]link:worksheet_for_nas_path_failover_configuration_auto.html["填写工作表"]
+[role="quick-margin-para"]
+使用工作表规划NAS路径故障转移。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["两个"]link:create_ipspaces.html["创建 IP 空间"]
+[role="quick-margin-para"]
+为集群中的每个SVM创建一个不同的IP地址空间。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["三个"]link:move_broadcast_domains.html["将广播域移动到 IP 空间"]
+[role="quick-margin-para"]
+将广播域移动到IP空间。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["四个"]link:create_svms.html["创建 SVM"]
+[role="quick-margin-para"]
+创建SVM以向客户端提供数据。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["五个"]link:create_a_lif.html["创建 LIF"]
+[role="quick-margin-para"]
+在要用于访问数据的端口上创建SIFs。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-6.png["六个"]link:configure_dns_services_auto.html["为SVM配置DNS服务"]
+[role="quick-margin-para"]
+在创建NFS或SMB服务器之前、为SVM配置DNS服务。

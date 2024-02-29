@@ -1,0 +1,301 @@
+---
+sidebar: sidebar 
+permalink: networking/use_lldp_to_detect_network_connectivity.html 
+keywords: display, view, show, network, connectivity, neighbor, discovery, protocol, ndp, link, layer, lldp, use lldp to detect network connectivity, enable or disable lldp, view lldp neighbor information, adjust the interval for transmitting lldp advertisements 
+summary: 使用 LLDP 检测网络连接包括查看部署注意事项，在所有端口上启用 LLDP ，查看相邻设备以及根据需要调整 LLDP 配置值。 
+---
+= 使用LDP检测网络连接
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+使用 LLDP 检测网络连接包括查看部署注意事项，在所有端口上启用 LLDP ，查看相邻设备以及根据需要调整 LLDP 配置值。
+
+此外、还必须在任何交换机和路由器上启用CDP、才能显示有关相邻设备的信息。
+
+ONTAP 当前报告以下类型 - 长度 - 值结构（ TLV ）：
+
+* 机箱 ID
+* 端口 ID
+* 生存时间（ TTL ）
+* 系统名称
++
+系统名称 TLV 不会在 CNA 设备上发送。
+
+
+
+某些融合网络适配器（ CNA ）（例如 X1143 适配器和 UTA2 板载端口）包含 LLDP 卸载支持：
+
+* LLDP 卸载用于数据中心桥接（ DCB ）。
+* 显示的信息可能因集群和交换机而异。
++
+对于CNA端口和非CNA端口、交换机显示的机箱ID和端口ID数据可能有所不同。
+
+
+
+例如：
+
+* 对于非CNA端口：
++
+** 机箱ID是节点上某个端口的固定MAC地址
+** port ID是节点上相应端口的端口名称
+
+
+* 对于CNA端口：
++
+** 机箱ID和端口ID是节点上相应端口的MAC地址。
+
+
+
+
+但是、对于这些端口类型、集群显示的数据是一致的。
+
+
+NOTE: LLDP 规范定义了通过 SNMP MIB 访问收集的信息。但是， ONTAP 当前不支持 LLDP MIB 。
+
+
+
+== 启用或禁用LDP
+
+要发现公告并将其发送到符合LDP的相邻设备、必须在集群的每个节点上启用LDP。从 ONTAP 9.7 开始，默认情况下会在节点的所有端口上启用 LLDP 。
+
+.关于此任务
+对于ONTAP 9.10.1及更早版本、 `lldp.enable` 选项用于控制节点的端口上是启用还是禁用了LDP：
+
+* `on` 在所有端口上启用LDP。
+* `off` 在所有端口上禁用LDP。
+
+
+对于ONTAP 9.11.1及更高版本、 `lldp.enable` 选项用于控制是否在节点的非集群和非存储端口上启用了LDP：
+
+* `on` 在所有非集群和非存储端口上启用LDP。
+* `off` 在所有非集群和非存储端口上禁用LDP。
+
+
+.步骤
+. 显示某个节点或集群中所有节点的当前LDP设置：
++
+** 单个节点 `run -node node_name options lldp.enable`
+** 所有节点：选项 `lldp.enable`
+
+
+. 在一个节点的所有端口或集群中所有节点的所有端口上启用或禁用LDP：
++
+[cols="30,70"]
+|===
+
+
+| 要启用或禁用的LDP... | 输入 ... 
+
+
+ a| 
+节点
+ a| 
+`run -node node_name options lldp.enable {on|off}`
+
+
+
+ a| 
+集群中的所有节点
+ a| 
+`options lldp.enable {on|off}`
+
+|===
++
+** 单个节点
++
+....
+run -node node_name options lldp.enable {on|off}
+....
+** 所有节点：
++
+....
+options lldp.enable {on|off}
+....
+
+
+
+
+
+
+== 查看LDP邻居信息
+
+您可以查看有关连接到集群节点的每个端口的相邻设备的信息，前提是该端口连接到 LLDP 兼容的设备。您可以使用 network device-discovery show 命令查看邻居信息。
+
+.步骤
+. 显示有关连接到集群中某个节点上的端口的所有符合LDP的设备的信息：
++
+....
+network device-discovery show -node node -protocol lldp
+....
++
+以下命令显示了连接到节点 cluster-1_01 上端口的邻居。输出列出了连接到指定节点的每个端口且已启用 LLDP 的设备。如果 `-protocol` 如果省略选项、则输出还会列出已启用CDP的设备。
+
++
+....
+network device-discovery show -node cluster-1_01 -protocol lldp
+Node/       Local  Discovered
+Protocol    Port   Device                    Interface         Platform
+----------- ------ ------------------------- ----------------  ----------------
+cluster-1_01/lldp
+            e2a    0013.c31e.5c60            GigabitEthernet1/36
+            e2b    0013.c31e.5c60            GigabitEthernet1/35
+            e2c    0013.c31e.5c60            GigabitEthernet1/34
+            e2d    0013.c31e.5c60            GigabitEthernet1/33
+....
+
+
+
+
+== 调整传输 LLDP 公告的间隔
+
+将定期向lld邻居发送lld公告。您可以根据网络流量和网络拓扑的变化增加或减少发送LLDP公告的间隔。
+
+.关于此任务
+IEEE 建议的默认间隔为 30 秒，但您可以输入一个介于 5 秒到 300 秒之间的值。
+
+.步骤
+. 显示某个节点或集群中所有节点的当前LDP公告时间间隔：
++
+** 单个节点
++
+....
+run -node <node_name> options lldp.xmit.interval
+....
+** 所有节点：
++
+....
+options lldp.xmit.interval
+....
+
+
+. 调整节点的所有端口或集群中所有节点的所有端口发送 LLDP 公告的间隔：
++
+** 单个节点
++
+....
+run -node <node_name> options lldp.xmit.interval <interval>
+....
+** 所有节点：
++
+....
+options lldp.xmit.interval <interval>
+....
+
+
+
+
+
+
+== 调整 LLDP 公告的生存时间值
+
+生存时间（ TTL ）是 LLDP 公告存储在相邻 LLDP 兼容设备的缓存中的时间段。TTL 会在每个 LLDP 数据包中公布，并在节点收到 LLDP 数据包时进行更新。可以在传出 LLDP 帧中修改 TTL 。
+
+.关于此任务
+* TTL是计算得出的值、即传输间隔的乘积 (`lldp.xmit.interval`)和保持乘数 (`lldp.xmit.hold`)加上一个。
+* 默认保持倍数值为 4 ，但您可以输入 1 到 100 之间的值。
+* 因此，根据 IEEE 的建议，默认 TTL 为 121 秒，但通过调整传输间隔和保持乘数值，您可以为传出帧指定一个介于 6 秒到 30001 秒之间的值。
+* 如果在 TTL 过期之前删除 IP 地址，则 LLDP 信息将缓存，直到 TTL 过期为止。
+
+
+.步骤
+. 显示节点或集群中所有节点的当前保持乘数值：
++
+** 单个节点
++
+....
+run -node <node_name> options lldp.xmit.hold
+....
+** 所有节点：
++
+....
+options lldp.xmit.hold
+....
+
+
+. 调整节点的所有端口或集群中所有节点的所有端口上的保持倍数值：
++
+** 单个节点
++
+....
+run -node <node_name> options lldp.xmit.hold <hold_value>
+....
+** 所有节点：
++
+....
+options lldp.xmit.hold <hold_value>
+....
+
+
+
+
+
+
+== 查看或清除LLDP统计信息
+
+您可以查看每个节点上集群和非集群端口的LLDP统计信息、以检测潜在的网络连接问题。LLDP统计信息是自上次清除以来累积的。
+
+.关于此任务
+对于ONTAP 9.10.1及更早版本、由于LLDP始终为集群端口启用、因此始终会显示这些端口上的流量的LLDP统计信息。必须在非集群端口上启用LLDP、才能显示这些端口的统计信息。
+
+对于ONTAP 9.11.1及更高版本、由于LLDP始终为集群和存储端口启用、因此始终会显示这些端口上的流量的LLDP统计信息。必须在非集群和非存储端口上启用LLDP、才能显示这些端口的统计信息。
+
+.步骤
+显示或清除节点上所有端口的当前LLDP统计信息：
+
+[cols="40,60"]
+|===
+
+
+| 如果您要 ... | 输入 ... 
+
+
+ a| 
+查看LLDP统计信息
+ a| 
+`run -node node_name lldp stats`
+
+
+
+ a| 
+清除LLDP统计信息
+ a| 
+`run -node node_name lldp stats -z`
+
+|===
+
+
+=== 显示并清除统计信息示例
+
+以下命令显示清除前的LLDP统计信息。输出将显示自上次清除统计信息以来已发送和接收的数据包总数。
+
+....
+cluster-1::> run -node vsim1 lldp stats
+
+RECEIVE
+ Total frames:     190k  | Accepted frames:   190k | Total drops:         0
+TRANSMIT
+ Total frames:     5195  | Total failures:      0
+OTHER
+ Stored entries:      64
+....
+以下命令将清除LLDP统计信息。
+
+....
+cluster-1::> The following command clears the LLDP statistics:
+run -node vsim1 lldp stats -z
+run -node node1 lldp stats
+
+RECEIVE
+ Total frames:        0  | Accepted frames:     0  | Total drops:         0
+TRANSMIT
+ Total frames:        0  | Total failures:      0
+OTHER
+ Stored entries:      64
+....
+清除统计信息后、在发送或接收下一个LLDP公告后、这些统计信息将开始累积。

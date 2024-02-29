@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: networking/add_or_remove_ports_from_a_broadcast_domain.html 
-keywords: adding, add, create, creating, remove, removing, delete, deleting, port, broadcast, domain, reachability, repair, physical, switch, configuration, add or remove ports from a broadcast domain 
+keywords: adding, add, create, creating, remove, removing, delete, deleting, port, broadcast, domain, reachability, repair, physical, switch, configuration, add or remove ports from a broadcast domain, system manager, reassign, broadcast domain, port, unassign, move, change 
 summary: 不需要或建议手动从广播域添加和删除端口 
 ---
-= 在广播域中添加或删除端口
+= 从广播域添加或删除端口(ONTAP 9.8及更高版本)
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -19,3 +19,32 @@ summary: 不需要或建议手动从广播域添加和删除端口
 如果通过物理网络连接或交换机配置更改了网络端口可访问性，并且某个网络端口属于其他广播域，请参见以下主题：
 
 link:repair_port_reachability.html["修复端口可访问性"]
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+从ONTAP 9.14.1开始、您可以使用System Manager在广播域之间重新分配以太网端口。建议将每个以太网端口分配给广播域。因此、如果从广播域取消分配以太网端口、则必须将其重新分配到其他广播域。
+
+.步骤
+要重新分配以太网端口、请执行以下步骤：
+
+. 选择*网络>概述*。
+. 在*广播域*部分中，选择 image:icon_kabob.gif["菜单图标"] 域名旁边。
+. 在下拉菜单中，选择 * 编辑 * 。
+. 在*编辑广播域*页上，取消选择要重新分配给另一个域的以太网端口。
+. 对于每个取消选择的端口，将显示*ReassignEthernet Port*(重新分配以太网端口)窗口。选择要将端口重新分配到的广播域，然后选择*Reassign*。
+. 选择要分配给当前广播域的所有端口并保存更改。
+
+
+--
+.命令行界面
+--
+您不能使用命令行界面手动在广播域中添加或删除端口。
+
+如果通过物理网络连接或交换机配置更改了网络端口可访问性，并且某个网络端口属于其他广播域，请参见以下主题：
+
+link:repair_port_reachability.html["修复端口可访问性"]
+
+--
+====

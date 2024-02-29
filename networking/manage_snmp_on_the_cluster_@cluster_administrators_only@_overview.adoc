@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: networking/manage_snmp_on_the_cluster_@cluster_administrators_only@_overview.html 
-keywords: manage, managing, snmp, monitor, monitoring, troubleshooting, error detection, traps, overview, configure snmp to monitor svms in your cluster 
+keywords: 'manage, managing, snmp, monitor, monitoring, troubleshooting, error detection, traps, overview, configure snmp to monitor svms in your cluster, snmp, trap, traphosts, asynchronous, notification, notify, alert, message, thresholds, failures, errors, fail, rfc 1215, built in, built-in, standard, snmp traps, use snmp traps to periodically check for operational thresholds or failures, standard snmp traps, system snmp authtrap, rfc 1215, coldstart, warmstart, linkdown, linkup, authenticationfailure, built-in snmp traps, traphost, diskfailedshutdown, cputoobusy, and volumenearlyfull, introducing, introduction, overview, mib, management information base, text, structure, netapp.mib, what mibs are, introducing management information bases (mibs), snmp objects and traps, object identifiers, oids, traps.dat' 
 summary: 配置 SNMP 以监控集群中的 SVM 
 ---
-= 概述
+= SNMP概述
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -21,3 +21,53 @@ summary: 配置 SNMP 以监控集群中的 SVM
 SNMP 网络管理工作站或管理器可以向 SVM SNMP 代理查询相关信息。SNMP 代理会收集信息并将其转发给 SNMP 管理器。SNMP 代理还会在发生特定事件时生成陷阱通知。SVM 上的 SNMP 代理具有只读权限；不能用于任何设置的操作或针对陷阱采取更正操作。ONTAP 提供了一个与 SNMP v1 ， v2c 和 v3 版本兼容的 SNMP 代理。SNMPv3 通过使用密码短语和加密提供高级安全性。
 
 有关 ONTAP 系统中 SNMP 支持的详细信息，请参见 https://www.netapp.com/pdf.html?item=/media/16417-tr-4220pdf.pdf["TR-4220 ： Data ONTAP 中的 SNMP 支持"^]。
+
+
+
+== MIB概述
+
+MIB （管理信息库）是一个文本文件，用于描述 SNMP 对象和陷阱。
+
+MIB 用于描述存储系统管理数据的结构，它们使用包含对象标识符（ OID ）的分层命名空间。每个 OID 标识一个可使用 SNMP 读取的变量。
+
+由于 MIB 不是配置文件，并且 ONTAP 不会读取这些文件，因此 SNMP 功能不受 MIB 的影响。ONTAP 提供了以下 MIB 文件：
+
+* NetApp自定义MIB (`netapp.mib`）
+
+
+ONTAP 支持 IPv6 （ RFC 2465 ）， TCP （ RFC 4022 ）， UDP （ RFC 4113 ）和 ICMP （ RFC 2466 ） MIB ，这些 MIB 可显示 IPv4 和 IPv6 数据。
+
+ONTAP还在中的对象标识符(OID)和对象短名称之间提供了一个简短的交叉引用 `traps.dat` 文件
+
+
+NOTE: ONTAP MIB 和“traps.dat”文件的最新版本可从 NetApp 支持站点获得。但是，支持站点上这些文件的版本不一定与 ONTAP 版本的 SNMP 功能相对应。提供这些文件是为了帮助您评估最新 ONTAP 版本中的 SNMP 功能。
+
+
+
+== SNMP 陷阱
+
+SNMP 陷阱用于捕获系统监控信息，此信息将作为异步通知从 SNMP 代理发送到 SNMP 管理器。
+
+SNMP 陷阱有三种类型：标准陷阱，内置陷阱和用户定义的陷阱。ONTAP 不支持用户定义的陷阱。
+
+可以使用陷阱定期检查 MIB 中定义的操作阈值或故障。如果达到阈值或检测到故障， SNMP 代理会向陷阱主机发送一条消息（陷阱），提醒其发生此事件。
+
+
+NOTE: ONTAP 支持 SNMPv1 陷阱，并在 ONTAP 9.1 中启动 SNMPv3 陷阱。ONTAP 不支持 SNMPv2c 陷阱和通知。
+
+
+
+== 标准 SNMP 陷阱
+
+这些陷阱在 RFC 1215 中定义。ONTAP 支持五个标准 SNMP 陷阱： coldstart ， warmStart ， linkDown ， linkUp 和 authenticationFailure 。
+
+
+NOTE: 默认情况下， authenticationFailure 陷阱处于禁用状态。您必须使用 `system snmp authtrap` 命令以启用陷阱。有关详细信息，请参见手册页： http://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-cmpr/GUID-5CB10C70-AC11-41C0-8C16-B4D0DF916E9B.html["ONTAP 9 命令"^]
+
+
+
+== 内置 SNMP 陷阱
+
+内置陷阱在 ONTAP 中预定义，如果发生事件，它们会自动发送到陷阱主机列表上的网络管理工作站。这些陷阱，例如 diskFailedShutdown ， cpuTooBusy 和 volumeNearlyFull ，均在自定义 MIB 中定义。
+
+每个内置陷阱都由一个唯一的陷阱代码标识。

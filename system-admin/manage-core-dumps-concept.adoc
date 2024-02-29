@@ -26,3 +26,121 @@ ONTAP 会阻止您在接管，聚合重新定位或交还期间启动核心转�
 
 * 删除不再需要的核心转储文件
 
+
+
+
+== 用于管理核心转储的命令
+
+您可以使用 `system node coredump config` 用于管理核心转储配置的命令 `system node coredump` 用于管理核心转储文件的命令、以及 `system node coredump reports` 用于管理应用程序核心报告的命令。
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+配置核心转储
+ a| 
+`system node coredump config modify`
+
+
+
+ a| 
+显示核心转储的配置设置
+ a| 
+`system node coredump config show`
+
+
+
+ a| 
+显示有关核心转储的基本信息
+ a| 
+`system node coredump show`
+
+
+
+ a| 
+重新启动节点时手动触发核心转储
+ a| 
+`system node reboot` 同时使用 `-dump` 和 `-skip-lif-migration-before-reboot` parameters
+
+[NOTE]
+====
+链接：https://docs.netapp.com/us-en/ontap-cli-9141//system-node-reboot.html#parameters[`skip-lif-migration-before-reboot`]参数指定将跳过重新启动前的LIF迁移。
+
+====
+
+
+ a| 
+关闭节点时手动触发核心转储
+ a| 
+`system node halt` 同时使用 `-dump` 和 `-skip-lif-migration-before-shutdown` parameters
+
+[NOTE]
+====
+链接：https://docs.netapp.com/us-en/ontap-cli-9141/system-node-halt.html#parameters[`skip-lif-migration-before-shutdown`]参数指定将跳过关闭前的LIF迁移。
+
+====
+
+
+ a| 
+保存指定的核心转储
+ a| 
+`system node coredump save`
+
+
+
+ a| 
+保存指定节点上所有未保存的核心转储
+ a| 
+`system node coredump save-all`
+
+
+
+ a| 
+生成包含您指定的核心转储文件的 AutoSupport 消息并发送此消息
+ a| 
+`system node autosupport invoke-core-upload`
+
+[NOTE]
+====
+。 `-uri` 可选参数用于指定AutoSupport消息的备用目标。
+
+====
+
+
+ a| 
+显示有关核心转储的状态信息
+ a| 
+`system node coredump status`
+
+
+
+ a| 
+删除指定的核心转储
+ a| 
+`system node coredump delete`
+
+
+
+ a| 
+删除节点上所有未保存的核心转储或所有已保存的核心文件
+ a| 
+`system node coredump delete-all`
+
+
+
+ a| 
+显示应用程序核心转储报告
+ a| 
+`system node coredump reports show`
+
+
+
+ a| 
+删除应用程序核心转储报告
+ a| 
+`system node coredump reports delete`
+
+|===
+.相关信息
+link:https://docs.netapp.com/us-en/ontap/concepts/manual-pages.html["ONTAP 9命令"^]

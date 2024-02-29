@@ -20,31 +20,67 @@ summary: 您可以使用显式配额为特定配额目标指定配额，或者�
 显式配额只会影响同一级别（卷或 qtree ）的默认配额。例如， qtree 的显式用户配额不会影响包含该 qtree 的卷的默认用户配额。但是， qtree 的显式用户配额会覆盖（替换由定义的限制）该 qtree 的默认用户配额。
 
 .显式配额示例
-以下配额文件包含一个默认用户配额，用于将 vol1 中的所有用户的空间限制为 50 MB 。但是，由于显式配额（以粗体显示），允许一个用户 jsmith 使用 80 MB 的空间：
+以下配额规则定义了一个默认用户配额、该配额会将vol1中的所有用户限制为50 MB的空间。但是、由于显式配额(以粗体显示)、用户jsmith可以获得80 MB的空间：
 
 [listing]
 ----
-#Quota target type            disk  files  thold  sdisk  sfile
-#-----------  ----            ----  -----  -----  -----  -----
-*             user@/vol/vol1  50M
-**jsmith      user@/vol/vol1  80M**
+cluster1::> volume quota policy rule create -vserver vs0 -volume vol1 -policy-name default -type user -target "" -qtree "" -disk-limit 50m
+
+cluster1::> volume quota policy rule create -vserver vs0 -volume vol1 -policy-name default -type user -target "jsmith" -qtree "" -disk-limit 80m
+
+cluster1::> volume quota policy rule show -vserver vs0 -volume vol1
+
+Vserver: vs0               Policy: default           Volume: vol1
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   ""        ""      off          50MB        -       -        -          -
+user   jsmith    ""      off          80MB        -       -        -          -
 ----
-以下配额条目将指定用户（以四个 ID 表示）限制为 500 MB 磁盘空间和 10 ， 240 个文件（位于 vol1 卷中）：
+以下配额规则会将指定用户(由四个ID表示)限制为vol1卷中的550 MB磁盘空间和10、000个文件：
 
 [listing]
 ----
-jsmith,corp\jsmith,engineering\”john smith”,
-S-1-5-32-544   user@/vol/vol1         500M      10K
+cluster1::> volume quota policy rule create -vserver vs0 -volume vol1 -policy-name default -type user -target " jsmith,corp\jsmith,engineering\john smith,S-1-5-32-544" -qtree "" -disk-limit 550m -file-limit 10000
+
+cluster1::> volume quota policy rule show -vserver vs0 -volume vol1
+
+Vserver: vs0               Policy: default           Volume: vol1
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   "jsmith,corp\jsmith,engineering\john smith,S-1-5-32-544"
+                 ""      off         550MB        -   10000        -          -
 ----
-以下配额条目将 eng1 组的磁盘空间限制为 150 MB ，并且 /vol/vol2/proj1 qtree 中的文件数不限：
+以下配额规则将eng1组的磁盘空间限制为150 MB、并且proj1 qtree中的文件数不限：
 
 [listing]
 ----
-eng1        group@/vol/vol2/proj1  150M
+cluster1::> volume quota policy rule create -vserver vs0 -volume vol2 -policy-name default -type group -target "eng1" -qtree "proj1" -disk-limit 150m
+
+cluster1::> volume quota policy rule show -vserver vs0 -volume vol2
+
+Vserver: vs0               Policy: default           Volume: vol2
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+group  eng1      proj1   off         150MB        -       -        -          -
 ----
-以下配额条目将 vol2 卷中的 proj1 qtree 限制为 750 MB 磁盘空间和 76 ， 800 个文件：
+以下配额规则将卷vol2中的proj1 qtree限制为750 MB磁盘空间和75、000个文件：
 
 [listing]
 ----
-/vol/vol2/proj1   tree                750M      75K
+cluster1::> volume quota policy rule create -vserver vs0 -volume vol2 -policy-name default -type tree -target "proj1" -disk-limit 750m -file-limit 75000
+
+cluster1::> volume quota policy rule show -vserver vs0 -volume vol2
+
+Vserver: vs0               Policy: default           Volume: vol2
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+tree   proj1     ""      -           750MB        -   75000        -          -
 ----

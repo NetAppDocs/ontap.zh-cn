@@ -14,9 +14,13 @@ summary: 创建一个 LIF ，此 LIF 是与物理或逻辑端口关联的 IP 地
 
 
 [role="lead"]
-LIF (网络接口)是与物理或逻辑端口关联的IP地址。如果组件出现故障，则 LIF 可以故障转移到或迁移到其他物理端口，从而继续与网络通信。
+SVM 通过一个或多个网络逻辑接口（ LIF ）向客户端提供数据。您必须在要用于访问数据的端口上创建 LIF 。LIF (网络接口)是与物理或逻辑端口关联的IP地址。如果组件出现故障，则 LIF 可以故障转移到或迁移到其他物理端口，从而继续与网络通信。
+
+.最佳实践
+连接到ONTAP的交换机端口应配置为生成树边缘端口、以减少LIF迁移期间的延迟。
 
 .开始之前
+* 您必须是集群管理员才能执行此任务。
 * 底层物理或逻辑网络端口必须已配置为管理启动状态。
 * 如果您计划使用子网名称为 LIF 分配 IP 地址和网络掩码值，则此子网必须已存在。
 +
@@ -29,6 +33,10 @@ LIF (网络接口)是与物理或逻辑端口关联的IP地址。如果组件出
 * 您不能将 NAS 和 SAN 协议分配给同一个 LIF 。
 +
 支持的协议包括 SMB ， NFS ， FlexCache ， iSCSI 和 FC ； iSCSI 和 FC 不能与其他协议结合使用。但是， NAS 和基于以太网的 SAN 协议可以位于同一物理端口上。
+
++
+** 您不应将传输SMB流量的LUN配置为自动还原到其主节点。如果SMB服务器要托管解决方案、以便通过基于SMB的Hyper-V或SQL Server实现无中断运行、则必须遵循此建议。
+
 
 * 您可以在同一网络端口上创建 IPv4 和 IPv6 LIF 。
 * SVM 使用的所有名称映射和主机名解析服务，例如 DNS ， NIS ， LDAP 和 Active Directory 。 必须可从至少一个处理 SVM 数据流量的 LIF 进行访问。
@@ -66,6 +74,8 @@ LIF (网络接口)是与物理或逻辑端口关联的IP地址。如果组件出
 link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故障转移"]
 
 
+
+从 ONTAP 9.7 开始，只要该 IP 空间的同一子网中至少已存在一个 LIF ， ONTAP 就会自动选择 LIF 的主端口。ONTAP 会选择与该子网中的其他 LIF 位于同一广播域中的主端口。您仍然可以指定主端口，但不再需要此端口（除非指定 IP 空间中的子网中尚不存在 LIF ）。
 
 从ONTAP 9.12.0开始、您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
 
@@ -117,7 +127,26 @@ link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故
 *使用命令行界面创建LIF*
 
 .步骤
-. 创建 LIF ：
+. 确定要用于 LIF 的广播域端口。
++
+`network port broadcast-domain show -ipspace _ipspace1_`
+
++
+....
+IPspace     Broadcast                       Update
+Name        Domain name   MTU   Port List   Status Details
+ipspace1
+            default       1500
+                                node1:e0d   complete
+                                node1:e0e   complete
+                                node2:e0d   complete
+                                node2:e0e   complete
+....
+. 验证要用于 LIF 的子网是否包含足够的未使用 IP 地址。
++
+`network subnet show -ipspace _ipspace1_`
+
+. 在要用于访问数据的端口上创建一个或多个 LIF 。
 +
 ....
 network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port port_name {-address _IP_address_ - netmask _Netmask_value_ | -subnet-name _subnet_name_} -firewall- policy _policy_ -auto-revert {true|false}
@@ -152,7 +181,31 @@ network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _se
 
 
 
-. 使用验证是否已创建LIF `network interface show` 命令：
+. 验证 LIF 接口配置是否正确。
++
+`network interface show -vserver vs1`
+
++
+....
+          Logical    Status     Network         Current   Current Is
+Vserver   Interface  Admin/Oper Address/Mask    Node      Port    Home
+--------- ---------- ---------- --------------- --------- ------- ----
+vs1
+           lif1       up/up      10.0.0.128/24   node1     e0d     true
+....
+. 验证故障转移组配置是否符合要求。
++
+`network interface show -failover -vserver _vs1_`
+
++
+....
+         Logical    Home       Failover        Failover
+Vserver  interface  Node:Port  Policy          Group
+-------- ---------- ---------  ---------       --------
+vs1
+         lif1       node1:e0d  system-defined  ipspace1
+Failover Targets: node1:e0d, node1:e0e, node2:e0d, node2:e0e
+....
 . 验证配置的 IP 地址是否可访问：
 
 
@@ -185,6 +238,3 @@ network interface create -vserver vs1.example.com -lif datalif1 -data-protocol n
 ....
 --
 ====
-.更多信息
-xref:modify_a_lif.html[修改 LIF]
-xref:../nfs-rdma/configure-lifs-task.html[通过 RDMA 为 NFS 配置 LIF]

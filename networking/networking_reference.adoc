@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: networking/networking_reference.html 
-keywords: network, components, cluster, networking, ontap 9 networking reference, network management reference, how to configure and manage physical and virtual network ports, lifs, routing, and host-resolution services in clusters, vlans and interface groups, ipv4 and ipv6, optimize network traffic, load balancing, monitor the cluster using snmp 
+keywords: network, components, cluster, networking, ontap 9 networking reference, network management reference, how to configure and manage physical and virtual network ports, lifs, routing, and host-resolution services in clusters, vlans and interface groups, ipv4 and ipv6, optimize network traffic, load balancing, monitor the cluster using snmp, system manager 
 summary: 欢迎使用 ONTAP 9 网络参考文档门户 
 ---
 = 网络管理概述
@@ -14,12 +14,46 @@ summary: 欢迎使用 ONTAP 9 网络参考文档门户
 
 
 [role="lead"]
-您可以使用以下信息执行基本存储网络管理。您可以配置物理和虚拟网络端口（ VLAN 和接口组），使用 IPv4 和 IPv6 创建 LIF ，管理集群中的路由和主机解析服务，使用负载平衡优化网络流量以及使用 SNMP 监控集群。
+您可以使用System Manager或命令行界面使用以下信息执行基本存储网络管理。您可以配置物理和虚拟网络端口（ VLAN 和接口组），使用 IPv4 和 IPv6 创建 LIF ，管理集群中的路由和主机解析服务，使用负载平衡优化网络流量以及使用 SNMP 监控集群。
 
-除非另有说明，否则这些过程适用于所有版本的 ONTAP 9 。
+除非另有说明、否则命令行界面过程适用于所有版本的ONTAP 9。
 
-在以下情况下，应使用这些过程：
+从 ONTAP 9.8 开始，您可以使用 System Manager 显示一个图形，其中显示了网络的组件和配置。从ONTAP 9.12开始、您可以在网络接口网格上查看LIF和子网关联。
+但是、如果您使用的是经典System Manager (仅适用于ONTAP 9.7及更早版本)、请参见此主题：
 
-* 您希望了解 ONTAP 网络管理功能的范围。
-* 您希望使用命令行界面，而不是 System Manager 。
+* https://docs.netapp.com/us-en/ontap-sm-classic/online-help-96-97/concept_managing_network.html["管理网络"^]
 
+
+通过新的网络可视化功能，用户可以在图形界面中查看主机，端口， SVM ，卷等之间的网络连接路径。
+
+选择 * 网络 > 概述 * 或选择时，将显示此图 image:icon_arrow.gif["蓝色箭头"] 信息板的 * 网络 * 部分。
+
+图中显示了以下组件类别：
+
+* 主机
+* 存储端口
+* 网络接口
+* Storage VM
+* 数据访问组件
+
+
+每个部分都显示了其他详细信息，您可以将鼠标悬停在这些详细信息上或选择执行网络管理和配置任务。
+
+
+
+== 示例
+
+以下是您可以通过多种方式与图形交互来查看每个组件的详细信息或启动操作来管理网络的一些示例：
+
+* 单击某个主机可查看其配置：端口、网络接口、Storage VM以及与其关联的数据访问组件。
+* 将鼠标悬停在 Storage VM 中的卷数上可选择一个卷以查看其详细信息。
+* 选择一个 iSCSI 接口以查看其上周的性能。
+* 单击 image:icon_kabob.gif["垂直三个点"] 在组件旁边启动操作以修改该组件。
+* 快速确定网络中可能出现的问题，这些问题由运行不正常的组件旁边的 "X" 指示。
+
+
+
+
+== System Manager 网络可视化视频
+
+video::8yCC4ZcqBGw[youtube,width=848,height=480]

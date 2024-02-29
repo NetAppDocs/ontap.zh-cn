@@ -14,18 +14,37 @@ summary: 为集群中的每个 SVM 创建 IP 空间
 
 
 [role="lead"]
-您可以使用 IP 空间为集群中的每个 SVM 创建不同的 IP 地址空间。这样，在管理上独立的网络域中的客户端就可以访问集群数据，同时使用来自同一 IP 地址子网范围的重叠 IP 地址。
+IP 空间是 Storage Virtual Machine （ SVM ）所在的不同 IP 地址空间。当您需要 SVM 具有自己的安全存储，管理和路由时，您可以创建 IP 空间。您可以使用 IP 空间为集群中的每个 SVM 创建不同的 IP 地址空间。这样，在管理上独立的网络域中的客户端就可以访问集群数据，同时使用来自同一 IP 地址子网范围的重叠 IP 地址。
+
+.关于此任务
+集群范围内的 IP 空间限制为 512 个。对于包含具有6 GB RAM的节点的集群、集群范围的IP空间限制将减少到256个。请参见 Hardware Universe 以确定您的平台是否具有其他限制。
+
+https://hwu.netapp.com/["NetApp Hardware Universe"^]
+
+
+NOTE: IP 空间名称不能为 "all" ，因为 "all" 是系统保留名称。
 
 .开始之前
 您必须是集群管理员才能执行此任务。
 
 .步骤
-创建 IP 空间。
+. 创建 IP 空间：
++
+....
+network ipspace create -ipspace ipspace_name
+....
++
+`ipspace_name` 是要创建的IP空间的名称。以下命令将在集群上创建 IP 空间 ipspace1 ：
 
-`network ipspace create -ipspace ipspace1`
-
++
+....
+network ipspace create -ipspace ipspace1
+....
+. 显示IP空间：
++
 `network ipspace show`
 
++
 ....
 IPspace             Vserver List          Broadcast Domains
 ------------------- --------------------- ----------------------------
@@ -33,4 +52,21 @@ Cluster             Cluster               Cluster
 Default             Cluster1              Default
 ipspace1            ipspace1              -
 ....
++
 此时将创建 IP 空间以及此 IP 空间的系统 SVM 。系统 SVM 传输管理流量。
+
+
+
+.完成后
+如果在采用 MetroCluster 配置的集群中创建 IP 空间，则必须手动将 IP 空间对象复制到配对集群。在复制 IP 空间之前创建并分配给此 IP 空间的任何 SVM 都不会复制到配对集群。
+
+广播域会自动在 " 默认 "IP 空间中创建，并可使用以下命令在 IP 空间之间移动：
+
+....
+network port broadcast-domain move
+....
+例如，如果要将广播域从 "Default" 移动到 "ips1" ，请使用以下命令：
+
+....
+network port broadcast-domain move -ipspace Default -broadcast-domain Default -to-ipspace ips1
+....

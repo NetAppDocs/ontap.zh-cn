@@ -4,7 +4,7 @@ permalink: networking/worksheet_for_nas_path_failover_configuration_manual.html
 keywords: ipspace configuration, broadcast domain configuration, subnet configuration, SVM configuration, LIF configuration, DNS configuration, dynamic DNS configuration, worksheet for nas path failover configuration for ontap 9.8 and later, complete all sections of the worksheet before configuring nas path failover for ontap 9.7 and earlier, ipspace configuration, broadcast domain configuration, mtu, maximum transmission unit, mtu is 1500 mtu is 9000, subnet configuration, storage virtual machine configuration, svm configuration, lif configuration, dynamic dns configuration, dns configuration 
 summary: 在为 ONTAP 9.0 - 9.7 配置 NAS 路径故障转移之前，请完成工作表的所有部分 
 ---
-= ONTAP 9.0 - 9.7 的 NAS 路径故障转移配置工作表
+= NAS路径故障转移配置工作表(ONTAP 9.7及更早版本)
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -362,14 +362,17 @@ DNS domain name
 | 是的。 |  
 
 
-| DNS服务器的IP地址
+ a| 
+DNS服务器的IP地址
 
-*要为NFS或SMB服务器提供名称解析的DNS服务器的IP地址列表。
-* 列出的 DNS 服务器必须包含为 SMB 服务器要加入的域查找 Active Directory LDAP 服务器和域控制器所需的服务位置记录（ SRV ）。
+* 要为NFS或SMB服务器提供名称解析的DNS服务器的IP地址列表。
+* 列出的DNS服务器必须包含为SMB服务器将加入的域查找Active Directory LDAP服务器和域控制器所需的服务位置记录(SRV)。
 SRV 记录用于将服务名称映射到提供该服务的服务器的 DNS 计算机名称。如果 ONTAP 无法通过本地 DNS 查询获取服务位置记录，则 SMB 服务器创建将失败。
 确保 ONTAP 可以找到 Active Directory SRV 记录的最简单方法是将 Active Directory 集成的 DNS 服务器配置为 SVM DNS 服务器。
 您可以使用非 Active Directory 集成的 DNS 服务器，前提是 DNS 管理员已手动将 SRV 记录添加到包含 Active Directory 域控制器信息的 DNS 区域。
-* 有关 Active Directory 集成的 SRV 记录的信息，请参见主题 link:http://technet.microsoft.com/library/cc759550(WS.10).aspx["Microsoft TechNet 上适用于 Active Directory 的 DNS 支持的工作原理"^]。 | 是的。 |  
+* 有关 Active Directory 集成的 SRV 记录的信息，请参见主题 link:http://technet.microsoft.com/library/cc759550(WS.10).aspx["Microsoft TechNet 上适用于 Active Directory 的 DNS 支持的工作原理"^]。
+
+| 是的。 |  
 |===
 
 

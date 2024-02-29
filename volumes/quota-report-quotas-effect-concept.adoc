@@ -18,27 +18,30 @@ summary: 由于配额的交互方式多种多样，因此有效的配额多于�
 .未为qtree指定用户配额的示例
 在此示例中，卷 vol1 包含一个 qtree q1 。管理员创建了三个配额：
 
-* vol1 上的默认树配额限制为 400 MB
-* vol1 上的默认用户配额限制为 100 MB
-* 用户 jsmith 在 vol1 上的显式用户配额限制为 200 MB
+* vol1上的默认树配额限制为400 MB
+* vol1上的默认用户配额限制为100 MB
+* 用户jsmith在vol1上的显式用户配额限制为200 MB
 
 
-这些配额的配额文件类似于以下摘录：
-
-[listing]
-----
-
-#Quota target type            disk files  thold sdisk  sfile
-#-----------  ----            ---  -----  ----  -----  -----
-*             tree@/vol/vol1  400M
-*             user@/vol/vol1  100M
-jsmith        user@/vol/vol1  200M
-----
-这些配额的配额报告类似于以下摘录：
+这些配额的配额规则类似于以下示例：
 
 [listing]
 ----
+cluster1::*> volume quota policy rule show -vserver vs1 -volume vol1
 
+Vserver: vs1               Policy: default           Volume: vol1
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+tree   ""        ""      -           400MB        -       -        -          -
+user   ""        ""      off         100MB        -       -        -          -
+user   jsmith    ""      off         200MB        -       -        -          -
+----
+这些配额的配额报告类似于以下示例：
+
+[listing]
+----
 cluster1::> volume quota report
 Vserver: vs1
                                     ----Disk----  ----Files-----   Quota
@@ -46,13 +49,12 @@ Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
 -------  --------  ------  -------  -----  -----  ------  ------   ---------
 vol1     -          tree   *           0B  400MB       0       -   *
 vol1     -          user   *           0B  100MB       0       -   *
-vol1     -          user   corp/jsmith
-                                     150B  200MB       7       -   corp/jsmith
+vol1     -          user   jsmith    150B  200MB       7       -   jsmith
 vol1     q1         tree   1           0B  400MB       6       -   q1
 vol1     q1         user   *           0B  100MB       0       -
-vol1     q1         user   corp/jsmith 0B  100MB       5       -
-vol1     -          user   root        0B   0MB        1       -
-vol1     q1         user   root        0B   0MB        8       -
+vol1     q1         user   jsmith      0B  100MB       5       -
+vol1     -          user   root        0B    0MB       1       -
+vol1     q1         user   root        0B    0MB       8       -
 ----
 配额报告的前三行显示管理员指定的三个配额。由于其中两个配额是默认配额，因此 ONTAP 会自动创建派生配额。
 
@@ -60,7 +62,7 @@ vol1     q1         user   root        0B   0MB        8       -
 
 第五行显示了由于卷上存在默认用户配额和 qtree 配额而为 qtree 创建的默认用户配额。
 
-第六行显示为 qtree 上的 jsmith 创建的派生用户配额，因为 qtree （第 5 行）具有默认用户配额，而用户 jsmith 拥有该 qtree 上的文件。请注意，在 qtree q1 中应用于用户 jsmith 的限制不是由显式用户配额限制（ 200 MB ）决定的。这是因为卷上存在显式用户配额限制，因此不会影响 qtree 的限制。相反， qtree 的派生用户配额限制由 qtree 的默认用户配额（ 100 MB ）决定。
+第六行显示为 qtree 上的 jsmith 创建的派生用户配额，因为 qtree （第 5 行）具有默认用户配额，而用户 jsmith 拥有该 qtree 上的文件。请注意、在qtree q1中应用于用户jsmith的限制不是由显式用户配额限制(200 MB)决定的。这是因为卷上存在显式用户配额限制，因此不会影响 qtree 的限制。而是由qtree的默认用户配额(100 MB)决定qtree的派生用户配额限制。
 
 最后两行显示的用户配额更多，这些配额是从卷和 qtree 上的默认用户配额派生的。已在卷和 qtree 上为 root 用户创建派生用户配额，因为 root 用户同时拥有卷和 qtree 上的文件。由于 root 用户在配额方面受到特殊对待，因此其派生配额仅跟踪配额。
 
@@ -69,25 +71,29 @@ vol1     q1         user   root        0B   0MB        8       -
 
 仍然存在一个卷 vol1 和一个 qtree q1 。管理员已创建以下配额：
 
-* vol1 上的默认树配额限制为 400 MB
-* vol1 上的默认用户配额限制为 100 MB
-* 用户 jsmith 在 vol1 上的显式用户配额限制为 200 MB
-* qtree q1 上的默认用户配额限制为 50 MB
-* 在 qtree q1 上为用户 jsmith 指定 75 MB 的明确用户配额限制
+* vol1上的默认树配额限制为400 MB
+* vol1上的默认用户配额限制为100 MB
+* vol1上用户jsmith的显式用户配额限制为200 MB
+* qtree q1上的默认用户配额限制为50 MB
+* qtree q1上用户jsmith的显式用户配额限制为75 MB
 
 
-这些配额的配额文件如下所示：
+这些配额的配额规则如下所示：
 
 [listing]
 ----
+cluster1::> volume quota policy rule show -vserver vs1 -volume vol1
 
-#Quota target type             disk files  thold sdisk  sfile
-#-----------  ----             ---  -----  ----  -----  -----
-*             tree@/vol/vol1   400M
-*             user@/vol/vol1   100M
-jsmith        user@/vol/vol1   200M
-*             user@/vol/vol1/q1 50M
-jsmith        user@/vol/vol1/q1 75M
+Vserver: vs1               Policy: default           Volume: vol1
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+tree   ""        ""      -           400MB        -       -        -          -
+user   ""        ""      off         100MB        -       -        -          -
+user   ""        q1      off          50MB        -       -        -          -
+user   jsmith    ""      off         200MB        -       -        -          -
+user   jsmith    q1      off          75MB        -       -        -          -
 ----
 这些配额的配额报告如下所示：
 
@@ -101,13 +107,12 @@ Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
 -------  --------  ------  -------  -----  -----  ------  ------   ---------
 vol1     -          tree   *           0B  400MB       0       -   *
 vol1     -          user   *           0B  100MB       0       -   *
-vol1     -          user   corp/jsmith
-                                    2000B  200MB       7       -   corp/jsmith
+vol1     -          user   jsmith   2000B  200MB       7       -   jsmith
 vol1     q1         user   *           0B   50MB       0       -   *
-vol1     q1         user   corp/jsmith 0B  75MB        5       -   corp/jsmith
-vol1     q1         tree   1           0B 400MB        6       -   q1
-vol1     -          user   root        0B   0MB        2       -
-vol1     q1         user   root        0B   0MB        1       -
+vol1     q1         user   jsmith      0B   75MB       5       -   jsmith
+vol1     q1         tree   1           0B  400MB       6       -   q1
+vol1     -          user   root        0B    0MB       2       -
+vol1     q1         user   root        0B    0MB       1       -
 ----
 配额报告的前五行显示了管理员创建的五个配额。由于其中某些配额是默认配额，因此 ONTAP 会自动创建派生配额。
 

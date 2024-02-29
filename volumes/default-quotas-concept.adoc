@@ -34,12 +34,19 @@ summary: 您可以使用默认配额将配额应用于给定配额类型的所�
 
 == 默认用户配额示例
 
-以下配额文件使用默认用户配额对 vol1 的每个用户应用 50 MB 的限制：
+以下配额规则使用默认用户配额对vol1的每个用户应用50 MB的限制：
 
 [listing]
 ----
-#Quota target type           disk  files  thold  sdisk  sfile
-#-----------  ----           ----  -----  -----  -----  -----
-*             user@/vol/vol1  50M
+cluster1::> volume quota policy rule create -vserver vs0 -volume vol1 -policy-name default -type user -target "" -qtree "" -disk-limit 50m
+
+cluster1::> volume quota policy rule show -vserver vs0 -volume vol1
+
+Vserver: vs0               Policy: default           Volume: vol1
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+user   ""        ""      off          50MB        -       -        -          -
 ----
 如果系统上的任何用户输入的命令会发生原因该用户的数据在 vol1 中占用超过 50 MB 的空间（例如，从编辑器写入文件），则该命令将失败。
