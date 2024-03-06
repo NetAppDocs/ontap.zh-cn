@@ -15,7 +15,7 @@ summary: 选择性 LUN 映射（ SLM ）可减少从主机到 LUN 的路径数�
 
 SLM 支持在每个主机上管理一个 igroup ，并支持不需要操作端口集或重新映射 LUN 的无中断 LUN 移动操作。
 
-可以将端口集与SLM结合使用、以便进一步限制某些目标对某些启动程序的访问。如果将 SLM 与端口集结合使用，则可以通过 LUN 所属节点以及该节点的 HA 配对节点上端口集中的一组 LIF 访问 LUN 。
+link:create-port-sets-binding-igroups-task.html["端口集"] 可与SLM结合使用、以进一步限制对特定目标的访问、使其仅能访问特定启动程序。如果将 SLM 与端口集结合使用，则可以通过 LUN 所属节点以及该节点的 HA 配对节点上端口集中的一组 LIF 访问 LUN 。
 
 默认情况下，所有新 LUN 映射都会启用 SLM 。
 
@@ -36,8 +36,10 @@ SLM 支持在每个主机上管理一个 igroup ，并支持不需要操作端�
 .步骤
 . 将目标节点及其配对节点添加到聚合或卷的报告节点列表中：
 +
-`lun mapping add-reporting-nodes -vserver _vserver_name_ -path _lun_path_ -igroup _igroup_name_ [-destination-aggregate _aggregate_name_|-destination-volume _volume_name_]`
-
+[source, cli]
+----
+lun mapping add-reporting-nodes -vserver _vserver_name_ -path _lun_path_ -igroup _igroup_name_ [-destination-aggregate _aggregate_name_|-destination-volume _volume_name_]
+----
 +
 如果您的命名约定一致、则可以使用同时修改多个LUN映射 `_igroup_prefix*_` 而不是 `_igroup_name_`。
 
@@ -46,16 +48,22 @@ SLM 支持在每个主机上管理一个 igroup ，并支持不需要操作端�
 . 对所需的移动操作运行命令，然后等待操作完成。
 . 验证是否正在通过主动 / 优化路径处理 I/O ：
 +
-`lun mapping show -fields reporting-nodes`
-
+[source, cli]
+----
+lun mapping show -fields reporting-nodes
+----
 . 从报告节点列表中删除先前的 LUN 所有者及其配对节点：
 +
-`lun mapping remove-reporting-nodes -vserver _vserver_name_ -path _lun_path_ -igroup _igroup_name_ -remote-nodes`
-
+[source, cli]
+----
+lun mapping remove-reporting-nodes -vserver _vserver_name_ -path _lun_path_ -igroup _igroup_name_ -remote-nodes
+----
 . 验证是否已从现有 LUN 映射中删除此 LUN ：
 +
-`lun mapping show -fields reporting-nodes`
-
+[source, cli]
+----
+lun mapping show -fields reporting-nodes
+----
 . 删除主机操作系统的任何陈旧设备条目。
 . 根据需要更改任何多路径配置文件。
 . 重新扫描主机以验证是否删除了旧路径。+

@@ -11,7 +11,12 @@ summary: LIF 连接到 SAN 主机。可以从端口集中删除这些节点，�
 
 
 [role="lead"]
-LIF 连接到 SAN 主机。可以从端口集中删除这些节点，将其移动到 Storage Virtual Machine （ SVM ）中的不同节点以及将其删除。
+您需要使用逻辑接口（ Logical Interface ， LIF ）从 HA 对中的每个节点创建一个或多个 iSCSI 路径，以允许访问由 HA 对提供服务的 LUN 。  您应为支持 SAN 的每个 Storage Virtual Machine （ SVM ）配置一个管理 LIF 。
+
+如果某个节点发生故障， LIF 不会迁移或假定出现故障的配对节点的 IP 地址。相反，在主机上使用 ALUA 的 MPIO 软件负责选择通过 LIF 访问 LUN 的适当路径。
+
+创建完后、可以从端口集中将其删除、将其移动到Storage Virtual Machine (SVM)中的不同节点以及将其删除。
 
 .相关信息
-link:../networking/index.html["网络管理"]
+link:../networking/configure_lifs_@cluster_administrators_only@_overview.html#lif-failover-and-giveback["配置用于覆盖的Sifs"]
+link:../networking/create_a_lif.html["创建 LIF"]

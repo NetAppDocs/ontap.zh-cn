@@ -11,9 +11,17 @@ summary: 支持使用 FC-NVMe ， FC ， iSCSI 和 FCoE 拓扑将主机计算机
 
 
 [role="lead"]
-以下各节介绍将主机计算机连接到节点时支持的 FC-NVMe ， FC ， iSCSI 和 FCoE 拓扑，并列出支持的 SAN 组件限制。
+存储区域网络(Storage Area Network、SAN)由通过SAN传输协议(如iSCSI或FC)连接到主机的存储解决方案组成。您可以配置SAN、以便存储解决方案通过一个或多个交换机连接到主机。  如果您使用的是iSCSI、则还可以配置SAN、以便存储解决方案直接连接到主机、而无需使用交换机。
 
-您应将此信息与基本 SAN 配置文档结合使用：
+在SAN中、使用不同操作系统(如Windows、Linux或UNIX)的多个主机可以同时访问存储解决方案。  您可以使用 link:../san-admin/selective-lun-map-concept.html["选择性LUN映射"] 和 link:../san-admin/create-port-sets-binding-igroups-task.html["端口集"] 限制主机和存储之间的数据访问。
 
+对于iSCSI、存储解决方案与主机之间的网络拓扑称为网络。  对于FC、FC/NVMe和FCoE、存储解决方案与主机之间的网络拓扑称为网络结构。要创建冗余以防止丢失数据访问、您应在多网络或多网络结构配置中使用HA对设置SAN。  使用单节点或单网络/网络结构的配置并非完全冗余、因此不建议使用。
+
+配置SAN后、您可以执行此操作 link:../san-admin/provision-storage.html["为iSCSI或FC配置存储"]也可以 link:../san-admin/create-nvme-namespace-subsystem-task.html["为FC/NVMe配置存储"]。  然后、您可以连接到主机以开始提供数据。
+
+SAN协议支持因ONTAP版本、平台和配置而异。有关特定配置的详细信息、请参见 link:https://imt.netapp.com/matrix/["NetApp 互操作性表工具"]。
+
+.相关信息
 * link:../san-admin/index.html["SAN 管理概述"]
+* link:../nvme/support-limitations.html["NVMe配置、支持和限制"]
 
