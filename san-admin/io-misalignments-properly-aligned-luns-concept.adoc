@@ -31,131 +31,18 @@ image::../media/bsag-cmode-lbpb.gif[LUN上物理块中的逻辑块]
 
 == 使用 LUN 操作系统类型实现 I/O 对齐
 
-要使用操作系统分区方案实现I/O对齐、应使用建议的ONTAP LUN `ostype` 与您的操作系统最匹配的值。
+对于ONTAP 9.7或更早版本、应使用建议的ONTAP LUN `ostype` 与您的操作系统最匹配的值、以使I/O与您的操作系统分区方案保持一致。
 
 主机操作系统采用的分区方案是导致 I/O 错位的一个主要因素。某些ONTAP LUN `ostype` 这些值使用一个称为"`前缀`"的特殊偏移、以便对齐主机操作系统使用的默认分区方案。
 
-[NOTE]
-====
-在某些情况下，可能需要使用自定义分区表来实现 I/O 对齐。但是、对于 `ostype` "`前缀`"值大于的值 `0`，则自定义分区可能会产生错位的I/O
 
-====
-LUN `ostype` 应根据您的操作系统使用下表中的值。
+NOTE: 在某些情况下，可能需要使用自定义分区表来实现 I/O 对齐。但是、对于 `ostype` "`前缀`"值大于的值 `0`，则自定义分区可能会产生错位的I/O
 
-[cols="4*"]
-|===
-| LUN `ostype` | 前缀（字节） | 前缀（扇区） | 操作系统 
+有关在ONTAP 9.7或更早版本中配置的LUN的详细信息、请参见知识库文章 link:https://kb.netapp.com/onprem/ontap/da/SAN/How_to_identify_unaligned_IO_on_LUNs["如何识别LUN上的未对齐IO"^]。
 
 
- a| 
-`windows`
- a| 
-32、256
- a| 
-63.
- a| 
-Windows 2000 ， 2003 （ MBR 格式）
+NOTE: 默认情况下、在ONTAP 9.8或更高版本中配置的新LUN在所有LUN操作系统类型中的前缀和后缀大小均为零。默认情况下、I/O应与受支持的主机操作系统对齐。
 
-
-
- a| 
-`windows_gpt`
- a| 
-17,408.
- a| 
-34.
- a| 
-Windows 2003 （ GPT 格式）
-
-
-
- a| 
-`windows_2008`
- a| 
-0
- a| 
-0
- a| 
-Windows 2008 及更高版本
-
-
-
- a| 
-`linux`
- a| 
-0
- a| 
-0
- a| 
-所有 Linux 分发版
-
-
-
- a| 
-`xen`
- a| 
-0
- a| 
-0
- a| 
-Citrix XenServer
-
-
-
- a| 
-`vmware`
- a| 
-0
- a| 
-0
- a| 
-VMware ESX
-
-
-
- a| 
-`solaris`
- a| 
-1 MB
- a| 
-2 ， 048
- a| 
-Solaris
-
-
-
- a| 
-`solaris_efi`
- a| 
-17,408.
- a| 
-34.
- a| 
-Solaris
-
-
-
- a| 
-`hpux`
- a| 
-0
- a| 
-0
- a| 
-HP-UX
-
-
-
- a| 
-`aix`
- a| 
-0
- a| 
-0
- a| 
-AIX
-
-|===
 
 
 == Linux 的特殊 I/O 对齐注意事项
