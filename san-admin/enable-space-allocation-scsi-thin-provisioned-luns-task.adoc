@@ -19,19 +19,27 @@ summary: 如果将 space-allocation 选项设置为 enabled ，则当卷空间�
 .步骤
 . 使LUN脱机。
 +
-`lun modify -vserver vserver_name -volume volume_name -lun lun_name -state offline`
-
-. 设置 `-space-allocation` 参数设置为 `enabled`：
+[source, cli]
+----
+lun modify -vserver vserver_name -volume volume_name -lun lun_name -state offline
+----
+. 启用空间分配：
 +
-`lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled`
-
+[source, cli]
+----
+lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled
+----
 . 验证是否已启用空间分配：
 +
-`lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation`
-
+[source, cli]
+----
+lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation
+----
 . 使 LUN 联机：
 +
-`lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -state online`
-
+[source, cli]
+----
+lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -state online
+----
 . 在主机上、重新扫描所有磁盘、以确保对所做的更改 `-space-allocation` 已正确发现选项。
 
