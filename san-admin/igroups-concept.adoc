@@ -18,3 +18,84 @@ summary: 启动程序组（ igroup ）是包含 FC 协议主机 WWPN 或 iSCSI �
 您可以创建 igroup ，以指定在创建 LUN 之前或之后哪些启动程序可以访问 LUN ，但必须先创建 igroup ，然后才能将 LUN 映射到 igroup 。
 
 启动程序组可以包含多个启动程序，多个 igroup 可以包含同一个启动程序。但是，不能将一个 LUN 映射到具有相同启动程序的多个 igroup 。启动程序不能是不同操作系统类型的 igroup 的成员。
+
+
+
+== igroup 如何授予 LUN 访问权限的示例
+
+您可以创建多个 igroup 来定义哪些 LUN 可供主机使用。例如，如果您有主机集群，则可以使用 igroup 来确保特定 LUN 仅对集群中的一个主机可见，或者对集群中的所有主机可见。
+
+下表说明了四个 igroup 如何为访问存储系统的四个不同主机提供 LUN 访问权限。集群模式主机（ Host3 和 Host4 ）都是同一个 igroup （ group3 ）的成员，并且可以访问映射到此 igroup 的 LUN 。名为 group4 的 igroup 包含 Host4 的 WWPN ，用于存储其配对节点不希望看到的本地信息。
+
+[cols="4*"]
+|===
+| 具有 HBA WWPN ， IQN 或 EUI 的主机 | igroup | 已将 WWPN ， IQN ， EUI 添加到 igroup 中 | 映射到 igroup 的 LUN 
+
+
+ a| 
+host1 ，单路径（ iSCSI 软件启动程序）
+
+iqn.1991-05.com.microsoft:host1
+ a| 
+组 1
+ a| 
+iqn.1991-05.com.microsoft:host1
+ a| 
+`/vol/vol2/lun1`
+
+
+
+ a| 
+Host2 ，多路径（两个 HBA ）
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 6b ： 3c
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 02 ： 3c
+ a| 
+组 2
+ a| 
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 6b ： 3c
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 02 ： 3c
+ a| 
+`/vol/vol2/lun2`
+
+
+
+ a| 
+Host3 ，多路径，与主机 4 集群在一起
+
+10：00：00：00：C9：2b：32：1b
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 41 ： 02
+ a| 
+第 3 组
+ a| 
+10：00：00：00：C9：2b：32：1b
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 41 ： 02
+
+10：00：00：00：C9：2b：51：2c
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 47 ： A2
+ a| 
+`/vol/vol2/qtree1/lun3`
+
+
+
+ a| 
+Host4 ，多路径，集群模式（对于 Host3 不可见）
+
+10：00：00：00：C9：2b：51：2c
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 47 ： A2
+ a| 
+组 4
+ a| 
+10：00：00：00：C9：2b：51：2c
+
+10 ： 00 ： 00 ： 00 ： c9 ： 2b ： 47 ： A2
+ a| 
+`/vol/vol2/qtree2/lun4` `/vol/vol2/qtree1/lun5`
+
+|===

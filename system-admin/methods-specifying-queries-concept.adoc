@@ -102,6 +102,11 @@ summary: 管理界面支持查询以及 UNIX 模式和通配符，可用于匹�
 例如、命令 `volume modify {-volume \*tmp*} -state offline` 将名称包含字符串的所有卷设置为脱机 `tmp`。
 
 |===
-如果要将查询字符解析为文字、则必须将这些字符用双引号引起来(例如、"`｛caret｝`"、"`.`", "`*`", or "`$`")以获得要返回的正确结果。
+如果要将查询字符解析为文字、则必须将这些字符用双引号括起来(例如、 `"<10"`， `"0..100"`， `"\*abc*"`或 `"a|b"`)以获得要返回的正确结果。
+
+必须将原始文件名用双引号括起来、以防止对特殊字符进行解释。这也是由集群Shell使用的适用场景特殊字符。
 
 您可以在一个命令行中使用多个查询运算符。例如、命令 `volume show -size >1GB -percent-used <50 -vserver !vs1` 显示大小大于1 GB、利用率小于50%且不在名为"`VS1`"的Storage Virtual Machine (SVM)中的所有卷。
+
+.相关信息
+link:../system-admin/keyboard-shortcuts-edit-cli-commands-reference.html["用于编辑 CLI 命令的快捷键"]

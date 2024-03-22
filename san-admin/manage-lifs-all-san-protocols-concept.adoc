@@ -11,9 +11,11 @@ summary: LIF 连接到 SAN 主机。可以从端口集中删除这些节点，�
 
 
 [role="lead"]
+对于SAN环境中的集群、启动程序必须使用多路径I/O (Multipath I/O、MPIO)和非对称逻辑单元访问(ALOA)实现故障转移功能。如果某个节点发生故障， LIF 不会迁移或假定出现故障的配对节点的 IP 地址。相反，在主机上使用 ALUA 的 MPIO 软件负责选择通过 LIF 访问 LUN 的适当路径。
+
 您需要使用逻辑接口（ Logical Interface ， LIF ）从 HA 对中的每个节点创建一个或多个 iSCSI 路径，以允许访问由 HA 对提供服务的 LUN 。  您应为支持 SAN 的每个 Storage Virtual Machine （ SVM ）配置一个管理 LIF 。
 
-如果某个节点发生故障， LIF 不会迁移或假定出现故障的配对节点的 IP 地址。相反，在主机上使用 ALUA 的 MPIO 软件负责选择通过 LIF 访问 LUN 的适当路径。
+您可以为每个节点配置两个 LIF ，每个 LIF 用于与 FC 一起使用的每个网络结构，并为 iSCSI 分隔以太网网络。
 
 创建完后、可以从端口集中将其删除、将其移动到Storage Virtual Machine (SVM)中的不同节点以及将其删除。
 
