@@ -16,10 +16,14 @@ summary: 当ARP检测到潜在攻击时、会创建Snapshot副本。您可以从
 
 
 [role="lead"]
-当自主勒索软件保护(ARP)检测到潜在攻击时、系统会创建名为"Anti勒索软件_backup"的Snapshot副本。您可以从这些ARP副本或其他Snapshot副本还原数据。
+自动防兰森(ARP)会创建名为的Snapshot副本 `Anti_ransomware_backup` 检测到潜在的勒索软件威胁时。您可以使用这些ARP Snapshot副本之一或卷的另一个Snapshot副本还原数据。
 
 .关于此任务
 如果卷具有 SnapMirror 关系，请在从 Snapshot 副本还原后立即手动复制卷的所有镜像副本。否则，可能会导致镜像副本不可用，必须删除并重新创建这些副本。
+
+从以外的Snapshot还原 `Anti_ransomware_backup` Snapshot在确定系统攻击后、必须先释放ARP Snapshot。
+
+如果未报告系统攻击、则必须先从还原 `Anti_ransomware_backup` 然后、Snapshot副本会从您选择的Snapshot副本完成卷的后续还原。
 
 .步骤
 您可以使用System Manager或ONTAP 命令行界面还原数据。
@@ -28,25 +32,15 @@ summary: 当ARP检测到潜在攻击时、会创建Snapshot副本。您可以从
 ====
 .System Manager
 --
-. 如果要从早期的Snapshot副本而不是ARP副本还原数据、则必须释放防勒索软件Snapshot锁定。如果要从ARP副本还原、则无需解除锁定、您可以跳过此步骤。
+.在系统受到攻击后恢复
+. 要从ARP快照还原、请跳至步骤二。要从早期的Snapshot副本还原、必须先释放ARP Snapshot的锁定。
 +
-[cols="2"]
-|===
-| 如果发现系统攻击、请执行以下操作... | 如果未发现系统攻击、请执行以下操作... 
-
-
- a| 
 .. 选择 * 存储 > 卷 * 。
 .. 选择*安全性*，然后选择*查看可疑文件类型*
 .. 将这些文件标记为"Falseal"。
 .. 选择*更新*和*清除可疑文件类型*
 
- a| 
-要释放Snapshot锁定、必须先从ARP副本还原、然后再从早期的Snapshot副本还原。
 
-按照步骤2-3从ARP副本还原数据、然后重复此过程从早期的Snapshot副本还原数据。
-
-|===
 . 显示卷中的Snapshot副本：
 +
 选择*存储>卷*，然后选择卷和*Snapshot副本*。
@@ -54,35 +48,33 @@ summary: 当ARP检测到潜在攻击时、会创建Snapshot副本。您可以从
 . 选择 ... image:icon_kabob.gif["菜单选项"] 在要还原的Snapshot副本旁边，然后选择*Restore*。
 
 
+.如果未发现系统攻击、则还原
+. 显示卷中的Snapshot副本：
++
+选择*存储>卷*，然后选择卷和*Snapshot副本*。
+
+. 选择 ... image:icon_kabob.gif["菜单选项"] 他们选择 `Anti_ransomware_backup` Snapshot。
+. 选择 * 还原 * 。
+. 返回到*Snapshot副本*菜单，然后选择要使用的Snapshot副本。选择 * 还原 * 。
+
+
 --
 .命令行界面
 --
-. 如果您要从早期Snapshot副本(而不是从ARP副本)还原数据、则必须执行以下操作以释放反勒索软件Snapshot锁定。  如果要从ARP副本还原、则无需解除锁定、您可以跳过此步骤。
+.在系统受到攻击后恢复
+. 要从ARP Snapshot副本还原、请跳至步骤二。要从早期的Snapshot副本还原数据、您必须解除对ARP Snapshot的锁定。
 +
 
 NOTE: 只有在使用时、才需要在从早期Snapshot副本还原之前释放反勒索软件SnapLock `volume snap restore` 命令。  如果使用Flex Clone、Single File Snap Restore或其他方法还原数据、则无需执行此操作。
 
 +
-[cols="2"]
-|===
-| 如果发现系统攻击、请执行以下操作... | 如果未发现系统攻击、请执行以下操作... 
-
-
- a| 
-将此攻击标记为"误报"和"明确可疑"。
-
+将攻击标记为"误报"和"明确怀疑"：
 `anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
-
 使用以下参数之一标识扩展：
 `[-seq-no _integer_]` 可疑列表中的文件序列号。
 `[-extension _text_, … ]` 文件扩展名
 `[-start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始时间和结束时间、格式为"MM/DD/YYYY HH：MM：SS"。
- a| 
-要释放Snapshot锁定、必须先从ARP副本还原、然后再从早期的Snapshot副本还原。
 
-按照步骤2-3从ARP副本还原数据、然后重复此过程从早期的Snapshot副本还原数据。
-
-|===
 . 列出卷中的 Snapshot 副本：
 +
 `volume snapshot show -vserver _SVM_ -volume _volume_`
@@ -120,6 +112,47 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
 ----
+
+
+.如果未发现系统攻击、则还原
+. 列出卷中的 Snapshot 副本：
++
+`volume snapshot show -vserver _SVM_ -volume _volume_`
+
++
+以下示例显示了中的Snapshot副本 `vol1`：
+
++
+[listing]
+----
+
+clus1::> volume snapshot show -vserver vs1 -volume vol1
+
+Vserver Volume Snapshot                State    Size  Total% Used%
+------- ------ ---------- ----------- ------   -----  ------ -----
+vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+               daily.2013-01-25_0010   valid   92KB      0%    0%
+               hourly.2013-01-25_0105  valid   228KB     0%    0%
+               hourly.2013-01-25_0205  valid   236KB     0%    0%
+               hourly.2013-01-25_0305  valid   244KB     0%    0%
+               hourly.2013-01-25_0405  valid   244KB     0%    0%
+               hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 从 Snapshot 副本还原卷的内容：
++
+`volume snapshot restore -vserver _SVM_ -volume _volume_ -snapshot _snapshot_`
+
++
+以下示例将还原的内容 `vol1`：
+
++
+[listing]
+----
+cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
+----
+. 重复步骤1和2、使用所需的Snapshot副本还原卷。
 
 
 --

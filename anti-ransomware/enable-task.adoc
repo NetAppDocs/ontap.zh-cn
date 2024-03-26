@@ -27,20 +27,26 @@ summary: 自动防兰森异常保护在学习模式下启用、用于分析工�
 NOTE: 在现有卷中、学习和活动模式仅适用于新写入的数据、而不适用于卷中已有的数据。不会扫描和分析现有数据、因为在为卷启用ARP后、系统会根据新数据假设先前正常数据流量的特征。
 
 .开始之前
-* 您必须为Storage VM启用NFS或SMB (或同时启用这两者)。
+* 您必须为NFS或SMB (或这两者)启用Storage VM (SVM)。
 * 。 xref:index.html[正确的许可证] 必须为您的ONTAP 版本安装。
 * 您必须已配置NAS工作负载和客户端。
-* 要设置ARP的卷需要受到保护、必须具有活动的 link:../concepts/namespaces-junction-points-concept.html["接合路径"^]。
+* 要设置ARP的卷需要受到保护、并且必须具有活动卷 link:../concepts/namespaces-junction-points-concept.html["接合路径"^]。
 * 卷的容量必须小于100%。
 * 建议您将EMS系统配置为发送电子邮件通知、其中包括ARP活动通知。有关详细信息，请参见 link:../error-messages/configure-ems-events-send-email-task.html["配置 EMS 事件以发送电子邮件通知"^]。
 * 从ONTAP 9.13.1开始、建议您启用多管理员验证(MAV)、以便需要两个或更多经过身份验证的用户管理员才能进行自动防病毒(ARP)配置。有关详细信息，请参见 link:../multi-admin-verify/enable-disable-task.html["启用多管理员验证"^]。
 
 
-.步骤
+
+
+== 启用ARP
+
+您可以使用System Manager或ONTAP命令行界面启用ARP。
+
 [role="tabbed-block"]
 ====
 .System Manager
 --
+.步骤
 . 选择*存储>卷*，然后选择要保护的卷。
 . 在*Volumes*概述的*Security*选项卡中，在*Anti-勒索 软件*框中选择*Status*，在学习模式下从Disabled切换为Enabled。
 . 学习期结束后、将ARP切换到活动模式。
@@ -62,19 +68,15 @@ NOTE: 从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自�
 --
 .命令行界面
 --
+如果要在现有卷上启用ARP、而要在新卷上启用ARP、则使用命令行界面启用ARP的过程会有所不同。
+
 .在现有卷上启用ARP
 . 修改现有卷以在学习模式下启用勒索软件保护：
 +
 `security anti-ransomware volume dry-run -volume _vol_name_ -vserver _svm_name_`
 
 +
-您还可以使用启用勒索软件保护 `volume modify` 命令：
-
-+
-`volume modify -volume _vol_name_ -vserver _svm_name_ -anti-ransomware-state dry-run`
-
-+
-如果您升级到ONTAP 9.13.1或更高版本、则会启用自适应学习、以便自动更改为活动状态。如果您不希望自动启用此行为、请在所有关联卷上的SVM级别更改此设置：
+如果您运行的是ONTAP 9.13.1.或更高版本、则会启用自适应学习、以便自动更改为活动状态。如果您不希望自动启用此行为、请在所有关联卷上的SVM级别更改此设置：
 
 +
 `vserver modify _svm_name_ -anti-ransomware-auto-switch-from-learning-to-enabled false`
@@ -101,7 +103,7 @@ NOTE: 从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自�
 `volume create -volume _vol_name_ -vserver _svm_name_  -aggregate _aggr_name_ -size _nn_ -anti-ransomware-state dry-run -junction-path /_path_name_`
 
 +
-如果您升级到ONTAP 9.13.1或更高版本、则会启用自适应学习、以便自动更改为活动状态。如果您不希望自动启用此行为、请在所有关联卷上的SVM级别更改此设置：
+如果您运行的是ONTAP 9.13.1.或更高版本、则会启用自适应学习、以便自动更改为活动状态。如果您不希望自动启用此行为、请在所有关联卷上的SVM级别更改此设置：
 
 +
 `vserver modify _svm_name_ -anti-ransomware-auto-switch-from-learning-to-enabled false`

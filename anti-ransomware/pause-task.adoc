@@ -26,17 +26,15 @@ summary: 如果您预期会发生异常工作负载事件、则可以随时暂�
 
 NOTE: 请勿使用ARP禁用功能暂停分析。这样做会禁用卷上的ARP、并且与所了解的工作负载行为相关的所有现有信息都将丢失。这需要重新开始学习。
 
-.开始之前
-* ARP正在学习或活动模式下运行。
-
-
 .步骤
+您可以使用System Manager或ONTAP命令行界面暂停ARP。
+
 [role="tabbed-block"]
 ====
 .System Manager
 --
 . 选择*存储>卷*，然后选择要暂停ARP的卷。
-. 在卷概述的安全性选项卡中、单击*防勒索软件*框中的*暂停防勒索软件*。
+. 在卷概述的**安全性**选项卡中，选择*反勒索软件*框中的*暂停反勒索软件*。
 +
 
 NOTE: 从ONTAP 9.13.1开始，如果使用MAV保护ARP设置，暂停操作将提示您获得一个或多个其他管理员的批准。 link:../multi-admin-verify/request-operation-task.html["必须获得所有管理员的批准"] 与MAV审批组关联、否则操作将失败。
@@ -54,28 +52,31 @@ NOTE: 从ONTAP 9.13.1开始，如果使用MAV保护ARP设置，暂停操作将�
 +
 `security anti-ransomware volume resume -vserver _svm_name_ -volume _vol_name_`
 
-
-
-从ONTAP 9.13.1开始，如果使用MAV保护ARP设置，暂停操作将提示您获得一个或多个其他管理员的批准。必须从与MAV批准组关联的所有管理员处获得批准、否则操作将失败。
-
+. *如果您使用MAV (从ONTAP 9.13.1开始可用于ARP)来保护ARP设置，*暂停操作将提示您获得一个或多个额外管理员的批准。必须从与MAV批准组关联的所有管理员处获得批准、否则操作将失败。
++
 如果您正在使用MAV、并且预期的暂停操作需要额外的审批、则每个MAV组审批人将执行以下操作：
 
-. 显示请求：
++
+.. 显示请求：
 +
 `security multi-admin-verify request show`
 
-. 批准申请：
+.. 批准申请：
 +
 `security multi-admin-verify request approve -index[_number returned from show request_]`
 
 +
 最后一个组批准者的响应指示卷已修改、并且ARP状态已暂停。
 
-
-
++
 如果您正在使用MAV、并且您是MAV组批准者、则可以拒绝暂停操作请求：
 
++
 `security multi-admin-verify request veto -index[_number returned from show request_]`
+
+
+
+
 
 --
 ====

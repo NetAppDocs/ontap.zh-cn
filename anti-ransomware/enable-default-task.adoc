@@ -35,7 +35,7 @@ summary: 从ONTAP 9.10.1开始、您可以对SVM进行配置、使新卷默认�
 .将ARP从学习模式切换到活动模式
 [%collapsible]
 ====
-从ONTAP 9.13.1开始、ARP分析中添加了自适应学习功能、并且会自动从学习模式切换到主动模式。ARP自动决定从学习模式切换到活动模式取决于以下选项的配置设置：
+从ONTAP 9.131开始、ARP分析增加了自适应学习功能。自动完成从学习模式切换到活动模式的操作。ARP自动决定从学习模式切换到活动模式取决于以下选项的配置设置：
 
 [listing]
 ----
@@ -47,16 +47,19 @@ summary: 从ONTAP 9.10.1开始、您可以对SVM进行配置、使新卷默认�
 ----
 学习30天后、卷会自动切换到活动模式、即使其中一个或多个条件不满足也是如此。也就是说、如果启用了自动切换、则卷将在最长30天后切换到活动模式。30天的最大值是固定的、不可修改。
 
-有关ARP配置选项(包括默认值)的详细信息、请参见ONTAP 手册页。
+有关ARP配置选项(包括默认值)的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9141//security-anti-ransomware-volume-auto-switch-to-enable-mode-show.html["ONTAP 命令参考"^]。
 
 ====
 .步骤
+默认情况下、您可以使用System Manager或ONTAP命令行界面启用ARP。
+
 [role="tabbed-block"]
 ====
 .System Manager
 --
 . 选择*存储> Storage VM*、然后选择包含要使用ARP保护的卷的Storage VM。
-. 导航到*Settings*选项卡。在*安全性*下，选择 image:icon_pencil.gif["笔图标"] 在*防勒索软件*框中、选中此框可为NAS卷启用ARP。选中附加框可在Storage VM中所有符合条件的NAS卷上启用ARP。
+. 导航到*Settings*选项卡。在*安全性*下，找到**反勒索软件**磁贴，然后选择 image:icon_pencil.gif["笔图标"]
+. 选中此框可为NAS卷启用ARP。选中附加框可在Storage VM中所有符合条件的NAS卷上启用ARP。
 +
 
 NOTE: 如果您已升级到ONTAP 9.13.1，*在充分学习后自动从学习模式切换到活动模式*设置将自动启用。这样、ARP就可以确定最佳学习周期间隔、并自动切换到活动模式。如果要手动过渡到活动模式、请关闭设置。

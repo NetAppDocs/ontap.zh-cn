@@ -89,11 +89,11 @@ NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索�
 
 ARP有两种模式：
 
-. 记忆(或"试运行"模式)
-. 活动(或"已启用"模式)
+* *学习*(或"演练"模式)
+* *Active*(或"已启用"模式)
 
 
-启用ARP后、它将在学习模式下运行。在学习模式下、ONTAP系统会根据分析区域(熵、文件扩展名类型和文件IOPS)开发警报配置文件。在学习模式下运行ARP并有足够的时间来评估工作负载特征后、您可以切换到活动模式并开始保护数据。一旦ARP切换到活动模式、ONTAP 将创建ARP快照、以便在检测到威胁时保护数据。
+启用ARP后、它将在_leARnLearning mode_下 运行。在学习模式下、ONTAP系统会根据分析区域(熵、文件扩展名类型和文件IOPS)开发警报配置文件。在学习模式下运行ARP并有足够的时间来评估工作负载特征后、您可以切换到活动模式并开始保护数据。ARP切换到活动模式后、ONTAP会创建ARP Snapshot副本、以便在检测到威胁时保护数据。
 
 建议您将ARP保留在学习模式30天。从ONTAP 9.13.1开始、ARP会自动确定最佳学习周期间隔并自动执行交换机操作、这可能会在30天之前发生。
 
@@ -103,7 +103,7 @@ ARP有两种模式：
 
 
 
-== 威胁评估和ARP快照
+== 威胁评估和ARP Snapshot副本
 
 在主动模式下、ARP根据根据所学分析测量的传入数据评估威胁概率。当ARP检测到威胁时、将分配一个度量值：
 
@@ -115,23 +115,23 @@ ARP有两种模式：
 
 
 
-在威胁较低的情况下、ONTAP会检测到一个非正常情况、并为卷创建一个Snapshot、以创建最佳恢复点。ARP Snapshot使用 `anti-ransomware-backup` 标记和可通过其名称进行标识、例如 `Anti_ransomware_backup.2022-12-20_1248`。
+在威胁较低的情况下、ONTAP会检测到一个非正常情况、并为此卷创建一个Snapshot副本、以创建最佳恢复点。ONTAP会在ARP Snapshot副本的名称前面附加 `Anti-ransomware-backup` 以使其易于识别、例如 `Anti_ransomware_backup.2022-12-20_1248`。
 
 在ONTAP运行分析报告以确定此非正常情况是否与勒索软件配置文件匹配后、此威胁会升级为中等。系统会在System Manager的**事件**部分中记录并显示处于较低级别的威胁。当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。ONTAP不会发送有关低威胁的警报、但是、从ONTAP 9.14.1开始、您可以发送警报 xref:manage-parameters-task.html#modify-alerts[修改警报设置]。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
 
 您可以在System Manager的**事件**部分中或使用查看有关威胁的信息，而不受威胁级别的限制 `security anti-ransomware volume show` 命令：
 
-ARP快照至少保留两天。从ONTAP 9.11.1开始、您可以修改保留设置。有关详细信息，请参见 xref:modify-automatic-shapshot-options-task.html[修改Snapshot副本的选项]。
+ARP Snapshot副本至少保留两天。从ONTAP 9.11.1开始、您可以修改保留设置。有关详细信息，请参见 xref:modify-automatic-shapshot-options-task.html[修改Snapshot副本的选项]。
 
 
 
 == 如何在勒索软件攻击后在 ONTAP 中恢复数据
 
-如果怀疑发生攻击，系统将在该时间点创建卷 Snapshot 副本并锁定该副本。如果稍后确认攻击、则可以将卷还原到此Snapshot、从而最大限度地减少数据丢失。
+如果怀疑发生攻击，系统将在该时间点创建卷 Snapshot 副本并锁定该副本。如果稍后确认攻击、则可以使用ARP Snapshot副本还原卷。
 
 无法正常删除已锁定的 Snapshot 副本。但是，如果您稍后决定将此攻击标记为误报，则锁定的副本将被删除。
 
-了解受影响的文件和攻击时间后，可以有选择地从各种 Snapshot 副本恢复受影响的文件，而不是简单地将整个卷还原到某个快照。
+了解受影响的文件和攻击时间后、可以有选择地从各种Snapshot副本恢复受影响的文件、而不是简单地将整个卷还原到其中一个Snapshot副本。
 
 因此、ARP建立在经验证的ONTAP 数据保护和灾难恢复技术之上、可应对勒索软件攻击。有关恢复数据的详细信息，请参见以下主题。
 
