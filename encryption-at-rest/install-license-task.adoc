@@ -2,7 +2,7 @@
 permalink: encryption-at-rest/install-license-task.html 
 sidebar: sidebar 
 keywords: install, license, VE license, NVE, encryption, encrypt data 
-summary: VE 许可证使您有权在集群中的所有节点上使用此功能。您必须先安装许可证，然后才能使用 NVE 对数据进行加密。 
+summary: VE 许可证使您有权在集群中的所有节点上使用此功能。您必须先验证是否已安装许可证、然后才能使用NVE对数据进行加密。 
 ---
 = 安装许可证
 :allow-uri-read: 
@@ -11,42 +11,19 @@ summary: VE 许可证使您有权在集群中的所有节点上使用此功能�
 
 
 [role="lead"]
-VE 许可证使您有权在集群中的所有节点上使用此功能。您必须先安装许可证，然后才能使用 NVE 对数据进行加密。
+VE 许可证使您有权在集群中的所有节点上使用此功能。要使用NVE对数据进行加密、必须先获得此许可证。随一起提供 link:https://docs.netapp.com/us-en/ontap/system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
+
+在ONTAP One之前、加密包附带VE许可证。加密包不再提供、但仍然有效。虽然目前不需要、但现有客户可以选择这样做 link:https://docs.netapp.com/us-en/ontap/system-admin/download-nlf-task.html["升级到ONTAP One"]。
 
 .开始之前
 * 您必须是集群管理员才能执行此任务。
-* 您必须已从销售代表处收到VE许可证密钥。
+* 您必须已从销售代表处收到VE许可证密钥、或者已安装ONTAP One。
 
 
 .步骤
-. 为节点安装VE许可证：
-+
-`system license add -license-code _license_key_`
-
-+
-以下命令将使用密钥安装许可证 `AAAAAAAAAAAAAAAAAAAAAAAAAAAA`。
-
-+
-[listing]
-----
-cluster1::> system license add -license-code AAAAAAAAAAAAAAAAAAAAAAAAAAAA
-----
-. 通过显示集群上的所有许可证来验证是否已安装此许可证：
-+
-`system license show`
-
-+
-有关完整的命令语法，请参见命令手册页。
-
-+
-以下命令将显示上的所有许可证 `cluster1`：
-
-+
-[listing]
-----
-cluster1::> system license show
-----
+* link:https://docs.netapp.com/us-en/ontap/system-admin/manage-license-task.html["验证是否已安装VE许可证"]。
 +
 VE许可证包名称为 `VE`。
 
+* 如果未安装许可证、 link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["使用System Manager或ONTAP命令行界面安装它"]。
 
