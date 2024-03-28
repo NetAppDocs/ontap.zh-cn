@@ -1,7 +1,7 @@
 ---
 permalink: upgrade/concept_upgrade_methods.html 
 sidebar: sidebar 
-keywords: upgrade, methods, andu, ndu, automated, automatic, system manager, cli, nondisruptive, disruptive 
+keywords: upgrade, methods, andu, ndu, automated, automatic, system manager, cli, nondisruptive, disruptive, rolling upgrade, rolling update, batch upgrades, batch upgrade, rolling, batch 
 summary: 升级方法取决于您的配置。  如果可用，则首选使用 System Manager 进行自动无中断升级（ ANDU ）。 
 ---
 = ONTAP软件升级方法
@@ -15,13 +15,35 @@ summary: 升级方法取决于您的配置。  如果可用，则首选使用 Sy
 
 可以使用滚动升级过程或批量升级过程执行升级。两者都是无中断的。
 
+对于自动升级、ONTAP会自动在每个节点上安装目标ONTAP映像、并验证集群组件以确保集群可以无中断升级、然后根据节点数量在后台执行批量升级或滚动升级。对于手动升级、管理员手动确认集群中的每个节点均已做好升级准备、然后执行步骤以执行滚动升级。
+
 .ONTAP滚动升级
-在滚动升级过程中、节点将脱机并进行升级、而其配对节点将接管其存储。节点升级完成后、配对节点会将控制权交还给原始所属节点、并在配对节点上重复此过程。每个附加 HA 对都会按顺序进行升级，直到所有 HA 对都运行目标版本为止。对于少于8个节点的集群、默认情况下会执行滚动升级过程。
+对于少于8个节点的集群、默认情况下会执行滚动升级过程。  在滚动升级过程中、节点将脱机并进行升级、而其配对节点将接管其存储。节点升级完成后、配对节点会将控制权交还给原始所属节点、并在配对节点上重复此过程。每个附加 HA 对都会按顺序进行升级，直到所有 HA 对都运行目标版本为止。
 
 .ONTAP批量升级
-在批量升级过程中、集群会分为多批、每批包含多个HA对。在第一批中、每个HA对中的一个节点会进行升级、然后升级其HA配对节点。然后，对其余批重复此过程。对于包含8个或更多节点的集群、默认执行批量升级过程。
+对于包含8个或更多节点的集群、默认执行批量升级过程。  在批量升级过程中、集群分为两批。  每个批处理都包含多个HA对。在第一批中、每个HA对的第一个节点会与该批中所有其他HA对的第一个节点同时进行升级。
 
-对于自动升级、ONTAP会自动在每个节点上安装目标ONTAP映像、并验证集群组件以确保集群可以无中断升级、然后根据节点数量在后台执行批量升级或滚动升级。对于手动升级、管理员手动确认集群中的每个节点均已做好升级准备、然后执行步骤以执行滚动升级。
+在以下示例中、每个批处理中有两个HA对。  开始批量升级时、节点A和节点C将同时升级。
+
+image::../media/batch_upgrade_set_1_ieops-1607.png[批量升级步骤1.]
+
+每个HA对的第一个节点升级完成后、批处理1中的配对节点将同时升级。
+
+在以下示例中、节点A和节点C升级后、节点B和节点D将同时升级。
+
+image::../media/batch_upgrade_set_2_ieops-1619.png[批量升级步骤2.]
+
+然后、对批处理2中的节点重复此过程；每个HA对的第一个节点将与该批处理中所有其他HA对的第一个节点同时进行升级。
+
+在以下示例中、节点E和节点G会同时升级。
+
+image::../media/batch_upgrade_set_3_ieops-1612.png[批量升级步骤3.]
+
+完成每个HA对的第一个节点的升级后、将同时升级批处理2中的配对节点。
+
+在以下示例中、节点F和节点H会同时升级以完成批量升级过程。
+
+image::../media/batch_upgrade_set_4_ieops-1620.png[批量升级步骤4.]
 
 
 
