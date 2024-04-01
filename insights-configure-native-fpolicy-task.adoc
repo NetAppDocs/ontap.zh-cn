@@ -1,0 +1,43 @@
+---
+permalink: insights-configure-native-fpolicy-task.html 
+sidebar: sidebar 
+keywords: system manager, fpolicy, file extensions, native, best practice, best practise, configure, disallow 
+summary: 从ONTAP 9.11.1开始、当您收到System Manager Insight建议实施本机FPolicy时、您可以在Storage VM和卷上对其进行配置。  
+---
+= 配置本机FPolicy
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+从ONTAP 9.11.1开始、当您收到System Manager Insight建议实施本机FPolicy时、您可以在Storage VM和卷上对其进行配置。
+
+.开始之前
+访问System Manager洞察力时、在*应用最佳实践*下、您可能会收到一条消息、指出未配置本机FPolicy。
+
+要了解有关FPolicy配置类型的更多信息、请参见 https://docs.netapp.com/us-en/ontap/nas-audit/fpolicy-config-types-concept.html["FPolicy 配置类型"]。
+
+.步骤
+. 在 System Manager 中，单击左侧导航列中的 * 见解 * 。
+. 在*应用最佳实践*下，找到*未配置本机FPolicy *。
+. 在采取措施之前、请阅读以下消息：
++
+[IMPORTANT]
+====
+*阻止扩展可能会导致意外结果。*从ONTAP 9.11.1开始、您可以使用System Manager为Storage VM启用本机FPolicy。
+使用FPolicy本机模式、您可以允许或禁止特定的文件扩展名。System Manager建议使用在过去的勒索软件攻击中使用的3000多个不允许的文件扩展名。  其中一些扩展名可能会被环境中的合法文件使用、阻止它们可能会导致意外问题。
+
+因此、强烈建议您修改扩展名列表以满足环境的需求。请参见 https://kb.netapp.com/onprem/ontap/da/NAS/How_to_remove_a_file_extension_from_a_native_FPolicy_configuration_created_by_System_Manager_using_System_Manager_to_recreate_the_policy["如何使用System Manager从System Manager创建的本机FPolicy配置中删除文件扩展名以重新创建策略"^]。
+
+====
+. 单击*Fix*。
+. 选择要应用本机FPolicy的Storage VM。
+. 对于每个Storage VM、选择要接收本机FPolicy的卷。
+. 单击 * 配置 * 。
+
