@@ -38,6 +38,10 @@ IMPORTANT: 修改的设置 `storage failover modify-auto-giveback` 自动无中�
 
 * 如果要升级MetroCluster FC配置中的ONTAP、则应启用集群以自动执行计划外切换。
 * 如果您不打算监控升级过程的进度、则应这样做 link:../error-messages/configure-ems-notifications-sm-task.html["请求可能需要手动干预的错误的 EMS 通知"]。
+* 如果您使用的是单节点集群、请遵循 link:../system-admin/single-node-clusters.html["自动中断升级"] 流程。
++
+升级单节点集群会造成系统中断。
+
 
 
 .步骤
@@ -332,6 +336,112 @@ metrocluster show
 
 --
 ====
+
+
+== 在自动升级过程出现错误后恢复ONTAP软件升级
+
+如果ONTAP软件自动升级因错误而暂停、则应解决此错误、然后继续升级。  解决错误后、您可以选择继续自动升级过程或手动完成升级过程。如果您选择继续自动升级、请勿手动执行任何升级步骤。
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 根据您运行的 ONTAP 版本，执行以下步骤之一：
++
+|===
+
+
+| 如果您正在运行 ... | 那么 ... 
+
+
+ a| 
+ONTAP 9.8或更高版本
+ a| 
+单击*Cluster*>*Overview*
+
+
+
+ a| 
+ONTAP 9.7、9.6或9.5
+ a| 
+单击 * 配置 * > * 集群 * > * 更新 * 。
+
+
+
+ a| 
+ONTAP 9.4 或更早版本
+ a| 
+** 单击 * 配置 * > * 集群更新 * 。
+** 在*Overview*窗格的右角，单击三个蓝色垂直点，然后选择ONTAP Update*。
+
+
+|===
+. 继续自动升级、或者取消自动升级并手动继续。
++
+|===
+
+
+| 如果您要 ... | 那么 ... 
+
+
+ a| 
+恢复自动升级
+ a| 
+单击 * 恢复 * 。
+
+
+
+ a| 
+取消自动升级并手动继续
+ a| 
+单击 * 取消 * 。
+
+|===
+
+
+--
+.命令行界面
+--
+. 查看升级错误：
++
+[source, cli]
+----
+cluster image show-update-progress
+----
+. 解决此错误。
+. 继续升级：
++
+|===
+
+
+| 如果您要 ... | 输入以下命令 ... 
+
+
+ a| 
+恢复自动升级
+ a| 
+[source, cli]
+----
+cluster image resume-update
+----
+
+
+ a| 
+取消自动升级并手动继续
+ a| 
+[source, cli]
+----
+cluster image cancel-update
+----
+|===
+
+
+--
+====
+.完成后
+link:task_what_to_do_after_upgrade.html["执行升级后检查"]。
+
 
 
 == 视频：轻松升级

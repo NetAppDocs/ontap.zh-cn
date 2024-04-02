@@ -1,33 +1,44 @@
 ---
 permalink: san-config/configure-iscsi-san-hosts-ha-pairs-reference.html 
 sidebar: sidebar 
-keywords: ways, configure, iscsi, san hosts, ha pairs 
-summary: 您可以使用一个或多个 IP 交换机将 iSCSI SAN 主机配置为连接到双节点或多节点配置。您应确定所需的单交换机配置不是完全冗余的，还是完全冗余的多交换机配置。 
+keywords: ways, configure, iscsi, san hosts, ha pairs, direct-attachment, single-network configuration, multi-network configuration 
+summary: '您应使用直接连接到iSCSI SAN主机或通过一个或多个IP交换机连接到主机的高可用性(HA)对来设置iSCSI配置。  ' 
 ---
-= 为 iSCSI SAN 主机配置 HA 对的方式
+= 配置iSCSI SAN主机的方式
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用一个或多个 IP 交换机将 iSCSI SAN 主机配置为连接到双节点或多节点配置。您应确定所需的单交换机配置不是完全冗余的，还是完全冗余的多交换机配置。
+您应使用直接连接到iSCSI SAN主机或通过一个或多个IP交换机连接到主机的高可用性(HA)对来设置iSCSI配置。
 
-您可以在直连，单网络或多网络环境中为 iSCSI SAN 主机配置单个控制器和 HA 对。HA 对可以与每个交换机建立多个 iSCSI 连接，但每台主机上都需要支持 ALUA 的多路径软件。如果有多个主机，则可以通过检查 NetApp 互操作性表工具为每个主机配置不同的操作系统。
+link:../concepts/high-availability-pairs-concept.html["HA 对"] 定义为主机将用于访问LUN的主动/优化路径和主动/非优化路径的报告节点。使用不同操作系统(如Windows、Linux或UNIX)的多个主机可以同时访问存储。  主机要求安装和配置支持ALOA的受支持多路径解决方案。可以在上验证受支持的操作系统和多路径解决方案 link:https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"^]。
 
-https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"^]
+在多网络配置中、有两个或更多交换机将主机连接到存储系统。  建议使用多网络配置、因为它们是完全冗余的。  在单网络配置中、有一个交换机将主机连接到存储系统。  单网络配置并非完全冗余。
+
+[NOTE]
+====
+link:../system-admin/single-node-clusters.html["单节点配置"] 不建议使用、因为它们不提供支持容错和无中断运行所需的冗余。
+
+====
+.相关信息
+* 了解如何操作 link:san-admin/selective-lun-map-concept.html#determine-whether-slm-is-enabled-on-a-lun-map["选择性LUN映射(SLM)"] 限制用于访问HA对所拥有的LUN的路径。
+* 了解相关信息 link:../san-admin/manage-lifs-all-san-protocols-concept.html["SAN LIF"]。
+* 了解 link:/benefits-vlans-iscsi-concept.html["iSCSI中VLAN的优势"]。
 
 
 
-== 直接连接
 
-在直连配置中，一个或多个主机直接连接到控制器。
+== 多网络iSCSI配置
 
-image::../media/dual-host-dual-controller.gif[直接连接配置]
+在多网络 HA 对配置中，两个或更多交换机将 HA 对连接到一个或多个主机。由于有多个交换机，因此此配置完全冗余。
+
+image::../media/scrn-en-drw-iscsi-dual.gif[多网络HA对配置]
 
 
 
-== 单网络 HA 对
+== 单网络iSCSI配置
 
 在单网络 HA 对配置中，一个交换机将 HA 对连接到一个或多个主机。由于只有一个交换机，因此此配置并非完全冗余。
 
@@ -35,8 +46,8 @@ image::../media/scrn-en-drw-iscsi-single.gif[单网络HA对配置]
 
 
 
-== 多网络 HA 对
+== 直连iSCSI配置
 
-在多网络 HA 对配置中，两个或更多交换机将 HA 对连接到一个或多个主机。由于有多个交换机，因此此配置完全冗余。
+在直连配置中，一个或多个主机直接连接到控制器。
 
-image::../media/scrn-en-drw-iscsi-dual.gif[多网络HA对配置]
+image::../media/dual-host-dual-controller.gif[直接连接配置]
