@@ -13,22 +13,17 @@ summary: 配置 NVMe LIF 时，必须满足某些要求。
 [role="lead"]
 配置 NVMe LIF 时，必须满足某些要求。
 
-.您需要的内容
-创建 LIF 的 FC 适配器必须支持 NVMe 。支持的适配器列在 _Adapter_ Hardware Universe 中。
-
-https://hwu.netapp.com["NetApp Hardware Universe"^]
+.开始之前
+创建 LIF 的 FC 适配器必须支持 NVMe 。中列出了支持的适配器 https://hwu.netapp.com["Hardware Universe"^]。
 
 .关于此任务
+从ONTAP 9.12.1及更高版本开始、您可以在最多12个节点上为每个节点配置两个NVMe LUN。  在ONTAP 9.11.1及更早版本中、您可以在每个节点上最多两个节点上配置两个NVMe LUN。
+
 创建 NVMe LIF 时，应遵循以下规则：
 
 * NVMe 可以是数据 LIF 上的唯一数据协议。
 * 您应该为每个支持 SAN 的 SVM 配置一个管理 LIF 。
-* 对于 ONTAP 9.5 及更高版本：
-+
-** 每个节点最多只能在四个节点上配置两个 NVMe LIF 。
-** 您必须在包含命名空间的节点和节点的 HA 配对节点上配置 NVMe LIF 。
-
-
+* 对于ONTAP 9.5及更高版本、您必须在包含命名空间的节点以及该节点的HA配对节点上配置NVMe LIF。
 * 仅适用于 ONTAP 9.4 ：
 +
 ** NVMe LIF 和命名空间必须托管在同一节点上。

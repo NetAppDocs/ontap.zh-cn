@@ -13,6 +13,9 @@ summary: ONTAP 会将磁盘所有权信息写入磁盘。在从节点中删除�
 [role="lead"]
 ONTAP 会将磁盘所有权信息写入磁盘。在从节点中删除备用磁盘或其磁盘架之前，您应删除其所有权信息，以便将其正确集成到另一节点中。
 
+
+NOTE: 如果磁盘已分区以进行根数据分区、并且您运行的是ONTAP 9.10.1或更高版本、请联系NetApp技术支持以帮助删除所有权。有关详细信息，请参见 link:https://kb.netapp.com/onprem/ontap/hardware/Error%3A_command_failed%3A_Failed_to_remove_the_owner_of_disk["知识库文章：无法删除磁盘所有者"]。
+
 .您需要的内容
 要从中删除所有权的磁盘必须满足以下要求：
 
@@ -51,21 +54,12 @@ ONTAP 会将磁盘所有权信息写入磁盘。在从节点中删除备用磁�
 ....
 storage disk removeowner sys1:0a.23,sys1:0a.24,sys1:0a.25
 ....
-. 如果磁盘已进行分区以进行根数据分区、请从分区中删除所有权：
+. 如果磁盘已分区以进行根数据分区、并且您运行的是ONTAP 9.9.1或更早版本、请从分区中删除所有权：
 +
 --
-.. 对于ONTAP 9.10.1及更高版本、输入：
-+
-`storage disk removeowner -disk _disk_name_`
-
-.. 对于ONTAP 9.9.1及更早版本、输入两个命令：
-+
 `storage disk removeowner -disk _disk_name_ -root true`
 
-+
 `storage disk removeowner -disk _disk_name_ -data true`
-
-
 
 这两个分区不再归任何节点所有。
 
