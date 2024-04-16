@@ -38,27 +38,28 @@ ONTAP会将名称服务配置信息存储在一个表中、该表相当于 `/etc
 . 在 SVM 上启用 DNS ：
 +
 ....
-vserver services name-service dns create -vserver vserver_name -domains domain_name - name-servers ip_addresses -state enabled
+vserver services name-service dns create -vserver <vserver_name> -domains <domain_name> -name-servers <ip_addresses> -state enabled
 ....
 +
 以下命令将在 SVM vs1 上启用外部 DNS 服务器：
 
 +
 ....
-vserver services name-service dns create -vserver <vs1.example.com> -domains <example.com> -name-servers <192.0.2.201,192.0.2.202> -state <enabled>
+vserver services name-service dns create -vserver vs1.example.com -domains example.com -name-servers 192.0.2.201,192.0.2.202 -state enabled
 ....
 +
 
-NOTE: vserver services name-service dns create 命令会执行自动配置验证，如果 ONTAP 无法与名称服务器联系，则会报告错误消息。
+NOTE: 。 `vserver services name-service dns create` 命令会执行自动配置验证、如果ONTAP无法联系到名称服务器、则会报告错误消息。
 
 . 使用验证名称服务器的状态 `vserver services name-service dns check` 命令：
 +
 ....
 vserver services name-service dns check -vserver vs1.example.com
-VserverName       Server     Status    Status Details
-----------------  ---------- -------   --------------------------
-vs1.example.com   10.0.0.50  up        Response time (msec): 2
-vs1.example.com   10.0.0.51  up        Response time (msec): 2
+                                    Name Server
+Vserver             Name Server     Status       Status Details
+-------------       --------------- ------------ --------------------------
+vs1.example.com     10.0.0.50       up           Response time (msec): 2
+vs1.example.com     10.0.0.51       up           Response time (msec): 2
 ....
 
 
@@ -77,18 +78,18 @@ vs1.example.com   10.0.0.51  up        Response time (msec): 2
 . 将必要的条目添加到名称服务切换表：
 +
 ....
-vserver services name-service <ns-switch> create -vserver <vserver_name> -database <database_name> -source <source_names>
+vserver services name-service ns-switch modify -vserver <vserver_name> -database <database_name> -source <source_names>
 ....
 . 验证名称服务切换表是否包含所需顺序的预期条目：
 +
 ....
-vserver services name-service <ns-switch> show -vserver <vserver_name>
+vserver services name-service ns-switch show -vserver <vserver_name>
 ....
 
 
 .示例
-以下示例将在名称服务切换表中为 SVM vs1 创建一个条目，以便首先使用本地主机文件，然后使用外部 DNS 服务器来解析主机名：
+以下示例将修改SVM VS1的名称服务切换表中的一个条目、使其首先使用本地主机文件、然后使用外部DNS服务器解析主机名：
 
 ....
-vserver services name-service ns-switch create -vserver vs1 -database hosts -sources files dns
+vserver services name-service ns-switch modify -vserver vs1 -database hosts -sources files,dns
 ....
