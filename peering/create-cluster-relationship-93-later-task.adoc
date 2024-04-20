@@ -2,7 +2,7 @@
 permalink: peering/create-cluster-relationship-93-later-task.html 
 sidebar: sidebar 
 keywords: create, cluster, peer, relationship 
-summary: 您可以使用 cluster peer create 命令在本地和远程集群之间创建对等关系。创建对等关系后，您可以在远程集群上运行 cluster peer create ，以便向本地集群进行身份验证。 
+summary: 您可以使用cluster peer-create命令或System Manager在本地集群和远程集群之间创建对等关系。创建对等关系后、您可以对远程集群重复此任务、以便向本地集群进行身份验证。 
 ---
 = 创建集群对等关系
 :allow-uri-read: 
@@ -19,10 +19,34 @@ summary: 您可以使用 cluster peer create 命令在本地和远程集群之�
 
 
 .步骤
+使用ONTAP 系统管理器或ONTAP 命令行界面执行此任务。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 在本地集群中、单击*集群>设置*。
+. 在*集群间设置*部分中，单击*添加网络接口*并为集群添加集群间网络接口。
++
+在远程集群上重复此步骤。
+
+. 在远程集群中、单击*集群>设置*。
+. 单击 image:icon_kabob.gif["菜单选项图标"] 在*集群对等方*部分中、选择*生成Pas则 文*。
+. 选择远程ONTAP集群版本。
+. 复制生成的密码短语。
+. 在本地集群的*集群对等方*下、单击 image:icon_kabob.gif["菜单选项图标"] 并选择*对等集群*。
+. 在*对等集群*窗口中，粘贴密码短语并单击*启动集群对等*。
+
+
+--
+.命令行界面
+--
 . 在目标集群上，创建与源集群的对等关系：
 +
-`cluster peer create -generate-passphrase -offer-expiration _MM/DD/YYYY HH:MM:SS_|1...7days|1...168hours -peer-addrs _peer_LIF_IPs_ -initial-allowed-vserver-peers _svm_name_,..|* -ipspace _ipspace_`
-
+[source, cli]
+----
+cluster peer create -generate-passphrase -offer-expiration <MM/DD/YYYY HH:MM:SS>|1...7days|1...168hours -peer-addrs <peer_LIF_IPs > -initial-allowed-vserver-peers <svm_name>|* -ipspace <ipspace>
+----
 +
 如果同时指定这两者 `-generate-passphrase` 和 `-peer-addrs`、仅限在中指定了集群间的集群间的集群 `-peer-addrs` 可以使用生成的密码。
 
@@ -82,8 +106,10 @@ Warning: make a note of the passphrase - it cannot be displayed again.
 ----
 . 在源集群上，将源集群身份验证到目标集群：
 +
-`cluster peer create -peer-addrs _peer_LIF_IPs_ -ipspace ipspace`
-
+[source, cli]
+----
+cluster peer create -peer-addrs <peer_LIF_IPs> -ipspace <ipspace>
+----
 +
 有关完整的命令语法，请参见手册页。
 
@@ -108,8 +134,10 @@ Clusters cluster02 and cluster01 are peered.
 
 . 验证是否已创建集群对等关系：
 +
-`cluster peer show -instance`
-
+[source, cli]
+----
+cluster peer show -instance
+----
 +
 [listing]
 ----
@@ -129,8 +157,10 @@ cluster01::> cluster peer show -instance
 ----
 . 检查对等关系中节点的连接和状态：
 +
-`cluster peer health show`
-
+[source, cli]
+----
+cluster peer health show
+----
 +
 [listing]
 ----
@@ -155,6 +185,8 @@ cluster01-02
 ----
 
 
+--
+====
 
 
 == 在 ONTAP 中执行此操作的其他方法

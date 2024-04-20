@@ -1,0 +1,74 @@
+---
+permalink: data-protection/create-delete-snapshot-manually-task.html 
+sidebar: sidebar 
+keywords: create, delete, snapshot, on demand, manually 
+summary: 您可以在等不及创建计划内Snapshot副本时手动创建Snapshot副本、也可以在不再需要Snapshot副本时将其删除。 
+---
+= 手动创建和删除Snapshot副本
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在无法等待创建计划内Snapshot副本时手动创建Snapshot副本、也可以在不再需要Snapshot副本时将其删除。
+
+
+
+== 手动创建Snapshot副本
+
+您可以使用System Manager或ONTAP命令行界面手动创建Snapshot副本。
+
+[role="tabbed-block"]
+====
+.步骤
+--
+. 导航到*存储>卷*并选择* Snapshot副本*选项卡。
+. 单击 image:icon_add.gif["添加图标"]。
+. 在*添加Snapshot副本*窗口中，接受默认的Snapshot副本名称或根据需要进行编辑。
+. *可选*：添加SnapMirror标签。
+. 单击 * 添加 * 。
+
+
+--
+.命令行界面
+--
+. 创建 Snapshot 副本：
++
+[source, cli]
+----
+volume snapshot create -vserver <SVM> -volume <volume> -snapshot <snapshot_name>
+----
+
+
+--
+====
+
+
+== 手动删除Snapshot副本
+
+您可以使用System Manager或ONTAP命令行界面手动删除Snapshot副本。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*存储>卷*并选择* Snapshot副本*选项卡。
+. 找到要删除的Snapshot副本、然后单击 image:icon_kabob.gif["kabob 图标"]，然后选择*Delete*。
+. 在*删除Snapshot副本*窗口中，选择*删除Snapshot副本*。
+. 单击 * 删除 * 。
+
+
+--
+.命令行界面
+--
+. 删除Snapshot副本：
++
+[source, cli]
+----
+volume snapshot delete -vserver <SVM> -volume <volume> -snapshot <snapshot_name>
+----
+
+
+--
+====
