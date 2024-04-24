@@ -105,10 +105,9 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
 * FabricPool 支持以下聚合类型：
 +
 ** 在 AFF 系统上，您只能对 FabricPool 使用全闪存（全 SSD ）聚合。
-+
-您不能使用同时包含SSD和HDD的Flash Pool聚合。
-
 ** 在 FAS 系统上，您可以对 FabricPool 使用全闪存（全 SSD ）或 HDD 聚合。
+ +
+您不能使用同时包含SSD和HDD的Flash Pool聚合。
 ** 在 Cloud Volumes ONTAP 和 ONTAP Select 上，您可以对 FabricPool 使用 SSD 或 HDD 聚合。
 +
 但是，建议使用 SSD 聚合。
@@ -128,7 +127,7 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
 
 * 您计划使用的对象存储 "`bucket` " （容器）必须已设置，必须至少具有 10 GB 的存储空间，并且不能重命名。
 * 使用 FabricPool 的 HA 对需要集群间 LIF 与对象存储进行通信。
-* 在附加云层后、您无法将其从本地层中分离；但是、您可以使用 link:https://docs.netapp.com/us-en/ontap/fabricpool/create-mirror-task.html["FabricPool镜像"] 将本地层附加到其他云层。
+* 在附加云层后、您无法将其从本地层中分离；但是、您可以使用 link:https:create-mirror-task.html["FabricPool镜像"] 将本地层附加到其他云层。
 * 如果使用吞吐量下限(QoS最小值)、则必须将卷上的分层策略设置为 `none` 才能将聚合附加到FabricPool。
 +
 其他分层策略会阻止将聚合附加到 FabricPool 。启用FabricPool后、QoS策略不会强制实施吞吐量下限。
@@ -174,6 +173,6 @@ FabricPool仅支持使用StorageGRID的信息生命周期管理策略进行数�
 +
 除了根SVM卷和CIFS审核暂存卷之外、FabricPool 不支持将云层附加到包含使用非空间保证的卷的聚合 `none`。例如、使用空间保证的卷 `volume` (`-space-guarantee` `volume`)。
 
-* 使用集群 link:https://docs.netapp.com/us-en/ontap/data-protection/snapmirror-licensing-concept.html#data-protection-optimized-license["DP_Optimized"许可证"]
+* 使用集群 link:../data-protection/snapmirror-licensing-concept.html#data-protection-optimized-license["DP_Optimized"许可证"]
 * Flash Pool 聚合
 
