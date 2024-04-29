@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: s3-snapmirror/index.html 
 keywords: s3 snapmirror buckets, snapmirror buckets SVM, s3 snapmirror data protection, hybrid cloud bundle, s3 snapmirror relationship, VM peering, cluster and storage VM peering, Fan-in deployments, data protection, s3 snapmirror policy, peering 
-summary: 从 ONTAP 9.10.1 开始，您可以使用熟悉的 SnapMirror 镜像和备份功能来保护 ONTAP S3 对象存储中的存储分段 
+summary: 从 ONTAP 9.10.1 开始，您可以使用熟悉的 SnapMirror 镜像和备份功能来保护 ONTAP S3 对象存储中的存储分段。 
 ---
 = S3 SnapMirror 概述
 :hardbreaks:
@@ -97,6 +97,11 @@ S3 SnapMirror到第三方对象存储(包括AWS S3)。
 
 
 
+
+
+
+
+NOTE: 请注意、如果SnapMirror关系中有两个S3存储分段、并且配置了生命周期策略、使对象的当前版本过期(即被删除)、则同一操作会复制到配对存储分段。即使配对存储分段为只读或被动存储、也是如此。
 
 * root用户密钥
 S3 SnapMirror关系需要Storage VM root用户访问密钥；默认情况下、ONTAP不会分配这些密钥。首次创建 S3 SnapMirror 关系时，您必须验证源和目标 Storage VM 上是否存在这些密钥，如果不存在，则重新生成这些密钥。如果需要重新生成这些密钥，则必须确保使用访问密钥和机密密钥对的所有客户端和所有 SnapMirror 对象存储配置都使用新密钥进行更新。
