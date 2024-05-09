@@ -27,9 +27,6 @@ HA对的两个节点都发生故障。负载共享镜像不适用于包含单个
 .步骤
 . 为 LSM 创建目标卷：
 +
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
-
-+
 [source, cli]
 ----
 volume create -vserver <SVM> -volume <volume> -aggregate <aggregate> -type DP -size <size>
@@ -54,9 +51,6 @@ cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -siz
 . link:create-replication-job-schedule-task.html["创建复制作业计划"]。
 . 在 SVM 根卷和 LSM 的目标卷之间创建负载共享镜像关系：
 +
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
-
-+
 [source, cli]
 ----
 snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume> -type LS -schedule <schedule>
@@ -77,16 +71,10 @@ cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path s
 
 . 初始化负载共享镜像：
 +
-在运行此命令之前、必须将尖括号中的变量替换为所需的值。
-
-+
 [source, cli]
 ----
 snapmirror initialize-ls-set -source-path <SVM:volume>
 ----
-+
-初始化可能非常耗时。您可能希望在非高峰时段运行基线传输。
-
 +
 有关完整的命令语法，请参见手册页。
 
