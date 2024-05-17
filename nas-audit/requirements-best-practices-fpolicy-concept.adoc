@@ -2,7 +2,7 @@
 permalink: nas-audit/requirements-best-practices-fpolicy-concept.html 
 sidebar: sidebar 
 keywords: requirements, considerations, best practices, configure, fpolicy 
-summary: 在 Storage Virtual Machine （ SVM ）上创建和配置 FPolicy 配置之前，您需要了解配置 FPolicy 的某些要求，注意事项和最佳实践。 
+summary: 在SVM上创建和配置FPolicy配置之前、您需要了解某些要求、注意事项和最佳实践。 
 ---
 = 配置 FPolicy 的要求，注意事项和最佳实践
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 在 Storage Virtual Machine （ SVM ）上创建和配置 FPolicy 配�
 
 
 [role="lead"]
-在SVM上创建和配置FPolicy配置之前、您需要了解配置FPolicy的某些要求、注意事项和最佳实践。
+在 Storage Virtual Machine （ SVM ）上创建和配置 FPolicy 配置之前，您需要了解配置 FPolicy 的某些要求，注意事项和最佳实践。
 
 FPolicy功能可通过命令行界面(CLI)或REST API进行配置。
 
@@ -43,7 +43,6 @@ NOTE: 从ONTAP 9.8开始、ONTAP 通过添加为出站FPolicy连接提供客户�
 
 
 
-* 从ONTAP 9.14.1开始、您可以通过FPolicy设置永久性存储、以捕获SVM中异步非强制策略的文件访问事件。永久性存储有助于将客户端I/O处理与FPolicy通知处理分离、以减少客户端延迟。不支持同步(强制或非强制)和异步强制配置。
 
 
 
@@ -53,6 +52,64 @@ NOTE: 从ONTAP 9.8开始、ONTAP 通过添加为出站FPolicy连接提供客户�
 在Storage Virtual Machine (SVM)上设置FPolicy时、请熟悉常规配置最佳实践和建议、以确保您的FPolicy配置提供稳定可靠的监控性能和结果、从而满足您的要求。
 
 有关性能、规模估算和配置的具体准则、请使用您的FPolicy合作伙伴应用程序。
+
+
+
+=== 永久性存储
+
+从ONTAP 9.14.1开始、您可以通过FPolicy设置永久性存储、以捕获SVM中异步非强制策略的文件访问事件。永久性存储有助于将客户端I/O处理与FPolicy通知处理分离、以减少客户端延迟。不支持同步(强制或非强制)和异步强制配置。
+
+* 在使用永久性存储功能之前、请确保您的合作伙伴应用程序支持此配置。
+* 对于启用了FPolicy的每个SVM、您需要一个永久性存储。
++
+** 每个SVM上只能设置一个永久性存储。该SVM上的所有FPolicy配置都需要使用这一永久性存储、即使这些策略来自不同的合作伙伴也是如此。
+
+
+* ONTAP 9.151或更高版本：
++
+** 创建永久性存储时、系统会自动处理永久性存储及其卷和卷配置。
+
+
+* ONTAP 9.14.1：
++
+** 永久性存储、其卷及其卷配置是手动处理的。
+
+
+* 在包含预期FPolicy监控最大流量的生命周期的节点上创建永久性存储卷。
++
+** ONTAP 9.151或更高版本：在创建永久性存储期间自动创建和配置卷。
+** ONTAP 9.14.1：集群管理员需要在启用了FPolicy的每个SVM上为永久性存储创建和配置卷。
+
+
+* 如果持久性存储中累积的通知超过所配置卷的大小、则FPolicy将开始删除传入通知并显示相应的EMS消息。
++
+** ONTAP 9.151或更高版本：以及 `size` 参数、 `autosize-mode` 参数可帮助卷根据已用空间量增长或缩减。
+** ONTAP 9.14.1： `size` 参数在卷创建期间进行配置、以提供最大限制。
+
+
+* 将Snapshot策略设置为 `none` 用于永久性存储卷、而不是 `default`。这是为了确保不会意外还原快照而导致当前事件丢失、并防止可能发生重复的事件处理。
++
+** ONTAP 9.151或更高版本： `snapshot-policy` 在创建永久性存储期间、参数会自动配置为none。
+** ONTAP 9.14.1： `snapshot-policy` 参数配置为 `none` 创建卷期间。
+
+
+* 使持久存储卷无法用于外部用户协议访问(CIFS或NFS)、以避免意外损坏或删除保留的事件记录。
++
+** ONTAP 9.15.1或更高版本：创建永久性存储期间、ONTAP会自动阻止卷访问外部用户协议(CIFS)。
+** ONTAP 9.14.1：启用FPolicy后、在ONTAP中卸载卷以删除接合路径。这样、外部用户协议访问(CIFS或NFS)将无法访问它。
+
+
+
+
+有关详细信息，请参见 link:persistent-stores.html["FPolicy持久存储"] 和 link:create-persistent-stores.html["创建持久性存储"]。
+
+
+
+==== 持久存储故障转移和恢复
+
+持久存储将保持接收到最后一个事件、发生意外重新启动或FPolicy被禁用并再次启用时的状态。接管操作完成后、配对节点将存储和处理新事件。在执行了恢复操作之后、永久性存储将恢复处理节点接管发生后可能仍存在的任何未处理事件。实时事件的优先级高于不经过处理的事件。
+
+如果永久性存储卷从同一SVM中的一个节点移至另一个节点、则尚未处理的通知也会移至新节点。您需要重新运行 `fpolicy persistent-store create` 命令、以确保将待定通知发送到外部服务器。
 
 
 

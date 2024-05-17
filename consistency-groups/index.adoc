@@ -23,15 +23,15 @@ summary: 一致性组是一组卷、这些卷按一个单元进行组织、便�
 
 一致性组支持任何FlexVol 卷、而不考虑协议(NAS、SAN或NVMe)、并且可以通过ONTAP REST API或System Manager中的*存储>一致性组*菜单项进行管理。从ONTAP 9.14.1开始、可以使用ONTAP命令行界面管理一致性组。
 
-一致性组可以作为单个实体(即卷集合)存在、也可以位于由其他一致性组组成的分层关系中。单个卷可以具有自己的卷粒度Snapshot策略。此外、还可以使用一致性组范围的Snapshot策略。一致性组只能具有一个SnapMirror业务连续性(SM-BC)关系和共享的SM-BC策略、此策略可用于恢复整个一致性组。
+一致性组可以作为单个实体(即卷集合)存在、也可以位于由其他一致性组组成的分层关系中。单个卷可以具有自己的卷粒度Snapshot策略。此外、还可以使用一致性组范围的Snapshot策略。此一致性组只能具有一个SnapMirror活动同步关系和共享SnapMirror策略、此策略可用于恢复整个一致性组。
 
 下图说明了如何使用单个一致性组。上托管的应用程序的数据 `SVM1` 跨两个卷： `vol1` 和 `vol2`。一致性组上的Snapshot策略每15分钟捕获一次数据的Snapshot副本。
 
 image:../media/consistency-group-single-diagram.gif["一个一致性组及其成分卷和本地 Snapshot 策略的示意图"]
 
-较大的应用程序工作负载可能需要多个一致性组。在这些情况下、您可以创建分层一致性组、其中、一个一致性组将成为父一致性组的子组件。父一致性组最多可以包含五个子一致性组。与各个一致性组一样，可以对一致性组（父级和子级）的整个配置应用远程 SM-BC 保护策略来恢复应用程序工作负载。
+较大的应用程序工作负载可能需要多个一致性组。在这些情况下、您可以创建分层一致性组、其中、一个一致性组将成为父一致性组的子组件。父一致性组最多可以包含五个子一致性组。与单个一致性组一样、远程SnapMirror主动同步保护策略可应用于一致性组的整个配置(父级和子级)、以恢复应用程序工作负载。
 
-在以下示例中、应用程序托管在上 `SVM1`。管理员已创建父一致性组、 `SVM1_app`、其中包括两个子一致性组： `SVM1appDataCG` 用于数据和 `SVM1app_logCG` 日志。每个子一致性组都有自己的Snapshot策略。中卷的Snapshot副本 `SVM1appDataCG` 每15分钟执行一次。的快照 `SVM1app_logCG` 每小时执行一次。父一致性组 `SVM1_app` 具有一个SM-BC策略、该策略可复制数据以确保在发生灾难时持续提供服务。
+在以下示例中、应用程序托管在上 `SVM1`。管理员已创建父一致性组、 `SVM1_app`、其中包括两个子一致性组： `SVM1appDataCG` 用于数据和 `SVM1app_logCG` 日志。每个子一致性组都有自己的Snapshot策略。中卷的Snapshot副本 `SVM1appDataCG` 每15分钟执行一次。的快照 `SVM1app_logCG` 每小时执行一次。父一致性组 `SVM1_app` 具有SnapMirror活动同步策略、该策略可复制数据、以确保在发生灾难时继续提供服务。
 
 image:../media/consistency-group-nested-diagram.gif["嵌套一致性组及其关联卷的示意图"]
 
@@ -67,9 +67,9 @@ NOTE: 在ONTAP 9.13.1中、只能使用REST API检索历史指标。从ONTAP 9.1
 一致性组可通过以下方式提供保护：
 
 * Snapshot 策略
-* xref:../smbc/index.html[SnapMirror 业务连续性（ SM-BC ）]
+* xref:../snapmirror-active-sync/index.html[SnapMirror活动同步]
 * <<mcc>> (从ONTAP 9.11.1开始)
-* xref:../data-protection/snapmirror-disaster-recovery-concept.html[异步SnapMirror] (从ONTAP 9.13.1开始)
+* xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror异步] (从ONTAP 9.13.1开始)
 * link:../data-protection/snapmirror-svm-replication-concept.html["SVM 灾难恢复"] (从ONTAP 9.14.1开始)
 
 
@@ -77,10 +77,10 @@ NOTE: 在ONTAP 9.13.1中、只能使用REST API检索历史指标。从ONTAP 9.1
 
 要为一致性组配置保护、请参见 link:protect-task.html["保护一致性组"]。
 
-要使用远程保护，您必须满足的要求 xref:../smbc/smbc_plan_prerequisites.html#licensing[SnapMirror 业务连续性部署]。
+要使用远程保护，您必须满足的要求 xref:../snapmirror-active-sync/prerequisites-reference.html[SnapMirror活动同步]。
 
 
-NOTE: 无法在为 NAS 访问而挂载的卷上建立 SM-BC 关系。
+NOTE: 无法在为进行NAS访问而挂载的卷上建立SnapMirror活动同步关系。
 
 
 
@@ -107,68 +107,68 @@ NOTE: 建议为镜像聚合至少保留20%的可用空间、以获得最佳存�
 
 == 升级注意事项
 
-在ONTAP 9.8和9.9.1中使用SM-BC创建的一致性组将自动升级、并在ONTAP升级到ONTAP 9.10.1或更高版本时在System Manager中的*存储>一致性组*下进行管理。有关从ONTAP 9.8或9.9.1升级的详细信息、请参见 link:../smbc/smbc_admin_upgrade_and_revert_considerations.html["SM-BC 升级和还原注意事项"]。
+升级到ONTAP 9.10.1或更高版本时、使用SnapMirror活动同步(以前称为SnapMirror业务连续性)创建的一致性组 在ONTAP 9.8和9.9.1中、系统会自动升级、并可在System Manager或ONTAP REST API中的*存储>一致性组*下进行管理。有关从ONTAP 9.8或9.9.1升级的详细信息、请参见 link:../snapmirror-active-sync/upgrade-revert-task.html["SnapMirror主动同步升级和还原注意事项"]。
 
 在REST API中创建的一致性组Snapshot副本可以通过System Manager的一致性组界面和一致性组REST API端点进行管理。从ONTAP 9.14.1开始、还可以使用ONTAP命令行界面管理一致性组快照。
 
 
-NOTE: 使用ONTAP PI命令创建的Snapshot副本 `cg-start` 和 `cg-commit` 可识别为一致性组快照、因此无法通过System Manager的一致性组界面或ONTAP REST API中的一致性组端点进行管理。从ONTAP 9.14.1开始、如果您使用的是异步SnapMirror策略、则可以将这些Snapshot副本镜像到目标卷。有关详细信息，请参见 xref:protect-task.html#configure-asynchronous-snapmirror-protection[配置异步SnapMirror保护]。
+NOTE: 使用ONTAP PI命令创建的Snapshot副本 `cg-start` 和 `cg-commit` 可识别为一致性组快照、因此无法通过System Manager的一致性组界面或ONTAP REST API中的一致性组端点进行管理。从ONTAP 9.14.1开始、如果您使用的是SnapMirror异步策略、则可以将这些Snapshot副本镜像到目标卷。有关详细信息，请参见 xref:protect-task.html#configure-asynchronous-snapmirror-protection[配置SnapMirror异步保护]。
 
 
 
 == 支持的功能(按版本)
 
-[cols="3,1,1,1,1,1"]
+[cols="3,1,1,1,1,1,1"]
 |===
-|  | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
+|  | ONTAP 9.15.1. | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
 
 
-| 分层一致性组 | ✓ | ✓ | ✓ | ✓ | ✓ 
+| 分层一致性组 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
 
 
-| 使用Snapshot副本进行本地保护 | ✓ | ✓ | ✓ | ✓ | ✓ 
+| 使用Snapshot副本进行本地保护 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
 
 
-| SnapMirror 业务连续性 | ✓ | ✓ | ✓ | ✓ | ✓ 
+| SnapMirror活动同步 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
 
 
-| 支持 MetroCluster | ✓ | ✓ | ✓ | ✓ |  
+| 支持 MetroCluster | ✓ | ✓ | ✓ | ✓ | ✓ |  
 
 
-| 两阶段提交(仅限REST API) | ✓ | ✓ | ✓ | ✓ |  
+| 两阶段提交(仅限REST API) | ✓ | ✓ | ✓ | ✓ | ✓ |  
 
 
-| 应用程序和组件标记 | ✓ | ✓ | ✓ |  |  
+| 应用程序和组件标记 | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 克隆一致性组 | ✓ | ✓ | ✓ |  |  
+| 克隆一致性组 | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 添加和删除卷 | ✓ | ✓ | ✓ |  |  
+| 添加和删除卷 | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 使用新NAS卷创建CGS | ✓ | ✓ | 仅限REST API |  |  
+| 使用新NAS卷创建CGS | ✓ | ✓ | ✓ | 仅限REST API |  |  
 
 
-| 使用新NVMe命名卷创建CGS | ✓ | ✓ | 仅限REST API |  |  
+| 使用新NVMe命名卷创建CGS | ✓ | ✓ | ✓ | 仅限REST API |  |  
 
 
-| 在子一致性组之间移动卷 | ✓ | ✓ |  |  |  
+| 在子一致性组之间移动卷 | ✓ | ✓ | ✓ |  |  |  
 
 
-| 修改一致性组几何结构 | ✓ | ✓ |  |  |  
+| 修改一致性组几何结构 | ✓ | ✓ | ✓ |  |  |  
 
 
-| 监控 | ✓ | ✓ |  |  |  
+| 监控 | ✓ | ✓ | ✓ |  |  |  
 
 
-| 异步SnapMirror (仅限单个一致性组) | ✓ | ✓ |  |  |  
+| SnapMirror异步(仅限单个一致性组) | ✓ | ✓ | ✓ |  |  |  
 
 
-| SVM灾难恢复(仅限单个一致性组) | ✓ |  |  |  |  
+| SVM灾难恢复(仅限单个一致性组) | ✓ | ✓ |  |  |  |  
 
 
-| CLI支持 | ✓ |  |  |  |  
+| CLI支持 | ✓ | ✓ |  |  |  |  
 |===
 
 
@@ -177,7 +177,7 @@ NOTE: 使用ONTAP PI命令创建的Snapshot副本 `cg-start` 和 `cg-commit` 可
 video::j0jfXDcdyzE[youtube,width=848,height=480]
 .更多信息
 * link:https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自动化文档"^]
-* xref:../smbc/index.html[SnapMirror 业务连续性]
-* xref:../data-protection/snapmirror-disaster-recovery-concept.html[异步 SnapMirror 灾难恢复基础知识]
+* xref:../snapmirror-active-sync/index.html[SnapMirror活动同步]
+* xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror异步灾难恢复基础知识]
 * link:https://docs.netapp.com/us-en/ontap-metrocluster/["MetroCluster 文档"]
 

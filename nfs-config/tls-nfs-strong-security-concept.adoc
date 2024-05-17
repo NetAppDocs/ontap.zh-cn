@@ -1,0 +1,30 @@
+---
+permalink: nfs-config/tls-nfs-strong-security-concept.html 
+sidebar: sidebar 
+keywords: use, tls, nfs, strong, security 
+summary: TLS支持加密网络通信、安全性与Kerberos相当、复杂性比Kerberos低。 
+---
+= 概述如何将TLS与NFS结合使用以增强安全性
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead lead"]
+TLS支持加密网络通信、安全性与Kerberos和IPsec相当、复杂性比Kerberos和IPsec低。作为管理员、您可以使用System Manager、ONTAP命令行界面或ONTAP REST API启用、配置和禁用TLS、以增强NFSv3和NFSv4.x连接的安全性。
+
+
+NOTE: 基于TLS的NFS在ONTAP 9.151中提供公开预览版。作为预览选项、ONTAP 9.15.1中的生产工作负载不支持基于TLS的NFS。
+
+ONTAP对基于TLS的NFS连接使用TLS 1.3。
+
+
+
+== 要求
+
+基于TLS的NFS需要X.509证书。您可以在ONTAP集群上创建安装CA签名的服务器证书、也可以安装NFS服务直接使用的证书。您的证书应符合以下准则：
+
+* 必须为每个证书配置一个公用名(Common Name、CN)、即NFS服务器的完全限定域名(FQDN)(要启用/配置TLS的数据LIF)。
+* 必须为每个证书配置NFS服务器(或两者)的IP地址或FQDN作为使用者替代名称(SAN)。如果同时配置了IP地址和FQDN、则NFS客户端可以使用IP地址或FQDN进行连接。
+* 您可以为同一个LIF安装多个NFS服务证书、但在NFS TLS配置中、一次只能使用其中一个证书。
+

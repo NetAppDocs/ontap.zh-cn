@@ -1,0 +1,326 @@
+---
+permalink: authentication/configure-dynamic-authorization.html 
+sidebar: sidebar 
+keywords: dynamic, authorization, framework, security, login, ssh 
+summary: 配置动态授权框架以提高SSH登录的安全性、并在可疑情况下限制某些命令的执行。 
+---
+= 自定义动态授权
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+作为管理员、您可以自定义动态授权配置的不同方面、以提高远程管理员与ONTAP集群的SSH连接的安全性。
+
+您可以根据安全需求自定义以下动态授权设置：
+
+* <<配置动态授权全局设置>>
+* <<配置动态授权信任得分组件>>
+* <<配置自定义信任得分提供程序>>
+* <<配置受限命令>>
+* <<配置动态授权组>>
+
+
+
+
+== 配置动态授权全局设置
+
+您可以配置动态授权的全局设置、包括要保护的Storage VM、身份验证挑战的禁止间隔以及信任得分设置。
+
+有关的参数和默认值的详细信息 `security dynamic-authorization modify` 命令、请参阅ONTAP手册页。
+
+.步骤
+. 配置动态授权的全局设置。如果不使用 `-vserver` 参数、则命令将在集群级别运行。更新括号<>中的值以符合您的环境：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization modify \
+-lower-challenge-boundary <percent> \
+-upper-challenge-boundary <percent> \
+-suppression-interval <interval> \
+-vserver <storage_VM_name>
+----
+. 查看生成的配置：
++
+[source, console]
+----
+security dynamic-authorization show
+----
+
+
+
+
+== 配置受限命令
+
+启用动态授权后、此功能将包括一组默认的受限命令。您可以根据需要修改此列表。请参见 link:../multi-admin-verify/index.html["多管理员验证(MAV)文档"] 有关默认受限命令列表的信息。
+
+
+
+=== 添加受限命令
+
+您可以将命令添加到受动态授权限制的命令列表中。
+
+有关的参数和默认值的详细信息 `security dynamic-authorization rule create` 命令、请参阅ONTAP手册页。
+
+.步骤
+. 添加命令。更新括号<>中的值以匹配您的环境。如果不使用 `-vserver` 参数、则命令将在集群级别运行。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization rule create \
+-query <query> \
+*-operation <text>* \
+-index <integer> \
+-vserver <storage_VM_name>
+----
+. 查看生成的受限命令列表：
++
+[source, console]
+----
+security dynamic-authorization rule show
+----
+
+
+
+
+=== 删除受限命令
+
+您可以从受动态授权限制的命令列表中删除命令。
+
+有关的参数和默认值的详细信息 `security dynamic-authorization rule delete` 命令、请参阅ONTAP手册页。
+
+.步骤
+. 删除命令。更新括号<>中的值以匹配您的环境。如果不使用 `-vserver` 参数、则命令将在集群级别运行。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization rule delete \
+*-operation <text>* \
+-vserver <storage_VM_name>
+----
+. 查看生成的受限命令列表：
++
+[source, console]
+----
+security dynamic-authorization rule show
+----
+
+
+
+
+== 配置动态授权组
+
+默认情况下、动态授权会在启用后立即适用场景所有用户和组。但是、您可以使用创建组 `security dynamic-authorization group create` 命令、以便动态授权仅适用场景这些特定用户。
+
+
+
+=== 添加动态授权组
+
+您可以添加动态授权组。
+
+有关的参数和默认值的详细信息 `security dynamic-authorization group create` 命令、请参阅ONTAP手册页。
+
+.步骤
+. 创建组。更新括号<>中的值以匹配您的环境。如果不使用 `-vserver` 参数、则命令将在集群级别运行。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization group create \
+*-group-name <group-name>* \
+-vserver <storage_VM_name> \
+-exclude-users <user1,user2,user3...>
+
+----
+. 查看生成的动态授权组：
++
+[source, console]
+----
+security dynamic-authorization group show
+----
+
+
+
+
+=== 删除动态授权组
+
+您可以删除动态授权组。
+
+.步骤
+. 删除组。更新括号<>中的值以匹配您的环境。如果不使用 `-vserver` 参数、则命令将在集群级别运行。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization group delete \
+*-group-name <group-name>* \
+-vserver <storage_VM_name>
+----
+. 查看生成的动态授权组：
++
+[source, console]
+----
+security dynamic-authorization group show
+----
+
+
+
+
+== 配置动态授权信任得分组件
+
+您可以配置最大分数权重、以更改评分标准的优先级或从风险评分中删除某些标准。
+
+
+NOTE: 作为最佳实践、您应保留默认分数权重值、仅在需要时进行调整。
+
+有关的参数和默认值的详细信息 `security dynamic-authorization trust-score-component modify` 命令、请参阅ONTAP手册页。
+
+以下是您可以修改的组件及其默认分数和百分比权重：
+
+[cols="4*"]
+|===
+| 标准 | 组件名称 | 默认原始分数权重 | 默认百分比权重 
+
+
+| 可信设备 | `trusted-device` | 20. | 50. 
+
+
+| 用户登录身份验证历史记录 | `authentication-history` | 20. | 50. 
+|===
+.步骤
+. 修改信任得分组件。更新括号<>中的值以匹配您的环境。如果不使用 `-vserver` 参数、则命令将在集群级别运行。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization trust-score-component modify \
+*-component <component-name>* \
+*-weight <integer>* \
+-vserver <storage_VM_name>
+----
+. 查看得到的信任得分组件设置：
++
+[source, console]
+----
+security dynamic-authorization trust-score-component show
+----
+
+
+
+
+=== 重置用户的信任得分
+
+如果用户因系统策略而被拒绝访问、并且能够证明其身份、则管理员可以重置用户的信任得分。
+
+有关的参数和默认值的详细信息 `security dynamic-authorization user-trust-score reset` 命令、请参阅ONTAP手册页。
+
+.步骤
+. 添加命令。请参见 <<配置动态授权信任得分组件>> 有关可重置的信任得分组件的列表。更新括号<>中的值以匹配您的环境。如果不使用 `-vserver` 参数、则命令将在集群级别运行。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization user-trust-score reset \
+*-username <username>* \
+*-component <component-name>* \
+-vserver <storage_VM_name>
+----
+
+
+
+
+=== 显示您的信任得分
+
+用户可以显示其自己的登录会话信任得分。
+
+.步骤
+. 显示您的信任得分：
++
+[source, console]
+----
+security login whoami
+----
++
+您应看到类似于以下内容的输出：
+
++
+[listing]
+----
+User: admin
+Role: admin
+Trust Score: 50
+----
+
+
+
+
+== 配置自定义信任得分提供程序
+
+如果您已从外部信任得分提供程序收到评分方法、则可以将自定义提供程序添加到动态授权配置中。
+
+.开始之前
+* 自定义信任得分提供程序必须返回JSON响应。必须满足以下语法要求：
++
+** 返回信任得分的字段必须是标量字段、而不是数组的元素。
+** 返回信任得分的字段可以是嵌套字段、例如 `trust_score.value`。
+** JSON响应中必须有一个字段返回数字信任得分。如果本机不可用、则可以编写包装程序脚本以返回此值。
+
+
+* 提供的值可以是信任得分或风险得分。不同之处在于信任得分按升序排列、较高的分数表示较高的信任级别、而风险得分则按降序排列。例如、如果信任分数为90、分数范围为0到100、则表示该分数非常值得信赖、并且可能会在不增加任何挑战的情况下获得"允许"、 如果分数范围为0到100、则风险分数为90表示风险较高、并且可能会在没有额外挑战的情况下导致"拒绝"。
+* 自定义信任得分提供程序必须可通过ONTAP REST API进行访问。
+* 必须使用支持的参数之一配置自定义信任得分提供程序。不支持需要在支持的参数列表中进行配置的自定义信任得分提供程序。
+
+
+有关的参数和默认值的详细信息 `security dynamic-authorization trust-score-component create` 命令、请参阅ONTAP手册页。
+
+.步骤
+. 添加自定义信任得分提供程序。更新括号<>中的值以匹配您的环境。如果不使用 `-vserver` 参数、则命令将在集群级别运行。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization trust-score-component create \
+-component <text> \
+*-provider-uri <text>* \
+-score-field <text> \
+-min-score <integer> \
+*-max-score <integer>* \
+*-weight <integer>* \
+-secret-access-key "<key_text>" \
+-provider-http-headers <list<header,header,header>> \
+-vserver <storage_VM_name>
+----
+. 查看得到的信任分数提供程序设置：
++
+[source, console]
+----
+security dynamic-authorization trust-score-component show
+----
+
+
+
+
+=== 配置自定义信任得分提供程序标记
+
+您可以使用标记与外部信任评分提供程序进行通信。这样、您就可以在不暴露敏感信息的情况下将URL中的信息发送到信任分数提供程序。
+
+有关的参数和默认值的详细信息 `security dynamic-authorization trust-score-component create` 命令、请参阅ONTAP手册页。
+
+.步骤
+. 启用信任分数提供程序标记。更新括号<>中的值以匹配您的环境。如果不使用 `-vserver` 参数、则命令将在集群级别运行。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization trust-score-component create \
+*-component <component_name>* \
+-weight <initial_score_weight> \
+-max-score <max_score_for_provider> \
+*-provider-uri <provider_URI>* \
+-score-field <REST_API_score_field> \
+*-secret-access-key "<key_text>"*
+----
++
+例如：
+
++
+[source, console]
+----
+security dynamic-authorization trust-score-component create -component comp1 -weight 20 -max-score 100 -provider-uri https://<url>/trust-scores/users/<user>/<ip>/component1.html?api-key=<access-key> -score-field score -access-key "MIIBBjCBrAIBArqyTHFvYdWiOpLkLKHGjUYUNSwfzX"
+----
+

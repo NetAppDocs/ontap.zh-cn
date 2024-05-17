@@ -2,7 +2,7 @@
 permalink: snaplock/commit-snapshot-copies-worm-concept.html 
 sidebar: sidebar 
 keywords: snaplock, commit, snapshot, copy, worm, snapvault, protect, snapmirror, clone, snaplock type 
-summary: 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot 副本进行 WORM 保护。您可以在 SnapVault 目标上执行所有基本 SnapLock 任务。目标卷会自动挂载为只读，因此无需明确将 Snapshot 副本提交到 WORM ；因此，不支持使用 SnapMirror 策略在目标卷上创建计划的 Snapshot 副本。 
+summary: 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot 副本进行 WORM 保护。您可以在存储目标上执行所有基本SnapLock任务。 
 ---
 = 将Snapshot副本提交到存储目标上的WORM
 :allow-uri-read: 
@@ -14,14 +14,18 @@ summary: 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot �
 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot 副本进行 WORM 保护。您可以在存储目标上执行所有基本SnapLock任务。目标卷会自动挂载为只读，因此无需明确将 Snapshot 副本提交到 WORM ；因此，不支持使用 SnapMirror 策略在目标卷上创建计划的 Snapshot 副本。
 
 .开始之前
-* 源集群必须运行 ONTAP 8.2.2 或更高版本。
+* 如果要使用System Manager配置此关系、则源集群和目标集群都必须运行ONTAP 9.151或更高版本。
+* 在目标集群上：
++
+** link:../system-admin/install-license-task.html["安装SnapLock 许可证"]。
+** link:initialize-complianceclock-task.html["初始化Compliance时钟"]。
+** 如果在9.10.1之前的ONTAP版本中使用命令行界面、 link:create-snaplock-aggregate-task.html["创建SnapLock聚合"]。
+
+
+* 保护策略的类型必须为"vault"。
 * 源聚合和目标聚合必须为 64 位。
 * 源卷不能是 SnapLock 卷。
-* 必须在具有对等 SVM 的对等集群中创建源卷和目标卷。
-+
-有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群对等"]。
-
-* 如果禁用了卷自动增长，则目标卷上的可用空间必须至少比源卷上的已用空间多 5% 。
+* 如果使用的是ONTAP命令行界面、则必须在中创建源卷和目标卷 link:../peering/create-cluster-relationship-93-later-task.html["对等集群"] 和 link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["svms"]。
 
 
 .关于此任务
@@ -35,9 +39,13 @@ NOTE: 您不能重命名提交到 WORM 状态的 Snapshot 副本。
 
 NOTE: SnapLock卷不支持LUN。只有当在非SnapLock卷上创建的Snapshot副本传输到SnapLock卷以在SnapLock存储关系中进行保护时、SnapLock卷才支持LUN。读/写SnapLock卷不支持LUN。但是、包含LUN的SnapMirror源卷和目标卷均支持防篡改Snapshot副本。
 
+从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。您可以使用卷"-SnapLock-type"选项指定Compliance或Enterprise SnapLock卷类型。在ONTAP 9.10.1之前的ONTAP 版本中、SnapLock 模式"合规性"或"企业"是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。
+
+作为存储目标的 SnapLock 卷会为其分配默认保留期限。对于 SnapLock 企业卷，此期限的值最初设置为最短 0 年，对于 SnapLock 合规性卷，此期限的值最长设置为 30 年。首次提交每个 NetApp Snapshot 副本时都会使用此默认保留期限。如果需要，可以稍后延长保留期限。有关详细信息，请参见 link:set-retention-period-task.html["设置保留时间概述"]。
+
 从ONTAP 9.14.1开始、您可以在SnapMirror关系的SnapMirror策略中为特定SnapMirror标签指定保留期限、以便从源卷复制到目标卷的Snapshot副本在规则中指定的保留期限内得以保留。如果未指定保留期限、则会使用目标卷的default-保留 期限。
 
-从ONTAP 9.13.1开始、您可以通过使用创建FlexClone来瞬时还原SnapLock存储关系的目标SnapLock卷上锁定的Snapshot副本 `snaplock-type` 选项设置为"非SnapLock"、并在执行卷克隆创建操作时将Snapshot副本指定为"父快照"。了解更多信息 link:https://docs.netapp.com/us-en/ontap/volumes/create-flexclone-task.html?q=volume+clone["创建SnapLock 类型的FlexClone卷"]。
+从ONTAP 9.13.1开始、您可以通过使用创建FlexClone来瞬时还原SnapLock存储关系的目标SnapLock卷上锁定的Snapshot副本 `snaplock-type` 选项设置为"非SnapLock"、并在执行卷克隆创建操作时将Snapshot副本指定为"父快照"。了解更多信息 link:../volumes/create-flexclone-task.html?q=volume+clone["创建SnapLock 类型的FlexClone卷"]。
 
 对于 MetroCluster 配置，您应注意以下事项：
 
@@ -51,34 +59,39 @@ NOTE: SnapLock卷不支持LUN。只有当在非SnapLock卷上创建的Snapshot�
 image::../media/snapvault-steps-clustered.gif[此图显示了用于初始化SnapLock存储关系的操作步骤：标识目标集群,creating a destination volume,creating a policy]
 
 .步骤
-. 确定目标集群。
-. 在目标集群上、 link:https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["安装SnapLock许可证"]， link:https://docs.netapp.com/us-en/ontap/snaplock/initialize-complianceclock-task.html["初始化Compliance时钟"]如果您使用的是9.10.1之前的ONTAP版本， link:https://docs.netapp.com/us-en/ontap/snaplock/create-snaplock-aggregate-task.html["创建SnapLock聚合"]。
+您可以使用ONTAP命令行界面创建SnapLock存储关系、也可以从ONTAP 9.15.1开始使用System Manager创建SnapLock存储关系。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*存储>卷*并选择*添加*。
+. 在*添加卷*窗口中，选择*更多选项*。
+. 输入卷名称、大小、导出策略和共享名称。
+. 选择*锁定目标快照以防止删除*，然后在*锁定方法*部分中，选择* SnapLock for SnapVault *。如果选定策略类型不是"存储"类型、未安装SnapLock许可证或未初始化合规性时钟、则不会显示此选择。
+. 如果尚未启用此选项，请选择*初 始化SnapLock Compliance Clock*。
+. 保存所做的更改。
+
+
+--
+--
+.命令行界面
 . 在目标集群上、创建类型为的SnapLock目标卷 `DP` 大小等于或大于源卷：
 +
-`*volume create -vserver _SVM_name_ -volume _volume_name_ -aggregate _aggregate_name_ -snaplock-type compliance|enterprise -type DP -size _size_*`
-
+[source, cli]
+----
+volume create -vserver <SVM_name> -volume <volume_name> -aggregate <aggregate_name> -snaplock-type <compliance|enterprise> -type DP -size <size>
+----
 +
-[NOTE]
-====
-从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。您可以使用volume -SnapLock-type选项指定Compliance或Enterprise SnapLock 卷类型。在ONTAP 9.10.1之前的ONTAP 版本中、SnapLock 模式"合规性"或"企业"是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。
-
-====
-+
-以下命令将创建一个2 GB的SnapLock `Compliance` 名为的卷 `dstvolB` 在中 `SVM2` 在聚合上 `node01_aggr`：
+以下命令将创建一个名为的2 GB SnapLock合规性卷 `dstvolB` 在中 `SVM2` 在聚合上 `node01_aggr`：
 
 +
 [listing]
 ----
 cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -snaplock-type compliance -type DP -size 2GB
 ----
-. 在目标集群上，设置默认保留期限，如中所述 xref:set-default-retention-period-task.adoc[设置默认保留期限]。
-+
-[NOTE]
-====
-作为存储目标的 SnapLock 卷会为其分配默认保留期限。对于 SnapLock 企业卷，此期限的值最初设置为最短 0 年，对于 SnapLock 合规性卷，此期限的值最长设置为 30 年。首次提交每个 NetApp Snapshot 副本时都会使用此默认保留期限。如果需要，可以稍后延长保留期限。有关详细信息，请参见 xref:set-retention-period-task.adoc[设置保留时间概述]。
-
-====
-. xref:../data-protection/create-replication-relationship-task.adoc[创建新的复制关系] 在非 SnapLock 源和步骤 3 中创建的新 SnapLock 目标之间。
+. 在目标集群上、 link:set-retention-period-task.html["设置默认保留期限"]。
+. link:../data-protection/create-replication-relationship-task.html["创建新的复制关系"] 在非SnapLock源和您创建的新SnapLock目标之间。
 +
 此示例将创建与目标SnapLock卷的新SnapMirror关系 `dstvolB` 使用的策略 `XDPDefault` 要按每小时计划存储标记为每天和每周的Snapshot副本、请执行以下操作：
 
@@ -88,15 +101,15 @@ cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -
 cluster2::> snapmirror create -source-path SVM1:srcvolA -destination-path SVM2:dstvolB -vserver SVM2 -policy XDPDefault -schedule hourly
 ----
 +
-[NOTE]
-====
-xref:../data-protection/create-custom-replication-policy-concept.adoc[创建自定义复制策略] 或 xref:../data-protection/create-replication-job-schedule-task.adoc[自定义计划] 如果可用的默认值不适用。
 
-====
-. 在目标 SVM 上，初始化步骤 5 中创建的 SnapVault 关系：
+NOTE: link:../data-protection/create-custom-replication-policy-concept.html["创建自定义复制策略"] 或 link:../data-protection/create-replication-job-schedule-task.html["自定义计划"] 如果可用的默认值不适用。
+
+. 在目标SVM上、初始化创建的SnapVault关系：
 +
-`*snapmirror initialize -destination-path _destination_path_*`
-
+[source, cli]
+----
+snapmirror initialize -destination-path <destination_path>
+----
 +
 以下命令将初始化源卷之间的关系 `srcvolA` 开启 `SVM1` 和目标卷 `dstvolB` 开启 `SVM2`：
 
@@ -116,6 +129,8 @@ cluster2::> snapshot show -vserver SVM2 -volume dstvolB -fields snapmirror-label
 ----
 
 
+--
+====
 .相关信息
 https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM 对等"]
 

@@ -1,0 +1,32 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/planned-failover-unsuccessful-task.html 
+keywords: troubleshooting, SM-BC, SMBC, SnapMirror, failover, planned failover, common Snapshot copy, snapmirror active sync 
+summary: '执行后 `snapmirror failover start` 命令、即的输出 `snapmirror failover show` 命令将显示一条消息、指示正在执行无中断操作。' 
+---
+= 计划内故障转移失败
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+.问题描述 ：
+[role="lead"]
+执行后 `snapmirror failover start` 命令、即的输出 `snapmirror failover show` 命令将显示一条消息、指示正在执行无中断操作。
+
+....
+Cluster1::> snapmirror failover show
+Source Destination Error
+Path Path Type Status start-time end-time Reason
+-------- ----------- -------- --------- ---------- ---------- ----------
+vs1:/cg/cg vs0:/cg/cg planned failed 10/1/2020 10/1/2020 SnapMirror Failover cannot start because a volume move is running. Retry the command once volume move has finished.
+                                                          08:35:04 08:35:04
+....
+.发生原因 ：
+如果正在执行无中断操作、包括卷移动、聚合重新定位和存储故障转移、则无法开始计划内故障转移。
+
+.解决方案 ：
+等待无中断操作完成，然后重试故障转移操作。

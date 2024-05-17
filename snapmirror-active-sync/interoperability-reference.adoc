@@ -1,0 +1,141 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/interoperability-reference.html 
+keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix, hp-ux, fanout, snapmirror active sync 
+summary: SnapMirror主动同步与ONTAP中的许多操作系统和其他功能兼容。 
+---
+= SnapMirror主动同步互操作性
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror主动同步与ONTAP中的许多操作系统、应用程序主机和其他功能兼容。
+
+
+
+== 应用程序主机
+
+SnapMirror主动同步支持应用程序主机包括Hyper-V、Red Hat Enterprise Linux (RHEL)、VMware、VMware vSphere Metro Storage Cluster (VMSC)、Windows Server、以及从ONTAP 9.14.1开始的Windows Server故障转移集群。
+
+
+
+== 操作系统
+
+SnapMirror主动同步支持多种操作系统、包括：
+
+* AIX (从ONTAP 9.11.1开始)
+* HP-UX (从ONTAP 9.10.1开始)
+* Solaris 11.4 (从ONTAP 9.10.1开始)
+
+
+
+
+=== AIX
+
+从ONTAP 9.11.1开始、SnapMirror主动同步支持AIX。在AIX配置中、主集群是"活动"集群。
+
+在AIX配置中、故障转移会造成中断。每次故障转移时、您都需要在主机上执行重新扫描、才能恢复I/O操作。
+
+要为具有SnapMirror活动系统的AIX主机配置、请参阅知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/How_to_configure_an_AIX_host_for_SnapMirror_Business_Continuity_(SM-BC)["如何为SnapMirror活动同步配置AIX主机"^]。
+
+
+
+=== HP-UX
+
+从ONTAP 9.10.1开始、支持适用于HP-UX的SnapMirror活动同步。
+
+.使用HP-UX自动执行计划外故障转移
+如果主集群与二级集群之间的连接断开、并且主集群与调解器之间的连接也断开、则可能会在隔离的主集群上发生自动计划外故障转移(AUFO)事件。与其他 AINFO 事件不同，此事件被视为罕见事件。
+
+* 在这种情况下、在HP-UX主机上恢复I/O可能需要120秒以上的时间。根据正在运行的应用程序，此操作可能不会导致任何 I/O 中断或错误消息。
+* 要进行修复、必须在中断容错小于120秒的HP-UX主机上重新启动应用程序。
+
+
+
+
+=== Solaris
+
+从ONTAP 9.10.1开始、SnapMirror主动同步支持Solaris 11.4。
+
+要确保在SnapMirror活动同步环境中发生计划外站点故障转移切换时Solaris客户端应用程序无中断、请修改默认的Solaris OS设置。要使用建议的设置配置Solaris，请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Protection_and_Security/SnapMirror/Solaris_Host_support_recommended_settings_in_SnapMirror_Business_Continuity_(SM-BC)_configuration["Solaris主机支持SnapMirror活动同步中的建议设置"^]。
+
+
+
+== ONTAP互操作性
+
+SnapMirror主动同步可与ONTAP的组件集成、以扩展其数据保护功能。
+
+
+
+=== FabricPool
+
+SnapMirror主动同步支持FabricPool聚合上的源卷和目标卷、分层策略为"无"、"快照"或"自动"。SnapMirror主动同步不支持使用all的层策略的FabricPool聚合。
+
+
+
+=== 扇出配置
+
+在中 xref:../data-protection/supported-deployment-config-concept.html[扇出配置]，源卷可以镜像到SnapMirror活动同步目标端点以及一个或多个SnapMirror异步关系。
+
+image:fanout-diagram.png["扇出配置示意图"]
+
+SnapMirror主动同步支持 xref:../data-protection/supported-deployment-config-concept.html[扇出配置] 使用 `MirrorAllSnapshots` 策略和(从ONTAP 9.11.1开始) `MirrorAndVault` 策略。在与同步的SnapMirror主动同步中不支持扇出配置 `XDPDefault` 策略。
+
+从ONTAP 9.15.1开始、SnapMirror主动同步支持在发生故障转移事件后在扇出段中自动重新配置。如果从主站点成功故障转移到二级站点、则会自动重新配置三级站点、将二级站点视为源站点。重新配置由计划内或计划外故障转移触发。故障恢复到主站点时也会进行重新配置。
+
+有关在早期版本的ONTAP中管理扇出配置的信息、请参阅 xref:recover-unplanned-failover-task.adoc[在扇出配置中恢复保护]。
+
+
+
+=== NDMP还原
+
+从ONTAP 9.131开始、您可以使用 xref:../tape-backup/transfer-data-ndmpcopy-task.html[通过NDMP复制和还原数据] SnapMirror处于活动同步状态。通过使用NDMP、您可以将数据移至SnapMirror活动同步源以完成还原、而不会暂停保护。这在扇出配置中尤其有用。
+
+
+
+=== SnapCenter
+
+从开始、SnapCenter支持SnapMirror主动同步 link:https://docs.netapp.com/us-en/snapcenter/index.html["SnapCenter 5.0"^]。通过SnapCenter、可以创建快照、以便用于保护和恢复应用程序和虚拟机、从而在应用程序级别粒度级别实现始终可用的存储解决方案。
+
+
+
+=== SnapRestore
+
+SnapMirror主动同步支持部分和单文件SnapRestore。
+
+.单文件SnapRestore
+从ONTAP 9.11.1开始、 xref:../data-protection/restore-single-file-snapshot-task.html[单文件SnapRestore] 支持SnapMirror活动同步卷。您可以从从SnapMirror活动同步源复制到目标的Snapshot副本还原单个文件。由于卷可以包含一个或多个LUN、因此、此功能可帮助您实施中断性较低的还原操作、即在不中断其他LUN的情况下细化还原单个LUN。Single File SnapRestore有两个选项：就地和异地。
+
+.部分文件SnapRestore
+从ONTAP 9.12.1开始、 link:../data-protection/restore-part-file-snapshot-task.html["部分LUN还原"] 支持SnapMirror活动同步卷。您可以从应用程序创建的Snapshot副本中还原数据、这些副本已在SnapMirror活动同步源(卷)和目标(Snapshot副本)卷之间复制。如果您需要在同一个LUN上存储多个数据库的主机上还原数据库、则可能需要执行部分LUN或文件还原。使用此功能要求您知道数据和字节计数的起始字节偏移量。
+
+
+
+=== 大型 LUN 和大型卷
+
+对大型LUN和大型卷(大于100 TB)的支持取决于您使用的ONTAP版本以及您的平台。
+
+[role="tabbed-block"]
+====
+.ONTAP 9.12.1P2及更高版本
+--
+* 对于ONTAP 9.12.1 P2及更高版本、SnapMirror主动同步支持ASA和AFF (包括C系列)上的大型LUN和大于100 TB的大型卷。
+
+
+
+NOTE: 对于ONTAP 9.12.1P2及更高版本、您必须确保主集群和二级集群均为纯闪存SAN阵列(ASA)或纯闪存阵列(AFF)、并且都安装了ONTAP 9.12.1 P2或更高版本。如果二级集群运行的版本低于ONTAP 9.12.1P2、或者阵列类型与主集群不同、则当主卷增长到100 TB以上时、同步关系可能会不同步。
+
+--
+.ONTAP 9.9.1 - 9.12.1P1
+--
+* 对于ONTAP 9.9.1和9.12.1 P1之间的ONTAP版本(包括此版本)、只有纯闪存SAN阵列才支持大于100 TB的大型LUN和大型卷。
+
+
+
+NOTE: 对于ONTAP 9.9.1和9.12.1 P2之间的ONTAP版本、您必须确保主集群和二级集群均为纯闪存SAN阵列、并且均安装了ONTAP 9.9.1或更高版本。如果二级集群运行的版本低于ONTAP 9.9.1、或者它不是纯闪存SAN阵列、则在主卷增长超过100 TB时、同步关系可能会不同步。
+
+--
+====

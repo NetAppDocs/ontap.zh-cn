@@ -1,0 +1,25 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/volume-move-snapshot-task.html 
+keywords: SM-BC, SMBC, volume move, troubleshooting, consistency group, Snapshot copy, snapmirror active sync 
+summary: 执行卷移动操作后，卷移动操作的参考 Snapshot 副本将显示为 SnapMirror 关系的最新副本。 
+---
+= 卷移动参考 Snapshot 副本显示为最新的
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+.问题描述 ：
+[role="lead"]
+对一致性组卷执行卷移动操作后、卷移动引用Snapshot副本可能会错误地显示为SnapMirror关系的最新副本。
+
+您可以使用以下命令查看最新的 Snapshot 副本：
+
+`snapmirror show -fields newest-snapshot status -expand`
+
+.解决方案 ：
+手动执行 `snapmirror resync` 或者、等待卷移动操作完成后下一次自动重新同步操作。

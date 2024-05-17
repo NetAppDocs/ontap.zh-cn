@@ -1,0 +1,113 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/limits-reference.html 
+keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix, hp-ux, fanout, snapmirror active sync 
+summary: 使用SnapMirror主动同步时、还存在一些其他限制。 
+---
+= SnapMirror活动同步的对象限制
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+准备使用SnapMirror活动同步时、请注意以下对象限制。
+
+
+
+== 集群中的一致性组
+
+采用SnapMirror主动同步的集群的一致性组限制是根据关系计算的、并取决于所使用的ONTAP版本。限制与平台无关。
+
+|===
+| ONTAP 版本 | 最大关系数 
+
+
+| ONTAP 9.11.1及更高版本 | 50. 
+
+
+| ONTAP 9.10.1 | 20. 
+
+
+| ONTAP 9.9.1 | 5. 
+|===
+
+
+== 每个一致性组的卷数
+
+每个采用SnapMirror主动同步的一致性组的最大卷数与平台无关。
+
+|===
+| ONTAP 版本 | 一致性组关系中支持的最大卷数 
+
+
+| ONTAP 9.151及更高版本 | 80 
+
+
+| ONTAP 9.10.1-9.14.1 | 16. 
+
+
+| ONTAP 9.9.1 | 12. 
+|===
+
+
+== Volumes
+
+SnapMirror主动同步中的卷限制是根据端点数量计算的、而不是根据关系数量计算的。包含12个卷的一致性组会在主集群和二级集群上提供12个端点。SnapMirror活动同步和SnapMirror同步关系都会影响端点总数。
+
+下表列出了每个平台的最大端点数量。
+
+|===
+| S否 | 平台 3+| 每个HA的端点、用于SnapMirror活动同步 3+| 每个HA的整体同步和SnapMirror活动同步端点 
+
+
+|  |  | ONTAP 9.11.1及更高版本 | ONTAP 9.10.1 | ONTAP 9.9.1 | ONTAP 9.11.1及更高版本 | ONTAP 9.10.1 | ONTAP 9.9.1 
+
+
+| 1. | AFF | 400 | 200 | 60 | 400 | 200 | 80 
+
+
+| 2. | ASA | 400 | 200 | 60 | 80 | 200 | 400 
+|===
+
+
+== SAN 对象限制
+
+下表列出了SAN对象限制。这些限制适用于任何平台。
+
+|===
+| SnapMirror活动同步关系中的对象 | 计数 
+
+
+| 每个卷的 LUN 数 | 256. 
+
+
+| 每个节点的 LUN 映射数  a| 
+* 4096 (ONTAP 9.10及更高版本)
+* 2048 (ONTAP 9.9.1及更早版本)
+
+
+
+
+| 每个集群的 LUN 映射数  a| 
+* 8192 (ONTAP 9.10及更高版本)
+* 4096 (ONTAP 9.9.1及更早版本)
+
+
+
+
+| 每个SVM的SVM数量(一个SnapMirror活动同步关系中至少有一个卷) | 256. 
+
+
+| 每个节点的集群间 LIF | 4. 
+
+
+| 每个集群的集群间 LIF | 8. 
+|===
+.相关信息
+* link:https://hwu.netapp.com/["Hardware Universe"^]
+* link:../consistency-groups/limits.html["一致性组限制"^]
+

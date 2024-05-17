@@ -1,0 +1,32 @@
+---
+permalink: authentication/dynamic-authorization-overview.html 
+sidebar: sidebar 
+keywords: dynamic, authorization, framework, security, login, ssh 
+summary: 配置动态授权框架以提高SSH登录的安全性、并在可疑情况下限制某些命令的执行。 
+---
+= 动态授权概述
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.151开始、管理员可以配置和启用动态授权、以提高远程访问ONTAP的安全性、同时缓解恶意攻击者可能造成的潜在损害。在ONTAP 9.151中、动态授权提供了一个初始框架、用于为用户分配安全得分、如果用户的活动看起来可疑、则通过额外的授权检查向用户提出质疑或完全拒绝操作。管理员可以创建规则、分配信任得分和限制命令、以确定何时允许或拒绝用户执行某些活动。管理员可以在集群范围内启用动态授权、也可以为各个Storage VM启用动态授权。
+
+
+
+== 动态授权的工作原理
+
+动态授权使用信任评分系统根据授权策略为用户分配不同的信任级别。根据用户的信任级别、可以允许或拒绝他们执行的活动、也可以提示用户进行进一步的身份验证。
+
+以三个不同用户尝试删除卷为例。在尝试执行操作时、会检查每个用户的风险等级：
+
+* 第一个用户在正常工作时间从可信设备登录、这使她的风险等级较低；无需额外身份验证即可操作。
+* 第二位用户在办公时间之外从家中的可信设备登录、这使风险评级为中等；在允许执行此操作之前、系统会提示她进行额外的身份验证。
+* 第三个用户在非工作时间从不可信的设备登录到新位置、这会使风险等级较高；不允许执行此操作。
+
+
+.下一步行动
+* link:configure-dynamic-authorization.html["自定义动态授权"^]
+* link:enable-disable-dynamic-authorization.html["启用或禁用动态授权"^]
+

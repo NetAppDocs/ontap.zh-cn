@@ -11,9 +11,9 @@ summary: 您可以通过向集群发出问题描述SSH请求来执行管理任�
 
 
 [role="lead"]
-您可以通过向集群发出问题描述SSH请求来执行管理任务。默认情况下、SSH处于启用状态。
+您可以通过向ONTAP集群发出问题描述SSH请求来执行管理任务。默认情况下、SSH处于启用状态。
 
-.您需要的内容
+.开始之前
 * 您必须具有配置为使用的用户帐户 `ssh` 作为访问方法。
 +
 。 `-application` 的参数 `security login` 命令用于指定用户帐户的访问方法。。 `security login` https://docs.netapp.com/us-en/ontap-cli-9141/security-login-create.html#description["手册页"^] 包含追加信息。
@@ -54,11 +54,12 @@ AD 用户名和域名不区分大小写。但是， ONTAP 用户名区分大小�
 
 * 从ONTAP 9.4开始、您可以执行此操作 link:../authentication/grant-access-nis-ldap-user-accounts-task.html["启用SSH多因素身份验证"^] LDAP和NIS远程用户。
 * 从ONTAP 9.13.1开始、您可以选择在SSH身份验证过程中添加证书验证、以增强登录安全性。为此、 link:../authentication/manage-ssh-public-keys-and-certificates.html["将X.509证书与公共密钥相关联"^] 帐户使用的。如果使用SSH公共密钥和X.509证书登录、则ONTAP会在使用SSH公共密钥进行身份验证之前检查X.509证书的有效性。如果此证书已过期或已撤销、则会拒绝SSH登录、并且SSH公共密钥会自动禁用。
-* 从ONTAP 9.14.1开始、您可以选择在SSH身份验证过程中添加Cisco双因素身份验证、以增强登录安全性。启用Cisco Duo身份验证后首次登录时、用户需要注册一个设备、以用作SSH会话的身份验证程序。请参见 link:../authentication/configure-cisco-duo-mfa-task.html["为SSH登录配置Cisco Duo 2FA"^] 有关为ONTAP配置Cisco双核SSH身份验证的详细信息、请参见。
+* 从ONTAP 9.14.1开始、ONTAP管理员可以执行此操作 link:../authentication/configure-cisco-duo-mfa-task.html["在SSH身份验证过程中添加Cisco Duo双重身份验证"^] 以增强登录安全性。启用Cisco Duo身份验证后首次登录时、用户需要注册一个设备、以用作SSH会话的身份验证程序。
+* 从ONTAP 9.15.1开始、管理员可以执行此操作 link:../authentication/dynamic-authorization-overview.html["配置动态授权"^] 根据SSH用户的信任得分向用户提供额外的自适应身份验证。
 
 
 .步骤
-. 从管理主机输入 `ssh` 命令、格式为以下之一：
+. 在可访问ONTAP集群网络的主机上、输入 `ssh` 命令、格式为以下之一：
 +
 ** `*ssh _username@hostname_or_IP_ [_command_]*`
 ** `*ssh -l _username hostname_or_IP_ [_command_]*`

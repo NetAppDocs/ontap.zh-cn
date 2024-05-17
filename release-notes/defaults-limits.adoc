@@ -1,0 +1,122 @@
+---
+permalink: release-notes/defaults-limits.html 
+sidebar: sidebar 
+keywords: ontap defaults, ontap limits, limits, defaults, ontap 9 
+summary: 了解对ONTAP 9.x限制和默认值所做的更改。 
+---
+= 对ONTAP限制和默认值进行的更改
+:allow-uri-read: 
+
+
+[role="lead"]
+了解在ONTAP 9版本中实施的一些限制和默认设置变更。NetApp致力于帮助客户了解每个ONTAP版本中更改的最重要限制。
+
+
+
+== ONTAP默认值
+
+[cols="25%,50%,25%"]
+|===
+| 功能 | 默认更改 | 在版本…中进行了更改 
+
+
+| `vserver object-store-server user show` 命令 | 在ONTAP 9.15.1之前的版本中、 `vserver object-store-server user show` 命令将返回S3用户的机密密钥。此命令将不再返回S3用户的机密密钥数据。 | ONTAP 9.15.1. 
+
+
+| NAS审核 | 默认情况下、NAS审核配置允许保留所有审核日志记录。修改后的rotate-Limit参数值可确保审核日志的大小适合支持审核日志的卷。 | ONTAP 9.15.1. 
+
+
+| 空间分配 | 默认情况下、新创建的VMware和Hyper-V LUN会启用空间分配、而未由VMware和Hyper-V使用的所有新创建的LUN会禁用空间分配 | ONTAP 9.15.1. 
+
+
+| NVMe/TCP自动主机发现 | 默认情况下、使用NVMe/TCP协议自动发现控制器。 | ONTAP 9.14.1 
+
+
+| AES加密、用于基于Kerberos的通信 | 默认情况下、对于与SMB服务器进行基于Kerberos的通信、身份验证的AES加密处于启用状态。如果您的环境不支持AES加密、则可以手动禁用它。 | ONTAP 9.13.1 
+
+
+| 默认情况下、TLS 1.1处于禁用状态 | 默认情况下、对于新安装的ONTAP、TLS 1.1处于禁用状态。已升级到ONTAP 9.12.0及更高版本且已启用TLS 1.1的系统不会受到影响、因为升级会使TLS 1.1处于启用状态。默认情况下、如果禁用、则可以根据需要手动启用TLS 1.1。 | ONTAP 9.12.0 
+
+
+| 默认情况下、TLS 1.0处于禁用状态 | 默认情况下、对于新安装的ONTAP、TLS 1.0处于禁用状态。升级到ONTAP 9.8及更高版本且已启用TLS 1.0的系统不会受到影响、因为升级会使TLS 1.0处于启用状态。默认情况下、如果禁用、则可以根据需要手动启用TLS 1.0。 | ONTAP 9.8 
+|===
+
+
+== ONTAP限制
+
+[cols="25%,50%,25%"]
+|===
+| 功能 | 限制更改 | 在版本…中进行了更改 
+
+
+| SnapMirror主动同步：对称主动/主动 | SnapMirror主动同步支持一致性组中的80个卷 | ONTAP 9.15.1. 
+
+
+| SnapMirror
+异步 | 使用SnapMirror异步保护的一致性组在一个一致性组中最多支持80个卷。 | ONTAP 9.15.1. 
+
+
+| 文件系统分析 | 为了缓解性能问题、ONTAP强制要求在启用文件系统分析时、卷的5-8%的容量必须可用。 | ONTAP 9.15.1. 
+
+
+| SVM 数据移动性 | 具有SVM数据移动性的每个SVM支持的最大卷数增加到400、而支持的HA对数增加到12。 | ONTAP 9.14.1 
+
+
+| FlexGroup 重新平衡 | FlexGroup重新平衡操作的最小可配置文件大小从4 KB增加到20 MB。  a| 
+* ONTAP 9.14.1
+* ONTAP 9.13.1P1
+* ONTAP 9.12.1P10.
+
+
+
+
+| FlexVol和FlexGroup卷大小限制 | AFF和FAS平台上支持的最大FlexVol和FlexGroup卷成分卷大小已从100 TB增加到300 TB。 | ONTAP 9.12.1P2 
+
+
+| LUN大小限制 | AFF和FAS平台上支持的最大LUN大小已从16 TB增加到128 TB。SnapMirror配置(同步和异步)中支持的最大LUN大小从16 TB增加到128 TB。 | ONTAP 9.12.1P2 
+
+
+| FlexVol卷大小限制 | AFF和FAS平台上支持的最大卷大小已从100 TB增加到300 TB。SnapMirror同步配置中支持的最大FlexVol卷大小已从100 TB增加到300 TB。 | ONTAP 9.12.1P2 
+
+
+| 文件大小限制 | AFF和FAS平台上NAS文件系统支持的最大文件大小已从16 TB增加到128 TB。SnapMirror同步配置中支持的最大文件大小从16 TB增加到128 TB。 | ONTAP 9.12.1P2 
+
+
+| 集群卷限制 | 提高控制器更充分地利用CPU和内存的能力、并将集群的最大卷数从15、000增加到30、000。 | ONTAP 9.12.1 
+
+
+| FlexVol卷的SVM-DR关系 | 对于FlexVol卷、SVM-DR关系的最大数量已从64个增加到128个(每个集群128个SVM)。 | ONTAP 9.11.1 
+
+
+| SnapMirror 同步 | 每个HA对允许的最大SnapMirror同步操作数已从200增加到400。 | ONTAP 9.11.1 
+
+
+| NAS FlexVol卷 | NAS FlexVol卷的集群限制已从12、000增加到15、000。 | ONTAP 9.10.1 
+
+
+| SAN FlexVol卷 | SAN FlexVol卷的集群限制已从12 k增加到15 k。 | ONTAP 9.10.1 
+
+
+| 带有FlexGroup卷的SVM-DR  a| 
+* FlexGroup卷最多支持32个SVM-DR关系。
+* SVM-DR关系中单个SVM支持的最大卷数为300、其中包括FlexVol卷和FlexGroup成分卷的数量。
+* FlexGroup中的最大成分卷数不能超过20个。
+* SVM-DR卷限制为每个节点500个、每个集群1000个(包括FlexVol卷和FlexGroup成分卷)。
+
+| ONTAP 9.10.1 
+
+
+| 已启用审核的SVM | 集群中支持的已启用审核的SVM的最大数量已从50个增加到400个。 | ONTAP 9.9.1 
+
+
+| SnapMirror 同步 | 每个HA对支持的最大SnapMirror同步端点数量已从80增加到160。 | ONTAP 9.9.1 
+
+
+| FlexGroup SnapMirror拓扑 | FlexGroup卷支持两个或更多扇出关系、例如A到B、A到C与FlexVol卷一样、FlexGroup扇出最多支持8个扇出支脚、并级联到两个级别、例如A到B到C | ONTAP 9.9.1 
+
+
+| SnapMirror并发传输 | 异步卷级SnapMirror并发传输的最大数量已从100增加到200。在高端系统上、云到云SnapMirror传输从32个增加到200个、在低端系统上、SnapMirror传输从6个增加到20个。 | ONTAP 9.8 
+
+
+| FlexVol卷限制 | 对于全闪存SAN阵列、FlexVol卷占用的空间已从100 TB增加到300 TB。 | ONTAP 9.8 
+|===

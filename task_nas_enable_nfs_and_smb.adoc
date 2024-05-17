@@ -18,29 +18,29 @@ summary: 修改 Storage VM 以使 NFS 和 SMB 服务器能够向 Linux 和 Windo
 [role="lead"]
 创建或修改Storage VM、以使NFS和SMB服务器能够向Linux和Windows客户端提供数据。
 
-通过此操作步骤 、新的或现有的Storage VM可以同时提供NFS和SMB协议。假定您的环境中所需的任何网络、身份验证或安全服务均提供了配置详细信息。
+启用新的或现有的Storage VM、以便使用此操作步骤同时提供NFS和SMB协议。
 
-image:workflow_nas_enable_nfs_and_smb.gif["使用 NFS 和 SMB 为 Linux 和 Windows 服务器启用 NAS 的工作流图"]
+image:workflow_nas_enable_nfs_and_smb.png["使用 NFS 和 SMB 为 Linux 和 Windows 服务器启用 NAS 的工作流图"]
+
+.开始之前
+确保您已记下环境中所需的任何网络连接、身份验证或安全服务的配置详细信息。
 
 .步骤
 . 在Storage VM上启用NFS和SMB。
 +
 .. 对于新的Storage VM：单击*存储> Storage VM*、单击*添加*、输入Storage VM名称、然后在* SMB/CIFS、NFS、S3*选项卡中、选择*启用SMB/CIFS *和*启用NFS*。
+.. 输入以下信息：
 +
-*** 输入以下信息：
-+
-**** 管理员名称和密码
-**** 服务器名称
-**** Active Directory域
+*** 管理员名称和密码
+*** 服务器名称
+*** Active Directory域
 
 
-*** 确认组织单位。
-*** 确认DNS值。
-*** 确认默认语言。
-*** 添加网络接口。
-*** 更新Storage VM管理员帐户信息(可选)。
-
-
+.. 确认组织单位。
+.. 确认DNS值。
+.. 确认默认语言。
+.. 添加网络接口。
+.. 更新Storage VM管理员帐户信息(可选)。
 .. 对于现有Storage VM：单击*存储> Storage VM*、选择一个Storage VM、然后单击*设置*。如果尚未启用NFS或SMB、请完成以下子步骤。
 +
 *** 单击 image:icon_gear.gif["设置图标"] 在* NFS *下。
@@ -78,9 +78,44 @@ image:workflow_nas_enable_nfs_and_smb.gif["使用 NFS 和 SMB 为 Linux 和 Wind
 .. 在名称服务切换文件中包含任何更改：单击 image:icon_pencil.gif["编辑图标"] 在 * 名称服务开关 * 下。
 
 
-. 根据需要配置 Kerberos ：单击 image:icon_arrow.gif["箭头图标"] 在 Kerberos 磁贴中，然后单击 * 添加 * 。
+. 根据需要配置身份验证和加密：
++
+[role="tabbed-block"]
+====
+.为NFS客户端配置TLS
+--
+
+NOTE: 基于TLS的NFS在ONTAP 9.151中提供公开预览版。作为预览选项、ONTAP 9.15.1中的生产工作负载不支持基于TLS的NFS。
+
+.步骤
+.. 请参见 link:nfs-admin/tls-nfs-strong-security-concept.html["要求"^] 适用于基于TLS的NFS。
+.. 单击 * 存储 > 存储 VM* ，选择此 Storage VM ，然后单击 * 设置 * 。
+.. 在*NFS*磁贴中，单击*NFS over TLS settings (基于TLS的NFS设置)*。
+.. 在*基于TLS的NFS设置*区域中、选择要启用TLS的NFS网络接口。
+.. 单击 image:icon_kabob.gif["选项图标"] 。
+.. 单击 * 启用 * 。
+.. 在*网络接口TLS配置*对话框中，通过选择以下选项之一包含用于TLS的证书：
++
+*** *已安装证书*：从下拉列表中选择以前安装的证书。
+*** *新证书*：选择证书的公用名。
+*** *外部CA签名证书*：按照说明将证书和私钥的内容粘贴到框中。
+
+
+.. 单击 * 保存 * 。
+
+
+--
+.配置Kerberos
+--
+.步骤
+.. 单击 * 存储 > 存储 VM* ，选择此 Storage VM ，然后单击 * 设置 * 。
+.. 单击 image:icon_arrow.gif["箭头图标"] 在 Kerberos 磁贴中，然后单击 * 添加 * 。
+
+
+--
+====
 . 根据需要映射 UNIX 和 Windows 用户名：单击 image:icon_arrow.gif["箭头图标"] 在 * 名称映射 * 下，然后单击 * 添加 * 。
 +
-只有当您的站点具有不隐式映射的 Windows 和 UNIX 用户帐户时，即每个 Windows 用户名的小写版本与 UNIX 用户名匹配时，才应使用此操作步骤。此操作步骤可以使用 LDAP ， NIS 或本地用户来完成。如果两组用户不匹配，则应配置名称映射。
+只有当您的站点包含未隐式映射的Windows和UNIX用户帐户时、即每个Windows用户名的小写版本与UNIX用户名匹配时、才应执行此操作。您可以使用LDAP、NIS或本地用户映射用户名。如果两组用户不匹配，则应配置名称映射。
 
 

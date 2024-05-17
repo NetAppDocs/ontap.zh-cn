@@ -1,0 +1,85 @@
+---
+sidebar: sidebar 
+permalink: concepts/ontap-and-vmware.html 
+keywords: vmware, vsphere, vcenter, ontap tools for vmware vsphere, otv, vvol, persistent reservation, scsi 
+summary: 您可以将ONTAP和相关NetApp产品与VMware vSphere集成在一起。根据您的技术环境和业务需求、有多种选项可供选择。 
+---
+= ONTAP和VMware vSphere
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将ONTAP和相关NetApp产品与VMware vSphere集成在一起。根据您的技术环境和业务需求、有多种选项可供选择。
+
+
+
+== 选定概念和术语
+
+当您开始探索在VMware环境中使用ONTAP和相关NetApp产品时、首先熟悉一些关键术语和概念会很有帮助。
+
+逻辑单元号:: LUN是一个用于标识存储区域网络(SAN)中的_logical unit_的数字。这些可寻址设备通常是通过小型计算机系统接口(SCSI)协议或其封装派生程序之一访问的逻辑磁盘。
+VMware vSphere虚拟卷:: 虚拟卷(Virtual Volume、vVol)为虚拟机使用的存储提供卷级抽象。它具有多项优势、并提供了一种替代传统LUN的方法。
+持久预留:: SCSI-3支持持久预留、与早期的SCSI-2预留相比、这一功能有所改进。它们允许多个客户端启动程序与单个目标进行通信、同时锁定其他节点。即使总线已重置以进行错误恢复、预留也会持续存在。
+
+
+
+NOTE: 从ONTAP 9.15.1开始、您可以使用SCSI-3为虚拟卷创建永久性预留。只有在使用适用于VMware vSphere 9的ONTAP工具和Windows服务器故障转移集群(WSFC)时、才支持此功能。
+
+Windows Server故障转移群集:: Microsoft WSFC是Windows Server操作系统的一项功能、可提供容错和高可用性。一组服务器节点(物理或虚拟)作为集群连接在一起、以便在发生故障时提供故障恢复能力。WSFC通常用于部署基础架构服务、包括数据库、文件和名称空间服务器。
+VMware vSphere存储API—存储感知:: VASA是一组API、可将存储阵列与vCenter相集成以进行管理。该架构基于多个组件、包括用于处理VMware vSphere与存储系统之间通信的_VASA ProvidER_。借助ONTAP、该提供程序可作为适用于VMware vSphere的ONTAP工具的一部分来实施。
+VMware vSphere存储API—阵列集成:: VAAI是一组API、可用于在VMware vSphere ESXi主机和存储设备之间进行通信。API包括一组原始操作、主机使用这些操作将存储操作卸载到阵列。VAAI可以显著提高存储密集型任务的性能。
+NetApp SnapCenter:: SnapCenter是一个可扩展的集中式平台、可为使用ONTAP存储系统的应用程序、数据库、主机文件系统和虚拟机提供数据保护。它利用本机ONTAP技术、包括Snapshot、SnapRestore、FlexClone、SnapMirror和SnapVault。
+
+
+
+
+== NetApp插件和相关技术
+
+NetApp为将ONTAP及相关产品与VMware vSphere技术集成提供了强大的支持。
+
+
+
+=== 适用于 VMware vSphere 的 ONTAP 工具
+
+适用于VMware vSphere的ONTAP工具是一组用于集成ONTAP和vSphere的工具。它可实施VASA API框架的提供程序功能。ONTAP工具还包括vCenter插件、适用于VMware Site Recovery Manager的存储复制适配器(Storage Replication Adapter、SRA)以及可用于构建自动化应用程序的REST API服务器。
+
+
+
+=== 适用于 VMware VAAI 的 NFS 插件
+
+通过适用于VMware VAAI的NetApp NFS插件、您可以访问VAAI功能。此插件可以安装在ESXi主机上、并允许主机通过ONTAP上的NFS数据存储库利用VAAI。它提供多种操作、包括克隆、空间预留和快照负载分流。
+
+
+
+=== VMware Site Recovery Manager
+
+VMware Site Recovery Manager (SRM)可提供灾难恢复功能。SRM可与适用于VMware vSphere的ONTAP工具集成、以访问和利用ONTAP数据管理功能。
+
+
+
+=== vSphere Metro Storage Cluster
+
+vSphere Metro Storage Cluster (VMSC)是一项技术、可在_延伸 型集群_部署中启用和支持vSphere。NetApp MetroCluster和SnapMirror主动同步(以前称为SMBC)支持VMSC解决方案。这些解决方案可在域发生故障时增强业务连续性。故障恢复能力模型取决于您的特定配置选择。
+
+
+
+=== 适用于 VMware vSphere 的 SnapCenter 插件
+
+适用于VMware vSphere的SnapCenter插件(SCV)是一款基于Linux的虚拟设备、您可以与SnapCenter服务器一起部署、也可以作为独立应用程序部署。在这两种情况下、选择控制阀都为VM、数据存储库和VMDK提供备份和还原操作。这些操作速度快、节省空间、崩溃状态一致且虚拟机一致。
+
+
+
+== 获取更多信息
+
+您还可以使用其他几种资源来帮助您准备在VMware vSphere环境中部署ONTAP。
+
+* https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/["适用于VMware vSphere的ONTAP工具文档"^]
+* https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vsphere-overview.html["企业级应用程序：采用ONTAP的VMware vSphere"^]
+* https://kb.netapp.com/onprem/ontap/da/SAN/What_are_SCSI_Reservations_and_SCSI_Persistent_Reservations["NetApp知识库：什么是SCSI预留和SCSI永久性预留？"^]
+* https://docs.netapp.com/us-en/sc-plugin-vmware-vsphere/index.html["适用于 VMware vSphere 的 SnapCenter 插件文档"^]
+

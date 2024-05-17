@@ -1,0 +1,136 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/remove-configuration-task.html 
+keywords: SM-BC, SMBC, removing, protection relationship, snapmirror active sync 
+summary: 您可以删除零RTO SnapMirror同步保护并删除SnapMirror活动同步关系配置。 
+---
+= 删除SnapMirror活动同步配置
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您不再需要零RTO SnapMirror同步保护、则可以删除SnapMirror活动同步关系。
+
+
+
+== 删除非对称配置
+
+* 在删除SnapMirror活动同步关系之前、必须取消目标集群中的所有LUN的映射。
+* 取消映射 LUN 并重新扫描主机后， SCSI 目标会通知主机 LUN 清单已更改。删除零 RTO 关系后，零 RTO 二级卷上的现有 LUN 将发生更改，以反映新的身份。主机会将二级卷 LUN 发现为与源卷 LUN 无关系的新 LUN 。
+* 删除关系后，二级卷仍保留 DP 卷。您可以问题描述 `snapmirror break` 命令将其转换为读/写。
+* 如果关系未反转，则在故障转移状态下不允许删除此关系。
+
+
+.步骤
+. 从二级集群中、删除源端点与目标端点之间的SnapMirror活动同步一致性组关系：
++
+`destination::>snapmirror delete -destination-path vs1_dst:/cg/cg_dst`
+
+. 从主集群中、释放一致性组关系以及为此关系创建的Snapshot副本：
++
+`source::>snapmirror release -destination-path vs1_dst:/cg/cg_dst`
+
+. 执行主机重新扫描以更新 LUN 清单。
+. 从 ONTAP 9.10.1 开始，删除 SnapMirror 关系不会删除一致性组。如果要删除一致性组，必须使用 System Manager 或 ONTAP REST API 。请参见 xref:../consistency-groups/delete-task.adoc[删除一致性组] 有关详细信息 ...
+
+
+
+
+== 删除对称主动/主动配置
+
+您可以使用System Manager或ONTAP命令行界面删除对称配置。在这两个界面中、的步骤不同 xref:index.html#key-concepts[统一和非统一配置]。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+.统一配置的步骤
+. 在主站点上、从igrop中删除远程主机并终止复制。
++
+.. 导航到**主机**>*SAN启动程序组*。
+.. 选择要修改的igroup，然后选择**编辑**.
+.. 删除远程启动程序并终止igrop复制。选择**保存**。
+
+
+. 在二级站点上、通过取消映射LUN来删除复制的关系。
++
+.. 导航到**主机**>** SAN启动程序组**。
+.. 选择具有SnapMirror关系的igroup，然后选择**删除**。
+.. 在对话框中，选择**取消映射关联的LUO**框，然后选择**删除**。
+.. 导航到**保护**>**关系**。
+.. 选择SnapMirror活动同步关系，然后选择“释放”以删除此关系。
+
+
+
+
+.非一致配置的步骤
+. 在主站点上、从igrop中删除远程主机并终止复制。
++
+.. 导航到**主机**>*SAN启动程序组*。
+.. 选择要修改的igroup，然后选择**编辑**.
+.. 删除远程启动程序并终止igrop复制。选择**保存**。
+
+
+. 在二级站点上、删除SnapMirror活动同步关系。
++
+.. 导航到**保护**>**关系**。
+.. 选择SnapMirror活动同步关系，然后选择“释放”以删除此关系。
+
+
+
+
+--
+.命令行界面
+--
+.统一配置的步骤
+. 将所有VM工作负载移动到SnapMirror主动同步源集群的本地主机。
+. 在源集群上、从igrop中删除启动程序、然后修改igrop配置以终止igrop复制。
++
+`SiteA::> igroup remove -vserver _svm_name_ -igroup _igroup_name_ -initiator _host2_
+SiteA::> igroup modify -vserver _svm_name_ -igroup _igroup_name_ -replication-peer "-"`
+
+. 在二级站点上、删除LUN映射并删除igrop配置：
++
+`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>
+SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
+
+. 在二级站点上、删除SnapMirror活动同步关系。
++
+`SiteB::> snapmirror delete -destination-path _destination_path_`
+
+. 在主站点上、从主站点释放SnapMirror活动同步关系。
++
+`SiteA::> snapmirror release -destination-path _destination_path_`
+
+. 重新发现路径以验证主机是否只能使用本地路径。
+
+
+.非一致配置的步骤
+. 将所有VM工作负载移动到SnapMirror主动同步源集群的本地主机。
+. 在源集群上、从igrop中删除启动程序。
++
+`SiteA::> igroup remove -vserver _svm_name_ -igroup _igroup_name_ -initiator _host2_`
+
+. 在二级站点上、删除LUN映射并删除igrop配置：
++
+`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>
+SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
+
+. 在二级站点上、删除SnapMirror活动同步关系。
++
+`SiteB::> snapmirror delete -destination-path _destination_path_`
+
+. 在主站点上、从主站点释放SnapMirror活动同步关系。
++
+`SiteA::> snapmirror release -destination-path _destination_path_`
+
+. 重新发现路径以验证主机是否只能使用本地路径。
+
+
+--
+====

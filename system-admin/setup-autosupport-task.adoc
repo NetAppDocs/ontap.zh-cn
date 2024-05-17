@@ -1,8 +1,8 @@
 ---
-permalink: system-admin/setup-autosupport-task.html 
 sidebar: sidebar 
-keywords: set, up, autosupport, technical, support, organization, internal, configuration, test 
-summary: 您可以控制是否以及如何将 AutoSupport 信息发送给技术支持和您的内部支持组织，然后测试配置是否正确。 
+permalink: system-admin/setup-autosupport-task.html 
+keywords: autosupport, set up autosupport, technical support 
+summary: 配置ONTAP集群、以便向NetApp技术支持传送AutoSupport消息并向内部支持组织发送电子邮件副本。 
 ---
 = 设置 AutoSupport
 :allow-uri-read: 
@@ -11,21 +11,18 @@ summary: 您可以控制是否以及如何将 AutoSupport 信息发送给技术�
 
 
 [role="lead"]
-您可以控制是否以及如何将 AutoSupport 信息发送给技术支持和您的内部支持组织，然后测试配置是否正确。
+您可以配置ONTAP集群、以便向NetApp技术支持传送AutoSupport消息、并向内部支持组织发送电子邮件副本。在此过程中、您还可以先对配置进行测试、然后再在生产环境中使用它。
 
 .关于此任务
-在 ONTAP 9.5 及更高版本中，您可以在集群的所有节点上同时启用 AutoSupport 并修改其配置。当新节点加入集群时，该节点会自动继承 AutoSupport 集群配置。您不必单独更新每个节点上的配置。
+从ONTAP 9.5开始、您可以同时为集群中的所有节点启用和配置AutoSupport。当新节点加入集群时、该节点会自动继承相同的AutoSupport配置。为此、请查看CLI命令的范围 `system node autosupport modify` 是集群级别的。。 `-node` 为了向后兼容、保留了命令选项、但会将其忽略。
 
-[NOTE]
-====
-从ONTAP 9.5开始、是的范围 `system node autosupport modify` 命令在集群范围内有效。系统会修改集群中所有节点上的AutoSupport配置、即使是 `-node` 选项。此选项将被忽略，但它已保留以实现 CLI 向后兼容性。
 
-在ONTAP 9.4及更早版本中、是指的范围 `system node autosupport modify` 命令特定于节点。应在集群中的每个节点上修改 AutoSupport 配置。
+NOTE: 在ONTAP 9.4及更早版本中、命令 `system node autosupport modify` 特定于每个节点。如果集群运行的是ONTAP 9.4或更早版本、则需要在集群中的每个节点上启用和配置AutoSupport。
 
-====
-默认情况下，每个节点都启用了 AutoSupport ，以便使用 HTTPS 传输协议向技术支持发送消息。
+.开始之前
+将AutoSupport消息传送到NetApp时、建议使用HTTPS (HTTP与TLS)传输配置。此选项可提供最强大的功能和最佳的安全性。
 
-您必须将HTTPS与TLSv1.2结合使用或使用安全SMTP来传送AutoSupport消息、以提供最佳安全性并支持所有最新的AutoSupport功能。
+请查看 link:requirements-autosupport-reference.html["准备使用AutoSupport"] 了解有关配置ONTAP集群之前的详细信息。
 
 .步骤
 . 确保已启用 AutoSupport ：
@@ -34,7 +31,7 @@ summary: 您可以控制是否以及如何将 AutoSupport 信息发送给技术�
 ----
 system node autosupport modify -state enable
 ----
-. 如果您希望技术支持接收 AutoSupport 消息，请使用以下命令：
+. 如果您希望NetApp技术支持接收AutoSupport消息、请使用以下命令：
 +
 [listing]
 ----
@@ -43,7 +40,7 @@ system node autosupport modify -support enable
 +
 如果要使 AutoSupport 能够与 AutoSupport OnDemand 配合使用，或者要将核心转储和性能归档文件等大型文件上传到技术支持或指定 URL ，则必须启用此选项。
 
-. 如果技术支持可以接收 AutoSupport 消息，请指定要用于消息的传输协议。
+. 如果已启用NetApp技术支持来接收AutoSupport消息、请指定要用于这些消息的传输协议。
 +
 您可以从以下选项中进行选择：
 
@@ -139,6 +136,28 @@ system node autosupport modify -support enable
 设置 `-perf` to `false`。
 
 |===
+. 如果您使用SMTP向NetApp传送AutoSupport消息、则可以选择启用TLS以提高安全性。
++
+.. 显示可用于新参数的值：
++
+[listing]
+----
+cluster1::> system node autosupport modify -smtp-encryption ?
+----
+.. 为SMTP消息传送启用TLS：
++
+[listing]
+----
+cluster1::> system node autosupport modify -smtp-encryption start_tls
+----
+.. 显示当前配置：
++
+[listing]
+----
+cluster1::> system node autosupport show -fields smtp-encryption
+----
+
+
 . 使用检查整体配置 `system node autosupport show` 命令 `-node` 参数。
 . 使用验证AutoSupport操作 `system node autosupport check show` 命令：
 +
@@ -146,7 +165,7 @@ system node autosupport modify -support enable
 
 . 测试是否正在发送和接收 AutoSupport 消息：
 +
-.. 使用 `system node autosupport invoke` 命令 `-type` 参数设置为 `test`。
+.. 使用 `system node autosupport invoke` 命令 `-type` 参数设置为 `test`：
 +
 [listing]
 ----
@@ -154,12 +173,14 @@ cluster1::> system node autosupport invoke -type test -node node1
 ----
 .. 确认 NetApp 正在接收您的 AutoSupport 消息：
 +
-system node AutoSupport history show -node local
-
+[listing]
+----
+system node autosupport history show -node local
+----
 +
 最新传出AutoSupport消息的状态最终应更改为 `sent-successful` 所有适当的协议目标。
 
-.. (可选)通过检查为配置的任何地址的电子邮件来确认AutoSupport消息将发送到您的内部支持组织或支持合作伙伴 `-to`， `-noteto`或 `-partner-address`  的参数 `system node autosupport modify` 命令：
+.. (可选)通过检查为配置的任何地址的电子邮件来确认AutoSupport消息正在发送到您的内部支持组织或您的支持合作伙伴 `-to`， `-noteto`或 `-partner-address`  的参数 `system node autosupport modify` 命令：
 
 
 

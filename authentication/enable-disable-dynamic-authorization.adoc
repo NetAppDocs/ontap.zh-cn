@@ -1,0 +1,100 @@
+---
+permalink: authentication/enable-disable-dynamic-authorization.html 
+sidebar: sidebar 
+keywords: dynamic, authorization, framework, security, login, ssh 
+summary: 配置动态授权框架以提高SSH登录的安全性、并在可疑情况下限制某些命令的执行。 
+---
+= 启用或禁用动态授权
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.15.1开始、管理员可以在中配置和启用动态授权 `visibility` 用于测试配置的模式、或在中 `enforced` 用于为通过SSH连接的CLI用户激活配置的模式。如果您不再需要动态授权、可以将其禁用。禁用动态授权后、配置设置仍可用、如果您决定重新启用、可以稍后使用这些设置。
+
+有关参数的详细信息、请参见 `security dynamic-authorization modify` 命令、请参阅ONTAP手册页。
+
+
+
+== 为测试启用动态授权
+
+您可以在可见性模式下启用动态授权、以便测试此功能并确保用户不会意外锁定。在此模式下、系统会对每个受限活动检查信任得分、但不会强制执行此得分。但是、系统会记录任何可能会被拒绝或面临其他身份验证挑战的活动。作为最佳实践、您应在此模式下测试所需设置、然后再强制实施。
+
+
+NOTE: 即使尚未配置任何其他动态授权设置、也可以按照此步骤首次启用动态授权。请参见 link:configure-dynamic-authorization.html["自定义动态授权"^] 了解配置其他动态授权设置以根据您的环境对其进行自定义的步骤。
+
+.步骤
+. 通过配置全局设置并将功能状态更改为、在可见性模式下启用动态授权 `visibility`。如果不使用 `-vserver` 参数、则命令将在集群级别运行。更新括号<>中的值以匹配您的环境。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization modify \
+*-state visibility* \
+-lower-challenge-boundary <percent> \
+-upper-challenge-boundary <percent> \
+-suppression-interval <interval> \
+-vserver <storage_VM_name>
+----
+. 使用检查结果 `show` 命令以显示全局配置：
++
+[source, console]
+----
+security dynamic-authorization show
+----
+
+
+
+
+== 在强制模式下启用动态授权
+
+您可以在强制模式下启用动态授权。通常、在使用可见性模式完成测试后、您会使用此模式。在此模式下、系统会对每个受限活动检查信任得分、如果满足限制条件、则会强制实施活动限制。此外、还会强制实施禁止间隔、以防止在指定间隔内出现其他身份验证问题。
+
+
+NOTE: 此步骤假定您之前已在中配置并启用动态授权 `visibility` 模式、强烈建议使用此模式。
+
+.步骤
+. 在中启用动态授权 `enforced` 模式、方法是将其状态更改为 `enforced`。如果不使用 `-vserver` 参数、则命令将在集群级别运行。更新括号<>中的值以匹配您的环境。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization modify \
+*-state enforced* \
+-vserver <storage_VM_name>
+----
+. 使用检查结果 `show` 命令以显示全局配置：
++
+[source, console]
+----
+security dynamic-authorization show
+----
+
+
+
+
+== 禁用动态授权
+
+如果您不再需要添加的身份验证安全性、则可以禁用动态授权。
+
+.步骤
+. 通过将动态授权的状态更改为来禁用它 `disabled`。如果不使用 `-vserver` 参数、则命令将在集群级别运行。更新括号<>中的值以匹配您的环境。参数必须以粗体显示：
++
+[source, subs="specialcharacters,quotes"]
+----
+security dynamic-authorization modify \
+*-state disabled* \
+-vserver <storage_VM_name>
+----
+. 使用检查结果 `show` 命令以显示全局配置：
++
+[source, console]
+----
+security dynamic-authorization show
+----
+
+
+
+
+== 下一步行动
+
+(可选)根据您的环境、请参见 link:configure-dynamic-authorization.html["自定义动态授权"^] 配置其他动态授权设置。

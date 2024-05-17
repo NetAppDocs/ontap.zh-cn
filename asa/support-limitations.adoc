@@ -22,34 +22,52 @@ summary: '纯闪存SAN阵列(ASA)配置限制和支持因ONTAP版本而异。'
 
 
 
-== 每个集群的SAN协议和节点数
+== SAN协议以及每个集群支持的节点数
 
-每个集群对SAN协议和节点的ASA支持如下：
+支持的SAN协议以及每个集群的最大节点数取决于您使用的是非MetroCluster配置还是MetroCluster配置：
+
+[role="tabbed-block"]
+====
+.Non-MetroCluster 配置
+--
+下表显示了ASA对SAN协议的支持以及非MetroCluster配置中每个集群支持的节点数：
 
 [cols="3*"]
 |===
-
-
 | 从ONTAP 开始... | 协议支持 | 每个集群的最大节点数 
 
 
-| 9.12.1.  a| 
-* NVMe (在四节点MetroCluster IP配置和非MetroCluster IP配置上受支持)
-* FC
-* iSCSI
+| 9.11.1.  a| 
+* NVMe/TCP
+* NVMe/FC
 
-| 12. 
+ a| 
+12.
 
 
-| 9.9.1.  a| 
-* NVMe (在非MetroCluster IP配置上受支持)
+
+| 9.10.1.  a| 
+* NVMe/TCP
+
+ a| 
+2.
+
+
+
+.2+| 9.9.1.  a| 
+* NVMe/FC
+
+ a| 
+2.
+
+
+
+ a| 
 * FC
 * iSCSI
 
  a| 
-* 12个节点(适用于非MetroCluser IP配置)
-* 8个节点(适用于MetroCluster IP配置)
-
+12.
 
 
 
@@ -57,15 +75,60 @@ summary: '纯闪存SAN阵列(ASA)配置限制和支持因ONTAP版本而异。'
 * FC
 * iSCSI
 
-| 4. 
+ a| 
+2.
+
 |===
+--
+.MetroCluster IP 配置。
+--
+下表显示了ASA对SAN协议的支持以及MetroCluster IP配置中每个集群支持的节点数：
+
+[cols="3*"]
+|===
+| 从ONTAP 开始... | 协议支持 | 每个集群的最大节点数 
+
+
+| 9.15.1.  a| 
+* NVMe/TCP
+
+| 在四节点MetroCluster IP配置中、每个集群2个节点 
+
+
+| 9.12.1.  a| 
+* NVMe/FC
+
+ a| 
+在四节点MetroCluster IP配置中、每个集群2个节点
+
+
+
+| 9.9.1.  a| 
+* FC
+* iSCSI
+
+ a| 
+在八节点MetroCluster IP配置中、每个集群4个节点
+
+
+
+| 9.7.  a| 
+* FC
+* iSCSI
+
+ a| 
+在四节点MetroCluster IP配置中、每个集群2个节点
+
+|===
+--
+====
 
 
 == 支持永久性端口
 
 从ONTAP 9.8开始、默认情况下、配置为使用FC协议的纯闪存SAN阵列(ASAS)上会启用永久性端口。永久性端口仅适用于 FC ，并且需要使用全球通用端口名称（ WWPN ）标识的区域成员资格。
 
-永久性端口可通过在 HA 配对节点的相应物理端口上创建影子 LIF 来减少接管的影响。接管节点后，配对节点上的影子 LIF 将采用原始 LIF 的标识，包括 WWPN 。在被接管节点的路径状态更改为故障之前，影子 LIF 将显示为主机 MPIO 堆栈的主动 / 优化路径，并且 I/O 将发生移动。这样可以减少 I/O 中断，因为即使在存储故障转移操作期间，主机也始终可以看到相同数量的目标路径。
+永久性端口可通过在高可用性(HA)配对节点的相应物理端口上创建影子LIF来减少接管的影响。接管节点后，配对节点上的影子 LIF 将采用原始 LIF 的标识，包括 WWPN 。在被接管节点的路径状态更改为故障之前，影子 LIF 将显示为主机 MPIO 堆栈的主动 / 优化路径，并且 I/O 将发生移动。这样可以减少 I/O 中断，因为即使在存储故障转移操作期间，主机也始终可以看到相同数量的目标路径。
 
 对于永久性端口，以下 FCP 端口特征在 HA 对中应相同：
 

@@ -1,0 +1,155 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/prerequisites-reference.html 
+keywords: SM-BC, SMBC, prerequisites, planning, software, hardware, licensing, protocols, network, snapmirror active sync 
+summary: 在规划SnapMirror主动同步解决方案部署时、您应考虑以下几个前提条件。 
+---
+= 前提条件
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在规划SnapMirror主动同步部署时、请确保满足各种硬件、软件和系统配置要求。
+
+
+
+== 硬件
+
+* 仅支持双节点 HA 集群
+* 两个集群都必须是AFF (包括AFF C系列)或全闪存SAN阵列(ASA；包括C系列)。不支持混用。
+
+
+
+
+== 软件
+
+* ONTAP 9.9.1或更高版本
+* ONTAP 调解器 1.2 或更高版本
+* 用于 ONTAP 调解器的 Linux 服务器或虚拟机，运行以下任一项：
+
+
+[cols="30,70"]
+|===
+
+
+| ONTAP 调解器版本 | 支持的 Linux 版本 
+
+
+ a| 
+1.7.
+ a| 
+* Red Hat Enterprise Linux：8.5、8.6、8.7、8.8、8.9、 9.0、9.1、9.2和9.3
+* 落基Linux 8和9
+
+
+
+
+ a| 
+1.6.
+ a| 
+* Red Hat Enterprise Linux：8.4、8.5、8.6、8.7、8.8、 9.0、9.1、9.2
+* 落基Linux 8和9
+
+
+
+
+ a| 
+1.5.
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
+* CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
+
+
+
+
+ a| 
+1.4.
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
+* CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
+
+
+
+
+ a| 
+1.3.
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3
+* CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
+
+
+
+
+ a| 
+1.2.
+ a| 
+* Red Hat Enterprise Linux：7.6、7.7、7.8、8.1
+* CentOS ： 7.6 ， 7.7 ， 7.8
+
+
+|===
+
+
+== 许可
+
+* 必须同时在两个集群上应用SnapMirror同步许可证。
+* 必须同时在两个集群上应用SnapMirror许可证。
++
+
+NOTE: 如果您的ONTAP存储系统是在2019年6月之前购买的、请参见 link:https://mysupport.netapp.com/site/systems/master-license-keys["NetApp ONTAP 主许可证密钥"^] 以获取所需的SnapMirror同步许可证。
+
+
+
+
+
+== 网络环境
+
+* 集群间延迟往返时间(RTT)必须小于10毫秒。
+* 从ONTAP 9.14.1开始、 link:https://kb.netapp.com/onprem/ontap/da/SAN/What_are_SCSI_Reservations_and_SCSI_Persistent_Reservations["SCSI-3永久性预留"] 支持SnapMirror活动同步。
+
+
+
+
+== 支持的协议
+
+* 仅支持SAN协议(不支持NFS/SMB)。
+* 仅支持光纤通道和iSCSI协议。
+* 对于集群对等关系、SnapMirror活动同步需要默认IP空间。不支持自定义 IP 空间。
+
+
+
+
+== NTFS 安全模式
+
+SnapMirror活动同步卷*不支持NTFS安全模式。
+
+
+
+== ONTAP 调解器
+
+* ONTAP调解器必须在外部配置并连接到ONTAP、以实现透明的应用程序故障转移。
+* 要全面发挥功能并启用自动计划外故障转移，应配置外部 ONTAP 调解器并为其配置 ONTAP 集群。
+* ONTAP调解器必须安装在与两个ONTAP集群不同的第三个故障域中。
+* 安装ONTAP调解器时、您应将自签名证书替换为由主流可靠CA签名的有效证书。
+* 有关 ONTAP 调解器的详细信息，请参见 link:../mediator/index.html["准备安装 ONTAP 调解器服务"]。
+
+
+
+
+== 读写目标卷
+
+* 读写目标卷不支持SnapMirror活动同步关系。在使用读写卷之前，必须先创建卷级 SnapMirror 关系，然后删除此关系，将其转换为 DP 卷。有关详细信息，请参见 link:convert-active-sync-task.html["将现有SnapMirror关系转换为SnapMirror活动同步"]。
+
+
+
+
+== 更多信息
+
+* link:https://hwu.netapp.com/["Hardware Universe"^]
+* link:../mediator/mediator-overview-concept.html["ONTAP 调解器概述"^]
+

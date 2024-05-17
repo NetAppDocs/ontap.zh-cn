@@ -1,34 +1,53 @@
 ---
 permalink: nas-audit/create-persistent-stores.html 
 sidebar: sidebar 
-keywords: create, persistent store, fpolicy 
-summary: 从ONTAP 9.14.1开始、您可以通过FPolicy设置永久性存储、以捕获SVM中异步非强制策略的文件访问事件。永久性存储有助于将客户端I/O处理与FPolicy通知处理分离、以减少客户端延迟。不支持同步和异步强制配置。 
+keywords: create, persistent store, fpolicy, asynchronous, non, mandatory 
+summary: 从ONTAP 9.14.1开始、您可以通过FPolicy设置永久性存储、以捕获异步非强制策略的文件访问事件。 
 ---
-= 创建持久性存储
+= 创建FPolicy持久存储
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从ONTAP 9.14.1开始、FPolicy允许您设置 link:persistent-stores.html["永久性存储"] 捕获SVM中异步非强制策略的文件访问事件。永久性存储有助于将客户端I/O处理与FPolicy通知处理分离、以减少客户端延迟。不支持同步(强制或非强制)和异步强制配置。
+永久性存储有助于将客户端I/O处理与FPolicy通知处理分离、以减少客户端延迟。从ONTAP 9.14.1开始、您可以使用FPolicy进行设置 link:persistent-stores.html["永久性存储"] 捕获SVM中异步非强制策略的文件访问事件。不支持同步(强制或非强制)和异步强制配置。
 
-.最佳实践
-* 在使用永久性存储功能之前、请确保您的合作伙伴应用程序支持此配置。
-* 永久性存储卷会按SVM进行设置。对于启用了FPolicy的每个SVM、您都需要一个永久性存储卷。
-* 创建卷时指定的永久性存储卷名称和接合路径应匹配。
-* 在包含预期Fpolicy监控的最大流量的生命周期的节点上创建永久性存储卷。
-* 将Snapshot策略设置为 `none` 而不是 `default`。这是为了确保不会意外还原快照而导致当前事件丢失、并防止可能发生重复的事件处理。
-* 使持久存储卷无法用于外部用户协议访问(CIFS或NFS)、以避免意外损坏或删除保留的事件记录。为此、在启用FPolicy后、请在ONTAP中卸载卷以删除接合路径、这样用户协议访问就无法访问该路径。
+从ONTAP 9.15.1开始、FPolicy持久存储配置得到了简化。。 `persistent-store create` 命令可自动为SVM创建卷、并为永久性存储配置卷。
+
+根据ONTAP版本、可以通过两种方式创建永久性存储：
+
+* ONTAP 9.151或更高版本：创建永久性存储时、ONTAP会同时自动创建和配置其卷。这样可以简化FPolicy持久存储配置并实施所有最佳实践。
+* ONTAP 9.14.1：手动创建和配置卷、然后为新创建的卷创建永久性存储。
+
+
+每个SVM上只能设置一个永久性存储。该SVM上的所有FPolicy配置都需要使用这一永久性存储、即使这些策略来自不同的合作伙伴也是如此。
+
+
+
+== 创建永久性存储(ONTAP 9.151或更高版本)
+
+从ONTAP 9.15.1开始、使用 `fpolicy persistent-store create` 命令以创建FPolicy持久存储并创建和配置实时卷。ONTAP会自动阻止卷访问外部用户协议(CIFS或NFS)。
+
+.开始之前
+* 要创建永久性存储的SVM必须至少具有一个聚合。
+* 您应有权访问可用于SVM的聚合、并具有足够的权限来创建卷。
 
 
 .步骤
-. 在SVM上创建一个可为永久性存储配置的空卷：
+. 创建永久性存储、用于自动创建和配置卷：
 +
-`volume create -vserver <SVM Name> -volume <volume> -state <online> -junction-path <path> -policy <default> -unix-permissions <777> -size <value> -aggregate <aggregate name> -snapshot-policy <none>`
+`vserver fpolicy persistent-store create -vserver <vserver> -persistent-store <name> -volume <volume_name> -size <size> -autosize-mode <off|grow|grow_shrink>`
 
 +
-** 永久性存储卷的大小取决于您要使未传送到外部服务器(配对应用程序)的事件持久化的持续时间。
+** 。 `vserver` parameter是SVM的名称。
+** 。 `persistent-store` parameter是永久性存储的名称。
+** 。 `volume` 参数是永久性存储卷的名称。
++
+
+NOTE: 如果要使用现有的空卷、请使用 `volume show` 命令以查找此卷并在volume参数中指定此卷。
+
+** 。 `size` 参数基于要使未传送到外部服务器(配对应用程序)的事件持久化的持续时间。
 +
 例如、如果您希望在每秒容量为3万次通知的集群中持久保留30分钟的事件：
 
@@ -38,7 +57,57 @@ summary: 从ONTAP 9.14.1开始、您可以通过FPolicy设置永久性存储、�
 +
 要了解大致的通知率、您可以联系您的FPolicy合作伙伴申请、也可以使用FPolicy计数器 `requests_dispatched_rate`。
 
-** 具有足够RBAC权限(用于创建卷)的管理员用户应使用volume CLI命令或REST API创建所需大小的卷、并将该卷的名称提供为 `-volume` 在永久性存储中、创建CLI命令或REST API。
++
+
+NOTE: 如果您使用的是现有卷、则size参数是可选的。如果为size参数提供了值、则它将使用您指定的大小修改卷。
+
+** 。 `autosize-mode` 参数用于指定卷的自动调整模式。支持的自动调整模式包括：
++
+*** off—卷大小不会根据已用空间量而增长或缩减。
+*** 增长—当卷中的已用空间超过增长阈值时、卷会自动增长。
+*** shr增长_shrink—卷大小根据已用空间量而增大或缩小。
+
+
+
+
+. 创建FPolicy策略并将永久性存储名称添加到该策略中。有关详细信息，请参见 link:create-fpolicy-policy-task.html["创建 FPolicy 策略"]。
+
+
+
+
+== 创建永久性存储(ONTAP 9.14.1)
+
+您可以创建一个卷、然后创建一个永久性存储以使用该卷。然后、您可以阻止外部用户协议访问(CIFS或NFS)新创建的卷。
+
+.步骤
+. 在SVM上创建一个可为永久性存储配置的空卷：
++
+`volume create -vserver <SVM Name> -volume <volume> -state <online> -policy <default> -unix-permissions <777> -size <value> -aggregate <aggregate name> -snapshot-policy <none>`
+
++
+具有足够RBAC权限(用于创建卷)的管理员用户应使用volume CLI命令或REST API创建所需大小的卷、并将该卷的名称提供为 `-volume` 在永久性存储中、创建CLI命令或REST API。
+
++
+** 。 `vserver` parameter是SVM的名称。
+** 。 `volume` 参数是永久性存储卷的名称。
+** 。 `state` 参数应设置为联机、以便可以使用此卷。
+** 。 `policy` 参数设置为FPolicy服务策略(如果已配置)。如果没有、则可以使用 `volume modify` 命令以添加策略。
+** 。 `unix-permissions` 参数是可选的。
+** 。 `size` 参数基于要使未传送到外部服务器(配对应用程序)的事件持久化的持续时间。
++
+例如、如果您希望在每秒容量为3万次通知的集群中持久保留30分钟的事件：
+
++
+所需卷大小= 30000 x 30 x 60 x 0.6 KB (平均通知记录大小)= 3240000 KB =~32 GB
+
++
+要了解大致的通知率、您可以联系您的FPolicy合作伙伴申请、也可以使用FPolicy计数器 `requests_dispatched_rate`。
+
+** FlexVol卷需要使用聚合参数、否则不需要此参数。
+** 。 `snapshot-policy` 参数必须设置为none。这样可以确保不会意外还原快照、从而导致当前事件丢失、并防止可能发生重复的事件处理。
++
+如果要使用现有的空卷、请使用 `volume show` 命令以查找它和 `volume modify` 命令进行任何必要的更改。确保策略、大小和 `snapshot-policy` 已为持久性存储正确设置参数。
+
 
 
 . 创建永久性存储：
@@ -46,10 +115,10 @@ summary: 从ONTAP 9.14.1开始、您可以通过FPolicy设置永久性存储、�
 `vserver fpolicy persistent store create -vserver <SVM> -persistent-store <PS_name> -volume <volume>`
 
 +
-** 永久性存储：永久性存储名称
-** volume：永久性存储卷
+** 。 `vserver` parameter是SVM的名称。
+** 。 `persistent-store` parameter是永久性存储的名称。
+** 。 `volume` 参数是永久性存储卷的名称。
 
 
-. 创建永久性存储后、您可以创建FPolicy策略并将此永久性存储名称添加到该策略中。
-有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap/nas-audit/create-fpolicy-policy-task.html["创建 FPolicy 策略"]。
+. 创建FPolicy策略并将永久性存储名称添加到该策略中。有关详细信息，请参见 link:create-fpolicy-policy-task.html["创建 FPolicy 策略"]。
 

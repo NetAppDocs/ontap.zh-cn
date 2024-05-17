@@ -23,7 +23,7 @@ summary: 在配置 FPolicy 事件之前，您必须了解创建 FPolicy 事件�
 * 事件名称
 * 要监控的协议
 +
-FPolicy 可以监控 SMB ， NFSv3 和 NFSv4 文件访问操作。
+从ONTAP 9.151开始、FPolicy可以监控SMB、NFSv3、NFSv4以及NFSv4.1文件访问操作。
 
 * 要监控的文件操作
 +
@@ -108,6 +108,11 @@ _ 协议 _
 ====
 如果指定 `-protocol`则必须在中指定有效值 `-file-operations` 参数。协议版本发生变化时，有效值可能会发生变化。
 
+====
+[NOTE]
+====
+从ONTAP 9.15.1开始、您可以通过NFSv4捕获NFSv4.0和NFSv4.1事件。
+
 ==== a| 
 `-protocol` `protocol`
 
@@ -174,15 +179,6 @@ _Filters_
 设置此筛选器后，只有在尝试打开文件并在其中写入内容时， FPolicy 服务器才会收到通知。
 
 * `write-with-size-change` 用于筛选客户端写入请求并更改大小的选项。
-
- a| 
-`-filters` `filter`，...
-
-
-
- a| 
-_Filters_continued
-
 * `setattr-with-owner-change` 用于筛选客户端SETATTR更改文件或目录所有者的请求的选项。
 * `setattr-with-group-change` 用于筛选客户端SETATTR更改文件或目录组的请求的选项。
 * `setattr-with-sacl-change` 用于筛选客户端SETATTR更改文件或目录上的SACL请求的选项。

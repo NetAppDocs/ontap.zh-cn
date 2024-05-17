@@ -15,14 +15,28 @@ summary: 基于 RDMA 的 NFS 利用 RDMA 适配器，可以在存储系统内存
 
 基于 RDMA 的 NFS 配置专为具有延迟敏感型或高带宽工作负载（例如机器学习和分析）的客户而设计。NVIDIA 已通过 RDMA 扩展 NFS ，以启用 GPU 直接存储（ GDS ）。GDS可通过完全绕过CPU和主内存、使用RDMA直接在存储系统和GPU内存之间传输数据、进一步加速支持GPU的工作负载。
 
-从ONTAP 9.14.1开始、NFSv4.1协议支持基于RDMA的NFS配置。
+从ONTAP 9.10.1开始、如果与使用RoCE协议版本2的RDMA提供支持的迈乐诺克斯CX-5或CX-6适配器结合使用、则NFSv4.0协议支持基于RDMA的NFS配置。只有使用 NVIDIA Tesla 和 Ampere 系列 GPU 以及 Mellanox NIC 卡和 MoFED 软件时，才支持 GDS 。请参见"要求"中的图表、了解后续ONTAP版本中的NFS版本支持。
 
-从ONTAP 9.10.1开始、如果与使用RoCE协议版本2的RDMA提供支持的迈乐诺克斯CX-5或CX-6适配器结合使用、则NFSv4.0协议支持基于RDMA的NFS配置。只有使用 NVIDIA Tesla 和 Ampere 系列 GPU 以及 Mellanox NIC 卡和 MoFED 软件时，才支持 GDS 。
 
-基于 RDMA 的 NFS 支持仅限于节点 - 本地流量。支持所有成分卷位于同一节点上的标准 FlexVol 或 FlexGroup ，并且必须从同一节点上的 LIF 进行访问。如果 NFS 挂载大小超过 64k ，则会导致 NFS over RDMA 配置的性能不稳定。
+NOTE: 如果NFS挂载大小超过64k、则会导致基于RDMA配置的NFS性能不稳定。
 
 .要求
-* 存储系统必须运行ONTAP 9.10.1或更高版本
+* 存储系统必须运行ONTAP 9.10.1或更高版本。
+* 确保您运行的ONTAP版本与要使用的NFS版本相符。
++
+[cols="2"]
+|===
+| NFS 版本 | ONTAP 支持 
+
+
+| NFSv4.0 | ONTAP 9.10.1 及更高版本 
+
+
+| NFSv4.1 | ONTAP 9.14.1及更高版本 
+
+
+| NFSv3 | ONTAP 9.151及更高版本 
+|===
 +
 ** 从ONTAP 9.12.1开始、您可以使用System Manager配置基于RDMA的NFS。在ONTAP 9.10.1和9.11.1中、您需要使用命令行界面配置基于RDMA的NFS。
 
@@ -36,16 +50,16 @@ summary: 基于 RDMA 的 NFS 利用 RDMA 适配器，可以在存储系统内存
 
 
 | 9.10.1及更高版本  a| 
-** A400
-** a700
-** A800
+** AFF A400
+** AFF A700
+** AFF A800
 
 
 
 
 | ONTAP 9.14.1及更高版本  a| 
 ** AFF C系列
-** A900
+** AFF A900
 
 
 |===
@@ -57,7 +71,7 @@ summary: 基于 RDMA 的 NFS 利用 RDMA 适配器，可以在存储系统内存
 
 NOTE: 基于RDMA的NFS不支持接口组。
 
-.下一步行动
+.后续步骤
 * xref:./configure-nics-task.adoc[为基于 RDMA 的 NFS 配置 NIC]
 * xref:./configure-lifs-task.adoc[通过 RDMA 为 NFS 配置 LIF]
 * xref:./configure-nfs-task.adoc[基于 RDMA 的 NFS 的 NFS 设置]
@@ -66,8 +80,8 @@ NOTE: 基于RDMA的NFS不支持接口组。
 .相关信息
 * link:../concepts/rdma-concept.html["RDMA"]
 * xref:../nfs-trunking/index.html[NFS中继概述]
-* link:https://datatracker.ietf.org/doc/html/rfc7530["RFC 7530 ： NFS 版本 4 协议"]
-* link:https://datatracker.ietf.org/doc/html/rfc8166["RFC 8166 ：适用于远程操作步骤调用版本 1 的远程直接内存访问传输"]
-* link:https://datatracker.ietf.org/doc/html/rfc8167["RFC 8167 ：基于 RDMA 的 RPC 传输的双向远程操作步骤调用"]
-* link:https://datatracker.ietf.org/doc/html/rfc8267["RFC 8267 ： NFS 上层绑定到 RDMA 上的 RPC 版本 1"]
+* https://datatracker.ietf.org/doc/html/rfc7530["RFC 7530 ： NFS 版本 4 协议"^]
+* https://datatracker.ietf.org/doc/html/rfc8166["RFC 8166 ：适用于远程操作步骤调用版本 1 的远程直接内存访问传输"^]
+* https://datatracker.ietf.org/doc/html/rfc8167["RFC 8167 ：基于 RDMA 的 RPC 传输的双向远程操作步骤调用"^]
+* https://datatracker.ietf.org/doc/html/rfc8267["RFC 8267 ： NFS 上层绑定到 RDMA 上的 RPC 版本 1"^]
 

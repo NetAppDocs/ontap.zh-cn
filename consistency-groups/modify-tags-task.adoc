@@ -23,7 +23,7 @@ summary: 应用程序和组件标记是一种管理工具、可用于筛选和�
 您可以在创建一致性组时或创建一致性组之后应用标记。
 
 
-IMPORTANT: 如果一致性组具有SM-BC关系、则必须使用*其他*作为应用程序或组件标记。
+IMPORTANT: 如果一致性组具有SnapMirror活动同步关系、则必须使用*其他*作为应用程序或组件标记。
 
 .步骤
 从ONTAP 9.12.1开始、您可以使用System Manager修改应用程序和组件标记。从ONTAP 9.14.1开始、您可以使用ONTAP命令行界面修改应用程序和组件标记。
@@ -43,6 +43,11 @@ IMPORTANT: 如果一致性组具有SM-BC关系、则必须使用*其他*作为�
 --
 从ONTAP 9.14.1开始、您可以使用ONTAP命令行界面修改现有一致性组的应用程序或组件标记。
 
+.开始之前
+* 要执行此任务、您必须具有管理员权限级别。
+* 在ONTAP 9.14.1中、您必须是集群或SVM管理员才能执行此任务。从ONTAP 9.15.1开始、具有管理权限级别的任何用户都可以执行此任务。
+
+
 .修改应用程序标记
 . 应用程序标记接受有限数量的预设字符串。要查看可接受的字符串列表、请运行以下命令：
 `consistency-group modify -vserver _svm_name_ -consistency-group _consistency_group_ -application-type ?`
@@ -51,7 +56,7 @@ IMPORTANT: 如果一致性组具有SM-BC关系、则必须使用*其他*作为�
 
 
 .修改组件标记
-. 修改组件类型。组件类型可以是数据、日志或其他。如果您使用的是SM-BC、则必须为"OT他 人"。
+. 修改组件类型。组件类型可以是数据、日志或其他。如果您使用的是SnapMirror活动同步、则必须为"其他"。
 `consistency-group modify -vserver _svm_ -consistency-group _child_consistency_group_ -parent-consistency-group _parent_consistency_group_ -application-component-type [data|logs|other]`
 
 

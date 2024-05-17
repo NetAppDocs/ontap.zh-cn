@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/planned-failover-task.html 
+keywords: SM-BC, testing failover, planned failover, maintenance, quorum, snapmirror active sync 
+summary: 您可以执行计划内故障转移以测试灾难恢复配置或对主集群执行维护。 
+---
+= 对SnapMirror活动同步关系中的集群执行计划内故障转移
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在对SnapMirror活动同步关系中的ONTAP集群进行计划内故障转移时、您可以切换主集群和二级集群的角色、以便二级集群从主集群进行接管。在故障转移期间、二级集群通常在本地处理输入和输出请求、而不会中断客户端操作。
+
+您可能希望执行计划内故障转移、以测试灾难恢复配置的运行状况或对主集群执行维护。
+
+.关于此任务
+计划内故障转移由二级集群的管理员启动。此操作需要切换主角色和二级角色，以便二级集群从主集群接管。然后，新的主集群便可开始在本地处理输入和输出请求，而不会中断客户端操作。
+
+.开始之前
+* SnapMirror活动同步关系必须处于同步状态。
+* 如果正在执行无中断操作、则无法启动计划内故障转移。无中断运行包括卷移动、聚合重新定位和存储故障转移。
+* ONTAP调解器必须已配置、已连接且处于仲裁状态。
+
+
+.步骤
+您可以使用ONTAP命令行界面或System Manager执行计划内故障转移。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+
+IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务连续性(SM-BC)。
+
+. 在System Manager中，选择**保护>概述>关系**。
+. 确定要故障转移的SnapMirror活动同步关系。在其名称旁边、选择 `...` 在关系的名称旁边，选择**故障转移**。
+. 要监控故障转移的状态、请使用 `snapmirror failover show` 在ONTAP命令行界面中。
+
+
+--
+.命令行界面
+--
+. 从目标集群中、启动故障转移操作：
++
+`destination::>snapmirror failover start -destination-path   vs1_dst:/cg/cg_dst`
+
+. 监控故障转移的进度：
++
+`destination::>snapmirror failover show`
+
+. 故障转移操作完成后、您可以从目标监控SnapMirror同步保护关系的状态：
++
+`destination::>snapmirror show`
+
+
+
+--
+====

@@ -33,7 +33,7 @@ summary: 从ONTAP 9.12.1开始、您可以克隆一致性组以创建一致性�
 +
 请参见 xref:../task_san_map_igroups_to_multiple_luns.html[将 igroup 映射到多个 LUN] 或 xref:../san-admin/map-nvme-namespace-subsystem-task.html[将 NVMe 命名空间映射到子系统] 有关详细信息 ...
 
-* SnapMirror业务连续性关系中的一致性组或任何关联的DP卷不支持克隆一致性组。
+* SnapMirror活动同步关系中的一致性组或任何关联的DP卷不支持克隆一致性组。
 
 
 [role="tabbed-block"]
@@ -61,7 +61,12 @@ summary: 从ONTAP 9.12.1开始、您可以克隆一致性组以创建一致性�
 --
 .命令行界面
 --
-从ONTAP 9.14.1开始、您可以使用命令行界面克隆一致性组。
+从ONTAP 9.14.1开始、您可以使用具有集群管理员凭据的命令行界面克隆一致性组。
+
+.开始之前
+* 要执行此任务、您必须具有管理员权限级别。
+* 在ONTAP 9.14.1中、您必须是集群或SVM管理员才能执行此任务。从ONTAP 9.15.1开始、具有管理权限级别的任何用户都可以执行此任务。
+
 
 .克隆一致性组
 . 。 `consistency-group clone create` 命令将克隆一致性组的当前时间点状态。要基于Snapshot执行克隆操作、请包括 `-source-snapshot` 参数。

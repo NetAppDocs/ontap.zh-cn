@@ -1,0 +1,61 @@
+---
+sidebar: sidebar 
+permalink: task_nas_enable_disable_secure_nfs_client_access_with_tls.html 
+keywords: netapp, ontap, kerberos, security, client access, group permissions, user permissions, UNIX permissions, name mapping, NAS client, storage access 
+summary: 启用 Kerberos 以保护 NAS 客户端的存储访问。 
+---
+= 使用TLS启用或禁用安全NFS客户端访问
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+您可以通过将基于TLS的NFS配置为对通过网络在NFS客户端和ONTAP之间发送的所有数据进行加密来提高NFS连接的安全性。这样可以提高NFS连接的安全性。您可以在启用了的现有Storage VM上配置此配置 link:task_nas_enable_linux_nfs.html["NFS"]。
+
+
+NOTE: 基于TLS的NFS在ONTAP 9.151中提供公开预览版。作为预览选项、ONTAP 9.15.1中的生产工作负载不支持基于TLS的NFS。
+
+
+
+== 启用TLS
+
+您可以为NFS客户端启用TLS加密、以提高传输中数据的安全性。
+
+.开始之前
+请参见 link:nfs-admin/tls-nfs-strong-security-concept.html["要求"^] 适用于基于TLS的NFS。
+
+. 单击 * 存储 > 存储 VM* ，选择此 Storage VM ，然后单击 * 设置 * 。
+. 在*NFS*磁贴中，单击*NFS over TLS settings (基于TLS的NFS设置)*。
+. 在*基于TLS的NFS设置*区域中、选择要启用TLS的NFS网络接口。
+. 单击 image:icon_kabob.gif["选项图标"] 。
+. 单击 * 启用 * 。
+. 在*网络接口TLS配置*对话框中，通过选择以下选项之一包含用于TLS的证书：
++
+** *已安装证书*：从下拉列表中选择以前安装的证书。
+** *新证书*：选择证书的公用名。
+** *外部CA签名证书*：按照说明将证书和私钥的内容粘贴到框中。
+
+
+. 单击 * 保存 * 。
+
+
+
+
+== 禁用TLS
+
+如果您不再需要增强传输中数据的安全性、则可以为NFS客户端禁用TLS。
+
+.步骤
+. 单击 * 存储 > 存储 VM* ，选择此 Storage VM ，然后单击 * 设置 * 。
+. 在*NFS*磁贴中，单击*NFS over TLS settings (基于TLS的NFS设置)*。
+. 在*基于TLS的NFS设置*区域中、选择要禁用TLS的NFS网络接口。
+. 单击 image:icon_kabob.gif["选项图标"] 。
+. 单击 * 禁用 * 。
+. 在显示的确认对话框中，选择*Disable"。
+

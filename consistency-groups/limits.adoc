@@ -17,7 +17,7 @@ summary: 在规划一致性组时、您应注意对象限制。
 
 == 强制实施的限制
 
-下表列出了一致性组的限制。使用SnapMirror业务连续性(SM-BC)的一致性组具有不同的限制。有关详细信息，请参见 link:../smbc/considerations-limits.html["SM-BC 限制和限制"]。
+下表列出了一致性组的限制。使用SnapMirror活动同步的一致性组具有不同的限制。有关详细信息，请参见 link:../snapmirror-active-sync/limits-reference.html["SnapMirror活动同步限制"]。
 
 |===
 
@@ -25,7 +25,7 @@ summary: 在规划一致性组时、您应注意对象限制。
 | limit | 范围 | 最小值 | 最大值 
 
 
-| 一致性组的数量 | 集群 | 0 | 与集群中的最大卷数相同 
+| 一致性组的数量 | 集群 | 0 | 与集群*中的最大卷数相同 
 
 
 | 父一致性组的数量 | 集群 | 0 | 与集群中的最大卷数相同 
@@ -35,6 +35,13 @@ summary: 在规划一致性组时、您应注意对象限制。
 
 
 | 一致性组中的卷数 | 单个一致性组 | 1个卷 | 80个卷 
+
+
+| 使用SnapMirror异步的一致性组中的卷数 | 单个一致性组 | 1个卷  a| 
+* 在ONTAP 9.151及更高版本中：80个卷
+* 在ONTAP 9.13.1和9.14.1中：16个卷
+
+
 
 
 | 父一致性组子级中的卷数 | 父一致性组 | 1个卷 | 80个卷 
@@ -48,8 +55,10 @@ summary: 在规划一致性组时、您应注意对象限制。
 
 | 存在一致性组的SVM灾难恢复关系的数量(从ONTAP 9.14.1开始提供) | 集群 | 0 | 32. 
 |===
+｛Asterisk｝一个集群最多可托管50个启用了SnapMirror异步的一致性组。
+
 
 
 == 非强制实施的限制
 
-一致性组支持的最小Snapshot副本计划为30分钟。此计划基于 link:https://www.netapp.com/media/12385-tr4571.pdf["测试FlexGroup"^](与一致性组共享同一个Snapshot基础架构)。
+一致性组支持的最小Snapshot副本计划为30分钟。这是基于的 link:https://www.netapp.com/media/12385-tr4571.pdf["测试FlexGroup"^](与一致性组共享同一个Snapshot基础架构)。

@@ -2,7 +2,7 @@
 permalink: nas-audit/steps-setup-fpolicy-config-concept.html 
 sidebar: sidebar 
 keywords: steps, setting, fpolicy configuration 
-summary: 要监控文件访问，必须先在需要 FPolicy 服务的 Storage Virtual Machine （ SVM ）上创建并启用 FPolicy 配置。 
+summary: 必须先在需要FPolicy服务的SVM上创建并启用FPolicy配置、然后FPolicy才能监控文件访问。 
 ---
 = 设置 FPolicy 配置的步骤是什么
 :allow-uri-read: 
@@ -19,9 +19,22 @@ summary: 要监控文件访问，必须先在需要 FPolicy 服务的 Storage Vi
 +
 FPolicy 外部引擎可识别与特定 FPolicy 配置关联的外部 FPolicy 服务器（ FPolicy 服务器）。如果使用内部 "`FPolicy` " 原生引擎创建原生文件阻止配置，则无需创建 FPolicy 外部引擎。
 
++
+从ONTAP 9.15.1开始、您可以使用 `protobuf` 引擎格式。设置为时 `protobuf`、通知消息使用Google Protobuf以二进制格式进行编码。将引擎格式设置为之前 `protobuf`下，请确保FPolicy服务器也支持 `protobuf` 反序列化。有关详细信息，请参见 link:plan-fpolicy-external-engine-config-concept.html["规划 FPolicy 外部引擎配置"]
+
 . 创建 FPolicy 事件。
 +
 FPolicy 事件描述了 FPolicy 策略应监控的内容。事件由要监控的协议和文件操作组成，并且可以包含筛选器列表。事件使用筛选器缩小 FPolicy 外部引擎必须发送通知的受监控事件的列表范围。事件还指定策略是否监控卷操作。
+
+. 创建FPolicy持久存储(可选)。
++
+从ONTAP 9.14.1开始、您可以使用FPolicy进行设置 link:persistent-stores.html["永久性存储"] 捕获SVM中异步非强制策略的文件访问事件。不支持同步(强制或非强制)和异步强制配置。
+
++
+永久性存储有助于将客户端I/O处理与FPolicy通知处理分离、以减少客户端延迟。
+
++
+从ONTAP 9.15.1开始、FPolicy持久存储配置得到了简化。。 `persistent-store-create` 命令可自动为SVM创建卷、并为永久性存储配置卷。
 
 . 创建 FPolicy 策略。
 +

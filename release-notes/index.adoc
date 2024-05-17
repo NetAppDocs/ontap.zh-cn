@@ -15,9 +15,58 @@ ONTAP 9数据管理软件的每个版本都提供了一些新增功能和增强�
 
 除了这些亮点之外、您还可以查看有关最新ONTAP版本中推出的所有新增功能和增强功能的按版本全面介绍。
 
-有关所有ONTAP 9版本中的硬件平台和交换机支持、已知问题和限制的详细信息、或者有关ONTAP 9.9.1之前版本中推出的功能的详细信息、请参阅_link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]_。您必须使用NetApp帐户登录或创建帐户才能访问发行说明。
+* 了解相关信息 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["新增和增强的ONTAP MetroCluster功能"^]。
+* 了解相关信息 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["新增和增强了对FAS、ASA和AFF平台以及支持的交换机的支持"^]。
+* 了解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["ONTAP REST API"^]。
+
+
+有关最新ONTAP 9版本中的已知问题、限制和升级注意事项的详细信息、请参阅 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]。您必须使用NetApp帐户登录或创建帐户才能访问发行说明。
 
 要升级到最新版本的ONTAP、请参见 xref:../upgrade/prepare.html[升级到最新版本的ONTAP] 和 xref:../upgrade/when-to-upgrade.html[何时应升级ONTAP？]
+
+
+
+== ONTAP 9.151亮点
+
+ONTAP 9.15.1在安全管理、数据保护和NAS工作负载支持方面提供了一些新增功能和增强功能。有关新增功能和增强功能的完整列表、请参见 xref:9151-reference.adoc[ONTAP 9.15.1.中的新增功能]。
+
+* https://www.netapp.com/data-storage/aff-a-series/["支持全新AFF A系列系统、专为AI构建的存储"^]
++
+ONTAP 9.15.1支持全新的高性能AFF A1K、AFF A90和AFF A70系统、专为AI/ML训练和推入等下一代业务工作负载而设计。这种新型系统的性能是现有AFF A系列产品的两倍、并可"无中断"提高存储效率、而不会在性能上造成任何影响。
+
+* xref:../authentication/dynamic-authorization-overview.html[动态授权]
++
+ONTAP 9.15.1引入了一个初始动态授权框架、这是一项安全功能、可确定是拒绝管理员帐户发出的命令、提示进行其他身份验证、还是允许其继续操作。根据用户帐户的信任得分确定、并考虑以下因素：时间、位置、IP地址、可信设备使用情况以及用户的身份验证和授权历史记录。
+
+* xref:../multi-admin-verify/index.html#rule-protected-commands[扩展了多管理员验证的影响范围]
++
+ONTAP 9.15.1 RC1为MAV框架增加了100多个新命令、可进一步防止恶意的入侵者。
+
+* xref:../nfs-admin/tls-nfs-strong-security-concept.html[基于TLS的NFS]
++
+与其他技术(如IPSec和NFS Kerberos)相比、通过简化的配置在协议层"通过缆线"保护数据。此时、此功能将作为公共预览提供。有关此功能的详细信息、请联系您的追加信息销售团队。
+
+* TLS 1.3加密支持集群对等等
++
+ONTAP 9.15.1引入了对S3存储、FlexCache、SnapMirror和集群对等加密的TLS 1.3加密支持。FabricPool、Microsoft Azure Page Blobs存储和SnapMirror Cloud等应用程序在9.151版本中仍使用TLS 1.2。
+
+* 支持基于TLS的SMTP流量
++
+借助TLS支持、通过电子邮件安全传输AutoSupport数据。
+
+* xref:../snapmirror-active-sync/index.html[适用于对称主动/主动配置的SnapMirror主动同步]
++
+这一新功能可提供同步双向复制、以实现业务连续性和灾难恢复。通过跨多个故障域同时对数据进行读写访问、保护关键SAN工作负载的数据访问、从而实现无中断运行、并最大程度地减少灾难或系统故障期间的停机时间。
+
+* xref:../flexcache/flexcache-writeback-enable-task.html[FlexCache回写]
++
+通过FlexCache回写、客户端可以在本地写入FlexCache卷、与直接写入原始卷相比、可以缩短延迟并提高性能。新写入的数据会异步复制回初始卷。
+
+* xref:../nfs-rdma/index.html[基于RDMA的NFSv3]
++
+基于RDMA的NFS3支持可通过TCP提供低延迟、高带宽访问、从而帮助您满足高性能要求。
+
+
 
 
 
@@ -220,11 +269,11 @@ ONTAP 9.91.1在存储效率、多因素身份验证、灾难恢复等方面提�
 +
 对SHA512和SSH A512密码哈希的支持可保护管理员帐户凭据免受试图获取系统访问权限的恶意攻击者的攻击。
 
-* link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_install_and_cable_the_mcc_components.html["MetroCluster IP增强功能：支持8节点集群"^]
+* https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_install_and_cable_the_mcc_components.html["MetroCluster IP增强功能：支持8节点集群"^]
 +
 新限制是上一个限制的两倍、可支持MetroCluster配置并实现持续数据可用性。
 
-* xref:../smbc/index.html[SnapMirror业务连续性增强功能]
+* xref:../snapmirror-active-sync/index.html[SnapMirror活动同步]
 +
 为NAS工作负载的大型数据容器提供更多复制选项、用于备份和灾难恢复。
 

@@ -1,0 +1,155 @@
+---
+permalink: nfs-config/create-tls-config-task.html 
+sidebar: sidebar 
+keywords: enable, tls, data, lif 
+summary: '您可以使用 `vserver nfs tls interface enable` 命令以在NFS客户端的数据LIF上启用TLS。这样、SVM便可对NFS使用TLS安全服务。' 
+---
+= 为NFS客户端启用或禁用TLS
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在NFS客户端的数据LIF上启用或禁用TLS。启用基于TLS的NFS时、SVM将使用TLS对通过网络在NFS客户端和ONTAP之间发送的所有数据进行加密。这样可以提高NFS连接的安全性。
+
+
+NOTE: 基于TLS的NFS在ONTAP 9.151中提供公开预览版。作为预览选项、ONTAP 9.15.1中的生产工作负载不支持基于TLS的NFS。
+
+
+
+== 启用TLS
+
+您可以为NFS客户端启用TLS加密、以提高传输中数据的安全性。
+
+.开始之前
+* 请参见 link:tls-nfs-strong-security-concept.html["要求"^] 适用于基于TLS的NFS。
+* 请参见 https://docs.netapp.com/us-en/ontap-cli-9151/vserver-nfs-tls-interface-enable.html["Vserver NFS TLS interface enable"^] 手册页、了解有关此操作步骤中命令的详细信息。
+
+
+.步骤
+. 选择要启用TLS的Storage VM和逻辑接口(LIF)。
+. 为该Storage VM和接口上的NFS连接启用TLS。将括号<>中的值替换为您环境中的信息：
++
+[source, console]
+----
+vserver nfs tls interface enable -vserver <STORAGE_VM> -lif <LIF_NAME> -certificate-name <CERTIFICATE_NAME>
+----
+. 使用 `vserver nfs tls interface show` 命令以查看结果：
++
+[source, console]
+----
+vserver nfs tls interface show
+----
+
+
+.示例
+以下命令将在上启用基于TLS的NFS `data1` 的LIF `vs1` Storage VM：
+
+[source, console]
+----
+vserver nfs tls interface enable -vserver vs1 -lif data1 -certificate-name cert_vs1
+----
+[source, console]
+----
+vserver nfs tls interface show
+----
+....
+               Logical
+Vserver        Interface     Address         TLS Status TLS Certificate Name
+-------------- ------------- --------------- ---------- -----------------------
+vs1            data1         10.0.1.1        enabled    cert_vs1
+vs2            data2         10.0.1.2        disabled   -
+2 entries were displayed.
+....
+
+
+== 禁用TLS
+
+如果您不再需要增强传输中数据的安全性、则可以为NFS客户端禁用TLS。
+
+
+NOTE: 禁用基于TLS的NFS时、用于NFS连接的TLS证书将被删除。如果将来需要启用基于TLS的NFS、则需要在启用期间重新指定证书名称。
+
+.开始之前
+请参见 https://docs.netapp.com/us-en/ontap-cli-9151/vserver-nfs-tls-interface-disable.html["Vserver NFS TLS接口已禁用"^] 手册页、了解有关此操作步骤中命令的详细信息。
+
+.步骤
+. 选择要禁用TLS的Storage VM和逻辑接口(LIF)。
+. 对该Storage VM和接口上的NFS连接禁用TLS。将括号<>中的值替换为您环境中的信息：
++
+[source, console]
+----
+vserver nfs tls interface disable -vserver <STORAGE_VM> -lif <LIF_NAME>
+----
+. 使用 `vserver nfs tls interface show` 命令以查看结果：
++
+[source, console]
+----
+vserver nfs tls interface show
+----
+
+
+.示例
+以下命令将在上禁用基于TLS的NFS `data1` 的LIF `vs1` Storage VM：
+
+[source, console]
+----
+vserver nfs tls interface disable -vserver vs1 -lif data1
+----
+[source, console]
+----
+vserver nfs tls interface show
+----
+....
+               Logical
+Vserver        Interface     Address         TLS Status TLS Certificate Name
+-------------- ------------- --------------- ---------- -----------------------
+vs1            data1         10.0.1.1        disabled   -
+vs2            data2         10.0.1.2        disabled   -
+2 entries were displayed.
+....
+
+
+== 编辑TLS配置
+
+您可以更改基于TLS的现有NFS配置的设置。例如、您可以使用此操作步骤更新TLS证书。
+
+.开始之前
+请参见 https://docs.netapp.com/us-en/ontap-cli-9151/vserver-nfs-tls-interface-modify.html["修改Vserver NFS TLS接口"^] 手册页、了解有关此操作步骤中命令的详细信息。
+
+.步骤
+. 选择要修改NFS客户端的TLS配置的Storage VM和逻辑接口(LIF)。
+. 修改配置。如果指定 `status` 的 `enable`，您还需要指定 `certificate-name` 参数。将括号<>中的值替换为您环境中的信息：
++
+[source, console]
+----
+vserver nfs tls interface modify -vserver <STORAGE_VM> -lif <LIF_NAME> -status <STATUS> -certificate-name <CERTIFICATE_NAME>
+----
+. 使用 `vserver nfs tls interface show` 命令以查看结果：
++
+[source, console]
+----
+vserver nfs tls interface show
+----
+
+
+.示例
+以下命令将在上修改基于TLS的NFS配置 `data2` 的LIF `vs2` Storage VM：
+
+[source, console]
+----
+vserver nfs tls interface modify -vserver vs2 -lif data2 -status enable -certificate-name new_cert
+----
+[source, console]
+----
+vserver nfs tls interface show
+----
+....
+               Logical
+Vserver        Interface     Address         TLS Status TLS Certificate Name
+-------------- ------------- --------------- ---------- -----------------------
+vs1            data1         10.0.1.1        disabled   -
+vs2            data2         10.0.1.2        enabled    new_cert
+2 entries were displayed.
+....

@@ -1,0 +1,37 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/delete-fails-takeover-task.html 
+keywords: troubleshooting, SM-BC, SMBC, SnapMirror, delete, takeover, consistency group, snapmirror active sync 
+summary: '如果在集群上安装了ONTAP 9.9.1、则执行 `snapmirror delete` 如果SnapMirror活动同步一致性组关系处于接管状态、则命令将失败。' 
+---
+= SnapMirror 删除操作在接管状态下失败
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+.问题描述 ：
+[role="lead"]
+如果在集群上安装了ONTAP 9.9.1、则执行 `snapmirror delete` 如果SnapMirror活动同步一致性组关系处于接管状态、则命令将失败。
+
+....
+C2_cluster::> snapmirror delete  vs1:/cg/dd
+
+Error: command failed: RPC: Couldn't make connection
+....
+.解决方案
+如果SnapMirror活动同步关系中的节点处于接管状态、请在将"-force "选项设置为true的情况下执行SnapMirror删除和释放操作。
+
+....
+C2_cluster::> snapmirror delete  vs1:/cg/dd -force true
+
+Warning: The relationship between source "vs0:/cg/ss" and destination
+         "vs1:/cg/dd" will be deleted, however the items of the destination
+         Consistency Group might not be made writable, deletable, or modifiable
+         after the operation. Manual recovery might be required.
+Do you want to continue? {y|n}: y
+Operation succeeded: snapmirror delete for the relationship with destination "vs1:/cg/dd".
+....

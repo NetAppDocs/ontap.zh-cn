@@ -1,0 +1,41 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/mediator-troubleshoot-task.html 
+keywords: troubleshooting, SM-BC, SMBC, Mediator, quorum, quorum status, failover, network, snapmirror active sync 
+summary: 执行 snapmirror failover start 命令后， snapmirror failover show 命令的输出将显示一条消息，指示未配置调解器。 
+---
+= ONTAP调解器不可访问或调解器仲裁状态为false
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+.问题描述 ：
+[role="lead"]
+执行后 `snapmirror failover start` 命令、即的输出 `snapmirror failover show` 命令将显示一条消息、指示未配置ONTAP调解器。
+
+请参见 link:mediator-install-task.html["为ONTAP活动同步配置SnapMirror调解器和集群"]。
+
+....
+Cluster1::> snapmirror failover show
+Source Destination Error
+Path Path Type Status start-time end-time Reason
+-------- ----------- -------- --------- ---------- ---------- ----------
+vs0:/cg/cg vs1:/cg/cg planned failed 10/1/2020 10/1/2020 SnapMirror failover cannot start because the source-side precheck failed. reason: Mediator not configured.
+05:50:42 05:50:43
+....
+.发生原因 ：
+未配置调解器或存在网络连接问题。
+
+.解决方案 ：
+如果未配置ONTAP调解器、则必须先配置ONTAP调解器、然后才能建立SnapMirror活动同步关系。修复任何网络连接问题。使用 snapmirror mediator show 命令确保源站点和目标站点上已连接调解器且仲裁状态为 true 。有关详细信息，请参见 xref:smbc_install_confirm_ontap_cluster.html[配置ONTAP调解器]。
+
+....
+cluster::> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+10.234.10.143    cluster2         connected         true
+....
