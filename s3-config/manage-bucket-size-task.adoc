@@ -1,0 +1,41 @@
+---
+permalink: s3-config/manage-bucket-size-task.html 
+sidebar: sidebar 
+keywords: s3, bucket, size, system manager, cli 
+summary: 您可以根据需要增加或减小存储分段的大小。 
+---
+= 管理存储分段大小
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+必要时、您可以增加或减小现有存储分段的大小。
+
+.步骤
+您可以使用System Manager或ONTAP命令行界面管理存储分段大小。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储>存储分段*并找到要修改的存储分段。
+. 单击 image:icon_kabob.gif["kabob 图标"] 在存储分段名称旁边，选择*Edit*。
+. 在*编辑存储分段*窗口中，更改存储分段的容量。
+. *保存*。
+
+
+--
+.命令行界面
+--
+. 更改铲斗容量：
++
+[source, cli]
+----
+vserver object-store-server bucket modify -vserver <SVM_name> -bucket <bucket_name> -size {<integer>[KB|MB|GB|TB|PB]}
+----
+
+
+--
+====
