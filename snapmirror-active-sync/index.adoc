@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: snapmirror-active-sync/index.html 
-keywords: SM-BC, SMBC, failover, terms, benefits, snapmirror active sync 
+keywords: SM-BC, SMBC, failover, terms, benefits, snapmirror active sync, TR-4878 
 summary: 使用SnapMirror主动同步保护具有LUN的应用程序、使应用程序能够透明地进行故障转移、从而确保发生灾难时的业务连续性。 
 ---
 = SnapMirror活动同步概述
@@ -14,11 +14,11 @@ summary: 使用SnapMirror主动同步保护具有LUN的应用程序、使应用�
 
 
 [role="lead"]
-SnapMirror主动同步(最初作为SnapMirror业务连续性[SM-BC)发布)支持业务服务在发生完全站点故障时仍可继续运行、支持应用程序使用二级副本透明地进行故障转移。使用SnapMirror活动同步触发故障转移需要手动干预或自定义脚本。
+SnapMirror主动同步(也称为SnapMirror业务连续性[SM-BC))支持业务服务在整个站点发生故障时继续运行、支持应用程序使用二级副本透明地进行故障转移。使用SnapMirror活动同步触发故障转移需要手动干预或自定义脚本。
 
-从ONTAP 9.9.1开始、可以使用SnapMirror主动同步。AFF集群、全闪存SAN阵列(ASA)集群、C系列(AFF或ASA)均支持SnapMirror主动同步。主集群和二级集群的类型必须相同：ASA或AFF。SnapMirror主动同步可通过iSCSI或FCP LUN保护应用程序。
+从ONTAP 9.9.1开始、AFF集群、纯闪存SAN阵列(ASA)集群和C系列(AFF或ASA)均支持SnapMirror主动同步。主集群和二级集群的类型必须相同：ASA或AFF。SnapMirror主动同步可通过iSCSI或FCP LUN保护应用程序。
 
-从ONTAP 9.15.1开始、SnapMirror主动同步支持 xref:architecture-concept.html[对称主动/主动功能]，启用通过双向同步复制从受保护LUN的两个副本执行读写I/O操作，从而使两个LUN副本都能在本地处理I/O操作。
+从ONTAP 9.15.1开始、SnapMirror主动同步支持 xref:architecture-concept.html[对称主动/主动功能]，启用通过双向同步复制从受保护LUN的两个副本执行读写I/O操作，从而使两个LUN副本都能在本地处理I/O操作。在ONTAP 9.15.1之前的版本中、SnapMirror主动同步仅支持非对称主动/主动配置、在这种配置中、二级站点上的数据会代理到LUN。
 
 
 NOTE: 从2024年7月开始、以前以PDF格式发布的技术报告中的内容已与ONTAP产品文档集成。ONTAP SnapMirror主动同步文档现在包含TR-4878：《SnapMirror主动同步》中的内容。
@@ -67,7 +67,7 @@ SnapMirror主动同步支持非对称解决方案、并且从ONTAP 9.15.1开始�
 
 * 对等ONTAP集群
 * 对等ONTAP集群节点
-* 一致性组(即故障转移单元)；对于每个一致性组、将提供以下信息：
+* 一致性组(用于定义SnapMirror活动同步关系中的故障转移单元)；对于每个一致性组、将提供以下信息：
 +
 ** 复制状态：未初始化、同步或不同步
 ** 哪个集群托管主副本
@@ -85,7 +85,7 @@ NOTE: 从ONTAP 9.15.1开始、System Manager将显示任一集群的SnapMirror�
 用于更改SnapMirror活动同步关系中副本角色的手动操作。主站点将成为二级站点、而二级站点将成为主站点。
 
 .主要-优先和主要偏倚
-SnapMirror主动同步采用主优先原则、在网络分区的情况下、优先使用主副本来提供I/O。
+SnapMirror主动同步采用主优先原则、在网络分区情况下、优先使用主副本来提供I/O。
 
 主偏置是一种特殊的仲裁实施方式、可提高受SnapMirror活动同步保护的数据集的可用性。如果主副本可用、则当无法从两个集群访问ONTAP调解器时、主偏置将生效。
 
@@ -104,8 +104,6 @@ SnapMirror主动同步支持自动重新同步、使副本能够返回到InSync�
 从ONTAP 9.15.1开始、SnapMirror主动同步支持 link:interoperability-reference.html#fan-out-configurations["在扇出配置中自动重新配置"]。
 
 .统一和非统一配置
-使用_对称active/active_创建保护时、此过程取决于您的配置：
-
 * **统一主机访问**表示两个站点的主机都连接到两个站点上存储集群的所有路径。跨站点路径会跨越距离进行延伸。
 * **非统一主机访问**表示每个站点中的主机仅连接到同一站点中的集群。跨站点路径和延伸型路径未连接。
 
