@@ -18,7 +18,7 @@ summary: 从 ONTAP 9.10.1 开始，您可以将 FlexVol 卷转换为 SVM-DR 源�
 * FlexVol 卷上的操作和配置必须与转换过程兼容。
 +
 如果 FlexVol 卷存在任何不兼容性，并且已取消卷转换，则会生成一条错误消息。您可以采取更正操作并重试转换。
-有关详细信息，请参见 xref:convert-flexvol-concept.html[将 FlexVol 卷转换为 FlexGroup 卷的注意事项]
+有关详细信息，请参见 link:convert-flexvol-concept.html["将 FlexVol 卷转换为 FlexGroup 卷的注意事项"]
 
 
 
@@ -26,31 +26,43 @@ summary: 从 ONTAP 9.10.1 开始，您可以将 FlexVol 卷转换为 SVM-DR 源�
 . 使用高级权限模式登录： `set -privilege advanced`
 . 从目标位置更新 SVM-DR 关系：
 +
-`*snapmirror update -destination-path destination_svm_name: -source-path source_svm_name:*`
-
+[source, cli]
+----
+snapmirror update -destination-path destination_svm_name: -source-path source_svm_name:
+----
 . 确保 SVM-DR 关系处于 SnapMirrored 状态且未断开：
 +
-`*snapmirror show*`
-
+[source, cli]
+----
+snapmirror show
+----
 . 从目标 SVM 中，验证 FlexVol 卷是否已做好转换准备：
 +
-`*volume conversion start -vserver svm_name -volume vol_name -check-only true*`
-
+[source, cli]
+----
+volume conversion start -vserver svm_name -volume vol_name -check-only true
+----
 +
 如果此命令生成除"此为目标SVMDR卷"以外的任何错误、您可以采取适当的更正操作、再次运行此命令并继续进行转换。
 
 . 从目标上，禁用 SVM-DR 关系上的传输：
 +
-`*snapmirror quiesce -destination-path dest_svm:*`
-
-. 开始转换：
+[source, cli]
+----
+snapmirror quiesce -destination-path dest_svm:
+----
+. 从源集群中、开始转换：
 +
-`*volume conversion start -vserver svm_name -volume vol_name*`
-
+[source, cli]
+----
+volume conversion start -vserver svm_name -volume vol_name
+----
 . 验证转换是否成功：
 +
-`*volume show vol_name -fields -volume-style-extended,state*`
-
+[source, cli]
+----
+volume show vol_name -fields -volume-style-extended,state
+----
 +
 [listing]
 ----
@@ -62,20 +74,28 @@ vs0     my_volume  online  flexgroup
 ----
 . 从目标集群恢复关系的传输：
 +
-`*snapmirror resume -destination-path dest_svm:*`
-
+[source, cli]
+----
+snapmirror resume -destination-path dest_svm:
+----
 . 在目标集群中，执行更新以将转换传播到目标：
 +
-`*snapmirror update -destination-path dest_svm:*`
-
+[source, cli]
+----
+snapmirror update -destination-path dest_svm:
+----
 . 确保 SVM-DR 关系处于 SnapMirrored 状态且未断开：
 +
-`*snapmirror show*`
-
+[source, cli]
+----
+snapmirror show
+----
 . 确保在目标上进行转换：
 +
-`*volume show vol_name -fields -volume-style-extended,state*`
-
+[source, cli]
+----
+volume show vol_name -fields -volume-style-extended,state
+----
 +
 [listing]
 ----
