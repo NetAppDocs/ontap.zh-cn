@@ -2,7 +2,7 @@
 permalink: data-protection/create-replication-job-schedule-task.html 
 sidebar: sidebar 
 keywords: create, replication, job, schedule 
-summary: 您可以使用 job schedule cron create 命令创建复制作业计划。作业计划用于确定 SnapMirror 何时自动更新分配了该计划的数据保护关系。 
+summary: 您可以使用System Manager或作业计划cron create命令创建复制作业计划。 
 ---
 = 创建复制作业计划
 :allow-uri-read: 
@@ -11,16 +11,34 @@ summary: 您可以使用 job schedule cron create 命令创建复制作业计划
 
 
 [role="lead"]
-您可以使用 `job schedule cron create` 命令以创建复制作业计划。作业计划用于确定 SnapMirror 何时自动更新分配了该计划的数据保护关系。
+作业计划用于确定 SnapMirror 何时自动更新分配了该计划的数据保护关系。您可以使用System Manager或 `job schedule cron create` 命令以创建复制作业计划。
 
 .关于此任务
 您可以在创建数据保护关系时分配作业计划。如果不分配作业计划，则必须手动更新此关系。
 
 .步骤
+您可以使用System Manager或ONTAP命令行界面创建复制作业计划。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*保护>概述*，然后展开*本地策略设置*。
+. 在*计划*窗格中，单击 image:icon_arrow.gif["箭头"]。
+. 在*计划*窗口中，单击 image:icon_add.gif["此外"]。
+. 在*添加计划*窗口中，输入计划名称，然后选择上下文和计划类型。
+. 单击 * 保存 * 。
+
+
+--
+.命令行界面
+--
 . 创建作业计划：
 +
-`job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
-
+[source, cli]
+----
+job schedule cron create -name <job_name> -month <month> -dayofweek <day_of_week> -day <day_of_month> -hour <hour> -minute <minute>
+----
 +
 适用于 `-month`， `-dayofweek`，和 `-hour`，您可以指定 `all` 以分别每月、每周的某一天和每小时运行此作业。
 
@@ -28,14 +46,14 @@ summary: 您可以使用 job schedule cron create 命令创建复制作业计划
 从 ONTAP 9.10.1 开始，您可以在作业计划中包含 Vserver ：
 
 +
-`job schedule cron create -name _job_name_ -vserver _Vserver_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
-
+[listing, subs="+quotes"]
+----
+job schedule cron create -name <job_name> *-vserver <Vserver_name>* -month <month> -dayofweek <day_of_week> -day <day_of_month> -hour <hour> -minute <minute>
+----
 +
-[NOTE]
-====
-对于卷SnapMirror关系中的FlexVol 卷、支持的最小计划(RPO)为5分钟。对于卷SnapMirror关系中的FlexGroup 卷、支持的最小计划(RPO)为30分钟。
 
-====
+NOTE: 对于卷SnapMirror关系中的FlexVol 卷、支持的最小计划(RPO)为5分钟。对于卷SnapMirror关系中的FlexGroup 卷、支持的最小计划(RPO)为30分钟。
+
 +
 以下示例将创建一个名为的作业计划 `my_weekly` 在星期六凌晨3：00运行：
 
@@ -45,3 +63,6 @@ summary: 您可以使用 job schedule cron create 命令创建复制作业计划
 cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -hour 3 -minute 0
 ----
 
+
+--
+====

@@ -2,7 +2,7 @@
 permalink: data-protection/create-snapshot-job-schedule-task.html 
 sidebar: sidebar 
 keywords: create, snapshot, job, schedule 
-summary: Snapshot 策略至少需要一个 Snapshot 副本作业计划。您可以使用 job schedule cron create 命令创建作业计划。 
+summary: Snapshot 策略至少需要一个 Snapshot 副本作业计划。使用System Manager或作业计划cron create命令创建作业计划。 
 ---
 = 创建 Snapshot 作业计划
 :allow-uri-read: 
@@ -11,18 +11,40 @@ summary: Snapshot 策略至少需要一个 Snapshot 副本作业计划。您可�
 
 
 [role="lead"]
-Snapshot 策略至少需要一个 Snapshot 副本作业计划。您可以使用 `job schedule cron create` 用于创建作业计划的命令。
+Snapshot 策略至少需要一个 Snapshot 副本作业计划。您可以使用System Manager或 `job schedule cron create` 用于创建作业计划的命令。
 
 .关于此任务
 默认情况下， ONTAP 通过在作业计划名称中附加时间戳来构成 Snapshot 副本的名称。
 
 如果您同时为月份中的日期和一周中的日期指定值，则会单独考虑这些值。例如、具有日期规范的cron计划 `Friday` 和日期规范 `13` 每周五和每月13日运行、而不仅仅是每周五和13日运行。
 
+
+
+== 创建Snapshot副本作业计划
+
 .步骤
+您可以使用System Manager或ONTAP命令行界面创建Snapshot副本作业计划。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*保护>概述*，然后展开*本地策略设置*。
+. 在*计划*窗格中，单击 image:icon_arrow.gif["箭头"]。
+. 在*计划*窗口中，单击 image:icon_add.gif["此外"]。
+. 在*添加计划*窗口中，输入计划名称，然后选择上下文和计划类型。
+. 单击 * 保存 * 。
+
+
+--
+.命令行界面
+--
 . 创建作业计划：
 +
-`job schedule cron create -name _job_name_ -month month -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
-
+[source, cli]
+----
+job schedule cron create -name <job_name> -month <month> -dayofweek <day_of_week> -day <day_of_month> -hour <hour> -minute <minute>
+----
 +
 适用于 `-month`， `-dayofweek`，和 `-hour`，您可以指定 `all` 以分别每月、每周的某一天和每小时运行此作业。
 
@@ -30,8 +52,10 @@ Snapshot 策略至少需要一个 Snapshot 副本作业计划。您可以使用 
 从 ONTAP 9.10.1 开始，您可以在作业计划中包含 Vserver ：
 
 +
-`job schedule cron create -name _job_name_ -vserver _Vserver_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
-
+[listing, subs="+quotes"]
+----
+job schedule cron create -name <job_name> *-vserver <Vserver_name>* -month <month> -dayofweek <day_of_week> -day <day_of_month> -hour <hour> -minute <minute>
+----
 +
 以下示例将创建一个名为的作业计划 `myweekly` 在星期六凌晨3：00运行：
 
@@ -49,3 +73,6 @@ cluster1::> job schedule cron create -name myweekly -dayofweek "Saturday" -hour 
 job schedule cron create -name myweeklymulti -dayofweek "Monday,Wednesday,Sunday" -hour 3,9,12 -minute 0,20,50
 ----
 
+
+--
+====
