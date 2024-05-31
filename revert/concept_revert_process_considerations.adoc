@@ -37,4 +37,8 @@ IMPORTANT: 如果已还原部分节点，但并非所有节点，请勿尝试将
 * 如果您当前版本的 ONTAP 支持带内 ACP （ IBACP ）功能，而您还原到不支持 IBACP 的 ONTAP 版本，则磁盘架的备用路径将被禁用。
 * 如果任何 Storage Virtual Machine （ SVM ）使用 LDAP ，则必须先禁用 LDAP 转介，然后才能还原。
 * 在使用符合 MetroCluster 但未经 MetroCluster 验证的交换机的 MetroCluster IP 系统中，从 ONTAP 9.7 还原到 9.6 会造成中断，因为不支持使用 ONTAP 9.6 及更早版本的系统。
+* 在将节点还原到ONTAP 9.131或更早版本之前、您需要先将加密的SVM根卷转换为非加密卷
++
+如果您尝试还原到不支持SVM根卷加密的版本、系统将做出响应并发出警告、并阻止还原。
+
 

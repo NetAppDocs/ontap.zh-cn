@@ -2,7 +2,7 @@
 permalink: mediator/manage-task.html 
 sidebar: sidebar 
 keywords: mediator, service, username, user name, password, change, uninstall, self-signed certificate, self signed certificate, regenerate, stop mediator service, uninstall scst 
-summary: 安装 ONTAP 调解器服务后，您可能需要更改用户名或密码。您还可以卸载ONTAP调解器服务。 
+summary: 管理ONTAP调解器服务、包括用户凭据管理、服务控制、运行状况验证、SCST维护以及证书管理和故障排除。 
 ---
 = 管理 ONTAP 调解器服务
 :allow-uri-read: 
@@ -11,23 +11,25 @@ summary: 安装 ONTAP 调解器服务后，您可能需要更改用户名或密�
 
 
 [role="lead"]
-安装 ONTAP 调解器服务后，您可能需要更改用户名或密码。您还可以卸载ONTAP调解器服务。
+管理ONTAP调解器服务、包括更改用户凭据、停止并重新启用该服务、验证其运行状况以及安装或卸载SCST以进行主机维护。您还可以管理证书、例如重新生成自签名证书、将其替换为受信任的第三方证书以及解决证书相关问题。
 
 
 
 == 更改用户名
 
-.关于这些任务
-这些任务在安装了 ONTAP 调解器服务的 Linux 主机上执行。
+您可以使用以下操作步骤更改用户名。
+
+.关于此任务
+在安装了ONTAP调解器服务的Linux主机上执行此任务。
 
 如果无法访问此命令，则可能需要使用完整路径运行此命令，如以下示例所示：
 
 `/usr/local/bin/mediator_username`
 
-.操作步骤
+.步骤
 通过选择以下选项之一更改用户名：
 
-* 运行命令 mediate_change_user 并响应提示，如以下示例所示：
+* *选项(A)*：运行命令 `mediator_change_user` 并对提示进行响应、如以下示例所示：
 +
 ....
  [root@mediator-host ~]# mediator_change_user
@@ -38,33 +40,36 @@ summary: 安装 ONTAP 调解器服务后，您可能需要更改用户名或密�
  The account username has been modified successfully.
  [root@mediator-host ~]#
 ....
-* 运行以下命令：
+* *选项(b)*：运行以下命令：
 +
 `MEDIATOR_USERNAME=mediator MEDIATOR_PASSWORD=mediator2 MEDIATOR_NEW_USERNAME=mediatoradmin mediator_change_user`
 
 +
-....
- [root@mediator-host ~]# MEDIATOR_USERNAME= mediator MEDIATOR_PASSWORD='mediator2' MEDIATOR_NEW_USERNAME= mediatoradmin mediator_change_user
+[listing]
+----
+ [root@mediator-host ~]# MEDIATOR_USERNAME=mediator MEDIATOR_PASSWORD='mediator2' MEDIATOR_NEW_USERNAME=mediatoradmin mediator_change_user
  The account username has been modified successfully.
  [root@mediator-host ~]#
-....
+----
 
 
 
 
 == 更改密码
 
+您可以使用以下操作步骤更改密码。
+
 .关于此任务
-此任务在安装了 ONTAP 调解器服务的 Linux 主机上执行。
+在安装了ONTAP调解器服务的Linux主机上执行此任务。
 
 如果无法访问此命令，则可能需要使用完整路径运行此命令，如以下示例所示：
 
 `/usr/local/bin/mediator_change_password`
 
-.操作步骤
+.步骤
 通过选择以下选项之一更改密码：
 
-* 运行 `mediator_change_password` 命令并对提示进行响应、如以下示例所示：
+* *选项(A)*：运行 `mediator_change_password` 命令并对提示进行响应、如以下示例所示：
 +
 ....
  [root@mediator-host ~]# mediator_change_password
@@ -76,9 +81,9 @@ summary: 安装 ONTAP 调解器服务后，您可能需要更改用户名或密�
  The password has been updated successfully.
  [root@mediator-host ~]#
 ....
-* 运行以下命令：
+* *选项(b)*：运行以下命令：
 +
-`MEDIATOR_USERNAME= mediatoradmin MEDIATOR_PASSWORD=mediator1 MEDIATOR_NEW_PASSWORD=mediator2 mediator_change_password`
+`MEDIATOR_USERNAME=mediatoradmin MEDIATOR_PASSWORD=mediator1 MEDIATOR_NEW_PASSWORD=mediator2 mediator_change_password`
 
 +
 此示例显示密码已从"mediator1"更改为"mediator2"。
@@ -98,15 +103,15 @@ summary: 安装 ONTAP 调解器服务后，您可能需要更改用户名或密�
 要停止ONTAP 调解器服务、请执行以下步骤：
 
 .步骤
-. 停止ONTAP 调解器。
+. 停止ONTAP调解器：
 +
 `systemctl stop ontap_mediator`
 
-. 停止SCST。
+. 停止SCST：
 +
 `systemctl stop mediator-scst`
 
-. 禁用ONTAP 调解器和SCST。
+. 禁用ONTAP调解器和SCST：
 +
 `systemctl diable ontap_mediator mediator-scst`
 
@@ -119,15 +124,15 @@ summary: 安装 ONTAP 调解器服务后，您可能需要更改用户名或密�
 要重新启用ONTAP 调解器服务、请执行以下步骤：
 
 .步骤
-. 启用ONTAP 调解器和SCST。
+. 启用ONTAP调解器和SCST：
 +
 `systemctl enable ontap_mediator mediator-scst`
 
-. 启动SCST。
+. 启动SCST：
 +
 `systemctl start mediator-scst`
 
-. 启动ONTAP 调解器。
+. 启动ONTAP调解器：
 +
 `systemctl start ontap_mediator`
 
@@ -293,21 +298,21 @@ scst-3.3.0.tar.bz2.
 .. `patch /etc/init.d/scst < /opt/netapp/lib/ontap_mediator/systemd/scst.patch`
 
 
-. (可选)如果已启用安全启动、请在重新启动之前执行以下步骤：
+. (可选)如果已启用安全启动、则在重新启动之前、请执行以下步骤：
 +
-.. 确定"scst_vdisk"、"scst"和"iSCSI_scst"模块的每个文件名。
+.. 确定"scst_vdisk"、"scst"和"iSCSI_scst"模块的每个文件名：
 +
 ....
 [root@localhost ~]# modinfo -n scst_vdisk
 [root@localhost ~]# modinfo -n scst
 [root@localhost ~]# modinfo -n iscsi_scst
 ....
-.. 确定内核版本。
+.. 确定内核版本：
 +
 ....
 [root@localhost ~]# uname -r
 ....
-.. 使用内核对每个文件进行签名。
+.. 使用内核对每个文件进行签名：
 +
 ....
 [root@localhost ~]# /usr/src/kernels/<KERNEL-RELEASE>/scripts/sign-file \sha256 \
@@ -330,7 +335,7 @@ _module-filename_
 
 
 
-. 执行重新启动。
+. 执行重新启动：
 +
 `reboot`
 
@@ -340,11 +345,13 @@ _module-filename_
 
 == 卸载 ONTAP 调解器服务
 
+如有必要，您可以删除 ONTAP 调解器服务。
+
 .开始之前
-如有必要，您可以删除 ONTAP 调解器服务。在删除调解器服务之前，必须断开调解器与 ONTAP 的连接。
+删除ONTAP调解器服务之前、必须先将ONTAP调解器与ONTAP断开连接。
 
 .关于此任务
-此任务在安装了 ONTAP 调解器服务的 Linux 主机上执行。
+您需要在安装了ONTAP调解器服务的Linux主机上执行此任务。
 
 如果无法访问此命令，则可能需要使用完整路径运行此命令，如以下示例所示：
 
@@ -371,16 +378,18 @@ _module-filename_
 
 == 重新生成临时自签名证书
 
+您可以使用以下操作步骤重新生成临时自签名证书。
+
 .关于此任务
 * 您可以在安装了ONTAP调解器服务的Linux主机上执行此任务。
 * 只有在安装ONTAP调解器后、由于主机的主机名或IP地址发生更改、生成的自签名证书已废弃时、才能执行此任务。
-* 在临时自签名证书被可信的第三方证书替换后、您不能使用此任务重新生成证书。  如果没有自签名证书、则发生原因此操作步骤将失败。
+* 在临时自签名证书被可信的第三方证书替换后、您不能使用此任务重新生成证书。如果没有自签名证书、则发生原因此操作步骤将失败。
 
 
 .步骤
 要为当前主机重新生成新的临时自签名证书、请执行以下步骤：
 
-. 重新启动ONTAP调解器：
+. 重新启动ONTAP调解器服务：
 +
 `./make_self_signed_certs.sh overwrite`
 
@@ -408,3 +417,282 @@ subject=C = US, ST = California, L = San Jose, O = "NetApp, Inc.", OU = ONTAP Co
 Getting CA Private Key
 ----
 
+
+
+
+== 将自签名证书替换为受信任的第三方证书
+
+您可以将自签名证书替换为受信任的第三方证书。
+
+.关于此任务
+* 您可以在安装了ONTAP调解器服务的Linux主机上执行此任务。
+* 如果生成的自签名证书需要替换为从受信任的从属证书颁发机构(CA)获取的证书、则可以执行此任务。为此、您应有权访问可信的公共密钥基础架构(PKI)颁发机构。
+
+
+
+
+=== 第1步：从颁发CA证书的第三方获取证书
+
+您可以使用以下操作步骤从PKI颁发机构获取证书。
+
+以下示例说明了如何替换自签名证书角色、即 `ca.key`， `ca.csr`， `ca.srl`，和 `ca.crt` 位于 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/` 与第三方证书主体。
+
+
+NOTE: 此示例说明了ONTAP调解器服务所需证书的必要条件。您可以通过与此操作步骤不同的方式从PKI颁发机构获取证书。根据您的业务需求调整操作步骤。
+
+.步骤
+. 创建专用密钥 `ca.key` 和配置文件 `openssl_ca.cnf` PKI颁发机构将使用该证书来生成证书。
++
+.. 生成专用密钥 `ca.key`：
++
+* 示例 *
+
++
+`openssl genrsa -aes256 -out ca.key 4096`
+
+.. 配置文件 `openssl_ca.cnf` (位于 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`)定义生成的证书必须具有的属性。
+
+
+. 使用私钥和配置文件创建证书签名请求 `ca.csr``：
++
+* 示例： *
+
++
+`openssl req -key <private_key_name>.key -new -out <certificate_csr_name>.csr -config <config_file_name>.cnf`
+
++
+[listing]
+----
+[root@scs000216655 server_config]# openssl req -key ca.key -new -config openssl_ca.cnf -out ca.csr
+Enter pass phrase for ca.key:
+[root@scs000216655 server_config]# cat ca.csr
+-----BEGIN CERTIFICATE REQUEST-----
+MIIE6TCCAtECAQAwgaMxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApDYWxpZm9ybmlh
+...
+erARKhY9z0e8BHPl3g==
+-----END CERTIFICATE REQUEST-----
+----
+. 发送证书签名请求 `ca.csr` 向PKI颁发机构签名。
++
+PKI颁发机构将验证请求并签署 `.csr`，生成证书 `ca.crt`。
+
++
+
+NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须添加证书 `ca.crt` 连接到ONTAP集群。请参见 link:https://docs.netapp.com/us-en/ontap/smbc/smbc_install_confirm_ontap_cluster.html#ontap-mediator["为SM-BC配置ONTAP调解器和集群"]。
+
+
+
+
+
+=== 第2步：使用第三方CA认证签名生成服务器证书
+
+服务器证书必须使用专用密钥进行签名 `ca.key` 和第三方证书 `ca.crt`。此外、还包括配置文件 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_server.cnf` 包含某些属性、用于指定OpenSSL颁发的服务器证书所需的属性。
+
+以下命令可生成服务器证书。
+
+.步骤
+要生成服务器证书、请从文件夹运行以下命令 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`：
+
+`openssl req -config openssl_server.cnf -extensions v3_req -nodes -newkey rsa:4096 -sha512 -keyout ontap_mediator_server.key -out ontap_mediator_server.csr`
+
+`openssl x509 -extfile openssl_server.cnf -extensions v3_req -CA ca.crt -CAkey ca.key -CAcreateserial -sha512 -days 1095 -req -in ontap_mediator_server.csr -out ontap_mediator_server.crt`
+
+`-CAcreateserial` 选项用于生成文件 `ca.srl`。
+
+
+
+=== 第3步：在ONTAP调解器配置中替换新的第三方CA证书和服务器证书
+
+证书配置将通过位于的配置文件提供给ONTAP调解器服务 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。此文件包含以下属性：
+
+[listing]
+----
+cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt'
+key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key'
+ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt'
+ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key'
+ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl'
+----
+* `cert_path` 和 `key_path` 是服务器证书变量。
+* `ca_cert_path`， `ca_key_path`，和 `ca_serial_path` 是CA证书变量。
+
+
+.步骤
+. 更换 `ca.*` 具有第三方证书的文件。
+. 重新启动ONTAP调解器：
++
+`systemctl restart ontap_mediator`
+
+
+
+
+
+=== 第4步：(可选)为第三方证书使用其他路径或名称
+
+您可以使用与以外的其他名称的第三方证书 `ca.*` 或将第三方证书存储在其他位置。
+
+.步骤
+. 配置文件 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.user_config.yaml` 覆盖中的默认变量值 `ontap_mediator.config.yaml` 文件
++
+例如、如果您获得 `intermediate.crt` 并存储其私钥 `intermediate.key` 和证书签名请求 `intermediate.csr` 。 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`，则user_config文件应如下所示：
+
++
+[listing]
+----
+[root@scs000216655 server_config]# cat  ontap_mediator.user_config.yaml
+
+# This config file can be used to override the default settings in ontap_mediator.config.yaml
+# To override a setting, copy the property key from ontap_mediator.config.yaml to this file and
+# set the property to the desired value. e.g.,
+#
+# The default value for 'default_mailboxes_per_target' is 4 in ontap_mediator.config.yaml
+#
+# To override this value with 6 mailboxes per target, add the following key/value pair
+# below this comment:
+#
+# 'default_mailboxes_per_target': 6
+#
+cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt'
+key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key'
+ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt'
+ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.key'
+ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.srl'
+----
+. 在配置文件中更新证书后、重新启动ONTAP调解器：
++
+`systemctl restart ontap_mediator`
+
+
+
+
+
+== 对证书相关问题进行故障排除
+
+您可以检查证书的某些属性。
+
+
+
+=== 验证证书到期时间
+
+使用以下命令确定证书有效期范围：
+
+[listing]
+----
+[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+Certificate:
+    Data:
+...
+        Validity
+            Not Before: Feb 22 19:57:25 2024 GMT
+            Not After : Feb 15 19:57:25 2029 GMT
+----
+
+
+=== 验证CA认证中的X509v3扩展
+
+使用以下命令验证CA认证中的X509v3扩展。
+
+在中定义的属性 `*v3_ca*` 在中 `openssl_ca.cnf` 显示为 `X509v3 extensions` 在中 `ca.crt`。
+
+[listing, subs="+quotes"]
+----
+[root@scs000216982 server_config]# pwd
+/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
+
+[root@scs000216982 server_config]# cat openssl_ca.cnf
+...
+[ v3_ca ]
+*subjectKeyIdentifier = hash*
+*authorityKeyIdentifier = keyid:always,issuer*
+*basicConstraints = critical, CA:true*
+*keyUsage = critical, cRLSign, digitalSignature, keyCertSign*
+
+[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+Certificate:
+    Data:
+...
+        *X509v3 extensions:*
+            X509v3 Subject Key Identifier:
+                9F:06:FA:47:00:67:BA:B2:D4:82:70:38:B8:48:55:B5:24:DB:FC:27
+            X509v3 Authority Key Identifier:
+                keyid:9F:06:FA:47:00:67:BA:B2:D4:82:70:38:B8:48:55:B5:24:DB:FC:27
+
+            X509v3 Basic Constraints: critical
+                CA:TRUE
+            X509v3 Key Usage: critical
+                Digital Signature, Certificate Sign, CRL Sign
+----
+
+
+=== 验证服务器证书和使用者Alt名称中的X509v3扩展
+
+。 `v3_req` 中定义的属性 `openssl_server.cnf` 配置文件显示为 `X509v3 extensions` 在证书中。
+
+在以下示例中、您可以在中获取变量 `alt_names` 部分 `hostname -A` 和 `hostname -I` 在安装了ONTAP调解器的Linux VM上。
+
+请与网络管理员联系、了解变量的正确值。
+
+[listing]
+----
+[root@scs000216982 server_config]# pwd
+/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
+
+[root@scs000216982 server_config]# cat openssl_server.cnf
+...
+[ v3_req ]
+basicConstraints       = CA:false
+extendedKeyUsage       = serverAuth
+keyUsage               = keyEncipherment, dataEncipherment
+subjectAltName         = @alt_names
+
+[ alt_names ]
+DNS.1 = abc.company.com
+DNS.2 = abc-v6.company.com
+IP.1 = 1.2.3.4
+IP.2 = abcd:abcd:abcd:abcd:abcd:abcd
+
+[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+Certificate:
+    Data:
+...
+
+        X509v3 extensions:
+            X509v3 Basic Constraints:
+                CA:FALSE
+            X509v3 Extended Key Usage:
+                TLS Web Server Authentication
+            X509v3 Key Usage:
+                Key Encipherment, Data Encipherment
+            X509v3 Subject Alternative Name:
+                DNS:abc.company.com, DNS:abc-v6.company.com, IP Address:1.2.3.4, IP Address:abcd:abcd:abcd:abcd:abcd:abcd
+----
+
+
+=== 验证专用密钥是否与证书匹配
+
+您可以验证特定专用密钥是否与证书匹配。
+
+对密钥和证书分别使用以下OpenSSL命令：
+
+[listing]
+----
+[root@scs000216982 server_config]# openssl rsa -noout -modulus -in intermediate.key | openssl md5
+Enter pass phrase for intermediate.key:
+(stdin)= 14c6b98b0c7c59012b1de89eee4a9dbc
+[root@scs000216982 server_config]# openssl x509 -noout -modulus -in intermediate.crt | openssl md5
+(stdin)= 14c6b98b0c7c59012b1de89eee4a9dbc
+----
+如果 `-modulus` 属性、表示专用密钥和证书对兼容且可相互配合使用。
+
+
+
+=== 验证是否已从特定CA证书创建服务器证书
+
+您可以使用以下命令验证服务器证书是否是从特定CA证书创建的。
+
+[listing]
+----
+[root@scs000216982 server_config]# openssl verify -CAfile ca.crt ontap_mediator_server.crt
+ontap_mediator_server.crt: OK
+----
+如果正在使用联机证书状态协议(Online Certificate Status Protocol、OCSP)验证、请使用命令 link:https://www.openssl.org/docs/manmaster/man1/openssl-verify.html^["OpenSSL验证"]。

@@ -1,0 +1,288 @@
+---
+permalink: release-notes/whats-new-9121.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.12.1' 
+summary: 了解ONTAP 9.12.1提供的新功能 
+---
+= ONTAP 9.12.1中的新增功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解ONTAP 9.12.1提供的新功能。
+
+有关最新ONTAP 9版本中的已知问题、限制和升级注意事项的详细信息、请参阅 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]。您必须使用NetApp帐户登录或创建帐户才能访问发行说明。
+
+了解新增功能和增强功能 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["ONTAP MetroCluster功能"^]。
+
+了解的新增和增强支持 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["FAS、ASA和AFF平台以及支持的交换机"^]。
+
+了解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["ONTAP REST API"^]。
+
+要升级ONTAP、请参见 xref:../upgrade/prepare.html[准备升级ONTAP]。
+
+
+
+== 数据保护
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html[支持采用SnapMirror同步的大型FlexVol卷]  a| 
+SnapMirror同步配置中支持的最大FlexVol卷大小已从100 TB增加到300 TB。源集群和目标集群都必须运行ONTAP 9.12.1P2或更高版本_。
+
+
+
+| xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html[在SnapMirror同步中支持更大的文件和LUN大小] | SnapMirror同步配置中支持的最大文件和LUN大小已从16 TB增加到128 TB。源集群和目标集群都必须运行ONTAP 9.12.1 P2或更高版本。 
+
+
+| xref:../consistency-groups/index.html[增强了对一致性组的支持]  a| 
+* 您可以在一致性组中添加和删除卷、也可以克隆一致性组(包括Snapshot副本)。
+* 一致性组支持应用程序标记、以简化数据保护和管理流程。
+* ONTAP REST API支持使用NFS/SMB卷或NVMe命名空间配置一致性组。
+
+
+
+
+| xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html#supported-features[SnapMirror同步Node.] | SnapMirror同步支持对HA接管和交还、卷移动以及其他与维护相关的操作执行无中断运行(Nodo)。此功能仅适用于AF/ASA平台。 
+
+
+| xref:../mediator/index.html[ONTAP调解器1.5支持SnapMirror业务连续性] | ONTAP调解器1.5可用于监控SnapMirror活动同步关系。 
+
+
+| xref:../snapmirror-active-sync/index.html[SnapMirror主动同步连续性增强功能] | SnapMirror活动同步支持从Snapshot执行部分LUN还原。此外、SnapMirror主动同步还会将QoS扩展到不属于SnapMirror关系的卷。 
+
+
+| xref:../data-protection/convert-snapmirror-version-flexible-task.html[SnapMirror异步的数据仓库重建指示器] | SnapMirror异步通过显示完成百分比来指示灾难恢复预演后数据仓库重建所需的时间。 
+
+
+| SnapLock选项、用于设置"未指定"的最短保留时间绝对保留时间 | SnapLock提供了一个选项、用于在绝对保留时间设置为"未指定"时设置最短保留时间。 
+
+
+| xref:../snaplock/snapshot-lock-concept.html[防篡改Snapshot副本] | 您可以在非SnapLock卷上锁定Snapshot副本、以防止勒索软件攻击。锁定Snapshot副本有助于确保它们不会被意外或恶意删除。 
+|===
+
+
+== 文件访问协议
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../smb-admin/configure-kerberos-aes-encryption-concept.html[为Kerberos通信禁用弱加密类型] | 通过一个新的SMB安全选项、您可以禁用RC4和DES、而使用高级加密标准(Advanced Encryption Standard、AES)加密类型与Active Directory (AD) KDC进行基于Kerberos的通信。 
+
+
+| xref:../s3-multiprotocol/index.html[S3客户端对NAS数据的访问] | S3客户端可以访问与NFS和SMB客户端相同的NAS数据、而无需重新格式化、从而可以更轻松地为需要对象数据的S3应用程序提供服务。 
+
+
+| xref:../nfs-admin/ontap-support-nfsv42-concept.html[NFS扩展属性] | 启用了NFSv4.2的NFS服务器可以从支持xattr的客户端存储和检索NFS扩展属性(xattr)。 
+
+
+| xref:../nfs-admin/ontap-support-nfsv42-concept.html[支持NFSv4.2稀疏文件和空间预留] | NFSv4.2客户端可以为稀疏文件预留空间。此外、还可以从文件中取消分配和取消预留空间。 
+|===
+
+
+== MetroCluster
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../mediator/index.html[MetroCluster IP配置支持ONTAP调解器1.5] | ONTAP调解器1.5可用于监控MetroCluster IP配置。 
+
+
+| xref:../configure_ip_security_@ipsec@_over_wire_encryption.html[在MetroCluster IP和MetroCluster光纤连接配置中、可以为前端主机协议(例如NFS和iSCSI)提供IPSEC支持。] | 在MetroCluster IP和MetroCluster光纤连接配置中、可以为前端主机协议(例如NFS和iSCSI)提供IPSEC支持。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept-risks-limitations-automatic-switchover.html["MetroCluster IP配置中的MetroCluster自动强制切换功能"^] | 您可以在MetroCluster IP配置中启用MetroCluster自动强制切换功能。此功能是调解器辅助计划外切换(MAUSO)功能的扩展。 
+
+
+| link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept-risks-limitations-automatic-switchover.html["MetroCluster IP配置中未镜像聚合上的SVM上的S3"^] | 您可以在MetroCluster IP配置中启用MetroCluster自动强制切换功能。此功能是调解器辅助计划外切换(MAUSO)功能的扩展。 
+|===
+要了解MetroCluster配置的平台和交换机配置增强功能、请参见_link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]_。
+
+
+
+== 网络
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../system-admin/forward-command-history-log-file-destination-task.html[LIF服务] | 您可以使用 `management-log-forwarding` 用于控制用于将审核日志转发到远程系统日志服务的Rifs的服务 
+|===
+
+
+== S3对象存储
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../s3-config/ontap-s3-supported-actions-reference.html[扩展了对S3操作的支持]  a| 
+支持以下Amazon S3 API操作：
+
+* `CopyObject`
+* `UploadPartCopy`
+* `BucketPolicy` (获取、放置、删除)
+
+
+|===
+
+
+== SAN
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:/san-admin/resize-lun-task.html[增加了AFF和FAS平台的最大LUN大小] | 从ONTAP 9.12.1P2开始、AFF和FAS平台上支持的最大LUN大小从16 TB增加到128 TB。 
+
+
+| link:https://hwu.netapp.com/["NVMe限制增加"^]  a| 
+NVMe协议支持以下功能：
+
+* 在一个Storage VM和一个集群中配置8 K个子系统
+* 12节点集群NVMe/FC支持每个端口256个控制器、而NVMe/TCP支持每个节点2K控制器。
+
+
+
+
+| xref:../nvme/setting-up-secure-authentication-nvme-tcp-task.html[NVMe/TCP支持安全身份验证] | 支持使用DHHMAC-CHAP身份验证协议通过NVMe/TCP在NVMe主机和控制器之间进行安全、单向和双向身份验证。 
+
+
+| xref:../asa/support-limitations.html[NVMe的MetroCluster IP支持] | 四节点MetroCluster IP配置支持NVMe/FC协议。 
+|===
+
+
+== 安全性
+
+2022年10月、NetApp实施了一些更改、以拒绝未通过HTTPS与TLSv1.2或安全SMTP发送的AutoSupport消息传输。有关详细信息，请参见 link:https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU484["SU484：NetApp将拒绝传输安全性不足的AutoSupport消息"^]。
+
+[cols="30%,70%"]
+|===
+| 功能 | Description 
+
+
+| xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurations[自主防兰森保护互操作性增强功能]  a| 
+自主防兰森防御可用于以下配置：
+
+* 使用SnapMirror保护的卷
+* 使用SnapMirror进行保护的SVM
+* 已启用SVM进行迁移(SVM数据移动性)
+
+
+
+
+| xref:../authentication/setup-ssh-multifactor-authentication-task.html[FIDO2和PIV支持SSH的多因素身份验证(MFA)(两者均由Yukikkey使用)] | SSH MFA可以使用具有用户名和密码的硬件辅助公共/专用密钥交换。Yukikkey是一种物理令牌设备、插入到SSH客户端中以提高MFA安全性。 
+
+
+| xref:../system-admin/ontap-implements-audit-logging-concept.html[防篡改日志记录] | 默认情况下、所有ONTAP内部日志都是防篡改的、可确保被入侵的管理员帐户无法隐藏恶意操作。 
+
+
+| xref:../error-messages/configure-ems-events-notifications-syslog-task.html[事件的TLS传输] | EMS事件可以使用TLS协议发送到远程系统日志服务器、从而增强对中央外部审核日志记录的线缆保护。 
+|===
+
+
+== 存储效率
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../volumes/change-efficiency-mode-task.html[对温度敏感的存储效率]  a| 
+默认情况下、新的AFF C250、AFF C400、AFF C800平台和卷会启用对温度敏感的存储效率。默认情况下、现有卷不会启用TSSE、但可以使用ONTAP命令行界面手动启用TSSE。
+
+
+
+| xref:../volumes/determine-space-usage-volume-aggregate-concept.html[增加可用聚合空间] | 对于全闪存FAS (AFF)和FAS500f平台、超过30 TB的聚合的WAFL预留从10%减少到5%、从而增加聚合中的可用空间。 
+
+
+| xref:../concept_nas_file_system_analytics_overview.html[文件系统分析：按大小排列的前几个目录] | 现在、文件系统分析可确定卷中占用空间最多的目录。 
+|===
+
+
+== 存储资源管理增强功能
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../flexgroup/manage-flexgroup-rebalance-task.html#flexgroup-rebalancing-considerations[FlexGroup 重新平衡]  a| 
+您可以启用无中断FlexGroup卷自动重新平衡、以便在FlexGroup成分卷之间重新分布文件。
+
+
+NOTE: 建议您不要在将FlexVol转换为FlexGroup后使用FlexGroup自动重新平衡。而是可以通过输入来使用ONTAP 9.10.1及更高版本中提供的中断性可追溯文件移动功能 `volume rebalance file-move` 命令：有关详细信息和命令语法、请参见 link:https://docs.netapp.com/us-en/ontap-cli-9121//volume-rebalance-file-move-start.html["《ONTAP命令参考》"^]。
+
+
+
+| xref:../snaplock/commit-snapshot-copies-worm-concept.html[SnapLock for SnapVault支持FlexGroup卷] | SnapLock for SnapVault支持FlexGroup卷 
+|===
+
+
+== SVM管理增强功能
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../svm-migrate/index.html[SVM数据移动性增强功能]  a| 
+集群管理员可以在混合聚合上使用FAS (AFF平台)将SVM从源集群无系统地重新定位到目标集群。
+增加了对中断SMB协议和自主防兰森保护的支持。
+
+|===
+
+
+== System Manager
+
+从ONTAP 9.12.1开始、System Manager与BlueXP集成在一起。借助BlueXP、管理员可以从一个控制平台管理混合多云基础架构、同时保留熟悉的System Manager信息板。登录到System Manager时、管理员可以选择在BlueXP中访问System Manager界面或直接访问System Manager。了解更多信息 xref:../sysmgr-integration-bluexp-concept.html[System Manager与BlueXP集成]。
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+| xref:../snaplock/create-snaplock-volume-task.html[System Manager支持SnapLock] | System Manager支持SnapLock操作、包括Compliance时钟初始化、SnapLock卷创建和WORM文件镜像。 
+
+
+| xref:../task_admin_troubleshoot_hardware_problems.html[布线的硬件可视化] | System Manager用户可以查看有关其集群中硬件设备之间布线的连接信息、以便对连接问题进行故障排除。 
+
+
+| xref:../system-admin/configure-saml-authentication-task.html[支持在登录到System Manager时使用Cisco Duo进行多因素身份验证] | 您可以将Cisco Duo配置为SAML身份提供程序(Idp)、使用户能够在登录到System Manager时使用Cisco Duo进行身份验证。 
+
+
+| xref:../nfs-rdma/index.html[System Manager网络增强功能] | System Manager可以在创建网络接口期间更好地控制子网和主端口的选择。System Manager还支持通过RDMA连接配置NFS。 
+
+
+| xref:../system-admin/access-cluster-system-manager-browser-task.html[系统显示主题] | System Manager用户可以选择用于显示System Manager界面的浅色或暗色主题。他们还可以选择默认为其操作系统或浏览器所使用的主题。此功能允许用户指定更适合阅读显示屏的设置。 
+
+
+| xref:../concepts/capacity-measurements-in-sm-concept.html[改进了本地层容量详细信息] | System Manager用户可以查看特定本地层的容量详细信息以确定空间是否过量使用、这可能表示他们需要添加更多容量来确保本地层不会用尽空间。 
+
+
+| xref:../task_admin_search_filter_sort.html[改进了搜索功能] | System Manager具有改进的搜索功能、使用户可以直接通过System Manager界面从NetApp 支持站点 中搜索和访问相关的上下文相关支持信息和System Manager产品文档。这样、用户就可以获得采取适当措施所需的信息、而不必在支持站点的不同位置进行搜索。 
+
+
+| xref:../task_admin_add_a_volume.html[改进了卷配置] | 存储管理员可以在使用System Manager创建卷时选择Snapshot副本策略、而不是使用默认策略。 
+
+
+| xref:../task_admin_expand_storage.html#increase-the-size-of-a-volume[增加卷的大小] | 存储管理员可以在使用System Manager调整卷大小时查看对数据空间和Snapshot副本预留的影响。 
+
+
+| xref:../disks-aggregates/create-ssd-storage-pool-task.html[存储池] 和 xref:../disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html?[Flash Pool] 管理 | 存储管理员可以使用System Manager向SSD存储池添加SSD、使用SSD存储池分配单元创建Flash Pool本地层(聚合)以及使用物理SSD创建Flash Pool本地层。 
+
+
+| xref:../nfs-rdma/index.html[System Manager中的基于RDMA的NFS支持] | System Manager支持通过RDMA为NFS配置网络接口、并可识别支持RoCE的端口。 
+|===
