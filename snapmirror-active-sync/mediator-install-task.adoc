@@ -16,7 +16,7 @@ summary: SnapMirror活动同步要求您安装并初始化ONTAP调解器、并�
 [role="lead"]
 SnapMirror主动同步利用对等集群来确保在发生故障转移时数据可用。ONTAP调解器是确保业务连续性的关键资源、可监控每个集群的运行状况。要配置SnapMirror活动同步、必须先安装ONTAP调解器、并确保已正确配置主集群和二级集群。
 
-安装ONTAP调解器并配置集群后、必须执行此操作 <<initialize-the-ontap-mediator>> 用于SnapMirror活动同步的ONTAP调解器。您必须这样做 xref:../protect-task.html[为SnapMirror活动同步创建、初始化和映射一致性组]。
+安装ONTAP调解器并配置集群后、必须执行此操作 <<initialize-the-ontap-mediator>> 用于SnapMirror活动同步的ONTAP调解器。您必须这样做 xref:protect-task.html[为SnapMirror活动同步创建、初始化和映射一致性组]。
 
 
 
@@ -65,21 +65,21 @@ xref:../smb-config/create-volume-task.html[Creating a volume]
 
 . 确认在集群中的每个节点上至少创建了一个 SAN LIF 。
 +
-link:../san-admin/lifs-cluster-concept.html["集群 SAN 环境中 LIF 的注意事项"]
+link:../san-admin/manage-lifs-all-san-protocols-concept.html["集群 SAN 环境中 LIF 的注意事项"]
 
 +
-link:https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cm-sanag/GUID-4B666C44-694A-48A3-B0A9-517FA7FD2502.html?cp=13_6_4_0["创建 LIF"^]
+link:../networking/create_a_lif.html["创建 LIF"]
 
 . 确认已创建必要的LUN并将其映射到igrop、igrop用于将LUN映射到应用程序主机上的启动程序。
 +
-xref:../san-admin/create-luns-mapping-igroups-task.html[创建 LUN 并映射 igroup]
+xref:../san-admin/provision-storage.html[创建 LUN 并映射 igroup]
 
 . 重新扫描应用程序主机以发现任何新的 LUN 。
 
 
 
 
-== 初始化用于SnapMirror活动同步的ONTAP调解器
+== 使用自签名证书初始化用于SnapMirror活动同步的ONTAP调解器
 
 安装ONTAP调解器并确认集群配置后、必须初始化ONTAP调解器以进行集群监控。您可以使用System Manager或ONTAP命令行界面初始化ONTAP调解器。
 
@@ -102,6 +102,27 @@ IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务�
 ** 证书
 
 
+. 您可以通过两种方式提供证书输入：
++
+** *选项(A)*：选择*导入*以导航到 `.crt` 文件并导入。
+** *选项(b)*：复制的内容 `.crt` 文件并粘贴到*证书*字段中。
++
+正确输入所有详细信息后、提供的证书将安装在所有对等集群上。
+
++
+image:configure-mediator-system-manager.png["添加System Manager调解器"]
+
++
+证书添加完成后、ONTAP调解器将添加到ONTAP集群中。
+
++
+下图显示了一个成功的ONTAP调解器配置：
+
++
+image:successful-mediator-installation.png["调解器添加成功"]。
+
+
+
 
 
 --
@@ -109,23 +130,104 @@ IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务�
 --
 您可以使用ONTAP命令行界面从主集群或二级集群初始化ONTAP调解器。问题描述时 `mediator add` 命令时、ONTAP调解器会自动添加到另一个集群上。
 
+如果没有有效的证书颁发机构(Certificate Authority、CA)证书、则无法在ONTAP中初始化ONTAP调解器。因此、您需要向对等集群的证书存储添加有效的证书颁发机构。
+
 .步骤
-. 在其中一个集群上初始化调解器：
+. 从ONTAP调解器Linux VM/主机软件安装位置查找ONTAP调解器CA证书 `cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`。
+. 向对等集群上的证书存储添加有效的证书颁发机构。
 +
-`snapmirror mediator add -mediator-address IP_Address -peer-cluster cluster_name -username user_name`
+* 示例 *
+
++
+[listing]
+----
+[root@ontap-mediator server_config]# cat ca.crt
+-----BEGIN CERTIFICATE-----
+MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
+BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+…
+p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
+-----END CERTIFICATE-----
+----
+. 将ONTAP调解器CA证书添加到ONTAP集群。出现提示时、插入从ONTAP调解器获取的CA证书。对所有对等集群重复上述步骤：
++
+`security certificate install -type server-ca -vserver <vserver_name>`
 
 +
 * 示例 *
 
 +
-....
-cluster1::> snapmirror mediator add -mediator-address 192.168.10.1 -peer-cluster cluster2 -username mediatoradmin
+[listing]
+----
+[root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
+
+[root@ontap-mediator server_config]# cat ca.crt
+-----BEGIN CERTIFICATE-----
+MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
+BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+…
+p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
+-----END CERTIFICATE-----
+----
++
+[listing]
+----
+C1_test_cluster::*> security certificate install -type server-ca -vserver C1_test_cluster
+
+Please enter Certificate: Press when done
+-----BEGIN CERTIFICATE-----
+MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
+BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+…
+p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
+-----END CERTIFICATE-----
+
+You should keep a copy of the CA-signed digital certificate for future reference.
+
+The installed certificate's CA and serial number for reference:
+CA: ONTAP Mediator CA
+serial: D86D8E4E87142XXX
+
+The certificate's generated name for reference: ONTAPMediatorCA
+
+C1_test_cluster::*>
+----
+. 查看使用生成的证书名称安装的自签名CA证书：
++
+`security certificate show -common-name <common_name>`
+
++
+* 示例 *
+
++
+[listing]
+----
+C1_test_cluster::*> security certificate show -common-name ONTAPMediatorCA
+Vserver    Serial Number   Certificate Name                       Type
+---------- --------------- -------------------------------------- ------------
+C1_test_cluster
+           6BFD17DXXXXX7A71BB1F44D0326D2DEEXXXXX
+                           ONTAPMediatorCA                        server-ca
+    Certificate Authority: ONTAP Mediator CA
+          Expiration Date: Thu Feb 15 14:35:25 2029
+----
+. 在其中一个集群上初始化ONTAP调解器。系统会自动为另一个集群添加ONTAP调解器：
++
+`snapmirror mediator add -mediator-address <ip_address> -peer-cluster <peer_cluster_name> -username user_name`
+
++
+* 示例 *
+
++
+[listing]
+----
+C1_test_cluster::*> snapmirror mediator add -mediator-address 1.2.3.4 -peer-cluster C2_test_cluster -username mediatoradmin
 Notice: Enter the mediator password.
 
 Enter the password: ******
 Enter the password again: ******
-....
-. 检查调解器配置的状态：
+----
+. 检查ONTAP调解器配置的状态：
 +
 `snapmirror mediator show`
 
@@ -133,8 +235,177 @@ Enter the password again: ******
 ....
 Mediator Address Peer Cluster     Connection Status Quorum Status
 ---------------- ---------------- ----------------- -------------
-192.168.10.1     cluster-2        connected         true
+1.2.3.4          C2_test_cluster   connected        true
 ....
++
+`Quorum Status` 指示SnapMirror一致性组关系是否已与ONTAP调解器同步；状态为 `true` 表示同步成功。
+
+
+
+--
+====
+
+
+== 使用第三方证书重新初始化ONTAP调解器
+
+您可能需要重新初始化ONTAP调解器服务。有时可能需要重新初始化ONTAP调解器服务、例如ONTAP调解器IP地址更改、证书到期等。
+
+以下操作步骤说明了在需要将自签名证书替换为第三方证书的特定情况下重新初始化ONTAP调解器的过程。
+
+.关于此任务
+您需要将SM-BC集群的自签名证书替换为第三方证书、从ONTAP中删除ONTAP调解器配置、然后添加ONTAP调解器。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+使用System Manager时、您需要从ONTAP集群中删除使用旧自签名证书配置的ONTAP调解器、然后使用新的第三方证书重新配置ONTAP集群。
+
+.步骤
+. 选择菜单选项图标并选择*Remove*以删除ONTAP调解器。
++
+
+NOTE: 此步骤不会从ONTAP集群中删除自签名server-ca。NetApp建议在执行下面的步骤添加第三方证书之前，导航到*Certifice*选项卡并手动将其删除：
+
++
+image:remove-mediator.png["System Manager调解器已删除"]
+
+. 使用正确的证书重新添加ONTAP调解器。
+
+
+现在、ONTAP调解器已配置新的第三方自签名证书。
+
+image:configure-mediator-system-manager.png["添加System Manager调解器"]
+
+--
+.命令行界面
+--
+您可以从主集群或二级集群重新初始化ONTAP调解器、方法是使用ONTAP命令行界面将自签名证书替换为第三方证书。
+
+.步骤
+. 删除自签名 `ca.crt` 在先前为所有集群使用自签名证书时安装。在以下示例中、有两个集群：
++
+* 示例 *
+
++
+[listing]
+----
+ C1_test_cluster::*> security certificate delete -vserver C1_test_cluster -common-name ONTAPMediatorCA
+ 2 entries were deleted.
+
+ C2_test_cluster::*> security certificate delete -vserver C2_test_cluster -common-name ONTAPMediatorCA *
+ 2 entries were deleted.
+----
+. 使用从SM-BC集群中删除先前配置的ONTAP调解器 `-force true`：
++
+* 示例 *
+
++
+[listing]
+----
+C1_test_cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+1.2.3.4          C2_test_cluster   connected         true
+
+C1_test_cluster::*> snapmirror mediator remove -mediator-address 1.2.3.4 -peer-cluster C2_test_cluster -force true
+
+Warning: You are trying to remove the ONTAP Mediator configuration with force. If this configuration exists on the peer cluster, it could lead to failure of a SnapMirror failover operation. Check if this configuration
+         exists on the peer cluster C2_test_cluster and remove it as well.
+Do you want to continue? {y|n}: y
+
+Info: [Job 136] 'mediator remove' job queued
+
+C1_test_cluster::*> snapmirror mediator show
+This table is currently empty.
+----
+. 请参阅中所述的步骤 link:../mediator/manage-task.html#Replace-self-signed-certificates-with-trusted-third-party-certificates["将自签名证书替换为受信任的第三方证书"] 如何从从属CA获取证书、称为 `ca.crt`。
++
+
+NOTE: 。 `ca.crt` 具有某些属性，这些属性是从需要发送到PKI颁发机构的请求(在文件中定义)中派生的 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`。
+
+. 添加新的第三方ONTAP调解器CA证书 `ca.crt` 从ONTAP调解器Linux VM/主机软件安装位置：
++
+* 示例 *
+
++
+[listing]
+----
+[root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
+[root@ontap-mediator server_config]# cat ca.crt
+-----BEGIN CERTIFICATE-----
+MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
+BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+…
+p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
+-----END CERTIFICATE-----
+----
+. 添加 `ca.crt` 文件到对等集群。对所有对等集群重复此步骤：
++
+* 示例 *
+
++
+[listing]
+----
+C1_test_cluster::*> security certificate install -type server-ca -vserver C1_test_cluster
+
+Please enter Certificate: Press when done
+-----BEGIN CERTIFICATE-----
+MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
+BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+…
+p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
+-----END CERTIFICATE-----
+
+You should keep a copy of the CA-signed digital certificate for future reference.
+
+The installed certificate's CA and serial number for reference:
+CA: ONTAP Mediator CA
+serial: D86D8E4E87142XXX
+
+The certificate's generated name for reference: ONTAPMediatorCA
+
+C1_test_cluster::*>
+----
+. 从SnapMirror活动同步集群中删除先前配置的ONTAP调解器：
++
+* 示例 *
+
++
+[listing]
+----
+C1_test_cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+1.2.3.4          C2_test_cluster  connected         true
+
+C1_test_cluster::*> snapmirror mediator remove -mediator-address 1.2.3.4 -peer-cluster C2_test_cluster
+
+Info: [Job 86] 'mediator remove' job queued
+C1_test_cluster::*> snapmirror mediator show
+This table is currently empty.
+----
+. 再次添加ONTAP调解器：
++
+* 示例 *
+
++
+[listing]
+----
+C1_test_cluster::*> snapmirror mediator add -mediator-address 1.2.3.4 -peer-cluster C2_test_cluster -username mediatoradmin
+
+Notice: Enter the mediator password.
+
+Enter the password:
+Enter the password again:
+
+Info: [Job: 87] 'mediator add' job queued
+
+C1_test_cluster::*> snapmirror mediator show
+Mediator Address Peer Cluster     Connection Status Quorum Status
+---------------- ---------------- ----------------- -------------
+1.2.3.4          C2_test_cluster  connected         true
+----
 +
 `Quorum Status` 指示SnapMirror一致性组关系是否与调解器同步；状态为 `true` 表示同步成功。
 

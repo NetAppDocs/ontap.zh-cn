@@ -11,10 +11,10 @@ summary: 在安装调解器安装包之前、您应验证ONTAP 调解器代码�
 
 
 [role="lead"]
-在安装调解器安装包之前、您应验证ONTAP 调解器代码签名。
+在安装ONTAP调解器安装包之前、您应验证ONTAP调解器代码签名。
 
 .开始之前
-在验证调解器代码签名之前、您的系统必须满足以下要求。
+在验证ONTAP调解器代码签名之前、您的系统必须满足以下要求。
 
 * OpenSSL 1.0.2到3.0版、用于基本验证
 * 适用于时间戳颁发机构(TSA)操作的OpenSSL 1.1.0或更高版本
@@ -52,21 +52,21 @@ summary: 在安装调解器安装包之前、您应验证ONTAP 调解器代码�
 
 
  a| 
-`ontap-mediator-1.7.0`
+`ontap-mediator-1.8.0`
  a| 
-1.7.0版的产品安装可执行文件
+1.8.0版的产品安装可执行文件
 
 
 
  a| 
-`ontap-mediator-1.7.0.sig`
+`ontap-mediator-1.8.0.sig`
  a| 
 SHA-256经过哈希处理、然后使用Ccs-prod密钥(安装程序签名)进行RSA签名
 
 
 
  a| 
-`ontap-mediator-1.7.0.sig.tsr`
+`ontap-mediator-1.8.0.sig.tsr`
  a| 
 OCSCP用于安装程序签名的撤消请求
 
@@ -122,7 +122,7 @@ NOTE: 。 `openssl` 路径中的版本必须有效 `cert.pem` (非自签名)。
 openssl verify -untrusted csc-prod-chain-ONTAP-Mediator.pem -CApath ${OPENSSLDIR} csc-prod-ONTAP-Mediator.pem  # Failure action: The Code-Signature-Check certificate has expired or is invalid. Download a newer version of the ONTAP Mediator.
 openssl verify -untrusted tsa-prod-chain-ONTAP-Mediator.pem -CApath ${OPENSSLDIR} tsa-prod-ONTAP-Mediator.pem  # Failure action: The Time-Stamp certificate has expired or is invalid. Download a newer version of the ONTAP Mediator.
 ----
-. 验证 `ontap-mediator-1.6.0.sig.tsr` 和 `ontap-mediator-1.7.0.tsr` 使用关联证书的文件：
+. 验证 `ontap-mediator-1.8.0.sig.tsr` 和 `ontap-mediator-1.8.0.tsr` 使用关联证书的文件：
 +
 `openssl ts -verify`
 
@@ -134,8 +134,8 @@ NOTE: `.tsr` 文件包含与安装程序关联的时间戳响应以及代码签�
 +
 [listing]
 ----
-openssl ts -verify -data ontap-mediator-1.7.0.sig -in ontap-mediator-1.7.0.sig.tsr -CAfile tsa-prod-chain-ONTAP-Mediator.pem -untrusted tsa-prod-ONTAP-Mediator.pem
-openssl ts -verify -data ontap-mediator-1.7.0 -in ontap-mediator-1.7.0.tsr -CAfile tsa-prod-chain-ONTAP-Mediator.pem -untrusted tsa-prod-ONTAP-Mediator.pem
+openssl ts -verify -data ontap-mediator-1.8.0.sig -in ontap-mediator-1.8.0.sig.tsr -CAfile tsa-prod-chain-ONTAP-Mediator.pem -untrusted tsa-prod-ONTAP-Mediator.pem
+openssl ts -verify -data ontap-mediator-1.8.0 -in ontap-mediator-1.8.0.tsr -CAfile tsa-prod-chain-ONTAP-Mediator.pem -untrusted tsa-prod-ONTAP-Mediator.pem
 ----
 . 根据密钥验证签名：
 +
@@ -144,30 +144,30 @@ openssl ts -verify -data ontap-mediator-1.7.0 -in ontap-mediator-1.7.0.tsr -CAfi
 +
 [listing]
 ----
-openssl dgst -sha256 -verify ONTAP-Mediator-production.pub -signature ontap-mediator-1.7.0.sig ontap-mediator-1.7.0
+openssl dgst -sha256 -verify ONTAP-Mediator-production.pub -signature ontap-mediator-1.8.0.sig ontap-mediator-1.8.0
 ----
 
 
-.验证ONTAP 调解器代码签名示例(控制台输出)
+.验证ONTAP调解器代码签名的示例(控制台输出)
 [%collapsible]
 ====
 [listing]
 ----
-[root@scspa2695423001 ontap-mediator-1.7.0]# pwd
-/root/ontap-mediator-1.7.0
-[root@scspa2695423001 ontap-mediator-1.7.0]# ls -l
+[root@scspa2695423001 ontap-mediator-1.8.0]# pwd
+/root/ontap-mediator-1.8.0
+[root@scspa2695423001 ontap-mediator-1.8.0]# ls -l
 total 63660
 -r--r--r-- 1 root root     8582 Feb 19 15:02 csc-prod-chain-ONTAP-Mediator.pem
 -r--r--r-- 1 root root     2373 Feb 19 15:02 csc-prod-ONTAP-Mediator.pem
--r-xr-xr-- 1 root root 65132818 Feb 20 15:17 ontap-mediator-1.7.0
--rw-r--r-- 1 root root      384 Feb 20 15:17 ontap-mediator-1.7.0.sig
--rw-r--r-- 1 root root     5437 Feb 20 15:17 ontap-mediator-1.7.0.sig.tsr
--rw-r--r-- 1 root root     5436 Feb 20 15:17 ontap-mediator-1.7.0.tsr
+-r-xr-xr-- 1 root root 65132818 Feb 20 15:17 ontap-mediator-1.8.0
+-rw-r--r-- 1 root root      384 Feb 20 15:17 ontap-mediator-1.8.0.sig
+-rw-r--r-- 1 root root     5437 Feb 20 15:17 ontap-mediator-1.8.0.sig.tsr
+-rw-r--r-- 1 root root     5436 Feb 20 15:17 ontap-mediator-1.8.0.tsr
 -r--r--r-- 1 root root      625 Feb 19 15:02 ONTAP-Mediator-production.pub
 -r--r--r-- 1 root root     3323 Feb 19 15:02 tsa-prod-chain-ONTAP-Mediator.pem
 -r--r--r-- 1 root root     1740 Feb 19 15:02 tsa-prod-ONTAP-Mediator.pem
-[root@scspa2695423001 ontap-mediator-1.7.0]#
-[root@scspa2695423001 ontap-mediator-1.7.0]# /root/verify_ontap_mediator_signatures.sh
+[root@scspa2695423001 ontap-mediator-1.8.0]#
+[root@scspa2695423001 ontap-mediator-1.8.0]# /root/verify_ontap_mediator_signatures.sh
 ++ openssl version -d
 ++ cut -d '"' -f2
 + OPENSSLDIR=/etc/pki/tls
@@ -234,15 +234,15 @@ csc-prod-ONTAP-Mediator.pem: good
 csc-prod-ONTAP-Mediator.pem: OK
 + openssl verify -untrusted tsa-prod-chain-ONTAP-Mediator.pem -CApath /etc/pki/tls tsa-prod-ONTAP-Mediator.pem
 tsa-prod-ONTAP-Mediator.pem: OK
-+ openssl ts -verify -data ontap-mediator-1.7.0.sig -in ontap-mediator-1.7.0.sig.tsr -CAfile tsa-prod-chain-ONTAP-Mediator.pem -untrusted tsa-prod-ONTAP-Mediator.pem
++ openssl ts -verify -data ontap-mediator-1.8.0.sig -in ontap-mediator-1.8.0.sig.tsr -CAfile tsa-prod-chain-ONTAP-Mediator.pem -untrusted tsa-prod-ONTAP-Mediator.pem
 Using configuration from /etc/pki/tls/openssl.cnf
 Verification: OK
-+ openssl ts -verify -data ontap-mediator-1.7.0 -in ontap-mediator-1.7.0.tsr -CAfile tsa-prod-chain-ONTAP-Mediator.pem -untrusted tsa-prod-ONTAP-Mediator.pem
++ openssl ts -verify -data ontap-mediator-1.8.0 -in ontap-mediator-1.8.0.tsr -CAfile tsa-prod-chain-ONTAP-Mediator.pem -untrusted tsa-prod-ONTAP-Mediator.pem
 Using configuration from /etc/pki/tls/openssl.cnf
 Verification: OK
-+ openssl dgst -sha256 -verify ONTAP-Mediator-production.pub -signature ontap-mediator-1.7.0.sig ontap-mediator-1.7.0
++ openssl dgst -sha256 -verify ONTAP-Mediator-production.pub -signature ontap-mediator-1.8.0.sig ontap-mediator-1.8.0
 Verified OK
-[root@scspa2695423001 ontap-mediator-1.7.0]#
+[root@scspa2695423001 ontap-mediator-1.8.0]#
 
 ----
 ====

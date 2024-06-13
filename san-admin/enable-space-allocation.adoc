@@ -2,7 +2,7 @@
 permalink: san-admin/enable-space-allocation.html 
 sidebar: sidebar 
 keywords: enable, space allocation, space reclamation, unmap 
-summary: 如果将 space-allocation 选项设置为 enabled ，则当卷空间用尽且卷中的 LUN 无法接受写入时， ONTAP 会通知主机。此选项还允许 ONTAP 在主机删除数据时自动回收空间。 
+summary: 启用空间分配、以使主机和存储系统能够在空间管理方面进行合作。 
 ---
 = 为SAN启用空间分配
 :allow-uri-read: 
@@ -11,12 +11,18 @@ summary: 如果将 space-allocation 选项设置为 enabled ，则当卷空间�
 
 
 [role="lead"]
-如果FC或iSCSI主机支持SCSI精简配置、则可以启用空间分配。  启用空间分配后、如果卷用尽空间、则该卷中的LUN将保持联机并设置为只读模式。  然后、系统会通知主机LUN无法再接受写入。  如果主机不支持或未启用空间分配、则当卷用尽空间且无法自动增长时、ONTAP会使LUN脱机。
+启用空间分配、以使主机和存储系统能够在LUN空间管理方面进行合作。启用 `space-allocation` 设置具有以下优势：
 
-此外、如果启用了空间分配、则主机端空间管理功能会识别已在主机文件系统上删除的数据块、并自动发出一个或多个数据块 `SCSI UNMAP` 用于释放存储系统上的相应块并允许ONTAP回收空间的命令。
+* * ONTAP可以与主机通信，指出没有可用空间来处理写入*：对于主机来说，这种通信是一种更好的方式，可以处理空间不足的情况。此LUN会保持联机状态、但无法处理写入IO、直到空间可用为止。仍可执行读取IO。对主机操作系统的确切影响取决于主机配置。在某些情况下、操作系统会重试写入IO、直到成功为止。在其他情况下、文件系统可能会置于脱机状态。
++
+
+NOTE: 如果 `space-allocation` 设置未启用、则LUN将进入状态 `space-error` 达到空间阈值低且所有IO均发生故障时。需要将此LUN重新更改为 `online` 解决空间问题后的状态。要将路径和设备还原到运行状态、可能还需要在主机上重新扫描LUN设备。
+
+* *主机可以执行 `SCSI UNMAP` (有时称为 `TRIM`)操作*：通过这些操作、主机可以识别LUN上不再需要的数据块、因为这些数据块不再包含有效数据。通常在文件删除后进行标识。然后、存储系统可以取消分配这些数据块、以便可以在其他位置使用这些空间。这种取消分配可以显著提高整体存储效率、尤其是在数据周转量较高的文件系统中。
+
 
 .开始之前
-要启用空间分配、主机必须支持SCSI精简配置。SCSI精简配置使用SCSI SBC-3标准中定义的逻辑块配置。只有支持此标准的主机才能在 ONTAP 中使用 SCSI 精简配置。
+要启用空间分配、需要使用能够正确处理写入无法完成时空间分配错误的主机配置。利用 `SCSI UNMAP` 要求配置能够使用SCSI SBC-3标准中定义的逻辑块配置。
 
 启用空间分配时，以下主机当前支持 SCSI 精简配置：
 
@@ -37,32 +43,18 @@ NVMe主机不支持空间分配。
 
 NOTE: 将集群升级到ONTAP 9.151后、无论主机类型如何、在软件升级之前创建的所有LUN的空间分配设置在升级后均保持不变。  例如、如果在ONTAP 9.13.1中为禁用了空间分配的VMware主机创建了LUN、则在升级到ONTAP 9.15.1后、该LUN上的空间分配仍会处于禁用状态。
 
-要启用空间分配、必须使LUN脱机；然后、必须在主机上执行发现、主机才能识别已启用空间分配。
-
 .步骤
-. 使 LUN 脱机：
-+
-[source, cli]
-----
-lun modify -vserver vserver_name -volume volume_name -lun lun_name -state offline
-----
 . 启用空间分配：
 +
-[source, cli]
-----
-lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled
-----
+`lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled`
+
 . 验证是否已启用空间分配：
 +
-[source, cli]
-----
-lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation
-----
-. 使 LUN 联机：
+`lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation`
+
+. 验证是否已在主机操作系统上启用空间分配。
 +
-[source, cli]
-----
-lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -state online
-----
-. 在主机上、重新扫描所有磁盘、以确保对所做的更改 `-space-allocation` 已正确发现选项。
+
+NOTE: 某些主机配置(尤其是ESX)可以自动识别设置更改、不需要用户干预。其他配置可能需要重新扫描设备。某些文件系统和卷管理器可能需要其他特定设置才能使用启用空间回收 `SCSI UNMAP`。可能需要重新挂载文件系统或完全重新启动操作系统。有关指导、请参见特定操作系统的文档。
+
 
