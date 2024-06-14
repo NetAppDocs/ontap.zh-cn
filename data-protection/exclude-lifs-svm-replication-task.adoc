@@ -87,6 +87,12 @@ cluster_dst::> snapmirror policy create -vserver svm1 -policy DR_exclude_LIFs -t
 ----
 cluster_dst::> snapmirror policy create -vserver svm1 -policy unified_exclude_LIFs -type mirror-vault -discard-configs network
 ----
++
+[NOTE]
+====
+请考虑在源集群上创建相同的自定义SnapMirror策略、以供将来进行故障转移和故障恢复时使用。
+
+====
 . 从目标 SVM 或目标集群运行以下命令以创建复制关系：
 +
 `snapmirror create -source-path _SVM_: -destination-path _SVM_: -type DP|XDP -schedule _schedule_ -policy _policy_ -identity-preserve true|false`
