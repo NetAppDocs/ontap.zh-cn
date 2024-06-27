@@ -14,12 +14,13 @@ summary: 从ONTAP 9.14.1开始、可以在运行v4.1或更高版本的NFS服务�
 从ONTAP 9.14.1开始、可以在NFS服务器上启用中继。创建NFS服务器时、默认情况下会启用NFSv4.1。
 
 .开始之前
-SVM必须：
+创建启用了中继的NFS服务器需要SVM。SVM必须：
 
 * 有足够的存储作为后盾、可满足客户端数据要求。
 * 已为NFS启用。
-* 专用于NFS中继。不应在其上配置任何其他客户端。
 
+
+您可以使用现有SVM；但是、启用中继需要重新挂载所有NFSv4.x客户端、这可能会造成系统中断。如果无法重新挂载、请为NFS服务器创建一个新的SVM。
 
 .步骤
 . 如果不存在合适的SVM、请创建一个：
@@ -31,7 +32,7 @@ SVM必须：
 `vserver show -vserver _svm_name_`
 
 +
-了解更多信息 link:../nfs-config/create-svms-data-access-task.html["创建SVM。"]
+了解更多信息 link:../nfs-config/create-svms-data-access-task.html["创建SVM"]。
 
 . 创建NFS服务器：
 +

@@ -13,7 +13,7 @@ summary: 您可以自动配置 FlexGroup 卷。ONTAP 通过自动选择聚合来
 [role="lead"]
 您可以自动配置 FlexGroup 卷。ONTAP 通过自动选择聚合来创建和配置 FlexGroup 卷。为了获得最佳性能，系统会根据最佳实践选择聚合。
 
-.您需要的内容
+.开始之前
 集群中的每个节点必须至少有一个聚合。
 
 [NOTE]
@@ -23,6 +23,8 @@ summary: 您可以自动配置 FlexGroup 卷。ONTAP 通过自动选择聚合来
 ====
 .关于此任务
 ONTAP 会在每个节点上选择两个可用空间最大的聚合来创建 FlexGroup 卷。如果两个聚合不可用，则 ONTAP 会为每个节点选择一个聚合来创建 FlexGroup 卷。
+
+从ONTAP 9.15.1开始、在自动配置FlexGroup卷时、ONTAP会使用平衡放置配置来确保空间保证有足够的可用空间。使用REST API或创建FlexGroup卷时 `auto-provision-as` 使用ONTAP命令行界面时、由于强制实施空间保证而导致空间不足、配置可能会失败。您可以通过创建较小的FlexGroup卷或来避免这种情况 link:create-task.html["创建FlexGroup卷并手动选择聚合"] 使用 `aggr-list` 参数。
 
 .步骤
 . 配置 FlexGroup 卷：
