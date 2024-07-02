@@ -1,0 +1,22 @@
+---
+permalink: concepts/builtin-storage-efficiency-concept.html 
+sidebar: sidebar 
+keywords: storage efficiency, built-in, platform, controller, offload 
+summary: 从ONTAP 9.151开始、AFF A70、AFF A90和AFF A1K平台上内置了自动启用的存储效率和数据缩减功能。 
+---
+= CPU或专用卸载处理器存储效率
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.15.1开始、ONTAP可在AFF A70、AFF A90和AFF A1K平台上提供存储效率和数据缩减功能。根据平台的不同、可使用主CPU或专用卸载处理器执行数据压缩。存储效率会自动启用、不需要任何配置。默认情况下、新创建的精简配置卷会启用存储效率、存储效率会应用于现有数据、包括从其他平台移至AFF A70、AFF A90或AFF A1K平台的卷。
+
+AFF A70、AFF A90和AFF A1K平台不会应用对温度敏感的存储效率。数据压缩不是基于这些平台上的热数据或冷数据、因此数据压缩开始时无需等待数据变冷。
+
+AFF A70、AFF A90和AFF A1K平台上的存储效率使用连续物理块打包来进一步提高压缩数据的存储效率。
+
+使用卷移动或SnapMirror技术迁移到AFF A70、AFF A90或AFF A1K平台的数据会自动转换为32 K实时数据压缩。从AFF A70、A90或A1K平台迁移到早期平台的数据的存储效率会根据目标平台的效率功能自动转换。
+
+有关将控制器升级到AFF A70、AFF A90或AFF A1K的信息，请参见 link:https://review.docs.netapp.com/us-en/ontap-systems-upgrade_restructure-sidebar/choose_controller_upgrade_procedure.html["ONTAP硬件升级文档"^]。

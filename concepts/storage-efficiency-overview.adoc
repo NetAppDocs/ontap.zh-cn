@@ -47,7 +47,7 @@ xref:deduplication-concept.html[重复数据删除] 可通过三种不同的方�
 xref:compression-concept.html[压缩] 通过将数据块合并到数据压缩组中(每个数据块存储为一个块)、减少卷所需的物理存储量。收到读取或覆盖请求时、只会读取一小组块、而不会读取整个文件。此过程可优化读取和覆盖性能、并提高所压缩文件大小的可扩展性。
 
 +
-数据压缩可以实时运行、也可以后处理运行。  实时数据压缩可在将数据写入磁盘之前压缩内存中的数据、从而立即节省空间。后处理压缩首先将块以未压缩格式写入磁盘、然后按计划压缩数据。您需要手动启用数据压缩。
+数据压缩可以实时运行、也可以后处理运行。实时数据压缩可在将数据写入磁盘之前压缩内存中的数据、从而立即节省空间。后处理压缩首先将块以未压缩格式写入磁盘、然后按计划压缩数据。默认情况下、AFA系统会启用此功能。您需要在所有其他系统上手动启用数据压缩。
 
 * *压缩*
 +
@@ -62,10 +62,14 @@ xref:flexclone-volumes-files-luns-concept.html[FlexClone技术] 利用Snapshot�
 
 * *对温度敏感的存储效率*
 +
-ONTAP提供 link:../volumes/enable-temperature-sensitive-efficiency-concept.html["对温度敏感的存储效率"] 通过评估卷数据的访问频率并将该频率映射到应用于该数据的压缩程度、可以获得优势。对于不常访问的冷数据、将压缩较大的数据块；对于频繁访问且覆盖频率更高的热数据、将压缩较小的数据块、从而提高流程效率。
+ONTAP可以通过评估卷数据的访问频率并将该频率映射到应用于该数据的压缩程度来提供 link:../volumes/enable-temperature-sensitive-efficiency-concept.html["对温度敏感的存储效率"] 优势。对于不常访问的冷数据、将压缩较大的数据块。对于访问频率较高且覆盖频率较高的热数据、较小的数据块会进行压缩、从而提高处理效率。
 
 +
-ONTAP 9.8中引入了温度敏感型存储效率(TSSE)、此功能会在新创建的精简配置AFF卷上自动启用。
+ONTAP 9.8中推出的温度敏感型存储效率(TSSE)会在新创建的精简配置AFF卷上自动启用。在ONTAP 9.15.1中推出的使用硬件卸载处理器的上未启用此 link:builtin-storage-efficiency-concept.html["AFF A70、AFF A90和AFF A1K平台"] 功能。
+
+* *CPU或专用卸载处理器存储效率*
++
+从ONTAP 9.15.1开始、ONTAP可在AFF A70、AFF A90和AFF A1K平台上提供 link:builtin-storage-efficiency-concept.html["CPU或专用卸载处理器存储效率"] 数据缩减功能。存储效率会自动启用、不需要任何配置。
 
 
 

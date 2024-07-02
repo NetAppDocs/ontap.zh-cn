@@ -13,7 +13,7 @@ summary: 主存储中的源卷与二级存储中的目标卷之间的关系称�
 [role="lead"]
 主存储中的源卷与二级存储中的目标卷之间的关系称为_data protection关系。_您可以使用 `snapmirror create` 用于创建SnapMirror灾难恢复、SnapVault或统一复制数据保护关系的命令。
 
-.您需要的内容
+.开始之前
 * 源和目标集群以及 SVM 必须建立对等关系。
 +
 https://docs.netapp.com/us-en/ontap-sm-classic/peering/index.html["集群和 SVM 对等"]
@@ -99,6 +99,8 @@ options replication.create_data_protection_rels.enable on
 在 ONTAP 9.3 及更早版本中，目标卷最多可包含 251 个 Snapshot 副本。在 ONTAP 9.4 及更高版本中，目标卷最多可以包含 1019 个 Snapshot 副本。
 
 从 ONTAP 9.5 开始，支持 SnapMirror 同步关系。
+
+从ONTAP 9.14.1开始， `-backoff-level` 在、和命令中添加了选项 `snapmirror create` `snapmirror modify` `snapmirror restore` ，用于指定每个关系的回退级别。只有FlexVol SnapMirror关系才支持此选项。此可选命令会根据客户端操作指定SnapMirror回退级别。回退值可以是high、Medium或none。默认值为high。
 
 .步骤
 . 从目标集群中，创建复制关系：
