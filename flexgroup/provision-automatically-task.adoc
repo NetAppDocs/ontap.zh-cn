@@ -2,7 +2,7 @@
 permalink: flexgroup/provision-automatically-task.html 
 sidebar: sidebar 
 keywords: provision, flexgroup, volume, automatic, create, flex group, aggregate, space 
-summary: 您可以自动配置 FlexGroup 卷。ONTAP 通过自动选择聚合来创建和配置 FlexGroup 卷。为了获得最佳性能，系统会根据最佳实践选择聚合。 
+summary: 创建FlexGroup卷时、您可以通过自动选择聚合来选择让ONTAP配置FlexGroup卷。为了获得最佳性能，系统会根据最佳实践选择聚合。 
 ---
 = 自动配置 FlexGroup 卷
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 您可以自动配置 FlexGroup 卷。ONTAP 通过自动选择聚合来
 
 
 [role="lead"]
-您可以自动配置 FlexGroup 卷。ONTAP 通过自动选择聚合来创建和配置 FlexGroup 卷。为了获得最佳性能，系统会根据最佳实践选择聚合。
+创建FlexGroup卷时、您可以通过选择聚合来选择让ONTAP自动配置FlexGroup卷。聚合会根据最佳实践进行选择、以获得最佳性能和容量。
 
 .开始之前
 集群中的每个节点必须至少有一个聚合。
@@ -24,7 +24,7 @@ summary: 您可以自动配置 FlexGroup 卷。ONTAP 通过自动选择聚合来
 .关于此任务
 ONTAP 会在每个节点上选择两个可用空间最大的聚合来创建 FlexGroup 卷。如果两个聚合不可用，则 ONTAP 会为每个节点选择一个聚合来创建 FlexGroup 卷。
 
-从ONTAP 9.15.1开始、在自动配置FlexGroup卷时、ONTAP会使用平衡放置配置来确保空间保证有足够的可用空间。使用REST API或创建FlexGroup卷时 `auto-provision-as` 使用ONTAP命令行界面时、由于强制实施空间保证而导致空间不足、配置可能会失败。您可以通过创建较小的FlexGroup卷或来避免这种情况 link:create-task.html["创建FlexGroup卷并手动选择聚合"] 使用 `aggr-list` 参数。
+从ONTAP 9.15.1开始、在自动配置FlexGroup卷时、ONTAP会使用平衡放置(Balanced Placement、BP)来选择聚合和FlexGroup成分卷布局。BP的一个方面是、它如何在创建"无"保证的FlexGroup卷时限制过度配置聚合。整个FlexGroup卷的大小受聚合上可用空间量的限制、但该限制高于"卷"保证的FlexGroup卷。使用REST API或ONTAP命令行界面创建FlexGroup卷时 `auto-provision-as` 、由于此限制导致空间不足、配置可能会失败。您可以通过创建较小的FlexGroup卷或使用参数来避免这种情况 link:create-task.html["创建FlexGroup卷并手动选择聚合"] `aggr-list` 。
 
 .步骤
 . 配置 FlexGroup 卷：
