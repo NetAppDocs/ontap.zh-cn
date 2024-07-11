@@ -1,0 +1,89 @@
+---
+sidebar: sidebar 
+permalink: smb-admin/windows-backup-symlinks.html 
+keywords: windows, windows server, backup, backup application, symbolic link, symlink, unix, unix-style 
+summary: '如果在Windows上运行的备份应用程序遇到Unix模式的符号链接(符号链接)、则该链接后面会出现、并备份数据。从ONTAP 9.15.1开始、您可以选择备份符号链接、而不是备份数据。ONTAP FlexGroup和FlexVol完全支持此功能。' 
+---
+= Windows备份应用程序和Unix模式符号链接
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果在Windows上运行的备份应用程序遇到Unix模式的符号链接(符号链接)、则该链接后面会出现、并备份数据。从ONTAP 9.15.1开始、您可以选择备份符号链接、而不是备份数据。ONTAP FlexGroup和FlexVol完全支持此功能。
+
+
+
+== 概述
+
+在更改ONTAP在Windows备份操作期间处理符号链接的方式之前、您应熟悉其优势、关键概念和配置选项。
+
+
+
+=== 优势
+
+如果禁用或不可用此功能、则会遍历每个符号链接、并备份其链接到的数据。因此、有时可能会备份不必要的数据、在某些情况下、应用程序可能会在环路中结束。而是备份符号链接可避免这些问题。由于符号链接文件与大多数情况下的数据相比非常小、因此完成备份所需的时间更短。由于IO操作减少、集群的整体性能也可以提高。
+
+
+
+=== Windows服务器环境
+
+在Windows上运行的备份应用程序支持此功能。在使用环境之前、您应了解环境的相关技术方面。
+
+.扩展属性
+Windows支持扩展属性(Extended attributes、EA)、这些属性共同构成可选的与文件关联的其他元数据。这些属性由各种应用程序使用，如中所述的Windows Subsystem for Linux https://learn.microsoft.com/en-us/windows/wsl/file-permissions["WSL的文件权限"^]。从ONTAP读取数据时、应用程序可以请求每个文件的扩展属性。
+
+启用此功能后、符号链接将在扩展属性中返回。因此、备份应用程序必须提供用于存储元数据的标准EA支持。某些Windows实用程序支持并保留扩展属性。但是、如果备份软件不支持备份和还原扩展属性、则不会保留与每个文件关联的元数据、并且无法正确处理符号链接。
+
+.Windows配置
+可以为在Microsoft Windows服务器上运行的备份应用程序授予特殊权限、使其绕过正常的文件安全性。这通常通过将应用程序添加到Backup Operators组来实现。然后、这些应用程序可以根据需要备份和还原文件、并执行其他相关系统操作。备份应用程序使用的SMB协议发生了细微的变化、ONTAP可以在读取和写入数据时检测到这些变化。
+
+
+
+=== 要求
+
+符号链接备份功能具有多项要求、包括：
+
+* 集群运行的是ONTAP 9.151或更高版本。
+* 已获得特殊备份权限的Windows备份应用程序。
+* 备份应用程序还必须支持扩展属性、并在备份操作期间请求这些属性。
+* 已为适用的数据SVM启用ONTAP符号链接备份功能。
+
+
+
+
+=== 配置选项
+
+除了ONTAP命令行界面之外、您还可以使用REST API管理此功能。有关详细信息、请参见 https://docs.netapp.com/us-en/ontap-automation/whats-new.html["ONTAP REST API和自动化的新增功能"^] 。必须为每个SVM单独执行用于确定ONTAP如何处理Unix模式符号链接的配置。
+
+
+
+== 在ONTAP中启用符号链接备份功能
+
+ONTAP 9.151中的现有命令行界面命令引入了一个配置选项。您可以使用此选项启用或禁用Unix模式的符号链接处理。
+
+.开始之前
+查看基本 <<要求>>。此外：
+
+* 能够将命令行界面权限提升到高级级别。
+* 确定要修改的数据SVM。示例命令将使用SVM `vs1` 。
+
+
+.步骤
+. 设置高级权限级别。
++
+[source, cli]
+----
+set privilege advanced
+----
+. 启用符号链接文件备份。
++
+[source, cli]
+----
+vserver cifs options modify -vserver vs1 -is-backup-symlink-enabled true
+----
+
