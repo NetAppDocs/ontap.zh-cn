@@ -13,7 +13,7 @@ summary: 从 ONTAP 9.10.1 开始，您可以将 FlexVol 卷转换为 SVM-DR 源�
 [role="lead"]
 从 ONTAP 9.10.1 开始，您可以将 FlexVol 卷转换为 SVM-DR 源上的 FlexGroup 卷。
 
-.您将需要什么
+.您需要的内容
 * 要转换的 FlexVol 卷必须处于联机状态。
 * FlexVol 卷上的操作和配置必须与转换过程兼容。
 +
@@ -28,7 +28,7 @@ summary: 从 ONTAP 9.10.1 开始，您可以将 FlexVol 卷转换为 SVM-DR 源�
 +
 [source, cli]
 ----
-snapmirror update -destination-path destination_svm_name: -source-path source_svm_name:
+snapmirror update -destination-path <destination_svm_name>: -source-path <source_svm_name>:
 ----
 . 确保 SVM-DR 关系处于 SnapMirrored 状态且未断开：
 +
@@ -40,7 +40,7 @@ snapmirror show
 +
 [source, cli]
 ----
-volume conversion start -vserver svm_name -volume vol_name -check-only true
+volume conversion start -vserver <svm_name> -volume <vol_name> -check-only true
 ----
 +
 如果此命令生成除"此为目标SVMDR卷"以外的任何错误、您可以采取适当的更正操作、再次运行此命令并继续进行转换。
@@ -49,19 +49,19 @@ volume conversion start -vserver svm_name -volume vol_name -check-only true
 +
 [source, cli]
 ----
-snapmirror quiesce -destination-path dest_svm:
+snapmirror quiesce -destination-path <dest_svm>:
 ----
 . 从源集群中、开始转换：
 +
 [source, cli]
 ----
-volume conversion start -vserver svm_name -volume vol_name
+volume conversion start -vserver <svm_name> -volume <vol_name>
 ----
 . 验证转换是否成功：
 +
 [source, cli]
 ----
-volume show vol_name -fields -volume-style-extended,state
+volume show <vol_name> -fields volume-style-extended,state
 ----
 +
 [listing]
@@ -76,13 +76,13 @@ vs0     my_volume  online  flexgroup
 +
 [source, cli]
 ----
-snapmirror resume -destination-path dest_svm:
+snapmirror resume -destination-path <dest_svm>:
 ----
 . 在目标集群中，执行更新以将转换传播到目标：
 +
 [source, cli]
 ----
-snapmirror update -destination-path dest_svm:
+snapmirror update -destination-path <dest_svm>:
 ----
 . 确保 SVM-DR 关系处于 SnapMirrored 状态且未断开：
 +
@@ -94,7 +94,7 @@ snapmirror show
 +
 [source, cli]
 ----
-volume show vol_name -fields -volume-style-extended,state
+volume show <vol_name> -fields volume-style-extended,state
 ----
 +
 [listing]

@@ -28,7 +28,7 @@ summary: 您可以使用 SnapMirror 将 Element 卷的 Snapshot 副本复制到 
 
 
 .关于此任务
-您必须在表单中指定Element源路径 `_hostip:_/lun/_name_`，其中“`LUN`”是实际字符串“`LUN`”和 `name` 是Element卷的名称。
+您必须以的形式指定Element源路径 `<hostip:>/lun/<name>`，其中“`LUN`”是实际字符串“`LUN`”，是Element卷的名称。 `name`
 
 Element 卷大致相当于 ONTAP LUN 。初始化 Element 软件和 ONTAP 之间的数据保护关系后， SnapMirror 将使用 Element 卷的名称创建一个 LUN 。如果 LUN 满足从 Element 软件复制到 ONTAP 的要求， SnapMirror 会将数据复制到现有 LUN 。
 
@@ -43,7 +43,7 @@ Element 卷大致相当于 ONTAP LUN 。初始化 Element 软件和 ONTAP 之间
 .步骤
 . 从目标集群中，创建从 Element 源到 ONTAP 目标的复制关系：
 +
-`snapmirror create -source-path _hostip:_/lun/name -destination-path _SVM:volume_|_cluster://SVM/volume_ -type XDP -schedule schedule -policy _policy_`
+`snapmirror create -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume> -type XDP -schedule schedule -policy <policy>`
 
 +
 有关完整的命令语法，请参见手册页。

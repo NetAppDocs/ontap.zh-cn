@@ -2,7 +2,7 @@
 permalink: smb-hyper-v-sql/configure-shares-continuous-availability-task.html 
 sidebar: sidebar 
 keywords: configure, shares, continuous, availability, hyper, v, sql, server, virutal, machine, database, file 
-summary: 您可以修改现有共享，使其成为持续可用的共享， Hyper-V 和 SQL Server 应用程序服务器可使用这些共享无中断地访问 Hyper-V 虚拟机和配置文件以及 SQL Server 数据库文件。 
+summary: 将共享修改为持续可用的共享Hyper-V和SQL Server应用程序服务器用于无中断访问 
 ---
 = 配置现有共享以实现持续可用性
 :allow-uri-read: 
@@ -42,45 +42,52 @@ summary: 您可以修改现有共享，使其成为持续可用的共享， Hype
 .步骤
 . 显示当前共享参数设置和当前已配置共享属性列表：
 +
-`*vserver cifs share show -vserver _vserver_name_ -share-name _share_name_*`
-
-. 如有必要、请使用修改共享参数以禁用符号链接、并将脱机文件设置为手动 `vserver cifs share properties modify` 命令：
-+
-您可以通过设置的值来禁用符号链接 `-symlink` 参数设置为 `""`。
-
+[source, cli]
+----
+vserver cifs share show -vserver <vserver_name> -share-name <share_name>
+----
+. 如有必要、请使用命令修改共享参数以禁用符号链接、并将脱机文件设置为manual. `vserver cifs share modify`
 +
 ** 您可以通过设置的值来禁用符号链接 `-symlink` 参数设置为 `""`。
 ** 您可以设置 `-offline-files` 参数到正确的设置 `manual`。
 
 
-. 添加 `continuously-available` 共享属性、如果需要、还包括 `oplocks` 共享属性：
+. 添加共享属性、如果需要、还添加 `continuously-available` `oplocks` 共享属性：
 +
-`*vserver cifs share properties add -vserver _vserver_name_ -share-name _share_name_ -share-properties continuously-available[,oplock]*`
-
+[source, cli]
+----
+vserver cifs share properties add -vserver <vserver_name> -share-name <share_name> -share-properties continuously-available[,oplock]
+----
 +
 如果 `oplocks` 尚未设置共享属性、必须将其与一起添加 `continuously-available` 共享属性。
 
 . 删除持续可用的共享不支持的任何共享属性：
 +
-`*vserver cifs share properties remove -vserver _vserver_name_ -share-name _share_name_ -share-properties properties[,...]*`
-
+[source, cli]
+----
+vserver cifs share properties remove -vserver <vserver_name> -share-name <share_name> -share-properties properties[,...]
+----
 +
 您可以通过使用逗号分隔列表指定共享属性来删除一个或多个共享属性。
 
 . 验证是否已 `-symlink` 和 `-offline-files` 参数设置正确：
 +
-`*vserver cifs share show -vserver _vserver_name_ -share-name _share_name_ -fields symlink-properties,offline-files*`
-
+[source, cli]
+----
+vserver cifs share show -vserver <vserver_name> -share-name <share_name> -fields symlink-properties,offline-files
+----
 . 验证已配置的共享属性列表是否正确：
 +
-`*vserver cifs shares properties show -vserver _vserver_name_ -share-name share_name*`
-
+[source, cli]
+----
+vserver cifs share properties show -vserver <vserver_name> -share-name <share_name>
+----
 
 
 .示例
-以下示例说明如何在 Storage Virtual Machine （ SVM ） vs1 上为 NDOS 配置一个名为 `share1` 的现有共享，并使用 SMB 上的应用程序服务器：
+以下示例显示了如何在具有基于SMB的应用程序服务器的Storage Virtual Machine (SVM)"VS1"上为NDOS配置名为"share1"的现有共享：
 
-* 通过设置在共享上禁用符号链接 `-symlink` 将参数设置为""。
+* 通过将参数设置为，可以在共享上禁用符号链接 `-symlink` `""`。
 * 。 `-offline-file` 参数已修改并设置为 `manual`。
 * 。 `continuously-available` 共享属性将添加到共享中。
 * 。 `oplocks` 共享属性已在共享属性列表中、因此无需添加。

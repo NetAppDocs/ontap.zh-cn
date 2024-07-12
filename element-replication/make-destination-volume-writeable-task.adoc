@@ -16,12 +16,12 @@ summary: 您需要先使目标卷可写，然后才能将数据从该卷提供�
 您需要先使目标卷可写，然后才能将数据从该卷提供给客户端。您可以使用 `snapmirror quiesce` 命令以停止向目标(即)进行的计划传输 `snapmirror abort` 命令以停止正在进行的传输、以及 `snapmirror break` 命令以使目标可写。
 
 .关于此任务
-您必须在表单中指定Element源路径 `_hostip:_/lun/_name_`，其中“`LUN`”是实际字符串“`LUN`”和 `name` 是Element卷的名称。
+您必须以的形式指定Element源路径 `<hostip:>/lun/<name>`，其中“`LUN`”是实际字符串“`LUN`”，是Element卷的名称。 `name`
 
 .步骤
 . 停止向目标进行的计划传输：
 +
-`snapmirror quiesce -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
+`snapmirror quiesce -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -36,7 +36,7 @@ cluster_dst::> snapmirror quiesce -source-path 10.0.0.11:/lun/0005 -destination-
 ----
 . 停止正在向目标传输的数据：
 +
-`snapmirror abort -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
+`snapmirror abort -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
 
 +
 有关完整的命令语法，请参见手册页。
@@ -51,7 +51,7 @@ cluster_dst::> snapmirror abort -source-path 10.0.0.11:/lun/0005 -destination-pa
 ----
 . 中断 SnapMirror 灾难恢复关系：
 +
-`snapmirror break -source-path _hostip:_/lun/_name_ -destination-path _SVM:volume_|_cluster://SVM/volume_`
+`snapmirror break -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
 
 +
 有关完整的命令语法，请参见手册页。

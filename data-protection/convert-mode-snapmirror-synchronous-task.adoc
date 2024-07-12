@@ -19,7 +19,7 @@ summary: 从 ONTAP 9.5 开始，支持 SnapMirror 同步关系。您可以将 Sn
 .步骤
 . 从目标集群中，暂停现有的 SnapMirror 同步关系：
 +
-`snapmirror quiesce -destination-path dest_SVM:dest_volume`
+`snapmirror quiesce -destination-path <destination_SVM>:<destination_volume>`
 
 +
 [listing]
@@ -28,7 +28,7 @@ cluster2::> snapmirror quiesce -destination-path vs1_dr:vol1
 ----
 . 从目标集群中，删除现有的 SnapMirror 同步关系：
 +
-`snapmirror delete -destination-path dest_SVM:dest_volume`
+`snapmirror delete -destination-path <destination_SVM>:<destination_volume>`
 
 +
 [listing]
@@ -37,7 +37,7 @@ cluster2::> snapmirror delete -destination-path vs1_dr:vol1
 ----
 . 在源集群中，释放 SnapMirror 关系而不删除通用 Snapshot 副本：
 +
-`snapmirror release -relationship-info-only true -destination-path dest_SVM:dest_volume`
+`snapmirror release -relationship-info-only true -destination-path <destination_SVM>:<destination_volume>`
 
 +
 [listing]
@@ -46,7 +46,7 @@ cluster1::> snapmirror release -relationship-info-only true -destination-path vs
 ----
 . 在目标集群中，通过指定要将 SnapMirror 同步关系转换到的模式来创建 SnapMirror 同步关系：
 +
-`snapmirror create -source-path vs1:vol1 -destination-path dest_SVM:dest_volume -policy Sync|StrictSync`
+`snapmirror create -source-path vs1:vol1 -destination-path <destination_SVM>:<destination_volume> -policy Sync|StrictSync`
 
 +
 [listing]
@@ -55,7 +55,7 @@ cluster2::> snapmirror create -source-path vs1:vol1 -destination-path vs1_dr:vol
 ----
 . 从目标集群重新同步 SnapMirror 关系：
 +
-`snapmirror resync -destination-path dest_SVM:dest_volume`
+`snapmirror resync -destination-path <destination_SVM>:<destination_volume>`
 
 +
 [listing]

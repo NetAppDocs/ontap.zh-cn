@@ -1,8 +1,8 @@
 ---
 permalink: smb-admin/configure-multichannel-performance-task.html 
 sidebar: sidebar 
-keywords: ontap, configure, smb, multichannel, multiple, connection, client, session, throughput, fault, tolerance, configure smb multichannel for performance and redundancy, performance, redundancy 
-summary: 从 ONTAP 9.4 开始，您可以配置 SMB 多通道，以便在单个 SMB 会话中提供 ONTAP 与客户端之间的多个连接。这样可以提高吞吐量和容错能力。 
+keywords: ontap, smb, multichannel, configure, multiple, connection, client, session, throughput, fault, tolerance, configure smb multichannel for performance and redundancy, performance, redundancy 
+summary: 配置SMB多通道、以便在单个SMB会话中提供ONTAP与客户端之间的多个连接、从而提高吞吐量和容错能力。 
 ---
 = 为 SMB 多通道配置性能和冗余
 :allow-uri-read: 
@@ -33,24 +33,44 @@ SMB 会话中同时连接的数量取决于您部署的 NIC ：
 
 您还可以修改以下参数（高级权限）：
 
-* *`-max-connections-per-session`*
+* `-max-connections-per-session`
 +
 每个多通道会话允许的最大连接数。默认值为 32 个连接。
 
 +
 如果要启用比默认连接更多的连接，则必须对客户端配置进行类似的调整，该配置的默认连接数也为 32 个。
 
-* *`-max-lifs-per-session`*
+* `-max-lifs-per-session`
 +
 每个多通道会话公布的最大网络接口数。默认值为 256 个网络接口。
 
 
 
 .步骤
-. 将权限级别设置为高级： `set -privilege advanced`
-. 在 SMB 服务器上启用 SMB 多通道： `vserver cifs options modify -vserver _vserver_name_ -is-multichannel-enabled true`
-. 验证 ONTAP 是否正在报告 SMB 多通道会话： `vserver cifs session show _options_`
-. 返回到管理权限级别： `set -privilege admin`
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 在 SMB 服务器上启用 SMB 多通道：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <vserver_name> -is-multichannel-enabled true
+----
+. 验证 ONTAP 是否正在报告 SMB 多通道会话：
++
+[source, cli]
+----
+vserver cifs session show
+----
+. 返回到管理权限级别：
++
+[source, cli]
+----
+set -privilege admin
+----
 
 
 .示例
