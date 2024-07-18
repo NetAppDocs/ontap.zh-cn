@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/tls-ssl.html 
+keywords: tr-4569, ontap hardening guide, security, TLS, FIPS, SSL, cipher, 140-2, SSH, OpenSSL, AES, 3DES, FIPS 140-2 compliance, FIPS 140-3 compliance, security config modify, protocol, ciphers, Perfect Forward Secrecy, SSH, advanced privilege level 
+summary: '使用ONTAP的"security config修改"命令可以限制集群范围控制平台接口的协议和加密。' 
+---
+= TLS和SSL管理
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+您可以通过在ONTAP命令中将参数设置为true来为控制平台接口启用FIPS 140-2合规性模式 `is-fips-enabled` `security config modify` 。
+
+从 ONTAP 9 开始，您可以为集群范围的控制面板接口启用 FIPS 140-2 合规模式。默认情况下，仅 FIPS 140-2 模式处于禁用状态。您可以通过将命令的参数设置为来启用FIPS 140-2合规性模式 `is-fips-enabled` `true` `security config modify` 。然后、您可以使用 `security config show command` 确认联机状态。
+
+启用FIPS 140-2合规性后、TLSv1和SSLv3将被禁用、只有TLSv1.1和TLSv1.2保持启用状态。启用FIPS 140-2合规性后、ONTAP 会阻止您启用TLSv1和SSLv3。如果在启用FIPS 140-2后又将其禁用、TLSv1和SSLv3将保持禁用状态、但TLSv1.2将保持启用状态、或者TLSv1.1和TLSv1.2同时保持启用状态、具体取决于先前的配置。
+
+命令用于 `security config modify` 修改现有集群范围的安全配置。如果启用 FIPS 合规模式，集群会自动仅选择 TLS 协议。使用 `-supported-protocols` 参数可独立于FIPS模式包含或排除TLS协议。默认情况下，FIPS 模式处于禁用状态，ONTAP 支持 TLSv1.2、TLSv1.1 和 TLSv1 协议。
+
+为了实现向后兼容性、ONTAP支持在FIPS模式处于禁用状态时将SSLv3添加到列表中 `supported-protocols` 。使用 `-supported-cipher-suites` 参数仅配置高级加密标准(Advanced Encryption Standard、AES)或AES和3DES。您也可以通过指定!RC4来禁用RC4等弱加密。默认情况下，支持的密码设置为 `ALL:!LOW:!aNULL:!EXP:!eNULL`。此设置表示已启用协议支持的所有密码套件、但不具有身份验证、不加密、不导出和低加密密码套件的密码套件除外。这些套件使用64位或56位加密算法。
+
+选择可与相应选定协议一起使用的密码套件。配置无效可能会导致某些功能无法正常运行。
+
+有关正确的密码字符串语法、请参见OpenSSL上的 link:https://www.openssl.org/docs/man1.1.1/man1/ciphers.html["ciphers"^] 页面(由OpenSSL软件基金会发布)。从ONTAP 9.9.1及更高版本开始、您无需在修改安全配置后手动重新启动所有节点。
+
+启用FIPS 140-2合规性会影响ONTAP 9内部和外部的其他系统和通信。NetApp强烈建议在具有控制台访问权限的非生产系统上测试这些设置。
+
+
+NOTE: 如果使用SSH管理ONTAP 9、则必须使用OpenSSH 5.7或更高版本的客户端。SSH客户端必须使用椭圆曲线数字签名算法(ECDSA)公共密钥算法协商、才能成功建立连接。
+
+通过仅启用TLS 1.2并使用支持完全正向保密(PFS)的密码套件、可以进一步加强TLS安全性。PFS是一种密钥交换方法、与TLS 1.2等加密协议结合使用时、有助于防止攻击者解密客户端和服务器之间的所有网络会话。要仅启用TLS 1.2和支持PFS的加密套件、请在高级权限级别使用命令、 `security config modify` 如以下示例所示。
+
+
+NOTE: 在更改SSL接口配置之前、请务必记住、在连接到ONTAP时、客户端必须支持所述的密码(DHE、ECDHE)。否则、不允许连接。
+
+[listing]
+----
+cluster1::*> security config modify -interface SSL -supported-protocols TLSv1.2 -supported-cipher-suites PSK:DHE:ECDHE:!LOW:!aNULL:!EXP:!eNULL:!3DES:!kDH:!kECDH
+----
+确认 `y` 每个提示。有关PFS的详细信息，请参见 link:https://blog.netapp.com/protecting-your-data-perfect-forward-secrecy-pfs-with-netapp-ontap/["此NetApp博客"^]。
+
+从ONTAP 9.11.1和TLS 1.3支持开始、您可以验证FIPS 140-2。
+
+
+NOTE: FIPS配置适用于ONTAP和平台BMC。

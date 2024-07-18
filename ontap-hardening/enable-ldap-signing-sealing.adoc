@@ -1,0 +1,43 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/enable-ldap-signing-sealing.html 
+keywords: tr-4569, ontap hardening guide, security, queries, LDAP server, none, sign, seal 
+summary: 轻量目录访问协议签名和签章可确保对LDAP服务器的查询的会话安全性。 
+---
+= 启用轻型目录访问协议签名和签章
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+支持签名和签章、以便对LDAP服务器的查询启用会话安全性。此方法提供了一种替代基于TLS的LDAP会话安全性的方法。
+
+签名功能使用密钥技术确认LDAP有效负载数据的完整性。密封功能会对LDAP有效负载数据进行加密、以避免以明文形式传输敏感信息。SVM上的会话安全设置与LDAP服务器上可用的设置相对应。默认情况下、LDAP签名和签章处于禁用状态。
+
+.步骤
+. 要启用此功能、请使用参数运行 `vserver cifs security modify` 命令 `session-security-for-ad-ldap` 。
++
+LDAP安全功能选项：
+
++
+** *无*：默认值，无签名或签章
+** *Sign*：对LDAP流量进行签名
+** *Seal*：对LDAP流量进行签名和加密
++
+
+NOTE: 符号和签章参数是累积的、这意味着如果使用签名选项、则结果为LDAP与签名。但是、如果使用了密封选项、则结果为符号和密封。此外、如果未为此命令指定参数、则默认值为none。
+
++
+以下是配置示例：
+
++
+[listing]
+----
+cluster1::> vserver cifs security modify -vserver vs1 -kerberos-clock-skew 3 -kerberos-ticket-age 8 -session-security-for-ad-ldap seal
+----
+
+
+

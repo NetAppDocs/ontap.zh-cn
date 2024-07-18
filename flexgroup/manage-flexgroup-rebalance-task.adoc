@@ -48,6 +48,9 @@ summary: 从ONTAP 9.12.1开始、您可以通过无中断地将文件从FlexGrou
 +
 如果正在移动文件且正在目标上进行帧传输、则Snapshot副本会受到限制。  在进行文件重新平衡期间、不允许执行Snapshot副本还原操作。
 
++
+启用此选项后创建的任何Snapshot副本都 `granular-data` 无法复制到运行ONTAP 9.11.1及更早版本的系统、因为ONTAP 9.11.1及更早版本不支持多部分节点。
+
 * SnapMirror 操作
 +
 应在计划的SnapMirror操作之间进行FlexGroup 重新平衡。如果在SnapMirror操作开始之前重新定位某个文件、而该文件移动未在24分钟SnapMirror重试期间内完成、则SnapMirror操作可能会失败。  在SnapMirror传输开始后开始的任何新文件重新定位都不会失败。

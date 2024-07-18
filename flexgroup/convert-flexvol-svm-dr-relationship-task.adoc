@@ -30,6 +30,12 @@ summary: 从 ONTAP 9.10.1 开始，您可以将 FlexVol 卷转换为 SVM-DR 源�
 ----
 snapmirror update -destination-path <destination_svm_name>: -source-path <source_svm_name>:
 ----
++
+[NOTE]
+====
+您必须在选项中的SVM名称后面输入冒号(：) `-destination-path` 。
+
+====
 . 确保 SVM-DR 关系处于 SnapMirrored 状态且未断开：
 +
 [source, cli]
@@ -51,6 +57,12 @@ volume conversion start -vserver <svm_name> -volume <vol_name> -check-only true
 ----
 snapmirror quiesce -destination-path <dest_svm>:
 ----
++
+[NOTE]
+====
+您必须在选项中的SVM名称后面输入冒号(：) `-destination-path` 。
+
+====
 . 从源集群中、开始转换：
 +
 [source, cli]
@@ -68,9 +80,9 @@ volume show <vol_name> -fields volume-style-extended,state
 ----
 cluster-1::*> volume show my_volume -fields volume-style-extended,state
 
-vserver   volume     state    volume-style-extended
--------       ---------     ------    ---------------------
-vs0     my_volume  online  flexgroup
+vserver       volume     state    volume-style-extended
+-------       ---------  ------    ---------------------
+vs0           my_volume  online  flexgroup
 ----
 . 从目标集群恢复关系的传输：
 +
@@ -78,12 +90,24 @@ vs0     my_volume  online  flexgroup
 ----
 snapmirror resume -destination-path <dest_svm>:
 ----
++
+[NOTE]
+====
+您必须在选项中的SVM名称后面输入冒号(：) `-destination-path` 。
+
+====
 . 在目标集群中，执行更新以将转换传播到目标：
 +
 [source, cli]
 ----
 snapmirror update -destination-path <dest_svm>:
 ----
++
+[NOTE]
+====
+您必须在选项中的SVM名称后面输入冒号(：) `-destination-path` 。
+
+====
 . 确保 SVM-DR 关系处于 SnapMirrored 状态且未断开：
 +
 [source, cli]
@@ -102,7 +126,7 @@ volume show <vol_name> -fields volume-style-extended,state
 cluster-2::*> volume show my_volume -fields volume-style-extended,state
 
 vserver    volume       state     volume-style-extended
--------       -------           ------     ---------------------
-vs0_dst   my_volume  online  flexgroup
+-------    -------      ------    ---------------------
+vs0_dst    my_volume    online    flexgroup
 ----
 

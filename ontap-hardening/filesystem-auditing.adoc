@@ -1,0 +1,82 @@
+---
+sidebar: sidebar 
+permalink: ontap-security-hardening/filesystem-auditing.html 
+keywords: tr-4569, ontap hardening guide, security, vserver audit create, file, folder, share access, files created, modified, or deleted, successful file read access, failed attempts to read or write files, folder permission changes, restriction of REST access and manipulate SMB/CIFS or NFS files 
+summary: '您必须启用CIFS审核才能生成审核事件。使用"vserver audi cree"命令创建审核配置。' 
+---
+= NAS文件系统审核
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media
+
+
+[role="lead"]
+NAS文件系统在当今的威胁形势下占用的空间越来越大、审核功能对于支持可见性至关重要。
+
+安全性需要验证。ONTAP 9在整个解决方案中提供了更多的审核事件和详细信息。由于NAS文件系统在当今的威胁形势下占用的空间越来越大、因此审核功能对于支持可见性至关重要。由于ONTAP 9改进了审核功能、因此CIFS审核详细信息比以往任何时候都更加丰富。密钥详细信息(包括以下内容)会随创建的事件一起记录：
+
+* 文件、文件夹和共享访问
+* 创建、修改或删除的文件
+* 文件读取访问成功
+* 读取或写入文件的尝试失败
+* 文件夹权限更改
+
+
+
+
+== 创建审核配置
+
+您必须启用CIFS审核才能生成审核事件。使用 `vserver audit create` 命令创建审核配置。默认情况下、审核日志会根据大小使用轮换方法。如果在"旋转参数"字段中指定了基于时间的旋转选项、则可以使用该选项。其他日志审核轮换配置详细信息包括轮换计划、轮换限制、一周的轮换日期和轮换大小。以下文本提供了一个示例配置、其中描述了一个审核配置、该配置使用基于时间的每月轮换、计划在一周中的所有日期的12：30进行轮换。
+
+[listing]
+----
+cluster1::> vserver audit create -vserver vs1 -destination /audit_log -rotate-schedule-month all -rotate-schedule-dayofweek all -rotate-schedule-hour 12 -rotate-schedule-minute 30
+----
+
+
+== CIFS审核事件
+
+CIFS审核事件如下：
+
+* *文件共享*：在使用相关命令添加、修改或删除CIFS网络共享时生成审核事件 `vserver cifs share` 。
+* *Audit policy change*：使用相关命令禁用、启用或修改审核策略时生成审核事件 `vserver audit` 。
+* *用户帐户*：在创建或删除本地CIFS或UNIX用户、启用、禁用或修改本地用户帐户或重置或更改密码时生成审核事件。此事件使用 `vserver cifs users-and-groups local-group` 命令或相关 `vserver services name-service unix-user` 命令。
+* *安全组*：使用命令或相关命令创建或删除本地CIFS或UNIX安全组时、生成审核事件 `vserver cifs users-and-groups local-group` `vserver services name-service unix-group` 。
+* *授权策略更改*：在使用命令授予或撤消CIFS用户或CIFS组的权限时生成审核事件 `vserver cifs users-and-groups privilege` 。
+
+
+
+NOTE: 此功能基于系统审核功能、管理员可以通过此功能从数据用户的角度查看系统允许执行的操作。
+
+
+
+== REST API对NAS审核的影响
+
+ONTAP允许管理员帐户使用REST API访问和操作SMB/CIFS/NFS或NFS文件。虽然REST API只能由ONTAP管理员运行、但REST API命令会绕过系统NAS审核日志。此外、使用REST API时、ONTAP管理员也可以绕过文件权限。但是、系统命令历史记录日志中会捕获管理员对文件使用REST API执行的操作。
+
+
+
+=== 创建无访问权限REST API角色
+
+您可以通过创建不能通过REST访问ONTAP卷的REST API角色来防止ONTAP管理员使用REST API进行文件访问。要配置此角色、请完成以下步骤。
+
+.步骤
+. 创建一个新的REST角色、此角色不能访问存储卷、但可以访问所有其他REST API。
++
+[listing]
+----
+cluster1::> security login rest-role create nofiles -vserver cluster1 "/api/storage/volumes" -access none
+cluster1::> security login rest-role create nofiles -vserver cluster1 "/api" -access all
+----
+. 将管理员帐户分配给您在上一步中创建的新REST API角色。
++
+[listing]
+----
+cluster1::> security login modify -user-or-group-name user1 -application http -authentication-method password -vserver cluster1 -role nofile
+----
+
+
+
+NOTE: 如果要阻止内置ONTAP集群管理员帐户使用REST API进行文件访问，则需要首先 link:../ontap-security-hardening/default-admin-accounts.html["创建新的管理员帐户并禁用或删除此内置帐户"]。
