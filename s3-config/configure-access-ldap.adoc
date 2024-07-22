@@ -89,3 +89,22 @@ NOTE: S3客户端可能会提示输入机密密钥。如果没有机密密钥、
 
 
 
+
+
+
+=== 不具有UID和GID的用户的Active Directory资源身份验证
+
+如果bket-policy语句中指定的鼻组或属于鼻组的用户未设置UID和GID、则在未找到这些属性时、查找将失败。
+
+为避免查找失败、NetApp建议使用受信任域以UPN格式进行资源授权：nsgroup/group@trusted_domain.com
+
+
+
+=== 在不使用LDAP快速绑定时为受信任域用户生成用户访问密钥
+
+对以<svm_uuid>格式指定的用户使用的3/services UPN/用户端点。示例：
+
+[listing]
+----
+$curl -siku FQDN\\user:<user_name> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user[@fqdn](https://github.com/fqdn)>,"<key_time_to_live>":"PT6H3M"}'
+----

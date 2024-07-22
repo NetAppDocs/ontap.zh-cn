@@ -1,7 +1,7 @@
 ---
 permalink: san-admin/enable-space-allocation.html 
 sidebar: sidebar 
-keywords: enable, space allocation, space reclamation, unmap 
+keywords: enable, space allocation, space reclamation, unmap, lun 
 summary: 启用空间分配、以使主机和存储系统能够在空间管理方面进行合作。 
 ---
 = 为SAN启用空间分配
@@ -11,7 +11,11 @@ summary: 启用空间分配、以使主机和存储系统能够在空间管理�
 
 
 [role="lead"]
-启用空间分配、以使主机和存储系统能够在LUN空间管理方面进行合作。启用 `space-allocation` 设置具有以下优势：
+启用空间分配、以使主机和存储系统能够在LUN空间管理方面进行合作。
+
+从ONTAP 9.15.1开始、新创建的LUN会默认启用空间分配。在早期版本的ONTAP (9.14.1及更早版本)中、空间分配已默认禁用。
+
+启用此 `space-allocation` 设置具有以下优势：
 
 * * ONTAP可以与主机通信，指出没有可用空间来处理写入*：对于主机来说，这种通信是一种更好的方式，可以处理空间不足的情况。此LUN会保持联机状态、但无法处理写入IO、直到空间可用为止。仍可执行读取IO。对主机操作系统的确切影响取决于主机配置。在某些情况下、操作系统会重试写入IO、直到成功为止。在其他情况下、文件系统可能会置于脱机状态。
 +
@@ -38,20 +42,21 @@ NOTE: 如果 `space-allocation` 设置未启用、则LUN将进入状态 `space-e
 NVMe主机不支持空间分配。
 
 .关于此任务
-从ONTAP 9.151开始、新创建的VMware和Hyper-V LUN会默认启用空间分配、而所有新创建的LUN不会由VMware和Hyper-V使用、则会禁用空间分配
-
-
-NOTE: 将集群升级到ONTAP 9.151后、无论主机类型如何、在软件升级之前创建的所有LUN的空间分配设置在升级后均保持不变。  例如、如果在ONTAP 9.13.1中为禁用了空间分配的VMware主机创建了LUN、则在升级到ONTAP 9.15.1后、该LUN上的空间分配仍会处于禁用状态。
+将集群升级到ONTAP 9.151后、无论主机类型如何、在软件升级之前创建的所有LUN的空间分配设置在升级后均保持不变。例如、如果在ONTAP 9.13.1中为禁用了空间分配的VMware主机创建了LUN、则在升级到ONTAP 9.15.1后、该LUN上的空间分配仍会处于禁用状态。
 
 .步骤
 . 启用空间分配：
 +
-`lun modify -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -space-allocation enabled`
-
+[source, cli]
+----
+`lun modify -vserver <vserver_name> -volume <volume_name> -lun <lun_name> -space-allocation enabled
+----
 . 验证是否已启用空间分配：
 +
-`lun show -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -fields space-allocation`
-
+[source, cli]
+----
+lun show -vserver <vserver_name> -volume <volume_name> -lun <lun_name> -fields space-allocation
+----
 . 验证是否已在主机操作系统上启用空间分配。
 +
 

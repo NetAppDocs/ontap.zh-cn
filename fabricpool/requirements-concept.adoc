@@ -17,7 +17,16 @@ summary: 为确保优化FabricPool配置、您应熟悉有关使用FabricPool的
 
 == 一般注意事项和要求
 
-* 要使用 FabricPool ，必须至少运行 ONTAP 9.2 。
+
+
+=== ONTAP 9.2
+
+必须运行ONTAP 9.2或更高版本的FabricPool。
+
+
+
+=== ONTAP 9.4
+
 * 您必须运行 ONTAP 9.4 或更高版本才能使用以下 FabricPool 功能：
 +
 ** 。 `auto` link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["层策略"]
@@ -27,12 +36,24 @@ summary: 为确保优化FabricPool配置、您应熟悉有关使用FabricPool的
 ** 将 FabricPool 与 ONTAP Select 结合使用
 
 
+
+
+
+
+=== ONTAP 9.5
+
 * 要使用以下 FabricPool 功能，您必须运行 ONTAP 9.5 或更高版本：
 +
 ** 指定分层填充度阈值
 ** 使用 IBM 云对象存储作为 FabricPool 的云层
 ** 云层的 NetApp 卷加密（ NVE ），默认情况下处于启用状态。
 
+
+
+
+
+
+=== ONTAP 9.6
 
 * 要使用以下FabricPool功能、必须运行ONTAP 9.6或更高版本：
 +
@@ -46,6 +67,12 @@ ONTAP 会监控系统负载，如果负载持续保持高 4 分钟，则会禁�
 ** 使用 Google 云平台作为 FabricPool 的云层
 ** 卷移动而不复制云层数据
 
+
+
+
+
+
+=== ONTAP 9.7
 
 * 要使用以下FabricPool功能、必须运行ONTAP 9.7或更高版本：
 +
@@ -64,35 +91,68 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
 
 
 
+
+
+
+
+=== ONTAP 9.8
+
 * 要使用以下 FabricPool 功能，必须运行 ONTAP 9.8 或更高版本：
 +
-** 云迁移控制，用于覆盖默认分层策略
-** 将数据提升到性能层
+** 云检索
 ** 采用SnapLock企业版的FabricPool。采用SnapLock企业版的FabricPool需要功能产品差异请求(Feature Product Vvariance Request、FPVR)。要创建FPVR、请联系您的销售团队。
 ** 最短冷却期最长为 183 天
 ** 使用用户创建的自定义标记进行对象标记
-** HDD 平台和聚合上的 FabricPools
+** HDD FabricPool聚合
 +
-只有具有 6 个或更多 CPU 核的系统（包括以下型号）才支持 SAS ， FSAS ， BSAS 和 MSATA 磁盘使用 HDD FabricPool ：
+只有具有6个或更多CPU核心的系统才支持SAS、FSAS、BSAS和MSATA磁盘的HDD FabricPools。
 
-+
-*** FAS9000
-*** FAS8700
-*** FAS8300
-*** FAS8200
-*** FAS8080
-*** FAS8060
-*** FAS8040
-*** FAS2750
-*** FAS2720
-*** FAS2650
-*** FAS2620
 +
 检查 https://hwu.netapp.com/Home/Index["Hardware Universe"^] 适用于最新支持的型号。
 
 
 
 
+
+
+
+=== ONTAP 9.10.1
+
+* 要使用以下FabricPool功能、必须运行ONTAP 9.10.1或更高版本：
++
+** 放置限制
+** 温度敏感型存储效率(T(SSE))。
+
+
+
+
+
+
+=== ONTAP 9.12.1
+
+* 要使用以下FabricPool功能、必须运行ONTAP 9.12.1或更高版本：
++
+** SVM迁移
+** 支持FabricPool、FlexGroup和SVM-DR协同工作。(在9.12.1之前的版本中、其中任何两个功能协同工作、但并非全部三个功能协同工作。)
+
+
+
+
+
+
+=== ONTAP 9.14.1
+
+* 要使用以下FabricPool功能、必须运行ONTAP 9.14.1或更高版本：
++
+** 云写入
+** 主动预读
+
+
+
+
+
+
+== 平台
 
 * 除以下平台外，所有能够运行 ONTAP 9.2 的平台均支持 FabricPool ：
 +
@@ -102,45 +162,74 @@ https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/
 ** FAS2520
 
 
-* FabricPool 支持以下聚合类型：
-+
-** 在 AFF 系统上，您只能对 FabricPool 使用全闪存（全 SSD ）聚合。
-** 在 FAS 系统上，您可以对 FabricPool 使用全闪存（全 SSD ）或 HDD 聚合。
- +
-您不能使用同时包含SSD和HDD的Flash Pool聚合。
-** 在 Cloud Volumes ONTAP 和 ONTAP Select 上，您可以对 FabricPool 使用 SSD 或 HDD 聚合。
-+
-但是，建议使用 SSD 聚合。
 
 
 
-* FabricPool 支持使用以下对象存储作为云层：
-+
-** NetApp StorageGRID 10.3 或更高版本
-** NetApp ONTAP S3 （ ONTAP 9.8 及更高版本）
-** 阿里云对象存储
-** Amazon Web Services Simple Storage Service （ AWS S3 ）
-** Google Cloud 存储
-** IBM 云对象存储
-** 适用于云的 Microsoft Azure Blob Storage
+
+== 本地层(聚合)
+
+FabricPool 支持以下聚合类型：
+
+* 在AFF系统上、您只能对FabricPool使用SSD聚合。
+* 在FAS系统上、您可以对FabricPool使用SSD或HDD聚合。
+* 在 Cloud Volumes ONTAP 和 ONTAP Select 上，您可以对 FabricPool 使用 SSD 或 HDD 聚合。建议使用SSD聚合。
 
 
+[NOTE]
+====
+不支持同时包含SSD和HDD的Flash Pool聚合。
+
+====
+
+
+== 云层
+
+FabricPool 支持使用以下对象存储作为云层：
+
+* 阿里云对象存储服务（标准，不常访问）
+* Amazon S3 (标准版、标准版IA、一个区域IA、智能分层、Glacier"即时恢复")
+* Amazon Commercial Cloud Services （ C2S ）
+* Google Cloud Storage (多区域、区域、近线、Cldline、归档)
+* IBM Cloud Object Storage （标准，存储，冷存储， Flex ）
+* Microsoft Azure Blob Storage （热存储和冷存储）
+* NetApp ONTAP S3 （ ONTAP 9.8 及更高版本）
+* NetApp StorageGRID (StorageGRID 10.3及更高版本)
+
+
+[NOTE]
+====
+不支持Glacier灵活的寻址和Glacier深度归档。
+
+====
 * 您计划使用的对象存储 "`bucket` " （容器）必须已设置，必须至少具有 10 GB 的存储空间，并且不能重命名。
 * 使用 FabricPool 的 HA 对需要集群间 LIF 与对象存储进行通信。
 * 在附加云层后、您无法将其从本地层中分离；但是、您可以使用 link:create-mirror-task.html["FabricPool镜像"] 将本地层附加到其他云层。
-* 如果使用吞吐量下限(QoS最小值)、则必须将卷上的分层策略设置为 `none` 才能将聚合附加到FabricPool。
-+
-其他分层策略会阻止将聚合附加到 FabricPool 。启用FabricPool后、QoS策略不会强制实施吞吐量下限。
-
-* 您应遵循在特定情形下使用 FabricPool 的最佳实践准则。
-+
-http://www.netapp.com/us/media/tr-4598.pdf["NetApp 技术报告 4598 ：《 ONTAP 9 中的 FabricPool 最佳实践》"^]
 
 
 
 
+== ONTAP 存储效率
 
-== 使用StorageGRID一致性控制时的其他注意事项
+在将数据移至云层时、数据压缩、重复数据删除和数据缩减等存储效率会得以保留、从而减少所需的对象存储容量和传输成本。
+
+
+NOTE: 从ONTAP 9.151开始、FabricPool支持英特尔QuickAssist技术(QAT4)、可提供更主动、更出色的存储效率节省。
+
+本地层支持聚合实时重复数据删除、但关联的存储效率不会转移到云层上存储的对象。
+
+使用全卷分层策略时、与后台重复数据删除进程相关的存储效率可能会降低、因为可能需要先对数据进行分层、然后才能应用额外的存储效率。
+
+
+
+== XP Bluetiering许可证
+
+在将第三方对象存储提供程序(例如Amazon S3)作为云层附加到AFF和FAS系统时、FabricPool需要基于容量的许可证。如果使用StorageGRID或ONTAP S3作为云层、或者使用Cloud Volumes ONTAP、Amazon FSx for NetApp ONTAP或Azure NetApp Files进行分层、则不需要BlueXP分层许可证。
+
+BlueXP许可证(包括原有FabricPool许可证的附加许可证或扩展许可证)在中激活 link:https://docs.netapp.com/us-en/bluexp-tiering/concept-cloud-tiering.html["BlueXP数字电子钱包"^]。
+
+
+
+== StorageGRID一致性控制
 
 StorageGRID的一致性控制会影响StorageGRID用于跟踪对象的元数据的方式
 在节点之间分布、以及客户端请求对象的可用性。NetApp建议使用
@@ -151,19 +240,22 @@ NOTE: 请勿对用作FabricPool目标的存储分段使用可用的一致性控�
 
 
 
-== 使用 Cloud Volumes ONTAP 时的其他注意事项
-
-无论您使用的对象存储提供程序是什么， Cloud Volumes ONTAP 都不需要 FabricPool 许可证。
-
-
-
 == 对 SAN 协议访问的数据进行分层的其他注意事项
 
-在对 SAN 协议访问的数据进行分层时， NetApp 建议使用私有云，例如 StorageGRID ，因为需要考虑连接问题。
+在对通过SAN协议访问的数据进行分层时、出于连接考虑、NetApp建议使用ONTAP S3或StorageGRID等私有云。
 
-* 重要 * ：
 
-请注意、在Windows主机上的SAN环境中使用FabricPool时、如果在将数据分层到云时对象存储长时间不可用、则Windows主机上NetApp LUN上的文件可能无法访问或消失。请参见知识库文章 link:https://kb.netapp.com/onprem/ontap/os/During_FabricPool_S3_object_store_unavailable_Windows_SAN_host_reported_filesystem_corruption["在FabricPool S3对象存储不可用期间、Windows SAN主机报告文件系统损坏"^]。
+IMPORTANT: 请注意、在Windows主机上的SAN环境中使用FabricPool时、如果在将数据分层到云时对象存储长时间不可用、则Windows主机上NetApp LUN上的文件可能无法访问或消失。请参见知识库文章 link:https://kb.netapp.com/onprem/ontap/os/During_FabricPool_S3_object_store_unavailable_Windows_SAN_host_reported_filesystem_corruption["在FabricPool S3对象存储不可用期间、Windows SAN主机报告文件系统损坏"^]。
+
+
+
+== 服务质量
+
+* 如果使用吞吐量下限(QoS最小值)、则必须将卷上的分层策略设置为 `none` 才能将聚合附加到FabricPool。
++
+其他分层策略会阻止将聚合附加到 FabricPool 。启用FabricPool后、QoS策略不会强制实施吞吐量下限。
+
+
 
 
 

@@ -1,0 +1,28 @@
+---
+permalink: system-admin/autosupport-case-suppression-maintenance.html 
+sidebar: sidebar 
+keywords: autosupport, case, suppression, scheduled, maintenance, windows, message 
+summary: 通过 AutoSupport 案例禁止，您可以阻止在计划维护时段触发的 AutoSupport 消息创建不必要的案例。 
+---
+= 禁止在计划的维护时段创建AutoSupport案例
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过 AutoSupport 案例禁止，您可以阻止在计划维护时段触发的 AutoSupport 消息创建不必要的案例。
+
+.步骤
+. 手动调用带有文本字符串的AutoSupport消息 `MAINT=xh`，其中 `x` 是维护窗口的持续时间(以小时为单位)。将<node>替换为要从中发送AutoSupport消息的节点的名称：
++
+[source, console]
+----
+system node autosupport invoke -node <node> -message MAINT=xh
+----
+
+
+.相关信息
+* https://review.docs.netapp.com/us-en/ontap-cli_main/system-node-autosupport-invoke.html["ONTAP 命令参考"^]
+* https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_suppress_automatic_case_creation_during_scheduled_maintenance_windows["如何在计划的维护时段禁止自动创建案例"^]
+

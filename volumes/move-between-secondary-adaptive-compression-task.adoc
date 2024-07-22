@@ -17,15 +17,15 @@ summary: 您可以根据数据读取量在二级压缩和自适应压缩之间�
 系统将根据您的聚合和平台选择默认压缩类型。
 
 .步骤
-. 在卷上禁用数据压缩：
+. 在卷上禁用效率：
 +
-`volume efficiency modify`
+`volume efficiency off`
 
 +
-以下命令会对卷 vol1 禁用数据压缩：
+例如、以下命令将在卷vol1上禁用效率：
 
 +
-`volume efficiency modify -compression false -inline-compression false -volume vol1`
+`volume efficiency off -vserver vs1 -volume vol1`
 
 . 更改为高级权限级别：
 +
@@ -36,7 +36,7 @@ summary: 您可以根据数据读取量在二级压缩和自适应压缩之间�
 `volume efficiency undo`
 
 +
-以下命令将解压缩卷 vol1 上的压缩数据：
+例如、以下命令将解压缩卷vol1上的压缩数据：
 
 +
 `volume efficiency undo -vserver vs1 -volume vol1 -compression true`
@@ -47,22 +47,33 @@ summary: 您可以根据数据读取量在二级压缩和自适应压缩之间�
 您必须验证卷中是否有足够的空间来容纳解压缩的数据。
 
 ====
+. 更改为管理权限级别：
++
+`set -privilege admin`
+
 . 验证操作状态是否为闲置：
 +
 `volume efficiency show`
 
 +
-以下命令显示卷 vol1 上的效率操作的状态：
+例如、以下命令将显示卷vol1上的效率操作状态：
 
 +
 `volume efficiency show -vserver vs1 -volume vol1`
+
+. 为卷启用效率：
++
+`volume efficiency on` 例如、以下命令将在卷vol1上启用效率：
+
++
+`volume efficiency on -vserver vs1 -volume vol1`
 
 . 启用数据压缩，然后设置压缩类型：
 +
 `volume efficiency modify`
 
 +
-以下命令将在卷 vol1 上启用数据压缩并将压缩类型设置为二级压缩：
+例如、以下命令将在卷vol1上启用数据压缩并将压缩类型设置为二级压缩：
 
 +
 `volume efficiency modify -vserver vs1 -volume vol1 -compression true -compression-type secondary`
@@ -77,16 +88,12 @@ summary: 您可以根据数据读取量在二级压缩和自适应压缩之间�
 
 
 ====
-. 更改为管理权限级别：
-+
-`set -privilege admin`
-
 . 可选：启用实时压缩：
 +
 `volume efficiency modify`
 
 +
-以下命令将对卷 vol1 启用实时压缩：
+例如、以下命令将对卷vol1启用实时数据压缩：
 
 +
 `volume efficiency modify -vserver vs1 -volume vol1 -inline-compression true`

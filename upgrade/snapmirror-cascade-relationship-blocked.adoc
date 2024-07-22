@@ -1,0 +1,57 @@
+---
+permalink: upgrade/snapmirror-cascade-relationship-blocked.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, 9.9.1. 9.10.1, update, cascade, LTR, long term retention, snapshots, considerations, secondary storage 
+summary: '如果您在集群上配置了SnapMirror级联关系、则可能需要在升级之前禁用长期保留(LTR)快照' 
+---
+= 在ONTAP升级之前禁用长期保留快照
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果要从ONTAP 9.9.1或更早版本升级到ONTAP 9.10.1或更高版本、并且在集群上配置了SnapMirror级联关系、则应在升级之前禁用级联中中间卷的长期保留(LTR)快照。ONTAP 9.10.1或更高版本不支持在启用了LTR快照的情况下级联卷。升级后使用此配置可能会导致备份和快照丢失。
+
+在以下情况下、您需要采取措施：
+
+* 长期保留(LTR)快照配置在"A > B > C" SnapMirror级联中的"B"卷上、或者配置在较大级联中的另一个中间SnapMirror目标卷上。
+* LTR快照由应用于SnapMirror策略规则的计划定义。此规则不会从源卷复制快照、而是直接在目标卷上创建快照。
++
+
+NOTE: 有关计划和SnapMirror策略的详细信息，请参阅知识库文章。
+
+
+
+.步骤
+. 从级联中间卷上的SnapMirror策略中删除LTR规则：
++
+[listing]
+----
+Secondary::> snapmirror policy remove-rule -vserver <> -policy <> -snapmirror-label <>
+----
+. 再次为不使用LTR计划的SnapMirror标签添加规则：
++
+[listing]
+----
+Secondary::> snapmirror policy add-rule -vserver <> -policy <> -snapmirror-label <> -keep <>
+----
++
+
+NOTE: 从SnapMirror策略规则中删除LTR快照意味着SnapMirror将从源卷中提取具有给定标签的快照。您可能还需要在源卷的快照策略上添加或修改计划、以创建标记正确的快照。
+
+. 如有必要、可修改(或创建)源卷快照策略上的计划、以允许使用SnapMirror标签创建快照：
++
+[listing]
+----
+Primary::> volume snapshot policy modify-schedule -vserver <> -policy <> -schedule <> -snapmirror-label <>
+----
++
+[listing]
+----
+Primary::> volume snapshot policy add-schedule -vserver <> -policy <> -schedule <> -snapmirror-label <> -count <>
+----
+
+
+
+NOTE: 在SnapMirror级联配置中、仍然可以在最终SnapMirror目标卷上启用LTR快照。
