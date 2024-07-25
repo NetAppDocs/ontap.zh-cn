@@ -11,23 +11,19 @@ summary: 从ONTAP 9.8开始、ONTAP 支持在内部环境中使用S3对象存储
 
 
 [role="lead"]
-从ONTAP 9.8开始、ONTAP 支持在内部环境中使用S3对象存储。从ONTAP 9.1.1开始、Cloud Volumes ONTAP 支持在云环境中使用S3对象存储。
+使用ONTAP 9.8及更高版本的所有AFF、FAS和ONTAP Select平台均支持S3对象存储。
+
+与FC、iSCSI、NFS、NVMe_oF和SMB等其他协议一样、 S3要求先安装许可证、然后才能在ONTAP中使用。S3许可证是零成本许可证、但必须安装在升级到ONTAP 9.8的系统上。S3许可证可从NetApp支持站点上的下载 link:https://mysupport.netapp.com/site/systems/master-license-keys/ontaps3["主许可证密钥页面"^] 。
+
+新的ONTAP 9.8及更高版本系统已预安装S3许可证。
 
 
 
-== MetroCluster支持S3
-
-从ONTAP 9.14.1开始、您可以在MetroCluster IP和FC配置中的镜像聚合中的SVM上启用S3对象存储服务器。
-
-从ONTAP 9.12.1开始、您可以在MetroCluster IP配置中未镜像聚合中的SVM上启用S3对象存储服务器。有关MetroCluster IP配置中未镜像聚合的限制的详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/considerations_unmirrored_aggrs.html["未镜像聚合的注意事项"^]。
-
-
-
-== Cloud Volumes ONTAP 支持S3
+== Cloud Volumes ONTAP
 
 ONTAP S3在Cloud Volumes ONTAP 中的配置和功能与在内部环境中相同、但有一个例外：
 
-* 底层聚合只能来自一个节点。了解更多信息 link:create-svm-s3-task.html["在CVO环境中创建存储分段"]。
+* 在Cloud Volumes ONTAP中创建分段时、应使用命令行界面过程确保底层FlexGroup卷仅使用单个节点的聚合。使用多个节点的聚合将影响性能、因为这些节点位于不同地理位置的可用性区域中、并且容易受到延迟问题的影响。
 
 
 |===
@@ -42,6 +38,20 @@ ONTAP S3在Cloud Volumes ONTAP 中的配置和功能与在内部环境中相同�
 
 | Google Cloud | ONTAP 9.12.1及更高版本 
 |===
+
+
+== 适用于 NetApp ONTAP 的 Amazon FSX
+
+使用ONTAP 9.11及更高版本的Amazon FSx for NetApp服务支持S3对象存储。
+
+
+
+== MetroCluster支持S3
+
+从ONTAP 9.14.1开始、您可以在MetroCluster IP和FC配置中的镜像聚合中的SVM上启用S3对象存储服务器。
+
+从ONTAP 9.12.1开始、您可以在MetroCluster IP配置中未镜像聚合中的SVM上启用S3对象存储服务器。有关MetroCluster IP配置中未镜像聚合的限制的详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/considerations_unmirrored_aggrs.html["未镜像聚合的注意事项"^]。
+
 
 
 == ONTAP 9.7中的S3公有 预览
