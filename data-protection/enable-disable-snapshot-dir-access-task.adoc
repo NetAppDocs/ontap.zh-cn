@@ -2,7 +2,7 @@
 permalink: data-protection/enable-disable-snapshot-dir-access-task.html 
 sidebar: sidebar 
 keywords: enable, disable, access, snapshot copy 
-summary: '要确定NFS和SMB客户端在从Snapshot副本还原文件或LUN时是否可以看到Snapshot副本目录、您可以使用启用和禁用对Snapshot副本目录的访问 `-snapdir-access` 的选项 `volume modify` 命令：' 
+summary: 您可以启用和禁用对Snapshot副本目录的访问、使其对客户端系统可见、并为其提供对卷上Snapshot副本目录的访问权限。 
 ---
 = 启用和禁用 NFS 和 SMB 客户端对 Snapshot 副本目录的访问
 :allow-uri-read: 
@@ -11,13 +11,37 @@ summary: '要确定NFS和SMB客户端在从Snapshot副本还原文件或LUN时�
 
 
 [role="lead"]
-要确定NFS和SMB客户端在从Snapshot副本还原文件或LUN时是否可以看到Snapshot副本目录、您可以使用启用和禁用对Snapshot副本目录的访问 `-snapdir-access` 的选项 `volume modify` 命令：
+您可以使用命令的ONTAP命令行界面选项启用和禁用对Snapshot副本目录的访问 `-snapdir-access` `volume modify` 、从ONTAP 9.10.1开始、您可以使用System Manager启用或禁用客户端系统以访问卷上的Snapshot副本目录。启用访问后、客户端可以看到Snapshot副本目录、并可通过Windows客户端将驱动器映射到Snapshot副本目录以查看和访问其内容。然后、NFS和SMB客户端可以从快照还原文件或LUN。
+
+您可以通过编辑卷设置或编辑卷的共享设置来启用或禁用对卷 Snapshot 副本目录的访问。
+
+
+
+== 通过编辑卷来启用或禁用客户端对 Snapshot 副本目录的访问
 
 .步骤
+您可以使用ONTAP系统管理器或ONTAP命令行界面启用和禁用客户端Snapshot副本目录访问。默认情况下，客户端可以访问卷上的 Snapshot 副本目录。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 单击 * 存储 > 卷 * 。
+. 选择包含要显示或隐藏的 Snapshot 副本目录的卷。
+. 单击 image:icon_kabob.gif["菜单选项图标"] 并选择*Edit*。
+. 在 * Snapshot 副本（本地）设置 * 部分中，选择或取消选择 * 向客户端显示 Snapshot 副本目录 * 。
+. 单击 * 保存 * 。
+
+
+--
+.命令行界面
+--
 . 检查 Snapshot 目录访问状态：
 +
-`volume show -vserver _SVM_name_ -volume _vol_name_ -fields snapdir-access`
-
+[source, cli]
+----
+volume show -vserver <SVM_name> -volume <vol_name> -fields snapdir-access
+----
 +
 示例
 
@@ -32,8 +56,10 @@ vs0     vol1   false
 ----
 . 启用或禁用 Snapshot 副本目录访问：
 +
-`volume modify -vserver _SVM_name_ -volume _vol_name_ -snapdir-access true|false`
-
+[source, cli]
+----
+volume modify -vserver <SVM_name> -volume <vol_name> -snapdir-access <true|false>
+----
 +
 以下示例将在 vol1 上启用 Snapshot 副本目录访问：
 
@@ -44,4 +70,20 @@ vs0     vol1   false
 clus1::> volume modify -vserver vs0 -volume vol1 -snapdir-access true
 Volume modify successful on volume vol1 of Vserver vs0.
 ----
+
+
+--
+====
+
+
+== 通过编辑共享来启用或禁用客户端对 Snapshot 副本目录的访问
+
+默认情况下，客户端可以访问卷上的 Snapshot 副本目录。
+
+.步骤
+. 单击 * 存储 > 共享 * 。
+. 选择包含要显示或隐藏的 Snapshot 副本目录的卷。
+. 单击 image:icon_kabob.gif["菜单选项图标"] 并选择*Edit*。
+. 在 * 共享属性 * 部分中，选择或取消选择 * 允许客户端访问 Snapshot 副本目录 * 。
+. 单击 * 保存 * 。
 

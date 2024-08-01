@@ -2,7 +2,7 @@
 permalink: data-protection/make-destination-volume-writeable-task.html 
 sidebar: sidebar 
 keywords: destination, volume, writeable, write, serve data, snapmirror, quiesce, pause, abort, transfers 
-summary: 您需要先使目标卷可写，然后才能将数据从该卷提供给客户端。您可以使用 snapmirror quiesce 命令停止向目标进行的计划传输，使用 snapmirror abort 命令停止正在进行的传输，使用 snapmirror break 命令使目标可写。 
+summary: 您需要先使目标卷可写，然后才能将数据从该卷提供给客户端。 
 ---
 = 使目标卷可写
 :allow-uri-read: 
@@ -11,16 +11,39 @@ summary: 您需要先使目标卷可写，然后才能将数据从该卷提供�
 
 
 [role="lead"]
-您需要先使目标卷可写，然后才能将数据从该卷提供给客户端。您可以使用 `snapmirror quiesce` 命令以停止向目标(即)进行的计划传输 `snapmirror abort` 命令以停止正在进行的传输、以及 `snapmirror break` 命令以使目标可写。
+您需要先使目标卷可写，然后才能将数据从该卷提供给客户端。要在源不可用时从镜像目标提供数据，请停止向目标进行的计划传输，然后中断 SnapMirror 关系以使目标可写。
 
 .关于此任务
 您必须从目标 SVM 或目标集群执行此任务。
 
 .步骤
+您可以使用System Manager或ONTAP命令行界面使目标卷可写。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择保护关系：单击*保护>关系*，然后单击所需的卷名称。
+. 单击image:icon_kabob.gif["菜单选项图标"]。
+. 停止计划传输：单击 * 暂停 * 。
+. 使目标可写：单击 * 中断 * 。
+. 转到主 * 关系 * 页面，验证关系状态是否显示为 " 已断开 " 。
+
+
+.后续步骤：
+在将目标卷设置为可写之后、您需要执行此 link:resynchronize-relationship-task.html["反向重新同步复制关系"] 操作。
+
+禁用的源卷恢复可用后、您应再次反向重新同步此关系、以便将当前数据复制到原始源卷。此过程将替换原始源卷上的数据。
+
+--
+.命令行界面
+--
 . 停止向目标进行的计划传输：
 +
-`snapmirror quiesce -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
-
+[source, cli]
+----
+snapmirror quiesce -source-path <SVM:volume|cluster://SVM/volume> -destination-path <SVM:volume|cluster://SVM/volume>
+----
 +
 有关完整的命令语法，请参见手册页。
 
@@ -34,17 +57,17 @@ cluster_dst::> snapmirror quiesce -source-path svm1:volA -destination-path svm_b
 ----
 . 停止正在向目标传输的数据：
 +
-`snapmirror abort -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
-
+[source, cli]
+----
+snapmirror abort -source-path <SVM:volume|cluster://SVM/volume> -destination-path <SVM:volume|cluster://SVM/volume>
+----
 +
 有关完整的命令语法，请参见手册页。
 
 +
-[NOTE]
-====
-SnapMirror 同步关系不需要执行此步骤（从 ONTAP 9.5 开始受支持）。
 
-====
+NOTE: SnapMirror 同步关系不需要执行此步骤（从 ONTAP 9.5 开始受支持）。
+
 +
 以下示例将停止源卷之间正在进行的传输 `volA` 开启 `svm1` 和目标卷 `volA_dst` 开启 `svm_backup`：
 
@@ -55,8 +78,10 @@ cluster_dst::> snapmirror abort -source-path svm1:volA -destination-path svm_bac
 ----
 . 中断 SnapMirror 灾难恢复关系：
 +
-`snapmirror break -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
-
+[source, cli]
+----
+snapmirror break -source-path <SVM:volume|cluster://SVM/volume> -destination-path <SVM:volume|cluster://SVM/volume>
+----
 +
 有关完整的命令语法，请参见手册页。
 
@@ -68,8 +93,14 @@ cluster_dst::> snapmirror abort -source-path svm1:volA -destination-path svm_bac
 ----
 cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+.后续步骤：
+在将目标卷设置为可写之后、您需要执行此 link:resynchronize-relationship-task.html["重新同步复制关系"] 操作。
 
 
+
+--
+====
 
 
 == 在 ONTAP 中执行此操作的其他方法
@@ -77,9 +108,6 @@ cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_bac
 [cols="2"]
 |===
 | 要执行以下任务，请执行以下操作 ... | 查看此内容 ... 
-
-
-| 重新设计的 System Manager （适用于 ONTAP 9.7 及更高版本） | link:https://docs.netapp.com/us-en/ontap/task_dp_serve_data_from_destination.html["从 SnapMirror 目标提供数据"^] 
 
 
 | System Manager 经典版（适用于 ONTAP 9.7 及更早版本） | link:https://docs.netapp.com/us-en/ontap-system-manager-classic/volume-disaster-recovery/index.html["卷灾难恢复概述"^] 

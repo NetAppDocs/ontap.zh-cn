@@ -99,7 +99,7 @@ image::../media/zero-trust-architecture.png[零信任架构图]
 
 NVE还提供了一项功能、称为 https://blog.netapp.com/flash-memory-summit-award/["安全清除"^] 在将敏感文件写入非分类卷时以加密方式删除数据泄漏中的有毒数据。
 
-作为ONTAP内置的密钥管理器的 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-466E3BFC-F7FA-4B79-A8C9-2540C3BF1408.html["板载密钥管理器（ OKM ）"^]，或者 https://mysupport.netapp.com/matrix/imt.jsp?components=69551;&solution=1156&isHWU&src=IMT["已批准"^] 第三方 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-nve/GUID-DD718B42-038D-4009-84FF-20BBD6530BC2.html["外部密钥管理器"^] 可与NSE和NVE结合使用以安全地存储密钥材料。
+link:../encryption-at-rest/support-storage-encryption-concept.html["板载密钥管理器（ OKM ）"]内置在ONTAP中的密钥管理器，或者 https://mysupport.netapp.com/matrix/imt.jsp?components=69551;&solution=1156&isHWU&src=IMT["已批准"^] 第三方 link:../encryption-at-rest/support-storage-encryption-concept.html["外部密钥管理器"] 可与NSE和NVE结合使用以安全地存储密钥材料。
 
 image::../media/zero-trust-two-layer-encryption-solution-aff-fas.png[适用于AFF和FAS的双层加密解决方案流程图]
 
@@ -109,13 +109,13 @@ image::../media/zero-trust-two-layer-encryption-solution-aff-fas.png[适用于AF
 
 ==== 传输中数据加密
 
-ONTAP传输中数据加密可保护用户数据访问和控制平台访问。对于Microsoft CIFS共享访问、可以使用SMB 3.0加密来加密用户数据访问；对于NFS Kerberos 5、可以使用krb5P来加密用户数据访问。对于CIFS、NFS和iSCSI、也可以使用加密用户数据访问 https://docs.netapp.com/us-en/ontap/networking/configure_ip_security_@ipsec@_over_wire_encryption.html["IPsec"^] 。控制平面访问使用传输层安全(Transport Layer Security、TLS)进行加密。ONTAP为控制平面访问提供了 https://docs.netapp.com/us-en/ontap-cli//security-config-modify.html["FIPS"^] 合规模式、该模式可启用FIPS批准的算法、并禁用未经FIPS批准的算法。数据复制使用进行加密 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.pow-csp/GUID-D58CC065-5EB5-4887-9A64-714755CC5B51.html["集群对等加密"^]。这样可以为ONTAP SnapVault和SnapMirror技术提供加密功能。
+ONTAP传输中数据加密可保护用户数据访问和控制平台访问。对于Microsoft CIFS共享访问、可以使用SMB 3.0加密来加密用户数据访问；对于NFS Kerberos 5、可以使用krb5P来加密用户数据访问。对于CIFS、NFS和iSCSI、也可以使用加密用户数据访问 https://docs.netapp.com/us-en/ontap/networking/configure_ip_security_@ipsec@_over_wire_encryption.html["IPsec"^] 。控制平面访问使用传输层安全(Transport Layer Security、TLS)进行加密。ONTAP为控制平面访问提供了 https://docs.netapp.com/us-en/ontap-cli//security-config-modify.html["FIPS"^] 合规模式、该模式可启用FIPS批准的算法、并禁用未经FIPS批准的算法。数据复制使用进行加密 link:../peering/enable-cluster-peering-encryption-existing-task.html["集群对等加密"]。这样可以为ONTAP SnapVault和SnapMirror技术提供加密功能。
 
 
 
 === 监控和记录所有访问
 
-在实施RBAC策略后、您必须部署主动监控、审核和警报。NetApp ONTAP的FPolicy零信任引擎与相结合 https://www.netapp.com/partners/partner-connect["NetApp FPolicy合作伙伴生态系统"^]，为以数据为中心的零信任模型提供了必要的控制。NetApp ONTAP是一款安全丰富的数据管理软件、 https://docs.netapp.com/ontap-9/topic/com.netapp.doc.dot-cifs-nfs-audit/GUID-F1F54C15-057A-460E-A5E1-21FFBB9773FA.html["fpolicy"^] 是行业领先的ONTAP功能、可提供基于文件的粒度事件通知界面。NetApp FPolicy合作伙伴可以使用此接口更好地了解ONTAP中的数据访问。借助ONTAP的FPolicy功能以及FPolicy合作伙伴的NetApp联盟合作伙伴生态系统、您可以确定组织数据的位置以及谁有权访问这些数据。这是通过用户行为分析来实现的、该分析可确定数据访问模式是否有效。用户行为分析可用于针对异常模式下的可疑或异常数据访问发出警报、并在必要时采取措施拒绝访问。
+在实施RBAC策略后、您必须部署主动监控、审核和警报。NetApp ONTAP的FPolicy零信任引擎与相结合 https://www.netapp.com/partners/partner-connect["NetApp FPolicy合作伙伴生态系统"^]，为以数据为中心的零信任模型提供了必要的控制。NetApp ONTAP是一款安全丰富的数据管理软件、 link:../nas-audit/two-parts-fpolicy-solution-concept.html["fpolicy"] 是行业领先的ONTAP功能、可提供基于文件的粒度事件通知界面。NetApp FPolicy合作伙伴可以使用此接口更好地了解ONTAP中的数据访问。借助ONTAP的FPolicy功能以及FPolicy合作伙伴的NetApp联盟合作伙伴生态系统、您可以确定组织数据的位置以及谁有权访问这些数据。这是通过用户行为分析来实现的、该分析可确定数据访问模式是否有效。用户行为分析可用于针对异常模式下的可疑或异常数据访问发出警报、并在必要时采取措施拒绝访问。
 
 FPolicy合作伙伴正在从用户行为分析转向机器学习(ML)和人工智能(AI)、以提高事件保真度并减少误报(如果有)。所有事件都应记录到系统日志服务器或安全信息和事件管理(SIEM)系统、该系统也可以使用ML和AI。
 

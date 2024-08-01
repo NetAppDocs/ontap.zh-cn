@@ -1,8 +1,8 @@
 ---
 permalink: data-protection/replicate-entire-svm-config-task.html 
 sidebar: sidebar 
-keywords: replicate, entire, svm, configuration, snapmirror, snap mirror, replication, mirror vault policy, snapshot 
-summary: 您可以使用 snapmirror create 命令的 -identity-preserve true 选项复制整个 SVM 配置。 
+keywords: replicate, entire, svm, storage vm, disaster, protection, configuration, snapmirror, snap mirror, replication, mirror vault policy, snapshot 
+summary: '您可以创建SVM灾难恢复(SVM DR)关系、以便将一个SVM配置复制到另一个SVM配置。如果主站点发生灾难、您可以快速激活目标SVM。' 
 ---
 = 复制整个 SVM 配置
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 您可以使用 snapmirror create 命令的 -identity-preserve true 选
 
 
 [role="lead"]
-您可以使用 `-identity-preserve true` 的选项 `snapmirror create` 命令以复制整个SVM配置。
+您可以创建SVM灾难恢复(SVM DR)关系、以便将一个SVM配置复制到另一个SVM配置。如果主站点发生灾难、您可以快速激活目标SVM。
 
 .开始之前
 源和目标集群以及 SVM 必须建立对等关系。
@@ -24,11 +24,31 @@ summary: 您可以使用 snapmirror create 命令的 -identity-preserve true 选
 
 从 ONTAP 9.1.1 开始，使用镜像存储策略时，您可以在源和目标 SVM 上创建不同的 Snapshot 策略，并且目标上的 Snapshot 副本不会被源上的 Snapshot 副本覆盖。有关详细信息，请参见 link:snapmirror-svm-replication-concept.html["了解 SnapMirror SVM 复制"]。
 
+从目标完成此操作步骤。如果您需要创建新的保护策略、例如、当源Storage VM配置了SMB时、应使用System Manager创建策略并在*添加保护策略*窗口中选择*身份保留*选项。有关详细信息，请参见 link:create-custom-replication-policy-concept.html["创建自定义数据保护策略"]。
+
 .步骤
+您可以从System Manager或ONTAP命令行界面执行此任务。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 在目标集群上，单击 * 保护 > 关系 * 。
+. 在*关系*下，单击*保护*并选择* Storage VM (DR)*。
+. 选择一个保护策略。如果创建了自定义保护策略，请将其选中，然后选择要复制的源集群和 Storage VM 。您也可以通过输入新的 Storage VM 名称来创建新的目标 Storage VM 。
+. 如果需要、可更改目标设置以覆盖身份保留、并选择包括或排除网络接口和协议。
+. 单击 * 保存 * 。
+
+
+--
+.命令行界面
+--
 . 创建目标 SVM ：
 +
-`vserver create -vserver _SVM_name_ -subtype dp-destination`
-
+[source, cli]
+----
+vserver create -vserver <SVM_name> -subtype dp-destination
+----
 +
 SVM 名称在源集群和目标集群中必须是唯一的。
 
@@ -46,17 +66,17 @@ cluster_dst:> vserver create -vserver svm_backup -subtype dp-destination
 
 . 创建复制作业计划
 +
-`job schedule cron create -name _job_name_ -month _month_ -dayofweek _day_of_week_ -day _day_of_month_ -hour _hour_ -minute _minute_`
-
+[source, cli]
+----
+job schedule cron create -name <job_name> -month <month> -dayofweek <day_of_week> -day <day_of_month> -hour <hour> -minute <minute>
+----
 +
 适用于 `-month`， `-dayofweek`，和 `-hour`，您可以指定 `all` 以分别每月、每周的某一天和每小时运行此作业。
 
 +
-[NOTE]
-====
-SVM SnapMirror关系中FlexVol 卷支持的最小计划(RPO)为15分钟。SVM SnapMirror关系中FlexGroup 卷支持的最小计划(RPO)为30分钟。
 
-====
+NOTE: SVM SnapMirror关系中FlexVol 卷支持的最小计划(RPO)为15分钟。SVM SnapMirror关系中FlexGroup 卷支持的最小计划(RPO)为30分钟。
+
 +
 以下示例将创建一个名为的作业计划 `my_weekly` 在星期六凌晨3：00运行：
 
@@ -67,14 +87,14 @@ cluster_dst::> job schedule cron create -name my_weekly -dayofweek saturday -hou
 ----
 . 从目标 SVM 或目标集群创建复制关系：
 +
-`snapmirror create -source-path _SVM_name_: -destination-path _SVM_name_: -type DP|XDP -schedule _schedule_ -policy _policy_ -identity-preserve true`
-
+[source, cli]
+----
+snapmirror create -source-path <SVM_name>: -destination-path <SVM_name>: -type <DP|XDP> -schedule <schedule> -policy <policy> -identity-preserve true
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项
+
 +
 以下示例将使用默认值创建SnapMirror灾难恢复关系 `MirrorAllSnapshots` 策略：
 
@@ -109,22 +129,27 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 ----
 . 停止目标 SVM ：
 +
-`vserver stop`
-
+[source, cli]
+----
+vserver stop -vserver <SVM_name>
+----
 +
-`_SVM name_`
-
-+
-以下示例将停止名为 dvs1 的目标 SVM ：
+以下示例将停止名为svm_backup的目标SVM：
 
 +
 [listing]
 ----
-cluster_dst::> vserver stop -vserver dvs1
+cluster_dst::> vserver stop -vserver svm_backup
 ----
-. 从目标 SVM 或目标集群初始化 SVM 复制关系： +
+. 从目标 SVM 或目标集群初始化 SVM 复制关系：
 +
-`snapmirror initialize -source-path _SVM_name_: -destination-path _SVM_name_:`
+[source, cli]
+----
+snapmirror initialize -source-path <SVM_name>: -destination-path <SVM_name>:
+----
++
+
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项
 
 +
 以下示例将初始化源SVM之间的关系、 `svm1`和目标SVM、 `svm_backup`：
@@ -135,3 +160,6 @@ cluster_dst::> vserver stop -vserver dvs1
 cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_backup:
 ----
 
+
+--
+====

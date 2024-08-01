@@ -1,8 +1,8 @@
 ---
 permalink: data-protection/make-svm-destination-volumes-writeable-task.html 
 sidebar: sidebar 
-keywords: make, svm, destination, volume, writable 
-summary: 您需要先使 SVM 目标卷可写，然后才能向客户端提供数据。在卷复制方面，操作步骤与操作步骤大致相同，但有一个例外。如果在创建 SVM 复制关系时设置 -identity-preserve true ，则必须先停止源 SVM ，然后再激活目标 SVM 。 
+keywords: make, svm, storage vm, destination, volume, writable 
+summary: 您需要先使 SVM 目标卷可写，然后才能向客户端提供数据。 
 ---
 = 使 SVM 目标卷可写
 :allow-uri-read: 
@@ -11,7 +11,9 @@ summary: 您需要先使 SVM 目标卷可写，然后才能向客户端提供数
 
 
 [role="lead"]
-您需要先使 SVM 目标卷可写，然后才能向客户端提供数据。在卷复制方面，操作步骤与操作步骤大致相同，但有一个例外。如果您设置了 `-identity-preserve true` 创建SVM复制关系时、必须先停止源SVM、然后再激活目标SVM。
+您需要先使 SVM 目标卷可写，然后才能向客户端提供数据。
+
+在卷复制方面，操作步骤与操作步骤大致相同，但有一个例外。如果您设置了 `-identity-preserve true` 创建SVM复制关系的时间、则必须先停止源SVM、然后再激活目标SVM。
 
 .关于此任务
 有关完整的命令语法，请参见手册页。
@@ -21,17 +23,36 @@ summary: 您需要先使 SVM 目标卷可写，然后才能向客户端提供数
 在灾难恢复场景中，您无法从源 SVM 向灾难恢复目标 SVM 执行 SnapMirror 更新，因为源 SVM 及其数据将无法访问，并且自上次重新同步以来的更新可能已损坏。
 
 ====
+从ONTAP 9.8开始、您可以在发生灾难后使用System Manager激活目标Storage VM。激活目标Storage VM会使SVM目标卷可写、并可为客户端提供数据。
+
 .步骤
+您可以从System Manager或ONTAP命令行界面执行此任务。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 如果源集群可访问、请验证SVM是否已停止：导航到*存储>存储VM*并检查SVM的*状态*列。
+. 如果源SVM状态为"正在运行"、请将其停止：选择 image:icon_kabob.gif["菜单选项图标"] 并选择*停止*。
+. 在目标集群上、找到所需的保护关系：导航到*保护>关系*。
+. 将鼠标悬停在所需的源Storage VM名称上，单击 image:icon_kabob.gif["菜单选项图标"]，然后选择*激活目标Storage VM*。
+. 在*激活目标Storage VM*窗口中，选择*激活目标Storage VM并中断关系*。
+. 单击 * 激活 * 。
+
+
+--
+.命令行界面
+--
 . 从目标 SVM 或目标集群停止向目标进行的计划传输：
 +
-`snapmirror quiesce -source-path _SVM_: -destination-path _SVM_:`
-
+[source, cli]
+----
+snapmirror quiesce -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 以下示例将停止源SVM之间的计划传输 `svm1` 和目标SVM `svm_backup`：
 
@@ -42,14 +63,14 @@ cluster_dst::> snapmirror quiesce -source-path svm1: -destination-path svm_backu
 ----
 . 从目标 SVM 或目标集群停止正在向目标进行的传输：
 +
-`snapmirror abort -source-path _SVM_: -destination-path _SVM_:`
-
+[source, cli]
+----
+snapmirror abort -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 以下示例将停止源SVM之间正在进行的传输 `svm1` 和目标SVM `svm_backup`：
 
@@ -60,14 +81,14 @@ cluster_dst::> snapmirror abort -source-path svm1: -destination-path svm_backup:
 ----
 . 从目标 SVM 或目标集群中断复制关系：
 +
-`snapmirror break -source-path _SVM_: -destination-path _SVM_:`
-
+[source, cli]
+----
+snapmirror break -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 以下示例将中断源SVM之间的关系 `svm1` 和目标SVM `svm_backup`：
 
@@ -78,8 +99,10 @@ cluster_dst::> snapmirror break -source-path svm1: -destination-path svm_backup:
 ----
 . 如果您设置了 `-identity-preserve true` 创建SVM复制关系时、停止源SVM：
 +
-`vserver stop -vserver _SVM_`
-
+[source, cli]
+----
+vserver stop -vserver <SVM>
+----
 +
 以下示例将停止源SVM `svm1`：
 
@@ -90,8 +113,10 @@ cluster_src::> vserver stop svm1
 ----
 . 启动目标 SVM ：
 +
-`vserver start -vserver _SVM_`
-
+[source, cli]
+----
+vserver start -vserver <SVM>
+----
 +
 以下示例将启动目标SVM `svm_backup`：
 
@@ -104,3 +129,6 @@ cluster_dst::> vserver start svm_backup
 
 .完成后
 配置用于数据访问的 SVM 目标卷，如中所述 link:configure-destination-volume-data-access-concept.html["配置用于数据访问的目标卷"]。
+
+--
+====

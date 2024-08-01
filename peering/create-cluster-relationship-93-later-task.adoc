@@ -2,7 +2,7 @@
 permalink: peering/create-cluster-relationship-93-later-task.html 
 sidebar: sidebar 
 keywords: create, cluster, peer, relationship 
-summary: 您可以使用cluster peer-create命令或System Manager在本地集群和远程集群之间创建对等关系。创建对等关系后、您可以对远程集群重复此任务、以便向本地集群进行身份验证。 
+summary: 在保护数据之前、请先在本地集群和远程集群之间创建集群对等关系、方法是将数据复制到远程集群以进行数据备份和灾难恢复。 
 ---
 = 创建集群对等关系
 :allow-uri-read: 
@@ -11,10 +11,18 @@ summary: 您可以使用cluster peer-create命令或System Manager在本地集�
 
 
 [role="lead"]
-您可以使用 `cluster peer create` 命令在本地集群和远程集群之间创建对等关系。创建对等关系后、您可以运行 `cluster peer create` 在远程集群上进行身份验证、以便向本地集群进行身份验证。
+在通过将数据复制到远程集群进行数据备份和灾难恢复来保护数据之前、您应在本地集群和远程集群之间创建集群对等关系。
+
+可以使用多个默认保护策略。如果要使用自定义策略，必须已创建保护策略。
 
 .开始之前
-* 您必须已在要建立对等关系的集群中的每个节点上创建集群间 LIF 。
+* 如果您使用的是ONTAP命令行界面、则必须已使用以下方法之一在要建立对等关系的集群中的每个节点上创建集群间LUN：
++
+** link:configure-intercluster-lifs-share-data-ports-task.html["在共享数据端口上配置集群间 LIF"]
+** link:configure-intercluster-lifs-use-dedicated-ports-task.html["在专用数据端口上配置集群间生命周期"]
+** link:configure-intercluster-lifs-use-ports-own-networks-task.html["在自定义 IP 空间中配置集群间 LIF"]
+
+
 * 集群必须运行 ONTAP 9.3 或更高版本。（如果集群运行的是 ONTAP 9.2 或更早版本，请参阅中的过程 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2494079["此归档文档"^]）
 
 
@@ -26,7 +34,7 @@ summary: 您可以使用cluster peer-create命令或System Manager在本地集�
 .System Manager
 --
 . 在本地集群中、单击*集群>设置*。
-. 在*集群间设置*部分中，单击*添加网络接口*并为集群添加集群间网络接口。
+. 在*Intercluster Settings*部分中，单击*Add Network Interfaces*并输入IP地址和子网掩码以添加集群的集群间网络接口。
 +
 在远程集群上重复此步骤。
 
@@ -45,7 +53,7 @@ summary: 您可以使用cluster peer-create命令或System Manager在本地集�
 +
 [source, cli]
 ----
-cluster peer create -generate-passphrase -offer-expiration <MM/DD/YYYY HH:MM:SS>|1...7days|1...168hours -peer-addrs <peer_LIF_IPs > -initial-allowed-vserver-peers <svm_name>|* -ipspace <ipspace>
+cluster peer create -generate-passphrase -offer-expiration <MM/DD/YYYY HH:MM:SS|1...7days|1...168hours> -peer-addrs <peer_LIF_IPs> -initial-allowed-vserver-peers <svm_name|*> -ipspace <ipspace>
 ----
 +
 如果同时指定这两者 `-generate-passphrase` 和 `-peer-addrs`、仅限在中指定了集群间的集群间的集群 `-peer-addrs` 可以使用生成的密码。
@@ -194,9 +202,6 @@ cluster01-02
 [cols="2"]
 |===
 | 要执行以下任务，请执行以下操作 ... | 查看此内容 ... 
-
-
-| 重新设计的 System Manager （适用于 ONTAP 9.7 及更高版本） | link:https://docs.netapp.com/us-en/ontap/task_dp_prepare_mirror.html["准备镜像和存储"^] 
 
 
 | System Manager 经典版（适用于 ONTAP 9.7 及更早版本） | link:https://docs.netapp.com/us-en/ontap-system-manager-classic/volume-disaster-prep/index.html["卷灾难恢复准备概述"^] 

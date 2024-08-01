@@ -11,15 +11,31 @@ summary: 您可以使用 volume snapshot restore 命令从 Snapshot 副本还原
 
 
 [role="lead"]
-您可以使用 `volume snapshot restore` 命令以从Snapshot副本还原卷的内容。
+您可以通过从 Snapshot 副本还原来将卷恢复到较早的时间点。您可以使用 `volume snapshot restore` 命令从Snapshot副本还原卷的内容。
 
 .关于此任务
 如果卷具有 SnapMirror 关系，请在从 Snapshot 副本还原后立即手动复制卷的所有镜像副本。否则，可能会导致镜像副本不可用，必须删除并重新创建这些副本。
 
+.步骤
+您可以使用System Manager或ONTAP命令行界面。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 单击 * 存储 * 并选择一个卷。
+. 在*Snapshot副本*下，单击 image:icon_kabob.gif["菜单选项图标"] 要还原的Snapshot副本旁边的，然后选择*Restore*。
+
+
+--
+.命令行界面
+--
 . 列出卷中的 Snapshot 副本：
 +
-`volume snapshot show -vserver _SVM_ -volume _volume_`
-
+[source, cli]
+----
+volume snapshot show -vserver <SVM> -volume <volume>
+----
 +
 以下示例显示了中的Snapshot副本 `vol1`：
 
@@ -31,7 +47,7 @@ clus1::> volume snapshot show -vserver vs1 -volume vol1
 
 Vserver Volume Snapshot                State    Size  Total% Used%
 ------- ------ ---------- ----------- ------   -----  ------ -----
-vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+vs1	    vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
                daily.2013-01-25_0010   valid   92KB      0%    0%
                hourly.2013-01-25_0105  valid   228KB     0%    0%
                hourly.2013-01-25_0205  valid   236KB     0%    0%
@@ -43,8 +59,10 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 ----
 . 从 Snapshot 副本还原卷的内容：
 +
-`volume snapshot restore -vserver _SVM_ -volume _volume_ -snapshot _snapshot_`
-
+[source, cli]
+----
+volume snapshot restore -vserver <SVM> -volume <volume> -snapshot <snapshot>
+----
 +
 以下示例将还原的内容 `vol1`：
 
@@ -54,3 +72,6 @@ vs1	 vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
 ----
 
+
+--
+====

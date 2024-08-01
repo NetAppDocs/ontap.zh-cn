@@ -13,10 +13,17 @@ summary: 主存储中的源卷与二级存储中的目标卷之间的关系称�
 [role="lead"]
 主存储中的源卷与二级存储中的目标卷之间的关系称为_data protection关系。_您可以使用 `snapmirror create` 用于创建SnapMirror灾难恢复、SnapVault或统一复制数据保护关系的命令。
 
+从ONTAP 9.11.1开始、您可以使用System Manager选择预创建的自定义镜像和存储策略、显示和选择旧策略、以及在保护卷和Storage VM时覆盖保护策略中定义的传输计划。ONTAP 9.8P12及更高版本的ONTAP 9.8修补程序也提供了此功能。
+
+[NOTE]
+====
+如果您使用的是ONTAP 9.8P12或更高版本的ONTAP 9.8修补程序版本、并且使用System Manager配置了SnapMirror、则如果您计划升级到ONTAP 9.9.1或ONTAP 9.10.1版本、则应使用ONTAP 9.9.0.1P13或更高版本以及ONTAP 9.10.1P10或更高版本的修补程序。
+
+====
 .开始之前
 * 源和目标集群以及 SVM 必须建立对等关系。
 +
-https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["集群和 SVM 对等"^]
+link:../peering/index.html["集群和 SVM 对等"]
 
 * 目标卷上的语言必须与源卷上的语言相同。
 
@@ -103,6 +110,23 @@ options replication.create_data_protection_rels.enable on
 从ONTAP 9.14.1开始， `-backoff-level` 在、和命令中添加了选项 `snapmirror create` `snapmirror modify` `snapmirror restore` ，用于指定每个关系的回退级别。只有FlexVol SnapMirror关系才支持此选项。此可选命令会根据客户端操作指定SnapMirror回退级别。回退值可以是high、Medium或none。默认值为high。
 
 .步骤
+您可以使用System Manager或ONTAP命令行界面创建复制关系。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择要保护的卷或 LUN ：单击 * 存储 > 卷 * 或 * 存储 > LUN* ，然后单击所需的卷或 LUN 名称。
+. 单击image:icon_protect.gif["保护图标"]。
+. 选择目标集群和 Storage VM 。
+. 默认情况下，异步策略处于选中状态。要选择同步策略，请单击 * 更多选项 * 。
+. 单击 * 保护 * 。
+. 单击选定卷或 LUN 的 * SnapMirror （本地或远程） * 选项卡以验证是否已正确设置保护。
+
+
+--
+.命令行界面
+--
 . 从目标集群中，创建复制关系：
 +
 在运行此命令之前、必须将尖括号中的变量替换为所需的值。
@@ -116,11 +140,9 @@ snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume> -type
 有关完整的命令语法，请参见手册页。
 
 +
-[NOTE]
-====
-。 `schedule` 参数在创建SnapMirror同步关系时不适用。
 
-====
+NOTE: 。 `schedule` 参数在创建SnapMirror同步关系时不适用。
+
 +
 以下示例将使用默认值创建SnapMirror灾难恢复关系 `MirrorLatest` 策略：
 
@@ -202,18 +224,18 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -policy SnapCenterSync
 ----
 +
-[NOTE]
-====
-预定义的策略 `SnapCenterSync` 属于类型 `Sync`。此策略会复制使用创建的任何Snapshot副本 `snapmirror-label` "应用一致"。
 
-====
+NOTE: 预定义的策略 `SnapCenterSync` 属于类型 `Sync`。此策略会复制使用创建的任何Snapshot副本 `snapmirror-label` "应用一致"。
+
 
 
 .完成后
 使用 `snapmirror show` 命令以验证是否已创建SnapMirror关系。有关完整的命令语法，请参见手册页。
 
+--
+====
 .相关信息
-* link:https://docs.netapp.com/us-en/ontap/data-protection/create-delete-snapmirror-failover-test-task.html["创建和删除SnapMirror故障转移测试卷"]。
+* link:create-delete-snapmirror-failover-test-task.html["创建和删除SnapMirror故障转移测试卷"](英文)
 
 
 
@@ -223,9 +245,6 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 [cols="2"]
 |===
 | 要执行以下任务，请执行以下操作 ... | 查看此内容 ... 
-
-
-| 重新设计的 System Manager （适用于 ONTAP 9.7 及更高版本） | link:https://docs.netapp.com/us-en/ontap/task_dp_configure_mirror.html["配置镜像和存储"^] 
 
 
 | System Manager 经典版（适用于 ONTAP 9.7 及更早版本） | link:https://docs.netapp.com/us-en/ontap-system-manager-classic/volume-backup-snapvault/index.html["使用 SnapVault 进行卷备份概述"^] 

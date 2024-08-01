@@ -26,19 +26,45 @@ NOTE: 快速重新同步不会保留目标卷的存储效率。启用快速重�
 
 此操作步骤假定原始源卷中的基线完好无损。如果基线不完好，则必须在执行操作步骤之前创建并初始化提供数据的卷与原始源卷之间的关系。
 
-有关命令的完整命令语法，请参见手册页。
+从 ONTAP 9.8 开始，您可以使用 System Manager 在发生灾难后重新激活源 Storage VM 。重新激活源 Storage VM 将停止目标 Storage VM ，并重新启用从源到目标的复制。
+
+使用System Manager重新激活源Storage VM时、System Manager会在后台执行以下操作：
+
+* 使用SnapMirror重新同步创建从原始目标到原始源的反向SVM灾难恢复关系
+* 停止目标SVM
+* 更新SnapMirror关系
+* 中断SnapMirror关系
+* 重新启动原始SVM
+* 对原始源重新同步到原始目标发出SnapMirror重新同步
+* 清理SnapMirror关系
+
 
 .步骤
+您可以从System Manager或ONTAP命令行界面执行此任务。
+
+[role="tabbed-block"]
+====
+--
+.System Manager
+. 从目标集群中，单击*保护>关系*，然后找到所需的保护关系。
+. 将鼠标悬停在源关系名称上，单击 image:icon_kabob.gif["菜单选项图标"]，然后选择*重新激活源Storage VM*。
+. 在*重新激活源Storage VM窗口*中，单击*重新激活*。
+. 在 * 关系 * 下，通过查看保护关系的 * 传输状态 * 来监控源重新激活进度。重新激活完成后、关系状态应恢复为"已镜像"。
+
+
+--
+.命令行界面
+--
 . 从原始源 SVM 或原始源集群中，使用与原始 SVM DR 关系相同的配置，策略和身份保留设置创建反向 SVM DR 关系：
 +
-`snapmirror create -source-path SVM: -destination-path SVM:`
-
+[source, cli]
+----
+snapmirror create -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 以下示例将在提供数据的SVM之间创建关系、 `svm_backup`和初始源SVM、 `svm1`：
 
@@ -49,23 +75,21 @@ cluster_src::> snapmirror create -source-path svm_backup: -destination-path svm1
 ----
 . 从原始源 SVM 或原始源集群运行以下命令以反转数据保护关系：
 +
-`snapmirror resync -source-path _SVM_: -destination-path _SVM_:`
-
+[source, cli]
+----
+snapmirror resync -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 虽然重新同步不需要基线传输，但它可能非常耗时。您可能希望在非高峰时段运行重新同步。
 
 +
-[NOTE]
-====
-如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 ... `snapmirror initialize` 重新初始化此关系。
 
-====
+NOTE: 如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 ... `snapmirror initialize` 重新初始化此关系。
+
 +
 以下示例将反转初始源SVM、 `svm1`和提供数据的SVM、 `svm_backup`：
 
@@ -84,8 +108,10 @@ cluster_src::> snapmirror resync -source-path svm_backup: -destination-path svm1
 ----
 . 准备好重新建立对原始源 SVM 的数据访问后，请停止原始目标 SVM 以断开当前连接到原始目标 SVM 的所有客户端。
 +
-`vserver stop -vserver _SVM_`
-
+[source, cli]
+----
+vserver stop -vserver <SVM>
+----
 +
 以下示例将停止当前正在提供数据的原始目标 SVM ：
 
@@ -106,14 +132,14 @@ svm_backup     data    default    stopped    stopped     rv         aggr1
 ----
 . 从初始源 SVM 或初始源集群运行以下命令，对已反转的关系执行最终更新，以便将所有更改从初始目标 SVM 传输到初始源 SVM ：
 +
-`snapmirror update -source-path _SVM_: -destination-path _SVM_:`
-
+[source, cli]
+----
+snapmirror update -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 以下示例将更新提供数据的原始目标SVM之间的关系,`svm_backup`和初始源SVM、 `svm1`：
 
@@ -124,14 +150,14 @@ cluster_src::> snapmirror update -source-path svm_backup: -destination-path svm1
 ----
 . 从初始源 SVM 或初始源集群运行以下命令，以停止已反转关系的计划传输：
 +
-`snapmirror quiesce -source-path _SVM_: -destination-path _SVM_:`
-
+[source, cli]
+----
+snapmirror quiesce -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 以下示例将停止提供数据的SVM之间的计划传输、 `svm_backup`和原始SVM、 `svm1`：
 
@@ -142,14 +168,14 @@ cluster_src::> snapmirror quiesce -source-path svm_backup: -destination-path svm
 ----
 . 当最终更新完成且关系状态指示 " 已暂停 " 时，从原始源 SVM 或原始源集群运行以下命令以中断已反转的关系：
 +
-`snapmirror break -source-path _SVM_: -destination-path _SVM_:`
-
+[source, cli]
+----
+snapmirror break -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 以下示例将中断您提供数据的原始目标SVM之间的关系： `svm_backup`和初始源SVM、 `svm1`：
 
@@ -160,8 +186,10 @@ cluster_src::> snapmirror break -source-path svm_backup: -destination-path svm1:
 ----
 . 如果原始源 SVM 先前已停止，请从原始源集群启动原始源 SVM ：
 +
-`vserver start -vserver _SVM_`
-
+[source, cli]
+----
+vserver start -vserver <SVM>
+----
 +
 以下示例将启动初始源 SVM ：
 
@@ -172,14 +200,14 @@ cluster_src::> vserver start svm1
 ----
 . 从初始目标 SVM 或初始目标集群重新建立初始数据保护关系：
 +
-`snapmirror resync -source-path _SVM_: -destination-path _SVM_:`
-
+[source, cli]
+----
+snapmirror resync -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 以下示例将在初始源SVM、 `svm1`和初始目标SVM、 `svm_backup`：
 
@@ -190,14 +218,14 @@ cluster_dst::> snapmirror resync -source-path svm1: -destination-path svm_backup
 ----
 . 从原始源 SVM 或原始源集群运行以下命令，以删除已反转的数据保护关系：
 +
-`snapmirror delete -source-path _SVM_: -destination-path _SVM_:`
-
+[source, cli]
+----
+snapmirror delete -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 以下示例将删除初始目标SVM、 `svm_backup`和初始源SVM、 `svm1`：
 
@@ -208,14 +236,14 @@ cluster_src::> snapmirror delete -source-path svm_backup: -destination-path svm1
 ----
 . 从原始目标 SVM 或原始目标集群释放反转的数据保护关系：
 +
-`snapmirror release -source-path SVM: -destination-path SVM:`
-
+[source, cli]
+----
+snapmirror release -source-path <SVM>: -destination-path <SVM>:
+----
 +
-[NOTE]
-====
-您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
 
-====
+NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-destination-path` 选项请参见以下示例。
+
 +
 以下示例将释放初始目标SVM svm_backup和初始源SVM之间的已反转关系、 `svm1`
 
@@ -228,3 +256,6 @@ cluster_dst::> snapmirror release -source-path svm_backup: -destination-path svm
 
 .完成后
 使用 `snapmirror show` 命令以验证是否已创建SnapMirror关系。有关完整的命令语法，请参见手册页。
+
+--
+====

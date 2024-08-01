@@ -1,8 +1,8 @@
 ---
 permalink: system-admin/enable-telnet-rsh-access-cluster-task.html 
 sidebar: sidebar 
-keywords: enable, telnet, rsh, access, cluster, mgmt, management, firewall, policy 
-summary: 作为安全最佳实践，在预定义的管理防火墙策略（ mgmt ）中禁用 Telnet 和 RSH 。要使集群能够接受 Telnet 或 RSH 请求，您必须创建一个已启用 Telnet 或 RSH 的新管理防火墙策略，然后将此新策略与集群管理 LIF 关联起来。 
+keywords: enable, telnet, rsh, access, cluster, mgmt, management, service, policy 
+summary: 作为一项安全最佳实践、默认情况下会禁用Telnet和RSH。要使集群能够接受Telnet或RSH请求、必须在默认管理服务策略中启用该服务。 
 ---
 = 启用对集群的 Telnet 或 RSH 访问
 :hardbreaks:
@@ -12,23 +12,55 @@ summary: 作为安全最佳实践，在预定义的管理防火墙策略（ mgmt
 
 
 [role="lead"]
-作为安全最佳实践、预定义的管理防火墙策略会禁用Telnet和RSH (`mgmt`）。要使集群能够接受 Telnet 或 RSH 请求，您必须创建一个已启用 Telnet 或 RSH 的新管理防火墙策略，然后将此新策略与集群管理 LIF 关联起来。
+作为一项安全最佳实践、默认情况下会禁用Telnet和RSH。要使集群能够接受Telnet或RSH请求、必须在默认管理服务策略中启用该服务。
 
 .关于此任务
-ONTAP不允许您更改预定义的防火墙策略、但您可以通过克隆预定义的来创建新策略 `mgmt` 管理防火墙策略、然后在新策略下启用Telnet或RSH。但是， Telnet 和 RSH 不是安全协议，因此您应考虑使用 SSH 访问集群。SSH 可提供安全的远程 shell 和交互式网络会话。
+* RSH 不是安全协议。
++
+您应考虑使用 SSH 访问集群。SSH 可提供安全的远程 shell 和交互式网络会话。
 
-要对集群启用 Telnet 或 RSH 访问，请执行以下步骤：
+* ONTAP 最多支持每个节点 50 个并发 RSH 会话。
++
+如果集群管理 LIF 驻留在节点上，则它与节点管理 LIF 共享此限制。
+
++
+如果传入连接的速率高于每秒 10 次，则此服务将暂时禁用 60 秒。
+
+* rsh命令需要高级权限。
+
 
 .步骤
-. 进入高级权限模式：
-`*set advanced*`
-. 启用安全协议（ RSH 或 Telnet ）：
-`*security protocol modify -application _security_protocol_ -enabled true*`
-. 基于创建新的管理防火墙策略 `mgmt` 管理防火墙策略：
-`*system services firewall policy clone -policy mgmt -destination-policy _policy-name_*`
-. 在新的管理防火墙策略中启用 Telnet 或 RSH ：
-`*system services firewall policy create -policy _policy-name_ -service _security_protocol_ -action allow -ip-list _ip_address/netmask_*`
-要允许所有IP地址、应指定 `-ip-list 0.0.0.0/0`
-. 将新策略与集群管理 LIF 关联：
-`*network interface modify -vserver _cluster_management_LIF_ -lif cluster_mgmt -firewall-policy _policy-name_*`
+. 确认RSH或Telnet安全协议已启用：
++
+`security protocol show`
+
++
+.. 如果已启用RSH或Telnet安全协议、请继续执行下一步。
+.. 如果未启用RSH或Telnet安全协议、请使用以下命令启用它：
++
+`security protocol modify -application <rsh/telnet> -enabled true`
+
+
+
+. 确认 `management-rsh-server` 或 `management-telnet-server` 服务位于管理生命周期管理中：
++
+`network interface show -services management-rsh-server`
+
++
+或
+
++
+`network interface show -services management-telnet-server`
+
++
+.. 如果 `management-rsh-server` 存在或 `management-telnet-server` 服务、请继续执行下一步。
+.. 如果 `management-rsh-server` 或 `management-telnet-server` 服务不存在、请使用以下命令进行添加：
++
+`network interface service-policy add-service -vserver cluster1 -policy default-management -service management-rsh-server`
+
++
+`network interface service-policy add-service -vserver cluster1 -policy default-management -service management-telnet-server`
+
+
+
 
