@@ -20,14 +20,6 @@ summary: 您可以通过问题描述向集群发送 Telnet 请求来执行管理
 +
 。 `-application` 的参数 `security login` 命令用于指定用户帐户的访问方法。有关详细信息，请参见 `security login` 手册页。
 
-* 必须已在集群或节点管理 LIF 使用的管理防火墙策略中启用 Telnet ，以便 Telnet 请求可以通过防火墙。
-+
-默认情况下， Telnet 处于禁用状态。。 `system services firewall policy show` 命令 `-service telnet` 参数显示是否已在防火墙策略中启用Telnet。有关详细信息，请参见 `system services firewall policy` 手册页。
-
-* 如果使用 IPv6 连接，则必须已在集群上配置并启用 IPv6 ，并且防火墙策略必须已配置 IPv6 地址。
-+
-。 `network options ipv6 show` 命令用于显示是否已启用IPv6。。 `system services firewall policy show` 命令可显示防火墙策略。
-
 
 
 .关于此任务
@@ -43,15 +35,33 @@ summary: 您可以通过问题描述向集群发送 Telnet 请求来执行管理
 如果传入连接的速率高于每秒 10 次，则此服务将暂时禁用 60 秒。
 
 * 如果要从 Windows 主机访问 ONTAP 命令行界面，可以使用 PuTTY 等第三方实用程序。
+* rsh命令需要高级权限。
 
 
 .步骤
-. 在管理主机中，输入以下命令：
+. 确认已启用Telnet安全协议：
 +
-`*telnet _hostname_or_IP_*`
+`security protocol show`
 
 +
-`_hostname_or_IP_` 是集群管理LIF或节点管理LIF的主机名或IP地址。建议使用集群管理 LIF 。您可以使用 IPv4 或 IPv6 地址。
+.. 如果已启用Telnet安全协议、请继续执行下一步。
+.. 如果未启用Telnet安全协议、请使用以下命令启用它：
++
+`security protocol modify -application telnet -enabled true`
+
+
+
+. 确认此 `management-telnet-server` 服务位于管理生命周期管理中：
++
+`network interface show -services management-telnet-server`
+
++
+.. 如果存在此 `management-telnet-server` 服务、请继续执行下一步。
+.. 如果此 `management-telnet-server` 服务不存在、请使用以下命令进行添加：
++
+`network interface service-policy add-service -vserver cluster1 -policy default-management -service management-telnet-server`
+
+
 
 
 
