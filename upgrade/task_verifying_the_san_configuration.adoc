@@ -20,29 +20,39 @@ summary: 在升级SAN集群之前、您应验证是否为每个主机配置了�
 
 . 验证每个主机是否已连接到每个节点上的 LIF 。
 +
-您应记录启动程序列表，以便在升级后进行比较。
+您应记录启动程序列表，以便在升级后进行比较。如果您运行的是ONTAP 9.11.1或更高版本、请使用System Manager查看连接状态、因为它的显示比命令行界面更清晰。
 
 +
-[cols="2*"]
-|===
-| 针对 ... | 输入 ... 
+[role="tabbed-block"]
+====
+.System Manager
+--
+.. 在System Manager中、单击*主机> SAN启动程序组*。
++
+此页面将显示启动程序组(igroup)的列表。如果列表很大、您可以单击页面右下角的页码来查看列表中的其他页面。
+
++
+这些列显示有关igroup的各种信息。从9.11.1开始、还会显示igroup的连接状态。将鼠标悬停在状态警报上可查看详细信息。
 
 
- a| 
-iSCSI
- a| 
+
+--
+.命令行界面
+--
+** 列出iSCSI启动程序：
++
 [source, cli]
 ----
 iscsi initiator show -fields igroup,initiator-name,tpgroup
 ----
-
-
- a| 
-FC
- a| 
+** 列出FC启动程序：
++
 [source, cli]
 ----
 fcp initiator show -fields igroup,wwpn,lif
 ----
-|===
+
+
+--
+====
 

@@ -60,7 +60,7 @@ network interface modify -vserver <vserver_name> -lif <lif_name> -failover-polic
 以下命令会将故障转移策略设置为 broadcast-domain-wide ，并使用故障转移组 fg3 中的端口作为 SVM vs3 上 LIF data1 的故障转移目标：
 
 ....
-network interface modify -vserver vs3 -lif data1 failover-policy broadcast-domain-wide - failover-group fg3
+network interface modify -vserver vs3 -lif data1 -failover-policy broadcast-domain-wide -failover-group fg3
 
 network interface show -vserver vs3 -lif * -fields failover-group,failover-policy
 
@@ -71,5 +71,5 @@ vs3     data1          broadcast-domain-wide  fg3
 以下命令将对 SVM vs3 上的 LIF data1 禁用故障转移：
 
 ....
-network interface modify -vserver vs3 -lif data1 failover-policy disabled
+network interface modify -vserver vs3 -lif data1 -failover-policy disabled
 ....

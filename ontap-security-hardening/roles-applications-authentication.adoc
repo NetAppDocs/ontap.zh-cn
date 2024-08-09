@@ -258,7 +258,7 @@ NOTE: 。 `autosupport` 已将角色分配给预定义的 `autosupport` 帐户�
 
 应用程序方法用于指定登录方法的访问类型。可能的值包括 `console, http, ontapi, rsh, snmp, service-processor, ssh,` 和 `telnet`。
 
-将此参数设置为 `service-processor` 可授予用户对服务处理器的访问权限。如果此参数设置为 `service-processor`，则必须将该 `-authentication-method` 参数设置为 `password` ，因为服务处理器仅支持密码身份验证。SVM用户帐户无法访问服务处理器。因此，当参数设置为时，操作员和管理员不能使用 `-vserver` 参数 `service-processor`。
+将此参数设置为 `service-processor` 可授予用户对服务处理器的访问权限。如果此参数设置为 `service-processor`，则必须将该 `-authentication-method` 参数设置为 `password` ，因为服务处理器仅支持 `password` 身份验证。SVM用户帐户无法访问服务处理器。因此，当参数设置为时，操作员和管理员不能使用 `-vserver` 参数 `service-processor`。
 
 要进一步限制对的访问， `service-processor` 请使用命令 `system service-processor ssh add-allowed-addresses`。命令 `system service-processor api-service` 可用于更新配置和证书。
 
@@ -300,7 +300,7 @@ authentication方法参数用于指定用于登录的身份验证方法。
 
 NOTE: 由于协议安全漏洞、不建议使用NIS。
 
-从ONTAP 9.3开始、本地SSH帐户可以使用和密码作为两种身份验证方法进行链式双因素身份验证 `admin` `publickey` 。除了 `-authentication-method` 命令中的字段 `security login` 之外、还添加了一个名为的新字段 `-second-authentication-method` 。公共密钥或密码可以指定为 `-authentication-method` 或 `-second-authentication-method`。但是、在SSH身份验证期间、顺序始终是部分身份验证的公共密钥、后跟用于完全身份验证的密码提示。
+从ONTAP 9.3开始、本地SSH帐户可以使用和作为两种身份验证方法来进行链式双因素身份验证 `admin` `publickey` `password` 。除了 `-authentication-method` 命令中的字段 `security login` 之外、还添加了一个名为的新字段 `-second-authentication-method` 。 `publickey`可以将或 `password` 指定为 `-authentication-method` 或 `-second-authentication-method`。但是、在SSH身份验证期间、顺序始终为 `publickey` 部分身份验证、然后是用于完全身份验证的密码提示。
 
 [listing]
 ----

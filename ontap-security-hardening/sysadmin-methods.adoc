@@ -50,11 +50,11 @@ vs1             aes256-ctr,   diffie-hellman-group-     hmac-sha1-96
 
 === 登录横幅
 
-通过登录横幅、组织可以向任何操作员、管理员甚至入侵者提供可接受使用的条款和条件、并指明允许谁访问系统。这种方法有助于建立对系统访问和使用的预期。命令用于 `security login banner modify` 修改登录横幅。在SSH和控制台设备登录过程中、登录横幅显示在身份验证步骤的前面。横幅文本必须使用双引号(“”)，如以下示例所示。
+通过登录横幅、组织可以向任何操作员、管理员甚至入侵者提供可接受使用的条款和条件、并指明允许谁访问系统。这种方法有助于建立对系统访问和使用的预期。命令用于 `security login banner modify` 修改登录横幅。在SSH和控制台设备登录过程中、登录横幅显示在身份验证步骤的前面。横幅文本必须用双引号("")括起来、如以下示例所示。
 
 [listing]
 ----
-cluster1::> security login banner modify -vserver cluster1 -message “Authorized users ONLY!”
+cluster1::> security login banner modify -vserver cluster1 -message "Authorized users ONLY!"
 ----
 
 
@@ -142,7 +142,7 @@ MOTD分为两类：集群级别的MOTD和数据SVM级别的MOTD。登录到数�
 
 == 使用NetApp ONTAP系统管理器进行Web访问
 
-如果ONTAP管理员更喜欢使用图形界面而不是命令行界面来访问和管理集群、请使用NetApp ONTAP系统管理器。它作为Web服务随ONTAP附带、默认情况下处于启用状态、并可通过浏览器进行访问。如果使用的是DNS或IPv4或IPv6地址，请通过将浏览器指向主机名 `https://cluster-management-LIF`。
+如果ONTAP管理员更喜欢使用图形界面而不是命令行界面来访问和管理集群、请使用NetApp ONTAP系统管理器。它作为Web服务随ONTAP附带、默认情况下处于启用状态、并可通过浏览器进行访问。如果使用的是DNS或IPv4或IPv6地址，请通过将浏览器指向主机名 `+https://cluster-management-LIF+`。
 
 如果集群使用自签名数字证书，浏览器可能会显示一条警告，指示此证书不可信。您可以确认风险以继续访问、也可以在集群上安装证书颁发机构(CA)签名的数字证书以进行服务器身份验证。
 
@@ -158,7 +158,7 @@ SAML规范中定义了三个角色：主体、Idp和服务提供商。在ONTAP�
 
 与SSH双因素配置过程不同、在激活SAML身份验证后、ONTAP系统管理器或ONTAP服务处理器访问要求所有现有管理员通过SAML Idp进行身份验证。不需要更改集群用户帐户。启用SAML身份验证后、将向具有和应用程序管理员角色的现有用户添加新的身份验证方法 `saml` `http` `ontapi` 。
 
-启用SAML身份验证后、应在ONTAP中使用管理员角色以及和应用程序的SAML身份验证方法定义需要SAML Idp访问的其他新帐户 `http` `ontapi` 。如果在某个时刻禁用了SAML身份验证、则这些新帐户需要 `password` 使用和应用程序的管理员角色定义身份验证方法 `http` `ontapi` 、并将用于本地ONTAP身份验证的控制台应用程序添加到ONTAP系统管理器中。
+启用SAML身份验证后、应在ONTAP中使用管理员角色以及和应用程序的SAML身份验证方法定义需要SAML Idp访问的其他新帐户 `http` `ontapi` 。如果在某个时刻禁用了SAML身份验证、则这些新帐户需要 `password` 使用和应用程序的管理员角色定义身份验证方法 `http` `ontapi` 、并将用于本地ONTAP身份验证的应用程序添加 `console` 到ONTAP系统管理器中。
 
 启用SAML IdP后、IdP将使用IdP可用的方法(例如轻型目录访问协议(Lightweight-Directory Access Protocol、LDAP)、Active Directory (AD)、Kerberos、密码等)执行ONTAP System Manager访问身份验证。可用方法对于Idp是唯一的。请务必确保在ONTAP中配置的帐户具有映射到Idp身份验证方法的用户ID。
 

@@ -160,10 +160,10 @@ IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务�
 . 在主机上、根据需要配置主机连接并访问每个集群。
 . 建立igrop配置。为本地集群上的启动程序设置首选路径。指定将配置复制到对等集群反向相关性的选项。
 +
-`SiteA::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -replication-peer _peer_svm_name_ -initiators _host_ -proximal-vserver local`
+`SiteA::> igroup create -vserver _svm_name_  -os-type _os_type_ -igroup _igroup_name_ -replication-peer _peer_svm_name_ -initiator _host_`
 
 +
-`SiteA::> igroup add -vserver _svm_name_ -igroup _igroup_name_ -initiators _host_ -proximal-vserver _peer_svm_`
+`SiteA::> igroup add -vserver _svm_name_ -igroup _igroup_name_ -os-type _os_type_ -initiator _host_`
 
 . 从主机中、发现路径、并验证主机是否具有从首选集群到存储LUN的主动/优化路径。
 . 部署应用程序并在集群之间分布VM工作负载、以实现所需的负载平衡。
@@ -182,11 +182,11 @@ IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务�
 . 在源集群和目标集群上建立igrop配置。
 +
 `# primary site
-SiteA::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -initiators _host_1_name_`
+SiteA::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -initiator _host_1_name_`
 
 +
 `# secondary site
-SiteB::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -initiators _host_2_name_`
+SiteB::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -initiator _host_2_name_`
 
 . 从主机中、发现路径、并验证主机是否具有从首选集群到存储LUN的主动/优化路径。
 . 部署应用程序并在集群之间分布VM工作负载、以实现所需的负载平衡。

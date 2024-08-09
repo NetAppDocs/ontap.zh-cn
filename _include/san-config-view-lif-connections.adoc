@@ -1,0 +1,36 @@
+= 
+:allow-uri-read: 
+
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 在System Manager中、单击*主机> SAN启动程序组*。
++
+此页面将显示启动程序组(igroup)的列表。如果列表很大、您可以单击页面右下角的页码来查看列表中的其他页面。
+
++
+这些列显示有关igroup的各种信息。从9.11.1开始、还会显示igroup的连接状态。将鼠标悬停在状态警报上可查看详细信息。
+
+
+
+--
+.命令行界面
+--
+* 列出iSCSI启动程序：
++
+[source, cli]
+----
+iscsi initiator show -fields igroup,initiator-name,tpgroup
+----
+* 列出FC启动程序：
++
+[source, cli]
+----
+fcp initiator show -fields igroup,wwpn,lif
+----
+
+
+--
+====

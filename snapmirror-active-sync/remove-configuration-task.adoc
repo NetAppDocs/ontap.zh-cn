@@ -91,13 +91,13 @@ summary: 您可以删除零RTO SnapMirror同步保护并删除SnapMirror活动�
 . 将所有VM工作负载移动到SnapMirror主动同步源集群的本地主机。
 . 在源集群上、从igrop中删除启动程序、然后修改igrop配置以终止igrop复制。
 +
-`SiteA::> igroup remove -vserver _svm_name_ -igroup _igroup_name_ -initiator _host2_
-SiteA::> igroup modify -vserver _svm_name_ -igroup _igroup_name_ -replication-peer "-"`
+`SiteA::> igroup remove -vserver <svm_name> -igroup <igroup_name> -os-type <os_type> -initiator <host2>
+SiteA::> igroup modify -vserver <svm_name> -igroup <igroup_name> -os-type <os_type> -replication-peer "-"`
 
 . 在二级站点上、删除LUN映射并删除igrop配置：
 +
-`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>
-SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup_name> -path <>
+SiteB::> igroup delete -vserver <svm_name> -igroup <igroup_name>`
 
 . 在二级站点上、删除SnapMirror活动同步关系。
 +
@@ -105,7 +105,7 @@ SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
 
 . 在主站点上、从主站点释放SnapMirror活动同步关系。
 +
-`SiteA::> snapmirror release -destination-path _destination_path_`
+`SiteA::> snapmirror release -destination-path <destination_path>`
 
 . 重新发现路径以验证主机是否只能使用本地路径。
 
@@ -114,20 +114,20 @@ SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
 . 将所有VM工作负载移动到SnapMirror主动同步源集群的本地主机。
 . 在源集群上、从igrop中删除启动程序。
 +
-`SiteA::> igroup remove -vserver _svm_name_ -igroup _igroup_name_ -initiator _host2_`
+`SiteA::> igroup remove -vserver <svm_name> -igroup <igroup_name> -initiator <host2>`
 
 . 在二级站点上、删除LUN映射并删除igrop配置：
 +
-`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>
-SiteB::> igroup delete -vserver _svm_name_ -igroup _igroup_name_`
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup_name> -path <>
+SiteB::> igroup delete -vserver <svm_name> -igroup <igroup_name>`
 
 . 在二级站点上、删除SnapMirror活动同步关系。
 +
-`SiteB::> snapmirror delete -destination-path _destination_path_`
+`SiteB::> snapmirror delete -destination-path <destination_path>`
 
 . 在主站点上、从主站点释放SnapMirror活动同步关系。
 +
-`SiteA::> snapmirror release -destination-path _destination_path_`
+`SiteA::> snapmirror release -destination-path <destination_path>`
 
 . 重新发现路径以验证主机是否只能使用本地路径。
 

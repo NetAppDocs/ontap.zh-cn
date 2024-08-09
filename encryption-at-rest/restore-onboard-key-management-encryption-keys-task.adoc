@@ -23,26 +23,10 @@ NOTE: 如果在具有Flash Cache模块的系统上使用NSE、则还应启用NVE
 
 
 
-== 具有加密根卷的ONTAP 9.8及更高版本
-
-
-NOTE: 如果您运行的是ONTAP 9.8或更高版本、并且根卷未加密、请遵循适用于ONTAP 9.6或更高版本的操作步骤。
-
-如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，则必须在启动菜单中设置板载密钥管理恢复密码短语。如果要更换启动介质、也需要执行此过程。
-
-. 将节点启动至启动菜单、然后选择选项 `(10) Set onboard key management recovery secrets`。
-. 输入 ... `y` 以使用此选项。
-. 在提示符处，输入集群的板载密钥管理密码短语。
-. 在提示符处，输入备份密钥数据。
-+
-节点将返回到启动菜单。
-
-. 从启动菜单中、选择选项 `(1) Normal Boot`。
-
-
-
-
 == ONTAP 9.6 及更高版本
+
+
+IMPORTANT: 如果您运行的是ONTAP 9.8或更高版本，并且根卷已加密，请按照中的过程进行操作 <<ontap-9-8>>。
 
 . 验证是否需要还原密钥：+
 `security key-manager key query -node _node_`
@@ -62,6 +46,22 @@ cluster1::> security key-manager onboard sync
 Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
 ----
 . 在密码短语提示符处，输入集群的板载密钥管理密码短语。
+
+
+
+
+== 使用加密根卷的ONTAP 9.8或更高版本
+
+如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，则必须在启动菜单中设置板载密钥管理恢复密码短语。如果要更换启动介质、也需要执行此过程。
+
+. 将节点启动至启动菜单、然后选择选项 `(10) Set onboard key management recovery secrets`。
+. 输入 ... `y` 以使用此选项。
+. 在提示符处，输入集群的板载密钥管理密码短语。
+. 在提示符处，输入备份密钥数据。
++
+节点将返回到启动菜单。
+
+. 从启动菜单中、选择选项 `(1) Normal Boot`。
 
 
 

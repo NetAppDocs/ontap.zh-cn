@@ -95,7 +95,7 @@ image::../media/zero-trust-architecture.png[零信任架构图]
 
 ==== 空闲数据加密
 
-每天、当企业重新利用驱动器、退回有缺陷的驱动器或通过销售或以旧换新方式升级到更大的驱动器时、要缓解存储系统风险和基础架构缺口、都有新的要求。 作为数据管理员和操作员、存储工程师应在数据的整个生命周期内安全地管理和维护数据。 https://www.netapp.com/us/media/ds-3898.pdf["NetApp存储加密(NSE)#44；NetApp卷加密(NVE)#44；以及NetApp聚合加密"^] 帮助您始终对空闲数据进行加密、无论数据是否有毒、而且不会影响日常运营。 https://www.netapp.com/us/media/ds-3213-en.pdf["NSE"^] 是ONTAP空闲数据硬件解决方案、使用经过FIPS 140-2 2级验证的自加密驱动器。 https://www.netapp.com/us/media/ds-3899.pdf["NVE和NAE"^] 是利用的ONTAP软件空闲数据解决方案 https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4144["FIPS 140-2 1级验证的NetApp加密模块"^]。使用NVE和NAE时、可以使用硬盘驱动器或固态驱动器进行空闲数据加密。此外、NSE驱动器可用于提供本机分层加密解决方案、以提供加密冗余和额外的安全性。如果违反了一个层、则第二个层仍可保护数据的安全。这些功能使ONTAP非常适合 https://www.netapp.com/us/media/sb-3952.pdf["量子就绪加密"^]。
+每天、当企业重新利用驱动器、退回有缺陷的驱动器或通过销售或以旧换新方式升级到更大的驱动器时、要缓解存储系统风险和基础架构缺口、都有新的要求。 作为数据管理员和操作员、存储工程师应在数据的整个生命周期内安全地管理和维护数据。 https://www.netapp.com/us/media/ds-3898.pdf["NetApp存储加密(NSE)#44；NetApp卷加密(NVE)#44；以及NetApp聚合加密"^] 帮助您始终对空闲数据进行加密、无论数据是否有毒、而且不会影响日常运营。 https://www.netapp.com/us/media/ds-3213-en.pdf["NSE"^] 是一款ONTAP硬件 link:../encryption-at-rest/index.html["空闲数据"] 解决方案、使用经过FIPS 140-2 2级验证的自加密驱动器。 https://www.netapp.com/us/media/ds-3899.pdf["NVE和NAE"^] 是利用的ONTAP软件 link:../encryption-at-rest/index.html["空闲数据"] 解决方案 https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4144["FIPS 140-2 1级验证的NetApp加密模块"^]。使用NVE和NAE时、可以使用硬盘驱动器或固态驱动器进行空闲数据加密。此外、NSE驱动器可用于提供本机分层加密解决方案、以提供加密冗余和额外的安全性。如果违反了一个层、则第二个层仍可保护数据的安全。这些功能使ONTAP非常适合 https://www.netapp.com/us/media/sb-3952.pdf["量子就绪加密"^]。
 
 NVE还提供了一项功能、称为 https://blog.netapp.com/flash-memory-summit-award/["安全清除"^] 在将敏感文件写入非分类卷时以加密方式删除数据泄漏中的有毒数据。
 
@@ -109,7 +109,7 @@ image::../media/zero-trust-two-layer-encryption-solution-aff-fas.png[适用于AF
 
 ==== 传输中数据加密
 
-ONTAP传输中数据加密可保护用户数据访问和控制平台访问。对于Microsoft CIFS共享访问、可以使用SMB 3.0加密来加密用户数据访问；对于NFS Kerberos 5、可以使用krb5P来加密用户数据访问。对于CIFS、NFS和iSCSI、也可以使用加密用户数据访问 https://docs.netapp.com/us-en/ontap/networking/configure_ip_security_@ipsec@_over_wire_encryption.html["IPsec"^] 。控制平面访问使用传输层安全(Transport Layer Security、TLS)进行加密。ONTAP为控制平面访问提供了 https://docs.netapp.com/us-en/ontap-cli//security-config-modify.html["FIPS"^] 合规模式、该模式可启用FIPS批准的算法、并禁用未经FIPS批准的算法。数据复制使用进行加密 link:../peering/enable-cluster-peering-encryption-existing-task.html["集群对等加密"]。这样可以为ONTAP SnapVault和SnapMirror技术提供加密功能。
+ONTAP传输中数据加密可保护用户数据访问和控制平台访问。对于Microsoft CIFS共享访问、可以使用SMB 3.0加密来加密用户数据访问；对于NFS Kerberos 5、可以使用krb5P来加密用户数据访问。对于CIFS、NFS和iSCSI、也可以使用加密用户数据访问 link:../networking/configure_ip_security_@ipsec@_over_wire_encryption.html["IPsec"] 。控制平面访问使用传输层安全(Transport Layer Security、TLS)进行加密。ONTAP为控制平面访问提供了 https://docs.netapp.com/us-en/ontap-cli//security-config-modify.html["FIPS"^] 合规模式、该模式可启用FIPS批准的算法、并禁用未经FIPS批准的算法。数据复制使用进行加密 link:../peering/enable-cluster-peering-encryption-existing-task.html["集群对等加密"]。这样可以为ONTAP SnapVault和SnapMirror技术提供加密功能。
 
 
 
