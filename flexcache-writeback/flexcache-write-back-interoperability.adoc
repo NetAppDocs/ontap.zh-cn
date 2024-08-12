@@ -1,0 +1,75 @@
+---
+permalink: flexcache-writeback/flexcache-write-back-interoperability.html 
+sidebar: sidebar 
+keywords: tr-4743, flexcache writeback, flexcache write-back, interoperability, client, technical report, netapp tr, ontap tr 
+summary: 了解在回写模式下部署FlexCache时的这些互操作性注意事项 
+---
+= FlexCache回写互操作性
+:allow-uri-read: 
+
+
+[role="lead"]
+了解在回写模式下部署FlexCache时的这些互操作性注意事项。
+
+
+
+== ONTAP 版本
+
+要使用回写操作模式，缓存和原始服务器*必须*都运行ONTAP 9.15.1.或更高版本。
+
+
+NOTE: 不需要启用回写缓存的集群可以运行早期版本的ONTAP、但该集群只能在绕写模式下运行。
+
+您的环境可以混合使用多种ONTAP版本。
+
+[cols="1*,1*,1*"]
+|===
+| 集群 | ONTAP 版本 | 是否支持回写？ 
+
+
+| *原产地* | ONTAP 9.15.1. | 不适用 
+
+
+| *集群1* | ONTAP 9.15.1. | 是的。 
+
+
+| *集群2* | ONTAP 9.14.1 | 否 
+|===
+[cols="1*,1*,1*"]
+|===
+| 集群 | ONTAP 版本 | 是否支持回写？ 
+
+
+| *原产地* | ONTAP 9.14.1 | 不适用 
+
+
+| *集群1* | ONTAP 9.15.1. | 否 
+
+
+| *集群2* | ONTAP 9.15.1. | 否 
+|===
+
+NOTE: 在中 <<example2-table>>，两个集群都不能启用回写模式，因为初始集群未运行ONTAP 9.151或更高版本，这是一项严格要求。
+
+
+
+== 客户端互操作性
+
+ONTAP通常支持的任何客户端均可访问FlexCache卷、而不管该卷是在绕写模式还是回写模式下运行。有关受支持客户端的最新列表，请参阅NetApp的 https://imt.netapp.com/matrix/#welcome["互操作性表"^]。
+
+尽管客户端版本无关紧要、但客户端必须足够新才能支持NFS3、NFSv4.0、NFSv4.1、SMB2.x或SMB3.xSMB1和NFSv2是已弃用的协议、不受支持。
+
+
+
+== 回写和绕写
+
+如中所示 <<example1-table>>，在回写模式下运行的FlexCache可以与在绕写模式下运行的缓存共存。建议将绕写与回写与特定工作负载进行比较。
+
+
+TIP: 如果工作负载在回写和绕写之间的性能相同、请使用绕写。
+
+
+
+== ONTAP功能互操作性
+
+有关FlexCache功能互操作性的最新列表，请参阅 link:../flexcache/supported-unsupported-features-concept.html["FlexCache卷支持和不支持的功能"]。

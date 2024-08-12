@@ -1,0 +1,229 @@
+---
+permalink: flexcache-writeback/flexcache-writeback-enable-task.html 
+sidebar: sidebar 
+keywords: creating, manage, disable, view, flexcache, flex cache, writeback, write-back, write back 
+summary: 在FlexCache卷上启用FlexCache回写模式、以便为具有写入量大的工作负载的边缘计算环境和缓存提供更好的性能。 
+---
+= 启用并管理FlexCache回写
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.15.1开始、您可以在FlexCache卷上启用FlexCache回写模式、以便为具有大量写入工作负载的边缘计算环境和缓存提供更好的性能。您还可以根据需要确定是在FlexCache卷上启用回写还是在卷上禁用回写。
+
+在缓存卷上启用回写后、写入请求将发送到本地缓存、而不是原始卷。
+
+.开始之前
+您必须处于高级权限模式。
+
+
+
+== 创建启用了回写的新FlexCache卷
+
+.步骤
+您可以使用ONTAP系统管理器或ONTAP命令行界面创建启用了回写的新FlexCache卷。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 如果FlexCache卷与初始卷位于不同的集群上、请创建集群对等关系：
++
+.. 在本地集群上，单击*保护>概述*。
+.. 展开*Intercluster Settings*，单击*Add Network Interfaces*，然后将集群间接口添加到集群中。
++
+在远程集群上重复此操作。
+
+.. 在远程集群上、单击*保护>概述*。单击 image:icon_kabob.gif["菜单选项图标"] "Cluster Peers"(集群对等方)部分，然后单击*Generate Pas密切 相关*。
+.. 复制生成的密码短语并将其粘贴到本地集群中。
+.. 在本地集群上的"Cluster Peers"下、单击*对等集群*并为本地集群和远程集群建立对等关系。
+
+
+. 如果FlexCache卷与原始卷位于不同的集群上、请创建SVM对等关系：
++
+在* Storage VM对等方*下、依次单击 image:icon_kabob.gif["菜单选项图标"] 和*对等Storage VM*以建立Storage VM对等关系。
+
++
+如果FlexCache卷位于同一集群上、则不能使用System Manager创建SVM对等关系。
+
+. 选择 * 存储 > 卷 * 。
+. 选择 * 添加 * 。
+. 选择*更多选项*，然后选择*为远程卷添加缓存*。
+. 选择*启用FlexCache回写*。
+
+
+--
+.命令行界面
+--
+. 如果要创建的 FlexCache 卷位于其他集群中，请创建集群对等关系：
++
+.. 在目标集群上、创建与数据保护源集群的对等关系：
++
+[source, cli]
+----
+cluster peer create -generate-passphrase -offer-expiration MM/DD/YYYY HH:MM:SS|1...7days|1...168hours -peer-addrs <peer_LIF_IPs> -initial-allowed-vserver-peers <svm_name>,..|* -ipspace <ipspace_name>
+----
++
+从 ONTAP 9.6 开始，默认情况下，在创建集群对等关系时会启用 TLS 加密。支持使用 TLS 加密在初始卷和 FlexCache 卷之间进行集群间通信。如果需要，您还可以为集群对等关系禁用 TLS 加密。
+
++
+[listing]
+----
+cluster02::> cluster peer create -generate-passphrase -offer-expiration 2days -initial-allowed-vserver-peers *
+
+                     Passphrase: UCa+6lRVICXeL/gq1WrK7ShR
+                Expiration Time: 6/7/2017 08:16:10 EST
+  Initial Allowed Vserver Peers: *
+            Intercluster LIF IP: 192.140.112.101
+              Peer Cluster Name: Clus_7ShR (temporary generated)
+
+Warning: make a note of the passphrase - it cannot be displayed again.
+----
+.. 在源集群上，将源集群身份验证到目标集群：
++
+[source, cli]
+----
+cluster peer create -peer-addrs <peer_LIF_IPs> -ipspace <ipspace>
+----
++
+[listing]
+----
+cluster01::> cluster peer create -peer-addrs 192.140.112.101,192.140.112.102
+
+Notice: Use a generated passphrase or choose a passphrase of 8 or more characters.
+        To ensure the authenticity of the peering relationship, use a phrase or sequence of characters that would be hard to guess.
+
+Enter the passphrase:
+Confirm the passphrase:
+
+Clusters cluster02 and cluster01 are peered.
+----
+
+
+. 如果FlexCache卷与原始卷位于不同的SVM中、请使用创建SVM对等关系 `flexcache` 作为应用程序：
++
+.. 如果SVM位于不同集群中、请为对等SVM创建SVM权限：
++
+[source, cli]
+----
+vserver peer permission create -peer-cluster <cluster_name> -vserver <svm-name> -applications flexcache
+----
++
+以下示例说明了如何创建适用于所有本地 SVM 的 SVM 对等权限：
+
++
+[listing]
+----
+cluster1::> vserver peer permission create -peer-cluster cluster2 -vserver "*" -applications flexcache
+
+Warning: This Vserver peer permission applies to all local Vservers. After that no explict
+"vserver peer accept" command required for Vserver peer relationship creation request
+from peer cluster "cluster2" with any of the local Vservers. Do you want to continue? {y|n}: y
+----
+.. 创建SVM对等关系：
++
+[source, cli]
+----
+vserver peer create -vserver <local_SVM> -peer-vserver <remote_SVM> -peer-cluster <cluster_name> -applications flexcache
+----
+
+
+. 创建启用了回写的FlexCache卷：
++
+[source, cli]
+----
+volume flexcache create -vserver <cache_vserver_name> -volume <cache_flexgroup_name> -aggr-list <list_of_aggregates> -origin-volume <origin flexgroup> -origin-vserver <origin_vserver name> -junction-path <junction_path> -is-writeback-enabled true
+----
+
+
+--
+====
+
+
+== 在现有FlexCache卷上启用FlexCache回写
+
+您可以使用ONTAP系统管理器或ONTAP命令行界面在现有FlexCache卷上启用FlexCache回写。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储>卷*并选择现有FlexCache卷。
+. 在卷的"概述"页面上，单击右上角的*Edit*。
+. 在*Edit Volumes*窗口中，选择*Enable FlexCache write-back*。
+
+
+--
+.命令行界面
+--
+. 在现有FlexCache卷上启用回写：
++
+[source, cli]
+----
+volume flexcache config modify -volume <cache_flexgroup_name> -is-writeback-enabled true
+----
+
+
+--
+====
+
+
+== 检查是否已启用FlexCache回写
+
+.步骤
+您可以使用System Manager或ONTAP命令行界面来确定是否已启用FlexCache回写。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储>卷*并选择一个卷。
+. 在卷*Overview*中，找到* FlexCache详细信息*，并检查FlexCache卷上的FlexCache回写是否设置为*Enabled"。
+
+
+--
+.命令行界面
+--
+. 检查是否已启用FlexCache回写：
++
+[source, cli]
+----
+volume flexcache config show -volume cache -fields is-writeback-enabled
+----
+
+
+--
+====
+
+
+== 在FlexCache卷上禁用回写
+
+在删除FlexCache卷之前、您需要禁用FlexCache回写。
+
+.步骤
+您可以使用System Manager或ONTAP命令行界面禁用FlexCache回写。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储>卷*并选择已启用FlexCache回写的现有FlexCache卷。
+. 在卷的"概述"页面上，单击右上角的*Edit*。
+. 在*Edit Volumes*窗口中，取消选择*Enable FlexCache write-back*。
+
+
+--
+.命令行界面
+--
+. 禁用回写：
++
+[source, cli]
+----
+volume flexcache config modify -volume <cache_vol_name> -is-writeback-enabled false
+----
+
+
+--
+====
