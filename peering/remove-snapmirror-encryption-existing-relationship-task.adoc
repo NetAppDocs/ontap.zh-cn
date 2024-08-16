@@ -14,7 +14,7 @@ summary: 默认情况下，在 ONTAP 9.6 或更高版本中创建的所有对等
 默认情况下，在 ONTAP 9.6 或更高版本中创建的所有对等关系都启用集群对等加密。如果您不想对跨集群对等通信使用加密，可以将其禁用。
 
 .步骤
-. 在目标集群上，修改与源集群的通信，以停止使用集群对等加密：
+. 在目标集群上、修改与源集群的通信以停止使用集群对等加密：
 +
 ** 要删除加密、但保持身份验证、请输入：
 +
@@ -22,7 +22,15 @@ summary: 默认情况下，在 ONTAP 9.6 或更高版本中创建的所有对等
 ----
 cluster peer modify <source_cluster> -auth-status-admin use-authentication -encryption-protocol-proposed none
 ----
-** 要删除加密和身份验证、请输入：
+** 删除加密和身份验证：
++
+... 修改集群对等策略以允许未经身份验证的访问：
++
+[source, cli]
+----
+cluster peer policy modify -is-unauthenticated-access-permitted true
+----
+... 修改加密和身份验证访问：
 +
 [source, cli]
 ----
@@ -30,7 +38,10 @@ cluster peer modify <source_cluster> -auth-status no-authentication
 ----
 
 
-. 出现提示时，输入密码短语。
+
+
+. 出现提示时、输入密码短语。
+. 重新输入密码短语以进行确认。
 . 在源集群上，禁用与目标集群通信的加密：
 +
 ** 要删除加密、但保持身份验证、请输入：
@@ -39,7 +50,15 @@ cluster peer modify <source_cluster> -auth-status no-authentication
 ----
 cluster peer modify <destination_cluster> -auth-status-admin use-authentication -encryption-protocol-proposed none
 ----
-** 要删除加密和身份验证、请输入：
+** 删除加密和身份验证：
++
+... 修改集群对等策略以允许未经身份验证的访问：
++
+[source, cli]
+----
+cluster peer policy modify -is-unauthenticated-access-permitted true
+----
+... 修改加密和身份验证访问：
 +
 [source, cli]
 ----
@@ -47,5 +66,7 @@ cluster peer modify <destination_cluster> -auth-status no-authentication
 ----
 
 
-. 出现提示时，输入在目标集群上输入的同一密码短语。
+
+
+. 出现提示时、输入并重新输入在目标集群上使用的同一密码短语。
 
