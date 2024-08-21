@@ -9,7 +9,7 @@ summary: 了解有关FlexCache回写操作的更详细信息。
 
 
 [role="lead"]
-FlexCache绕过在设计时充分考虑了强大的一致性。传统的绕写操作模式和ONTAP 9.15.1中引入的新回写操作模式均可确保访问的数据始终保持100%一致、最新且一致。
+FlexCache在设计时充分考虑了一致性、包括两种写入操作模式：回写和绕写。传统的绕写操作模式和ONTAP 9.15.1中引入的新回写操作模式均可确保访问的数据始终保持100%一致、最新且一致。
 
 以下概念详细介绍了FlexCache回写的操作方式。
 
@@ -65,7 +65,7 @@ NOTE: 每个原始成分卷的XLD限制为170。
 
 * `SETATTR`
 +
-** `SETATTRs`：在缓存中仅 `mtime`处理、 `atime`或 `ctime` 修改。
+** `sETATTR`s只能在缓存中处理修改mttime、atme和/或ctime的操作，避免了WAN的影响。
 
 
 * `CLOSE`

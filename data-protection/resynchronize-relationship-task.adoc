@@ -1,7 +1,7 @@
 ---
 permalink: data-protection/resynchronize-relationship-task.html 
 sidebar: sidebar 
-keywords: resynchronize, replication, relationship 
+keywords: resynchronize, replication, relationship, snapmirror, mirror, snapshot copy, restore, disaster recovery, DR, resync, protection relationship, data protection 
 summary: 在将目标卷设为可写之后，在因源卷和目标卷上不存在通用 Snapshot 副本而导致更新失败之后，或者如果要更改此关系的复制策略，则需要重新同步复制关系。 
 ---
 = 重新同步复制关系
@@ -20,27 +20,28 @@ summary: 在将目标卷设为可写之后，在因源卷和目标卷上不存�
 * 属于扇出或级联配置的卷可能需要较长时间才能重新同步。在较长的一段时间内， SnapMirror 关系报告状态 " 正在准备 " 的情况并不少见。
 
 
-此操作步骤将在异步关系中替换原始源卷中的数据，以便您可以重新开始从原始源卷提供数据并恢复原始保护关系。
-
 [NOTE]
 ====
 System Manager不支持对集群内关系执行反向重新同步。您可以使用ONTAP命令行界面对集群内关系执行反向重新同步操作。
 
 ====
-执行反向重新同步操作时、源卷上晚于通用Snapshot副本中数据的任何数据都将被删除。
-
 .步骤
-您可以使用System Manager或ONTAP命令行界面重新同步复制关系。在将目标卷设置为可写后、您可以使用System Manager反向重新同步复制关系。如果使用ONTAP命令行界面、则无论您是要使目标卷可写还是更新复制关系、此过程都是相同的。
+您可以使用System Manager或ONTAP命令行界面执行此任务。如果使用ONTAP命令行界面、则无论您是要使目标卷可写还是更新复制关系、此过程都是相同的。
 
 [role="tabbed-block"]
 ====
 .System Manager反向重新同步
 --
+link:make-destination-volume-writeable-task.html["中断关系"]将目标设置为可写之后、请反向重新同步此关系：
+
 . 在目标集群上，单击 * 保护 > 关系 * 。
-. 将鼠标悬停在要反转的已断开关系上，单击 image:icon_kabob.gif["kabob 图标"]，然后选择*反向重新同步*。
+. 将鼠标悬停在要反转的已断开关系上，单击 image:icon_kabob.gif["菜单选项图标"]，然后选择*反向重新同步*。
 . 在*反向重新同步关系*窗口中，单击*反向重新同步*。
 . 在 * 关系 * 下，通过查看关系的 * 传输状态 * 来监控反向重新同步进度。
 
+
+.后续步骤
+初始源恢复可用后、您可以通过中断已反转的关系并执行另一个反向重新同步操作来重新建立初始关系。反向重新同步过程会将提供数据的站点中的所有更改复制到原始源、并使原始源再次可读写。
 
 --
 .System Manager重新同步

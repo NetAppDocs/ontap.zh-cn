@@ -1,0 +1,233 @@
+---
+sidebar: sidebar 
+permalink: data-protection/cloud-backup-using-cbs-task.html 
+keywords: cloud, data, backup, back up, storage, volume, lun, connector, secret key, access key, Cloud Backup service, CBS, restore data, protect volumes, ipspace, storagegrid, storage grid, archive, archival, archiving, cost, calculator, glacier, deep archive 
+summary: 从 ONTAP 9.1.1 开始，您可以使用 System Manager 使用云备份在云中备份数据。 
+---
+= 使用 Cloud Backup 备份数据
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+从 ONTAP 9.1.1 开始，您可以使用 System Manager 使用云备份在云中备份数据。
+
+
+NOTE: Cloud Backup 支持 FlexVol 读写卷和数据保护（ DP ）卷。不支持 FlexGroup 卷和 SnapLock 卷。
+
+.开始之前
+要在BlueXP中建立帐户、您应执行以下过程。对于服务帐户，您需要创建 " 帐户管理员 " 角色。（其他服务帐户角色没有从 System Manager 建立连接所需的权限。）
+
+. link:https://docs.netapp.com/us-en/occm/task_logging_in.html["在BlueXP中创建帐户"^]。
+. link:https://docs.netapp.com/us-en/occm/concept_connectors.html["在BlueXP中创建连接器"^] 使用以下云提供商之一：
++
+** Microsoft Azure
+** Amazon Web Services （ AWS ）
+** Google Cloud Platform （ GCP ）
+** StorageGRID （ ONTAP 9.10.1 ）
++
+
+NOTE: 从ONTAP 9.10.1开始、您可以选择StorageGRID 作为云备份提供程序、但前提是在内部部署了BlueXP。  BlueXP连接器必须安装在内部、并可通过BlueXP软件即服务(SaaS)应用程序使用。
+
+
+
+. link:https://docs.netapp.com/us-en/occm/concept_backup_to_cloud.html["在BlueXP中订阅Cloud Backup Service"^] （需要相应的许可证）。
+. link:https://docs.netapp.com/us-en/occm/task_managing_cloud_central_accounts.html#creating-and-managing-service-accounts["使用BlueXP生成访问密钥和机密密钥"^]。
+
+
+
+
+== 向BlueXP注册集群
+
+您可以使用BlueXP或System Manager向BlueXP注册集群。
+
+.步骤
+. 在 System Manager 中，转到 * 保护概述 * 。
+. 在 * Cloud Backup Service * 下，提供以下详细信息：
++
+** 客户端 ID
+** 客户端密钥
+
+
+. 选择 * 注册并继续 * 。
+
+
+
+
+== 启用 Cloud Backup
+
+在将集群注册到BlueXP后、您需要启用Cloud Backup并启动首次到云的备份。
+
+.步骤
+. 在 System Manager 中，单击 * 保护 > 概述 * ，然后滚动到 * Cloud Backup Service * 部分。
+. 输入 * 客户端 ID* 和 * 客户端机密 * 。
++
+
+NOTE: 从 ONTAP 9.10.1 开始，您可以单击 * 了解有关使用云的成本的更多信息 * 来了解使用云的成本。
+
+. 单击 * 连接并启用 Cloud Backup Service * 。
+. 在 * 启用 Cloud Backup Service * 页面上，根据您选择的提供程序提供以下详细信息。
++
+[cols="35,65"]
+|===
+
+
+| 对于此云提供商 ... | 输入以下数据 ... 
+
+
+ a| 
+Azure 酒店
+ a| 
+** Azure 订阅 ID
+** Region
+** 资源组名称（现有或新）
+
+
+
+
+ a| 
+AWS
+ a| 
+** AWS Account ID
+** 访问密钥
+** 机密密钥
+** Region
+
+
+
+
+ a| 
+Google Cloud Project （ GCP ）
+ a| 
+** Google Cloud Project 名称
+** Google Cloud Access 密钥
+** Google Cloud 机密密钥
+** Region
+
+
+
+
+ a| 
+StorageGRID
+(ONTAP 9.10.1及更高版本、仅适用于BlueXP的内部部署)
+ a| 
+** 服务器
+** SG访问密钥
+** SG 机密密钥
+
+
+|===
+. 选择 * 保护策略 * ：
++
+** * 现有策略 * ：选择现有策略。
+** * 新策略 * ：指定名称并设置传输计划。
++
+
+NOTE: 从 ONTAP 9.10.1 开始，您可以指定是要使用 Azure 还是 AWS 进行归档。
+
++
+
+IMPORTANT: 如果使用 Azure 或 AWS 为卷启用归档，则无法禁用归档。
+
++
+如果为 Azure 或 AWS 启用归档，请指定以下内容：
+
++
+*** 卷经过多少天之后才进行归档。
+*** 要保留在归档中的备份数。  指定 "0" （零）可归档到最新备份。
+*** 对于 AWS ，选择归档存储类。
+
+
+
+
+. 选择要备份的卷。
+. 选择 * 保存 * 。
+
+
+
+
+== 编辑用于 Cloud Backup 的保护策略
+
+您可以更改 Cloud Backup 使用的保护策略。
+
+.步骤
+. 在 System Manager 中，单击 * 保护 > 概述 * ，然后滚动到 * Cloud Backup Service * 部分。
+. 单击，然后单击 image:../media/icon_kabob.gif["菜单选项图标"]*Edit*。
+. 选择 * 保护策略 * ：
++
+** * 现有策略 * ：选择现有策略。
+** * 新策略 * ：指定名称并设置传输计划。
++
+
+NOTE: 从 ONTAP 9.10.1 开始，您可以指定是要使用 Azure 还是 AWS 进行归档。
+
++
+
+IMPORTANT: 如果使用 Azure 或 AWS 为卷启用归档，则无法禁用归档。
+
++
+如果为 Azure 或 AWS 启用归档，请指定以下内容：
+
++
+*** 卷经过多少天之后才进行归档。
+*** 要保留在归档中的备份数。  指定 "0" （零）可归档到最新备份。
+*** 对于 AWS ，选择归档存储类。
+
+
+
+
+. 选择 * 保存 * 。
+
+
+
+
+== 保护云上的新卷或 LUN
+
+创建新卷或 LUN 时，您可以建立 SnapMirror 保护关系，以便可以将卷或 LUN 备份到云。
+
+.开始之前
+* 您应具有 SnapMirror 许可证。
+* 应配置集群间 LIF 。
+* 应配置 NTP 。
+* 集群必须运行 ONTAP 9.1.1 。
+
+
+.关于此任务
+对于以下集群配置，您无法保护云上的新卷或 LUN ：
+
+* 集群不能位于 MetroCluster 环境中。
+* 不支持 SVM-DR 。
+* 无法使用 Cloud Backup 备份 FlexGroup 。
+
+
+.步骤
+. 配置卷或 LUN 时，在 System Manager 的 * 保护 * 页面上，选中标记为 * 启用 SnapMirror （本地或远程） * 的复选框。
+. 选择 Cloud Backup 策略类型。
+. 如果未启用云备份，请选择 * 启用 Cloud Backup Service * 。
+
+
+
+
+== 保护云上的现有卷或 LUN
+
+您可以为现有卷和 LUN 建立 SnapMirror 保护关系。
+
+.步骤
+. 选择现有卷或 LUN ，然后单击 * 保护 * 。
+. 在 * 保护卷 * 页面上，为保护策略指定 * 使用 Cloud Backup Service 备份 * 。
+. 单击 * 保护 * 。
+. 在 * 保护 * 页面上，选中标记为 * 启用 SnapMirror （本地或远程） * 的复选框。
+. 选择 * 启用 Cloud Backup Service * 。
+
+
+
+
+== 从备份文件还原数据
+
+只有在使用BlueXP界面时、您才能执行备份管理操作、例如还原数据、更新关系和删除关系。请参见 link:https://docs.netapp.com/us-en/occm/task_restore_backups.html["从备份文件还原数据"] 有关详细信息 ...

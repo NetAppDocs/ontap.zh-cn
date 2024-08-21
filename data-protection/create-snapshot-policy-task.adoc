@@ -27,10 +27,31 @@ hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
 。 `snapmirror-label` 选项用于SnapMirror复制。有关详细信息，请参见 link:define-rule-policy-task.html["为策略定义规则"]。
 
 .步骤
+您可以使用System Manager或ONTAP命令行界面创建Snapshot副本策略。此过程仅在本地集群上创建Snapshot副本策略。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*保护>概述*并展开*本地策略设置*。
+. 在*Snapshot Policies*窗格中，单击image:icon_arrow.gif["箭头图标"]。
+. 在*Snapshot Policies*选项卡中，单击image:icon_add.gif["添加图标"]。
+. 在*添加Snapshot策略*窗口中，输入策略名称并选择范围。
+. 单击 image:icon_add.gif["添加图标"]。
+. 要选择计划，请单击当前显示的计划名称，单击image:icon_dropdown_arrow.gif["下拉图标"]，然后选择其他计划。
+. 输入要保留的最大Snapshot副本数、并根据需要输入SnapMirror标签和SnapLock保留期限。
+. 单击 * 保存 * 。
+
+
+--
+.命令行界面
+--
 . 创建快照策略
 +
-`volume snapshot policy create -vserver _SVM_ -policy _policy_name_ -enabled true|false -schedule1 _schedule1_name_ -count1 _copies_to_retain_ -prefix1 _snapshot_prefix_ -snapmirror-label1 _snapshot_label_ ... -schedule5 _schedule5_name_ -count5 _copies_to_retain_-prefix5 _snapshot_prefix_ -snapmirror-label5 _snapshot_label_`
-
+[source, cli]
+----
+volume snapshot policy create -vserver <SVM> -policy <policy_name> -enabled true|false -schedule1 <schedule1_name> -count1 <copies_to_retain> -prefix1 <snapshot_prefix> -snapmirror-label1 <snapshot_label> ... -schedule5 <schedule5_name> -count5 <copies_to_retain> -prefix5 <snapshot_prefix> -snapmirror-label5 <snapshot_label>
+----
 +
 以下示例将创建一个名为的Snapshot策略 `snap_policy_daily` 运行在上 `daily` 计划。此策略最多包含五个Snapshot副本、每个副本都具有相应的名称 `daily`.`_timestamp_` 和SnapMirror标签 `daily`：
 
@@ -40,3 +61,6 @@ hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
 cluster1::> volume snapshot policy create -vserver vs0 -policy snap_policy_daily -schedule1 daily -count1 5 -snapmirror-label1 daily
 ----
 
+
+--
+====
