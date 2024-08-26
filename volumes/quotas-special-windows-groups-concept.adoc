@@ -1,8 +1,8 @@
 ---
 permalink: volumes/quotas-special-windows-groups-concept.html 
 sidebar: sidebar 
-keywords: how quotas work, with, special windows groups 
-summary: 配额应用于 Everyone 组和 BUILTIN\Administrators 组的方式与应用于其他 Windows 组的方式不同。 
+keywords: how quotas work, special windows groups 
+summary: 有几个特殊的Windows组处理配额的方式与其他Windows组不同。您应了解如何为这些特殊组应用配额。 
 ---
 = 配额如何与特殊 Windows 组配合使用
 :allow-uri-read: 
@@ -11,22 +11,15 @@ summary: 配额应用于 Everyone 组和 BUILTIN\Administrators 组的方式与�
 
 
 [role="lead"]
-配额应用于 Everyone 组和 BUILTIN\Administrators 组的方式与应用于其他 Windows 组的方式不同。
-
-以下列表介绍了当配额目标是特殊的 Windows 组 ID 时会发生的情况：
-
-* 如果配额目标是 Everyone 组，则 ACL 显示所有者为 Everyone 的文件将计入 Everyone 的 SID 之下。
-* 如果配额目标为 BUILTIN\Administrators ，则该条目将被视为用户配额，仅用于跟踪。
-+
-您不能对 BUILTIN\Administrators 实施限制。
-
-+
-如果 BUILTIN\Administrators 的成员创建了一个文件，则该文件由 BUILTIN\Administrators 所有，并计入 BUILTIN\Administrators 的 SID 之下，而不是用户的个人 SID 之下。
-
-
+有几个特殊的Windows组处理配额的方式与其他Windows组不同。您应了解如何为这些特殊组应用配额。
 
 [NOTE]
 ====
 ONTAP 不支持基于 Windows 组 ID 的组配额。如果指定 Windows 组 ID 作为配额目标，则此配额将视为用户配额。
 
 ====
+.每个人
+如果配额目标为Everyone组、则ACL显示所有者为Everyone的文件将计入Everyone的SID。
+
+.BUILTIN\Administrators
+如果配额目标是BUILTIFiles\Administrators组、则该条目将被视为用户配额、并且仅用于跟踪。您不能对 BUILTIN\Administrators 实施限制。如果BUILWIN\Administrators的成员创建了一个文件、则该文件属于BUILWIN\Administrators、并计入BUILWIN\Administrators的SID (而不是用户的个人SID)。

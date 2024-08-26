@@ -1,28 +1,22 @@
 ---
 permalink: volumes/quota-rules-policies-enforced-quotas-concept.html 
 sidebar: sidebar 
-keywords: what are, quota rules, quota policies, quotas 
-summary: 配额在特定于 FlexVol 卷的配额规则中定义。这些配额规则将在 Storage Virtual Machine （ SVM ）的配额策略中收集在一起，然后在 SVM 上的每个卷上激活。 
+keywords: understand quotas, quota rules, quota policies 
+summary: '配额在特定于 FlexVol 卷的配额规则中定义。这些配额规则在Storage Virtual Machine (SVM)的配额策略中收集在一起、并在SVM上的每个卷上激活。' 
 ---
-= 什么是配额规则，配额策略和配额
+= 了解配额、配额规则和配额策略
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-配额在特定于 FlexVol 卷的配额规则中定义。这些配额规则将在 Storage Virtual Machine （ SVM ）的配额策略中收集在一起，然后在 SVM 上的每个卷上激活。
+配额在特定于 FlexVol 卷的配额规则中定义。这些配额规则在Storage Virtual Machine (SVM)的配额策略中收集在一起、并在SVM上的每个卷上激活。
 
 配额规则始终特定于卷。在配额规则中定义的卷上激活配额之前，配额规则不起作用。
 
-配额策略是 SVM 中所有卷的一组配额规则。配额策略不会在 SVM 之间共享。一个 SVM 最多可以有五个配额策略，您可以通过这些策略获得配额策略的备份副本。在任何给定时间，系统都会为 SVM 分配一个配额策略。
+配额策略是 SVM 中所有卷的一组配额规则。配额策略不会在 SVM 之间共享。一个 SVM 最多可以有五个配额策略，您可以通过这些策略获得配额策略的备份副本。在任何给定时间，系统都会为 SVM 分配一个配额策略。初始化卷上的配额或调整其大小时，您将激活当前分配给 SVM 的配额策略中的配额规则。
 
 配额是指 ONTAP 实施的实际限制或 ONTAP 执行的实际跟踪。一个配额规则始终会生成至少一个配额，并且可能会生成许多额外的派生配额。强制实施的配额的完整列表仅显示在配额报告中。
 
 激活是指触发 ONTAP 根据已分配配额策略中的当前配额规则集创建强制实施的配额的过程。激活会逐个卷进行。首次在卷上激活配额称为初始化。后续激活称为重新初始化或调整大小，具体取决于更改的范围。
-
-[NOTE]
-====
-初始化卷上的配额或调整其大小时，您将激活当前分配给 SVM 的配额策略中的配额规则。
-
-====

@@ -2,7 +2,7 @@
 permalink: volumes/run-efficiency-operations-manual-task.html 
 sidebar: sidebar 
 keywords: starting deduplication manually, starting data compression manually, efficiency, run, sequential packing 
-summary: 您可以使用 volume efficiency start 命令在卷上手动运行效率操作。 
+summary: 您可以手动对卷运行效率操作。如果不适合计划效率操作、则可以执行此操作。 
 ---
 = 手动运行效率操作
 :allow-uri-read: 
@@ -11,13 +11,13 @@ summary: 您可以使用 volume efficiency start 命令在卷上手动运行效�
 
 
 [role="lead"]
-您可以使用在卷上手动运行效率操作 `volume efficiency start` 命令：
+您可以手动对卷运行效率操作。如果不适合计划效率操作、则可以执行此操作。
 
-.您需要的内容
+.开始之前
 根据您要手动运行的效率操作，您必须已在卷上启用重复数据删除或同时启用数据压缩和重复数据删除。
 
 .关于此任务
-如果在卷上启用了对温度敏感的存储效率、则会先运行重复数据删除、然后再运行数据压缩。
+此操作可使用 `volume efficiency start`命令执行。如果在卷上启用了对温度敏感的存储效率、则会先运行重复数据删除、然后再运行数据压缩。
 
 重复数据删除是一个后台进程，它会在运行时占用系统资源。如果卷中的数据更改不频繁，则最好不要频繁运行重复数据删除。在存储系统上运行多个并发重复数据删除操作会导致系统资源消耗量增加。
 
@@ -31,17 +31,17 @@ summary: 您可以使用 volume efficiency start 命令在卷上手动运行效�
 
 .步骤
 . 在卷上启动效率操作： `volume efficiency start`
-+
+
+
 .示例
-以下命令可用于在卷VolA上手动仅启动重复数据删除或重复数据删除、然后启动逻辑数据压缩和容器数据压缩
++以下命令可用于在卷VolA上手动仅启动重复数据删除或重复数据删除、然后启动逻辑压缩和容器压缩
 
 +
+
 [listing]
 ----
 volume efficiency start -vserver vs1 -volume VolA
 ----
-
-
 
 
 == 重新打包现有数据
@@ -51,10 +51,13 @@ volume efficiency start -vserver vs1 -volume VolA
 .步骤
 . 设置权限级别： `set -privilege advanced`
 . 重新打包现有数据： `volume efficiency inactive-data-compression start -vserver _vserver_name_ -volume _volume_name_ -scan-mode extended_recompression`
-+
+
+
 .示例
 [listing]
 ----
 volume efficiency inactive-data-compression start -vserver vs1 -volume vol1 -scan-mode extended_recompression
 ----
+.相关信息
+* link:run-efficiency-operations-manual-existing-data-task.html["对现有数据手动运行效率操作"]
 

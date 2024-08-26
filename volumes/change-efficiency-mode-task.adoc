@@ -1,8 +1,8 @@
 ---
 permalink: volumes/change-efficiency-mode-task.html 
 sidebar: sidebar 
-keywords: storage, efficiency, mode, change, efficient, default 
-summary: '您可以使用 `volume efficiency modify` 命令以更改在AFF卷上设置的存储效率模式。您可以从更改模式 `default` to `efficient` 或者、您也可以在尚未设置卷效率时设置效率模式。' 
+keywords: storage, efficiency, mode, change, efficient, default, volume 
+summary: '您可以将AFF卷的存储效率模式从更 `default`改为 `efficient`，也可以在尚未设置卷效率时设置效率模式。' 
 ---
 = 更改卷效率模式
 :allow-uri-read: 
@@ -11,11 +11,13 @@ summary: '您可以使用 `volume efficiency modify` 命令以更改在AFF卷上
 
 
 [role="lead"]
-从ONTAP 9.10.1开始、仅为AFF 系统引入了两种卷级存储效率模式、即_default_和_高效_。这两种模式提供了两种选择：文件压缩(默认)(创建新AFF卷时的默认模式)或温度敏感型存储效率(高效)(启用温度敏感型存储效率)。您可以使用 `volume efficiency modify` 命令以更改在AFF卷上设置的存储效率模式。您可以从更改模式 `default` to `efficient` 或者、您也可以在尚未设置卷效率时设置效率模式。
+从ONTAP 9 10.1开始、只有AFF系统才支持卷级存储效率模式_default_和_高效_。通过这些模式、您可以选择文件压缩(默认)(创建新AFF卷时的默认模式)或温度敏感型存储效率(高效)(启用温度敏感型存储效率)。您可以使用 `volume efficiency modify`命令将AFF卷的存储效率模式从更 `default`改为 `efficient`、也可以在尚未设置卷效率时设置效率模式。
 
 .步骤
 . 更改卷效率模式：
 +
-`volume efficiency modify -vserver <vserver name> -volume <volume name> -storage-efficiency-mode <default|efficient>`
-
+[listing]
+----
+volume efficiency modify -vserver <vserver name> -volume <volume name> -storage-efficiency-mode <default|efficient>
+----
 

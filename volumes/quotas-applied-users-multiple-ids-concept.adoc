@@ -2,7 +2,7 @@
 permalink: volumes/quotas-applied-users-multiple-ids-concept.html 
 sidebar: sidebar 
 keywords: how, quotas are applied, users, multiple ids 
-summary: 一个用户可以由多个 ID 表示。您可以通过将 ID 列表指定为配额目标来为此类用户设置单个用户配额。这些 ID 中的任何一个所拥有的文件都受用户配额限制。 
+summary: 一个用户可以由多个 ID 表示。您可以通过将ID列表指定为配额目标来为此类用户定义单个用户配额。这些 ID 中的任何一个所拥有的文件都受用户配额限制。 
 ---
 = 如何将配额应用于具有多个 ID 的用户
 :allow-uri-read: 
@@ -11,14 +11,13 @@ summary: 一个用户可以由多个 ID 表示。您可以通过将 ID 列表指
 
 
 [role="lead"]
-一个用户可以由多个 ID 表示。您可以通过将 ID 列表指定为配额目标来为此类用户设置单个用户配额。这些 ID 中的任何一个所拥有的文件都受用户配额限制。
+一个用户可以由多个 ID 表示。您可以通过将ID列表指定为配额目标来为此类用户定义单个用户配额。这些 ID 中的任何一个所拥有的文件都受用户配额限制。
 
-假设用户具有 UNIX UID 20 和 Windows ID corp\john_smith 和 engineering\jsmith 。对于此用户，您可以指定一个配额，其中配额目标是 UID 和 Windows ID 的列表。此用户写入存储系统时，无论写入来自 UID 20 ， corp\john_smith 还是 engineering\jsmith ，都将应用指定的配额。
+假设用户具有UNIX UID `20`以及Windows ID `corp\john_smith`和 `engineering\jsmith`。对于此用户，您可以指定一个配额，其中配额目标是 UID 和 Windows ID 的列表。当此用户向存储系统写入数据时，无论写入来自UID `20`、还是，都会应用指定的配额 `corp\john_smith` `engineering\jsmith`。
 
-[NOTE]
-====
-单独的配额规则会被视为单独的目标、即使这些ID属于同一个用户也是如此。例如，对于同一个用户，您可以指定一个配额将 UID 20 限制为 1 GB 磁盘空间，而另一个配额将 corp\john_smith 限制为 2 GB 磁盘空间，即使这两个 ID 代表同一个用户也是如此。ONTAP 会将配额分别应用于 UID 20 和 corp\john_smith 。
+请注意、即使ID属于同一用户、单独的配额规则也会被视为单独的目标。例如、对于同一个用户、您可以指定一个配额将UID限制 `20`为1 GB磁盘空间、而指定另一个配额则将corp\John_Smith限制为2 GB磁盘空间、即使这两个ID代表同一个用户也是如此。ONTAP会 `20` `corp\john_smith`分别将配额应用于UID和。在这种情况下，不会对应用任何限制 `engineering\jsmith`，即使对同一用户使用的其他ID应用了限制。
 
-在这种情况下，不会对 engineering\jsmith 应用任何限制，即使对同一用户使用的其他 ID 应用了限制也是如此。
+.相关信息
+* link:../volumes/quotas-applied-concept.html["如何应用配额"]
+* link:../volumes/quotas-applied-root-user-concept.html["如何将配额应用于 root 用户"]
 
-====

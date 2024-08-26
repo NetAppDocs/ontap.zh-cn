@@ -1,0 +1,72 @@
+---
+permalink: upgrade/task-prep-node-upgrade-nse-with-ext-kmip-servers.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, prepare, preparing, nodes, netapp, storage, encryption, nse, external, key management, servers 
+summary: 如果您在ONTAP 9.2或更早版本上使用NetApp存储加密并升级到9.3或更高版本、请在升级之前删除外部密钥管理服务器连接。 
+---
+= 在升级ONTAP之前、请删除现有外部密钥管理服务器连接
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+升级ONTAP之前、如果您运行的是采用NetApp存储加密(NSE)的ONTAP 9.2或更早版本、并升级到ONTAP 9.3或更高版本、则必须使用命令行界面(CLI)删除任何现有的外部密钥管理(KMIP)服务器连接。
+
+.步骤
+. 验证 NSE 驱动器是否已解锁，打开并设置为默认的制造安全 ID 0x0 ：
++
+[source, cli]
+----
+storage encryption disk show -disk *
+----
+. 进入高级权限模式：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 使用默认的制造安全ID 0x0将FIPS密钥分配给自加密磁盘(SED)：
++
+[source, cli]
+----
+storage encryption disk modify -fips-key-id 0x0 -disk *
+----
+. 验证是否已完成为所有磁盘分配FIPS密钥：
++
+[source, cli]
+----
+storage encryption disk show-status
+----
+. 验证所有磁盘的*mode*是否设置为data
++
+[source, cli]
+----
+storage encryption disk show
+----
+. 查看已配置的KMIP服务器：
++
+[source, cli]
+----
+security key-manager show
+----
+. 删除已配置的KMIP服务器：
++
+[source, cli]
+----
+security key-manager delete -address <kmip_ip_address>
+----
+. 删除外部密钥管理器配置：
++
+[source, cli]
+----
+security key-manager delete-kmip-config
+----
++
+
+NOTE: 此步骤不会删除 NSE 证书。
+
+
+
+.下一步行动
+升级完成后、您必须执行此操作 xref:task_reconfiguring_kmip_servers_connections_after_upgrading_to_ontap_9_3_or_later.adoc[重新配置KMIP服务器连接]。

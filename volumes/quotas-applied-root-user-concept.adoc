@@ -1,8 +1,8 @@
 ---
 permalink: volumes/quotas-applied-root-user-concept.html 
 sidebar: sidebar 
-keywords: how, quotas are applied, root user 
-summary: UNIX 客户端上的 root 用户（ UID=0 ）受树配额限制，但不受用户配额或组配额限制。这样， root 用户就可以代表其他用户执行操作，否则配额会阻止这些操作。 
+keywords: quotas applied, root user 
+summary: 'UNIX客户端上的root用户(UID=0)受树配额限制、但不受用户或组配额限制。这样， root 用户就可以代表其他用户执行操作，否则配额会阻止这些操作。' 
 ---
 = 如何将配额应用于 root 用户
 :allow-uri-read: 
@@ -11,12 +11,16 @@ summary: UNIX 客户端上的 root 用户（ UID=0 ）受树配额限制，但�
 
 
 [role="lead"]
-UNIX 客户端上的 root 用户（ UID=0 ）受树配额限制，但不受用户配额或组配额限制。这样， root 用户就可以代表其他用户执行操作，否则配额会阻止这些操作。
+UNIX客户端上的root用户(UID=0)受树配额限制、但不受用户或组配额限制。这样， root 用户就可以代表其他用户执行操作，否则配额会阻止这些操作。
 
-当root用户执行文件或目录所有权更改或其他操作(如UNIX)时 `chown` 命令)、ONTAP会代表权限较低的用户根据新所有者检查配额、但不会报告错误或停止操作、即使超出了新所有者的硬配额限制也是如此。当恢复丢失的数据等管理操作导致临时超过配额时，此功能非常有用。
+当root用户 `chown`代表Privileges较低的用户执行文件或目录所有权更改或其他操作(例如UNIX命令)时、ONTAP会根据新所有者检查配额、但不会报告错误或停止此操作、即使超出了新所有者的硬配额限制也是如此。当恢复丢失的数据等管理操作导致临时超过配额时，此功能非常有用。
 
 [NOTE]
 ====
 但是，在执行所有权传输后，如果用户在仍超过配额的情况下尝试分配更多磁盘空间，则客户端系统将报告磁盘空间错误。
 
 ====
+.相关信息
+* link:../volumes/quotas-applied-concept.html["如何应用配额"]
+* link:../volumes/quotas-applied-users-multiple-ids-concept.html["如何将配额应用于具有多个 ID 的用户"]
+

@@ -2,7 +2,7 @@
 permalink: volumes/enable-temperature-sensitive-efficiency-concept.html 
 sidebar: sidebar 
 keywords: enable, temperature, sensitive, storage, efficiency, sequential packing 
-summary: ONTAP 9.8引入了对温度敏感的存储效率功能、此功能可在新创建的精简配置AFF卷上自动启用。您可以在现有AFF卷和精简配置的非Af DP卷上手动启用对温度敏感的存储效率。 
+summary: 在ONTAP 9。8中推出、某些AFF卷会自动启用对温度敏感的存储效率、而现有卷则会手动启用此效率。 
 ---
 = 温度敏感型存储效率概述
 :allow-uri-read: 
@@ -11,12 +11,12 @@ summary: ONTAP 9.8引入了对温度敏感的存储效率功能、此功能可�
 
 
 [role="lead"]
-ONTAP 通过评估卷数据的访问频率并将该频率映射到应用于该数据的压缩程度、可提供对温度敏感的存储效率优势。对于不常访问的冷数据、将压缩较大的数据块；对于频繁访问且覆盖频率更高的热数据、将压缩较小的数据块、从而提高流程效率。
+ONTAP可通过评估卷数据的访问频率并将该频率映射到应用于该数据的压缩程度来提供对温度敏感的存储效率优势。对于不常访问的冷数据、将压缩较大的数据块；对于频繁访问且覆盖频率更高的热数据、将压缩较小的数据块、从而提高流程效率。
 
 ONTAP 9.8中引入了温度敏感型存储效率(TSSE)、此功能会在新创建的精简配置AFF卷上自动启用。您可以在现有AFF卷和精简配置的非Af DP卷上启用对温度敏感的存储效率。
 
 .引入"默认"和"高效"模式
-从ONTAP 9.10.1开始、仅为AFF 系统引入了两种卷级存储效率模式、即_default_和_高效_。这两种模式提供了两种选择：文件压缩(默认)(创建新AFF卷时的默认模式)或温度敏感型存储效率(高效)(启用温度敏感型存储效率)。与ONTAP 9.10.1配合使用、 link:https://docs.netapp.com/us-en/ontap/volumes/set-efficiency-mode-task.html["必须明确设置对温度敏感的存储效率"] 启用自动自适应数据压缩。但是、默认情况下、AFF 平台会在默认和高效模式下启用数据缩减、自动重复数据删除计划、实时重复数据删除、跨卷实时重复数据删除和跨卷后台重复数据删除等其他存储效率功能。
+从ONTAP 9 10.1开始、仅为AFF系统引入了_default_和_高效_卷级存储效率模式。这两种模式提供了两种选择：文件压缩(默认)(创建新AFF卷时的默认模式)或温度敏感型存储效率(高效)(启用温度敏感型存储效率)。使用ONTAP 9 10.1link:https://docs.netapp.com/us-en/ontap/volumes/set-efficiency-mode-task.html["必须明确设置对温度敏感的存储效率"]启用自动自适应数据压缩。但是、默认情况下、AFF 平台会在默认和高效模式下启用数据缩减、自动重复数据删除计划、实时重复数据删除、跨卷实时重复数据删除和跨卷后台重复数据删除等其他存储效率功能。
 
 启用了FabricPoool的聚合以及所有分层策略类型均支持这两种存储效率模式(默认和高效)。
 

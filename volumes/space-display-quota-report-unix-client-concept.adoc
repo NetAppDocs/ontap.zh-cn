@@ -2,16 +2,16 @@
 permalink: volumes/space-display-quota-report-unix-client-concept.html 
 sidebar: sidebar 
 keywords: difference, space usage, displayed, quota report, unix client 
-summary: FlexVol 卷或 qtree 的配额报告中显示的已用磁盘空间值可能与 UNIX 客户端为同一卷或 qtree 显示的值不同。使用量值的差异是由于配额报告和 UNIX 命令在计算卷或 qtree 中的数据块时所遵循的方法不同。 
+summary: FlexVol volume或qtree的配额报告中显示的已用磁盘空间值可能与UNIX客户端为同一个卷或qtree显示的值不同。 
 ---
-= 配额报告和 UNIX 客户端概述显示的空间使用量差异
+= 配额报告显示的空间使用量与UNIX客户端显示的空间使用量之间的差异概述
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-FlexVol 卷或 qtree 的配额报告中显示的已用磁盘空间值可能与 UNIX 客户端为同一卷或 qtree 显示的值不同。使用量值的差异是由于配额报告和 UNIX 命令在计算卷或 qtree 中的数据块时所遵循的方法不同。
+FlexVol volume或qtree的配额报告中显示的已用磁盘空间值可能与UNIX客户端为同一个卷或qtree显示的值不同。这些值之所以存在差异、是因为配额报告和UNIX命令在计算卷或qtree中的数据块时所遵循的方法不同。
 
 例如，如果卷包含包含包含空数据块（未向其写入数据）的文件，则该卷的配额报告在报告空间使用情况时不会计算空数据块。但是、当卷挂载到UNIX客户端上且文件显示为的输出时 `ls` 命令中、空数据块也会计入空间使用量。因此、 `ls` 命令显示的文件大小比配额报告显示的空间使用量更大。
 

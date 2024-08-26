@@ -1,10 +1,10 @@
 ---
 permalink: volumes/qtree-changes-affect-quotas-concept.html 
 sidebar: sidebar 
-keywords: how, qtree, changes, affect, quotas 
+keywords: how, qtree, quota, delete qtree, rename qtree, tree quotas, security, style of a qtree, security style, style 
 summary: 删除，重命名或更改 qtree 的安全模式时， ONTAP 应用的配额可能会发生更改，具体取决于当前应用的配额。 
 ---
-= qtree 更改如何影响配额概述
+= qtree 更改如何影响配额
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -12,3 +12,44 @@ summary: 删除，重命名或更改 qtree 的安全模式时， ONTAP 应用的
 
 [role="lead"]
 删除，重命名或更改 qtree 的安全模式时， ONTAP 应用的配额可能会发生更改，具体取决于当前应用的配额。
+
+
+
+== qtree删除和树配额
+
+删除 qtree 时， ONTAP 将不再应用适用于该 qtree 的所有配额，无论是显式配额还是派生配额。
+
+配额规则是否持久取决于您删除 qtree 的位置：
+
+* 如果使用 ONTAP 删除 qtree ，则该 qtree 的配额规则将自动删除，包括树配额规则以及为该 qtree 配置的任何用户和组配额规则。
+* 如果使用 CIFS 或 NFS 客户端删除 qtree ，则必须删除该 qtree 的任何配额规则，以避免在重新初始化配额时出错。如果创建的新 qtree 与删除的 qtree 同名，则在重新初始化配额之前，现有配额规则不会应用于新 qtree 。
+
+
+
+
+== 重命名 qtree 如何影响配额
+
+使用 ONTAP 重命名 qtree 时，该 qtree 的配额规则会自动更新。如果使用 CIFS 或 NFS 客户端重命名 qtree ，则必须更新该 qtree 的任何配额规则。
+
+
+NOTE: 如果使用CIFS或NFS客户端重命名qtree、并且在重新初始化配额之前未使用新名称更新该qtree的配额规则、则配额不会应用于该qtree。可以将qtree的显式配额(包括qtree的树配额以及qtree的用户或组配额)转换为派生配额。
+
+
+
+== qtree安全模式和用户配额
+
+您可以使用 NTFS 或混合安全模式对 qtree 应用访问控制列表（ ACL ），但不能使用 UNIX 安全模式。更改qtree的安全模式可能会影响配额的计算方式。更改 qtree 的安全模式后，应始终重新初始化配额。
+
+如果将 qtree 的安全模式从 NTFS 或混合更改为 UNIX ，则会忽略该 qtree 中文件的任何 ACL ，并将文件使用量计入 UNIX 用户 ID 。
+
+如果将 qtree 的安全模式从 UNIX 更改为混合或 NTFS ，则会显示先前隐藏的 ACL 。此外，忽略的任何 ACL 将重新生效， NFS 用户信息将被忽略。如果之前没有 ACL ，则配额计算中将继续使用 NFS 信息。
+
+
+NOTE: 要确保在更改 qtree 的安全模式后正确计算 UNIX 和 Windows 用户的配额使用量，必须重新初始化包含该 qtree 的卷的配额。
+
+.示例
+以下示例显示了 qtree 安全模式的更改如何导致其他用户因使用特定 qtree 中的文件而被收费。
+
+假设qtree A采用NTFS安全 `corp\joe`模式、ACL为Windows用户提供了一个5 MB文件的所有权。用户 `corp\joe`需要为qtree A支付5 MB的磁盘空间使用量
+
+现在，您可以将 qtree A 的安全模式从 NTFS 更改为 UNIX 。重新初始化配额后、 `corp\joe`不再为此文件向Windows用户收费、而是向与此文件的UID对应的UNIX用户收费。UID可以是映射到的UNIX用户 `corp\joe`或root用户。

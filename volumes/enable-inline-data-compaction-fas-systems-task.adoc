@@ -1,8 +1,8 @@
 ---
 permalink: volumes/enable-inline-data-compaction-fas-systems-task.html 
 sidebar: sidebar 
-keywords: enable, inline, data, compaction, fas systems 
-summary: 您可以使用 WAFL compression enable node shell 命令在卷或聚合级别控制使用 Flash Pool （混合）聚合或 HDD 聚合的 FAS 系统上的实时数据缩减。默认情况下， FAS 系统会禁用数据缩减。 
+keywords: enable, inline, data compaction, fas systems, hdd aggregate, volume efficiency 
+summary: '在卷或聚合级别使用Flash Pool (混合)聚合或HDD聚合的FAS系统上启用实时数据缩减。' 
 ---
 = 为 FAS 系统启用实时数据缩减
 :allow-uri-read: 
@@ -11,24 +11,40 @@ summary: 您可以使用 WAFL compression enable node shell 命令在卷或聚�
 
 
 [role="lead"]
-您可以使用在卷或聚合级别控制使用Flash Pool (混合)聚合或HDD聚合的FAS系统上的实时数据缩减 `volume efficiency` cluster shell命令。默认情况下， FAS 系统会禁用数据缩减。
+您可以使用 `volume efficiency`cluster shell命令在卷或聚合级别对使用Flash Pool (混合)聚合或HDD聚合的FAS系统启用实时数据缩减。默认情况下， FAS 系统会禁用数据缩减。
 
 .关于此任务
 如果在聚合级别启用数据缩减、则会在使用卷空间保证创建的任何新卷上启用数据缩减 `none` 在聚合中。在 HDD 聚合上的卷上启用数据缩减会占用额外的 CPU 资源。
 
 .步骤
-. 更改为高级权限级别：+
-`set -privilege advanced`
-. 检查所需节点的卷和聚合的数据缩减状态：+
-`volume efficiency show -volume _volume_name_` +
-. 对卷启用数据缩减：+
-`volume efficiency modify -volume _volume_name_ -data-compaction true`
+. 更改为高级权限级别：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 检查所需节点的卷和聚合的数据缩减状态：
++
+[source, cli]
+----
+volume efficiency show -volume <volume_name>
+----
+. 对卷启用数据缩减：
++
+[source, cli]
+----
+volume efficiency modify -volume <volume_name> -data-compaction true
+----
 +
 [NOTE]
 ====
-如果将聚合或卷的数据缩减设置为 `false` 、则数据缩减将失败。启用数据缩减不会压缩现有数据；只会压缩向系统写入的新数据。 `volume efficiency start`命令包含有关如何缩减现有数据的详细信息(在ONTAP 9.1及更高版本中)。+有关详细信息，请参见 https://docs.netapp.com/us-en/ontap-cli["ONTAP 命令参考"^]。
+如果将聚合或卷的数据缩减设置为 `false` 、则数据缩减将失败。启用数据缩减不会压缩现有数据；只会压缩向系统写入的新数据。 `volume efficiency start`命令包含有关如何缩减现有数据的详细信息(在ONTAP 9.1及更高版本中)。有关详细信息，请参见 https://docs.netapp.com/us-en/ontap-cli["ONTAP 命令参考"^]。
 
 ====
 . 查看数据缩减统计信息：
-`volume efficiency show -volume _volume_name_`
++
+[source, cli]
+----
+volume efficiency show -volume <volume_name>
+----
 

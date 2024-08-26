@@ -2,19 +2,19 @@
 permalink: volumes/run-efficiency-operations-manual-existing-data-task.html 
 sidebar: sidebar 
 keywords: run, efficiency, operations, manually, existing, data 
-summary: 在使用 ONTAP 9.8 之前的 ONTAP 版本启用重复数据删除，数据压缩或数据缩减之前，您可以对非温度敏感型存储效率卷中的数据手动运行效率操作。您可以使用 volume efficiency start -scan-old-data 命令运行这些操作。 
+summary: 在启用重复数据删除、数据压缩或数据缩减之前、手动对非温度敏感型存储效率卷中的数据运行效率操作。 
 ---
-= 对现有数据手动运行效率操作
+= 手动对现有数据运行效率操作
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在使用 ONTAP 9.8 之前的 ONTAP 版本启用重复数据删除，数据压缩或数据缩减之前，您可以对非温度敏感型存储效率卷中的数据手动运行效率操作。您可以使用运行这些操作 `volume efficiency start -scan-old-data` 命令：
+在启用重复数据删除、数据压缩或数据缩减之前、您可以对非温度敏感型存储效率卷中的数据手动运行效率操作。您可以对早于ONTAP 9。8的ONTAP版本运行这些操作。
 
 .关于此任务
-此 `-compression` 选项不适用于 `-scan-old-data` 对温度敏感的存储效率卷。在ONTAP 9.8及更高版本中、对温度敏感型存储效率卷的原有数据自动运行非活动数据压缩。
+可使用 `volume efficiency start`命令和 `-scan-old-data`参数执行此操作。此 `-compression` 选项不适用于 `-scan-old-data` 对温度敏感的存储效率卷。在ONTAP 9.8及更高版本中、对温度敏感型存储效率卷的原有数据自动运行非活动数据压缩。
 
 如果在卷上仅启用重复数据删除，则会对数据运行重复数据删除。如果在卷上启用重复数据删除，数据压缩和数据缩减，则先运行数据压缩，然后运行重复数据删除和数据缩减。
 
@@ -24,7 +24,7 @@ summary: 在使用 ONTAP 9.8 之前的 ONTAP 版本启用重复数据删除，�
 
 [NOTE]
 ====
-后处理压缩不会在 AFF 平台上运行。此时将生成一条 EMS 消息，通知您已跳过此操作。
+后处理压缩不会在AFF平台上运行。此时将生成一条 EMS 消息，通知您已跳过此操作。
 
 ====
 .步骤
@@ -35,4 +35,8 @@ summary: 在使用 ONTAP 9.8 之前的 ONTAP 版本启用重复数据删除，�
 +
 `volume efficiency start -vserver vs1 -volume VolA -scan-old-data true [-compression | -dedupe | -compaction ] true`
 
+
+
+.相关信息
+* link:run-efficiency-operations-manual-task.html["手动运行效率操作"]
 
