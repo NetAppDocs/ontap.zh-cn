@@ -1,0 +1,46 @@
+---
+sidebar: sidebar 
+permalink: ransomware-solutions/ransomware-fpolicy.html 
+keywords: tr-4572, technical report, ransomware, protect, protection, netapp ransomware protection, netapp tr, ontap tr 
+summary: NetApp的勒索软件保护功能包括FPolicy、它可以阻止不需要的文件存储在企业级存储设备上。 
+---
+= FPolicy文件阻止
+:allow-uri-read: 
+
+
+[role="lead"]
+FPolicy可阻止不需要的文件存储在企业级存储设备上。FPolicy还提供了一种阻止已知勒索软件文件扩展名的方法。用户仍对主文件夹拥有完全访问权限、但FPolicy不允许用户存储管理员标记为已阻止的文件。无论这些文件是MP3文件还是已知的勒索软件文件扩展名、都无关紧要。
+
+
+
+== 使用FPolicy本机模式阻止恶意文件
+
+NetApp FPolicy本机模式(名称"文件策略"的演变)是一个文件扩展名阻止框架、可用于阻止不需要的文件扩展名进入环境。它已成为ONTAP的一部分超过十年、在帮助您防范勒索软件方面非常有用。此零信任引擎非常有用、因为您可以获得超出访问控制列表(ACL)权限的额外安全措施。
+
+在ONTAP系统管理器和BlueXP  中、提供了3000多个文件扩展名列表供参考。
+
+
+WARNING: 某些扩展在您的环境中可能是合法的、阻止它们可能会导致意外问题。在配置本机FPolicy之前、创建适合您环境的列表。
+
+所有ONTAP许可证均包含FPolicy本机模式。
+
+.了解更多信息。
+* https://www.netapp.com/blog/fighting-ransomware-tools/["博客：应对网络软件：第三部分—ONTAP FPolicy、另一个功能强大的本机(也称为免费)工具"^]
+
+
+
+
+== 在FPolicy外部模式下启用用户和实体行为分析(UEA)
+
+FPolicy外部模式是一种文件活动通知和控制框架、可提供文件和用户活动的可见性。外部解决方案可以使用这些通知执行基于AI的分析以检测恶意行为。
+
+也可以将FPolicy外部模式配置为等待FPolicy服务器批准、然后再允许执行特定活动。可以在一个集群上配置多个类似这样的策略、从而为您提供极大的灵活性。
+
+
+WARNING: 如果FPolicy服务器配置为提供批准、则必须对FPolicy请求做出响应；否则、存储系统性能可能会受到负面影响。
+
+FPolicy外部模式包括在中link:../system-admin/manage-licenses-concept.html["所有ONTAP许可证"]。
+
+.了解更多信息。
+* https://www.netapp.com/blog/fighting-ransomware-ontap-fpolicy/["博客：应对异常：第四部分—采用FPolicy外部模式的UBA和ONTAP。"^]
+

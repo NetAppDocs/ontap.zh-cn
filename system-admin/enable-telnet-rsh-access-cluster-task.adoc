@@ -1,7 +1,7 @@
 ---
 permalink: system-admin/enable-telnet-rsh-access-cluster-task.html 
 sidebar: sidebar 
-keywords: enable, telnet, rsh, access, cluster, mgmt, management, service, policy 
+keywords: enable, telnet, rsh, access, cluster, mgmt, management, service, policy, firewall, roles 
 summary: 作为一项安全最佳实践、默认情况下会禁用Telnet和RSH。要使集群能够接受Telnet或RSH请求、必须在默认管理服务策略中启用该服务。 
 ---
 = 启用对集群的 Telnet 或 RSH 访问
@@ -14,6 +14,33 @@ summary: 作为一项安全最佳实践、默认情况下会禁用Telnet和RSH�
 [role="lead"]
 作为一项安全最佳实践、默认情况下会禁用Telnet和RSH。要使集群能够接受Telnet或RSH请求、必须在默认管理服务策略中启用该服务。
 
+随着时间的推移、ONTAP管理其支持的流量类型的方式发生了变化。
+
+* ONTAP 9 5及更早版本使用LIF角色和防火墙服务
+* ONTAP 9 6及更高版本使用LIF服务策略
++
+** ONTAP 9 5版本引入了LIF服务策略
+** ONTAP 9 6将LIF角色替换为LIF服务策略
+** LIF.10.1将防火墙服务替换为ONTAP 9服务策略
+
+
+
+
+您配置的方法取决于所使用的ONTAP版本。
+
+要了解有关以下内容的更多信息：
+
+* 防火墙策略、请参见link:https://docs.netapp.com/us-en/ontap-cli//system-services-firewall-policy-show.html["命令：Firewall-policy-show"^]
+* LIF角色、请参见link:../networking/lif_roles95.html["LIF角色(ONTAP 9.5及更早版本)"]
+* LIF服务策略、请参见link:../networking/lifs_and_service_policies96.html["ONTAP 9.6及更高版本"]
+
+
+Telnet和RSH不是安全协议、应考虑使用SSH访问集群。SSH 可提供安全的远程 shell 和交互式网络会话。有关详细信息、请参见link:./access-cluster-ssh-task.html["使用SSH访问集群"]
+
+[role="tabbed-block"]
+====
+.ONTAP 9 6或更高版本
+--
 .关于此任务
 * RSH 不是安全协议。
 +
@@ -64,3 +91,38 @@ summary: 作为一项安全最佳实践、默认情况下会禁用Telnet和RSH�
 
 
 
+
+--
+.ONTAP 9.5 或更早版本
+--
+.关于此任务
+ONTAP会阻止您更改预定义的防火墙策略、但您可以通过克隆预定义的 `mgmt`管理防火墙策略、然后在此新策略下启用Telnet或RSH来创建新策略。
+
+.步骤
+. 进入高级权限模式：
++
+`set advanced`
+
+. 启用安全协议（ RSH 或 Telnet ）：
++
+`security protocol modify -application security_protocol -enabled true`
+
+. 根据 `mgmt`管理防火墙策略创建新的管理防火墙策略：
++
+`system services firewall policy clone -policy _mgmt_ -destination-policy _policy-name_`
+
+. 在新的管理防火墙策略中启用 Telnet 或 RSH ：
++
+`system services firewall policy create -policy _policy-name_ -service _security_protocol_ -action allow -ip-list _ip_address/netmask_`
+
++
+要允许所有IP地址、应指定 `-ip-list _0.0.0.0/0_`
+
+. 将新策略与集群管理 LIF 关联：
++
+`network interface modify -vserver cluster_management_LIF -lif cluster_mgmt -firewall-policy policy-name`
+
+
+
+--
+====

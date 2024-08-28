@@ -1,0 +1,42 @@
+---
+sidebar: sidebar 
+permalink: ransomware-solutions/ransomware-cyber-vaulting.html 
+keywords: tr-4572, technical report, ransomware, protect, protection, netapp ransomware protection, netapp tr, ontap tr 
+summary: NetApp的勒索软件保护包括网络存储和无线WORM保护、用于隔离关键数据备份。 
+---
+= 通过网络数据保护实现无线WORM保护
+:allow-uri-read: 
+
+
+[role="lead"]
+NetApp的网络存储方法是一种专用参考架构、用于逻辑上隔离的网络存储。这种方法利用SnapLock等安全强化和合规性技术实现了不可变和不可删除的快照。
+
+
+
+== 利用SnapLock Compliance进行网络存储、并形成合理的空隙
+
+攻击者破坏备份副本的趋势越来越明显、在某些情况下甚至会对其进行加密。因此、网络安全行业的许多企业都建议将空隙备份作为整体网络弹性策略的一部分。
+
+问题在于、传统的空隙(磁带和脱机介质)可以显著增加恢复时间、从而增加停机时间和整体相关成本。即使采用更现代化的方法来解决空隙问题也会有问题。例如、如果临时打开备份存储以接收新的备份副本、然后断开并关闭其与主数据的网络连接、以便再次"无线连接"、则攻击者可以利用临时打开的空间。在连接联机期间、攻击者可能会攻击以破坏或销毁数据。此类配置通常还会增加不必要的复杂性。逻辑空隙非常适合替代传统或现代空隙、因为它在保持备份联机的同时具有相同的安全保护原则。借助NetApp、您可以通过逻辑气隙来解决磁带或磁盘气隙的复杂性、而逻辑气隙可以通过不可固定的Snapshot副本和NetApp SnapLock Compliance来实现。
+
+image:ransomware-solution-workload-characteristics2.png["与NetApp网络存储的逻辑空隙"]
+
+NetApp在10多年前发布了SnapLock功能、旨在满足数据合规性要求、例如健康保险携带和责任法案(HIPAA)、萨班斯-奥克斯利法案以及其他法规数据规则。您还可以将主Snapshot副本存储到SnapLock卷、以便将这些副本提交到WORM、从而防止删除。SnapLock许可证有两个版本：SnapLock Compliance和SnapLock Enterprise。对于勒索软件防护、NetApp建议使用SnapLock Compliance、因为您可以设置一个特定的保留期限、在该期限内、即使ONTAP管理员或NetApp支持人员也可以锁定Snapshot副本、并且无法将其删除。
+
+.了解更多信息。
+* https://community.netapp.com/t5/Tech-ONTAP-Blogs/Layered-Ransomware-Protection-with-NetApp-s-Cyber-Vault-Solution/ba-p/452660["博客：利用NetApp网络存储解决方案提供分层勒索软件保护"^]
+
+
+
+
+== 防篡改Snapshot副本
+
+虽然利用SnapLock Compliance作为逻辑空隙可提供防止攻击者删除备份副本的终极保护、但它确实要求您使用SnapVault将Snapshot副本移动到启用了SnapLock的二级卷。因此、许多客户都会在网络中的二级存储上部署此配置。与在主存储上还原主卷Snapshot副本相比、这可能会导致还原时间更长。
+
+从ONTAP 9．12.1开始，防篡改快照副本可以为主存储和主卷上的快照副本提供接近SnapLock Compliance级别的保护。无需使用SnapVault将Snapshot副本存储到二级SnapLocked卷。防篡改Snapshot副本使用SnapLock技术来防止主Snapshot副本被删除、即使是使用相同SnapLock保留期限的完整ONTAP管理员也是如此。这样可以缩短还原时间、并可通过防篡改的受保护Snapshot副本备份FlexClone卷、而传统的SnapLock Compliance存储Snapshot副本则无法做到这一点。
+
+SnapLock Compliance与防篡改Snapshot副本之间的主要区别在于、如果SnapLock Compliance卷中存储的Snapshot副本尚未达到到期日期、则SnapLock Compliance不允许对ONTAP阵列进行初始化和擦除。要使Snapshot副本不经过篡改、需要SnapLock Compliance许可证。
+
+.了解更多信息。
+* link:../snaplock/snapshot-lock-concept.html["锁定Snapshot副本、防止勒索软件攻击"]
+

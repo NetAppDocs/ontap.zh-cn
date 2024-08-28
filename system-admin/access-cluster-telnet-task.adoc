@@ -13,7 +13,34 @@ summary: 您可以通过问题描述向集群发送 Telnet 请求来执行管理
 [role="lead"]
 您可以通过问题描述向集群发送 Telnet 请求来执行管理任务。默认情况下， Telnet 处于禁用状态。
 
-.您需要的内容
+随着时间的推移、ONTAP管理其支持的流量类型的方式发生了变化。
+
+* ONTAP 9 5及更早版本使用LIF角色和防火墙服务
+* ONTAP 9 6及更高版本使用LIF服务策略
++
+** ONTAP 9 5版本引入了LIF服务策略
+** ONTAP 9 6将LIF角色替换为LIF服务策略
+** LIF.10.1将防火墙服务替换为ONTAP 9服务策略
+
+
+
+
+您配置的方法取决于所使用的ONTAP版本。
+
+要了解有关以下内容的更多信息：
+
+* 防火墙策略、请参见link:https://docs.netapp.com/us-en/ontap-cli//system-services-firewall-policy-show.html["命令：Firewall-policy-show"^]
+* LIF角色、请参见link:../networking/lif_roles95.html["LIF角色(ONTAP 9.5及更早版本)"]
+* LIF服务策略、请参见link:../networking/lifs_and_service_policies96.html["ONTAP 9.6及更高版本"]
+
+
+Telnet和RSH不是安全协议、应考虑使用SSH访问集群。SSH 可提供安全的远程 shell 和交互式网络会话。有关详细信息、请参见link:./access-cluster-ssh-task.html["使用SSH访问集群"]
+
+[role="tabbed-block"]
+====
+.ONTAP 9 6或更高版本
+--
+.开始之前
 在使用 Telnet 访问集群之前，必须满足以下条件：
 
 * 您必须拥有一个集群本地用户帐户，该帐户必须配置为使用 Telnet 作为访问方法。
@@ -76,3 +103,65 @@ login: joe
 Password:
 cluster1::>
 ----
+--
+.ONTAP 9.5 或更早版本
+--
+.开始之前
+在使用 Telnet 访问集群之前，必须满足以下条件：
+
+* 您必须拥有一个集群本地用户帐户，该帐户必须配置为使用 Telnet 作为访问方法。
++
+ `-application`security login命令的参数用于指定用户帐户的访问方法。有关详细信息、请参见security login手册页。
+
+* 必须已在集群或节点管理 LIF 使用的管理防火墙策略中启用 Telnet ，以便 Telnet 请求可以通过防火墙。
++
+默认情况下， Telnet 处于禁用状态。带有`-service telnet `参数的system services防火墙策略show命令可显示是否已在防火墙策略中启用Telnet。有关详细信息、请参见system services防火墙策略手册页。
+
+* 如果使用 IPv6 连接，则必须已在集群上配置并启用 IPv6 ，并且防火墙策略必须已配置 IPv6 地址。
++
+network options ipv6 show命令可显示是否已启用IPv6。system services防火墙policy show命令可显示防火墙策略。
+
+
+
+.关于此任务
+* Telnet 不是一种安全协议。
++
+您应考虑使用 SSH 访问集群。SSH 可提供安全的远程 shell 和交互式网络会话。
+
+* ONTAP 最多支持每个节点 50 个并发 Telnet 会话。
++
+如果集群管理 LIF 驻留在节点上，则它与节点管理 LIF 共享此限制。
+
++
+如果传入连接的速率高于每秒 10 次，则此服务将暂时禁用 60 秒。
+
+* 如果要从 Windows 主机访问 ONTAP 命令行界面，可以使用 PuTTY 等第三方实用程序。
+
+
+.步骤
+. 在管理主机中，输入以下命令：
++
+`telnet hostname_or_IP`
+
++
+`hostname_or_IP`是集群管理LIF或节点管理LIF的主机名或IP地址。建议使用集群管理 LIF 。您可以使用 IPv4 或 IPv6 地址。
+
+
+
+.Telnet请求示例
+以下示例显示了已设置Telnet访问权限的名为"joe"的用户如何发出Telnet请求来访问集群管理LIF为10.72.137.28的集群：
+
+[listing]
+----
+
+admin_host$ telnet 10.72.137.28
+
+Data ONTAP
+login: joe
+Password:
+
+cluster1::>
+
+----
+--
+====
