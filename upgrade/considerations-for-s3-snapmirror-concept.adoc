@@ -2,39 +2,39 @@
 permalink: upgrade/considerations-for-s3-snapmirror-concept.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, update, considerations, s3, snapmirror, license 
-summary: 如果您使用的是S3 SnapMirror、则应在升级ONTAP之前检查许可证 
+summary: 如果您使用的是SnapMirror S3、则应在升级ONTAP之前检查您的许可证 
 ---
-= 验证S3 SnapMirror配置的许可
+= 验证SnapMirror S3配置的许可
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在升级ONTAP之前、如果您使用的是S3 SnapMirror、并且要升级到ONTAP 9.12.1或更高版本、则应验证您是否具有正确的SnapMirror许可证。
+在升级ONTAP之前、如果您使用的是SnapMirror S3、并且要升级到ONTAP 9．12.1或更高版本、则应验证您是否具有正确的SnapMirror许可证。
 
-升级ONTAP后、如果ONTAP 9.11.1及更早版本与ONTAP 9.12.1及更高版本之间发生许可更改、则可能会导致S3 SnapMirror关系失败。
+升级ONTAP后、如果在ONTAP 9 .11.1及更早版本与ONTAP 9 .12.1及更高版本之间发生许可更改、则可能会导致SnapMirror S3关系失败。
 
 
 
 == ONTAP 9.11.1及更早版本
 
-* 在复制到NetApp托管的目标存储分段(ONTAP S3或StorageGRID)时、S3 SnapMirror会在推出软件套件之前检查数据保护包中是否包含SnapMirror同步许可证 link:../system-admin/manage-licenses-concept.html["ONTAP One"] 。
-* 在复制到非NetApp目标存储分段时、S3 SnapMirror会检查SnapMirror Cloud许可证是否包含在混合云捆绑包中、该捆绑包在软件套件推出之前提供 link:../system-admin/manage-licenses-concept.html["ONTAP One"] 。
+* 在复制到NetApp托管的目标存储分段(ONTAP S3或StorageGRID)时、SnapMirror S3会在推出link:../system-admin/manage-licenses-concept.html["ONTAP One"]软件套件之前检查数据保护包中是否包含SnapMirror同步许可证。
+* 在复制到非NetApp目标存储分段时、SnapMirror S3会检查SnapMirror云许可证、此许可证包含在推出link:../system-admin/manage-licenses-concept.html["ONTAP One"]软件套件之前提供的混合云捆绑包中。
 
 
 
 
 == ONTAP 9.12.1及更高版本
 
-* 在复制到NetApp托管的目标存储分段(ONTAP S3或StorageGRID)时、S3 SnapMirror会检查S3 SnapMirror许可证、该许可证包含在推出软件套件之前提供的数据保护包中 link:../system-admin/manage-licenses-concept.html["ONTAP One"] 。
-* 在复制到非NetApp目标存储分段时、S3 SnapMirror会检查是否存在S3 SnapMirror外部许可证、此许可证包含在混合云捆绑包中、该捆绑包在推出软件套件和之前提供 link:../system-admin/manage-licenses-concept.html["ONTAP One"] link:../data-protection/install-snapmirror-cloud-license-task.html["ONTAP One兼容包"]。
+* 在复制到NetApp托管的目标存储分段(ONTAP S3或StorageGRID)时、SnapMirror S3会检查SnapMirror S3许可证、此许可证包含在推出link:../system-admin/manage-licenses-concept.html["ONTAP One"]软件套件之前提供的数据保护包中。
+* 在复制到非NetApp目标存储分段时，SnapMirror S3会检查SnapMirror S3外部许可证，该许可证包含在混合云捆绑包中，该捆绑包在推出link:../system-admin/manage-licenses-concept.html["ONTAP One"]软件套件和之前提供link:../data-protection/install-snapmirror-cloud-license-task.html["ONTAP One兼容包"]。
 
 
 
 
-== 现有S3 SnapMirror关系
+== 现有SnapMirror S3关系
 
-从ONTAP 9.11.1或更早版本升级到ONTAP 9.12.1或更高版本后、现有的S3 SnapMirror关系应继续正常运行、即使集群没有新的许可也是如此。
+从ONTAP 9．11.1或更早版本升级到ONTAP 9．12.1或更高版本后，现有的SnapMirror S3关系应继续有效，即使群集没有新的许可也是如此。
 
-如果集群未安装正确的许可证、则创建新的S3 SnapMirror关系将失败。
+如果集群未安装正确的许可证、则创建新的SnapMirror S3关系将失败。

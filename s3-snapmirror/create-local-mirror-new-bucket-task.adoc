@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: s3-snapmirror/create-local-mirror-new-bucket-task.html 
 keywords: snapmirror, create local, new bucket, create a mirror relationship for an existing bucket 
-summary: 创建新的 S3 存储分段时，您可以立即将其保护到同一集群上的 S3 SnapMirror 目标。您可以将数据镜像到与源不同的 Storage VM 或同一个 Storage VM 中的存储分段。 
+summary: 创建新的S3存储分段时、您可以立即将其保护到同一集群上的SnapMirror S3目标。您可以将数据镜像到与源不同的 Storage VM 或同一个 Storage VM 中的存储分段。 
 ---
 = 为新存储分段创建镜像关系（本地集群）
 :hardbreaks:
@@ -16,7 +16,7 @@ summary: 创建新的 S3 存储分段时，您可以立即将其保护到同一�
 
 
 [role="lead"]
-创建新的 S3 存储分段时，您可以立即将其保护到同一集群上的 S3 SnapMirror 目标。您可以将数据镜像到与源不同的 Storage VM 或同一个 Storage VM 中的存储分段。
+创建新的S3存储分段时、您可以立即将其保护到同一集群上的SnapMirror S3目标。您可以将数据镜像到与源不同的 Storage VM 或同一个 Storage VM 中的存储分段。
 
 .开始之前
 * 已完成 ONTAP 版本，许可和 S3 服务器配置的要求。
@@ -28,7 +28,7 @@ summary: 创建新的 S3 存储分段时，您可以立即将其保护到同一�
 ====
 .System Manager
 --
-. 如果这是此 Storage VM 的第一个 S3 SnapMirror 关系，请验证源和目标 Storage VM 是否都存在根用户密钥，如果没有，请重新生成这些密钥：
+. 如果这是此Storage VM的第一个SnapMirror S3关系、请验证源Storage VM和目标Storage VM是否都存在root用户密钥、如果它们未执行以下操作、请重新生成它们：
 +
 .. 单击 * 存储 > 存储 VM* ，然后选择此 Storage VM 。
 .. 在*Settings*选项卡中，单击 image:icon_pencil.gif["编辑图标"] S3磁贴。
@@ -40,14 +40,14 @@ summary: 创建新的 S3 存储分段时，您可以立即将其保护到同一�
 +
 请参见 link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组"] 有关详细信息 ...
 
-. 如果您没有 S3 SnapMirror 策略，并且不想使用默认策略，请创建该策略：
+. 如果您没有SnapMirror S3策略、并且不想使用默认策略、请创建此策略：
 +
 .. 单击*Protection > Overview*，然后单击*Local Policy Settings*。
 .. 单击 image:../media/icon_arrow.gif["箭头图标"] *Protection Policies*旁边的，然后单击*Add*。
 +
 *** 输入策略名称和问题描述。
 *** 选择策略范围，集群或 SVM
-*** 为 S3 SnapMirror 关系选择 * 持续 * 。
+*** 为SnapMirror S3关系选择*连续*。
 *** 输入 * 限制 * 和 * 恢复点目标 * 值。
 
 
@@ -106,7 +106,7 @@ GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucket
 --
 .命令行界面
 --
-. 如果这是此 SVM 的第一个 S3 SnapMirror 关系，请验证源和目标 SVM 是否都存在根用户密钥，如果没有，请重新生成这些密钥：
+. 如果这是此SVM的第一个SnapMirror S3关系、请验证源和目标SVM是否都存在root用户密钥、如果不存在、请重新生成这些密钥：
 `vserver object-store-server user show`
 +
 验证是否存在 root 用户的访问密钥。如果没有，请输入：
@@ -127,13 +127,13 @@ GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucket
 ....
 src_cluster::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ....
-. 如果您没有 S3 SnapMirror 策略，并且不想使用默认策略，请创建该策略：
+. 如果您没有SnapMirror S3策略、并且不想使用默认策略、请创建此策略：
 `snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
 Parameters
 
 +
-** `continuous` –S3 SnapMirror关系的唯一策略类型(必需)。
+** `continuous`–SnapMirror S3关系的唯一策略类型(必需)。
 ** `-rpo` 指定恢复点目标的时间(以秒为单位)(可选)。
 ** `-throttle` –指定吞吐量/带宽的上限(以千字节/秒为单位)(可选)。
 +
@@ -157,7 +157,7 @@ src_cluster::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -po
 
 
 
-. 创建S3 SnapMirror关系：
+. 创建SnapMirror S3关系：
 `snapmirror create -source-path _src_svm_name_:/bucket/_bucket_name_ -destination-path _dest_peer_svm_name_:/bucket/_bucket_name_, ...} [-policy policy_name]``
 +
 您可以使用创建的策略或接受默认值。

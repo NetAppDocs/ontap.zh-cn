@@ -32,13 +32,13 @@ summary: 您可以随时开始备份现有的 S3 存储分段；例如，如果�
 +
 请参见 link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组"] 有关详细信息 ...
 
-. 如果您没有 S3 SnapMirror 策略，并且不想使用默认策略，请创建该策略：
+. 如果您没有SnapMirror S3策略、并且不想使用默认策略、请创建此策略：
 +
 .. 单击 * 保护 > 概述 * ，然后单击 * 本地策略设置 * 。
 .. 单击 image:../media/icon_arrow.gif["箭头图标"] *Protection Policies*旁边的，然后单击*Add*。
 .. 输入策略名称和问题描述。
 .. 选择策略范围，集群或 SVM
-.. 为 S3 SnapMirror 关系选择 * 持续 * 。
+.. 为SnapMirror S3关系选择*连续*。
 .. 输入 * 限制 * 和 * 恢复点目标值 * 。
 
 
@@ -75,7 +75,7 @@ summary: 您可以随时开始备份现有的 S3 存储分段；例如，如果�
 
 
 
-. 使用 S3 SnapMirror 备份存储分段：
+. 使用SnapMirror S3备份存储分段：
 +
 .. 单击 * 存储 * > * 分段 * ，然后选择要备份的分段。
 .. 单击 * 保护 * ，选择 * 目标 * 下的 * 云存储 * ，然后选择 * 云对象存储 * 。
@@ -96,13 +96,10 @@ summary: 您可以随时开始备份现有的 S3 存储分段；例如，如果�
 ----
 clusterA::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 如果您没有 S3 SnapMirror 策略，并且不想使用默认策略，请创建该策略：
+. 如果您没有SnapMirror S3策略、并且不想使用默认策略、请创建此策略：
 `snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
-Parameters
-* `type continuous` –S3 SnapMirror关系的唯一策略类型(必需)。
-* `-rpo` 指定恢复点目标的时间(以秒为单位)(可选)。
-* `-throttle` –指定吞吐量/带宽的上限(以千字节/秒为单位)(可选)。
+参数：* `type continuous`—SnapMirror S3关系的唯一策略类型(必需)。* `-rpo`–指定恢复点目标的时间(以秒为单位)(可选)。* `-throttle`–指定吞吐量/带宽的上限(以千字节/秒为单位)(可选)。
 
 +
 .示例
@@ -115,7 +112,7 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 +
 请参见 `security certificate install` 有关详细信息、请参见手册页。
 
-. 定义S3 SnapMirror目标对象存储：
+. 定义SnapMirror S3目标对象存储：
 `snapmirror object-store config create -vserver _svm_name_ -object-store-name _target_store_name_ -usage data -provider-type {AWS_S3|SGWS} -server _target_FQDN_ -container-name _remote_bucket_name_ -is-ssl-enabled true -port _port_number_ -access-key target_access_key -secret-password _target_secret_key_`
 +
 Parameters
@@ -133,7 +130,7 @@ Parameters
 ----
 src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
 ----
-. 创建S3 SnapMirror关系：
+. 创建SnapMirror S3关系：
 `snapmirror create -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _object_store_name_:/objstore  -policy _policy_name_`
 +
 Parameters

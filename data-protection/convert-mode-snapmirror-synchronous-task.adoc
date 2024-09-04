@@ -2,22 +2,22 @@
 permalink: data-protection/convert-mode-snapmirror-synchronous-task.html 
 sidebar: sidebar 
 keywords: convert, mode, snapmirror, synchronous, relationship 
-summary: 从 ONTAP 9.5 开始，支持 SnapMirror 同步关系。您可以将 SnapMirror 同步关系的模式从 StrictSync 转换为 Sync ，反之亦然。 
+summary: 从ONTAP 9。5开始、支持SnapMirror同步关系。您可以将SnapMirror同步关系的模式从StrictSync转换为Sync、反之亦然。 
 ---
-= 转换 SnapMirror 同步关系的模式
+= 转换SnapMirror同步关系的模式
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从 ONTAP 9.5 开始，支持 SnapMirror 同步关系。您可以将 SnapMirror 同步关系的模式从 StrictSync 转换为 Sync ，反之亦然。
+从ONTAP 9。5开始、支持SnapMirror同步关系。您可以将SnapMirror同步关系的模式从StrictSync转换为Sync、反之亦然。
 
 .关于此任务
 您不能修改SnapMirror同步关系的策略来转换其模式。
 
 .步骤
-. 从目标集群中，暂停现有的 SnapMirror 同步关系：
+. 从目标集群中、将现有SnapMirror同步关系静用：
 +
 `snapmirror quiesce -destination-path <destination_SVM>:<destination_volume>`
 
@@ -26,7 +26,7 @@ summary: 从 ONTAP 9.5 开始，支持 SnapMirror 同步关系。您可以将 Sn
 ----
 cluster2::> snapmirror quiesce -destination-path vs1_dr:vol1
 ----
-. 从目标集群中，删除现有的 SnapMirror 同步关系：
+. 从目标集群中、删除现有SnapMirror同步关系：
 +
 `snapmirror delete -destination-path <destination_SVM>:<destination_volume>`
 
@@ -44,7 +44,7 @@ cluster2::> snapmirror delete -destination-path vs1_dr:vol1
 ----
 cluster1::> snapmirror release -relationship-info-only true -destination-path vs1_dr:vol1
 ----
-. 在目标集群中，通过指定要将 SnapMirror 同步关系转换到的模式来创建 SnapMirror 同步关系：
+. 在目标集群中、通过指定要将SnapMirror同步关系转换到的模式来创建SnapMirror同步关系：
 +
 `snapmirror create -source-path vs1:vol1 -destination-path <destination_SVM>:<destination_volume> -policy Sync|StrictSync`
 

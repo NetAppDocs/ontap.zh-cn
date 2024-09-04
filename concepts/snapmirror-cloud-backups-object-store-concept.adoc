@@ -2,26 +2,26 @@
 permalink: concepts/snapmirror-cloud-backups-object-store-concept.html 
 sidebar: sidebar 
 keywords: snapmirror cloud backup, recovery, data protection, replication, object storage, ontap s3, StorageGRID 
-summary: SnapMirror 云是一种备份和恢复技术，专为希望将数据保护工作流过渡到云的 ONTAP 用户而设计。从传统备份到磁带架构迁移的企业可以使用对象存储作为长期数据保留和归档的备用存储库。 
+summary: SnapMirror云是一种备份和恢复技术、专为希望将数据保护工作流过渡到云的ONTAP用户而设计。从传统备份到磁带架构迁移的企业可以使用对象存储作为长期数据保留和归档的备用存储库。 
 ---
-= SnapMirror Cloud 备份到对象存储
+= 将SnapMirror云备份到对象存储
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-_SnapMirror Cloud_ 是一种备份和恢复技术，专为希望将数据保护工作流过渡到云的 ONTAP 用户而设计。从传统备份到磁带架构迁移的企业可以使用对象存储作为长期数据保留和归档的备用存储库。SnapMirror Cloud 在增量永久备份策略中提供了 ONTAP 到对象存储复制功能。
+_ SnapMirror云_是一项备份和恢复技术、专为希望将数据保护工作流过渡到云的ONTAP用户而设计。从传统备份到磁带架构迁移的企业可以使用对象存储作为长期数据保留和归档的备用存储库。SnapMirror云提供ONTAP到对象存储复制、作为增量永久备份策略的一部分。
 
-ONTAP 9.8 引入了 SnapMirror 云，作为 SnapMirror 复制技术系列的扩展。虽然 SnapMirror 经常用于 ONTAP 到 ONTAP 备份，但 SnapMirror Cloud 使用同一个复制引擎将 ONTAP 的 Snapshot 副本传输到符合 S3 的对象存储备份。
+SnapMirror云是在ONTAP 9™8中推出的，作为SnapMirror复制技术系列的扩展。虽然SnapMirror经常用于ONTAP到ONTAP备份、但SnapMirror云使用相同的复制引擎将ONTAP的Snapshot副本传输到符合S3的对象存储备份。
 
-SnapMirror Cloud 针对备份使用情形，支持长期保留和归档工作流。与 SnapMirror 一样，初始 SnapMirror Cloud 备份会对卷执行基线传输。对于后续备份， SnapMirror Cloud 会生成源卷的快照副本，并将仅包含已更改数据块的快照副本传输到对象存储目标。
+SnapMirror Cloud面向备份用例、支持长期保留和归档工作流。与SnapMirror一样、初始SnapMirror云备份也会对卷执行基线传输。对于后续备份、SnapMirror Cloud会生成源卷的Snapshot副本、并仅将包含更改数据块的Snapshot副本传输到对象存储目标。
 
-SnapMirror云关系可以在ONTAP系统和选定内部和公共云对象存储目标(包括Amazon S3、Google Cloud Storage和Microsoft Azure Blot Storage)之间配置。其他内部对象存储目标包括StorageGRID和ONTAP S3。
+可以在ONTAP系统和选定的内部和公共云对象存储目标(包括Amazon S3、Google云存储和Microsoft Azure Blot存储)之间配置SnapMirror云关系。其他内部对象存储目标包括StorageGRID和ONTAP S3。
 
-SnapMirror 云复制是一项获得许可的 ONTAP 功能，需要经过批准的应用程序来编排数据保护工作流。可通过多种业务流程选项管理 SnapMirror Cloud 备份：
+SnapMirror云复制是一项获得许可的ONTAP功能、需要经过批准的应用程序才能编排数据保护工作流。有多种业务流程选项可用于管理SnapMirror云备份：
 
-* 支持 SnapMirror 云复制的多个第三方备份合作伙伴。可从获取参与的供应商 link:https://www.netapp.com/blog/new-backup-architecture-snapdiff-v3/["NetApp 博客"^]。
+* 为SnapMirror云复制提供支持的多个第三方备份合作伙伴。有关参与供应商的信息，请访问link:https://www.netapp.com/blog/new-backup-architecture-snapdiff-v3/["NetApp 博客"^]。
 * 适用于ONTAP环境的NetApp原生解决方案的BlueXP备份和恢复
 * 用于为数据保护工作流开发自定义软件或利用自动化工具的 API
 

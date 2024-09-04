@@ -13,7 +13,7 @@ summary: 您可以使用扇出部署将数据保护扩展到多个二级系统�
 [role="lead"]
 您可以使用 _fan-out 部署将数据保护扩展到多个二级系统。您可以使用 _c连带 _ 部署将数据保护扩展到三级系统。
 
-扇出和级联部署均支持 SnapMirror 灾难恢复， SnapVault 或统一复制的任意组合；但是， SnapMirror 同步关系（从 ONTAP 9.5 开始受支持）仅支持具有一个或多个异步 SnapMirror 关系的扇出部署，不支持级联部署。扇出配置中只能有一个关系是 SnapMirror 同步关系，源卷中的所有其他关系都必须是异步 SnapMirror 关系。 xref:../snapmirror-active-sync/recover-unplanned-failover-task.html[SnapMirror活动同步] (从ONTAP 9.3.1开始受支持)也支持扇出配置。
+扇出和级联部署均支持SnapMirror DR、SnapVault或统一复制的任意组合；但是、SnapMirror同步关系(从ONTAP 9开始受支持)仅支持具有一个或多个SnapMirror异步关系的扇出部署、不支持级联部署。在扇出配置中、只能有一个关系是SnapMirror同步关系、源卷中的所有其他关系都必须是SnapMirror异步关系。xref:../snapmirror-active-sync/recover-unplanned-failover-task.html[SnapMirror活动同步](从ONTAP 9 3.1开始受支持)还支持扇出配置。
 
 
 NOTE: 您可以使用 _fan-in-_ 部署在多个主系统和一个二级系统之间创建数据保护关系。每个关系都必须在二级系统上使用不同的卷。
@@ -37,7 +37,7 @@ image:sm-mirror-mirror-fanout.png["数据保护部署：多镜像镜像扇出"]
 
 image:sm-mirror-vault-fanout.png["数据保护部署：镜像 - 存储扇出"]
 
-从 ONTAP 9.5 开始，您可以使用 SnapMirror 同步关系进行扇出部署；但是，扇出配置中只能有一个关系是 SnapMirror 同步关系，源卷中的所有其他关系都必须是异步 SnapMirror 关系。
+从ONTAP 9。5开始、您可以使用SnapMirror同步关系进行扇出部署；但是、扇出配置中只有一个关系可以是SnapMirror同步关系、源卷中的所有其他关系都必须是SnapMirror异步关系。
 
 image:ssm-fanout.gif["数据保护部署：采用SnapMirror同步关系的扇出部署"]
 
@@ -49,7 +49,7 @@ SnapMirror 支持 _mirror-mirror_ ， _mirror-vaults_ ， _vault-mirror_ 和 _va
 
 镜像 - 镜像级联部署由一系列关系组成，其中，源卷镜像到二级卷，而二级卷镜像到三级卷。如果二级卷不可用，您可以同步主卷和三级卷之间的关系，而无需执行新的基线传输。
 
-从 ONTAP 9.6 开始，在镜像 - 镜像级联部署中支持 SnapMirror 同步关系。只有主卷和二级卷才能处于 SnapMirror 同步关系中。二级卷和三级卷之间的关系必须是异步的。
+从ONTAP 9 6开始、镜像-镜像级联部署支持SnapMirror同步关系。只有主卷和二级卷才能处于SnapMirror同步关系中。二级卷和三级卷之间的关系必须是异步的。
 
 image:sm-mirror-mirror-cascade.png["SnapMirror 部署：源到镜像 - 镜像级联链"]
 

@@ -2,16 +2,16 @@
 permalink: encryption-at-rest/purge-data-encrypted-asynchronous-snapmirror-task.html 
 sidebar: sidebar 
 keywords: securely, purging, scrub, data, encrypted, volume, nve, netapp, volume encryption, snapmirror, asynchronous 
-summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异步 SnapMirror 关系的启用了 NVE 的卷上无中断地 " 擦除 " 数据。' 
+summary: '从NVE.8开始、您可以使用安全清除功能在具有SnapMirror异步关系且已启用ONTAP 9的卷上无故障"擦除"数据。' 
 ---
-= 使用异步 SnapMirror 关系安全地清除加密卷上的数据
+= 安全清除具有SnapMirror异步关系的加密卷上的数据
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从 ONTAP 9.8 开始，您可以使用安全清除功能在具有异步 SnapMirror 关系且已启用 NVE 的卷上无中断地传输 " `scrub` " 数据。
+从NVE.8开始、您可以对具有SnapMirror异步关系且已启用ONTAP 9的卷上无故障的"`scrub`"数据使用安全清除。
 
 .开始之前
 * 您必须是集群管理员才能执行此任务。
@@ -40,7 +40,7 @@ NOTE: 要在 SAN 主机上执行安全清除，您必须删除包含要清除的
 `volume encryption secure-purge start -vserver _SVM_name_ -volume _volume_name_ -prepare true`
 
 +
-对异步 SnapMirror 关系中的每个卷重复此步骤。
+对SnapMirror异步关系中的每个卷重复此步骤。
 
 . 如果要安全清除的文件位于 Snapshot 副本中，请删除 Snapshot 副本：
 +
@@ -48,7 +48,7 @@ NOTE: 要在 SAN 主机上执行安全清除，您必须删除包含要清除的
 
 . 如果要安全清除的文件位于基本 Snapshot 副本中，请执行以下操作：
 +
-.. 在异步 SnapMirror 关系中的目标卷上创建 Snapshot 副本：
+.. 在SnapMirror异步关系中的目标卷上创建Snapshot副本：
 +
 `volume snapshot create -snapshot snapshot_name -vserver _SVM_name_ -volume _volume_name_`
 
@@ -57,7 +57,7 @@ NOTE: 要在 SAN 主机上执行安全清除，您必须删除包含要清除的
 `snapmirror update -source-snapshot _snapshot_name_ -destination-path _destination_path_`
 
 +
-对异步 SnapMirror 关系中的每个卷重复此步骤。
+对SnapMirror异步关系中的每个卷重复此步骤。
 
 .. 重复步骤（ a ）和（ b ），使其等于基本 Snapshot 副本数加 1 。
 +
@@ -76,7 +76,7 @@ NOTE: 要在 SAN 主机上执行安全清除，您必须删除包含要清除的
 `volume encryption secure-purge start -vserver _svm_name_ -volume _volume_name_`
 
 +
-对异步 SnapMirror 关系中的每个卷重复此步骤。
+对SnapMirror异步关系中的每个卷重复此步骤。
 
 +
 以下命令可安全清除 SVM "`vs1` " 上 "`vol1` " 上的已删除文件：

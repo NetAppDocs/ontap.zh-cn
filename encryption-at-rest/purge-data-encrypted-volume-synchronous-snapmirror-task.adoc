@@ -2,16 +2,16 @@
 permalink: encryption-at-rest/purge-data-encrypted-volume-synchronous-snapmirror-task.html 
 sidebar: sidebar 
 keywords: secure, purge, scrub, data, encrypted, volume, nve, netapp, volume encryption, snapmirror, synchronous 
-summary: '从 ONTAP 9.8 开始，您可以使用安全清除功能在具有同步 SnapMirror 关系且已启用 NVE 的卷上无中断地 " 擦除 " 数据。' 
+summary: '从NVE.8开始、您可以使用安全清除功能在具有SnapMirror同步关系且已启用ONTAP 9的卷上无故障"擦除"数据。' 
 ---
-= 擦除具有同步 SnapMirror 关系的加密卷上的数据
+= 擦除具有SnapMirror同步关系的加密卷上的数据
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从ONTAP 9.8开始、您可以使用安全清除功能无故障"擦除"启用了NVE且具有同步SnapMirror关系的卷上的数据。
+从NVE.8开始、您可以使用安全清除功能无故障"擦除"已启用ONTAP 9且具有SnapMirror同步关系的卷上的数据。
 
 .关于此任务
 安全清除可能需要几分钟到几小时才能完成，具体取决于已删除文件中的数据量。您可以使用 `volume encryption secure-purge show` 命令以查看操作状态。您可以使用 `volume encryption secure-purge abort` 命令以终止操作。
@@ -40,7 +40,7 @@ NOTE: 要在 SAN 主机上执行安全清除，您必须删除包含要清除的
 `volume encryption secure-purge start -vserver SVM_name -volume volume_name -prepare true`
 
 +
-对同步 SnapMirror 关系中的另一个卷重复此步骤。
+对SnapMirror同步关系中的另一个卷重复此步骤。
 
 . 如果要安全清除的文件位于 Snapshot 副本中，请删除 Snapshot 副本：
 +
@@ -53,7 +53,7 @@ NOTE: 要在 SAN 主机上执行安全清除，您必须删除包含要清除的
 +
 有两个通用 Snapshot 副本，因此必须发出此命令两次。
 
-. 如果安全清除文件位于应用程序一致的 Snapshot 副本中，请删除同步 SnapMirror 关系中两个卷上的 Snapshot 副本：
+. 如果安全清除文件位于应用程序一致的Snapshot副本中、请删除SnapMirror同步关系中两个卷上的Snapshot副本：
 +
 `snapshot delete -vserver _SVM_name_ -volume _volume_name_ -snapshot _snapshot_`
 
@@ -65,7 +65,7 @@ NOTE: 要在 SAN 主机上执行安全清除，您必须删除包含要清除的
 `volume encryption secure-purge start -vserver _SVM_name_ -volume _volume_name_`
 
 +
-对同步 SnapMirror 关系中的每个卷重复此步骤。
+对SnapMirror同步关系中的每个卷重复此步骤。
 
 +
 以下命令可安全清除 SMV"`vs1` " 上 "`vol1` " 上已删除的文件。

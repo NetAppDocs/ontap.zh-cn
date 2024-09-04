@@ -65,10 +65,10 @@ ARP取决于将传入数据区分为已加密或未加密。如果应用程序�
 |  | ONTAP 9.15.1. | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
 
 
-| 使用异步SnapMirror保护的卷 | ✓ | ✓ | ✓ | ✓ |  |  
+| 使用SnapMirror异步保护的卷 | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 使用异步SnapMirror保护SVM (SVM灾难恢复) | ✓ | ✓ | ✓ | ✓ |  |  
+| 使用SnapMirror异步保护SVM (SVM灾难恢复) | ✓ | ✓ | ✓ | ✓ |  |  
 
 
 | SVM 数据移动性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ |  |  
@@ -83,7 +83,7 @@ ARP取决于将传入数据区分为已加密或未加密。如果应用程序�
 
 ==== SnapMirror和ARP互操作性
 
-从ONTAP 9.12.1开始、异步SnapMirror目标卷支持ARP。SnapMirror同步**不支持ARP。
+从ARP.12.1开始、SnapMirror异步目标卷支持ONTAP 9。SnapMirror同步**不支持ARP。
 
 如果SnapMirror源卷已启用ARP、则SnapMirror目标卷会自动获取源卷的ARP配置状态(学习、已启用等)、ARP培训数据以及ARP创建的Snapshot。无需显式启用。
 
@@ -136,8 +136,8 @@ ARP不支持以下卷配置：
 * 使卷脱机
 * SAN-only volumes
 * SnapLock 卷
-* SnapMirror 同步
-* 异步SnapMirror (仅在ONTAP 9.10.1和9.11.1中不受支持。从ONTAP 9.12.1开始、支持异步SnapMirror。有关详细信息，请参见 <<snapmirror>>）
+* SnapMirror同步
+* SnapMirror异步(仅在ONTAP 9 10.1和9.11.1中不受支持。从ONTAP 9 .12.1开始、支持SnapMirror异步。有关详细信息，请参见<<snapmirror>>。)
 * 受限卷
 * Storage VM的根卷
 * 已停止Storage VM的卷
