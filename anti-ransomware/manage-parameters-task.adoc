@@ -45,7 +45,7 @@ summary: 从ONTAP 9.11.1开始、可以根据工作负载修改自主防兰软�
 .步骤
 . 查看现有攻击检测参数：
 +
-`security anti-ransomware volume attack-detection-parameters show -vserver _svm_name_ -volume _volume_name_`
+`security anti-ransomware volume attack-detection-parameters show -vserver <svm_name> -volume <volume_name>`
 
 +
 ....
@@ -77,17 +77,17 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 
 即使在活动模式下、ARP也会继续修改检测参数的基线值。如果您知道音量活动中的电涌(一次性电涌或新正常值的电涌)，您应该将其报告为安全。手动将这些激增报告为安全状态有助于提高ARP威胁评估的准确性。
 
-.报告一次性电涌
+.报告一次性激增
 . 如果在已知情况下发生一次性激增、而您希望ARP在未来情况下报告类似的激增、请从工作负载行为中清除该激增：
 +
-`security anti-ransomware volume workload-behavior clear-surge -vserver _svm_name_ -volume _volume_name_`
+`security anti-ransomware volume workload-behavior clear-surge -vserver <svm_name> -volume <volume_name>`
 
 
 
 .修改基线喘振
 . 如果报告的浪涌应视为正常应用行为、则报告此浪涌以修改基线浪涌值。
 +
-`security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver _svm_name_ -volume _volume_name_`
+`security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver <svm_name> -volume <volume_name>`
 
 
 
@@ -129,11 +129,11 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .为卷设置警报
 * 要为新文件扩展名设置警报、请执行以下操作：
 +
-`security anti-ransomware volume event-log modify -vserver _svm_name_ -is-enabled-on-new-file-extension-seen true`
+`security anti-ransomware volume event-log modify -vserver <svm_name> -is-enabled-on-new-file-extension-seen true`
 
 * 要为创建ARP Snapshot设置警报、请执行以下操作：
 +
-`security anti-ransomware volume event-log modify -vserver _svm_name_ -is-enabled-on-snapshot-copy-creation true`
+`security anti-ransomware volume event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true`
 
 * 使用确认设置 `anti-ransomware volume event-log show` 命令：
 
@@ -141,17 +141,17 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .为SVM设置警报
 * 要为新文件扩展名设置警报、请执行以下操作：
 +
-`security anti-ransomware vserver event-log modify -vserver _svm_name_ -is-enabled-on-new-file-extension-seen true`
+`security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-new-file-extension-seen true`
 
 * 要为创建ARP Snapshot设置警报、请执行以下操作：
 +
-`security anti-ransomware vserver event-log modify -vserver _svm_name_ -is-enabled-on-snapshot-copy-creation true`
+`security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true`
 
 * 使用确认设置 `security anti-ransomware vserver event-log show` 命令：
 
 
 --
 ====
-.更多信息
+.相关信息
 * link:https://kb.netapp.com/onprem/ontap/da/NAS/Understanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot["了解自动防兰索防攻击和自动防兰索防快照"^](英文)
 

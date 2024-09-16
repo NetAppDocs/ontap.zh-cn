@@ -14,39 +14,10 @@ summary: 作为一项安全最佳实践、默认情况下会禁用Telnet和RSH�
 [role="lead"]
 作为一项安全最佳实践、默认情况下会禁用Telnet和RSH。要使集群能够接受Telnet或RSH请求、必须在默认管理服务策略中启用该服务。
 
-随着时间的推移、ONTAP管理其支持的流量类型的方式发生了变化。
+Telnet和RSH不是安全协议；您应考虑使用SSH访问集群。SSH 可提供安全的远程 shell 和交互式网络会话。有关详细信息，请参阅 link:./access-cluster-ssh-task.html["使用SSH访问集群"]。
 
-* ONTAP 9 5及更早版本使用LIF角色和防火墙服务
-* ONTAP 9 6及更高版本使用LIF服务策略
-+
-** ONTAP 9 5版本引入了LIF服务策略
-** ONTAP 9 6将LIF角色替换为LIF服务策略
-** LIF.10.1将防火墙服务替换为ONTAP 9服务策略
-
-
-
-
-您配置的方法取决于所使用的ONTAP版本。
-
-要了解有关以下内容的更多信息：
-
-* 防火墙策略、请参见link:https://docs.netapp.com/us-en/ontap-cli//system-services-firewall-policy-show.html["命令：Firewall-policy-show"^]
-* LIF角色、请参见link:../networking/lif_roles95.html["LIF角色(ONTAP 9.5及更早版本)"]
-* LIF服务策略、请参见link:../networking/lifs_and_service_policies96.html["ONTAP 9.6及更高版本"]
-
-
-Telnet和RSH不是安全协议、应考虑使用SSH访问集群。SSH 可提供安全的远程 shell 和交互式网络会话。有关详细信息、请参见link:./access-cluster-ssh-task.html["使用SSH访问集群"]
-
-[role="tabbed-block"]
-====
-.ONTAP 9 6或更高版本
---
 .关于此任务
-* RSH 不是安全协议。
-+
-您应考虑使用 SSH 访问集群。SSH 可提供安全的远程 shell 和交互式网络会话。
-
-* ONTAP 最多支持每个节点 50 个并发 RSH 会话。
+* ONTAP最多支持每个节点50个并发Telnet或RSH会话。
 +
 如果集群管理 LIF 驻留在节点上，则它与节点管理 LIF 共享此限制。
 
@@ -56,6 +27,10 @@ Telnet和RSH不是安全协议、应考虑使用SSH访问集群。SSH 可提供�
 * rsh命令需要高级权限。
 
 
+[role="tabbed-block"]
+====
+.ONTAP 9 6或更高版本
+--
 .步骤
 . 确认RSH或Telnet安全协议已启用：
 +
