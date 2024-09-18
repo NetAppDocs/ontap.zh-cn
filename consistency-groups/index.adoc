@@ -27,13 +27,13 @@ summary: 一致性组是一组卷、这些卷按一个单元进行组织、便�
 
 下图说明了如何使用单个一致性组。上托管的应用程序的数据 `SVM1` 跨两个卷： `vol1` 和 `vol2`。一致性组上的Snapshot策略每15分钟捕获一次数据的Snapshot副本。
 
-image:../media/consistency-group-single-diagram.gif["一个一致性组及其成分卷和本地 Snapshot 策略的示意图"]
+image:consistency-group-single-diagram.gif["一个一致性组及其成分卷和本地Snapshot策略"]
 
 较大的应用程序工作负载可能需要多个一致性组。在这些情况下、您可以创建分层一致性组、其中、一个一致性组将成为父一致性组的子组件。父一致性组最多可以包含五个子一致性组。与单个一致性组一样、远程SnapMirror主动同步保护策略可应用于一致性组的整个配置(父级和子级)、以恢复应用程序工作负载。
 
 在以下示例中、应用程序托管在上 `SVM1`。管理员已创建父一致性组、 `SVM1_app`、其中包括两个子一致性组： `SVM1appDataCG` 用于数据和 `SVM1app_logCG` 日志。每个子一致性组都有自己的Snapshot策略。中卷的Snapshot副本 `SVM1appDataCG` 每15分钟执行一次。的快照 `SVM1app_logCG` 每小时执行一次。父一致性组 `SVM1_app` 具有SnapMirror活动同步策略、该策略可复制数据、以确保在发生灾难时继续提供服务。
 
-image:../media/consistency-group-nested-diagram.gif["嵌套一致性组及其关联卷的示意图"]
+image:consistency-group-nested-diagram.gif["嵌套的一致性组及其关联卷"]
 
 从ONTAP 9.12.1开始、支持一致性组 xref:clone-task.html[克隆] 并通过修改一致性的成员 xref:modify-task.html[添加或删除卷] 在System Manager和ONTAP REST API中。从ONTAP 9.12.1开始、ONTAP REST API还支持：
 
