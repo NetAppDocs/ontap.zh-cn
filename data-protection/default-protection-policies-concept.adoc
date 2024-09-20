@@ -1,0 +1,78 @@
+---
+permalink: data-protection/default-protection-policies-concept.html 
+sidebar: sidebar 
+keywords: snapmirror, policy, default, replicate, protection, predefined 
+summary: ONTAP提供了多个默认保护策略以及预定义的计划、您可以在创建数据保护关系时使用这些计划。 
+---
+= 默认保护策略
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP提供了多个默认保护策略、您可以将这些策略用于数据保护关系。您使用的策略取决于保护关系类型。
+
+如果默认策略不能满足数据保护关系的需求，您可以link:create-custom-replication-policy-concept.html["创建自定义策略"]。
+
+
+
+== 列出默认保护策略和说明
+
+下面介绍了默认保护策略及其关联的策略类型。
+
+[cols="3,4,1"]
+|===
+| Name | Description | Policy type 
+
+
+| 异步 | 一种统一的SnapMirror异步和存储策略、用于镜像最新活动文件系统以及具有每小时传输计划的每日和每周快照。 | 异步 
+
+
+| 自动故障转移 | 零RTO的SnapMirror同步策略可保证在复制失败时客户端I/O不会中断。 | 同步 
+
+
+| AutomatedFailOver双 工 | SnapMirror同步策略、无RTO保证和双向同步复制。 | 同步 
+
+
+| CloudBackupDefault | 具有每日规则的存储策略。 | 异步 
+
+
+| 持续 | 用于S3存储分段镜像的策略。 | 持续 
+
+
+| DailyBackup | 具有每日规则和每日传输计划的存储策略。 | 异步 
+
+
+| DPDefault | 用于镜像所有Snapshot副本和最新活动文件系统的SnapMirror异步策略。 | 异步 
+
+
+| MirrorAllSnapshots | 用于镜像所有快照和最新活动文件系统的SnapMirror异步策略。 | 异步 
+
+
+| 镜像所有快照DiscardNetwork | 用于镜像所有快照和最新活动文件系统(不包括网络配置)的SnapMirror异步策略。 | 异步 
+
+
+| MirrorAndVault | 一种统一的SnapMirror异步和存储策略、用于镜像最新活动文件系统以及每日和每周快照。 | 异步 
+
+
+| 镜像和VaultDiscardNetwork | 一种统一的SnapMirror异步和存储策略、用于镜像最新活动文件系统以及每日和每周快照(不包括网络配置)。 | 异步 
+
+
+| MirrorLatest | 用于镜像最新活动文件系统的SnapMirror异步策略。 | 异步 
+
+
+| SnapCenterSync | 使用应用程序创建的Snapshot配置对SnapCenter执行SnapMirror同步的策略。 | 同步 
+
+
+| StrictSync | 用于SnapMirror同步的策略、在复制失败时客户端访问将中断。 | 同步 
+
+
+| 同步 | 用于SnapMirror同步的策略、在复制失败时客户端访问不会中断。 | 同步 
+
+
+| 未指定 7 年 | 保留7年的统一SnapMirror策略。 | 异步 
+
+
+| XDPDefault | 包含每日和每周规则的存储策略。 | 异步 
+|===
