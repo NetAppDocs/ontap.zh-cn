@@ -30,7 +30,7 @@ IMPORTANT: 修改的设置 `storage failover modify-auto-giveback` 自动无中�
 * 您应该 link:prepare.html["准备升级"]。
 * 您应该 link:download-software-image.html["下载ONTAP软件映像"] 目标ONTAP版本。
 +
-如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，您需要下载特定所需的两个ONTAP映像 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#supported-upgrade-paths["升级路径"]。
+如果要执行link:../upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，则需要下载特定所需的两个ONTAP映像link:../upgrade/concept_upgrade_paths.html#supported-upgrade-paths["升级路径"]。
 
 * 对于每个 HA 对，每个节点应在同一广播域上具有一个或多个端口。
 +
@@ -199,7 +199,7 @@ Package download completed.
 Package processing completed.
 ----
 +
-如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，您还需要加载升级所需的ONTAP中间版本的软件包。例如、如果要从9.8升级到9.13.1、则需要加载适用于ONTAP 9.12.1的软件包、然后使用同一命令加载适用于9.13.1.的软件包。
+如果要执行link:../upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，还需要加载升级所需的ONTAP中间版本的软件包。例如、如果要从9.8升级到9.13.1、则需要加载适用于ONTAP 9.12.1的软件包、然后使用同一命令加载适用于9.13.1.的软件包。
 
 .. 验证集群软件包存储库中是否存在软件包：
 +
@@ -222,7 +222,7 @@ Package Version  Package Build Time
 cluster image validate -version <package_version_number>
 ----
 +
-如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，只需使用目标ONTAP软件包进行验证即可。  您无需单独验证中间升级映像。  例如、如果要从9.8升级到9.13.1、请使用9.13.1软件包进行验证。您不需要单独验证9.12.1软件包。
+如果要执行link:../upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，则只需使用目标ONTAP软件包进行验证。您无需单独验证中间升级映像。例如、如果要从9.8升级到9.13.1、请使用9.13.1软件包进行验证。您不需要单独验证9.12.1软件包。
 
 +
 [listing]
@@ -261,7 +261,7 @@ NOTE: 如果要升级MetroCluster配置、则可以在集群A或集群B上运行
 cluster image update -version <package_version_number>
 ----
 +
-** 如果您要执行 link:https://docs.netapp.com/us-en/ontap/upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，请使用packue_version_number的目标ONTAP版本。例如、如果要从ONTAP 9.8升级到9.13.1、请使用9.13.1作为packing_version_number。
+** 如果要执行link:../upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，请使用packue_version_number的目标ONTAP版本。例如、如果要从ONTAP 9.8升级到9.13.1、请使用9.13.1作为packing_version_number。
 ** 默认情况下、ONTAP使用 link:concept_upgrade_methods.html["批量升级过程"] 升级包含八个或更多节点的集群。  如果愿意、您可以使用 `-force-rolling` 参数以覆盖默认过程、并使用滚动升级过程使集群一次升级一个节点。
 ** 完成每次接管和交还后，升级将等待 8 分钟，以使客户端应用程序能够从接管和交还期间发生的 I/O 暂停中恢复。如果您的环境需要更多或更少的时间来实现客户端稳定、则可以使用 `-stabilize-minutes` 用于指定不同稳定时间量的参数。
 ** 对于包含4个以上节点的MetroCluster配置、自动升级会同时在两个站点的HA对上启动。  对于双节点MetroCluster配置、升级将在未启动升级的站点上开始。第一个升级完全完成后、将开始对其余站点进行升级。
