@@ -1,62 +1,8 @@
 ---
 permalink: element-replication/create-relationship-element-destination-task.html 
-sidebar: sidebar 
-keywords: create, relationship, ontap, source, element, destination, snapshot, snap shot, lun, migrate, data, snap mirror, snapmirror, replicate, replication 
-summary: 从 ONTAP 9.4 开始，您可以使用 SnapMirror 将在 ONTAP 源上创建的 LUN 的 Snapshot 副本复制回 Element 目标。您可能正在使用 LUN 将数据从 ONTAP 迁移到 Element 软件。 
+redirect: element-software/storage/task-element-replication-create-relationship-element-destination.html 
 ---
-= 创建从 ONTAP 源到 Element 目标的关系
+= 
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
 
-[role="lead"]
-从 ONTAP 9.4 开始，您可以使用 SnapMirror 将在 ONTAP 源上创建的 LUN 的 Snapshot 副本复制回 Element 目标。您可能正在使用 LUN 将数据从 ONTAP 迁移到 Element 软件。
-
-.开始之前
-* Element 目标节点必须可供 ONTAP 访问。
-* 必须已为 Element 卷启用 SnapMirror 复制。
-
-
-.关于此任务
-您必须以的形式指定Element目标路径 `<hostip:>/lun/<name>`，其中“`LUN`”是实际字符串“`LUN`”，是Element卷的名称。 `name`
-
-复制规则如下：
-
-* 复制关系的策略类型必须为 "`async-mirror` " 。
-+
-您可以使用默认策略或自定义策略。
-
-* 仅支持 iSCSI LUN 。
-* 不能将多个 LUN 从 ONTAP 卷复制到 Element 卷。
-* 您不能将 LUN 从 ONTAP 卷复制到多个 Element 卷。
-
-
-.步骤
-. 创建从 ONTAP 源到 Element 目标的复制关系：
-+
-`snapmirror create -source-path <SVM:volume>|<cluster://SVM/volume> -destination-path <hostip:>/lun/<name> -type XDP -schedule schedule -policy <policy>`
-
-+
-有关完整的命令语法，请参见手册页。
-
-+
-以下示例将使用默认值创建SnapMirror灾难恢复关系 `MirrorLatest` 策略：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror create -source-path svm_1:volA_dst -destination-path 10.0.0.11:/lun/0005 -type XDP -schedule my_daily -policy MirrorLatest
-----
-+
-以下示例将使用自定义创建SnapMirror灾难恢复关系 `my_mirror` 策略：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror create -source-path svm_1:volA_dst -destination-path 10.0.0.11:/lun/0005 -type XDP -schedule my_daily -policy my_mirror
-----
-
-
-.完成后
-使用 `snapmirror show` 命令以验证是否已创建SnapMirror关系。有关完整的命令语法，请参见手册页。

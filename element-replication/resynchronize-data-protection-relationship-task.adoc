@@ -1,37 +1,8 @@
 ---
 permalink: element-replication/resynchronize-data-protection-relationship-task.html 
-sidebar: sidebar 
-keywords: resynchronize, replication, relationship 
-summary: 在将目标卷设为可写之后，在因源卷和目标卷上不存在通用 Snapshot 副本而导致更新失败之后，或者如果要更改此关系的复制策略，则需要重新同步复制关系。 
+redirect: element-software/storage/task-element-replication-resynchronize-data-protection-relationship.html 
 ---
-= 重新同步复制关系
+= 
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
-
-[role="lead"]
-在将目标卷设为可写之后，在因源卷和目标卷上不存在通用 Snapshot 副本而导致更新失败之后，或者如果要更改此关系的复制策略，则需要重新同步复制关系。
-
-.关于此任务
-虽然重新同步不需要基线传输，但它可能非常耗时。您可能希望在非高峰时段运行重新同步。
-
-您必须以的形式指定Element源路径 `<hostip:>/lun/<name>`，其中“`LUN`”是实际字符串“`LUN`”，是Element卷的名称。 `name`
-
-.步骤
-. 重新同步源卷和目标卷：
-+
-`snapmirror resync -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume> -type XDP -policy <policy>`
-
-+
-有关完整的命令语法，请参见手册页。
-
-+
-以下示例将重新同步源卷之间的关系 `0005` IP地址10.0.0.11处的卷和目标卷 `volA_dst` 开启 `svm_backup`：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror resync -source-path 10.0.0.11:/lun/0005 -policy MirrorLatest -destination-path svm_backup:volA_dst
-----
 

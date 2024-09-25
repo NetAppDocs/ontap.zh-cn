@@ -1,67 +1,8 @@
 ---
 permalink: element-replication/make-destination-volume-writeable-task.html 
-sidebar: sidebar 
-keywords: make, destination, volume, write 
-summary: 您需要先使目标卷可写，然后才能将数据从该卷提供给客户端。您可以使用 snapmirror quiesce 命令停止向目标进行的计划传输，使用 snapmirror abort 命令停止正在进行的传输，使用 snapmirror break 命令使目标可写。 
+redirect: element-software/storage/task-element-replication-make-destination-volume-writeable.html 
 ---
-= 使目标卷可写
+= 
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
-
-[role="lead"]
-如果因发生灾难而禁用了 SnapMirror 灾难恢复关系中的主站点，则可以从目标卷提供数据，而不会造成任何中断。在主站点恢复服务后，您可以重新激活源卷。
-
-您需要先使目标卷可写，然后才能将数据从该卷提供给客户端。您可以使用 `snapmirror quiesce` 命令以停止向目标(即)进行的计划传输 `snapmirror abort` 命令以停止正在进行的传输、以及 `snapmirror break` 命令以使目标可写。
-
-.关于此任务
-您必须以的形式指定Element源路径 `<hostip:>/lun/<name>`，其中“`LUN`”是实际字符串“`LUN`”，是Element卷的名称。 `name`
-
-.步骤
-. 停止向目标进行的计划传输：
-+
-`snapmirror quiesce -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
-
-+
-有关完整的命令语法，请参见手册页。
-
-+
-以下示例将停止源卷之间的计划传输 `0005` IP地址10.0.0.11处的卷和目标卷 `volA_dst` 开启 `svm_backup`：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror quiesce -source-path 10.0.0.11:/lun/0005 -destination-path svm_backup:volA_dst
-----
-. 停止正在向目标传输的数据：
-+
-`snapmirror abort -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
-
-+
-有关完整的命令语法，请参见手册页。
-
-+
-以下示例将停止源卷之间正在进行的传输 `0005` IP地址10.0.0.11处的卷和目标卷 `volA_dst` 开启 `svm_backup`：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror abort -source-path 10.0.0.11:/lun/0005 -destination-path svm_backup:volA_dst
-----
-. 中断 SnapMirror 灾难恢复关系：
-+
-`snapmirror break -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
-
-+
-有关完整的命令语法，请参见手册页。
-
-+
-以下示例将中断源卷之间的关系 `0005` IP地址10.0.0.11处的卷和目标卷 `volA_dst` 开启 `svm_backup` 和目标卷 `volA_dst` 开启 `svm_backup`：
-
-+
-[listing]
-----
-cluster_dst::> snapmirror break -source-path 10.0.0.11:/lun/0005 -destination-path svm_backup:volA_dst
-----
 

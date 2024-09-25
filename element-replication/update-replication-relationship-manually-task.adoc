@@ -1,41 +1,8 @@
 ---
 permalink: element-replication/update-replication-relationship-manually-task.html 
-sidebar: sidebar 
-keywords: update, replication, relationship, manually 
-summary: 如果更新因网络错误而失败，您可能需要手动更新复制关系。 
+redirect: element-software/storage/task-element-replication-update-replication-relationship-manually.html 
 ---
-= 手动更新复制关系
+= 
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
-
-[role="lead"]
-如果更新因网络错误而失败，您可能需要手动更新复制关系。
-
-.关于此任务
-您必须以的形式指定Element源路径 `<hostip:>/lun/<name>`，其中“`LUN`”是实际字符串“`LUN`”，是Element卷的名称。 `name`
-
-.步骤
-. 手动更新复制关系：
-+
-`snapmirror update -source-path <hostip:>/lun/<name> -destination-path <SVM:volume>|<cluster://SVM/volume>`
-
-+
-有关完整的命令语法，请参见手册页。
-
-+
-[NOTE]
-====
-如果源和目标上不存在通用 Snapshot 副本，则此命令将失败。使用 ... `snapmirror initialize` 重新初始化此关系。
-
-====
-+
-以下示例将更新源卷之间的关系 `0005` IP地址10.0.0.11处的卷和目标卷 `volA_dst` 开启 `svm_backup`：
-
-+
-[listing]
-----
-cluster_src::> snapmirror update -source-path 10.0.0.11:/lun/0005 -destination-path svm_backup:volA_dst
-----
 
