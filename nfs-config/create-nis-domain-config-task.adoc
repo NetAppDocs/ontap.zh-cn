@@ -13,14 +13,12 @@ summary: 如果在您的环境中使用网络信息服务（ Network Information
 [role="lead"]
 如果您的环境使用网络信息服务(Network Information Service、NIS)提供名称服务、则必须使用为SVM创建NIS域配置 `vserver services name-service nis-domain create` 命令：
 
-.您需要的内容
+.开始之前
 在 SVM 上配置 NIS 域之前，所有已配置的 NIS 服务器都必须可用且可访问。
 
 如果计划使用 NIS 进行目录搜索，则 NIS 服务器中的映射每个条目不能超过 1 ， 024 个字符。请勿指定不符合此限制的 NIS 服务器。否则，依赖于 NIS 条目的客户端访问可能会失败。
 
 .关于此任务
-您可以创建多个 NIS 域。但是、您只能使用设置为的 `active`。
-
 如果NIS数据库包含 `netgroup.byhost` 地图、ONTAP可以使用它加快搜索速度。。 `netgroup.byhost` 和 `netgroup` 目录中的映射必须始终保持同步、以避免出现客户端访问问题。从ONTAP 9.7开始、为NIS `netgroup.byhost` 可以使用缓存条目 `vserver services name-service nis-domain netgroup-database` 命令
 
 不支持使用NIS进行主机名解析。
@@ -28,7 +26,7 @@ summary: 如果在您的环境中使用网络信息服务（ Network Information
 .步骤
 . 创建 NIS 域配置：
 +
-`vserver services name-service nis-domain create -vserver vs1 -domain _domain_name_ -active true _-servers IP_addresses_`
+`vserver services name-service nis-domain create -vserver vs1 -domain <domain_name> -nis-servers <IP_addresses>`
 
 +
 最多可以指定 10 个 NIS 服务器。
@@ -46,10 +44,9 @@ summary: 如果在您的环境中使用网络信息服务（ Network Information
 
 
 .示例
-以下命令将在 SVM vs1 上为 NIS 域 nisdomain 创建 NIS 域配置并使其处于活动状态，并且 NIS 服务器的 IP 地址为 192.0.2.180 ：
+以下命令将为SVM上调用的NIS域创建NIS域配置、该SVM使用IP地址的NIS `nisdomain`服务器 `192.0.2.180`命名 `vs1`：
 
 [listing]
 ----
-vs1::> vserver services name-service nis-domain create -vserver vs1
--domain nisdomain -active true -nis-servers 192.0.2.180
+vs1::> vserver services name-service nis-domain create -vserver vs1 -domain nisdomain -nis-servers 192.0.2.180
 ----

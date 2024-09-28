@@ -42,7 +42,7 @@ summary: 您必须先配置对 SVM 的 LDAP 或 NIS 服务器访问，然后 LDA
 .步骤
 . 在SVM上创建LDAP客户端配置：
 +
-`vserver services name-service ldap client create -vserver _SVM_name_ -client-config _client_configuration_ -servers _LDAP_server_IPs_ -schema _schema_ -use-start-tls true|false`
+`vserver services name-service ldap client create -vserver <SVM_name> -client-config <client_configuration> -servers <LDAP_server_IPs> -schema <schema> -use-start-tls <true|false>`
 
 +
 
@@ -52,7 +52,7 @@ NOTE: 仅支持使用启动 TLS 访问数据 SVM 。不支持访问管理 SVM �
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
 
 +
-以下命令会在SVM"`engData`"上创建名为"`corp`"的LDAP客户端配置。客户端使用IP地址172.160.0.100和172.16.0.101匿名绑定到LDAP服务器。客户端使用RFC 2307模式进行LDAP查询。客户端与服务器之间的通信使用 Start TLS 进行加密。
+以下命令将在SVM上 `engData`创建名为的LDAP客户端配置 `corp`。客户端使用IP地址172.160.0.100和172.16.0.101匿名绑定到LDAP服务器。客户端使用RFC 2307模式进行LDAP查询。客户端与服务器之间的通信使用 Start TLS 进行加密。
 
 +
 [listing]
@@ -64,7 +64,7 @@ cluster1::> vserver services name-service ldap client create
 
 NOTE: 从ONTAP 9.2开始、此字段为 `-ldap-servers` 替换字段 `-servers`。此新字段可以使用 LDAP 服务器的主机名或 IP 地址。
 
-. 将LDAP客户端配置与SVM相关联： `vserver services name-service ldap create -vserver _SVM_name_ -client-config _client_configuration_ -client-enabled true|false`
+. 将LDAP客户端配置与SVM相关联： `vserver services name-service ldap create -vserver <SVM_name> -client-config <client_configuration> -client-enabled <true|false>`
 +
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
 
@@ -105,9 +105,6 @@ cluster1::> vserver services name-service ldap check -vserver vs0
 
 您必须先配置对SVM的NIS服务器访问权限、然后NIS帐户才能访问SVM。您可以使用 `vserver services name-service nis-domain create` 命令以在SVM上创建NIS域配置。
 
-.关于此任务
-您可以创建多个 NIS 域。只能将一个NIS域设置为 `active` 一次。
-
 .开始之前
 * 在 SVM 上配置 NIS 域之前，所有已配置的服务器都必须可用且可访问。
 * 要执行此任务，您必须是集群或 SVM 管理员。
@@ -116,7 +113,7 @@ cluster1::> vserver services name-service ldap check -vserver vs0
 .步骤
 . 在SVM上创建NIS域配置：
 +
-`vserver services name-service nis-domain create -vserver _SVM_name_ -domain client_configuration -active true|false -nis-servers _NIS_server_IPs_`
+`vserver services name-service nis-domain create -vserver <SVM_name> -domain <client_configuration> -nis-servers <NIS_server_IPs>`
 
 +
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
@@ -126,13 +123,13 @@ cluster1::> vserver services name-service ldap check -vserver vs0
 NOTE: 从ONTAP 9.2开始、此字段为 `-nis-servers` 替换字段 `-servers`。此新字段可以使用NIS服务器的主机名或IP地址。
 
 +
-以下命令会在SVM"`engData`"上创建NIS域配置。NIS域 `nisdomain` 在创建时处于活动状态、并与IP地址为192.0.2.180的NIS服务器通信。
+以下命令将在SVM上创建NIS域配置 `engData`。NIS域 `nisdomain`使用IP地址与NIS服务器进行通信 `192.0.2.180`。
 
 +
 [listing]
 ----
 cluster1::>vserver services name-service nis-domain create
--vserver engData -domain nisdomain -active true -nis-servers 192.0.2.180
+-vserver engData -domain nisdomain -nis-servers 192.0.2.180
 ----
 
 
@@ -150,13 +147,13 @@ cluster1::>vserver services name-service nis-domain create
 .步骤
 . 指定名称服务源的查找顺序：
 +
-`vserver services name-service ns-switch modify -vserver _SVM_name_ -database _name_service_switch_database_ -sources _name_service_source_order_`
+`vserver services name-service ns-switch modify -vserver <SVM_name> -database <name_service_switch_database> -sources <name_service_source_order>`
 
 +
 有关完整的命令语法，请参见 link:config-worksheets-reference.html["工作表"]。
 
 +
-以下命令为SVM"`engData`"上的"`passwd`"数据库指定LDAP和NIS名称服务源的查找顺序。
+以下命令为SVM上的数据库 `engData`指定LDAP和NIS名称服务源的查找顺序 `passwd`。
 
 +
 [listing]
