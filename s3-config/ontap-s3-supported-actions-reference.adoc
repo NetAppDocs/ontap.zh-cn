@@ -196,3 +196,72 @@ ONTAP支持使用AWS S3 API执行以下操作：
 * CreateGroup
 * DeleteGroup
 
+
+
+
+== S3操作(按版本)
+
+.ONTAP 9.14.1
+S3.14.1增加了对ONTAP 9对象锁定的支持。
+
+* GetObjectLockConfiguration
+* GetObject保留
+* PutObjectLockConfiguration
+* PutObject保留
+
+
+.ONTAP 9.13.1
+ONTAP 9．1增加了对存储分段生命周期管理的支持。
+
+* DeleteBucketLifecycleConfiguration
+* GetBucketLifecycleConfiguration
+* PutBucketLifecycleConfiguration
+
+
+.ONTAP 9.12.1
+ONTAP 9 12.1增加了对分段策略的支持以及复制对象的功能。
+
+* DeleteBucketPolicy
+* GetBucketPolicy
+* PutBucketPolicy
+* CopyObject
+* 上传PartCopy
+
+
+.ONTAP 9.11.1
+API.11.1增加了对版本控制、预先签名的、分块上传以及使用S3 ONTAP 9创建和删除存储分段等常见S3操作的支持。
+
+* 现在、ONTAP S3支持使用x-amz-content-SHA256：流传输-aWS4-hMAC-SHA256-payload处理chunked上传签名请求
+* 现在、ONTAP S3支持使用预先签名的URL的客户端应用程序共享对象、或者允许其他用户上传对象而无需用户凭据。
+* CreateBucket
+* DeleteBucket
+* GetBucketVersioning
+* ListBucketVersions
+* PutBucket
+* PutBucketVersioning
+* DeleteObjects
+* ListObjectVersies
+
+
+
+NOTE: 由于在创建第一个分段之前不会创建底层FlexGroup、因此、必须先在ONTAP中创建分段、然后外部客户端才能使用CreateBucket.
+
+.ONTAP 9.10.1
+GetBucket10.1增加了对S3 SnapMirror和ONTAP 9的支持。
+
+* GetBucketLocation
+
+
+.ONTAP 9.9.1
+ONTAP 9 S3.9.1为ONTAP S3增加了对对象元数据和标记支持的支持。
+
+* 现在、PutObject和CreateMultipartUpload可使用"x-AMZ-meta-Upload"包括键值对<key>。例如："x-amz-meta-project：ONTAP S3 "。
+* 现在、GetObject和HeadObject将返回用户定义的元数据。
+
+
+标记也可与存储分段一起使用。与元数据不同，可以使用以下命令独立于对象读取标记：
+
+* PutObjectTagging
+* GetObjectTagging
+* DeleteObjectTagging
+
