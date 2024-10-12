@@ -1,0 +1,46 @@
+---
+permalink: upgrade/task-change-svm-42v-xattrs-option.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, svm, xattr, nfsv4.2 
+summary: 在升级NFSv.12.1及更高版本之前、请确保为ONTAP 9 4.2扩展属性选项提供显式值、以防止出现NFSv4.1响应错误。 
+---
+= 为v4.2-xatts选项分配显式值
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您使用的是NFSv4.2客户端、则在从NFSv.12.1及更高版本的某些版本和修补程序升级之前、您需要为ONTAP 9 4.2扩展属性选项提供显式值、以防止在升级后出现NFS响应错误。
+
+如果在将ONTAP升级到受影响的版本之前从未明确为此 `v4.2-xattrs`选项分配值、则NFSv4.2客户端不会收到服务器扩展属性选项已更改的通知。由于客户端和服务器不匹配、这会导致特定调用出现NFS响应错误 `xattrs`。
+
+.开始之前
+如果满足以下条件、则需要为NFSv4.2扩展属性选项分配显式值：
+
+* 您正在将NFSv4.2与使用NFSv.11.1或更早版本创建的ONTAP 9结合使用
+* 您要从以下任一受影响版本和修补程序升级ONTAP：
++
+** 9.12.1RC1 9.12.1P11
+** 9.13.1RC1 9.13.1P8
+** 9.14.1RC1 9.14.1P1
+
+
+
+
+.关于此任务
+要使用此过程中所述的命令设置此值、必须运行ONTAP 9．12.1或更高版本。
+
+如果 `v4.2-xattrs`已将设置为 `enabled`，则仍应将其明确设置为， `enabled`以避免将来发生中断。如果设置 `v4.2-xattrs`为disabled、则NFSv4.2客户端可以收到"参数无效"响应、直到重新挂载它们或将选项设置为 `enabled`为止 `v4.2-xattrs`。
+
+.步骤
+* 为选项分配显式值 `v4.2-xattrs`：
++
+[source, cli]
+----
+nfs modify -v4.2-xattrs <enabled/disabled> -vserver <vserver_name>
+----
+
+
+.相关信息
+https://kb.netapp.com/on-prem/ontap/da/NAS/NAS-Issues/CONTAP-120160["升级后、NFS v4.2-xatts字段将发生翻转"^]

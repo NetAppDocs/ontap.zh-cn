@@ -16,6 +16,8 @@ summary: 要使S3客户端用户能够访问NAS数据、您必须将S3用户名�
 .开始之前
 客户端访问的用户名—Linux/UNIX、Windows和S3客户端用户—必须已存在。
 
+请注意，某些S3功能为link:index.html#nas-functionality-not-currently-supported-by-s3-nas-buckets["S3 NAS分段不支持"]。
+
 .关于此任务
 通过将S3用户名映射到相应的Linux/UNIX或Windows用户、可以在S3客户端访问NAS文件时对这些文件进行授权检查。通过提供S3用户名_Pattern_来指定S3到NAS的映射、该用户名可以表示为单个名称或POSIX正则表达式、并提供Linux/UNIX或Windows用户名_Replacement。
 
@@ -72,7 +74,7 @@ vserver name-mapping create -direction s3-unix -position 2 -pattern s3_user_1 -r
 `vserver object-store-server bucket policy add-statement -vserver svm_name -bucket bucket_name -effect {deny|allow}  -action list_of_actions -principal list_of_users_or_groups -resource [-sid alphanumeric_text]`
 +
 ** `-effect {deny|allow}` -指定在用户请求操作时是允许还是拒绝访问。
-** `-action <Action>, ...` -指定允许或拒绝的资源操作。对象存储服务器当前为S3 NAS分段支持的一组资源操作包括：GetObject、PutObject、DeleteObject、ListBucketAcl、GetBucketAcl、 GetObjectAcl、GetObjectTagging、PutObjectTagging、DeleteObjectTagging、GetBucketLocation、 GetBucketVersioning、PutBucketVersioning和ListBucketVersions。此参数可使用通配符。
+** `-action <Action>, ...`-指定允许或拒绝的资源操作。对象存储服务器当前支持S3 NAS存储分段的资源操作集包括：GetObject、PutObject、DeleteObject、ListBucketAcl、GetObjectAcl和GetBucketLocation。此参数可使用通配符。
 ** `-principal <Objectstore Principal>, ...` -根据在此参数中指定的对象存储服务器用户或组验证请求访问的用户。
 +
 *** 通过向组名称添加前缀group/来指定对象存储服务器组。
