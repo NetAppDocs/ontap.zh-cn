@@ -15,23 +15,95 @@ summary: 本文介绍如何审核 ONTAP S3 环境中的数据和管理事件。
 
 在 SVM 上创建和启用 S3 审核配置时， S3 事件会记录在日志文件中。您可以指定要记录的以下事件：
 
-* 对象访问（数据）事件
-+
-GetObject ， PutObject 和 DeleteObject
 
-* 管理事件
-+
-PutBucket 和 DeleteBucket
 
+== 按版本列出的对象访问(数据)事件
+
+9.11.1：
+
+* ListBucketVersions
+* ListBucket( ListObjects 9.10.1已重命名为此)
+* ListAllMyBuc桶(ListBuc桶9.10.1已重命名为此)
+
+
+9.10.1：
+
+* HeadObject
+* GetObject
+* PutObject
+* DeleteObject
+* List桶
+* ListObjects
+* MPUpload
+* MPUploadPart
+* MP"完成"
+* MP中止
+* GetObjectTagging
+* DeleteObjectTagging
+* PutObjectTagging
+* ListUploads
+* ListParts
+
+
+
+
+== 按版本列出的管理事件
+
+9.15.1:
+
+* GetBucketCORS
+* PutBucketCORS
+* DeleteBucketCORS
+
+
+9.14.1：
+
+* GetObject保留
+* PutObject保留
+* PutBucketObjectLockConfiguration
+* GetBucketObjectLockConfiguration
+
+
+9.13.1:
+
+* PutBucketLifecycle
+* DeleteBucketLifecycle
+* GetBucketLifecycle
+
+
+9.12.1：
+
+* GetBucketPolicy
+* CopyObject
+* 上传PartCopy
+* PutBucketPolicy
+* DeleteBucketPolicy
+
+
+9.11.1：
+
+* GetBucketVersioning
+* PutBucketVersioning
+
+
+9.10.1：
+
+* HeadBucket
+* GetBucketAcl
+* GetObjectAcl
+* PutBucket
+* DeleteBucket
+* MOTIFYObjectTaging
+* GetBucketLocation
 
 
 日志格式为 JavaScript 对象表示法（ JSON ）。
 
 S3 和 NFS 审核配置的组合限制为每个集群 50 个 SVM 。
 
-需要以下许可证包：
+需要以下许可证：
 
-* 核心捆绑包、适用于ONTAP S3协议和存储
+* ONTAP One、以前属于核心软件包、适用于ONTAP S3协议和存储
 
 
 有关详细信息，请参见 link:../nas-audit/auditing-process-concept.html["ONTAP 审核过程的工作原理"]。
