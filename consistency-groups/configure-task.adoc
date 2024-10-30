@@ -62,21 +62,21 @@ summary: 创建一个一致性组，用于应用程序工作负载管理和数�
 .使用NFS卷创建一致性组
 . 创建一致性组：
 +
-`consistency-group create -vserver _SVM_name_ -consistency-group _consistency-group-name_ -volume _volume-prefix_ -volume-count _number_ -size _size_ -export-policy _policy_name_`
+`consistency-group create -vserver <SVM_name> -consistency-group <consistency-group-name> -volume-prefix <prefix_for_new_volume_names> -volume-count <number> -size <size> -export-policy <policy_name>`
 
 
 
 .使用SAN卷创建一致性组
 . 创建一致性组：
 +
-`consistency-group create -vserver _SVM_name_ -consistency-group _consistency-group-name_ -lun _lun_name_ -size _size_ -lun-count _number_ -igroup _igroup_name_`
+`consistency-group create -vserver <SVM_name> -consistency-group <consistency-group-name> -lun <lun_name> -size <size> -lun-count <number> -lun-os-type <LUN_operating_system_format> -igroup <igroup_name>`
 
 
 
 .使用NVMe命名卷创建一致性组
 . 创建一致性组：
 +
-`consistency-group create -vserver _SVM_name_ -consistency-group _consistency_group_name_ -namespace _namespace_name_ -volume-count _number_ -namespace-count _number_ -size _size_ -subsystem _subsystem_name_`
+`consistency-group create -vserver <SVM_name> -consistency-group <consistency_group_name> -namespace <namespace_name> -volume-count <number> -namespace-count <number> -size <size> -subsystem <subsystem_name>`
 
 
 
@@ -130,7 +130,7 @@ NOTE: 如果使用现有卷创建一致性组、则此一致性组支持FlexVol 
 .步骤
 . 问题描述 `consistency-group create` 命令：。 `-volumes` 参数接受以逗号分隔的卷名称列表。
 +
-`consistency-group create -vserver _SVM_name_ -consistency-group _consistency-group-name_ -volume _volumes_`
+`consistency-group create -vserver <SVM_name> -consistency-group <consistency-group-name> -volume <volumes>`
 
 . 使用查看一致性组 `consistency-group show` 命令：
 

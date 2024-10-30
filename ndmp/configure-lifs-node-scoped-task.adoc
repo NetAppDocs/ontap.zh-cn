@@ -6,16 +6,60 @@ summary: 您必须确定用于在节点和备份应用程序之间建立数据�
 ---
 = 配置 LIF
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
 
 [role="lead"]
 您必须确定用于在节点和备份应用程序之间建立数据连接和控制连接的 LIF 。确定 LIF 后，您必须验证是否为 LIF 设置了防火墙和故障转移策略。
 
 
-NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF服务策略。有关详细信息，请参见 link:../networking/configure_firewall_policies_for_lifs.html["为 LIF 配置防火墙策略"]。
+NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF服务策略。有关详细信息，请参见 link:../networking/manage_supported_traffic.html["管理支持的流量"]。
 
+[role="tabbed-block"]
+====
+.ONTAP 9．10.1或更高版本
+--
+.步骤
+. 使用命令和 `-service-policy`参数确定节点上托管的集群间LIF `network interface show`。
++
+`network interface show -service-policy default-intercluster`
+
+. 确保集群间LIF包含此 `backup-ndmp-control`服务：
++
+`network interface service-policy show`
+
+. 确保已为集群间 LIF 正确设置故障转移策略：
++
+.. 验证集群间CIFs的故障转移策略是否设置为 `local-only` 使用 `network interface show -failover` 命令：
++
+[listing]
+----
+cluster1::> network interface show -failover
+            Logical          Home              Failover     Failover
+Vserver     Interface        Node:Port         Policy       Group
+--------    ---------------  ----------------- ------------ --------
+cluster1    IC1               cluster1-1:e0a    local-only   Default
+                                                    Failover Targets:
+                                                    .......
+            IC2               cluster1-2:e0b    local-only   Default
+                                                    Failover Targets:
+                                                    .......
+cluster1-1  cluster1-1_mgmt1 cluster1-1:e0m    local-only    Default
+                                                    Failover Targets:
+                                                    .......
+----
+.. 如果未正确设置故障转移策略、请使用修改此故障转移策略 `network interface modify` 命令 `-failover-policy` 参数。
++
+[listing]
+----
+cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy local-only
+----
+
+
+
+
+--
+.ONTAP 9.9 或更早版本
+--
 .步骤
 . 使用确定节点上托管的集群间LIF `network interface show` 命令 `-role` 参数。
 +
@@ -45,7 +89,7 @@ Vserver     Policy       Service    Allowed
 cluster1    intercluster dns        -
                          http       -
                          https      -
-                         **ndmp       0.0.0.0/0, ::/0**
+                         ndmp       0.0.0.0/0, ::/0
                          ndmps      -
                          ntp        -
                          rsh        -
@@ -74,10 +118,10 @@ cluster1::> network interface show -failover
             Logical          Home              Failover     Failover
 Vserver     Interface        Node:Port         Policy       Group
 --------    ---------------  ----------------- ------------ --------
-cluster1    **IC1               cluster1-1:e0a    local-only   Default**
+cluster1    IC1               cluster1-1:e0a    local-only   Default
                                                     Failover Targets:
                                                     .......
-            **IC2               cluster1-2:e0b    local-only   Default**
+            IC2               cluster1-2:e0b    local-only   Default
                                                     Failover Targets:
                                                     .......
 cluster1-1  cluster1-1_mgmt1 cluster1-1:e0m    local-only    Default
@@ -93,3 +137,6 @@ cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy
 
 
 
+
+--
+====

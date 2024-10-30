@@ -2,19 +2,99 @@
 permalink: ndmp/configure-lifs-svm-scoped-task.html 
 sidebar: sidebar 
 keywords: configure, lifs 
-summary: 您必须确定用于在数据和磁带资源之间建立数据连接以及在管理 SVM 和备份应用程序之间建立控制连接的 LIF 。确定 LIF 后，您必须验证是否为 LIF 设置了防火墙和故障转移策略，并指定首选接口角色。 
+summary: 您必须确定用于在数据和磁带资源之间建立数据连接以及在管理 SVM 和备份应用程序之间建立控制连接的 LIF 。确定了这些生命周期后、您必须验证是否已设置服务和故障转移策略。 
 ---
 = 配置 LIF
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
 
 [role="lead"]
-您必须确定用于在数据和磁带资源之间建立数据连接以及在管理 SVM 和备份应用程序之间建立控制连接的 LIF 。确定 LIF 后，您必须验证是否为 LIF 设置了防火墙和故障转移策略，并指定首选接口角色。
+您必须确定用于在数据和磁带资源之间建立数据连接以及在管理 SVM 和备份应用程序之间建立控制连接的 LIF 。确定了这些生命周期后、您必须验证是否已设置服务和故障转移策略。
 
-从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF服务策略。有关详细信息，请参见 link:../networking/lifs_and_service_policies96.html["ONTAP 9.6 及更高版本中的 LIF 和服务策略"]。
 
+NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF服务策略。有关详细信息，请参见 link:../networking/manage_supported_traffic.html["管理支持的流量"]。
+
+[role="tabbed-block"]
+====
+.ONTAP 9．10.1或更高版本
+--
+.步骤
+. 使用命令和 `-service-policy`参数确定节点上托管的集群间LIF `network interface show`。
++
+`network interface show -service-policy default-intercluster`
+
+. 使用命令和 `-service-policy`参数确定节点上托管的管理LIF `network interface show`。
++
+`network interface show -service-policy default-management`
+
+. 确保集群间LIF包含此 `backup-ndmp-control`服务：
++
+`network interface service-policy show`
+
+. 确保已为所有 LIF 正确设置故障转移策略：
++
+.. 验证集群管理LIF的故障转移策略是否设置为 `broadcast-domain-wide`、并且集群间和节点管理的生命周期管理的策略设置为 `local-only` 使用 `network interface show -failover` 命令：
++
+以下命令显示集群管理 LIF ，集群间 LIF 和节点管理 LIF 的故障转移策略：
+
++
+[listing]
+----
+cluster1::> network interface show -failover
+
+           Logical          Home            Failover    Failover
+Vserver    Interface        Node:Port       Policy      Group
+-------    --------------   --------------  ----------  --------
+cluster    cluster1_clus1   cluster1-1:e0a  local-only  cluster
+                                                     Failover Targets:
+                   	                                 .......
+cluster1   cluster_mgmt     cluster1-1:e0m  broadcast-  Default
+                                          domain-wide
+                                                     Failover Targets:
+                                                     .......
+           IC1              cluster1-1:e0a  local-only  Default
+                                                     Failover Targets:
+           IC2              cluster1-1:e0b  local-only  Default
+                                                     Failover Targets:
+                                                     .......
+cluster1-1 c1-1_mgmt1       cluster1-1:e0m  local-only  Default
+                                                     Failover Targets:
+                                                     ......
+cluster1-2 c1-2_mgmt1       cluster1-2:e0m  local-only  Default
+                                                     Failover Targets:
+                                                     ......
+----
+.. 如果未正确设置故障转移策略、请使用修改此故障转移策略 `network interface modify` 命令 `-failover-policy` 参数。
++
+[listing]
+----
+cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy local-only
+----
+
+
+. 使用指定数据连接所需的生命周期 `vserver services ndmp modify` 命令 `preferred-interface-role` 参数。
++
+[listing]
+----
+cluster1::> vserver services ndmp modify -vserver cluster1 -preferred-interface-role intercluster,cluster-mgmt,node-mgmt
+----
+. 使用验证是否已为集群设置首选接口角色 `vserver services ndmp show` 命令：
++
+[listing]
+----
+cluster1::> vserver services ndmp show -vserver cluster1
+
+                Vserver: cluster1
+                NDMP Version: 4
+                .......
+                .......
+Preferred Interface Role: intercluster, cluster-mgmt, node-mgmt
+----
+
+
+--
+.ONTAP 9.9 或更早版本
+--
 .步骤
 . 使用确定集群间、集群管理和节点管理的生命周期 `network interface show` 命令 `-role` 参数。
 +
@@ -25,11 +105,11 @@ summary: 您必须确定用于在数据和磁带资源之间建立数据连接�
 ----
 cluster1::> network interface show -role intercluster
 
-            Logical           Status     Network            Current       Current Is
-Vserver     Interface         Admin/Oper Address/Mask       Node          Port    Home
------------ ----------        ---------- ------------------ ------------- ------- ----
-cluster1    IC1               up/up      192.0.2.65/24      cluster1-1    e0a     true
-cluster1    IC2               up/up      192.0.2.68/24      cluster1-2    e0b     true
+            Logical      Status     Network            Current       Current Is
+Vserver     Interface    Admin/Oper Address/Mask       Node          Port    Home
+----------- ----------   ---------- ------------------ ------------- ------- ----
+cluster1    IC1          up/up      192.0.2.65/24      cluster1-1    e0a     true
+cluster1    IC2          up/up      192.0.2.68/24      cluster1-2    e0b     true
 ----
 +
 以下命令显示集群管理 LIF ：
@@ -39,10 +119,10 @@ cluster1    IC2               up/up      192.0.2.68/24      cluster1-2    e0b   
 ----
 cluster1::> network interface show -role cluster-mgmt
 
-            Logical           Status     Network            Current       Current Is
-Vserver     Interface         Admin/Oper Address/Mask       Node          Port    Home
------------ ----------        ---------- ------------------ ------------- ------- ----
-cluster1    cluster_mgmt      up/up      192.0.2.60/24      cluster1-2    e0M     true
+            Logical       Status     Network            Current     Current Is
+Vserver     Interface     Admin/Oper Address/Mask       Node        Port    Home
+----------- ----------    ---------- ------------------ ----------- ------- ----
+cluster1    cluster_mgmt  up/up      192.0.2.60/24      cluster1-2  e0M     true
 ----
 +
 以下命令显示节点管理 LIF ：
@@ -52,13 +132,13 @@ cluster1    cluster_mgmt      up/up      192.0.2.60/24      cluster1-2    e0M   
 ----
 cluster1::> network interface show -role node-mgmt
 
-            Logical           Status     Network            Current       Current Is
-Vserver     Interface         Admin/Oper Address/Mask       Node          Port    Home
------------ ----------        ---------- ------------------ ------------  ------  ------
-cluster1    cluster1-1_mgmt1  up/up      192.0.2.69/24      cluster1-1    e0M     true
-            cluster1-2_mgmt1  up/up      192.0.2.70/24      cluster1-2    e0M     true
+            Logical           Status     Network         Current       Current Is
+Vserver     Interface         Admin/Oper Address/Mask    Node          Port    Home
+----------- ----------        ---------- --------------- ------------  ------  ------
+cluster1    cluster1-1_mgmt1  up/up      192.0.2.69/24   cluster1-1    e0M     true
+            cluster1-2_mgmt1  up/up      192.0.2.70/24   cluster1-2    e0M     true
 ----
-. 确保已在集群间 LIF ，集群管理（ cluster-mgmt ） LIF 和节点管理（ node-mgmt ） LIF 上为 NDMP 启用防火墙策略：
+. 确保已为集群间、集群管理(`cluster-mgmt`和节点管理)的NDMP启用防火墙策略(`node-mgmt`：
 +
 .. 使用验证是否已为NDMP启用防火墙策略 `system services firewall policy show` 命令：
 +
@@ -74,7 +154,7 @@ Vserver     Policy       Service    Allowed
 cluster     cluster      dns        0.0.0.0/0
                          http       0.0.0.0/0
                          https      0.0.0.0/0
-                        ** ndmp       0.0.0.0/0**
+                         ndmp       0.0.0.0/0
                          ndmps      0.0.0.0/0
                          ntp        0.0.0.0/0
                          rsh        0.0.0.0/0
@@ -96,7 +176,7 @@ Vserver     Policy       Service    Allowed
 cluster1    intercluster dns        -
                          http       -
                          https      -
-                         **ndmp       0.0.0.0/0, ::/0**
+                         ndmp       0.0.0.0/0, ::/0
                          ndmps      -
                          ntp        -
                          rsh        -
@@ -117,7 +197,7 @@ Vserver     Policy       Service    Allowed
 cluster1-1  mgmt         dns        0.0.0.0/0, ::/0
                          http       0.0.0.0/0, ::/0
                          https      0.0.0.0/0, ::/0
-                         **ndmp       0.0.0.0/0, ::/0**
+                         ndmp       0.0.0.0/0, ::/0
                          ndmps      0.0.0.0/0, ::/0
                          ntp        0.0.0.0/0, ::/0
                          rsh        -
@@ -155,18 +235,18 @@ cluster    cluster1_clus1     cluster1-1:e0a    local-only            cluster
                                                      Failover Targets:
                    	                                 .......
 
-**cluster1   cluster_mgmt       cluster1-1:e0m    broadcast-domain-wide Default**
+cluster1   cluster_mgmt       cluster1-1:e0m    broadcast-domain-wide Default
                                                      Failover Targets:
                                                      .......
-           **IC1                 cluster1-1:e0a    local-only           Default**
+           IC1                 cluster1-1:e0a    local-only           Default
                                                      Failover Targets:
-           **IC2                 cluster1-1:e0b    local-only           Default**
+           IC2                 cluster1-1:e0b    local-only           Default
                                                      Failover Targets:
                                                      .......
-**cluster1-1 cluster1-1_mgmt1   cluster1-1:e0m    local-only            Default**
+cluster1-1 cluster1-1_mgmt1   cluster1-1:e0m    local-only            Default
                                                      Failover Targets:
                                                      ......
-**cluster1-2 cluster1-2_mgmt1   cluster1-2:e0m    local-only            Default**
+cluster1-2 cluster1-2_mgmt1   cluster1-2:e0m    local-only            Default
                                                      Failover Targets:
                                                      ......
 ----
@@ -197,3 +277,6 @@ cluster1::> vserver services ndmp show -vserver cluster1
             Preferred Interface Role: intercluster, cluster-mgmt, node-mgmt
 ----
 
+
+--
+====
