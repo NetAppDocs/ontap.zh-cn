@@ -13,16 +13,41 @@ summary: 要安装 ONTAP 调解器服务，必须确保满足所有前提条件�
 [role="lead"]
 要安装ONTAP调解器服务、必须确保满足所有前提条件、提取安装包并在主机上运行安装程序。此操作步骤用于安装或升级现有安装。
 
-.关于此任务
 * 从ONTAP 9.7开始、您可以使用任何版本的ONTAP 调解器来监控MetroCluster IP配置。
 * 从ONTAP 9.8开始、您可以使用任何版本的ONTAP调解器监控SnapMirror活动同步关系。
 
 
-.开始之前
-您必须满足以下前提条件。
 
 
-NOTE: ONTAP调解器服务与Red Hat Enterprise Linux FIPS模式不兼容、将使其无法成功安装。您可以使用命令检查是否已启用FIPS模式 `fips-mode-setup --check` 。您可以使用命令禁用FIPS模式 `fips-mode-setup --disable` 。禁用FIPS模式后重新启动、以成功安装ONTAP调解器服务。
+== 安装和升级注意事项
+
+在升级或安装ONTAP调解器之前、请查看以下注意事项。
+
+
+CAUTION: ONTAP调解器1.8及更早版本与Red Hat Enterprise Linux FIPS模式不兼容、将导致其无法成功安装。您可以使用命令检查是否已启用FIPS模式 `fips-mode-setup --check` 。您可以使用命令禁用FIPS模式 `fips-modesetup --disable` 。禁用FIPS模式后重新启动、以成功安装ONTAP调解器1.8或更早版本。
+
+* 您应将ONTAP调解器升级到可用的最新版本。早期版本的ONTAP调解器与所有ONTAP版本保持向后兼容、但最新版本包括所有第三方元素的安全修补程序。
+* 升级到新的ONTAP调解器版本时、安装程序会自动升级到建议的SCST版本、除非有更高版本可用。有关手动安装较高版本SCST的说明，请参阅link:manage-task.html["管理调解器服务"]。有关支持的版本，请参见link:whats-new-concept.html#scst-support-matrix["SCST支持列表"]。
++
+
+CAUTION: 如果安装失败、您可能需要升级到更高版本的ONTAP调解器。
+
+* 如果安装 `yum-utils` 软件包中、您可以使用 `needs-restarting` 命令：
+
+
+
+
+=== 操作系统要求
+
+操作系统必须满足以下要求：
+
+* 64 位物理安装或虚拟机
+* 8 GB RAM
+* 1 GB磁盘空间(用于应用程序安装、服务器日志和数据库)
+* 用户： root 访问权限
+
+
+下表显示了每个版本的ONTAP调解器支持的操作系统。
 
 [cols="30,70"]
 |===
@@ -32,9 +57,23 @@ NOTE: ONTAP调解器服务与Red Hat Enterprise Linux FIPS模式不兼容、将�
 
 
  a| 
+1.9
+ a| 
+* Red Hat Enterprise Linux
++
+** 兼容：8.4、8.5、8.6、8.7、8.9、9.1和9.3 ^1^
+** 建议：8.8、8.10、9.0、9.2和9.4
+
+
+* 落基Linux 8和9
+
+
+
+
+ a| 
 1.8.
  a| 
-* Red Hat Enterprise Linux：8.6、8.7、8.8、8.9、8.10、 9.2、9.3和9.4
+* Red Hat Enterprise Linux：8.4、8.5、8.6、8.7、8.8、8.9、8.10、9.0、9.1、9.2、9.3和9.4
 * 落基Linux 8和9
 
 
@@ -43,7 +82,7 @@ NOTE: ONTAP调解器服务与Red Hat Enterprise Linux FIPS模式不兼容、将�
  a| 
 1.7.
  a| 
-* Red Hat Enterprise Linux：8.5、8.6、8.7、8.8、8.9、 9.0、9.1、9.2和9.3
+* Red Hat Enterprise Linux：8.4、8.5、8.6、8.7、8.8、8.9、9.0、9.1、9.2和9.3
 * 落基Linux 8和9
 
 
@@ -61,7 +100,7 @@ NOTE: ONTAP调解器服务与Red Hat Enterprise Linux FIPS模式不兼容、将�
  a| 
 1.5.
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.0、8.1、8.2、8.3、8.4、8.5
 * CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
 
 
@@ -70,7 +109,7 @@ NOTE: ONTAP调解器服务与Red Hat Enterprise Linux FIPS模式不兼容、将�
  a| 
 1.4.
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3、8.4、8.5
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.0、8.1、8.2、8.3、8.4、8.5
 * CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
 
 
@@ -79,7 +118,7 @@ NOTE: ONTAP调解器服务与Red Hat Enterprise Linux FIPS模式不兼容、将�
  a| 
 1.3.
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.1、 8.2、8.3
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.0、 8.1、8.2、8.3
 * CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
 
 
@@ -88,53 +127,75 @@ NOTE: ONTAP调解器服务与Red Hat Enterprise Linux FIPS模式不兼容、将�
  a| 
 1.2.
  a| 
-* Red Hat Enterprise Linux：7.6、7.7、7.8、8.1
-* CentOS ： 7.6 ， 7.7 ， 7.8
+* Red Hat Enterprise Linux：7.6、7.7、7.8、7.9、8.0、 8.1.
+* CentOS ： 7.6 ， 7.7 ， 7.8 ， 7.9
 
 
 |===
-
-NOTE: 内核版本必须与操作系统版本匹配。
-
-* 64 位物理安装或虚拟机
-* 8 GB RAM
-* 1 GB磁盘空间(用于应用程序安装、服务器日志和数据库)
-* 用户： root 访问权限
+. "兼容"表示RHEL不再支持此版本、但仍可安装ONTAP调解器。
 
 
-可以安全地更新除内核之外的任何库软件包、但可能需要重新启动才能在ONTAP 调解器应用程序中生效。  需要重新启动时、建议使用服务窗口。
-
-如果安装 `yum-utils` 软件包中、您可以使用 `needs-restarting` 命令：
-
-如果要将内核更新到ONTAP 调解器版本表仍支持的版本、则可以更新此内核。必须重新启动、因此需要一个服务窗口。
-
-必须在重新启动之前卸载SCST内核模块、然后在重新启动之后重新安装。
 
 
-NOTE: 不支持升级到特定ONTAP调解器版本支持的操作系统版本以外的内核。(这可能表示测试的SCST模块不会编译)。
+=== 操作系统升级注意事项和内核兼容性
 
+* 除了内核之外、所有库软件包都可以安全地更新、但可能需要重新启动才能在ONTAP调解器应用程序中应用更改。需要重新启动时、建议使用服务窗口。
+* 您应使操作系统内核保持最新。内核可以升级到中列为受支持的版本link:whats-new-concept.html#scst-support-matrix["ONTAP调解器版本表"]。重新启动是必需的、因此您应该为中断计划一个维护窗口。
++
+** 必须先卸载SCST内核模块，然后再重新引导。
+** 在开始内核操作系统升级之前、您必须准备好受支持的SCST版本以重新安装。
+
+
+
+
+[NOTE]
+====
+* 内核版本必须与操作系统版本匹配。
+* 不支持升级到特定ONTAP调解器版本支持的操作系统版本以外的内核。(这可能表示测试的SCST模块不会编译)。
+
+
+====
 
 
 == 启用UEFI安全启动后注册安全密钥
 
-如果启用了UEFI安全启动、则要安装ONTAP调解器、您必须先注册安全密钥、然后才能启动ONTAP调解器服务。要确定系统是否已启用UEFI且安全启动已打开、请执行以下步骤：
+要在启用了UEFI安全启动的情况下安装ONTAP调解器、必须先注册安全密钥、然后才能启动服务。密钥是在SCST安装的编译步骤中生成的、并保存为计算机上的私有-公共密钥对。使用 `mokutil`实用程序将公共密钥作为计算机所有者密钥(Machine Owner Key、MOK)添加到UEFI固件中、以使系统信任并加载签名模块。请将密码短语保存 `mokutil`在安全位置、因为在重新启动系统以激活MOK时需要使用此密码短语。
+
+要确定系统是否已启用UEFI且安全启动已打开、请执行以下步骤：
 
 .步骤
-. 如果未安装mukutil、请运行以下命令：
+. 如果 `mokutil`未安装、请运行以下命令：
 +
 `yum install mokutil`
 
-. 要确定系统上是否启用了UEFI安全启动、请运行以下命令：
+. 检查系统上是否启用了UEFI安全启动：
 +
 `mokutil --sb-state`
 
 +
-结果显示此系统上是否启用了UEFI安全启动。
+结果指示此系统是否已启用UEFI安全启动。
+
++
+[NOTE]
+====
+** 系统会提示您创建密码短语、必须将其存储在安全位置。要在UEFI引导管理器中启用密钥、您需要使用此密码短语。
+** ONTAP 1.2.0及更早版本不支持此模式。
+
+
+====
+. 将公共密钥添加到MOK列表：
++
+`mokutil --import /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der`
 
 +
 
-NOTE: ONTAP调解器1.2.0及先前版本不支持此模式。
+NOTE: 您可以将私钥保留在其默认位置、也可以将其移动到安全位置。但是、公共密钥必须保留在其现有位置、以供启动管理器使用。有关详细信息，请参见以下README.MODUP-signing文件：
 
++
+`[root@hostname ~]# ls /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/
+README.module-signing  scst_module_key.der  scst_module_key.priv`
+
+. 重新启动主机、然后使用设备的UEFI Boot Manager批准新的MOK。您需要使用步骤2中为提供的密码短语 `mokutil`。
 
 
 

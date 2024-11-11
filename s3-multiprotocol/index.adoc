@@ -1,10 +1,10 @@
 ---
 permalink: s3-multiprotocol/index.html 
 sidebar: sidebar 
-keywords: multiprotocol, s3, configuration, overview, nfs, smb 
+keywords: multiprotocol, s3, configuration, overview, nfs, smb, multipart 
 summary: 从ONTAP 9.12.1开始、您可以使运行S3协议的客户端访问为使用NFS和SMB协议的客户端提供的相同数据、而无需重新格式化。 
 ---
-= S3多协议概述
+= ONTAP中的S3多协议支持
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -27,13 +27,13 @@ S3多协议功能可解决两种使用情形：
 
 
 
-== S3多协议的工作原理
+== S3多协议支持的工作原理
 
-使用ONTAP 多协议、您可以将相同的数据集作为文件层次结构或存储分段中的对象来呈现。为此、ONTAP 会创建"S3 NAS分段"、以使S3客户端能够使用S3对象请求在NAS存储中创建、读取、删除和枚举文件。此映射符合NAS安全配置、可观察文件和目录访问权限、并根据需要写入安全审核记录。
+通过ONTAP多协议支持、您可以将相同的数据集呈现为文件层次结构或存储分段中的对象。为此、ONTAP 会创建"S3 NAS分段"、以使S3客户端能够使用S3对象请求在NAS存储中创建、读取、删除和枚举文件。此映射符合NAS安全配置、可观察文件和目录访问权限、并根据需要写入安全审核记录。
 
 此映射是通过将指定的NAS目录层次结构显示为S3分段来实现的。目录层次结构中的每个文件都表示为S3对象、该对象的名称与映射的目录相对、目录边界由斜杠字符("/")表示。
 
-正常的ONTAP定义的S3用户可以访问此存储、该存储受为映射到NAS目录的存储分段定义的存储分段策略的约束。为此、必须在S3用户和SMB/NFS用户之间定义映射。SMB/NFS用户的凭据将用于NAS权限检查、并包含在这些访问所产生的任何审核记录中。
+根据为映射到NAS目录的存储分段定义的分段策略、ONTAP定义的S3用户可以访问此存储。为此、必须在S3用户和SMB/NFS用户之间定义映射。SMB/NFS用户的凭据将用于NAS权限检查、并包含在这些访问所产生的任何审核记录中。
 
 当文件由SMB或NFS客户端创建时、文件会立即放置在目录中、因此在写入任何数据之前、客户端可以看到该文件。S3客户端希望使用不同的语义、在写入新对象的所有数据之前、新对象不会显示在命名空间中。将S3映射到NAS存储会使用S3语义创建文件、从而使这些文件在外部不可见、直到S3创建命令完成为止。
 
@@ -64,6 +64,27 @@ S3 NAS的"分段"只是S3客户端的NAS数据映射、而不是标准S3分段�
 
 
 
+== 对象多部分上传
+
+从ONTAP 9．16．1开始，启用FlexGroup卷上的时，支持对象多部分上载link:../flexgroup/enable-adv-capacity-flexgroup-task.html["高级容量平衡"]。
+
+通过在NAS文件存储上进行对象多部分上传、S3协议客户端可以将大型对象作为较小的部分进行上传。对象多部分上传具有以下优势：
+
+* 它支持并行上传对象。
+* 如果上传失败或暂停、则只需要上传尚未上传的部件。无需重新启动整个对象的上传。
+* 如果事先不知道对象大小(例如、当仍在写入大型对象时)、则客户端可以立即开始上传对象的部分内容、并在创建整个对象后完成上传。
+
+
+多部分上传支持以下S3操作：
+
+* AbortMultipartUpload
+* CompleteMultipartUpload
+* CreateMultipartUpload
+* ListMultipartUpload
+
+
+
+
 == S3和NAS互操作性
 
 ONTAP S3 NAS分段支持标准NAS和S3功能、但此处列出的功能除外。
@@ -72,7 +93,7 @@ ONTAP S3 NAS分段支持标准NAS和S3功能、但此处列出的功能除外。
 
 === S3 NAS存储分段当前不支持NAS功能
 
-FabricPool 容量层:: S3 NAS存储分段不能配置为FabricPool 的容量层。
+FabricPool 容量层:: 无法将S3 NAS分段配置为FabricPool的容量层。
 
 
 
@@ -100,16 +121,6 @@ AWS标记::
 --
 * 包含非空版本规范(versionId=xyz query-string)的请求会收到错误响应。
 * 影响存储分段版本控制状态的请求将被拒绝、但出现错误。
-
-
---
-多部分操作:: 不支持以下操作：
-+
---
-* AbortMultipartUpload
-* CompleteMultipartUpload
-* CreateMultipartUpload
-* ListMultipartUpload
 
 
 --

@@ -9,7 +9,7 @@ summary: 限制对管理员和诊断帐户的访问
 :allow-uri-read: 
 :icons: font
 :linkattrs: 
-:imagesdir: ../media
+:imagesdir: ../media/
 
 
 [role="lead"]
@@ -47,87 +47,6 @@ autosupport      console     password  autosupport      no     no
 6 entries were displayed.
 
 ----
-
-
-== 删除默认管理员帐户
-
-该 `admin` 帐户具有管理员角色、并允许使用所有应用程序进行访问。
-
-.步骤
-. 创建另一个管理员级别帐户。
-+
-要完全删除默认 `admin` 帐户、必须先创建另一个使用登录应用程序的管理员级别帐户 `console` 。
-
-+
-
-NOTE: 进行这些更改可能会产生一些不希望看到的影响。始终首先在非生产集群上测试可能影响解决方案安全状态的新设置。
-
-+
-示例
-
-+
-[listing]
-----
-cluster1::*> security login create -user-or-group-name NewAdmin -application console -authentication-method password -vserver cluster1
-----
-+
-[listing]
-----
-cluster1::*> security login show -vserver cluster1
-
-Vserver: cluster1
-                             Authentication             Acct   Is-Nsswitch
-User/Group Name  Application Method    Role Name        Locked Group
----------------- ----------- --------- ---------------- ------ -----------
-NewAdmin         console     password  admin            no     no
-admin            console     password  admin            no     no
-admin            http        password  admin            no     no
-admin            ontapi      password  admin            no     no
-admin            service-processor password admin       no     no
-admin            ssh         password  admin            no     no
-autosupport      console     password  autosupport      no     no
-7 entries were displayed.
-----
-. 创建新的管理员帐户后、请使用帐户登录测试对该帐户的访问权限 `NewAdmin` 。登录时 `NewAdmin` ，将帐户配置为与默认或以前的管理员帐户(例如、、或)具有相同的登录应用程序 `http` `ontapi` `service-processor` `ssh`。此步骤可确保保持访问控制。
-+
-示例
-
-+
-[listing]
-----
-cluster1::*> security login create -vserver cluster1 -user-or-group-name NewAdmin -application ssh -authentication-method password
-cluster1::*> security login create -vserver cluster1 -user-or-group-name NewAdmin -application http -authentication-method password
-cluster1::*> security login create -vserver cluster1 -user-or-group-name NewAdmin -application ontapi -authentication-method password
-cluster1::*> security login create -vserver cluster1 -user-or-group-name NewAdmin -application service-processor -authentication-method password
-----
-. 测试完所有功能后、您可以先禁用所有应用程序的管理员帐户、然后再从ONTAP中将其删除。此步骤可作为最终测试、以确认不存在依赖先前管理员帐户的持久功能。
-+
-[listing]
-----
-cluster1::*> security login lock -vserver cluster1 -user-or-group-name admin -application *
-----
-. 要删除默认管理员帐户及其所有条目、请运行以下命令：
-+
-[listing]
-----
-cluster1::*> security login delete -vserver cluster1 -user-or-group-name admin -application *
-cluster1::*> security login show -vserver cluster1
-
-Vserver: cluster1
-                             Authentication             Acct   Is-Nsswitch
-User/Group Name  Application Method    Role Name        Locked Group
----------------- ----------- --------- ---------------- ------ -----------
-NewAdmin         console     password  admin            no     no
-NewAdmin         http        password  admin            no     no
-NewAdmin         ontapi      password  admin            no     no
-NewAdmin         service-processor password admin       no     no
-NewAdmin         ssh         password  admin            no     no
-autosupport      console     password  autosupport      no     no
-7 entries were displayed.
-
-----
-
-
 
 
 == 设置诊断(diag)帐户密码

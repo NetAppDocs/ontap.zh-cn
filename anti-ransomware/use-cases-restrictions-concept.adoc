@@ -16,7 +16,7 @@ summary: NAS工作负载支持ARP。它最适合NFS存储上的数据库、Windo
 
 
 [role="lead"]
-从ONTAP 9.10.1开始、可为NAS工作负载提供自主关系统软件保护(ARP)。在部署ARP之前、您应了解建议的用途和支持的配置以及对性能的影响。
+从ONTAP 9 10.1开始、可为NAS工作负载提供自动防兰软件保护(ARP)。在部署ARP之前、您应了解建议的用途和支持的配置以及对性能的影响。
 
 
 
@@ -57,39 +57,44 @@ ARP取决于将传入数据区分为已加密或未加密。如果应用程序�
 
 === 支持的配置
 
-从ONTAP 9.10.1开始、可对内部ONTAP系统中的NFS和SMB卷使用ARP。
+从ARP.10.1开始、ONTAP 9可用于内部ONTAP系统中的NFS和SMB FlexVol卷。
 
 以下ONTAP版本支持其他配置和卷类型：
 
 |===
-|  | ONTAP 9.15.1. | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
+|  | ONTAP 9.16.1. | ONTAP 9.15.1. | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
 
 
-| 使用SnapMirror异步保护的卷 | ✓ | ✓ | ✓ | ✓ |  |  
+| 使用SnapMirror异步保护的卷 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 使用SnapMirror异步保护SVM (SVM灾难恢复) | ✓ | ✓ | ✓ | ✓ |  |  
+| 使用SnapMirror异步保护SVM (SVM灾难恢复) | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| SVM 数据移动性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ |  |  
+| SVM 数据移动性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| FlexGroup 卷 | ✓ | ✓ | ✓ |  |  |  
+| FlexGroup卷* | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| 多管理员验证 | ✓ | ✓ | ✓ |  |  |  
+| 多管理员验证 | ✓ | ✓ | ✓ | ✓ |  |  |  
+
+
+| ARP/AI、具有自动更新功能 | ✓ |  |  |  |  |  |  
 |===
+*ARP/AI不支持FlexGroup卷。升级到ARP.16.1后、启用了的FlexGroup卷将继续使用ARP/AI之前使用的相同ONTAP 9模式运行。
+
 
 
 ==== SnapMirror和ARP互操作性
 
 从ARP.12.1开始、SnapMirror异步目标卷支持ONTAP 9。SnapMirror同步**不支持ARP。
 
-如果SnapMirror源卷已启用ARP、则SnapMirror目标卷会自动获取源卷的ARP配置状态(学习、已启用等)、ARP培训数据以及ARP创建的Snapshot。无需显式启用。
+如果SnapMirror源卷启用了ARP、则SnapMirror目标卷会自动获取源卷的ARP配置状态(学习、启用等)、ARP训练数据以及ARP创建的快照。无需显式启用。
 
-虽然目标卷包含只读(Read Only、RO) Snapshot副本、但不会对其数据执行ARP处理。但是、当SnapMirror目标卷转换为读写(rw)时、将自动在RW转换的目标卷上启用ARP。除了已记录在源卷上的内容之外、目标卷不需要任何其他学习操作步骤。
+虽然目标卷包含只读(RO)快照、但不会对其数据进行ARP处理。但是、当SnapMirror目标卷转换为读写(rw)时、将自动在RW转换的目标卷上启用ARP。除了已记录在源卷上的内容之外、目标卷不需要任何其他学习操作步骤。
 
-在ONTAP 9.10.1和9.11.1中、SnapMirror不会将ARP配置状态、培训数据和Snapshot副本从源卷传输到目标卷。因此、在将SnapMirror目标卷转换为RW后、必须在转换后的学习模式下明确启用目标卷上的ARP。
+在ARP.10.1和9.11.1中、SnapMirror不会将ONTAP 9配置状态、训练数据和快照从源卷传输到目标卷。因此、在将SnapMirror目标卷转换为RW后、必须在转换后的学习模式下明确启用目标卷上的ARP。
 
 
 
@@ -115,9 +120,9 @@ ARP取决于将传入数据区分为已加密或未加密。如果应用程序�
 
 
 .虚拟机内部的更改
-如果勒索软件攻击以虚拟机为目标、而虚拟机内部的文件在未在虚拟机外部进行更改的情况下发生更改、则在虚拟机的默认熵较低(例如.txt、.DOCX或.mp4文件)时、ARP会检测到威胁。在此情形下、尽管ARP会创建一个保护性Snapshot、但它不会生成威胁警报、因为虚拟机外部的文件扩展名未被篡改。
+如果勒索软件攻击以虚拟机为目标、而虚拟机内部的文件在未在虚拟机外部进行更改的情况下发生更改、则在虚拟机的默认熵较低(例如.txt、.DOCX或.mp4文件)时、ARP会检测到威胁。虽然在此情形下ARP会创建一个保护性快照、但它不会生成威胁警报、因为虚拟机外部的文件扩展名未被篡改。
 
-默认情况下、如果文件的熵较高(例如.gzip或受密码保护的文件)、则ARP的检测功能会受到限制。在这种情况下、ARP仍可主动创建快照；但是、如果文件扩展名未被外部篡改、则不会触发任何警报。
+默认情况下、如果文件的熵较高(例如.gzip或受密码保护的文件)、则ARP的检测功能会受到限制。在这种情况下、ARP仍可创建主动快照；但是、如果文件扩展名未被外部篡改、则不会触发任何警报。
 
 
 
@@ -131,7 +136,7 @@ ARP取决于将传入数据区分为已加密或未加密。如果应用程序�
 
 ARP不支持以下卷配置：
 
-* FlexGroup卷(在ONTAP 9.10.1到9.12.1中。从ONTAP 9.131开始、支持FlexGroup卷)
+* FlexGroup卷(在ONTAP 9.10.1到9.12.1中。从ARP.13.1开始、支持FlexGroup卷、但仅限于ARP/AI之前使用的ONTAP 9模型)
 * FlexCache卷(原始FlexVol卷支持ARP、但缓存卷不支持ARP)
 * 使卷脱机
 * SAN-only volumes
@@ -171,7 +176,7 @@ ARP不支持以下卷配置：
 
 您需要为MAV组定义管理员并为创建MAV规则 `security anti-ransomware volume disable`， `security anti-ransomware volume pause`，和 `security anti-ransomware volume attack clear-suspect` 要保护的ARP命令。MAV组中的每个管理员都必须批准每个新规则请求和 link:../multi-admin-verify/enable-disable-task.html["再次添加MAV规则"^] 在MAV设置中。
 
-从ONTAP 9.14.1开始、ARP提供有关创建ARP快照和观察新文件扩展名的警报。默认情况下、这些事件的警报处于禁用状态。可以在卷或SVM级别设置警报。您可以使用在SVM级别创建MAV规则 `security anti-ransomware vserver event-log modify` 或在卷级别使用 `security anti-ransomware volume event-log modify`。
+从ARP.14.1开始、ONTAP 9可提供有关创建ARP快照和观察新文件扩展名的警报。默认情况下、这些事件的警报处于禁用状态。可以在卷或SVM级别设置警报。您可以使用在SVM级别创建MAV规则，也可以使用在卷级别 `security anti-ransomware volume event-log modify`创建MAV规则 `security anti-ransomware vserver event-log modify`。
 
 .后续步骤
 * link:enable-task.html["启用自主勒索软件保护"]

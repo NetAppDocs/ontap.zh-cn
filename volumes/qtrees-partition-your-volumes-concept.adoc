@@ -1,22 +1,171 @@
 ---
 permalink: volumes/qtrees-partition-your-volumes-concept.html 
 sidebar: sidebar 
-keywords: use, qtrees, partition, flexvol volumes 
-summary: 通过 qtree ，您可以将 FlexVol 卷分区为较小的区块，以便单独管理这些区块。您可以使用 qtree 管理配额，安全模式和 CIFS 操作锁定。 
+keywords: volumes, volume partitioning, qtrees, flexvol volumes, performance, metrics, extended performance monitoring 
+summary: 通过qtrees、您可以将FlexVol卷分区为较小的区块、这些区块可以单独进行管理。在按项目、用户或组管理存储时、qtrees启用的卷分区功能可提供更精细的控制。您可以使用qtrees更好地管理配额、安全模式和CIFS操作锁定。 
 ---
-= qtrees和FlexVol volume分区
+= qtrees和ONTAP FlexVol volume分区
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-通过 qtree ，您可以将 FlexVol 卷分区为较小的区块，以便单独管理这些区块。您可以使用 qtree 管理配额，安全模式和 CIFS 操作锁定。
+通过qtrees、您可以将FlexVol卷分区为较小的区块、这些区块可以单独进行管理。在按项目、用户或组管理存储时、qtrees启用的卷分区功能可提供更精细的控制。您可以使用qtrees更好地管理配额、安全模式和CIFS操作锁定。
 
-ONTAP 会为每个卷创建一个名为 _qtree0_ 的默认 qtree 。如果不将数据放入 qtree ，则数据将驻留在 qtree0 中。
 
-qtree 名称不能超过 64 个字符。
+NOTE: ONTAP会为每个名为*qtree0*的卷创建一个默认qtree。如果不将数据放置在特定qtree中、则数据将放置在qtree0中。
 
-无法在 qtree 之间移动目录。只能在 qtree 之间移动文件。
 
-如果在同一个 FlexVol 或 SCVMM 池上创建 qtree 级别和卷级别的共享，则这些 qtree 将在 FlexVol 共享上显示为目录。因此，您需要注意不要意外删除它们。
+
+== 一般限制
+
+在生产环境中使用qtrees之前、您应了解这些qtrees的限制。使用扩展qtree性能监控功能时、另请查看<<操作和限制>>。
+
+* qtree名称不能超过64个字符。
+* qtree名称中使用的某些特殊字符(例如逗号和空格)可能会导致其他ONTAP功能出现问题、应予以避免。
+* 不能在不同的qtrees之间移动目录。只能在 qtree 之间移动文件。
+* 如果在同一个 FlexVol 或 SCVMM 池上创建 qtree 级别和卷级别的共享，则这些 qtree 将在 FlexVol 共享上显示为目录。请注意、不要意外将其删除。
+
+
+
+
+== 用于管理和配置 qtree 的命令
+
+您可以使用ONTAP命令行界面管理和配置qtrees。根据您要执行的操作、您应使用以下命令来管理qtrees。
+
+[NOTE]
+====
+此命令 `volume rehost`可能会导致针对同一卷的其他并发管理操作失败。
+
+====
+|===
+
+
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+创建 qtree
+ a| 
+`volume qtree create`
+
+
+
+ a| 
+显示经过筛选的 qtree 列表
+ a| 
+`volume qtree show`
+
+
+
+ a| 
+删除 qtree
+ a| 
+`volume qtree delete`
+
+
+NOTE: 除非qtree为空或使用标志、否则此命令将失败 `-force true`。
+
+
+
+ a| 
+修改 qtree 的 UNIX 权限
+ a| 
+`volume qtree modify -unix-permissions`
+
+
+
+ a| 
+修改 qtree 的 CIFS 操作锁定设置
+ a| 
+`volume qtree oplocks`
+
+
+
+ a| 
+修改 qtree 的安全设置
+ a| 
+`volume qtree security`
+
+
+
+ a| 
+重命名 qtree
+ a| 
+`volume qtree rename`
+
+
+
+ a| 
+显示 qtree 的统计信息
+ a| 
+`volume qtree statistics`
+
+
+
+ a| 
+重置 qtree 的统计信息
+ a| 
+`volume qtree statistics -reset`
+
+|===
+
+
+== 扩展的qtree性能监控
+
+从API.16.1开始、您可以使用ONTAP REST ONTAP 9访问扩展的qtree监控功能、其中包括延迟指标和历史统计信息。
+
+ONTAP REST API包括与qtrees相关的多个端点。在ONTAP 9 16.1之前的版本中、客户可以访问qtrees的实时统计信息、包括每秒IO操作数(IOPS)以及读取、写入和其他操作的吞吐量。
+
+通过从NFSv.161开始提供的扩展qtree性能监控功能、您可以监控ONTAP 9、NFSv3、NFSv4.0、NFSv4.1、NFSv4.2、pNFS (从技术上说是NFSv4.1和NFSv4.2的一部分)和NFSv3.1的实时延迟统计信息以及IOPS和吞吐量。它还会收集和归档统计信息、以便查看历史性能数据。
+
+这种扩展的监控功能使存储管理员能够更深入地了解系统性能。在努力提高服务质量时、您可以使用这些数据来确定高利用率qtrees、潜在瓶颈和其他方面。能够分析这些指标(包括较长时间段内的趋势)、有助于您做出更明智的数据驱动型决策。
+
+
+
+=== 操作和限制
+
+在生产环境中使用扩展qtree性能监控功能之前、应考虑几个操作特征、包括限制。
+
+.需要重新挂载
+启用qtree扩展监控后、您需要重新挂载受影响的卷才能激活此功能。
+
+.统计数据的提供情况
+启用扩展性能监控后、统计数据不会立即可用。其中包括IOPS、吞吐量和延迟统计信息。为qtree显示此数据可能需要长达五分钟的时间。
+
+.每个集群的qtrees
+您可以为ONTAP集群中的最多50、000个qtrees启用扩展性能监控。
+
+
+
+=== 使用ONTAP REST API访问扩展指标
+
+从API.16.1开始、您可以通过ONTAP 9 ONTAP REST API访问扩展的qtree性能监控功能。基本功能分为几类、如下所述。
+
+.启用和禁用扩展性能监控
+您可以在端点 `/api/storage/qtrees`访问此属性 `ext_performance_monitoring.enabled`以启用或禁用扩展监控功能。根据您是创建新qtree还是配置现有qtree、可以使用POST和修补方法。
+
+.检索全局监控指标和设置
+已向端点添加多个新的全局属性 `/api/storage/qtrees`。您可以使用GET方法检索这些字段。
+
+.检索特定qtree的指标
+您可以在端点使用get方法 `/api/storage/qtrees/{volume.uuid}/{id}/metrics`检索特定卷上定义的特定qtree的新统计信息和指标属性。
+
+
+
+=== 升级和还原
+
+如果在ONTAP 9中启用了此功能、则可以无限制地升级到后续ONTAP版本。但是、需要考虑两种情形。
+
+.升级9.16.1并处理混合版本集群
+只有在集群的有效集群版本(ECV)为9.161时、才能使用扩展性能监控功能(即、 `ext_performance_monitoring.enabled`不能设置为 `true`)。
+
+.还原9.16.1
+如果任何qtrees的属性 `ext_performance_monitoring.enabled`设置为 `true`，则不允许还原9.15.1 9.16.1。此还原操作已被阻止。最佳做法是、在还原到早期ONTAP版本之前、为所有qtrees设置 `ext_performance_monitoring.enabled`为 `false`。
+
+
+
+=== 了解更多信息。
+
+有关ONTAP REST API的详细信息，请参见ONTAP自动化文档，包括 https://docs.netapp.com/us-en/ontap-automation/whats-new.html["ONTAP REST API的新增功能"^]。有关ONTAP REST API qtree端点的更多详细信息、您应查看ONTAP https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html["API参考"^]文档。

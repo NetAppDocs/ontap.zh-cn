@@ -1,0 +1,43 @@
+---
+permalink: nvme/disable-tls-secure-channel-nvme-task.html 
+sidebar: sidebar 
+keywords: manage, nvme, secure, encryption, in-flight, tcp, tls secure channel, tls, encrypt, disable, turn off 
+summary: 从tls.16.1开始、您可以为NVMe/TCP连接启用或禁用ONTAP 9安全通道。 
+---
+= 禁用NVMe/TCP的TLS安全通道
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从tls.16.1开始、您可以为NVMe/TCP连接配置ONTAP 9安全通道。如果您已为NVMe/TCP连接配置TLS安全通道、则可以随时选择将其禁用。
+
+.步骤
+. 从子系统中删除主机以禁用TLS安全通道：
++
+[source, cli]
+----
+vserver nvme subsystem host remove -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
+. 验证是否已从主机中删除TLS安全通道：
++
+[source, cli]
+----
+vserver nvme subsystem host show
+----
+. 将主机添加回不具有TLS安全通道的子系统：
++
+[source, cli]
+----
+vserver nvme subsystem host add vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
+
+
+.了解更多信息。
+有关这些命令、请访问ONTAP手册页：
+
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-add.html["SVM NVMe子系统主机添加"^]
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-remove.html["SVM NVMe子系统主机删除"^]
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-show.html["vserver nvme subsystem host show"^]
+

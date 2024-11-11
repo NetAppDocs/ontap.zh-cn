@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/modify-automatic-snapshot-options-task.html 
-keywords: anti-ransomware, automatic Snapshot copy, suspected attack, vserver options, autonomous ransomware protection, arp 
-summary: 修改在发生可疑勒索软件攻击时自动生成的自动勒索软件保护Snapshot副本的设置。 
+keywords: anti-ransomware, automatic, snapshot, suspected attack, vserver options, autonomous ransomware protection, arp 
+summary: '修改为应对可疑勒索软件攻击而自动生成的"自主勒索软件保护"快照的设置。' 
 ---
-= 修改自动Snapshot副本的选项
+= 修改自动快照选项
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -12,26 +12,26 @@ summary: 修改在发生可疑勒索软件攻击时自动生成的自动勒索�
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../media/
 
 
 [role="lead"]
-从ONTAP 9.11.1开始、您可以使用命令行界面来控制在发生可疑勒索软件攻击时自动生成的自动勒索软件保护(Autonomous Ransomware Protection、ARP) Snapshot副本的保留设置。
+从Ransomware 11.1开始、您可以使用命令行界面来控制在发生可疑勒索软件攻击时自动生成的自动保护(Autonomous ONTAP 9 Protection、ARP)快照的保留设置。
 
 .开始之前
-您只能修改节点SVM上的ARP Snapshot选项。
+您只能修改节点SVM上的ARP快照选项。
 
 .步骤
-. 要显示所有当前ARP Snapshot副本设置、请输入：
-`vserver options -vserver _svm_name_ arw*`
+. 要显示所有当前ARP快照设置、请输入：
+`vserver options -vserver <svm_name> -option-name arw*`
 +
 
 NOTE: 。 `vserver options` command是一个隐藏命令。要查看手册页、请输入 `man vserver options` 在ONTAP 命令行界面上。
 
-. 要显示选定的当前ARP Snapshot副本设置、请输入：
-`vserver options -vserver _svm_name_ -option-name _arw_setting_name_`
-. 要修改ARP Snapshot副本设置、请输入：
-`vserver options -vserver _svm_name_ -option-name _arw_setting_name_ -option-value _arw_setting_value_`
+. 要显示选定的当前ARP快照设置、请输入：
+`vserver options -vserver <svm_name> -option-name <arw_setting_name>`
+. 要修改ARP快照设置、请输入：
+`vserver options -vserver <svm_name> -option-name <arw_setting_name> -option-value <arw_setting_value>`
 +
 以下设置可修改：
 
@@ -42,48 +42,40 @@ NOTE: 。 `vserver options` command是一个隐藏命令。要查看手册页、
 
 
 | `arw.snap.max.count`  a| 
-指定在任何给定时间卷中可以存在的最大ARP Snapshot副本数。系统会删除较早的副本、以确保ARP Snapshot副本总数不超过此指定限制。
-。 `-option-value` 参数接受3到8之间的整数(含3到8)。默认值为6。
+指定在任何给定时间卷中可以存在的最大ARP快照数。系统会删除较早的副本、以确保ARP快照总数不超过此指定限制。 `-option-value`参数接受3到8之间的整数(含3到8)。默认值为6。
 
 
 
 | `arw.snap.create.interval.hours`  a| 
-指定两个ARP Snapshot副本之间的间隔_in Hours_。如果怀疑发生了基于数据熵的攻击、并且最近创建的ARP Snapshot副本早于指定的时间间隔、则会创建一个新的ARP Snapshot副本。
-。 `-option-value` 参数接受1到48之间的整数(包括1和48)。默认值为4。
+指定两次ARP快照之间的间隔以小时为单位。如果怀疑发生了基于数据熵的攻击、而最近创建的ARP快照早于指定的时间间隔、则会创建一个新的ARP快照。 `-option-value`参数接受1到48之间的整数(包括1和48)。默认值为4。
 
 
 
 | `arw.snap.normal.retain.interval.hours`  a| 
-指定保留ARP Snapshot副本的持续时间_以小时为单位_。当ARP Snapshot副本达到保留阈值时、删除之前创建的任何其他ARP Snapshot副本。保留阈值之前的ARP Snapshot副本不能超过一个。
-。 `-option-value` 参数接受4到96之间的整数(含4和96)。默认值为48。
+指定保留ARP快照的持续时间_以小时为单位_。当ARP快照达到保留阈值时、删除之前创建的任何其他ARP快照副本。保留阈值之前的ARP快照不能超过一个。 `-option-value`参数接受4到96之间的整数(含4和96)。默认值为48。
 
 
 
 | `arw.snap.max.retain.interval.days`  a| 
-指定可以保留ARP Snapshot副本的最长持续时间(以天为单位)。如果卷上未报告攻击、则会删除早于此持续时间的任何ARP Snapshot副本。
+指定可以保留ARP快照的最长持续时间_in days_。如果卷上未报告攻击、则会删除早于此持续时间的任何ARP快照。
 
 
-NOTE: 如果检测到中等威胁、则会忽略ARP Snapshot副本的最大保留间隔。为响应威胁而创建的ARP Snapshot副本将保留、直到您对威胁做出响应为止。将威胁标记为误报删除卷上的ARP Snapshot副本。
-。 `-option-value` 参数接受1到365之间的整数(包括1和365)。默认值为5。
+NOTE: 如果检测到中等威胁、则会忽略ARP快照的最大保留间隔。为响应威胁而创建的ARP快照将保留、直到您对威胁做出响应为止。将威胁标记为误报后、ONTAP将删除卷的ARP快照。 `-option-value`参数接受1到365之间的整数(包括1和365)。默认值为5。
 
 
 
 | `arw.snap.create.interval.hours.post.max.count`  a| 
-指定卷已包含最大ARP Snapshot副本数时两个ARP Snapshot副本之间的间隔_in Hours_。达到最大数量后、将删除ARP Snapshot副本、以便为新副本腾出空间。可以使用此选项降低新的ARP Snapshot副本创建速度、以保留旧副本。如果卷中的ARP Snapshot副本数已达到上限、则下次创建ARP Snapshot副本时将使用此选项中指定的间隔、而不是 `arw.snap.create.interval.hours`。
-。 `-option-value` 参数接受4到48之间的整数(含4和48)。默认值为8。
+指定卷已包含最大ARP快照数时两次ARP快照之间的间隔_in Hours_。达到最大数量后、系统将删除ARP快照、以便为新副本腾出空间。使用此选项可以降低新ARP快照创建速度、以保留旧副本。如果卷已包含最大数量的ARP快照，则下次创建ARP快照时将使用此选项中指定的时间间隔，而不是 `arw.snap.create.interval.hours`。 `-option-value`参数接受4到48之间的整数(含4和48)。默认值为8。
 
 
 
 | `arw.surge.snap.interval.days`  a| 
-指定为响应IO激增而创建的ARP Snapshot副本之间的间隔_天_。如果IO流量激增、而上次创建的ARP Snapshot副本早于此指定间隔、则ONTAP会创建一个ARP Snapshot激增副本。此选项还会为ARP激增的Snapshot副本指定保留期限_in day_。
-。 `-option-value` 参数接受1到365之间的整数(包括1和365)。默认值为5。
+指定为响应IO激增而创建的ARP快照之间的间隔_天_。如果IO流量激增、而上次创建的ARP快照早于此指定间隔、则ONTAP会创建一个ARP快照激增副本。此选项还指定ARP激增快照的保留期限_in day_。 `-option-value`参数接受1到365之间的整数(包括1和365)。默认值为5。
 
 
 
 | `arw.snap.new.extns.interval.hours`  a| 
-此选项用于指定检测到新文件扩展名时创建ARP Snapshot副本的间隔_in Hours_。创建新的ARP Snapshot副本的时间
-系统会观察到新的文件扩展名；在观察到新文件扩展名后创建的上一个Snapshot早于此指定间隔。对于频繁创建新文件扩展名的工作负载、此间隔有助于控制ARP Snapshot副本的频率。此选项独立于而存在 `arw.snap.create.interval.hours`，用于指定基于数据熵的ARP Snapshot副本的间隔。
-。 `-option-value` 参数接受24到8760之间的整数。默认值为48。
+此选项指定检测到新文件扩展名时创建ARP快照的间隔以小时为单位。在观察到新的文件扩展名时、将创建一个新的ARP快照；观察到新的文件扩展名时创建的上一个快照早于此指定的时间间隔。对于频繁创建新文件扩展名的工作负载、此间隔有助于控制ARP快照的频率。此选项独立于 `arw.snap.create.interval.hours`，后者指定基于数据熵的ARP快照的间隔。 `-option-value`参数接受24到8760之间的整数。默认值为48。
 
 |===
 

@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: authentication/oauth2-as-servers.html 
-keywords: oauth 2.0, oauth2, access token, grant type, jwt 
+keywords: oauth 2.0, oauth2, authorization servers, features, access tokens, grant types, jwt 
 summary: 授权服务器作为OAuth2.0授权框架中的一个中央组件执行多项重要功能。 
 ---
 = 授权服务器和访问令牌
@@ -70,6 +70,33 @@ ONTAP可能受防火墙保护。在这种情况下、您需要在配置中标识
 
 .授权服务器的数量
 一个ONTAP集群最多可以定义八个授权服务器。只要颁发者或颁发者/受众声明是唯一的、同一授权服务器就可以多次定义到同一ONTAP集群。例如、使用Keyloak时、使用不同领域时始终会出现这种情况。
+
+
+
+== ONTAP中支持的OAuth2.0功能
+
+OAuth.14.1最初提供对ONTAP 9 2.0的支持、之后的版本将继续增强支持。下面介绍了ONTAP支持的OAuth2.0功能。
+
+
+NOTE: 特定ONTAP版本引入的功能将延续到未来版本。
+
+
+
+=== ONTAP 9.16.1.
+
+OAuth.161扩展了标准ONTAP 9 2.0功能、为本机的Entra ID组提供了特定于Entra ID的扩展。这涉及到在访问令牌中使用GUID而不是名称。此外、此版本还增加了对外部角色映射的支持、可使用访问令牌中的"Roles"字段将本机身份提供程序角色映射到ONTAP角色。
+
+
+
+=== ONTAP 9.14.1
+
+从Oauth.14.1开始、使用的应用程序可通过以下标准ONTAP 9 2.0功能支持授权服务器：
+
+* 具有标准字段(包括“iss”、“aud”和“exp”)的OAuth2.0，如和 https://www.rfc-editor.org/rfc/rfc7519["RFC 7519：JSON Web令牌(JWT)"^]中所述 https://www.rfc-editor.org/rfc/rfc6749["RFC6749：OAuth2.0授权框架"^]。这还包括支持通过访问令牌中的字段(例如"UPN"、"AppID"、"sub"、"USERNAME"或"PREDY_USERNAME")唯一标识用户。
+* 使用"group"字段的组名称的ADFS供应商专用扩展。
+* 具有"组"字段的组UUID的Azure供应商专用扩展。
+* ONTAP扩展、用于在OAuth2.0访问令牌范围内使用自包含和命名角色提供授权支持。这包括"范围"和"scp"字段以及范围内的组名称。
+
 
 
 

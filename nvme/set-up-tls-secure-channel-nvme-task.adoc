@@ -1,0 +1,64 @@
+---
+permalink: nvme/set-up-tls-secure-channel-nvme-task.html 
+sidebar: sidebar 
+keywords: manage, nvme, secure, encryption, in-flight, tls secure channel, tcp, tls, encrypt, enable, set up 
+summary: 从tls.16.1开始、您可以为NVMe/TCP连接启用和禁用ONTAP 9安全通道。 
+---
+= 为NVMe/TCP设置TLS安全通道
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从tls.16.1开始、您可以为NVMe/TCP连接配置ONTAP 9安全通道。您可以使用System Manager或ONTAP命令行界面添加启用了TLS的新NVMe子系统、或者为现有NVMe子系统启用TLS。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+从NVMe.161开始、您可以在创建或更新子系统、创建或克隆命名时间或使用新的NVMe/TCP命名时间添加一致性组时使用ONTAP 9为NVMe/TCP连接配置TLS。
+
+.步骤
+. 在System Manager中、单击*主机> NVMe子系统*、然后单击*添加*。
+. 添加NVMe子系统名称、然后选择Storage VM和主机操作系统。
+. 输入主机NQN。
+. 选择主机NQN旁边的*需要传输层安全(TLS)*。
+. 提供预共享密钥(PSK)。
+. 单击 * 保存 * 。
+. 要验证是否已启用TLS安全通道、请选择*系统管理器>主机> NVMe子系统>网格> Peek View*。
+
+
+--
+.命令行界面
+--
+.步骤
+. 添加支持TLS安全通道的NVMe子系统主机。您可以使用参数提供预共享密钥(PSK)、也可以使用参数使用生成的 `tls-generated-psk`PSK `tls-configured-psk`：
++
+[source, cli]
+----
+vserver nvme subsystem host add -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> {-tls-configured-psk <key_text> | -tls-generated-psk true}
+----
+. 验证是否已为NVMe子系统主机配置TLS安全通道。您可以选择使用 `tls-key-type`参数仅显示正在使用该密钥类型的主机：
++
+[source, cli]
+----
+vserver nvme subsystem host show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured|generated}
+----
+. 验证是否已为NVMe子系统主机控制器配置TLS安全通道。您可以选择使用任何 `tls-key-type`、 `tls-identity`或 `tls-cipher`参数仅显示具有这些TLS属性的控制器：
++
+[source, cli]
+----
+vserver nvme subsystem controller show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured|generated} -tls-identity <text> -tls-cipher {none|TLS_AES_128_GCM_SHA256|TLS_AES_256_GCM_SHA384}
+----
+
+
+--
+====
+.了解更多信息。
+有关这些命令、请访问ONTAP手册页：
+
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-add.html["SVM NVMe子系统主机添加"^]
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-show.html["vserver nvme subsystem host show"^]
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-controller-show.html["vserver nvme subsystem controller show"^]
+

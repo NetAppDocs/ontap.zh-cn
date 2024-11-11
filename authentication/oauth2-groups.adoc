@@ -1,0 +1,190 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-groups.html 
+keywords: oauth 2.0, oauth2, identity mapping, group uuid, group name, group mapping, external roles, role mapping 
+summary: ONTAP提供了多个选项、用于根据授权服务器配置组。然后、可以将这些组映射到ONTAP用来确定访问权限的角色。 
+---
+= 使用组
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+ONTAP提供了多个选项、用于根据授权服务器配置组。然后、可以将这些组映射到ONTAP用来确定访问权限的角色。
+
+
+
+== 如何标识组
+
+在授权服务器上配置组时、该组将使用名称或UUID在OAuth2.0访问令牌中进行标识和承载。在配置ONTAP之前、您需要了解授权服务器如何处理组。
+
+
+NOTE: 如果一个访问令牌中包含多个组、则ONTAP将尝试使用每个组、直到找到匹配项为止。
+
+
+
+=== 组名称
+
+许多授权服务器使用名称来标识和表示组。下面是由包含多个组的Active Directory联合身份验证服务(Active Directory Federation Service、ADFS)生成的JSON访问令牌的一个片段。有关详细信息、请参见 <<管理具有名称的组>> 。
+
+[listing]
+----
+  ...
+  "sub": "User1_TestDev@NICAD5.COM",
+  "group": [
+    "NICAD5\\Domain Users",
+    "NICAD5\\Development Group",
+    "NICAD5\\Production Group"
+  ],
+  "apptype": "Confidential",
+  "appid": "3bff3b2b-8e40-44ba-7c11-d73c3b76e3e8",
+  ...
+----
+
+
+=== 组UUID
+
+某些授权服务器使用UUID来标识和表示组。下面是由Microsoft Entra ID生成的JSON访问令牌的一个片段、其中包含多个组。有关详细信息、请参见 <<管理具有UID的组>> 。
+
+[listing]
+----
+  ...
+  "appid": "4aff4b4b-8e40-44ba-7c11-d73c3b76e3d7",
+  "appidacr": "1",
+  "groups": [
+    "8ea4c5b0-bcad-4e66-8f1e-cd395474a448",
+    "a8558fc2-a1b2-4cb7-cc41-59bd831840cc"],
+  "name": "admin007 with group membership",
+  ...
+----
+
+
+== 管理具有名称的组
+
+如果授权服务器使用名称来标识组、则需要确保将每个组定义为ONTAP。根据您的安全环境、您可能已经定义了组。
+
+下面是一个命令行界面命令示例、用于将组定义为ONTAP。请注意、它使用的是样本访问令牌中的命名组。要发出此命令，您需要处于ONTAP *admin*权限级别。
+
+.示例
+[listing]
+----
+security login create -user-or-group-name "NICAD5\\Domain Users" -application http -authentication-method domain -role admin
+----
+
+NOTE: 您也可以使用ONTAP REST API配置此功能。有关详细信息、请参见 https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自动化"^] 。
+
+
+
+== 管理具有UID的组
+
+如果授权服务器使用UUID值表示组、则在使用组之前、您需要执行两步配置。从Microsoft.161开始、提供了两个映射功能、并已通过ONTAP 9 ID测试。要发出命令行界面命令，您需要处于ONTAP *admin*权限级别。
+
+
+NOTE: 您也可以使用ONTAP REST API配置这些功能。有关详细信息、请参见 https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自动化"^]文档站点。
+
+.相关信息
+* https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令行界面命令"^]
+
+
+
+
+=== 将组UUID映射到组名称
+
+如果您使用的授权服务器使用UUID值表示组、则需要将组UUID映射到组名称。下面介绍了主要的ONTAP命令行界面操作。
+
+
+
+==== 创建
+
+您可以使用命令定义新的组映射配置 `security login group create`。组UUID和名称应与授权服务器上的配置匹配。
+
+.Parameters
+下面介绍了用于创建组映射的参数。
+
+[cols="30,70"]
+|===
+| 参数 | Description 
+
+
+| `vserver` | (可选)指定与组关联的SVM (SVM)的名称。如果省略此参数、则该组将与ONTAP集群关联。 
+
+
+| `name` | ONTAP将使用的组的唯一名称。 
+
+
+| `type` | 此值表示组的来源标识提供程序。 
+
+
+| `uuid` | 指定授权服务器提供的组的通用唯一标识符。 
+|===
+下面是一个命令行界面命令示例、用于将组定义为ONTAP。请注意、它使用的是示例访问令牌中的UUID组。
+
+.示例
+[listing]
+----
+security login group create -vserver ontap-cls-1 -name IAM_Dev -type entra -uuid 8ea4c5b0-bcad-4e66-8f1e-cd395474a448
+----
+创建组后、将为该组生成唯一的只读整数标识符。
+
+
+
+==== 其他CLI操作
+
+命令支持多项附加操作、包括：
+
+* 显示
+* 修改
+* 删除
+
+
+您可以使用 `show`选项检索为组生成的唯一组ID。有关详细信息、请参见ONTAP命令参考文档。
+
+
+
+=== 将组UUID映射到角色
+
+如果您使用的授权服务器使用UUID值表示组、则可以将组映射到角色。下面介绍了主要的ONTAP命令行界面操作。此外，您需要处于ONTAP *admin*权限级别才能发出命令。
+
+
+NOTE: 您需要首先<<将组UUID映射到组名称>>检索为组生成的唯一整数ID。您需要ID才能将组映射到角色。
+
+
+
+==== 创建
+
+您可以使用命令定义新角色映射 `security login group role-mapping create`。
+
+.Parameters
+下面介绍了用于将组映射到角色的参数。
+
+[cols="30,70"]
+|===
+| 参数 | Description 
+
+
+| `group-id` | 使用命令指定为组生成的唯一ID `security login group create`。 
+
+
+| `role` | 组映射到的ONTAP角色的名称。 
+|===
+.示例
+[listing]
+----
+security login group role-mapping create -group-id 1 -role admin
+----
+
+
+==== 其他CLI操作
+
+命令支持多项附加操作、包括：
+
+* 显示
+* 修改
+* 删除
+
+
+有关详细信息、请参见ONTAP命令参考文档。

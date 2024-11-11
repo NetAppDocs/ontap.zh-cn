@@ -1,0 +1,123 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/arp-ai-automatic-updates.html 
+keywords: ransomware, arp, automatic, ai, update, upgrade, autonomous ransomware protection 
+summary: 通过自动或手动更新安全捆绑包、保持最新的ARP/AI保护、抵御勒索软件威胁。 
+---
+= 使用AI更新自主防兰软件保护(ARP/AI)
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+为了及时防范最新的勒索软件威胁、ARP/AI提供了常规ONTAP版本周期之外的自动更新。
+
+从System Manager.161开始、除了系统和固件更新之外、还可以从ONTAP 9软件下载中获取ARP/AI的安全更新。如果您的ONTAP集群已注册link:../update/enable-automatic-updates-task.html["自动更新系统和固件"]，当ARP/AI安全更新可用时，您将自动收到通知。您还可以进行更改<<选择ARP/AI的更新首选项,更新首选项>>、以便ONTAP自动安装安全更新。
+
+如果需要<<使用最新的安全软件包手动更新ARP/AI,手动更新ARP/AI>>，您可以从NetApp支持站点下载更新并使用System Manager进行安装。
+
+
+IMPORTANT: ARP/AI功能目前仅支持NAS。尽管自动更新功能会显示可在System Manager中部署的新安全文件的可用性、但这些更新仅适用于NAS工作负载保护。
+
+.关于此任务
+对于ONTAP 9。16.1及更高版本、您只能使用System Manager更新ARP/AI。
+
+
+
+== 选择ARP/AI的更新首选项
+
+在System Manager中、如果您已注册自动固件和系统更新、则为安全文件启用自动更新页面上的设置将设置为 `Show notifications`。如果您希望ONTAP自动应用最新更新、则可以将更新设置更改为 `Automatically update`。如果您使用非公开站点或希望手动执行更新、则可以选择显示通知或自动取消安全更新。
+
+.开始之前
+对于自动安全更新， https://docs.netapp.com/us-en/ontap/system-admin/setup-autosupport-task.html["应启用AutoSupport和AutoSupport OnDemand、并将传输协议设置为HTTPS"]。
+
+.步骤
+. 在System Manager中、单击*集群>设置>软件更新*。
+. 在*软件更新*部分中，选择image:icon_arrow.gif["箭头图标"]。
+. 从*软件更新*页面中，选择*所有其他更新*选项卡。
+. 选择*所有其他更新*选项卡，然后单击*更多*。
+. 选择*编辑自动更新设置*。
+. 从“自动更新设置”页面中，选择*安全文件*。
+. 指定要对安全文件执行的操作(ARP/AI更新)。
++
+您可以选择自动更新、显示通知或自动取消更新。
+
++
+
+NOTE: 要使安全更新自动更新、应启用AutoSupport和AutoSupport OnDemand、并将传输协议设置为HTTPS。
+
+. 接受条款和条件并选择*保存*。
+
+
+
+
+== 使用最新的安全软件包手动更新ARP/AI
+
+根据您是否已向Active IQ Unified Manager注册、按照相应的过程进行操作。
+
+
+NOTE: 请确保仅安装比当前版本更新的ARP更新、以避免意外的ARP降级。
+
+[role="tabbed-block"]
+====
+.采用ONTAP 9的数字顾问.161及更高版本
+--
+.步骤
+. 在System Manager中，转至*"DardManager*(仪表板*)"。
++
+在*Health*部分中，如果有任何建议的集群安全更新，则会显示一条消息。
+
+. 单击警报消息。
+. 在建议更新列表中的安全更新旁边，选择*Actions*。
+. 单击*Update*立即安装更新，或单击*Schedule *安排以后安装。
++
+如果已计划更新，您可以*编辑*或*取消*更新。
+
+
+
+--
+.不带ONTAP 9的数字顾问.16.1及更高版本
+--
+.步骤
+. 导航到 link:https://mysupport.netapp.com/site/downloads["NetApp 支持站点"^] 并登录。
+. 选择要用于更新集群ARP/AI的安全软件包。
+. 将文件复制到网络上的HTTP或FTP服务器、或者复制到集群可使用ARP/AI访问的本地文件夹。
+. 在System Manager中、单击*集群>设置>软件更新*。
+. 在*软件更新*中，选择*所有其他更新*选项卡。
+. 在*手动更新*窗格中，单击*添加安全文件*并使用以下首选项之一添加文件：
++
+** *从服务器下载*：输入安全文件包的URL。
+** *从本地客户端上传*：导航到下载的TGZ文件。
++
+
+IMPORTANT: 确保文件名以开头、并 `.tgz`作为文件扩展名 `ontap_security_file_arpai_`。
+
+
+
+. 单击*Add*以应用更新。
+
+
+--
+====
+
+
+== 验证ARP/AI更新
+
+要查看已取消或无法安装的自动更新的历史记录、请执行以下操作：
+
+. 在System Manager中、单击*集群>设置>软件更新*。
+. 在*软件更新*部分中，选择image:icon_arrow.gif["箭头图标"]。
+. 从“*软件更新*”页面中，选择“*所有其他更新*”选项卡，然后单击“更多*”。
+. 选择*查看所有自动更新*。
+
+
+.相关信息
+* link:enable-arp-ai-with-au.html["启用ARP/AI"]
+* https://mysupport.netapp.com/site/user/email-subscription["通过电子邮件订阅软件更新"^]
+

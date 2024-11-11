@@ -1,0 +1,39 @@
+---
+permalink: revert/task-disable-tls-nvme-host.html 
+sidebar: sidebar 
+keywords: ontap, revert, reversion, reverting, tls, nvme, host, controller, subsystem, tls secure channel 
+summary: 在还原到不支持对NVMe主机使用TLS的早期ONTAP版本之前、您需要在NVMe主机上禁用TLS。 
+---
+= 还原之前、请在NVMe主机上禁用TLS安全通道
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从tls.16.1开始、您可以为NVMe/TCP连接配置ONTAP 9安全通道。如果您在NVMe.161或更高版本中为NVMe/TCP连接配置了安全通道、则需要先在ONTAP 9主机上禁用配置、然后才能将ONTAP还原到不支持NVMe/TCP安全通道的版本。
+
+.步骤
+. 从主机中删除TLS安全通道配置：
++
+[source, cli]
+----
+vserver nvme subsystem host unconfigure-tls-for-revert -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn>
+----
++
+此命令将从子系统中删除此主机、然后在子系统中重新创建此主机、而不使用TLS配置。
+
+. 验证是否已从主机中删除TLS安全通道：
++
+[source, cli]
+----
+vserver nvme subsystem host show
+----
+
+
+.了解更多信息。
+有关这些命令、请访问ONTAP手册页：
+
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-unconfigure-tls-for-revert.html["Vserver NVMe子系统host unconfigure-tls-for -还原"^]
+* https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-show.html["vserver nvme subsystem host show"^]
+

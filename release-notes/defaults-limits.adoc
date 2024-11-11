@@ -24,6 +24,12 @@ summary: 了解对ONTAP 9.x限制和默认值所做的更改。
 | 功能 | 默认更改 | 在版本…中进行了更改 
 
 
+| NAS审核 | 和 `file-session-io-grouping-duration`参数的最大限制 `file-session-io-grouping-count`已增加、因此您可以选择更少、更整合的NAS审核事件通知。这有利于IO速率较高的SVM、减少了对目标卷的存储影响。NFS_file_sSession_io_grouping_COUNT_MAX：20000到120000 NFS_file_sSession_io_grouping_DORG_MAX：600到3600 | ONTAP 9.16.1. 
+
+
+| FAS系统的每个节点的最大卷数 | 对于每个控制器的RAM超过200 GB的FAS系统、每个节点支持的最大卷数从1000增加到2500。在早期版本的ONTAP中、要将ONTAP FAS系统支持从每个节点1000个卷增加到2500个卷、需要一个link:../data-protection/dpo-systems-feature-enhancements-reference.html["数据保护优化(DPO)"]许可证。 | ONTAP 9.16.1. 
+
+
 | `vserver object-store-server user show` 命令 | 在ONTAP 9.15.1之前的版本中、 `vserver object-store-server user show` 命令将返回S3用户的机密密钥。此命令将不再返回S3用户的机密密钥数据。 | ONTAP 9.15.1. 
 
 
@@ -56,6 +62,9 @@ summary: 了解对ONTAP 9.x限制和默认值所做的更改。
 [cols="25%,50%,25%"]
 |===
 | 功能 | 限制更改 | 在版本…中进行了更改 
+
+
+| qtree扩展性能监控 | 您可以为一个ONTAP集群中的最多50、000个qtrees启用扩展性能监控。 | ONTAP 9.16.1. 
 
 
 | SnapMirror活动同步 | SnapMirror主动同步支持一致性组中的80个卷 | ONTAP 9.15.1. 

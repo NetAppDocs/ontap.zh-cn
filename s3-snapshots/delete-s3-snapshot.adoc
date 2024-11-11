@@ -1,0 +1,67 @@
+---
+sidebar: sidebar 
+permalink: s3-snapshots/delete-s3-snapshot.html 
+keywords: s3 snapshots, delete S3 snapshots 
+summary: 您可以删除不再需要的S3快照、并释放存储分段中的存储空间。 
+---
+= 删除S3快照
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以删除不再需要的S3快照、并释放存储分段中的存储空间。您可以手动删除S3快照、也可以修改附加到S3存储分段的快照策略、以更改计划要保留的快照数量。
+
+S3存储分段的Snapshot策略与传统ONTAP Snapshot策略遵循相同的删除规则。有关创建快照策略的详细信息，请参见link:../data-protection/create-snapshot-policy-task.html["创建快照策略"]。
+
+.关于此任务
+* 如果在多个快照中捕获对象版本(位于版本控制分段中)或对象(位于非版本控制分段中)、则只有在删除保护对象的最后一个快照后、才会从文件系统中删除该对象。
+* 如果需要删除包含具有快照的对象的S3存储分段、请确保已删除该存储分段中所有对象的所有快照。
+* 如果您需要将集群还原到ONTAP 9 16.1之前的ONTAP版本、请确保已删除所有存储分段的所有S3快照。您可能还需要运行 `vserver object-store-server bucket clear-snapshot-metadata`命令来删除S3存储分段的快照元数据。有关信息，请参见 link:../s3-snapshots/delete-s3-snapshot.html#clear-s3-snapshots-metadata["清除S3快照元数据"]。
+* 批量删除快照时、您可以删除多个快照中捕获的大量对象、从而有效地释放比单个快照删除所能释放的空间更多的空间。因此、您可以为存储对象回收更多空间。
+
+
+.步骤
+. 要删除特定S3快照、请运行以下命令：
++
+[listing]
+----
+vserver object-store-server bucket snapshot delete -vserver <svm_name> -bucket <bucket_name> -snapshot <snapshot_name>
+----
+. 要删除存储分段中的所有S3快照、请运行以下命令：
++
+[listing]
+----
+vserver object-store-server bucket snapshot delete -vserver <svm_name> -bucket <bucket_name> -snapshot *
+----
+
+
+
+
+== 清除S3快照元数据
+
+对于S3快照、还会在一个存储分段中生成快照元数据。即使从存储分段中删除了所有快照、快照元数据也会继续位于存储分段中。如果存在Snapshot元数据、则会阻止以下操作：
+
+* 集群还原到ONTAP 9版本16.1之前的ONTAP版本
+* 在存储分段上配置S3 SnapMirror
+
+
+在执行这些操作之前、您应清除存储分段中的所有Snapshot元数据。
+
+.开始之前
+在开始清除元数据之前、请确保已从存储分段中删除所有S3快照。
+
+.步骤
+. 要从存储分段中清除快照元数据、请运行以下命令：
+
+
+[listing]
+----
+vserver object-store-server bucket clear-snapshot-metadata -vserver <svm_name> -bucket <bucket_name>
+----

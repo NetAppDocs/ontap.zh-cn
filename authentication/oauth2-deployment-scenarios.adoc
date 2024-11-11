@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: authentication/oauth2-deployment-scenarios.html 
 keywords: oauth 2.0, deployment, configuration, parameters, local validation, remote introspection 
-summary: 在为ONTAP定义授权服务器时、可以使用多个配置选项。根据这些选项、您可以创建适合您的部署环境的授权服务器。 
+summary: 在为ONTAP定义授权服务器时、可以使用多个配置选项。根据这些选项、您可以使用多种部署方案之一定义适合您环境的授权服务器。 
 ---
 = OAuth2.0部署方案
 :hardbreaks:
@@ -14,7 +14,7 @@ summary: 在为ONTAP定义授权服务器时、可以使用多个配置选项。
 
 
 [role="lead"]
-在为ONTAP定义授权服务器时、可以使用多个配置选项。根据这些选项、您可以创建适合您的部署环境的授权服务器。
+在为ONTAP定义授权服务器时、可以使用多个配置选项。根据这些选项、您可以使用多种部署方案之一定义适合您环境的授权服务器。
 
 
 
@@ -22,7 +22,8 @@ summary: 在为ONTAP定义授权服务器时、可以使用多个配置选项。
 
 在为ONTAP定义授权服务器时、可以使用多个配置参数。通常、所有管理界面都支持这些参数。
 
-根据ONTAP管理界面的不同、参数名称可能略有不同。例如、在配置远程自省时、可以使用命令行界面命令参数来标识端点 `-introspection-endpoint`。但对于System Manager、等效字段为_Authorizationserver令牌自省URI_。为了支持所有ONTAP管理界面、提供了参数的常规问题描述。根据上下文、确切的参数或字段应显而易见。
+
+NOTE: 单个参数或字段使用的名称可能会因ONTAP管理界面而异。为了适应管理界面之间的差异、表中的每个参数都使用一个通用名称。根据上下文、用于特定接口的确切名称应该是显而易见的。
 
 [cols="25,75"]
 |===
@@ -56,7 +57,10 @@ summary: 在为ONTAP定义授权服务器时、可以使用多个配置选项。
 | 使用本地角色(如果存在) | 一个布尔值标志、用于确定是否使用本地ONTAP定义、包括已命名的REST角色和本地用户。 
 
 
-| 删除用户声明 | ONTAP用于匹配本地用户的备用名称。使用 `sub` 字段以匹配本地用户名。 
+| 远程用户声明 | ONTAP用于匹配本地用户的备用名称。使用 `sub` 字段以匹配本地用户名。 
+
+
+| audience | 此字段定义可以使用访问令牌的端点。 
 |===
 
 

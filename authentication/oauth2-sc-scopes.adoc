@@ -1,0 +1,132 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-sc-scopes.html 
+keywords: self-contained scopes, scopes 
+summary: 自包含范围是指访问令牌中包含的字符串。每个角色都是一个完整的自定义角色定义、其中包括ONTAP做出访问决策所需的一切。此范围与ONTAP本身定义的任何REST角色是分开的、并与之不同。 
+---
+= 独立的OAuth2.0范围
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+自包含范围是指访问令牌中包含的字符串。每个角色都是一个完整的自定义角色定义、其中包括ONTAP做出访问决策所需的一切。此范围与ONTAP本身定义的任何REST角色是分开的、并与之不同。
+
+
+
+== 范围字符串的格式
+
+在基本级别、范围表示为连续字符串、由六个冒号分隔值组成。范围字符串中使用的参数如下所述。
+
+
+
+=== ONTAP文字
+
+范围必须以文字值开头 `ontap` 小写。此操作会将范围标识为特定于ONTAP的范围。
+
+
+
+=== 集群
+
+此选项用于定义将哪个ONTAP集群范围设置为适用场景。这些值可以包括：
+
+* 集群UUID
++
+标识单个集群。
+
+* 星号(***)
++
+指示适用场景all集群的范围。
+
+
+
+您可以使用ONTAP命令行界面命令 `cluster identity show` 以显示集群的UUID。如果未指定、则范围为适用场景all集群。
+
+
+
+=== Role
+
+自身作用域中包含的REST角色的名称。ONTAP不会检查此值、也不会将其与定义给ONTAP的任何现有REST角色匹配。此名称用于日志记录。
+
+
+
+=== 访问级别
+
+此值指示在范围中使用API端点时应用于客户端应用程序的访问级别。下表介绍了六个可能的值。
+
+[cols="25,75"]
+|===
+| 访问级别 | Description 
+
+
+| 无 | 拒绝对指定端点的所有访问。 
+
+
+| -readonly | 仅允许使用GET进行读取访问。 
+
+
+| read_create | 允许读取访问以及使用POST创建新资源实例。 
+
+
+| read_modify | 允许读取访问以及使用修补程序更新现有资源的功能。 
+
+
+| read_create_modify | 允许除删除以外的所有访问。允许的操作包括GET (读取)、POST (创建)和patch (更新)。 
+
+
+| 全部 | 允许完全访问。 
+|===
+
+
+=== SVM
+
+集群中SVM的名称(范围为适用场景)。使用***值(星号)表示所有SVM。
+
+
+CAUTION: ONTAP 9.14.1不完全支持此功能。您可以忽略SVM参数并使用星号作为占位符。查看 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 发行说明》"^] 以检查未来是否支持SVM。
+
+
+
+=== REST API URI
+
+指向一个资源或一组相关资源的完整或部分路径。字符串必须以开头 `/api`。如果未指定值、则会将范围限定为适用场景集群中的所有ONTAP端点。
+
+
+
+== 范围示例
+
+以下是一些独立范围的示例。
+
+ONTAP：*：joes-Role：read_cree_Modify：*：/API/cluster:: 为分配了此角色的用户提供对的读取、创建和修改访问权限 `/cluster` 端点。
+
+
+
+
+== CLI管理工具
+
+为了使独立范围的管理更轻松、更不容易出错、ONTAP提供了命令行界面命令 `security oauth2 scope` 根据输入参数生成范围字符串。
+
+命令 `security oauth2 scope` 根据您的输入、有两个用例：
+
+* CLI参数以限定字符串范围
++
+您可以使用此版本的命令根据输入参数生成范围字符串。
+
+* 作用域字符串到CLI参数
++
+您可以使用此版本的命令根据输入范围字符串生成命令参数。
+
+
+
+.示例
+以下示例将生成一个范围字符串、其输出包含在以下命令示例后面。定义适用场景all Clusters。
+
+[listing]
+----
+security oauth2 scope cli-to-scope -role joes-role -access readonly -api /api/cluster
+----
+`ontap:*:joes-role:readonly:*:/api/cluster`

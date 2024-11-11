@@ -1,41 +1,29 @@
 ---
 sidebar: sidebar 
-permalink: networking/configure_ip_security_@ipsec@_over_wire_encryption.html 
-keywords: ipsec, security, internet protocol, on wire, in transit, encrypt, encryption, secure, enable ipsec, security ipsec config show, ipsec config modify, ipsec config show, security ipsec policy create, protocols, local-ports, remote-ports, spd, security policy database,ipsec identities 
-summary: 为了确保数据持续安全和加密，即使在传输期间， ONTAP 也会在传输模式下使用 IPsec 协议 
+permalink: networking/ipsec-configure.html 
+keywords: ip security, ipsec, data-in-motion, in-flight, encryption, security ipsec config show, ipsec config modify, ipsec config show, security ipsec policy create, local-ports, remote-ports, spd, security policy database,ipsec identities 
+summary: 要在ONTAP集群上配置和激活IPsec传输中加密、需要执行多项任务。 
 ---
-= 通过线缆加密配置 IP 安全性（ IP security ， IPsec ）
+= 在ONTAP中配置IP安全性
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
 :icons: font
 :linkattrs: 
-:imagesdir: ./media/
+:imagesdir: ../media/
 
 
 [role="lead"]
-ONTAP在传输模式下使用互联网协议安全性(Internet Protocol Security、IPsec)来确保数据持续安全和加密、即使在传输过程中也是如此。IPsec 为所有 IP 流量提供数据加密，包括 NFS ， iSCSI 和 SMB 协议。
+要在ONTAP集群上配置和激活IPsec传输中加密、需要执行多项任务。
 
-从ONTAP 9.12.1开始、MetroCluster IP和MetroCluster 光纤连接配置支持前端主机协议IPsec。
-MetroCluster 集群中的IPsec支持仅限于前端主机流量、MetroCluster 集群间LIF不支持。
 
-从 ONTAP 9.10.1 开始，您可以使用预共享密钥（ PSK ）或证书通过 IPsec 进行身份验证。以前， IPsec 仅支持 PSK 。
-
-从ONTAP 9.1.1开始、IPsec使用的加密算法已通过FIPS 140-2验证。这些算法由ONTAP 中的NetApp加密模块生成、该模块执行FIPS 140-2验证。
-
-从ONTAP 9.8开始、ONTAP支持在传输模式下使用IPsec。
-
-配置 IPsec 后，客户端和 ONTAP 之间的网络流量将通过预防措施得到保护，以防止重放和中间人（ MIM ）攻击。
-
-对于 NetApp SnapMirror 和集群对等流量加密，仍然建议使用集群对等加密（ Cluster peering encryption ， CPE ）和传输层安全（ Transport Layer Security ， TLS ）而不是通过 IPsec 进行，以便通过线缆进行安全传输。这是因为 TLS 的性能优于 IPsec 。
-
-在集群上启用了 IPsec 功能时，网络需要使用安全策略数据库（ SPD ）条目来匹配要保护的流量，并指定保护详细信息（例如密码套件和身份验证方法），然后才能使流量流动。每个客户端上也需要相应的 SPD 条目。
+NOTE: 请确保在配置IPsec之前进行查看link:../networking/ipsec-prepare.html["准备使用IP安全性"]。例如，您可能需要决定是否使用从IPsec.16.1开始提供的ONTAP 9硬件卸载功能。
 
 
 
 == 在集群上启用 IPsec
 
-您可以在集群上启用 IPsec ，以确保数据持续安全和加密，即使在传输期间也是如此。
+您可以在集群上启用IPsec、以确保数据在传输过程中持续加密和安全。
 
 .步骤
 . 发现是否已启用 IPsec ：
@@ -48,6 +36,9 @@ MetroCluster 集群中的IPsec支持仅限于前端主机流量、MetroCluster �
 . 启用 IPsec ：
 +
 `security ipsec config modify -is-enabled true`
+
++
+可以使用布尔参数启用IPsec硬件卸载功能 `is-offload-enabled`。
 
 . 再次运行 discovery 命令：
 +
@@ -91,7 +82,7 @@ NOTE: ONTAP LIF 可以共享证书。不需要在证书和 LIF 之间进行一�
 
 
 
-有关ONTAP中证书的详细信息，请参见ONTAP 9文档中的security certificates命令。
+有关 ONTAP 中证书的详细信息，请参见 ONTAP 9 文档中的 security certificate 命令。
 
 
 
@@ -117,7 +108,7 @@ NOTE: 客户端必须使用预共享密钥（ psk ）支持 Internet 密钥交�
 ... 如果输入PSK、请包含参数、然后按<enter>显示提示、以输入并验证预共享密钥。
 +
 
-NOTE: `local-identity` 和 `remote-identity` 如果主机和客户端均使用strong、并且未为主机或客户端选择通配符策略、则参数为可选参数。
+NOTE:  `local-identity`如果主机和客户端均使用strong、并且未为主机或客户端选择通配符策略、则和 `remote-identity`参数是可选的。
 
 ... 如果输入PKI、则还需要输入 `cert-name`， `local-identity`， `remote-identity` parameters如果远程端证书标识未知、或者如果需要多个客户端标识、请输入特殊标识 `ANYTHING`。
 
@@ -133,7 +124,7 @@ Enter the preshared key for IPsec Policy _test34_ on Vserver _vs1_:
 ....
 security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168.134.34/32 -remote-ip-subnets 192.168.134.44/32 -local-ports 2049 -protocols tcp -auth-method PKI -cert-name my_nfs_server_cert -local-identity CN=netapp.ipsec.lif1.vs0 -remote-identity ANYTHING
 ....
-只有在ONTAP和客户端都设置了匹配的IPsec策略并且身份验证凭据(PSK或证书)在两端都到位之后、IP流量才能在客户端和服务器之间流动。有关详细信息、请参见客户端IPsec配置。
+只有在ONTAP和客户端都设置了匹配的IPsec策略并且身份验证凭据(PSK或证书)在两端都到位之后、IP流量才能在客户端和服务器之间流动。
 
 
 
@@ -147,7 +138,8 @@ security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168
 在 ONTAP 中，标识是通过修改 SPD 条目或在创建 SPD 策略期间指定的。SPD 可以是 IP 地址或字符串格式的标识名称。
 
 .步骤
-要修改现有SPD标识设置、请使用以下命令：
+. 使用以下命令修改现有SPD标识设置：
+
 
 `security ipsec policy modify`
 
@@ -210,11 +202,12 @@ NOTE: 在子网配置中使用单个策略条目时，该子网中的 IPsec 客�
 
 
 
-== IPsec 统计信息
+== 显示IPsec统计信息
 
-通过协商，可以在 ONTAP SVM IP 地址和客户端 IP 地址之间建立一个称为 "ike 安全关联（ SA ） " 的安全通道。IPsec SAS 安装在两个端点上，用于执行实际的数据加密和解密工作。
+通过协商，可以在 ONTAP SVM IP 地址和客户端 IP 地址之间建立一个称为 "ike 安全关联（ SA ） " 的安全通道。IPsec SAS 安装在两个端点上，用于执行实际的数据加密和解密工作。您可以使用 statistics 命令来检查 IPsec SAS 和 ike SAS 的状态。
 
-您可以使用 statistics 命令来检查 IPsec SAS 和 ike SAS 的状态。
+
+NOTE: 如果使用IPsec硬件卸载功能，则命令会显示几个新计数器 `security ipsec config show-ipsecsa`。
 
 .命令示例
 IKESA 命令示例：

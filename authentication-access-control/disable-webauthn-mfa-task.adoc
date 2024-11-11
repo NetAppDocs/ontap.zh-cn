@@ -1,0 +1,66 @@
+---
+sidebar: sidebar 
+permalink: authentication-access-control/disable-webauthn-mfa-task.html 
+keywords: mfa, multi-factor, authentication, authorization, webauthn, FIDO2, hardware key, disable, system manager 
+summary: 如果已为System Manager用户启用WebAuthn MFA、则可以随时将其禁用。 
+---
+= 为ONTAP System Manager用户禁用WebAuthn MFA
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+作为ONTAP管理员、您可以通过使用System Manager或ONTAP命令行界面编辑用户或组来为用户或组禁用WebAuthn MFA。
+
+
+
+== 为现有用户或组禁用WebAuthn MFA
+
+您可以随时为现有用户或组禁用WebAuthn MFA。
+
+
+NOTE: 如果禁用已注册的凭据、这些凭据将保留下来。如果您将来再次启用这些凭据、则会使用相同的凭据、因此用户无需在登录时重新注册。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*集群>设置*。
+. 选择*用户和角色*旁边的箭头图标。
+. 在用户和组列表中、选择要编辑的用户或组。
+. 在该用户的*MFA for HTTP/*列中，选择*Disabled。
+. 选择 * 保存 * 。
+
+
+--
+.命令行界面
+--
+. 修改现有用户或组以禁用该用户或组的WebAuthn MFA。
++
+在以下示例中、通过为第二种身份验证方法选择"none"来禁用WebAuthn MFA。
+
++
+[source, console]
+----
+security login modify -user-or-group-name <user_or_group_name> \
+                     -authentication-method domain \
+                     -second-authentication-method none \
+                     -application http \
+                     -role admin
+----
+
+
+--
+====
+
+
+== 了解更多信息。
+
+请访问此命令的ONTAP手册页：
+
+* https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["security login修改"^]
+

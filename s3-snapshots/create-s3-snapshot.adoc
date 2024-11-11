@@ -1,0 +1,117 @@
+---
+sidebar: sidebar 
+permalink: s3-snapshots/create-s3-snapshot.html 
+keywords: s3 snapshots, snapshot create 
+summary: 您可以手动生成S3快照、也可以设置快照策略来自动为您创建S3快照。 
+---
+= 创建S3快照
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以手动生成S3快照、也可以设置快照策略来自动为您创建S3快照。快照可作为对象的静态副本、用于数据备份和恢复。要确定快照保留的期限、您可以创建快照策略、以便于按指定间隔自动创建快照。
+
+无论是否启用对象版本控制、S3快照都可以帮助您保护S3存储分段中的对象数据。
+
+
+TIP: 在S3存储分段中未启用对象版本控制时、快照在建立数据保护方面尤其有用、因为它们充当时间点记录、当先前的对象版本不可用时、您可以使用这些记录执行还原操作。
+
+.关于此任务
+* 以下命名规则适用于快照(对于手动快照和自动快照)：
++
+** S3快照名称最多可以包含30个字符
+** S3快照名称只能包含小写字母、数字、点(.)和连字符(-)
+** S3快照名称必须以字母或数字结尾
+** S3快照名称不能包含子字符串 `s3snap`
+
+
+* 在S3协议环境中、存储分段命名限制将存储分段名称限制为63个字符。由于ONTAP S3快照通过S3协议以分段的形式提供、因此、快照分段名称也存在类似的限制。默认情况下、原始存储分段名称用作基本存储分段名称。
+* 为了便于识别哪个快照属于哪个存储分段，快照存储分段名称由基本存储分段名称以及一个特殊字符串组成，该字符串 `-s3snap-`前附在快照名称中。快照分段名称的格式为 `<base_bucket_name>-s3snap-<snapshot_name>`。
++
+例如，运行以下命令在上创建 `snap1`将 `bucket-a`创建一个名为的快照分段 `bucket-a-s3snap-snap1`，如果您有权访问基本分段，则可以通过S3客户端访问该分段。
+
++
+[listing]
+----
+vserver object-store-server bucket snapshot create -bucket bucket-a -snapshot snap1
+----
+* 您不能创建包含超过63个字符的快照分段名称的快照。
+* 自动快照名称包含策略计划名称和时间戳、这与传统卷快照的命名约定类似。例如，计划快照的名称可以是 `daily-2024-01-01-0015`和 `hourly-2024-05-22-1105`。
+
+
+
+
+== 手动创建S3快照
+
+您可以使用ONTAP命令行界面手动创建S3快照。此过程仅在本地集群上创建快照。
+
+.步骤
+. 创建S3快照：
++
+[listing]
+----
+vserver object-store-server bucket snapshot create -vserver <svm_name> -bucket <bucket_name> -snapshot <snapshot_name>
+----
++
+以下示例将在Storage VM和存储 `website-data`分段上 `vs0`创建名为的快照 `pre-update`：
+
++
+[listing]
+----
+vserver object-store-server bucket snapshot create -vserver vs0 -bucket website-data -snapshot pre-update
+----
+
+
+
+
+== 将S3快照策略分配给存储分段
+
+在S3存储分段级别配置快照策略时、ONTAP会自动为您创建计划的S3快照。与传统快照策略一样、最多可以为S3快照配置五个计划。
+
+快照策略通常指定创建快照的计划、要为每个计划保留的副本数以及计划前缀。例如，策略可以在每天中午12：10创建一个S3快照，保留两个最新副本并将其命名为 `daily-<timestamp>`。
+
+默认Snapshot策略会保留：
+
+* 六个每小时快照
+* 两个每日快照
+* 两个每周快照
+
+
+.开始之前
+* 必须先创建Snapshot策略、然后才能将其分配给S3存储分段。
+
+
+
+NOTE: S3快照的策略与其他ONTAP快照策略遵循相同的规则。但是、不能将在任何快照计划中配置了保留期限的快照策略分配给S3存储分段。
+
+有关创建快照策略以自动生成快照的详细信息，请参见link:../data-protection/configure-custom-snapshot-policies-concept.html["配置自定义快照策略概述"]。
+
+.步骤
+. 在存储分段上分配Snapshot策略：
++
+[listing]
+----
+vserver object-store-server bucket create -vserver <svm_name> -bucket <bucket_name> -snapshot-policy <policy_name>
+----
++
+或
+
++
+[listing]
+----
+vserver object-store-server bucket modify -vserver <svm_name> -bucket <bucket_name> -snapshot-policy <policy_name>
+----
+
+
+
+NOTE: 如果需要将集群还原到ONTAP 9版本16.1之前的ONTAP版本，请确保所有分段的值 `snapshot-policy`均设置为 `none`(或 `-`)。
+
+.相关信息
+link:../s3-snapshots/index.html["S3 Snapshot概述"]

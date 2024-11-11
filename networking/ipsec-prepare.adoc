@@ -1,0 +1,138 @@
+---
+sidebar: sidebar 
+permalink: networking/ipsec-prepare.html 
+keywords: ip security, ipsec, data-in-motion, in-flight encryption, ONTAP ipsec evolution, security policy database, spd, hardware offload, nic 
+summary: '从ONTAP 9 IPsec-8开始，您可以选择使用IP安全性(IPsec)来保护网络通信。IPSEC是ONTAP提供的多种移动数据或传输中数据加密选项之一。在生产环境中使用IPsec之前，应准备好配置它。' 
+---
+= 准备使用IP安全性
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9 IPsec-8开始，您可以选择使用IP安全性(IPsec)来保护网络通信。IPSEC是ONTAP提供的多种移动数据或传输中数据加密选项之一。在生产环境中使用IPsec之前，应准备好配置它。
+
+
+
+== ONTAP中的IP安全实施
+
+IPsec是IETF维护的一种Internet标准。它可以为IP级别网络端点之间的流量提供数据加密和完整性以及身份验证。
+
+通过ONTAP、IPsec可保护ONTAP与各种客户端之间的所有IP流量、包括NFS、SMB和iSCSI协议。除了隐私和数据完整性之外、网络流量还可以抵御多种攻击、例如重放攻击和中间人攻击。ONTAP使用IPsec传输模式实现。它利用Internet密钥交换(IKE)协议版本2在ONTAP和使用IPv4或IPv6的客户端之间协商密钥材料。
+
+如果在集群上启用了IPsec功能、则网络需要在ONTAP安全策略数据库(SPD)中有一个或多个与各种流量特征匹配的条目。这些条目映射到处理和发送数据所需的特定保护详细信息(例如密码套件和身份验证方法)。每个客户端还需要相应的SPD条目。
+
+对于某些类型的流量、另一种移动数据加密选项可能更好。例如、对于NetApp SnapMirror和集群对等流量的加密、通常建议使用传输层安全(Transport Layer Security、TLS)协议、而不是IPsec。这是因为在大多数情况下、TLS的性能会更高。
+
+.相关信息
+* https://www.ietf.org/["互联网工程任务小组"^]
+* https://www.rfc-editor.org/info/rfc4301["RFC 4301：《Internet协议的安全架构》"^]
+
+
+
+
+== ONTAP IPsec实施的演变
+
+IPsec. 8首次推出ONTAP 9。执行工作继续不断发展和改进，如下所述。
+
+
+NOTE: 从特定ONTAP版本开始引入某项功能时、除非另有说明、否则后续版本也支持该功能。
+
+.ONTAP 9.16.1.
+加密和完整性检查等多个加密操作可以卸载到受支持的NIC卡。有关详细信息、请参见 <<IPsec硬件卸载功能>> 。
+
+.ONTAP 9.12.1
+MetroCluster IP和MetroCluster光纤连接配置支持IPSec前端主机协议。随MetroCluster集群提供的IPsec支持仅限于前端主机流量、MetroCluster集群间LIS不支持此功能。
+
+.ONTAP 9.10.1
+除了预共享密钥(PSK)之外、证书还可用于IPsec身份验证。在PSM.10.1之前的版本中、仅支持ONTAP 9进行身份验证。
+
+.ONTAP 9.9.1
+IPsec使用的加密算法已通过FIPS 140-2验证。这些算法由ONTAP中的NetApp加密模块处理、该模块执行FIPS 140-2验证。
+
+.ONTAP 9.8
+根据传输模式的实现情况，最初可提供对IPsec的支持。
+
+
+
+== IPsec硬件卸载功能
+
+如果您使用的是NIC.161或更高版本、则可以选择将某些计算密集型操作(例如加密和完整性检查)卸载到存储节点上安装的网络接口控制器(ONTAP 9)卡。使用此硬件卸载选项可以显著提高受IPsec保护的网络流量的性能和吞吐量。
+
+
+
+=== 要求和建议
+
+在使用IPsec硬件卸载功能之前，应考虑几个要求。
+
+.支持的以太网卡
+您只需要在存储节点上安装和使用受支持的以太网卡。ONTAP 9．16．1支持以下以太网卡：
+
+* X50131A (2p、40G/100G/200g/400G以太网控制器CX7)
+* X60243A (4p、10G25G以太网控制器CX7)
+
+
+.集群范围
+IPsec硬件卸载功能是为集群全局配置的。因此、例如、命令 `security ipsec config`将应用于集群中的所有节点。
+
+.一致的配置
+应在集群中的所有节点上安装受支持的NIC卡。如果支持的NIC卡仅在某些节点上可用、而某些IF未托管在支持卸载的NIC上、则在故障转移后、性能可能会显著下降。
+
+.禁用反重放
+您应在ONTAP (默认配置)和IPsec客户端上禁用IPsec反重放保护。如果未禁用、则不支持分段和多路径(冗余路由)。
+
+
+
+=== 限制
+
+在使用IPsec硬件卸载功能之前，应考虑一些限制。
+
+.IPv6
+IPsec硬件卸载功能不支持IP版本6。只有IPsec软件实施才支持IPv6。
+
+.扩展序列号
+硬件卸载功能不支持IPsec扩展序列号。仅使用正常的32位序列号。
+
+.链路聚合
+IPsec硬件卸载功能不支持链路聚合。因此、它不能与通过ONTAP命令行界面上的命令管理的接口或链路聚合组结合使用 `network port ifgrp`。
+
+
+
+=== ONTAP命令行界面中的配置支持
+
+IPsec.161中更新了三个现有命令行界面命令、以支持如下所述的ONTAP 9硬件卸载功能。有关详细信息、另请参见link:../networking/ipsec-configure.html["在ONTAP中配置IP安全性"]。
+
+[cols="40,60"]
+|===
+| ONTAP 命令 | 更新 
+
+
+| `security ipsec config show` | 布尔值参数 `Offload Enabled`显示当前NIC卸载状态。 
+
+
+| `security ipsec config modify` | 参数 `is-offload-enabled`可用于启用或禁用NIC卸载功能。 
+
+
+| `security ipsec config show-ipsecsa` | 添加了四个新计数器、用于显示入站和出站流量(以字节和数据包为单位)。 
+|===
+
+
+=== ONTAP REST API中的配置支持
+
+IPsec.161中更新了两个现有的REST API端点、以支持如下所述的ONTAP 9硬件卸载功能。
+
+[cols="40,60"]
+|===
+| REST端点 | 更新 
+
+
+| `/api/security/ipsec` | 已添加参数、此参数 `offload_enabled`可用于修补方法。 
+
+
+| `/api/security/ipsec/security_association` | 添加了两个新的计数器值、用于跟踪由卸载功能处理的总字节数和数据包数。 
+|===
+要了解有关ONTAP REST API的更多信息， https://docs.netapp.com/us-en/ontap-automation/whats-new.html["ONTAP REST API的新增功能"^]请访问ONTAP自动化文档站点。您还应查看ONTAP https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html["API参考"^]文档以了解有关IPsec端点的详细信息。

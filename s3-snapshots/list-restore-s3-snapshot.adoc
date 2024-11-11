@@ -1,0 +1,100 @@
+---
+sidebar: sidebar 
+permalink: s3-snapshots/list-restore-s3-snapshot.html 
+keywords: s3 snapshots, list, restore, browse S3 snapshots 
+summary: 通过ONTAP S3快照功能、您可以从S3客户端查看、浏览和还原存储分段的S3快照内容。 
+---
+= 查看和还原S3快照
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+通过ONTAP S3快照功能、您可以查看和浏览S3客户端中存储分段的S3快照内容。此外、您还可以从S3快照还原S3客户端上的单个对象、一组对象或整个存储分段。
+
+.开始之前
+要查看、浏览和还原存储分段上的ONTAP S3快照、应事先创建快照、并可通过S3协议客户端访问S3基本存储分段。
+
+
+
+== 列出并查看S3快照
+
+您可以查看S3快照详细信息、对其进行比较并确定错误。使用ONTAP命令行界面、您可以列出在S3存储分段上创建的所有快照。
+
+.步骤
+. 列出S3快照：
++
+[listing]
+----
+vserver object-store-server bucket snapshot show
+----
++
+您可以查看快照名称、Storage VM、分段、创建时间以及 `instance-uuid`为集群上的所有分段创建的S3快照。
+
+. 您还可以指定分段名称、以查看为该特定分段创建的所有S3快照的名称、创建时间和创建时间 `instance-uuid`。
++
+[listing]
+----
+vserver object-store-server bucket snapshot show -vserver <svm_name> -bucket <bucket_name>
+----
+
+
+
+
+== 浏览S3快照内容
+
+如果您发现环境中存在任何故障或问题、可以浏览S3存储分段快照的内容以确定错误。您还可以浏览S3快照以确定要还原的无错误内容。
+
+S3快照会作为快照分段提供给S3客户端。快照分段名称的格式为 `<base_bucket_name>-s3snap-<snapshot_name>`。您可以使用S3 API操作查看Storage VM中的所有Snapshot分段 `ListBuckets`。
+
+S3快照分段会继承基本分段的访问策略、并且仅支持只读操作。如果您有权访问基本存储分段，则还可以对S3快照存储分段执行只读S3 API操作，例如 `HeadObject`、、 `GetObject`、 `GetObjectTagging`、 `ListObjects` `ListObjectVersions` `GetObjectAcl`和 `CopyObject`。
+
+
+NOTE: 只有当S3快照分段是源分段的快照副本时、才支持此 `CopyObject`操作、而不是当它是快照的存储目标时。
+
+有关这些操作的详细信息，请参见link:../s3-config/ontap-s3-supported-actions-reference.html["ONTAP S3 支持的操作"]。
+
+
+
+== 从S3快照还原内容
+
+您可以在S3客户端上执行还原操作、通过将内容从快照分段复制到原始分段或其他分段来恢复单个对象、一组对象或整个分段。您可以浏览快照以确定应复制哪些快照内容。
+
+您可以使用命令还原整个存储分段、带前缀的对象或单个对象 `aws s3 cp`。
+
+.步骤
+. 为基础S3存储分段创建快照。
++
+[listing]
+----
+vserver object-store-server bucket snapshot create -vserver <svm_name> -bucket <base_bucket_name> -snapshot <snapshot_name>
+----
+. 使用快照还原基本分段：
++
+** 还原整个存储分段。使用格式的快照分段名称 `<base_bucket_name>-s3snap-<snapshot_name>`。
++
+[listing]
+----
+aws --endpoint http://<IP> s3 cp s3://<snapshot-bucket-name> s3://<base-bucket>  --recursive
+----
+** 还原目录中带有前缀的对象 `dir1`：
++
+[listing]
+----
+aws --endpoint http://<IP> s3 cp s3://<snapshot-bucket-name>/dir1 s3://<base_bucket_name>/dir1 --recursive
+----
+** 还原名为的单个对象 `web.py`：
++
+[listing]
+----
+aws --endpoint http://<IP> s3 cp s3:// <snapshot-bucket-name>/web.py s3://<base_bucket_name>/web.py
+----
+
+
+

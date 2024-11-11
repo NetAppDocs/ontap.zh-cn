@@ -86,6 +86,14 @@ NOTE: 无法在为进行NAS访问而挂载的卷上建立SnapMirror活动同步�
 
 
 
+== 一致性组支持多管理员验证
+
+从MAV.16.1开始、您可以对一致性组使用多管理员验证(ONTAP 9)、以确保某些操作(例如创建、修改或删除一致性组)只能在指定管理员批准后才能执行。这样可以防止受到威胁的、恶意的或不具有相应权限的管理员对现有配置进行不希望的更改。
+
+link:../multi-admin-verify/index.html["了解更多信息。"]
+
+
+
 == MetroCluster 配置中的一致性组
 
 从ONTAP 9.11.1开始、您可以在MetroCluster 配置中的集群上使用新卷配置一致性组。这些卷在镜像聚合上进行配置。
@@ -109,7 +117,7 @@ NOTE: 建议为镜像聚合至少保留20%的可用空间、以获得最佳存�
 
 == 升级注意事项
 
-升级到ONTAP 9.10.1或更高版本时、使用SnapMirror活动同步(以前称为SnapMirror业务连续性)创建的一致性组 在ONTAP 9.8和9.9.1中、系统会自动升级、并可在System Manager或ONTAP REST API中的*存储>一致性组*下进行管理。有关从ONTAP 9.8或9.9.1升级的详细信息、请参见 link:../snapmirror-active-sync/upgrade-revert-task.html["SnapMirror主动同步升级和还原注意事项"]。
+升级到ONTAP 9．10.1或更高版本时，在System ONTAP 9．8 9.9.1中使用SnapMirror active sync (以前称为SnapMirror业务连续性)创建的一致性组将自动升级，并可在System Manager或ONTAP REST API的*存储>一致性组*下进行管理。有关从ONTAP 9．8或9．1升级link:../snapmirror-active-sync/upgrade-revert-task.html["SnapMirror主动同步升级和还原注意事项"]的详细信息，请参阅。
 
 在REST API中创建的一致性组Snapshot副本可以通过System Manager的一致性组界面和一致性组REST API端点进行管理。从ONTAP 9.14.1开始、还可以使用ONTAP命令行界面管理一致性组快照。
 
@@ -120,66 +128,70 @@ NOTE: 使用ONTAP命令创建的Snapshot副本 `cg-start` `cg-commit`不会被�
 
 == 支持的功能(按版本)
 
-[cols="3,1,1,1,1,1,1"]
+[cols="3,1,1,1,1,1,1,1"]
 |===
-|  | ONTAP 9.15.1. | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
+|  | ONTAP 9.16.1. | ONTAP 9.15.1. | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
 
 
-| 分层一致性组 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+| 分层一致性组 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
 
 
-| 使用Snapshot副本进行本地保护 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+| 使用Snapshot副本进行本地保护 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
 
 
-| SnapMirror活动同步 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+| SnapMirror活动同步 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
 
 
-| 支持 MetroCluster | ✓ | ✓ | ✓ | ✓ | ✓ |  
+| 支持 MetroCluster | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  
 
 
-| 两阶段提交(仅限REST API) | ✓ | ✓ | ✓ | ✓ | ✓ |  
+| 两阶段提交(仅限REST API) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  
 
 
-| 应用程序和组件标记 | ✓ | ✓ | ✓ | ✓ |  |  
+| 应用程序和组件标记 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 克隆一致性组 | ✓ | ✓ | ✓ | ✓ |  |  
+| 克隆一致性组 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 添加和删除卷 | ✓ | ✓ | ✓ | ✓ |  |  
+| 添加和删除卷 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 使用新NAS卷创建CGS | ✓ | ✓ | ✓ | 仅限REST API |  |  
+| 使用新NAS卷创建CGS | ✓ | ✓ | ✓ | ✓ | 仅限REST API |  |  
 
 
-| 使用新NVMe命名卷创建CGS | ✓ | ✓ | ✓ | 仅限REST API |  |  
+| 使用新NVMe命名卷创建CGS | ✓ | ✓ | ✓ | ✓ | 仅限REST API |  |  
 
 
-| 在子一致性组之间移动卷 | ✓ | ✓ | ✓ |  |  |  
+| 在子一致性组之间移动卷 | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| 修改一致性组几何结构 | ✓ | ✓ | ✓ |  |  |  
+| 修改一致性组几何结构 | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| 监控 | ✓ | ✓ | ✓ |  |  |  
+| 监控 | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| SnapMirror异步(仅限单个一致性组) | ✓ | ✓ | ✓ |  |  |  
+| 多管理员验证 | ✓ |  |  |  |  |  |  
 
 
-| SVM灾难恢复(仅限单个一致性组) | ✓ | ✓ |  |  |  |  
+| SnapMirror异步(仅限单个一致性组) | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| CLI支持 | ✓ | ✓ |  |  |  |  
+| SVM灾难恢复(仅限单个一致性组) | ✓ | ✓ | ✓ |  |  |  |  
+
+
+| CLI支持 | ✓ | ✓ | ✓ |  |  |  |  
 |===
 
 
 == 了解有关一致性组的更多信息
 
 video::j0jfXDcdyzE[youtube,width=848,height=480]
-.更多信息
+.相关信息
 * link:https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自动化文档"^]
 * xref:../snapmirror-active-sync/index.html[SnapMirror活动同步]
 * xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror异步灾难恢复基础知识]
 * link:https://docs.netapp.com/us-en/ontap-metrocluster/["MetroCluster 文档"]
+* link:../multi-admin-verify/index.html["多管理员验证"]
 

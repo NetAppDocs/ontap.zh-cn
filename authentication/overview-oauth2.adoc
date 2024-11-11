@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: authentication/overview-oauth2.html 
-keywords: oauth 2.0, oauth2, access token, bearer token, authentication, authorization, mutual tls, mtls, adfs, auth0, oidc 
+keywords: oauth 2.0, oauth2, access token, bearer token, authentication, authorization, mutual tls, mtls, adfs, auth0, oidc, entra id 
 summary: '从ONTAP 9.14开始、您可以选择使用开放授权(OAuth2.0)框架控制对ONTAP集群的访问。您可以使用任何ONTAP管理界面配置此功能、包括ONTAP命令行界面、System Manager和REST API。但是、只有当客户端使用REST API访问ONTAP时、才能应用OAuth2.0授权和访问控制决策。' 
 ---
 = ONTAP OAuth2.0实施概述
@@ -34,13 +34,24 @@ OAuth2.0是行业标准授权框架。它用于使用签名访问令牌限制和
 * 非常适合与REST API结合使用
 
 
-.已通过多个常见授权服务器的测试
-ONTAP实施旨在与任何符合OAuth2.0标准的授权服务器兼容。它已通过以下常见服务器或服务的测试、包括：
+.已通过常见授权服务器的测试
+ONTAP OAuth2.0实施已在基于ONTAP版本的多个常见服务器或服务上进行了测试、如下所示：
 
-* auth0
-* Active Directory联合身份验证服务(ADFS)
-* Keyloak
+* UUUID.161 (支持组ONTAP 9到名称映射和外部角色)：
++
+** Microsoft Entra ID
 
+
+* Oauth.14.1 (支持标准ONTAP 9 2.0功能)
++
+** auth0
+** Active Directory联合身份验证服务(ADFS)
+** Keyloak
+
+
+
+
+有关每个ONTAP版本提供的特性和功能的详细信息、请参见link:../authentication/oauth2-as-servers.html["授权服务器和访问令牌"]。
 
 .支持多个并发授权服务器
 一个ONTAP集群最多可以定义八个授权服务器。这样、您就可以灵活地满足各种安全环境的需求。
@@ -135,6 +146,7 @@ FAPI:: OpenID Foundation的一个工作组、为金融行业提供协议、数�
 
 .产品和服务
 * https://auth0.com["auth0"^]
+* https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id["输入ID"^]
 * https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview["ADFS概述"^]
 * https://www.keycloak.org["Keyloak"^]
 

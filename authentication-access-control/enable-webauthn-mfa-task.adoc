@@ -1,0 +1,112 @@
+---
+sidebar: sidebar 
+permalink: authentication-access-control/enable-webauthn-mfa-task.html 
+keywords: mfa, multi-factor, authentication, authorization, webauthn, FIDO2, hardware key, enable, system manager 
+summary: 您可以为System Manager用户启用WebAuthn MFA。 
+---
+= 为ONTAP System Manager用户或组启用WebAuthn MFA
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+作为ONTAP管理员、您可以通过添加启用了WebAuthn MFA选项的新用户或组或为现有用户或组启用WebAuthn MFA选项来为System Manager用户或组启用WebAuthn MFA。
+
+
+NOTE: 在为用户或组启用WebAuthn MFA作为第二种身份验证方法后、下次登录到System Manager时、系统将要求该用户(或该组中的所有用户)注册硬件FIDO2设备。此注册由用户的本地操作系统处理、通常包括插入安全密钥、创建密钥以及触摸安全密钥(如果支持)。
+
+
+
+== 创建新用户或组时启用WebAuthn MFA
+
+您可以使用System Manager或ONTAP命令行界面创建启用了WebAuthn MFA的新用户或组。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*集群>设置*。
+. 选择*用户和角色*旁边的箭头图标。
+. 在*USERS*下选择*ADD*。
+. 指定用户或组名称，然后在下拉菜单中为*rouser*选择一个角色。
+. 指定用户或组的登录方法和密码。
++
+WebAuthn MFA支持用户使用"password"、"domain"或"nsswitch"登录方法、组使用"domain"或"nsswitch"登录方法。
+
+. 在“* HTTP的MFA”列中，选择“*已启用*”。
+. 选择 * 保存 * 。
+
+
+--
+.命令行界面
+--
+. 创建启用了WebAuthn MFA的新用户或组。
++
+在以下示例中、通过为第二种身份验证方法选择"publickey"来启用WebAuthn MFA：
+
++
+[source, console]
+----
+security login create -user-or-group-name <user_or_group_name> \
+                     -authentication-method domain \
+                     -second-authentication-method publickey \
+                     -application http \
+                     -role admin
+----
+
+
+--
+====
+
+
+== 为现有用户或组启用WebAuthn MFA
+
+您可以为现有用户或组启用WebAuthn MFA。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*集群>设置*。
+. 选择*用户和角色*旁边的箭头图标。
+. 在用户和组列表中、选择要编辑的用户或组的选项菜单。
++
+WebAuthn MFA支持用户使用"password"、"domain"或"nsswitch"登录方法、组使用"domain"或"nsswitch"登录方法。
+
+. 在该用户的*MFA for HTTP/*列中，选择*Enabled"。
+. 选择 * 保存 * 。
+
+
+--
+.命令行界面
+--
+. 修改现有用户或组、以便为该用户或组启用WebAuthn MFA。
++
+在以下示例中、通过为第二种身份验证方法选择"publickey"来启用WebAuthn MFA：
+
++
+[source, console]
+----
+security login modify -user-or-group-name <user_or_group_name> \
+                     -authentication-method domain \
+                     -second-authentication-method publickey \
+                     -application http \
+                     -role admin
+----
+
+
+--
+====
+
+
+== 了解更多信息。
+
+有关这些命令、请访问ONTAP手册页：
+
+* https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["创建安全登录"^]
+* https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["security login修改"^]
+

@@ -1,0 +1,30 @@
+---
+sidebar: sidebar 
+permalink: authentication-access-control/webauthn-mfa-overview.html 
+keywords: mfa, multi-factor, authentication, authorization, webauthn, FIDO2, hardware key 
+summary: 从Webauth.16.1开始、您可以为ONTAP用户启用ONTAP 9。 
+---
+= WebAuthn多因素身份验证概述
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+从ONTAP 9 Manager.16开始、管理员可以为登录到System Manager的用户启用WebAuthn多因素身份验证(MFA)。这样、System Manager就可以使用FIDO2密钥(例如YukiKey)作为第二种身份验证形式进行登录。默认情况下、对于新用户和现有ONTAP用户、WebAuthn MFA处于禁用状态。
+
+对于对第一种身份验证方法使用以下类型的身份验证的用户和组、支持WebAuthn MFA：
+
+* 用户：密码、域或nsswitch
+* 组：domain或nsswitch
+
+
+在为用户启用WebAuthn MFA作为第二种身份验证方法后、系统会要求用户在登录到System Manager时注册硬件身份验证程序。注册后、私钥存储在身份验证程序中、公共密钥存储在ONTAP中。
+
+ONTAP支持每个用户一个WebAuthn凭据。如果用户丢失了身份验证程序并需要更换它、ONTAP管理员需要删除该用户的WebAuthn凭据、以便该用户可以在下次登录时注册新的身份验证程序。
+
+
+NOTE: 启用了WebAuthn MFA作为第二种身份验证方法的用户需要使用FQDN (例如"https://myontap.example.com"[])而不是IP地址(例如"https://192.168.100.200"[])来访问System Manager。对于启用了WebAuthn MFA的用户、使用IP地址登录到System Manager的尝试将被拒绝。

@@ -18,17 +18,33 @@ summary: '您可以将更新后的固件应用于集群中支持的设备、例�
 [role="lead"]
 从ONTAP 9.9.1开始(如果已注册到) link:https://netapp.com/support-and-training/documentation/active-iq-unified-manager["Active IQ Unified Manager"^]中，您可以在System Manager中接收警报，通知您群集上受支持设备(例如磁盘、磁盘架、服务处理器(SP)或基板管理控制器(BMC))的固件更新处于待定状态。
 
-如果您运行的是ONTAP 9.8或未向Active IQ Unified Manager注册、则可以导航到NetApp 支持站点 以下载固件更新。
+如果您运行的是ONTAP 9 8或未向Active IQ Unified Manager注册，请导航至NetApp支持站点下载固件更新。
 
 .开始之前
-要准备平稳地更新固件、您应在更新开始之前重新启动SP或BMC。  您可以使用 `system service-processor reboot-sp -node node_name` 命令以重新启动。
+要准备平稳地更新固件、您应在更新开始之前重新启动SP或BMC。使用 `system service-processor reboot-sp -node node_name`命令重新启动。
 
 .步骤
 如果您已向Active IQ Unified Manager注册、请根据您的ONTAP版本使用相应的操作步骤。
 
 [role="tabbed-block"]
 ====
-.ONTAP 9 9.1及更高版本
+.采用ONTAP 9的数字顾问.161及更高版本
+--
+.步骤
+. 在System Manager中，转至*"DardManager*(仪表板*)"。
++
+在 * 运行状况 * 部分中，如果为集群建议了任何固件更新，则会显示一条消息。
+
+. 单击警报消息。
+. 在建议更新列表中的安全更新旁边，选择*Actions*。
+. 单击*Update*立即安装更新，或单击*Schedule *安排以后安装。
++
+如果已计划更新，您可以*编辑*或*取消*更新。
+
+
+
+--
+.采用ONTAP 9的数字顾问.9.1 9.15.1
 --
 . 在System Manager中，转至*"DardManager*(仪表板*)"。
 +
@@ -77,14 +93,19 @@ summary: '您可以将更新后的固件应用于集群中支持的设备、例�
 . 选择要用于更新集群固件的固件包。
 . 将文件复制到网络上的 HTTP 或 FTP 服务器或本地文件夹。
 . 在 System Manager 中，单击 * 集群 > 概述 * 。
-. 在*Overview*窗格的右角，单击*More (更多 image:icon_kabob.gif["菜单选项图标"] )*并选择ONTAP Update*。
-. 单击 * 固件更新 * 。
+. 在*Overview*窗格的右角，单击*More (更多image:icon_kabob.gif["菜单选项图标"])*并选择ONTAP Update*或*Software updates*(软件更新)(取决于您的版本)。
+. 根据您的ONTAP版本、执行以下操作：
++
+** 对于ONTAP 9．15．1及更早版本，单击*固件更新*。
+** 对于ONTAP 9．16．1及更高版本，单击*所有其它更新*。
+
+
 . 根据您的ONTAP版本、执行以下操作：
 
 
 [cols="2"]
 |===
-| ONTAP 9.8、9.9.1和9.10.0 | ONTAP 9.10.1 及更高版本 
+| ONTAP 9。8、9.9.1、9.10.0 | ONTAP 9.10.1 及更高版本 
 
 
  a| 
@@ -104,4 +125,8 @@ summary: '您可以将更新后的固件应用于集群中支持的设备、例�
 --
 ====
 .完成后
-您可以在 * 固件更新摘要 * 下监控或验证更新。  要查看已取消或安装失败的更新，请单击*群集>设置>自动更新>查看所有自动更新*。
+您可以在 * 固件更新摘要 * 下监控或验证更新。要查看已取消或无法安装的更新、请根据您的ONTAP版本执行以下操作之一：
+
+* 对于ONTAP 9．15．1及更早版本，单击*群集>设置>自动更新>查看所有自动更新*
+* 对于ONTAP 9．16．1及更高版本，单击*群集>设置>软件更新*。在*所有其他更新*窗格的右角，单击*更多*image:icon_kabob.gif["菜单选项图标"]并选择*查看所有自动更新*。
+

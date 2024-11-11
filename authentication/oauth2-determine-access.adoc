@@ -1,0 +1,121 @@
+---
+sidebar: sidebar 
+permalink: authentication/oauth2-determine-access.html 
+keywords: oauth 2.0, oauth2, scopes, groups, roles, users, determine access 
+summary: 要正确设计和实施OAuth2.0、您需要了解ONTAP如何使用您的授权配置来决定客户端的访问。 
+---
+= ONTAP如何确定客户端访问
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+要正确设计和实施OAuth2.0、您需要了解ONTAP如何使用您的授权配置来决定客户端的访问。下面根据ONTAP版本介绍了用于确定访问权限的主要步骤。
+
+
+NOTE: 在ONTAP 9 15.1.中没有重要的OAuth2.0更新。如果您使用的是9.15.1版本、请参阅ONTAP 9。14.1的说明。
+
+.相关信息
+* link:../authentication/oauth2-as-servers.html#oauth-2-0-features-supported-in-ontap["ONTAP中支持的OAuth2.0功能"]
+
+
+
+
+== ONTAP 9.16.1.
+
+OAuth.161扩展了标准ONTAP 9 2.0支持、包括本机Entra ID组的专用于Microsoft Entra ID的扩展以及外部角色映射。
+
+.确定ONTAP 9的客户端访问权限。16.1.
+[%collapsible]
+====
+.第1步：独立的范围
+如果访问令牌包含任何自包含范围、则ONTAP会首先检查这些范围。如果没有独立范围、请转至步骤2。
+
+如果存在一个或多个自包含范围，ONTAP将应用每个范围，直到可以明确地作出*ALLOW或*deny*决定为止。如果做出明确的决定、则处理将结束。
+
+如果ONTAP无法做出明确的访问决定、请继续执行步骤2。
+
+.第2步：检查本地角色标志
+ONTAP会检查布尔参数 `use-local-roles-if-present`。对于定义为ONTAP的每个授权服务器、此标志的值会单独设置。
+
+* 如果值为 `true` 继续执行步骤3。
+* 如果值为 `false` 处理结束、访问被拒绝。
+
+
+.第3步：命名ONTAP REST角色
+如果访问令牌在或 `scp`字段中或作为声明包含一个命名的REST角色 `scope`、则ONTAP将使用该角色来做出访问决策。这始终会导致*ALLOW或*deny*决定和处理结束。
+
+如果没有已命名的REST角色或未找到此角色、请继续执行步骤4。
+
+.第4步：用户
+从访问令牌中提取用户名、并尝试将其与有权访问应用程序"http"的用户进行匹配。系统将根据身份验证方法按以下顺序检查用户：
+
+* password
+* 域(Active Directory)
+* nsswitch (LDAP)
+
+
+如果找到匹配的用户、ONTAP将使用为该用户定义的角色来决定访问权限。这始终会导致*ALLOW或*deny*决定和处理结束。
+
+如果用户不匹配或访问令牌中没有用户名、请继续执行步骤5。
+
+.第5步：组
+如果包含一个或多个组、则会检查格式。如果这些组表示为UIDS、则会搜索内部组映射表。如果存在匹配的组和关联的角色、ONTAP将使用为该组定义的角色来做出访问决策。这始终会导致*ALLOW或*deny*决定和处理结束。有关详细信息，请参阅 link:../authentication/oauth2-groups.html["使用组"]。
+
+如果组表示为名称并配置了域或nsswitch授权、则ONTAP会尝试分别将其与Active Directory或LDAP组进行匹配。如果存在组匹配项、ONTAP将使用为组定义的角色来决定访问权限。这始终会导致*ALLOW或*deny*决定和处理结束。
+
+如果没有组匹配项或访问令牌中没有组、则会拒绝访问并结束处理。
+
+====
+
+
+== ONTAP 9.14.1
+
+支持的初始OAuth2.0是在ONTAP 9．14.1中基于标准OAuth2.0功能引入的。
+
+.确定ONTAP 9的客户端访问权限。14.1
+[%collapsible]
+====
+.第1步：独立的范围
+如果访问令牌包含任何自包含范围、则ONTAP会首先检查这些范围。如果没有独立范围、请转至步骤2。
+
+如果存在一个或多个自包含范围，ONTAP将应用每个范围，直到可以明确地作出*ALLOW或*deny*决定为止。如果做出明确的决定、则处理将结束。
+
+如果ONTAP无法做出明确的访问决定、请继续执行步骤2。
+
+.第2步：检查本地角色标志
+ONTAP会检查布尔参数 `use-local-roles-if-present`。对于定义为ONTAP的每个授权服务器、此标志的值会单独设置。
+
+* 如果值为 `true` 继续执行步骤3。
+* 如果值为 `false` 处理结束、访问被拒绝。
+
+
+.第3步：命名ONTAP REST角色
+如果访问令牌在或 `scp`字段中包含一个命名的REST角色 `scope`、则ONTAP将使用该角色来决定访问权限。这始终会导致*ALLOW或*deny*决定和处理结束。
+
+如果没有已命名的REST角色或未找到此角色、请继续执行步骤4。
+
+.第4步：用户
+从访问令牌中提取用户名、并尝试将其与有权访问应用程序"http"的用户进行匹配。系统将根据身份验证方法按以下顺序检查用户：
+
+* password
+* 域(Active Directory)
+* nsswitch (LDAP)
+
+
+如果找到匹配的用户、ONTAP将使用为该用户定义的角色来决定访问权限。这始终会导致*ALLOW或*deny*决定和处理结束。
+
+如果用户不匹配或访问令牌中没有用户名、请继续执行步骤5。
+
+.第5步：组
+如果包含一个或多个组并为其配置了域或nsswitch授权、则ONTAP会尝试将其分别与Active Directory或LDAP组进行匹配。
+
+如果存在组匹配项、ONTAP将使用为组定义的角色来决定访问权限。这始终会导致*ALLOW或*deny*决定和处理结束。
+
+如果没有组匹配项或访问令牌中没有组、则会拒绝访问并结束处理。
+
+====

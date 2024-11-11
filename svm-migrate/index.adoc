@@ -120,7 +120,7 @@ NOTE:  从AFF 集群迁移到包含混合聚合的FAS 集群时、自动卷放�
 * 源集群中的所有节点都必须运行ONTAP 9.10.1或更高版本。有关特定的ONTAP阵列控制器支持、请参见 link:https://hwu.netapp.com/["Hardware Universe"^]。
 * 源集群中的所有节点都必须运行相同版本的ONTAP。
 * 目标集群中的所有节点都必须运行相同版本的ONTAP。
-* 目标集群必须与源集群版本相同或不超过两个新的主要有效集群版本(ECV)。
+* 目标集群ONTAP版本必须与源集群版本相同或不超过两个主要较新版本。
 * 源集群和目标集群必须支持相同的IP子网才能进行数据LIF访问。
 * 源SVM中的必须少于 xref:Maximum supported volumes per SVM[此版本支持的最大数据卷数]。
 * 目标上必须有足够的空间用于放置卷
@@ -207,10 +207,10 @@ NOTE:  从AFF 集群迁移到包含混合聚合的FAS 集群时、自动卷放�
 | 负载共享镜像 | 不支持 |  
 
 
-| MetroCluster SVM | 不支持 | 虽然SVM迁移不支持MetroCluster SVM迁移，但您可以使用SnapMirror异步复制到link:https://www.netapp.com/media/83785-tr-4966.pdf["迁移MetroCluster配置中的SVM"]。请注意、在MetroCluster配置中迁移SVM的过程是一种无中断方法。 
+| MetroCluster SVM | ONTAP 9.16.1. | 您可以将SVM从非MetroCluster HA对迁移到MetroCluster配置、也可以将MetroCluster配置迁移到非MetroCluster HA对。您不能将SVM从一个MetroCluster配置迁移到另一个MetroCluster配置。[注意]在ONTAP 9 16.1之前的版本中、SVM迁移不支持MetroCluster SVM迁移。您可以使用SnapMirror异步复制到link:https://www.netapp.com/media/83785-tr-4966.pdf["迁移MetroCluster配置中的SVM"^]。请注意、在MetroCluster配置中使用SnapMirror异步迁移SVM是一种_颠覆性_迁移方法。 
 
 
-| NetApp 聚合加密（ NAE ） | 不支持 | 不支持从未加密源迁移到加密目标。 
+| NetApp 聚合加密（ NAE ） | 不支持 | 使用NAE的任何端点均不支持迁移。 
 
 
 | NDMP配置 | 不支持 |  
@@ -222,7 +222,7 @@ NOTE:  从AFF 集群迁移到包含混合聚合的FAS 集群时、自动卷放�
 | NFS和SMB审核日志 | ONTAP 9.13.1  a| 
 [NOTE]
 ====
-审核日志重定向仅在云模式下可用。对于启用了审核的内部SVM迁移、您应在源SVM上禁用审核、然后执行迁移。
+对于启用了审核的内部SVM迁移、您应在源SVM上禁用审核、然后执行迁移。
 
 ====
 迁移SVM之前：
@@ -262,7 +262,7 @@ SMB迁移会造成系统中断、需要在迁移后刷新客户端。
 
 
 
-| SnapMirror云关系 | ONTAP 9.12.1 | 从SVM.12.1开始、在迁移具有SnapMirror云关系的ONTAP 9时、目标集群必须已link:../data-protection/snapmirror-licensing-concept.html#snapmirror-cloud-license["SnapMirror云许可证"]安装、并且必须具有足够的可用容量来支持将要镜像到云的卷中的容量移动。 
+| SnapMirror云关系 | ONTAP 9.12.1 | 从SVM.12.1开始、在迁移具有SnapMirror云关系的内部ONTAP 9时、目标集群必须已link:../data-protection/snapmirror-licensing-concept.html#snapmirror-cloud-license["SnapMirror云许可证"]安装、并且必须具有足够的可用容量、以支持将要镜像到云的卷中的容量移动。 
 
 
 | SnapMirror异步目标 | ONTAP 9.12.1 |  
@@ -300,16 +300,16 @@ SMB迁移会造成系统中断、需要在迁移后刷新客户端。
 | SnapMirror同步 | 不支持 |  
 
 
-| Snapshot 副本 | ONTAP 9.10.1 |  
+| 快照 | ONTAP 9.10.1 |  
 
 
-| 防篡改Snapshot副本锁定 | ONTAP 9.14.1 | 防篡改Snapshot副本锁定与SnapLock不等效。SnapLock仍不受支持。 
+| 防篡改快照锁定 | ONTAP 9.14.1 | 防篡改快照锁定与SnapLock不等效。SnapLock Enterprise和SnapLock Compliance仍不受支持。 
 
 
 | 虚拟IP Cifs/BGP | 不支持 |  
 
 
-| Virtual Storage Console 7.0及更高版本 | 不支持 | VSC是的一部分 https://docs.netapp.com/us-en/ontap-tools-vmware-vsphere/index.html["适用于 VMware vSphere 虚拟设备的 ONTAP 工具"^] 从VSC 7.0开始。 
+| Virtual Storage Console 7.0及更高版本 | 不支持 |  
 
 
 | 卷克隆 | 不支持 |  
@@ -369,17 +369,17 @@ SMB迁移会造成系统中断、需要在迁移后刷新客户端。
 | 限制 | 不允许 | 允许 | 不支持 
 
 
-| Snapshot副本属性修改 | 允许 | 允许 | 不支持 
+| Snapshot属性已修改 | 允许 | 允许 | 不支持 
 
 
-| Snapshot副本自动删除修改 | 允许 | 允许 | 不支持 
+| Snapshot自动删除修改 | 允许 | 允许 | 不支持 
 
 
-| Snapshot副本创建 | 允许 | 允许 | 不支持 
+| Snapshot创建 | 允许 | 允许 | 不支持 
 
 
-| Snapshot副本删除 | 允许 | 允许 | 不支持 
+| Snapshot删除 | 允许 | 允许 | 不支持 
 
 
-| 从Snapshot副本还原文件 | 允许 | 允许 | 不支持 
+| 从快照还原文件 | 允许 | 允许 | 不支持 
 |===

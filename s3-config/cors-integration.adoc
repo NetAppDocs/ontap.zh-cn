@@ -1,0 +1,255 @@
+---
+permalink: s3-config/cors-integration.html 
+sidebar: sidebar 
+keywords: cors, cross-origin resource sharing, domain, same origin, s3, s3 api, buckets, nas 
+summary: '从S3.161开始、您可以使用Web浏览器安全地访问ONTAP 9存储分段。通过实施跨源资源共享(CORS)安全建议、可在ONTAP中提供访问权限。' 
+---
+= 跨源站资源共享(CORS)与ONTAP的集成
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从CORS.16.1开始、您可以配置跨源站资源共享(ONTAP 9)、以允许来自不同域的客户端Web应用程序访问ONTAP分段。这样便可使用Web浏览器安全访问存储分段对象。
+
+CORS是一个基于HTTP构建的框架、它允许一个网页中定义的脚本访问不同域中服务器上的资源。该框架用于安全地绕过_s춬 一源策略_、后者是Web安全的早期基础。下面介绍了主要概念和术语。
+
+.来源
+来源精确定义了资源的位置和标识。它表示为以下值的组合：
+
+* URI方案(协议)
+* 主机名(域名或IP地址)
+* 端口号
+
+
+以下是一个简单的原点示例： `https://www.mycompany.com:8001`。当源服务器与CORS结合使用时、它将标识发出请求的客户端。
+
+.同源策略
+同源策略(SOP)是一个安全概念、适用于基于浏览器的脚本。该策略允许最初从网页加载的脚本访问另一个页面中的数据、只要这两个页面位于同一来源。此限制可防止恶意脚本访问不同来源页面中的数据。
+
+.常见CORS用例
+CORS有几种常见使用情形。大多数都涉及定义明确的跨域访问实例、例如AJAX请求、加载字体、样式表和脚本以及跨域身份验证。CORS也可以作为单页应用程序(SPA)的一部分来实施。
+
+.HTTP标头
+CORS是使用插入到HTTP请求和响应中的标头实现的。例如、有多个响应标头可实现访问控制并指示允许执行的操作、包括方法和标头。如果HTTP请求中存在_ORIGA_标头、则会将其定义为跨域请求。原始值由CORS服务器用于查找有效的CORS配置。
+
+.HTTP预检请求
+这是一个可选请求、用于最初确定服务器是否支持CORS、包括特定方法和标头。根据响应情况、CORS请求是否可以完成。
+
+.ONTAP存储分段
+存储分段是指一个容器、其中包含根据定义完善的命名空间存储和访问的对象。ONTAP存储分段有两种类型：
+
+* 可通过NAS和S3协议访问的NAS分段
+* 只能通过S3协议访问的S3存储分段
+
+
+
+
+== 在ONTAP中实施CORS
+
+CORS在CORS.16 ONTAP 9及更高版本中默认处于启用状态。您需要在要处于活动状态的每个SVM上配置CORS。
+
+
+NOTE: 没有用于为ONTAP集群禁用CORS的管理选项。但是、您可以通过不定义任何规则或删除所有现有规则来有效地禁用它。
+
+
+
+=== 可能的用例
+
+ONTAP CORS实施可为跨域资源访问提供多种可能的拓扑、其中包括：
+
+* ONTAP S3存储分段(在相同或不同的SVM或集群中)
+* ONTAP NAS存储分段(在相同或不同的SVM或集群中)
+* ONTAP S3和NAS分段(在相同或不同的SVM或集群中)
+* ONTAP分段和外部供应商分段
+* 分段
+
+
+
+
+=== 高级别视图
+
+下面简要说明了CORS如何支持对ONTAP S3存储分段的访问。
+
+image:s3-cors.png["使用CORS访问S3存储分段"]
+
+
+
+=== 定义CORS规则
+
+您需要在ONTAP中定义CORS规则才能激活和使用此功能。
+
+
+
+==== 配置操作
+
+ONTAP支持三种主要配置规则操作：
+
+* 显示
+* 创建
+* 删除
+
+
+在ONTAP中定义的CORS规则具有多个属性、包括SVM和存储分段以及允许的源、方法和标头。
+
+
+
+==== 管理选项
+
+在ONTAP集群上管理CORS时、您可以使用多个选项。
+
+.ONTAP 命令行界面
+您可以使用命令行界面配置CORS。有关详细信息、请参见 <<使用命令行界面管理CORS>> 。
+
+.ONTAP REST API
+您可以使用ONTAP REST API配置CORS。未添加任何新端点来支持CORS功能。您可以改用以下现有端点：
+
+`/api/protocols/s3/services/{svm.uuid}/buckets/{bucket.uuid}`
+
+有关详细信息、请参见 https://docs.netapp.com/us-en/ontap-automation/["ONTAP 自动化"^]文档站点。
+
+.S3 API
+您可以使用S3 API在ONTAP存储分段上创建和删除CORS配置。S3客户端管理员需要足够的Privileges、其中包括：
+
+* 访问或机密密钥凭据
+* 在存储分段上配置的策略、允许通过s3api进行访问
+
+
+
+
+=== 升级和还原
+
+如果您计划使用CORS访问ONTAP S3存储分段、则应注意几个管理问题。
+
+.升级
+如果所有节点均升级到9.161、则支持CORS功能。在混合模式集群中、此功能仅在有效集群版本(ECV) 9.16.1或更高版本时可用。
+
+.还原
+从用户角度来看、在继续执行集群还原之前、应删除所有CORS配置。在内部、此操作将删除所有CORS数据库。系统将要求您运行一个命令来清除和还原这些数据结构。
+
+
+
+== 使用命令行界面管理CORS
+
+您可以使用ONTAP命令行界面管理CORS规则。主要操作如下所述。要发出ONTAP命令，您需要处于CORS *admin*权限级别。
+
+
+
+=== 创建
+
+您可以使用命令定义CORS规则 `vserver object-store-server bucket cors-rule create`。
+
+.Parameters
+下面介绍了用于创建规则的参数。
+
+[cols="30,70"]
+|===
+| 参数 | Description 
+
+
+ a| 
+`vserver`
+ a| 
+指定托管创建了规则的对象存储服务器分段的SVM (SVM)的名称。
+
+
+
+ a| 
+`bucket`
+ a| 
+为其创建规则的对象存储服务器上的分段名称。
+
+
+
+ a| 
+`index`
+ a| 
+一个可选参数、用于指示创建规则的对象存储服务器分段的索引。
+
+
+
+ a| 
+`rule id`
+ a| 
+对象存储服务器分段规则的唯一标识符。
+
+
+
+ a| 
+`allowed-origins`
+ a| 
+允许从其发出跨来源请求的来源列表。
+
+
+
+ a| 
+`allowed-methods`
+ a| 
+跨源请求中允许的HTTP方法列表。
+
+
+
+ a| 
+`allowed-headers`
+ a| 
+跨源请求中允许的HTTP方法列表。
+
+
+
+ a| 
+`expose-headers`
+ a| 
+在CORS响应中发送的额外标头列表、客户可以从其应用程序访问这些标头。
+
+
+
+ a| 
+`max-age-in-seconds`
+ a| 
+一个可选参数、用于指定浏览器应在多长时间内缓存特定资源的飞行前响应。
+
+|===
+.示例
+[listing]
+----
+vserver object-store-server bucket cors-rule create -vserver vs1 -bucket bucket1 -allowed-origins www.myexample.com -allowed-methods GET,DELETE
+----
+
+
+=== 显示
+
+您可以使用命令 `vserver object-store-server bucket cors-rule show`显示当前规则及其内容的列表。
+
+
+NOTE: 包含参数 `-instance`可扩展为每个规则提供的数据。您还可以指定所需的字段。
+
+.示例
+[listing]
+----
+server object-store-server bucket cors-rule show -instance
+----
+
+
+=== 删除
+
+您可以使用delete命令删除CORS规则的实例。您需要 `index`此规则的值、因此此操作分两步执行：
+
+. 发出 `show`命令以显示规则并检索其索引。
+. 使用索引值发出删除命令。
+
+
+.示例
+[listing]
+----
+vserver object-store-server bucket cors-rule delete -vserver vs1 -bucket bucket1 -index 1
+----
+
+
+=== 修改
+
+没有可用于修改现有CORS规则的CLI命令。要修改规则、需要执行以下操作：
+
+. 删除现有规则。
+. 使用所需选项创建新规则。
+

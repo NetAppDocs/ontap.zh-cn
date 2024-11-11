@@ -1,0 +1,144 @@
+---
+permalink: flexgroup/enable-adv-capacity-flexgroup-task.html 
+sidebar: sidebar 
+keywords: flexgroup advanced capacity balancing, flexgroup granular data distribution, gdd, flexgroup, volume, balancing 
+summary: 从ONTAP 9 16.1开始、引入了高级容量平衡功能、以便当非常大的文件增长并占用一个成员卷上的空间时、可以在FlexGroup成员卷之间分布数据。 
+---
+= 通过重新分布文件数据来平衡ONTAP FlexGroup卷
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9 16.1开始、您可以启用高级容量平衡、以便在一个成员卷上的超大文件增长并占用空间时在FlexGroup成员卷之间分布数据。
+
+高级容量平衡扩展了ONTAP 9．12.1中引入的粒度数据功能，该功能使ONTAP可以通过将文件移动到其他成员来实现link:manage-flexgroup-rebalance-task.html["重新平衡FlexGroup卷"]。从ONTAP 9 16.1开始、如果使用选项启用了高级容量平衡 `-granular-data advanced`、则会同时激活"基本"文件重新平衡功能和高级容量功能。
+
+[NOTE]
+====
+默认情况下、文件重新平衡和高级容量平衡均处于禁用状态。启用这些功能后、将无法禁用它们。如果需要禁用容量平衡、则必须从启用高级容量平衡之前创建的快照进行还原。
+
+====
+高级容量平衡由达到卷可用空间的10 GB或1%的新写入触发。
+
+
+
+== 文件的分布方式
+
+如果创建的文件或文件增长到足以触发高级容量平衡、则该文件会在成员FlexGroup卷之间以1 GB到10 GB的条带形式分布。
+
+启用高级容量平衡后、ONTAP不会追溯性地对现有大文件进行条带化。如果启用高级容量平衡后现有大文件继续增长、则现有大文件中的新内容可能会在成员FlexGroup卷之间进行条带化、具体取决于文件的大小和可用空间。
+
+高级容量平衡可通过使用成员卷上的可用空间量来确定条带宽度。高级容量平衡会创建一个文件条带、该条带相当于可用空间的1%。这意味着、如果有更多可用空间、条带开始时会变大、而随着FlexGroup填满、条带将变小。
+
+除了成员卷上的可用空间之外、高级容量平衡还会使用其他几个因素来确定条带宽度：
+
+* 最小条带宽度：所选的最小条带宽度为1 GB。
+* 最大条带宽度：最大可能条带宽度为10 GB。
+* 粒度：条带始终以1 GB的倍数创建。
+
+
+
+
+== 支持的协议
+
+以下协议支持高级容量平衡：
+
+* NFSv3、NFSv4、NFSv4.1
+* pNFS
+* SMB
+
+
+
+
+== 启用高级容量平衡
+
+默认情况下、高级容量平衡处于禁用状态。您必须启用高级容量平衡才能自动平衡FlexGroup容量。请注意、一旦启用此功能、您就无法将其禁用、但您可以从启用高级容量平衡之前创建的快照进行还原。
+
+.开始之前
+* 集群中的所有节点都必须运行ONTAP 9.16.1或更高版本。
+* 如果启用了高级容量平衡、则无法还原到ONTAP 9 16.1之前的版本。如果需要还原、则必须先从启用高级容量平衡之前创建的快照还原。
+* 如果已(`vserver nfs -vstorage enabled`在SVM上启用NFS副本卸载)，则无法在FlexGroup卷上启用高级容量平衡。同样、如果在SVM中的任何FlexGroup卷上启用了高级容量平衡、则无法启用NFS副本卸载。
+* FlexCache回写不支持高级容量平衡。
+
+
+.关于此任务
+在使用任一粒度数据选项(基本或高级)创建DP目标卷期间、目标会将此设置显示为"disdisabled (已禁用)"、直到SnapMirror传输完成为止。传输完成后、DP目标会将粒度数据显示为"enabled (已启用)"。
+
+
+
+=== 在创建FlexGroup期间启用高级容量平衡
+
+.步骤
+您可以使用System Manager或ONTAP命令行界面在创建新FlexGroup卷时启用高级容量平衡。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*存储>卷*，然后单击image:icon_add_blue_bg.gif["添加图标"]。
+. 在*添加卷*窗口中，输入卷名称和大小。然后单击*更多选项*。
+. 在*存储和优化*下，选择*在集群中分布卷数据(FlexGroup)*。
+. 选择*高级容量平衡*。
+. 完成卷配置并单击*Save*。
+
+
+--
+.命令行界面
+--
+. 创建启用了高级容量平衡的卷：
++
+[source, cli]
+----
+volume create -vserver <svm name> -volume <volume name> -size <volume size> -auto-provision-as flexgroup -junction-path /<path> -granular-data advanced
+----
++
+示例
+
++
+[listing]
+----
+volume create -vserver vs0 -volume newvol -size 1TB -auto-provision-as flexgroup -junction-path /newvol -granular-data advanced
+----
+
+
+--
+====
+
+
+=== 在现有FlexGroup卷上启用高级容量平衡
+
+.步骤
+您可以使用System Manager或ONTAP命令行界面启用高级容量平衡。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*存储>卷*，单击image:icon_kabob.gif["菜单选项图标"]，然后选择*编辑>卷*。
+. 在*编辑卷*窗口的*存储和优化*下，选择*高级容量平衡*。
+. 单击 * 保存 * 。
+
+
+--
+.命令行界面
+--
+. 修改现有FlexGroup卷以启用高级容量平衡：
++
+[source, cli]
+----
+volume modify -vserver <svm name> -volume <volume name> -granular-data advanced
+----
++
+示例
+
++
+[listing]
+----
+volume modify -vserver vs0 -volume newvol  -granular-data advanced
+----
+
+
+--
+====

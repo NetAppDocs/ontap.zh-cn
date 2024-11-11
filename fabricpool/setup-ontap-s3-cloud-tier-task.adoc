@@ -16,6 +16,11 @@ summary: 如果您运行的是 ONTAP 9.8 或更高版本，则可以将 ONTAP S3
 .您需要的内容
 您必须在远程集群上拥有 ONTAP S3 服务器名称及其关联 LIF 的 IP 地址。
 
+[NOTE]
+====
+客户端应用程序会使用服务器名称作为完全限定域名(FQDN)。在ONTAP之外、确认DNS记录指向正在使用的SVM数据LUN。
+
+====
 本地集群上必须存在集群间LIF。
 
 link:../s3-config/create-intercluster-lifs-remote-fabricpool-tiering-task.html["为远程 FabricPool 分层创建集群间 LIF"]
@@ -72,7 +77,7 @@ FabricPool 镜像为您提供了一种无缝替换数据存储的方法，它有
 +
 这样可以无中断地访问 ONTAP S3 对象存储中的数据。
 
-** 设置 `-is-certificate-validation-enabled` 参数设置为 `false` 禁用ONTAP S3的证书检查。
+** 将参数设置 `-is-certificate-validation-enabled`为 `false`对ONTAP S3禁用证书检查。(`-is-certificate-validation-enabled true`建议的最佳做法是使用第三方证书颁发机构颁发的签名证书。
 
 
 +

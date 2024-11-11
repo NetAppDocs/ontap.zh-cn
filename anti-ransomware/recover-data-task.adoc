@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: anti-ransomware/recover-data-task.html 
-keywords: Restore data after an attack, anti-ransomware backup, restore data from snapshot copies, potential ransomware attack, ransomware attack, recovery snapshot copies are deleted, recover deleted snapshot copies, autonomous, ransomware, protection, arp 
-summary: 当ARP检测到潜在攻击时、会创建Snapshot副本。您可以从这些反勒索软件副本或其他 Snapshot 副本还原数据。 
+keywords: Restore data after an attack, anti-ransomware backup, restore data from snapshots, potential ransomware attack, ransomware attack, recovery snapshots are deleted, recover deleted snapshots, autonomous, ransomware, protection, arp 
+summary: 当ARP检测到潜在攻击时、将创建快照。您可以从这些反勒索软件副本或其他快照还原数据。 
 ---
 = 在勒索软件攻击后还原数据
 :hardbreaks:
@@ -16,14 +16,14 @@ summary: 当ARP检测到潜在攻击时、会创建Snapshot副本。您可以从
 
 
 [role="lead"]
-自动防兰森(ARP)会创建名为的Snapshot副本 `Anti_ransomware_backup` 检测到潜在的勒索软件威胁时。您可以使用这些ARP Snapshot副本之一或卷的另一个Snapshot副本还原数据。
+自动勒索软件保护(ARP)会在检测到潜在勒索软件威胁时创建名为的快照 `Anti_ransomware_backup`。您可以使用其中一个ARP快照或卷的另一个快照来还原数据。
 
 .关于此任务
-如果卷具有 SnapMirror 关系，请在从 Snapshot 副本还原后立即手动复制卷的所有镜像副本。否则，可能会导致镜像副本不可用，必须删除并重新创建这些副本。
+如果此卷具有SnapMirror关系、请在从快照还原后立即手动复制此卷的所有镜像副本。否则，可能会导致镜像副本不可用，必须删除并重新创建这些副本。
 
-从以外的Snapshot还原 `Anti_ransomware_backup` Snapshot在确定系统攻击后、必须先释放ARP Snapshot。
+要在发现系统攻击后从快照以外的快照进行还原、必须先释放ARP快 `Anti_ransomware_backup`照。
 
-如果未报告系统攻击、则必须先从还原 `Anti_ransomware_backup` 然后、Snapshot副本会从您选择的Snapshot副本完成卷的后续还原。
+如果未报告系统受到攻击、则必须先从快照还原 `Anti_ransomware_backup`、然后再从所选快照完成卷的后续还原。
 
 .步骤
 您可以使用System Manager或ONTAP 命令行界面还原数据。
@@ -33,47 +33,46 @@ summary: 当ARP检测到潜在攻击时、会创建Snapshot副本。您可以从
 .System Manager
 --
 .在系统受到攻击后恢复
-. 要从ARP快照还原、请跳至步骤二。要从早期的Snapshot副本还原、必须先释放ARP Snapshot的锁定。
+. 要从ARP快照还原、请跳至步骤二。要从早期的快照还原、必须先释放ARP快照上的锁定。
 +
 .. 选择 * 存储 > 卷 * 。
-.. 选择*安全性*，然后选择*查看可疑文件类型*
-.. 将这些文件标记为"Falseal"。
-.. 选择*更新*和*清除可疑文件类型*
+.. 选择*安全性*，然后选择*查看可疑文件类型*。
+.. 将文件标记为"潜在勒索软件攻击"。
+.. 选择*更新*和*清除可疑文件类型*。
 
 
-. 显示卷中的Snapshot副本：
+. 显示卷中的快照：
 +
 选择*存储>卷*，然后选择卷和*Snapshot副本*。
 
-. 选择要还原的Snapshot副本旁边的，然后选择 image:icon_kabob.gif["菜单选项图标"] *Restore*。
+. 选择要还原的快照旁边的，然后选择image:icon_kabob.gif["菜单选项图标"]*Restore*。
 
 
 .如果未发现系统攻击、则还原
-. 显示卷中的Snapshot副本：
+. 显示卷中的快照：
 +
 选择*存储>卷*，然后选择卷和*Snapshot副本*。
 
-. 选择 image:icon_kabob.gif["菜单选项图标"] 它们并选择 `Anti_ransomware_backup` Snapshot。
+. 选择它们 `Anti_ransomware_backup`选择image:icon_kabob.gif["菜单选项图标"]快照。
 . 选择 * 还原 * 。
-. 返回到*Snapshot副本*菜单，然后选择要使用的Snapshot副本。选择 * 还原 * 。
+. 返回到*Snapshot副本*菜单，然后选择要使用的快照。选择 * 还原 * 。
 
 
 --
 .命令行界面
 --
 .在系统受到攻击后恢复
-. 要从ARP Snapshot副本还原、请跳至步骤二。要从早期的Snapshot副本还原数据、您必须解除对ARP Snapshot的锁定。
+. 要从ARP快照还原、请跳至步骤二。要从早期快照还原数据、必须解除对ARP快照的锁定。
 +
 
-NOTE: 只有在使用 `volume snap restore`以下命令的情况下、才需要在从早期Snapshot副本还原之前释放反勒索软件SnapLock。如果使用Flex Clone、Single File Snap Restore或其他方法还原数据、则无需执行此操作。
+NOTE: 只有在使用以下命令时、才需要在从早期快照还原之前释放反勒索软件SnapLock `volume snap restore`。如果使用FlexClone、单文件Snap Restore或其他方法还原数据、则无需执行此操作。
 
 +
-将攻击标记为"误报"和"明确怀疑"：
-`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
-使用以下参数之一标识扩展：
-`[-seq-no _integer_]` 可疑列表中的文件序列号。
-`[-extension _text_, … ]` 文件扩展名
-`[-start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始时间和结束时间、格式为"MM/DD/YYYY HH：MM：SS"。
+将此攻击标记为潜在的勒索软件攻击(`-false-positive false`，并清除可疑文件(`clear-suspect`：
+`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive false`使用以下参数之一确定扩展名：可疑列表中文件的序列号
+`[-extension _text_, … ]`。
+`[-seq-no _integer_]`要清除的文件范围的文件扩展名
+`[-start-time _date_time_ -end-time _date_time_]`开始和结束时间、格式为"MM/DD/YYYYHH：MM：SS"。
 
 . 列出卷中的 Snapshot 副本：
 +
@@ -160,7 +159,7 @@ volume snapshot restore -vserver <SVM> -volume <volume> -snapshot <snapshot>
 ----
 cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
 ----
-. 重复步骤1和2、使用所需的Snapshot副本还原卷。
+. 重复步骤1和2、使用所需的快照还原卷。
 
 
 --

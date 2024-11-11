@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: enable, storage, rebalance, modify, stop, status, flexgroup, volume 
 summary: 从ONTAP 9.12.1开始、您可以通过无中断地将文件从FlexGroup 中的一个成分卷移动到另一个成分卷来重新平衡FlexGroup 卷。 
 ---
-= 重新平衡FlexGroup 卷
+= 通过移动文件重新平衡FlexGroup卷
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -23,6 +23,8 @@ summary: 从ONTAP 9.12.1开始、您可以通过无中断地将文件从FlexGrou
 只有当集群中的所有节点都运行ONTAP 9.12.1或更高版本时、才可以重新平衡。您必须在运行重新平衡操作的任何FlexGroup卷上启用粒度数据功能。  启用此功能后、您将无法还原到ONTAP 9.11.1及更早版本、除非删除此卷或从启用此设置之前创建的Snapshot副本进行还原。
 
 从ONTAP 9.14.1开始、ONTAP引入了一种算法、用于无中断主动移动启用了粒度数据的卷中的文件、而无需用户交互。该算法可在非常具体的目标情形下运行、以缓解性能瓶颈。  此算法可能起作用的情形包括：集群中一个节点上的一组特定文件写入负载非常重、或者父目录非常热、文件持续增长。
+
+从ONTAP 9 16.1开始、您还可以启用link:enable-adv-capacity-flexgroup-task.html["高级容量平衡"]在FlexGroup成员卷之间重新分布大型文件的数据。
 
 
 
@@ -95,6 +97,10 @@ summary: 从ONTAP 9.12.1开始、您可以通过无中断地将文件从FlexGrou
 * 使用创建FlexGroup 卷时 `volume create` 命令
 * 通过修改现有FlexGroup 卷以使用启用设置 `volume modify` 命令
 * 在使用启动FlexGroup 重新平衡时自动设置 `volume rebalance` 命令
++
+
+NOTE: 如果您使用的是ONTAP 9．16．1或更高版本，并link:enable-adv-capacity-flexgroup-task.html["FlexGroup高级容量平衡"]使用ONTAP命令行界面中的选项或使用System Manager启用了 `granular-data advanced`重新平衡，则还会启用FlexGroup重新平衡。
+
 
 
 .步骤
@@ -118,7 +124,12 @@ NOTE: 仅当FlexGroup状态为不平衡时，*重新平衡*选项才可用。
 --
 .命令行界面
 --
-. 启动自动重新平衡： `volume rebalance start -vserver _SVM_name_ -volume _volume_name_`
+. 启动自动重新平衡：
++
+[source, cli]
+----
+volume rebalance start -vserver <SVM name> -volume <volume name>
+----
 +
 您也可以指定以下选项：
 
@@ -178,7 +189,12 @@ NOTE: 仅当FlexGroup状态为不平衡时，*重新平衡*选项才可用。
 --
 .命令行界面
 --
-. 修改自动重新平衡： `volume rebalance modify -vserver _SVM_name_ -volume _volume_name_`
+. 修改自动重新平衡：
++
+[source, cli]
+----
+volume rebalance modify -vserver <SVM name> -volume <volume name>
+----
 +
 您可以指定以下一个或多个选项：
 
@@ -225,7 +241,12 @@ NOTE: 仅当FlexGroup状态为不平衡时，*重新平衡*选项才可用。
 --
 .命令行界面
 --
-. 停止FlexGroup 重新平衡： `volume rebalance stop -vserver _SVM_name_ -volume _volume_name_`
+. 停止FlexGroup 重新平衡：
++
+[source, cli]
+----
+volume rebalance stop -vserver <SVM name> -volume <volume name>
+----
 
 
 --
@@ -249,7 +270,12 @@ NOTE: 仅当FlexGroup状态为不平衡时，*重新平衡*选项才可用。
 --
 .命令行界面
 --
-. 查看FlexGroup 重新平衡操作的状态： `volume rebalance show`
+. 查看FlexGroup 重新平衡操作的状态：
++
+[source, cli]
+----
+volume rebalance show
+----
 +
 重新平衡状态示例：
 

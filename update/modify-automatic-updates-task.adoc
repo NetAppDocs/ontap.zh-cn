@@ -1,7 +1,7 @@
 ---
 permalink: update/modify-automatic-updates-task.html 
 sidebar: sidebar 
-keywords: ontap, modify, upgrade, update, automatic, automated, firmware, bmc, sp, system, timezone database, timezone 
+keywords: ontap, modify, upgrade, update, automatic, automated, firmware, bmc, sp, system, timezone database, timezone, security, arp 
 summary: 如果启用了自动更新、则默认情况下、ONTAP会自动检测、下载并安装所有建议的更新。  如果您希望在安装建议的更新之前查看这些更新、或者希望自动取消这些建议、您可以根据自己的偏好修改默认行为。 
 ---
 = 修改自动更新
@@ -11,18 +11,42 @@ summary: 如果启用了自动更新、则默认情况下、ONTAP会自动检测
 
 
 [role="lead"]
-如果启用了自动更新、则默认情况下、ONTAP会自动检测、下载并安装所有建议的固件更新、以及从ONTAP 9.13.1开始的ONTAP时区数据库更新。如果您希望在安装建议的更新之前查看这些更新、或者希望自动取消这些建议、您可以根据自己的偏好修改默认行为。
+启用自动更新后、默认情况下、ONTAP会自动检测、下载并安装所有建议的更新。如果您希望在安装建议的更新之前查看这些更新、或者希望自动取消这些建议、您可以根据自己的偏好修改默认行为。
 
 .步骤
+[role="tabbed-block"]
+====
+.ONTAP 9.16.1 及更高版本
+--
+. 在System Manager中、导航到*集群>设置*。
+. 在*软件更新*部分中，选择image:icon_arrow.gif["箭头图标"]。
+. 选择*所有其他更新*选项卡，然后单击*编辑自动更新设置*。
+. 为每种更新类型指定要执行的默认操作。
++
+对于每种更新类型、您可以选择自动更新、显示通知或自动取消更新。
+
++
+
+NOTE: ONTAP时区数据库由*系统文件*更新类型控制。
+
+. 接受条款和条件并选择*保存*。
+
+
+--
+.ONTAP 9.15.1及更早版本
+--
 . 在 System Manager 中，单击 * 集群 > 设置 * 。
 . 在*Automatic Update*部分中，单击 image:icon_kabob.gif["菜单选项图标"] 以查看操作列表。
 . 单击 * 编辑自动更新设置 * 。
-. 指定要对每种事件类型执行的默认操作。
+. 为每种更新类型指定要执行的默认操作。
 +
-对于每种事件类型、您可以选择自动更新、显示通知或自动取消更新。
+对于每种类型、您可以选择自动更新、显示通知或自动取消更新。
 
 +
 
-NOTE: ONTAP时区数据库由系统文件事件类型控制。
+NOTE: ONTAP时区数据库由系统文件更新类型控制。
 
 
+
+--
+====
