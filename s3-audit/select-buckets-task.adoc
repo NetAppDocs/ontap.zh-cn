@@ -20,13 +20,15 @@ summary: 您必须指定要在启用了审核的 SVM 中审核的分段。
 .关于此任务
 S3审核配置会按SVM启用、但您必须在SVM中选择已启用审核的分段。如果要将存储分段添加到 SVM 中并对新存储分段进行审核，则必须使用此操作步骤选择这些存储分段。您还可以在 SVM 中启用非审核分段以进行 S3 审核。
 
-审核配置会一直保留到分段为止、直到被删除为止 `vserver object-store-server audit object-select delete` 命令：
+审核配置会一直保留到分段、直到命令删除为止 `vserver object-store-server audit event-selector delete`。
 
 .操作步骤
 选择用于 S3 审核的存储分段：
 
-`vserver object-store-server audit event-selector create -vserver _svm_name_ -bucket _bucket_name_ [[-access] {read-only|write-only|all}] [[-permission] {allow-only|deny-only|all}]`
-
+[source, cli]
+----
+vserver object-store-server audit event-selector create -vserver <svm_name> -bucket <bucket_name> [[-access] {read-only|write-only|all}] [[-permission] {allow-only|deny-only|all}]
+----
 * `-access` -指定要审核的事件访问类型： `read-only`， `write-only` 或 `all` (默认为 `all`）。
 * `-permission` -指定要审核的事件权限的类型： `allow-only`， `deny-only` 或 `all` (默认为 `all`）。
 
