@@ -13,7 +13,7 @@ summary: 从ONTAP 9.14.1开始、您可以在FabricPool中的新卷或现有卷�
 [role="lead"]
 从ONTAP 9.14.1开始、您可以启用和禁用直接写入FabricPool中新卷或现有卷上的云、以使NFS客户端可以直接将数据写入云、而无需等待分层扫描。SMB客户端仍会写入已启用云写入的卷中的性能层。默认情况下、云写入模式处于禁用状态。
 
-在迁移等情况下、能够直接写入云非常有用、例如、向集群传输的数据量超过集群在本地层上支持的数据量。如果不使用云写入模式、则在迁移期间会先传输少量数据、然后进行分层、再进行传输并再次分层、直到迁移完成为止。使用云写入模式时、不再需要这种类型的管理、因为数据永远不会传输到本地层。
+在迁移等情况下、能够直接写入云非常有用、例如、向集群传输的数据量超过集群在本地层上支持的数据量。如果没有云写入模式、则在迁移期间会先传输少量数据、然后再进行分层、再进行传输和分层、直到迁移完成为止。使用云写入模式时、不再需要这种类型的管理、因为数据永远不会传输到本地层。
 
 .开始之前
 * 您应该是集群或SVM管理员。
@@ -37,7 +37,7 @@ set -privilege advanced
 +
 [source, cli]
 ----
-volume create -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <local tier name>
+volume create -vserver <svm name> -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <local tier name>
 ----
 +
 以下示例将在FabricPool本地层(aggr1)上创建一个名为vol1且已启用云写入的卷：
@@ -45,7 +45,7 @@ volume create -volume <volume name> -is-cloud-write-enabled <true|false> -aggreg
 +
 [listing]
 ----
-volume create -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
+volume create -vserver vs1 -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
 ----
 
 
@@ -64,15 +64,15 @@ set -privilege advanced
 +
 [source, cli]
 ----
-volume modify -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <local tier name>
+volume modify -vserver <svm name> -volume <volume name> -is-cloud-write-enabled true
 ----
 +
-以下示例将修改FabricPool本地层(aggr1)上启用了云写入的卷vol1：
+以下示例将修改名为vol1的卷以启用云写入：
 
 +
 [listing]
 ----
-volume modify -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
+volume modify -vserver vs1 -volume vol1 -is-cloud-write-enabled true
 ----
 
 
@@ -87,18 +87,18 @@ volume modify -volume vol1 -is-cloud-write-enabled true -aggregate aggr1
 ----
 set -privilege advanced
 ----
-. 禁用云写入模式：
+. 在卷上禁用云写入模式：
 +
 [source, cli]
 ----
-volume modify -volume <volume name> -is-cloud-write-enabled <true|false> -aggregate <aggregate name>
+volume modify -vserver <svm name> -volume <volume name> -is-cloud-write-enabled false
 ----
 +
-以下示例将创建一个名为vol1且已启用云写入的卷：
+以下示例将在名为vol1的卷上禁用云写入模式：
 
 +
 [listing]
 ----
-volume modify -volume vol1 -is-cloud-write-enabled false -aggregate aggr1
+volume modify -vserver vs1 -volume vol1 -is-cloud-write-enabled false
 ----
 
