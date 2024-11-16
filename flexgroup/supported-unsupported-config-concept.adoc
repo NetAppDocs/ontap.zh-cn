@@ -15,6 +15,20 @@ summary: 您应了解 ONTAP 9 中的 FlexGroup 卷支持和不支持的 ONTAP �
 
 
 
+== 从ONTAP 9.16.1开始支持的功能
+
+* xref:enable-adv-capacity-flexgroup-task.html[高级容量平衡]
+
+
+
+
+== 从ONTAP 9.15.1开始支持的功能
+
+* xref:provision-automatically-task.html[自动配置增强功能]
+
+
+
+
 == 从ONTAP 9.14.1开始支持的功能
 
 * Snapshot副本标记：支持使用为FlexGroup卷上的Snapshot副本创建、修改和删除Snapshot副本标记(SnapMirror标签和注释) `volume snapshot` 命令：
@@ -24,32 +38,32 @@ summary: 您应了解 ONTAP 9 中的 FlexGroup 卷支持和不支持的 ONTAP �
 
 == 从ONTAP 9.13.1开始支持的功能
 
-* FlexGroup卷的自动防软件保护(ARP)、包括以下受支持的功能：
+* xref:../anti-ransomware/index.html[自主勒索软件保护(ARP)]对于FlexGroup卷、包括以下受支持的功能：
 +
-** FlexGroup扩展操作：新成分卷继承自主的防兰软件保护属性。
+** FlexGroup扩展操作：新成员卷会继承自主防兰软件保护属性。
 ** FlexVol到FlexGroup的转换：可以将FlexVol转换为具有主动自主防兰软件保护的FlexVol。
 ** FlexGroup重新平衡：在中断和无中断重新平衡操作期间、支持自动防软件保护。
 
 
 * 计划一次FlexGroup重新平衡操作。
-* SnapMirror扇出关系与FlexGroup卷上的SVM DR建立关系。支持扇出到八个站点。
+* xref:create-snapmirror-cascade-fanout-reference.html[SnapMirror扇出]与FlexGroup卷上的SVM DR的关系。支持扇出到八个站点。
 
 
 
 
 == 从ONTAP 9.12.1开始支持的功能
 
-* FlexGroup 重新平衡
+* xref:manage-flexgroup-rebalance-task.html[FlexGroup 重新平衡]
 * 适用于SnapVault 的SnapLock
 * FabricPool、FlexGroup和SVM DR协同工作。(在ONTAP 9.12.1之前的版本中、其中任一两项功能协同工作、但并非所有这三项功能协同工作。)
-* 使用ONTAP 9.12.1 P2及更高版本时、在AFF和FAS平台上、FlexGroup卷成分卷的最大大小可达300 TB。
+* xref:../volumes/enable-large-vol-file-support-task.html[支持大卷]将FlexGroup卷成员大小从最大100 TB增加到最大300 TB。
 
 
 
 
 == 从ONTAP 9.11.1开始支持的功能
 
-* SnapLock 卷
+* xref:../snaplock/index.html[SnapLock 卷]
 +
 SnapLock 不支持对FlexGroup 卷使用以下功能：
 
@@ -61,37 +75,26 @@ SnapLock 不支持对FlexGroup 卷使用以下功能：
 
 
 
-您可以在FlexGroup 级别配置SnapLock。您不能在成分卷级别配置SnapLock。
+您可以在FlexGroup 级别配置SnapLock。您不能在成员卷级别配置SnapLock。
 
-xref:../snaplock/snaplock-concept.adoc[什么是 SnapLock]
-
-* 客户端异步目录删除
-+
-xref:manage-client-async-dir-delete-task.adoc[管理客户端异步删除目录的权限]
-
+* xref:manage-client-async-dir-delete-task.adoc[客户端异步目录删除]
 
 
 
 
 == 从 ONTAP 9.10.1 开始支持的功能
 
-* 将 FlexVol 卷转换为 SVM-DR 源中的 FlexGroup 卷
-+
-xref:convert-flexvol-svm-dr-relationship-task.adoc[将 FlexVol 卷转换为 SVM-DR 关系中的 FlexGroup 卷]
-
-* SVM灾难恢复FlexClone支持FlexGroup卷
-+
-xref:../volumes/create-flexclone-task.adoc[了解有关创建 FlexClone 卷的更多信息。]
-
+* xref:convert-flexvol-svm-dr-relationship-task.adoc[将FlexVol volume转换为SVM DR关系中的FlexGroup卷]
+* xref:../volumes/create-flexclone-task.adoc[SVM灾难恢复FlexClone支持FlexGroup卷]
 
 
 
 
 == 从ONTAP 9.9.1开始支持的功能
 
-* SVM 灾难恢复
+* xref:create-svm-disaster-recovery-relationship-task.html[SVM 灾难恢复]
 +
-不支持克隆属于 SVM-DR 关系的 FlexGroup 卷。
+不支持克隆SVM DR关系中的FlexGroup卷。
 
 * SnapMirror 扇出关系为 2 个或更多（ A 到 B ， A 到 C ），最多具有 8 个扇出支架。
 +
@@ -118,8 +121,8 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[为 FlexGroup 创建 SnapMi
 有关详细信息、请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_To_Convert_a_Transitioned_FlexVol_to_FlexGroup["如何将过渡后的FlexVol 转换为FlexGroup"]。
 
 * NFSv4.2
-* 异步删除文件和目录
-* 文件系统分析（ FSA ）
+* xref:fast-directory-delete-asynchronous-task.html[异步删除文件和目录]
+* xref:../concept_nas_file_system_analytics_overview.html[文件系统分析（ FSA ）]
 * FlexGroup 作为 VMware vSphere 数据存储库
 * 支持使用 NDMP 进行磁带备份和还原，包括以下功能：
 +
@@ -136,10 +139,10 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[为 FlexGroup 创建 SnapMi
 
 == 从ONTAP 9.7开始支持的功能
 
-* FlexClone 卷
+* xref:../volumes/flexclone-efficient-copies-concept.html[FlexClone 卷]
 * NFSv4和NFSv4.1
 * pNFS
-* 使用 NDMP 进行磁带备份和还原
+* xref:../ndmp/index.html[使用 NDMP 进行磁带备份和还原]
 +
 要在 FlexGroup 卷上支持 NDMP ，您必须了解以下几点：
 
@@ -166,7 +169,7 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[为 FlexGroup 创建 SnapMi
 == 从ONTAP 9.6开始支持的功能
 
 * 持续可用的 SMB 共享
-* MetroCluster 配置
+* https://docs.netapp.com/us-en/ontap-metrocluster/index.html["MetroCluster 配置"^]
 * 重命名FlexGroup卷 (`volume rename` 命令)
 * 缩减或减小FlexGroup卷的大小 (`volume size` 命令)
 * 弹性规模估算
@@ -230,7 +233,7 @@ xref:create-snapmirror-cascade-fanout-reference.adoc[为 FlexGroup 创建 SnapMi
 
 * 卷加密
 * 聚合实时重复数据删除（跨卷重复数据删除）
-* NetApp 卷加密（ NVE ）
+* xref:../encryption-at-rest/encrypt-volumes-concept.html[NetApp 卷加密（ NVE ）]
 
 
 
@@ -259,7 +262,7 @@ FlexGroup 卷是在 ONTAP 9.1 中推出的，支持多种 ONTAP 功能。
 
 
 
-== ONTAP 9 中不支持的配置
+== ONTAP 9中不支持的FlexGroup卷配置
 
 |===
 
@@ -268,22 +271,20 @@ FlexGroup 卷是在 ONTAP 9.1 中推出的，支持多种 ONTAP 功能。
 
 
  a| 
-* pNFS （ ONTAP 9.0 到 9.6 ）
+* xref:../nfs-admin/enable-disable-pnfs-task.html[pNFS](ONTAP 9 6及更早版本)
 * SMB 1.0
-* SMB 透明故障转移（ ONTAP 9.0 到 9.5 ）
-* SAN
+* xref:../smb-hyper-v-sql/witness-protocol-transparent-failover-concept.html[SMB透明故障转移](ONTAP 9 5及更早版本)
+* xref:../volumes/san-volumes-concept.html[SAN]
 
  a| 
-* SnapLock 卷(ONTAP 9.10.1及更早版本)
-* SMTape
-* SnapMirror同步
+* xref:../snaplock/index.html[SnapLock 卷](ONTAP 9 10.1及更早版本)
+* xref:../tape-backup/smtape-engine-concept.html[SMTape]
+* xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.html[SnapMirror同步]
 * 包含FabricPools的FlexGroup卷的SVM DR (ONTAP 9.11.1及更早版本)
 
  a| 
-* 远程卷影复制服务（ VSS ）
-* SVM 数据移动性
+* xref:../smb-hyper-v-sql/share-based-backups-remote-vss-concept.html[远程卷影复制服务（ VSS ）]
+* xref:../svm-migrate/index.html[SVM 数据移动性]
 
 
 |===
-.相关信息
-https://docs.netapp.com/ontap-9/index.jsp["ONTAP 9 文档中心"]
