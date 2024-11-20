@@ -172,9 +172,9 @@ ARP不支持以下卷配置：
 
 == 使用ARP保护的卷进行多管理员验证
 
-从ONTAP 9.13.1开始、您可以使用ARP启用多管理员验证(MAV)、以提高安全性。MAV可确保至少需要两个或更多经过身份验证的管理员在受保护的卷上关闭ARP、暂停ARP或将可疑攻击标记为误报。了解操作方法 link:../multi-admin-verify/enable-disable-task.html["为受ARP保护的卷启用MAV"^]。
+从ONTAP 9.13.1开始、您可以使用ARP启用多管理员验证(MAV)、以提高安全性。MAV可确保至少需要两个或更多经过身份验证的管理员在受保护的卷上关闭ARP、暂停ARP或将可疑攻击标记为误报。了解如何link:../multi-admin-verify/enable-disable-task.html["为受ARP保护的卷启用MAV"]。
 
-您需要为MAV组定义管理员并为创建MAV规则 `security anti-ransomware volume disable`， `security anti-ransomware volume pause`，和 `security anti-ransomware volume attack clear-suspect` 要保护的ARP命令。MAV组中的每个管理员都必须批准每个新规则请求和 link:../multi-admin-verify/enable-disable-task.html["再次添加MAV规则"^] 在MAV设置中。
+您需要为MAV组定义管理员，并为要保护的、 `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect`ARP命令创建MAV规则 `security anti-ransomware volume disable`。MAV组中的每个管理员都必须在MAV设置范围内批准每个新规则请求link:../multi-admin-verify/enable-disable-task.html["再次添加MAV规则"]。
 
 从ARP.14.1开始、ONTAP 9可提供有关创建ARP快照和观察新文件扩展名的警报。默认情况下、这些事件的警报处于禁用状态。可以在卷或SVM级别设置警报。您可以使用在SVM级别创建MAV规则，也可以使用在卷级别 `security anti-ransomware volume event-log modify`创建MAV规则 `security anti-ransomware vserver event-log modify`。
 
