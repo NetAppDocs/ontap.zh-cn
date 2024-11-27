@@ -21,9 +21,9 @@ summary: 安装并运行ONTAP 调解器服务后、必须在ONTAP 存储系统�
 
 == 配置ONTAP 调解器安全策略
 
-ONTAP 调解器服务器支持多种可配置的安全设置。  所有设置的默认值均在low_space_threshold" MIB：10只读文件中提供：
+ONTAP 调解器服务器支持多种可配置的安全设置。所有设置的默认值均在只读文件中提供 `low_space_threshold_mib: 10`：
 
-`/opt/netapp/lib/ontap_mediator/server_config/ontap_mediator.user_config.yaml`
+`/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.user_config.yaml`
 
 放置在中的所有值 `ontap_mediator.user_config.yaml` 将覆盖默认值、并在所有ONTAP 调解器升级中保持不变。
 
@@ -35,40 +35,93 @@ ONTAP 调解器服务器支持多种可配置的安全设置。  所有设置的
 
 == 修改ONTAP调解器属性
 
-可以配置以下属性：
+如果需要、可以修改本节中所述的ONTAP调解器属性。
 
 
-NOTE: 中的其他默认值 `ontap_mediator.config.yaml` 不应修改。
+NOTE: 不应更改中的其他默认值 `ontap_mediator.config.yaml`、因为在ONTAP调解器升级期间不会保留修改后的值。
 
-* *用于安装第三方SSL证书以替代默认自签名证书的设置*
-+
-....
-cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt'
-key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key'
-ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt'
-ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key'
-ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl'
-cert_valid_days: '1095'                   # Used to set the expiration on client certs to 3 years
-x509_passin_pwd: 'pass:ontap'             # passphrase for the signed client cert
-....
-* *提供保护以防止暴力破解密码攻击的设置*
-+
-要启用此功能、请为设置一个值 `window_seconds` 和 `retry_limit`
+您可以通过将所需变量复制到文件来修改ONTAP调解器属性 `ontap_mediator.user_config.yaml`、以覆盖默认设置。
 
-+
+
+
+=== 安装第三方SSL证书
+
+如果需要将默认自签名证书替换为第三方SSL证书、请修改以下文件中的某些属性：
+
+* `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`
+* `/opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini`
+
+
+这些文件中的变量用于控制ONTAP调解器服务使用的证书文件。
+
+下表中列出的默认变量包含在该文件中 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。
+
+[cols="2*"]
+|===
+| 变量 | 路径 
+
+
+| `cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt` 
+
+
+| `key_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key` 
+
+
+| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt` 
+
+
+| `ca_key_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key` 
+
+
+| `ca_serial_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl` 
+
+
+| `cert_valid_days` | `1095` 
+
+
+| `x509_passin_pwd` | `pass:ontap` 
+|===
+* `cert_valid_days`用于设置客户端证书的到期时间。最大值为三年(1095天)。
+* `x509_passin_pwd`是已签名客户端证书的密码短语。
+
+
+下表中列出的默认变量包含在该文件中 `/opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini`。
+
+[cols="2*"]
+|===
+| 变量 | 路径 
+
+
+| `mediator_cert` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt` 
+
+
+| `mediator_key` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key` 
+
+
+| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt` 
+|===
+如果修改了这些属性、请重新启动ONTAP调解器服务以应用更改。有关如何将默认证书替换为第三方证书的详细说明，请参阅link:../mediator/manage-task.html#replace-self-signed-certificates-with-trusted-third-party-certificates["将自签名证书替换为受信任的第三方证书"]。
+
+
+
+=== 密码攻击保护
+
+以下设置可防止暴力破解密码猜测攻击。
+
+要启用该功能，请为和 `retry_limit`设置一个值 `window_seconds`。
+
 示例
 
-+
 --
-** 提供一个5分钟的窗口供您进行猜测、然后将计数重置为零故障：
+* 提供一个5分钟的窗口供您进行猜测、然后将计数重置为零故障：
 +
 `authentication_lock_window_seconds: 300`
 
-** 如果在窗口时间范围内发生五次故障、请锁定帐户：
+* 如果在窗口时间范围内发生五次故障、请锁定帐户：
 +
 `authentication_retry_limit: 5`
 
-** 通过设置在拒绝每次尝试之前发生的延迟来减少暴力密码猜测攻击的影响、从而减缓攻击的速度。
+* 通过设置在拒绝每次尝试之前发生的延迟来减少暴力密码猜测攻击的影响、从而减缓攻击的速度。
 +
 `authentication_failure_delay_seconds: 5`
 
@@ -81,8 +134,12 @@ authentication_retry_limit: null          # number of retries to allow before lo
 
 
 --
-* *用于控制ONTAP 调解器API用户帐户的密码复杂度规则的字段*
-+
+
+
+=== 密码复杂度规则
+
+以下字段用于控制ONTAP调解器API用户帐户的密码复杂度规则。
+
 ....
 password_min_length: 8
 
@@ -96,45 +153,44 @@ password_special_chars: 1      # min. non-letter, non-digit
 
 password_nonletter_chars: 2    # min. non-letter characters (digits, specials, anything)
 ....
-* *用于控制上所需可用空间的设置 `/opt/netapp/lib/ontap_mediator` 磁盘。*
-+
+
+
+=== 控制可用空间
+
+有一些设置可控制磁盘上所需的可用空间 `/opt/netapp/lib/ontap_mediator`。
+
 如果此空间低于设置的阈值、则此服务将对警告事件执行问题描述 操作。
 
-+
 ....
 low_space_threshold_mib: 10
 ....
-* *用于控制RESERT_LOG_SPACE的设置。*
-+
-默认情况下、ONTAP调解器服务器会为日志创建单独的磁盘空间。  安装程序会创建一个新的固定大小文件、其中总磁盘空间为700 MB、将明确用于调解器日志记录。
 
-+
+
+=== 控制预留日志空间
+
+保留日志空间由特定设置控制。默认情况下、ONTAP调解器服务器安装会为日志创建单独的磁盘空间。安装程序会创建一个新的固定大小文件、其中总磁盘空间为700 MB、将明确用于调解器日志记录。
+
 要禁用此功能并使用默认磁盘空间、请执行以下步骤：
 
-+
 --
-.. 将以下文件中的RESERT_LOG_SPACE值从"`1`"更改为"`0`"：
+. 将以下文件中的RESERT_LOG_SPACE值从1更改为0：
 +
 `/opt/netapp/lib/ontap_mediator/tools/mediator_env`
 
-.. 重新启动调解器：
+. 重新启动调解器：
 +
-... `cat /opt/netapp/lib/ontap_mediator/tools/mediator_env | grep "RESERVE_LOG_SPACE"`
+.. `cat /opt/netapp/lib/ontap_mediator/tools/mediator_env | grep "RESERVE_LOG_SPACE"`
 +
 ....
 RESERVE_LOG_SPACE=0
 ....
-... `systemctl restart ontap_mediator`
+.. `systemctl restart ontap_mediator`
 
 
 
 
 --
-+
-要重新启用此功能、请将值从"`0`"更改为"`1`"、然后重新启动调解器。
+要重新启用此功能、请将此值从0更改为1、然后重新启动调解器。
 
-+
 
 NOTE: 在磁盘空间之间切换不会清除现有日志。  之前的所有日志都会进行备份、然后在切换并重新启动调解器后移至当前磁盘空间。
-
-
