@@ -1,0 +1,75 @@
+---
+permalink: revert/terminate-smb-sessions.html 
+sidebar: sidebar 
+keywords: ontap, revert, reversion, reverting, downgrade, downgrading, preparation 
+summary: 各种配置设置可能会影响集群升级准备情况。 
+---
+= 在还原ONTAP之前终止某些SMB会话
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在从任何版本的ONTAP 9还原ONTAP集群之前、您应确定并妥善终止不持续可用的任何SMB会话。
+
+通过使用 SMB 3.0 协议的 Hyper-V 或 Microsoft SQL Server 客户端访问的持续可用 SMB 共享，无需在升级或降级之前终止。
+
+.步骤
+. 确定已建立但不持续可用的任何SMB会话：
++
+[source, cli]
+----
+vserver cifs session show -continuously-available No -instance
+----
++
+此命令可显示有关无持续可用性的任何SMB会话的详细信息。在继续 ONTAP 降级之前，您应终止它们。
+
++
+[listing]
+----
+cluster1::> vserver cifs session show -continuously-available No -instance
+
+                        Node: node1
+                     Vserver: vs1
+                  Session ID: 1
+               Connection ID: 4160072788
+Incoming Data LIF IP Address: 198.51.100.5
+      Workstation IP address: 203.0.113.20
+    Authentication Mechanism: NTLMv2
+                Windows User: CIFSLAB\user1
+                   UNIX User: nobody
+                 Open Shares: 1
+                  Open Files: 2
+                  Open Other: 0
+              Connected Time: 8m 39s
+                   Idle Time: 7m 45s
+            Protocol Version: SMB2_1
+      Continuously Available: No
+1 entry was displayed.
+----
+. 如有必要、确定为您确定的每个SMB会话打开的文件：
++
+[source, cli]
+----
+vserver cifs session file show -session-id session_ID
+----
++
+[listing]
+----
+cluster1::> vserver cifs session file show -session-id 1
+
+Node:       node1
+Vserver:    vs1
+Connection: 4160072788
+Session:    1
+File    File      Open Hosting                               Continuously
+ID      Type      Mode Volume          Share                 Available
+------- --------- ---- --------------- --------------------- ------------
+1       Regular   rw   vol10           homedirshare          No
+Path: \TestDocument.docx
+2       Regular   rw   vol10           homedirshare          No
+Path: \file1.txt
+2 entries were displayed.
+----
+

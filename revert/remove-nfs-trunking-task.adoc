@@ -4,22 +4,30 @@ sidebar: sidebar
 keywords: nfsv4.1, trunking, revert 
 summary: 如果为客户端连接启用了中继、而还原到ONTAP 9.12.1之前的版本、则必须在还原之前在任何NFSv4.1服务器上禁用中继。 
 ---
-= 从ONTAP 9.14.1或更高版本还原之前、请删除NFSv4.1会话中继配置
+= 在从9.14.1 9.14.1还原之前禁用NFSv4.1会话中继
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果您已为客户端连接启用中继、并还原到ONTAP 9.14.1之前的版本、则必须在还原之前在任何NFSv4.1服务器上禁用中继。
+如果为客户端连接启用了中继、则必须在从ONTAP 9.14.1还原之前在任何NFSv4.1服务器上禁用中继。
 
 当您输入时 `revert-to` 命令时、您将看到一条警告消息、建议您在继续操作之前禁用中继。
 
-还原到早期ONTAP版本后、使用中继连接的客户端将回退到使用单个连接。他们的数据吞吐量将受到影响、但不会发生中断。还原行为与将SVM的NFSv4.1中继选项从启用修改为禁用相同。
+还原到ONTAP 9.131后、使用中继连接的客户端将回退到使用单个连接。他们的数据吞吐量将受到影响、但不会发生中断。还原行为与将SVM的NFSv4.1中继选项从启用修改为禁用相同。
 
 .步骤
-. 在NFSv4.1服务器上禁用中继：+
-`vserver nfs modify -vserver _svm_name_ -v4.1-trunking disabled`
-. 验证是否已根据需要配置NFS：+
-`vserver nfs show -vserver _svm_name_`
+. 在NFSv4.1服务器上禁用中继：
++
+[source, cli]
+----
+vserver nfs modify -vserver _svm_name_ -v4.1-trunking disabled
+----
+. 验证是否已根据需要配置 NFS ：
++
+[source, cli]
+----
+vserver nfs show -vserver _svm_name_
+----
 

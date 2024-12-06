@@ -4,130 +4,87 @@ sidebar: sidebar
 keywords: fc, target, port, configuration, recommendations 
 summary: 为了获得最佳性能和最高可用性，您应使用建议的 FC 目标端口配置。 
 ---
-= FC 目标端口配置建议
+= FC目标端口配置建议
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-为了获得最佳性能和最高可用性，您应使用建议的 FC 目标端口配置。
+FC目标端口的配置和使用方式与FC协议的配置和使用方式完全相同。对FC-NVMe协议的支持因平台和ONTAP版本而异。使用NetApp Hardware Universe验证是否支持。
 
-下表显示了板载 FC 和 FC-NVMe 目标端口的首选端口使用顺序。对于扩展适配器， FC 端口应进行分布，以使其不使用同一 ASIC 进行连接。中列出了首选插槽顺序 https://hwu.netapp.com["NetApp Hardware Universe"^] 控制器使用的 ONTAP 软件版本。
-
-以下型号支持 FC-NVMe ：
-
-* AFF A300
-+
-[NOTE]
-====
-AFF A300 板载端口不支持 FC-NVMe 。
-
-====
-* AFF A700
-* AFF A700s
-* AFF A800
+为了获得最佳性能和最高可用性、您应针对特定平台使用中列出的建议目标端口配置 https://hwu.netapp.com["NetApp Hardware Universe"^]。
 
 
-[NOTE]
-====
-FAS2520系统不具有板载FC端口、也不支持附加适配器。
 
-====
+== 使用共享ASIC的FC目标端口的配置
+
+以下平台具有具有共享应用程序专用集成电路(Application-Specific Integrated Circuits、ASIC)的端口对。如果在这些平台上使用扩展适配器、则应配置FC端口、以使其不使用同一ASIC进行连接。
+
 [cols="3*"]
 |===
-| 控制器 | 具有共享 ASIC 的端口对 | 目标端口数：首选端口 
+| 控制器 | 具有共享 ASIC 的端口对 | 目标端口数：建议的端口 
 
 
  a| 
-FAS9000 ， AFF A700 ， AFF A700s 和 AFF A800
- a| 
-无
- a| 
-所有数据端口均位于扩展适配器上。请参见 https://hwu.netapp.com["NetApp Hardware Universe"^] 有关详细信息 ...
+* FAS8200
+* AFF A300
 
-
-
- a| 
-8080 ， 8060 和 8040
- a| 
-0E+0f
-
-0g+0h
- a| 
-1 ： 0E
-
-2 ： 0E ， 0g
-
-3 ： 0E ， 0g ， 0h
-
-4 ： 0E ， 0g ， 0f ， 0h
-
-
-
- a| 
-FAS8200 和 AFF A300
  a| 
 0g+0h
  a| 
-1 ： 0g
-
-2 ： 0g ， 0h
+1：0g 2：0g、0h
 
 
 
  a| 
-8020.
- a| 
-0C+0d
- a| 
-1 ： 0C
-
-2 ： 0C ， 0d
-
-
+* FAS2720
+* FAS2750
+* AFF A220
 
  a| 
-62xx
+0c+0d 0e+0f
  a| 
-0a+0b
-
-0C+0d
- a| 
-1：0A
-
-2：0a、0c
-
-3 ： 0a ， 0c ， 0b
-
-4 ： 0a ， 0c ， 0b ， 0d
-
-
-
- a| 
-32xx
- a| 
-0C+0d
- a| 
-1 ： 0C
-
-2 ： 0C ， 0d
-
-
-
- a| 
-FAS2554 ， FAS2552 ， FAS2600 系列， FAS2720 ， FAS2750 ， AFF A200 和 AFF A220
- a| 
-0C+0d
-
-0E+0f
- a| 
-1 ： 0C
-
-2：0c、0e
-
-3 ： 0C ， 0e ， 0d
-
-4 ： 0C ， 0e ， 0d ， 0f
+1：0C 2：0C、0e 3：0C、0e、0d 4：0C、0e、0d、0f
 
 |===
+
+
+== FC 目标端口支持的速度
+
+可以将 FC 目标端口配置为以不同的速度运行。给定主机使用的所有目标端口都应设置为相同的速度。您应设置目标端口速度，使其与所连接设备的速度一致。请勿对端口速度使用自动验证。在接管 / 交还或其他中断后，设置为自动协商的端口可能需要较长时间才能重新连接。
+
+您可以将板载端口和扩展适配器配置为以以下速度运行。可以根据需要为每个控制器和扩展适配器端口分别配置不同的速度。
+
+[cols="4*"]
+|===
+| 4 Gb 端口 | 8 Gb端口 | 16 Gb端口 | 32 Gb端口 
+
+
+ a| 
+* 4 GB
+* 2 GB
+* 1 GB
+
+ a| 
+* 8 GB
+* 4 GB
+* 2 GB
+
+ a| 
+* 16 GB
+* 8 GB
+* 4 GB
+
+ a| 
+* 32 GB
+* 16 GB
+* 8 GB
+
+
+|===
+[NOTE]
+====
+UTA2 端口可以根据需要使用 8 Gb SFP+ 适配器来支持 8 ， 4 和 2 Gb 的速度。
+
+====

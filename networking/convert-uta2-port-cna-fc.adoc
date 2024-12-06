@@ -1,0 +1,87 @@
+---
+permalink: networking/convert-uta2-port-cna-fc.html 
+sidebar: sidebar 
+keywords: change, uta2, port, cna mode, fc mode 
+summary: 如果需要更改将端口连接到其网络的物理介质或支持FC启动程序和目标、请将UTA2特性从CNO模式更改为FC模式。 
+---
+= 在ONTAP中转换UTA2端口
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以将UTA2端口从融合网络适配器(CNA)模式转换为光纤通道(FC)模式、反之亦然。
+
+如果需要更改将端口连接到其网络的物理介质或支持FC启动程序和目标、则应将UTA2特性从CNO模式更改为FC模式。
+
+[role="tabbed-block"]
+====
+.从CNNA模式到FC模式
+--
+.步骤
+. 使适配器脱机：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter_name> -status-admin down
+----
+. 更改端口模式：
++
+[source, cli]
+----
+ucadmin modify -node <node_name> -adapter <adapter_name> -mode fcp
+----
+. 重新启动节点，然后使适配器联机：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter_name> -status-admin up
+----
+. 通知管理员或 VIF 管理器删除或删除此端口（如果适用）：
++
+** 如果此端口用作 LIF 的主端口，接口组（ ifgrp ）的成员或托管 VLAN ，则管理员应执行以下操作：
++
+*** 分别移动 LIF ，从 ifgrp 中删除端口或删除 VLAN 。
+*** 运行命令以手动删除此端口 `network port delete`。如果 `network port delete`命令失败、管理员应解决错误、然后再次运行命令。
+
+
+** 如果此端口未用作 LIF 的主端口，不是 ifgrp 的成员且未托管 VLAN ，则 VIF 管理器应在重新启动时从其记录中删除此端口。如果VIF管理器未删除此端口、则管理员必须在重新启动后使用命令手动删除此端口 `network port delete`。
+
+
+. 验证是否已安装正确的 SFP+ ：
++
+[source, cli]
+----
+network fcp adapter show -instance -node -adapter
+----
++
+对于 CNA ，您应使用 10 Gb 以太网 SFP 。对于 FC ，在更改节点上的配置之前，您应使用 8 Gb SFP 或 16 Gb SFP 。
+
+
+
+--
+.从FC模式到CNNA模式
+--
+.步骤
+. 使适配器脱机：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter_name> -status-admin down
+----
+. 更改端口模式：
++
+[source, cli]
+----
+ucadmin modify -node <node_name> -adapter <adapter_name> -mode cna
+----
+. 重新启动节点。
+. 验证是否已安装正确的SFP+。
++
+对于 CNA ，您应使用 10 Gb 以太网 SFP 。
+
+
+
+--
+====

@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ontap, revert, reverting, reversion, snapshot, copy, copies, policy, policies, enable, restart 
 summary: 还原到早期版本的 ONTAP 后，必须启用 Snapshot 副本策略才能重新开始创建 Snapshot 副本。 
 ---
-= 还原后启用 Snapshot 副本策略
+= 在ONTAP还原后启用Snapshot副本策略
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -15,17 +15,22 @@ summary: 还原到早期版本的 ONTAP 后，必须启用 Snapshot 副本策略
 
 您正在重新启用在还原到早期版本的 ONTAP 之前禁用的 Snapshot 计划。
 
+.步骤
 . 为所有数据 SVM 启用 Snapshot 副本策略：
 +
-`volume snapshot policy modify -vserver * -enabled true`
-
-+
-`snapshot policy modify pg-rpo-hourly -enable true`
-
-. 对于每个节点，使用 run-nodenamevol optionsroot_vol_namenosnap off 命令启用根卷的 Snapshot 副本策略。
-+
-[listing]
+[source, cli]
 ----
-cluster1::> run -node node1 vol options vol0 nosnap off
+volume snapshot policy modify -vserver * -enabled true
+----
++
+[source, cli]
+----
+snapshot policy modify pg-rpo-hourly -enable true
+----
+. 对于每个节点、启用根卷的Snapshot副本策略：
++
+[source, cli]
+----
+run -node <node_name> vol options <volume_name> nosnap off
 ----
 

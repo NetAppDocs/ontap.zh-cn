@@ -2,62 +2,69 @@
 section: revert
 title: 还原 ONTAP
 entries:
-- title: 概述
-  url: "/revert/index.html"
 - title: 我是否需要技术支持？
   url: "/revert/concept_when_to_call_technical_support.html"
-- title: 还原路径是什么？
+- title: ONTAP还原路径
   url: "/revert/concept_revert_paths.html"
-- title: 在还原之前，应阅读哪些内容？
+- title: 还原问题和限制
+  url: "/revert/concept_revert_process_considerations.html"
+- title: 准备ONTAP还原
   entries:
-  - title: 预还原资源
+  - title: 还原前要查看的资源
     url: "/revert/task_reviewing_pre_reversion_resources.html"
-  - title: 还原注意事项
-    url: "/revert/concept_revert_process_considerations.html"
-- title: 在还原之前，应验证哪些内容？
-  url: "/revert/task_things_to_verify_before_revert.html"
-- title: 在还原之前，还应检查其他哪些内容？
-  entries:
-  - title: 还原前检查摘要
-    url: "/revert/concept_pre_revert_checks.html"
-  - title: SnapMirror
-    pdf-filename: SnapMirror恢复要求
+  - title: 系统验证
+    url: "/revert/task_things_to_verify_before_revert.html"
+  - title: 执行ONTAP版本专用的还原前检查
     entries:
-    - title: SnapMirror 同步关系
-      url: "/revert/concept_consideration_for_reverting_systems_with_snapmirror_synchronous_relationships.html"
-    - title: SnapMirror/SnapVault 关系
-      url: "/revert/concept_reversion_requirements_for_snapmirror_and_snapvault_relationships.html"
-  - title: SnapLock
-    url: "/revert/task_setting_autocommit_periods_for_snaplock_volumes_before_reverting.html"
-  - title: 拆分 FlexClone 卷
-    url: "/revert/task_reverting_the_physical_block_sharing_in_split_flexclone_volumes.html"
-  - title: FlexGroup 卷
-    url: "/revert/task_disabling_qtrees_in_flexgroup_volumes_before_reverting.html"
-  - title: 工作组模式下的SMB服务器
-    url: "/revert/task_identifying_and_moving_cifs_servers_in_workgroup_mode.html"
-  - title: 已删除重复数据的卷
-    url: "/revert/task_reverting_systems_with_deduplicated_volumes.html"
-  - title: Snapshot 副本
-    url: "/revert/task_preparing_snapshot_copies_before_reverting.html"
-  - title: 使用 SHA-2 哈希函数的用户帐户
-    url: "/revert/identify-user-sha2-hash-user-accounts.html"
-  - title: 反勒索软件许可
-    url: "/revert/anti-ransomware-license-task.html"
-  - title: S3 NAS存储分段
-    url: "/revert/remove-nas-bucket-task.html"
-  - title: NFSv4.1中继
-    url: "/revert/remove-nfs-trunking-task.html"
-  - title: 2 节点或 4 节点 MetroCluster
-    url: "/revert/task_disable_asuo.html"
-  - title: 禁用IPsec
-    url: "/revert/task-disable-ipsec.html"
-  - title: 在NVMe主机上禁用TLS
-    url: "/revert/task-disable-tls-nvme-host.html"
-- title: 如何获取和安装还原软件映像？
+    - title: 还原前检查摘要
+      url: "/revert/concept_pre_revert_checks.html"
+    - title: 任何ONTAP 9版本
+      entries:
+      - title: SMB会话
+        url: "/revert/terminate-smb-sessions.html"
+      - title: SnapMirror/SnapVault 关系
+        url: "/revert/concept_reversion_requirements_for_snapmirror_and_snapvault_relationships.html"
+      - title: 已删除重复数据的卷
+        url: "/revert/task_reverting_systems_with_deduplicated_volumes.html"
+      - title: 快照
+        url: "/revert/task_preparing_snapshot_copies_before_reverting.html"
+      - title: SnapLock
+        url: "/revert/task_setting_autocommit_periods_for_snaplock_volumes_before_reverting.html"
+      - title: MetroCluster配置的自动计划外切换
+        url: "/revert/task_disable_asuo.html"
+    - title: ONTAP 9.16.1.
+      entries:
+      - title: NVMe TLS配置
+        url: "/revert/task-disable-tls-nvme-host.html"
+      - title: 扩展的qtree性能监控
+        url: "/revert/disable-extended-qtree-performance-monitoring.html"
+      - title: S3 CORS配置
+        url: "/revert/remove-cors-configuration.html"
+    - title: ONTAP 9.14.1
+      entries:
+      - title: NFS中继
+        url: "/revert/remove-nfs-trunking-task.html"
+    - title: ONTAP 9.12.1
+      entries:
+      - title: S3 NAS存储分段
+        url: "/revert/remove-nas-bucket-task.html"
+      - title: NVMe带内身份验证
+        url: "/revert/disable-in-band-authentication.html"
+      - title: 用于MetroCluster配置的IPSEC
+        url: "/revert/task-disable-ipsec.html"
+    - title: ONTAP 9.11.1
+      entries:
+      - title: 反勒索软件许可
+        url: "/revert/anti-ransomware-license-task.html"
+    - title: ONTAP 9.6
+      entries:
+      - title: SnapMirror 同步关系
+        url: "/revert/concept_consideration_for_reverting_systems_with_snapmirror_synchronous_relationships.html"
+- title: 下载并安装还原软件映像
   url: "/revert/task_download_and_install_ontap_software_image.html"
-- title: 还原我的集群
+- title: 还原集群
   url: "/revert/task_reverting_an_ontap_cluster.html"
-- title: 还原集群后应执行什么操作？
+- title: ONTAP还原后要执行的操作
   entries:
   - title: 验证集群和存储运行状况
     url: "/revert/task_verify_health.html"
@@ -67,13 +74,7 @@ entries:
     url: "/revert/task_enabling_and_reverting_lifs_to_home_ports_completing_post_reversion_tasks.html"
   - title: 启用 Snapshot 副本策略
     url: "/revert/task_preparing_snapshot_copies_after_reverting.html"
-  - title: 验证客户端访问(SMB和NFS)
-    url: "/revert/task_verifying_client_access_cifs_and_nfs.html"
   - title: 验证 IPv6 防火墙条目
     url: "/revert/task_verifying_ipv6_firewall_entries.html"
-  - title: 还原密码哈希函数
-    url: "/revert/task_reverting_password_hash_function.html"
-  - title: 自动更新 SP 固件
-    url: "/revert/concept_support_of_sp_firmware_automatic_revert.html"
   - title: 验证可访问服务处理器的用户帐户
     url: "/revert/verify-sp-user-accounts-task.html"

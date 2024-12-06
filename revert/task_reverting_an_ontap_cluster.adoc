@@ -11,19 +11,39 @@ summary: 要使集群脱机以还原到早期的 ONTAP 版本，您必须禁用�
 
 
 [role="lead"]
-要使集群脱机以还原到早期的 ONTAP 版本，您必须禁用存储故障转移和数据 LIF ，解决还原前提条件，还原节点上的集群和文件系统配置，然后对集群中的其他每个节点重复此过程。
+还原ONTAP集群会造成系统中断。您必须在恢复期间使集群脱机。没有技术支持的帮助、您不应还原生产集群。
 
-您必须已完成还原 link:task_things_to_verify_before_revert.html["验证"] 和 link:concept_pre_revert_checks.html["预检查"]。
+要还原新集群或测试集群、您必须禁用存储故障转移和数据Bifs并解决还原前提条件；然后、您必须还原集群中每个节点上的集群和文件系统配置。
 
-还原集群要求您在还原期间使集群脱机。
+.开始之前。
+* 您应已完成link:task_things_to_verify_before_revert.html["还原前验证"]。
+* 您应已完成所需的link:concept_pre_revert_checks.html["预检查特定ONTAP版本"]。
 
-. 将权限级别设置为高级： `set -privilege advanced`
+
+
+
+== 第1步：准备集群以进行恢复
+
+在还原任何集群节点之前、您应验证是否已安装目标映像、并禁用集群中的所有数据ONTAP。
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
 +
 在系统提示您继续时、输入*。
 
-. 验证是否已安装目标ONTAP软件： `system image show`
+. 验证是否已安装目标ONTAP软件：
 +
-以下示例显示了版本 9.1 作为备用映像安装在两个节点上：
+[source, cli]
+----
+system image show
+----
++
+以下示例显示9.13.1已作为备用映像安装在两个节点上：
 
 +
 [listing]
@@ -33,29 +53,71 @@ cluster1::*> system image show
 Node     Image   Default Current Version    Date
 -------- ------- ------- ------- --------   -------------------
 node0
-         image1  true    true    9.2        MM/DD/YYYY TIME
-         image2  false   false   9.1        MM/DD/YYYY TIME
+         image1  true    true    9.14.1      MM/DD/YYYY TIME
+         image2  false   false   9.13.1      MM/DD/YYYY TIME
 node1
-         image1  true    true    9.2        MM/DD/YYYY TIME
-         image2  false   false   9.1        MM/DD/YYYY TIME
+         image1  true    true    9.14.1      MM/DD/YYYY TIME
+         image2  false   false   9.13.1      MM/DD/YYYY TIME
 4 entries were displayed.
 ----
-. 禁用集群中的所有数据Bifs： `network interface modify {-role data} -status-admin down`
-. 确定是否存在集群间FlexCache 关系： `flexcache origin show-caches -relationship-type inter-cluster`
-. 如果存在集群间聚合、请禁用缓存集群上的数据LIF： `network interface modify -vserver vserver_name -lif lif_name -status-admin down`
-. 如果集群仅包含两个节点、请禁用集群HA： `cluster ha modify -configured false`
-. 【第5步】从任一节点为HA对中的节点禁用存储故障转移： `storage failover modify -node nodename -enabled false`
+. 禁用集群中的所有数据Bifs：
 +
-对于 HA 对，只需禁用一次存储故障转移。如果对某个节点禁用存储故障转移，则该节点的配对节点上也会禁用存储故障转移。
+[source, cli]
+----
+network interface modify {-role data} -status-admin down
+----
+. 确定是否存在集群间FlexCache 关系：
++
+[source, cli]
+----
+flexcache origin show-caches -relationship-type inter-cluster
+----
+. 如果存在集群间聚合、请禁用缓存集群上的数据LIF：
++
+[source, cli]
+----
+network interface modify -vserver <vserver_name> -lif <lif_name> -status-admin down
+----
 
-. 【第6步】登录到要还原的节点。
+
+
+
+== 第2步：还原集群节点
+
+要还原集群、您需要还原HA对中的第一个节点、然后还原配对节点。然后、对集群中的每个HA对重复此过程、直到所有节点均已还原为止。如果您使用的是MetroCluster配置、则需要对该配置中的两个集群重复上述步骤。
+
+[role="tabbed-block"]
+====
+.4个或更多节点
+--
+.步骤
+. 登录到要还原的节点。
 +
 要还原节点，必须通过节点的节点管理 LIF 登录到集群。
 
-. 将节点的目标ONTAP软件映像设置为默认映像： `system image modify -node nodename -image target_image -isdefault true`
-. 验证目标ONTAP软件映像是否已设置为要还原的节点的默认映像： `system image show`
+. 为HA对中的节点禁用存储故障转移：
 +
-以下示例显示版本 9.1 已设置为 node0 上的默认映像：
+[source, cli]
+----
+storage failover modify -node <nodename> -enabled false
+----
++
+对于 HA 对，只需禁用一次存储故障转移。如果对某个节点禁用存储故障转移，则该节点的配对节点上也会禁用存储故障转移。
+
+. 将节点的目标ONTAP软件映像设置为默认映像：
++
+[source, cli]
+----
+system image modify -node <nodename> -image <target_image> -isdefault true
+----
+. 验证目标ONTAP软件映像是否已设置为要还原的节点的默认映像：
++
+[source, cli]
+----
+system image show
+----
++
+以下示例显示9.13.1已设置为node0上的默认映像：
 
 +
 [listing]
@@ -65,59 +127,56 @@ cluster1::*> system image show
 Node     Image   Default Current Version    Date
 -------- ------- ------- ------- --------   -------------------
 node0
-         image1  false   true    9.2        MM/DD/YYYY TIME
-         image2  true    false   9.1        MM/DD/YYYY TIME
+         image1  false   true    9.14.1      MM/DD/YYYY TIME
+         image2  true    false   9.13.1      MM/DD/YYYY TIME
 node1
-         image1  true    true    9.2        MM/DD/YYYY TIME
-         image2  false   false   9.1        MM/DD/YYYY TIME
+         image1  true    true    9.14.1      MM/DD/YYYY TIME
+         image2  false   false   9.13.1      MM/DD/YYYY TIME
 4 entries were displayed.
 ----
-. 如果集群仅包含两个节点，请验证此节点是否不持有 epsilon ：
+. 验证节点是否已准备好进行恢复：
 +
-.. 检查节点当前是否持有eps龙： `cluster show -node nodename`
-+
-以下示例显示该节点持有 epsilon ：
-
-+
-[listing]
+[source, cli]
 ----
-cluster1::*> cluster show -node node1
-
-          Node: node1
-          UUID: 026efc12-ac1a-11e0-80ed-0f7eba8fc313
-       Epsilon: true
-   Eligibility: true
-        Health: true
+system node revert-to -node <nodename> -check-only true -version 9.x
 ----
-.. 如果此节点持有eps龙、请在该节点上将eps龙 标记为false、以便eps龙 可以传输到该节点的配对节点： `cluster modify -node nodenameA -epsilon false`
-.. 通过在配对节点上将eps龙 标记为true、将eps龙 传输到该节点的配对节点： `cluster modify -node nodenameB -epsilon true`
-
-
-. 验证节点是否已准备好进行恢复： `system node revert-to -node nodename -check-only true -version 9.x`
 +
-check-only 参数用于确定还原前必须解决的任何前提条件，例如以下示例：
+ `check-only`参数用于标识还原之前必须解决的任何前提条件、例如、禁用Snapshot策略或删除在升级到更高版本的ONTAP之后创建的Snapshot副本。
 
+. 还原节点的集群配置：
 +
-** 禁用存储故障转移
-** 正在禁用 Snapshot 策略
-** 删除在升级到更高版本的 ONTAP 后创建的 Snapshot 副本
-
-
-. 验证是否已解决所有前提条件： `system node revert-to -node nodename -check-only true -version 9.x`
-. 还原节点的集群配置： `system node revert-to -node nodename -version 9.x`
+[source, cli]
+----
+system node revert-to -node <nodename> -version 9.x
+----
 +
-version 选项是指目标版本。例如，如果您安装并验证的软件为 ONTAP 9.1 ，则 -version 选项的正确值为 9.1 。
+ `-version`选项是指要还原到的ONTAP版本。例如、如果要将9.14.1还原到9.13.1,则该选项的正确值 `-version`为9.13.1.
 
 +
 此时将还原集群配置，然后您将从 clustershell 中注销。
 
-. 重新登录到该"nosershell"、然后切换到noshell"： `run -node nodename`
+. 等待登录提示，然后在系统询问您是否要登录到systemshell时输入*No*。
++
+可能需要长达30分钟或更长时间才能显示登录提示。
+
+. 使用admin登录到集群Shell。
+. 切换到noshell：
++
+[source, cli]
+----
+run -node <nodename>
+----
 +
 再次登录 clustershell 后，可能需要几分钟时间，才能准备好接受 nodeshell 命令。因此，如果命令失败，请等待几分钟，然后重试。
 
-. 还原节点的文件系统配置： `revert_to 9.x`
+. 还原节点的文件系统配置：
 +
-此命令将验证节点的文件系统配置是否已准备好还原，然后还原该配置。如果确定了任何前提条件，则必须解决这些前提条件，然后重新运行 revert_to 命令。
+[source, cli]
+----
+revert_to 9.x
+----
++
+此命令将验证节点的文件系统配置是否已准备好还原，然后还原该配置。如果确定了任何前提条件、则必须先解决这些前提条件、然后重新运行 `revert_to`命令。
 
 +
 
@@ -127,9 +186,14 @@ NOTE: 使用系统控制台监控还原过程可显示比 nodeshell 更多的详
 如果 autoboot 为 true ，则在命令完成后，节点将重新启动到 ONTAP 。
 
 +
-如果 autoboot 为 false ，则在命令完成后，将显示 LOADER 提示符。输入 ... `yes` 还原、然后使用 `boot_ontap` 手动重新启动节点。
+如果autoboot为false、则在命令完成后、将显示Loader提示符。输入 `yes`以还原、然后使用 `boot_ontap`手动重新启动节点。
 
-. 节点重新启动后、确认新软件是否正在运行： `system node image show`
+. 节点重新启动后、确认新软件是否正在运行：
++
+[source, cli]
+----
+system node image show
+----
 +
 在以下示例中， image1 是新的 ONTAP 版本，并设置为 node0 上的当前版本：
 
@@ -148,12 +212,215 @@ node1
          image2  false   true    Y.Y.Y      MM/DD/YYYY TIME
 4 entries were displayed.
 ----
-. 【第16步】验证每个节点的还原状态是否已完成： `system node upgrade-revert show -node nodename`
+. 验证节点的还原状态是否为complete：
++
+[source, cli]
+----
+system node upgrade-revert show -node <nodename>
+----
 +
 此状态应显示为"完成"、"不需要"或"未返回任何表条目"。
 
-. 重复 <<step-6>> 到 <<step-16>> 在 HA 对中的另一个节点上。
-. 如果集群仅包含两个节点、请重新启用集群HA： `cluster ha modify -configured true`
-. 如果先前已禁用存储故障转移、则在两个节点上重新启用存储故障转移： `storage failover modify -node nodename -enabled true`
-. 重复 <<step-5>> 到 <<step-19>> MetroCluster 配置中的每个附加 HA 对和两个集群。
+. 对HA对中的另一个节点重复上述步骤、然后对其他每个HA对重复上述步骤。
++
+如果您使用的是MetroCluster配置、则需要对配置中的两个集群重复这些步骤
 
+. 还原所有节点后、为集群重新启用高可用性：
++
+[source, cli]
+----
+cluster ha modify -configured true
+----
+
+
+--
+.2 节点集群
+--
+. 登录到要还原的节点。
++
+要还原节点，必须通过节点的节点管理 LIF 登录到集群。
+
+. 禁用集群高可用性(HA)：
++
+[source, cli]
+----
+cluster ha modify -configured false
+----
+. 禁用存储故障转移：
++
+[source, cli]
+----
+storage failover modify -node <nodename> -enabled false
+----
++
+对于 HA 对，只需禁用一次存储故障转移。如果对某个节点禁用存储故障转移，则该节点的配对节点上也会禁用存储故障转移。
+
+. 将节点的目标ONTAP软件映像设置为默认映像：
++
+[source, cli]
+----
+system image modify -node <nodename> -image <target_image> -isdefault true
+----
+. 验证目标ONTAP软件映像是否已设置为要还原的节点的默认映像：
++
+[source, cli]
+----
+system image show
+----
++
+以下示例显示版本 9.1 已设置为 node0 上的默认映像：
+
++
+[listing]
+----
+cluster1::*> system image show
+                 Is      Is                 Install
+Node     Image   Default Current Version    Date
+-------- ------- ------- ------- --------   -------------------
+node0
+         image1  false   true    9.2        MM/DD/YYYY TIME
+         image2  true    false   9.1        MM/DD/YYYY TIME
+node1
+         image1  true    true    9.2        MM/DD/YYYY TIME
+         image2  false   false   9.1        MM/DD/YYYY TIME
+4 entries were displayed.
+----
+. 检查节点当前是否持有eps龙：
++
+[source, cli]
+----
+cluster show -node <nodename>
+----
++
+以下示例显示该节点持有 epsilon ：
+
++
+[listing]
+----
+cluster1::*> cluster show -node node1
+
+          Node: node1
+          UUID: 026efc12-ac1a-11e0-80ed-0f7eba8fc313
+       Epsilon: true
+   Eligibility: true
+        Health: true
+----
++
+.. 如果此节点持有eps龙、请在该节点上将eps龙 标记为false、以便eps龙 可以传输到该节点的配对节点：
++
+[source, cli]
+----
+cluster modify -node <nodename> -epsilon false
+----
+.. 通过在配对节点上将eps龙 标记为true、将eps龙 传输到该节点的配对节点：
++
+[source, cli]
+----
+cluster modify -node <node_partner_name> -epsilon true
+----
+
+
+. 验证节点是否已准备好进行恢复：
++
+[source, cli]
+----
+system node revert-to -node <nodename> -check-only true -version 9.x
+----
++
+ `check-only`参数用于标识还原前必须解决的任何条件、例如禁用Snapshot策略或删除在升级到更高版本的ONTAP之后创建的Snapshot副本。
+
+. 还原节点的集群配置：
++
+[source, cli]
+----
+system node revert-to -node <nodename> -version 9.x
+----
++
+ `-version`选项是指要还原到的ONTAP版本。例如、如果要将9.14.1还原到9.13.1,则该选项的正确值 `-version`为9.13.1.
+
++
+此时将还原集群配置，然后您将从 clustershell 中注销。
+
+. 等待出现登录提示、然后在系统询问您是否要登录到systemshell时输入 `No`。
++
+可能需要长达30分钟或更长时间才能显示登录提示。
+
+. 使用admin登录到集群Shell。
+. 切换到noshell：
++
+[source, cli]
+----
+run -node <nodename>
+----
++
+再次登录 clustershell 后，可能需要几分钟时间，才能准备好接受 nodeshell 命令。因此，如果命令失败，请等待几分钟，然后重试。
+
+. 还原节点的文件系统配置：
++
+[source, cli]
+----
+revert_to 9.x
+----
++
+此命令将验证节点的文件系统配置是否已准备好还原，然后还原该配置。如果确定了任何前提条件、则必须先解决这些前提条件、然后重新运行 `revert_to`命令。
+
++
+
+NOTE: 使用系统控制台监控还原过程可显示比 nodeshell 更多的详细信息。
+
++
+如果 autoboot 为 true ，则在命令完成后，节点将重新启动到 ONTAP 。
+
++
+如果 autoboot 为 false ，则在命令完成后，将显示 LOADER 提示符。输入 ... `yes` 还原、然后使用 `boot_ontap` 手动重新启动节点。
+
+. 节点重新启动后、确认新软件是否正在运行：
++
+[source, cli]
+----
+system node image show
+----
++
+在以下示例中， image1 是新的 ONTAP 版本，并设置为 node0 上的当前版本：
+
++
+[listing]
+----
+cluster1::*> system node image show
+                 Is      Is                 Install
+Node     Image   Default Current Version    Date
+-------- ------- ------- ------- --------   -------------------
+node0
+         image1  true    true    X.X.X       MM/DD/YYYY TIME
+         image2  false   false   Y.Y.Y      MM/DD/YYYY TIME
+node1
+         image1  true    false   X.X.X      MM/DD/YYYY TIME
+         image2  false   true    Y.Y.Y      MM/DD/YYYY TIME
+4 entries were displayed.
+----
+. 验证节点的还原状态是否为complete：
++
+[source, cli]
+----
+system node upgrade-revert show -node <nodename>
+----
++
+此状态应显示为"完成"、"不需要"或"未返回任何表条目"。
+
+. 对HA对中的另一个节点重复上述步骤。
+. 还原两个节点后、为集群重新启用高可用性：
++
+[source, cli]
+----
+cluster ha modify -configured true
+----
+. 在两个节点上重新启用存储故障转移：
++
+[source, cli]
+----
+storage failover modify -node <nodename> -enabled true
+----
+
+
+--
+====

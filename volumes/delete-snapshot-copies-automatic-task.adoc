@@ -2,27 +2,27 @@
 permalink: volumes/delete-snapshot-copies-automatic-task.html 
 sidebar: sidebar 
 keywords: delete, snapshot, copies, automatically, flexclone luns, automatic, lun, luns 
-summary: 您可以定义自动删除Snapshot副本和FlexClone LUN的策略、以帮助管理空间利用率。 
+summary: 您可以定义自动删除快照和FlexClone LUN的策略、以帮助管理空间利用率。 
 ---
-= 自动删除 Snapshot 副本
+= 启用自动快照和LUN删除以管理空间
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以定义并启用用于自动删除 Snapshot 副本和 FlexClone LUN 的策略。自动删除 Snapshot 副本和 FlexClone LUN 有助于管理空间利用率。
+您可以定义并启用自动删除快照和FlexClone LUN的策略。自动删除快照和FlexClone LUN有助于管理空间利用率。
 
 .关于此任务
-您可以自动从读写卷中删除 Snapshot 副本，并从读写父卷中删除 FlexClone LUN 。您不能设置从只读卷自动删除 Snapshot 副本，例如 SnapMirror 目标卷。
+您可以自动从读写卷中删除快照、并从读写父卷中删除FlexClone LUN。您不能设置自动删除只读卷(例如SnapMirror目标卷)中的快照。
 
 .步骤
-. 使用定义并启用用于自动删除Snapshot副本的策略 `volume snapshot autodelete modify` 命令：
+. 使用命令定义并启用用于自动删除快照的策略 `volume snapshot autodelete modify`。
 +
 请参见 `volume snapshot autodelete modify` 手册页、了解有关可与此命令结合使用以定义满足需要的策略的参数的信息。
 
 +
-以下命令将启用Snapshot副本自动删除、并将触发器设置为 `snap_reserve` 对于vs0.example.com Storage Virtual Machine (SVM)中的vol3卷：
+以下命令将为vs0.example.com Storage Virtual Machine (SVM)中的vol3卷启用快照自动删除并将触发器设置为 `snap_reserve`：
 
 +
 [listing]
@@ -31,7 +31,7 @@ cluster1::> volume snapshot autodelete modify -vserver vs0.example.com
 -volume vol3 -enabled true -trigger snap_reserve
 ----
 +
-以下命令可自动删除 vs0.example.com Storage Virtual Machine （ SVM ）中的卷 vol3 的 Snapshot 副本和标记为自动删除的 FlexClone LUN ：
+以下命令将为vs0.example.com Storage Virtual Machine (SVM)中的vol3卷启用快照和标记为自动删除的FlexClone LUN的自动删除：
 
 +
 [listing]
@@ -43,9 +43,9 @@ oldest_first -destroy-list lun_clone,file_clone
 +
 [NOTE]
 ====
-聚合级 Snapshot 副本的工作方式与卷级 Snapshot 副本不同，并由 ONTAP 自动管理。删除聚合 Snapshot 副本的选项始终处于启用状态，有助于管理空间利用率。
+聚合级快照的工作原理与卷级快照不同、它由ONTAP自动管理。删除聚合快照的选项始终处于启用状态、并有助于管理空间利用率。
 
-如果触发器参数设置为 `snap_reserve` 对于聚合、Snapshot副本会一直保留、直到预留空间超过阈值容量为止。因此、即使触发器参数未设置为也是如此 `snap_reserve`，则命令中Snapshot副本使用的空间将列为 `0` 因为系统会自动删除这些Snapshot副本。此外， Snapshot 副本在聚合中使用的空间会被视为可用空间，并包含在命令的可用空间参数中。
+如果聚合的触发器参数设置为 `snap_reserve`、则会一直保留快照、直到预留空间超过阈值容量为止。因此，即使未将触发器参数设置为，命令中的快照副本所使用的空间也 `snap_reserve`将列为 `0`，因为这些快照会被自动删除。此外、聚合中快照使用的空间会被视为可用空间、并包含在命令的可用空间参数中。
 
 ====
 

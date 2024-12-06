@@ -4,46 +4,74 @@ sidebar: sidebar
 keywords: ontap, revert, reverting, reversion, systems, deduplication, deduplicated, volumes 
 summary: 在从任何版本的 ONTAP 9 还原之前，您必须确保卷包含足够的可用空间来执行还原操作。 
 ---
-= 还原之前，请验证已删除重复数据的卷是否具有足够的可用空间
+= 在还原ONTAP之前、请验证已进行重复数据删除的卷的可用空间
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在从任何版本的 ONTAP 9 还原之前，您必须确保卷包含足够的可用空间来执行还原操作。
+在从任何版本的ONTAP 9还原ONTAP集群之前、您必须确保卷包含足够的可用空间来执行还原操作。
 
 卷必须具有足够的空间来容纳通过实时检测零块实现的节省。请参见知识库文章 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_see_space_savings_from_deduplication%2C_compression%2C_and_compaction_in_ONTAP_9["如何在ONTAP 9中查看通过重复数据删除、数据压缩和数据缩减节省的空间"]。
 
 如果在要还原的卷上同时启用了重复数据删除和数据压缩，则必须在还原重复数据删除之前还原数据压缩。
 
-. 使用带有 -fields 选项的 volume efficiency show 命令查看卷上运行的效率操作的进度。
+.步骤
+. 查看卷上运行的效率操作的进度：
 +
-以下命令显示效率操作的进度： `volume efficiency show -fields vserver,volume,progress`
-
-. 使用带有 -all 选项的 volume efficiency stop 命令停止所有活动的和排队等待的重复数据删除操作。
+[source, cli]
+----
+volume efficiency show -fields vserver,volume,progress
+----
+. 停止所有活动和排队的重复数据删除操作：
 +
-以下命令将停止卷VolA上所有处于活动状态的和排队等待的重复数据删除操作： `volume efficiency stop -vserver vs1 -volume VolA -all`
-
-. 使用 set -privilege advanced 命令以高级权限级别登录。
-. 使用带有 -version 选项的 volume efficiency revert-to 命令将卷的效率元数据降级到特定版本的 ONTAP 。
+[source, cli]
+----
+volume efficiency stop -vserver <svm_name> -volume <volume_name> -all
+----
+. 将权限级别设置为高级：
 +
-以下命令将卷VolA上的效率元数据还原到ONTAP 9.x： `volume efficiency revert-to -vserver vs1 -volume VolA -version 9.x`
+[source, cli]
+----
+set -privilege advanced
+----
+. 将卷的效率元数据降级到ONTAP的目标版本：
++
+[source, cli]
+----
+volume efficiency revert-to -vserver <svm_name> -volume <volume_name> -version <version>
+----
++
+以下示例将卷VolA上的效率元数据还原到ONTAP 9.x
 
++
+[listing]
+----
+volume efficiency revert-to -vserver vs1 -volume VolA -version 9.x
+----
 +
 
 NOTE: volume efficiency revert-to 命令将还原执行此命令的节点上的卷。此命令不会在节点之间还原卷。
 
-. 使用带有 -op-status 选项的 volume efficiency show 命令监控降级进度。
+. 监控降级进度：
 +
-以下命令可监控并显示降级状态： `volume efficiency show -vserver vs1 -op-status Downgrading`
-
-. 如果还原失败，请使用带有 -instance 选项的 volume efficiency show 命令查看还原失败的原因。
+[source, cli]
+----
+volume efficiency show -vserver <svm_name> -op-status Downgrading
+----
+. 如果还原未成功、请显示实例以查看还原失败的原因。
 +
-以下命令显示有关所有字段的详细信息： `volume efficiency show -vserver vs1 -volume vol1 - instance`
-
-. 还原操作完成后、返回到管理权限级别： `set -privilege admin`
+[source, cli]
+----
+volume efficiency show -vserver <svm_name> -volume <volume_name> - instance
+----
+. 还原操作完成后、返回到管理权限级别：
 +
-link:../volumes/index.html["逻辑存储管理"]
+[source, cli]
+----
+set -privilege admin
+----
 
 
+详细了解 link:../volumes/index.html["逻辑存储管理"]。

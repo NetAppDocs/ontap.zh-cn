@@ -4,15 +4,26 @@ sidebar: sidebar
 keywords: ontap, revert, reversion, reverting, downgrade, downgrading, enable, enabling, automatic, switchover, metrocluster, mcc, configurations 
 summary: 本主题提供了有关在还原 MetroCluster 配置后必须执行的其他任务的信息。 
 ---
-= 为 MetroCluster 配置启用自动切换
+= 在ONTAP还原后为MetroCluster配置启用自动切换
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-本主题提供了有关在还原 MetroCluster 配置后必须执行的其他任务的信息。
+还原ONTAP MetroCluster配置后、您必须启用自动计划外切换、以确保MetroCluster配置完全正常运行。
 
-. 启用自动计划外切换： `metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster`
-. 验证MetroCluster配置： `metrocluster check run`
+.步骤
+. 启用自动计划外切换：
++
+[source, cli]
+----
+metrocluster modify -auto-switchover-failure-domain auso-on-cluster-disaster
+----
+. 验证MetroCluster配置：
++
+[source, cli]
+----
+metrocluster check run
+----
 

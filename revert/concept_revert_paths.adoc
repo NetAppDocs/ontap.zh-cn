@@ -2,18 +2,22 @@
 permalink: revert/concept_revert_paths.html 
 sidebar: sidebar 
 keywords: ontap, downgrade, revert, paths 
-summary: 您可以还原到的 ONTAP 版本因节点上当前运行的 ONTAP 版本而异。 
+summary: 您可以直接将ONTAP软件还原到比当前ONTAP版本更早的一个版本。您不应还原到不受支持的ONTAP版本。 
 ---
-= 还原路径
+= 支持的ONTAP还原路径
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以还原到的 ONTAP 版本因节点上当前运行的 ONTAP 版本而异。您可以使用 `system image show` 命令以确定每个节点上运行的ONTAP版本。
+您只能将ONTAP软件直接还原到当前ONTAP版本之前的一个版本。例如、如果您运行的是9.15.1、则无法直接还原到9.13.1.您必须还原到9.14.1；然后单独执行还原9.14.1到9.13.1.
 
-这些准则仅适用于内部部署的ONTAP 版本。有关在云中还原ONTAP 的信息、请参见 https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-ontap/task-updating-ontap-cloud.html#reverting-or-downgrading["还原或降级Cloud Volumes ONTAP"^]。
+不支持还原到ONTAP 9.4或更早版本。您不应还原到不受支持的ONTAP版本。
+
+您可以使用 `system image show`命令确定每个节点上运行的ONTAP版本。
+
+以下受支持的还原路径仅指内部ONTAP版本。有关在云中还原ONTAP的信息，请参见 https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-ontap/task-updating-ontap-cloud.html#reverting-or-downgrading["还原或降级Cloud Volumes ONTAP"^]。
 
 [cols="2*"]
 |===
@@ -62,58 +66,15 @@ ONTAP 9.9.1
 
  a| 
 ONTAP 9.8
- a| 
-ONTAP 9.7
-
+| ONTAP 9.7 
 
 
  a| 
 ONTAP 9.7
- a| 
-ONTAP 9.6
-
+| ONTAP 9.6 
 
 
  a| 
 ONTAP 9.6
- a| 
-ONTAP 9.5
-
-
-
- a| 
-ONTAP 9.5
- a| 
-ONTAP 9.4
-
-
-
- a| 
-ONTAP 9.4
- a| 
-ONTAP 9.3
-
-
-
- a| 
-ONTAP 9.3
- a| 
-ONTAP 9.2
-
-
-
- a| 
-ONTAP 9.2
- a| 
-ONTAP 9.1
-
-
-
- a| 
-ONTAP 9.1或ONTAP 9
- a| 
-Data ONTAP 8.3.x
-
+| ONTAP 9.5 
 |===
-
-NOTE: 如果需要从ONTAP 9.1更改为9.0、应按照 link:https://library.netapp.com/ecm/ecm_download_file/ECMLP2876873["降级过程"^] 请参见此处的文档。

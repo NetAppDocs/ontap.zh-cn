@@ -11,71 +11,73 @@ summary: 您必须先下载 ONTAP 软件，然后才能进行安装。
 
 
 [role="lead"]
-您必须先从 NetApp 支持站点下载 ONTAP 软件，然后才能进行安装。
+还原当前的ONTAP软件之前、您必须从NetApp支持站点下载目标软件版本、然后进行安装。
 
 
 
-== 下载软件映像
+== 下载ONTAP软件映像
 
-要从 ONTAP 9.4 及更高版本降级或还原，您可以将 ONTAP 软件映像从 NetApp 支持站点复制到本地文件夹。要降级或还原到 ONTAP 9.3 或更早版本，必须将 ONTAP 软件映像复制到网络上的 HTTP 服务器或 FTP 服务器。
+软件映像特定于平台型号。您必须为集群获取正确的映像。您可以从 NetApp 支持站点获取适用于您的平台型号的软件映像，固件版本信息和最新固件。软件映像包括在发布给定版本的 ONTAP 时可用的最新版本系统固件。
 
-您应注意以下重要信息：
 
-* 软件映像特定于平台型号。
+NOTE: 如果要从ONTAP 9.5或更高版本还原使用NetApp卷加密的系统、则必须下载适用于非受限国家/地区的ONTAP软件映像、其中包括NetApp卷加密。如果您使用受限国家/地区的ONTAP软件映像还原具有NetApp卷加密的系统、则系统将发生故障、您将无法访问卷。
+
+.步骤
+. 在link:http://mysupport.netapp.com/NOW/cgi-bin/software["软件下载"^]NetApp支持站点的区域中找到目标ONTAP软件。
+. 从NetApp支持站点复制软件映像(例如97_q_image.tgz)
 +
-您必须为集群获取正确的映像。您可以从 NetApp 支持站点获取适用于您的平台型号的软件映像，固件版本信息和最新固件。
+您可以将映像复制到HTTP服务器或FTP服务器上要提供映像的目录或本地文件夹。
 
-* 软件映像包括在发布给定版本的 ONTAP 时可用的最新版本系统固件。
-* 如果要从 ONTAP 9.5 或更高版本降级使用 NetApp 卷加密的系统，则必须下载适用于非受限国家或地区的 ONTAP 软件映像，其中包括 NetApp 卷加密。
+
+
+
+
+== 安装ONTAP软件映像
+
+从NetApp支持站点下载目标ONTAP软件映像后、将其安装在集群节点上。
+
+.步骤
+. 将权限级别设置为高级：
 +
-如果使用适用于受限国家或地区的 ONTAP 软件映像降级或还原采用 NetApp 卷加密的系统，则系统将崩溃，您将无法访问卷。
-
-+
-.. 在link:http://mysupport.netapp.com/NOW/cgi-bin/software["软件下载"^]NetApp支持站点的区域中找到目标ONTAP软件。
-.. 复制软件映像。
-+
-*** 对于 ONTAP 9.3 或更早版本，请将软件映像（例如 93_q_image.tgz）从 NetApp 支持站点复制到 HTTP 服务器或 FTP 服务器上要提供此映像的目录。
-*** 对于 ONTAP 9.4 或更高版本，请将软件映像（例如 97_q_image.tgz）从 NetApp 支持站点复制到要从中提供此映像的 HTTP 服务器或 FTP 服务器上的目录或本地文件夹。
-
-
-
-
-
-
-
-
-== 安装软件映像
-
-您必须在集群节点上安装目标软件映像。
-
-* 如果您要从 ONTAP 9.5 或更高版本降级或还原使用 NetApp 卷加密的系统，则必须已下载适用于非受限国家或地区的 ONTAP 软件映像，其中包括 NetApp 卷加密。
-+
-如果使用适用于受限国家或地区的 ONTAP 软件映像降级或还原采用 NetApp 卷加密的系统，则系统将崩溃，您将无法访问卷。
-
-+
-.. 将权限级别设置为高级，在系统提示您继续时输入*y*： `set -privilege advanced`
+[source, cli]
+----
+set -privilege advanced
+----
 +
 高级提示符 (`*>`)。
 
-.. 在节点上安装软件映像。
+. 出现提示时，输入 `y`以继续。
+. 安装软件映像：
 +
-此命令可同时在所有节点上下载并安装软件映像。要一次在每个节点上下载并安装一个映像，请勿指定 -background 参数。
-
+** 对于标准配置或双节点MetroCluster配置、请输入以下命令：
 +
-*** 如果要降级或还原非MetroCluster配置或双节点MetroCluster配置：``system node image update -node * -package location -replace-package true -setdefault true -background true``
+[source, cli]
+----
+system node image update -node * -package location -replace-package true -setdefault true -background true
+----
 +
-此命令使用扩展查询将作为备用映像安装的目标软件映像更改为节点的默认映像。
+此命令可同时在所有节点上下载并安装软件映像。要逐一在每个节点上下载并安装映像、请勿指定参数。 `-background`此命令还会使用扩展查询将作为备用映像安装的目标软件映像更改为节点的默认映像。
 
-*** 如果要降级或还原四节点或八节点MetroCluster配置、则必须在两个集群上问题描述以下命令： `system node image update -node * -package location -replace-package true true -background true -setdefault false`
+** 对于四节点或八节点MetroCluster配置、在两个集群上输入以下命令：
 +
-此命令使用扩展查询来更改目标软件映像，该映像作为备用映像安装在每个节点上。
-
-
-
-.. 输入 ... `y` 出现提示时继续。
-.. 验证软件映像是否已下载并安装在每个节点上： `system node image show-update-progress -node *`
+[source, cli]
+----
+system node image update -node * -package location -replace-package true true -background true -setdefault false
+----
 +
-此命令将显示软件映像下载和安装的当前状态。您应继续运行此命令，直到所有节点都报告 Run Status 为 Exited ，并报告 Exit Status 为 Success 为止。
+此命令可同时在所有节点上下载并安装软件映像。要逐一在每个节点上下载并安装映像、请勿指定参数。 `-background`此命令还会使用扩展查询来更改目标软件映像、该映像会作为备用映像安装在每个节点上。
+
+
+
+. 输入 ... `y` 出现提示时继续。
+. 验证软件映像是否已下载并安装在每个节点上：
++
+[source, cli]
+----
+system node image show-update-progress -node *
+----
++
+此命令将显示软件映像下载和安装的当前状态。您应继续运行此命令、直到所有节点报告*运行状态*为"exited"、*退出状态*为"success。
 
 +
 system node image update 命令可能会失败并显示错误或警告消息。解决任何错误或警告后，您可以再次运行此命令。
@@ -101,6 +103,4 @@ Status of most recent operation:
         Exit Message:   After a clean shutdown, image2 will be set as the default boot image on node1.
 2 entries were acted on.
 ----
-
-
 
