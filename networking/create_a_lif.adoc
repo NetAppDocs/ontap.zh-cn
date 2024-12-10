@@ -148,6 +148,10 @@ ipspace1
 
 . 在要用于访问数据的端口上创建一个或多个 LIF 。
 +
+
+CAUTION: NetApp建议为数据SVM上的所有LUN创建子网对象。这对于MetroCluster配置尤为重要、因为子网对象使ONTAP能够确定目标集群上的故障转移目标、因为每个子网对象都有一个关联的广播域。有关说明，请参阅link:../networking/create_a_subnet.html["创建子网"]。
+
++
 ....
 network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port port_name {-address _IP_address_ - netmask _Netmask_value_ | -subnet-name _subnet_name_} -firewall- policy _policy_ -auto-revert {true|false}
 ....
