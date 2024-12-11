@@ -55,10 +55,14 @@ summary: 您可以重新托管定义为SnapMirror关系一部分的卷。在重�
 
 . 从源集群中，删除 SnapMirror 关系信息：
 +
-`snapmirror release relationship-info-only true`
+`snapmirror release -relationship-info-only true`
 
 +
-设置 `relationship-info-only` 参数设置为 `true` 删除源关系信息而不删除Snapshot副本。
+将参数设置 `-relationship-info-only`为 `true`可删除源关系信息、而不删除快照。
+
+. 如果卷已挂载、请将其卸载：
++
+`volume unmount -vserver <source_svm> -volume <vol_name>`
 
 . 切换到高级权限级别：
 +
@@ -66,7 +70,7 @@ summary: 您可以重新托管定义为SnapMirror关系一部分的卷。在重�
 
 . 在目标 SVM 上重新托管卷：
 +
-`volume rehost -vserver source_svm -volume vol_name -destination-vserver destination_svm`
+`volume rehost -vserver <source_svm> -volume <vol_name> -destination-vserver <destination_svm>`
 
 . 如果不存在 SVM 对等关系，请在源 SVM 和目标 SVM 之间创建 SVM 对等关系：
 +

@@ -13,8 +13,91 @@ summary: 从 ONTAP 9.8 开始，如果您是高级权限级别的集群管理员
 [role="lead"]
 从ONTAP 9.8开始、如果您是具有高级权限级别的集群管理员、则可以结合使用主动将数据从云层提升到性能层 `tiering-policy` 和 `cloud-retrieval-policy` 设置。
 
-
-
-== 关于此任务
-
+.关于此任务
 如果要停止在卷上使用FabricPool、或者您有、则可以执行此操作 `snapshot-only` 分层策略、并且您希望将还原的Snapshot副本数据恢复到性能层。
+
+
+
+== 将 FabricPool 卷中的所有数据提升到性能层
+
+您可以主动检索云层中FabricPool卷上的所有数据、并将其提升到性能层。
+
+.步骤
+. 使用 `volume modify` 要设置的命令 `tiering-policy` to `none` 和 `cloud-retrieval-policy` to `promote`。
++
+[listing]
+----
+volume modify -vserver <vserver-name> -volume <volume-name> -tiering-policy none -cloud-retrieval-policy promote
+----
+
+
+
+
+== 将文件系统数据提升到性能层
+
+您可以主动从云层中已还原的 Snapshot 副本检索活动文件系统数据，并将其提升到性能层。
+
+.步骤
+. 使用 `volume modify` 要设置的命令 `tiering-policy` to `snapshot-only` 和 `cloud-retrieval-policy` to `promote`。
++
+[listing]
+----
+volume modify -vserver <vserver-name> -volume <volume-name> -tiering-policy snapshot-only cloud-retrieval-policy promote
+----
+
+
+
+
+== 检查性能层促销的状态
+
+您可以检查性能层提升的状态以确定操作何时完成。
+
+.步骤
+. 使用卷 `object-store` 命令 `tiering` 用于检查性能层提升状态的选项。
++
+[listing]
+----
+volume object-store tiering show [ -instance | -fields <fieldname>, ... ] [ -vserver <vserver name> ] *Vserver
+[[-volume] <volume name>] *Volume [ -node <nodename> ] *Node Name [ -vol-dsid <integer> ] *Volume DSID
+[ -aggregate <aggregate name> ] *Aggregate Name
+----
++
+[listing]
+----
+volume object-store tiering show v1 -instance
+
+                                  Vserver: vs1
+                                   Volume: v1
+                                Node Name: node1
+                              Volume DSID: 1023
+                           Aggregate Name: a1
+                                    State: ready
+                      Previous Run Status: completed
+                 Aborted Exception Status: -
+               Time Scanner Last Finished: Mon Jan 13 20:27:30 2020
+                 Scanner Percent Complete: -
+                      Scanner Current VBN: -
+                         Scanner Max VBNs: -
+      Time Waiting Scan will be scheduled: -
+                           Tiering Policy: snapshot-only
+     Estimated Space Needed for Promotion: -
+                        Time Scan Started: -
+  Estimated Time Remaining for scan to complete: -
+                    Cloud Retrieve Policy: promote
+----
+
+
+
+
+== 触发计划内迁移和分层
+
+从ONTAP 9.8开始、如果您不想等待默认分层扫描、可以随时触发分层扫描请求。
+
+.步骤
+. 使用 `volume object-store` 命令 `trigger` 用于请求迁移和层的选项。
++
+[listing]
+----
+volume object-store tiering trigger [ -vserver <vserver name> ] *VServer Name [-volume] <volume name> *Volume Name
+----
+

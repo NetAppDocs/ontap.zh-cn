@@ -1,7 +1,7 @@
 ---
 permalink: fabricpool/object-tagging-user-created-custom-tags-task.html 
 sidebar: sidebar 
-keywords: object, tagging, user-created, custom tags, fabricpool, fabric pool, sort 
+keywords: object, tagging, user-created, custom tags, fabricpool, fabric pool, sort, fabricpool sorting, fabricpool data 
 summary: 从 ONTAP 9.8 开始， FabricPool 支持使用用户创建的自定义标记进行对象标记，以便对对象进行分类和排序，从而简化管理。如果您是具有管理员权限级别的用户，则可以创建新的对象标记，以及修改，删除和查看现有标记。 
 ---
 = 使用用户创建的自定义标记概述进行对象标记
@@ -12,3 +12,173 @@ summary: 从 ONTAP 9.8 开始， FabricPool 支持使用用户创建的自定义
 
 [role="lead"]
 从 ONTAP 9.8 开始， FabricPool 支持使用用户创建的自定义标记进行对象标记，以便对对象进行分类和排序，从而简化管理。如果您是具有管理员权限级别的用户，则可以创建新的对象标记，以及修改，删除和查看现有标记。
+
+
+
+== 在创建卷期间分配新标记
+
+如果要为从创建的新卷分层的新对象分配一个或多个标记，则可以创建新的对象标记。您可以使用标记帮助对对象进行分类和排序、以便于管理数据。从ONTAP 9.8开始、您可以使用System Manager创建对象标记。
+
+.关于此任务
+您只能在连接到 StorageGRID 的 FabricPool 卷上设置标记。这些标记会在卷移动期间保留。
+
+* 每个卷最多允许4个标记。
+* 在命令行界面中、每个对象标记都必须是一个键值对、并以等号分隔。
+* 在命令行界面中、多个标记必须以逗号分隔。
+* 每个标记值最多可包含127个字符。
+* 每个标记键都必须以字母字符或下划线开头。
++
+密钥只能包含字母数字字符和下划线，允许的最大字符数为 127 。
+
+
+
+您可以使用ONTAP 系统管理器或ONTAP 命令行界面分配对象标记。
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*存储>层*。
+. 找到包含要标记的卷的存储层。
+. 单击 * 卷 * 选项卡
+. 找到要标记的卷、然后在*对象标记*列中选择*单击以输入标记*。
+. 输入密钥和值。
+. 单击 * 应用 * 。
+
+
+--
+.命令行界面
+--
+. 使用 `volume create` 命令 `-tiering-object-tags` 用于创建具有指定标记的新卷的选项。您可以使用逗号分隔对指定多个标记：
++
+[listing]
+----
+volume create [ -vserver <vserver name> ] -volume <volume_name> -tiering-object-tags <key1=value1> [,<key2=value2>,<key3=value3>,<key4=value4> ]
+----
++
+以下示例将创建一个名为 fp_volume1 的卷，其中包含三个对象标记。
+
++
+[listing]
+----
+vol create -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=abc,content=data
+----
+
+
+--
+====
+
+
+== 修改现有标记
+
+您可以更改标记的名称，替换对象存储中现有对象上的标记，或者向计划稍后添加的新对象添加其他标记。
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*存储>层*。
+. 找到包含要修改的标记的卷的存储层。
+. 单击 * 卷 * 选项卡
+. 找到包含要修改的标记的卷、然后在*对象标记*列中单击标记名称。
+. 修改标记。
+. 单击 * 应用 * 。
+
+
+--
+.命令行界面
+--
+. 使用 `volume modify` 命令 `-tiering-object-tags` 用于修改现有标记的选项。
++
+[listing]
+----
+volume modify [ -vserver <vserver name> ] -volume <volume_name> -tiering-object-tags <key1=value1> [ ,<key2=value2>,
+<key3=value3>,<key4=value4> ]
+----
++
+以下示例将现有标记 type=abc 的名称更改为 type=xyz 。
+
++
+[listing]
+----
+vol create -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=xyz,content=data
+----
+
+
+--
+====
+
+
+== 删除标记
+
+如果不再需要在卷或对象存储中的对象上设置对象标记，则可以删除这些对象标记。
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到*存储>层*。
+. 找到包含要删除的标记的卷的存储层。
+. 单击 * 卷 * 选项卡
+. 找到包含要删除的标记的卷、然后在*对象标记*列中单击标记名称。
+. 要删除此标记、请单击垃圾桶图标。
+. 单击 * 应用 * 。
+
+
+--
+.命令行界面
+--
+. 使用 `volume modify` 命令 `-tiering-object-tags` 选项、后跟一个空值 (`""`)以删除现有标记。
++
+以下示例将删除 fp_volume1 上的现有标记。
+
++
+[listing]
+----
+vol modify -volume fp_volume1 -vserver vs0 -tiering-object-tags ""
+----
+
+
+--
+====
+
+
+== 查看卷上的现有标记
+
+在向列表附加新标记之前，您可以查看卷上的现有标记，以查看哪些标记可用。
+
+.步骤
+. 使用 `volume show`命令和 `tiering-object-tags`选项查看卷上的现有标记。
++
+[listing]
+----
+volume show [ -vserver <vserver name> ] -volume <volume_name> -fields tiering-object-tags
+----
+
+
+
+
+== 检查 FabricPool 卷上的对象标记状态
+
+您可以检查一个或多个 FabricPool 卷上的标记是否已完成。
+
+.步骤
+. 使用 `vol show`命令和 `-fields needs-object-retagging`选项查看是否正在进行标记、是否已完成标记或是否未设置标记。
++
+[listing]
+----
+vol show -fields needs-object-retagging  [ -instance | -volume <volume name>]
+----
++
+此时将显示以下值之一：
+
++
+** `true`：尚未对此卷运行对象标记扫描程序，或者需要对此卷再次运行对象标记扫描程序
+** `false`：对象标记扫描程序已完成对此卷的标记
+** `+<->+`：对象标记扫描程序不适用于此卷。对于不驻留在 FabricPool 上的卷，会发生这种情况。
+
+
+
