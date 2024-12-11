@@ -1,0 +1,135 @@
+---
+permalink: fabricpool/fabricpool-object-deletion.html 
+sidebar: sidebar 
+keywords: fabricpool, fabric pool, tiering, delete, defrag, unreclaimed, threshold 
+summary: 当ONTAP不再引用某个百分比的对象块时、FabricPool将删除该对象。 
+---
+= FabricPool对象删除和碎片整理
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FabricPool不会从附加的对象存储中删除块。而是在ONTAP不再引用对象中特定百分比的块之后、FabricPool将删除对象。
+
+例如、一个4 MB的对象分层到Amazon S3、其中包含1、024个4 KB块。只有在ONTAP引用的4 KB块少于205个(1、024个中的20%)时、才会进行碎片整理和删除。如果有足够(1、024)个块没有引用、则会删除其原始4 MB对象、并创建一个新对象。
+
+您可以自定义未回收的空间阈值百分比、并将其设置为不同对象存储的不同默认级别。默认设置为：
+
+|===
+
+
+| 对象存储 | ONTAP 9.3及更早版本 | ONTAP 9.4到9.7 | ONTAP 9.8及更高版本 | Cloud Volumes ONTAP 
+
+
+ a| 
+Amazon S3
+ a| 
+0%
+ a| 
+20%
+ a| 
+20%
+ a| 
+30%
+
+
+
+ a| 
+Google Cloud Storage
+ a| 
+不适用
+ a| 
+12%
+ a| 
+20%
+ a| 
+35%
+
+
+
+ a| 
+Microsoft Azure Blob Storage
+ a| 
+不适用
+ a| 
+15%
+ a| 
+25%
+ a| 
+35%
+
+
+
+ a| 
+NetApp ONTAP S3
+ a| 
+不适用
+ a| 
+不适用
+ a| 
+40%
+ a| 
+不适用
+
+
+
+ a| 
+NetApp StorageGRID
+ a| 
+0%
+ a| 
+40%
+ a| 
+40%
+ a| 
+不适用
+
+|===
+
+
+== 未回收空间阈值
+
+更改默认的未回收空间阈值设置将增加或减少可接受的对象碎片量。减少碎片将会减少云层使用的物理容量、而这会影响额外的对象存储资源(读取和写入)。
+
+
+
+=== 降低阈值
+
+为了避免额外支出、请考虑在使用对象存储定价方案时降低未回收的空间阈值、因为此类方案可降低存储成本、但会增加读取成本。例如Amazon的Standard" IA和Azure Blb Storage的Cool。
+
+例如、对因法律原因节省的10年历史项目进行分层可能比使用标准IA等定价方案时成本更低、也可能比使用标准定价方案时成本更低。尽管对于此类卷、读取成本较高、包括对象碎片整理所需的读取、但它们不太可能频繁发生。
+
+
+
+=== 阈值增加
+
+或者、如果对象碎片导致要使用的对象存储容量明显超过ONTAP所引用数据所需的容量、则可以考虑增加未回收的空间阈值。例如、如果在最坏情况下使用20%的未回收空间阈值、并且所有对象都同样碎片化到允许的最大范围、则意味着ONTAP可能会取消引用云层中总容量的80%。例如：
+
+ONTAP引用的2 TB + ONTAP未引用的8 TB =云层已使用的总容量为10 TB。
+
+在这种情况下、增加未回收空间阈值或增加卷最小冷却天数可能会更有利、从而减少未引用块使用的容量。
+
+[NOTE]
+====
+随着对象进行碎片整理并提高存储效率、在将引用的块写入效率更高的新对象时、底层文件可能会变得更加碎片化。因此、大幅增加未回收空间阈值会导致对象的存储效率提高、但顺序读取性能可能会降低。
+
+====
+
+
+== 更改未回收的空间阈值
+
+您可以为不同的对象存储自定义未回收的空间阈值百分比。
+
+.开始之前
+需要高级权限级别。
+
+.步骤
+. 要更改默认的未回收空间阈值、请自定义并运行以下命令：
++
+[source, cli]
+----
+storage aggregate object-store modify -aggregate <name> -object-store-name <name> -unreclaimedspace-threshold <%> (0%-99%)
+----
+

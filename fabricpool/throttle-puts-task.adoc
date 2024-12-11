@@ -1,0 +1,35 @@
+---
+permalink: fabricpool/throttle-puts-task.html 
+sidebar: sidebar 
+keywords: throttle, fabricpool, fabric pool, tiering, put, rate, limit 
+summary: 通过放置限制、存储管理员可以为每个节点的最大放置速率设置上限阈值。 
+---
+= 限制FabricPool输出
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+作为存储管理员、您可以使用放置限制为每个节点的最大放置速率设置上限阈值。
+
+当网络资源或对象存储端点受资源限制时、放置限制非常有用。虽然很少出现资源限制、但在性能不足的对象存储中、或者在使用FabricPool的最初几天、当TB或PB的冷数据开始分层时、可能会出现资源限制。
+
+放置限制按节点设置。最小Put节流put - rate -限制为8MB /秒将Put－Rate－Limit设置为小于8MB的值将导致该节点上的吞吐量为8MB或秒。多个节点并发分层可能会占用更多带宽、并可能使容量极其有限的网络链路饱和。
+
+[NOTE]
+====
+FabricPool Put操作不会与其他应用程序争用资源。客户端应用程序和其他ONTAP工作负载(例如SnapMirror)会自动将FabricPool Put操作置于较低的优先级("受管")。使用放置限制 `put-rate-limit`可能有助于减少与FabricPool分层关联的网络流量、但它与并发ONTAP流量无关。
+
+====
+.开始之前
+需要高级权限级别。
+
+.步骤
+. 使用ONTAP命令行界面限制FabricPool放置操作：
++
+[source, cli]
+----
+storage aggregate object-store put-rate-limit modify -node <name> -default <true|false> -putrate-bytes-limit <integer>[KB|MB|GB|TB|PB]
+----
+

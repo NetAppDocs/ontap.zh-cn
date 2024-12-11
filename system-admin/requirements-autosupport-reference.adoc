@@ -1,8 +1,8 @@
 ---
-sidebar: sidebar 
 permalink: system-admin/requirements-autosupport-reference.html 
-keywords: requirements, autosupport, messages, http, https, smtp, smtps 
-summary: 您需要将HTTPS与TLSv1.2结合使用或使用安全SMTP来传送AutoSupport消息、以提供最佳安全性并支持最新的AutoSupport功能。 
+sidebar: sidebar 
+keywords: requirements, autosupport, messages, https, smtp, smtps, tls, email, proxy, certificate, validation 
+summary: 您需要将HTTPS与TLSv1.2或SMTPS结合使用来传送AutoSupport消息、以提供最佳安全性并支持最新的AutoSupport功能。 
 ---
 = 准备使用AutoSupport
 :allow-uri-read: 
@@ -17,69 +17,57 @@ summary: 您需要将HTTPS与TLSv1.2结合使用或使用安全SMTP来传送Auto
 
 == 向NetApp传送AutoSupport消息
 
-可以使用HTTP或SMTP协议将AutoSupport消息传送到NetApp。为了提高安全性、您可以将TLS与HTTP结合使用。从ONTAP 9.15.1开始、您还可以将TLS与SMTP结合使用。
+可以使用HTTPS或SMTP协议将AutoSupport消息传送到NetApp。从ONTAP 9.15.1开始、您还可以将TLS与SMTP结合使用。
 
 
-TIP: 尽可能对TLS (HTTPS)使用HTTP。
+TIP: 尽可能使用HTTPS与AutoSupport OnDemand通信并上传大型文件。
 
 另请注意以下事项：
 
 * 只能为NetApp AutoSupport消息配置一个传送通道。您不能使用两种协议向NetApp传送AutoSupport消息。
 * AutoSupport 会限制每个协议的最大文件大小。如果AutoSupport消息的大小超过配置的限制、则AutoSupport会尽可能多地发送消息、但会发生消息被删除。
-* 您可以根据需要更改最大文件大小。请参见命令 `system node autosupport modify` 有关详细信息 ...
+* 您可以根据需要更改最大文件大小。有关^命令的详细信息[`system node autosupport modify`、请参见ONTAP命令参考。
 * 这两种协议都可以根据名称解析到的地址系列通过IPv4或IPv6进行传输。
 * ONTAP为发送AutoSupport消息而建立的TCP连接是临时的、短暂的。
 
 
 
 
-=== HTTP
+=== HTTPS
 
 这提供了最强大的功能。请注意以下事项：
 
 * 支持AutoSupport OnDemand和大型文件传输。
-* 首先尝试HTTP放置请求。如果此请求在传输期间失败、则此请求将从停止位置重新启动。
-* 如果服务器不支持Put、则改用HTTP POST方法。
-* HTTP传输的默认限制为50 MB。
-* 不安全的HTTP协议使用端口80。
+* 首先尝试HTTPS放置请求。如果此请求在传输期间失败、则此请求将从停止位置重新启动。
+* 如果服务器不支持Put、则改用HTTPS POST方法。
+* HTTPS传输的默认限制为50 MB。
+* HTTPS 协议使用端口 443 。
 
 
 
 
 === SMTP
 
-一般情况下、只有在出于某种原因不允许或不支持HTTPS/HTTP时、才应使用SMTP。请注意以下事项：
+一般情况下、只有在不允许或不支持HTTPS的情况下、才应使用SMTP。请注意以下事项：
 
 * 不支持AutoSupport OnDemand和传输大型文件。
 * 如果配置了SMTP登录凭据、则会以未加密的方式以明文形式发送这些凭据。
-* HTTP传输的默认限制为5 MB。
+* 默认传输限制为5 MB。
 * 不安全的SMTP协议使用端口25。
 
 
+.利用TLS提高SMTP安全性
+使用SMTP时、所有流量均未加密、可以轻松截获和读取。从ONTAP 9.15.1开始、您还可以将TLS与SMTP (SMTPS)结合使用。在这种情况下、会使用_explicit tls_、以便在建立TCP连接后激活安全通道。
 
-
-=== 利用TLS提高安全性
-
-使用HTTP或SMTP时、所有流量均未加密、并且可以轻松截获和读取。使用HTTP时、您应始终将协议配置为同时使用TLS (HTTPS)。
-
-
-NOTE: 从ONTAP 9.15.1开始、您还可以将TLS与SMTP (SMTPS)结合使用。在这种情况下、会使用_explicit tls_、以便在建立TCP连接后激活安全通道。
-
-.用于安全协议的端口
-以下端口通常用于这些协议的安全版本：
-
-* HTTPS—端口443
-* SMTPS—端口587
-
-
-.证书验证
-对于TLS、ONTAP会根据根CA证书验证从服务器下载的证书。在使用HTTPS或SMTPS之前、您需要确保根证书已安装在ONTAP中。请参见 <<安装服务器证书>> 有关详细信息 ...
+以下端口通常用于SMTPS：端口587
 
 
 
 == 其他配置注意事项
 
 配置AutoSupport时、还需要考虑一些其他注意事项。
+
+有关与这些注意事项相关的命令的详细信息，请参见link:../system-admin/setup-autosupport-task.html["设置 AutoSupport"]。
 
 
 
@@ -100,11 +88,11 @@ NOTE: 如果您使用SMTP (或SMTPS)将消息传送到NetApp、同时还发送�
 
 == 安装服务器证书
 
-如果使用TLS (HTTPS或SMTPS)、则需要确保ONTAP可以验证服务器证书。此验证将根据签署服务器证书的CA来执行。
+对于TLS (HTTPS或SMTPS)、ONTAP会根据根CA证书对从服务器下载的证书进行验证。在使用HTTPS或SMTPS之前、您需要确保根证书已安装在ONTAP中、并且ONTAP可以验证服务器证书。此验证将根据签署服务器证书的CA来执行。
 
-ONTAP包含大量预安装的根CA证书。因此、在许多情况下、ONTAP将立即识别服务器的证书、而无需进行额外配置。但是、根据服务器证书的签名方式、您可能需要安装根CA证书和任何中间证书。
+ONTAP包含大量预安装的根CA证书。在许多情况下、ONTAP可以立即识别服务器的证书、而无需进行额外配置。根据服务器证书的签名方式、您可能需要安装根CA证书和任何中间证书。
 
-如果需要、请按照下面提供的说明安装证书。您应在集群级别安装所有必需的证书。
+如果需要、请使用以下过程安装证书。您应在集群级别安装所有必需的证书。
 
 .步骤
 [role="tabbed-block"]
@@ -125,29 +113,41 @@ ONTAP包含大量预安装的根CA证书。因此、在许多情况下、ONTAP�
 --
 . 开始安装：
 +
-`security certificate install -type server-ca`
-
+[source, cli]
+----
+security certificate install -type server-ca
+----
 . 查找以下控制台消息：
 +
-`Please enter Certificate: Press <Enter> when done`
-
+[listing]
+----
+Please enter Certificate: Press <Enter> when done
+----
 . 使用文本编辑器打开证书文件。
 . 复制整个证书、包括以下行：
 +
-`-----BEGIN CERTIFICATE-----`
-
+[listing]
+----
+-----BEGIN CERTIFICATE-----
+----
 +
-`-----END CERTIFICATE-----`
-
+[listing]
+----
+-----END CERTIFICATE-----
+----
 . 在命令提示符后、将证书粘贴到终端中。
 . 按*Enter*键完成安装。
-. 使用以下方法之一确认已安装证书：
+. 运行以下命令之一以确认证书已安装：
 +
-`security certificate show-user-installed`
-
+[source, cli]
+----
+security certificate show-user-installed
+----
 +
-`security certificate show`
-
+[source, cli]
+----
+security certificate show
+----
 
 
 --
