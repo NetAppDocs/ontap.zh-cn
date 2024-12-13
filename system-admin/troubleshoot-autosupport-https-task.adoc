@@ -1,0 +1,99 @@
+---
+permalink: system-admin/troubleshoot-autosupport-https-task.html 
+sidebar: sidebar 
+keywords: troubleshoot, autosupport, message, delivery, http, https, check, settings, resolve, problem 
+summary: 如果系统未发送预期的AutoSupport消息、而您使用的是HTTPS、则可以检查多项设置来解决此问题。 
+---
+= 对通过 HTTPS 传送 AutoSupport 消息进行故障排除
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果系统未发送预期的AutoSupport消息、并且您使用的是HTTPS或自动更新功能不起作用、则可以检查多项设置来解决此问题。
+
+.开始之前
+您应已确认基本网络连接和 DNS 查找：
+
+* 您的节点管理 LIF 必须处于运行和管理状态。
+* 您必须能够从集群管理 LIF （而不是任何节点上的 LIF ）对同一子网上运行正常的主机执行 ping 操作。
+* 您必须能够从集群管理 LIF 对子网以外正在运行的主机执行 ping 操作。
+* 您必须能够使用主机的名称（而不是 IP 地址）从集群管理 LIF 对子网外正常运行的主机执行 ping 操作。
+
+
+.关于此任务
+如果您已确定 AutoSupport 可以生成消息，但无法通过 HTTPS 传送消息，则可以执行以下步骤。
+
+如果您遇到错误或无法完成此操作步骤中的某个步骤，请先确定并解决此问题，然后再继续执行下一步。
+
+.步骤
+. 显示 AutoSupport 子系统的详细状态：
++
+`system node autosupport check show-details`
+
++
+其中包括通过发送测试消息来验证与 AutoSupport 目标的连接，并提供 AutoSupport 配置设置中可能出现的错误列表。
+
+. 验证节点管理 LIF 的状态：
++
+[source, cli]
+----
+network interface show -home-node local -role node-mgmt -fields vserver,lif,status-oper,status-admin,address,role
+----
++
+。 `status-oper` 和 `status-admin` 字段应返回 `up`。
+
+. 记录 SVM 名称， LIF 名称和 LIF IP 地址，以供日后使用。
+. 确保已启用并正确配置 DNS ：
++
+[source, cli]
+----
+vserver services name-service dns show
+----
+. 解决 AutoSupport 消息返回的任何错误：
++
+[source, cli]
+----
+system node autosupport history show -node * -fields node,seq-num,destination,last-update,status,error
+----
++
+有关对返回的任何错误进行故障排除的帮助，请参阅link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/ONTAP_AutoSupport_(Transport_HTTPS_and_HTTP)_Resolution_Guide["《ONTAP AutoSupport (传输HTTPS和HTTP)解决指南》"^]。
+
+. 确认集群可以成功访问所需的服务器和 Internet ：
++
+.. `network traceroute -lif node-management_LIF -destination DNS server`
+.. `network traceroute -lif node_management_LIF -destination support.netapp.com`
++
+[NOTE]
+====
+地址 `support.netapp.com` 自身不响应ping/traceroute、但每跳信息非常重要。
+
+====
+.. `system node autosupport show -fields proxy-url`
+.. `network traceroute -node node_management_LIF -destination proxy_url`
+
+
++
+如果其中任一路由无法正常运行、请使用大多数第三方网络客户端上的或 `tracert`实用程序、从与集群位于同一子网上的正常运行主机尝试相同的路由 `traceroute`。然后、您可以确定问题出在网络配置还是集群配置上。
+
+. 如果您对 AutoSupport 传输协议使用 HTTPS ，请确保 HTTPS 流量可以退出您的网络：
++
+.. 在与集群管理 LIF 相同的子网上配置 Web 客户端。
++
+确保所有配置参数的值与 AutoSupport 配置的值相同，包括使用相同的代理服务器，用户名，密码和端口。
+
+.. 访问 `+https://support.netapp.com+` 使用Web客户端。
++
+访问应成功。如果没有，请确保已正确配置所有防火墙以允许 HTTPS 和 DNS 流量，并且已正确配置代理服务器。有关为support.netapp.com配置静态名称解析的详细信息、请参见知识库文章 https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_would_a_HOST_entry_be_added_in_ONTAP_for_support.netapp.com%3F["如何在 ONTAP for support.netapp.com? 中添加主机条目"^]
+
+
+
+. 从9.10.1 9.10.1开始、如果启用了自动更新功能、请确保与以下附加URL建立HTTPS连接：
++
+** \https://support-sg-emea.netapp.com
+** \https://support-sg-naeast.netapp.com
+** \https://support-sg-nawest.netapp.com
+
+
+

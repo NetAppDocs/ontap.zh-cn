@@ -1,0 +1,72 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_lifs_cluster_administrators_only_overview.html 
+keywords: configure, configuring, configuration, setup, set, up, introducing, introduction, overview, introducing lif configuration, configure lifs 
+summary: 引入 LIF 配置 
+---
+= 配置文件配置概览
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+LIF （逻辑接口）表示集群中某个节点的网络访问点。您可以在集群通过网络发送和接收通信的端口上配置 LIF 。
+
+集群管理员可以创建，查看，修改，迁移，还原， 或删除 LIF 。SVM 管理员只能查看与 SVM 关联的 LIF 。
+
+LIF 是指具有相关特征的 IP 地址或 WWPN ，例如服务策略，主端口，主节点，故障转移到的端口列表以及防火墙策略。您可以在集群通过网络发送和接收通信的端口上配置 LIF 。
+
+
+NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF服务策略。有关详细信息，请参见 link:../networking/configure_firewall_policies_for_lifs.html["为 LIF 配置防火墙策略"]。
+
+LIF 可以托管在以下端口上：
+
+* 不属于接口组的物理端口
+* 接口组
+* VLAN
+* 托管 VLAN 的物理端口或接口组
+* 虚拟 IP （ VIP ）端口
++
+从 ONTAP 9.5 开始，支持 VIP LIF 并托管在 VIP 端口上。
+
+
+
+在 LIF 上配置 FC 等 SAN 协议时，它将与 WWPN 关联。
+
+link:../san-admin/index.html["SAN 管理"^]
+
+下图显示了 ONTAP 系统中的端口层次结构：
+
+image:ontap_nm_image13.png["端口层次结构图"]
+
+
+
+== LIF故障转移和恢复
+
+当LIF从其主节点或端口移至其HA配对节点或端口时、会发生LIF故障转移。LIF故障转移可以由ONTAP自动触发、也可以由集群管理员手动触发、以处理某些事件、例如物理以太网链路断开或节点退出复制的数据库(RDB)仲裁。发生LIF故障转移时、ONTAP会继续在配对节点上正常运行、直到故障转移的原因得以解决为止。当主节点或端口恢复运行状况时、LIF将从HA配对节点还原回其主节点或端口。  此恢复称为"恢复"。
+
+对于LIF故障转移和恢复、每个节点的端口都需要属于同一广播域。要检查每个节点上的相关端口是否属于同一广播域、请参见以下内容：
+
+* ONTAP 9.8及更高版本： link:../networking/repair_port_reachability.html["修复端口可访问性"]
+* ONTAP 9.7及更早版本： link:../networking/add_or_remove_ports_from_a_broadcast_domain97.html["在广播域中添加或删除端口"]
+
+
+对于已启用LIF故障转移(自动或手动)的LIF、以下情况适用：
+
+* 对于使用数据服务策略的生命周期、您可以检查故障转移策略限制：
++
+** ONTAP 9.6及更高版本： link:lifs_and_service_policies96.html["ONTAP 9.6 及更高版本中的 LIF 和服务策略"]
+** ONTAP 9.5及更早版本： link:lif_roles95.html["ONTAP 9.5 及更早版本中的 LIF 角色"]
+
+
+* 如果将自动还原设置为、则会自动还原此项 `true` 以及LIF的主端口运行状况良好且能够托管LIF的情况。
+* 在计划内或计划外节点接管时、被接管节点上的LIF将故障转移到HA配对节点。LIF故障转移所使用的端口由VIF Manager确定。
+* 故障转移完成后、LIF将正常运行。
+* 启动交还后、如果将自动还原设置为、则LIF将还原回其主节点和端口 `true`。
+* 如果托管一个或多个BIF的端口上的以太网链路发生故障、则VIF Manager会将此BIF从已关闭的端口迁移到同一广播域中的其他端口。新端口可以位于同一节点或其HA配对节点中。如果将自动还原设置为、则在还原链路后执行此操作 `true`、则VIF Manager会将这些IF还原回其主节点和主端口。
+* 当某个节点退出复制的数据库(RDB)仲裁时、VIF Manager会将此脱离仲裁节点的生命周期迁移到其HA配对节点。在节点恢复仲裁后、如果将自动还原设置为 `true`、则VIF Manager会将这些IF还原回其主节点和主端口。
+

@@ -1,0 +1,49 @@
+---
+sidebar: sidebar 
+permalink: networking/configure_broadcast_domains_cluster_administrators_only_overview.html 
+keywords: broadcast, domain, overview, introduction, introducing, configure broadcast domains overview for ontap 9.8 and later, broadcast domains group network ports that belong to the same layer 2 network, example, sample, broadcast, domains, example of using broadcast domains, sample broadcast domain 
+summary: 广播域对属于同一第 2 层网络的网络端口进行分组 
+---
+= 广播域概述(ONTAP 9.8及更高版本)
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+广播域用于对属于同一第 2 层网络的网络端口进行分组。然后， Storage Virtual Machine （ SVM ）可以使用组中的端口来传输数据或管理流量。
+
+广播域驻留在 IP 空间中。在集群初始化期间，系统会创建两个默认广播域：
+
+* "Default" 广播域包含位于 "Default" IP 空间中的端口。
++
+这些端口主要用于提供数据。集群管理和节点管理端口也位于此广播域中。
+
+* " 集群 " 广播域包含位于 " 集群 " IP 空间中的端口。
++
+这些端口用于集群通信，并包括集群中所有节点的所有集群端口。
+
++
+系统会根据需要在默认 IP 空间中创建其他广播域。" 默认 " 广播域包含管理 LIF 的主端口，以及可通过第 2 层访问该端口的任何其他端口。其他广播域名为 "Default-1" ， "Default-2" 等。
+
+
+
+
+
+== 使用广播域的示例
+
+广播域是同一 IP 空间中的一组网络端口，也具有第 2 层可相互访问性，通常包括集群中许多节点的端口。
+
+图中显示了分配给四节点集群中三个广播域的端口：
+
+* " 集群 " 广播域会在集群初始化期间自动创建，其中包含集群中每个节点的端口 a 和 b 。
+* " 默认 " 广播域也会在集群初始化期间自动创建，其中包含集群中每个节点的端口 c 和 d 。
+* 在集群初始化期间，系统会根据第 2 层网络可访问性自动创建任何其他广播域。这些附加广播域名为 Default-1 ， Default-2 等。
+
+
+image:Broadcast_Domains.png["广播域映像"]
+
+系统会自动创建一个与每个广播域名称相同且网络端口相同的故障转移组。此故障转移组由系统自动管理，这意味着在从广播域添加或删除端口时，这些端口会自动添加或从此故障转移组中删除。
