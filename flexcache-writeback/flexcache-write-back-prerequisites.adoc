@@ -4,12 +4,21 @@ sidebar: sidebar
 keywords: tr-4743, flexcache writeback, flexcache write-back, prerequisites, technical report, netapp tr, ontap tr 
 summary: 在以回写模式部署FlexCache之前、请确保满足这些软件、许可和系统配置要求。 
 ---
-= FlexCache回写前提条件
+= ONTAP FlexCache回写前提条件
 :allow-uri-read: 
 
 
 [role="lead"]
-在以回写模式部署FlexCache之前、请确保满足这些软件、许可和系统配置要求。
+在以回写模式部署FlexCache之前、请确保满足这些性能、软件、许可和系统配置要求。
+
+
+
+== CPU和内存
+
+每个初始集群节点应至少具有128 GB RAM和20个CPU、以吸收由启用了回写的缓存启动的回写消息。这相当于A400或更高版本。如果初始集群用作多个启用了回写的FlexCaches的初始集群、则需要更多CPU和RAM。
+
+
+CAUTION: 为工作负载使用大小不足的源站可能会对启用了回写的缓存或源站的性能产生深远影响。
 
 
 
@@ -17,7 +26,7 @@ summary: 在以回写模式部署FlexCache之前、请确保满足这些软件�
 
 * 原点*_Must_*运行的是ONTAP 9.15.1.或更高版本。
 * 任何需要在回写模式*_Must_*下运行的缓存集群都运行ONTAP 9.15.1.或更高版本。
-* 任何不需要在回写模式下运行的缓存集群均可运行任何受支持的ONTAP版本。
+* 任何不需要在回写模式下运行的缓存集群都可以运行任何普遍支持的ONTAP版本。
 
 
 

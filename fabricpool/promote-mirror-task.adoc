@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: promoting, fabricpool, mirror 
 summary: 您可以通过提升对象存储镜像来将其重新分配为主对象存储。当对象存储镜像成为主镜像时，原始主镜像将自动成为镜像。 
 ---
-= 提升 FabricPool 镜像
+= 提升ONTAP FabricPool镜像
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -22,6 +22,20 @@ summary: 您可以通过提升对象存储镜像来将其重新分配为主对�
 您可以将原始对象存储替换为其他云提供商的对象存储。例如，原始镜像可能是 AWS 对象存储，但您可以将其替换为 Azure 对象存储。
 
 .步骤
+. 使用命令验证FabricPool镜像是否同步 `storage aggregate object-store show-resync-status`。如果 FabricPool 镜像处于同步状态，则不会显示任何条目。如果镜像未处于同步状态、请等待重新同步完成。
++
+[listing]
+----
+aggregate1::> storage aggregate object-store show-resync-status -aggregate aggr1
+----
++
+[listing]
+----
+                                               Complete
+      Aggregate    Primary       Mirror        Percentage
+      ---------    -----------   ----------    ----------
+      aggr1        my-store-1     my-store-2     40%
+----
 . 使用提升对象存储镜像 `storage aggregate object-store modify -aggregate` 命令：
 +
 [listing]

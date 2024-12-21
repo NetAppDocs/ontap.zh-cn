@@ -2,7 +2,7 @@
 permalink: flexgroup/definition-concept.html 
 sidebar: sidebar 
 keywords: flexgroup, volume 
-summary: FlexGroup 卷是一种横向扩展 NAS 容器，可提供高性能以及自动负载分布和可扩展性。FlexGroup 卷包含多个成分卷，这些成分卷会自动透明地共享流量。 
+summary: 'FlexGroup 卷是一种横向扩展 NAS 容器，可提供高性能以及自动负载分布和可扩展性。一个FlexGroup卷包含多个成员卷(成分卷)、这些卷会自动透明地共享流量。' 
 ---
 = 什么是 FlexGroup 卷
 :allow-uri-read: 
@@ -11,16 +11,26 @@ summary: FlexGroup 卷是一种横向扩展 NAS 容器，可提供高性能以�
 
 
 [role="lead"]
-FlexGroup 卷是一种横向扩展 NAS 容器，可提供高性能以及自动负载分布和可扩展性。FlexGroup 卷包含多个成分卷，这些成分卷会自动透明地共享流量。_成分 卷_是构成FlexGroup卷的底层FlexVol卷。
+FlexGroup 卷是一种横向扩展 NAS 容器，可提供高性能以及自动负载分布和可扩展性。一个FlexGroup卷包含多个成员卷(成分卷)、这些卷会自动透明地共享流量。_Member volums_是构成FlexGroup卷的底层FlexVol卷。
 
-image:fg-overview-flexgroup.gif["FlexGroup 卷表示为一组称为成分卷的 FlexVol 卷"]
+image:fg-overview-flexgroup.gif["FlexGroup卷表示为一组FlexVol卷、称为成员卷或成分卷"]
 
 FlexGroup 卷具有以下优势：
 
 * 高可扩展性
 +
-在 ONTAP 9.1 及更高版本中， FlexGroup 卷的最大大小为 20 PB ，在一个 10 节点集群上有 4000 亿个文件。
+只要成员卷的数量不超过节点或集群限制、就可以在一个集群上配置多个FlexGroup卷。
 
++
+从ONTAP 9.12.1P2开始，单个FlexGroup卷的最大容量为60 PB，当时，10节点集群上的文件数为4000亿link:../volumes/enable-large-vol-file-support-task.html["已启用大卷支持"]。如果不支持大型卷、则一个FlexGroup卷的最大容量为20 PB。
+
+
+
+[NOTE]
+====
+尽管一个FlexGroup卷的最大容量为60 PB (200个成员卷x 300 TB = 60 PB)、但如果成员卷的已用容量仍低于80%(200个成员卷x 240 TB = 48 PB)、则可实现最佳性能。
+
+====
 * 高性能
 +
 FlexGroup 卷可以利用集群的资源来处理高吞吐量和低延迟的工作负载。

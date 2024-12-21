@@ -1,0 +1,32 @@
+---
+permalink: flexcache-writeback/faq-flexcache-write-back.html 
+sidebar: sidebar 
+keywords: tr-4743, flexcache writeback, flexcache write-back, flexcache, write-back, write back, faq, frequently asked questions, ontap tr, netapp tr 
+summary: 有关FlexCache回写的常见问题 
+---
+= 有关ONTAP FlexCache回写的常见问题
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+此常见问题解答有助于您快速找到问题的答案。
+
+.我想使用回写。我需要运行哪个版本的ONTAP？
+缓存和初始服务器都必须运行9.15.1 9.151或更高版本。强烈建议您运行最新的P版本。工程部门正在不断提高启用了回写的缓存的性能和功能。
+
+.访问源站的客户端是否会影响访问启用了回写的缓存的客户端？
+是。源服务器与任何缓存具有相同的数据访问权限。如果对某个文件执行的操作要求将该文件从缓存中逐出、或者撤消锁定/数据委派、则缓存中的客户端可能会在访问该文件时出现延迟。
+
+.是否可以将QoS应用于启用了回写的FlexCaches？
+是。每个缓存和源站都可以应用独立的QoS策略。这不会对任何回写启动的集群间流量产生直接影响。通过QoS限制启用了回写的缓存中的前端流量、您可以间接降低集群间回写流量的速度。
+
+.启用了回写的FlexCaches是否支持多协议NAS？
+是。启用了回写的FlexCaches完全支持多协议。目前、在绕写或回写模式下运行的FlexCache不支持NFSv4.2和S3。
+
+.启用了回写的FlexCaches是否支持SMB备用数据流？
+支持SMB备用数据流(ADS)、但不能通过回写来加速。对ADS的写入会转发到源站、从而会降低WAN延迟。写入操作还会从缓存中清除ADS所属的主文件。
+
+.创建缓存后、是否可以在绕写模式和回写模式之间切换缓存？
+是。您只需切换 `is-writeback-enabled`链接中的标志：./vs-writback/vs. FlexCache FlexCache-writeback-enable-task.html[`flexcache modify` command]。
