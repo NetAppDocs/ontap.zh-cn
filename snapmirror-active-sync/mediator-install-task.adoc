@@ -83,6 +83,9 @@ xref:../san-admin/provision-storage.html[创建 LUN 并映射 igroup]
 
 安装ONTAP调解器并确认集群配置后、必须初始化ONTAP调解器以进行集群监控。您可以使用System Manager或ONTAP命令行界面初始化ONTAP调解器。
 
+
+NOTE: 在ONTAP调解器1.8及更早版本中，CA证书为 `ca.crt`。从ONTAP调解器1.9开始，所需证书为 `intermediate.crt`。
+
 [role="tabbed-block"]
 ====
 .System Manager
@@ -104,8 +107,8 @@ IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务�
 
 . 您可以通过两种方式提供证书输入：
 +
-** *选项(A)*：选择*导入*以导航到 `.crt` 文件并导入。
-** *选项(b)*：复制的内容 `.crt` 文件并粘贴到*证书*字段中。
+** *选项(A)*：选择*Import*导航到 `intermediate.crt`文件并导入。
+** *选项(b)*：复制文件内容 `intermediate.crt`并将其粘贴到*Certifice*字段中。
 +
 正确输入所有详细信息后、提供的证书将安装在所有对等集群上。
 
@@ -141,7 +144,7 @@ image:successful-mediator-installation.png["调解器添加成功"]。
 +
 [listing]
 ----
-[root@ontap-mediator server_config]# cat ca.crt
+[root@ontap-mediator server_config]# cat intermediate.crt
 -----BEGIN CERTIFICATE-----
 MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
 BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
@@ -161,7 +164,7 @@ p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
 ----
 [root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
 
-[root@ontap-mediator server_config]# cat ca.crt
+[root@ontap-mediator server_config]# cat intermediate.crt
 -----BEGIN CERTIFICATE-----
 MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
 BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
@@ -283,7 +286,7 @@ image:configure-mediator-system-manager.png["添加System Manager调解器"]
 您可以从主集群或二级集群重新初始化ONTAP调解器、方法是使用ONTAP命令行界面将自签名证书替换为第三方证书。
 
 .步骤
-. 删除自签名 `ca.crt` 在先前为所有集群使用自签名证书时安装。在以下示例中、有两个集群：
+. 删除先前在对所有集群使用自签名证书时安装的自签名 `intermediate.crt`证书。在以下示例中、有两个集群：
 +
 * 示例 *
 
@@ -319,12 +322,12 @@ Info: [Job 136] 'mediator remove' job queued
 C1_test_cluster::*> snapmirror mediator show
 This table is currently empty.
 ----
-. 请参阅中介绍的有关如何从从属CA获取证书的步骤 link:../mediator/manage-task.html["将自签名证书替换为受信任的第三方证书"] ，称为 `ca.crt`。将自签名证书替换为受信任的第三方证书
+. 有关如何从从属CA获取证书的说明，请参阅中所述的步骤link:../mediator/manage-task.html["将自签名证书替换为受信任的第三方证书"]，称为 `intermediate.crt`。将自签名证书替换为受信任的第三方证书
 +
 
-NOTE: 。 `ca.crt` 具有某些属性，这些属性是从需要发送到PKI颁发机构的请求(在文件中定义)中派生的 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`。
+NOTE: 具有某些属性，这些属性是从需要发送到PKI授权机构的请求(在文件中定义)派生 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`的 `intermediate.crt`。
 
-. 添加新的第三方ONTAP调解器CA证书 `ca.crt` 从ONTAP调解器Linux VM/主机软件安装位置：
+. 从ONTAP调解器Linux VM/主机软件安装位置添加新的第三方ONTAP调解器CA证书 `intermediate.crt`：
 +
 * 示例 *
 
@@ -332,7 +335,7 @@ NOTE: 。 `ca.crt` 具有某些属性，这些属性是从需要发送到PKI颁�
 [listing]
 ----
 [root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
-[root@ontap-mediator server_config]# cat ca.crt
+[root@ontap-mediator server_config]# cat intermediate.crt
 -----BEGIN CERTIFICATE-----
 MIIFxTCCA62gAwIBAgIJANhtjk6HFCiOMA0GCSqGSIb3DQEBCwUAMHgxFTATBgNV
 BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
@@ -340,7 +343,7 @@ BAoMDE5ldEFwcCwgSW5jLjELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
 p+jdg5bG61cxkuvbRm7ykFbih1b88/Sgu5XJg2KRhjdISF98I81N+Fo=
 -----END CERTIFICATE-----
 ----
-. 添加 `ca.crt` 文件到对等集群。对所有对等集群重复此步骤：
+. 将文件添加 `intermediate.crt`到对等集群。对所有对等集群重复此步骤：
 +
 * 示例 *
 

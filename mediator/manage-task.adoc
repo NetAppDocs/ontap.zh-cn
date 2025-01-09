@@ -466,25 +466,29 @@ image:mediator-certs-index.png["Web服务器设置和ONTAP调解器服务器设�
 
 您可以使用以下操作步骤从PKI颁发机构获取证书。
 
-以下示例说明了如何替换自签名证书角色、即 `ca.key`， `ca.csr`， `ca.srl`，和 `ca.crt` 位于 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/` 与第三方证书主体。
+以下示例说明了如何将自签名证书角色替换为位于的第三方证书角色 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/`。
+
+[NOTE]
+====
+* 在ONTAP调解器1.8及更早版本中，使用的CA文件包括： `ca.key`、 `ca.csr`、 `ca.srl`和 `ca.crt`。从ONTAP调解器1.9开始，所需的文件为 `intermediate.key`、 `intermediate.csr`、 `intermediate.srl`和 `intermediate.crt`。
+* 此示例说明了ONTAP调解器服务所需证书的必要条件。您可以通过与此操作步骤不同的方式从PKI颁发机构获取证书。根据您的业务需求调整此过程。
 
 
-NOTE: 此示例说明了ONTAP调解器服务所需证书的必要条件。您可以通过与此操作步骤不同的方式从PKI颁发机构获取证书。根据您的业务需求调整操作步骤。
-
+====
 .步骤
-. 创建专用密钥 `ca.key` 和配置文件 `openssl_ca.cnf` PKI颁发机构将使用该证书来生成证书。
+. 创建私钥和配置文件，PKI颁发机构将使用这些密钥 `intermediate.key`和配置文件 `openssl_ca.cnf`来生成证书。
 +
-.. 生成专用密钥 `ca.key`：
+.. 生成私钥 `intermediate.key`：
 +
 * 示例 *
 
 +
-`openssl genrsa -aes256 -out ca.key 4096`
+`openssl genrsa -aes256 -out intermediate.key 4096`
 
 .. 配置文件 `openssl_ca.cnf` (位于 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_ca.cnf`)定义生成的证书必须具有的属性。
 
 
-. 使用私钥和配置文件创建证书签名请求 `ca.csr`：
+. 使用私钥和配置文件创建证书签名请求 `intermediate.csr`：
 +
 * 示例： *
 
@@ -494,22 +498,22 @@ NOTE: 此示例说明了ONTAP调解器服务所需证书的必要条件。您可
 +
 [listing]
 ----
-[root@scs000216655 server_config]# openssl req -key ca.key -new -config openssl_ca.cnf -out ca.csr
-Enter pass phrase for ca.key:
-[root@scs000216655 server_config]# cat ca.csr
+[root@scs000216655 server_config]# openssl req -key intermediate.key -new -config openssl_ca.cnf -out intermediate.csr
+Enter pass phrase for intermediate.key:
+[root@scs000216655 server_config]# cat intermediate.csr
 -----BEGIN CERTIFICATE REQUEST-----
 MIIE6TCCAtECAQAwgaMxCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApDYWxpZm9ybmlh
 ...
 erARKhY9z0e8BHPl3g==
 -----END CERTIFICATE REQUEST-----
 ----
-. 发送证书签名请求 `ca.csr` 向PKI颁发机构签名。
+. 将证书签名请求发送 `intermediate.csr`到PKI颁发机构进行签名。
 +
-PKI授权机构验证请求并签署 `.csr`，生成证书 `ca.crt`。此外、您还需要从PKI颁发机构获取 `root_ca.crt` 对证书进行签名的证书 `ca.crt` 。
+PKI授权机构验证请求并签署 `.csr`，生成证书 `intermediate.crt`。此外、您还需要从PKI颁发机构获取 `root_intermediate.crt` 对证书进行签名的证书 `intermediate.crt` 。
 
 +
 
-NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `ca.crt` `root_ca.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为ONTAP活动同步配置SnapMirror调解器和集群"]
+NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `intermediate.crt` `root_intermediate.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为ONTAP活动同步配置SnapMirror调解器和集群"]
 
 
 
@@ -517,7 +521,7 @@ NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `c
 
 === 第2步：使用第三方CA认证签名生成服务器证书
 
-服务器证书必须使用专用密钥进行签名 `ca.key` 和第三方证书 `ca.crt`。此外、还包括配置文件 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_server.cnf` 包含某些属性、用于指定OpenSSL颁发的服务器证书所需的属性。
+服务器证书必须由专用密钥和第三方证书 `intermediate.crt`签名 `intermediate.key`。此外、配置文件 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/openssl_server.cnf`还包含某些属性、用于指定OpenSSL颁发的服务器证书所需的属性。
 
 以下命令可生成服务器证书。
 
@@ -529,10 +533,10 @@ NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `c
 . [[STEP_2_DEmediate_info]]要从CSR生成服务器证书、请从文件夹运行以下命令 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config` ：
 +
 
-NOTE:  `ca.crt`和 `ca.key` 文件是从PKI颁发机构获取的。如果您使用的是其他证书名称(例如 `intermediate.crt` 和 `intermediate.key`)，请分别将和替换 `ca.crt` `ca.key` 为 `intermediate.crt` 和 `intermediate.key` 。
+NOTE: 这些文件是从PKI颁发机构获得的。如果您使用的是其他证书名称、请将和 `intermediate.key`替换 `intermediate.crt`为相关文件名。
 
 +
-`openssl x509 -extfile openssl_server.cnf -extensions v3_req -CA ca.crt -CAkey ca.key -CAcreateserial -sha512 -days 1095 -req -in ontap_mediator_server.csr -out ontap_mediator_server.crt`
+`openssl x509 -extfile openssl_server.cnf -extensions v3_req -CA intermediate.crt -CAkey intermediate.key -CAcreateserial -sha512 -days 1095 -req -in ontap_mediator_server.csr -out ontap_mediator_server.crt`
 
 +
 **  `-CAcreateserial`选项用于生成 `ca.srl` 或 `intermediate.srl` 文件、具体取决于您使用的证书名称。
@@ -550,19 +554,19 @@ NOTE:  `ca.crt`和 `ca.key` 文件是从PKI颁发机构获取的。如果您使�
 ----
 cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt'
 key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key'
-ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt'
-ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key'
-ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl'
+ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt'
+ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.key'
+ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.srl'
 ----
 * `cert_path` 和 `key_path` 是服务器证书变量。
 * `ca_cert_path`， `ca_key_path`，和 `ca_serial_path` 是CA证书变量。
 
 
 .步骤
-. 将所有文件替换 `ca.*` 为第三方证书。
-. 从和证书创建证书链 `ca.crt` `ontap_mediator_server.crt` ：
+. 将所有文件替换 `intermediate.*` 为第三方证书。
+. 从和证书创建证书链 `intermediate.crt` `ontap_mediator_server.crt` ：
 +
-`cat ontap_mediator_server.crt ca.crt > ontap_mediator_server_chain.crt`
+`cat ontap_mediator_server.crt intermediate.crt > ontap_mediator_server_chain.crt`
 
 . 更新 `/opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini` 文件。
 +
@@ -575,12 +579,12 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.
 `set-placeholder = mediator_key = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key`
 
 +
-`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_ca.crt`
+`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_intermediate.crt`
 
 +
 **  `mediator_cert`值是文件的路径 `ontap_mediator_server_chain.crt` 。
 **  `mediator_key value`是文件中的密钥路径 `ontap_mediator_server.crt` ，即 `ontap_mediator_server.key`。
-**  `ca_certificate`值是文件的路径 `root_ca.crt` 。
+**  `ca_certificate`值是文件的路径 `root_intermediate.crt` 。
 
 
 . 验证新生成的证书的以下属性是否设置正确：
@@ -599,7 +603,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.
 
 === 第4步：(可选)为第三方证书使用其他路径或名称
 
-您可以使用与以外的其他名称的第三方证书 `ca.*` 或将第三方证书存储在其他位置。
+您可以使用与以外的其他名称的第三方证书、也可以 `intermediate.*`将第三方证书存储在其他位置。
 
 .步骤
 . 配置 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.user_config.yaml` 文件以覆盖文件中的默认变量值 `ontap_mediator.config.yaml` 。
@@ -634,7 +638,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/int
 
 ----
 +
-.. 如果您使用的证书结构中的 `root_ca.crt` 证书提供了 `intermediate.crt` 用于对证书签名的证书 `ontap_mediator_server.crt` 、请从和证书创建证书链 `intermediate.crt` `ontap_mediator_server.crt` ：
+.. 如果您使用的证书结构中的 `root_intermediate.crt` 证书提供了 `intermediate.crt` 用于对证书签名的证书 `ontap_mediator_server.crt` 、请从和证书创建证书链 `intermediate.crt` `ontap_mediator_server.crt` ：
 +
 
 NOTE: 您应已在此过程的前面部分从PKI颁发机构获取 `intermediate.crt` 和 `ontap_mediator_server.crt` 证书。
@@ -653,15 +657,15 @@ NOTE: 您应已在此过程的前面部分从PKI颁发机构获取 `intermediate
 `set-placeholder = mediator_key = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key`
 
 +
-`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_ca.crt`
+`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_intermediate.crt`
 
 +
 ***  `mediator_cert`值是文件的路径 `ontap_mediator_server_chain.crt` 。
 ***  `mediator_key`值是文件中的密钥路径 `ontap_mediator_server.crt` ，即 `ontap_mediator_server.key`。
-***  `ca_certificate`值是文件的路径 `root_ca.crt` 。
+***  `ca_certificate`值是文件的路径 `root_intermediate.crt` 。
 +
 
-NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `intermediate.crt` `root_ca.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为ONTAP活动同步配置SnapMirror调解器和集群"]
+NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `intermediate.crt` `root_intermediate.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为ONTAP活动同步配置SnapMirror调解器和集群"]
 
 
 
@@ -693,7 +697,7 @@ NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `i
 
 [listing]
 ----
-[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+[root@scs000216982 server_config]# openssl x509 -in intermediate.crt -text -noout
 Certificate:
     Data:
 ...
@@ -707,7 +711,7 @@ Certificate:
 
 使用以下命令验证CA认证中的X509v3扩展。
 
-在中定义的属性 `*v3_ca*` 在中 `openssl_ca.cnf` 显示为 `X509v3 extensions` 在中 `ca.crt`。
+在中定义的属性 `*v3_ca*`将显示为 `X509v3 extensions`中 `intermediate.crt`的 `openssl_ca.cnf`。
 
 [listing, subs="+quotes"]
 ----
@@ -722,7 +726,7 @@ Certificate:
 *basicConstraints = critical, CA:true*
 *keyUsage = critical, cRLSign, digitalSignature, keyCertSign*
 
-[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+[root@scs000216982 server_config]# openssl x509 -in intermediate.crt -text -noout
 Certificate:
     Data:
 ...
@@ -766,7 +770,7 @@ DNS.2 = abc-v6.company.com
 IP.1 = 1.2.3.4
 IP.2 = abcd:abcd:abcd:abcd:abcd:abcd
 
-[root@scs000216982 server_config]# openssl x509 -in ca.crt -text -noout
+[root@scs000216982 server_config]# openssl x509 -in intermediate.crt -text -noout
 Certificate:
     Data:
 ...
@@ -807,7 +811,7 @@ Enter pass phrase for intermediate.key:
 
 [listing]
 ----
-[root@scs000216982 server_config]# openssl verify -CAfile ca.crt ontap_mediator_server.crt
+[root@scs000216982 server_config]# openssl verify -CAfile intermediate.crt ontap_mediator_server.crt
 ontap_mediator_server.crt: OK
 ----
 如果正在使用联机证书状态协议(OCSP)验证，请使用命令 link:https://www.openssl.org/docs/manmaster/man1/openssl-verify.html["OpenSSL验证"^]。

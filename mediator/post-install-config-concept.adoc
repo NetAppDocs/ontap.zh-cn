@@ -54,6 +54,9 @@ NOTE: 不应更改中的其他默认值 `ontap_mediator.config.yaml`、因为在
 
 这些文件中的变量用于控制ONTAP调解器服务使用的证书文件。
 
+
+NOTE: 在ONTAP调解器1.8及更早版本中，CA证书为 `ca.crt`。从ONTAP调解器1.9开始，所需证书为 `intermediate.crt`。
+
 下表中列出的默认变量包含在该文件中 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。
 
 [cols="2*"]
@@ -67,13 +70,13 @@ NOTE: 不应更改中的其他默认值 `ontap_mediator.config.yaml`、因为在
 | `key_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key` 
 
 
-| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt` 
+| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt` 
 
 
-| `ca_key_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.key` 
+| `ca_key_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.key` 
 
 
-| `ca_serial_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.srl` 
+| `ca_serial_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.srl` 
 
 
 | `cert_valid_days` | `1095` 
@@ -98,7 +101,7 @@ NOTE: 不应更改中的其他默认值 `ontap_mediator.config.yaml`、因为在
 | `mediator_key` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key` 
 
 
-| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.crt` 
+| `ca_cert_path` | `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt` 
 |===
 如果修改了这些属性、请重新启动ONTAP调解器服务以应用更改。有关如何将默认证书替换为第三方证书的详细说明，请参阅link:../mediator/manage-task.html#replace-self-signed-certificates-with-trusted-third-party-certificates["将自签名证书替换为受信任的第三方证书"]。
 

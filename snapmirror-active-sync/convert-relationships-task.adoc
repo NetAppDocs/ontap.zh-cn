@@ -20,7 +20,7 @@ summary: 在SnapMirror活动同步配置中的对称保护和非对称保护之�
 
 == 转换为对称主动/主动关系
 
-您可以将具有同步保护的SnapMirror活动同步关系转换为使用对称主动/主动。
+您可以转换具有异步保护的SnapMirror活动同步关系、以使用对称主动/主动。
 
 .开始之前
 * 两个集群都必须运行ONTAP 9.151或更高版本。
@@ -91,11 +91,11 @@ summary: 在SnapMirror活动同步配置中的对称保护和非对称保护之�
 .统一配置的步骤
 . 从修改SnapMirror策略 `AutomatedFailover` to `AutomatedFailoverDuplex`：
 +
-`snapmirror modify -destination-path _destination_path_ -policy AutomatedFailoverDuplex`
+`snapmirror modify -destination-path <destination_path> -policy AutomatedFailoverDuplex`
 
 . 修改策略将触发重新同步。等待重新同步完成、然后确认此关系为 `Insync`：
 +
-`snapmirror show -destination-path _destination_path_`
+`snapmirror show -destination-path <destination_path>`
 
 . 如果现有主机位于主集群的本地、请将该主机添加到第二个集群、并建立与每个集群的相应访问权限的连接。
 . 在二级站点上、删除与远程主机关联的igroui上的LUN映射。
@@ -104,11 +104,11 @@ summary: 在SnapMirror活动同步配置中的对称保护和非对称保护之�
 NOTE: 确保igrop不包含未复制LUN的映射。
 
 +
-`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_ -path <>`
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup> -path <>`
 
 . 在主站点上、修改现有主机的启动程序配置、以便为本地集群上的启动程序设置近端路径。
 +
-`SiteA::> igroup initiator add-proximal-vserver -vserver _svm_name_ -initiator _host_ -proximal-vserver _server_`
+`SiteA::> igroup initiator add-proximal-vserver -vserver <svm_name> -initiator <host> -proximal-vserver <server>`
 
 . 为新主机添加新的igrop和启动程序、并设置主机与本地站点关联性的主机接近度。启用igrop复制以复制配置并在远程集群上转换主机位置。
 +
@@ -124,11 +124,11 @@ SiteA::> igroup initiator add-proximal-vserver -vserver vsA -initiator host2 -pr
 .非一致配置的步骤
 . 从修改SnapMirror策略 `AutomatedFailover` to `AutomatedFailoverDuplex`：
 +
-`snapmirror modify -destination-path _destination_path_ -policy AutomatedFailoverDuplex`
+`snapmirror modify -destination-path <destination_path> -policy AutomatedFailoverDuplex`
 
 . 修改策略将触发重新同步。等待重新同步完成、然后确认此关系为 `Insync`：
 +
-`snapmirror show -destination-path _destination_path_`
+`snapmirror show -destination-path <destination_path>`
 
 . 如果现有主机是主集群的本地主机、请将该主机添加到第二个集群、并建立与每个集群的相应访问权限的连接。
 . 在二级站点上、删除与远程主机关联的igroui上的LUN映射。
@@ -137,18 +137,18 @@ SiteA::> igroup initiator add-proximal-vserver -vserver vsA -initiator host2 -pr
 NOTE: 确保igrop不包含未复制LUN的映射。
 
 +
-`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_ -path <>`
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup> -path <>`
 
 . 在主站点上、修改现有主机的启动程序配置、以便为本地集群上的启动程序设置近端路径。
 +
-`SiteA::> igroup initiator add-proximal-vserver -vserver _Svm_name_ -initiator _host_ -proximal-vserver _server_`
+`SiteA::> igroup initiator add-proximal-vserver -vserver <svm_name> -initiator <host> -proximal-vserver <server>`
 
 . 在二级站点上、为新主机添加新的igrop和启动程序、并设置主机与其本地站点关联性的主机邻近度。将LUN映射到igrop。
 +
 ``
-SiteB::> igroup create -vserver _svm_name_ -igroup _igroup_name_
-SiteB::> igroup add -vserver _svm_name_ -igroup  _igroup_name_ -initiator _host_name_
-SiteB::> lun mapping create -igroup  _igroup_name_ -path _path_name_
+SiteB::> igroup create -vserver <svm_name> -igroup <igroup>
+SiteB::> igroup add -vserver <svm_name> -igroup  <igroup> -initiator <host_name>
+SiteB::> lun mapping create -igroup  <igroup> -path <path_name>
 ``
 
 . 发现主机上的路径、并验证主机是否具有从首选集群到存储LUN的主动/优化路径
@@ -165,30 +165,30 @@ SiteB::> lun mapping create -igroup  _igroup_name_ -path _path_name_
 
 .步骤
 . 将所有VM工作负载移动到源集群的本地主机。
-. 为不管理VM实例的主机删除igrop配置、并修改igrop配置以终止igrop复制。
+. 为不管理VM实例的主机删除igrop配置、然后修改igrop配置以终止igrop复制。
 +
-`code`
+`igroup modify -vserver <svm_name> -igroup <igroup> -replication-peer -`
 
 . 在二级站点上、取消映射LUN。
 +
-`SiteB::> lun mapping delete -vserver _svm_name_ -igroup _igroup_name_ -path <>`
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup> -path <>`
 
 . 在二级站点上、删除对称主动/主动关系。
 +
-`SiteB::> snapmirror delete -destination-path _destination_path_`
+`SiteB::> snapmirror delete -destination-path <destination_path>`
 
 . 在主站点上、释放对称主动/主动关系。
-`SiteA::> snapmirror release -destination-path _destination_path_ -relationship-info-only true`
-. 在二级站点中、使用创建与同一组卷的关系 `AutomatedFailover` 策略重新同步此关系。
+`SiteA::> snapmirror release -destination-path <destination_path> -relationship-info-only true`
+. 在二级站点中、使用策略创建与同一组卷的关系 `AutomatedFailover`以重新同步此关系。
 +
 ``
-SiteB::> snapmirror create -source-path _source_path_ -destination-path _destination_path_ -cg-item-mappings _source:@destination_ -policy AutomatedFailover
-SiteB::> snapmirror resync -destination-path vs1:/cg/cg1_dst
+SiteB::> snapmirror create -source-path <source_path> -destination-path <destination_path> -cg-item-mappings <source:@destination> -policy AutomatedFailover
+SiteB::> snapmirror resync -destination-path vs1:/cg/cg1_dst -policy <policy_type>
 ``
 
 +
 
-NOTE: 二级站点上的一致性组需要 link:../consistency-groups/delete-task.html["待删除"] 重新创建关系之前。目标卷 link:https://kb.netapp.com/onprem/ontap/dp/SnapMirror/How_to_change_a_volume_type_from_RW_to_DP["必须转换为DP类型"^]。
+NOTE: 在重新创建此关系之前、需要二级站点上的一致性组link:../consistency-groups/delete-task.html["待删除"]。目标卷link:https://kb.netapp.com/onprem/ontap/dp/SnapMirror/How_to_change_a_volume_type_from_RW_to_DP["必须转换为DP类型"^]。要将卷转换为DP，请使用非策略执行 `snapmirror resync`命令-`AutomatedFailover`： `MirrorAndVault`、 `MirrorAllSnapshots`或 `Sync`。
 
 . 确认关系镜像状态为 `Snapmirrored` 关系状态为 `Insync`。
 +

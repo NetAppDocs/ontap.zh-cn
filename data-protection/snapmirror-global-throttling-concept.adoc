@@ -22,7 +22,7 @@ SnapMirror 全局限制用于限制传入和 / 或传出 SnapMirror 和 SnapVaul
 
 [NOTE]
 ====
-在ONTAP 9.9.1及更早版本中、此限制对不起作用 `volume move` 传输或负载共享镜像传输。从ONTAP 9.10.0开始、您可以指定一个选项来限制卷移动操作。有关详细信息，请参见 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_throttle_volume_move_in_ONTAP_9.10_or_later["如何在ONTAP 9.10及更高版本中限制卷移动。"]
+在9.9.1 9.9.1及更早版本中、此限制对传输或负载共享镜像传输没有任何影响 `volume move`。从ONTAP 9.10.0开始、您可以指定一个选项来限制卷移动操作。有关详细信息、请参见link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_throttle_volume_move_in_ONTAP_9.10_or_later["如何在ONTAP 9.10及更高版本中限制卷移动。"]
 
 ====
 全局限制与 SnapMirror 和 SnapVault 传输的每个关系限制功能结合使用。系统将强制实施每个关系限制，直到每个关系传输的总带宽超过全局限制的值为止，之后将强制实施全局限制。限制值 `0` 表示已禁用全局限制。
@@ -47,13 +47,13 @@ cluster_dst::> options -option-name replication.throttle.enable on
 ----
 . 指定目标集群上传入传输所使用的最大总带宽：
 +
-`options -option-name replication.throttle.incoming.max_kbs _KBps_`
+`options -option-name replication.throttle.incoming.max_kbs <KBps>`
 
 +
-建议的最小限制带宽为 4 KBps ，最大限制为 2 Tbps 。此选项的默认值为 `unlimited`，表示已用总带宽无限制。
+建议的最小限制带宽为4 KB/秒(KBps)、最大带宽为2 TB/秒(TBps)。此选项的默认值为 `unlimited`，这意味着对使用的总带宽没有限制。
 
 +
-以下示例显示了如何将传入传输使用的最大总带宽设置为 100 Mbps ：
+以下示例显示了如何将传入传输使用的最大总带宽设置为100 Mbps：
 
 +
 [listing]
@@ -63,15 +63,15 @@ cluster_dst::> options -option-name replication.throttle.incoming.max_kbs 12500
 +
 [NOTE]
 ====
-100 Mbps = 12500 KBps
+100兆位/秒(MBps)= 12500千字节/秒(KBps)
 
 ====
 . 指定源集群上传出传输使用的最大总带宽：
 +
-`options -option-name replication.throttle.outgoing.max_kbs _KBps_`
+`options -option-name replication.throttle.outgoing.max_kbs <KBps>`
 
 +
-建议的最小限制带宽为 4 KBps ，最大限制为 2 Tbps 。此选项的默认值为 `unlimited`，表示已用总带宽无限制。参数值以KBps为单位。
+建议的最小限制带宽为 4 KBps ，最大限制为 2 Tbps 。此选项的默认值为 `unlimited`，这意味着对使用的总带宽没有限制。参数值以KB/秒(KBps)为单位。
 
 +
 以下示例显示了如何将传出传输使用的最大总带宽设置为 100 Mbps ：

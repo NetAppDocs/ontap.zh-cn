@@ -151,19 +151,21 @@ IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务�
 .统一配置的步骤
 . 创建一个新的SnapMirror关系、对应用程序中的所有卷进行分组。请确保指定 `AutomatedFailOverDuplex` 用于建立双向同步复制的策略。
 +
-`snapmirror create -source-path _source_path_ -destination-path _destination_path_ -cg-item-mappings _source_volume:@destination_volume_ -policy AutomatedFailOverDuplex`
+`snapmirror create -source-path <source_path> -destination-path <destination_path> -cg-item-mappings <source_volume:@destination_volume> -policy AutomatedFailOverDuplex`
 
+. 初始化SnapMirror关系：
+`snapmirror initialize -destination-path <destination-consistency-group>`
 . 等待以确认操作已成功 `Mirrored State` 以显示为 `SnapMirrored` 和 `Relationship Status` 作为 `Insync`。
 +
-`snapmirror show -destination-path _destination_path_`
+`snapmirror show -destination-path <destination_path>`
 
 . 在主机上、根据需要配置主机连接并访问每个集群。
 . 建立igrop配置。为本地集群上的启动程序设置首选路径。指定将配置复制到对等集群反向相关性的选项。
 +
-`SiteA::> igroup create -vserver _svm_name_  -os-type _os_type_ -igroup _igroup_name_ -replication-peer _peer_svm_name_ -initiator _host_`
+`SiteA::> igroup create -vserver <svm_name> -os-type <os_type> -igroup <igroup_name> -replication-peer <peer_svm_name> -initiator <host>`
 
 +
-`SiteA::> igroup add -vserver _svm_name_ -igroup _igroup_name_ -os-type _os_type_ -initiator _host_`
+`SiteA::> igroup add -vserver <svm_name> -igroup <igroup_name> -os-type <os_type> -initiator <host>`
 
 . 从主机中、发现路径、并验证主机是否具有从首选集群到存储LUN的主动/优化路径。
 . 部署应用程序并在集群之间分布VM工作负载、以实现所需的负载平衡。
@@ -172,21 +174,23 @@ IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务�
 .非一致配置的步骤
 . 创建一个新的SnapMirror关系、对应用程序中的所有卷进行分组。请确保指定`AutomatedFailOver双 工`策略以建立双向同步复制。
 +
-`snapmirror create -source-path _source_path_ -destination-path _destination_path_ -cg-item-mappings _source_volume:@destination_volume_ -policy AutomatedFailOverDuplex`
+`snapmirror create -source-path <source_path> -destination-path <destination_path> -cg-item-mappings <source_volume:@destination_volume> -policy AutomatedFailOverDuplex`
 
+. 初始化SnapMirror关系：
+`snapmirror initialize -destination-path <destination-consistency-group>`
 . 等待以确认操作已成功 `Mirrored State` 以显示为 `SnapMirrored` 和 `Relationship Status` 作为 `Insync`。
 +
-`snapmirror show -destination-path _destination_path_`
+`snapmirror show -destination-path <destination_path>`
 
 . 在主机上、根据需要配置主机连接并访问每个集群。
 . 在源集群和目标集群上建立igrop配置。
 +
 `# primary site
-SiteA::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -initiator _host_1_name_`
+SiteA::> igroup create -vserver <svm_name> -igroup <igroup_name> -initiator <host_1_name_>`
 
 +
 `# secondary site
-SiteB::> igroup create -vserver _svm_name_ -igroup _igroup_name_ -initiator _host_2_name_`
+SiteB::> igroup create -vserver <svm_name> -igroup <igroup_name> -initiator <host_2_name>`
 
 . 从主机中、发现路径、并验证主机是否具有从首选集群到存储LUN的主动/优化路径。
 . 部署应用程序并在集群之间分布VM工作负载、以实现所需的负载平衡。
