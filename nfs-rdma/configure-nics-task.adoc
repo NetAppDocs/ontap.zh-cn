@@ -17,20 +17,41 @@ summary: 本文介绍客户端系统和存储平台配置如何处理 NIC 在 ON
 
 == 存储平台配置
 
-需要在服务器上安装 X1148 RDMA 适配器。如果您使用的是 HA 配置，则故障转移配对节点上必须具有相应的 X1148 适配器，以便 RDMA 服务可以在故障转移期间继续运行。NIC 必须支持 ROCE 。
+有关目标RNIC支持的信息，请参阅 https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
-从ONTAP 9.10.1开始、您可以使用以下命令查看RDMA卸载协议列表：
-`network port show -rdma-protocols roce`
+如果您使用的是高可用性(HA)配置、则两个节点都必须使用同一个NIC来支持RDMA故障转移。NIC必须支持RoCE。
+
+* 从ONTAP 9.10.1开始、您可以使用以下命令查看RDMA卸载协议列表：
++
+[source, cli]
+----
+network port show -rdma-protocols roce
+----
+* 从ONTAP 9.161开始、建议使用优先级流量控制(Priority Flow Control、PFC)。使用命令配置PFC `network port modify`：
++
+[source, cli]
+----
+network port modify -node <nodename> -port <portname> -flowcontrol-admin pfc -pfc-queues-admin 3
+----
+* 在ONTAP 9.161之前的版本中、建议使用默认全局流量控制(GFC)。如果更改了流量控制设置、请使用命令配置GFC `network port modify`：
++
+[source, cli]
+----
+network port modify -node <nodename> -port <portname> -flowcontrol-admin full
+----
+
 
 
 
 == 客户端系统配置
 
-客户端必须使用支持 Mellanox RDMA 的 NIC 卡（例如 X1148 ）和 Mellanox OFED 网络软件。有关支持的型号和版本，请参见 Mellanox 文档。尽管客户端和服务器可以直接连接，但由于交换机的故障转移性能有所提高，因此建议使用交换机。
+有关基于RDMA的NFS支持的客户端操作系统的信息，请参阅 https://imt.netapp.com/matrix/["NetApp互操作性表(IMT)"^]。有关RoCE v2支持的RNIC、请参阅相应的RNIC供应商文档。
 
-客户端、服务器、任何交换机以及交换机上的所有端口都必须使用巨型帧进行配置。此外，还应确保优先级流量控制在任何交换机上有效。
+虽然客户端和服务器可以直接连接、但建议使用交换机以提高故障转移性能。
 
-确认此配置后，您可以挂载 NFS 。
+客户端、服务器、任何交换机以及交换机上的所有端口都必须使用巨型帧进行配置。客户端和交换机上的流量控制配置应与ONTAP的流量控制配置相匹配。从ONTAP 9.161开始、最佳实践是在ONTAP、交换机和客户端上启用和配置优先级流量控制。在ONTAP 9.161之前的版本中、建议使用全局流量控制。
+
+确认此配置后、您可以使用RDMA挂载NFS导出。
 
 [role="tabbed-block"]
 ====
@@ -52,24 +73,24 @@ summary: 本文介绍客户端系统和存储平台配置如何处理 NIC 在 ON
 --
 . 使用命令检查 NFS 服务器上是否启用了 RDMA 访问：
 +
-`vserver nfs show-vserver _SVM_name_`
+`vserver nfs show-vserver <SVM_name>`
 
 +
 默认情况下、 `-rdma` 应启用。如果不是，请在 NFS 服务器上启用 RDMA 访问：
 
 +
-`vserver nfs modify -vserver _SVM_name_ -rdma enabled`
+`vserver nfs modify -vserver <SVM_name> -rdma enabled`
 
 . 通过 NFSv4.0 通过 RDMA 挂载客户端：
 +
 .. proto 参数的输入取决于服务器 IP 协议版本。如果为IPv4、请使用 `proto=rdma`。如果使用IPv6、请使用 `proto=rdma6`。
 .. 将NFS目标端口指定为 `port=20049` 而不是标准端口2049：
 +
-`mount -o vers=4,minorversion=0,proto=rdma,port=20049 _Server_IP_address_:/_volume_path_ _mount_point_`
+`mount -o vers=4,minorversion=0,proto=rdma,port=20049 <Server_IP_address>:/<volume_path> <mount_point>`
 
 
 
-. *可选*：如果需要卸载客户端、请运行命令 `unmount _mount_path_`
+. *可选*：如果需要卸载客户端、请运行命令 `unmount <mount_path>`
 
 
 --

@@ -2,26 +2,28 @@
 sidebar: sidebar 
 permalink: anti-ransomware/respond-abnormal-task.html 
 keywords: abnormal activity, data entropy, unusual file extensions, potential ransomware attack, false positive, ransomware attack, abnormal activity notification, ransomware alert, detected abnormal volume, suspected file types, attack report, anti-ransomware attack, ransomware ems 
-summary: 了解如何响应ARP通知以了解勒索软件攻击是否正在进行。 
+summary: 了解如何在ONTAP中发送ARP通知、并确定是否发生勒索软件攻击以及如何做出响应。 
 ---
 = 应对异常活动。
-:hardbreaks:
-:toclevels: 1
 :allow-uri-read: 
-:toclevels: 1
-:nofooter: 
 :icons: font
-:linkattrs: 
 :imagesdir: ../media/
 
 
 [role="lead"]
-当自主勒索软件保护(ARP)检测到受保护卷中的异常活动时、它会发出警告。您应评估通知以确定活动是否可接受(误报)或攻击是否看起来是恶意的。
+当自主勒索软件保护(ARP)检测到受保护卷中的异常活动时、它会发出警告。您应评估通知以确定活动是否可接受(误报)或攻击是否看起来是恶意的。对攻击进行分类后、您可以清除有关可疑文件的警告和通知。
+
+当ONTAP检测到一个错误时、它还会创建link:index.html#threat-assessment-and-arp-snapshots["ARP快照"]卷以创建最佳恢复点。默认情况下、ARP快照会保留2到5天。
+
+对攻击进行分类时、这些ARP快照会立即删除(9.15.1 9.151及更早版本)、或者由分类操作启动的一段较短时间(9.16.1 9.161及更高版本)予以保留。
+
+
+NOTE: 从ONTAP 9.11.1开始、您可以修改ARP快照的xref:modify-automatic-snapshot-options-task.html[保留设置]。
 
 .关于此任务
 如果ARP检测到高数据容量、具有数据加密的异常卷活动以及异常文件扩展名的任意组合、则会显示可疑文件的列表。
 
-发出警告后、通过以下两种方式之一指定文件活动来进行响应：
+发出ARP警告后、通过以下两种方式之一指定文件活动来进行响应：
 
 * *误报*
 +
@@ -44,7 +46,7 @@ NOTE: 如果还原整个卷、则不需要清除任何通知。
 ARP必须在活动模式下运行。
 
 .步骤
-您可以使用System Manager或ONTAP命令行界面来响应异常任务。
+您可以使用System Manager或ONTAP命令行界面来响应异常活动。
 
 [role="tabbed-block"]
 ====
@@ -54,13 +56,12 @@ ARP必须在活动模式下运行。
 +
 警告显示在*Events*菜单的*Overview*窗格中。
 
-. 当显示"Detected ab不正常volume active"(检测到异常卷活动)消息时、请查看可疑文件。
+. 当出现有关检测到异常卷活动的消息时、请查看可疑的文件类型。
 +
-在*安全性*选项卡中，选择*查看可疑文件类型*。
+在*Security*选项卡中，选择选项以查看可疑的文件类型。
 
 . 在*可疑文件类型*对话框中，检查每种文件类型，并将其标记为"False"(误报)或"Ppyseed Ransamor Attack"(潜在的Ransamor攻击)。
-
-
++
 [cols="25,75"]
 |===
 
@@ -68,24 +69,42 @@ ARP必须在活动模式下运行。
 | 如果选择此值 ... | 执行此操作… 
 
 
-| 误报  a| 
-选择*更新*和*清除可疑文件类型*以记录您的决定并恢复正常ARP监控。
-
+ a| 
+误报
+ a| 
+.. 选择*更新*和*清除可疑文件类型*以记录您的决定。
++
 
 NOTE: 从ONTAP 9.13.1开始、如果使用MAV保护ARP设置、则清除可疑操作会提示您获得一个或多个其他管理员的批准。 link:../multi-admin-verify/request-operation-task.html["必须获得所有管理员的批准"] 与MAV审批组关联、否则操作将失败。
 
++
+此操作将清除有关可疑文件的警告通知。然后、ARP恢复对卷的正常监控。对于9.15.1 9.151及更早版本、清除可疑文件类型后、系统会自动删除ARP快照。对于9.16.1 9.161及更高版本中的ARP/AI、在经过分类操作触发的缩短保留期限后、系统会自动删除ARP快照。
 
 
-| 潜在勒索软件攻击 | 应对攻击并还原受保护的数据。然后选择*更新*和*清除可疑文件类型*以记录您的决定并恢复正常ARP监控。
-如果还原了整个卷、则不需要清除任何可疑文件类型。 
+
+
+
+ a| 
+潜在勒索软件攻击
+ a| 
+.. 对攻击做出响应，然后link:recover-data-task.html["还原受保护的数据"]。
+.. 选择*更新*和*清除可疑文件类型*以记录您的决定并恢复正常ARP监控。
+
+
+此操作将清除攻击报告。如果您还原了整个卷、则不会清除任何可疑文件类型通知。对于9.15.1 9.151及更早版本、还原卷后会自动删除ARP快照。对于9.16.1 9.161及更高版本中的ARP/AI、在经过分类操作触发的缩短保留期限后、系统会自动删除ARP快照。
+
 |===
+
+
 --
 .命令行界面
 --
 . 收到可疑勒索软件攻击的通知后，请验证此攻击的时间和严重性：
 +
-`security anti-ransomware volume show -vserver _svm_name_ -volume _vol_name_`
-
+[source, cli]
+----
+security anti-ransomware volume show -vserver <svm_name> -volume <vol_name>
+----
 +
 示例输出：
 
@@ -102,55 +121,76 @@ Number of Attacks: 1
 您还可以检查 EMS 消息：
 
 +
-`event log show -message-name callhome.arw.activity.seen`
-
+[source, cli]
+----
+event log show -message-name callhome.arw.activity.seen
+----
 . 生成攻击报告并记下输出位置：
 +
-`security anti-ransomware volume attack generate-report -volume _vol_name_ -dest-path _file_location_/`
+[source, cli]
+----
+security anti-ransomware volume attack generate-report -vserver <svm_name> -volume <vol_name> -dest-path <[svm_name:]vol_name/[sub-dir-name]>`
+----
++
+命令示例：
 
++
+[listing]
+----
+security anti-ransomware volume attack generate-report -vserver vs0 -volume vol1 -dest-path vs0:vol1
+----
 +
 示例输出：
 
 +
-`Report "report_file_vs0_vol1_14-09-2021_01-21-08" available at path "vs0:vol1/"`
-
+[listing]
+----
+Report "report_file_vs0_vol1_14-09-2021_01-21-08" available at path "vs0:vol1/"
+----
 . 在管理客户端系统上查看报告。例如：
 +
 ....
-[root@rhel8 mnt]# cat report_file_vs0_vol1_14-09-2021_01-21-08
-
-19  "9/14/2021 01:03:23"   test_dir_1/test_file_1.jpg.lckd
-20  "9/14/2021 01:03:46"   test_dir_2/test_file_2.jpg.lckd
-21  "9/14/2021 01:03:46"   test_dir_3/test_file_3.png.lckd`
+cat report_file_vs0_vol1_14-09-2021_01-21-08
 ....
 . 根据对文件扩展名的评估，执行以下操作之一：
 +
 ** 误报
 +
-输入以下命令记录您的决定、将新扩展名添加到允许的扩展名列表中、并恢复正常的反勒索软件监控：
-`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive true`
+运行以下命令、记录您的决定、将新扩展添加到允许的扩展列表中、并恢复正常的自主防兰森异常保护监控：
 
 +
-使用以下参数之一标识扩展：
-`[-seq-no _integer_]` 可疑列表中的文件序列号。
-`[-extension _text_, … ]` 文件扩展名
-`[-start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始时间和结束时间、格式为"MM/DD/YYYY HH：MM：SS"。
+[source, cli]
+----
+anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive true
+----
++
+使用以下可选参数仅将特定扩展识别为误报：
+
++
+*** `[-extension <text>, … ]`：文件扩展名
++
+此操作将 `clear-suspect`清除有关可疑文件的警告通知。然后、ARP恢复对卷的正常监控。对于9.15.1 9.151及更早版本、清除可疑文件类型后、系统会自动删除ARP快照。对于9.16.1 9.161及更高版本中的ARP/AI、在经过分类操作触发的缩短保留期限后、系统会自动删除ARP快照。
+
+
 
 ** 潜在的勒索软件攻击
 +
-应对攻击、然后 link:../anti-ransomware/recover-data-task.html["从ARP创建的备份快照恢复数据"]。恢复数据后、输入以下命令记录您的决定并恢复正常ARP监控：
+对攻击做出响应，然后link:../anti-ransomware/recover-data-task.html["从ARP创建的备份快照恢复数据"]。恢复数据后、运行以下命令记录您的决定并恢复正常ARP监控：
 
 +
-`anti-ransomware volume attack clear-suspect -vserver _svm_name_ -volume _vol_name_ [_extension identifiers_] -false-positive false`
+[source, cli]
+----
+anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive false
+----
++
+使用以下可选参数仅将特定扩展识别为潜在勒索软件：
 
 +
-使用以下参数之一标识扩展：
-`[-seq-no _integer_]` 可疑列表中的文件序列号
-`[-extension _text_, … ]` 文件扩展名
-`[-start-time _date_time_ -end-time _date_time_]` 要清除的文件范围的开始时间和结束时间、格式为"MM/DD/YYYY HH：MM：SS"。
-
+*** `[-extension <text>, … ]`：文件扩展名
 +
-如果还原了整个卷、则不需要清除任何可疑文件类型。系统将删除ARP创建的备份快照、并清除攻击报告。
+此 `clear-suspect`操作将清除攻击报告。如果您还原了整个卷、则不会清除任何可疑文件类型通知。对于9.15.1 9.151及更早版本、还原卷后会自动删除ARP快照。对于9.16.1 9.161及更高版本中的ARP/AI、在经过分类操作触发的缩短保留期限后、系统会自动删除ARP快照。
+
+
 
 
 
@@ -158,12 +198,16 @@ Number of Attacks: 1
 +
 .. 显示请求：
 +
-`security multi-admin-verify request show`
-
+[source, cli]
+----
+security multi-admin-verify request show
+----
 .. 批准恢复正常反勒索软件监控的请求：
 +
-`security multi-admin-verify request approve -index[_number returned from show request_]`
-
+[source, cli]
+----
+security multi-admin-verify request approve -index[<number returned from show request>]
+----
 +
 最后一个组批准者的响应指示卷已修改、并记录误报。
 
@@ -171,12 +215,15 @@ Number of Attacks: 1
 
 . 如果您正在使用MAV、并且您是MAV组批准者、您还可以拒绝可疑交易请求：
 +
-`security multi-admin-verify request veto -index[_number returned from show request_]`
-
+[source, cli]
+----
+security multi-admin-verify request veto -index[<number returned from show request>]
+----
 
 
 --
 ====
-.更多信息
+.相关信息
 * link:https://kb.netapp.com/onprem%2Fontap%2Fda%2FNAS%2FUnderstanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot#["知识库文章：了解自动防系统攻击和自动防系统攻击快照"^]。
+* link:modify-automatic-snapshot-options-task.html["修改自动快照选项"](英文)
 

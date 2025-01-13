@@ -11,17 +11,13 @@ summary: 基于 RDMA 的 NFS 利用 RDMA 适配器，可以在存储系统内存
 
 
 [role="lead"]
-基于 RDMA 的 NFS 利用 RDMA 适配器，可以在存储系统内存和主机系统内存之间直接复制数据，从而避免 CPU 中断和开销。
+基于RDMA的NFS利用支持RDMA的网络适配器、允许直接在存储系统内存和主机系统内存之间复制数据、从而避免CPU中断和开销。
 
-基于 RDMA 的 NFS 配置专为具有延迟敏感型或高带宽工作负载（例如机器学习和分析）的客户而设计。NVIDIA 已通过 RDMA 扩展 NFS ，以启用 GPU 直接存储（ GDS ）。GDS可通过完全绕过CPU和主内存、使用RDMA直接在存储系统和GPU内存之间传输数据、进一步加速支持GPU的工作负载。
+基于 RDMA 的 NFS 配置专为具有延迟敏感型或高带宽工作负载（例如机器学习和分析）的客户而设计。基于RDMA的ONTAP NFS可用于任何基于NFS的工作负载。此外、NVIDIA还扩展了基于RDMA的NFS、以支持GPU直接存储(GDS)。GDS可通过完全绕过CPU和主内存、使用RDMA直接在存储系统和GPU内存之间传输数据、进一步加速支持GPU的工作负载。
 
-从ONTAP 9.10.1开始、如果与使用RoCE协议版本2的RDMA提供支持的迈乐诺克斯CX-5或CX-6适配器结合使用、则NFSv4.0协议支持基于RDMA的NFS配置。只有使用 NVIDIA Tesla 和 Ampere 系列 GPU 以及 Mellanox NIC 卡和 MoFED 软件时，才支持 GDS 。请参见"要求"中的图表、了解后续ONTAP版本中的NFS版本支持。
-
-
-NOTE: 如果NFS挂载大小超过64k、则会导致基于RDMA配置的NFS性能不稳定。
+从ONTAP 9.10.1开始、NFSv4.0协议支持基于RDMA的NFS配置。后续ONTAP版本支持其他NFS版本。
 
 .要求
-* 存储系统必须运行ONTAP 9.10.1或更高版本。
 * 确保您运行的ONTAP版本与要使用的NFS版本相符。
 +
 [cols="2"]
@@ -41,8 +37,8 @@ NOTE: 如果NFS挂载大小超过64k、则会导致基于RDMA配置的NFS性能�
 ** 从ONTAP 9.12.1开始、您可以使用System Manager配置基于RDMA的NFS。在ONTAP 9.10.1和9.11.1中、您需要使用命令行界面配置基于RDMA的NFS。
 
 
-* HA对中的两个节点必须为相同版本。
-* 存储系统控制器必须支持RDMA
+* 高可用性(HA)对中的两个节点必须版本相同。
+* 存储系统控制器必须支持RDMA：
 +
 [cols="2"]
 |===
@@ -80,7 +76,8 @@ NOTE: 如果NFS挂载大小超过64k、则会导致基于RDMA配置的NFS性能�
 
 |===
 * 必须配置数据 LIF 以支持 RDMA 。
-* 客户端必须使用支持 Mellanox RDMA 的 NIC 卡和 Mellanox OFED （ MoFED ）网络软件。有关适配器支持的信息，请参阅link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。基于RDMA的NFS支持的适配器在说明字段中显示"RoCE"。
+* 有关目标RNIC支持的信息，请参阅 https://hwu.netapp.com/["NetApp Hardware Universe"^]。
+* 有关基于RDMA的NFS支持的客户端操作系统的信息，请参阅 https://imt.netapp.com/matrix/["NetApp互操作性表(IMT)"^]。有关RoCE v2支持的RNIC、请参阅相应的RNIC供应商文档。
 
 
 
