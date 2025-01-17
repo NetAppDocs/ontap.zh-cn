@@ -1,52 +1,60 @@
 ---
 permalink: snaplock/snapshot-lock-concept.html 
 sidebar: sidebar 
-keywords: snaplock, snapshot copy, lock, tamperproof 
-summary: 从ONTAP 9.12.1开始、您可以在非SnapLock卷上锁定Snapshot副本、以防止遭受勒索软件攻击。锁定Snapshot副本可确保不会意外或恶意删除这些副本。 
+keywords: snaplock, snapshot, lock, tamperproof 
+summary: 从ONTAP 9.12.1开始、您可以锁定非SnapLock卷上的快照、以防止勒索软件攻击。锁定快照可确保它们不会被意外或恶意删除。 
 ---
-= 锁定Snapshot副本以防止勒索软件攻击
+= 锁定快照以防止勒索软件攻击
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从ONTAP 9.12.1开始、您可以在非SnapLock卷上锁定Snapshot副本、以防止遭受勒索软件攻击。锁定Snapshot副本可确保不会意外或恶意删除这些副本。
+从ONTAP 9.12.1开始、您可以锁定非SnapLock卷上的快照、以防止勒索软件攻击。锁定快照可确保它们不会被意外或恶意删除。
 
-您可以使用SnapLock 合规时钟功能在指定时间段内锁定Snapshot副本、以便在达到到期时间之前无法删除这些副本。锁定Snapshot副本可防止数据被篡改、防止他们受到勒索软件威胁。如果卷受到勒索软件攻击的影响、您可以使用锁定的Snapshot副本恢复数据。
+您可以使用SnapLock Compliance时钟功能在指定时间段内锁定快照、以便在达到到期时间之前无法删除这些快照。锁定快照可使其防篡改、防止其受到勒索软件威胁。如果卷受到勒索软件攻击、您可以使用锁定的快照来恢复数据。
 
-从ONTAP 9.14.1开始、Snapshot副本锁定支持在SnapLock存储目标和非SnapLock SnapMirror目标卷上长期保留Snapshot副本。可通过使用与关联的SnapMirror策略规则设置保留期限来启用Snapshot副本锁定 xref:Modify an existing policy to apply long-term retention[现有策略标签]。此规则将覆盖在卷上设置的默认保留期限。如果SnapMirror标签没有关联的保留期限、则使用卷的默认保留期限。
+从ONTAP 9.14.1开始、快照锁定支持SnapLock存储目标和非SnapLock SnapMirror目标卷上的长期保留快照。可通过使用与关联的SnapMirror策略规则设置保留期限来启用快照锁定xref:Modify an existing policy to apply long-term retention[现有策略标签]。此规则将覆盖在卷上设置的默认保留期限。如果SnapMirror标签没有关联的保留期限、则使用卷的默认保留期限。
 
-.防篡改Snapshot副本的要求和注意事项
+.防篡改快照要求和注意事项
 * 如果使用的是ONTAP命令行界面、则集群中的所有节点都必须运行ONTAP 9.12.1或更高版本。如果使用的是System Manager、则所有节点都必须运行ONTAP 9.13.1或更高版本。
 * link:../system-admin/install-license-task.html["集群上必须安装SnapLock许可证"](英文)此许可证包含在中link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
 * link:../snaplock/initialize-complianceclock-task.html["必须初始化集群上的Compliance时钟"](英文)
-* 在卷上启用Snapshot锁定后、您可以将集群升级到ONTAP 9.12.1之后的ONTAP 版本； 但是、在所有锁定的Snapshot副本均已达到其到期日期并被删除以及Snapshot副本锁定被禁用之前、您无法还原到早期版本的ONTAP。
-* 锁定Snapshot后、卷到期时间将设置为Snapshot副本的到期时间。如果锁定了多个Snapshot副本、则卷到期时间将是所有Snapshot副本中最长的到期时间。
-* 锁定的Snapshot副本的保留期限优先于Snapshot副本保留计数、这意味着、如果锁定的Snapshot副本的Snapshot副本保留期限未过期、则不会遵守保留计数限制。
-* 在SnapMirror关系中、您可以对镜像-存储策略规则设置保留期限、如果目标卷启用了Snapshot副本锁定、则会对复制到目标的Snapshot副本应用保留期限。保留期限优先于保留数量；例如、即使超过保留数量、尚未过期的Snapshot副本也将被保留。
-* 您可以重命名非SnapLock卷上的Snapshot副本。只有当策略为MirrorAllSnapshots时、SnapMirror关系的主卷上的Snapshot重命名操作才会反映在二级卷上。对于其他策略类型、更新期间不会传播已重命名的Snapshot副本。
-* 如果您使用的是ONTAP命令行界面、则可以使用还原锁定的Snapshot副本 `volume snapshot restore` 仅当锁定的Snapshot副本为最新副本时才使用命令。如果在要还原的Snapshot副本之后存在任何未过期的Snapshot副本、则Snapshot副本还原操作将失败。
+* 在卷上启用快照锁定后、您可以将集群升级到ONTAP 9.12.1之后的ONTAP版本；但是、只有在所有锁定的快照均已达到到期日期并被删除且快照锁定已禁用之前、您才能还原到早期版本的ONTAP。
+* 锁定快照后、卷到期时间将设置为快照的到期时间。如果锁定了多个快照、则卷到期时间是所有快照中的最长到期时间。
+* 锁定快照的保留期限优先于快照保留计数、这意味着、如果锁定快照的快照保留期限未到期、则不会遵守保留计数限制。
+* 在SnapMirror关系中、您可以为镜像-存储策略规则设置保留期限、如果目标卷启用了快照锁定、则会为复制到目标的快照应用保留期限。保留期限优先于保留计数；例如、即使超过保留计数、未超过到期时间的快照也会保留。
+* 您可以重命名非SnapLock卷上的快照。只有当策略为MirrorAllSnapshots时、SnapMirror关系的主卷上的Snapshot重命名操作才会反映在二级卷上。对于其他策略类型、更新期间不会传播重命名的快照。
+* 如果使用的是ONTAP命令行界面、则只有在锁定的快照是最新的时、才能使用命令还原锁定的快照 `volume snapshot restore`。如果有任何未过期的快照晚于要还原的快照、快照还原操作将失败。
 
 
-.防篡改Snapshot副本支持的功能
+.支持防篡改快照的功能
 * link:https://docs.netapp.com/us-en/bluexp-cloud-volumes-ontap/reference-worm-snaplock.html["Cloud Volumes ONTAP"^]
 * FlexGroup 卷
 +
-FlexGroup 卷支持Snapshot副本锁定。Snapshot锁定仅发生在根成分卷Snapshot副本上。只有在根成分卷过期时间已过的情况下、才允许删除FlexGroup 卷。
+FlexGroup卷支持快照锁定。快照锁定仅在根成分卷快照上进行。只有在根成分卷过期时间已过的情况下、才允许删除FlexGroup 卷。
 
 * FlexVol 到FlexGroup 的转换
 +
-您可以将具有锁定Snapshot副本的FlexVol 卷转换为FlexGroup 卷。Snapshot副本在转换后仍保持锁定状态。
+您可以将具有锁定快照的FlexVol volume转换为FlexGroup卷。转换后、快照将保持锁定状态。
+
+* SnapMirror异步
++
+必须在源和目标上初始化Compliance时钟。
+
+* SVM 灾难恢复
++
+必须在源和目标上初始化Compliance时钟。
 
 * 卷克隆和文件克隆
 +
-您可以从锁定的Snapshot副本创建卷克隆和文件克隆。
+您可以从锁定的快照创建卷克隆和文件克隆。
 
 
 
 .不支持的功能
-防篡改Snapshot副本当前不支持以下功能：
+防篡改快照当前不支持以下功能：
 
 * 一致性组
 * FabricPool
@@ -60,9 +68,9 @@ FlexGroup 卷支持Snapshot副本锁定。Snapshot锁定仅发生在根成分卷
 
 
 
-== 创建卷时启用Snapshot副本锁定
+== 创建卷时启用快照锁定
 
-从ONTAP 9.12.1开始、您可以在创建新卷或使用修改现有卷时启用Snapshot副本锁定 `-snapshot-locking-enabled` 选项 `volume create` 和 `volume modify` 命令。从ONTAP 9.13.1开始、您可以使用System Manager启用Snapshot副本锁定。
+从ONTAP 9.12.1开始、您可以在创建新卷或修改现有卷时通过在命令行界面中将选项与和 `volume modify`命令结合 `volume create`使用来启用快照锁定 `-snapshot-locking-enabled`。从ONTAP 9.13.1开始、您可以使用System Manager启用快照锁定。
 
 [role="tabbed-block"]
 ====
@@ -75,24 +83,24 @@ FlexGroup 卷支持Snapshot副本锁定。Snapshot锁定仅发生在根成分卷
 . 如果尚未启用此选项，请选择*初 始化SnapLock Compliance Clock*。
 . 保存所做的更改。
 . 在*Volumes*窗口中，选择要更新的卷，然后选择*Overview*。
-. 验证* SnapLock Snapshot副本锁定*是否显示为*已启用*。
+. 验证* SnapLock快照锁定*是否显示为*已启用*。
 
 
 --
 .命令行界面
 --
-. 要创建新卷并启用Snapshot副本锁定、请输入以下命令：
+. 要创建新卷并启用快照锁定、请输入以下命令：
 +
 `volume create -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
 
 +
-以下命令将在名为vol1的新卷上启用Snapshot副本锁定：
+以下命令将在名为vol1的新卷上启用快照锁定：
 
 +
 [listing]
 ----
 > volume create -volume vol1 -aggregate aggr1 -size 100m -snapshot-locking-enabled true
-Warning: Snapshot copy locking is being enabled on volume “vol1” in Vserver “vs1”. It cannot be disabled until all locked Snapshot copies are past their expiry time. A volume with unexpired locked Snapshot copies cannot be deleted.
+Warning: snapshot locking is being enabled on volume “vol1” in Vserver “vs1”. It cannot be disabled until all locked snapshots are past their expiry time. A volume with unexpired locked snapshots cannot be deleted.
 Do you want to continue: {yes|no}: y
 [Job 32] Job succeeded: Successful
 ----
@@ -102,9 +110,9 @@ Do you want to continue: {yes|no}: y
 ====
 
 
-== 在现有卷上启用Snapshot副本锁定
+== 在现有卷上启用快照锁定
 
-从ONTAP 9.12.1开始、您可以使用ONTAP 命令行界面在现有卷上启用Snapshot副本锁定。从ONTAP 9.13.1开始、您可以使用System Manager对现有卷启用Snapshot副本锁定。
+从ONTAP 9.12.1开始、您可以使用ONTAP命令行界面在现有卷上启用快照锁定。从ONTAP 9.13.1开始、您可以使用System Manager对现有卷启用快照锁定。
 
 [role="tabbed-block"]
 ====
@@ -112,20 +120,20 @@ Do you want to continue: {yes|no}: y
 --
 . 导航到*存储>卷*。
 . 选择 image:icon_kabob.gif["菜单选项图标"] 并选择*编辑>卷*。
-. 在*编辑卷*窗口中，找到Snapshot副本(本地)设置部分，然后选择*启用Snapshot锁定*。
+. 在*编辑卷*窗口中，找到快照(本地)设置部分，然后选择*启用快照锁定*。
 +
 如果未安装SnapLock许可证、则不会显示此选择。
 
 . 如果尚未启用此选项，请选择*初 始化SnapLock Compliance Clock*。
 . 保存所做的更改。
 . 在*Volumes*窗口中，选择要更新的卷，然后选择*Overview*。
-. 验证* SnapLock Snapshot副本锁定*是否显示为*已启用*。
+. 验证* SnapLock快照锁定*是否显示为*已启用*。
 
 
 --
 .命令行界面
 --
-. 要修改现有卷以启用Snapshot副本锁定、请输入以下命令：
+. 要修改现有卷以启用快照锁定、请输入以下命令：
 +
 `volume modify -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
 
@@ -135,13 +143,13 @@ Do you want to continue: {yes|no}: y
 ====
 
 
-== 创建锁定的Snapshot副本策略并应用保留
+== 创建锁定的Snapshot策略并应用保留
 
-从ONTAP 9.12.1开始、您可以创建Snapshot副本策略以应用Snapshot副本保留期限、并将此策略应用于卷以在指定期限内锁定Snapshot副本。您也可以通过手动设置保留期限来锁定Snapshot副本。从ONTAP 9.13.1开始、您可以使用System Manager创建Snapshot副本锁定策略并将其应用于卷。
+从ONTAP 9.12.1开始、您可以创建快照策略以应用快照保留期限、并将该策略应用于卷以锁定指定期限的快照。您也可以通过手动设置保留期限来锁定快照。从ONTAP 9.13.1开始、您可以使用System Manager创建快照锁定策略并将其应用于卷。
 
 
 
-=== 创建Snapshot副本锁定策略
+=== 创建快照锁定策略
 
 [role="tabbed-block"]
 ====
@@ -152,8 +160,8 @@ Do you want to continue: {yes|no}: y
 . 找到*Snapshot Policies*，然后选择 image:icon_arrow.gif["箭头图标"]。
 . 在*添加Snapshot策略*窗口中，输入策略名称。
 . 选择 ... image:icon_add.gif["添加图标"]。
-. 提供Snapshot副本计划详细信息、包括计划名称、要保留的最大Snapshot副本数和SnapLock 保留期限。
-. 在*Snapshot保留期限*列中，输入SnapLock 副本的保留小时数、天数、月数或年数。例如、保留期限为5天的Snapshot副本策略会将Snapshot副本从创建之日起锁定5天、在此期间无法删除。支持以下保留期限范围：
+. 提供快照计划详细信息、包括计划名称、要保留的最大快照数和SnapLock保留期限。
+. 在* SnapLock保留期限*列中、输入快照保留的小时数、天数、月数或年数。例如、保留期限为5天的快照策略会将快照从创建之日起锁定5天、在此期间无法删除。支持以下保留期限范围：
 +
 ** 年：0 - 100
 ** 月：0 - 1200
@@ -167,12 +175,12 @@ Do you want to continue: {yes|no}: y
 --
 .命令行界面
 --
-. 要创建Snapshot副本策略、请输入以下命令：
+. 要创建快照策略、请输入以下命令：
 +
 `volume snapshot policy create -policy policy_name -enabled true -schedule1 _schedule1_name_ -count1 _maximum_Snapshot_copies -retention-period1 _retention_period_`
 
 +
-以下命令将创建Snapshot副本锁定策略：
+以下命令将创建快照锁定策略：
 
 +
 [listing]
@@ -180,7 +188,7 @@ Do you want to continue: {yes|no}: y
 cluster1> volume snapshot policy create -policy policy_name -enabled true -schedule1 hourly -count1 24 -retention-period1 "1 days"
 ----
 +
-如果Snapshot副本处于活动保留状态、则不会替换该副本；也就是说、如果存在尚未过期的锁定Snapshot副本、则不会使用保留计数。
+如果快照处于活动保留状态、则不会替换该快照；也就是说、如果存在尚未过期的锁定快照、则不会使用保留计数。
 
 
 
@@ -196,16 +204,16 @@ cluster1> volume snapshot policy create -policy policy_name -enabled true -sched
 --
 . 导航到*存储>卷*。
 . 选择 image:icon_kabob.gif["菜单选项图标"] 并选择*编辑>卷*。
-. 在*编辑卷*窗口中，选择*计划Snapshot副本*。
-. 从列表中选择锁定Snapshot副本策略。
-. 如果尚未启用Snapshot副本锁定，请选择*Enable Snapshot locking*。
+. 在*编辑卷*窗口中，选择*计划快照*。
+. 从列表中选择锁定Snapshot策略。
+. 如果尚未启用快照锁定，请选择*Enable Snapshot locking*。
 . 保存所做的更改。
 
 
 --
 .命令行界面
 --
-. 要将Snapshot副本锁定策略应用于现有卷、请输入以下命令：
+. 要将快照锁定策略应用于现有卷、请输入以下命令：
 +
 `volume modify -volume volume_name -vserver vserver_name -snapshot-policy policy_name`
 
@@ -215,31 +223,31 @@ cluster1> volume snapshot policy create -policy policy_name -enabled true -sched
 ====
 
 
-=== 在手动创建Snapshot副本期间应用保留期限
+=== 在手动创建快照期间应用保留期限
 
-您可以在手动创建Snapshot副本时应用Snapshot副本保留期限。必须在卷上启用Snapshot副本锁定；否则、将忽略保留期限设置。
+您可以在手动创建快照时应用快照保留期限。必须在卷上启用快照锁定；否则、保留期限设置将被忽略。
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
 . 导航到*存储>卷*并选择一个卷。
-. 在卷详细信息页面中、选择* Snapshot副本*选项卡。
+. 在卷详细信息页面中，选择*快照*选项卡。
 . 选择 ... image:icon_add.gif["添加图标"]。
-. 输入Snapshot副本名称和SnapLock到期时间。您可以选择日历来选择保留到期日期和时间。
+. 输入快照名称和SnapLock到期时间。您可以选择日历来选择保留到期日期和时间。
 . 保存所做的更改。
-. 在*卷> Snapshot副本*页面中、选择*显示/隐藏*并选择* SnapLock 到期时间*以显示* SnapLock 到期时间*列并验证是否已设置保留时间。
+. 在*卷>快照*页面中，选择*显示/隐藏*并选择* SnapLock到期时间*以显示* SnapLock到期时间*列并验证保留时间是否已设置。
 
 
 --
 .命令行界面
 --
-. 要手动创建Snapshot副本并应用锁定保留期限、请输入以下命令：
+. 要手动创建快照并应用锁定保留期限、请输入以下命令：
 +
 `volume snapshot create -volume _volume_name_ -snapshot _snapshot_copy_name_ -snaplock-expiry-time _expiration_date_time_`
 
 +
-以下命令将创建一个新的Snapshot副本并设置保留期限：
+以下命令将创建新快照并设置保留期限：
 
 +
 [listing]
@@ -252,28 +260,28 @@ cluster1> volume snapshot create -vserver vs1 -volume vol1 -snapshot snap1 -snap
 ====
 
 
-=== 将保留期限应用于现有Snapshot副本
+=== 将保留期限应用于现有快照
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
 . 导航到*存储>卷*并选择一个卷。
-. 在卷详细信息页面中、选择* Snapshot副本*选项卡。
-. 选择Snapshot副本，选择 image:icon_kabob.gif["菜单选项图标"]，然后选择*Modify SnapLock Expiration time*。您可以选择日历来选择保留到期日期和时间。
+. 在卷详细信息页面中，选择*快照*选项卡。
+. 选择快照，选择image:icon_kabob.gif["菜单选项图标"]，然后选择*Modify SnapLock Expiration time*。您可以选择日历来选择保留到期日期和时间。
 . 保存所做的更改。
-. 在*卷> Snapshot副本*页面中、选择*显示/隐藏*并选择* SnapLock 到期时间*以显示* SnapLock 到期时间*列并验证是否已设置保留时间。
+. 在*卷>快照*页面中，选择*显示/隐藏*并选择* SnapLock到期时间*以显示* SnapLock到期时间*列并验证保留时间是否已设置。
 
 
 --
 .命令行界面
 --
-. 要手动对现有Snapshot副本应用保留期限、请输入以下命令：
+. 要手动将保留期限应用于现有快照、请输入以下命令：
 +
 `volume snapshot modify-snaplock-expiry-time -volume _volume_name_ -snapshot _snapshot_copy_name_ -expiry-time _expiration_date_time_`
 
 +
-以下示例将保留期限应用于现有Snapshot副本：
+以下示例将保留期限应用于现有快照：
 
 +
 [listing]
@@ -288,13 +296,13 @@ cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot sna
 
 === 修改现有策略以应用长期保留
 
-在SnapMirror关系中、您可以对镜像-存储策略规则设置保留期限、如果目标卷启用了Snapshot副本锁定、则会对复制到目标的Snapshot副本应用保留期限。保留期限优先于保留数量；例如、即使超过保留数量、尚未过期的Snapshot副本也将被保留。
+在SnapMirror关系中、您可以为镜像-存储策略规则设置保留期限、如果目标卷启用了快照锁定、则会为复制到目标的快照应用保留期限。保留期限优先于保留计数；例如、即使超过保留计数、未超过到期时间的快照也会保留。
 
-从ONTAP 9.14.1开始、您可以通过添加规则来设置Snapshot副本的长期保留来修改现有SnapMirror策略。此规则用于覆盖SnapLock存储目标和非SnapLock SnapMirror目标卷上的默认卷保留期限。
+从ONTAP 9.14.1开始、您可以通过添加规则来设置快照的长期保留来修改现有SnapMirror策略。此规则用于覆盖SnapLock存储目标和非SnapLock SnapMirror目标卷上的默认卷保留期限。
 
 . 向现有SnapMirror策略添加规则：
 +
-`snapmirror policy add-rule -vserver <SVM name> -policy <policy name> -snapmirror-label <label name> -keep <number of Snapshot copies> -retention-period [<integer> days|months|years]`
+`snapmirror policy add-rule -vserver <SVM name> -policy <policy name> -snapmirror-label <label name> -keep <number of snapshots> -retention-period [<integer> days|months|years]`
 
 +
 以下示例将创建一个规则、将保留期限应用于名为"LockVault"的现有策略：

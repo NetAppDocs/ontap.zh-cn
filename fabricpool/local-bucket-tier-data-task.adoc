@@ -13,15 +13,17 @@ summary: 从 ONTAP 9.8 开始，您可以使用 ONTAP S3 将数据分层到本�
 [role="lead"]
 从 ONTAP 9.8 开始，您可以使用 ONTAP S3 将数据分层到本地对象存储。
 
-将数据分层到本地存储分段可作为将数据移动到其他本地层的一种简单替代方案。此操作步骤使用本地集群上的现有存储分段，或者您也可以让 ONTAP 自动创建新的 Storage VM 和新存储分段。
+将数据分层到本地存储分段可作为将数据移动到其他本地层的一种简单替代方案。此过程将使用本地集群上的现有存储分段、您也可以让ONTAP自动创建新的Storage VM和新存储分段。
 
-请注意、一旦附加到本地层(聚合)、则无法取消附加云层。
+请注意、一旦连接了主本地存储分段、就无法将其取消连接。
 
-此工作流需要 S3 许可证，它可以创建新的 S3 服务器和新存储分段，也可以使用现有的存储分段。此许可证包含在中link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。此工作流不需要 FabricPool 许可证。
+.开始之前
+* 此工作流需要 S3 许可证，它可以创建新的 S3 服务器和新存储分段，也可以使用现有的存储分段。此许可证包含在中link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。此工作流不需要 FabricPool 许可证。
+* link:../s3-config/enable-ontap-s3-access-local-fabricpool-task.html["为本地 FabricPool 分层启用 ONTAP S3 访问"](英文)
+
 
 .步骤
-. 将数据分层到本地存储分段：单击*Tier*，选择一个层，然后单击 image:icon_kabob.gif["菜单选项图标"]。
-. 如有必要、请启用精简配置。
-. 选择现有层或创建新层。
-. 如有必要、请编辑现有分层策略。
+. 将数据分层到本地存储分段：单击*存储>分层*，在*SSD*窗格中，选择一个本地层image:icon_kabob.gif["菜单选项图标"]，单击，然后选择*分层到本地存储分段*。
+. 在*Primary tier*部分，选择*Exister*或*New*。
+. 单击 * 保存 * 。
 
