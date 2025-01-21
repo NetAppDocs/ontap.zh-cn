@@ -93,7 +93,9 @@ NOTE: S3客户端可能会提示输入机密密钥。如果没有机密密钥、
 
 === 不具有UID和GID的用户的Active Directory资源身份验证
 
-如果bket-policy语句中指定的鼻组或属于鼻组的用户未设置UID和GID、则在未找到这些属性时、查找将失败。
+如果bket-policy语句中指定的鼻组或属于鼻组的用户未设置UID和GID、则在未找到这些属性时、查找将失败。Active Directory使用SID、而不是UID。如果SID条目无法映射到UID、则需要将必要的数据带到ONTAP。
+
+为此、请使用link:../authentication/enable-ad-users-groups-access-cluster-svm-task.html["Vserver active-directory create"]、以便SVM可以向Active Directory进行身份验证并获取所需的用户和组信息。
 
 为避免查找失败、NetApp建议使用受信任域以UPN格式进行资源授权：nsgroup/group@trusted_domain.com
 
@@ -107,3 +109,5 @@ NOTE: S3客户端可能会提示输入机密密钥。如果没有机密密钥、
 ----
 $curl -siku FQDN\\user:<user_name> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user[@fqdn](https://github.com/fqdn)>,"<key_time_to_live>":"PT6H3M"}'
 ----
+
+NOTE: 将API定向到集群管理LIF、而不是SVM的数据LIF。
