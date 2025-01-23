@@ -4,7 +4,7 @@ permalink: snapmirror-active-sync/upgrade-revert-task.html
 keywords: upgrade, revert, snapmirror active sync, SMBC, SM-BC 
 summary: 升级或还原ONTAP会影响您的SnapMirror活动同步关系、尤其是在迁移到ONTAP 9.9.1或更高版本或者9.7及更早版本时。 
 ---
-= 使用SnapMirror活动同步升级和还原ONTAP
+= 在ONTAP中使用SnapMirror活动同步进行升级和还原
 :allow-uri-read: 
 :nofooter: 
 :icons: font
@@ -13,7 +13,27 @@ summary: 升级或还原ONTAP会影响您的SnapMirror活动同步关系、尤�
 
 
 [role="lead"]
-从ONTAP 9.9.1开始、支持SnapMirror主动同步。升级和还原ONTAP集群会影响SnapMirror活动同步关系、具体取决于要升级或还原到的ONTAP版本。
+从ONTAP 9.9.1开始、支持SnapMirror主动同步。升级和还原ONTAP集群或控制器会对SnapMirror活动同步关系产生影响、具体取决于要升级或还原到的ONTAP版本。
+
+
+
+== 刷新集群
+
+从ONTAP 9.161开始、SnapMirror主动同步支持采用对称主动/主动配置的四节点集群。您可以使用四节点集群升级控制器和存储。
+
+.开始之前
+* 查看 link:protect-task.html#configure-symmetric-activeactive-protection["四节点集群的要求"]。
+* 您可以在技术更新过程中创建非对称配置；但是、完成更新后、您应恢复为对称配置。
+* 以下说明适用于包含50个或更少一致性组以及400个或更少卷端点的现有四节点配置。
+
+
+.步骤
+. link:../volumes/move-volume-task.html["将所有SnapMirror活动同步卷移动到一个_single_高可用性(HA)对中"](英文)
+. link:../system-admin/remove-nodes-cluster-concept.html["从集群中删除未使用的节点"](英文)
+. link:../system-admin/add-nodes-cluster-concept.html["将新节点添加到集群中"](英文)
+. link:../volumes/move-volume-task.html["移动所有卷"]到新节点中。
+. link:../system-admin/remove-nodes-cluster-concept.html["从集群中删除未使用的节点"]然后将其更换link:../system-admin/add-nodes-cluster-concept.html["使用新节点"]。
+
 
 
 

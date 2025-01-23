@@ -119,21 +119,21 @@ FabricPool 容量层:: 无法将S3 NAS分段配置为FabricPool的容量层。
 
 
 
-NOTE: 在S3 NAS分段中使用S3时、特别不支持这些S3操作。使用本机S3分段时，这些操作为link:../s3-config/ontap-s3-supported-actions-reference.html["正常支持"]。
+NOTE: 在S3 NAS存储分段中使用S3时、尤其不支持这些S3操作。使用本机S3分段时，这些操作为link:../s3-config/ontap-s3-supported-actions-reference.html["正常支持"]。
 
 AWS用户元数据::
 +
 --
-* 在当前版本中、作为S3用户元数据一部分收到的键值对不会与对象数据一起存储在磁盘上。
-* 前缀为"x-AMZ-meta"的请求标头将被忽略。
+* 对于9.15.1 9.151及更早版本、作为S3用户元数据的一部分收到的密钥值对不会与对象数据一起存储在磁盘上。
+* 对于9.15.1 9.151及更早版本、将忽略前缀为"x-AMZ-meta "的请求标头。
 
 
 --
 AWS标记::
 +
 --
-* 在PUT对象和Multipart启动请求上、会忽略前缀为"x-AMZ-Tagging"的标头。
-* 更新现有文件上的标记的请求(即使用"标记查询字符串"的PUT、GET和Delete请求)将被拒绝、并显示错误。
+* 对于Put对象和多部分启动请求上的9.15.1 9.151及更早版本、将忽略前缀为"x-AMZ-tag (x-AMZ-tag)"的标头。
+* 对于9.15.1 9.151及更早版本，更新现有文件上标记的请求(带有?taging query-string的Put、GET和Delete请求)将被拒绝，并显示错误。
 
 
 --

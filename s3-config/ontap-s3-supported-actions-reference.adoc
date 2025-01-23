@@ -14,7 +14,7 @@ summary: ONTAP S3 支持的操作。
 标准S3 REST API支持ONTAP S3操作、但如下所示除外。有关详细信息，请参见 link:https://docs.aws.amazon.com/AmazonS3/latest/API/Type_API_Reference.html["Amazon S3 API参考"^]。
 
 
-NOTE: 在ONTAP中使用本机S3分段时、特别支持这些S3操作。使用时不支持其中某些操作，例如与版本控制、对象锁定和其他功能关联的操作link:../s3-multiprotocol/index.html["S3 NAS分段(多协议NAS卷中的S3)"]。
+NOTE: 在ONTAP中使用本机S3分段时、尤其支持这些S3操作。使用时不支持其中某些操作，例如与版本控制、对象锁定和其他功能关联的操作link:../s3-multiprotocol/index.html["S3 NAS分段(多协议NAS卷中的S3)"]。
 
 
 
@@ -83,7 +83,7 @@ ONTAP支持使用AWS S3 API执行以下操作：
 +
 例如： `x-amz-meta-project: ontap_s3`。
 
-* GetObject 。和HeadObject返回用户定义的元数据。
+* GetObject和HeadObject返回用户定义的元数据。
 * 与元数据不同，可以使用以下命令独立于对象读取标记：
 +
 ** PutObjectTagging
@@ -261,7 +261,7 @@ GetBucket10.1增加了对SnapMirror S3和ONTAP 9的支持。
 .ONTAP 9.9.1
 ONTAP 9 S3.9.1为ONTAP S3增加了对对象元数据和标记支持的支持。
 
-* 现在、PutObject和CreateMultipartUpload可使用"x-AMZ-meta-Upload"包括键值对<key>。例如："x-amz-meta-project：ONTAP S3 "。
+* 现在，PutObject和CreateMultipartUpload使用包括键值对 `x-amz-meta-<key>`。例如： `x-amz-meta-project: ontap_s3`。
 * 现在、GetObject和HeadObject将返回用户定义的元数据。
 
 

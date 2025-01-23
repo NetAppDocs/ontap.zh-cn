@@ -31,10 +31,27 @@ SVM上的容量等于FlexVol、FlexGroup 卷、FlexClone、FlexCache 卷之和�
 |===
 .开始之前
 * 您必须是集群管理员才能设置SVM限制。
-* 不能为包含数据保护卷、SnapMirror关系中的卷或MetroCluster 配置中的任何SVM配置存储限制。
+* 从ONTAP 9.161开始、可以为包含数据保护卷的SVM配置存储限制、包括以下数据保护类型：
++
+** 异步灾难恢复中的FlexVol卷、无级联
+** 同步灾难恢复中的FlexVol卷(同步策略和严格同步策略)
+** link:../data-protection/restore-volume-snapvault-backup-task.html["还原"]
+
+
+* 以下配置支持SVM的存储限制：
++
+** SnapMirror存储关系
+** SnapMirror活动同步
+** FlexGroup
+** 一致性组
+** SVM 灾难恢复
+** 级联
+** MetroCluster
+
+
 * 迁移SVM时、源SVM不能启用存储限制。要完成迁移操作、请在源上禁用存储限制、然后完成迁移。
 * SVM容量与不同 xref:../volumes/quotas-concept.html[配额]。配额不能超过最大大小。
-* 如果正在SVM上执行其他操作、则不能设置存储限制。使用 `job show vservser _svm_name_` 命令以查看现有作业。完成任何作业后、请尝试重新运行命令。
+* 如果正在SVM上执行其他操作、则不能设置存储限制。使用 `job show vservser <svm_name>`命令查看现有作业。完成任何作业后、请尝试重新运行命令。
 
 
 
@@ -76,18 +93,18 @@ SVM上的容量等于FlexVol、FlexGroup 卷、FlexClone、FlexCache 卷之和�
 .步骤
 . 创建SVM。要设置存储限制、请提供 `storage-limit` 价值。要为存储限制设置阈值警报、请为提供一个百分比值 `-storage-limit-threshold-alert`。
 +
-`vserver create -vserver _vserver_name_ -aggregate _aggregate_name_ -rootvolume _root_volume_name_ -rootvolume-security-style {unix|ntfs|mixed} -storage-limit _value_ [GiB|TIB] -storage-limit-threshold-alert _percentage_ [-ipspace IPspace_name] [-language <language>] [-snapshot-policy _snapshot_policy_name_] [-quota-policy _quota_policy_name_] [-comment _comment_]`
+`vserver create -vserver <vserver_name> -aggregate <aggregate_name> -rootvolume <root_volume_name> -rootvolume-security-style {unix|ntfs|mixed} -storage-limit <value> [GiB|TIB] -storage-limit-threshold-alert <percentage> [-ipspace IPspace_name] [-language <language>] [-snapshot-policy <snapshot_policy_name>] [-quota-policy <quota_policy_name>] [-comment <comment>]`
 
 +
 如果不提供阈值、则默认情况下、当SVM容量达到90%时、将触发警报。要禁用阈值警报、请提供零值。
 
 . 确认已成功创建SVM：
 +
-`vserver show -vserver _vserver_name_`
+`vserver show -vserver <vserver_name>`
 
 . 如果要禁用存储限制、请使用修改SVM `-storage-limit` 参数设置为零：
 +
-`vserver modify -vserver _vserver_name_ -storage-limit 0`
+`vserver modify -vserver <vserver_name> -storage-limit 0`
 
 
 
@@ -121,14 +138,14 @@ SVM上的容量等于FlexVol、FlexGroup 卷、FlexClone、FlexCache 卷之和�
 .步骤
 . 在托管SVM的集群上、问题描述 the `vserver modify` 命令：为提供一个数值 `-storage-limit` 和的百分比值 `-storage-limit-threshold-alert`。
 +
-`vserver modify -vserver _vserver_name_ -storage-limit _value_ [GiB|TIB] -storage-limit-threshold-alert _percentage_`
+`vserver modify -vserver <vserver_name> -storage-limit <value> [GiB|TIB] -storage-limit-threshold-alert <percentage>`
 
 +
-如果不提供阈值、则默认警报容量为90%。要禁用阈值警报、请提供零值。
+如果不提供阈值、则会显示容量为90%的默认警报。要禁用阈值警报、请提供零值。
 
 . 如果要禁用存储限制、请使用修改SVM `-storage-limit` 设置为零：
 +
-`vserver modify -vserver _vserver_name_ -storage-limit 0`
+`vserver modify -vserver <vserver_name> -storage-limit 0`
 
 
 

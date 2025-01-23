@@ -18,7 +18,7 @@ SnapMirror主动同步(也称为SnapMirror业务连续性_[SM-BC]_)支持业务�
 
 从ONTAP 9.9.1开始、AFF集群、纯闪存SAN阵列(ASA)集群和C系列(AFF或ASA)均支持SnapMirror主动同步。主集群和二级集群的类型必须相同：ASA或AFF。SnapMirror主动同步可通过iSCSI或FCP LUN保护应用程序。
 
-从ONTAP 9.15.1开始、SnapMirror主动同步支持 xref:architecture-concept.html[对称主动/主动功能]，启用通过双向同步复制从受保护LUN的两个副本执行读写I/O操作，从而使两个LUN副本都能在本地处理I/O操作。在ONTAP 9.15.1之前的版本中、SnapMirror主动同步仅支持非对称主动/主动配置、在这种配置中、二级站点上的数据会代理到LUN。
+从ONTAP 9.151开始，SnapMirror主动同步支持xref:architecture-concept.html[对称主动/主动功能]。对称主动/主动允许通过双向同步复制从受保护LUN的两个副本执行读写I/O操作、以便两个LUN副本都可以在本地处理I/O操作。在ONTAP 9.15.1之前的版本中、SnapMirror主动同步仅支持非对称主动/主动配置、在这种配置中、二级站点上的数据会代理到LUN。从9.16.1 9.161 GA开始、四节点ONTAP集群还支持对称主动/主动。
 
 
 NOTE: 从2024年7月开始、以前以PDF格式发布的技术报告中的内容已与ONTAP产品文档集成。ONTAP SnapMirror主动同步文档现在包含了_TR-4878：SnapMirror active sync_中的内容。
@@ -104,7 +104,7 @@ SnapMirror主动同步支持自动重新同步、使副本能够返回到InSync�
 从ONTAP 9.15.1开始、SnapMirror主动同步支持 link:interoperability-reference.html#fan-out-configurations["在扇出配置中自动重新配置"]。
 
 .统一和非统一配置
-* **统一主机访问**表示两个站点的主机都连接到两个站点上存储集群的所有路径。跨站点路径会跨越距离进行延伸。
+* **统一主机访问**表示两个站点的主机都连接到两个站点上存储集群的所有路径。跨站点路径会跨越多个距离。
 * **非统一主机访问**表示每个站点中的主机仅连接到同一站点中的集群。跨站点路径和延伸型路径未连接。
 
 

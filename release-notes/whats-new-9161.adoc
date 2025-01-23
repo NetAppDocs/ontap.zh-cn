@@ -33,6 +33,20 @@ summary: 了解ONTAP 9中提供的新功能。16.1。
 
 
  a| 
+xref:../snapmirror-active-sync/[SnapMirror主动同步的节点支持]
+ a| 
+SnapMirror主动同步从以前的双节点限制扩展而来、支持四节点集群、从而可以为较大的工作负载复制数据。
+
+
+
+ a| 
+xref:../data-protection/cloud-backup-with-snapmirror-task.html[SnapMirror云支持创建扇出关系]
+ a| 
+SnapMirror Cloud支持从同一源卷或FlexGroup到不同对象存储中的一个或多个分段的扇出关系。
+
+
+
+ a| 
 xref:../data-protection/cloud-backup-with-snapmirror-task.html[支持从迁移的卷进行SnapMirror云备份]
  a| 
 SnapMirror云支持使用更高效的同步过程对迁移到云的卷进行备份。新功能支持将SnapMirror云备份从云中的已迁移卷备份到同一目标对象存储端点、而无需执行重新基线操作。支持FlexVol和FlexGroup卷。
@@ -57,7 +71,7 @@ xref:../encryption-at-rest/migrate-keys-between-key-managers.html[支持密钥�
  a| 
 xref:../networking/configure_virtual_ip_vip_lifs.html#set-up-border-gateway-protocol-bgp[为BGP对等组提供MD5身份验证支持]
  a| 
-ONTAP支持对BGP对等组进行MD5身份验证、以保护BGP会话。启用MD5后、只能在授权对等方之间建立和处理BGP会话、从而防止未经授权的行为者可能中断会话。
+ONTAP支持对BGP对等组进行MD5身份验证、以保护BGP会话。启用MD5后、只能在授权对等方之间建立和处理BGP会话、从而防止路由劫持等攻击、即攻击者尝试通过欺骗BGP更新向网络注入虚假路由信息。
 
 
 
@@ -77,9 +91,19 @@ IP安全(IPsec)是一种动态数据安全选项，可用于保护客户端与ON
 
 
  a| 
+多协议S3存储分段支持S3对象元数据和标记
+ a| 
+S3对象标记可用于非多协议ONTAP S3存储分段。从ONTAP 9.161开始、S3对象标记功能已扩展到NAS和S3多协议ONTAP S3存储分段。这些标记仅在S3协议中可见。使用S3客户端应用 https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-tagging.html["标记和元数据"^]于S3对象有助于定义生命周期、回付费用、数据类别以及对ONTAP中作为对象或文件存储的数据的自定义工作流。与Breck或Athena等AWS数据服务集成后、标记和元数据将成为这些服务提供的Data Processing的核心。
+
+
+NOTE: ONTAP 9.9.1开始支持本机S3存储分段中的标记和用户定义的元数据。
+
+
+
+ a| 
 xref:../s3-multiprotocol/index.html[多协议S3存储分段支持多部分上传]
  a| 
-通过多部分上传、您可以将单个对象作为一组部分上传到S3多协议分段。
+多部分上传是一项核心S3功能、从一开始便可用于非多协议ONTAP S3存储分段。从ONTAP 9.161开始、此核心功能已扩展到NAS和S3多协议ONTAP S3存储分段。
 
 
 
@@ -138,9 +162,9 @@ NOTE: ARP/AI功能目前仅支持NAS。尽管自动更新功能会显示可在Sy
 
 
  a| 
-xref:../nvme/set-up-tls-secure-channel-nvme-task.html[支持对发送到NVMe存储设备和从NVMe存储设备发送的数据流量进行传输中加密]
+xref:../nvme/set-up-tls-secure-channel-nvme-task.html[基于TLS的NVMe/TCP 1.3]
  a| 
-现在、ONTAP支持对通过网络发送到NVMe存储设备以及从NVMe存储设备发送的数据流量进行传输中加密。
+与IPSec相比、通过简化的配置和更高的性能在协议层保护NVMe/tcp"线上"。
 
 
 
@@ -182,16 +206,33 @@ xref:../volumes/qtrees-partition-your-volumes-concept.html[扩展了qtree性能�
 
 
  a| 
+xref:../volumes/manage-svm-capacity.html[支持启用了存储限制的SVM中的数据保护卷]
+ a| 
+启用了存储限制的SVM可以包含数据保护卷。支持采用异步灾难恢复关系(无级联)、同步灾难恢复关系和还原关系的FlexVol卷。
+
+[NOTE]
+====
+在9.15.1 9.151及更早版本中、不能为包含数据保护卷、SnapMirror关系中的卷或MetroCluster配置中的任何SVM配置存储限制。
+
+====
+
+
+ a| 
 xref:../flexgroup/enable-adv-capacity-flexgroup-task.html[支持FlexGroup高级容量分布]
  a| 
-启用高级容量平衡后、当非常大的文件增长并占用一个成员卷上的空间时、高级容量平衡会在FlexGroup成员卷之间分布数据。
+启用高级容量平衡后、当非常大的文件增长并占用一个成员卷上的空间时、高级容量平衡会在FlexGroup成员卷之间分布文件中的数据。
 
 
 
  a| 
 xref:../svm-migrate/index.html[支持迁移MetroCluster配置的SVM数据移动性]
  a| 
-现在、ONTAP支持将MetroCluster HA对中的SVM迁移到MetroCluster配置、或者将MetroCluster配置中的SVM迁移到非MetroCluster HA对。您不能将SVM从一个MetroCluster配置迁移到另一个MetroCluster配置
+ONTAP支持以下MetroCluster SVM迁移：
+
+* 在非MetroCluster配置和MetroCluster IP配置之间迁移SVM
+* 在两个MetroCluster IP配置之间迁移SVM
+* 在MetroCluster FC配置和MetroCluster IP配置之间迁移SVM
+
 
 |===
 
