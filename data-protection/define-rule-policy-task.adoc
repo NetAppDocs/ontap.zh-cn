@@ -1,8 +1,8 @@
 ---
 permalink: data-protection/define-rule-policy-task.html 
 sidebar: sidebar 
-keywords: define, rule, policy 
-summary: '对于策略类型为 "vaule" 或 "mirror-vaule" 的自定义策略，您必须至少定义一个规则来确定初始化和更新期间传输的 Snapshot 副本。您还可以为策略类型为 " 存储 " 或 " 镜像 - 存储 " 的默认策略定义规则。' 
+keywords: define, rule, policy, data protection 
+summary: '对于策略类型为"vault"或"marcy-vault"的自定义策略、您必须至少定义一个规则来确定初始化和更新期间传输的快照。您还可以为策略类型为 " 存储 " 或 " 镜像 - 存储 " 的默认策略定义规则。' 
 ---
 = 为策略定义规则
 :allow-uri-read: 
@@ -11,10 +11,10 @@ summary: '对于策略类型为 "vaule" 或 "mirror-vaule" 的自定义策略，
 
 
 [role="lead"]
-对于策略类型为 "`vault` " 或 " `mirror-vault` " 的自定义策略，您必须至少定义一个规则来确定初始化和更新期间传输的 Snapshot 副本。您还可以为策略类型为 "`vault` " 或 " `mirror-vault` " 的默认策略定义规则。
+对于`策略类型为"`vault"或"`mirrer-vault"`的自定义策略、必须至少定义一个规则来确定初始化和更新期间传输的快照。您还可以为策略类型为 "`vault` " 或 " `mirror-vault` " 的默认策略定义规则。
 
 .关于此任务
-每个策略类型为 "`vault` " 或 " `mirror-vault` " 的策略都必须具有一个规则，用于指定要复制的 Snapshot 副本。例如，规则 "`bi-monthly` " 表示仅应复制分配了 SnapMirror 标签 "`bi-monthly` " 的 Snapshot 副本。在源上配置 Snapshot 策略时，您可以指定 SnapMirror 标签。
+策略类型为"`vault"`或"`mirrer-vault"`的每个策略都必须具有一个规则、用于指定要复制哪些快照。例如、规则"`bi-monthlyn`"指示只应复制分配了SnapMirror标签"`bi-monthlyn`"的快照。在源上配置快照策略时、可以指定SnapMirror标签。
 
 每个策略类型都与一个或多个系统定义的规则相关联。指定策略类型时，系统会自动为策略分配这些规则。下表显示了系统定义的规则。
 
@@ -30,7 +30,7 @@ sm_created
  a| 
 异步镜像，镜像存储，同步， StrictSync
  a| 
-在初始化和更新时传输 SnapMirror 创建的 Snapshot 副本。
+SnapMirror创建的快照将在初始化和更新时传输。
 
 
 
@@ -39,7 +39,7 @@ all_source_snapshots
  a| 
 异步镜像
  a| 
-初始化和更新时会传输源上的新 Snapshot 副本。
+源上的新快照将在初始化和更新时传输。
 
 
 
@@ -48,7 +48,7 @@ all_source_snapshots
  a| 
 存储，镜像存储
  a| 
-在初始化和更新时传输源上 SnapMirror 标签为 `daily` 的新 Snapshot 副本。
+初始化和更新时会传输源上SnapMirror标签为`daily`的新快照。
 
 
 
@@ -57,7 +57,7 @@ all_source_snapshots
  a| 
 存储，镜像存储
  a| 
-在初始化和更新时，会传输源上 SnapMirror 标签为 "`weekly` " 的新 Snapshot 副本。
+初始化和更新时会传输源上SnapMirror标签为"`Weekly`"的新快照。
 
 
 
@@ -66,7 +66,7 @@ all_source_snapshots
  a| 
 镜像存储
  a| 
-在初始化和更新时，会传输源上 SnapMirror 标签为 " `m月` 日 " 的新 Snapshot 副本。
+初始化和更新时会传输源上SnapMirror标签为`m` onh 的新快照。
 
 
 
@@ -75,13 +75,13 @@ all_source_snapshots
  a| 
 Sync ， StrictSync
  a| 
-源上 SnapMirror 标签为 "`APP_consistent` " 的 Snapshot 副本会同步复制到目标。从 ONTAP 9.7 开始支持。
+源上SnapMirror标签为"`APP_SONGBILATION`"的快照会同步复制到目标。从ONTAP 9.7开始支持。
 
 |===
 除了 "`async-mirror` " 策略类型之外，您还可以根据需要为默认或自定义策略指定其他规则。例如：
 
-* 对于默认值 `MirrorAndVault` 策略中、您可以创建一个名为"`bi-monthly"`的规则、以匹配源上具有"`bi-monthly"` SnapMirror标签的Snapshot副本。
-* 对于策略类型为 `mirror-vault` 的自定义策略，您可以创建一个名为 "`bi-weekly` " 的规则，以匹配源上具有 "`bi-weekly` " SnapMirror 标签的 Snapshot 副本。
+* 对于默认 `MirrorAndVault`策略、您可以创建一个名为"`bi-monthly"`的规则、以匹配源上具有"`bi-monthly"` SnapMirror标签的快照。
+* 对于策略类型为`mirrirr-vor`的自定义策略、您可以创建一个名为"`bi-Weekly`"的规则、以匹配源上具有"`bi-Weekly`" SnapMirror标签的快照。
 
 
 .步骤
@@ -117,7 +117,7 @@ cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy my_snapvault -sn
 cluster_dst::> snapmirror policy add-rule -vserver svm1 -policy Sync -snapmirror-label app_consistent -keep 1
 ----
 +
-然后，您可以从与此 SnapMirror 标签匹配的源集群复制 Snapshot 副本：
+然后、您可以从与此SnapMirror标签匹配的源集群复制快照：
 
 +
 [listing]
