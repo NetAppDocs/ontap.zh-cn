@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: snapmirror, efficiency, manage, storage, snap mirror, compression, compress, postprocess, post-process, update relationship, volume 
 summary: 要使用SnapMirror在源卷和目标卷之间保持存储效率、您需要在目标卷上禁用后处理压缩 
 ---
-= 管理存储效率
+= 利用ONTAP管理存储效率
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -14,7 +14,7 @@ summary: 要使用SnapMirror在源卷和目标卷之间保持存储效率、您�
 除非在目标卷上启用了后处理数据压缩、否则SnapMirror会保留源卷和目标卷上的存储效率。在这种情况下、目标卷上的所有存储效率都将丢失。要更正此问题、您需要在目标卷上禁用后处理压缩、手动更新此关系、然后重新启用存储效率。
 
 .关于此任务
-您可以使用 `volume efficiency show` 命令以确定是否已在卷上启用效率。有关详细信息，请参见手册页。
+您可以使用 `volume efficiency show`命令确定是否已在卷上启用效率。有关的详细信息 `volume efficiency show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-show.html["ONTAP 命令参考"^]。
 
 您可以通过查看 SnapMirror 审核日志并找到传输问题描述来检查 SnapMirror 是否保持存储效率。如果传输说明显示 `transfer_desc=Logical Transfer with Storage Efficiency`、则表示SnapMirror正在保持存储效率。如果传输说明显示 `transfer_desc=Logical Transfer`、则表示SnapMirror不会保持存储效率。例如：
 
@@ -56,7 +56,7 @@ https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["�
 snapmirror update -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ... -enable-storage-efficiency true
 ----
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `snapmirror update`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["ONTAP 命令参考"^]。
 
 +
 [NOTE]

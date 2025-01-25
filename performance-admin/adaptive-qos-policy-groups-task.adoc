@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: use, adaptive, qos, policy, groups 
 summary: 您可以使用自适应 QoS 策略组自动将吞吐量上限或下限扩展到卷大小，从而在卷大小发生变化时保持 IOPS 与 TBSGB 的比率。如果您要在大型部署中管理数百或数千个工作负载，则这是一项显著优势。 
 ---
-= 使用自适应 QoS 策略组
+= 在ONTAP中使用自适应QoS策略组
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -127,7 +127,7 @@ SVM 到策略组
 `qos adaptive-policy-group create -policy group _policy_group_ -vserver _SVM_ -expected-iops _number_of_iops_/TB|GB -peak-iops _number_of_iops_/TB|GB -expected-iops-allocation-space|used-space -peak-iops-allocation allocated-space|used-space -absolute-min-iops _number_of_iops_ -block-size 8K|16K|32K|64K|ANY`
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `qos adaptive-policy-group create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/qos-adaptive-policy-group-create.html["ONTAP 命令参考"^]。
 
 +
 [NOTE]
@@ -148,7 +148,7 @@ cluster1::> qos adaptive-policy-group create -policy group adpg-app1 -vserver vs
 `volume create -vserver SVM -volume _volume_ -aggregate _aggregate_ -size _number_of_ TB|GB -qos-adaptive-policy-group _policy_group_`
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `volume create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-create.html["ONTAP 命令参考"^]。
 
 +
 以下命令将应用自适应QoS策略组 `adpg-app1` 到卷 `app1`：

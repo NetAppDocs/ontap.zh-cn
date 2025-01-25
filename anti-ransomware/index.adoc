@@ -24,8 +24,8 @@ summary: 自主勒索软件保护可通过NAS环境中的工作负载分析来�
 
 从ARP.16.1开始、ONTAP 9采用机器学习模型进行反勒索软件分析、以99%的准确性检测不断演变的勒索软件形式、从而提高网络故障恢复能力。在模拟勒索软件攻击前后、ARP的机器学习模型都是针对大型文件数据集进行预先训练的。此资源密集型培训在ONTAP外部完成、但从该培训中学到的知识用于ONTAP内部的模型。
 
-.将带有FlexVol卷的ARP/AI立即过渡到活动模式
-对于ARP/AI和FlexVol卷，没有<<学习和主动模式,学习期>>。ARP/AI在安装或升级到9.16后立即开始处于活动模式。将集群升级到ARP.16.1后、如果已为现有和新的FlexVol卷启用了ONTAP 9、则这些卷将自动启用ARP/AI。
+.使用FlexVol卷立即过渡到ARP/AI的主动保护
+对于ARP/AI和FlexVol卷，没有<<学习和主动模式,学习期>>。安装或升级到9.16后、ARP/AI将立即启用并激活。将集群升级到ARP.16.1后、如果已为现有和新的FlexVol卷启用了ONTAP 9、则这些卷将自动启用ARP/AI。
 
 link:enable-arp-ai-with-au.html["详细了解如何启用ARP/AI"]
 
@@ -106,11 +106,14 @@ NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索�
 
 == 学习和主动模式
 
-ARP有两种模式：
+对于使用9.10.1 9.10.1 9.15.1运行的所有ARP以及使用ONTAP 9.161的FlexGroup卷使用的ARP、ARP有两种模式：
 
 * *学习模式*(或"演练"模式)
 * *活动模式*(或"启用"模式)
 
+
+
+NOTE: 从ARP/AI的ARP.16.1开始ONTAP 9、FlexVol卷不会使用ARP/AI。安装或升级到9.161后、FlexVol卷上的ARP/AI将立即启用并处于活动状态。如果对FlexGroup卷使用ARP.161和ONTAP 9、则在过渡到活动模式之前、仍需要一个学习阶段。
 
 .学习模式
 对于使用ARP.10.1 9.15.1运行的所有ONTAP 9以及使用ARP.161的卷使用的FlexGroup、启用ONTAP 9后、它将在_leARP.16模式下运行。在学习模式下、ONTAP系统会根据分析区域(熵、文件扩展名类型和文件IOPS)开发警报配置文件。在学习模式下运行ARP并有足够的时间来评估工作负载特征后、您可以切换到活动模式并开始保护数据。
@@ -121,9 +124,7 @@ ARP有两种模式：
 TIP: 命令可 `security anti-ransomware volume workload-behavior show`显示在卷中检测到的文件扩展名。如果您在学习模式早期运行此命令、并且此命令显示了文件类型的准确表示、则不应将此数据用作迁移到活动模式的基础、因为ONTAP仍在收集其他指标。
 
 .活动模式
-对于使用ARP.10.1到9.151运行的ONTAP 9、在达到最佳学习间隔后、ARP.10.1将切换到_active mode_。从ARP/AI的ARP.16.1开始ONTAP 9、FlexVol卷不会使用ARP/AI。安装或升级到9.161后、FlexVol卷上的ARP/AI将立即开始处于活动模式。如果对FlexGroup卷使用ARP.161和ONTAP 9、则在过渡到活动模式之前、仍需要一个学习阶段。
-
-在ARP切换到活动模式后、ONTAP会创建ARP快照、以便在检测到威胁时保护数据。
+对于使用ARP.10.1到9.151运行的ONTAP 9、在达到最佳学习间隔后、ARP.10.1将切换到_active mode_。在ARP切换到活动模式后、ONTAP会创建ARP快照、以便在检测到威胁时保护数据。
 
 在活动模式下、如果文件扩展名被标记为异常、则应评估警报。您可以对警报采取措施来保护您的数据、也可以将警报标记为误报。将警报标记为误报可更新警报配置文件。例如、如果警报由新文件扩展名触发、而您将警报标记为误报、则下次观察到该文件扩展名时、您不会收到警报。
 
@@ -134,7 +135,7 @@ NOTE: 从ONTAP 9.11.1开始、您可以自定义ARP的检测参数。有关详�
 
 == 威胁评估和ARP快照
 
-在主动模式下、ARP根据根据所学分析测量的传入数据评估威胁概率。当ARP检测到威胁时、将分配一个度量值：
+当处于活动状态而未处于学习模式时、ARP会根据根据根据所学分析测量的传入数据评估威胁概率。当ARP检测到威胁时、将分配一个度量值：
 
 * *Low*：检测到卷中存在异常的最早时间(例如、在卷中观察到新的文件扩展名)。此检测级别仅适用于ONTAP 9不具有ARP/AI的ARP.16.1之前的版本。
 * *Moder*：观察到多个文件具有相同的"从未见过"文件扩展名。
@@ -147,9 +148,9 @@ NOTE: 从ONTAP 9.11.1开始、您可以自定义ARP的检测参数。有关详�
 
 在威胁较低的情况下、ONTAP会检测到一个错误并创建卷的快照、以创建最佳恢复点。ONTAP会在ARP快照的名称前面加上 `Anti-ransomware-backup`，以便于识别；例如 `Anti_ransomware_backup.2022-12-20_1248`。
 
-在ONTAP运行分析报告以确定此非正常情况是否与勒索软件配置文件匹配后、此威胁会升级为中等。系统会在System Manager的**事件**部分中记录并显示处于较低级别的威胁。当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。ONTAP不会发送有关低威胁的警报、但是、从ONTAP 9.14.1开始、您可以发送警报 xref:manage-parameters-task.html#modify-alerts[修改警报设置]。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
+在ONTAP运行分析报告以确定此非正常情况是否与勒索软件配置文件匹配后、此威胁会升级为中等。当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。ONTAP不会发送有关低威胁的警报，但是，从ONTAP 9.14.1开始，您可以发送警报xref:manage-parameters-task.html#modify-alerts[修改警报设置]。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
 
-您可以在System Manager的*事件*部分或使用命令查看有关威胁的信息、而不受威胁级别的 `security anti-ransomware volume show`限制。
+您可以在System Manager的*事件*部分或使用命令查看有关中等威胁的信息 `security anti-ransomware volume show`。在不包含ARP/AI的9.16.1 9.161之前的版本中、也可以使用命令查看低威胁事件 `security anti-ransomware volume show`。
 
 单个ARP快照会保留两天。如果存在多个ARP快照、则默认情况下、这些快照会保留五天。从ONTAP 9.11.1开始、您可以修改保留设置。有关详细信息，请参见 xref:modify-automatic-shapshot-options-task.html[修改快照选项]。
 

@@ -26,7 +26,7 @@ summary: '从SVM.10.1开始、您可以配置、以便默认情况下为新卷�
 现有卷不会自动启用ARP。此过程中所述的设置更改仅会影响新卷。了解如何link:enable-task.html["为现有卷启用ARP"]。
 
 * *默认情况下，对于带有FlexGroup卷的ARP.10.1 9.15.1和ONTAP 9，启用了ARP.10.1的新卷将设置为(或“演练”)模式，在此模式下，系统将link:index.html#learning-and-active-modes["学习模式"]分析工作负载以确定正常行为特征。学习模式可以手动(所有ARP版本)或自动(从ARP 9.131开始)转换为活动模式。对于9.13.1及更高版本、ARP分析中添加了自适应学习功能、以便自动从学习模式切换到活动模式。
-* *对于带有FlexVol卷的ARP.161及更高版本*启用ONTAP 9时，ARP/AI保护将立即在活动模式下开始。无需学习。
+* *对于带有FlexVol卷的9.16.1 9.161及更高版本*，启用ARP后，ARP/AI保护将立即启用并处于活动状态。无需学习。
 
 
 .开始之前
@@ -48,11 +48,7 @@ summary: '从SVM.10.1开始、您可以配置、以便默认情况下为新卷�
 . 选中此框可为NAS卷启用ARP。选中附加框可在Storage VM中所有符合条件的NAS卷上启用ARP。
 +
 
-NOTE: 对于ONTAP 9。16．1、默认情况下、新FlexVol卷会自动启用活动模式、并且不需要学习周期。
-
-+
-
-NOTE: 在现有卷中、学习和活动模式仅适用于新写入的数据、而不适用于卷中已有的数据。不会扫描和分析现有数据、因为在为卷启用ARP后、系统会根据新数据假设先前正常数据流量的特征。
+NOTE: 对于ONTAP 9.16.1、这些操作会将ARP/AI保护作为新FlexVol卷的默认设置、并且不需要任何学习期。
 
 . 如果已升级到9.13.1或更高版本，可选择*在充分学习后自动从学习模式切换到活动模式*。这样、ARP就可以确定最佳学习周期间隔、并自动切换到活动模式。
 
@@ -62,32 +58,36 @@ NOTE: 在现有卷中、学习和活动模式仅适用于新写入的数据、�
 --
 * 修改现有SVM、以便在新卷中默认启用ARP：
 +
-** 对于ONTAP 9 15.1.及更早版本和FlexGroup卷、将默认状态设置为 `dry-run`(学习模式)：
+
+NOTE: 对于9.15.1 9.151及更早版本以及FlexGroup卷、新卷将开始处于学习模式。对于带有FlexVol卷的9.16.1 9.161及更高版本、系统会立即启用ARP/AI。无论哪种情况、均使用 `dry-run`作为值。
+
 +
-`vserver modify -vserver <svm_name> -anti-ransomware-default-volume-state dry-run`
-
-** 对于ONTAP 9带有ARP/AI和FlexVol卷的ARP.161及更高版本、请将默认状态设置为 `active`(活动模式)：
-+
-`vserver modify -vserver <svm_name> -anti-ransomware-default-volume-state active`
-
-
-
+[source, cli]
+----
+vserver modify -vserver <svm_name> -anti-ransomware-default-volume-state dry-run
+----
 * 为新卷创建一个默认启用ARP的新SVM：
 +
-** 对于ONTAP 9 15.1.及更早版本和FlexGroup卷、将默认状态设置为 `dry-run`(学习模式)：
+
+NOTE: 对于9.15.1 9.151及更早版本以及FlexGroup卷、新卷将开始处于学习模式。对于带有FlexVol卷的9.16.1 9.161及更高版本、系统会立即启用ARP/AI。无论哪种情况、均使用 `dry-run`作为值。
+
 +
-`vserver create -vserver <svm_name> -anti-ransomware-default-volume-state dry-run <other parameters as needed>`
-
-** 对于ONTAP 9带有ARP/AI和FlexVol卷的ARP.161及更高版本、请将默认状态设置为 `active`(活动模式)：
+[source, cli]
+----
+vserver create -vserver <svm_name> -anti-ransomware-default-volume-state dry-run <other parameters as needed>
+----
+* 如果您从9.13.1 9.131升级到9.15.1 9.151，并且默认状态为 `dry-run`，则会启用自适应学习，以便自动更改 `active`状态。如果不希望自动启用此行为、请修改现有SVM：
 +
-`vserver modify -vserver <svm_name> -anti-ransomware-default-volume-state active`
-
-
-
-* 如果您升级到ONTAP 9．1或更高版本，并且默认状态为 `dry-run`，则会启用自适应学习，以便自动更改为活动状态。如果不希望自动启用此行为、请修改现有SVM：
+[source, cli]
+----
+vserver modify <svm_name> -anti-ransomware-auto-switch-from-learning-to-enabled false
+----
+* 验证启用了ARP的卷是否显示 `enabled`状态。
 +
-`vserver modify <svm_name> -anti-ransomware-auto-switch-from-learning-to-enabled false`
-
+[source, cli]
+----
+security anti-ransomware volume show
+----
 
 
 --

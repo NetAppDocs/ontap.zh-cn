@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: configure, intercluster, LIFs  custom, ipspaces 
 summary: 您可以在自定义 IP 空间中配置集群间 LIF 。这样可以在多租户环境中隔离复制流量。 
 ---
-= 在自定义 IP 空间中配置集群间 LIF
+= 在ONTAP中的自定义IP空间中配置集群间LUN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -21,7 +21,7 @@ summary: 您可以在自定义 IP 空间中配置集群间 LIF 。这样可以�
 `network port show`
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `network port show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-port-show.html["ONTAP 命令参考"^]。
 
 +
 以下示例显示了中的网络端口 `cluster01`：
@@ -66,7 +66,7 @@ cluster01::> network ipspace create -ipspace ipspace-IC1
 `network interface show -fields home-port,curr-port`
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `network interface show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["ONTAP 命令参考"^]。
 
 +
 以下示例显示了这些端口 `e0e` 和 `e0f` 尚未分配的生命周期：
@@ -94,7 +94,7 @@ cluster01
 `network port broadcast-domain remove-ports -broadcast-domain Default -ports ports`
 
 +
-一个端口一次不能位于多个广播域中。有关完整的命令语法，请参见手册页。
+一个端口一次不能位于多个广播域中。有关的详细信息 `network port broadcast-domain remove-ports`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-remove-ports.html["ONTAP 命令参考"^]。
 
 +
 以下示例将删除端口 `e0e` 和 `e0f` 从默认广播域：
@@ -110,7 +110,7 @@ cluster01-01:e0e,cluster01-01:e0f,cluster01-02:e0e,cluster01-02:e0f
 `network port show`
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `network port show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-port-show.html["ONTAP 命令参考"^]。
 
 +
 以下示例显示了这些端口 `e0e` 和 `e0f` 已从默认广播域中删除：
@@ -158,7 +158,7 @@ cluster01-02:e0e,cluster01-02:e0f
 `network port broadcast-domain show`
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `network port broadcast-domain show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-show.html["ONTAP 命令参考"^]。
 
 +
 [listing]
@@ -209,7 +209,7 @@ ipspace-IC1
 
 |===
 +
-此时将在分配主端口的广播域中创建 LIF 。此广播域具有一个默认故障转移组，其名称与此广播域相同。有关完整的命令语法，请参见手册页。
+此时将在分配主端口的广播域中创建 LIF 。此广播域具有一个默认故障转移组，其名称与此广播域相同。有关的详细信息 `network interface create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-create.html["ONTAP 命令参考"^]。
 
 +
 以下示例将创建集群间生命周期 `cluster01_icl01` 和 `cluster01_icl02` 在广播域中 `ipspace-IC1-bd`：
@@ -245,7 +245,7 @@ policy default-intercluster -home-node cluster01-02 -home-port e0e -address 192.
 
 |===
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `network interface show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["ONTAP 命令参考"^]。
 
 +
 [listing]
@@ -280,7 +280,7 @@ ipspace-IC1
 
 |===
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `network interface show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["ONTAP 命令参考"^]。
 
 +
 以下示例显示了集群间的生命周期 `cluster01_icl01` 和 `cluster01_icl02` 在SVM上 `e0e` 端口故障转移到`e0f`端口：

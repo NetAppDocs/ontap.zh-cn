@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: lifs, network, settings, svm, replication 
 summary: 如果源 SVM 和目标 SVM 位于不同子网中，则可以使用 snapmirror policy create 命令的 -discard-configs network 选项从 SVM 复制中排除 LIF 和相关网络设置。 
 ---
-= 从 SVM 复制中排除 LIF 和相关网络设置
+= 使用ONTAP从SVM复制中排除LIP和相关网络设置
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -21,7 +21,7 @@ summary: 如果源 SVM 和目标 SVM 位于不同子网中，则可以使用 sna
 .关于此任务
 。 `-identity-preserve` 的选项 `snapmirror create` 命令必须设置为 `true` 创建SVM复制关系时。
 
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `snapmirror create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["ONTAP 命令参考"^]。
 
 .步骤
 . 创建目标 SVM ：
@@ -69,7 +69,7 @@ cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -h
 `snapmirror policy create -vserver _SVM_ -policy _policy_ -type async-mirror|vault|mirror-vault -comment _comment_ -tries transfer_tries -transfer-priority low|normal -is-network-compression-enabled true|false -discard-configs network`
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `snapmirror policy create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["ONTAP 命令参考"^]。
 
 +
 以下示例将为 SnapMirror 灾难恢复创建一个自定义复制策略，该策略会排除 LIF ：
@@ -139,7 +139,7 @@ cluster_dst::> vserver stop -vserver svm_backup
 `snapmirror initialize -source-path _SVM_: -destination-path _SVM_:`
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `snapmirror initialize`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["ONTAP 命令参考"^]。
 
 +
 以下示例将初始化源、 `svm1` 和目标、 `svm_backup`：

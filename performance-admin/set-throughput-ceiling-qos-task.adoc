@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: setting, throughput, ceiling, qos 
 summary: 您可以使用策略组的 max-throughput 字段为存储对象工作负载定义吞吐量上限（ QoS 最大值）。您可以在创建或修改存储对象时应用策略组。 
 ---
-= 使用 QoS 设置吞吐量上限
+= 在ONTAP中使用QoS设置吞吐量上限
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -41,7 +41,7 @@ summary: 您可以使用策略组的 max-throughput 字段为存储对象工作�
 `qos policy-group create -policy-group _policy_group_ -vserver _SVM_ -max-throughput _number_of_iops_|Mb/S|iops,Mb/S -is-shared true|false`
 
 +
-有关完整的命令语法，请参见手册页。您可以使用 `qos policy-group modify` 用于调整吞吐量上限的命令。
+有关的详细信息 `qos policy-group create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html["ONTAP 命令参考"^]。您可以使用 `qos policy-group modify`命令调整吞吐量上限。
 
 +
 以下命令将创建共享策略组 `pg-vs1` 最大吞吐量为5、000次IOPS：
@@ -72,7 +72,7 @@ cluster1::> qos policy-group create -policy-group pg-vs4 -vserver vs4 -is-shared
 `_storage_object_ create -vserver _SVM_ -qos-policy-group _policy_group_`
 
 +
-有关完整的命令语法，请参见手册页。您可以使用 `_storage_object_ modify` 命令将不同的策略组应用于存储对象。
+有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。您可以使用 `_storage_object_ modify`命令将其他策略组应用于存储对象。
 
 +
 以下命令将应用策略组 `pg-vs1` 到SVM `vs1`：
@@ -100,7 +100,7 @@ cluster1::> volume create -vserver vs2 -volume app2 -aggregate aggr1 -qos-policy
 `qos statistics performance show`
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `qos statistics performance show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/qos-statistics-performance-show.html["ONTAP 命令参考"^]。
 
 +
 [NOTE]
@@ -127,7 +127,7 @@ _System-Background         30           0KB/s        0ms
 `qos statistics workload performance show`
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `qos statistics workload performance show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/qos-statistics-workload-performance-show.html["ONTAP 命令参考"^]。
 
 +
 [NOTE]
@@ -153,7 +153,7 @@ _Scan_Backgro..   5688       20            0KB/s        0ms
 +
 [NOTE]
 ====
-您可以使用 `qos statistics workload latency show` 命令以查看QoS工作负载的详细延迟统计信息。
+您可以使用 `qos statistics workload latency show`命令查看QoS工作负载的详细延迟统计信息。有关的详细信息 `qos statistics workload latency show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/qos-statistics-workload-latency-show.html["ONTAP 命令参考"^]。
 
 ====
 

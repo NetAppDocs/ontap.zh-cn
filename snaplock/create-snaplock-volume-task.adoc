@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: snaplock, volume, shanpshot, copy, create, complianceclock, file, worm, compliance, enterprise 
 summary: '您必须为要提交到 WORM 状态的文件或 Snapshot 副本创建 SnapLock 卷。从 ONTAP 9.10.1 开始，无论聚合类型如何，您创建的任何卷都会默认创建为非 SnapLock 卷。您必须使用 `-snaplock-type` 通过指定"Compliance (合规性)"或"Enterprise (企业)"作为SnapLock类型来显式创建SnapLock卷的选项。默认情况下、SnapLock类型设置为 `non-snaplock`。' 
 ---
-= 创建并挂载SnapLock 卷
+= 在ONTAP中创建和挂载SnapLock卷
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -59,7 +59,7 @@ SnapLock卷不支持LUN。只有当在非SnapLock卷上创建的Snapshot副本�
 volume create -vserver <SVM_name> -volume <volume_name> -aggregate <aggregate_name> -snaplock-type <compliance|enterprise>
 ----
 +
-有关完整的选项列表，请参见命令手册页。以下选项不适用于SnapLock卷： `-nvfail`， `-atime-update`， `-is-autobalance-eligible`， `-space-mgmt-try-first`，和 `vmalign`。
+有关的详细信息 `volume create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-create.html["ONTAP 命令参考"^]。以下选项不适用于SnapLock卷： `-nvfail`、、 `-atime-update` `-is-autobalance-eligible`、 `-space-mgmt-try-first`和 `vmalign`。
 
 +
 以下命令将创建SnapLock `Compliance` 名为的卷 `vol1` 开启 `aggr1` 开启 `vs1`：
@@ -93,7 +93,7 @@ SnapLock 卷必须处于联机状态。
 `*volume mount -vserver _SVM_name_ -volume _volume_name_ -junction-path _path_*`
 
 +
-有关完整的选项列表，请参见命令手册页。
+有关的详细信息 `volume mount`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-mount.html["ONTAP 命令参考"^]。
 
 +
 以下命令会挂载名为的SnapLock卷 `vol1` 连接到接合路径 `/sales` 在中 `vs1` 命名空间：

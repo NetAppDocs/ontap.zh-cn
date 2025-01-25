@@ -6,12 +6,14 @@ summary: '对于自动防兰软件保护(ARP 9.15.1及更早版本)、手动或�
 ---
 = 学习一段时间后切换到ARP活动模式
 :allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
 
 
 [role="lead"]
 对于自动防兰软件保护(ARP 9.15.1及更早版本或随FlexGroup卷一起运行的ARP)、手动或自动将启用了ARP的卷从学习模式切换到活动模式。在ARP完成至少30天的学习模式运行后、您可以手动切换到活动模式。从ARP.13.1.开始、ONTAP 9会自动确定最佳学习周期间隔并自动执行交换机操作、这可能会在30天之前发生。
 
-如果在运行ARP.16．1或更高版本的FlexVol卷上使用ONTAP 9、则ARP/AI功能不需要学习期、默认情况下会选择活动模式。
+如果在运行9.16.1 9.161或更高版本的FlexVol卷上使用ARP、则ARP/AI保护将启用并自动变为活动状态。无需学习。
 
 
 NOTE: 在现有卷中、学习和活动模式仅适用于新写入的数据、而不适用于卷中已有的数据。不会扫描和分析现有数据、因为在为卷启用ARP后、系统会根据新数据假设先前正常数据流量的特征。
@@ -38,18 +40,24 @@ NOTE: 在现有卷中、学习和活动模式仅适用于新写入的数据、�
 .步骤
 . 学习期结束后、如果尚未自动修改受保护卷以切换到活动模式、请将其修改为：
 +
-`security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>`
-
+[source, cli]
+----
+security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>
+----
 +
 您也可以使用 modify volume 命令切换到活动模式：
 
 +
-`volume modify -volume <vol_name> -vserver <svm_name> -anti-ransomware-state active`
-
+[source, cli]
+----
+volume modify -volume <vol_name> -vserver <svm_name> -anti-ransomware-state active
+----
 . 验证卷的ARP状态。
 +
-`security anti-ransomware volume show`
-
+[source, cli]
+----
+security anti-ransomware volume show
+----
 
 
 --

@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: create, initialize, load-sharing, mirror, relationship 
 summary: 您应为集群中的每个根卷创建负载共享镜像（ LSM ）。您可以在包含根卷的节点以外的任何节点上创建 LSM ，例如 HA 对中的配对节点，或者最好在其他 HA 对中创建。对于双节点集群，您应在具有根卷的节点的配对节点上创建 LSM 。 
 ---
-= 创建并初始化负载共享镜像关系
+= 使用ONTAP创建并初始化负载共享镜像关系
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -38,7 +38,7 @@ volume create -vserver <SVM> -volume <volume> -aggregate <aggregate> -type DP -s
 最佳做法是、为根卷和目标卷命名时使用后缀、例如 `_root` 和 `_m1`。
 
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `volume create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-create.html["ONTAP 命令参考"^]。
 
 +
 以下示例将为根卷创建负载共享镜像卷 `svm1_root` 在中 `cluster_src`：
@@ -56,7 +56,7 @@ cluster_src:> volume create -vserver svm1 -volume svm1_m1 -aggregate aggr_1 -siz
 snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume> -type LS -schedule <schedule>
 ----
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `snapmirror create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["ONTAP 命令参考"^]。
 
 +
 以下示例将在根卷之间创建负载共享镜像关系 `svm1_root` 和负载共享镜像卷 `svm1_m1`：
@@ -76,7 +76,7 @@ cluster_src::> snapmirror create -source-path svm1:svm1_root -destination-path s
 snapmirror initialize-ls-set -source-path <SVM:volume>
 ----
 +
-有关完整的命令语法，请参见手册页。
+有关的详细信息 `snapmirror initialize`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["ONTAP 命令参考"^]。
 
 +
 以下示例将初始化根卷的负载共享镜像 `svm1_root`：
