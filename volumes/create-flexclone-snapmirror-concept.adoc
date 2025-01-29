@@ -13,14 +13,14 @@ summary: 您可以从现有SnapMirror关系中的源卷或目标卷创建FlexClo
 [role="lead"]
 您可以从现有卷 SnapMirror 关系中的源卷或目标卷创建 FlexClone 卷。但是，这样做可能会阻止未来的 SnapMirror 复制操作成功完成。
 
-复制可能不起作用，因为在创建 FlexClone 卷时，您可能会锁定 SnapMirror 使用的 Snapshot 副本。如果发生这种情况， SnapMirror 将停止复制到目标卷，直到 FlexClone 卷被销毁或从其父卷拆分为止。您可以通过两种方法来解决此问题描述：
+复制可能不起作用、因为在创建FlexClone卷时、您可能会锁定SnapMirror使用的快照。如果发生这种情况， SnapMirror 将停止复制到目标卷，直到 FlexClone 卷被销毁或从其父卷拆分为止。您可以通过两种方法来解决此问题描述：
 
 * 如果您临时需要 FlexClone 卷，并且可以临时停止 SnapMirror 复制，则可以创建 FlexClone 卷，并在可能的情况下将其删除或从其父卷中拆分。
 +
 删除 FlexClone 卷或将其从父卷拆分后， SnapMirror 复制将继续正常进行。
 
-* 如果不允许临时停止 SnapMirror 复制，则可以在 SnapMirror 源卷中创建 Snapshot 副本，然后使用该 Snapshot 副本创建 FlexClone 卷。（如果要从目标卷创建 FlexClone 卷，则必须等待该 Snapshot 副本复制到 SnapMirror 目标卷。）
+* 如果不允许临时停止SnapMirror复制、则可以在SnapMirror源卷中创建一个快照、然后使用该快照创建FlexClone卷。(如果要从目标卷创建FlexClone卷、则必须等待该快照复制到SnapMirror目标卷。)
 +
-通过这种在 SnapMirror 源卷中创建 Snapshot 副本的方法，您可以创建克隆，而无需锁定 SnapMirror 正在使用的 Snapshot 副本。
+通过这种在SnapMirror源卷中创建快照的方法、您可以在创建克隆时不锁定SnapMirror正在使用的快照。
 
 

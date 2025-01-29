@@ -157,24 +157,49 @@ CAUTION: 如果安装失败、您可能需要升级到更高版本的ONTAP调解
 ====
 
 
-== 启用UEFI安全启动后注册安全密钥
+== 启用UEFI安全启动时安装ONTAP调解器
 
+ONTAP调解器可以安装在启用或不启用UEFI安全启动的系统上。
+
+.关于此任务
+如果不需要UEFI安全启动、或者您要对调解器安装问题进行故障排除、则可以选择在安装ONTAP调解器之前禁用ONTAP安全启动。从计算机设置中禁用UEFI安全启动选项。
+
+[NOTE]
+====
+有关如何禁用UEFI安全启动的更多详细信息、请参阅系统专用说明。
+
+====
 要在启用了UEFI安全启动的情况下安装ONTAP调解器、必须先注册安全密钥、然后才能启动服务。密钥是在SCST安装的编译步骤中生成的、并保存为计算机上的私有-公共密钥对。使用 `mokutil`实用程序将公共密钥作为计算机所有者密钥(Machine Owner Key、MOK)添加到UEFI固件中、以使系统信任并加载签名模块。请将密码短语保存 `mokutil`在安全位置、因为在重新启动系统以激活MOK时需要使用此密码短语。
 
-要确定系统是否已启用UEFI且安全启动已打开、请执行以下步骤：
-
 .步骤
-. 如果 `mokutil`未安装、请运行以下命令：
-+
-`yum install mokutil`
-
-. 检查系统上是否启用了UEFI安全启动：
+. [[STEP_1_UEFI]]检查系统上是否启用了UEFI安全启动：
 +
 `mokutil --sb-state`
 
 +
 结果指示此系统是否已启用UEFI安全启动。
 
++
+[cols="40,60"]
+|===
+
+
+| 条件 | 转至 ... 
+
+
+ a| 
+已启用UEFI安全启动
+ a| 
+
+
+
+
+ a| 
+已禁用UEFI安全启动
+ a| 
+link:upgrade-host-os-mediator-task.html["升级主机操作系统、然后升级ONTAP 调解器"]
+
+|===
 +
 [NOTE]
 ====
@@ -183,6 +208,10 @@ CAUTION: 如果安装失败、您可能需要升级到更高版本的ONTAP调解
 
 
 ====
+. [[STEP_2_UEFI]]如果 `mokutil`未安装实用程序、请运行以下命令：
++
+`yum install mokutil`
+
 . 将公共密钥添加到MOK列表：
 +
 `mokutil --import /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der`
@@ -195,16 +224,5 @@ NOTE: 您可以将私钥保留在其默认位置、也可以将其移动到安�
 `[root@hostname ~]# ls /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/
 README.module-signing  scst_module_key.der  scst_module_key.priv`
 
-. 重新启动主机、然后使用设备的UEFI Boot Manager批准新的MOK。您需要使用步骤2中为提供的密码短语 `mokutil`。
-
-
-
-
-== 禁用UEFI安全启动
-
-在安装ONTAP调解器之前、您还可以选择禁用UEFI安全启动。
-
-.步骤
-. 在物理机BIOS设置中、禁用"UEFI安全启动"选项。
-. 在VM的VMware设置中、禁用vSphere 6.x的"Safe Start"(安全启动)选项或vSphere 7.x的"Secure Boot"(安全启动)选项
+. 重新启动主机、然后使用设备的UEFI Boot Manager批准新的MOK。您需要中为实用程序提供的密码短语 `mokutil`<<step_1_uefi,检查系统上是否启用了UEFI安全启动的步骤>>。
 

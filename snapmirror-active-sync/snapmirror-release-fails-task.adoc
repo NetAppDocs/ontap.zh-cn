@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: snapmirror-active-sync/snapmirror-release-fails-task.html 
 keywords: SM-BC, SMBC, volume move, troubleshooting, primary down, snapmirror active sync 
-summary: 无法删除 Snapshot 副本时， SnapMirror 发布操作将失败。 
+summary: 如果无法删除快照、则SnapMirror释放操作将失败。 
 ---
-= 如果无法删除 Snapshot 副本， SnapMirror 版本将失败
+= 无法删除快照时、SnapMirror版本失败
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -15,10 +15,10 @@ summary: 无法删除 Snapshot 副本时， SnapMirror 发布操作将失败。
 
 .问题描述 ：
 [role="lead"]
-无法删除 Snapshot 副本时， SnapMirror 发布操作将失败。
+如果无法删除快照、则SnapMirror释放操作将失败。
 
 .解决方案 ：
-Snapshot 副本包含一个瞬时标记。使用 `snapshot delete` 命令 `-ignore-owners` 可选择删除瞬时Snapshot副本。
+快照包含瞬时标记。使用 `snapshot delete`命令和 `-ignore-owners`选项删除瞬时快照。
 `snapshot delete -volume <volume_name> -snapshot <snapshot_name> -ignore-owners true -force true`
 
 重试 `snapmirror release` 命令：

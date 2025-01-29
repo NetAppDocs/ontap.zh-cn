@@ -2,7 +2,7 @@
 permalink: data-protection/vault-archive-snapmirror-technology-concept.html 
 sidebar: sidebar 
 keywords: vault, archiving, snapmirror, technology 
-summary: SnapMirror 存储策略取代了 ONTAP 9.3 及更高版本中的 SnapVault 技术。您可以使用 SnapMirror 存储策略进行磁盘到磁盘 Snapshot 副本复制，以满足标准合规性和其他监管相关目的。在 SnapMirror 关系中，目标通常仅包含源卷中当前的 Snapshot 副本，而存储目标则通常保留较长时间内创建的时间点 Snapshot 副本。 
+summary: SnapMirror 存储策略取代了 ONTAP 9.3 及更高版本中的 SnapVault 技术。您可以使用SnapMirror存储策略进行磁盘到磁盘快照复制、以满足标准合规性和其他监管相关要求。在SnapMirror关系中、目标通常仅包含源卷中的当前快照、而与此不同、存储目标通常会保留在更长时间段内创建的时间点快照。 
 ---
 = 使用 SnapMirror 技术进行存储归档
 :allow-uri-read: 
@@ -11,9 +11,9 @@ summary: SnapMirror 存储策略取代了 ONTAP 9.3 及更高版本中的 SnapVa
 
 
 [role="lead"]
-SnapMirror 存储策略取代了 ONTAP 9.3 及更高版本中的 SnapVault 技术。您可以使用 SnapMirror 存储策略进行磁盘到磁盘 Snapshot 副本复制，以满足标准合规性和其他监管相关目的。在 SnapMirror 关系中，目标通常仅包含源卷中当前的 Snapshot 副本，而存储目标则通常保留较长时间内创建的时间点 Snapshot 副本。
+SnapMirror 存储策略取代了 ONTAP 9.3 及更高版本中的 SnapVault 技术。您可以使用SnapMirror存储策略进行磁盘到磁盘快照复制、以满足标准合规性和其他监管相关要求。在SnapMirror关系中、目标通常仅包含源卷中的当前快照、而与此不同、存储目标通常会保留在更长时间段内创建的时间点快照。
 
-您可能希望在 20 年的时间内保留数据的每月 Snapshot 副本，例如，为了符合政府对您企业的会计规定。由于无需从存储提供数据，因此您可以在目标系统上使用速度较慢，成本较低的磁盘。
+例如、您可能希望将数据的每月快照保留20年、以遵守政府对您企业的会计法规。由于无需从存储提供数据，因此您可以在目标系统上使用速度较慢，成本较低的磁盘。
 
 下图说明了 SnapMirror 存储数据保护关系。
 
@@ -25,18 +25,18 @@ image:snapvault-data-protection.gif["SnapMirror存储数据保护关系"]
 
 此关系的 SnapMirror 策略用于定义基线内容以及任何更新。
 
-默认存储策略下的基线传输 `XDPDefault` 为源卷创建Snapshot副本、然后将该副本及其引用的数据块传输到目标卷。与 SnapMirror 关系不同，存储备份不会在基线中包含较早的 Snapshot 副本。
+默认存储策略下的基线传输 `XDPDefault`会创建源卷的快照、然后将该副本及其引用的数据块传输到目标卷。与SnapMirror关系不同、存储备份不会在基线中包含较早的快照。
 
 
 
 == 如何更新存储数据保护关系
 
-更新是异步的，遵循您配置的计划。您在关系的策略中定义的规则可确定更新中要包含哪些新 Snapshot 副本以及要保留多少副本。在策略中定义的标签（ `m例如 " 每月，` " ）必须与源上 Snapshot 策略中定义的一个或多个标签匹配。否则，复制将失败。
+更新是异步的，遵循您配置的计划。您在关系策略中定义的规则可确定更新中要包含哪些新快照以及要保留多少副本。在策略中定义的标签(例如、"`month、`")必须与源上的Snapshot策略中定义的一个或多个标签匹配。否则，复制将失败。
 
-在下的每次更新时 `XDPDefault` 策略、SnapMirror将传输自上次更新以来创建的Snapshot副本、前提是这些副本的标签与策略规则中定义的标签匹配。在的以下输出中 `snapmirror policy show` 命令 `XDPDefault` 策略中、请注意以下事项：
+在策略下的每次更新时 `XDPDefault`、SnapMirror都会传输自上次更新以来创建的快照、前提是这些快照的标签与策略规则中定义的标签匹配。在策略命令的 `XDPDefault`以下输出中 `snapmirror policy show`、请注意以下几点：
 
-* `Create Snapshot` 为"`false`"、表示 `XDPDefault` 在SnapMirror更新关系时、不会创建Snapshot副本。
-* `XDPDefault` 具有规则"`daily`"和"`Weekly`"、指示在SnapMirror更新关系时传输源上具有匹配标签的所有Snapshot副本。
+* `Create Snapshot`为"`false`"、表示 `XDPDefault`在SnapMirror更新关系时不会创建快照。
+* `XDPDefault`具有规则"`daily`"和"`Weekly`"、指示在SnapMirror更新关系时传输源上具有匹配标签的所有快照。
 
 
 [listing]

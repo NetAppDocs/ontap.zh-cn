@@ -4,7 +4,7 @@ permalink: snapmirror-active-sync/interoperability-reference.html
 keywords: SM-BC, SMBC, restrictions, consistency group, endpoint limits, solaris, aix, hp-ux, fanout, snapmirror active sync 
 summary: SnapMirror主动同步与ONTAP中的许多操作系统和其他功能兼容。 
 ---
-= SnapMirror主动同步互操作性
+= ONTAP中的SnapMirror主动同步互操作性
 :allow-uri-read: 
 :icons: font
 :linkattrs: 
@@ -87,7 +87,7 @@ SnapMirror主动同步支持FabricPool聚合上的源卷和目标卷、分层策
 
 image:fanout-diagram.png["扇出配置示意图"]
 
-SnapMirror主动同步支持 xref:../data-protection/supported-deployment-config-concept.html[扇出配置] 使用 `MirrorAllSnapshots` 策略和(从ONTAP 9.11.1开始) `MirrorAndVault` 策略。在与同步的SnapMirror主动同步中不支持扇出配置 `XDPDefault` 策略。
+SnapMirror主动同步支持策略、 `MirrorAllSnapshots`从ONTAP 9.11.1开始 `MirrorAndVault`支持xref:../data-protection/supported-deployment-config-concept.html[扇出配置]策略。在与策略进行SnapMirror主动同步时、不支持扇出配置 `XDPDefault`。
 
 从ONTAP 9.15.1开始、SnapMirror主动同步支持在发生故障转移事件后在扇出段中自动重新配置。如果从主站点成功故障转移到二级站点、则会自动重新配置三级站点、将二级站点视为源站点。重新配置由计划内或计划外故障转移触发。故障恢复到主站点时也会进行重新配置。
 
@@ -97,13 +97,13 @@ SnapMirror主动同步支持 xref:../data-protection/supported-deployment-config
 
 === NDMP还原
 
-从ONTAP 9.131开始、您可以使用 xref:../tape-backup/transfer-data-ndmpcopy-task.html[通过NDMP复制和还原数据] SnapMirror处于活动同步状态。通过使用NDMP、您可以将数据移至SnapMirror活动同步源以完成还原、而不会暂停保护。这在扇出配置中尤其有用。
+从ONTAP 9.13.1开始、您可以使用xref:../tape-backup/transfer-data-ndmpcopy-task.html[通过NDMP复制和还原数据]SnapMirror active sync。通过使用NDMP、您可以将数据移至SnapMirror活动同步源以完成还原、而不会暂停保护。这在扇出配置中尤其有用。
 
 
 
 === SnapCenter
 
-从开始、SnapCenter支持SnapMirror主动同步 link:https://docs.netapp.com/us-en/snapcenter/index.html["SnapCenter 5.0"^]。通过SnapCenter、可以创建快照、以便用于保护和恢复应用程序和虚拟机、从而在应用程序级别粒度级别实现始终可用的存储解决方案。
+从开始，SnapCenter支持SnapMirror主动同步link:https://docs.netapp.com/us-en/snapcenter/index.html["SnapCenter 5.0"^]。通过SnapCenter、您可以创建快照来保护和恢复应用程序和虚拟机、从而实现应用程序级粒度级别的始终可用的存储解决方案。
 
 
 
@@ -112,10 +112,10 @@ SnapMirror主动同步支持 xref:../data-protection/supported-deployment-config
 SnapMirror主动同步支持部分和单文件SnapRestore。
 
 .单文件SnapRestore
-从ONTAP 9.11.1开始、 xref:../data-protection/restore-single-file-snapshot-task.html[单文件SnapRestore] 支持SnapMirror活动同步卷。您可以从从SnapMirror活动同步源复制到目标的Snapshot副本还原单个文件。由于卷可以包含一个或多个LUN、因此、此功能可帮助您实施中断性较低的还原操作、即在不中断其他LUN的情况下细化还原单个LUN。Single File SnapRestore有两个选项：就地和异地。
+从ONTAP 9.11.1开始、xref:../data-protection/restore-single-file-snapshot-task.html[单文件SnapRestore]支持对SnapMirror活动同步卷使用。您可以从从SnapMirror活动同步源复制到目标的快照中还原单个文件。由于卷可以包含一个或多个LUN、因此、此功能可帮助您实施中断性较低的还原操作、即在不中断其他LUN的情况下细化还原单个LUN。Single File SnapRestore有两个选项：就地和异地。
 
 .部分文件SnapRestore
-从ONTAP 9.12.1开始、 link:../data-protection/restore-part-file-snapshot-task.html["部分LUN还原"] 支持SnapMirror活动同步卷。您可以从应用程序创建的Snapshot副本中还原数据、这些副本已在SnapMirror活动同步源(卷)和目标(Snapshot副本)卷之间复制。如果您需要在同一个LUN上存储多个数据库的主机上还原数据库、则可能需要执行部分LUN或文件还原。使用此功能要求您知道数据和字节计数的起始字节偏移量。
+从ONTAP 9.12.1开始、link:../data-protection/restore-part-file-snapshot-task.html["部分LUN还原"]SnapMirror活动同步卷支持。您可以从应用程序创建的快照中还原数据、这些快照已在SnapMirror活动同步源(卷)和目标(快照)卷之间复制。如果您需要在同一个LUN上存储多个数据库的主机上还原数据库、则可能需要执行部分LUN或文件还原。使用此功能要求您知道数据和字节计数的起始字节偏移量。
 
 
 

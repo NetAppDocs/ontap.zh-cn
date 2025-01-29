@@ -2,7 +2,7 @@
 permalink: san-admin/access-read-only-lun-copy-backup-vault-task.html 
 sidebar: sidebar 
 keywords: access, read-only, lun, copy, snapvault, backup 
-summary: 您可以从 SnapVault 备份中的最新 Snapshot 副本访问 LUN 的只读副本。LUN ID ，路径和序列号与源 LUN 不同，必须先映射。永久性预留， LUN 映射和 igroup 不会复制到 SnapVault 二级卷。 
+summary: 您可以从SnapVault备份中的最新快照访问LUN的只读副本。LUN ID ，路径和序列号与源 LUN 不同，必须先映射。永久性预留， LUN 映射和 igroup 不会复制到 SnapVault 二级卷。 
 ---
 = 从 SnapVault 备份访问只读 LUN 副本
 :allow-uri-read: 
@@ -11,10 +11,10 @@ summary: 您可以从 SnapVault 备份中的最新 Snapshot 副本访问 LUN 的
 
 
 [role="lead"]
-您可以从 SnapVault 备份中的最新 Snapshot 副本访问 LUN 的只读副本。LUN ID ，路径和序列号与源 LUN 不同，必须先映射。永久性预留， LUN 映射和 igroup 不会复制到 SnapVault 二级卷。
+您可以从SnapVault备份中的最新快照访问LUN的只读副本。LUN ID ，路径和序列号与源 LUN 不同，必须先映射。永久性预留， LUN 映射和 igroup 不会复制到 SnapVault 二级卷。
 
 .您需要的内容
-* 必须初始化 SnapVault 关系，并且 SnapVault 二级卷中的最新 Snapshot 副本必须包含所需的 LUN 。
+* 必须初始化SnapVault关系、并且SnapVault二级卷中的最新快照必须包含所需的LUN。
 * 包含 SnapVault 备份的 Storage Virtual Machine （ SVM ）必须具有一个或多个具有所需 SAN 协议的 LIF ，此 LIF 可从用于访问 LUN 副本的主机访问。
 * 如果您计划直接从 SnapVault 二级卷访问 LUN 副本，则必须事先在 SnapVault SVM 上创建 igroup 。
 +
@@ -23,7 +23,7 @@ summary: 您可以从 SnapVault 备份中的最新 Snapshot 副本访问 LUN 的
 
 
 .关于此任务
-如果在从先前的 Snapshot 副本映射 LUN 的情况下向 SnapVault 二级卷添加了新的 Snapshot 副本，则映射的 LUN 的内容会发生更改。LUN 仍使用相同的标识符进行映射，但数据取自新的 Snapshot 副本。如果 LUN 大小发生变化，则某些主机会自动检测到大小变化； Windows 主机需要重新扫描磁盘才能检测到任何大小变化。
+如果在从上一个快照映射LUN的情况下向SnapVault二级卷添加了新快照、则映射的LUN的内容会发生更改。LUN仍会使用相同的标识符进行映射、但数据会从新快照中获取。如果 LUN 大小发生变化，则某些主机会自动检测到大小变化； Windows 主机需要重新扫描磁盘才能检测到任何大小变化。
 
 .步骤
 . 运行 `lun show` 命令以列出SnapVault二级卷中的可用LUN。

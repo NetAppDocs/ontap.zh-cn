@@ -2,9 +2,9 @@
 permalink: consistency-groups/protect-task.html 
 sidebar: sidebar 
 keywords: application protection, two-phase commit, 2 phase, smbc, async snapmirror, local, remote, snapshot, asynchronous, svm disaster recovery, snapmirror 
-summary: 使用一致性组通过本地Snapshot、SnapMirror异步、SnapMirror活动同步和SVM灾难恢复来保护数据。 
+summary: 使用一致性组通过本地快照、SnapMirror异步、SnapMirror活动同步和SVM灾难恢复来保护数据。 
 ---
-= 保护一致性组
+= 在ONTAP中保护一致性组
 :hardbreaks:
 :allow-uri-read: 
 :icons: font
@@ -16,7 +16,7 @@ summary: 使用一致性组通过本地Snapshot、SnapMirror异步、SnapMirror�
 
 创建一致性组不会自动启用保护。可以在创建一致性组时或创建一致性组后设置保护策略。您可以使用以下方法保护一致性组：
 
-* 本地Snapshot副本
+* 本地快照
 * SnapMirror主动同步(在9.15.1之前的ONTAP版本中称为SnapMirror业务连续性)
 * xref:index.html#mcc[MetroCluster (从9.11.1开始)]
 * SnapMirror异步(从9.13.1开始)
@@ -25,18 +25,18 @@ summary: 使用一致性组通过本地Snapshot、SnapMirror异步、SnapMirror�
 
 如果要使用嵌套一致性组、则可以为父一致性组和子一致性组设置不同的保护策略。
 
-从ONTAP 9.11.1开始、一致性组可提供 <<two-phase,创建两阶段一致性组Snapshot>>。两阶段Snapshot操作将执行预检查、以确保成功捕获Snapshot副本。
+从ONTAP 9.11.1开始，一致性组提供了<<two-phase,创建两阶段一致性组快照>>。两阶段快照操作将执行预检查、以确保成功捕获快照。
 
-可以对整个一致性组，分层配置中的单个一致性组或一致性组中的单个卷进行恢复。要实现恢复、可以选择要从中恢复的一致性组、选择Snapshot副本类型、然后确定要基于还原的Snapshot副本。有关此过程的详细信息，请参见 link:../task_dp_restore_from_vault.html["从早期的 Snapshot 副本还原卷"]。
+可以对整个一致性组，分层配置中的单个一致性组或一致性组中的单个卷进行恢复。要实现恢复、可以选择要从中恢复的一致性组、选择快照类型、然后确定用作恢复基础的快照。有关此过程的详细信息，请参见link:../task_dp_restore_from_vault.html["从早期的快照还原卷"]。
 
 
 
-== 配置本地Snapshot策略
+== 配置本地快照策略
 
 通过设置本地快照保护策略、您可以创建一个涵盖一致性组中所有卷的策略。
 
 .关于此任务
-一致性组支持的最小Snapshot副本计划为30分钟。这是基于的 link:https://www.netapp.com/media/12385-tr4571.pdf["测试FlexGroup"^](与一致性组共享同一个Snapshot基础架构)。
+一致性组支持的最小快照计划为30分钟。此配置基于link:https://www.netapp.com/media/12385-tr4571.pdf["测试FlexGroup"^]，它与一致性组共享相同的Snapshot基础架构。
 
 [role="tabbed-block"]
 ====
@@ -47,9 +47,9 @@ summary: 使用一致性组通过本地Snapshot、SnapMirror异步、SnapMirror�
 . 从一致性组菜单中选择已创建的一致性组。
 . 在一致性组的概述页面的右上角，选择 * 编辑 * 。
 . 选中 * 计划 Snapshot 副本（本地） * 旁边的框。
-. 选择快照策略。要配置新的自定义策略，请参见 link:../task_dp_create_custom_data_protection_policies.html["创建自定义数据保护策略"]。
+. 选择快照策略。要配置新的自定义策略，请参见link:../task_dp_create_custom_data_protection_policies.html["创建自定义数据保护策略"]。
 . 选择 * 保存 * 。
-. 返回一致性组概述菜单。在左列的*Snapshot副本(本地)*下，状态将在旁边显示为“受保护 image:../media/icon_shield.png["屏蔽图标"]”。
+. 返回一致性组概述菜单。在左列的*快照(本地)*下，状态将在旁边显示为image:../media/icon_shield.png["屏蔽图标"]“受保护”。
 
 
 --
@@ -76,9 +76,9 @@ summary: 使用一致性组通过本地Snapshot、SnapMirror异步、SnapMirror�
 ====
 
 
-== 创建按需Snapshot副本
+== 创建按需快照
 
-如果您需要在正常计划的策略之外创建一致性组的Snapshot副本、则可以按需创建一个。
+如果需要在正常计划的策略之外创建一致性组的快照、则可以按需创建一个。
 
 [role="tabbed-block"]
 ====
@@ -86,7 +86,7 @@ summary: 使用一致性组通过本地Snapshot、SnapMirror异步、SnapMirror�
 --
 .步骤
 . 导航到*存储*>*一致性组*。
-. 选择要为其创建按需Snapshot副本的一致性组。
+. 选择要为其创建按需快照的一致性组。
 . 切换到*Snapshot副本*选项卡，然后选择*+Add*。
 . 请提供*名称*和* SnapMirror标签*。在*一致性*的下拉菜单中，选择*应用程序一致*或*崩溃一致*。
 . 选择 * 保存 * 。
@@ -95,7 +95,7 @@ summary: 使用一致性组通过本地Snapshot、SnapMirror异步、SnapMirror�
 --
 .命令行界面
 --
-从ONTAP 9.14.1开始、您可以使用命令行界面为一致性组创建按需Snapshot副本。
+从ONTAP 9.14.1开始、您可以使用命令行界面为一致性组创建按需快照。
 
 .开始之前
 * 要执行此任务、您必须具有管理员权限级别。
@@ -103,9 +103,9 @@ summary: 使用一致性组通过本地Snapshot、SnapMirror异步、SnapMirror�
 
 
 .步骤
-. 创建Snapshot副本：
+. 创建快照：
 +
-默认情况下、Snapshot类型为崩溃状态一致的。您可以使用可选修改Snapshot类型 `-type` 参数。
+默认情况下、快照类型为崩溃状态一致的。您可以使用可选参数修改快照类型 `-type`。
 
 +
 `consistency-group snapshot create -vserver _svm_name_ -consistency-group _consistency_group_name_ -snapshot _snapshot_name_`
@@ -116,35 +116,35 @@ summary: 使用一致性组通过本地Snapshot、SnapMirror异步、SnapMirror�
 ====
 
 
-== 创建两阶段一致性组Snapshot
+== 创建两阶段一致性组快照
 
-从ONTAP 9.11.1开始、一致性组支持两阶段提交以创建一致性组(CG) Snapshot、这两阶段会在提交Snapshot副本之前执行预检。此功能仅适用于ONTAP REST API。
+从ONTAP 9.11.1开始、一致性组支持两阶段提交以创建一致性组(CG)快照、这两阶段会在提交快照之前执行预检。此功能仅适用于ONTAP REST API。
 
-双阶段CG Snapshot创建仅适用于Snapshot创建、而不适用于配置一致性组或还原一致性组。
+两阶段CG快照创建只能用于创建快照、而不能配置一致性组或还原一致性组。
 
-两阶段CG Snapshot会将Snapshot创建过程分为两个阶段：
+两阶段CG快照会将快照创建过程分为两个阶段：
 
-. 在第一阶段、API将执行预检并触发Snapshot创建。第一阶段包括一个超时参数、用于指定Snapshot副本成功提交的时间量。
-. 如果第一阶段的请求成功完成、您可以在指定的时间间隔内从第一阶段开始调用第二阶段、并将Snapshot副本提交到相应的端点。
+. 在第一阶段、API将执行预检并触发快照创建。第一个阶段包括一个超时参数、用于指定快照成功提交的时间量。
+. 如果第一阶段的请求成功完成、您可以在指定的时间间隔内从第一阶段调用第二阶段、将快照提交到相应的端点。
 
 
 .开始之前
-* 要使用两阶段CG Snapshot创建、集群中的所有节点都必须运行ONTAP 9.11.1或更高版本。
-* 一个一致性组实例一次仅支持一次活动调用一致性组Snapshot操作、无论是一个阶段还是两个阶段。如果在另一个Snapshot操作正在进行时尝试调用该操作、则会导致失败。
-* 调用Snapshot创建时、您可以设置5到120秒之间的可选超时值。如果未提供超时值、则此操作将在默认值7秒处超时。在API中、使用设置超时值 `action_timeout` 参数。在命令行界面中、使用 `-timeout` 标志。
+* 要使用两阶段CG快照创建功能、集群中的所有节点都必须运行9.11.1 9.11.1或更高版本。
+* 一个一致性组实例一次仅支持一次活动调用一致性组快照操作、无论是一个阶段还是两个阶段。如果在另一个快照操作正在进行中时尝试调用该操作、则会导致失败。
+* 调用快照创建时、您可以将可选超时值设置为5到120秒之间。如果未提供超时值、则此操作将在默认值7秒处超时。在API中、使用参数设置超时值 `action_timeout`。在命令行界面中、使用 `-timeout`标志。
 
 
 .步骤
 您可以使用REST API或从ONTAP 9.14.1开始使用ONTAP命令行界面完成两阶段快照。System Manager不支持此操作。
 
 
-NOTE: 如果使用API调用Snapshot创建、则必须使用API提交Snapshot副本。如果使用命令行界面调用Snapshot创建、则必须使用命令行界面提交Snapshot副本。不支持混合方法。
+NOTE: 如果使用API调用快照创建、则必须使用API提交快照。如果使用命令行界面调用快照创建、则必须使用命令行界面提交快照。不支持混合方法。
 
 [role="tabbed-block"]
 ====
 .命令行界面
 --
-从ONTAP 9.14.1开始、您可以使用命令行界面创建两阶段Snapshot副本。
+从ONTAP 9.14.1开始、您可以使用命令行界面创建两阶段快照。
 
 .开始之前
 * 要执行此任务、您必须具有管理员权限级别。
@@ -152,11 +152,11 @@ NOTE: 如果使用API调用Snapshot创建、则必须使用API提交Snapshot副�
 
 
 .步骤
-. 启动Snapshot：
+. 启动快照：
 +
 `consistency-group snapshot start -vserver _svm_name_ -consistency-group _consistency_group_name_ -snapshot _snapshot_name_ [-timeout _time_in_seconds_ -write-fence {true|false}]`
 
-. 验证是否已创建Snapshot：
+. 验证是否已创建快照：
 +
 `consistency-group snapshot show`
 
@@ -169,7 +169,7 @@ NOTE: 如果使用API调用Snapshot创建、则必须使用API提交Snapshot副�
 --
 .API
 --
-. 调用Snapshot创建。使用向一致性组端点发送POST请求 `action=start` 参数。
+. 调用快照创建。使用参数向一致性组端点发送POST请求 `action=start`。
 +
 [source, curl]
 ----
@@ -181,7 +181,7 @@ curl -k -X POST 'https://<IP_address>/application/consistency-groups/<cg-uuid>/s
   "snapmirror_label": "<SnapMirror_label>"
 }'
 ----
-. 如果POST请求成功、则输出将包含Snapshot的"unSnapshot unid"。使用该用户ID、提交一个修补程序请求以提交Snapshot副本。
+. 如果POST请求成功、则输出将包含一个快照的unId。使用该用户ID、提交一个修补程序请求以提交快照。
 +
 [source, curl]
 ----
@@ -203,12 +203,12 @@ For more information about the ONTAP REST API, see link:https://docs.netapp.com/
 
 === 使用SnapMirror活动同步配置保护
 
-您可以使用SnapMirror活动同步来确保在一致性组上创建的一致性组的Snapshot副本会复制到目标。要了解有关SnapMirror活动同步或如何使用命令行界面配置SnapMirror活动同步的详细信息、请参见 xref:../task_san_configure_protection_for_business_continuity.html[配置业务连续性保护]。
+您可以使用SnapMirror主动同步来确保在一致性组上创建的一致性组的快照会复制到目标。要了解有关SnapMirror活动同步或如何使用命令行界面配置SnapMirror活动同步的更多信息，请参见xref:../task_san_configure_protection_for_business_continuity.html[配置业务连续性保护]。
 
 .开始之前
 * 无法在为进行NAS访问而挂载的卷上建立SnapMirror活动同步关系。
 * 源集群和目标集群中的策略标签必须匹配。
-* 默认情况下、SnapMirror主动同步不会复制Snapshot副本、除非在预定义的中添加了带有SnapMirror标签的规则 `AutomatedFailOver` 策略和Snapshot副本将使用该标签创建。
+* 默认情况下、SnapMirror主动同步不会复制快照、除非在预定义策略中添加了带有SnapMirror标签的规则 `AutomatedFailOver`、并且使用该标签创建了快照。
 +
 要了解有关此过程的更多信息，请参见 link:../task_san_configure_protection_for_business_continuity.html["使用SnapMirror活动同步进行保护"]。
 
@@ -233,21 +233,21 @@ TIP: 要使用命令行界面配置SnapMirror活动同步、请参见 xref:../ta
 
 === 配置SnapMirror异步
 
-从ONTAP 9.13.1开始、您可以为单个一致性组配置SnapMirror异步保护。从ONTAP 9.14.1开始、您可以使用SnapMirror异步通过一致性组关系将卷粒度Snapshot副本复制到目标集群。
+从ONTAP 9.13.1开始、您可以为单个一致性组配置SnapMirror异步保护。从ONTAP 9.14.1开始、您可以使用SnapMirror异步功能通过一致性组关系将卷粒度快照复制到目标集群。
 
 .关于此任务
-要复制卷粒度Snapshot副本、必须运行ONTAP 9.14.1或更高版本。对于镜像和存储策略、卷粒度级Snapshot策略的SnapMirror标签必须与一致性组的SnapMirror策略规则匹配。卷粒度Snapshot遵循一致性组的SnapMirror策略的保留值、该值的计算与一致性组Snapshot无关。例如、如果您制定了在目标上保留两个Snapshot副本的策略、则可以创建两个卷粒度Snapshot副本和两个一致性组Snapshot副本。
+要复制卷粒度快照、必须运行9.14.1 9.14.1或更高版本。对于镜像和存储策略、卷粒度Snapshot策略的SnapMirror标签必须与一致性组的SnapMirror策略规则匹配。卷粒度快照遵循一致性组的SnapMirror策略的保留值、该值是独立于一致性组快照计算的。例如、如果您的策略是在目标上保留两个快照、则可以创建两个卷粒度快照和两个一致性组快照。
 
-在重新同步与卷粒度Snapshot副本的SnapMirror关系时、您可以使用保留卷粒度Snapshot副本 `-preserve` 标志。系统会保留比一致性组更新的卷粒度Snapshot副本。如果没有一致性组Snapshot副本、则无法在重新同步操作中传输任何卷粒度Snapshot副本。
+在使用卷粒度快照重新同步SnapMirror关系时、您可以使用标志保留卷粒度快照 `-preserve`。系统会保留比一致性组快照更新的卷粒度快照。如果没有一致性组快照、则无法在重新同步操作中传输任何卷粒度快照。
 
 .开始之前
 * SnapMirror异步保护仅适用于一个一致性组。分层一致性组不支持此功能。要将分层一致性组转换为单个一致性组、请参见 xref:modify-geometry-task.html[修改一致性组架构]。
 * 源集群和目标集群中的策略标签必须匹配。
 * 您可以无干扰地运行 xref:modify-task.html#add-volumes-to-a-consistency-group[将卷添加到一致性组] 具有活动的SnapMirror异步关系。对一致性组进行任何其他更改都需要中断SnapMirror关系、修改一致性组、然后重新建立并重新同步此关系。
 * 为使用SnapMirror异步进行保护而启用的一致性组具有不同的限制。有关详细信息，请参见 xref:limits.html[一致性组限制]。
-* 如果已为多个卷配置SnapMirror异步保护关系、则可以将这些卷转换为一致性组、同时保留现有Snapshot副本。成功转换卷：
+* 如果已为多个卷配置SnapMirror异步保护关系、则可以将这些卷转换为一致性组、同时保留现有快照。成功转换卷：
 +
-** 卷必须具有一个通用Snapshot副本。
+** 必须有一个卷的通用快照。
 ** 您必须中断现有的SnapMirror关系、 xref:configure-task.html[将卷添加到单个一致性组]，然后使用以下工作流重新同步此关系。
 
 
@@ -273,7 +273,7 @@ NOTE: 对于采用SnapMirror异步的一致性组、支持的最小计划(恢复
 
 === 配置SVM灾难恢复
 
-从ONTAP 9.14.1开始、 xref:../data-protection/snapmirror-svm-replication-concept.html#[SVM 灾难恢复] 支持一致性组、可用于将一致性组信息从源集群镜像到目标集群。
+从ONTAP 9.14.1开始、xref:../data-protection/snapmirror-svm-replication-concept.html#[SVM 灾难恢复]支持一致性组、使您可以将一致性组信息从源集群镜像到目标集群。
 
 如果要在已包含一致性组的SVM上启用SVM灾难恢复、请按照的SVM配置工作流进行操作 xref:../task_dp_configure_storage_vm_dr.html[System Manager] 或 xref:../data-protection/replicate-entire-svm-config-task.html[ONTAP 命令行界面]。
 
@@ -295,10 +295,10 @@ System Manager会在*保护>关系*菜单下显示LUN映射。选择源关系时
 
 .相关信息
 * link:clone-task.html["克隆一致性组"]
-* link:../task_dp_configure_snapshot.html["配置 Snapshot 副本"]
+* link:../task_dp_configure_snapshot.html["配置快照"]
 * link:../task_dp_create_custom_data_protection_policies.html["创建自定义数据保护策略"]
-* link:../task_dp_recover_snapshot.html["从 Snapshot 副本恢复"]
-* link:../task_dp_restore_from_vault.html["从早期的 Snapshot 副本还原卷"]
+* link:../task_dp_recover_snapshot.html["从快照恢复"]
+* link:../task_dp_restore_from_vault.html["从早期的快照还原卷"]
 * link:../snapmirror-active-sync/index.html["SnapMirror活动同步概述"]
 * link:https://docs.netapp.com/us-en/ontap-automation/["ONTAP自动化文档"^]
 * xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror异步灾难恢复基础知识]

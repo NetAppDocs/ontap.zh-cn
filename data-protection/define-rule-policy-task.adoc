@@ -2,7 +2,7 @@
 permalink: data-protection/define-rule-policy-task.html 
 sidebar: sidebar 
 keywords: define, rule, policy, data protection 
-summary: '对于策略类型为"vault"或"marcy-vault"的自定义策略、您必须至少定义一个规则来确定初始化和更新期间传输的快照。您还可以为策略类型为 " 存储 " 或 " 镜像 - 存储 " 的默认策略定义规则。' 
+summary: '对于策略类型为"vault"或"mirrir-vault"的自定义策略、必须至少定义一个规则来确定初始化和更新期间传输的快照。您还可以为策略类型为 " 存储 " 或 " 镜像 - 存储 " 的默认策略定义规则。' 
 ---
 = 使用ONTAP为策略定义规则
 :allow-uri-read: 
@@ -11,10 +11,10 @@ summary: '对于策略类型为"vault"或"marcy-vault"的自定义策略、您�
 
 
 [role="lead"]
-对于`策略类型为"`vault"或"`mirrer-vault"`的自定义策略、必须至少定义一个规则来确定初始化和更新期间传输的快照。您还可以为策略类型为 "`vault` " 或 " `mirror-vault` " 的默认策略定义规则。
+对于策略类型为或 `mirror-vault`的自定义 `vault`策略、您必须至少定义一个规则来确定初始化和更新期间传输的快照。您还可以为策略类型为或 `mirror-vault`的默认策略定义规则 `vault`。
 
 .关于此任务
-策略类型为"`vault"`或"`mirrer-vault"`的每个策略都必须具有一个规则、用于指定要复制哪些快照。例如、规则"`bi-monthlyn`"指示只应复制分配了SnapMirror标签"`bi-monthlyn`"的快照。在源上配置快照策略时、可以指定SnapMirror标签。
+策略类型为或 `mirror-vault`的每个策略都 `vault`必须具有一条规则、用于指定要复制哪些快照。例如，规则 `bi-monthly`指示只应复制分配了SnapMirror标签的快照 `bi-monthly`。在源上配置快照策略时、可以指定SnapMirror标签。
 
 每个策略类型都与一个或多个系统定义的规则相关联。指定策略类型时，系统会自动为策略分配这些规则。下表显示了系统定义的规则。
 
@@ -48,7 +48,7 @@ all_source_snapshots
  a| 
 存储，镜像存储
  a| 
-初始化和更新时会传输源上SnapMirror标签为`daily`的新快照。
+初始化和更新时会传输源上标有SnapMirror标签的新快照 `daily`。
 
 
 
@@ -57,7 +57,7 @@ all_source_snapshots
  a| 
 存储，镜像存储
  a| 
-初始化和更新时会传输源上SnapMirror标签为"`Weekly`"的新快照。
+初始化和更新时会传输源上标有SnapMirror标签的新快照 `weekly`。
 
 
 
@@ -66,7 +66,7 @@ all_source_snapshots
  a| 
 镜像存储
  a| 
-初始化和更新时会传输源上SnapMirror标签为`m` onh 的新快照。
+初始化和更新时会传输源上标有SnapMirror标签的新快照 `monthly`。
 
 
 
@@ -75,13 +75,13 @@ all_source_snapshots
  a| 
 Sync ， StrictSync
  a| 
-源上SnapMirror标签为"`APP_SONGBILATION`"的快照会同步复制到目标。从ONTAP 9.7开始支持。
+源上具有SnapMirror标签的快照 `app_consistent`会同步复制到目标。从ONTAP 9.7开始支持。
 
 |===
 除了 "`async-mirror` " 策略类型之外，您还可以根据需要为默认或自定义策略指定其他规则。例如：
 
-* 对于默认 `MirrorAndVault`策略、您可以创建一个名为"`bi-monthly"`的规则、以匹配源上具有"`bi-monthly"` SnapMirror标签的快照。
-* 对于策略类型为`mirrirr-vor`的自定义策略、您可以创建一个名为"`bi-Weekly`"的规则、以匹配源上具有"`bi-Weekly`" SnapMirror标签的快照。
+* 对于默认 `MirrorAndVault`策略、您可以创建一个名为的规则 `bi-monthly`、以匹配源上具有SnapMirror标签的快照 `bi-monthly`。
+* 对于策略类型为的自定义策略 `mirror-vault`、您可以创建一个名为的规则 `bi-weekly`、以匹配源上具有SnapMirror标签的快照 `bi-weekly`。
 
 
 .步骤

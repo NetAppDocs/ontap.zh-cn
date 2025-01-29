@@ -15,14 +15,13 @@ SnapLock 是一款高性能合规解决方案，适用于使用 WORM 存储以�
 
 SnapLock有助于防止删除、更改或重命名数据、以满足SEC 17a-4 (f)、HIPAA、FIRA、CFTC和GDPR等法规的要求。借助SnapLock 、您可以创建专用卷、在这些卷中、可以在指定保留期限内或无限期地存储文件并将其提交到不可擦除、不可写入的状态。SnapLock 允许通过CIFS和NFS等标准开放文件协议在文件级别执行此保留。SnapLock 支持的打开文件协议包括NFS (版本2、3和4)和CIFS (SMB 1.0、2.0和3.0)。
 
-使用SnapLock 、您可以将文件和Snapshot副本提交到WORM存储、并为受WORM保护的数据设置保留期限。SnapLock WORM存储使用NetApp Snapshot技术、并可利用SnapMirror复制和SnapVault 备份作为为数据提供备份恢复保护的基础技术。
-详细了解WORM存储： link:https://www.netapp.com/pdf.html?item=/media/6158-tr4526pdf.pdf["使用NetApp SnapLock 的合规WORM存储—TR-4526"^]。
+使用SnapLock、您可以将文件和快照提交到WORM存储、并为受WORM保护的数据设置保留期限。SnapLock WORM存储使用NetApp快照技术、并可利用SnapMirror复制和SnapVault备份作为基础技术、为数据提供备份恢复保护。了解有关WORM存储的更多信息：link:https://www.netapp.com/pdf.html?item=/media/6158-tr4526pdf.pdf["使用NetApp SnapLock 的合规WORM存储—TR-4526"^]。
 
 您可以使用应用程序通过 NFS 或 CIFS 将文件提交到 WORM ，或者使用 SnapLock 自动提交功能将文件自动提交到 WORM 。您可以使用 _WORM 可附加文件 _ 来保留以增量方式写入的数据，例如日志信息。有关详细信息，请参见 link:commit-files-worm-state-manual-task.html#create-a-worm-appendable-file["使用卷附加模式创建 WORM 可附加文件"]。
 
 SnapLock 支持应满足大多数合规性要求的数据保护方法：
 
-* 您可以使用 SnapLock for SnapVault 对二级存储上的 Snapshot 副本进行 WORM 保护。请参见 link:commit-snapshot-copies-worm-concept.html["将 Snapshot 副本提交到 WORM"]。
+* 您可以使用SnapLock for SnapVault对二级存储上的快照进行WORM保护。请参阅。 link:commit-snapshot-copies-worm-concept.html["将快照提交到WORM"]
 * 您可以使用 SnapMirror 将 WORM 文件复制到其他地理位置以进行灾难恢复。请参见 link:mirror-worm-files-task.html["镜像 WORM 文件"]。
 
 
@@ -37,14 +36,14 @@ SnapLock 是NetApp ONTAP 的一项基于许可证的功能。只需一个许可�
 配置SnapLock 后、您可以完成以下任务：
 
 * link:commit-files-worm-state-manual-task.html["将文件提交到 WORM"]
-* link:commit-snapshot-copies-worm-concept.html["将Snapshot副本提交到WORM以用于二级存储"]
+* link:commit-snapshot-copies-worm-concept.html["将快照提交到二级存储的WORM"]
 * link:mirror-worm-files-task.html["镜像WORM文件以进行灾难恢复"]
 * link:hold-tamper-proof-files-indefinite-period-task.html["在诉讼期间使用合法保留保留WORM文件"]
 * link:delete-worm-files-concept.html["使用特权删除功能删除WORM文件"]
 * link:set-retention-period-task.html["设置文件保留期限"]
 * link:move-snaplock-volume-concept.html["移动 SnapLock 卷"]
-* link:snapshot-lock-concept.html["锁定Snapshot副本以防止勒索软件攻击"]
-* link:create-audit-log-task.html["查看审核日志中的SnapLock 使用情况"]
+* link:snapshot-lock-concept.html["锁定快照以防止勒索软件攻击"]
+* link:create-audit-log-task.html["查看SnapLock与审核日志的使用情况"]
 * link:snaplock-apis-reference.html["使用SnapLock API"]
 
 
@@ -338,7 +337,7 @@ SnapLock 支持从ONTAP 9.11.1开始的FlexGroup 卷、但不支持以下功能�
 
 == LUN支持
 
-只有当在非SnapLock卷上创建的Snapshot副本传输到SnapLock卷以在SnapLock存储关系中进行保护时、SnapLock卷才支持LUN。读/写SnapLock卷不支持LUN。但是、包含LUN的SnapMirror源卷和目标卷均支持防篡改Snapshot副本。
+只有当在非SnapLock卷上创建的快照传输到SnapLock卷以在SnapLock存储关系中进行保护时、SnapLock卷才支持LUN。读/写SnapLock卷不支持LUN。但是、包含LUN的SnapMirror源卷和目标卷均支持防篡改快照。
 
 
 

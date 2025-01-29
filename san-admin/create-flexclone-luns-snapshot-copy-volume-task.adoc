@@ -2,16 +2,16 @@
 permalink: san-admin/create-flexclone-luns-snapshot-copy-volume-task.html 
 sidebar: sidebar 
 keywords: create, flexclone, luns, snapshot, copy, volume 
-summary: 您可以使用卷中的 Snapshot 副本为 LUN 创建 FlexClone 副本。LUN 的 FlexClone 副本既可读，也可写。 
+summary: 您可以使用卷中的快照创建LUN的FlexClone副本。LUN 的 FlexClone 副本既可读，也可写。 
 ---
-= 从卷中的 Snapshot 副本创建 FlexClone LUN
+= 从卷中的快照创建FlexClone LUN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用卷中的 Snapshot 副本为 LUN 创建 FlexClone 副本。LUN 的 FlexClone 副本既可读，也可写。
+您可以使用卷中的快照创建LUN的FlexClone副本。LUN 的 FlexClone 副本既可读，也可写。
 
 .您需要的内容
 必须安装 FlexClone 许可证。此许可证包含在中link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
@@ -21,14 +21,14 @@ FlexClone LUN 会继承父 LUN 的空间预留属性。预留了空间的 FlexCl
 
 .步骤
 . 验证 LUN 是否未映射或未写入。
-. 为包含 LUN 的卷创建 Snapshot 副本：
+. 为包含LUN的卷创建快照：
 +
 `volume snapshot create -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
 
 +
-您必须为要克隆的 LUN 创建 Snapshot 副本（备用 Snapshot 副本）。
+您必须为要克隆的LUN创建一个快照(备份快照)。
 
-. 从 Snapshot 副本创建 FlexClone LUN ：
+. 从快照创建FlexClone LUN：
 +
 `file clone create -vserver _vserver_name_ -volume _volume_name_ -source-path _source_path_ -snapshot-name _snapshot_name_ -destination-path _destination_path_`
 

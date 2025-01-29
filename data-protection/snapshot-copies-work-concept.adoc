@@ -2,18 +2,18 @@
 permalink: data-protection/snapshot-copies-work-concept.html 
 sidebar: sidebar 
 keywords: restore, file, snapshot copy, nfs, cifs, smb, client 
-summary: NFS或SMB客户端上的用户可以直接从Snapshot副本还原文件、而无需存储系统管理员干预。 
+summary: NFS或SMB客户端上的用户可以直接从快照还原文件、而无需存储系统管理员干预。 
 ---
-= 从NFS或SMB客户端上的Snapshot副本还原文件
+= 从NFS或SMB客户端上的快照还原文件
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-NFS或SMB客户端上的用户可以直接从Snapshot副本还原文件、而无需存储系统管理员干预。
+NFS或SMB客户端上的用户可以直接从快照还原文件、而无需存储系统管理员干预。
 
-文件系统中的每个目录都包含一个名为的子目录 `.snapshot` 可供NFS和SMB用户访问。。 `.snapshot` 子目录包含与卷的Snapshot副本对应的子目录：
+文件系统中的每个目录都包含一个名为的子目录、 `.snapshot`可供NFS和SMB用户访问。此 `.snapshot`子目录包含与卷的快照对应的子目录：
 
 ....
 $ ls .snapshot
@@ -21,7 +21,7 @@ daily.2017-05-14_0013/              hourly.2017-05-15_1106/
 daily.2017-05-15_0012/              hourly.2017-05-15_1206/
 hourly.2017-05-15_1006/             hourly.2017-05-15_1306/
 ....
-每个子目录都包含 Snapshot 副本引用的文件。如果用户意外删除或覆盖某个文件，他们可以将该文件从 Snapshot 子目录复制到读写目录，从而将该文件还原到父读写目录：
+每个子目录都包含快照引用的文件。如果用户意外删除或覆盖某个文件、则可以通过将该文件从Snapshot子目录复制到读写父目录来将该文件还原到读写目录：
 
 ....
 $ ls my.txt

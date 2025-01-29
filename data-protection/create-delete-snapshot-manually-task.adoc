@@ -2,25 +2,25 @@
 permalink: data-protection/create-delete-snapshot-manually-task.html 
 sidebar: sidebar 
 keywords: on-demand snapshot, system manager, ontap cli, snapshot, create, delete 
-summary: 如果您不能等待创建计划内Snapshot副本、也不能在不再需要Snapshot副本时删除该副本、请手动创建Snapshot副本 
+summary: 如果您不能等待创建计划快照、也不能删除不再需要的快照、请手动创建快照 
 ---
-= 手动创建和删除Snapshot副本
+= 手动创建和删除快照
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以在无法等待创建计划内Snapshot副本时手动创建Snapshot副本、也可以在不再需要Snapshot副本时将其删除。
+您可以在无法等待创建计划快照时手动创建快照、也可以在不再需要快照时将其删除。
 
 .关于此任务
 此过程适用于FAS、AFF和当前ASA系统。如果您有ASA R2系统(ASA A1K、ASA A70或ASA A90)、请按照link:https://docs.netapp.com/us-en/asa-r2/data-protection/create-snapshots.html#step-2-create-a-snapshot["这些步骤"^]创建按需快照。ASA R2系统可为仅使用SAN的客户提供简化的ONTAP体验。
 
 
 
-== 手动创建Snapshot副本
+== 手动创建快照
 
-您可以使用System Manager或ONTAP命令行界面手动创建Snapshot副本。
+您可以使用System Manager或ONTAP命令行界面手动创建快照。
 
 [role="tabbed-block"]
 ====
@@ -29,7 +29,7 @@ summary: 如果您不能等待创建计划内Snapshot副本、也不能在不再
 .步骤
 . 导航到*存储>卷*并选择* Snapshot副本*选项卡。
 . 单击 image:icon_add.gif["添加图标"]。
-. 在*添加Snapshot副本*窗口中，接受默认的Snapshot副本名称或根据需要进行编辑。
+. 在*添加快照*窗口中，接受默认快照名称或根据需要进行编辑。
 . *可选*：添加SnapMirror标签。
 . 单击 * 添加 * 。
 
@@ -37,7 +37,7 @@ summary: 如果您不能等待创建计划内Snapshot副本、也不能在不再
 --
 .命令行界面
 --
-. 创建 Snapshot 副本：
+. 创建快照：
 +
 [source, cli]
 ----
@@ -49,9 +49,9 @@ volume snapshot create -vserver <SVM> -volume <volume> -snapshot <snapshot_name>
 ====
 
 
-== 手动删除Snapshot副本
+== 手动删除快照
 
-您可以使用System Manager或ONTAP命令行界面手动删除Snapshot副本。
+您可以使用System Manager或ONTAP命令行界面手动删除快照。
 
 [role="tabbed-block"]
 ====
@@ -59,15 +59,15 @@ volume snapshot create -vserver <SVM> -volume <volume> -snapshot <snapshot_name>
 --
 .步骤
 . 导航到*存储>卷*并选择* Snapshot副本*选项卡。
-. 找到要删除的Snapshot副本，单击 image:icon_kabob.gif["菜单选项图标"]，然后选择*Delete*。
-. 在*删除Snapshot副本*窗口中，选择*删除Snapshot副本*。
+. 找到要删除的快照，单击image:icon_kabob.gif["菜单选项图标"]，然后选择*Delete*。
+. 在*Delete Snapshot (删除快照)*窗口中，选择*Delete Snapshot (删除快照)*。
 . 单击 * 删除 * 。
 
 
 --
 .命令行界面
 --
-. 删除Snapshot副本：
+. 删除快照：
 +
 [source, cli]
 ----

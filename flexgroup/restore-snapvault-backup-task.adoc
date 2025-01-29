@@ -2,7 +2,7 @@
 permalink: flexgroup/restore-snapvault-backup-task.html 
 sidebar: sidebar 
 keywords: restore, flexgroup, volume, snapvault, backup 
-summary: 您可以从 SnapVault 二级卷中的 Snapshot 副本对 FlexGroup 卷执行完整卷还原操作。您可以将 FlexGroup 卷还原到原始源卷或新的 FlexGroup 卷。 
+summary: 您可以从FlexGroup二级卷中的快照对SnapVault卷执行完整卷还原操作。您可以将 FlexGroup 卷还原到原始源卷或新的 FlexGroup 卷。 
 ---
 = 从 SnapVault 备份还原 FlexGroup 卷
 :hardbreaks:
@@ -12,22 +12,20 @@ summary: 您可以从 SnapVault 二级卷中的 Snapshot 副本对 FlexGroup 卷
 
 
 [role="lead"]
-您可以从 SnapVault 二级卷中的 Snapshot 副本对 FlexGroup 卷执行完整卷还原操作。您可以将 FlexGroup 卷还原到原始源卷或新的 FlexGroup 卷。
+您可以从FlexGroup二级卷中的快照对SnapVault卷执行完整卷还原操作。您可以将 FlexGroup 卷还原到原始源卷或新的 FlexGroup 卷。
 
 .开始之前
 从 FlexGroup 卷的 SnapVault 备份还原时，您必须了解某些注意事项。
 
-* 只支持从 SnapVault 备份执行部分 Snapshot 副本的基线还原。
-目标卷中的成分卷数量必须与创建 Snapshot 副本时源卷中的成分卷数量匹配。
+* SnapVault备份中的部分快照仅支持基线还原。创建快照时、目标卷中的成分卷数必须与源卷中的成分卷数匹配。
 * 如果还原操作失败，则在还原操作完成之前不允许执行其他操作。
 您可以重试还原操作、也可以使用运行还原操作 `cleanup` 参数。
 * FlexGroup 卷只能是一个备份关系或还原关系的源卷。
 FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 SnapVault 关系和一个还原关系的源。
 * SnapVault 备份和还原操作不能并行运行。
 在执行基线还原操作或增量还原操作时，您应暂停备份操作。
-* 您必须中止从目标 FlexGroup 卷还原部分 Snapshot 副本的操作。
-您不能从源卷中止部分 Snapshot 副本的还原操作。
-* 如果中止还原操作，则必须使用与上次还原操作相同的 Snapshot 副本重新启动还原操作。
+* 您必须从目标FlexGroup卷中止部分快照的还原操作。您不能从源卷中止部分快照的还原操作。
+* 如果中止还原操作、则必须使用上次还原操作所使用的相同快照重新启动还原操作。
 
 
 .关于此任务
@@ -37,7 +35,7 @@ FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 Snap
 
 .步骤
 . 还原FlexGroup卷： `snapmirror restore -source-path _src_svm:src_flexgroup_ -destination-path _dest_svm:dest_flexgroup_ -snapshot _snapshot_name_`
-`snapshot_name` 是要从源卷还原到目标卷的Snapshot副本。如果未指定 Snapshot 副本，则会从最新的 Snapshot 副本还原目标卷。
+`snapshot_name`是要从源卷还原到目标卷的快照。如果未指定快照、则目标卷将从最新快照还原。
 +
 [listing]
 ----

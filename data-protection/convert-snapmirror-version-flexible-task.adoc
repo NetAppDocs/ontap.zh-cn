@@ -62,7 +62,7 @@ Healthy: true
 您可能会发现保留一份命令输出副本以跟踪现有关系设置会很有帮助 `snapmirror show`。有关的详细信息 `snapmirror show`，请参见link:https://docs.netapp.com/us-en/ontap-cli//snapmirror-show.html["ONTAP 命令参考"^]。
 
 ====
-. 在源卷和目标卷中、确保两个卷都具有通用Snapshot副本：
+. 从源卷和目标卷中、确保两个卷都具有一个通用快照：
 +
 [source, cli]
 ----
@@ -157,14 +157,14 @@ snapmirror break -destination-path <SVM:volume>
 ----
 cluster_dst::> snapmirror break -destination-path svm_backup:volA_dst
 ----
-. 如果在目标卷上启用了Snapshot副本自动删除、请将其禁用：
+. 如果在目标卷上启用了快照自动删除、请将其禁用：
 +
 [source, cli]
 ----
 volume snapshot autodelete modify -vserver _SVM_ -volume _volume_ -enabled false
 ----
 +
-以下示例将在目标卷上禁用Snapshot副本自动删除 `volA_dst`：
+以下示例将在目标卷上禁用Snapshot自动删除 `volA_dst`：
 
 +
 [listing]
@@ -255,7 +255,7 @@ snapmirror resync -source-path <SVM:volume> -destination-path <SVM:volume>
 ----
 cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
-. 如果您禁用了Snapshot副本自动删除、请重新启用它：
+. 如果您禁用了快照自动删除、请重新启用它：
 +
 [source, cli]
 ----
@@ -265,5 +265,5 @@ volume snapshot autodelete modify -vserver <SVM> -volume <volume> -enabled true
 
 .完成后
 . 使用 `snapmirror show` 命令以验证是否已创建SnapMirror关系。
-. 一旦SnapMirror XDP目标卷开始按照SnapMirror策略的定义更新Snapshot副本、请使用的输出 `snapmirror list-destinations` 命令以显示新的SnapMirror XDP关系。
+. SnapMirror XDP目标卷开始按照SnapMirror策略的定义更新快照后、使用源集群中的命令输出 `snapmirror list-destinations`显示新的SnapMirror XDP关系。
 

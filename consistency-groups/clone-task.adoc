@@ -14,7 +14,7 @@ summary: 从ONTAP 9.12.1开始、您可以克隆一致性组以创建一致性�
 从ONTAP 9.12.1开始、您可以克隆一致性组以创建一致性组及其内容的副本。克隆一致性组将创建一致性组配置的副本、其元数据(如应用程序类型)以及所有卷及其内容(如文件、目录、LUN或NVMe命名空间)。
 
 .关于此任务
-克隆一致性组时、您可以使用其当前配置对其进行克隆、但可以使用卷内容进行克隆、也可以基于现有一致性组Snapshot进行克隆。
+克隆一致性组时、您可以使用其当前配置克隆该一致性组、但可以按原样克隆卷内容、也可以基于现有一致性组快照克隆该一致性组。
 
 只有整个一致性组才支持克隆一致性组。您不能克隆分层关系中的单个子一致性组：只能克隆完整的一致性组配置。
 
@@ -28,7 +28,7 @@ summary: 从ONTAP 9.12.1开始、您可以克隆一致性组以创建一致性�
 
 .开始之前
 * 克隆一致性组时、如果未指定共享名称、ONTAP 将不会为克隆的卷创建SMB共享。*如果未指定接合路径、则不会挂载克隆的一致性组。
-* 如果您尝试基于未反映一致性组当前成分卷的Snapshot克隆一致性组、则此操作将失败。
+* 如果您尝试基于未反映一致性组当前成分卷的快照克隆一致性组、则此操作将失败。
 * 克隆一致性组后、您需要执行相应的映射操作。
 +
 请参见 xref:../task_san_map_igroups_to_multiple_luns.html[将 igroup 映射到多个 LUN] 或 xref:../san-admin/map-nvme-namespace-subsystem-task.html[将 NVMe 命名空间映射到子系统] 有关详细信息 ...
@@ -52,7 +52,7 @@ summary: 从ONTAP 9.12.1开始、您可以克隆一致性组以创建一致性�
 
 . 要以当前状态克隆一致性组、请选择*添加新的Snapshot副本*。
 +
-要基于快照克隆一致性组、请选择*使用现有Snapshot副本*。选择此选项将打开一个新的子菜单。选择要用作克隆操作基础的Snapshot。
+要基于快照克隆一致性组，请选择*使用现有快照*。选择此选项将打开一个新的子菜单。选择要用作克隆操作基础的快照。
 
 . 选择 * 克隆 * 。
 . 返回到*一致性组*菜单以确认已克隆一致性组。
@@ -69,7 +69,7 @@ summary: 从ONTAP 9.12.1开始、您可以克隆一致性组以创建一致性�
 
 
 .克隆一致性组
-. 。 `consistency-group clone create` 命令将克隆一致性组的当前时间点状态。要基于Snapshot执行克隆操作、请包括 `-source-snapshot` 参数。
+. 命令将 `consistency-group clone create`克隆处于当前时间点状态的一致性组。要基于快照执行克隆操作、请包含 `-source-snapshot`参数。
 +
 `consistency-group clone create -vserver _svm_name_ -consistency-group _clone_name_ -source-consistency-group _consistency_group_name_ [-source-snapshot _snapshot_name_]`
 

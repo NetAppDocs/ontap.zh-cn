@@ -13,8 +13,6 @@ summary: 支持中继的Linux和VMware客户端可以从启用了中继的ONTAP 
 [role="lead"]
 支持中继的Linux和VMware客户端可以从启用了中继的ONTAP NFSv4.1服务器挂载卷或数据共享。
 
-在客户端上输入mount命令时、必须为中继组中的每个LIF输入IP地址。
-
 了解相关信息 link:index.html#supported-clients["支持的客户端"]。
 
 [role="tabbed-block"]
@@ -23,14 +21,20 @@ summary: 支持中继的Linux和VMware客户端可以从启用了中继的ONTAP 
 --
 如果使用9.16.1 9.161或更高版本以及Red Hat Enterprise Linux 8.7或更高版本(适用于RHEL 8)或9.2或更高版本(适用于RHEL 9)作为Linux客户端、则中继组只需要一个挂载点。使用以下选项、使用此命令挂载导出的卷 `trunkdiscovery`：
 
-`mount <lif1_ip>:<volume> </mnt/test1> -o trunkdiscovery,vers=4.1`
+[source, cli]
+----
+mount <lif_ip>:<volume_name> </mount_path> -o trunkdiscovery,vers=4.1
+----
+否则、中继组中的每个连接都需要一个单独的挂载点。使用选项、使用类似于以下内容的命令挂载导出的卷 `max_connect`：
 
-否则、中继组中的每个连接都需要一个单独的挂载点。使用类似于以下内容的命令挂载导出的卷：
-
-`mount <lif1_ip>:<volume> </mnt/test1> -o vers=4.1,max_connect=16`
-
-`mount <lif2_ip>:<volume> </mnt/test2> -o vers=4.1,max_connect=16`
-
+[source, cli]
+----
+mount <lif1_ip>:<volume_name> </mount_path1> -o vers=4.1,max_connect=16
+----
+[source, cli]
+----
+mount <lif2_ip>:<volume_name> </mount_path2> -o vers=4.1,max_connect=16
+----
 版本 (`vers`)值应为 `4.1` 或更高版本。
 
 。 `max_connect` 值对应于中继组中的连接数。

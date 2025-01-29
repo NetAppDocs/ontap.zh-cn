@@ -19,16 +19,16 @@ summary: SnapMirror 统一复制允许您在同一目标卷上配置灾难恢复
 
 与 SnapMirror 一样，统一数据保护会在您首次调用时执行基线传输。此关系的 SnapMirror 策略用于定义基线内容以及任何更新。
 
-默认统一数据保护策略下的基线传输 `MirrorAndVault` 为源卷创建Snapshot副本、然后将该副本及其引用的数据块传输到目标卷。与存储归档一样，统一数据保护不会在基线中包含较早的 Snapshot 副本。
+默认统一数据保护策略下的基线传输 `MirrorAndVault`会创建源卷的快照、然后将该副本及其引用的数据块传输到目标卷。与存储归档一样、统一数据保护不会在基线中包含较早的快照。
 
 
 
 == 如何更新统一数据保护关系
 
-在下的每次更新时 `MirrorAndVault` 策略中、SnapMirror将创建源卷的Snapshot副本、并传输该Snapshot副本以及自上次更新以来创建的任何Snapshot副本、前提是它们的标签与Snapshot策略规则中定义的标签匹配。在的以下输出中 `snapmirror policy show` 命令 `MirrorAndVault` 策略中、请注意以下事项：
+在策略下的每次更新时 `MirrorAndVault`、SnapMirror都会为源卷创建一个快照、并传输该快照以及自上次更新以来创建的任何快照、前提是它们的标签与快照策略规则中定义的标签匹配。在策略命令的 `MirrorAndVault`以下输出中 `snapmirror policy show`、请注意以下几点：
 
-* `Create Snapshot` 是"`true`"、表示 `MirrorAndVault` 在SnapMirror更新关系时创建Snapshot副本。
-* `MirrorAndVault` 具有规则"`sm_created`"、"`daily`"和"`Weekly`"、表示在SnapMirror更新关系时、将传输SnapMirror创建的Snapshot副本以及源上具有匹配标签的Snapshot副本。
+* `Create Snapshot`为"`true`"、表示 `MirrorAndVault`在SnapMirror更新关系时创建快照。
+* `MirrorAndVault`具有规则"`sm_created`"、"`daily`"和"`Weekly`"、表示当SnapMirror更新关系时、SnapMirror创建的快照以及源上具有匹配标签的快照都会传输。
 
 
 [listing]
@@ -59,7 +59,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAndVault -instance
 
 == Unified7year 策略
 
-预配置的 `Unified7year` 策略的工作方式与完全相同 `MirrorAndVault`但第四条规则会传输每月Snapshot副本并将其保留七年。
+预配置 `Unified7year`策略的工作方式与完全相同 `MirrorAndVault`，只是第四条规则传输每月快照并将其保留七年。
 
 [listing]
 ----
@@ -75,9 +75,9 @@ cluster_dst::> snapmirror policy show -policy MirrorAndVault -instance
 
 == 防止可能的数据损坏
 
-统一复制会将基线传输的内容限制为初始化时由 SnapMirror 创建的 Snapshot 副本。每次更新时， SnapMirror 都会为源创建另一个 Snapshot 副本，并传输该 Snapshot 副本以及标签与 Snapshot 策略规则中定义的标签匹配的任何新 Snapshot 副本。
+统一复制会将基线传输的内容限制为初始化时由SnapMirror创建的快照。每次更新时、SnapMirror都会为源创建另一个快照、并传输该快照以及标签与快照策略规则中定义的标签匹配的任何新快照。
 
-您可以通过在目标上为上次传输的 Snapshot 副本创建一份副本来防止更新后的 Snapshot 副本损坏。无论源上的保留规则如何，此 "`local copy` " 都会保留，这样，即使最初由 SnapMirror 传输的 Snapshot 在源上不再可用，目标上也会提供该 Snapshot 的副本。
+您可以通过在目标上创建上次传输的快照的副本来防止更新后的快照可能损坏。无论源上的保留规则如何、都会保留此"`local copy`"、这样、即使最初通过SnapMirror传输的快照在源上不再可用、也可以在目标上获得其副本。
 
 
 
@@ -85,4 +85,4 @@ cluster_dst::> snapmirror policy show -policy MirrorAndVault -instance
 
 您需要权衡维护完整镜像的优势与统一复制在减少二级存储数量，限制基线传输数量以及减少网络流量方面的优势。
 
-确定统一复制是否合适的关键因素是活动文件系统的更改率。例如，传统镜像可能更适合存放数据库事务日志的每小时 Snapshot 副本的卷。
+确定统一复制是否合适的关键因素是活动文件系统的更改率。例如、传统镜像可能更适合存放数据库事务日志的每小时快照的卷。

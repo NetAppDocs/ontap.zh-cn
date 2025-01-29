@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: convert, flexvol, volume, flexgroup, conversion, flex vol, flex group, transitioned, 
 summary: 从 ONTAP 9.7 开始，您可以将 FlexVol 卷原位转换为 FlexGroup 卷，而无需数据副本或额外的磁盘空间。 
 ---
-= 将 FlexVol 卷转换为 FlexGroup 卷
+= 在ONTAP中将FlexVol volume转换为FlexGroup卷
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -14,7 +14,7 @@ summary: 从 ONTAP 9.7 开始，您可以将 FlexVol 卷原位转换为 FlexGrou
 从 ONTAP 9.7 开始，您可以将 FlexVol 卷原位转换为 FlexGroup 卷，而无需数据副本或额外的磁盘空间。
 
 .开始之前
-* 从ONTAP 9.8开始、过渡后的卷可以转换为FlexGroup 卷。
+* 从ONTAP 9.8开始、可以将已转换的卷转换为FlexGroup卷。
 * 要转换的 FlexVol 卷必须处于联机状态。
 * FlexVol 卷上的操作和配置必须与转换过程兼容。
 +
@@ -25,11 +25,11 @@ summary: 从 ONTAP 9.7 开始，您可以将 FlexVol 卷原位转换为 FlexGrou
 +
 从ONTAP 9.8开始、可以转换已转换的卷。
 
-** 在卷上启用了FlexGroup卷尚不支持的某些功能、例如SAN LUN、Windows NFS、SMB1、 Snapshot命名/自动删除、vmalign set、SnapLock、空间SLO或逻辑空间强制实施/报告。有关详细信息，请参阅 link:supported-unsupported-config-concept.html["支持和不支持 FlexGroup 卷的配置"]。
+** 在卷上启用了FlexGroup卷尚不支持的某些功能、例如SAN LUN、Windows NFS、SMB1、快照命名/自动删除、vmalign set、SnapLock、空间SLO或逻辑空间强制实施/报告。有关详细信息，请参阅 link:supported-unsupported-config-concept.html["支持和不支持 FlexGroup 卷的配置"]。
 ** 要转换的FlexVol卷所在的SVM当前正在使用SVM DR。
 ** 存在NetApp FlexClone卷、FlexVol卷是父卷。要转换的卷不能是父卷或克隆卷。
 ** 此卷是NetApp FlexCache初始卷。
-** 对于ONTAP 9.7及更早版本、NetApp Snapshot副本不得超过255个。对于ONTAP 9.8及更高版本、支持1023个Snapshot副本。
+** 对于ONTAP 9.7及更早版本、NetApp快照不能超过255个。对于ONTAP 9.8及更高版本、支持1023个快照。
 ** 已启用存储效率。必须禁用这些功能、并可在转换后重新启用。
 ** 此卷是SnapMirror关系的源、尚未转换此目标。
 ** 此卷属于活动(非静音) SnapMirror关系。

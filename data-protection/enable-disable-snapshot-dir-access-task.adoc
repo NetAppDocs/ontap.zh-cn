@@ -2,32 +2,32 @@
 permalink: data-protection/enable-disable-snapshot-dir-access-task.html 
 sidebar: sidebar 
 keywords: enable, disable, access, snapshot copy 
-summary: 您可以启用和禁用对Snapshot副本目录的访问、使其对客户端系统可见、并为其提供对卷上Snapshot副本目录的访问权限。 
+summary: 您可以启用和禁用对快照目录的访问、使其对客户端系统可见、并为其提供对卷上快照目录的访问权限。 
 ---
-= 启用和禁用 NFS 和 SMB 客户端对 Snapshot 副本目录的访问
+= 启用和禁用NFS和SMB客户端对Snapshot目录的访问
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用命令的ONTAP命令行界面选项启用和禁用对Snapshot副本目录的访问 `-snapdir-access` `volume modify` 、从ONTAP 9.10.1开始、您可以使用System Manager启用或禁用客户端系统以访问卷上的Snapshot副本目录。启用访问后、客户端可以看到Snapshot副本目录、并可通过Windows客户端将驱动器映射到Snapshot副本目录以查看和访问其内容。然后、NFS和SMB客户端可以从快照还原文件或LUN。
+您可以使用命令的ONTAP命令行界面选项 `volume modify`启用和禁用对快照目录的访问 `-snapdir-access`、而从ONTAP 9.10.1开始、您可以使用System Manager启用或禁用客户端系统以访问卷上的快照目录。启用访问后、客户端可以看到快照目录、并允许Windows客户端将驱动器映射到快照目录以查看和访问其内容。然后、NFS和SMB客户端可以从快照还原文件或LUN。
 
-您可以通过编辑卷设置或编辑卷的共享设置来启用或禁用对卷 Snapshot 副本目录的访问。
+您可以通过编辑卷设置或编辑卷的共享设置来启用或禁用对卷快照目录的访问。
 
 
 
-== 通过编辑卷来启用或禁用客户端对 Snapshot 副本目录的访问
+== 通过编辑卷来启用或禁用客户端对Snapshot目录的访问
 
 .步骤
-您可以使用ONTAP系统管理器或ONTAP命令行界面启用和禁用客户端Snapshot副本目录访问。默认情况下，客户端可以访问卷上的 Snapshot 副本目录。
+您可以使用ONTAP系统管理器或ONTAP命令行界面启用和禁用客户端快照目录访问。默认情况下、客户端可以访问卷上的Snapshot目录。
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
 . 单击 * 存储 > 卷 * 。
-. 选择包含要显示或隐藏的 Snapshot 副本目录的卷。
+. 选择包含要显示或隐藏的快照目录的卷。
 . 单击 image:icon_kabob.gif["菜单选项图标"] 并选择*Edit*。
 . 在 * Snapshot 副本（本地）设置 * 部分中，选择或取消选择 * 向客户端显示 Snapshot 副本目录 * 。
 . 单击 * 保存 * 。
@@ -36,7 +36,7 @@ summary: 您可以启用和禁用对Snapshot副本目录的访问、使其对客
 --
 .命令行界面
 --
-. 检查 Snapshot 目录访问状态：
+. 检查Snapshot目录访问状态：
 +
 [source, cli]
 ----
@@ -54,14 +54,14 @@ vserver volume snapdir-access
 ------- ------ --------------
 vs0     vol1   false
 ----
-. 启用或禁用 Snapshot 副本目录访问：
+. 启用或禁用Snapshot目录访问：
 +
 [source, cli]
 ----
 volume modify -vserver <SVM_name> -volume <vol_name> -snapdir-access <true|false>
 ----
 +
-以下示例将在 vol1 上启用 Snapshot 副本目录访问：
+以下示例将在vol1上启用快照目录访问：
 
 +
 [listing]
@@ -76,14 +76,14 @@ Volume modify successful on volume vol1 of Vserver vs0.
 ====
 
 
-== 通过编辑共享来启用或禁用客户端对 Snapshot 副本目录的访问
+== 通过编辑共享启用或禁用客户端对快照目录的访问
 
-默认情况下，客户端可以访问卷上的 Snapshot 副本目录。
+默认情况下、客户端可以访问卷上的Snapshot目录。
 
 .步骤
 . 单击 * 存储 > 共享 * 。
-. 选择包含要显示或隐藏的 Snapshot 副本目录的卷。
+. 选择包含要显示或隐藏的快照目录的卷。
 . 单击 image:icon_kabob.gif["菜单选项图标"] 并选择*Edit*。
-. 在 * 共享属性 * 部分中，选择或取消选择 * 允许客户端访问 Snapshot 副本目录 * 。
+. 在*共享属性*部分中，选择或取消选择*允许客户端访问快照目录*。
 . 单击 * 保存 * 。
 

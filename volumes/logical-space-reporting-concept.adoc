@@ -32,37 +32,37 @@ Definitions
  a| 
 `-logical-used`
  a| 
-仅显示有关具有指定逻辑已用大小的卷的信息。此值包括存储效率功能节省的所有空间以及物理使用的空间。这不包括 Snapshot 预留，但考虑 Snapshot 溢出。
+仅显示有关具有指定逻辑已用大小的卷的信息。此值包括存储效率功能节省的所有空间以及物理使用的空间。这不包括快照预留、但会考虑快照溢出。
 
 
 
  a| 
 `-logical-used-by-afs`
  a| 
-仅显示有关活动文件系统使用的指定逻辑大小的卷的信息。此值与不同``-logical-used`` 值、即超出Snapshot预留的Snapshot溢出量。
+仅显示有关活动文件系统使用的指定逻辑大小的卷的信息。此值与此值不同、它与超出快照预留的快照溢出量不同``-logical-used``。
 
 
 
  a| 
 `-logical-available`
  a| 
-如果仅启用逻辑空间报告，则仅显示物理可用空间。如果同时启用了空间报告和强制实施，则会显示当前可用空间量，并将存储效率功能节省的空间视为正在使用。这不包括 Snapshot 预留。
+如果仅启用逻辑空间报告，则仅显示物理可用空间。如果同时启用了空间报告和强制实施，则会显示当前可用空间量，并将存储效率功能节省的空间视为正在使用。这不包括Snapshot预留。
 
 
 
  a| 
 `-logical-used-percent`
  a| 
-显示当前的百分比 `-logical-used` 此值的已配置大小不包括卷的Snapshot预留。
+显示当前值与已配置大小(不包括卷的快照预留)的百分比 `-logical-used`。
 
-此值可以大于100%、因为 `-logical-used-by-afs` 值包括卷中的效率节省。。 `-logical-used-by-afs` 卷的值不包括Snapshot溢出作为已用空间。。 `-physical-used` 卷的值包括Snapshot溢出作为已用空间。
+此值可以大于100%、因为此 `-logical-used-by-afs`值包括卷中的效率节省。 `-logical-used-by-afs`卷的值不包括快照溢出作为已用空间。 `-physical-used`卷的值包括Snapshot溢出作为已用空间。
 
 
 
  a| 
 `-used`
  a| 
-显示用户数据和文件系统元数据占用的空间量。  它与不同 `physical-used` 空间等于为将来写入预留的空间与通过聚合存储效率节省的空间之和。  它包括Snapshot溢出(Snapshot副本超出Snapshot预留的空间量)。它不包括Snapshot预留。
+显示用户数据和文件系统元数据占用的空间量。它与空间的区别 `physical-used`在于为将来写入预留的空间与通过聚合存储效率节省的空间之和。它包括快照溢出(快照超出快照预留的空间量)。它不包括Snapshot预留。
 
 |===
 在命令行界面中启用逻辑空间报告还可以在 System Manager 中显示已用逻辑空间（ % ）和逻辑空间值

@@ -40,7 +40,7 @@ summary: '从 ONTAP 9.4 开始，您可以使用安全清除功能无中断擦�
 ** 可以使用更改这些默认值 `secure purge re-encryption-method [volume-move|in-place-rekey]` 命令：
 
 
-* 默认情况下， FlexVol 卷中的所有 Snapshot 副本都会在安全清除操作期间自动删除。默认情况下，在安全清除操作期间，不会自动删除使用 SnapMirror 数据保护的 FlexGroup 卷和卷中的快照。可以使用更改这些默认值 `secure purge delete-all-snapshots [true|false]` 命令：
+* 默认情况下、在安全清除操作期间、系统会自动删除FlexVol卷中的所有快照。默认情况下，在安全清除操作期间，不会自动删除使用 SnapMirror 数据保护的 FlexGroup 卷和卷中的快照。可以使用命令更改这些默认值 `secure purge delete-all-snapshots [true|false]`。
 
 
 --
@@ -55,7 +55,7 @@ summary: '从 ONTAP 9.4 开始，您可以使用安全清除功能无中断擦�
 
 * 如果要清除的卷是 SnapMirror 关系的源，则必须先断开 SnapMirror 关系，然后才能清除该卷。
 +
-如果卷中的 Snapshot 副本繁忙，则必须先释放 Snapshot 副本，然后才能清除卷。例如，您可能需要将 FlexClone 卷从其父卷拆分。
+如果卷中的快照繁忙、则必须先释放快照、然后才能清除卷。例如，您可能需要将 FlexClone 卷从其父卷拆分。
 
 * 成功调用安全清除功能将触发卷移动，以便使用新密钥重新加密其余未清除的数据。
 +

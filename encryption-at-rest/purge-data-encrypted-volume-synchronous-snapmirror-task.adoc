@@ -42,18 +42,18 @@ NOTE: 要在 SAN 主机上执行安全清除，您必须删除包含要清除的
 +
 对SnapMirror同步关系中的另一个卷重复此步骤。
 
-. 如果要安全清除的文件位于 Snapshot 副本中，请删除 Snapshot 副本：
+. 如果要安全清除的文件位于快照中，请删除这些快照：
 +
 `snapshot delete -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot>`
 
-. 如果安全清除文件位于基本 Snapshot 副本或通用 Snapshot 副本中，请更新 SnapMirror 以将通用 Snapshot 副本前移：
+. 如果安全清除文件位于基本快照或通用快照中，请更新 SnapMirror 以将通用快照前移：
 +
 `snapmirror update -source-snapshot <snapshot_name> -destination-path <destination_path>`
 
 +
-有两个通用 Snapshot 副本，因此必须发出此命令两次。
+有两个常见快照，因此必须发出此命令两次。
 
-. 如果安全清除文件位于应用程序一致的Snapshot副本中、请删除SnapMirror同步关系中两个卷上的Snapshot副本：
+. 如果安全清除文件位于应用程序一致的快照中、请删除SnapMirror同步关系中两个卷上的快照：
 +
 `snapshot delete -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot>`
 

@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: 'load balance, workload, latency, overload, reduce load, ceiling, limits, iops, "mb/s", qos, min, max, policy group, throughput, headroom, floor, adaptive qos' 
 summary: 当节点上的工作量超过可用资源时，工作负载的性能开始受到延迟的影响。您可以通过增加可用资源（升级磁盘或 CPU ）或减少负载（根据需要将卷或 LUN 移动到不同节点）来管理过载节点。 
 ---
-= 负载平衡
+= ONTAP中的负载平衡
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -68,8 +68,7 @@ _Adaptive QoS_ 会自动将策略组值扩展到工作负载大小，并在工�
 
 NOTE: 在 ONTAP 9.5 及更高版本中，已用空间可用于吞吐量下限。在 ONTAP 9.4 及更早版本中，吞吐量下限不支持此功能。
 
-+
-从ONTAP 9.13.1开始、您可以使用自适应QoS在SVM级别设置吞吐量下限和上限。
++从ONTAP 9.13.1开始、您可以使用自适应QoS在SVM级别设置吞吐量下限和上限。
 
 * 已分配空间策略会根据存储对象的标称大小保持 IOPS/TBGB 比率。如果此比率为 100 IOPS/GB ，则只要 150 GB 卷保持此大小，其吞吐量上限将为 15 ， 000 IOPS 。如果将卷大小调整为 300 GB ，则自适应 QoS 会将吞吐量上限调整为 30 ， 000 IOPS 。
 * 已用空间策略（默认值）会根据存储效率之前存储的实际数据量保持 IOPS/TBGB 比率。如果此比率为 100 IOPS/GB ，则存储了 100 GB 数据的 150 GB 卷的吞吐量上限为 10 ， 000 IOPS 。随着已用空间量的变化，自适应 QoS 会根据比率调整吞吐量上限。

@@ -2,32 +2,32 @@
 permalink: tape-backup/snapshot-copies-during-smtape-backup-concept.html 
 sidebar: sidebar 
 keywords: snapshot, copy, smtape, backup, baseline, incremental, snapmirror 
-summary: 您应了解在 SMTape 基线备份和增量备份期间如何使用 Snapshot 副本。使用 SMTape 执行备份时，还需要注意一些事项。 
+summary: 您应了解在SMTape基线备份和增量备份期间如何使用快照。使用 SMTape 执行备份时，还需要注意一些事项。 
 ---
-= 在 SMTape 备份期间使用 Snapshot 副本
+= 在SMTape备份期间使用快照
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您应了解在 SMTape 基线备份和增量备份期间如何使用 Snapshot 副本。使用 SMTape 执行备份时，还需要注意一些事项。
+您应了解在SMTape基线备份和增量备份期间如何使用快照。使用 SMTape 执行备份时，还需要注意一些事项。
 
 
 
 == 基线备份
 
-执行基线备份时，您可以指定要备份到磁带的 Snapshot 副本的名称。如果未指定 Snapshot 副本，则根据卷的访问类型（读 / 写或只读），系统会自动创建 Snapshot 副本或使用现有 Snapshot 副本。为备份指定 Snapshot 副本时，早于指定 Snapshot 副本的所有 Snapshot 副本也会备份到磁带。
+在执行基线备份时、您可以指定要备份到磁带的快照的名称。如果未指定快照、则根据卷的访问类型(读/写或只读)、系统会自动创建快照或使用现有快照。如果为备份指定快照、则早于指定快照的所有快照也会备份到磁带。
 
-如果未为备份指定 Snapshot 副本，则会发生以下情况：
+如果未指定备份快照、则会发生以下情况：
 
-* 对于读 / 写卷，系统会自动创建 Snapshot 副本。
+* 对于读/写卷、系统会自动创建快照。
 +
-新创建的 Snapshot 副本和所有旧的 Snapshot 副本将备份到磁带。
+新创建的快照和所有较早的快照都会备份到磁带。
 
-* 对于只读卷，所有 Snapshot 副本（包括最新的 Snapshot 副本）都会备份到磁带。
+* 对于只读卷、所有快照(包括最新快照)都会备份到磁带。
 +
-在备份启动后创建的任何新 Snapshot 副本都不会进行备份。
+在备份启动后创建的任何新快照都不会进行备份。
 
 
 
@@ -35,21 +35,21 @@ summary: 您应了解在 SMTape 基线备份和增量备份期间如何使用 Sn
 
 == 增量备份
 
-对于 SMTape 增量或差异备份操作，符合 NDMP 的备份应用程序会创建和管理 Snapshot 副本。
+对于SMTape增量或差异备份操作、符合NDMP的备份应用程序会创建和管理快照。
 
-在执行增量备份操作时，您必须始终指定 Snapshot 副本。要成功执行增量备份操作，在上次备份操作（基线或增量）期间备份的 Snapshot 副本必须位于执行备份的卷上。要确保使用此备份的 Snapshot 副本，在配置备份策略时必须考虑为此卷分配的 Snapshot 策略。
+在执行增量备份操作时、您必须始终指定快照。要成功执行增量备份操作、上次备份操作(基线或增量)期间备份的快照必须位于从中执行备份的卷上。要确保使用此备份快照、您必须在配置备份策略时考虑为此卷分配的快照策略。
 
 
 
 == 有关 SnapMirror 目标上的 SMTape 备份的注意事项
 
-* 数据保护镜像关系会在目标卷上创建临时 Snapshot 副本以进行复制。
+* 数据保护镜像关系会在目标卷上创建临时快照以进行复制。
 +
-不应将这些 Snapshot 副本用于 SMTape 备份。
+您不应使用这些快照进行SMTape备份。
 
-* 如果在对同一卷执行 SMTape 备份操作期间数据保护镜像关系中的目标卷上发生 SnapMirror 更新，则不能删除源卷上由 SMTape 备份的 Snapshot 副本。
+* 如果在对数据保护镜像关系中的目标卷执行SMTape备份操作期间、同一卷上发生SnapMirror更新、则不能在源卷上删除由SMTape备份的快照。
 +
-在备份操作期间， SMTape 会锁定目标卷上的 Snapshot 副本，如果源卷上的相应 Snapshot 副本被删除，则后续的 SnapMirror 更新操作将失败。
+在备份操作期间、SMTape会锁定目标卷上的快照、如果删除源卷上的相应快照、则后续SnapMirror更新操作将失败。
 
-* 在增量备份期间，不应使用这些 Snapshot 副本。
+* 在增量备份期间、不应使用这些快照。
 

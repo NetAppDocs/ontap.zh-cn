@@ -2,42 +2,42 @@
 permalink: data-protection/restore-contents-volume-snapshot-task.html 
 sidebar: sidebar 
 keywords: restore, contents, volume, snapshot copy, System Manager, cli 
-summary: 您可以使用 volume snapshot restore 命令从 Snapshot 副本还原卷的内容。 
+summary: 您可以使用volume Snapshot restore命令从快照还原卷的内容。 
 ---
-= 从 Snapshot 副本还原卷的内容
+= 从快照还原卷的内容
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以通过从 Snapshot 副本还原来将卷恢复到较早的时间点。您可以使用System Manager或 `volume snapshot restore`命令从Snapshot副本还原卷的内容。
+您可以通过从快照还原将卷恢复到较早的时间点。您可以使用System Manager或 `volume snapshot restore`命令从快照还原卷的内容。
 
 .关于此任务
-如果卷具有 SnapMirror 关系，请在从 Snapshot 副本还原后立即手动复制卷的所有镜像副本。否则，可能会导致镜像副本不可用，必须删除并重新创建这些副本。
+如果此卷具有SnapMirror关系、请在从快照还原后立即手动复制此卷的所有镜像副本。否则，可能会导致镜像副本不可用，必须删除并重新创建这些副本。
 
 .步骤
-您可以使用System Manager或ONTAP命令行界面从早期的Snapshot副本进行还原。
+您可以使用System Manager或ONTAP命令行界面从早期的快照进行还原。
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
 . 单击 * 存储 * 并选择一个卷。
-. 在*Snapshot副本*下，单击 image:icon_kabob.gif["菜单选项图标"] 要还原的Snapshot副本旁边的，然后选择*Restore*。
+. 在*Snapshot copies*下，单击image:icon_kabob.gif["菜单选项图标"]要还原的快照旁边的，然后选择*Restore*。
 
 
 --
 .命令行界面
 --
-. 列出卷中的 Snapshot 副本：
+. 列出卷中的快照：
 +
 [source, cli]
 ----
 volume snapshot show -vserver <SVM> -volume <volume>
 ----
 +
-以下示例显示了中的Snapshot副本 `vol1`：
+以下示例显示了中的快照 `vol1`：
 
 +
 [listing]
@@ -57,7 +57,7 @@ vs1	    vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
 
 7 entries were displayed.
 ----
-. 从 Snapshot 副本还原卷的内容：
+. 从快照还原卷的内容：
 +
 [source, cli]
 ----

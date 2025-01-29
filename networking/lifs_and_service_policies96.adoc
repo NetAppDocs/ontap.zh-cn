@@ -4,7 +4,7 @@ permalink: networking/lifs_and_service_policies96.html
 keywords: service policies for system svms, lif service policies, lif, logical, interface, service, policy, policies, lifs and service policies in ontap 9.6 and later, assign service policies to lifs to specify the supported traffic, service policies for system svms, service policies for data svms, data-core service 
 summary: 为 LIF 分配服务策略以指定支持的流量 
 ---
-= ONTAP 9.6及更高版本
+= ONTAP 9.6 及更高版本中的 LIF 和服务策略
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -29,7 +29,7 @@ summary: 为 LIF 分配服务策略以指定支持的流量
 
 管理 SVM 和任何系统 SVM 都包含可用于该 SVM 中 LIF 的服务策略，包括管理和集群间 LIF 。创建 IP 空间时，系统会自动创建这些策略。
 
-下表列出了截至ONTAP 9.12.1的系统SVM中的内置的LUN策略。对于其他版本，使用以下命令显示服务策略及其详细信息：
+下表列出了从ONTAP 9.12.1开始的系统SVM中的内置LUN策略。对于其他版本，使用以下命令显示服务策略及其详细信息：
 
 `network interface service-policy show`
 
@@ -71,11 +71,10 @@ management-core、management-https、management-http、management-ssh、manageme
  a| 
 node-mgmt 或 cluster-mgmt
  a| 
-使用此系统范围的管理策略创建系统SVM所拥有的节点和集群范围的管理LIF。这些LIF可用于到DNS、AD、LDAP或NIS服务器的出站连接、以及一些附加连接、以支持代表整个系统运行的应用程序。
-从ONTAP 9.12.1开始、您可以使用 `management-log-forwarding` 用于控制用于将审核日志转发到远程系统日志服务器的LIF的服务。
+使用此系统范围的管理策略创建系统SVM所拥有的节点和集群范围的管理LIF。这些LIF可用于到DNS、AD、LDAP或NIS服务器的出站连接、以及一些附加连接、以支持代表整个系统运行的应用程序。从ONTAP 9.12.1开始、您可以使用服务控制使用 `management-log-forwarding`哪些LUN将审核日志转发到远程系统日志服务器。
 
 |===
-下表列出了自ONTAP 9.11.1之日LIF可在系统SVM上使用的服务：
+下表列出了从ONTAP 9.11.1开始、可在系统SVM上使用的服务：
 
 [cols="25,25,50"]
 |===
@@ -236,7 +235,7 @@ management-log-forwarding
 
 所有数据 SVM 都包含可由该 SVM 中的 LIF 使用的服务策略。
 
-下表列出了自ONTAP 9.11.1之日数据SVM中LIF的内置策略。对于其他版本，使用以下命令显示服务策略及其详细信息：
+下表列出了从ONTAP 9.11.1开始的数据SVM中的内置LUN策略。对于其他版本，使用以下命令显示服务策略及其详细信息：
 
 `network interface service-policy show`
 
@@ -265,7 +264,7 @@ default-data-blocks
  a| 
 iSCSI
  a| 
-由传输面向块的SAN数据流量的LIF使用。从ONTAP 9.10.1开始、"default-data-blocs"策略已弃用。请改用"default-data-iscsi"服务策略。
+由传输面向块的SAN数据流量的LIF使用。从ONTAP 9.10.1开始、已弃用"default-data-blocks"策略。请改用"default-data-iscsi"服务策略。
 
 
 
@@ -301,7 +300,7 @@ NVMe-TCP
 由传输NVMe/TCP数据流量的LIF使用。
 
 |===
-下表列出了数据SVM上可使用的服务以及每个服务自ONTAP 9.11.1之日对LIF的故障转移策略施加的任何限制：
+下表列出了可在数据SVM上使用的服务、以及从ONTAP 9.11.1开始、每个服务对LIF的故障转移策略施加的任何限制：
 
 [cols="25,25,50"]
 |===

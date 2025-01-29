@@ -30,9 +30,9 @@ summary: 您可以通过添加或删除卷或在子一致性组之间移动卷�
 +
 从ONTAP 9.131开始、System Manager支持此功能。
 
-* 扩展一致性组时、修改之前捕获的一致性组的Snapshot副本将视为部分副本。基于该Snapshot副本的任何还原操作都将反映快照时间点的一致性组。
+* 扩展一致性组时、修改前捕获的一致性组快照将视为部分快照。基于该快照的任何还原操作都将反映该快照时间点的一致性组。
 * 如果使用的是ONTAP 9.10.1到9.11.1、则无法修改一致性组。要在ONTAP 9.10.1或9.11.1中更改一致性组的配置、必须删除此一致性组、然后使用要包含的卷创建一个新的一致性组。
-* 从ONTAP 9。14.1开始、您可以使用SnapMirror异步将卷粒度快照复制到目标集群。使用SnapMirror异步扩展一致性组时、只有在SnapMirror策略为镜像全部或镜像AndVault时、才会在扩展一致性组后复制卷粒度快照。仅复制比基线一致性组Snapshot更新的卷粒度Snapshot。
+* 从ONTAP 9.14.1开始、您可以在使用SnapMirror异步时将卷粒度快照复制到目标集群。使用SnapMirror异步扩展一致性组时、只有在SnapMirror策略为镜像全部或镜像AndVault时、才会在扩展一致性组后复制卷粒度快照。仅复制比基线一致性组快照更新的卷粒度快照。
 * 如果要将卷添加到SVM灾难恢复关系中的一致性组(从ONTAP 9.14.1开始受支持)、则必须在扩展此一致性组后从目标集群更新此SVM灾难恢复关系。有关详细信息、请参见 xref:../data-protection/update-replication-relationship-manual-task.html[手动更新复制关系]。
 
 
@@ -109,7 +109,7 @@ NOTE: 仅包括 `-parent-consistency-group` 如果一致性组处于分层关系
 .关于此任务
 * 您不能从SnapMirror活动同步或SVM灾难恢复关系中的一致性组中删除卷。您必须先删除SnapMirror活动同步关系以修改一致性组、然后再重新建立此关系。
 * 如果在执行删除操作后某个一致性组中没有卷、则此一致性组将被删除。
-* 从一致性组中删除卷后、该一致性组的现有Snapshot将保留、但会被视为无效。现有Snapshot不能用于还原一致性组的内容。卷粒度快照仍然有效。
+* 从一致性组中删除卷后、该一致性组的现有快照将保留、但会被视为无效。现有快照不能用于还原一致性组的内容。卷粒度快照仍然有效。
 * 如果从集群中删除某个卷、则该卷将自动从一致性组中删除。
 * 要在ONTAP 9.10.1或9.11.1中更改一致性组的配置、必须先删除此一致性组、然后使用所需的成员卷创建新的一致性组。
 * 从集群中删除卷将自动将其删除一致性组。
@@ -126,7 +126,7 @@ NOTE: 仅包括 `-parent-consistency-group` 如果一致性组处于分层关系
 . 选择要修改的单个或子一致性组。
 . 在*卷*菜单中、选中要从一致性组中删除的各个卷旁边的复选框。
 . 选择*从一致性组中删除卷*。
-. 确认您已了解删除卷将使一致性组的所有Snapshot副本发生原因 变为无效、然后选择*删除*。
+. 确认您了解删除卷将导致一致性组的所有快照无效、然后选择*删除*。
 
 
 --
@@ -159,8 +159,8 @@ NOTE: 仅包括 `-parent-consistency-group` 如果一致性组处于分层关系
 
 .关于此任务
 * 您只能在嵌套在同一父一致性组下的一致性组之间移动卷。
-* 现有一致性组快照无效、无法再作为一致性组快照进行访问。单个卷快照仍然有效。
-* 父一致性组的Snapshot副本仍然有效。
+* 现有一致性组快照将无效、无法再作为一致性组快照进行访问。单个卷快照仍然有效。
+* 父一致性组的快照仍有效。
 * 如果将所有卷移出子一致性组、则该一致性组将被删除。
 * 对一致性组的修改必须遵守 xref:limits.html[一致性组限制]。
 
@@ -197,7 +197,7 @@ NOTE: 仅包括 `-parent-consistency-group` 如果一致性组处于分层关系
 .将卷移动到新的子一致性组
 . 以下命令将创建一个新的子一致性组、其中包含指定的卷。
 +
-创建新一致性组时、您可以指定新的Snapshot、QoS和分层策略。
+创建新一致性组时、您可以指定新的快照、QoS和分层策略。
 
 +
 `consistency-group volume reassign -vserver _SVM_name_ -consistency-group _source_child_consistency_group_ -parent-consistency-group _parent_consistency_group_ -volume _volumes_ -new-consistency-group _consistency_group_name_ [-snapshot-policy _policy_ -qos-policy _policy_ -tiering-policy _policy_]`

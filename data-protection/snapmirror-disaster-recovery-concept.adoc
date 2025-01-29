@@ -40,7 +40,7 @@ image:snapmirror-for-dp-pg.gif["SnapMirror数据保护关系图"]
 +
 link:../snaplock/index.html["使用 SnapLock 技术实现归档和合规性"]
 
-* 从ONTAP 9．1开始，您可以使用SnapMirror异步保护xref:../consistency-groups/index.html[一致性组]。从ONTAP 9．14.1开始，您可以使用SnapMirror异步功能通过一致性组关系将卷粒度快照复制到目标集群。有关详细信息，请参见 xref:../consistency-groups/protect-task.html#configure-snapmirror-asynchronous[配置SnapMirror异步保护]。
+* 从ONTAP 9．1开始，您可以使用SnapMirror异步保护xref:../consistency-groups/index.html[一致性组]。从ONTAP 9.14.1开始、您可以使用SnapMirror异步功能通过一致性组关系将卷粒度快照复制到目标集群。有关详细信息，请参见 xref:../consistency-groups/protect-task.html#configure-snapmirror-asynchronous[配置SnapMirror异步保护]。
 
 
 
@@ -51,21 +51,21 @@ link:../snaplock/index.html["使用 SnapLock 技术实现归档和合规性"]
 
 默认SnapMirror策略下的基线传输 `MirrorAllSnapshots` 包括以下步骤：
 
-* 为源卷创建 Snapshot 副本。
-* 将 Snapshot 副本及其引用的所有数据块传输到目标卷。
-* 将源卷上剩余的较晚 Snapshot 副本传输到目标卷，以便在 "`active` " 镜像损坏时使用。
+* 创建源卷的快照。
+* 将快照及其引用的所有数据块传输到目标卷。
+* 将源卷上其余不太近的快照传输到目标卷、以便在"`active`"镜像损坏时使用。
 
 
 
 
 == 如何更新 SnapMirror 数据保护关系
 
-更新是异步的，遵循您配置的计划。保留会镜像源上的 Snapshot 策略。
+更新是异步的，遵循您配置的计划。保留会镜像源上的Snapshot策略。
 
-在下的每次更新时 `MirrorAllSnapshots` 策略中、SnapMirror将创建源卷的Snapshot副本、并传输该Snapshot副本以及自上次更新以来创建的任何Snapshot副本。在的以下输出中 `snapmirror policy show` 命令 `MirrorAllSnapshots` 策略中、请注意以下事项：
+在策略下的每次更新时 `MirrorAllSnapshots`、SnapMirror都会创建源卷的快照、并传输该快照以及自上次更新以来创建的任何快照。在策略命令的 `MirrorAllSnapshots`以下输出中 `snapmirror policy show`、请注意以下几点：
 
-* `Create Snapshot` 是"`true`"、表示 `MirrorAllSnapshots` 在SnapMirror更新关系时创建Snapshot副本。
-* `MirrorAllSnapshots` 具有规则"`sm_created`"和"`all_ssource_Snapshot`"、表示在SnapMirror更新关系时、将传输SnapMirror创建的Snapshot副本以及自上次更新以来创建的任何Snapshot副本。
+* `Create Snapshot`为"`true`"、表示 `MirrorAllSnapshots`在SnapMirror更新关系时创建快照。
+* `MirrorAllSnapshots`具有规则"`sm_created`"和"`all_ssource_Snapshot`"、表示当SnapMirror更新关系时、SnapMirror创建的快照以及自上次更新以来创建的任何快照都会传输。
 
 
 [listing]
@@ -95,7 +95,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAllSnapshots -instance
 
 == MirrorLatest 策略
 
-预配置的 `MirrorLatest` 策略的工作方式与完全相同 `MirrorAllSnapshots`，不同之处在于初始化和更新时仅传输由SnapMirror创建的Snapshot副本。
+预配置的 `MirrorLatest`策略与的工作方式完全相同 `MirrorAllSnapshots`，只是在初始化和更新时仅传输SnapMirror创建的快照。
 
 [listing]
 ----

@@ -41,7 +41,7 @@ SnapMirror同步配置中支持的最大FlexVol卷大小已从100 TB增加到300
 
 
 | xref:../consistency-groups/index.html[增强了对一致性组的支持]  a| 
-* 您可以在一致性组中添加和删除卷、也可以克隆一致性组(包括Snapshot副本)。
+* 您可以在一致性组中添加和删除卷、也可以克隆一致性组(包括从快照)。
 * 一致性组支持应用程序标记、以简化数据保护和管理流程。
 * ONTAP REST API支持使用NFS/SMB卷或NVMe命名空间配置一致性组。
 
@@ -54,7 +54,7 @@ SnapMirror同步配置中支持的最大FlexVol卷大小已从100 TB增加到300
 | xref:../mediator/index.html[ONTAP调解器1.5支持SnapMirror业务连续性] | ONTAP调解器1.5可用于监控SnapMirror活动同步关系。 
 
 
-| xref:../snapmirror-active-sync/index.html[SnapMirror主动同步连续性增强功能] | SnapMirror活动同步支持从Snapshot执行部分LUN还原。此外、SnapMirror主动同步还会将QoS扩展到不属于SnapMirror关系的卷。 
+| xref:../snapmirror-active-sync/index.html[SnapMirror主动同步连续性增强功能] | SnapMirror主动同步支持从快照执行部分LUN还原。此外、SnapMirror主动同步还会将QoS扩展到不属于SnapMirror关系的卷。 
 
 
 | xref:../data-protection/convert-snapmirror-version-flexible-task.html[SnapMirror异步的数据仓库重建指示器] | SnapMirror异步通过显示完成百分比来指示灾难恢复预演后数据仓库重建所需的时间。 
@@ -63,7 +63,7 @@ SnapMirror同步配置中支持的最大FlexVol卷大小已从100 TB增加到300
 | SnapLock选项、用于设置"未指定"的最短保留时间绝对保留时间 | SnapLock提供了一个选项、用于在绝对保留时间设置为"未指定"时设置最短保留时间。 
 
 
-| xref:../snaplock/snapshot-lock-concept.html[防篡改Snapshot副本] | 您可以在非SnapLock卷上锁定Snapshot副本、以防止勒索软件攻击。锁定Snapshot副本有助于确保它们不会被意外或恶意删除。 
+| xref:../snaplock/snapshot-lock-concept.html[防篡改快照] | 您可以在非SnapLock卷上锁定快照、以防止勒索软件攻击。锁定快照有助于确保它们不会被意外或恶意删除。 
 |===
 
 
@@ -275,10 +275,10 @@ NOTE: 建议您不要在将FlexVol转换为FlexGroup后使用FlexGroup自动重�
 | xref:../task_admin_search_filter_sort.html[改进了搜索功能] | System Manager具有改进的搜索功能、使用户可以直接通过System Manager界面从NetApp 支持站点 中搜索和访问相关的上下文相关支持信息和System Manager产品文档。这样、用户就可以获得采取适当措施所需的信息、而不必在支持站点的不同位置进行搜索。 
 
 
-| xref:../task_admin_add_a_volume.html[改进了卷配置] | 存储管理员可以在使用System Manager创建卷时选择Snapshot副本策略、而不是使用默认策略。 
+| xref:../task_admin_add_a_volume.html[改进了卷配置] | 存储管理员可以在使用System Manager创建卷时选择快照策略、而不是使用默认策略。 
 
 
-| xref:../task_admin_expand_storage.html#increase-the-size-of-a-volume[增加卷的大小] | 存储管理员可以在使用System Manager调整卷大小时查看对数据空间和Snapshot副本预留的影响。 
+| xref:../task_admin_expand_storage.html#increase-the-size-of-a-volume[增加卷的大小] | 存储管理员可以在使用System Manager调整卷大小时查看对数据空间和快照预留的影响。 
 
 
 | xref:../disks-aggregates/create-ssd-storage-pool-task.html[存储池] 和 xref:../disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html?[Flash Pool] 管理 | 存储管理员可以使用System Manager向SSD存储池添加SSD、使用SSD存储池分配单元创建Flash Pool本地层(聚合)以及使用物理SSD创建Flash Pool本地层。 

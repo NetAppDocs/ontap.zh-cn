@@ -2,7 +2,7 @@
 permalink: san-admin/backup-lun-host-backup-system-task.html 
 sidebar: sidebar 
 keywords: back up, lun, through, host, backup, system 
-summary: 您可以使用 Snapshot 副本中的克隆 LUN 作为主机备份系统的源数据。 
+summary: 您可以使用快照中的克隆LUN作为主机备份系统的源数据。 
 ---
 = 通过主机备份系统备份 LUN
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 您可以使用 Snapshot 副本中的克隆 LUN 作为主机备份系�
 
 
 [role="lead"]
-您可以使用 Snapshot 副本中的克隆 LUN 作为主机备份系统的源数据。
+您可以使用快照中的克隆LUN作为主机备份系统的源数据。
 
 .您需要的内容
 生产 LUN 必须存在并映射到包含应用程序服务器的 WWPN 或启动程序节点名称的 igroup 。此外， LUN 还必须进行格式化并可供主机访问
@@ -21,7 +21,7 @@ summary: 您可以使用 Snapshot 副本中的克隆 LUN 作为主机备份系�
 +
 您可以使用主机操作系统提供的命令，也可以使用适用于 Windows 的 SnapDrive 或适用于 UNIX 的 SnapDrive 。您也可以选择将此步骤加入 SAN 备份预处理脚本。
 
-. 使用 `volume snapshot create` 命令创建生产LUN的Snapshot副本。
+. 使用 `volume snapshot create`命令创建生产LUN的快照。
 +
 `volume snapshot create -vserver vs0 -volume vol3 -snapshot vol3_snapshot -comment "Single snapshot" -foreground false`
 
@@ -53,7 +53,7 @@ summary: 您可以使用 Snapshot 副本中的克隆 LUN 作为主机备份系�
 +
 `lun delete -vserver vs3 -volume vol3 -lun lun1_backup`
 
-. 使用 `volume snapshot delete` 命令以删除Snapshot副本。
+. 使用 `volume snapshot delete`命令删除快照。
 +
 `volume snapshot delete -vserver vs3 -volume vol3 -snapshot vol3_snapshot`
 

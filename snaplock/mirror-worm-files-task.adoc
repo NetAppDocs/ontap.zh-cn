@@ -35,7 +35,7 @@ summary: 您可以使用 SnapMirror 将 WORM 文件复制到其他地理位置�
 
 如果目标上放置的合法保留与源不同，则不允许重新同步。在尝试重新同步之前，源和目标必须具有相同的合法保留，或者必须释放目标上的所有合法保留。
 
-可以使用命令行界面运行将为捕获不同数据而创建的目标卷上锁定的Snapshot副本复制到源卷 `snapmirror update -s snapshot` 命令：复制后的快照也将继续在源上锁定。
+可以使用命令行界面运行命令、将目标卷上为捕获不同数据而创建的锁定快照复制到源卷 `snapmirror update -s snapshot`。复制后的快照也将继续在源上锁定。
 
 * 不支持 SVM 数据保护关系。
 * 不支持负载共享数据保护关系。
@@ -90,7 +90,7 @@ cluster2::> volume create -vserver SVM2 -volume dstvolB -aggregate node01_aggr -
 ----
 . 在目标 SVM 上，创建 SnapMirror 策略：
 +
-`*snapmirror policy create -vserver _SVM_name_ -policy _policy_name_*`
+`snapmirror policy create -vserver _SVM_name_ -policy _policy_name_`
 
 +
 以下命令将创建SVM范围的策略 `SVM1-mirror`：
@@ -114,7 +114,7 @@ SVM2::> job schedule cron create -name weekendcron -dayofweek "Saturday, Sunday"
 ----
 . 在目标 SVM 上，创建 SnapMirror 关系：
 +
-`*snapmirror create -source-path _source_path_ -destination-path _destination_path_ -type XDP|DP -policy _policy_name_ -schedule _schedule_name_*`
+`snapmirror create -source-path _source_path_ -destination-path _destination_path_ -type XDP|DP -policy _policy_name_ -schedule _schedule_name_`
 
 +
 以下命令将在源卷之间创建SnapMirror关系 `srcvolA` 开启 `SVM1` 和目标卷 `dstvolB` 开启 `SVM2`，并分配策略 `SVM1-mirror` 和计划 `weekendcron`：
@@ -130,10 +130,10 @@ NOTE: XDP 类型可在 ONTAP 9.5 及更高版本中使用。您必须在 ONTAP 9
 
 . 在目标 SVM 上，初始化 SnapMirror 关系：
 +
-`*snapmirror initialize -destination-path _destination_path_*`
+`snapmirror initialize -destination-path _destination_path_`
 
 +
-初始化过程会向目标卷执行 _baseline transfer_ 。SnapMirror 为源卷创建 Snapshot 副本，然后将该副本及其引用的所有数据块传输到目标卷。它还会将源卷上的任何其他 Snapshot 副本传输到目标卷。
+初始化过程会向目标卷执行 _baseline transfer_ 。SnapMirror创建源卷的快照、然后将副本及其引用的所有数据块传输到目标卷。它还会将源卷上的任何其他快照传输到目标卷。
 
 +
 以下命令将初始化源卷之间的关系 `srcvolA` 开启 `SVM1` 和目标卷 `dstvolB` 开启 `SVM2`：
