@@ -13,7 +13,9 @@ summary: 从 ONTAP 9.8 开始，如果启用了 NFSv4.1 ，则默认情况下可
 [role="lead"]
 从 ONTAP 9.8 开始，如果启用了 NFSv4.1 ，则默认情况下可以使用 nconnect 功能。
 
-早期的 NFS 客户端实施仅使用挂载的单个 TCP 连接。在 ONTAP 中，单个 TCP 连接可能会随着 IOPS 的增加而成为瓶颈。但是，启用了 nconnect 的客户端可以具有多个与单个 NFS 挂载关联的 TCP 连接（最多 16 个）。此类 NFS 客户端会以轮循的方式将文件操作多路由到多个 TCP 连接上，从而从可用网络带宽中获得更高的吞吐量。建议仅对 NFSv3 和 NFSv4.1 挂载使用 nConnect 。
+早期的 NFS 客户端实施仅使用挂载的单个 TCP 连接。在 ONTAP 中，单个 TCP 连接可能会随着 IOPS 的增加而成为瓶颈。
+
+但是、启用了nconnect的客户端可以与单个NFS挂载关联多个TCP连接(最多16个)。nConnect只使用一个IP、并通过该IP建立多个TCP连接以挂载NFS导出。此类NFS客户端会以循环方式将文件操作分布到多个TCP连接上、从而从可用网络带宽中获得更高的吞吐量。建议仅对 NFSv3 和 NFSv4.1 挂载使用 nConnect 。
 
 请参见 NFS 客户端文档以确认您的客户端版本是否支持 nconnect 。
 
