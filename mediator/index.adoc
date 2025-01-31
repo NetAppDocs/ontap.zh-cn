@@ -37,9 +37,43 @@ CAUTION: 如果安装失败、您可能需要升级到更高版本的ONTAP调解
 
 
 
-=== 操作系统要求
+=== 主机要求
 
-操作系统必须满足以下要求：
+安装Red Hat Enterprise Linux (RHEL)或Rocki Linux并配置关联的存储库时、请遵循以下要求。
+
+[NOTE]
+====
+如果您修改安装或配置过程、则可能需要执行其他步骤。
+
+====
+.Linux分发要求
+* 根据Red Hat的最佳实践安装RHEL或Rocky's Linux。由于CentOS 8.x已达到使用寿命、因此不建议使用兼容版本的CentOS 8.x。
+* 安装ONTAP调解器服务时、请确保系统有权访问所需的存储库、以便安装程序可以检索并安装所有必需的软件依赖项。
+* 要使yum安装程序能够在RHEL存储库中查找相关软件、请在安装期间或之后使用有效的Red Hat订阅注册系统。
++
+[NOTE]
+====
+有关详细信息、请参见Red Hat订阅管理器文档。
+
+====
+
+
+.网络要求
+* 确保以下端口可用于ONTAP调解器且未使用：
++
+** 31784.
+** 3260
+
+
+* 如果使用第三方防火墙，请参阅link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["ONTAP 调解器的防火墙要求"^]。
+* 对于无法访问Internet的Linux主机、请确保所需的软件包在本地存储库中可用。
++
+如果您在Linux环境中使用链路聚合控制协议(Link Aggregation" Control Protocol, LacP)，请配置内核并将设置 `sysctl net.ipv4.conf.all.arp_ignore`为 `2`。
+
+
+
+.操作系统要求
+您的操作系统必须满足以下要求：
 
 * 64 位物理安装或虚拟机
 * 8 GB RAM
@@ -135,6 +169,58 @@ CAUTION: 如果安装失败、您可能需要升级到更高版本的ONTAP调解
 . "兼容"表示RHEL不再支持此版本、但仍可安装ONTAP调解器。
 
 
+.操作系统所需的软件包
+ONTAP 调解器服务需要以下软件包：
+
+
+NOTE: 软件包可以是预安装的、也可以是由ONTAP调解器安装程序自动安装的。
+
+[cols="34,33,33"]
+|===
+
+
+| 所有 RHEL/CentOS 版本 | 适用于RHEL 8.x / Rocky Linux 8的其他软件包 | 适用于RHEL 9.x / Rocky Linux 9的其他软件包 
+
+
+ a| 
+* OpenSSL
+* OpenSSL 开发
+* kernel-devel-$(uname -r)
+* GCC
+* 创建
+* libselinux-utils
+* patch
+* bzip 2
+* Perl 数据 - Dumper
+* Perl 扩展程序 -MakeMaker
+* efibootmgr
+* mukutil
+
+ a| 
+* python3-pip
+* elfutils-libelf-devel
+* policycoreutils-python 实用程序
+* RedHat-lsb-core
+* python39
+* python39-devel
+
+ a| 
+* python3-pip
+* elfutils-libelf-devel
+* policycoreutils-python 实用程序
+* python3.
+* python3-devel
+
+
+|===
+调解器安装包是一个自解压压缩 tar 文件，其中包括：
+
+* 一个 RPM 文件，其中包含无法从受支持版本的存储库获取的所有依赖项。
+* 安装脚本。
+
+
+建议提供有效的SSL认证。
+
 
 
 === 操作系统升级注意事项和内核兼容性
@@ -166,7 +252,7 @@ ONTAP调解器可以安装在启用或不启用UEFI安全启动的系统上。
 
 [NOTE]
 ====
-有关如何禁用UEFI安全启动的更多详细信息、请参阅系统专用说明。
+有关禁用UEFI安全启动的详细说明、请参阅适用于您的主机操作系统的文档。
 
 ====
 要在启用了UEFI安全启动的情况下安装ONTAP调解器、必须先注册安全密钥、然后才能启动服务。密钥是在SCST安装的编译步骤中生成的、并保存为计算机上的私有-公共密钥对。使用 `mokutil`实用程序将公共密钥作为计算机所有者密钥(Machine Owner Key、MOK)添加到UEFI固件中、以使系统信任并加载签名模块。请将密码短语保存 `mokutil`在安全位置、因为在重新启动系统以激活MOK时需要使用此密码短语。
