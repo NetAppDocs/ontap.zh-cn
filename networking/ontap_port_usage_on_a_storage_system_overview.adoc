@@ -1,7 +1,7 @@
 ---
 sidebar: sidebar 
 permalink: networking/ontap_port_usage_on_a_storage_system_overview.html 
-keywords: port, tcp, udp, ontap, external, externally, service, services, introduce, introduction, introducing, overview, ontap port usage overview, ontap port usage, network ports, ontap ports, tcp ports, udp ports, ssh, port 22, telnet, port 23, dns, port 53, http, port 80, rpcbind, port 111, ntp, port 123, msrpc, port 135, netbios-ssn, port 139, snmp, port 161, https, port 443, microsoft-ds, port 445, mount, port 635, named, port 953, nfs, port 2049, nrv, port 2050, iscsi, port 3260, lockd, port 4045, nsm, port 4046, rquotad, port 4049, krb524, port 4444, mdns, port 5353, https, port 5986, port 8443, ndmp, port 10000, cluster peering, port 11104, port 11105, ports 18600 through 18699, cifs witness, port 40001, tls, port 50000, port 65200 
+keywords: port, tcp, udp, http, https, ssh, ontap ports overview, communication ports, port conflicts, ontap ports for inbound traffic, ontap ports for outbound traffic, internal ports 
 summary: 预留端口，用于与特定服务进行 ONTAP 通信 
 ---
 = ONTAP端口概述
@@ -14,121 +14,232 @@ summary: 预留端口，用于与特定服务进行 ONTAP 通信
 
 
 [role="lead"]
-为与特定服务进行 ONTAP 通信预留了许多已知端口。如果存储网络环境中的端口值与 ONTAP 端口上的端口值相同，则会发生端口冲突。
+为与特定服务进行ONTAP通信、保留了几个众所周知的端口。如果存储网络环境中的端口值与ONTAP端口上的值相同、则会发生端口冲突。
 
-下表列出了 ONTAP 使用的 TCP 端口和 UDP 端口。
+
+
+== 入站流量
+
+ONTAP存储上的入站流量使用以下协议和端口：
 
 [cols="25,25,50"]
 |===
 
 
-| 服务 | 端口 / 协议 | Description 
+| 协议 | Port | 目的 
 
 
-| SSH | 22/TCP | 安全 Shell 登录 
+| 所有 ICMP | 全部 | Ping 实例 
 
 
-| Telnet | 23TCP | 远程登录 
+| TCP | 22. | 对集群管理LIF或节点管理LIF的IP地址进行安全Shell访问 
 
 
-| DNS | 53/TCP | 负载平衡 DNS 
+| TCP | 80 | 对集群管理LIF IP地址的网页访问权限 
 
 
-| HTTP | 80/TCP | 超文本传输协议 
+| TCP/UDP | 111 | rpc绑 定、NFS的远程过程调用 
 
 
-| rpcbind | 111/TCP | 远程操作步骤调用 
+| UDP | 123. | NTP、网络时间协议 
 
 
-| rpcbind | 111/UDP | 远程操作步骤调用 
+| UDP | 135 | MRPC、Microsoft远程过程调用 
 
 
-| NTP | 123/UDP | 网络时间协议 
+| TCP | 139 | Netbios-SSN、用于CIFS的NetBIOS服务会话 
 
 
-| MSRPC | 135/UDP | MSRPC 
+| TCP/UDP | 161-162 | SNMP、简单网络管理协议 
 
 
-| Netbios-SSN | 139/TCP | NetBIOS 服务会话 
+| TCP | 443 | 对集群管理LIF的IP地址进行安全网页访问 
 
 
-| SNMP | 161/UDP | 简单网络管理协议 
+| TCP | 445 | MS Active Domain Services、基于TCP的Microsoft SMB/CCIFS、带NetBIOS帧 
 
 
-| HTTPS | 443/TCP | 基于 TLS 的 HTTP 
+| TCP/UDP | 635 | NFS挂载、可与远程文件系统进行交互、就像该系统位于本地一样 
 
 
-| Microsoft DS | 445/TCP | Microsoft DS 
+| TCP | 749 | Kerberos 
 
 
-| 挂载 | 635/TCP | NFS 挂载 
+| UDP | 953 | 名称守护进程 
 
 
-| 挂载 | 635/UDP | NFS 挂载 
+| TCP/UDP | 2049 | NFS 服务器守护进程 
 
 
-| 已命名 | 953/UDP | 名称守护进程 
+| TCP | 2050 | NRV、NetApp远程卷协议 
 
 
-| NFS | 2049 UDP | NFS 服务器守护进程 
+| TCP | 3260 | 通过 iSCSI 数据 LIF 进行 iSCSI 访问 
 
 
-| NFS | 2049/TCP | NFS 服务器守护进程 
+| TCP/UDP | 4045 | NFS 锁定守护进程 
 
 
-| Nrv | 20205/TCP | NetApp 远程卷协议 
+| TCP/UDP | 4046 | NFS 的网络状态监视器 
 
 
-| iSCSI | 3260/TCP | iSCSI 目标端口 
+| UDP | 4049-51 | NFS RPC报价 
 
 
-| 锁定 | 4045/TCP | NFS 锁定守护进程 
+| UDP | 4444 | KRB524、Kerberos 524 
 
 
-| 锁定 | 4045/UDP | NFS 锁定守护进程 
+| UDP | 5353 | 多播 DNS 
 
 
-| NSM | 4046/ TCP | 网络状态监控器 
+| TCP | 10000 | 使用网络数据管理协议(NDMP)备份 
 
 
-| NSM | 4046/UDP | 网络状态监控器 
+| TCP | 11104 | 对SnapMirror的集群间通信会话进行集群对等和双向管理 
 
 
-| rquotad | 4049/UDP | NFS Rquotad 协议 
+| TCP | 11105 | 使用集群间SnapMirror进行集群对等、双向集群间LUN数据传输 
+|===
 
 
-| krb524 | 444/UDP | Kerberos 524 
+== 出站流量
 
+您可以根据业务需求使用基本或高级规则设置ONTAP存储上的出站流量。
 
-| mDNS | 5533/UDP | 多播 DNS 
 
 
-| HTTPS | 5986/UDP | HTTPS 端口—侦听二进制协议 
+=== 基本外向规则
 
+所有端口均可用于通过ICMP、TCP和UDP协议传输的所有出站流量。
 
-| HTTPS | 843/TCP | 通过 https 使用 7MTT GUI 工具 
+[cols="25,25,50"]
+|===
 
 
-| NDMP | 10000/TCP | 网络数据管理协议 
+| 协议 | Port | 目的 
 
 
-| 集群对等 | 11104/TCP | 集群对等、双向 
+| 所有 ICMP | 全部 | 所有出站流量 
 
 
-| 集群对等、双向 | 11105/TCP | 集群对等 
+| 所有 TCP | 全部 | 所有出站流量 
 
 
-| NDMP | 18600 - 18699/TCP | NDMP 
+| 所有 UDP | 全部 | 所有出站流量 
+|===
 
 
-| NDMP | 30000/TCP | 通过安全插槽接受控制连接 
+=== 高级出站规则
 
+如果您需要对出站流量设置严格的规则、则可以使用以下信息仅打开ONTAP出站通信所需的端口。
 
-| CIFS 见证端口 | 40001/TCP | CIFS 见证端口 
 
 
-| TLS | 50000/TCP | 传输层安全性 
+==== Active Directory
 
+[cols="10,10,30,25,25"]
+|===
 
-| iSCSI | 65200/TCP | iSCSI 端口 
+
+| 协议 | Port | 源 | 目标 | 目的 
+
+
+| TCP | 88 | 节点管理LIF、数据LIF (NFS、CIFS、iSCSI) | Active Directory 目录林 | Kerberos V 身份验证 
+
+
+| UDP | 137 | 节点管理LIF、数据LIF (NFS、CIFS) | Active Directory 目录林 | NetBIOS 名称服务 
+
+
+| UDP | 138 | 节点管理LIF、数据LIF (NFS、CIFS) | Active Directory 目录林 | NetBIOS 数据报服务 
+
+
+| TCP | 139 | 节点管理LIF、数据LIF (NFS、CIFS) | Active Directory 目录林 | NetBIOS 服务会话 
+
+
+| TCP | 389 | 节点管理LIF、数据LIF (NFS、CIFS) | Active Directory 目录林 | LDAP 
+
+
+| UDP | 389 | 节点管理LIF、数据LIF (NFS、CIFS) | Active Directory 目录林 | LDAP 
+
+
+| TCP | 445 | 节点管理LIF、数据LIF (NFS、CIFS) | Active Directory 目录林 | Microsoft SMB/CIFS over TCP （通过 TCP ）和 NetBIOS 成帧 
+
+
+| TCP | 464 | 节点管理LIF、数据LIF (NFS、CIFS) | Active Directory 目录林 | 更改并设置Kerberos V密码(set_change) 
+
+
+| UDP | 464 | 节点管理LIF、数据LIF (NFS、CIFS) | Active Directory 目录林 | Kerberos 密钥管理 
+
+
+| TCP | 749 | 节点管理LIF、数据LIF (NFS、CIFS) | Active Directory 目录林 | 更改并设置Kerberos V密码(RPCSEC_GSS) 
+|===
+
+
+==== AutoSupport
+
+[cols="10,10,30,25,25"]
+|===
+
+
+| 协议 | Port | 源 | 目标 | 目的 
+
+
+| TCP | 80 | 节点管理 LIF | support.netapp.com | AutoSupport （仅当传输协议从 HTTPS 更改为 HTTP 时） 
+|===
+
+
+==== SNMP
+
+[cols="10,10,30,25,25"]
+|===
+
+
+| 协议 | Port | 源 | 目标 | 目的 
+
+
+| TCP/UDP | 162 | 节点管理 LIF | 监控服务器 | 通过 SNMP 陷阱进行监控 
+|===
+
+
+==== SnapMirror
+
+[cols="10,10,30,25,25"]
+|===
+
+
+| 协议 | Port | 源 | 目标 | 目的 
+
+
+| TCP | 11104 | 集群间 LIF | ONTAP 集群间 LIF | 管理 SnapMirror 的集群间通信会话 
+|===
+
+
+==== 其他服务
+
+[cols="10,10,30,25,25"]
+|===
+
+
+| 协议 | Port | 源 | 目标 | 目的 
+
+
+| TCP | 25 | 节点管理 LIF | 邮件服务器 | SMTP 警报、可用于 AutoSupport 
+
+
+| UDP | 53 | 节点管理 LIF 和数据 LIF （ NFS 、 CIFS ） | DNS | DNS 
+
+
+| UDP | 67 | 节点管理 LIF | DHCP | DHCP服务器 
+
+
+| UDP | 68 | 节点管理 LIF | DHCP | 首次设置 DHCP 客户端 
+
+
+| UDP | 514. | 节点管理 LIF | 系统日志服务器 | 系统日志转发消息 
+
+
+| TCP | 5010 | 集群间 LIF | 备份端点或还原端点 | 备份到 S3 功能的备份和还原操作 
+
+
+| TCP | 18600至18699 | 节点管理 LIF | 目标服务器 | NDMP 副本 
 |===

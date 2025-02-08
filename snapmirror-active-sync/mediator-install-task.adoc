@@ -14,9 +14,9 @@ summary: SnapMirror活动同步要求您安装并初始化ONTAP调解器、并�
 
 
 [role="lead"]
-SnapMirror主动同步使用对等集群来确保在发生故障转移时数据可用。ONTAP调解器是确保业务连续性的关键资源、可监控每个集群的运行状况。要配置SnapMirror活动同步、必须先安装ONTAP调解器、并确保已正确配置主集群和二级集群。
+SnapMirror主动同步会在发生故障转移时使用对等集群来保护数据。ONTAP调解器是一种关键资源、可通过监控每个集群的运行状况来实现业务连续性。要配置SnapMirror主动同步、必须先安装ONTAP调解器、并验证主集群和二级集群配置是否正确。
 
-安装ONTAP调解器并配置集群后、必须执行此操作 <<initialize-the-ontap-mediator>> 用于SnapMirror活动同步的ONTAP调解器。您必须这样做 xref:protect-task.html[为SnapMirror活动同步创建、初始化和映射一致性组]。
+安装ONTAP调解器并配置集群后，<<initialize-the-ontap-mediator,使用自签名证书初始化用于SnapMirror活动同步的ONTAP调解器>>。您必须这样xref:protect-task.html[为SnapMirror活动同步创建、初始化和映射一致性组]。
 
 
 
@@ -33,21 +33,21 @@ ONTAP调解器可为SnapMirror活动同步关系中的ONTAP集群使用的高可
 例如、如果集群B与集群A、集群C和集群D具有对等关系、则在为这三个集群对等关系配置了SnapMirror活动同步后、这三个关系都可以具有唯一关联的ONTAP调解器实例。或者、集群B也可以对所有三个对等关系使用同一个ONTAP调解器实例。在这种情况下、同一个ONTAP调解器实例会为集群列出三次。
 
 .ONTAP 调解器的前提条件
-* ONTAP 调解器包括自己的一组前提条件。在安装调解器之前，必须满足这些前提条件。
+* ONTAP 调解器包括自己的一组前提条件。在安装ONTAP调解器之前、必须满足这些前提条件。
 +
 有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["准备安装 ONTAP 调解器服务"^]。
 
-* 默认情况下， ONTAP 调解器通过 TCP 端口 31784 提供服务。您应确保 ONTAP 集群和调解器之间的端口 31784 已打开且可用。
+* 默认情况下， ONTAP 调解器通过 TCP 端口 31784 提供服务。您应确保端口31784在ONTAP集群和ONTAP调解器之间处于打开状态且可用。
 
 
 
 
 == 安装ONTAP调解器并确认集群配置
 
-继续执行以下每个步骤。对于每个步骤，您都应确认已执行特定配置。使用每个步骤后面的链接根据需要获取更多信息。
+执行以下每个步骤以安装ONTAP调解器并验证集群配置。对于每个步骤，您都应确认已执行特定配置。每个步骤都包含一个指向需要遵循的特定过程的链接。
 
 .步骤
-. 请先安装 ONTAP 调解器服务，然后再确保源集群和目标集群配置正确。
+. 请先安装ONTAP调解器服务、然后再验证源集群和目标集群是否配置正确。
 +
 xref:../mediator/index.html[准备安装或升级ONTAP 调解器服务]
 
@@ -59,11 +59,11 @@ NOTE: 对于集群对等关系、SnapMirror活动同步需要默认IP空间。�
 +
 xref:../task_dp_prepare_mirror.html[配置对等关系]
 
-. 确认已在每个集群上创建 Storage VM 。
+. 确认已在每个集群上创建SVM。
 +
 xref:../smb-config/create-svms-data-access-task.html[创建 SVM]
 
-. 确认每个集群上的 Storage VM 之间存在对等关系。
+. 确认每个集群上的SVM之间存在对等关系。
 +
 xref:../peering/create-intercluster-svm-peer-relationship-93-later-task.html[创建 SVM 对等关系]
 
@@ -82,7 +82,7 @@ link:../networking/create_a_lif.html["创建 LIF"]
 +
 xref:../san-admin/provision-storage.html[创建 LUN 并映射 igroup]
 
-. 重新扫描应用程序主机以发现任何新的 LUN 。
+. 重新扫描应用程序主机以发现任何新的LUN。
 
 
 
@@ -179,7 +179,7 @@ image:successful-mediator-installation.png["调解器添加成功"]。
 
 您可以使用ONTAP命令行界面从主集群或二级集群初始化ONTAP调解器。问题描述时 `mediator add` 命令时、ONTAP调解器会自动添加到另一个集群上。
 
-使用调解器监控SnapMirror活动同步关系时、如果没有有效的自签名证书或证书颁发机构(CA)证书、则无法在ONTAP中初始化调解器。您可以向对等集群的证书存储添加有效证书。使用调解器监控MetroCluster IP系统时、初始配置后不会使用HTTPS；因此、不需要证书。
+使用ONTAP调解器监控SnapMirror活动同步关系时、如果没有有效的自签名证书或证书颁发机构(CA)证书、则无法在ONTAP中初始化此调解器。您可以向对等集群的证书存储添加有效证书。使用ONTAP调解器监控MetroCluster IP系统时、初始配置后不会使用HTTPS；因此、不需要证书。
 
 [role="tabbed-block"]
 ====
@@ -408,7 +408,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 以下操作步骤说明了在需要将自签名证书替换为第三方证书的特定情况下重新初始化ONTAP调解器的过程。
 
 .关于此任务
-您需要将SM-BC集群的自签名证书替换为第三方证书、从ONTAP中删除ONTAP调解器配置、然后添加ONTAP调解器。
+您需要将SnapMirror活动同步集群的自签名证书替换为第三方证书、从ONTAP中删除ONTAP调解器配置、然后添加ONTAP调解器。
 
 
 
@@ -455,7 +455,7 @@ image:configure-mediator-system-manager.png["添加System Manager调解器"]
  C2_test_cluster::*> security certificate delete -vserver C2_test_cluster -common-name ONTAPMediatorCA *
  2 entries were deleted.
 ----
-. 使用从SM-BC集群中删除先前配置的ONTAP调解器 `-force true`：
+. 使用从SnapMirror活动同步集群中删除先前配置的ONTAP调解器 `-force true`：
 +
 * 示例 *
 
@@ -580,7 +580,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
  C2_test_cluster::*> security certificate delete -vserver C2_test_cluster -common-name ONTAPMediatorCA *
  2 entries were deleted.
 ----
-. 使用从SM-BC集群中删除先前配置的ONTAP调解器 `-force true`：
+. 使用从SnapMirror活动同步集群中删除先前配置的ONTAP调解器 `-force true`：
 +
 * 示例 *
 

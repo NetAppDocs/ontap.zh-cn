@@ -2,7 +2,7 @@
 permalink: antivirus/create-scanner-pool-single-cluster-task.html 
 sidebar: sidebar 
 keywords: create, scanner pool, single cluster 
-summary: 扫描程序池用于定义可连接到 SVM 的 Vscan 服务器和有权限的用户。您可以为单个SVM或集群中的所有SVM创建扫描程序池。 
+summary: 扫描程序池用于定义可连接到 SVM 的 Vscan 服务器和有权限的用户。 
 ---
 = 使用ONTAP在单个集群上创建扫描程序池
 :allow-uri-read: 
@@ -11,41 +11,29 @@ summary: 扫描程序池用于定义可连接到 SVM 的 Vscan 服务器和有�
 
 
 [role="lead"]
-扫描程序池用于定义可连接到 SVM 的 Vscan 服务器和有权限的用户。您可以为单个SVM或集群中的所有SVM创建扫描程序池。
+扫描程序池用于定义可连接到 SVM 的 Vscan 服务器和有权限的用户。
 
-.您需要的内容
+.开始之前
 * SVM 和 Vscan 服务器必须位于同一域或受信任域中。
-* 对于为单个SVM定义的扫描程序池、您必须已为ONTAP防病毒连接器配置SVM管理LIF或SVM数据LIF。
-* 对于为集群中的所有SVM定义的扫描程序池、您必须已使用集群管理LIF配置ONTAP防病毒连接器。
-* 有权限的用户列表必须包含 Vscan 服务器用于连接到 SVM 的域用户帐户。
+* 使用集群管理LIF配置ONTAP防病毒连接器。
+* 有权限的用户列表必须包含Vscan服务器用于连接到SVM的域和用户名。
 * 配置扫描程序池后、请检查与服务器的连接状态。
 
 
 .步骤
 . 创建扫描程序池：
 +
-`vserver vscan scanner-pool create -vserver data_SVM|cluster_admin_SVM -scanner-pool scanner_pool -hostnames Vscan_server_hostnames -privileged-users privileged_users`
+`vserver vscan scanner-pool create -vserver cluster_admin_SVM -scanner-pool scanner_pool -hostnames Vscan_server_hostnames -privileged-users privileged_users`
 
 +
-** 为为为单个 SVM 定义的池指定数据 SVM ，并为为为集群中的所有 SVM 定义的池指定集群管理员 SVM 。
+** 指定集群管理SVM。
 ** 为每个 Vscan 服务器主机名指定 IP 地址或 FQDN 。
 ** 为每个有权限的用户指定域和用户名。有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。
 
 
-+
-以下命令将创建名为的扫描程序池 `SP` 在上 `vs1` SVM：
-
-+
-[listing]
-----
-cluster1::> vserver vscan scanner-pool create -vserver vs1 -scanner-pool SP -hostnames 1.1.1.1,vmwin204-27.fsct.nb -privileged-users cifs\u1,cifs\u2
-----
 . 验证是否已创建扫描程序池：
 +
-`vserver vscan scanner-pool show -vserver _data_SVM|cluster_admin_SVM_ -scanner-pool _scanner_pool_`
-
-+
-有关的详细信息 `vserver vscan scanner-pool show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-vscan-scanner-pool-show.html["ONTAP 命令参考"^]。
+`vserver vscan scanner-pool show -vserver cluster_admin_SVM -scanner-pool _scanner_pool_`
 
 +
 以下命令将显示的详细信息 `SP` 扫描程序池：
@@ -53,19 +41,19 @@ cluster1::> vserver vscan scanner-pool create -vserver vs1 -scanner-pool SP -hos
 +
 [listing]
 ----
-cluster1::> vserver vscan scanner-pool show -vserver vs1 -scanner-pool SP
+cluster1::> vserver vscan scanner-pool show -vserver cluster_admin_SVM -scanner-pool SP
 
-                                    Vserver: vs1
+                                    Vserver: cluster_admin_SVM
                                Scanner Pool: SP
                              Applied Policy: idle
                              Current Status: off
          Cluster on Which Policy Is Applied: -
-                  Scanner Pool Config Owner: vserver
+                  Scanner Pool Config Owner: cluster
        List of IPs of Allowed Vscan Servers: 1.1.1.1, 10.72.204.27
 List of Host Names of Allowed Vscan Servers: 1.1.1.1, vmwin204-27.fsct.nb
                    List of Privileged Users: cifs\u1, cifs\u2
 ----
 +
-您也可以使用 `vserver vscan scanner-pool show`命令查看SVM上的所有扫描程序池。有关的详细信息 `vserver vscan scanner-pool show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-vscan-scanner-pool-show.html["ONTAP 命令参考"^]。
+您还可以使用 `vserver vscan scanner-pool show`命令查看集群上的所有扫描程序池。有关的详细信息 `vserver vscan scanner-pool show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-vscan-scanner-pool-show.html["ONTAP 命令参考"^]。
 
 

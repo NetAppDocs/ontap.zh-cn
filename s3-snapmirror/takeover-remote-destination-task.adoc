@@ -25,6 +25,10 @@ summary: 如果源存储分段中的数据不可用，您可以中断 SnapMirror
 
 接管操作必须从远程集群启动。
 
+虽然SnapMirror S3会将对象从源存储分段复制到目标存储分段、但它不会将组和分段策略从源对象存储复制到目标对象存储。
+
+必须在目标对象存储上配置用户、组策略、权限和类似组件、以便客户端可以在故障转移事件期间访问目标存储分段。
+
 [role="tabbed-block"]
 ====
 .System Manager
@@ -52,3 +56,8 @@ dest_cluster::> snapmirror failover start -destination-path dest_svm1:/bucket/te
 
 --
 ====
+.相关信息
+* link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组（ System Manager ）"]
+* link:../s3-config/create-s3-user-task.html["创建 S3 用户（命令行界面）"]
+* link:../s3-config/create-modify-groups-task.html["创建或修改 S3 组（命令行界面）"]
+

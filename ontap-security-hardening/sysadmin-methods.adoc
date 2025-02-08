@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: ontap-security-hardening/sysadmin-methods.html 
-keywords: tr-4569, ontap hardening guide, security, access, encryption, MFA, multi-factor authentication, ssh, MOTD, CLI timeout, SAML access for System Manager, Insights 
-summary: 部署这些方法可实现强大的ONTAP系统管理。 
+keywords: tr-4569, ontap hardening guide, security, access, encryption, MFA, multi-factor authentication, ssh, MOTD, timeout, SAML access for System Manager, Insights 
+summary: 请考虑使用这些命令行界面和System Manager方法来实现强大的ONTAP系统管理。 
 ---
 = 系统管理方法
 :hardbreaks:
@@ -224,3 +224,19 @@ SAML规范中定义了三个角色：主体、Idp和服务提供商。在ONTAP�
 | 没有为集群配置通知 | 电子邮件、webhook或SNMP陷阱主机未配置为接收通知。 
 |===
 有关ONTAP System Manager洞察的详细信息，请参见 link:../insights-system-optimization-task.html#view-optimization-insights["ONTAP System Manager洞察力文档"]。
+
+
+
+=== System Manager会话超时
+
+您可以更改System Manager会话非活动超时。默认非活动超时时间为30分钟。超时对于防止陈旧会话和会话备份非常重要。
+
+
+NOTE: 如果配置了SAML、则非活动超时由Idp上的设置控制。
+
+.步骤
+. 选择*集群>设置*。
+. 在*UI设置*中，选择image:icon_pencil.gif["编辑图标"]。
+. 在*非活动超时*框中，键入一个介于2到180之间的分钟值，或者输入“0”禁用超时。
+. 选择 * 保存 * 。
+

@@ -86,7 +86,7 @@ FlexGroup卷支持快照锁定。快照锁定仅在根成分卷快照上进行�
 . 如果尚未启用此选项，请选择*初 始化SnapLock Compliance Clock*。
 . 保存所做的更改。
 . 在*Volumes*窗口中，选择要更新的卷，然后选择*Overview*。
-. 验证* SnapLock Snapshot副本锁定*是否显示为*已启用*。
+. 验证* SnapLock快照锁定*是否显示为*已启用*。
 
 
 --
@@ -94,7 +94,7 @@ FlexGroup卷支持快照锁定。快照锁定仅在根成分卷快照上进行�
 --
 . 要创建新卷并启用快照锁定、请输入以下命令：
 +
-`volume create -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
+`volume create -vserver <vserver_name> -volume <volume_name> -snapshot-locking-enabled true`
 
 +
 以下命令将在名为vol1的新卷上启用快照锁定：
@@ -130,7 +130,7 @@ Do you want to continue: {yes|no}: y
 . 如果尚未启用此选项，请选择*初 始化SnapLock Compliance Clock*。
 . 保存所做的更改。
 . 在*Volumes*窗口中，选择要更新的卷，然后选择*Overview*。
-. 验证* SnapLock Snapshot副本锁定*是否显示为*已启用*。
+. 验证* SnapLock快照锁定*是否显示为*已启用*。
 
 
 --
@@ -138,7 +138,7 @@ Do you want to continue: {yes|no}: y
 --
 . 要修改现有卷以启用快照锁定、请输入以下命令：
 +
-`volume modify -vserver _vserver_name_ -volume _volume_name_ -snapshot-locking-enabled true`
+`volume modify -vserver <vserver_name> -volume <volume_name> -snapshot-locking-enabled true`
 
 
 
@@ -180,7 +180,7 @@ Do you want to continue: {yes|no}: y
 --
 . 要创建快照策略、请输入以下命令：
 +
-`volume snapshot policy create -policy policy_name -enabled true -schedule1 _schedule1_name_ -count1 _maximum_Snapshot_copies -retention-period1 _retention_period_`
+`volume snapshot policy create -policy <policy_name> -enabled true -schedule1 <schedule1_name> -count1 <maximum snapshots> -retention-period1 <retention_period>`
 
 +
 以下命令将创建快照锁定策略：
@@ -188,7 +188,7 @@ Do you want to continue: {yes|no}: y
 +
 [listing]
 ----
-cluster1> volume snapshot policy create -policy policy_name -enabled true -schedule1 hourly -count1 24 -retention-period1 "1 days"
+cluster1> volume snapshot policy create -policy lock_policy -enabled true -schedule1 hourly -count1 24 -retention-period1 "1 days"
 ----
 +
 如果快照处于活动保留状态、则不会替换该快照；也就是说、如果存在尚未过期的锁定快照、则不会使用保留计数。
@@ -218,7 +218,7 @@ cluster1> volume snapshot policy create -policy policy_name -enabled true -sched
 --
 . 要将快照锁定策略应用于现有卷、请输入以下命令：
 +
-`volume modify -volume volume_name -vserver vserver_name -snapshot-policy policy_name`
+`volume modify -volume <volume_name> -vserver <vserver_name> -snapshot-policy <policy_name>`
 
 
 
@@ -247,7 +247,7 @@ cluster1> volume snapshot policy create -policy policy_name -enabled true -sched
 --
 . 要手动创建快照并应用锁定保留期限、请输入以下命令：
 +
-`volume snapshot create -volume _volume_name_ -snapshot _snapshot_copy_name_ -snaplock-expiry-time _expiration_date_time_`
+`volume snapshot create -volume <volume_name> -snapshot <snapshot name> -snaplock-expiry-time <expiration_date_time>`
 
 +
 以下命令将创建新快照并设置保留期限：
@@ -281,7 +281,7 @@ cluster1> volume snapshot create -vserver vs1 -volume vol1 -snapshot snap1 -snap
 --
 . 要手动将保留期限应用于现有快照、请输入以下命令：
 +
-`volume snapshot modify-snaplock-expiry-time -volume _volume_name_ -snapshot _snapshot_copy_name_ -expiry-time _expiration_date_time_`
+`volume snapshot modify-snaplock-expiry-time -volume <volume_name> -snapshot <snapshot name> -snaplock-expiry-time <expiration_date_time>`
 
 +
 以下示例将保留期限应用于现有快照：
@@ -289,7 +289,7 @@ cluster1> volume snapshot create -vserver vs1 -volume vol1 -snapshot snap1 -snap
 +
 [listing]
 ----
-cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot snap2 -expiry-time "11/10/2022 09:00:00"
+cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot snap2 -snaplock-expiry-time "11/10/2022 09:00:00"
 ----
 
 

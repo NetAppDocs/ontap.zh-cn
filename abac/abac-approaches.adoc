@@ -2,7 +2,7 @@
 permalink: abac/abac-approaches.html 
 sidebar: sidebar 
 keywords: technical report, tr, abac, attribute, access control, attribute based, nfs, security labels, xattrs, nfs 4.2, nist, abac compliant, data management, role-based access control, rbac, policy enforcement point, pep, policy decision point, pdp 
-summary: ONTAP提供了多种客户可用于实现文件级ABAC的方法、包括使用NFS和SMB/CCIFS的标记NFSv4.2和XATTRS。 
+summary: ONTAP提供了多种客户可用于实现文件级ABAC的方法、包括NFS v4.2安全标签和使用NFS的xattrs。 
 ---
 = 在ONTAP中使用ABAC的方法
 :allow-uri-read: 
@@ -11,19 +11,19 @@ summary: ONTAP提供了多种客户可用于实现文件级ABAC的方法、包�
 
 
 [role="lead"]
-ONTAP提供了多种客户可用于实现文件级ABAC的方法、包括使用NFS和SMB/CCIFS的标记NFSv4.2和XATTRS。
+ONTAP提供了多种客户可用于实现文件级基于属性的访问控制(ABAC)的方法、包括NFS v4.2安全标签和使用NFS的扩展属性(xatts)。
 
 
 
-== 标记为NFSv4.2
+== NFS v4.2安全标签
 
-从NFS.9.1开始、支持名为标记ONTAP 9的NFSv4.2功能。
+从ONTAP 9.9.1开始、支持名为标记NFS的NFS v4.2功能。
 
-标记NFS是一种使用SELinux标签和强制访问控制(MandatoryAL Access Control、MAC)管理精细文件和文件夹访问的方法。这些MAC标签与文件和文件夹存储在一起、并与UNIX权限和NFSv4.x ACL结合使用。
+NFS v4.2安全标签是一种使用SELinux标签和强制访问控制(Mandat强制 访问控制、MAC)管理精细文件和文件夹访问的方法。这些MAC标签与文件和文件夹存储在一起、并与UNIX权限和NFS v4.x ACL结合使用。
 
-支持标记NFS意味着ONTAP现在可以识别和了解NFS客户端的SELinux标签设置。标记的NFS在RFC 7204中进行了介绍。
+支持NFS v4.2安全标签意味着ONTAP现在可以识别和了解NFS客户端的SELinux标签设置。RFC 7204中介绍了NFS v4.2安全标签。
 
-标记为NFSv4.2的使用情形包括以下内容：
+NFS v4.2安全标签的使用情形如下：
 
 * 虚拟机(VM)映像的MAC标签
 * 公共部门的数据安全分类(机密、最高机密和其他分类)
@@ -31,30 +31,38 @@ ONTAP提供了多种客户可用于实现文件级ABAC的方法、包括使用NF
 * 无磁盘 Linux
 
 
-.启用带标签的NFSv4.2
-您可以使用以下高级权限选项启用或禁用带标签的NFS：
+
+
+=== 启用 NFS v4.2 安全标签
+
+您可以使用以下命令启用或禁用NFS v4.2安全标签(需要高级权限)：
 
 [source, cli]
 ----
-[-v4.2-seclabel {enabled|disabled}] - NFSV4.2 Security Label Support (privilege: advanced)
+vserver nfs modify -vserver <svm_name> -v4.2-seclabel <disabled|enabled>
 ----
-此参数是可选的，默认设置为 `disabled`。
 
-.已标记NFSv4.2的强制实施模式
+
+=== NFS v4.2安全标签的强制实施模式
+
 从ONTAP 9.9.1开始、ONTAP支持以下强制实施模式：
 
 * *受限服务器模式*：ONTAP无法强制执行标签，但可以存储和传输标签。
 +
 
-NOTE: 更改 MAC 标签的功能也由客户端强制实施。
+NOTE: 更改MAC标签的功能由客户端实施。
 
 * *来宾模式*：如果客户端未标记为NFS感知型(v4.1或更低版本)，则不会传输MAC标签。
-
-
++
 
 NOTE: ONTAP当前不支持完整模式(存储和强制实施MAC标签)。
 
-.标记为NFSv4.2的配置示例
+
+
+
+
+=== NFS v4.2安全标签示例
+
 以下配置示例演示了使用Red Hat Enterprise Linux 9.3 (Plow)的概念。
 
 根据John R. Smith的凭据创建的用户 `jrsmith`具有以下帐户Privileges：
@@ -100,10 +108,7 @@ NOTE: ONTAP当前不支持完整模式(存储和强制实施MAC标签)。
 * S3 =排名靠前的机密数据
 
 
-
-NOTE: 遵循您组织的安全策略
-
-.使用MCS的NFSv4.2安全标签示例
+.使用MCS的NFS v4.2安全标签示例
 除了多级别安全性(MLS)之外、另一项称为多类别安全性(MCS)的功能还允许您定义项目等类别。
 
 [cols="2a,8a"]
@@ -119,15 +124,16 @@ NOTE: 遵循您组织的安全策略
 |===
 
 
-== 扩展属性(XATTRS)
+== 扩展属性(xatts)
 
 从ONTAP 9.12.1开始、ONTAP支持xattr。xattr允许元数据与系统提供的范围以外的文件和目录相关联、例如访问控制列表(ACL)或用户定义的属性。
 
-要实施xatts、您可以在Linux中使用 `setfattr`和 `getfattr`命令行实用程序来管理文件系统对象的xatts。这些工具为管理文件和目录的其他元数据提供了一种强大的方式。应谨慎使用、因为使用不当可能会导致意外行为或安全问题。有关详细的使用说明、请始终参考 `setfattr`和 `getfattr`手册页或其他可靠的文档。
+要实施xatts、您可以在Linux中使用 `setfattr`和 `getfattr`命令行实用程序。这些工具为管理文件和目录的其他元数据提供了一种强大的方式。使用时应小心、因为使用不当可能会导致意外行为或安全问题。有关详细的使用说明、请始终参考 `setfattr`和 `getfattr`手册页或其他可靠的文档。
 
 在ONTAP文件系统上启用xatts后、用户可以设置、修改和检索文件的任意属性。这些属性可用于存储有关标准文件属性集未捕获的文件的其他信息、例如访问控制信息。
 
-.在ONTAP中使用xatts的要求
+在ONTAP中使用xattrs有多个要求和限制：
+
 * Red Hat Enterprise Linux 8.4或更高版本
 * Ubuntu 22.04或更高版本
 * 每个文件最多可以包含128个xatts
@@ -137,19 +143,21 @@ NOTE: 遵循您组织的安全策略
 * 要设置和检索xattr、 `w`必须为用户和组启用写入模式位
 
 
-.xatts的用例
-xattrs在用户命名空间中使用、不会对ONTAP本身具有任何内在意义。而是由与文件系统交互的客户端应用程序来确定和管理它们的实际应用程序。
+Xatts在用户命名空间中使用、对ONTAP本身没有任何内在意义。而是由与文件系统交互的客户端应用程序来确定和管理它们的实际应用程序。
 
 XATTR用例示例：
 
-* 记录负责创建文件的应用程序的名称。
-* 维护对从中获取文件的电子邮件的引用。
-* 建立用于组织文件对象的分类框架。
-* 使用原始下载源的URL标记文件。
+* 记录负责创建文件的应用程序的名称
+* 维护对从中获取文件的电子邮件的引用
+* 建立用于组织文件对象的分类框架
+* 使用原始下载源的URL标记文件
 
 
-.用于管理xattrs的命令
-* `setfattr`:设置文件或目录的扩展属性：
+
+
+=== 用于管理xattrs的命令
+
+* `setfattr`设置文件或目录的扩展属性：
 +
 `setfattr -n <attribute_name> -v <attribute_value> <file or directory name>`
 
@@ -157,9 +165,11 @@ XATTR用例示例：
 命令示例：
 
 +
-`setfattr -n user.comment -v test example.txt`
-
-* `getfattr`：检索特定扩展属性的值或列出文件或目录的所有扩展属性：
+[source, cli]
+----
+setfattr -n user.comment -v test example.txt
+----
+* `getfattr`检索特定扩展属性的值或列出文件或目录的所有扩展属性：
 +
 特定属性：
 `getfattr -n <attribute_name> <file or directory name>`
@@ -172,9 +182,17 @@ XATTR用例示例：
 命令示例：
 
 +
-`getfattr -n user.comment example.txt`
+[source, cli]
+----
+getfattr -n user.comment example.txt
+----
 
 
+
+
+=== XATTR键值对示例
+
+下表显示了两个xattr键值对示例：
 
 [cols="2a,8a"]
 |===
@@ -196,9 +214,16 @@ XATTR用例示例：
 |===
 
 
-== ACE的用户权限(用于扩展属性)
+=== ACE for xatts的用户权限
 
-访问控制条目(ACE)是访问控制列表(ACL)中的一个组件、用于定义为特定资源(例如文件或目录)授予单个用户或一组用户的访问权限。每个ACE都指定允许或拒绝的访问类型、并与特定安全主体(用户或组身份)相关联。
+访问控制条目(ACE)是ACL中的一个组件、用于定义为特定资源(例如文件或目录)授予单个用户或一组用户的访问权限。每个ACE都指定允许或拒绝的访问类型、并与特定安全主体(用户或组身份)相关联。
+
+.xatts需要访问控制条目(ACE)
+* RetrievE xattr：用户读取文件或目录的扩展属性所需的权限。"R"表示需要读取权限。
+* set xattr：修改或设置扩展属性所需的权限。"a"、"w"和"T"表示不同的权限示例、例如附加、写入以及与xatts相关的特定权限。
+* files：用户需要附加、写入以及可能与xatts相关的特殊权限来设置扩展属性。
+* 目录：设置扩展属性需要特定权限"T"。
+
 
 |===
 | 文件类型 | 检索xattr | 设置xattrs. 
@@ -209,58 +234,92 @@ XATTR用例示例：
 
 | 目录 | R | T 
 |===
-xatts所需权限的说明：
-
-*REQUERVE XATTR*：用户读取文件或目录的扩展属性所需的权限。"R"表示需要读取权限。*set xatts*：修改或设置扩展属性所需的权限。"a"、"w"和"T"表示不同的权限示例、例如附加、写入以及与xatts相关的特定权限。*Files*：用户需要附加、写入以及可能与xatts相关的特殊权限来设置扩展属性。*目录*：设置扩展属性需要特定权限"T"。
 
 
+== 与ABAC身份和访问控制软件集成
 
-== xattrs的SMB/CCIFS协议支持
+为了充分利用ABAC的功能、ONTAP可以与面向ABAC的身份和访问管理软件集成。
 
-ONTAP对SMB/CCIFS协议的支持扩展到对xatts的全面处理、xatts是Windows环境中文件元数据不可或缺的一部分。通过扩展属性、用户和应用程序可以存储标准文件属性集之外的其他信息、例如作者详细信息、自定义安全描述符或应用程序特定的数据。ONTAP的SMB/CCIFS实施可确保完全支持这些xattrs、从而可以与依赖此元数据执行功能和策略的Windows服务和应用程序无缝集成。
+在ABAC系统中、政策执行点(PEP)和政策决策点(PDP)发挥着关键作用。PEP负责实施访问控制策略、而PDP则根据策略决定是授予还是拒绝访问。
 
-在通过ONTAP管理的SMB/CCIFS共享访问或传输文件时、系统会保留xattr的完整性、从而确保所有元数据都得以保留并保持一致。这对于维护安全设置以及使用xattr进行配置或操作的应用程序来说尤其重要。ONTAP在SMB/CCIFS环境中对xattrs的强大处理可确保不同平台和环境之间的文件共享可靠且安全、从而为用户提供无缝体验、并确保管理员遵守数据监管策略。无论是协作、数据归档还是合规性、ONTAP对SMB/CCIFS共享中的xattr的关注体现了其在混合操作系统环境中实现卓越数据管理和互操作性的承诺。
-
-
-
-== ABAC中的政策执行点(PEP)和政策决策点(PDP)
-
-在基于属性的访问控制(ABAC)系统中、策略实施点(PEP)和策略决策点(PDP)发挥着关键作用。PEP负责实施访问控制策略、而PDP则根据策略决定是授予还是拒绝访问。
-
-在所提供的Python代码段上下文中、脚本本身充当PEP。它可以通过打开文件并读取其内容来授予对该文件的访问权限，也可以通过提出来拒绝访问来强制执行访问控制决策 `PermissionError`。
-
-另一方面、PDP将是底层SELinux系统的一部分。当脚本尝试打开具有特定SELinux环境的文件时、SELinux系统会检查其策略以确定是授予还是拒绝访问。然后、该脚本将强制执行此决定。
-
-下面是此代码在ABAC环境中的工作原理的分步示例细分：
-
-. 该脚本使用函数将SELinux上下文设置为 `jrsmith`上下文 `selinux.setcon()`。这相当于 `jrsmith`尝试访问文件。
-. 该脚本将尝试打开该文件。这就是PEP发挥作用的地方。
-. SELinux系统会检查其策略、以确定是否 `jrsmith`允许(更具体地说、是具有SELinux环境的用户 `jrsmith`)访问该文件。这是PDP的角色。
-. 如果 `jrsmith`允许访问该文件、则SELinux系统允许该脚本打开该文件、该脚本将读取并打印该文件的内容。
-. 如果 `jrsmith`不允许访问该文件，SELinux系统将阻止该脚本打开该文件，并且该脚本将发出 `PermissionError`。
-. 该脚本将还原初始SELinux上下文、以确保临时上下文更改不会影响其他操作。
+在实际环境中、组织会混合使用NFS安全标签和xatts。它们用于表示各种元数据、包括分类、安全性、应用程序和内容、这些都有助于ABAC决策。例如、xatts可用于存储PDP决策过程所使用的资源属性。可以定义一个属性来表示文件的分类级别(例如、"未分类"、"机密"、"机密"或"最高机密")。然后、PDP可以使用此属性来强制实施一项策略、该策略将限制用户仅访问分类级别等于或低于其间隙级别的文件。
 
 
-使用pyPython，获取上下文的代码如下所示，其中可变文件路径是要检查的文档：
+NOTE: 此内容假定客户的身份、身份验证和访问服务至少包括PEP和PDP、它们充当文件系统访问的中间人。
 
-[listing]
-----
-#Get the current context
+.ABAC流程示例
+. 用户提供系统访问PEP的凭据(例如PKI、OAuth、SAML)、并从PDP获取结果。
++
+PEP的角色是截获用户的访问请求并将其转发到PDP。
 
-context = selinux.getfilecon(file_path)[1]
-----
+. 然后、PDP会根据已建立的ABAC策略评估此请求。
++
+这些策略会考虑与用户、相关资源和周围环境相关的各种属性。根据这些政策、PDP做出允许或拒绝访问决定、然后将该决定传达给PEP。
+
++
+PDP为PEP提供了要强制实施的策略。然后、PEP会根据PDP的决定批准或拒绝用户的访问请求、从而强制执行此决定。
+
+. 请求成功后、用户将请求存储在ONTAP中的文件(例如AFF、AFF C)。
+. 如果请求成功、PEP将从文档中获取精细的访问控制标签。
+. PEP根据该用户的证明请求该用户的策略。
+. PEP根据策略和标记决定用户是否有权访问该文件、并允许用户检索该文件。
+
+
+
+NOTE: 实际访问可能使用令牌完成。
+
+image:abac-access-architecture.png["ABAC访问架构"]
+
 
 
 == ONTAP克隆和SnapMirror
 
-ONTAP的克隆和SnapMirror技术旨在提供高效可靠的数据复制和克隆功能、确保文件数据的所有方面(包括扩展属性(xattrs))都与文件一起保留和传输。xattrs非常重要、因为它们存储与文件关联的其他元数据、例如安全标签、访问控制信息和用户定义的数据、这些对于维护文件的上下文和完整性至关重要。
+ONTAP的克隆和SnapMirror技术旨在提供高效可靠的数据复制和克隆功能、确保文件数据的所有方面(包括xattrs)都与文件一起保留和传输。xattrs非常重要、因为它们存储与文件关联的其他元数据、例如安全标签、访问控制信息和用户定义的数据、这些对于维护文件的上下文和完整性至关重要。
 
 使用ONTAP的FlexClone技术克隆卷时、系统会为该卷创建一个精确的可写副本。此克隆过程可瞬时完成、并且节省空间、其中包括所有文件数据和元数据、从而确保完全复制xatts。同样、SnapMirror可确保以完全保真的方式将数据镜像到二级系统。其中包括xatts、对于依赖此元数据的应用程序正常运行至关重要。
 
 通过在克隆和复制操作中使用xatts、NetApp ONTAP可确保整个数据集及其所有特征在主存储系统和二级存储系统中可用且一致。这种全面的数据管理方法对于需要一致的数据保护、快速恢复以及遵守合规性和法规标准的组织至关重要。同时、它还可以简化不同环境(无论是内部环境还是云环境)中的数据管理、让用户确信其数据在这些过程中是完整的、不会被更改。
 
 
-NOTE: NFSv4.2安全标签具有中定义的说明<<标记为NFSv4.2>>。
+NOTE: NFS v4.2安全标签具有中定义的说明<<NFS v4.2安全标签>>。
+
+
+
+== 审核标签更改
+
+审核对xattr或NFS安全标签的更改是文件系统管理和安全性的一个关键方面。通过标准文件系统审核工具、可以监控和记录对文件系统的所有更改、包括对xattrs和安全标签的修改。
+
+在Linux环境中、 `auditd`守护进程通常用于为文件系统事件建立审核。它允许管理员配置规则，以监视与xattr更改相关的特定系统调用，例如 `setxattr`、、 `lsetxattr`以及 `fsetxattr`设置属性和 `removexattr`、 `lremovexattr`以及 `fremovexattr`删除属性。
+
+ONTAP FPolicy通过提供一个用于实时监控和控制文件操作的强大框架、扩展了这些功能。可以对FPolicy进行配置、使其支持各种xattr事件、从而对文件操作进行精细控制、并能够实施全面的数据管理策略。
+
+对于使用xattrs的用户、尤其是在NFS v3和NFS v4环境中、仅支持使用特定的文件操作和筛选器组合进行监控。下面详细列出了对NFS v3和NFS v4文件访问事件进行FPolicy监控时支持的文件操作和筛选器组合：
+
+[cols="25%a,75%a"]
+|===
+| 支持的文件操作 | 支持的筛选器 
+
+
+ a| 
+`setattr`
+ a| 
+`offline-bit, setattr_with_owner_change, setattr_with_group_change, setattr_with_mode_change, setattr_with_modify_time_change, setattr_with_access_time_change, setattr_with_size_change, exclude_directory`
+
+|===
+.setattr操作的auditd日志段示例：
+[listing]
+----
+type=SYSCALL msg=audit(1713451401.168:106964): arch=c000003e syscall=188
+success=yes exit=0 a0=7fac252f0590 a1=7fac251d4750 a2=7fac252e50a0 a3=25
+items=1 ppid=247417 pid=247563 auid=1112 uid=1112 gid=1112 euid=1112
+suid=1112 fsuid=1112 egid=1112 sgid=1112 fsgid=1112 tty=pts0 ses=141
+comm="python3" exe="/usr/bin/python3.9"
+subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+key="*set-xattr*"ARCH=x86_64 SYSCALL=**setxattr** AUID="jrsmith"
+UID="jrsmith" GID="jrsmith" EUID="jrsmith" SUID="jrsmith"
+FSUID="jrsmith" EGID="jrsmith" SGID="jrsmith" FSGID="jrsmith"
+----
+为使用xatts的用户启用link:../nas-audit/two-parts-fpolicy-solution-concept.html["ONTAP FPolicy"]可提供一层可见性和控制、这对于维护文件系统的完整性和安全性至关重要。通过利用FPolicy的高级监控功能、企业可以确保跟踪、审核对xatts的所有更改、并使其符合其安全和合规性标准。这种主动式文件系统管理方法是强烈建议任何希望增强数据监管和保护策略的组织启用ONTAP FPolicy的原因。
 
 
 
@@ -269,7 +328,7 @@ NOTE: NFSv4.2安全标签具有中定义的说明<<标记为NFSv4.2>>。
 以下John R Smith的PKI证书中存储的数据条目示例显示了如何将NetApp的方法应用于文件并提供精细的访问控制。
 
 
-NOTE: 这些示例仅用于说明目的、政府有责任定义什么是NFSv4.2安全标签和xattl。为了简便起见、省略了有关更新和标签保留的详细信息。
+NOTE: 这些示例仅用于说明目的、客户负责确定与NFS v4.2安全标签和xatts关联的元数据。为了简便起见、省略了有关更新和标签保留的详细信息。
 
 [cols="2a,8a"]
 |===
@@ -478,7 +537,7 @@ image:abac-unclassified.png["未分类CA总 成文档部分标记的示例"]
 
 如果IC-TDF元数据与文件分开存储、则NetApp主张增加一层精细的访问控制。这涉及到在目录级别以及与每个文件关联的情况下存储访问控制信息。例如、请考虑以下链接到文件的标记：
 
-* NFSv4.2安全标签：用于制定安全决策
+* NFS v4.2安全标签：用于制定安全决策
 * xatts：提供与文件和组织计划要求相关的补充信息
 
 
@@ -575,84 +634,12 @@ image:abac-unclassified.png["未分类CA总 成文档部分标记的示例"]
 `[-78.7941, 35.7956]`
 
 |===
-
-
-== 审核标签更改
-
-审核对xattr或NFS安全标签的更改是文件系统管理和安全性的一个关键方面。通过标准文件系统审核工具、可以监控和记录对文件系统的所有更改、包括对扩展属性和安全标签的修改。
-
-在Linux环境中、 `auditd`守护进程通常用于为文件系统事件建立审核。它允许管理员配置规则，以监视与xattr更改相关的特定系统调用，例如 `setxattr`、、 `lsetxattr`以及 `fsetxattr`设置属性和 `removexattr`、 `lremovexattr`以及 `fremovexattr`删除属性。
-
-ONTAP FPolicy通过提供一个用于实时监控和控制文件操作的强大框架、扩展了这些功能。可以对FPolicy进行配置、使其支持各种xattr事件、从而对文件操作进行精细控制、并能够实施全面的数据管理策略。
-
-对于使用xattrs的用户、尤其是在NFSv3和NFSv4环境中、仅支持使用特定的文件操作和筛选器组合进行监控。下面详细列出了在对NFSv3和NFSv4文件访问事件进行FPolicy监控时支持的文件操作和筛选器组合：
-
-[cols="25%a,75%a"]
-|===
-| 支持的文件操作 | 支持的筛选器 
-
-
- a| 
-`setattr`
- a| 
-`offline-bit, setattr_with_owner_change, setattr_with_group_change, setattr_with_mode_change, setattr_with_modify_time_change, setattr_with_access_time_change, setattr_with_size_change, exclude_directory`
-
-|===
-.setattr操作的auditd日志段示例：
-[listing]
-----
-type=SYSCALL msg=audit(1713451401.168:106964): arch=c000003e syscall=188
-success=yes exit=0 a0=7fac252f0590 a1=7fac251d4750 a2=7fac252e50a0 a3=25
-items=1 ppid=247417 pid=247563 auid=1112 uid=1112 gid=1112 euid=1112
-suid=1112 fsuid=1112 egid=1112 sgid=1112 fsgid=1112 tty=pts0 ses=141
-comm="python3" exe="/usr/bin/python3.9"
-subj=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
-key="*set-xattr*"ARCH=x86_64 SYSCALL=**setxattr** AUID="jrsmith"
-UID="jrsmith" GID="jrsmith" EUID="jrsmith" SUID="jrsmith"
-FSUID="jrsmith" EGID="jrsmith" SGID="jrsmith" FSGID="jrsmith"
-----
-为使用xatts的用户启用ONTAP FPolicy可提供一层可见性和控制、这对于维护文件系统的完整性和安全性至关重要。通过利用FPolicy的高级监控功能、企业可以确保跟踪、审核对xatts的所有更改、并使其符合其安全和合规性标准。这种主动式文件系统管理方法是强烈建议任何希望增强数据监管和保护策略的组织启用ONTAP FPolicy的原因。
-
-
-
-== 与ABAC身份和访问控制软件集成
-
-为了充分利用基于属性的访问控制(ABAC)的功能、ONTAP可以与面向ABAC的身份和访问管理软件集成。
-
-
-NOTE: 与此内容并行的是、NetApp具有一个使用GrayBox的参考实施。此内容的一个假设是、政府的身份、身份验证和访问服务至少包括一个策略实施点(PEP)和一个策略决策点(PDP)、它们充当文件系统访问的中间人。
-
-在实际环境中、组织会混合使用NFS安全标签和xatts。这些元数据用于表示各种元数据、包括分类、安全性、应用程序和内容、它们都有助于ABAC决策。例如、xattr可用于存储PDP用于其决策过程的资源属性。可以定义一个属性来表示文件的分类级别(例如、"未分类"、"机密"、"机密"或"最高机密")。然后、PDP可以使用此属性来强制实施一项策略、该策略将限制用户仅访问分类级别等于或低于其间隙级别的文件。
-
-.ABAC流程示例
-. 用户提供系统访问PEP的凭据(例如PKI、OAuth、SAML)、并从PDP获取结果。
-+
-PEP的角色是截获用户的访问请求并将其转发到PDP。
-
-. 然后、PDP会根据已建立的ABAC策略评估此请求。
-+
-这些策略会考虑与用户、相关资源和周围环境相关的各种属性。根据这些政策、PDP做出允许或拒绝访问决定、然后将该决定传达给PEP。
-
-+
-PDP为PEP提供了要强制实施的策略。然后、PEP会根据PDP的决定批准或拒绝用户的访问请求、从而强制执行此决定。
-
-. 请求成功后、用户将请求存储在ONTAP中的文件(例如AFF、AFF C)。
-. 如果请求成功、PEP将从文档中获取精细的访问控制标签。
-. PEP根据该用户的证明请求该用户的策略。
-. PEP根据策略和标记决定用户是否有权访问该文件、并允许用户检索该文件。
-
-
-
-NOTE: 实际访问可以使用非代理令牌来完成。
-
-image:abac-access-architecture.png["ABAC访问架构"]
-
 .相关信息
 * link:https://www.netapp.com/media/10720-tr-4067.pdf["NetApp ONTAP中的NFS：最佳实践和实施指南"^]
 * 请求注释(RFC)
 +
-** RFC 2203：《RPCSEC_GSS协议规范》
-** RFC 3530：《网络文件系统(Network File System、NFS)版本4协议》
+** link:https://datatracker.ietf.org/doc/html/rfc2203["RFC 2203：《RPCSEC_GSS协议规范》"^]
+** link:https://datatracker.ietf.org/doc/html/rfc3530["RFC 3530：《网络文件系统(Network File System、NFS)版本4协议》"^]
 
 
 
