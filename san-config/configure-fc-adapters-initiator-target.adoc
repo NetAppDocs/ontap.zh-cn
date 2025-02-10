@@ -1,0 +1,167 @@
+---
+permalink: san-config/configure-fc-adapters-initiator-target.html 
+sidebar: sidebar 
+keywords: configure, fc adapters, initiator mode, target mode, FC-NVMe, FC adapter speed 
+summary: 板载FC适配器和某些FC扩展适配器卡可以配置为启动程序或目标端口。其他FC扩展适配器在出厂时已配置为启动程序或目标、并且无法更改。 
+---
+= 配置FC适配器
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+板载FC适配器和某些FC扩展适配器卡可以单独配置为启动程序或目标端口。其他FC扩展适配器在出厂时已配置为启动程序或目标、并且无法更改。此外、还可以通过使用FC SFP+适配器配置的受支持UTA2卡使用其他FC端口。
+
+启动程序端口可用于直接连接到后端磁盘架、可能还包括外部存储阵列。目标端口只能用于连接到FC交换机。
+
+为FC配置的板载端口和CNA/UTA2端口数量因控制器型号而异。受支持的目标扩展适配器也因控制器型号而异。有关适用于您的控制器型号的板载FC端口和支持的目标扩展适配器的完整列表、请参见link:https://hwu.netapp.com["NetApp Hardware Universe"^]。
+
+
+
+== 为启动程序模式配置 FC 适配器
+
+启动程序模式用于通过 FlexArray 虚拟化或外部 LUN 导入（ FLI ）将端口连接到磁带驱动器，磁带库或第三方存储。
+
+.开始之前
+* 适配器上的 LIF 必须从其所属的任何端口集中删除。
+* 在将物理端口的特性从目标更改为启动程序之前，必须迁移或销毁使用要修改的物理端口的每个 Storage Virtual Machine （ SVM ）中的所有 LIF 。
+
+
+[NOTE]
+====
+NVMe/FC 支持启动程序模式。
+
+====
+.步骤
+. 从适配器中删除所有 LIF ：
++
+[source, cli]
+----
+network interface delete -vserver _SVM_name_ -lif _lif_name_,_lif_name_
+----
+. 使适配器脱机：
++
+[source, cli]
+----
+network fcp adapter modify -node _node_name_ -adapter _adapter_port_ -status-admin down
+----
++
+如果适配器未脱机，您也可以从系统上的相应适配器端口拔下缆线。
+
+. 将适配器从目标更改为启动程序：
++
+[source, cli]
+----
+system hardware unified-connect modify -t initiator _adapter_port_
+----
+. 重新启动托管已更改适配器的节点。
+. 验证 FC 端口是否已配置为适用于您的配置的正确状态：
++
+[source, cli]
+----
+system hardware unified-connect show
+----
+. 将适配器恢复联机：
++
+[source, cli]
+----
+node run -node _node_name_ storage enable adapter _adapter_port_
+----
+
+
+
+
+== 为目标模式配置 FC 适配器
+
+目标模式用于将端口连接到 FC 启动程序。
+
+使用相同步骤为FC协议和FC-NVMe协议配置FC适配器。但是，只有某些 FC 适配器支持 FC-NVMe 。有关支持FC-NVMe协议的适配器列表、请参见link:https://hwu.netapp.com["NetApp Hardware Universe"^]。
+
+.步骤
+. 使适配器脱机：
++
+[source, cli]
+----
+node run -node _node_name_ storage disable adapter _adapter_name_
+----
++
+如果适配器未脱机，您也可以从系统上的相应适配器端口拔下缆线。
+
+. 将适配器从启动程序更改为目标：
++
+[source, cli]
+----
+system node hardware unified-connect modify -t target -node _node_name_ adapter _adapter_name_
+----
+. 重新启动托管已更改适配器的节点。
+. 验证目标端口的配置是否正确：
++
+[source, cli]
+----
+network fcp adapter show -node _node_name_
+----
+. 使适配器联机：
++
+[source, cli]
+----
+network fcp adapter modify -node _node_name_ -adapter _adapter_port_ -state up
+----
+
+
+
+
+== 配置FC适配器速度
+
+您应将适配器目标端口速度配置为与其所连接设备的速度匹配、而不是使用自动协调。在接管 / 交还或其他中断后，设置为自动协商的端口可能需要较长时间才能重新连接。
+
+.关于此任务
+由于此任务包含集群中的所有Storage Virtual Machine (SVM)和所有SVM、因此您必须使用 `-home-port` 和 `-home-lif` 用于限制此操作范围的参数。如果不使用这些参数，则操作适用场景 all LIF 将在集群中运行，这可能不是理想的做法。
+
+.开始之前
+使用此适配器作为主端口的所有 LIF 都必须脱机。
+
+.步骤
+. 使此适配器上的所有 LIF 脱机：
++
+[source, cli]
+----
+network interface modify -vserver * -lif * { -home-node node1 -home-port 0c } -status-admin down
+----
+. 使适配器脱机：
++
+[source, cli]
+----
+network fcp adapter modify -node node1 -adapter 0c -state down
+----
++
+如果适配器未脱机，您也可以从系统上的相应适配器端口拔下缆线。
+
+. 确定端口适配器的最大速度：
++
+[source, cli]
+----
+fcp adapter show -instance
+----
++
+您不能将适配器速度修改为超过最大速度。
+
+. 更改适配器速度：
++
+[source, cli]
+----
+network fcp adapter modify -node node1 -adapter 0c -speed 16
+----
+. 使适配器联机：
++
+[source, cli]
+----
+network fcp adapter modify -node node1 -adapter 0c -state up
+----
+. 使适配器上的所有 LIF 联机：
++
+[source, cli]
+----
+network interface modify -vserver * -lif * { -home-node node1 -home-port 0c } -status-admin up
+----
+

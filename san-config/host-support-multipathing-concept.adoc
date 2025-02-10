@@ -4,15 +4,45 @@ sidebar: sidebar
 keywords: host, support, multipathing 
 summary: ONTAP 始终对 FC 和 iSCSI 路径使用非对称逻辑单元访问（ Asymmetric Logical Unit Access ， ALUA ）。请务必使用支持 FC 和 iSCSI 协议 ALUA 的主机配置。 
 ---
-= 主机支持多路径概述
+= ONTAP支持SAN主机多路径
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-ONTAP 始终对 FC 和 iSCSI 路径使用非对称逻辑单元访问（ Asymmetric Logical Unit Access ， ALUA ）。请务必使用支持 FC 和 iSCSI 协议 ALUA 的主机配置。
+ONTAP可使用非对称逻辑单元访问(ANAUA)软件为FC和iSCSI主机提供多路径功能。
 
-从 ONTAP 9.5 开始，使用异步命名空间访问（ Asynchronous Namespace Access ， ANA ）的 NVMe 配置支持多路径 HA 对故障转移 / 交还。在 ONTAP 9.4 中， NVMe 仅支持从主机到目标的一条路径。应用程序主机需要管理指向其高可用性（ HA ）配对节点的路径故障转移。
+从ONTAP 9.5开始、使用异步命名空间访问(ANA)的NVMe主机支持多路径高可用性(HA)对故障转移/交还。在ONTAP 9.4中、NVMe仅支持从主机到目标的一条路径、因此应用程序主机必须管理到其HA配对节点的路径故障转移。
+
+如果SAN主机可以通过多条路径访问LUN或NVMe命名空间、则需要在该主机上安装多路径软件。对于LUN或NVMe命名空间的所有路径、它会向操作系统提供一个磁盘。如果没有它、操作系统可能会将每个路径视为一个单独的磁盘、从而导致数据损坏。
+
+如果您具有以下任一项，则解决方案将被视为具有多个路径：
+
+* 主机中的单个启动程序端口，连接到 SVM 中的多个 SAN LIF
+* 多个启动程序端口连接到 SVM 中的单个 SAN LIF
+* 多个启动程序端口连接到 SVM 中的多个 SAN LIF
+
+
+建议在HA配置中使用多路径软件、也称为MPIO (多路径I/O)软件。除了选择性LUN映射之外、还建议使用FC交换机分区或端口集来限制用于访问LUN的路径。
 
 有关哪些特定主机配置支持 ALUA 或 ANA 的信息，请参见 https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"^] 和 https://docs.netapp.com/us-en/ontap-sanhost/index.html["ONTAP SAN 主机配置"] 适用于主机操作系统。
+
+
+
+== 从主机到集群中节点的建议路径数
+
+从主机到集群中每个节点的路径不应超过八个。此外、您还不应超过主机操作系统可支持的路径总数以及主机上使用的多路径。
+
+通过集群中的Storage Virtual Machine (SVM)使用、每个连接到每个报告节点的LUN至少应有两个路径link:../san-admin/selective-lun-map-concept.html["选择性 LUN 映射（ SLM ）"]。这样可以消除单点故障，并使系统能够承受组件故障。
+
+如果集群中有四个或更多节点，或者任何节点中的 SVM 正在使用四个以上的目标端口， 您可以使用以下方法限制可用于访问节点上 LUN 的路径数，以便不超过建议的最大路径数 8 个。
+
+* SLM
++
+SLM 会将从主机到 LUN 的路径数减少为仅包含 LUN 的节点及其 HA 配对节点上的路径。默认情况下， SLM 处于启用状态。
+
+* link:../san-admin/limit-lun-access-portsets-igroups-concept.html["iSCSI 的端口集"]
+* 主机中的 FC igroup 映射
+* FC 交换机分区
+
