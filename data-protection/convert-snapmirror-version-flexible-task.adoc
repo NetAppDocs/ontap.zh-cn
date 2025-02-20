@@ -13,8 +13,10 @@ summary: 您可以轻松地将现有 DP 类型关系转换为 XDP ，以利用�
 [role="lead"]
 如果要升级到ONTAP 9.12.1或更高版本、则必须在升级之前将DP类型关系转换为XDP。ONTAP 9.12.1及更高版本不支持DP类型关系。您可以轻松地将现有 DP 类型关系转换为 XDP ，以利用版本灵活的 SnapMirror 。
 
+在升级到ONTAP 9.12.1之前、必须先将现有DP类型关系转换为XDP、然后才能升级到ONTAP 9.12.1及更高版本。
+
 .关于此任务
-* SnapMirror 不会自动将现有的 DP 类型关系转换为 XDP 。要转换此关系，您需要中断并删除现有关系，创建新的 XDP 关系并重新同步此关系。有关背景信息，请参见 link:version-flexible-snapmirror-default-concept.html["XDP 取代 DP 作为 SnapMirror 默认设置"]。
+* SnapMirror 不会自动将现有的 DP 类型关系转换为 XDP 。要转换此关系，您需要中断并删除现有关系，创建新的 XDP 关系并重新同步此关系。
 * 在规划转换时，您应了解 XDP SnapMirror 关系的后台准备和数据仓库阶段可能需要很长时间。在较长的一段时间内， SnapMirror 关系报告状态 " 正在准备 " 的情况并不少见。
 
 
@@ -266,4 +268,118 @@ volume snapshot autodelete modify -vserver <SVM> -volume <volume> -enabled true
 .完成后
 . 使用 `snapmirror show` 命令以验证是否已创建SnapMirror关系。
 . SnapMirror XDP目标卷开始按照SnapMirror策略的定义更新快照后、使用源集群中的命令输出 `snapmirror list-destinations`显示新的SnapMirror XDP关系。
+
+
+.有关DP类型关系的其他信息
+从ONTAP 9.3开始、XDP模式为默认模式、在命令行或新脚本或现有脚本中调用的任何DP模式都将自动转换为XDP模式。
+
+现有关系不受影响。如果某个关系的类型已经是 DP ，则它将继续为 DP 类型。从ONTAP 9.5开始、如果未指定数据保护模式或将XDP模式指定为关系类型、则默认策略为镜像和存储。下表显示了预期行为。
+
+[cols="3*"]
+|===
+
+
+| 指定项 | 类型为 ... | 默认策略（如果未指定策略）为 ... 
+
+
+ a| 
+数据
+ a| 
+XDP
+ a| 
+MirrorAllSnapshots （ SnapMirror 灾难恢复）
+
+
+
+ a| 
+无
+ a| 
+XDP
+ a| 
+MirrorAndVault （统一复制）
+
+
+
+ a| 
+XDP
+ a| 
+XDP
+ a| 
+MirrorAndVault （统一复制）
+
+|===
+如表所示、在不同情况下分配给XDP的默认策略可确保转换保持与先前类型的功能等效。当然，您可以根据需要使用不同的策略，包括用于统一复制的策略：
+
+[cols="3*"]
+|===
+
+
+| 指定项 | 策略是 ... | 结果是 ... 
+
+
+ a| 
+数据
+ a| 
+MirrorAllSnapshots
+ a| 
+SnapMirror 灾难恢复
+
+
+
+ a| 
+XDPDefault
+ a| 
+SnapVault
+
+
+
+ a| 
+MirrorAndVault
+ a| 
+统一复制
+
+
+
+ a| 
+XDP
+ a| 
+MirrorAllSnapshots
+ a| 
+SnapMirror 灾难恢复
+
+
+
+ a| 
+XDPDefault
+ a| 
+SnapVault
+
+
+
+ a| 
+MirrorAndVault
+ a| 
+统一复制
+
+|===
+转换的唯一例外情况如下：
+
+* 在 ONTAP 9.3 及更早版本中， SVM 数据保护关系仍默认为 DP 模式。
++
+从 ONTAP 9.4 开始， SVM 数据保护关系默认为 XDP 模式。
+
+* 根卷负载共享数据保护关系仍默认为 DP 模式。
+* 在 ONTAP 9.4 及更早版本中， SnapLock 数据保护关系仍默认为 DP 模式。
++
+从 ONTAP 9.5 开始， SnapLock 数据保护关系默认为 XDP 模式。
+
+* 如果设置了以下集群范围选项，则显式调用 DP 仍会默认为 DP 模式：
++
+[listing]
+----
+options replication.create_data_protection_rels.enable on
+----
++
+如果不显式调用 DP ，则会忽略此选项。
+
 

@@ -163,7 +163,7 @@ network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _se
 ** `-home-port` 是LIF返回到的物理或逻辑端口 `network interface revert` 命令将在LIF上运行。
 ** 您可以使用指定IP地址 `-address` 和 `-netmask` 选项、或者使用启用从子网分配 `-subnet_name` 选项
 ** 使用子网提供 IP 地址和网络掩码时，如果使用网关定义了子网，则在使用该子网创建 LIF 时，系统会自动向 SVM 添加指向该网关的默认路由。
-** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。。 `network route create` 手册页包含有关在SVM中创建静态路由的信息。
+** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。有关的详细信息 `network route create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-route-create.html["ONTAP 命令参考"^]。
 ** `-auto-revert` 用于指定在启动、更改管理数据库状态或建立网络连接等情况下、数据LIF是否自动还原到其主节点。默认设置为 `false`，但您可以将其设置为 `true` 具体取决于您环境中的网络管理策略。
 **  `-service-policy` 从ONTAP 9.5开始、您可以使用为LIF分配服务策略 `-service-policy` 选项
 为 LIF 指定服务策略时，将使用该策略为 LIF 构建默认角色，故障转移策略和数据协议列表。在 ONTAP 9.5 中，只有集群间和 BGP 对等服务才支持服务策略。在 ONTAP 9.6 中，您可以为多个数据和管理服务创建服务策略。

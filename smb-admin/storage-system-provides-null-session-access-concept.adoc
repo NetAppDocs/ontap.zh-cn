@@ -17,7 +17,7 @@ summary: 由于空会话共享不需要身份验证，因此需要空会话访�
 
 [NOTE]
 ====
-ONTAP通过支持Windows注册表设置值 `–restrict-anonymous` 选项这样，您可以控制未映射的空用户查看或访问系统资源的范围。例如，您可以禁用共享枚举和对 IPC$ 共享（隐藏的命名管道共享）的访问。。 `vserver cifs options modify` 和 `vserver cifs options show` 手册页提供了有关的详细信息 `–restrict-anonymous` 选项
+ONTAP支持带有选项的Windows注册表设置值 `–restrict-anonymous`。这样，您可以控制未映射的空用户查看或访问系统资源的范围。例如，您可以禁用共享枚举和对 IPC$ 共享（隐藏的命名管道共享）的访问。有关和 `vserver cifs options show`以及 `–restrict-anonymous`选项的详细信息， `vserver cifs options modify`请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+cifs+options["ONTAP 命令参考"^]。
 
 ====
 除非另有配置，否则运行通过空会话请求存储系统访问的本地进程的客户端仅是非限制性组的成员，例如 "`everyone` " 。要限制对选定存储系统资源的空会话访问，您可能需要创建所有空会话客户端所属的组；通过创建此组，您可以限制存储系统访问并设置专门应用于空会话客户端的存储系统资源权限。
