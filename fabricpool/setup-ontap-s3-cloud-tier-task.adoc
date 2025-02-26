@@ -1,10 +1,10 @@
 ---
 permalink: fabricpool/setup-ontap-s3-cloud-tier-task.html 
 sidebar: sidebar 
-keywords: setting up, ontap s3, cloud tier 
+keywords: tr-4814, fabricpool, setting up, ontap s3, cloud tier, local tier, tiering, storage tiering, storage tier, lif 
 summary: 如果您运行的是 ONTAP 9.8 或更高版本，则可以将 ONTAP S3 设置为 FabricPool 的云层。 
 ---
-= 将ONTAP S3设置为ONTAP FabricPool云层
+= 将ONTAP S3设置为FabricPool云层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,22 +13,27 @@ summary: 如果您运行的是 ONTAP 9.8 或更高版本，则可以将 ONTAP S3
 [role="lead"]
 如果您运行的是 ONTAP 9.8 或更高版本，则可以将 ONTAP S3 设置为 FabricPool 的云层。
 
-.您需要的内容
-您必须在远程集群上拥有 ONTAP S3 服务器名称及其关联 LIF 的 IP 地址。
+.开始之前
+* 您必须在远程集群上拥有 ONTAP S3 服务器名称及其关联 LIF 的 IP 地址。
++
 
-[NOTE]
-====
-客户端应用程序会使用服务器名称作为完全限定域名(FQDN)。在ONTAP之外、确认DNS记录指向正在使用的SVM数据LUN。
+NOTE: 客户端应用程序会使用服务器名称作为完全限定域名(FQDN)。在ONTAP之外、确认DNS记录指向正在使用的SVM数据LUN。
 
-====
-本地集群上必须存在集群间LIF。
+* 本地集群上必须存在<<create-lif,集群内的lifs>>。
++
+如果配置了本地集群分层、则会将本地层(在ONTAP命令行界面中也称为存储聚合)附加到本地分段。FabricPool使用集群lifs传输集群内流量。
 
-link:../s3-config/create-intercluster-lifs-remote-fabricpool-tiering-task.html["为远程 FabricPool 分层创建集群间 LIF"]
++
+
+NOTE: 如果集群LIF资源饱和、可能会导致性能下降。为避免这种情况、NetApp建议在分层到本地分段时使用四节点或更多节点集群、同时使用一个HA对(用于本地层)和一个HA对(用于本地分段)。建议不要分层到单个HA对上的本地分段。
+
+* 要使用ONTAP S3启用远程FabricPool容量(云)分层、您必须link:../s3-config/create-intercluster-lifs-remote-fabricpool-tiering-task.html["配置集群间生命周期"]在FabricPool客户端和对象存储服务器上link:../s3-config/create-data-lifs-task.html["配置数据生命周期"]。
+
 
 .关于此任务
 在 ONTAP 9.8 及更高版本中，已为 ONTAP S3 服务器启用负载平衡。当服务器的主机名解析为多个 IP 地址时， ONTAP 将使用返回的所有 IP 地址（最多 16 个 IP 地址）建立客户端连接。建立连接后， IP 地址将以轮循方式进行选取。
 
-.过程
+.操作步骤
 您可以使用ONTAP System Manager或ONTAP 命令行界面将ONTAP S3设置为FabricPool 的云层。
 
 [role="tabbed-block"]
@@ -65,8 +70,10 @@ FabricPool 镜像为您提供了一种无缝替换数据存储的方法，它有
  a| 
 输入以下命令：
 
-`dns host create -vserver svm_name -address ip_address -hostname s3_server_name`
-
+[listing]
+----
+dns host create -vserver <svm_name> -address ip_address -hostname <s3_server_name>
+----
 |===
 . 使用指定ONTAP S3配置信息 `storage aggregate object-store config create` 命令 `-provider-type` `ONTAP_S3` 参数。
 +
@@ -96,3 +103,8 @@ cluster1::> storage aggregate object-store config create
 
 --
 ====
+[[create-lif]]
+.相关信息
+* link:../smb-config/create-lif-task.html["为SMB创建LIF"]
+* link:../nfs-config/create-lif-task.html["为NFS创建LIF"]
+
