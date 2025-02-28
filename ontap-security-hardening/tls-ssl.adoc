@@ -52,7 +52,13 @@ NOTE: NIST已提交FIPS-140-2标准、NCSM将进行FIPS-140-2和FIPS-140-2验证
 
  `security config modify`命令可用于修改现有集群范围的安全配置。如果启用FIPS兼容模式、则集群将自动仅选择TLS协议。
 
-* 使用 `-supported-protocols` 参数可独立于FIPS模式包含或排除TLS协议。默认情况下，FIPS 模式处于禁用状态，ONTAP 支持 TLSv1.2、TLSv1.1 和 TLSv1 协议。
+* 使用 `-supported-protocols` 参数可独立于FIPS模式包含或排除TLS协议。默认情况下、FIPS模式处于禁用状态、TLSv1.3 (从ONTAP 9.11.1开始)和TLSv1.2协议处于启用状态。
+* 默认情况下、先前版本的ONTAP启用了以下TLS协议：
++
+** TLSv1.1 (从ONTAP 9.12.1开始、默认情况下处于禁用状态)
+** TLSv1 (从ONTAP 9.8开始、默认情况下处于禁用状态)
+
+
 * 为了实现向后兼容性、ONTAP支持在FIPS模式处于禁用状态时将SSLv3添加到支持的协议列表中。
 
 
