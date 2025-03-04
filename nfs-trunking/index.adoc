@@ -46,6 +46,9 @@ ONTAP NFSv4.1服务器支持与任何支持NFSv4.1会话中继的客户端进行
 
 
 
+NOTE: 如果在故障转移事件(例如控制器故障转移)中将中继的RIF迁移到另一个节点、RHEL NFS客户端将不会重新建立中继。将LUN迁移到另一节点后、它们将从中继组中删除。如果中继组中的所有LIF均已迁移、则NFS客户端将仅使用第一个LIF继续I/O
+
+
 NOTE: 在NFS服务器上启用中继后、在不支持中继的NFS客户端上访问导出共享的用户可能会看到性能下降。这是因为多个SVM数据SVM挂载只使用一个TCP连接。
 
 
@@ -56,4 +59,4 @@ NOTE: 在NFS服务器上启用中继后、在不支持中继的NFS客户端上�
 
 相比之下、中继是_multiPathing_功能、可通过多个LIFs提供多个TCP连接。如果您能够在环境中使用其他NIC、则中继可以提供比nconnect更出色的并行处理能力和性能。
 
-了解更多信息 link:../nfs-admin/ontap-support-nfsv41-concept.html["n连接。"]
+详细了解 link:../nfs-admin/ontap-support-nfsv41-concept.html["n连接"]。

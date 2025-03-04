@@ -11,12 +11,12 @@ summary: 要利用NFS中继、您需要在每个中继连接的两个或更多NI
 
 
 [role="lead"]
-NFSv4.1中继要求中继组中的LUN位于同一节点上、并且主端口位于同一节点上。所有的LUN都应配置在同一节点上的故障转移组中。
+要利用NFSv4.1中继、中继组中的LUN必须位于同一节点上、并且主端口位于同一节点上。应在同一节点上的故障转移组中配置这些LUN。
 
 .关于此任务
-LIS和NIC的一对一映射可获得最大的性能提升、但启用中继并不需要。
+LIS和NIC的一对一映射可获得最大的性能提升、但不需要启用中继。至少安装两个NIC可以提高性能、但这并不是必需的。
 
-可以有多个故障转移组、但中继的故障转移组必须仅包含中继组中的这些LUN。
+中继组中的所有LUN都应属于同一个故障转移组。请注意、如果在同一节点上的故障转移组中配置了这些LUN、则该节点上的控制器故障转移可能会导致这些LUN脱机。如果未在同一节点上的故障转移组中配置这些LUN并故障转移到另一节点、则中继将不再起作用。
 
 在故障转移组中添加或删除连接(和底层NIC)时、您应随时调整中继故障转移组。
 
@@ -32,20 +32,20 @@ LIS和NIC的一对一映射可获得最大的性能提升、但启用中继并�
 
 . 创建中继故障转移组或修改现有中继故障转移组：
 +
-`network interface failover-groups create -vserver _svm_name_ -failover-group _failover_group_name_ -targets _ports_list_`
+`network interface failover-groups create -vserver <svm_name> -failover-group <failover_group_name> -targets <ports_list>`
 
 +
-`network interface failover-groups modify -vserver _svm_name_ -failover-group _failover_group_name_ -targets _ports_list_`
+`network interface failover-groups modify -vserver <svm_name> -failover-group <failover_group_name> -targets <ports_list>`
 
 +
 
 NOTE: 虽然不要求具有故障转移组、但强烈建议这样做。
 
 +
-** `_svm_name_` 是包含NFS服务器的SVM的名称。
-** `_ports_list_` 是要添加到故障转移组的端口列表。
+** `<svm_name>`是包含NFS服务器的SVM的名称。
+** `<ports_list>`是要添加到故障转移组的端口列表。
 +
-端口将以格式添加 `_node_name:port_number_`，例如， `node1:e0c`。
+以格式添加端口 `<node_name>:<port_number>`，例如 `node1:e0c`。
 
 +
 以下命令将创建故障转移组 `fg3` 对于SVM VS1、添加了三个端口：
@@ -60,7 +60,7 @@ NOTE: 虽然不要求具有故障转移组、但强烈建议这样做。
 
 . 根据需要为中继组成员创建其他的LUN：
 +
-`network interface create -vserver _svm_name_ -lif _lif_name_ -home-node _node_name_ -home-port _port_name_ -address _IP_address_ -netmask _IP_address_ [-service-policy _policy_] [-auto-revert {true|false}]`
+`network interface create -vserver <svm_name> -lif <lif_name> -home-node <node_name> -home-port <port_name> -address <IP_address> -netmask <IP_address> [-service-policy <policy>] [-auto-revert <true|false>]`
 
 +
 ** `-home-node` -在对LIF运行network interface还原命令时、LIF返回到的节点。
@@ -76,7 +76,7 @@ NOTE: 虽然不要求具有故障转移组、但强烈建议这样做。
 对中继组中所需的每个附加LIF重复此步骤。
 
 +
-以下命令将在节点"cluster-1_01 "的端口e0c上为SVM VS1创建l1-A：
+以下命令将创建 `lif-A` 对于SVM `vs1`，在端口上 `e0c` 节点的 `cluster1_01`：
 
 +
 `network interface create -vserver vs1 -lif lif-A -service-policy default-intercluster -home-node cluster1_01 -home-port e0c -address 192.0.2.0`
@@ -88,8 +88,10 @@ NOTE: 虽然不要求具有故障转移组、但强烈建议这样做。
 
 . 验证是否已创建这些生命周期：
 +
-`network interface show`
-
+[source, cli]
+----
+network interface show
+----
 . 验证配置的 IP 地址是否可访问：
 +
 [cols="25,75"]
