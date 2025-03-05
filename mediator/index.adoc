@@ -59,16 +59,60 @@ CAUTION: 如果安装失败、您可能需要升级到更高版本的ONTAP调解
 
 
 .网络要求
-* 确保以下端口可用于ONTAP调解器且未使用。
+确保以下端口可用于ONTAP调解器且未使用：
+
+|===
+
+
+| 端口 / 服务 | 源 | 方向 | 目标 | 目的 
+
+
+ a| 
+22 TCP
+ a| 
+管理主机
+ a| 
+入站
+ a| 
+ONTAP 调解器
+ a| 
+(可选) SSH / ONTAP调解器管理
+
+
+
+ a| 
+31784 TCP
+ a| 
+集群管理 LIF
+ a| 
+入站
+ a| 
+ONTAP 调解器 Web 服务器
+ a| 
+(必需) REST API (HTTPS)
+
+
+
+ a| 
+3260/TCP ^1^
+ a| 
+节点数据文件或节点管理文件
+ a| 
+双向
+ a| 
+ONTAP 调解器 iSCSI 目标
+ a| 
+(对于MCCIP为必需)邮箱的iSCSI数据连接
+
+|===
+. 对于SMBC客户、ONTAP不需要启用或连接端口3260。
 +
-** 31784：为入站请求配置此端口、因为它是HTTPS端口、并且仅接受传入流量。
-** 3260：此端口是双向的、因为iSCSI协议需要双向连接。
-
-
-* 如果使用第三方防火墙，请参阅link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["ONTAP 调解器的防火墙要求"^]。
-* 对于无法访问Internet的Linux主机、请确保所需的软件包在本地存储库中可用。
+** 如果使用第三方防火墙，请参阅link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["ONTAP 调解器的防火墙要求"^]。
+** 对于无法访问Internet的Linux主机、请确保所需的软件包在本地存储库中可用。
 +
 如果您在Linux环境中使用链路聚合控制协议(Link Aggregation" Control Protocol, LacP)，请配置内核并将设置 `sysctl net.ipv4.conf.all.arp_ignore`为 `2`。
+
+
 
 
 
