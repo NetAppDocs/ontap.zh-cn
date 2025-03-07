@@ -2,16 +2,19 @@
 permalink: disks-aggregates/convert-raid-tec-dp-task.html 
 sidebar: sidebar 
 keywords: convert, raid-tec, raid-dp, raid policy 
-summary: '如果减小本地层(聚合)的大小而不再需要三重奇偶校验、则可以将RAID策略从RAID-TEC 转换为RAID-DP、并减少RAID奇偶校验所需的磁盘数量。' 
+summary: 如果减小本地层的大小而不再需要三重奇偶校验、则可以将RAID策略从RAID-TEC转换为RAID-DP、并减少RAID奇偶校验所需的磁盘数量。 
 ---
-= 从RAID-TEC 转换为RAID-DP
+= 在ONTAP中从RAID-TEC转换为RAID-DP
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果减小本地层(聚合)的大小而不再需要三重奇偶校验、则可以将RAID策略从RAID-TEC 转换为RAID-DP、并减少RAID奇偶校验所需的磁盘数量。
+如果减小本地层的大小而不再需要三重奇偶校验、则可以将RAID策略从RAID-TEC转换为RAID-DP、并减少RAID奇偶校验所需的磁盘数量。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 .开始之前
 RAID-TEC 的最大 RAID 组大小大于 RAID-DP 的最大 RAID 组大小。如果最大的 RAID-TEC 组大小不在 RAID-DP 限制范围内，则无法转换为 RAID-DP 。
@@ -20,15 +23,15 @@ RAID-TEC 的最大 RAID 组大小大于 RAID-DP 的最大 RAID 组大小。如�
 要了解在不同RAID类型之间转换的含义、请参见 https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-modify.html#parameters["parameters"^] `storage aggregate modify` 命令的。
 
 .步骤
-. 验证聚合是否联机且至少具有六个磁盘：
+. 验证本地层是否已联机且至少具有六个磁盘：
 +
 `storage aggregate show-status -aggregate _aggregate_name_`
 
-. 将聚合从 RAID-TEC 转换为 RAID-DP ：
+. 将本地层从RAID-TEC转换为RAID-DP：
 +
 `storage aggregate modify -aggregate _aggregate_name_ -raidtype raid_dp`
 
-. 验证聚合 RAID 策略是否为 RAID-DP ：
+. 验证本地层RAID策略是否为RAID-DP：
 +
 `storage aggregate show _aggregate_name_`
 

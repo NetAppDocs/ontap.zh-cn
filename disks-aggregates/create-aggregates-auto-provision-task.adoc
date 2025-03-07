@@ -2,19 +2,22 @@
 permalink: disks-aggregates/create-aggregates-auto-provision-task.html 
 sidebar: sidebar 
 keywords: create, aggregates, auto-provision, add, local tier, automatic, automatically, create, aggregate, auto-provisioning, System Manager, CLI, storage, disk, ownership, assign 
-summary: '您可以接受ONTAP关于自动添加本地层的建议(使用自动配置创建聚合)、并让ONTAP添加本地层。' 
+summary: 您可以接受ONTAP关于自动添加本地层的建议、并让ONTAP添加本地层。 
 ---
-= 在ONTAP中自动添加本地层(使用自动配置创建聚合)
+= 在ONTAP中自动添加本地层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果ONTAP 为自动添加本地层(使用自动配置创建聚合)提供的最佳实践建议适用于您的环境、则您可以接受此建议并让ONTAP 添加本地层。
+如果ONTAP提供的自动添加本地层的最佳实践建议适合您的环境、您可以接受该建议并让ONTAP添加本地层。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 .开始之前
-磁盘必须归节点所有、才能在本地层(聚合)中使用。  如果集群未配置为使用自动磁盘所有权分配、则必须执行此操作 link:manual-assign-disks-ownership-prep-task.html["手动分配所有权"]。
+磁盘必须由节点拥有、才能在本地层中使用。如果集群未配置为使用自动磁盘所有权分配，则必须link:manual-assign-disks-ownership-prep-task.html["手动分配所有权"]。
 
 有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。
 
@@ -66,7 +69,7 @@ System Manager从ONTAP 9.8开始显示以下信息：
  a| 
 手动配置本地层、并使用System Manager中的建议*；not_*。
  a| 
-继续执行 link:create-aggregates-manual-task.html["手动添加本地层(创建聚合)"]：
+继续执行link:create-aggregates-manual-task.html["手动添加本地层"]：
 
 ** 对于ONTAP 9.10.1及更早版本、请按照以下步骤使用命令行界面。
 ** 从ONTAP 9.11.1开始、按照以下步骤使用System Manager。
@@ -87,23 +90,23 @@ System Manager从ONTAP 9.8开始显示以下信息：
 --
 .命令行界面
 --
-运行 `storage aggregate auto-provision` 命令以生成聚合布局建议。然后，您可以在查看并批准 ONTAP 建议后创建聚合。
+您可以运行 `storage aggregate auto-provision`命令来生成本地层布局建议。然后、您可以在审核并批准ONTAP建议后创建本地层。
 
 .开始之前
 集群上必须运行 ONTAP 9.2 或更高版本。
 
 .关于此任务
-使用生成的默认摘要 `storage aggregate auto-provision` 命令可列出建议创建的聚合、包括名称和可用大小。您可以查看此列表，并在出现提示时确定是否要创建建议的聚合。
+使用命令生成的默认摘要 `storage aggregate auto-provision`列出了建议创建的本地层、包括名称和可用大小。您可以查看此列表、并在出现提示时确定是否要创建建议的本地层。
 
 您还可以使用显示详细摘要 `-verbose` 选项、其中显示以下报告：
 
-* 要创建的新聚合的每个节点摘要，已发现的备用磁盘以及创建聚合后的剩余备用磁盘和分区
-* 要创建的新数据聚合以及要使用的磁盘和分区数
-* RAID 组布局显示了如何在要创建的新数据聚合中使用备用磁盘和分区
-* 有关创建聚合后剩余的备用磁盘和分区的详细信息
+* 要创建的新本地层、已发现的备用磁盘以及创建本地层后剩余备用磁盘和分区的每个节点摘要
+* 要创建的新数据本地层、其中包含要使用的磁盘和分区数
+* RAID组布局显示了如何在要创建的新数据本地层中使用备用磁盘和分区
+* 有关创建本地层后剩余备用磁盘和分区的详细信息
 
 
-如果您熟悉自动配置方法、并且您的环境已做好正确准备、则可以使用 `-skip-confirmation` 选项、用于创建建议的聚合、而不进行显示和确认。。 `storage aggregate auto-provision` 命令不受命令行界面会话的影响 `-confirmations` 设置。
+如果您熟悉自动配置方法、并且环境准备正确、则可以使用选项创建建议的本地层、 `-skip-confirmation`而无需显示和确认。 `storage aggregate auto-provision`命令不受命令行界面会话设置的影响 `-confirmations`。
 
 有关的详细信息 `storage aggregate auto-provision`，请参见link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-auto-provision.html["ONTAP 命令参考"^]。
 
@@ -112,7 +115,7 @@ System Manager从ONTAP 9.8开始显示以下信息：
 +
 ** 无选项：显示标准摘要
 ** `-verbose` 选项：显示详细摘要
-** `-skip-confirmation` 选项：创建建议的聚合而不显示或确认
+** `-skip-confirmation`选项：创建建议的本地层、无需显示或确认
 
 
 . 执行以下步骤之一：
@@ -127,7 +130,7 @@ System Manager从ONTAP 9.8开始显示以下信息：
  a| 
 接受ONTAP 的建议。
  a| 
-查看建议聚合的显示、然后响应提示创建建议的聚合。
+查看显示的建议本地层、然后对提示做出响应以创建建议的本地层。
 
 [listing]
 ----
@@ -152,7 +155,7 @@ myA400-44556677::>
  a| 
 手动配置本地层、并使用ONTAP 中的建议*。
  a| 
-继续执行 link:create-aggregates-manual-task.html["手动添加本地层(创建聚合)"]。
+继续执行。link:create-aggregates-manual-task.html["手动添加本地层"]
 
 |===
 

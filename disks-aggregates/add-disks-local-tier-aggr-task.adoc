@@ -2,9 +2,9 @@
 permalink: disks-aggregates/add-disks-local-tier-aggr-task.html 
 sidebar: sidebar 
 keywords: add, expand, aggregate, add drives, add disks, add capacity, local tier, add disks to local tier, add disks to aggregate, increase storage, increase aggregate size, local tier, capacity, disk, expand storage, add drives, add disks, add capacity 
-summary: '您可以将磁盘添加到本地层(聚合)、以便为其关联卷提供更多存储。' 
+summary: 您可以将磁盘添加到本地层、以便它可以为与其关联的卷提供更多存储。 
 ---
-= 向本地层添加容量(向聚合添加磁盘)
+= 向ONTAP中的本地层添加容量
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,7 +16,10 @@ summary: '您可以将磁盘添加到本地层(聚合)、以便为其关联卷�
 
 
 [role="lead"]
-您可以将磁盘添加到本地层(聚合)、以便为其关联卷提供更多存储。
+您可以将磁盘添加到本地层、以便它可以为与其关联的卷提供更多存储。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 [role="tabbed-block"]
 ====
@@ -70,30 +73,30 @@ ONTAP 9.8、9.9或9.10.1
 .步骤
 . (仅适用于ONTAP 9.7)选择*(返回经典版本)*。
 . 选择*硬件和诊断>聚合*。
-. 选择要添加容量磁盘的聚合、然后选择*操作>添加容量*。
+. 选择要添加容量磁盘的本地层、然后选择*操作>添加容量*。
 +
 
-NOTE: 您应添加与聚合中的其他磁盘大小相同的磁盘。
+NOTE: 您应添加与本地层中其他磁盘大小相同的磁盘。
 
 . (仅适用于ONTAP 9.7)选择*切换到新体验*。
-. 选择*存储>层*以验证新聚合的大小。
+. 选择*存储>层*以验证新本地层的大小。
 
 
 --
 .命令行界面
 --
 .开始之前
-您必须了解要添加存储的聚合的 RAID 组大小。
+您必须了解要添加存储的本地层的RAID组大小是多少。
 
 .关于此任务
-此过程用于向聚合添加已分区磁盘、与添加未分区磁盘的过程类似。
+此过程用于将已分区磁盘添加到本地层、与添加未分区磁盘的过程类似。
 
-扩展聚合时，您应了解是向聚合添加分区磁盘还是未分区磁盘。向现有聚合添加未分区驱动器时，现有 RAID 组的大小将由新 RAID 组继承，这可能会影响所需的奇偶校验磁盘数量。如果将未分区磁盘添加到由分区磁盘组成的 RAID 组中，则新磁盘将进行分区，从而留下一个未使用的备用分区。
+扩展本地层时、您应了解是向本地层添加分区磁盘还是未分区磁盘。将未分区驱动器添加到现有本地层时、新RAID组会继承现有RAID组的大小、这可能会影响所需的奇偶校验磁盘数量。如果将未分区磁盘添加到由分区磁盘组成的 RAID 组中，则新磁盘将进行分区，从而留下一个未使用的备用分区。
 
 配置分区时，您必须确保节点中没有同时包含两个分区的驱动器作为备用驱动器。否则，如果节点发生控制器中断，则可能无法向技术支持提供有关此问题的宝贵信息（核心文件）。
 
 .步骤
-. 显示拥有聚合的系统上的可用备用存储：
+. 显示拥有本地层的系统上的可用备用存储：
 +
 `storage aggregate show-spare-disks -original-owner _node_name_`
 
@@ -121,7 +124,7 @@ Original Owner: cl1-s2
  1.0.10                      BSAS    7200 block                0B  73.89GB  828.0GB zeroed
 2 entries were displayed.
 ----
-. 显示聚合的当前 RAID 组：
+. 显示本地层的当前RAID组：
 +
 [source, cli]
 ----
@@ -184,13 +187,13 @@ Aggregate capacity available for volume use would be increased by 1.83TB.
 storage aggregate add-disks -aggregate <aggr_name> -raidgroup new -diskcount <number_of_disks_or_partitions>
 ----
 +
-创建Flash Pool聚合时、如果要添加的磁盘与聚合的校验和不同、或者要向混合校验和聚合添加磁盘、则必须使用 `-checksumstyle` 参数。
+创建Flash Pool本地层时、如果要添加的磁盘校验和与本地层不同、或者要向混合校验和本地层添加磁盘、则必须使用参数。 `-checksumstyle`
 
 +
-如果要向Flash Pool聚合添加磁盘、则必须使用 `-disktype` 参数以指定磁盘类型。
+如果要向Flash Pool本地层添加磁盘、则必须使用 `-disktype`参数指定磁盘类型。
 
 +
-您可以使用 `-disksize` 用于指定要添加的磁盘大小的参数。仅会选择大小约为指定大小的磁盘以添加到聚合中。
+您可以使用 `-disksize`参数指定要添加的磁盘的大小。只会选择具有近似指定大小的磁盘添加到本地层。
 
 +
 [listing]

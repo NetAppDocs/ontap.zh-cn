@@ -2,28 +2,28 @@
 permalink: disks-aggregates/flash-pool-aggregate-caching-policies-concept.html 
 sidebar: sidebar 
 keywords: cache, flash pool, policy, local tier, aggregate 
-summary: '缓存策略会应用于Flash Pool本地层(聚合)中的卷。在更改缓存策略之前，您应了解这些策略的工作原理。' 
+summary: 缓存策略会应用于Flash Pool本地层中的卷。在更改缓存策略之前，您应了解这些策略的工作原理。 
 ---
-= Flash Pool本地层(聚合)缓存策略
+= ONTAP中的Flash Pool本地层缓存策略
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-通过Flash Pool本地层(聚合)中卷的缓存策略、您可以将Flash部署为工作数据集的高性能缓存、而将低成本的HDD用于不太常访问的数据。如果要向两个或更多Flash Pool本地层提供缓存、则应使用Flash Pool SSD分区功能在Flash Pool的本地层之间共享SSD。
+通过为Flash Pool本地层中的卷设置缓存策略、您可以将闪存部署为工作数据集的高性能缓存、同时使用低成本的HDD来存储不常访问的数据。如果要向两个或更多Flash Pool本地层提供缓存、则应使用Flash Pool SSD分区功能在Flash Pool的本地层之间共享SSD。
 
 缓存策略会应用于Flash Pool本地层中的卷。在更改缓存策略之前，您应了解这些策略的工作原理。
 
-在大多数情况下、默认缓存策略"`auto`"是最佳缓存策略。只有当其他策略可为您的工作负载提供更好的性能时，才应更改缓存策略。配置错误的缓存策略可能会严重降低卷性能；性能下降可能会随着时间的推移逐渐增加。
+在大多数情况下、的默认缓存策略 `auto`是最佳缓存策略。只有当其他策略可为您的工作负载提供更好的性能时，才应更改缓存策略。配置错误的缓存策略可能会严重降低卷性能；性能下降可能会逐渐增加。
 
-缓存策略将读取缓存策略与写入缓存策略结合使用。策略名称将读取缓存策略和写入缓存策略的名称串联在一起，并用连字符分隔。如果策略名称中没有连字符、则写入缓存策略为"`none`"、但"`auto`"策略除外。
+缓存策略将读取缓存策略与写入缓存策略结合使用。策略名称由读取缓存策略和写入缓存策略的名称串联而成、并以连字符分隔。如果策略名称中没有连字符，则写入缓存策略为 `none`，但该策略除外 `auto`。
 
 除了 HDD 上存储的数据之外，读取缓存策略还会将一份数据副本放在缓存中，以优化未来的读取性能。对于将数据插入缓存以执行写入操作的读取缓存策略，缓存将作为 _write-through 缓存运行。
 
 使用写入缓存策略插入到缓存中的数据仅存在于缓存中； HDD 中不存在副本。Flash Pool 缓存受 RAID 保护。启用写入缓存可使写入操作中的数据立即从缓存中读取，同时将数据写入 HDD ，直到其在缓存中过期为止。
 
-如果将卷从Flash Pool本地层移动到单层本地层、则卷将丢失其缓存策略；如果稍后将其移回Flash Pool本地层、则会为其分配默认缓存策略"`auto`"。如果在两个Flash Pool本地层之间移动卷、则会保留缓存策略。
+如果将卷从Flash Pool本地层移动到单层本地层、则会丢失其缓存策略；如果稍后将其移回Flash Pool本地层、则会为其分配默认缓存策略 `auto`。如果在两个Flash Pool本地层之间移动卷、则会保留缓存策略。
 
 
 
@@ -31,4 +31,4 @@ summary: '缓存策略会应用于Flash Pool本地层(聚合)中的卷。在更�
 
 您可以使用命令行界面更改Flash Pool本地层上的卷的缓存策略 `-caching-policy` 参数 `volume create` 命令：
 
-默认情况下、在Flash Pool本地层上创建卷时、系统会为此卷分配"`auto`"缓存策略。
+默认情况下、在Flash Pool本地层上创建卷时、 `auto`系统会为此卷分配缓存策略。

@@ -2,50 +2,53 @@
 permalink: concepts/mirrored-unmirrored-aggregates-concept.html 
 sidebar: sidebar 
 keywords: mirrored, unmirrored, aggregate, local tier, plex, syncmirror, dparity, raid group 
-summary: 'ONTAP 具有一个称为_RAID_的可选功能、您可以使用该功能同步镜像副本中的本地层(聚合)数据、也可以是存储在不同SyncMirror 组中的_plexes_。丛可确保在出现故障的磁盘数量超过 RAID 类型所能保护的磁盘数量或与 RAID 组磁盘的连接断开时防止数据丢失。' 
+summary: ONTAP有一项名为_RAID_的可选功能、可用于同步镜像不同SyncMirror组中存储的副本层数据或_plexes_。丛可确保在出现故障的磁盘数量超过 RAID 类型所能保护的磁盘数量或与 RAID 组磁盘的连接断开时防止数据丢失。 
 ---
-= 镜像和未镜像本地层(聚合)
+= 镜像和未镜像本地层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-ONTAP 具有一个称为_RAID_的可选功能、您可以使用该功能同步镜像副本中的本地层(聚合)数据、也可以是存储在不同SyncMirror 组中的_plexes_。丛可确保在出现故障的磁盘数量超过 RAID 类型所能保护的磁盘数量或与 RAID 组磁盘的连接断开时防止数据丢失。
+您可以使用ONTAP _RAID_同步镜像不同SyncMirror组中存储的副本或_plexes_中的本地层数据。丛可确保在出现故障的磁盘数量超过 RAID 类型所能保护的磁盘数量或与 RAID 组磁盘的连接断开时防止数据丢失。
 
-使用System Manager或CLI创建本地层时、您可以指定已镜像或未镜像本地层。
+使用System Manager创建本地层时、您可以指定本地层是镜像还是未镜像。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 
 
-== 未镜像的本地层(聚合)的工作原理
+== 未镜像本地层的工作原理
 
-如果未指定要镜像这些本地层、则这些本地层将创建为未镜像本地层(聚合)。未镜像的本地层只有一个_plex_(其数据的副本)、其中包含属于该本地层的所有RAID组。
+如果未指定镜像本地层、则会将其创建为未镜像。未镜像的本地层只有一个_plex_(其数据的副本)、其中包含属于该本地层的所有RAID组。
 
-下图显示了一个由磁盘组成的未镜像本地层及其一个丛。本地层包含四个RAID组：rg0、rg1、rg2和rg3。每个RAID组都有六个数据磁盘、一个奇偶校验磁盘和一个dparity (双奇偶校验)磁盘。本地层使用的所有磁盘都来自同一个池"`pool0`"。
+下图显示了一个未镜像本地层、该本地层由多个磁盘组成、并分组为一个丛。本地层包含四个RAID组：rg0、rg1、rg2和rg3。每个RAID组都有六个数据磁盘、一个奇偶校验磁盘和一个dparity (双奇偶校验)磁盘。本地层使用的所有磁盘都来自同一个池"`pool0`"。
 
 image:drw-plexum-scrn-en-noscale.gif["未镜像本地层由具有一个丛的磁盘组成"]
 
-下图显示了一个具有阵列LUN的未镜像本地层及其一个丛。它具有两个 RAID 组： rg0 和 rg1 。本地层使用的所有阵列LUN均来自同一个池"`pool0`"。
+下图显示了一个未镜像本地层、其中包含已分组为一个丛的阵列LUN。它具有两个 RAID 组： rg0 和 rg1 。本地层使用的所有阵列LUN均来自同一个池"`pool0`"。
 
 image:unmirrored-aggregate-with-array-luns.gif["未镜像本地层由阵列LUN及其一个丛组成"]
 
 
 
-== 镜像本地层(聚合)的工作原理
+== 镜像本地层的工作原理
 
-镜像聚合具有两个 _plexes_ （其数据的副本），这两个聚合使用 SyncMirror 功能复制数据以提供冗余。
+镜像本地层具有两个_plexes_(其数据的副本)、它们使用SyncMirror功能复制数据以提供冗余。
 
-创建本地层时、您可以指定它是镜像本地层。  此外、您还可以向现有未镜像本地层添加另一个丛、使其成为镜像层。使用SyncMirror 功能、ONTAP 会将原始丛(plex0)中的数据复制到新丛(plex1)中。丛在物理上是分开的（每个丛都有自己的 RAID 组和池），并且丛会同时更新。
+创建本地层时、您可以指定对其进行镜像。此外、您还可以向现有未镜像本地层添加另一个丛、使其成为镜像层。使用SyncMirror、ONTAP会将原始丛(plex0)中的数据复制到新丛(plex1)。丛在物理上是分开的(每个丛都有自己的RAID组和池)、并且这些丛会同时更新。
 
-如果出现故障的磁盘数超过聚合所保护的RAID级别、或者连接断开、则此配置可提供额外的保护、防止数据丢失、因为在修复故障发生原因 期间、未受影响的丛会继续提供数据。修复出现问题的丛后，两个丛将重新同步并重新建立镜像关系。
+如果故障磁盘数超过本地层的RAID级别所保护的磁盘数、或者连接断开、此配置可提供额外的保护、以防止数据丢失、因为未受影响的丛会在您修复故障原因时继续提供数据。修复出现问题的丛后，两个丛将重新同步并重新建立镜像关系。
 
-系统上的磁盘和阵列LUN分为两个池："`pool0`"和"`pool1`"。Plex0 从 pool0 获取其存储，而 Plex1 从 pool1 获取其存储。
+系统上的磁盘和阵列LUN分为两个池： `pool0`和 `pool1`。Plex0 从 pool0 获取其存储，而 Plex1 从 pool1 获取其存储。
 
-下图显示了一个由启用并实施了SyncMirror 功能的磁盘组成的本地层。已为本地层创建第二个丛"`plex1`"。plex1 中的数据是 plex0 中的数据副本， RAID 组也是相同的。32个备用磁盘将使用每个池的16个磁盘分配给pool0或pool1。
+下图显示了一个由启用并实施了SyncMirror的磁盘组成的本地层。已为本地层创建了第二个丛 `plex1`。plex1 中的数据是 plex0 中的数据副本， RAID 组也是相同的。32个备用磁盘将使用每个池的16个磁盘分配给pool0或pool1。
 
 image:drw-plexm-scrn-en-noscale.gif["由具有SyncMirror功能的磁盘组成的本地层"]
 
-下图显示了一个由已启用并实施SyncMirror 功能的阵列LUN组成的本地层。已为本地层创建第二个丛"`plex1`"。Plex1 是 plex0 的副本， RAID 组也相同。
+下图显示了一个由已启用并实施SyncMirror 功能的阵列LUN组成的本地层。已为本地层创建了第二个丛 `plex1`。Plex1 是 plex0 的副本， RAID 组也相同。
 
 image:mirrored-aggregate-with-array-luns.gif["由具有SyncMirror功能的阵列LUN组成的本地层"]
 

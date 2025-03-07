@@ -2,16 +2,19 @@
 permalink: disks-aggregates/assign-aggregates-svms-task.html 
 sidebar: sidebar 
 keywords: assign, aggregate, local tier, svm, storage vm, vserver 
-summary: '如果将一个或多个本地层(聚合)分配给Storage Virtual Machine (Storage VM或SVM、以前称为Vserver)、则只能使用这些本地层来包含该SVM的卷。答' 
+summary: '如果将一个或多个本地层分配给 Storage Virtual Machine (Storage VM或SVM、以前称为Vserver)、则只能使用这些本地层来包含该SVM的卷。答' 
 ---
-= 将本地层(聚合)分配给Storage VM (SVM)
+= 在ONTAP中为Storage VM (SVM)分配本地层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果将一个或多个本地层(聚合)分配给Storage Virtual Machine (Storage VM或SVM、以前称为Vserver)、则只能使用这些本地层来包含该Storage VM (SVM)的卷。
+如果您将一个或多个本地层分配给Storage Virtual Machine (Storage VM或SVM、以前称为Vserver)、则只能使用这些本地层来包含该Storage VM (SVM)的卷。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 .开始之前
 要分配给此Storage VM的Storage VM和本地层必须已存在。
@@ -20,14 +23,14 @@ summary: '如果将一个或多个本地层(聚合)分配给Storage Virtual Mach
 为Storage VM分配本地层有助于使Storage VM彼此隔离；这在多租户环境中尤为重要。
 
 .步骤
-. 检查已分配给SVM的本地层(聚合)列表：
+. 检查已分配给SVM的本地层列表：
 +
 `vserver show -fields aggr-list`
 
 +
-此时将显示当前分配给 SVM 的聚合。如果未分配聚合，则会显示 "` -` " 。
+此时将显示当前分配给SVM的本地层。如果未分配本地层、则会显示。 `-`
 
-. 根据您的要求添加或删除已分配的聚合：
+. 根据您的要求添加或删除分配的本地层：
 +
 |===
 
@@ -36,24 +39,24 @@ summary: '如果将一个或多个本地层(聚合)分配给Storage Virtual Mach
 
 
  a| 
-分配其他聚合
+分配其他本地层
  a| 
 `vserver add-aggregates`
 
 
 
  a| 
-取消分配聚合
+取消分配本地层
  a| 
 `vserver remove-aggregates`
 
 |===
 +
-列出的聚合将分配给 SVM 或从 SVM 中删除。如果 SVM 中的卷使用的聚合未分配给 SVM ，则会显示一条警告消息，但命令已成功完成。已分配给 SVM 但未在命令中命名的任何聚合不受影响。
+列出的本地层将分配给SVM或从中删除。如果 SVM 中的卷使用的聚合未分配给 SVM ，则会显示一条警告消息，但命令已成功完成。已分配给SVM但未在命令中指定的任何本地层不受影响。
 
 
 
 .示例
-在以下示例中，将聚合 aggr1 和 aggr2 分配给 SVM svm1 ：
+在以下示例中、将本地层aggr1和aggr2分配给SVM svm1：
 
 `vserver add-aggregates -vserver svm1 -aggregates aggr1,aggr2`

@@ -2,16 +2,16 @@
 permalink: disks-aggregates/setup-active-passive-config-root-data-task.html 
 sidebar: sidebar 
 keywords: setting, active-passive, configuration, node, root-data, partitioning, configure, active passive, 
-summary: '如果在出厂时将HA对配置为使用根数据分区、则数据分区的所有权将在该对中的两个节点之间拆分、以便在主动-主动配置中使用。如果要在主动-被动配置中使用HA对、则必须在创建数据本地层(聚合)之前更新分区所有权。' 
+summary: 如果在出厂时将HA对配置为使用根数据分区、则数据分区的所有权将在该对中的两个节点之间拆分、以便在主动-主动配置中使用。如果要在主动-被动配置中使用HA对、则必须在创建数据本地层之前更新分区所有权。 
 ---
-= 使用根数据分区在节点上设置主动 - 被动配置
+= 在ONTAP中使用根数据分区功能在节点上设置主动-被动配置
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果在出厂时将HA对配置为使用根数据分区、则数据分区的所有权将在该对中的两个节点之间拆分、以便在主动-主动配置中使用。如果要在主动-被动配置中使用HA对、则必须在创建数据本地层(聚合)之前更新分区所有权。
+如果在出厂时将HA对配置为使用根数据分区、则数据分区的所有权将在该对中的两个节点之间拆分、以便在主动-主动配置中使用。如果要在主动-被动配置中使用HA对、则必须在创建数据本地层之前更新分区所有权。
 
 .开始之前
 * 您应已确定哪个节点将成为主动节点，哪个节点将成为被动节点。
@@ -21,7 +21,7 @@ summary: '如果在出厂时将HA对配置为使用根数据分区、则数据�
 .关于此任务
 此任务在节点 A 和节点 B 这两个节点上执行
 
-此操作步骤 专为尚未从分区磁盘创建数据本地层(聚合)的节点而设计。
+此过程适用于尚未从已分区磁盘创建数据本地层的节点。
 
 了解相关信息 link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_are_the_rules_for_Advanced_Disk_Partitioning%3F["高级磁盘分区"^]。
 
@@ -130,11 +130,11 @@ Original Owner: cluster1-02
 +
 `set admin`
 
-. 创建数据聚合，至少保留一个数据分区作为备用分区：
+. 创建数据本地层、至少保留一个数据分区作为备用分区：
 +
 `storage aggregate create _new_aggr_name_ -diskcount _number_of_partitions_ -node _active_node_name_`
 
 +
-此时将创建数据聚合，并归活动节点所有。
+此时将创建此数据本地层、此数据本地层归活动节点所有。
 
 

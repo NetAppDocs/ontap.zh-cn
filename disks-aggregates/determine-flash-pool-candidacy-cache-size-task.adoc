@@ -2,16 +2,19 @@
 permalink: disks-aggregates/determine-flash-pool-candidacy-cache-size-task.html 
 sidebar: sidebar 
 keywords: flash pool, candidacy, optimal cache size, local tier, aggregate 
-summary: '在将现有本地层(聚合)转换为Flash Pool本地层之前、您可以确定本地层是否受I/O限制、以及适合您的工作负载和预算的最佳Flash Pool缓存大小。您还可以检查现有Flash Pool本地层的缓存大小是否正确。' 
+summary: 在将现有本地层转换为Flash Pool本地层之前、您可以确定本地层是否受I/O制约、以及是否是最适合您的工作负载和预算的Flash Pool缓存大小。您还可以检查现有Flash Pool本地层的缓存大小是否正确。 
 ---
-= 确定 Flash Pool 候选资格和最佳缓存大小
+= 在ONTAP中确定Flash Pool候选资格和最佳缓存大小
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-在将现有本地层(聚合)转换为Flash Pool本地层之前、您可以确定本地层是否受I/O限制、以及适合您的工作负载和预算的最佳Flash Pool缓存大小。您还可以检查现有Flash Pool本地层的缓存大小是否正确。
+在将现有本地层转换为Flash Pool本地层之前、您可以确定本地层是否受I/O制约、以及是否是最适合您的工作负载和预算的Flash Pool缓存大小。您还可以检查现有Flash Pool本地层的缓存大小是否正确。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 .开始之前
 您应大致了解所分析的本地层何时会遇到峰值负载。
@@ -21,15 +24,15 @@ summary: '在将现有本地层(聚合)转换为Flash Pool本地层之前、您�
 +
 `set advanced`
 
-. 如果您需要确定现有本地层(聚合)是否适合转换为Flash Pool聚合、请确定聚合中的磁盘在高峰负载期间的繁忙程度、以及这对延迟的影响：
+. 如果需要确定现有本地层是否适合转换为Flash Pool本地层、请确定本地层中的磁盘在高峰负载期间的繁忙程度以及这对延迟的影响：
 +
 `statistics show-periodic -object disk:raid_group -instance _raid_group_name_ -counter disk_busy|user_read_latency -interval 1 -iterations 60`
 
 +
-您可以确定通过添加 Flash Pool 缓存来减少延迟对于此聚合是否有意义。
+您可以确定通过添加Flash Pool缓存来降低延迟是否适用于此本地层。
 
 +
-以下命令显示聚合 "`aggr1` " 中第一个 RAID 组的统计信息：
+以下命令显示本地层"`aggr1`"中第一个RAID组的统计信息：
 
 +
 `statistics show-periodic -object disk:raid_group -instance /aggr1/plex0/rg0 -counter disk_busy|user_read_latency -interval 1 -iterations 60`
@@ -39,14 +42,14 @@ summary: '在将现有本地层(聚合)转换为Flash Pool本地层之前、您�
 `storage automated-working-set-analyzer start -node _node_name_ -aggregate _aggr_name_`
 
 +
-AWA 将开始收集与指定聚合关联的卷的工作负载数据。
+AWA将开始收集与指定本地层关联的卷的工作负载数据。
 
 . 退出高级模式：
 +
 `set admin`
 
 +
-允许 AWA 运行，直到出现一个或多个高峰负载间隔。AWA 会收集与指定聚合关联的卷的工作负载统计信息，并分析持续时间内最长一周的数据。如果 AWA 运行一周以上，则仅会报告从最近一周收集的数据。缓存大小估计基于数据收集期间看到的最高负载；在整个数据收集期间，负载不必高。
+允许 AWA 运行，直到出现一个或多个高峰负载间隔。AWA会收集与指定本地层关联的卷的工作负载统计信息、并分析持续时间内最多一周的数据。如果 AWA 运行一周以上，则仅会报告从最近一周收集的数据。缓存大小估计基于数据收集期间看到的最高负载；在整个数据收集期间，负载不必高。
 
 . 进入高级模式：
 +

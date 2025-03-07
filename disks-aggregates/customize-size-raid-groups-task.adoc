@@ -2,19 +2,22 @@
 permalink: disks-aggregates/customize-size-raid-groups-task.html 
 sidebar: sidebar 
 keywords: raidsize, customize, raid groups 
-summary: '您可以自定义RAID组的大小、以确保RAID组的大小适合您计划包含在本地层(聚合)中的存储量。' 
+summary: 您可以自定义RAID组的大小、以确保RAID组大小适合计划包含在本地层中的存储量。 
 ---
-= 自定义 RAID 组的大小
+= 在ONTAP中自定义RAID组的大小
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以自定义RAID组的大小、以确保RAID组的大小适合您计划包含在本地层(聚合)中的存储量。
+您可以自定义RAID组的大小、以确保RAID组大小适合计划包含在本地层中的存储量。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 .关于此任务
-对于标准本地层(聚合)、您可以单独更改每个本地层的RAID组大小。对于Flash Pool本地层、您可以单独更改SSD RAID组和HDD RAID组的RAID组大小。
+对于标准本地层、您可以单独更改每个本地层的RAID组大小。对于Flash Pool本地层、您可以单独更改SSD RAID组和HDD RAID组的RAID组大小。
 
 以下列表概括了有关更改 RAID 组大小的一些事实：
 
@@ -35,7 +38,7 @@ summary: '您可以自定义RAID组的大小、以确保RAID组的大小适合�
 
 
  a| 
-更改 Flash Pool 聚合的 SSD RAID 组的最大 RAID 组大小
+更改Flash Pool本地层中SSD RAID组的最大RAID组大小
  a| 
 `storage aggregate modify -aggregate aggr_name -cache-raid-group-size size`
 
@@ -50,10 +53,10 @@ summary: '您可以自定义RAID组的大小、以确保RAID组的大小适合�
 
 
 .示例
-以下命令会将聚合 n1_a4 的最大 RAID 组大小更改为 20 个磁盘或阵列 LUN ：
+以下命令会将本地层n1_a4的最大RAID组大小更改为20个磁盘或阵列LUN：
 
 `storage aggregate modify -aggregate n1_a4 -maxraidsize 20`
 
-以下命令会将 Flash Pool 聚合 n1_cache_a2 的 SSD 缓存 RAID 组的最大 RAID 组大小更改为 24 ：
+以下命令将Flash Pool本地层n1_cache_a2的SSD缓存RAID组的最大RAID组大小更改为24：
 
 `storage aggregate modify -aggregate n1_cache_a2 -cache-raid-group-size 24`

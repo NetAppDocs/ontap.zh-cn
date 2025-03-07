@@ -2,21 +2,24 @@
 permalink: disks-aggregates/create-flash-pool-aggregate-physical-ssds-task.html 
 sidebar: sidebar 
 keywords: create, flash, pool, aggregate, local tier, physical, ssds 
-summary: '您可以在由HDD RAID组组成的现有本地层上启用Flash Pool本地层(聚合)功能、然后将一个或多个SSD RAID组添加到该本地层来创建Flash Pool本地层(聚合)。这会导致该本地层出现两组RAID组：SSD RAID组(SSD缓存)和HDD RAID组。' 
+summary: '要创建Flash Pool本地层、可以在由HDD RAID组组成的现有本地层上启用此功能、然后向该本地层添加一个或多个SSD RAID组。这会导致该本地层出现两组RAID组：SSD RAID组(SSD缓存)和HDD RAID组。' 
 ---
-= 使用物理SSD创建Flash Pool本地层(聚合)
+= 在ONTAP中使用物理SSD创建Flash Pool本地层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以在由HDD RAID组组成的现有本地层上启用Flash Pool本地层(聚合)功能、然后将一个或多个SSD RAID组添加到该本地层来创建Flash Pool本地层(聚合)。这会导致该本地层出现两组RAID组：SSD RAID组(SSD缓存)和HDD RAID组。
+要创建Flash Pool本地层、可以在由HDD RAID组组成的现有本地层上启用此功能、然后向该本地层添加一个或多个SSD RAID组。这会导致该本地层出现两组RAID组：SSD RAID组(SSD缓存)和HDD RAID组。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 .关于此任务
 将SSD缓存添加到本地层以创建Flash Pool本地层后、您无法删除此SSD缓存将本地层转换回其原始配置。
 
-默认情况下， SSD 缓存的 RAID 级别与 HDD RAID 组的 RAID 级别相同。您可以通过在添加第一个SSD RAID组时指定"`RAIDType`"选项来覆盖此默认选择。
+默认情况下， SSD 缓存的 RAID 级别与 HDD RAID 组的 RAID 级别相同。您可以通过在添加第一个SSD RAID组时指定选项来覆盖此默认选择 `raidtype`。
 
 .开始之前
 * 您必须已确定一个由HDD组成的有效本地层以转换为Flash Pool本地层。
@@ -33,7 +36,7 @@ summary: '您可以在由HDD RAID组组成的现有本地层上启用Flash Pool�
 
 
 .步骤
-您可以使用System Manager或ONTAP命令行界面创建FlashPool聚合。
+您可以使用System Manager或ONTAP命令行界面创建FlashPool本地层。
 
 [role="tabbed-block"]
 ====
@@ -56,17 +59,17 @@ summary: '您可以在由HDD RAID组组成的现有本地层上启用Flash Pool�
 .命令行界面
 --
 .步骤
-. 将本地层(聚合)标记为有资格成为Flash Pool聚合：
+. 将本地层标记为有资格成为Flash Pool本地层：
 +
 `storage aggregate modify -aggregate _aggr_name_ -hybrid-enabled true`
 
 +
-如果此步骤未成功，请确定目标聚合的写入缓存资格。
+如果此步骤未成功、请确定目标本地层的写入缓存资格。
 
-. 使用将SSD添加到聚合 `storage aggregate add` 命令：
+. 使用命令将SSD添加到本地层 `storage aggregate add`。
 +
 ** 您可以通过ID或使用指定SSD `diskcount` 和 `disktype` parameters
-** 如果HDD和SSD的校验和类型不同、或者聚合是混合校验和聚合、则必须使用 `checksumstyle` 用于指定要添加到聚合的磁盘的校验和类型的参数。
+** 如果HDD和SSD的校验和类型不同、或者本地层是混合校验和本地层、则必须使用 `checksumstyle`参数指定要添加到本地层的磁盘的校验和类型。
 ** 您可以使用为SSD缓存指定不同的RAID类型 `raidtype` 参数。
 ** 如果您希望缓存RAID组大小与所使用RAID类型的默认大小不同、则应立即使用进行更改 `-cache-raid-group-size` 参数。
 

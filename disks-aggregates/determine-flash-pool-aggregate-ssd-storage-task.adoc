@@ -1,26 +1,29 @@
 ---
 permalink: disks-aggregates/determine-flash-pool-aggregate-ssd-storage-task.html 
 sidebar: sidebar 
-keywords: determine, flash pool, aggregate,local tier, ssd storage pool 
-summary: '当Flash Pool本地层(聚合)使用SSD存储池提供缓存时、其管理方式与使用离散SSD时不同。' 
+keywords: determine, flash pool, aggregate, local tier, ssd storage pool 
+summary: 使用SSD存储池提供缓存的Flash Pool本地层与使用离散SSD的Flash Pool本地层的管理方式不同。 
 ---
-= 确定Flash Pool本地层(聚合)是否正在使用SSD存储池
+= 确定Flash Pool本地层是否正在ONTAP中使用SSD存储池
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以通过将SSD存储池中的一个或多个分配单元添加到现有HDD本地层来配置Flash Pool (本地层)聚合。
+您可以通过将一个或多个分配单元从SSD存储池添加到现有HDD本地层来配置Flash Pool本地层。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 当Flash Pool本地层使用SSD存储池提供缓存时、与使用离散SSD时相比、您对其进行管理的方式有所不同。
 
 .步骤
-. 按 RAID 组显示聚合的驱动器：
+. 按RAID组显示本地层的驱动器：
 +
 `storage aggregate show-status _aggr_name_`
 
 +
-如果聚合正在使用一个或多个SSD存储池、则为的值 `Position` SSD RAID组的列显示为 `Shared`，存储池的名称将显示在RAID组名称旁边。
+如果本地层正在使用一个或多个SSD存储池，则SSD RAID组列的值 `Position`将显示为，并且存储池的名称将显示 `Shared`在RAID组名称旁边。
 
 

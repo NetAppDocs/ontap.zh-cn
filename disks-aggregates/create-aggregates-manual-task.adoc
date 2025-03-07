@@ -2,19 +2,22 @@
 permalink: disks-aggregates/create-aggregates-manual-task.html 
 sidebar: sidebar 
 keywords: ontap 9, create, aggregates, manually, manual, add, local tier 
-summary: '如果您不想使用ONTAP 提供的最佳实践建议添加本地层(创建聚合)、则可以手动执行此过程。' 
+summary: 如果您不想按照ONTAP的最佳实践建议添加本地层、则可以手动执行此过程。 
 ---
-= 手动添加本地层(创建聚合)
+= 在ONTAP中手动添加本地层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果您不想使用ONTAP 提供的最佳实践建议添加本地层(创建聚合)、则可以手动执行此过程。
+如果您不想按照ONTAP的最佳实践建议添加本地层、则可以手动执行此过程。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 .开始之前
-磁盘必须归节点所有、才能在本地层(聚合)中使用。  如果集群未配置为使用自动磁盘所有权分配、则必须执行此操作 link:manual-assign-disks-ownership-prep-task.html["手动分配所有权"]。
+磁盘必须由节点拥有、才能在本地层中使用。如果集群未配置为使用自动磁盘所有权分配，则必须link:manual-assign-disks-ownership-prep-task.html["手动分配所有权"]。
 
 有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。
 
@@ -63,41 +66,41 @@ summary: '如果您不想使用ONTAP 提供的最佳实践建议添加本地层(
 --
 .命令行界面
 --
-在手动创建聚合之前，您应查看磁盘配置选项并模拟创建过程。
+在手动创建本地层之前、您应查看磁盘配置选项并模拟创建过程。
 
 然后、您可以问题描述 `storage aggregate create` 命令并验证结果。
 
 .开始之前
-您必须已确定聚合中所需的磁盘数量和热备用磁盘数量。
+您必须已确定本地层中所需的磁盘数和热备用磁盘数。
 
 .关于此任务
 如果已启用根-数据-数据分区、并且配置中的固态驱动器(SSD)不超过24个、则建议将数据分区分配给不同的节点。
 
-用于在启用了根数据分区和根数据数据分区的系统上创建聚合的操作步骤与用于在使用未分区磁盘的系统上创建聚合的操作步骤相同。如果您的系统启用了根数据分区、则应使用的磁盘分区数 `-diskcount` 选项对于根-数据-数据分区、请使用 `-diskcount` 选项用于指定要使用的磁盘数。
+在启用了根-数据分区和根-数据-数据分区的系统上创建本地层的过程与在使用未分区磁盘的系统上创建本地层的过程相同。如果您的系统启用了根数据分区、则应使用磁盘分区数作为 `-diskcount`选项。对于根-数据-数据分区、 `-diskcount`选项指定要使用的磁盘数。
 
 
-NOTE: 创建多个聚合以用于 FlexGroup 时，聚合的大小应尽可能接近。
+NOTE: 在创建多个本地层以用于FlexGroup时、本地层的大小应尽可能接近。
 
-有关以及聚合创建选项和要求的详细信息， `storage aggregate create`请参见link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-create.html["ONTAP 命令参考"^]。
+有关以及本地层创建选项和要求的详细信息， `storage aggregate create`请参见link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-create.html["ONTAP 命令参考"^]。
 
 .步骤
-. 查看备用磁盘分区列表，以验证是否有足够的空间来创建聚合：
+. 查看备用磁盘分区列表、以验证是否有足够的空间来创建本地层：
 +
 `storage aggregate show-spare-disks -original-owner _node_name_`
 
 +
 数据分区显示在下 `Local Data Usable`。根分区不能用作备用分区。
 
-. 模拟聚合的创建：
+. 模拟本地层的创建：
 +
 `storage aggregate create -aggregate _aggregate_name_ -node _node_name_ -raidtype raid_dp -diskcount _number_of_disks_or_partitions_ -simulate true`
 
 . 如果模拟命令显示任何警告，请调整命令并重复模拟。
-. 创建聚合：
+. 创建本地层：
 +
 `storage aggregate create -aggregate _aggr_name_ -node _node_name_ -raidtype raid_dp -diskcount _number_of_disks_or_partitions_`
 
-. 显示聚合以验证其是否已创建：
+. 显示本地层以验证是否已创建：
 +
 `storage aggregate show-status _aggregate_name_`
 

@@ -2,30 +2,33 @@
 permalink: disks-aggregates/commands-manage-aggregates-reference.html 
 sidebar: sidebar 
 keywords: commands, manage, aggregates 
-summary: 您可以使用 storage aggregate 命令管理聚合。 
+summary: 您可以使用storage聚合命令管理本地层。 
 ---
-= 用于管理聚合的命令
+= 用于在ONTAP中管理本地层的命令
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用 `storage aggregate` 命令来管理聚合。
+您可以使用 `storage aggregate`命令管理本地层。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 |===
 | 如果您要 ... | 使用此命令 ... 
 
 
  a| 
-显示所有 Flash Pool 聚合的缓存大小
+显示全Flash Pool本地层的缓存大小
  a| 
 `storage aggregate show -fields hybrid-cache-size-total -hybrid-cache-size-total >0`
 
 
 
  a| 
-显示聚合的磁盘信息和状态
+显示本地层的磁盘信息和状态
  a| 
 `storage aggregate show-status`
 
@@ -39,63 +42,63 @@ summary: 您可以使用 storage aggregate 命令管理聚合。
 
 
  a| 
-显示集群中的根聚合
+显示集群中的本地层根
  a| 
 `storage aggregate show -has-mroot true`
 
 
 
  a| 
-显示聚合的基本信息和状态
+显示本地层的基本信息和状态
  a| 
 `storage aggregate show`
 
 
 
  a| 
-显示聚合中使用的存储类型
+显示本地层中使用的存储类型
  a| 
 `storage aggregate show -fields storage-type`
 
 
 
  a| 
-使聚合联机
+使本地层联机
  a| 
 `storage aggregate online`
 
 
 
  a| 
-删除聚合
+删除本地层
  a| 
 `storage aggregate delete`
 
 
 
  a| 
-将聚合置于受限状态
+将本地层置于受限状态
  a| 
 `storage aggregate restrict`
 
 
 
  a| 
-重命名聚合
+重命名本地层
  a| 
 `storage aggregate rename`
 
 
 
  a| 
-使聚合脱机
+使本地层脱机
  a| 
 `storage aggregate offline`
 
 
 
  a| 
-更改聚合的 RAID 类型
+更改本地层的RAID类型
  a| 
 `storage aggregate modify -raidtype`
 

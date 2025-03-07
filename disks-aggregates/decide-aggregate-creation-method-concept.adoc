@@ -2,18 +2,21 @@
 permalink: disks-aggregates/decide-aggregate-creation-method-concept.html 
 sidebar: sidebar 
 keywords: decide, aggregate, create, add, method, local tier 
-summary: '尽管ONTAP 为自动(自动配置)创建本地层(聚合)提供了最佳实践建议、但您必须确定您的环境是否支持建议的配置。否则、您必须先确定RAID策略和磁盘配置、然后手动创建本地层。' 
+summary: 虽然ONTAP提供了有关自动创建本地层的最佳实践建议、但您必须确定您的环境是否支持建议的配置。否则、您必须先确定RAID策略和磁盘配置、然后手动创建本地层。 
 ---
-= 确定用于创建本地层(聚合)的方法
+= 确定在ONTAP中使用哪种方法创建本地层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-虽然ONTAP 提供了自动添加本地层(使用自动配置创建聚合)的最佳实践建议、但您必须确定您的环境是否支持建议的配置。如果不是、则必须决定RAID策略和磁盘配置、然后手动创建本地层。
+虽然ONTAP提供了有关自动添加本地层的最佳实践建议、但您必须确定您的环境是否支持建议的配置。如果不是、则必须决定RAID策略和磁盘配置、然后手动创建本地层。
 
 自动创建本地层时、ONTAP 会分析集群中的可用备用磁盘、并生成有关应如何使用备用磁盘根据最佳实践添加本地层的建议。ONTAP 将显示建议的配置。  您可以接受建议或手动添加本地层。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 
 
@@ -39,23 +42,23 @@ summary: '尽管ONTAP 为自动(自动配置)创建本地层(聚合)提供了最
 
 NOTE: 从ONTAP 9.11.1开始、您可以使用System Manager手动添加本地层。
 
-* 使用第三方阵列 LUN 的聚合
+* 使用第三方阵列LUN的本地层
 * 使用 Cloud Volumes ONTAP 或 ONTAP Select 的虚拟磁盘
 * MetroCluster 系统
 * SyncMirror
 * MSATA 磁盘
-* FlashPool层(聚合)
+* FlashPool层
 * 节点连接了多种磁盘类型或大小
 
 
 
 
-== 选择创建本地层(聚合)的方法
+== 选择创建本地层的方法
 
 选择要使用的方法：
 
-* link:create-aggregates-auto-provision-task.html["自动添加(创建)本地层(聚合)"]
-* link:create-aggregates-manual-task.html["手动添加(创建)本地层(聚合)"]
+* link:create-aggregates-auto-provision-task.html["自动添加(创建)本地层"]
+* link:create-aggregates-manual-task.html["手动添加(创建)本地层"]
 
 
 .相关信息

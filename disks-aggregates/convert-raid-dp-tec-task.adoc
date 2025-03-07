@@ -2,19 +2,22 @@
 permalink: disks-aggregates/convert-raid-dp-tec-task.html 
 sidebar: sidebar 
 keywords: convert, raid-dp, raid-tec, raid policy 
-summary: 如果要添加三重奇偶校验保护，可以从 RAID-DP 转换为 RAID-TEC 。如果聚合中使用的磁盘大小大于 4 TiB ，建议使用 RAID-TEC 。 
+summary: 如果要添加三重奇偶校验保护，可以从 RAID-DP 转换为 RAID-TEC 。如果本地层中使用的磁盘大小大于4 TiB、建议使用RAID-TEC。 
 ---
-= 从 RAID-DP 转换为 RAID-TEC
+= 在ONTAP中从RAID-DP转换为RAID-TEC
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果要添加三重奇偶校验保护，可以从 RAID-DP 转换为 RAID-TEC 。如果本地层(聚合)中使用的磁盘大小大于4 TiB、则建议使用RAID-TEC。
+如果要添加三重奇偶校验保护，可以从 RAID-DP 转换为 RAID-TEC 。如果本地层中使用的磁盘大小大于4 TiB、建议使用RAID-TEC。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 .开始之前
-要转换的本地层(聚合)必须至少具有七个磁盘。
+要转换的本地层必须至少具有七个磁盘。
 
 .关于此任务
 * 硬盘驱动器(HDD)本地层可以从RAID-DP转换为RAID-TEC。这包括Flash Pool本地层中的HDD层。
@@ -22,15 +25,15 @@ summary: 如果要添加三重奇偶校验保护，可以从 RAID-DP 转换为 R
 
 
 .步骤
-. 验证聚合是否联机且至少具有六个磁盘：
+. 验证本地层是否已联机且至少具有六个磁盘：
 +
 `storage aggregate show-status -aggregate _aggregate_name_`
 
-. 将聚合从RAID-DP转换为RAID-TEC：
+. 将本地层从RAID-DP转换为RAID-TEC：
 +
 `storage aggregate modify -aggregate _aggregate_name_ -raidtype raid_tec`
 
-. 验证聚合RAID策略是否为RAID-TEC：
+. 验证本地层RAID策略是否为RAID-TEC：
 +
 `storage aggregate show _aggregate_name_`
 

@@ -2,16 +2,19 @@
 permalink: disks-aggregates/create-flash-pool-aggregate-ssd-storage-task.html 
 sidebar: sidebar 
 keywords: create, flash pool, aggregate, local tier, ssd, storage pool, allocation units 
-summary: '您可以通过将SSD存储池中的一个或多个分配单元添加到现有HDD本地层来配置Flash Pool本地层(聚合)。 ' 
+summary: 您可以通过将一个或多个分配单元从SSD存储池添加到现有HDD本地层来配置Flash Pool本地层。 
 ---
-= 使用SSD存储池分配单元创建Flash Pool本地层(聚合)
+= 使用SSD存储池分配单元在ONTAP中创建Flash Pool本地层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以通过将SSD存储池中的一个或多个分配单元添加到现有HDD本地层来配置Flash Pool本地层(聚合)。
+您可以通过将一个或多个分配单元从SSD存储池添加到现有HDD本地层来配置Flash Pool本地层。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 从ONTAP 9.12.1开始、您可以使用重新设计的System Manager使用存储池分配单元创建Flash Pool本地层。
 
@@ -63,18 +66,18 @@ summary: '您可以通过将SSD存储池中的一个或多个分配单元添加�
 .命令行界面
 --
 .步骤
-. 将聚合标记为有资格成为 Flash Pool 聚合：
+. 将本地层标记为有资格成为Flash Pool本地层：
 +
 `storage aggregate modify -aggregate _aggr_name_ -hybrid-enabled true`
 
 +
-如果此步骤未成功，请确定目标聚合的写入缓存资格。
+如果此步骤未成功、请确定目标本地层的写入缓存资格。
 
 . 显示可用的 SSD 存储池分配单元：
 +
 `storage pool show-available-capacity`
 
-. 将 SSD 容量添加到聚合：
+. 将SSD容量添加到本地层：
 +
 `storage aggregate add _aggr_name_ -storage-pool _sp_name_ -allocation-units _number_of_units_`
 
@@ -88,7 +91,7 @@ summary: '您可以通过将SSD存储池中的一个或多个分配单元添加�
 您不能设置缓存的 RAID 组大小；它由存储池中的 SSD 数量决定。
 
 +
-此时，缓存将添加到聚合中，而聚合现在是 Flash Pool 聚合。添加到聚合中的每个分配单元都将成为其自己的 RAID 组。
+此时、缓存将添加到本地层、而本地层现在已成为Flash Pool本地层。添加到本地层的每个分配单元都将成为其自己的RAID组。
 
 . 确认 SSD 缓存是否存在及其大小：
 +

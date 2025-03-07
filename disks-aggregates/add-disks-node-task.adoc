@@ -1,17 +1,20 @@
 ---
 permalink: disks-aggregates/add-disks-node-task.html 
 sidebar: sidebar 
-keywords: add, drives, node, shelf 
-summary: '您可以向节点或磁盘架添加驱动器、以增加热备用磁盘数量或向本地层(聚合)添加空间。' 
+keywords: add, drives, node, shelf, local tier, aggregate 
+summary: 您可以向节点或磁盘架添加驱动器、以增加热备用磁盘的数量或向本地层添加空间。 
 ---
-= 向节点或磁盘架添加驱动器
+= 在ONTAP中向节点或磁盘架添加驱动器
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以向节点或磁盘架添加驱动器、以增加热备用磁盘数量或向本地层(聚合)添加空间。
+您可以向节点或磁盘架添加驱动器、以增加热备用磁盘的数量或向本地层添加空间。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 .开始之前
 您的平台必须支持要添加的驱动器。您可以使用进行确认 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
@@ -76,9 +79,9 @@ When the drive's activity LED is solid, it means that the drive has power.When t
 `storage disk zerospares`
 
 +
-必须将先前在ONTAP 本地层(聚合)中使用的驱动器置零、然后才能将其添加到其他聚合。在ONTAP 9.3及更早版本中、完成置零可能需要数小时、具体取决于节点中未置零的驱动器的大小。现在、将驱动器置零可以防止在需要快速增加本地层大小时出现延迟。这不是ONTAP 9.4或更高版本中使用快速置零功能将驱动器置零的问题描述 、该功能只需几秒钟即可完成。
+以前在ONTAP本地层中使用的驱动器必须先将其置于零状态、然后才能添加到其他本地层。在ONTAP 9.3及更早版本中、完成置零可能需要数小时、具体取决于节点中未置零的驱动器的大小。现在、将驱动器置零可以防止在需要快速增加本地层大小时出现延迟。这不是ONTAP 9.4或更高版本中使用快速置零功能将驱动器置零的问题描述 、该功能只需几秒钟即可完成。
 
 
 
 .结果
-新驱动器已准备就绪。  您可以将其添加到本地层(聚合)、放置在热备用磁盘列表中或在创建新本地层时添加它们。
+新驱动器已准备就绪。您可以将其添加到本地层、将其放置到热备用磁盘列表中、或者在创建新本地层时添加。

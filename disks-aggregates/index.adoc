@@ -2,28 +2,25 @@
 permalink: disks-aggregates/index.html 
 sidebar: sidebar 
 keywords: decide, overview, disk, aggregate, local tier, manage, physical, storage, flash pool, raid, policies, policy 
-summary: '您可以使用System Manager和命令行界面管理ONTAP 物理存储。您可以创建、扩展和管理本地层(聚合)、使用Flash Pool本地层(聚合)、管理磁盘以及管理RAID策略。' 
+summary: 您可以使用System Manager和命令行界面管理ONTAP 物理存储。您可以创建、扩展和管理本地层、使用Flash Pool本地层、管理磁盘以及管理RAID策略。 
 ---
-= 磁盘和本地层(聚合)概述
+= 磁盘和本地层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以使用System Manager和命令行界面管理ONTAP 物理存储。您可以创建、扩展和管理本地层(聚合)、使用Flash Pool本地层(聚合)、管理磁盘以及管理RAID策略。
+_local tiers_(也称为_Aggregates _)是由节点管理的磁盘的逻辑容器。您可以使用本地层隔离具有不同性能需求的工作负载、使用不同的访问模式对数据进行分层、或者出于监管目的隔离数据。
 
 
-
-== 什么是本地层(聚合)
-
-_local第_层(也称为_aggregates _)是由节点管理的磁盘的容器。您可以使用本地层隔离具有不同性能需求的工作负载、使用不同的访问模式对数据进行分层、或者出于监管目的隔离数据。
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。
 
 * 对于需要尽可能低延迟和最高性能的业务关键型应用程序、您可以创建一个完全由SSD组成的本地层。
 * 要对不同访问模式的数据进行分层、您可以创建_hybrid本地层_、将闪存部署为工作数据集的高性能缓存、同时对访问频率较低的数据使用低成本的HDD或对象存储。
 +
-** Flash Pool_由SSD和HDD组成。
-** _SSD_由一个全FabricPool 本地层和一个附加的对象存储组成。
+** link:flash-pool-aggregate-caching-policies-concept.html["_Flash Pool_"]由SSD和HDD组成。
+** link:../concepts/fabricpool-concept.html["_ FabricPool _"]由一个连接了对象存储的纯SSD本地层组成。
 
 
 * 如果出于监管目的需要将归档数据与活动数据隔离、则可以使用由容量HDD组成的本地层、或者结合使用性能和容量HDD。
@@ -33,23 +30,14 @@ image:data-tiering.gif["FabriPool数据分层"]
 
 
 
-== 使用本地层(聚合)
+== 使用MetroCluster配置中的本地层
 
-您可以执行以下任务：
-
-* link:manage-local-tiers-overview-concept.html["管理本地层(聚合)"]
-* link:manage-disks-overview-concept.html["管理磁盘"]
-* link:manage-raid-configs-overview-concept.html["管理RAID配置"]
-* link:manage-flash-pool-tiers-overview-concept.html["管理Flash Pool层"]
-
-
-如果满足以下条件，则执行这些任务：
-
-* 您不想使用自动化脚本编写工具。
-* 您希望使用最佳实践，而不是浏览每个可用选项。
-* 您已配置 MetroCluster ，并且正在按照中的过程进行操作 link:https://docs.netapp.com/us-en/ontap-metrocluster["MetroCluster"^] 有关初始配置的文档以及本地层(聚合)和磁盘管理的准则。
-
+如果您使用的是MetroCluster配置、则应遵循文档中有关初始配置以及本地层和磁盘管理准则的过程link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_considerations_when_using_ontap_in_a_mcc_configuration.html["MetroCluster"^]。
 
 .相关信息
-* link:../fabricpool/index.html["管理FabricPool 云层"]
+* link:manage-local-tiers-overview-concept.html["管理本地层"]
+* link:manage-disks-overview-concept.html["管理磁盘"]
+* link:manage-raid-configs-overview-concept.html["管理RAID配置"]
+* link:flash-pool-aggregate-caching-policies-concept.html["管理Flash Pool层"]
+* link:../concepts/index.html["管理FabricPool 云层"]
 
