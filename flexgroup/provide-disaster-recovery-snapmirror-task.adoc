@@ -2,54 +2,40 @@
 permalink: flexgroup/provide-disaster-recovery-snapmirror-task.html 
 sidebar: sidebar 
 keywords: data, protection, workflow, flexgroup, volumes, snapmirror, snap mirror, disaster recovery, dr, unified, relationship 
-summary: 您可以为 FlexGroup 卷创建 SnapMirror 灾难恢复（ DR ）关系。从 ONTAP 9.3 开始，您还可以使用 SnapVault 技术备份和还原 FlexGroup 卷，并且可以创建使用同一目标进行备份和灾难恢复的统一数据保护关系。 
+summary: 您可以为 FlexGroup 卷创建 SnapMirror 灾难恢复（ DR ）关系。您还可以使用SnapVault技术备份和还原FlexGroup卷、并创建使用同一目标进行备份和灾难恢复的统一数据保护关系。 
 ---
-= FlexGroup 卷的数据保护工作流
+= FlexGroup卷的数据保护工作流摘要
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以为 FlexGroup 卷创建 SnapMirror 灾难恢复（ DR ）关系。从 ONTAP 9.3 开始，您还可以使用 SnapVault 技术备份和还原 FlexGroup 卷，并且可以创建使用同一目标进行备份和灾难恢复的统一数据保护关系。
-
-数据保护工作流包括验证集群和 SVM 对等关系，创建目标卷，创建作业计划，指定策略，创建数据保护关系以及初始化关系。
-
-image:flexgroups-data-protection-workflow.gif["FlexGroup 卷灾难恢复准备工作流"]
+您可以为 FlexGroup 卷创建 SnapMirror 灾难恢复（ DR ）关系。您还可以使用SnapVault技术备份和还原FlexGroup卷、并创建使用同一目标进行备份和灾难恢复的统一数据保护关系。
 
 .关于此任务
-SnapMirror关系类型始终为 `XDP` 适用于FlexGroup卷。SnapMirror 关系提供的数据保护类型由您使用的复制策略决定。您可以对要创建的复制关系使用默认策略或所需类型的自定义策略。下表显示了不同类型的数据保护关系的默认策略类型和支持的自定义策略类型。
+SnapMirror关系类型始终 `XDP`适用于FlexGroup卷。SnapMirror 关系提供的数据保护类型由您使用的复制策略决定。您可以对要创建的复制关系使用默认策略或所需类型的自定义策略。
 
-|===
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["1."]为集群和SVM建立对等关系
+[role="quick-margin-para"]
+如果集群和SVM尚未建立对等关系，请创建link:../peering/create-cluster-relationship-93-later-task.html["集群对等方"]和link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["SVM对等方"]。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["2."]创建作业计划
+[role="quick-margin-para"]
+您必须link:../data-protection/create-replication-job-schedule-task.html["创建作业计划"]确定何时进行SnapMirror更新。
+
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["3."]根据数据保护类型、请遵循以下路径之一：
+[role="quick-margin-list"]
+* *如果SnapMirror DR:*
++
+link:create-snapmirror-relationship-task.html["创建SnapMirror关系。"]创建关系时，可以选择默认策略或类型为的自定义 `async-mirror`策略 `MirrorAllSnapshots`。
+
+* *如果SnapMirror vault:*
++
+link:create-snapvault-relationship-task.html["创建SnapMirror存储关系。"]创建关系时，可以选择默认策略或类型为的自定义 `vault`策略 `XDPDefault`。
+
+* *如果使用统一数据保护：*
++
+link:create-unified-data-protection-relationship-task.html["创建统一数据保护关系。"]创建关系时，可以选择默认策略或类型为的自定义 `mirror-vault`策略 `MirrorAndVault`。
 
 
-| 关系类型 | 默认策略 | 自定义策略类型 
-
-
- a| 
-SnapMirror 灾难恢复
- a| 
-MirrorAllSnapshots
- a| 
-异步镜像
-
-
-
- a| 
-SnapVault 备份
- a| 
-XDPDefault
- a| 
-存储
-
-
-
- a| 
-统一数据保护
- a| 
-MirrorAndVault
- a| 
-镜像存储
-
-|===
-FlexGroup 卷不支持 MirrorLatest 策略。

@@ -2,7 +2,7 @@
 permalink: system-admin/configure-saml-authentication-task.html 
 sidebar: sidebar 
 keywords: tdp, ldap, identity, provider, saml, security, assertion, markup, lanaguage, active, directory, disable, authentication, idp, active directory, troubleshoot, repair 
-summary: 从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记语言（ SAML ）身份验证。配置并启用 SAML 身份验证后，用户将通过外部身份提供程序（ Identity Provider ， IdP ）进行身份验证，而不是 Active Directory 和 LDAP 等目录服务提供程序进行身份验证。禁用 SAML 身份验证后，将使用已配置的目录服务提供程序（例如 Active Directory 和 LDAP ）进行身份验证。 
+summary: 从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记语言（ SAML ）身份验证。 
 ---
 = 配置 SAML 身份验证
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记�
 
 
 [role="lead"]
-从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记语言（ SAML ）身份验证。配置并启用 SAML 身份验证后，用户将通过外部身份提供程序（ Identity Provider ， IdP ）进行身份验证，而不是 Active Directory 和 LDAP 等目录服务提供程序进行身份验证。
+从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记语言（ SAML ）身份验证。配置并启用 SAML 身份验证后，用户将通过外部身份提供程序（ Identity Provider ， IdP ）进行身份验证，而不是 Active Directory 和 LDAP 等目录服务提供程序进行身份验证。禁用SAML身份验证后、将使用配置的目录服务提供程序(如Active Directory和LDAP)进行身份验证
 
 
 
@@ -89,7 +89,7 @@ image:workflow_security_mfa_setup.gif["使用SAML设置多因素身份验证的�
 --
 . 创建 SAML 配置，以便 ONTAP 可以访问 IdP 元数据：
 +
-`*security saml-sp create -idp-uri _idp_uri_ -sp-host _ontap_host_name_*`
+`security saml-sp create -idp-uri <idp_uri> -sp-host <ontap_host_name>`
 
 +
 `idp_uri` 是可从中下载IdP元数据的IdP主机的FTP或HTTP地址。
@@ -122,7 +122,7 @@ Configure the IdP and Data ONTAP users for the same directory server domain to e
 
 . 启用 SAML 配置：
 +
-`*security saml-sp modify -is-enabled true*`
+`security saml-sp modify -is-enabled true`
 
 +
 访问的任何现有用户 `http` 或 `ontapi` 系统会自动为应用程序配置SAML身份验证。
@@ -131,7 +131,15 @@ Configure the IdP and Data ONTAP users for the same directory server domain to e
 +
 .. 使用SAML身份验证为新用户创建登录方法：
 +
-`*security login create -user-or-group-name _user_name_ -application [http | ontapi] -authentication-method saml -vserver _svm_name_*`
+
+NOTE: 此 `user_name`值区分大小写。仅包含用户名、不包含域的任何部分。
+
++
+`security login create -user-or-group-name <user_name> -application [http | ontapi] -authentication-method saml -vserver <svm_name>`
+
++
+示例
+
 +
 [listing]
 ----
@@ -139,10 +147,13 @@ cluster_12::> security login create -user-or-group-name admin1 -application http
 ----
 .. 验证是否已创建此用户条目：
 +
-`*security login show*`
+`security login show`
 
 +
-[listing]
+示例
+
++
+[listing, subs="+quotes"]
 ----
 cluster_12::> security login show
 
@@ -160,7 +171,7 @@ admin          service-processor
                            password      admin            no     none
 admin          ssh         password      admin            no     none
 admin1         http        password      backup           no     none
-**admin1       http        saml          backup           -      none**
+**admin1         http        saml          backup           -      none**
 ----
 
 
@@ -191,11 +202,11 @@ admin1         http        password      backup           no     none
 --
 . 禁用 SAML 身份验证
 +
-`*security saml-sp modify -is-enabled false*`
+`security saml-sp modify -is-enabled false`
 
 . 如果您不想再使用 SAML 身份验证或要修改 IdP ，请删除 SAML 配置：
 +
-`*security saml-sp delete*`
+`security saml-sp delete`
 
 
 
@@ -213,11 +224,14 @@ admin1         http        password      backup           no     none
 .步骤
 . 登录到高级权限级别：
 +
-`*set -privilege advanced*`
+`set -privilege advanced`
 
 . 确定 SAML 配置失败的节点：
 +
-`*security saml-sp status show -instance*`
+`security saml-sp status show -instance`
+
++
+示例
 
 +
 [listing]
@@ -243,7 +257,10 @@ SAML Service Provider Enabled: false
 ----
 . 修复故障节点上的 SAML 配置：
 +
-`*security saml-sp repair -node _node_name_*`
+`security saml-sp repair -node <node_name>`
+
++
+示例
 
 +
 [listing]
@@ -261,15 +278,18 @@ Web 服务器将重新启动，并且任何活动的 HTTP 连接或 HTTPS 连接
 
 . 验证是否已在所有节点上成功配置 SAML ：
 +
-`*security saml-sp status show -instance*`
+`security saml-sp status show -instance`
 
 +
-[listing]
+示例
+
++
+[listing, subs="+quotes"]
 ----
 cluster_12::*> security saml-sp status show -instance
 
                          Node: node1
-                Update Status: config-success
+                Update Status: **config-success**
                Database Epoch: 9
    Database Transaction Count: 997
                    Error Text:

@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: decide, overview, administrator, authentication, rbac, role-based, access, control 
 summary: 您可以为 ONTAP 集群管理员和 Storage Virtual Machine （ SVM ）管理员启用登录帐户。您还可以使用基于角色的访问控制（ Role-Based Access Control ， RBAC ）定义管理员的功能。 
 ---
-= 使用 CLI 进行管理员身份验证和 RBAC 概述
+= ONTAP管理员身份验证和RBAC概述
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,9 +13,29 @@ summary: 您可以为 ONTAP 集群管理员和 Storage Virtual Machine （ SVM �
 [role="lead"]
 您可以为 ONTAP 集群管理员和 Storage Virtual Machine （ SVM ）管理员启用登录帐户。您还可以使用基于角色的访问控制（ Role-Based Access Control ， RBAC ）定义管理员的功能。
 
-您可以通过以下方式启用登录帐户和 RBAC ：
+您可以启用本地管理员帐户以使用以下类型的身份验证访问管理 Storage Virtual Machine （ SVM ）或数据 SVM ：
 
-* 您希望使用 ONTAP 命令行界面（ CLI ），而不是 System Manager 或自动化脚本编写工具。
-* 您希望使用最佳实践，而不是浏览每个可用选项。
-* 您不使用 SNMP 收集有关集群的信息。
+* link:enable-password-account-access-task.html["Password"]
+* link:enable-ssh-public-key-accounts-task.html["SSH 公有密钥"]
+* link:enable-ssl-certificate-accounts-task.html["SSL证书"]
+* link:mfa-overview.html["SSH 多因素身份验证（ MFA ）"]
++
+从 ONTAP 9.3 开始，支持使用密码和公有密钥进行身份验证。
+
+
+
+您可以通过以下类型的身份验证使远程管理员帐户能够访问管理 SVM 或数据 SVM ：
+
+* link:grant-access-active-directory-users-groups-task.html["Active Directory"]
++
+从ONTAP 9.131开始、您可以使用SSH公共密钥作为Active Directory用户的主身份验证方法或二级身份验证方法。
+
+* link:../system-admin/configure-saml-authentication-task.html["SAML 身份验证（仅适用于管理 SVM ）"]
++
+从 ONTAP 9.3 开始，可以使用安全断言标记语言（ SAML ）身份验证通过以下任一 Web 服务访问管理 SVM ：服务处理器基础架构， ONTAP API 或 System Manager 。
+
+* link:grant-access-nis-ldap-user-accounts-task.html["LDAP或NIS"]
++
+从 ONTAP 9.4 开始， SSH MFA 可用于 LDAP 或 NIS 服务器上的远程用户。支持使用 nsswitch 和公有密钥进行身份验证。
+
 

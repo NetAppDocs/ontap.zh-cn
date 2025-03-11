@@ -29,27 +29,8 @@ summary: 您可以将缓存保留策略分配给Flash Pool本地层中的卷。�
 
 . 设置缓存保留策略：
 +
-|===
+`volume modify -volume volume_name -vserver vserver_name -caching-policy policy_name`
 
-
-| ONTAP 版本 | 命令 
-
-
- a| 
-ONTAP 9.0 和 9.1
- a| 
-`priority hybrid-cache set volume_name read-cache=read_cache_value write-cache=write_cache_value cache-retention-priority=cache_retention_policy`
-
-设置 `cache_retention_policy` to `high` 用于希望在缓存中保留更长时间的数据。设置 `cache_retention_policy` to `low` 对于要尽快从缓存中删除的数据。
-
-
-
- a| 
-ONTAP 9.2或更高版本
- a| 
-`volume modify -volume volume_name -vserver vserver_name -caching-policy policy_name.`
-
-|===
 . 验证卷的缓存保留策略是否已更改为选定选项。
 . 将权限设置恢复为 admin ：
 +

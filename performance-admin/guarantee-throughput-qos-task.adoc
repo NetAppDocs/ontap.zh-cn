@@ -15,7 +15,7 @@ summary: 您可以使用存储服务质量（ QoS ）来保证关键工作负载
 
 
 
-== 关于吞吐量上限（ QoS 最大值）
+== 吞吐量上限(QoS最大值)
 
 吞吐量上限会将工作负载的吞吐量限制为最大 IOPS 或 MBps 数，或者 IOPS 和 MBps 数。在下图中，工作负载 2 的吞吐量上限可确保它不会 " 抢占 " 工作负载 1 和 3 。
 
@@ -28,7 +28,7 @@ image:qos-ceiling.gif["应用吞吐量上限前后QoS对比图表。"]
 
 
 
-== 关于吞吐量下限（ QoS 最小值）
+== 吞吐量下限(QoS最小值)
 
 吞吐量下限可确保工作负载的吞吐量不会低于最小IOPS或MBps数或IOPS和MBps数。在下图中，工作负载 1 和工作负载 3 的吞吐量下限可确保满足最小吞吐量目标，而不管工作负载 2 的需求如何。
 
@@ -52,7 +52,7 @@ image:qos-floor.gif["两个图表、用于比较应用下限前后的QoS吞吐�
 
 
 
-== 关于共享和非共享 QoS 策略组
+== 共享和非共享QoS策略组
 
 从 ONTAP 9.4 开始，您可以使用 _non-shared_ QoS 策略组分别指定每个成员工作负载的已定义吞吐量上限或下限适用场景。_shared_ 策略组的行为取决于策略类型：
 
@@ -62,7 +62,7 @@ image:qos-floor.gif["两个图表、用于比较应用下限前后的QoS吞吐�
 
 
 
-== 关于自适应 QoS
+== 自适应 QoS
 
 通常，分配给存储对象的策略组值是固定的。当存储对象的大小发生变化时，您需要手动更改此值。例如，增加卷上的已用空间量通常需要相应地增加为卷指定的吞吐量上限。
 
@@ -132,8 +132,8 @@ ONTAP 9 版本
 全部
  a| 
 * AFF
-* C190 *
-* 采用 SSD * 的 ONTAP Select 高级版
+* C190 ^1^
+* ONTAP Select高级版、含SSD ^1^
 
  a| 
 * AFF
@@ -183,7 +183,7 @@ SnapMirror 同步
 是的。
 
 |===
-从ONTAP 9.6版开始支持C190和ONTAP Select。
+从ONTAP 9.6版开始支持^1^ C190和ONTAP Select。
 
 
 
@@ -192,17 +192,11 @@ SnapMirror 同步
 下表按 ONTAP 9 版本显示了工作负载对吞吐量上限的支持。不支持根卷，负载共享镜像和数据保护镜像。
 
 |===
-| 工作负载支持—上限 | ONTAP 9.0 | ONTAP 9.1 | ONTAP 9.2 | ONTAP 9.3 | ONTAP 9.4 - 9.7 | ONTAP 9.8及更高版本 
+| 工作负载支持 | ONTAP 9.3及更早版本 | ONTAP 9.4到9.7 | ONTAP 9.8及更高版本 
 
 
  a| 
 Volume
- a| 
-是的。
- a| 
-是的。
- a| 
-是的。
  a| 
 是的。
  a| 
@@ -220,23 +214,11 @@ Volume
 是的。
  a| 
 是的。
- a| 
-是的。
- a| 
-是的。
- a| 
-是的。
 
 
 
  a| 
 LUN
- a| 
-是的。
- a| 
-是的。
- a| 
-是的。
  a| 
 是的。
  a| 
@@ -254,25 +236,13 @@ SVM
 是的。
  a| 
 是的。
- a| 
-是的。
- a| 
-是的。
- a| 
-是的。
 
 
 
  a| 
 FlexGroup 卷
  a| 
-否
- a| 
-否
- a| 
-否
- a| 
-是的。
+是(仅限ONTAP 9.3)
  a| 
 是的。
  a| 
@@ -281,13 +251,7 @@ FlexGroup 卷
 
 
  a| 
-qtree*
- a| 
-否
- a| 
-否
- a| 
-否
+qtrees ^1^
  a| 
 否
  a| 
@@ -305,12 +269,6 @@ qtree*
 是的。
  a| 
 是的。
- a| 
-是的。
- a| 
-是的。
- a| 
-是的。
 
 
 
@@ -319,18 +277,12 @@ qtree*
  a| 
 否
  a| 
-否
- a| 
-否
- a| 
-否
- a| 
 是的。
  a| 
 是的。
 
 |===
-从ONTAP 9.8开始、在启用了NFS的FlexVol和FlexGroup卷中的qtrees支持NFS访问。从 ONTAP 9.1.1 开始，启用了 SMB 的 FlexVol 和 FlexGroup 卷的 qtree 也支持 SMB 访问。
+^1^从ONTAP 9.8开始、在启用了NFS的FlexVol和FlexGroup卷中的qtrees支持NFS访问。从 ONTAP 9.1.1 开始，启用了 SMB 的 FlexVol 和 FlexGroup 卷的 qtree 也支持 SMB 访问。
 
 
 
@@ -339,7 +291,7 @@ qtree*
 下表按 ONTAP 9 版本显示了吞吐量下限的工作负载支持。不支持根卷，负载共享镜像和数据保护镜像。
 
 |===
-| 工作负载支持—楼层 | ONTAP 9.2 | ONTAP 9.3 | ONTAP 9.4 - 9.7 | ONTAP 9.8 - 9.13.0 | ONTAP 9.13.1及更高版本 
+| 工作负载支持 | ONTAP 9.2 | ONTAP 9.3 | ONTAP 9.4到9.7 | ONTAP 9.8 到 9.13.0 | ONTAP 9.13.1及更高版本 
 
 
 | Volume | 是的。 | 是的。 | 是的。 | 是的。 | 是的。 
@@ -357,7 +309,7 @@ qtree*
 | FlexGroup 卷 | 否 | 否 | 是的。 | 是的。 | 是的。 
 
 
-| qtree * | 否 | 否 | 否 | 是的。 | 是的。 
+| qtrees ^1^ | 否 | 否 | 否 | 是的。 | 是的。 
 
 
 | 每个策略组具有多个工作负载 | 否 | 否 | 是的。 | 是的。 | 是的。 
@@ -365,7 +317,7 @@ qtree*
 
 | 非共享策略组 | 否 | 否 | 是的。 | 是的。 | 是的。 
 |===
-\*从ONTAP 9.8开始、在启用了NFS的FlexVol 和FlexGroup 卷中的qtrees支持NFS访问。从 ONTAP 9.1.1 开始，启用了 SMB 的 FlexVol 和 FlexGroup 卷的 qtree 也支持 SMB 访问。
+^1^从ONTAP 9.8开始、在启用了NFS的FlexVol和FlexGroup卷中的qtrees支持NFS访问。从 ONTAP 9.1.1 开始，启用了 SMB 的 FlexVol 和 FlexGroup 卷的 qtree 也支持 SMB 访问。
 
 
 
@@ -374,7 +326,7 @@ qtree*
 下表显示了 ONTAP 9 版本对自适应 QoS 的工作负载支持。不支持根卷，负载共享镜像和数据保护镜像。
 
 |===
-| 工作负载支持—自适应 QoS | ONTAP 9.3 | ONTAP 9.4 - 9.13.0 | ONTAP 9.13.1及更高版本 
+| 工作负载支持 | ONTAP 9.3 | ONTAP 9.4 到 9.13.0 | ONTAP 9.13.1及更高版本 
 
 
 | Volume | 是的。 | 是的。 | 是的。 

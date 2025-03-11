@@ -29,45 +29,35 @@ ONTAP 会在每个节点上选择两个可用空间最大的聚合来创建 Flex
 .步骤
 . 配置 FlexGroup 卷：
 +
-|===
-
-
-| 如果您使用的是 ... | 使用此命令 ... 
-
-
- a| 
-ONTAP 9.2或更高版本
- a| 
 `volume create -vserver svm_name -volume fg_vol_name –auto-provision-as flexgroup -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-support-tiering true]`
 
++
 从ONTAP 9.5开始、您可以为FabricPool 创建FlexGroup 卷。要在FabricPool上自动配置FlexGroup卷、必须设置 `-support-tiering` 参数设置为 `true`。卷保证必须始终设置为 `none` 适用于FabricPool。您还可以为 FlexGroup 卷指定分层策略和分层最小冷却期。
 
++
 link:../disks-aggregates/index.html["磁盘和聚合管理"]
 
-从 ONTAP 9.3 开始，您可以为 FlexGroup 卷指定吞吐量上限（ QoS 最大值），从而限制 FlexGroup 卷可以使用的性能资源。从 ONTAP 9.4 开始，您可以为 FlexGroup 卷指定吞吐量下限（ QoS 最小值）和自适应 QoS 。
++
+您可以为FlexGroup卷指定吞吐量上限(QoS最大值)。这会限制FlexGroup卷可以使用的性能资源。从 ONTAP 9.4 开始，您可以为 FlexGroup 卷指定吞吐量下限（ QoS 最小值）和自适应 QoS 。
 
++
 link:../performance-admin/index.html["性能管理"]
 
-从ONTAP 9.2开始、您可以设置 `-encrypt` 参数设置为 `true` 要在FlexGroup卷上启用加密的选项。要创建加密卷，必须已安装卷加密许可证和密钥管理器。
++
+如果要对FlexGroup卷启用加密、可以将参数设置 `-encrypt`为 `true`。要创建加密卷，必须已安装卷加密许可证和密钥管理器。
 
++
 
 NOTE: 您必须在创建 FlexGroup 卷时对其启用加密。您不能对现有 FlexGroup 卷启用加密。
 
++
 link:../encryption-at-rest/index.html["空闲数据加密"]
 
-
-
- a| 
-ONTAP 9.1
- a| 
-`volume flexgroup deploy -vserver svm_name -size fg_size`
-
-|===
 +
 。 `size` 参数用于指定FlexGroup卷的大小(以KB、MB、GB、TB或PB为单位)。
 
 +
-以下示例显示了如何在 ONTAP 9.2 中配置大小为 400 TB 的 FlexGroup 卷：
+以下示例显示了如何配置大小为400 TB的FlexGroup卷：
 
 +
 [listing]
@@ -113,7 +103,10 @@ Do you want to continue? {y|n}: y
 +
 默认情况下、FlexGroup卷是使用创建的 `volume` 空间保证设置(AFF系统除外)。对于AFF系统、默认情况下会使用创建FlexGroup卷 `none` 空间保证。
 
-. 使用接合路径挂载FlexGroup卷： `volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
+. 使用接合路径挂载FlexGroup卷：
++
+`volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
+
 +
 [listing]
 ----

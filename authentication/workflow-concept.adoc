@@ -1,10 +1,10 @@
 ---
 permalink: authentication/workflow-concept.html 
 sidebar: sidebar 
-keywords: svms, administrator, authentication, rbac, workflow 
+keywords: svm, svms, administrator, authentication, rbac, workflow, account, role 
 summary: 您可以为本地管理员帐户或远程管理员帐户启用身份验证。本地帐户的帐户信息位于存储系统上，远程帐户的帐户信息位于其他位置。每个帐户可以具有一个预定义角色或一个自定义角色。 
 ---
-= 管理员身份验证和 RBAC 工作流
+= ONTAP管理员身份验证和RBAC工作流摘要
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,25 +13,26 @@ summary: 您可以为本地管理员帐户或远程管理员帐户启用身份�
 [role="lead"]
 您可以为本地管理员帐户或远程管理员帐户启用身份验证。本地帐户的帐户信息位于存储系统上，远程帐户的帐户信息位于其他位置。每个帐户可以具有一个预定义角色或一个自定义角色。
 
-image:administrator-authentication-rbac-workflow.gif["管理员身份验证和 RBAC 工作流"]
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["一个"]完成配置工作表
+[role="quick-margin-para"]
+在创建登录帐户和设置基于角色的访问控制(RRBAC )之前，应收集中每个项目的信息link:config-worksheets-reference.html["配置工作表"]。
 
-您可以启用本地管理员帐户以使用以下类型的身份验证访问管理 Storage Virtual Machine （ SVM ）或数据 SVM ：
-
-* Password
-* SSH 公有密钥
-* SSL证书
-* SSH 多因素身份验证（ MFA ）
-+
-从 ONTAP 9.3 开始，支持使用密码和公有密钥进行身份验证。
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["两个"]确定管理员帐户是本地帐户还是远程帐户
+[role="quick-margin-list"]
+* *如果本地:*启用link:enable-password-account-access-task.html["password"]、、link:enable-ssh-public-key-accounts-task.html["SSH"] link:mfa-overview.html["SSH MFA"]或link:enable-ssl-certificate-accounts-task.html["SSL"]访问。
+* *如果远程:*确定远程访问的类型。根据访问类型、、link:grant-access-active-directory-users-groups-task.html["启用Active Directory访问"] link:grant-access-nis-ldap-user-accounts-task.html["启用LDAP或NIS访问"]或link:../system-admin/configure-saml-authentication-task.html["配置SAML身份验证(仅适用于管理SVM)"]。
 
 
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["三个"]设置基于角色的访问
+[role="quick-margin-para"]
+分配给管理员的角色决定了管理员有权访问的命令。此角色在您创建管理员帐户时分配、可以稍后再分配link:modify-role-assigned-administrator-task.html["已修改"]。您可以使用和link:predefined-roles-svm-administrators-concept.html["SVM"]管理员的预定义角色、也link:define-custom-roles-task.html["定义自定义角色"]可以根据需要使用link:predefined-roles-cluster-administrators-concept.html["集群"]。
 
-您可以通过以下类型的身份验证使远程管理员帐户能够访问管理 SVM 或数据 SVM ：
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["四个"]管理管理员帐户
+[role="quick-margin-para"]
+根据您启用帐户访问的方式，您可能需要关联link:manage-public-key-authentication-concept.html["具有本地帐户的公共密钥"]、管理link:configure-cisco-duo-mfa-task.html["用于SSH登录的Cisco Duo 2FA"]、link:manage-ssh-public-keys-and-certificates.html["公共密钥和X.509证书"]配置、安装link:install-server-certificate-cluster-svm-ssl-server-task.html["CA 签名的服务器数字证书"]或配置、link:enable-ad-users-groups-access-cluster-svm-task.html["Active Directory"]link:enable-nis-ldap-users-access-cluster-task.html["LDAP或NIS"] 访问。您可以在启用帐户访问之前或之后执行所有这些任务。
 
-* Active Directory
-* SAML 身份验证（仅适用于管理 SVM ）
-+
-从 ONTAP 9.3 开始，可以使用安全断言标记语言（ SAML ）身份验证通过以下任一 Web 服务访问管理 SVM ：服务处理器基础架构， ONTAP API 或 System Manager 。
-
-* 从 ONTAP 9.4 开始， SSH MFA 可用于 LDAP 或 NIS 服务器上的远程用户。支持使用 nsswitch 和公有密钥进行身份验证。
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-5.png["五个"]配置其他安全功能
+[role="quick-margin-list"]
+* link:../multi-admin-verify/index.html["管理多管理员验证"]如果要确保某些操作需要指定管理员的批准。
+* link:dynamic-authorization-overview.html["管理动态授权"]如果要根据用户的信任级别动态应用其他授权检查。
 
