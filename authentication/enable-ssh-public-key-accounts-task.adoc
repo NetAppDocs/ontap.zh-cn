@@ -11,7 +11,7 @@ summary: 您可以使用 security login create 命令使管理员帐户能够使
 
 
 [role="lead"]
-您可以使用 `security login create` 命令以使管理员帐户能够使用SSH公共密钥访问管理员或数据SVM。
+您可以使用 `security login create`命令使管理员帐户能够使用SSH公共密钥访问管理员或数据SVM。有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。
 
 .关于此任务
 * 您必须先将公有密钥与帐户关联，然后帐户才能访问 SVM 。
@@ -21,7 +21,7 @@ xref:manage-public-key-authentication-concept.adoc[将公有密钥与用户帐�
 +
 您可以在启用帐户访问之前或之后执行此任务。
 
-* 如果您不确定要分配给登录帐户的访问控制角色、可以使用 `security login modify` 命令以稍后添加此角色。
+* 如果您不确定要分配给登录帐户的访问控制角色、可以稍后使用命令添加此角色。 `security login modify`有关的详细信息 `security login modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["ONTAP 命令参考"^]。
 
 
 如果要在集群上启用FIPS模式、则必须使用支持的密钥类型重新配置不支持密钥算法的现有SSH公共密钥帐户。  在启用FIPS之前、应重新配置这些帐户、否则管理员身份验证将失败。
@@ -73,9 +73,6 @@ NOTE: 从ONTAP 9.11.1开始、不再支持ssh-ed25519主机密钥算法。
 . 允许本地管理员帐户使用 SSH 公有密钥访问 SVM ：
 +
 `security login create -vserver _SVM_name_ -user-or-group-name user_or_group_name -application _application_ -authmethod _authentication_method_ -role _role_ -comment _comment_`
-
-+
-有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。
 
 +
 以下命令将启用SVM管理员帐户 `svmadmin1` 和预定义的 `vsadmin-volume` 访问SVM的角色``engData1`` 使用SSH公共密钥：

@@ -11,7 +11,7 @@ summary: 您可以使用 security login role create 命令定义自定义角色�
 
 
 [role="lead"]
-您可以使用 `security login role create` 用于定义自定义角色的命令。您可以根据需要多次执行此命令，以实现要与角色关联的功能的精确组合。
+您可以使用 `security login role create`命令定义自定义角色。您可以根据需要多次执行此命令，以实现要与角色关联的功能的精确组合。有关的详细信息 `security login role create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-role-create.html["ONTAP 命令参考"^]。
 
 .关于此任务
 * 角色（无论是预定义的还是自定义的）可以授予或拒绝对 ONTAP 命令或命令目录的访问权限。
@@ -36,9 +36,6 @@ NOTE: 您不能为SVM管理员分配一个角色来访问仅对可用的命令�
 `security login role create -vserver SVM_name -role role -cmddirname command_or_directory_name -access access_level -query query`
 
 +
-有关的详细信息 `security login role create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-role-create.html["ONTAP 命令参考"^]。
-
-+
 以下命令用于授予 `vol_role` 对中命令的角色完全访问权限 `volume` 命令目录以及对中命令的只读访问权限 `volume snapshot` 子目录。
 
 +
@@ -60,4 +57,10 @@ cluster1::>security login role create -role SVM_storage -cmddirname "storage enc
 
 cluster1::>security login role create -role SVM_storage -cmddirname "storage aggregate plex offline" -access all
 ----
+
+
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/security-login-role-create.html["创建安全登录角色"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-plex-offline.html["存储聚合丛脱机"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=storage+encryption["存储加密"^]
 

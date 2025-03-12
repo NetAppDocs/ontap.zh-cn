@@ -121,7 +121,7 @@ NOTE: 从ARP/AI的ARP.16.1开始ONTAP 9、FlexVol卷不会使用ARP/AI。安装�
 建议您将ARP保留在学习模式30天。从ARP.13.1.开始、ONTAP 9会自动确定最佳学习间隔并自动执行交换机操作、这可能会在30天之前发生。
 
 
-TIP: 命令可 `security anti-ransomware volume workload-behavior show`显示在卷中检测到的文件扩展名。如果您在学习模式早期运行此命令、并且此命令显示了文件类型的准确表示、则不应将此数据用作迁移到活动模式的基础、因为ONTAP仍在收集其他指标。
+TIP: 命令可 `security anti-ransomware volume workload-behavior show`显示在卷中检测到的文件扩展名。如果您在学习模式早期运行此命令、并且此命令显示了文件类型的准确表示、则不应将此数据用作迁移到活动模式的基础、因为ONTAP仍在收集其他指标。有关的详细信息 `security anti-ransomware volume workload-behavior show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-show.html["ONTAP 命令参考"^]。
 
 .活动模式
 对于使用9.10.1 9.10.1到9.15.1运行的ARP、在完成最佳学习周期后、ARP将切换到_active mode_。在ARP切换到活动模式后、ONTAP会创建ARP快照、以便在检测到威胁时保护数据。
@@ -150,7 +150,7 @@ NOTE: 从ONTAP 9.11.1开始、您可以自定义ARP的检测参数。有关详�
 
 在ONTAP运行分析报告以确定此非正常情况是否与勒索软件配置文件匹配后、此威胁会升级为中等。当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。ONTAP不会发送有关低威胁的警报，但是，从ONTAP 9.14.1开始，您可以发送警报xref:manage-parameters-task.html#modify-alerts[修改警报设置]。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
 
-您可以在System Manager的*事件*部分或使用命令查看有关中等威胁的信息 `security anti-ransomware volume show`。在不包含ARP/AI的9.16.1 9.161之前的版本中、也可以使用命令查看低威胁事件 `security anti-ransomware volume show`。
+您可以在System Manager的*事件*部分或使用命令查看有关中等威胁的信息 `security anti-ransomware volume show`。在不包含ARP/AI的9.16.1 9.161之前的版本中、也可以使用命令查看低威胁事件 `security anti-ransomware volume show`。有关的详细信息 `security anti-ransomware volume show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["ONTAP 命令参考"^]。
 
 单个ARP快照会保留两天。如果存在多个ARP快照、则默认情况下、这些快照会保留五天。从ONTAP 9.11.1开始、您可以修改保留设置。有关详细信息，请参见 xref:modify-automatic-shapshot-options-task.html[修改快照选项]。
 

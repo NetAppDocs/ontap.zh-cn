@@ -19,7 +19,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 == 创建或修改登录帐户
 
-您可以在中提供这些值 `security login create` 命令。您可以在中提供相同的值 `security login modify` 命令。
+在启用登录帐户以访问Storage VM时、可以在命令中提供这些值 `security login create`。有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。在修改帐户访问Storage VM的方式时、您可以在命令中提供相同的值 `security login modify`。有关的详细信息 `security login modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -139,7 +139,7 @@ summary: 在创建登录帐户和设置基于角色的访问控制（ Role-Based
 
 == 配置Cisco Duo安全信息
 
-您可以在中提供这些值 `security login duo create` 命令。
+如果要为Storage VM启用通过SSH登录进行Cisco Duo双重身份验证、请在命令中提供以下值 `security login duo create`。有关的详细信息 `security login duo create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-duo-create.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -247,7 +247,7 @@ http-proxy=http://username:password@proxy.example.org:8080
 
 == 定义自定义角色
 
-您可以在中提供这些值 `security login role create` 命令。
+定义自定义角色时、可以在命令中提供这些值 `security login role create`。有关的详细信息 `security login role create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-role-create.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -313,7 +313,7 @@ http-proxy=http://username:password@proxy.example.org:8080
 
 == 将公有密钥与用户帐户关联
 
-您可以在中提供这些值 `security login publickey create` 命令。
+将SSH公共密钥与用户帐户关联时、可以在命令中提供这些值 `security login publickey create`。有关的详细信息 `security login publickey create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-create.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -445,7 +445,7 @@ MFA挑战百分比上限。有效范围为0到100。此值必须等于或大于�
 
 == 安装 CA 签名的服务器数字证书。
 
-您可以在中提供这些值 `security certificate generate-csr` 命令。
+在生成数字证书签名请求(CSR)以将Storage VM作为SSL服务器进行身份验证时、可以在命令中提供以下值 `security certificate generate-csr`。有关的详细信息 `security certificate generate-csr`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-generate-csr.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -525,7 +525,7 @@ Storage VM的联系人管理员的电子邮件地址。
  a| 
 
 |===
-您可以在中提供这些值 `security certificate install` 命令。下表仅显示与帐户配置相关的选项。
+在安装用于将集群或Storage VM作为SSL服务器进行身份验证的CA签名数字证书时、可以在命令中提供以下值 `security certificate install`。下表仅显示与帐户配置相关的选项。有关的详细信息 `security certificate install`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -559,7 +559,7 @@ Storage VM的联系人管理员的电子邮件地址。
 
 == 配置 Active Directory 域控制器访问
 
-您可以在中提供这些值 `security login domain-tunnel create` 命令。
+如果已为数据Storage VM配置SMB服务器、并且要将此Storage VM配置为网关或_tn通道_以使Active Directory域控制器能够访问集群、则可以在命令中提供这些值 `security login domain-tunnel create`。有关的详细信息 `security login domain-tunnel create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-domain-tunnel-create.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -575,7 +575,7 @@ Storage VM的联系人管理员的电子邮件地址。
  a| 
 
 |===
-您可以在中提供这些值 `vserver active-directory create` 命令。
+如果尚未配置SMB服务器、但要在Active Directory域上创建Storage VM计算机帐户、请在命令中提供这些值 `vserver active-directory create`。有关的详细信息 `vserver active-directory create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-active-directory-create.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -619,7 +619,7 @@ Storage VM的联系人管理员的电子邮件地址。
 
 == 配置 LDAP 或 NIS 服务器访问
 
-您可以在中提供这些值 `vserver services name-service ldap client create` 命令。
+在为Storage VM创建LDAP客户端配置时、可以在命令中提供这些值 `vserver services name-service ldap client create`。有关的详细信息 `vserver services name-service ldap client create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-ldap-client-create.html["ONTAP 命令参考"^]。
 
 下表仅显示与帐户配置相关的选项：
 
@@ -674,7 +674,7 @@ Storage VM的联系人管理员的电子邮件地址。
 ==== a| 
 
 |===
-您可以在中提供这些值 `vserver services name-service ldap create` 命令。
+将LDAP客户端配置与Storage VM关联时、可以在命令中提供这些值 `vserver services name-service ldap create`。有关的详细信息 `vserver services name-service ldap create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-ldap-create.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -706,7 +706,7 @@ Storage VM是否可以使用LDAP客户端配置 (`true` 或 `false`）。
  a| 
 
 |===
-您可以在中提供这些值 `vserver services name-service nis-domain create` 命令。
+在Storage VM上创建NIS域配置时、可以在命令中提供这些值 `vserver services name-service nis-domain create`。有关的详细信息 `vserver services name-service nis-domain create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-nis-domain-create.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -738,7 +738,7 @@ Storage VM是否可以使用LDAP客户端配置 (`true` 或 `false`）。
  a| 
 
 |===
-您可以在中提供这些值 `vserver services name-service ns-switch create` 命令。
+在为名称服务源指定查找顺序时、可以在命令中提供这些值 `vserver services name-service ns-switch create`。有关的详细信息 `vserver services name-service ns-switch create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-ns-switch-create.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===
@@ -787,7 +787,7 @@ Storage VM是否可以使用LDAP客户端配置 (`true` 或 `false`）。
 
 == 配置 SAML 访问
 
-从ONTAP 9.3开始、您可以在中提供这些值 `security saml-sp create` 命令以配置SAML身份验证。
+从ONTAP 9.3开始、您可以在命令中提供这些值 `security saml-sp create`来配置SAML身份验证。有关的详细信息 `security saml-sp create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-saml-sp-create.html["ONTAP 命令参考"^]。
 
 [cols="3*"]
 |===

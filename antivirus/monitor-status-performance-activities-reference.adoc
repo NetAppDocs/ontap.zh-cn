@@ -56,17 +56,21 @@ Vscan服务器的运行状况以及已扫描的文件数。此信息将有所帮
 有关已连接Vscan服务器的信息
 
 |===
+有关的详细信息 `vserver vscan connection-status show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-vscan-connection-status-show.html["ONTAP 命令参考"^]。
+
 
 
 == 查看Vscan服务器统计信息
 
-您可以查看Vscan服务器专用的统计信息、以监控性能并诊断与相关的问题
-病毒扫描。您必须先收集数据样本、然后才能使用 `statistics show` 命令
-显示Vscan服务器统计信息。
+您可以查看Vscan服务器专用的统计信息、以监控性能并诊断与病毒扫描相关的问题。您必须先收集数据样本、然后才能使用 `statistics show`命令显示Vscan服务器统计信息。有关的详细信息 `statistics show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/statistics-show.html["ONTAP 命令参考"^]。
+
 要完成数据样本、请完成以下步骤：
 
 .步骤
-. 运行 `statistics start` 命令和 `optional statistics` 停止命令。
+. 运行 `statistics start`命令和可选命令 `statistics stop`。
++
+有关的详细信息 `statistics`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=statistics["ONTAP 命令参考"^]。
+
 
 
 
@@ -78,8 +82,7 @@ Vscan服务器的运行状况以及已扫描的文件数。此信息将有所帮
 服务器。要查看这些统计信息、请完成以下步骤：
 
 .步骤
-. 运行统计信息show `object offbox_vscan –instance SVM` 命令
-以下计数器：
+. 使用以下计数器运行 `statistics show -object offbox_vscan –instance SVM`命令：
 +
 |===
 
@@ -115,6 +118,8 @@ ONTAP中用于确定可用Vscan服务器并将请求发送到该Vscan服务器�
 
 |===
 
+
+有关的详细信息 `statistics show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/statistics-show.html#description["ONTAP 命令参考"^]。
 
 
 
@@ -169,6 +174,8 @@ SVM:servername:nodename` 命令和以下计数器：
 
 |===
 
+
+有关的详细信息 `statistics show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=statistics+show["ONTAP 命令参考"^]。
 
 
 
@@ -252,6 +259,8 @@ Vscan服务器上使用的内存
 Vscan服务器上使用的网络
 
 |===
+有关的详细信息 `statistics show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=statistics+show["ONTAP 命令参考"^]。
+
 
 
 ==== Vscan服务器利用率统计信息示例
@@ -274,4 +283,6 @@ scanner_stats_pct_mem_used 95
 scanner_stats_pct_network_used 4
 -----------------------------------------------------------------
 ----
-有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/index.html["ONTAP 命令参考"^]。
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/index.html["ONTAP 命令参考"^]
+

@@ -27,7 +27,7 @@ image:workflow_nas_secure_client_access_with_kerberos.gif["工作流摘要：1�
 .步骤
 . 在 ONTAP 命令行中，为 Storage VM 根卷设置 UNIX 权限。
 +
-.. 显示Storage VM根卷上的相关权限： `volume show -volume _root_vol_name_-fields user,group,unix-permissions`
+.. 显示Storage VM根卷上的相关权限： `volume show -volume _root_vol_name_-fields user,group,unix-permissions`。有关的详细信息 `volume show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-show.html["ONTAP 命令参考"^]。
 +
 Storage VM 的根卷必须具有以下配置：
 
@@ -45,12 +45,12 @@ Storage VM 的根卷必须具有以下配置：
 
 | UNIX 权限 | 755 
 |===
-.. 如果未显示这些值、请使用 `volume modify` 命令进行更新。
+.. 如果未显示这些值、请使用 `volume modify`命令对其进行更新。有关的详细信息 `volume modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["ONTAP 命令参考"^]。
 
 
 . 设置 Storage VM 根卷的用户权限。
 +
-.. 显示本地 UNIX 用户： `vserver services name-service unix-user show -vserver _vserver_name_`
+.. 显示本地UNIX用户： `vserver services name-service unix-user show -vserver _vserver_name_`。有关的详细信息 `vserver services name-service unix-user show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-unix-user-show.html["ONTAP 命令参考"^]。
 +
 此 Storage VM 应配置以下 UNIX 用户：
 
@@ -68,12 +68,12 @@ Storage VM 的根卷必须具有以下配置：
 +
 * 注： * 如果 NFS 客户端用户的 SPN 存在 Kerberos - UNIX 名称映射，则不需要 NFS 用户；请参见第 5 步。
 
-.. 如果未显示这些值、请使用 `vserver services name-service unix-user modify` 命令进行更新。
+.. 如果未显示这些值、请使用 `vserver services name-service unix-user modify`命令对其进行更新。有关的详细信息 `vserver services name-service unix-user modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-unix-user-modify.html["ONTAP 命令参考"^]。
 
 
 . 设置 Storage VM 根卷的组权限。
 +
-.. 显示本地 UNIX 组： `vserver services name-service unix-group show -vserver _vserver_name_`
+.. 显示本地UNIX组： `vserver services name-service unix-group show -vserver _vserver_name_`。有关的详细信息 `vserver services name-service unix-group show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-unix-group-show.html["ONTAP 命令参考"^]。
 +
 此 Storage VM 应配置以下 UNIX 组：
 
@@ -88,7 +88,7 @@ Storage VM 的根卷必须具有以下配置：
 
 | root | 0 
 |===
-.. 如果未显示这些值、请使用 `vserver services name-service unix-group modify` 命令进行更新。
+.. 如果未显示这些值、请使用 `vserver services name-service unix-group modify`命令对其进行更新。有关的详细信息 `vserver services name-service unix-group modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-name-service-unix-group-modify.html["ONTAP 命令参考"^]。
 
 
 . 切换到 System Manager 以配置 Kerberos

@@ -2,7 +2,7 @@
 :allow-uri-read: 
 
 
-. 使用 `system license show` 命令以验证您是否具有FC或iSCSI许可证。
+. 使用 `system license show`命令验证您是否已获得FC或iSCSI许可证。有关的详细信息 `system license show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/system-license-show.html["ONTAP 命令参考"^]。
 +
 `system license show`
 
@@ -18,7 +18,7 @@ Package           Type    Description           Expiration
  iSCSI             site    iSCSI License         -
  FCP               site    FCP License           -
 ----
-. 如果您没有FC或iSCSI许可证、请使用 `license add` 命令：
+. 如果您没有FC或iSCSI许可证、请使用命令。 `license add`有关的详细信息 `license add`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=license+add["ONTAP 命令参考"^]。
 +
 `license add -license-code _your_license_code_`
 
@@ -27,25 +27,34 @@ Package           Type    Description           Expiration
 *对于iSCSI：* `vserver iscsi create -vserver _vserver_name_ -target-alias _vserver_name_`
 
 +
+有关的详细信息 `vserver iscsi create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-iscsi-create.html["ONTAP 命令参考"^]。
+
++
 *对于FC：* `vserver fcp create -vserver _vserver_name_ -status-admin up`
+
++
+有关的详细信息 `vserver fcp create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-fcp-create.html["ONTAP 命令参考"^]。
 
 . 在每个节点上为SVM创建两个LIF：
 +
 `network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol iscsi|fc -home-node _node_name_ -home-port _port_name_ -address _ip_address_ -netmask netmask`
 
 +
-对于每个提供数据的SVM、NetApp至少支持每个节点一个iSCSI或FC LIF。但是、要实现冗余、每个节点需要两个LIF。
+对于每个提供数据的SVM、NetApp至少支持每个节点一个iSCSI或FC LIF。但是、要实现冗余、每个节点需要两个LIF。有关的详细信息 `network interface create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-create.html["ONTAP 命令参考"^]。
 
 . 确认已创建LIFs且其运行状态为 `online`：
 +
 `network interface show -vserver _vserver_name_ _lif_name_`
+
++
+有关的详细信息 `network interface show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["ONTAP 命令参考"^]。
 
 . 创建 LUN ：
 +
 `lun create -vserver vserver_name -volume _volume_name_ -lun _lun_name_ -size _lun_size_ -ostype linux -space-reserve enabled|disabled`
 
 +
-LUN 名称不能超过 255 个字符，并且不能包含空格。
+LUN 名称不能超过 255 个字符，并且不能包含空格。有关的详细信息 `lun create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-create.html["ONTAP 命令参考"^]。
 
 +
 
@@ -55,13 +64,22 @@ NOTE: 在卷中创建 LUN 时， NVFAIL 选项会自动启用。
 +
 `igroup create -vserver _vserver_name_ -igroup _igroup_name_ -protocol fcp|iscsi|mixed -ostype linux -initiator _initiator_name_`
 
++
+有关的详细信息 `igroup create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=igroup+create["ONTAP 命令参考"^]。
+
 . 将 LUN 映射到 igroup ：
 +
 `lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
 
++
+有关的详细信息 `lun mapping create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-create.html["ONTAP 命令参考"^]。
+
 . 验证是否已正确配置 LUN ：
 +
 `lun show -vserver _vserver_name_`
+
++
+有关的详细信息 `lun show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["ONTAP 命令参考"^]。
 
 . link:san-admin/create-port-sets-binding-igroups-task.html["创建端口集并绑定到igroup"] （可选）。
 . 按照主机文档中的步骤在特定主机上启用块访问。
