@@ -1,0 +1,40 @@
+---
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-intra-inter-svm-hdfa.html 
+sidebar: sidebar 
+keywords: tr, hotspot, flexcache, hdfa, configuration, inter-svm, intra-svm, architecture 
+summary: 确定HDFS的密度后、请确定是否要使用NFS访问HDFS。 
+---
+= 确定ONTAP的SVM间或SVM内HDFA选项
+:allow-uri-read: 
+
+
+[role="lead"]
+确定HDFS的密度后、请确定是否要使用NFS访问HDFS、并了解SVM间HDFA和SVM内HDFA选项。
+
+
+TIP: 如果只有SMB客户端要访问HDFS、则应在一个SVM中创建所有HDFS。请参见Windows客户端配置、了解如何使用DFS目标进行负载平衡。
+
+
+
+== SVM间HDFA部署
+
+SVM间HDFA要求为HDFA中的每个HDF创建一个SVM。这样、HDFA中的所有HDFS都可以具有相同的接合路径、从而更轻松地在客户端进行配置。
+
+在此示例中<<Figure-1,图1.>>、每个HDF都位于各自的SVM中。这是SVM间HDFA部署。每个HDF都有一个接合路径/hotspots。此外、每个IP都有一条DNS A主机名缓存记录。此配置可利用DNS循环对不同HDFS的挂载进行负载平衡。
+
+.图1：4x1x4 SVM间HDFA配置
+image:flexcache-hotspot-hdfa-one-hdf-per-svm.png["图1：4x1x4 SVM间HDFA配置"]
+
+
+
+== SVM内HDFA部署
+
+SVM内需要每个HDF都具有唯一的接合路径、但所有HDFS都位于一个SVM中。在ONTAP中进行此设置更容易、因为它只需要一个SVM、但需要在Linux端进行更高级的配置 `autofs`、并在ONTAP中放置数据LIF。
+
+在此示例中<<Figure-2,图2.>>、每个HDF都位于同一个SVM中。这是SVM内HDFA部署、需要接合路径是唯一的。要使负载平衡正常工作、您需要为每个IP创建一个唯一的DNS名称、并仅将主机名解析为的数据SIF放置在HDF所在的节点上。您还需要配置 `autofs`多个条目，如中所述link:flexcache-hotspot-remediation-client-config.html["Linux客户端配置"]。
+
+.图2：4x1x4 SVM内HDFA配置
+image:flexcache-hotspot-hdfa-4x1x4-intra-svm-hdfa.png["图2：4x1x4 SVM内HDFA"]
+
+.下一步行动
+现在，您已经了解了如何部署HDFA，link:flexcache-hotspot-remediation-ontap-config.html["部署HDFA并将客户端配置为以分布式方式访问它们"]。

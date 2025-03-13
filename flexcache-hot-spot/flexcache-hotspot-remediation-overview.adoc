@@ -1,0 +1,40 @@
+---
+sidebar: sidebar 
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-overview.html 
+keywords: hotspot, FlexCache, HDFA, problem, solution, ONTAP 
+summary: '了解如何使用FlexCache修复热点问题、这是许多高性能计算工作负载(例如动画渲染或EDA)的常见问题。' 
+---
+= 使用ONTAP在高性能计算工作负载中进行热抽查
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+许多高性能计算工作负载(例如动画渲染或EDA)的一个常见问题是HotSpoting。如果集群或网络的特定部分遇到的负载比其他区域高得多、则会出现热抽样、这会由于该位置集中的数据流量过多而导致性能瓶颈和整体效率降低。例如、正在运行的作业对一个或多个文件的需求较高、这会导致用于(通过卷关联性)处理该文件的请求的CPU出现瓶颈。FlexCache可以帮助缓解此瓶颈、但必须正确设置。
+
+本文档介绍如何设置FlexCache以修复热点。
+
+
+NOTE: 从2024年7月开始、以前以PDF格式发布的技术报告中的内容已与ONTAP产品文档集成。此ONTAP热点修复技术报告内容自发布之日起为全新内容、之前从未生成过任何格式。
+
+
+
+== 关键概念
+
+在规划热点修复时、了解这些基本概念非常重要。
+
+* *高密度FlexCache (HDF)*：一种FlexCache，它会根据缓存容量要求进行精简，以尽可能少地覆盖节点
+* *HDF阵列(HDFA)*：一组HDFS，它们是位于集群中的相同来源的缓存
+* *SVM间HDFA*：每个服务器虚拟机(SVM)从HDFA中获取一个HDF
+* *SVM内HDFA*：HDFA中的所有HDFS都位于一个SVM中
+* *东西向流量*：间接数据访问生成的集群后端流量
+
+
+.下一步行动
+* link:flexcache-hotspot-remediation-architecture.html["了解如何使用高密度FlexCache进行架构设计以帮助修复热点"]
+* link:flexcache-hotspot-remediation-hdfa-examples.html["确定FlexCache阵列密度"]
+* link:flexcache-hotspot-remediation-intra-inter-svm-hdfa.html["确定HDFS的密度、并确定是否要使用NFS以及SVM间HDFA和SVM内HDFA访问HDFS"]
+* link:flexcache-hotspot-remediation-ontap-config.html["配置HDFA和数据lifs、以实现在ONTAP配置中使用集群内缓存的优势"]
+* link:flexcache-hotspot-remediation-client-config.html["了解如何配置客户端以使用客户端配置分布ONTAP NAS连接"]
+

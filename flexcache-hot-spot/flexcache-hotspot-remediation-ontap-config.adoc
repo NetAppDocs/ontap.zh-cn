@@ -1,0 +1,108 @@
+---
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-ontap-config.html 
+sidebar: sidebar 
+keywords: tr, hotspot, FlexCache, HDFA, configuration, ONTAP 
+summary: 配置HDFA和数据lifs以实现使用集群内缓存的优势 
+---
+= 在ONTAP中配置HDFA和数据LUN
+:allow-uri-read: 
+
+
+[role="lead"]
+您需要相应地配置HDFA和数据Mifs、才能实现此热点修复解决方案的优势。此解决方案使用集群内缓存、并在同一集群中使用原始缓存和HDFA。
+
+以下是两个HDFA示例配置：
+
+* 2x2个SVM间HDFA
+* 4x1x4 SVM内HDFA
+
+
+.关于此任务
+使用ONTAP命令行界面执行此高级配置。命令中必须使用两种配置、其中一种配置必须 `flexcache create`确保未配置：
+
+* `-aggr-list`：提供位于要将HDF限制到的节点或节点子集上的聚合或聚合列表。
+* `-aggr-list-multiplier`：确定要为选项中列出的每个聚合创建多少个成分卷 `aggr-list`。如果列出了两个聚合，并将此值设置为 `2`，则最终将包含四个成分卷。NetApp建议每个聚合最多包含8个成分卷、但16个也足以满足要求。
+* `-auto-provision-as`：如果您选择退出，CLI将尝试自动加载并将值设置为 `flexgroup`。确保未配置此项。如果出现、请将其删除。
+
+
+
+
+== 创建2x2X2 SVM间HDFA配置
+
+. 要帮助配置2x2X2 SVM间HDFA (如图1所示)、请完成准备工作表。
++
+.图1：2x2个SVM间HDFA布局
+image:flexcache-hotspot-hdfa-2x2x2-inter-svm-hdfa.png["图1：2x2个SVM间HDFA布局"]
+
++
+[cols="1,1,1,1,1,1"]
+|===
+| SVM | 每个HDF的节点数 | 聚合 | 每个节点的成分卷数 | Junction path | 数据LIF IP 
+
+
+| svm1 | node1、node2 | aggr1、aggr2 | 2. | /hotspot | 192.168.0.11、192.168.0.12 
+
+
+| svm2 | node3、node4 | aggr3、aggr4 | 2. | /hotspot | 192.168.0.13、192.168.0.14 
+|===
+. 创建HDFS。运行以下命令两次、对准备工作表中的每行运行一次。确保为第二次迭代调整 `vserver`和 `aggr-list`值。
++
+[listing]
+----
+cache::> flexcache create -vserver svm1 -volume hotspot -aggr-list aggr1,aggr2 -aggr-list-multiplier 2 -origin-volume <origin_vol> -origin-vserver <origin_svm> -size <size> -junction-path /hotspot
+----
+. 创建数据生命周期。运行命令四次、在准备工作表中列出的节点上为每个SVM创建两个数据文件。确保为每次迭代适当调整值。
++
+[listing]
+----
+cache::> net int create -vserver svm1 -home-port e0a -home-node node1 -address 192.168.0.11 -netmask-length 24
+----
++
+.下一步行动
+现在、您需要对客户端进行配置、以便适当地利用HDFA。请参阅。 link:flexcache-hotspot-remediation-client-config.html["客户端配置"]
+
+
+
+
+
+== 创建4x1x4 SVM内HDFA
+
+. 要帮助配置4x1x4 SVM间HDFA (如图2所示)、请填写准备表。
++
+.图2：4x1x4 SVM内HDFA布局
+image:flexcache-hotspot-hdfa-4x1x4-intra-svm-hdfa.png["图2：4x1x4 SVM内HDFA布局"]
+
++
+[cols="1,1,1,1,1,1"]
+|===
+| SVM | 每个HDF的节点数 | 聚合 | 每个节点的成分卷数 | Junction path | 数据LIF IP 
+
+
+| svm1 | 节点 1 | aggr1 | 4. | /hotspot1 | 192.168.0.11 
+
+
+| svm1 | 节点 2. | aggr2 | 4. | /hotspot2 | 192.168.0.12 
+
+
+| svm1 | node3 | aggr3 | 4. | /hotspot3 | 192.168.0.13 
+
+
+| svm1 | node4 | aggr4 | 4. | /hotspot4 | 192.168.0.14 
+|===
+. 创建HDFS。运行以下命令四次、对准备工作表中的每行运行一次。请确保调整 `aggr-list`每次迭代的和 `junction-path`值。
++
+[listing]
+----
+cache::> flexcache create -vserver svm1 -volume hotspot1 -aggr-list aggr1 -aggr-list-multiplier 4 -origin-volume <origin_vol> -origin-vserver <origin_svm> -size <size> -junction-path /hotspot1
+----
+. 创建数据生命周期。运行命令四次、在SVM中总共创建四个数据生命周期。每个节点应有一个数据LIF。确保为每次迭代适当调整值。
++
+[listing]
+----
+cache::> net int create -vserver svm1 -home-port e0a -home-node node1 -address 192.168.0.11 -netmask-length 24
+----
++
+.下一步行动
+现在、您需要对客户端进行配置、以便适当地利用HDFA。请参阅。 link:flexcache-hotspot-remediation-client-config.html["客户端配置"]
+
+

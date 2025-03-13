@@ -1,0 +1,73 @@
+---
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-architecture.html 
+sidebar: sidebar 
+keywords: hotspot, FlexCache, hdfa, problem, solution, ONTAP 
+summary: 了解采用高密度FlexCache的架构如何帮助修复热点。 
+---
+= 构建ONTAP FlexCache热点修复解决方案
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+要修复热点问题、请了解瓶颈的根本原因、自动配置的FlexCache不足的原因以及有效构建FlexCache解决方案所需的技术详细信息。通过了解和实施高密度FlexCache阵列(HDFA)、您可以优化高需求工作负载的性能并消除瓶颈。
+
+
+
+== 了解瓶颈
+
+下面<<Figure-1,图像>>显示了典型的单文件热抽查情形。此卷是一个FlexGroup、每个节点具有一个成分卷、文件驻留在节点1上。
+
+如果将所有NAS客户端的网络连接分布在集群中的不同节点上、则为热文件所在的卷关联性提供服务的CPU仍会出现瓶颈。此外、对于来自连接到文件所在节点以外的节点的客户端的呼叫、还会引入集群网络流量(东西向流量)。东西向流量开销通常很小、但对于高性能计算工作负载来说、每一个小位都很重要。
+
+.图1：FlexGroup单文件热点场景
+image:flexcache-hotspot-hdfa-flexgroup.png["图1：FlexGroup单文件热点场景"]
+
+
+
+== 为什么自动配置的FlexCache不是答案
+
+要补救HotSpoting、请消除CPU瓶颈、最好也消除东西向流量。如果设置正确、FlexCache可以提供帮助。
+
+在以下示例中、FlexCache使用System Manager、BlueXP  或默认命令行界面参数进行自动配置。<<Figure-1,图1.>>而<<Figure-2,图2.>>最初看起来是相同的：这两个容器都是四节点单成分卷NAS容器。唯一的区别是、图1的NAS容器是FlexGroup、图2的NAS容器是FlexCache。每个图都描述了相同的瓶颈：节点1用于卷相关性的CPU、用于提供对热文件的访问、以及导致延迟的东西向流量。自动配置的FlexCache并未消除瓶颈。
+
+.图2：自动配置的FlexCache方案
+image:flexcache-hotspot-hdfa-1x4x1.png["图2：自动配置的FlexCache方案"]
+
+
+
+== FlexCache解剖结构
+
+要有效地构建FlexCache以进行热点修复、您需要了解有关FlexCache的一些技术详细信息。
+
+FlexCache始终是稀疏FlexGroup。一个FlexGroup由多个FlexVol组成。这些FlexVol称为FlexGroup成分卷。在默认FlexGroup布局中、集群中的每个节点都有一个或多个成分卷。这些成分卷在抽象层下"缝合在一起"、并作为一个大型NAS容器提供给客户端。将文件写入FlexGroup后、通过数据启发法确定要将文件存储在哪个成分卷上。它可能是包含客户端NAS连接的成分卷、也可能是其他节点。位置无关紧要、因为所有内容都在抽象层下运行、并且对客户端不可见。
+
+让我们将对FlexGroup的了解应用于FlexCache。由于FlexCache是基于FlexGroup构建的，因此默认情况下，您有一个，该FlexCache在集群中的所有节点上都有成分卷，如中所示<<Figure-1,图1.>>。在大多数情况下、这是一件好事。您正在利用集群中的所有资源。
+
+但是、对于热文件的解决、这并不理想、因为存在两个瓶颈：单个文件的CPU和东西向流量。如果为热文件创建的FlexCache在每个节点上都有成分卷、则该文件仍将仅驻留在其中一个成分卷上。这意味着、只有一个CPU可以处理对热文件的所有访问。此外、您还希望限制访问热文件所需的东西向流量。
+
+该解决方案是一组高密度FlexCaches。
+
+
+
+== 高密度FlexCache剖析
+
+高密度FlexCache (HDF)在缓存数据的容量要求允许的数量下、在尽可能少的节点上包含成分卷。其目标是使缓存驻留在单个节点上。如果容量要求导致无法实现这一点、则只能在少数节点上创建成分卷。
+
+例如、一个24节点集群可以具有三个高密度FlexCaches：
+
+* 一个跨节点1到8
+* 一秒、跨越节点9到16
+* 第三个节点、跨越节点17到24
+
+
+这三个HDFS构成一个高密度FlexCache阵列(HDFA)。如果文件在每个HDF中均匀分布、则客户端请求的文件可能会驻留在前端NAS连接的本地、这种可能性为八分之一。如果要有12个HDFS、每个HDFS仅跨越两个节点、则文件位于本地的几率为50%。如果您可以将HDF折叠到一个节点并创建其中24个节点、则可以保证该文件为本地文件。
+
+此配置将消除所有东西向流量、最重要的是、将为访问热文件提供24个CPU/volume关联性。
+
+.下一步是什么？
+link:flexcache-hotspot-remediation-hdfa-examples.html["确定FlexCache阵列密度"]
+
+.相关信息
+link:../volume-admin/index.html["有关FlexGroup和TRs的文档"]

@@ -66,7 +66,7 @@ S3 NAS的"分段"只是S3客户端的NAS数据映射、而不是标准S3分段�
 
 == 对象多部分上传
 
-从ONTAP 9．16．1开始，启用FlexGroup卷上的时，支持对象多部分上载link:../flexgroup/enable-adv-capacity-flexgroup-task.html["高级容量平衡"]。
+从ONTAP 9.16.1开始、如果在底层FlexGroup卷上启用了、则S3 NAS分段支持对象多部分上传link:../flexgroup/enable-adv-capacity-flexgroup-task.html["高级容量平衡"]。
 
 通过在NAS文件存储上进行对象多部分上传、S3协议客户端可以将大型对象作为较小的部分进行上传。对象多部分上传具有以下优势：
 
@@ -75,13 +75,20 @@ S3 NAS的"分段"只是S3客户端的NAS数据映射、而不是标准S3分段�
 * 如果事先不知道对象大小(例如、当仍在写入大型对象时)、则客户端可以立即开始上传对象的部分内容、并在创建整个对象后完成上传。
 
 
+
+NOTE: S3 NAS分段中的多部分对象必须按1 MB大小对齐。例如、一个部件可以是4 MB、4 GB或类似大小。部件不能使用子MB大小、例如4.5 MB或4000.5MB。
+
 多部分上传支持以下S3操作：
 
 * AbortMultipartUpload
 * CompleteMultipartUpload
 * CreateMultipartUpload
 * ListMultipartUpload
+* 上传部件
 
+
+
+NOTE: S3 NAS分段不支持按部件号获取("partnumber=xx")。而是返回完整对象。
 
 
 

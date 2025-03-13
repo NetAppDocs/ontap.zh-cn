@@ -1,0 +1,74 @@
+---
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-client-config.html 
+sidebar: sidebar 
+keywords: tr, hotspot, hot-spot, flexcache, hdfa, client configuration 
+summary: 要补救HotSpoting、需要正确配置客户端、以便在防止CPU瓶颈方面发挥作用。 
+---
+= 配置客户端以分布ONTAP NAS连接
+:allow-uri-read: 
+
+
+[role="lead"]
+要补救"热点"、请正确配置客户端、使其在防止CPU瓶颈方面发挥作用。
+
+
+
+== Linux客户端配置
+
+无论您选择SVM内还是SVM间HDFA部署、都应在Linux中使用 `autofs`来确保客户端在不同HDFS之间实现负载平衡。 `autofs`SVM间和SVM内的配置有所不同。
+
+.开始之前
+您需要 `autofs`安装和相应的依赖项。有关此操作的帮助、请参见Linux文档。
+
+.关于此任务
+所述步骤将使用一个示例 `/etc/auto_master`文件、其中包含以下条目：
+
+[listing]
+----
+/flexcache auto_hotspot
+----
+此选项会配置 `autofs`为在进程尝试访问目录时查找目录 `/flexcache`中 `/etc`调用的文件 `auto_hotspot`。文件内容 `auto_hotspot`将指定要挂载到目录中的NFS服务器和接合路径 `/flexcache`。所述示示例是文件的不同配置 `auto_hotspot`。
+
+
+
+=== SVM内HDFA自动配置
+
+在以下示例中，我们将在中为图创建一个 `autofs`地图<<Figure-1,图1.>>。由于每个缓存都有相同的接合路径、并且主机名 `cache`有四条DNS A记录、因此我们只需要一行：
+
+[listing]
+----
+hotspot cache:/hotspot
+----
+这一行很简单，会使NFS客户端对主机名进行DNS查找 `cache`。DNS已设置为以循环方式返回IP。这样可以均匀分布前端NAS连接。客户端收到IP后，将在上 `/flexcache/hotspot`挂载接合路径 `/hotspot`。它可以连接到SVM1、SVM2、SVM3或SVM4、但特定SVM无关紧要。
+
+.图1：2x2个SVM间HDFA
+image:flexcache-hotspot-hdfa-2x2x2-inter-svm-hdfa.png["图1：2个2 x 2 HDFA"]
+
+
+
+=== SVM内HDFA自动配置
+
+在以下示例中，我们将在中为图创建一个 `autofs`地图<<Figure-2,图2.>>。我们需要确保NFS客户端装载HDF接合路径部署中的IP。换言之、我们不希望使用IP 192.168.0.11以外的任何其他内容进行挂载 `/hotspot1`。为此、我们可以在映射中列出一个本地挂载位置的所有四个IP/接合路径对 `auto_hotspot`。
+
+
+NOTE: (`\`在以下示例中，反斜杠将继续条目到下一行，使其更易于阅读。
+
+[listing]
+----
+hotspot     cache1:/hostspot1 \
+            cache2:/hostspot2 \
+            cache3:/hostspot3 \
+            cache4:/hostspot4
+----
+当客户端尝试访问时 `/flexcache/hotspot`， `autofs`将对所有四个主机名进行正向查找。假设所有四个IP都与客户端位于同一子网中或位于不同子网中、 `autofs`则会对每个IP发出NFS NULL ping。
+
+此空ping操作需要ONTAP的NFS服务处理数据包、但不需要任何磁盘访问。要返回的第一个ping将是IP、接合路径 `autofs`选择挂载。
+
+.图2：4x1x4 SVM内HDFA
+image:flexcache-hotspot-hdfa-4x1x4-intra-svm-hdfa.png["图2：S4x1x4 SVM内HDFA"]
+
+
+
+== Windows客户端配置
+
+对于Windows客户端、应使用SVM内HDFA。要在SVM中的不同HDFS之间进行负载平衡、必须为每个HDF添加一个唯一的共享名称。之后、按照中的步骤link:https://learn.microsoft.com/en-us/windows-server/storage/dfs-namespaces/create-a-dfs-namespace["Microsoft 文档"^]为同一文件夹实施多个DFS目标。

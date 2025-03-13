@@ -1,0 +1,38 @@
+---
+permalink: flexcache-hot-spot/flexcache-hotspot-remediation-hdfa-examples.html 
+sidebar: sidebar 
+keywords: tr, hotspot, hot-spot, flexcache, hdfa, compare, examples 
+summary: 确定FlexCache阵列密度并了解它如何帮助修复热点。 
+---
+= 确定ONTAP FlexCache密度
+:allow-uri-read: 
+
+
+[role="lead"]
+您的第一个热点修复设计决策是确定FlexCache密度。以下示例是四节点集群。假设文件数量均匀分布在每个HDF中的所有成分卷之间。此外、还假定在所有节点之间均匀分布前端NAS连接。
+
+尽管这些示例并不是您可以使用的唯一配置、但您应了解指导设计原则、以便根据空间要求和可用资源的允许创建尽可能多的HDFS。
+
+
+NOTE: HDFA使用以下语法表示： `HDFs per HDFA x nodes per HDF x constituents per node per HDF`
+
+
+
+== 2x2x2 HDFA配置
+
+<<Figure-1,图1.>>是一个2x2X2 HDFA配置示例：两个HDFS、每个HDFS跨越两个节点、每个节点包含两个成分卷。在此示例中、每个客户端有50%的机会直接访问热文件。四个客户端中有两个具有东西向流量。重要的是、现在有两个HDFS、这意味着热文件有两个不同的缓存。现在、每个卷有两个CPU/Affinities、用于访问热文件。
+
+.图1：2x2X2 HDFA配置
+image:flexcache-hotspot-hdfa-2x2x2.png["图1：2x2X2 HDFA配置"]
+
+
+
+== 4x1x4 HDFA配置
+
+<<Figure-2,图2.>>表示最佳配置。下面是4x1x4 HDFA配置的一个示例：四个HDFS、每个HDFS包含在一个节点中、每个节点包含四个成分卷。在此示例中、每个客户端都保证可以直接访问热文件的缓存。由于四个不同节点上有四个缓存文件、因此四个不同的CPU/卷关联有助于服务对热文件的访问。此外、不会生成任何东西流量。
+
+.图2：4x1x4 HDFA配置
+image:flexcache-hotspot-hdfa-4x1x4.png["图2：4x1x4 HDFA"]
+
+.下一步行动
+在确定HDFS的密度后，如果要使用通过NFS访问HDFS，则必须做出另一个设计决定link:flexcache-hotspot-remediation-intra-inter-svm-hdfa.html["SVM间HDFA和SVM内HDFA"]。
