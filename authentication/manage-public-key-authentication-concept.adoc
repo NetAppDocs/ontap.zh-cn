@@ -11,7 +11,7 @@ summary: 对于 SSH 公有密钥身份验证，您必须先将公有密钥与管
 
 
 [role="lead"]
-对于 SSH 公有密钥身份验证，您必须先将公有密钥与管理员帐户关联，然后此帐户才能访问 SVM 。您可以使用 `security login publickey create` 用于将密钥与管理员帐户关联的命令。
+对于 SSH 公有密钥身份验证，您必须先将公有密钥与管理员帐户关联，然后此帐户才能访问 SVM 。您可以使用 `security login publickey create`命令将密钥与管理员帐户关联。有关的详细信息 `security login publickey create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-create.html["ONTAP 命令参考"^]。
 
 .关于此任务
 如果使用密码和 SSH 公有密钥通过 SSH 对帐户进行身份验证，则首先使用公有密钥对帐户进行身份验证。
@@ -25,9 +25,6 @@ summary: 对于 SSH 公有密钥身份验证，您必须先将公有密钥与管
 . 将公有密钥与管理员帐户关联：
 +
 `security login publickey create -vserver _SVM_name_ -username _user_name_ -index _index_ -publickey _certificate_ -comment _comment_`
-
-+
-有关的详细信息 `security login publickey create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-create.html["ONTAP 命令参考"^]。
 
 . 查看公共密钥以验证更改：
 +
@@ -43,3 +40,4 @@ summary: 对于 SSH 公有密钥身份验证，您必须先将公有密钥与管
 cluster1::> security login publickey create -vserver engData1 -username svmadmin1 -index 5 -publickey
 "<key text>"
 ----
+有关的详细信息 `security login publickey show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-show.html["ONTAP 命令参考"^]。

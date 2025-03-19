@@ -125,6 +125,18 @@ NOTE:  从AFF 集群迁移到包含混合聚合的FAS 集群时、自动卷放�
 * 源SVM中的必须少于 xref:Maximum supported volumes per SVM[此版本支持的最大数据卷数]。
 * 目标上必须有足够的空间用于放置卷
 * 如果源 SVM 具有加密卷，则必须在目标上配置板载密钥管理器
+* 如果要在非MetroCluster配置和MetroCluster配置之间或两个MetroCluster配置之间迁移SVM、请验证您的配置是否满足以下要求：
++
+** 源和目标MetroCluster集群处于"正常"状态。这意味着它们不能处于切换模式或"正在等待切回"状态。
+** 源和目标MetroCluster集群未处于FC-IP过渡或硬件更新过程中。
+** 目标集群运行的ONTAP版本等于或高于源集群上运行的版本。
+** 如果源为MetroCluster集群、则SVM子类型为"sync-ssource"(而不是"sync-Destination ")。
++
+
+NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"sync-ssource"。如果目标为非MetroCluster集群、则SVM子类型始终为"default"。
+
+
+
 
 
 
@@ -212,6 +224,9 @@ NOTE:  从AFF 集群迁移到包含混合聚合的FAS 集群时、自动卷放�
 * 在两个MetroCluster FC配置之间迁移SVM
 * 在非MetroCluster配置和MetroCluster FC配置之间迁移SVM
 
+
+
+NOTE: 如果源或目标为MetroCluster集群、则FabricPool不支持SVM迁移。
 
 
 

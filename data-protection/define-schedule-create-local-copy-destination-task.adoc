@@ -14,7 +14,7 @@ summary: '对于SnapVault和统一复制关系、您可以通过在目标上创�
 对于SnapVault和统一复制关系、您可以通过在目标上创建上次传输的快照的副本来防止更新后的快照损坏。无论源上的保留规则如何、都会保留此"`local copy`"、这样、即使最初通过SnapMirror传输的快照在源上不再可用、也可以在目标上获得其副本。
 
 .关于此任务
-您可以在中指定创建本地副本的计划 `-schedule` 的选项 `snapmirror policy add-rule` 命令：
+您可以在命令的选项 `snapmirror policy add-rule`中指定创建本地副本的计划 `-schedule`。有关的详细信息 `snapmirror policy add-rule`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-add-rule.html["ONTAP 命令参考"^]。
 
 .步骤
 . 定义在目标上创建本地副本的计划：
@@ -22,7 +22,7 @@ summary: '对于SnapVault和统一复制关系、您可以通过在目标上创�
 `snapmirror policy add-rule -vserver _SVM_ -policy _policy_for_rule_ -snapmirror-label _snapmirror-label_ -schedule _schedule_`
 
 +
-有关的详细信息 `snapmirror policy add-rule`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-add-rule.html["ONTAP 命令参考"^]。有关如何创建作业计划的示例，请参见link:create-replication-job-schedule-task.html["创建复制作业计划"]。
+有关如何创建作业计划的示例，请参见link:create-replication-job-schedule-task.html["创建复制作业计划"]。
 
 +
 以下示例将创建本地副本的计划添加到默认值 `MirrorAndVault` 策略：

@@ -25,7 +25,9 @@ ONTAP提供了一个名为的卷级字段 `-atime-update`，管理使用Read、r
 
 == 开始之前
 
-所有FlexCache 卷都必须运行ONTAP 9.11.1或更高版本。
+* 所有FlexCache 卷都必须运行ONTAP 9.11.1或更高版本。
+* 您必须使用 `advanced`权限模式。
+
 
 
 
@@ -36,9 +38,13 @@ ONTAP提供了一个名为的卷级字段 `-atime-update`，管理使用Read、r
 设置 `-atime-update-period` 设置为0时、会针对每个读取访问向源站发送消息。然后、原始卷会通知每个FlexCache 卷、atime已过时、这会影响性能。
 
 .步骤
+. 将权限模式设置为 `advanced`：
++
+`set -privilege advanced`
+
 . 启用文件访问时间更新并设置更新频率：
 +
-`volume modify -volume vol_name -vserver _SVM_name_ -atime-update true -atime-update-period _seconds_`
+`volume modify -volume vol_name -vserver <SVM name> -atime-update true -atime-update-period <seconds>`
 
 +
 以下示例将启用 `-atime-update` 和设置 `-atime-update-period` 至86400秒或24小时：
@@ -60,4 +66,10 @@ vserver volume         atime-update atime-update-period
 ------- -------------- ------------ -------------------
 vs2_c1  cache1_origin1 true         86400
 ----
+. 启用后 `-atime-update`、您可以指定是否可以自动清理FlexCache卷上的文件：
++
+`volume flexcache config modify -vserver <SVM name> -volume <volume_name> -is-atime-scrub-enabled <true|false>`
 
+
+
+有关参数的其他信息 `-is-atime-scrub-enabled`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-flexcache-config-modify.html#parameters["ONTAP命令参考"^]。

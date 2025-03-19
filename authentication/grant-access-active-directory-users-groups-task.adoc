@@ -11,7 +11,7 @@ summary: 您可以使用 security login create 命令启用 Active Directory （
 
 
 [role="lead"]
-您可以使用 `security login create` 命令以使Active Directory (AD)用户或组帐户能够访问管理员或数据SVM。AD 组中的任何用户都可以使用分配给该组的角色访问 SVM 。
+您可以使用 `security login create`命令使Active Directory (AD)用户或组帐户能够访问管理员或数据SVM。AD 组中的任何用户都可以使用分配给该组的角色访问 SVM 。有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。
 
 .关于此任务
 * 您必须先配置对集群或 SVM 的 AD 域控制器访问，然后帐户才能访问 SVM 。
@@ -26,7 +26,7 @@ xref:enable-ad-users-groups-access-cluster-svm-task.adoc[配置 Active Directory
 如果选择使用SSH公共密钥作为主身份验证、则不会进行AD身份验证。
 
 * 从ONTAP 9.11.1开始、您可以使用 link:../nfs-admin/ldap-fast-bind-nsswitch-authentication-task.html["用于nsswitch身份验证的LDAP快速绑定"] AD LDAP服务器是否支持此功能。
-* 如果您不确定要分配给登录帐户的访问控制角色、可以使用 `security login modify` 命令以稍后添加此角色。
+* 如果您不确定要分配给登录帐户的访问控制角色、可以稍后使用命令添加此角色。 `security login modify`有关的详细信息 `security login modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["ONTAP 命令参考"^]。
 +
 xref:modify-role-assigned-administrator-task.adoc[修改分配给管理员的角色]
 
@@ -94,9 +94,6 @@ security login create -vserver <svm_name> -user-or-group-name <user_name> -appli
 security login create -vserver <svm_name> -user-or-group-name <user_name> -application <application> -authentication-method domain -role <role> -comment <comment> [-is-ldap-fastbind true]
 ----
 |===
-+
-有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。
-
 
 
 .完成后

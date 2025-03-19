@@ -11,7 +11,7 @@ summary: 您可以使用 security login create 命令使 LDAP 或 NIS 用户帐�
 
 
 [role="lead"]
-您可以使用 `security login create` 命令以使LDAP或NIS用户帐户能够访问管理员或数据SVM。如果尚未配置对 SVM 的 LDAP 或 NIS 服务器访问，则必须先配置此访问权限，然后帐户才能访问此 SVM 。
+您可以使用 `security login create`命令使LDAP或NIS用户帐户能够访问管理员或数据SVM。如果尚未配置对 SVM 的 LDAP 或 NIS 服务器访问，则必须先配置此访问权限，然后帐户才能访问此 SVM 。有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。
 
 .关于此任务
 * 不支持组帐户。
@@ -22,7 +22,7 @@ xref:enable-nis-ldap-users-access-cluster-task.adoc[配置 LDAP 或 NIS 服务�
 +
 您可以在启用帐户访问之前或之后执行此任务。
 
-* 如果您不确定要分配给登录帐户的访问控制角色、可以使用 `security login modify` 命令以稍后添加此角色。
+* 如果您不确定要分配给登录帐户的访问控制角色、可以稍后使用命令添加此角色。 `security login modify`有关的详细信息 `security login modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["ONTAP 命令参考"^]。
 +
 xref:modify-role-assigned-administrator-task.adoc[修改分配给管理员的角色]
 
@@ -38,9 +38,6 @@ xref:modify-role-assigned-administrator-task.adoc[修改分配给管理员的角
 . 启用 LDAP 或 NIS 用户或组帐户以访问 SVM ：
 +
 `security login create -vserver SVM_name -user-or-group-name user_name -application application -authmethod nsswitch -role role -comment comment -is-ns-switch-group yes|no [-is-ldap-fastbind true]`
-
-+
-有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。
 
 +
 link:config-worksheets-reference.html["创建或修改登录帐户"]
@@ -75,3 +72,7 @@ cluster-1 -second-authentication-method publickey"
 如果尚未配置对 SVM 的 LDAP 或 NIS 服务器访问，则必须先配置此访问权限，然后帐户才能访问此 SVM 。
 
 xref:enable-nis-ldap-users-access-cluster-task.adoc[配置 LDAP 或 NIS 服务器访问]
+
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+login["安全登录"^]
+

@@ -26,6 +26,9 @@ summary: 您可以使用 snapmirror delete 和 snapmirror release 命令删除�
 ----
 cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
++
+有关的详细信息 `snapmirror quiesce`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-quiesce.html["ONTAP 命令参考"^]。
+
 . (可选)如果您要求目标卷为读/写卷、请中断复制关系。如果您计划删除目标卷或不需要对卷进行读/写、则可以跳过此步骤：
 +
 `snapmirror break -source-path <SVM:volume>|<cluster://SVM/volume>, …​ -destination-path <SVM:volume>|<cluster://SVM/volume>, …​`
@@ -35,12 +38,12 @@ cluster_dst::> snapmirror quiesce -destination-path svm_backup:volA_dst
 ----
 cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+有关的详细信息 `snapmirror break`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["ONTAP 命令参考"^]。
+
 . 删除复制关系：
 +
 `snapmirror delete -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
-
-+
-有关的详细信息 `snapmirror delete`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-delete.html["ONTAP 命令参考"^]。
 
 +
 [NOTE]
@@ -56,12 +59,12 @@ cluster_dst::> snapmirror break -source-path svm1:volA -destination-path svm_bac
 ----
 cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+有关的详细信息 `snapmirror delete`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-delete.html["ONTAP 命令参考"^]。
+
 . 从源 SVM 释放复制关系信息：
 +
 `snapmirror release -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ...`
-
-+
-有关的详细信息 `snapmirror release`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-release.html["ONTAP 命令参考"^]。
 
 +
 [NOTE]
@@ -77,4 +80,7 @@ cluster_dst::> snapmirror delete -source-path svm1:volA -destination-path svm_ba
 ----
 cluster_src::> snapmirror release -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+有关的详细信息 `snapmirror release`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-release.html["ONTAP 命令参考"^]。
+
 

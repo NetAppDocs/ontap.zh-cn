@@ -1,17 +1,20 @@
 ---
 permalink: fabricpool/create-volume-task.html 
 sidebar: sidebar 
-keywords: creating, volume, fabricpool, tiering, policy, policies, create, snap shot, snapshot, aggregate, flexgroup, cloud retrieval 
+keywords: aggreate, local tier, creating, volume, fabricpool, tiering, policy, policies, create, snap shot, snapshot, aggregate, flexgroup, cloud retrieval 
 summary: 在为 FabricPool 创建卷时，您可以选择指定分层策略。如果未指定分层策略，则创建的卷将使用默认的仅快照分层策略。对于采用仅快照或自动分层策略的卷，您还可以指定分层最小冷却期。 
 ---
-= 在启用了FabricPool的ONTAP聚合上创建卷
+= 在启用了FabricPool的ONTAP本地层上创建卷
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-您可以通过直接在启用了 FabricPool 的聚合中创建新卷或将现有卷从另一个聚合移动到启用了 FabricPool 的聚合来向 FabricPool 添加卷。
+您可以通过直接在启用了FabricPool的本地层中创建新卷或将现有卷从另一本地层移动到启用了FabricPool的本地层来向FabricPool添加卷。
+
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
 
 在为 FabricPool 创建卷时，您可以选择指定分层策略。如果未指定分层策略、则创建的卷将使用默认值 `snapshot-only` 层策略。用于具有的卷 `snapshot-only` 或 `auto` 分层策略中、您还可以指定分层最小冷却期。
 
@@ -80,7 +83,7 @@ link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricP
 
 
 .为FabricPool 创建卷的示例
-以下示例将在启用了 FabricPool 的聚合中创建一个名为 `myFabricPool` 的卷，名为` yvol1 `m。此层策略将设置为 `auto` 分层最小冷却期设置为45天：
+以下示例将在启用了FabricPool的"`myFabricPol`"本地层中创建一个名为"`myvol1`"的卷。分层策略设置为、分层最小冷却期设置为 `auto`45天：
 
 [listing]
 ----

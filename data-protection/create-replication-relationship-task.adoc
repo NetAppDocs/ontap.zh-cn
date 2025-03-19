@@ -11,7 +11,7 @@ summary: 主存储中的源卷与二级存储中的目标卷之间的关系称�
 
 
 [role="lead"]
-主存储中的源卷与二级存储中的目标卷之间的关系称为_data protection关系。_您可以使用 `snapmirror create` 用于创建SnapMirror灾难恢复、SnapVault或统一复制数据保护关系的命令。
+主存储中的源卷与二级存储中的目标卷之间的关系称为_data protection关系。_您可以使用命令创建SnapMirror DR、SnapVault或统一复制数据保护关系。 `snapmirror create`有关的详细信息 `snapmirror create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["ONTAP 命令参考"^]。
 
 
 NOTE: 此过程适用于FAS、AFF和当前ASA系统。如果您有ASA R2系统(ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30或ASA A20)、请按照创建复制关系。link:https://docs.netapp.com/us-en/asa-r2/data-protection/snapshot-replication.html["这些步骤"^]ASA R2系统可为仅使用SAN的客户提供简化的ONTAP体验。
@@ -110,7 +110,7 @@ options replication.create_data_protection_rels.enable on
 
 从ONTAP 9。5开始、支持SnapMirror同步关系。
 
-从ONTAP 9.14.1开始， `-backoff-level` 在、和命令中添加了选项 `snapmirror create` `snapmirror modify` `snapmirror restore` ，用于指定每个关系的回退级别。只有FlexVol SnapMirror关系才支持此选项。此可选命令会根据客户端操作指定SnapMirror回退级别。回退值可以是high、Medium或none。默认值为high。
+从ONTAP 9.14.1开始， `-backoff-level` 在、和命令中添加了选项 `snapmirror create` `snapmirror modify` `snapmirror restore` ，用于指定每个关系的回退级别。只有FlexVol SnapMirror关系才支持此选项。此可选命令会根据客户端操作指定SnapMirror回退级别。回退值可以是high、Medium或none。默认值为high。有关、 `snapmirror modify`和的详细信息 `snapmirror create`， `snapmirror restore`请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=snapmirror["ONTAP 命令参考"^]。
 
 .步骤
 您可以使用System Manager或ONTAP命令行界面创建复制关系。
@@ -139,9 +139,6 @@ options replication.create_data_protection_rels.enable on
 ----
 snapmirror create -source-path <SVM:volume> -destination-path <SVM:volume> -type <DP|XDP> -schedule <schedule> -policy <policy>
 ----
-+
-有关的详细信息 `snapmirror create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["ONTAP 命令参考"^]。
-
 +
 
 NOTE:  `schedule`创建SnapMirror同步关系时、参数不适用。

@@ -11,7 +11,7 @@ summary: 对于SSH公共密钥身份验证、您可以管理管理员帐户的�
 
 
 [role="lead"]
-要提高管理员帐户的SSH身份验证安全性、您可以使用 `security login publickey` 一组命令、用于管理SSH公共密钥及其与X.509证书的关联。
+为了提高管理员帐户的SSH身份验证安全性、您可以使用 `security login publickey`一组命令来管理SSH公共密钥及其与X.509证书的关联。有关的详细信息 `security login publickey`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+login+publickey["ONTAP 命令参考"^]。
 
 
 
@@ -29,7 +29,7 @@ summary: 对于SSH公共密钥身份验证、您可以管理管理员帐户的�
 * 如果需要检查X.509证书的到期和吊销情况：
 +
 ** 您必须已从证书颁发机构(CA)收到证书。
-** 您必须使用安装证书链(中间CA证书和根CA证书) `security certificate install` 命令
+** 您必须使用命令安装证书链(中间CA证书和根CA证书) `security certificate install`。有关的详细信息 `security certificate install`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["ONTAP 命令参考"^]。
 ** 您需要为SSH启用OCSP。请参见 link:../system-admin/verify-digital-certificates-valid-ocsp-task.html["使用 OCSP 验证数字证书是否有效"^] 有关说明，请参见。
 
 
@@ -46,6 +46,9 @@ summary: 对于SSH公共密钥身份验证、您可以管理管理员帐户的�
 . 查看公共密钥以验证更改：
 +
 `security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
+
++
+有关的详细信息 `security login publickey show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-show.html["ONTAP 命令参考"^]。
 
 
 
@@ -73,6 +76,9 @@ Please enter Certificate: Press <Enter> when done
 +
 `security login publickey modify -vserver SVM_name -username user_name -index index -x509-certificate delete`
 
++
+有关的详细信息 `security login publickey modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-modify.html["ONTAP 命令参考"^]。
+
 . 查看公共密钥以验证更改：
 +
 `security login publickey show -vserver _SVM_name_ -username _user_name_ -index _index_`
@@ -99,6 +105,9 @@ cluster1::> security login publickey modify -vserver engData2 -username svmadmin
 . 从管理员帐户中删除公共密钥和X.509证书关联：
 +
 `security login publickey delete -vserver _SVM_name_ -username _user_name_ -index _index_`
+
++
+有关的详细信息 `security login publickey delete`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-delete.html["ONTAP 命令参考"^]。
 
 . 查看公共密钥以验证更改：
 +

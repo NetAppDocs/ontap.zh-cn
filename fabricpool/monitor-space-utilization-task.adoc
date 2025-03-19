@@ -1,10 +1,10 @@
 ---
 permalink: fabricpool/monitor-space-utilization-task.html 
 sidebar: sidebar 
-keywords: monitoring, space, utilization, fabricpool 
+keywords: aggregate, local tier, monitoring, space, utilization, fabricpool 
 summary: 您需要了解 FabricPool 的性能和云层中存储的数据量。此信息有助于您确定是否需要更改卷的分层策略，增加 FabricPool 许可的使用量限制或增加云层的存储空间。 
 ---
-= 监控已启用FabricPool的ONTAP聚合的空间利用率
+= 监控已启用FabricPool的ONTAP本地层的空间利用率
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,8 +13,11 @@ summary: 您需要了解 FabricPool 的性能和云层中存储的数据量。�
 [role="lead"]
 您需要了解 FabricPool 的性能和云层中存储的数据量。此信息有助于您确定是否需要更改卷的分层策略，增加 FabricPool 许可的使用量限制或增加云层的存储空间。
 
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
+
 .步骤
-. 使用以下命令之一显示相关信息，以监控启用了 FabricPool 的聚合的空间利用率：
+. 使用以下命令之一显示信息、以监控已启用FabricPool的本地层的空间利用率：
 +
 |===
 
@@ -23,28 +26,28 @@ summary: 您需要了解 FabricPool 的性能和云层中存储的数据量。�
 
 
  a| 
-聚合中云层的已用大小
+本地层中云层的已用大小
  a| 
 `storage aggregate show` 使用 `-instance` 参数
 
 
 
  a| 
-聚合中的空间利用率详细信息，包括对象存储的引用容量
+有关本地层中空间利用率的详细信息、包括对象存储的引用容量
  a| 
 `storage aggregate show-space` 使用 `-instance` 参数
 
 
 
  a| 
-附加到聚合的对象存储的空间利用率，包括正在使用的许可证空间量
+附加到本地层的对象存储的空间利用率、包括正在使用的许可证空间量
  a| 
 `storage aggregate object-store show-space`
 
 
 
  a| 
-聚合中的卷及其数据和元数据占用空间的列表
+本地层中的卷及其数据和元数据占用空间的列表
  a| 
 `volume show-footprint`
 

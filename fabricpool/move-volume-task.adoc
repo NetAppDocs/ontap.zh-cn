@@ -1,10 +1,10 @@
 ---
 permalink: fabricpool/move-volume-task.html 
 sidebar: sidebar 
-keywords: moving, volume, fabricpool, fabric pool, tiering, policy, policies, block, capacity, cold data, 
+keywords: aggregate, local tier, moving, volume, fabricpool, fabric pool, tiering, policy, policies, block, capacity, cold data, 
 summary: 将卷移动到 FabricPool 时，您可以选择指定或更改移动时卷的分层策略。从 ONTAP 9.8 开始，在移动启用了非活动数据报告的非 FabricPool 卷时， FabricPool 会使用热图读取可控制的块，并将冷数据移至 FabricPool 目标上的容量层。 
 ---
-= 将卷移动到启用了FabricPool的ONTAP聚合
+= 将卷移动到启用了FabricPool的ONTAP本地层
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,13 +13,16 @@ summary: 将卷移动到 FabricPool 时，您可以选择指定或更改移动�
 [role="lead"]
 将卷移动到 FabricPool 时，您可以选择指定或更改移动时卷的分层策略。从 ONTAP 9.8 开始，在移动启用了非活动数据报告的非 FabricPool 卷时， FabricPool 会使用热图读取可控制的块，并将冷数据移至 FabricPool 目标上的容量层。
 
-.您需要的内容
+
+NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来描述_local ti层_。无论您的ONTAP版本如何、ONTAP命令行界面都使用术语_AGREL_。要了解有关本地层的更多信息，请参见link:../disks-aggregates/index.html["磁盘和本地层"]。
+
+.在您开始之前
 您必须了解更改分层策略可能会如何影响数据变冷并移至云层所需的时间。
 
 link:tiering-policies-concept.html#what-happens-to-the-tiering-policy-when-you-move-a-volume["移动卷时分层策略会发生什么情况"]
 
 .关于此任务
-如果非FabricPool卷已启用非活动数据报告、则在移动具有分层策略的卷时 `auto` 或 `snapshot-only` 对于FabricPool、FabricPool会从热图文件中读取可分层温度的块、并使用该温度将冷数据直接移动到FabricPool目标上的容量层。
+如果非FabricPool卷启用了非活动数据报告、则在移动具有分层策略的卷或 `snapshot-only`移动 `auto`到FabricPool时、FabricPool会从热图文件中读取可分层温度的块、当非FabricPool卷上的分层策略设置为时 `auto`、FabricPool会使用该温度将冷数据直接移动到FabricPool目标上的容量层。
 
 您不应使用 `-tiering-policy` 如果您使用的是ONTAP 9.8、并且希望FabricPools使用非活动数据报告信息将数据直接移动到容量层、则可选择卷移动选项。使用此选项会导致 FabricPools 忽略温度数据，而是遵循 ONTAP 9.8 之前版本的移动行为。
 
@@ -43,7 +46,7 @@ link:tiering-policies-concept.html#types-of-fabricpool-tiering-policies["FabricP
 
 
 .将卷移动到FabricPool 的示例
-以下示例将 "VS1" SVM 的名为 `myvol2` 的卷移动到启用了 FabricPool 的 "dest_FabricPool " 聚合。已明确将此卷设置为使用 `none` 层策略：
+以下示例将"VS1" FabricPool的名为`myvol2`的卷移至启用了FabricPool的"dest_SVM"本地层。此卷已明确设置为使用此 `none`层策略：
 
 [listing]
 ----
