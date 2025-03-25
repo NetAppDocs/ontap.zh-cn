@@ -19,7 +19,7 @@ summary: 您可以启用FlexVol volume、以便在卷中的可用空间降至特
 
 
 .步骤
-. 使用启用FlexVol卷中FlexClone文件和FlexClone LUN的自动删除 `volume snapshot autodelete modify` 命令：
+. 使用命令在FlexVol volume中启用FlexClone文件和FlexClone LUN的自动删除 `volume snapshot autodelete modify`。有关的详细信息 `volume snapshot autodelete modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-autodelete-modify.html["ONTAP 命令参考"^]。
 +
 ** 。 `-trigger` 参数、您可以指定 `volume` 或 `snap_reserve`。
 ** 。 `-destroy-list` 参数、则必须始终指定 `lun_clone,file_clone` 无论是否仅删除一种类型的克隆。
@@ -39,7 +39,7 @@ Volume modify successful on volume:vol1
 ====
 
 
-. 使用验证是否已在FlexVol卷中启用FlexClone文件和FlexClone LUN的自动删除 `volume snapshot autodelete show` 命令：
+. 使用命令验证是否已在FlexVol volume中启用FlexClone文件和FlexClone LUN的自动删除 `volume snapshot autodelete show`。有关的详细信息 `volume snapshot autodelete show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-autodelete-show.html["ONTAP 命令参考"^]。
 +
 以下示例显示已启用卷 vol1 以自动删除 FlexClone 文件和 FlexClone LUN ：
 
@@ -62,7 +62,7 @@ Is Constituent Volume: false
 ----
 . 通过执行以下步骤，确保为要删除的卷中的 FlexClone 文件和 FlexClone LUN 启用了自动删除：
 +
-.. 使用启用特定FlexClone文件或FlexClone LUN的自动删除 `volume file clone autodelete` 命令：
+.. 使用命令启用特定FlexClone文件或FlexClone LUN的自动删除 `volume file clone autodelete`。有关的详细信息 `volume file clone autodelete`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-file-clone-autodelete.html["ONTAP 命令参考"^]。
 +
 您可以使用强制自动删除特定的FlexClone文件或FlexClone LUN `volume file clone autodelete` 命令 `-force` 参数。
 
@@ -77,7 +77,7 @@ cluster1::> volume file clone autodelete -vserver vs1 -clone-path /vol/vol1/lun1
 +
 您可以在创建 FlexClone 文件和 FlexClone LUN 时启用自动删除。
 
-.. 使用验证是否已启用FlexClone文件或FlexClone LUN自动删除 `volume file clone show-autodelete` 命令：
+.. 使用命令验证FlexClone文件或FlexClone LUN是否已启用自动删除 `volume file clone show-autodelete`。有关的详细信息 `volume file clone show-autodelete`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-file-clone-show-autodelete.html["ONTAP 命令参考"^]。
 +
 以下示例显示已启用 FlexClone LUN lun1_clone 以自动删除：
 

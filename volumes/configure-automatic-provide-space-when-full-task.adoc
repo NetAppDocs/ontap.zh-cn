@@ -34,12 +34,12 @@ ONTAP 可以使用以下一种或两种方法自动为已满的卷提供更多�
 默认情况下， ONTAP 会首先尝试增加卷的大小。在大多数情况下、最好使用默认配置、因为删除快照后无法还原。但是、如果您需要尽可能避免增加卷的大小、则可以将ONTAP配置为在增加卷大小之前删除快照。
 
 .步骤
-. 如果希望ONTAP在卷已满时尝试增加卷的大小、请使用为此卷启用自动增长功能 `volume autosize` 命令 `grow` 模式。
+. 如果希望ONTAP在卷已满时尝试增加卷的大小、请使用命令和 `grow`mode为卷启用自动增长功能 `volume autosize`。有关的详细信息 `volume autosize`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-autosize.html["ONTAP 命令参考"^]。
 +
 请记住，当卷增长时，它会从关联聚合中占用更多可用空间。如果您依赖于卷在需要时的增长能力，则必须监控关联聚合中的可用空间，并在需要时添加更多可用空间。
 
 . 如果希望ONTAP在卷已满时删除快照、FlexClone文件或FlexClone LUN、请为这些对象类型启用自动删除。
-. 如果同时启用了卷自动增长功能以及一项或多项自动删除功能、请使用选择ONTAP为卷提供可用空间应使用的第一种方法 `volume modify` 命令 `-space-mgmt-try-first` 选项
+. 如果同时启用了卷自动增长功能以及一项或多项自动删除功能、请使用命令和 `-space-mgmt-try-first`选项选择ONTAP为卷提供可用空间应使用的第一种方法 `volume modify`。有关的详细信息 `volume modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["ONTAP 命令参考"^]。
 +
 要指定首先增加卷的大小(默认值)，请使用 `volume_grow`。要指定先删除快照，请使用 `snap_delete`。
 

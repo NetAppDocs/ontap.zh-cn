@@ -11,7 +11,7 @@ summary: '在卷或聚合级别使用Flash Pool (混合)聚合或HDD聚合的FAS
 
 
 [role="lead"]
-您可以使用cluster shell命令在卷级别对包含Flash Pool (混合)聚合或HDD聚合的FAS系统启用实时数据缩减 `volume efficiency`。默认情况下、对于在FAS系统上创建的卷、数据缩减处于禁用状态。
+您可以使用cluster shell命令在卷级别对包含Flash Pool (混合)聚合或HDD聚合的FAS系统启用实时数据缩减 `volume efficiency`。默认情况下、对于在FAS系统上创建的卷、数据缩减处于禁用状态。有关的详细信息 `volume efficiency`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=volume+efficiency["ONTAP 命令参考"^]。
 
 .关于此任务
 要对卷启用实时数据缩减，必须将其 `-space-guarantee`选项设置为 `none`。在 HDD 聚合上的卷上启用数据缩减会占用额外的 CPU 资源。
@@ -23,12 +23,18 @@ summary: '在卷或聚合级别使用Flash Pool (混合)聚合或HDD聚合的FAS
 ----
 set -privilege advanced
 ----
++
+有关的详细信息 `set`，请参见link:https://docs.netapp.com/us-en/ontap-cli/set.html["ONTAP 命令参考"^]。
+
 . 检查所需节点的卷和聚合的数据缩减状态：
 +
 [source, cli]
 ----
 volume efficiency show -volume <volume_name>
 ----
++
+有关的详细信息 `volume efficiency show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-show.html["ONTAP 命令参考"^]。
+
 . 对卷启用数据缩减：
 +
 [source, cli]
@@ -36,9 +42,12 @@ volume efficiency show -volume <volume_name>
 volume efficiency modify -volume <volume_name> -data-compaction true
 ----
 +
+有关的详细信息 `volume efficiency modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-modify.html["ONTAP 命令参考"^]。
+
++
 [NOTE]
 ====
-如果将聚合或卷的数据缩减设置为 `false` 、则数据缩减将失败。启用数据缩减不会压缩现有数据；只会压缩向系统写入的新数据。 `volume efficiency start`命令包含有关如何压缩现有数据的详细信息。有关详细信息，请参见 https://docs.netapp.com/us-en/ontap-cli["ONTAP 命令参考"^]。
+如果将聚合或卷的数据缩减设置为 `false` 、则数据缩减将失败。启用数据缩减不会压缩现有数据；只会压缩向系统写入的新数据。 `volume efficiency start`命令包含有关如何压缩现有数据的详细信息。有关的详细信息 `volume efficiency start`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-start.html["ONTAP 命令参考"^]。
 
 ====
 . 查看数据缩减统计信息：
