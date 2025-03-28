@@ -157,9 +157,13 @@ NOTE: 您不应使用 S3 root 用户管理 ONTAP 对象存储并共享其权限�
 
 如果要使用 S3 对象存储进行 FabricPool 分层，请考虑选择 * 用于分层 * （使用低成本介质，为分层数据提供最佳性能），而不是性能服务级别。
 
-如果要为对象启用版本控制以便稍后恢复，请选择*Enable Versioning*。如果要在存储分段上启用对象锁定、则默认情况下会启用版本控制。有关对象版本控制的信息、请参见 https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html["在适用于Amazon的S3存储分段中使用版本控制"]。
+如果对分段启用了版本控制、则可以使用S3客户端将对象锁定保留时间放置在特定版本的对象上。锁定对象的特定版本不会阻止删除对象的其他版本。如果要为对象启用版本控制以便稍后恢复，请选择*Enable Versioning*。如果要在存储分段上启用对象锁定、则默认情况下会启用版本控制。有关对象版本控制的信息，请参见 https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html["在适用于Amazon的S3存储分段中使用版本控制"]。
 
-从9.14.1开始、S3存储分段支持对象锁定。S3对象锁定需要标准SnapLock许可证。此许可证包含在中link:../system-admin/manage-licenses-concept.html["ONTAP One"]。在ONTAP One之前、SnapLock许可证包含在"安全性和合规性"包中。安全与合规性包不再提供、但仍然有效。虽然目前并不需要，但现有客户可以选择 https://docs.netapp.com/us-en/ontap/system-admin/download-nlf-task.html["升级到ONTAP One"]。如果要在存储分段上启用对象锁定，则应 https://docs.netapp.com/us-en/ontap/system-admin/manage-license-task.html["验证是否已安装SnapLock许可证"]。如果未安装SnapLock许可证、则必须 https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["安装"]先安装该许可证、然后才能启用对象锁定。确认已安装SnapLock许可证后，要防止存储分段中的对象被删除或覆盖，请选择*Enable object locking*。锁定可以在所有或特定版本的对象上启用、并且只能在为集群节点初始化SnapLock Compliance时钟时才启用。请按照以下步骤操作：
+从9.14.1开始、S3存储分段支持对象锁定。创建分段时、必须启用S3对象锁定。无法对已有分段启用对象锁定。对象锁定只能在本机S3用例中使用。配置为使用S3协议的多协议NAS卷应使用SnapLock将数据提交到WORM存储。S3对象锁定需要标准SnapLock许可证。此许可证包含在中link:../system-admin/manage-licenses-concept.html["ONTAP One"]。
+
+在ONTAP One之前、SnapLock许可证包含在"安全性和合规性"包中。安全与合规性包不再提供、但仍然有效。虽然目前并不需要，但现有客户可以选择 https://docs.netapp.com/us-en/ontap/system-admin/download-nlf-task.html["升级到ONTAP One"]。如果要在存储分段上启用对象锁定，则应 https://docs.netapp.com/us-en/ontap/system-admin/manage-license-task.html["验证是否已安装SnapLock许可证"]。如果未安装SnapLock许可证、则必须 https://docs.netapp.com/us-en/ontap/system-admin/install-license-task.html["安装"]先安装该许可证、然后才能启用对象锁定。
+
+确认已安装SnapLock许可证后，要防止存储分段中的对象被删除或覆盖，请选择*Enable object locking*。锁定可以在所有或特定版本的对象上启用、并且只能在为集群节点初始化SnapLock Compliance时钟时才启用。请按照以下步骤操作：
 
 . 如果未在集群的任何节点上初始化SnapLock Compliance时钟，则会显示*初 始化SnapLock Compliance Clock*按钮。单击*初始化SnapLock Compliance Clock*以初始化集群节点上的SnapLock Compliance时钟。
 . 选择*监管*模式可激活基于时间的锁定，该锁定允许对对象具有_Write Once, Read M众多(WORM)_权限。即使在_监管_模式下、具有特定权限的管理员用户也可以删除这些对象。
