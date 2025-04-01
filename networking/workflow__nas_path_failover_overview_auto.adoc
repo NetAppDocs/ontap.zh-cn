@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: networking/workflow__nas_path_failover_overview_auto.html 
-keywords: introducing, introduction, overview, workflow, nas path, failover, fail, over, workflow for nas path failover, nas path failover overview, nas failover workflow diagram, multipathing 
+keywords: introducing, introduction, overview, workflow, nas path, failover, fail, over, workflow for nas path failover, nas path failover overview, nas failover workflow diagram, multipathing, configure nas path failover on the ONTAP network 
 summary: ONTAP 9.8 及更高版本的 NAS 路径故障转移配置 
 ---
-= 工作流(ONTAP 9.8及更高版本)
+= 在ONTAP网络上配置NAS路径故障转移
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -16,9 +16,10 @@ summary: ONTAP 9.8 及更高版本的 NAS 路径故障转移配置
 [role="lead"]
 如果您已经熟悉基本网络概念，则可以通过查看 NAS 路径故障转移配置的 " 实践 " 工作流来节省网络设置时间。
 
-在 NAS LIF 的当前端口出现链路故障后，该 LIF 会自动迁移到正常运行的网络端口。您可以依靠 ONTAP 默认值来管理路径故障转移。
 
-image:Workflow_NAS_failover.png["工作流摘要：1创建IP空间2将广播域移动到IP空间3创建SVM 4创建Lifs 5为SVM配置DNS服务"]
+NOTE: 在ONTAP 9.7及更早版本中、配置NAS路径故障转移的工作流有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上配置NAS故障转移，请参阅工作流link:https://docs.netapp.com/us-en/ontap-system-manager-classic/networking-failover/workflow__nas_path_failover_overview_manual.html["NAS路径故障转移工作流(ONTAP 9.7及更早版本)"^]。
+
+在 NAS LIF 的当前端口出现链路故障后，该 LIF 会自动迁移到正常运行的网络端口。您可以依靠 ONTAP 默认值来管理路径故障转移。
 
 
 NOTE: SAN LIF 不会迁移（除非您在链路出现故障后手动移动）。相反，主机上的多路径技术会将流量转移到其他 LIF 。有关详细信息，请参见 link:../san-admin/index.html["SAN 管理"^]。

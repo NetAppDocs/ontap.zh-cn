@@ -4,7 +4,7 @@ permalink: networking/change_the_mtu_value_for_ports_in_a_broadcast_domain.html
 keywords: modify, modifying, mtu, mtu_value, change, changing, broadcast, domain, ports, port, change the mtu value for ports in a broadcast domain 
 summary: 修改广播域的 MTU 值以更改广播域中所有端口的 MTU 值 
 ---
-= 更改广播域中端口的MTU值(ONTAP 9.8及更高版本)
+= 更改ONTAP广播域中端口的MTU值
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -15,6 +15,9 @@ summary: 修改广播域的 MTU 值以更改广播域中所有端口的 MTU 值
 
 [role="lead"]
 您可以修改广播域的 MTU 值，以更改该广播域中所有端口的 MTU 值。这样可以支持在网络中进行的拓扑更改。
+
+
+NOTE: 在ONTAP 9.7及更早版本中、更改广播域端口的MTU值的过程有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上更改广播域端口的MTU值，请参阅link:https://docs.netapp.com/us-en/ontap-system-manager-classic/networking-bd/change_the_mtu_value_for_ports_in_a_broadcast_domain97.html["更改广播域中端口的MTU值(ONTAP 9.7及更早版本)"^]。
 
 .开始之前
 MTU 值必须与连接到该第 2 层网络的所有设备匹配，但处理管理流量的 e0M 端口除外。
@@ -38,3 +41,6 @@ network port broadcast-domain modify -broadcast-domain <Default-1> -mtu < 9000 >
 Warning: Changing broadcast domain settings will cause a momentary data-serving interruption.
 Do you want to continue? {y|n}: <y>
 ....
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-modify.html["network port broadcast-domain modify"^]
+

@@ -4,7 +4,7 @@ permalink: networking/add_or_remove_ports_from_a_broadcast_domain.html
 keywords: adding, add, create, creating, remove, removing, delete, deleting, port, broadcast, domain, reachability, repair, physical, switch, configuration, add or remove ports from a broadcast domain, system manager, reassign, broadcast domain, port, unassign, move, change 
 summary: 不需要或建议手动从广播域添加和删除端口 
 ---
-= 从广播域添加或删除端口(ONTAP 9.8及更高版本)
+= 在ONTAP广播域中添加或删除端口
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -19,6 +19,9 @@ summary: 不需要或建议手动从广播域添加和删除端口
 如果通过物理网络连接或交换机配置更改了网络端口可访问性，并且某个网络端口属于其他广播域，请参见以下主题：
 
 link:repair_port_reachability.html["修复端口可访问性"]
+
+
+NOTE: 在ONTAP 9.7及更早版本中、为广播域添加或删除端口的过程有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上的广播域中添加或删除端口，请参阅link:https://docs.netapp.com/us-en/ontap-system-manager-classic/networking-bd/add_or_remove_ports_from_a_broadcast_domain97.html["从广播域添加或删除端口(ONTAP 9.7及更早版本)"^]。
 
 [role="tabbed-block"]
 ====
@@ -118,8 +121,9 @@ NOTE: 如果使用删除接口组的最后一个成员端口 `network port ifgrp
 
 `cluster-1::> network port broadcast-domain remove-ports -broadcast-domain bcast1 -ports cluster-1-01:e0e`
 
---
-====
 .相关信息
 * link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]
 
+
+--
+====

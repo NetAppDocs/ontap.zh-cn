@@ -4,7 +4,7 @@ permalink: networking/commands_for_managing_firewall_service_and_policies.html
 keywords: manage, managing, firewall, fire, wall, service, policy, policies, commands for managing firewall service and policies, system services firewall, system services firewall policy, network interface modify, system services firewall modify, system services firewall show, system services firewall policy create, network interface modify -lif lifname -firewall-policy, system services firewall policy modify, system services firewall policy show, system services firewall policy clone, system services firewall policy delete 
 summary: 管理防火墙服务 
 ---
-= 用于在ONTAP中管理防火墙服务和策略的命令
+= 用于管理防火墙服务和策略的ONTAP命令
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -15,6 +15,15 @@ summary: 管理防火墙服务
 
 [role="lead"]
 您可以使用 `system services firewall` 用于管理防火墙服务的命令 `system services firewall policy` 用于管理防火墙策略的命令、以及 `network interface modify` 用于管理LIFs的防火墙设置的命令。
+
+从 ONTAP 9.10.1 开始：
+
+* 防火墙策略已弃用、并由LIF服务策略取代。以前，板载防火墙是使用防火墙策略进行管理的。现在，可以使用 LIF 服务策略来实现此功能。
+* 所有防火墙策略均为空，不会打开底层防火墙中的任何端口。而是必须使用 LIF 服务策略打开所有端口。
+* 升级到9.10.1或更高版本后、无需执行任何操作即可从防火墙策略过渡到LIF服务策略。系统会根据上一个ONTAP 版本中使用的防火墙策略自动构建LIF服务策略。如果您使用脚本或其他工具创建和管理自定义防火墙策略，则可能需要升级这些脚本以创建自定义服务策略。
+
+
+要了解更多信息，请参见 link:lifs_and_service_policies96.html["ONTAP 9.6 及更高版本中的 LIF 和服务策略"]。
 
 |===
 

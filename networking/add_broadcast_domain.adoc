@@ -4,7 +4,7 @@ permalink: networking/add_broadcast_domain.html
 keywords: broadcast, domain, adding, add, network, ports, cluster, svm, IPspace, mtu 
 summary: 广播域对集群中属于同一第2层网络的网络端口进行分组。然后， SVM 可以使用这些端口。 
 ---
-= 添加广播域
+= 创建ONTAP广播域
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -16,7 +16,10 @@ summary: 广播域对集群中属于同一第2层网络的网络端口进行分�
 [role="lead"]
 广播域对集群中属于同一第2层网络的网络端口进行分组。然后， SVM 可以使用这些端口。
 
-从 ONTAP 9.8 开始，在集群创建或加入操作期间会自动创建广播域。从ONTAP 9.12.0开始、除了自动创建的广播域之外、您还可以在System Manager中手动添加广播域。
+在集群创建或加入操作期间，系统会自动创建广播域。从ONTAP 9.12.0开始、除了自动创建的广播域之外、您还可以在System Manager中手动添加广播域。
+
+
+NOTE: ONTAP 9.7及更早版本中创建广播域的过程有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上创建广播域，请参见link:https://docs.netapp.com/us-en/ontap-system-manager-classic/networking-bd/create_a_broadcast_domain97.html["创建广播域(ONTAP 9.7及更早版本)"^]。
 
 .开始之前
 计划添加到广播域的端口不能属于另一个广播域。如果要使用的端口属于另一个广播域、但未使用、请从原始广播域中删除这些端口。
@@ -50,9 +53,9 @@ summary: 广播域对集群中属于同一第2层网络的网络端口进行分�
 --
 .命令行界面
 --
-在ONTAP 9.7或更早版本中、您可以手动创建广播域。
-
 如果使用的是ONTAP 9.8及更高版本、则会根据第2层可访问性自动创建广播域。有关详细信息，请参见 link:repair_port_reachability.html["修复端口可访问性"]。
+
+您也可以手动创建广播域。
 
 .步骤
 . 查看当前未分配给广播域的端口：
@@ -97,6 +100,10 @@ summary: 广播域对集群中属于同一第2层网络的网络端口进行分�
 您可以通过创建子网来定义广播域中可用的 IP 地址池，也可以此时将 SVM 和接口分配给 IP 空间。有关详细信息，请参见 link:../peering/index.html["集群和 SVM 对等"]。
 
 如果需要更改现有广播域的名称、请使用 `network port broadcast-domain rename` 命令：
+
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-create.html["network port broadcast-domain create"^]
+
 
 --
 ====

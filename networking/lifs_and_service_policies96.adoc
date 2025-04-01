@@ -4,7 +4,7 @@ permalink: networking/lifs_and_service_policies96.html
 keywords: service policies for system svms, lif service policies, lif, logical, interface, service, policy, policies, lifs and service policies in ontap 9.6 and later, assign service policies to lifs to specify the supported traffic, service policies for system svms, service policies for data svms, data-core service 
 summary: 为 LIF 分配服务策略以指定支持的流量 
 ---
-= ONTAP 9.6 及更高版本中的 LIF 和服务策略
+= 了解ONTAP LUN和服务策略
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -15,6 +15,9 @@ summary: 为 LIF 分配服务策略以指定支持的流量
 
 [role="lead"]
 您可以将服务策略(而不是LIF角色或防火墙策略)分配给LIF、以确定LIF支持的流量类型。服务策略定义 LIF 支持的一组网络服务。ONTAP 提供了一组可与 LIF 关联的内置服务策略。
+
+
+NOTE: ONTAP 9.7及更早版本中的网络流量管理方法有所不同。如果需要管理运行ONTAP 9.7及更早版本的网络上的流量，请参见link:https://docs.netapp.com/us-en/ontap-system-manager-classic/networking/lif_roles95.html["LIF角色(ONTAP 9.5及更早版本)"^]。
 
 您可以使用以下命令显示服务策略及其详细信息：
 `network interface service-policy show`
@@ -539,3 +542,7 @@ data-fpolicy-client
 
 |===
 每个新服务都会自动包含在某些内置服务策略中，但管理员可以从内置策略中删除这些服务，或者将其添加到自定义策略中，以代表每个应用程序控制用于出站连接的 LIF 。
+
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/network-interface-service-policy-show.html["network interface service-policy show"^]
+

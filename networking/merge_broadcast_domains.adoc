@@ -4,7 +4,7 @@ permalink: networking/merge_broadcast_domains.html
 keywords: merge, combine, broadcast, domain, reachability, merge broadcast domains, merge the ports from one broadcast domain into an existing broadcast domain 
 summary: 将一个广播域中的端口合并到一个现有广播域中 
 ---
-= 合并广播域(ONTAP 9.8及更高版本)
+= 合并ONTAP广播域
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -15,6 +15,9 @@ summary: 将一个广播域中的端口合并到一个现有广播域中
 
 [role="lead"]
 如果通过物理网络连接或交换机配置更改了网络端口可访问性，并且先前在多个广播域中配置的两组网络端口现在都共享可访问性，则可以通过合并两个广播域将 ONTAP 配置与物理网络拓扑同步。
+
+
+NOTE: 合并广播域的过程在ONTAP 9.7及更早版本中有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上合并广播域，请参见link:https://docs.netapp.com/us-en/ontap-system-manager-classic/networking-bd/merge_broadcast_domains97.html["合并广播域(ONTAP 9.7或更早版本)"^]。
 
 要确定多个广播域是否属于一个可访问性集，请使用 "network port reachability show -details" 命令，并注意在另一个广播域中配置的端口实际彼此连接（ " 意外端口 " ）。通常，意外端口列表会定义在确认物理和交换机配置准确后应合并到广播域中的一组端口。
 
@@ -27,4 +30,8 @@ network port broadcast-domain merge -ipspace <ipspace_name> -broadcast-domain <b
 * `ipspace_name` 是广播域所在IP空间的名称。
 * `-broadcast-domain` 是要合并的广播域的名称。
 * `-into-broadcast-domain` 是将接收其他端口的广播域的名称。
+
+
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-merge["网络端口广播域合并"^]
 
