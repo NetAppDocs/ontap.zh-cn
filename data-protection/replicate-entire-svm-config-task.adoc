@@ -60,9 +60,15 @@ SVM 名称在源集群和目标集群中必须是唯一的。
 ----
 cluster_dst:> vserver create -vserver svm_backup -subtype dp-destination
 ----
++
+有关的详细信息 `vserver create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-create.html["ONTAP 命令参考"^]。
+
 . 在目标集群中、使用创建SVM对等关系 `vserver peer create` 命令：
 +
 有关详细信息，请参见 link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["创建 SVM 集群间对等关系"]。
+
++
+有关的详细信息 `vserver peer create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-peer-create.html["ONTAP 命令参考"^]。
 
 . 创建复制作业计划
 +
@@ -85,6 +91,9 @@ NOTE: SVM SnapMirror关系中FlexVol 卷支持的最小计划(RPO)为15分钟。
 ----
 cluster_dst::> job schedule cron create -name my_weekly -dayofweek saturday -hour 3 -minute 0
 ----
++
+有关的详细信息 `job schedule cron create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/job-schedule-cron-create.html["ONTAP 命令参考"^]。
+
 . 从目标 SVM 或目标集群创建复制关系：
 +
 [source, cli]
@@ -127,6 +136,9 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 ----
 cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy my_unified -identity-preserve true
 ----
++
+有关的详细信息 `snapmirror create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["ONTAP 命令参考"^]。
+
 . 停止目标 SVM ：
 +
 [source, cli]
@@ -141,6 +153,9 @@ vserver stop -vserver <SVM_name>
 ----
 cluster_dst::> vserver stop -vserver svm_backup
 ----
++
+有关的详细信息 `vserver stop`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-stop.html["ONTAP 命令参考"^]。
+
 . 从目标 SVM 或目标集群初始化 SVM 复制关系：
 +
 [source, cli]
@@ -159,6 +174,9 @@ NOTE: 您必须在中的SVM名称后面输入冒号(：) `-source-path` 和 `-de
 ----
 cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_backup:
 ----
++
+有关的详细信息 `snapmirror initialize`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["ONTAP 命令参考"^]。
+
 
 
 --
