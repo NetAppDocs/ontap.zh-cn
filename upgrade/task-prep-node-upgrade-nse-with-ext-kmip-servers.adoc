@@ -20,42 +20,63 @@ summary: 如果您在ONTAP 9.2或更早版本上使用NetApp存储加密并升�
 ----
 storage encryption disk show -disk *
 ----
++
+有关的详细信息 `storage encryption disk show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/storage-encryption-disk-show.html["ONTAP 命令参考"^]。
+
 . 进入高级权限模式：
 +
 [source, cli]
 ----
 set -privilege advanced
 ----
++
+有关的详细信息 `set`，请参见link:https://docs.netapp.com/us-en/ontap-cli/set.html["ONTAP 命令参考"^]。
+
 . 使用默认的制造安全ID 0x0将FIPS密钥分配给自加密磁盘(SED)：
 +
 [source, cli]
 ----
 storage encryption disk modify -fips-key-id 0x0 -disk *
 ----
++
+有关的详细信息 `storage encryption disk modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/storage-encryption-disk-modify.html["ONTAP 命令参考"^]。
+
 . 验证是否已完成为所有磁盘分配FIPS密钥：
 +
 [source, cli]
 ----
 storage encryption disk show-status
 ----
++
+有关的详细信息 `storage encryption disk show-status`，请参见link:https://docs.netapp.com/us-en/ontap-cli/storage-encryption-disk-show-status.html["ONTAP 命令参考"^]。
+
 . 验证所有磁盘的*mode*是否设置为data
 +
 [source, cli]
 ----
 storage encryption disk show
 ----
++
+有关的详细信息 `storage encryption disk show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/storage-encryption-disk-show.html["ONTAP 命令参考"^]。
+
 . 查看已配置的KMIP服务器：
 +
 [source, cli]
 ----
 security key-manager show
 ----
++
+有关的详细信息 `security key-manager show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+show["ONTAP 命令参考"^]。
+
 . 删除已配置的KMIP服务器：
 +
 [source, cli]
 ----
 security key-manager delete -address <kmip_ip_address>
 ----
++
+有关的详细信息 `security key-manager delete`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-delete.html["ONTAP 命令参考"^]。
+
 . 删除外部密钥管理器配置：
 +
 [source, cli]
@@ -64,7 +85,7 @@ security key-manager delete-kmip-config
 ----
 +
 
-NOTE: 此步骤不会删除 NSE 证书。
+NOTE: 此步骤不会删除 NSE 证书。有关的详细信息 `security key-manager delete-kmip-config`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-delete-kmip-config.html["ONTAP 命令参考"^]。
 
 
 

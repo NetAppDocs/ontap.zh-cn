@@ -14,10 +14,10 @@ summary: '将FlexVol volume移动到同一个Storage Virtual Machine (SVM)中的
 在确定存储容量不平衡后，您可以将 FlexVol 卷移动到同一 Storage Virtual Machine （ SVM ）中的其他聚合，节点或两者，以平衡存储容量。
 
 .关于此任务
-默认情况下，如果转换操作无法在 30 秒内完成，则会重试。您可以使用和 `-cutover-action`参数调整默认行为 `-cutover-window`、这两个参数都需要高级权限级别访问。有关的详细信息 `volume move start`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-move-start.html["ONTAP 命令参考"^]。
+默认情况下，如果转换操作无法在 30 秒内完成，则会重试。您可以使用和 `-cutover-action`参数调整默认行为 `-cutover-window`、这两个参数都需要高级权限级别访问。
 
 .步骤
-. 如果要移动数据保护镜像、但尚未初始化镜像关系、请使用初始化镜像关系 `snapmirror initialize` 命令：
+. 如果要移动数据保护镜像、但尚未初始化镜像关系、请使用命令初始化镜像关系 `snapmirror initialize`。有关的详细信息 `snapmirror initialize`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["ONTAP 命令参考"^]。
 +
 必须先初始化数据保护镜像关系，然后才能移动其中一个卷。
 
@@ -41,7 +41,10 @@ node12a_aggr1    10.36GB          hdd
 node12a_aggr4    10.36GB          hdd
 5 entries were displayed.
 ----
-. 使用验证卷是否可以移动到预期聚合 `volume move start -perform-validation-only` 命令以运行验证检查。
++
+有关的详细信息 `volume move target-aggr show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-move-target-aggr-show.html["ONTAP 命令参考"^]。
+
+. 使用命令运行验证检查、以验证卷是否可以移动到预期聚合 `volume move start -perform-validation-only`。有关的详细信息 `volume move start`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-move-start.html["ONTAP 命令参考"^]。
 . 使用移动卷 `volume move start` 命令：
 +
 以下命令会将 vs2 SVM 上的 user_max 卷移动到 node12a_aggr3 聚合。移动操作将作为后台进程运行。
@@ -67,6 +70,9 @@ vs2       user_max   healthy  cutover     -                -
 ----
 +
 卷移动完成后、它将不再显示在中 `volume move show` 命令输出。
+
++
+有关的详细信息 `volume move show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-move-show.html["ONTAP 命令参考"^]。
 
 
 
