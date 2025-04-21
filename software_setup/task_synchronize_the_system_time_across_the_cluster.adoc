@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ontap, software, setup, synchronize, system, time, across, cluster 
 summary: 同步时间可确保集群中的每个节点都有相同的时间，并防止 CIFS 和 Kerberos 出现故障。 
 ---
-= 在集群中同步系统时间
+= 在ONTAP集群中同步系统时间
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -17,12 +17,18 @@ summary: 同步时间可确保集群中的每个节点都有相同的时间，�
 
 您可以通过将集群与一个或多个 NTP 服务器关联来同步整个集群的时间。
 
-. 验证是否已为每个节点正确设置系统时间和时区。
+. 验证是否已为每个节点正确设置系统时间和时区：
++
+[source, cli]
+----
+cluster date show
+----
 +
 集群中的所有节点应设置为同一时区。
 
 +
-.. 使用 cluster date show 命令显示每个节点的当前日期，时间和时区。
+此示例显示了集群中每个节点的日期和时区。
+
 +
 [listing]
 ----
@@ -35,7 +41,12 @@ cluster1-03  01/06/2015 09:35:15 America/New_York
 cluster1-04  01/06/2015 09:35:15 America/New_York
 4 entries were displayed.
 ----
-.. 使用 cluster date modify 命令更改所有节点的日期或时区。
+. 更改所有节点的日期或时区：
++
+[source, cli]
+----
+cluster date modify
+----
 +
 此示例将集群的时区更改为 GMT ：
 
@@ -44,15 +55,26 @@ cluster1-04  01/06/2015 09:35:15 America/New_York
 ----
 cluster1::> cluster date modify -timezone GMT
 ----
-
-
-. 使用 cluster time-service ntp server create 命令将集群与 NTP 服务器相关联。
+. 将集群与NTP服务器相关联：
 +
-** 要设置不采用对称身份验证的NTP服务器、请输入以下命令： `cluster time-service ntp server create -server server_name`
-** 要设置采用对称身份验证的NTP服务器、请输入以下命令： `cluster time-service ntp server create -server server_ip_address -key-id key_id`
+要设置不采用对称身份验证的NTP服务器、请输入以下命令：
+
++
+[source, cli]
+----
+cluster time-service ntp server create -server <server_name>
+----
++
+要设置采用对称身份验证的NTP服务器、请输入以下命令：
+
++
+[source, cli]
+----
+cluster time-service ntp server create -server <server_ip_address> -key-id <key_id>
+----
 +
 
-NOTE: 从 ONTAP 9.5 开始，可以使用对称身份验证。在 ONTAP 9.4 或更早版本中不提供此功能。
+NOTE: 从ONTAP 9.5开始、可以使用对称身份验证。在 ONTAP 9.4 或更早版本中不提供此功能。
 
 +
 此示例假设已为集群配置 DNS 。如果尚未配置 DNS ，则必须指定 NTP 服务器的 IP 地址：
@@ -62,9 +84,15 @@ NOTE: 从 ONTAP 9.5 开始，可以使用对称身份验证。在 ONTAP 9.4 或�
 ----
 cluster1::> cluster time-service ntp server create -server ntp1.example.com
 ----
+. 验证集群是否已与NTP服务器关联：
++
+[source, cli]
+----
+cluster time-service ntp server show
+----
++
+此示例显示集群与NTP服务器ntp1.example.com关联。
 
-
-. 验证集群是否已与NTP服务器关联： `cluster time-service ntp server show`
 +
 [listing]
 ----
@@ -75,5 +103,82 @@ ntp1.example.com     auto
 ----
 
 
-.相关信息
-link:../system-admin/index.html["系统管理"]
+
+
+== 用于在 NTP 服务器上管理对称身份验证的命令
+
+从 ONTAP 9.5 开始，支持网络时间协议（ NTP ）版本 3 。NTPv3 包括使用 SHA-1 密钥的对称身份验证，可提高网络安全性。
+
+[cols="2*"]
+|===
+| 要执行此操作 ... | 使用此命令 ... 
+
+
+ a| 
+配置不使用对称身份验证的 NTP 服务器
+ a| 
+[source, cli]
+----
+cluster time-service ntp server create -server server_name
+----
+
+
+ a| 
+使用对称身份验证配置 NTP 服务器
+ a| 
+[source, cli]
+----
+cluster time-service ntp server create -server server_ip_address -key-id key_id
+----
+
+
+ a| 
+为现有 NTP 服务器启用对称身份验证
+
+可以通过添加所需的密钥 ID 来修改现有 NTP 服务器以启用身份验证。
+ a| 
+[source, cli]
+----
+cluster time-service ntp server modify -server server_name -key-id key_id
+----
+
+
+ a| 
+配置共享 NTP 密钥
+ a| 
+[source, cli]
+----
+cluster time-service ntp key create -id shared_key_id -type shared_key_type -value shared_key_value
+----
+* 注： * 共享密钥由 ID 引用。节点和 NTP 服务器上的 ID ，类型和值必须相同
+
+
+
+ a| 
+使用未知密钥 ID 配置 NTP 服务器
+ a| 
+[source, cli]
+----
+cluster time-service ntp server create -server server_name -key-id key_id
+----
+
+
+ a| 
+使用未在 NTP 服务器上配置的密钥 ID 配置服务器。
+ a| 
+[source, cli]
+----
+cluster time-service ntp server create -server server_name -key-id key_id
+----
+* 注： * 密钥 ID ，类型和值必须与 NTP 服务器上配置的密钥 ID ，类型和值相同。
+
+
+
+ a| 
+禁用对称身份验证
+ a| 
+[source, cli]
+----
+cluster time-service ntp server modify -server server_name -authentication disabled
+----
+|===

@@ -1,0 +1,217 @@
+---
+sidebar: sidebar 
+permalink: software_setup/setup-cluster.html 
+keywords: install, installing, cluster, set up, setup, configure, disk, data ports, guided setup, local tiers, aggregate, vserver, volume, configuring ONTAP on a new cluster, configuring a new cluster, assign a node-management IP address, node, DNS server, host name, hostname, NTP server, synchronize time, create a local tier, configure protocol, SSD, provision storage, add LUN, add volume, add namespace, volume, vserver, configure ONTAP on a new cluster, configuration 
+summary: System Manager 为设置集群和配置存储提供了一个简单易用的工作流。 
+---
+= 创建ONTAP集群并加入节点
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+NetApp建议您使用System Manager创建新集群。System Manager为集群设置提供了一个简单易行的工作流。只有在MetroCluster配置中运行ONTAP 9.7或更早版本或者需要在某些平台上配置纯IPv6集群时、才需要使用ONTAP命令行界面(CLI)。
+
+.关于此任务
+此过程适用于FAS、AFF和当前ASA系统。如果您有ASA R2系统(ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30或ASA A20)、请按照link:https://docs.netapp.com/us-en/asa-r2/install-setup/initialize-ontap-cluster.html["这些步骤"^]使用系统管理器设置ONTAP集群。ASA R2系统可为仅使用SAN的客户提供简化的ONTAP体验。
+
+从9.13.1开始、您可以在初始集群设置期间使用ONTAP命令行界面为AFF A800和FAS8700平台上的管理ONTAP分配IPv6地址。对于ONTAP 9.13.1之前的ONTAP版本或其他平台上的9.13.1 9.13.1及更高版本、您应使用System Manager使用IPv4地址创建集群、然后在完成集群设置后再使用这些地址创建集群link:convert-ipv4-to-ipv6-task.html["转换为IPv6"]。
+
+
+NOTE: System Manager不支持在ONTAP 9.6及更早版本中需要IPv6网络的部署。
+
+.开始之前
+* 您应已根据适用于您的平台型号的安装和设置说明安装新存储系统、并为其布线和加电。
++
+请参见link:https://docs.netapp.com/us-en/ontap-systems/index.html["AFF 和 FAS 文档"^]。
+
+* link:gather_cluster_setup_information.html["收集所需信息"]以完成集群设置。
+* 应在集群的每个节点上配置集群网络接口、以便进行集群内通信。
+* 如果要使用命令行界面配置IPv6、则应在基础管理控制器(BMC)上配置IPv6、以便可以使用SSH访问系统。
+
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 分配节点管理 IP 地址
++
+** Windows计算机
++
+... 将Windows计算机连接到与控制器相同的子网。
++
+此操作会自动为您的系统分配节点管理IP地址。
+
+... 打开*Network*驱动器以发现节点。
+... 选择节点以启动集群设置向导。
+
+
+** 非Windows计算机
++
+... 打开要添加到集群中的所有节点的电源。
++
+要为您的集群设置启用发现、必须执行此操作。
+
+... 连接到第一个节点的控制台。
++
+节点将启动，然后在控制台上启动集群设置向导。
+
++
+[listing]
+----
+Welcome to the cluster setup wizard....
+----
+... 确认 AutoSupport 语句。
++
+[listing]
+----
+Type yes to confirm and continue {yes}: yes
+----
++
+默认情况下， AutoSupport 处于启用状态。
+
+... 按照屏幕上的说明为此节点分配管理IP地址。
+... 在Web浏览器中，输入已配置的节点管理IP地址："https://node-management-IP"[]。
++
+System Manager 会自动发现集群中的其余节点。
+
+
+
+
+
+. 在*初始化存储系统*下、输入集群名称和管理员密码。
+. 在*Networking*下，输入集群管理IP地址、子网掩码和网关。
+. 如果要使用域名服务解析主机名，请选择*Use Domain Name Service (DDNS)*；然后输入DNS服务器信息。
+. 如果要使用网络时间协议(NTP)在集群中保持时间同步、请在*其他*下选择*使用时间服务(NTP)*；然后输入NTP服务器信息。
+. 选择 * 提交 * 。
+
+
+--
+.ONTAP 命令行界面
+--
+. 打开要添加到集群中的所有节点的电源。
++
+要为集群设置启用发现，必须执行此操作。
+
+. 连接到第一个节点的控制台。
++
+节点将启动，然后在控制台上启动集群设置向导。
+
++
+[listing]
+----
+Welcome to the cluster setup wizard....
+----
+. 确认 AutoSupport 语句。
++
+[listing]
+----
+Type yes to confirm and continue {yes}: yes
+----
++
+默认情况下， AutoSupport 处于启用状态。
+
+. 按照屏幕上的说明为此节点分配管理IP地址。
++
+从ONTAP 9.13.1开始、您可以为A800和FAS8700平台上的管理LUN分配IPv6地址。对于9.13.1之前的ONTAP版本或其他平台上的9.13.1及更高版本、您必须为管理LUN分配IPv4地址、然后在完成集群设置后转换为IPv6。
+
+. 按 * 输入 * 继续。
++
+[listing]
+----
+Do you want to create a new cluster or join an existing cluster? {create, join}:
+----
+. 创建新集群：
++
+.. 输入 `create`
+.. 接受系统默认值或输入您自己的值。
+.. 设置完成后、登录到集群并验证集群是否处于活动状态、以及第一个节点是否运行正常： `cluster show`
++
+以下示例显示了一个集群，其中第一个节点（ cluster1-01 ）运行状况良好且符合参与条件：
+
++
+[listing]
+----
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+cluster1-01           true    true
+----
++
+如果需要、您可以使用 `cluster setup`命令访问集群设置向导并更改为管理或节点SVM输入的任何值。
+
+
+
+. 将节点加入集群：
++
+一次只能将一个节点加入集群。您必须完成每个节点的加入操作、并且该节点必须是集群的一部分、然后才能开始加入下一个节点。
+
++
+如果您的FAS2720包含24个或更少的NL) SAS驱动器、则应验证存储配置默认设置为主动/被动以优化性能。有关详细信息，请参见的文档 link:../disks-aggregates/setup-active-passive-config-root-data-task.html["在使用根数据分区的节点上设置主动-被动配置"]。
+
++
+.. 登录到要加入集群的节点。
++
+集群设置向导将在控制台上启动。
+
++
+[listing]
+----
+Welcome to the cluster setup wizard....
+----
+.. 确认 AutoSupport 语句。
++
+
+NOTE: 默认情况下， AutoSupport 处于启用状态。
+
+
+
++
+[listing]
+----
+Type yes to confirm and continue {yes}: yes
+----
++
+.. 按照屏幕上的说明为节点分配 IP 地址。
++
+从ONTAP 9.13.1开始、您可以为A800和FAS8700平台上的管理LUN分配IPv6地址。对于9.13.1之前的ONTAP版本或其他平台上的9.13.1及更高版本、您必须为管理LUN分配IPv4地址、然后在完成集群设置后转换为IPv6。
+
+.. 按 * 输入 * 继续。
++
+[listing]
+----
+Do you want to create a new cluster or join an existing cluster? {create, join}:
+----
+.. 输入 `join`
+.. 按照屏幕上的说明设置节点并将其加入集群。
+.. 设置完成后、验证节点是否运行状况良好并有资格加入集群： `cluster show`
++
+以下示例显示了第二个节点（ cluster1-02 ）加入集群后的集群：
+
++
+[listing]
+----
+cluster1::> cluster show
+Node                  Health  Eligibility
+--------------------- ------- ------------
+cluster1-01           true    true
+cluster1-02           true    true
+----
+
+
+. 重复步骤7以加入其余每个节点。
+
+
+--
+====
+.下一步行动
+* 如果需要， link:convert-ipv4-to-ipv6-task.html["从IPv4转换为IPv6"]。
+* link:task_check_cluster_with_config_advisor.html["运行Active IQ Config Advisor以验证配置并检查常见配置错误"](英文)
+
