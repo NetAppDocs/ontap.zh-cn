@@ -23,7 +23,7 @@ image:epsilon-preserving-quorum.gif["此图通过周围的文本进行了说明�
 
 创建集群时，系统会自动将 epsilon 分配给第一个节点。如果持有 epsilon 的节点运行状况不正常，接管其高可用性配对节点或由其高可用性配对节点接管，则 epsilon 会自动重新分配给其他 HA 对中运行状况良好的节点。
 
-使节点脱机可能会影响集群保持仲裁状态的能力。因此，如果您尝试执行的操作会使集群脱离仲裁关系，或者使其因丢失仲裁而中断一次，则 ONTAP 会发出警告消息。您可以使用禁用仲裁警告消息 `cluster quorum-service options modify` 高级权限级别的命令。
+使节点脱机可能会影响集群保持仲裁状态的能力。因此，如果您尝试执行的操作会使集群脱离仲裁关系，或者使其因丢失仲裁而中断一次，则 ONTAP 会发出警告消息。您可以在高级权限级别使用命令禁用仲裁警告消息 `cluster quorum-service options modify`。有关的详细信息 `cluster quorum-service options modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/cluster-quorum-service-options-modify.html["ONTAP 命令参考"^]。
 
 一般来说，假设集群节点之间的连接可靠，则较大的集群比较小的集群更稳定。与两个节点的集群相比，在包含 24 个节点的集群中更容易保持一半节点和 epsilon 的简单多数的仲裁要求。
 
