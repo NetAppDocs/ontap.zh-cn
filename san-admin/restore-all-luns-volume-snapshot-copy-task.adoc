@@ -23,6 +23,9 @@ summary: 您可以使用volume Snapshot restore命令从快照还原指定卷中
 +
 `lun mapping delete -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
 
++
+有关的详细信息 `lun mapping delete`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-delete.html["ONTAP 命令参考"^]。
+
 . 确定要将卷还原到的快照：
 +
 `volume snapshot show -vserver _vserver_name_ -volume _volume_name_`
@@ -40,13 +43,22 @@ summary: 您可以使用volume Snapshot restore命令从快照还原指定卷中
 +
 `lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
 
++
+有关的详细信息 `lun mapping create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-create.html["ONTAP 命令参考"^]。
+
 . 验证 LUN 是否联机：
 +
 `lun show -vserver _vserver_name_ -path _lun_path_ -fields state`
 
++
+有关的详细信息 `lun show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["ONTAP 命令参考"^]。
+
 . 如果 LUN 未联机，请将其联机：
 +
 `lun modify -vserver _vserver_name_ -path _lun_path_ -state online`
+
++
+有关的详细信息 `lun modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-modify.html["ONTAP 命令参考"^]。
 
 . 将权限设置更改为 admin ：
 +

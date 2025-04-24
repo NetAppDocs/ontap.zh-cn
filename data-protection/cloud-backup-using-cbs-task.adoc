@@ -4,7 +4,7 @@ permalink: data-protection/cloud-backup-using-cbs-task.html
 keywords: cloud, data, backup, back up, storage, volume, lun, connector, secret key, access key, BlueXP back and recovery service, Cloud Backup service, CBS, restore data, protect volumes, ipspace, storagegrid, storage grid, archive, archival, archiving, cost, calculator, glacier, deep archive 
 summary: 从ONTAP 9.9.1开始、您可以使用System Manager通过BlueXP  备份和恢复服务备份云中的数据。 
 ---
-= 使用ONTAP BlueXP  备份和恢复服务备份数据
+= 使用BlueXP  备份和恢复来备份数据
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,17 +16,17 @@ summary: 从ONTAP 9.9.1开始、您可以使用System Manager通过BlueXP  备�
 
 
 [role="lead"]
-从ONTAP 9.9.1开始、您可以使用System Manager通过BlueXP  备份和恢复服务(原Cloud Backup Service)备份云中的数据。
+从ONTAP 9.9.1开始、您可以使用System Manager通过BlueXP  备份和恢复(原Cloud Backup Service)备份云中的数据。
 
-BlueXP  备份和恢复服务支持FlexVol读写卷和数据保护(DP)卷。从ONTAP 9.12.1开始、BlueXP  备份和恢复服务支持FlexGroup卷和SnapLock卷。
+BlueXP  备份和恢复支持FlexVol读写卷和数据保护(DP)卷。从ONTAP 9.12.1开始、BlueXP  备份和恢复支持FlexGroup卷和SnapLock卷。
 
 详细了解 link:https://docs.netapp.com/us-en/bluexp-backup-recovery/index.html["BlueXP备份和恢复"^]。
 
 .开始之前
 要在BlueXP中建立帐户、您应执行以下过程。对于服务帐户，您需要创建 " 帐户管理员 " 角色。（其他服务帐户角色没有从 System Manager 建立连接所需的权限。）
 
-. link:https://docs.netapp.com/us-en/occm/task_logging_in.html["在BlueXP中创建帐户"^]。
-. link:https://docs.netapp.com/us-en/occm/concept_connectors.html["在BlueXP中创建连接器"^] 使用以下云提供商之一：
+. link:https://docs.netapp.com/us-en/bluexp-setup-admin/task-logging-in.html["在BlueXP中创建帐户"^](英文)
+. link:https://docs.netapp.com/us-en/bluexp-setup-admin/concept-connectors.html["在BlueXP中创建连接器"^]使用以下云提供商之一：
 +
 ** Microsoft Azure
 ** Amazon Web Services （ AWS ）
@@ -38,7 +38,7 @@ NOTE: 从ONTAP 9.10.1开始、您可以选择StorageGRID作为云备份提供程
 
 
 
-. link:https://docs.netapp.com/us-en/occm/concept_backup_to_cloud.html["在BlueXP  中订阅BlueXP  备份和恢复服务"^](需要相应的许可证)。
+. link:https://docs.netapp.com/us-en/bluexp-backup-recovery/concept-backup-to-cloud.html["在BlueXP  中订阅BlueXP  备份和恢复"^](需要相应的许可证)。
 . link:https://docs.netapp.com/us-en/occm/task_managing_cloud_central_accounts.html#creating-and-managing-service-accounts["使用BlueXP生成访问密钥和机密密钥"^]。
 
 
@@ -195,7 +195,7 @@ IMPORTANT: 如果使用 Azure 或 AWS 为卷启用归档，则无法禁用归档
 * 您应具有 SnapMirror 许可证。
 * 应配置集群间 LIF 。
 * 应配置 NTP 。
-* 集群必须运行 ONTAP 9.1.1 。
+* 集群必须运行9.9.1 9.9.1或更高版本。
 
 
 .关于此任务
@@ -209,7 +209,7 @@ IMPORTANT: 如果使用 Azure 或 AWS 为卷启用归档，则无法禁用归档
 .步骤
 . 配置卷或 LUN 时，在 System Manager 的 * 保护 * 页面上，选中标记为 * 启用 SnapMirror （本地或远程） * 的复选框。
 . 选择BlueXP  备份和恢复策略类型。
-. 如果未启用BlueXP  备份和恢复服务，请选择*使用BlueXP  备份和恢复服务启用备份*。
+. 如果未启用BlueXP  备份和恢复，请选择*启用使用BlueXP  备份和恢复的备份*。
 
 
 
@@ -220,7 +220,7 @@ IMPORTANT: 如果使用 Azure 或 AWS 为卷启用归档，则无法禁用归档
 
 .步骤
 . 选择现有卷或LUN、然后选择*保护*。
-. 在*Protect Volumes*页面上，为保护策略指定*Backup using BlueXP  backup and recovery services*。
+. 在*Protect Volumes*页面上，为保护策略指定*Backup using BlueXP  backup and recovery *。
 . 选择*保护*。
 . 在 * 保护 * 页面上，选中标记为 * 启用 SnapMirror （本地或远程） * 的复选框。
 . 选择*连接并启用BlueXP  备份和恢复*。

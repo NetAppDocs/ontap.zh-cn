@@ -56,6 +56,8 @@ NOTE: 升级到ONTAP 9.14.1或更高版本时、使用旧版ONTAP创建的现有
 
 如果已为数据SVM配置SMB服务器、则可以使用 `security login domain-tunnel create` 命令将SVM配置为网关或_tannel"、以便对集群进行AD访问。
 
+在ONTAP 9.161之前的版本中、您必须使用身份验证通道来管理使用AD的集群管理员帐户。
+
 .开始之前
 * 您必须已为数据SVM配置SMB服务器。
 * 您必须已启用 AD 域用户帐户才能访问集群的管理 SVM 。
@@ -70,8 +72,10 @@ NOTE: 始终先尝试 Kerberos 身份验证。如果发生故障，则会尝试 
 .步骤
 . 将启用了SMB的数据SVM配置为身份验证通道、以便AD域控制器能够访问集群：
 +
-`security login domain-tunnel create -vserver _svm_name_`
-
+[source, cli]
+----
+security login domain-tunnel create -vserver <svm_name>
+----
 +
 有关的详细信息 `security login domain-tunnel create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-domain-tunnel-create.html["ONTAP 命令参考"^]。
 
@@ -82,7 +86,7 @@ NOTE: 始终先尝试 Kerberos 身份验证。如果发生故障，则会尝试 
 
 ====
 +
-以下命令会将启用了SMB的数据SVM"`engData`"配置为身份验证通道。
+以下命令会将启用了SMB的数据SVM配置 `engData`为身份验证通道。
 
 +
 [listing]
@@ -100,19 +104,23 @@ cluster1::>security login domain-tunnel create -vserver engData
 .关于此任务
 输入后 `vserver active-directory create` 命令时、系统会提示您提供AD用户帐户的凭据、该帐户具有足够的权限、可以将计算机添加到域中的指定组织单位。帐户的密码不能为空。
 
+从ONTAP 9.161开始、您可以使用此过程通过AD管理集群管理员帐户。
+
 .开始之前
 要执行此任务，您必须是集群或 SVM 管理员。
 
 .步骤
 . 在 AD 域上为 SVM 创建计算机帐户：
 +
-`vserver active-directory create -vserver _SVM_name_ -account-name _NetBIOS_account_name_ -domain _domain_ -ou _organizational_unit_`
+[source, cli]
+----
+vserver active-directory create -vserver <SVM_name> -account-name <NetBIOS_account_name> -domain <domain> -ou <organizational_unit>
+----
++
+从ONTAP 9.161开始、 `-vserver`参数接受管理SVM。有关的详细信息 `vserver active-directory create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-active-directory-create.html["ONTAP 命令参考"^]。
 
 +
-有关的详细信息 `vserver active-directory create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-active-directory-create.html["ONTAP 命令参考"^]。
-
-+
-以下命令会在域"`example.com`" for SVM"`engData`"上创建一个名为"`ADSERVER1`"的计算机帐户。输入命令后，系统将提示您输入 AD 用户帐户凭据。
+以下命令将在SVM的 `engData`域上 `example.com`创建名为的计算机帐户 `ADSERVER1`。输入命令后，系统将提示您输入 AD 用户帐户凭据。
 
 +
 [listing]

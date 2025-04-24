@@ -11,7 +11,7 @@ summary: 您可以使用 system health alert show 命令手动查看系统运行
 
 
 [role="lead"]
-您可以使用手动查看系统运行状况警报 `system health alert show` 命令：但是，您应订阅特定事件管理系统（ EMS ）消息，以便在运行状况监控器生成警报时自动接收通知。
+您可以使用命令手动查看系统运行状况警报 `system health alert show`。但是，您应订阅特定事件管理系统（ EMS ）消息，以便在运行状况监控器生成警报时自动接收通知。有关的详细信息 `system health alert show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/system-health-alert-show.html["ONTAP 命令参考"^]。
 
 .关于此任务
 以下操作步骤介绍了如何为所有 hm.alert.raised 消息和所有 hm.alert.cleared 消息设置通知。
@@ -25,13 +25,20 @@ summary: 您可以使用 system health alert show 命令手动查看系统运行
 ----
 cluster1::> event destination create -name health_alerts -mail admin@example.com
 ----
++
+有关的详细信息 `event destination create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=event+destination+create["ONTAP 命令参考"^]。
+
 . 使用 `event route add-destinations` 用于路由的命令 `hm.alert.raised` 消息和 `hm.alert.cleared` 发送到目标的消息。
 +
 [listing]
 ----
 cluster1::> event route add-destinations -messagename hm.alert* -destinations health_alerts
 ----
++
+有关的详细信息 `event route add-destinations`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=event+route+add-destinations["ONTAP 命令参考"^]。
+
 
 
 .相关信息
-link:../networking/networking_reference.html["网络管理"]
+* link:../networking/networking_reference.html["网络管理"]
+

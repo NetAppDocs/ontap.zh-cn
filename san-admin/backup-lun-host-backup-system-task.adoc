@@ -33,12 +33,18 @@ summary: 您可以使用快照中的克隆LUN作为主机备份系统的源数�
 +
 `lun igroup create -vserver vs3 -igroup igroup3 -protocol fc -ostype windows -initiator 10:00:00:00:c9:73:5b:91`
 
++
+有关的详细信息 `lun igroup create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-igroup-create.html["ONTAP 命令参考"^]。
+
 . 使用 `lun mapping create` 命令将步骤3中创建的LUN克隆映射到备份主机。
 +
 `lun mapping create -vserver vs3 -volume vol3 -lun lun1_backup -igroup igroup3`
 
 +
 您可以选择将此步骤加入到 SAN 备份应用程序的后处理脚本中。
+
++
+有关的详细信息 `lun mapping create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-create.html["ONTAP 命令参考"^]。
 
 . 在主机中，发现新的 LUN 并使文件系统可供主机使用。
 +
@@ -49,9 +55,15 @@ summary: 您可以使用快照中的克隆LUN作为主机备份系统的源数�
 +
 `lun modify -vserver vs3 -path /vol/vol3/lun1_backup -state offline`
 
++
+有关的详细信息 `lun modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-modify.html["ONTAP 命令参考"^]。
+
 . 使用 `lun delete` 删除LUN克隆。
 +
 `lun delete -vserver vs3 -volume vol3 -lun lun1_backup`
+
++
+有关的详细信息 `lun delete`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-delete.html["ONTAP 命令参考"^]。
 
 . 使用 `volume snapshot delete`命令删除快照。
 +

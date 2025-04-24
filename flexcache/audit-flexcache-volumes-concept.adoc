@@ -32,6 +32,7 @@ summary: 从 ONTAP 9.7 开始，您可以使用原生 ONTAP 审核以及通过 F
 +
 ** 尽管对 FlexCache 卷的写入是在原始卷上提交的，但 FPolicy 配置会监控对缓存卷的写入。这一点与原生审核不同，在审核中，会对初始卷上的写入进行审核。
 ** 虽然 ONTAP 不需要对缓存和初始 SVM 进行相同的 FPolicy 配置，但建议您部署两个类似的配置。为此，您可以为缓存创建一个新的 FPolicy 策略，该策略与原始 SVM 的策略配置相似，但新策略的范围仅限于缓存 SVM 。
+** FPolicy配置中的扩展大小限制为20 KB (20480字节)。如果FlexCache卷上FPolicy配置中使用的扩展大小超过20 KB、则会触发EMS消息。 `nblade.fpolicy.extn.failed`
 
 
 
