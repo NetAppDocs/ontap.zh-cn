@@ -140,10 +140,16 @@ MetroCluster环境不支持SnapMirror S3。
 
 创建新存储分段时，您可以通过创建用户和组来控制访问。
 
-虽然SnapMirror S3会将对象从源存储分段复制到目标存储分段、但它不会将组和分段策略从源对象存储复制到目标对象存储。
+虽然SnapMirror S3会将对象从源存储分段复制到目标存储分段、但它不会将用户、组和策略从源对象存储复制到目标对象存储。
 
 必须在目标对象存储上配置用户、组策略、权限和类似组件、以便客户端可以在故障转移事件期间访问目标存储分段。
 
+源用户和目标用户可以使用相同的访问密钥和机密密钥、但前提是在目标集群上创建用户时手动提供了源密钥。例如：
+
+[listing]
+----
+vserver object-store-server user create -vserver svm1 -user user1 -access-key "20-characters" -secret-key "40-characters"
+----
 有关详细信息，请参见以下主题：
 
 * link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组（ System Manager ）"]
