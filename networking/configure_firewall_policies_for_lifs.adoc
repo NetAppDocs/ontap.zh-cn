@@ -48,7 +48,7 @@ summary: 防火墙策略可增强集群的安全性
 
 LIF 防火墙策略用于限制通过每个 LIF 对集群的访问。您需要了解默认防火墙策略如何影响通过每种类型的 LIF 进行的系统访问，以及如何自定义防火墙策略以通过 LIF 提高或降低安全性。
 
-使用配置LIF时 `network interface create` 或 `network interface modify` 命令、即为指定的值 `-firewall-policy` 参数用于确定允许访问LIF的服务协议和IP地址。
+使用或 `network interface modify`命令配置LIF时 `network interface create`、为参数指定的值 `-firewall-policy`将确定允许访问LIF的服务协议和IP地址。有关的详细信息 `network interface`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=network+interface["ONTAP 命令参考"^]。
 
 在许多情况下，您可以接受默认防火墙策略值。在其他情况下，您可能需要限制对某些 IP 地址和某些管理服务协议的访问。可用的管理服务协议包括 SSH ， HTTP ， HTTPS ， Telnet ， NTP ， NDMP ， NDMPS ， RSH ， DNS 和 SNMP 。
 
@@ -191,6 +191,9 @@ ONTAP 9.4 到 ONTAP 9.6 的行为旨在在升级时实现无缝过渡。如果 p
 `network interface modify -vserver _vserver_name_ -lif _lif_name_ -firewall-policy _policy_name_`
 
 . 使用验证是否已将此策略正确添加到LIF `network interface show -fields firewall-policy` 命令：
++
+有关的详细信息 `network interface show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["ONTAP 命令参考"^]。
+
 
 
 .创建防火墙策略并将其分配给LIF的示例

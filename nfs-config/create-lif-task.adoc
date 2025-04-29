@@ -26,6 +26,9 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
 * 您可以在同一网络端口上创建 IPv4 和 IPv6 LIF 。
 * 如果您使用的是 Kerberos 身份验证，请在多个 LIF 上启用 Kerberos 。
 * 如果集群中有大量LIF、则可以使用验证集群上支持的LIF容量 `network interface capacity show` 命令以及每个节点上支持的LIF容量 `network interface capacity details show` 命令(在高级权限级别)。
++
+有关和的 `network interface capacity details show`详细信息 `network interface capacity show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=network+interface+capacity+show["ONTAP 命令参考"^]。
+
 * 从 ONTAP 9.7 开始，如果同一子网中已存在 SVM 的其他 LIF ，则无需指定 LIF 的主端口。ONTAP 会自动在与已在同一子网中配置的其他 LIF 位于同一广播域的指定主节点上选择一个随机端口。
 
 
@@ -44,6 +47,10 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
 `network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _IP_address_ | -subnet-name _subnet_name_} -firewall-policy data -auto-revert {true|false}`
 
 +
+有关的详细信息 `network interface create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-create.html["ONTAP 命令参考"^]。
+
+
+
 |===
 
 
@@ -63,21 +70,23 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
 `network interface create -vserver _vserver_name_ -lif _lif_name_ -role data -data-protocol nfs -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _IP_address_ | -subnet-name _subnet_name_} -firewall-policy data -auto-revert {true|false}`
 
 |===
-+
-** 。 `-role` 使用服务策略创建LIF时不需要参数(从ONTAP 9.6开始)。
-** 。 `-data-protocol` 必须在创建LIF时指定参数、如果不销毁并重新创建数据LIF、则以后无法修改此参数。
+* 。 `-role` 使用服务策略创建LIF时不需要参数(从ONTAP 9.6开始)。
+* 。 `-data-protocol` 必须在创建LIF时指定参数、如果不销毁并重新创建数据LIF、则以后无法修改此参数。
 +
 。 `-data-protocol` 使用服务策略创建LIF时不需要参数(从ONTAP 9.6开始)。
 
-** `-home-node` 是LIF返回到的节点 `network interface revert` 命令将在LIF上运行。
+* `-home-node` 是LIF返回到的节点 `network interface revert` 命令将在LIF上运行。
 +
 您还可以使用指定LIF是否应自动还原到主节点和主端口 `-auto-revert` 选项
 
-** `-home-port` 是LIF返回到的物理或逻辑端口 `network interface revert` 命令将在LIF上运行。
-** 您可以使用指定IP地址 `-address` 和 `-netmask` 选项、或者使用启用从子网分配 `-subnet_name` 选项
-** 使用子网提供 IP 地址和网络掩码时，如果使用网关定义了子网，则在使用该子网创建 LIF 时，系统会自动向 SVM 添加指向该网关的默认路由。
-** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。有关在SVM中创建静态路由的详细信息 `network route create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-route-create.html["ONTAP 命令参考"^]。
-** 。 `-firewall-policy` 选项中、使用相同的默认值 `data` 作为LIF角色。
++
+有关的详细信息 `network interface revert`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-revert.html["ONTAP 命令参考"^]。
+
+* `-home-port` 是LIF返回到的物理或逻辑端口 `network interface revert` 命令将在LIF上运行。
+* 您可以使用指定IP地址 `-address` 和 `-netmask` 选项、或者使用启用从子网分配 `-subnet_name` 选项
+* 使用子网提供 IP 地址和网络掩码时，如果使用网关定义了子网，则在使用该子网创建 LIF 时，系统会自动向 SVM 添加指向该网关的默认路由。
+* 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。有关在SVM中创建静态路由的详细信息 `network route create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-route-create.html["ONTAP 命令参考"^]。
+* 。 `-firewall-policy` 选项中、使用相同的默认值 `data` 作为LIF角色。
 +
 如果需要，您可以稍后创建和添加自定义防火墙策略。
 
@@ -85,11 +94,10 @@ LIF 是指与物理或逻辑端口关联的 IP 地址。如果组件出现故障
 
 NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF服务策略。有关详细信息，请参见 link:../networking/configure_firewall_policies_for_lifs.html["为 LIF 配置防火墙策略"]。
 
-** `-auto-revert` 用于指定在启动、更改管理数据库状态或建立网络连接等情况下、数据LIF是否自动还原到其主节点。默认设置为 `false`，但您可以将其设置为 `false` 具体取决于您环境中的网络管理策略。
-
-
-. 使用验证是否已成功创建LIF `network interface show` 命令：
-. 验证配置的 IP 地址是否可访问：
+* `-auto-revert` 用于指定在启动、更改管理数据库状态或建立网络连接等情况下、数据LIF是否自动还原到其主节点。默认设置为 `false`，但您可以将其设置为 `false` 具体取决于您环境中的网络管理策略。
++
+.. 使用验证是否已成功创建LIF `network interface show` 命令：
+.. 验证配置的 IP 地址是否可访问：
 +
 |===
 
@@ -110,9 +118,11 @@ IPv6地址
 `network ping6`
 
 |===
-. 如果使用的是 Kerberos ，请重复步骤 1 到 3 以创建其他 LIF 。
+.. 如果使用的是 Kerberos ，请重复步骤 1 到 3 以创建其他 LIF 。
 +
 必须在每个 LIF 上单独启用 Kerberos 。
+
+
 
 
 
@@ -163,4 +173,5 @@ network interface create -vserver vs1 -lif lif2 -home-node node2 -homeport e0d -
 ----
 .相关信息
 * link:https://docs.netapp.com/us-en/ontap-cli/network-ping.html["网络 ping"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=network+interface["网络接口"^]
 

@@ -71,9 +71,15 @@ summary: '本文介绍如何将LIF (网络接口)配置为支持RDMA。'
 .命令行界面
 --
 . 您可以使用检查您的生命周期管理器的状态 `network interface show` 命令：服务策略必须包含 data-nfs 网络接口服务。。 `-rdma-protocols` 列表应包括 `roce`。如果上述任一条件不正确，请修改 LIF 。
++
+有关的详细信息 `network interface show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["ONTAP 命令参考"^]。
+
 . 要修改 LIF ，请运行：
 +
 `network interface modify vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port _port_name_ {-address _IP_address_ -netmask _netmask_value_ | -subnet-name _subnet_name_} -firewall-policy _policy_name_ -auto-revert {true|false} -rdma-protocols roce`
+
++
+有关的详细信息 `network interface modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-modify.html["ONTAP 命令参考"^]。
 
 
 
@@ -97,7 +103,7 @@ NOTE: 如果当前未将 LIF 分配给支持该协议的端口，则修改 LIF �
 
 有关迁移网络接口的详细信息、请参见 xref:../networking/migrate_a_lif.html[迁移 LIF]。
 
-.更多信息
+.相关信息
 * xref:../networking/create_a_lif.html[创建 LIF]
 * xref:../networking/create_a_lif.html[创建 LIF]
 * xref:../networking/modify_a_lif.html[修改 LIF]
