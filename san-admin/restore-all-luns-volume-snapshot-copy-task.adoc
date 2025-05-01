@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: restore, all, luns in a volume, from, snapshot copy 
 summary: 您可以使用volume Snapshot restore命令从快照还原指定卷中的所有LUN。 
 ---
-= 从快照还原卷中的所有LUN
+= 从ONTAP快照还原卷中的所有LUN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -21,49 +21,54 @@ summary: 您可以使用volume Snapshot restore命令从快照还原指定卷中
 . 卸载该主机上的 LUN ，使该主机无法访问这些 LUN 。
 . 取消映射 LUN ：
 +
-`lun mapping delete -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
-
-+
-有关的详细信息 `lun mapping delete`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-delete.html["ONTAP 命令参考"^]。
-
+[source, cli]
+----
+lun mapping delete -vserver <SVM_name> -volume <volume_name> -lun <lun_name> -igroup <igroup_name>
+----
 . 确定要将卷还原到的快照：
 +
-`volume snapshot show -vserver _vserver_name_ -volume _volume_name_`
+[source, cli]
+----
+volume snapshot show -vserver <SVM_name> -volume <volume_name>
 
+----
 . 将权限设置更改为高级：
 +
-`set -privilege advanced`
-
+[source, cli]
+----
+set -privilege advanced
+----
 . 还原数据：
 +
-`volume snapshot restore -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
-
+[source, cli]
+----
+volume snapshot restore -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot_name>
+----
 . 按照屏幕上的说明进行操作。
 . 重新映射 LUN ：
 +
-`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
-
-+
-有关的详细信息 `lun mapping create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-create.html["ONTAP 命令参考"^]。
-
+[source, cli]
+----
+lun mapping create -vserver <SVM_name> -volume <volume_name> -lun <lun_name> -igroup <igroup_name>
+----
 . 验证 LUN 是否联机：
 +
-`lun show -vserver _vserver_name_ -path _lun_path_ -fields state`
-
-+
-有关的详细信息 `lun show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["ONTAP 命令参考"^]。
-
+[source, cli]
+----
+lun show -vserver <SVM_name> -path <lun_path> -fields state
+----
 . 如果 LUN 未联机，请将其联机：
 +
-`lun modify -vserver _vserver_name_ -path _lun_path_ -state online`
-
-+
-有关的详细信息 `lun modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-modify.html["ONTAP 命令参考"^]。
-
+[source, cli]
+----
+lun modify -vserver <SVM_name> -path <lun_path> -state online
+----
 . 将权限设置更改为 admin ：
 +
-`set -privilege admin`
-
+[source, cli]
+----
+set -privilege admin
+----
 . 从主机重新挂载 LUN 。
 . 从主机重新启动对 LUN 的访问。
 

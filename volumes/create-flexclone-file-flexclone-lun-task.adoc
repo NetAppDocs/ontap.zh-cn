@@ -31,8 +31,14 @@ summary: 您可以为FlexVol或FlexClone卷中的文件和LUN创建节省空间�
 
 当节点达到其最大分摊负载时、该节点会暂时停止接受创建FlexClone文件和FlexClone LUN的请求、并发出 `EBUSY` 错误消息。当节点的分摊负载降至最大值以下时，该节点将再次接受创建 FlexClone 文件和 FlexClone LUN 的请求。您应等待节点具有创建克隆的容量，然后再重试创建请求。
 
+FlexClone LUN 会继承父 LUN 的空间预留属性。预留了空间的 FlexClone LUN 所需的空间与预留了空间的父 LUN 所需的空间相同。如果 FlexClone LUN 未预留空间，则卷必须具有足够的空间来容纳对克隆所做的更改。
+
 .步骤
-. 使用创建FlexClone文件或FlexClone LUN `volume file clone create` 命令：
+. 如果要克隆LUN、请验证此LUN是否未映射或未写入。
+. 创建FlexClone LUN或文件：
++
+`volume file clone create -vserver _vserver_name_ -volume _volume_name_ -source-path _source_path_ -destination-path _destination_path_`
+
 +
 以下示例显示了如何为卷 vol1 中的父文件 file1_source 创建 FlexClone 文件 file1_clone ：
 
@@ -46,5 +52,45 @@ cluster1::> volume file clone create -vserver vs0 -volume vol1 -source-path /fil
 
 
 
-.相关信息
-link:../concepts/manual-pages.html["ONTAP 命令参考"]
+
+
+== 从卷中的快照创建FlexClone LUN
+
+您可以使用卷中的快照创建LUN的FlexClone副本。LUN 的 FlexClone 副本既可读，也可写。
+
+.您需要的内容
+必须安装 FlexClone 许可证。此许可证包含在中link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
+
+.关于此任务
+FlexClone LUN 会继承父 LUN 的空间预留属性。预留了空间的 FlexClone LUN 所需的空间与预留了空间的父 LUN 所需的空间相同。如果 FlexClone LUN 未预留空间，则卷必须具有足够的空间来容纳对克隆所做的更改。
+
+.步骤
+. 验证 LUN 是否未映射或未写入。
+. 为包含LUN的卷创建快照：
++
+`volume snapshot create -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
+
++
+您必须为要克隆的LUN创建一个快照(备份快照)。
+
+. 从快照创建FlexClone LUN：
++
+`volume file clone create -vserver _vserver_name_ -volume _volume_name_ -source-path _source_path_ -snapshot-name _snapshot_name_ -destination-path _destination_path_`
+
++
+如果您需要FlexClone LUN可用于自动删除、可以包括 `-autodelete true`。如果要在使用半厚配置的卷中创建此 FlexClone LUN ，则必须为所有 FlexClone LUN 启用自动删除。
+
+. 验证 FlexClone LUN 是否正确：
++
+`lun show -vserver _vserver_name_`
+
++
+[listing]
+----
+
+Vserver Path                      State    Mapped    Type     Size
+------- ----------------------    -------- --------- -------- -------
+vs1     /vol/vol1/lun1_clone      online   unmapped windows   47.07MB
+vs1     /vol/vol1/lun1_snap_clone online   unmapped windows   47.07MB
+----
+

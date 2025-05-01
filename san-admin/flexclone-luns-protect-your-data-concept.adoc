@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: use, flexclone, luns, protect, your, data 
 summary: FlexClone LUN是活动卷或快照中另一个LUN的可写时间点副本。可以独立修改克隆及其父级，而不会彼此影响。 
 ---
-= 使用 FlexClone LUN 保护您的数据概览
+= 使用ONTAP FlexClone LUN保护数据
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -12,6 +12,16 @@ summary: FlexClone LUN是活动卷或快照中另一个LUN的可写时间点副�
 
 [role="lead"]
 FlexClone LUN是活动卷或快照中另一个LUN的可写时间点副本。可以独立修改克隆及其父级，而不会彼此影响。
+
+您可以使用 FlexClone LUN 为 LUN 创建多个读 / 写副本。
+
+.创建FlexClone LUN的原因
+* 您需要为 LUN 创建一个临时副本以供测试。
+* 您需要为其他用户提供一份数据副本，而无需授予他们对生产数据的访问权限。
+* 您希望创建数据库的克隆以供操作和预测操作，同时以未更改的形式保留原始数据。
+* 要访问 LUN 数据的特定子集（卷组中的特定逻辑卷或文件系统， 或文件系统中的特定文件或文件集）并将其复制到原始 LUN ，而不还原原始 LUN 中的其余数据。这适用于支持同时挂载 LUN 和 LUN 克隆的操作系统。适用于UNIX的SnapDrive支持通过使用此功能 `snap connect` 命令：
+* 您需要使用多个具有相同操作系统的 SAN 启动主机。
+
 
 FlexClone LUN 最初与其父 LUN 共享空间。默认情况下， FlexClone LUN 会继承父 LUN 的空间预留属性。例如，如果父 LUN 未预留空间，则默认情况下， FlexClone LUN 也未预留空间。但是，您可以从作为空间预留 LUN 的父级创建未预留空间的 FlexClone LUN 。
 
@@ -27,4 +37,7 @@ FlexClone LUN 最初与其父 LUN 共享空间。默认情况下， FlexClone LU
 
 ====
 .相关信息
-link:../volumes/index.html["逻辑存储管理"]
+* link:../volumes/create-flexclone-file-flexclone-lun-task.html["创建FlexClone LUN"]
+* link:../volumes/configure-flexvol-delete-flexclone-files-luns-task.html["配置FlexVol volume以自动删除FlexClone LUN"]
+* link:../volumes/prevent-flexclone-file-lun-automatic-deleted-task.html["防止自动删除FlexClone LUN"]
+

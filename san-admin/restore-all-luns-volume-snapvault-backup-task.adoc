@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ontap 9.2, restore, luns, in a volume, snapvault, backup 
 summary: 如果需要从 SnapVault 备份还原卷中的一个或多个 LUN ，则可以还原整个卷。还原卷会影响卷中的所有 LUN 。 
 ---
-= 从 SnapVault 备份还原卷中的所有 LUN
+= 从ONTAP SnapVault备份还原卷中的所有LUN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -23,7 +23,12 @@ summary: 如果需要从 SnapVault 备份还原卷中的一个或多个 LUN ，�
 
 .步骤
 . 停止卷中所有 LUN 的 I/O 。
-. 运行 `snapmirror show` 命令以验证包含SnapVault二级卷的二级卷。
+. 验证包含SnapVault二级卷的二级卷。
++
+[source, cli]
+----
+snapmirror show
+----
 +
 [listing]
 ----
@@ -37,7 +42,12 @@ vserverA:srcvolA
                         Snapmirrored
                                 Idle       -         true    -
 ----
-. 运行 `volume snapshot show`命令以确定要从中还原的快照。
+. 确定要从中还原的快照。
++
+[source, cli]
+----
+volume snapshot show
+----
 +
 [listing]
 ----
@@ -51,7 +61,12 @@ vserverB
                  snap1.2013-02-10_0015 valid  112KB     0%    0%
                  snap2.2013-02-11_0010  valid  164KB     0%    0%
 ----
-. 运行 `snapmirror restore`命令并指定 `-source-snapshot`用于指定要使用的快照的选项。
+. 指定要使用的快照。
++
+[source, cli]
+----
+snapmirror restore -destination-path <destination_path> -source-path <source_path> -source-snapshot <snapshot_name>
+----
 +
 为还原指定的目标是要还原到的原始卷。
 
@@ -116,5 +131,3 @@ vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
 6 entries were displayed.
 ----
 从 SnapVault 二级卷还原卷后，源卷不再包含 LUN_D还原后，您无需重新映射源卷中的 LUN ，因为它们仍处于映射状态。
-
-有关的详细信息 `lun show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["ONTAP 命令参考"^]。

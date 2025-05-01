@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: restore, single lun, snapshot copy 
 summary: 您可以从快照还原单个LUN、而无需还原包含单个LUN的整个卷。您可以将 LUN 还原到原位，也可以将其还原到卷中的新路径。此操作仅还原单个 LUN ，而不会影响卷中的其他文件或 LUN 。您还可以使用流还原文件。 
 ---
-= 从快照还原单个LUN
+= 从ONTAP快照还原单个LUN
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -40,38 +40,41 @@ summary: 您可以从快照还原单个LUN、而无需还原包含单个LUN的�
 . 卸载主机上的 LUN ，使主机无法访问此 LUN 。
 . 取消映射 LUN ：
 +
-`lun mapping delete -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
-
-+
-有关的详细信息 `lun mapping delete`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-delete.html["ONTAP 命令参考"^]。
-
+[source, cli]
+----
+lun mapping delete -vserver <SVM_name> -volume <volume_name> -lun <lun_name> -igroup <igroup_name>
+----
 . 确定要将LUN还原到的快照：
 +
-`volume snapshot show -vserver _vserver_name_ -volume _volume_name_`
-
+[source, cli]
+----
+volume snapshot show -vserver <SVM_name> -volume <volume_name>
+----
 . 在还原LUN之前创建LUN的快照：
 +
-`volume snapshot create -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_`
-
+[source, cli]
+----
+volume snapshot create -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot_name>
+----
 . 还原卷中的指定 LUN ：
 +
-`volume snapshot restore-file -vserver _vserver_name_ -volume _volume_name_ -snapshot _snapshot_name_ -path _lun_path_`
-
+[source, cli]
+----
+volume snapshot restore-file -vserver <SVM_name> -volume <volume_name> -snapshot <snapshot_name> -path <lun_path>
+----
 . 按照屏幕上的步骤进行操作。
 . 如有必要，将 LUN 置于联机状态：
 +
-`lun modify -vserver _vserver_name_ -path _lun_path_ -state online`
-
-+
-有关的详细信息 `lun modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-modify.html["ONTAP 命令参考"^]。
-
+[source, cli]
+----
+lun modify -vserver <SVM_name> -path <lun_path> -state online
+----
 . 如有必要，请重新映射 LUN ：
 +
-`lun mapping create -vserver _vserver_name_ -volume _volume_name_ -lun _lun_name_ -igroup _igroup_name_`
-
-+
-有关的详细信息 `lun mapping create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-mapping-create.html["ONTAP 命令参考"^]。
-
+[souce]
+----
+lun mapping create -vserver <SVM_name> -volume <volume_name> -lun <lun_name> -igroup <igroup_name>
+----
 . 从主机重新挂载 LUN 。
 . 从主机重新启动对 LUN 的访问。
 

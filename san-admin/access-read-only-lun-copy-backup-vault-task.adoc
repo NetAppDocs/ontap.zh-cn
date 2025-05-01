@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: access, read-only, lun, copy, snapvault, backup 
 summary: 您可以从SnapVault备份中的最新快照访问LUN的只读副本。LUN ID ，路径和序列号与源 LUN 不同，必须先映射。永久性预留， LUN 映射和 igroup 不会复制到 SnapVault 二级卷。 
 ---
-= 从 SnapVault 备份访问只读 LUN 副本
+= 从ONTAP SnapVault备份访问只读LUN副本
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -26,7 +26,12 @@ summary: 您可以从SnapVault备份中的最新快照访问LUN的只读副本�
 如果在从上一个快照映射LUN的情况下向SnapVault二级卷添加了新快照、则映射的LUN的内容会发生更改。LUN仍会使用相同的标识符进行映射、但数据会从新快照中获取。如果 LUN 大小发生变化，则某些主机会自动检测到大小变化； Windows 主机需要重新扫描磁盘才能检测到任何大小变化。
 
 .步骤
-. 运行 `lun show` 命令以列出SnapVault二级卷中的可用LUN。
+. 列出SnapVault二级卷中的可用LUN。
++
+[source, cli]
+----
+lun show
+----
 +
 在此示例中，您可以看到主卷 srcvolA 中的原始 LUN 以及 SnapVault 二级卷 dstvolB 中的副本：
 
@@ -49,7 +54,12 @@ vserverB  /vol/dstvolB/lun_C  online  unmapped windows  300.0GB
 +
 有关的详细信息 `lun show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/lun-show.html["ONTAP 命令参考"^]。
 
-. 如果包含SnapVault二级卷的SVM上尚不存在所需主机的igrop、请运行 `igroup create` 命令以创建igroup。
+. 如果包含SnapVault二级卷的SVM上尚不存在所需主机的igroup、请创建一个igroup。
++
+[source, cli]
+----
+igroup create -vserver <SVM_name> -igroup <igroup_name> -protocol <protocol> -ostype <ostype> -initiator <initiator_name>
+----
 +
 此命令将为使用 iSCSI 协议的 Windows 主机创建一个 igroup ：
 
@@ -60,7 +70,12 @@ cluster::> igroup create -vserver vserverB -igroup temp_igroup
   -protocol iscsi -ostype windows
   -initiator iqn.1991-05.com.microsoft:hostA
 ----
-. 运行 `lun mapping create` 命令将所需的LUN副本映射到igrop。
+. 将所需的LUN副本映射到igrop。
++
+[source, cli]
+----
+lun mapping create -vserver <SVM_name> -path <LUN_path> -igroup <igroup_name>
+----
 +
 [listing]
 ----
