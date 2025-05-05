@@ -1,7 +1,7 @@
 ---
 permalink: volumes/storage-efficiency-behavior-snapmirror-reference.html 
 sidebar: sidebar 
-keywords: storage, efficiency, temperature, change, efficient, snapmirror, volume, move 
+keywords: storage, fabricpool, efficiency, temperature, change, efficient, snapmirror, volume, move 
 summary: 其他处于活动状态或同时启动的存储操作可能会影响存储效率行为。 
 ---
 = 卷移动和SnapMirror操作的存储效率行为
@@ -13,7 +13,15 @@ summary: 其他处于活动状态或同时启动的存储操作可能会影响�
 [role="lead"]
 其他处于活动状态或同时启动的存储操作可能会影响存储效率的行为。您应了解这些操作对存储效率的影响。
 
-在多种情况下、卷上的存储效率可能会受到其他操作的影响。这包括在执行卷移动或SnapMirror操作时以及在执行SnapMirror中断并手动启用温度敏感型存储效率(T(SSE)时会发生什么情况、具体取决于源卷上的效率类型。
+在多种情况下，卷上的存储效率可能会受到其他操作的影响，包括卷移动、SnapMirror关系、FabricPool卷和link:enable-temperature-sensitive-efficiency-concept.html["温度敏感型存储效率(T(SSE))"]。
+
+
+
+== FabricPool
+
+ `all`数据保护卷上通常使用分层策略来立即将数据标记为冷数据并尽快对其进行分层。无需等待最短天数、即可将数据创建为冷数据并进行分层。
+
+由于 `all`分层策略会尽快对数据进行分层、因此依赖于后台进程(如32K高效自适应数据压缩(T(SSE)))的存储效率没有足够的时间来应用。实时存储效率(如8K数据压缩)将照常应用。
 
 下表介绍了执行其中一项操作时源卷和目标卷的行为。
 

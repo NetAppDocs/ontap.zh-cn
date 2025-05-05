@@ -2,7 +2,7 @@
 permalink: nfs-admin/create-volumes-specified-junction-task.html 
 sidebar: sidebar 
 keywords: create, data, volume, specify, junction, point 
-summary: 您可以在创建数据卷时指定接合点。生成的卷会自动挂载在接合点，并可立即配置用于 NAS 访问。 
+summary: 创建一个数据卷、以便该卷自动挂载在接合点、并可立即配置为可进行NAS访问。 
 ---
 = 在ONTAP中创建具有指定接合点的数据卷
 :allow-uri-read: 
@@ -22,16 +22,17 @@ summary: 您可以在创建数据卷时指定接合点。生成的卷会自动�
 
 
 
-NOTE: 接合路径中不能使用以下字符： * # " > < | ？\
+NOTE: 接合路径中不能使用以下字符： `*` `#` `"` `>` `<` `|` `?` `\`
 
-+
 此外，接合路径长度不能超过 255 个字符。
 
 .步骤
 . 创建具有接合点的卷：
 +
-`volume create -vserver _vserver_name_ -volume _volume_name_ -aggregate _aggregate_name_ -size {integer[KB|MB|GB|TB|PB]} -security-style {ntfs|unix|mixed} -junction-path _junction_path_`
-
+[source, cli]
+----
+volume create -vserver <vserver_name> -volume <volume_name> -aggregate <aggregate_name> -size {integer[KB|MB|GB|TB|PB]} -security-style {ntfs|unix|mixed} -junction-path <junction_path>
+----
 +
 接合路径必须以根（ / ）开头，并且可以同时包含目录和接合卷。接合路径不需要包含卷的名称。接合路径与卷名称无关。
 
@@ -46,12 +47,14 @@ NOTE: 接合路径中不能使用以下字符： * # " > < | ？\
 
 . 验证是否已使用所需的接合点创建卷：
 +
-`volume show -vserver _vserver_name_ -volume _volume_name_ -junction`
-
+[source, cli]
+----
+volume show -vserver <vserver_name> -volume <volume_name> -junction
+----
 
 
 .示例
-以下示例将在` SVM VS1上创建一个具有接合路径的名为"`home"的卷 `/eng/home`：
+以下示例将在SVM VS1上创建一个名为的卷、此卷 `home4`的接合路径为 `/eng/home`：
 
 [listing]
 ----
