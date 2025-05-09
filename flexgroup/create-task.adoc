@@ -2,7 +2,7 @@
 permalink: flexgroup/create-task.html 
 sidebar: sidebar 
 keywords: create, flexgroup, volume, flex group, aggregate, fabricpool, fabric pool 
-summary: 您可以通过手动选择必须创建 FlexGroup 卷的聚合，然后指定每个聚合上的成分卷数来创建 FlexGroup 卷。 
+summary: '您可以通过手动选择要创建FlexGroup卷的本地层(聚合)、然后指定每个本地层上的成员卷数来创建FlexGroup卷。' 
 ---
 = 创建ONTAP FlexGroup卷
 :allow-uri-read: 
@@ -11,33 +11,35 @@ summary: 您可以通过手动选择必须创建 FlexGroup 卷的聚合，然后
 
 
 [role="lead"]
-您可以通过手动选择必须创建 FlexGroup 卷的聚合，然后指定每个聚合上的成分卷数来创建 FlexGroup 卷。
+要创建FlexGroup卷、可以手动选择必须创建FlexGroup卷的本地层(聚合)、然后指定每个本地层上的成员卷(成分卷)数量。
+
+或者、您也可以选择通过选择本地层并让ONTAP根据最佳实践设置成员卷数来为FlexGroup卷创建ONTAPlink:provision-automatically-task.html["自动配置"]、以实现最佳性能和容量。
 
 .关于此任务
-您必须了解聚合中创建 FlexGroup 卷所需的空间。
+您必须了解创建FlexGroup卷所需的本地层空间。
 
 创建 FlexGroup 卷时，要获得使用 FlexGroup 卷的最佳性能结果，必须考虑以下准则：
 
-* FlexGroup 卷只能跨越相同硬件系统上的聚合。
+* FlexGroup卷应使用位于相同硬件系统上的本地层。
 +
 使用相同的硬件系统有助于在 FlexGroup 卷中提供可预测的性能。
 
-* FlexGroup 卷应跨越具有相同磁盘类型和 RAID 组配置的聚合。
+* FlexGroup卷应使用相同的磁盘类型和RAID组配置跨越本地层。
 +
-为了获得一致的性能，您必须确保所有聚合都由所有 SSD ，所有 HDD 或所有混合聚合组成。此外，聚合应在 FlexGroup 卷中具有相同数量的驱动器和 RAID 组。
+要获得稳定一致的性能、必须确保所有本地层均由所有SSD、所有HDD或全闪存池(混合)本地层组成。此外、本地层应在整个FlexGroup卷中具有相同数量的驱动器和RAID组。
 
 * FlexGroup 卷可以跨越集群的一部分。
 +
 不必将 FlexGroup 卷配置为跨越整个集群，但这样做可以更好地利用可用的硬件资源。
 
-* 创建 FlexGroup 卷时，部署 FlexGroup 卷的聚合最好具有以下特征：
+* 创建FlexGroup卷时、部署FlexGroup卷的本地层最好具有以下特征：
 +
-** 多个聚合应具有大致相同的可用空间量，尤其是在使用精简配置时。
-** 创建 FlexGroup 卷后，应为聚合元数据预留大约 3% 的可用空间。
+** 在多个本地层中、可用空间量应大致相同、尤其是在使用精简配置时。
+** 创建FlexGroup卷后、应预留大约3%的可用空间用于本地层元数据。
 
 
-* 对于 FAS 系统，每个节点最好有两个聚合；对于 AFF 系统， FlexGroup 卷每个节点必须有一个聚合。
-* 对于每个 FlexGroup 卷，应至少创建八个成分卷，这些成分卷分布在 FAS 系统上的两个或更多聚合上，以及 AFF 系统上的一个或多个聚合上。
+* 对于FAS系统、每个节点最好有两个本地层；对于AFF系统、每个节点必须有一个FlexGroup卷本地层。
+* 对于每个FlexGroup卷、应至少创建八个成员卷、这些卷分布在FAS系统上的两个或更多本地层以及AFF系统上的一个或多个本地层上。
 
 
 .开始之前
@@ -48,23 +50,21 @@ summary: 您可以通过手动选择必须创建 FlexGroup 卷的聚合，然后
 
 
 .步骤
-. 创建FlexGroup卷： `volume create -vserver svm_name -volume flexgroup_name -aggr-list aggr1,aggr2,.. -aggr-list-multiplier constituents_per_aggr -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name]`
+. 创建FlexGroup卷： `volume create -vserver svm_name -volume flexgroup_name -aggr-list aggr1,aggr2,.. -aggr-list-multiplier constituents_per_aggr -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-granular-data advanced]`
 +
-** 。 `-aggr-list` 参数用于指定要用于FlexGroup卷成分卷的聚合列表。
+**  `-aggr-list`参数用于指定要用于FlexGroup成员卷的本地层列表。
 +
-列表中的每个条目都会在指定聚合上创建一个成分卷。您可以多次指定一个聚合，以便在该聚合上创建多个成分卷。
+要在FlexGroup卷之间保持性能一致、所有本地层都必须使用相同的磁盘类型和RAID组配置。
 
-+
-为了在整个 FlexGroup 卷中保持性能一致，所有聚合都必须使用相同的磁盘类型和 RAID 组配置。
-
-** 。 `-aggr-list-multiplier` 参数用于指定迭代随一起列出的聚合的次数 `-aggr-list` 参数FlexGroup。
+**  `-aggr-list-multiplier`参数用于指定要在使用参数列出的每个本地层上创建的成员卷的数量 `-aggr-list`。
 +
 的默认值 `-aggr-list-multiplier` 参数为4。
 
 ** 。 `size` 参数用于指定FlexGroup卷的大小(以KB、MB、GB、TB或PB为单位)。
-** 从 ONTAP 9.5 开始，您可以为 FabricPool 创建 FlexGroup 卷，此卷仅使用所有 SSD 聚合。
+** 从ONTAP 9.161开始、您可以 (`-granular-data advanced`在命令行界面中启用link:../enable-adv-capacity-flexgroup-task.html["高级容量平衡"])、以便在文件大于10 GB时跨多个FlexGroup成员卷写入数据。
+** 从ONTAP 9.5开始、您可以使用启用了FabricPool的本地层创建FlexGroup卷。
 +
-要为FabricPool创建FlexGroup卷、请使用指定的所有聚合 `-aggr-list` 参数必须为FabricPool。卷保证必须始终设置为 `none` 适用于FabricPool。您还可以为 FlexGroup 卷指定分层策略和分层最小冷却期。
+要为FabricPool创建FlexGroup卷、使用参数指定的所有本地层都 `-aggr-list`必须启用FabricPool。使用FabricPool时、卷保证必须始终设置为 `none`。您还可以为 FlexGroup 卷指定分层策略和分层最小冷却期。
 
 +
 xref:../disks-aggregates/index.html[磁盘和聚合管理]
@@ -101,7 +101,7 @@ Do you want to continue? {y|n}: y
 ----
 
 
-在上一示例中，如果要为 FabricPool 创建 FlexGroup 卷，则所有聚合（ aggr1 ， aggr2 和 aggr3 ）都必须是 FabricPool 中的聚合。使用接合路径挂载FlexGroup卷： `volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
+在上一示例中、如果要为FabricPool创建FlexGroup卷、则所有本地层(aggr1、aggr2和aggr3)都必须启用FabricPool。使用接合路径挂载FlexGroup卷： `volume mount -vserver vserver_name -volume vol_name -junction-path junction_path`
 
 [listing]
 ----

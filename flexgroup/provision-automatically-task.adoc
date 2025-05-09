@@ -2,7 +2,7 @@
 permalink: flexgroup/provision-automatically-task.html 
 sidebar: sidebar 
 keywords: provision, flexgroup, volume, automatic, create, flex group, aggregate, space 
-summary: 创建FlexGroup卷时、您可以通过自动选择聚合来选择让ONTAP配置FlexGroup卷。为了获得最佳性能，系统会根据最佳实践选择聚合。 
+summary: '创建FlexGroup卷时、您可以通过自动选择本地层(聚合)来选择让ONTAP配置FlexGroup卷。为了获得最佳性能、我们会根据最佳实践选择本地层。' 
 ---
 = 自动配置ONTAP FlexGroup卷
 :allow-uri-read: 
@@ -11,28 +11,31 @@ summary: 创建FlexGroup卷时、您可以通过自动选择聚合来选择让ON
 
 
 [role="lead"]
-创建FlexGroup卷时、您可以通过选择聚合来选择让ONTAP自动配置FlexGroup卷。聚合会根据最佳实践进行选择、以获得最佳性能和容量。
+创建FlexGroup卷时、您可以通过选择底层本地层(聚合)来选择让ONTAP自动配置FlexGroup卷。我们会根据最佳实践选择本地层、以获得最佳性能和容量。
 
 .开始之前
-集群中的每个节点必须至少有一个聚合。
+集群中的每个节点必须至少具有一个本地层。
 
 [NOTE]
 ====
-要在 ONTAP 9.5 中为 FabricPool 创建 FlexGroup 卷，每个节点必须至少有一个 FabricPool 聚合。
+创建要对非活动数据进行分层的FlexGroup卷时、每个节点必须至少有一个启用了FabricPool的本地层。
 
 ====
 .关于此任务
-ONTAP 会在每个节点上选择两个可用空间最大的聚合来创建 FlexGroup 卷。如果两个聚合不可用，则 ONTAP 会为每个节点选择一个聚合来创建 FlexGroup 卷。
+ONTAP会在每个节点上选择可用空间量最大的两个本地层来创建FlexGroup卷。如果两个本地层不可用、则ONTAP会为每个节点选择一个本地层来创建FlexGroup卷。
 
-从ONTAP 9.15.1开始、在自动配置FlexGroup卷时、ONTAP会使用平衡放置(Balanced Placement、BP)来选择聚合和FlexGroup成分卷布局。BP的一个方面是、它如何在创建"无"保证的FlexGroup卷时限制过度配置聚合。整个FlexGroup卷的大小受聚合上可用空间量的限制、但该限制高于"卷"保证的FlexGroup卷。使用REST API或ONTAP命令行界面创建FlexGroup卷时 `auto-provision-as` 、由于此限制导致空间不足、配置可能会失败。您可以通过创建较小的FlexGroup卷或使用参数来避免这种情况 link:create-task.html["创建FlexGroup卷并手动选择聚合"] `aggr-list` 。
+从ONTAP 9.15.1开始、在自动配置FlexGroup卷时、ONTAP会使用平衡放置(Balanced Placement、BP)来选择本地层和FlexGroup成员(成分卷)卷布局。BP的一个方面是、在创建"无"保证(精简配置) FlexGroup卷时、它如何限制过度配置本地层。整个FlexGroup卷的大小受本地层上可用空间量的限制、尽管该限制高于"卷"保证的(厚配置) FlexGroup卷。使用REST API或ONTAP命令行界面创建FlexGroup卷时 `auto-provision-as` 、由于此限制导致空间不足、配置可能会失败。您可以通过创建较小的FlexGroup卷或使用参数来避免这种情况 link:create-task.html["手动创建FlexGroup卷并选择本地层"] `aggr-list` 。
 
 .步骤
 . 配置 FlexGroup 卷：
 +
-`volume create -vserver svm_name -volume fg_vol_name –auto-provision-as flexgroup -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-support-tiering true]`
+`volume create -vserver svm_name -volume fg_vol_name –auto-provision-as flexgroup -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-support-tiering true] [-granular-data advanced]`
 
 +
-从ONTAP 9.5开始、您可以为FabricPool 创建FlexGroup 卷。要在FabricPool上自动配置FlexGroup卷、必须设置 `-support-tiering` 参数设置为 `true`。卷保证必须始终设置为 `none` 适用于FabricPool。您还可以为 FlexGroup 卷指定分层策略和分层最小冷却期。
+从ONTAP 9.161开始、您可以 (`-granular-data advanced`在命令行界面中启用link:../enable-adv-capacity-flexgroup-task.html["高级容量平衡"])、以便在文件大于10 GB时跨多个FlexGroup成员卷写入数据。
+
++
+从ONTAP 9.5开始、您可以在启用了FabricPool的本地层上创建FlexGroup卷。要在启用了FabricPool的情况下在本地层上自动配置FlexGroup卷，必须将参数设置 `-support-tiering`为 `true`。对于FabricPool、卷保证必须始终设置为 `none`。您还可以为 FlexGroup 卷指定分层策略和分层最小冷却期。
 
 +
 link:../disks-aggregates/index.html["磁盘和聚合管理"]
@@ -86,7 +89,7 @@ Do you want to continue? {y|n}: y
 [Job 34] Job succeeded: Successful
 ----
 +
-以下示例显示了如何在 ONTAP 9.5 中的 FabricPool 中的聚合上配置大小为 400 TB 的 FlexGroup 卷：
+以下示例显示了如何在启用了FabricPool的本地层上配置大小为400 TB的FlexGroup卷：
 
 +
 [listing]
@@ -98,7 +101,7 @@ Do you want to continue? {y|n}: y
 [Job 34] Job succeeded: Successful
 ----
 +
-创建 FlexGroup 卷时，集群中的每个节点上都有八个成分卷。这些成分卷会在每个节点上的两个最大聚合之间平均分布。
+FlexGroup卷在集群中的每个节点上创建有八个成员卷。成员卷会在每个节点上的两个最大本地层之间平均分布。
 
 +
 默认情况下、FlexGroup卷是使用创建的 `volume` 空间保证设置(AFF系统除外)。对于AFF系统、默认情况下会使用创建FlexGroup卷 `none` 空间保证。
