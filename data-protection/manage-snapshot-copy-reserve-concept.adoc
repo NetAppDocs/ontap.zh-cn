@@ -1,10 +1,10 @@
 ---
 permalink: data-protection/manage-snapshot-copy-reserve-concept.html 
 sidebar: sidebar 
-keywords: manage, snapshot, copy, reserve 
+keywords: manage, snapshot, copy, reserve, increase, protected files 
 summary: '快照预留会为快照预留一定百分比的磁盘空间、默认情况下为5%。由于快照会在快照预留空间用尽时使用活动文件系统中的空间、因此您可能需要根据需要增加快照预留。或者、您也可以在预留空间已满时自动删除快照。' 
 ---
-= 管理Snapshot预留概述
+= 了解如何管理ONTAP快照预留
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -12,3 +12,50 @@ summary: '快照预留会为快照预留一定百分比的磁盘空间、默认�
 
 [role="lead"]
 Snapshot预留_会为快照预留一定百分比的磁盘空间、默认情况下为5%。由于快照会在快照预留空间用尽时使用活动文件系统中的空间、因此您可能需要根据需要增加快照预留。或者、您也可以在预留空间已满时自动删除快照。
+
+
+
+== 何时增加快照预留
+
+在决定是否增加快照预留时、请务必记住、快照仅记录自上次创建快照以来对文件所做的更改。只有在修改或删除活动文件系统中的块时，它才会占用磁盘空间。
+
+这意味着、文件系统的更改率是确定快照使用的磁盘空间量的关键因素。无论您创建多少快照、如果活动文件系统未更改、它们都不会占用磁盘空间。
+
+例如、包含数据库事务日志的FlexVol volume可能具有高达20%的快照预留、以应对其较高的更改率。您不仅需要创建更多快照来捕获更频繁的数据库更新、还需要更大的快照预留空间来处理快照占用的额外磁盘空间。
+
+[TIP]
+====
+快照由指向块而非块副本的指针组成。您可以将指针视为块上的"声明"：ONTAP会"保留"块、直到删除快照为止。
+
+====
+image:how-snapshots-consume-disk-space.gif["快照占用的磁盘空间"]
+
+
+
+== 删除受保护的文件会导致文件空间比预期少
+
+即使删除了使用某个块的文件、快照也会指向该块。这就是为什么用尽快照预留可能会导致反直观的结果、即删除整个文件系统会导致可用空间少于文件系统占用的空间。
+
+请考虑以下示例。在删除任何文件之前、 `df` 命令输出如下：
+
+[listing]
+----
+
+Filesystem          kbytes  used    avail  capacity
+/vol/vol0/          3000000 3000000 0       100%
+/vol/vol0/.snapshot 1000000 500000  500000   50%
+----
+删除整个文件系统并创建卷的快照后、该命令将 `df`生成以下输出：
+
+[listing]
+----
+
+Filesystem          kbytes  used    avail  capacity
+/vol/vol0/          3000000 2500000 500000   83%
+/vol/vol0/.snapshot 1000000 3500000 0       350%
+----
+如输出所示、除了删除前已使用的0.5 GB空间之外、活动文件系统以前使用的整个3 GB空间现在正由Snapshot使用。
+
+由于快照使用的磁盘空间现在已超过快照预留空间、因此2.5 GB的"`s丸`"会溢出到为活动文件预留的空间中、从而为您合理地预期为3 GB的文件留出0.5 GB的可用空间。
+
+有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。
