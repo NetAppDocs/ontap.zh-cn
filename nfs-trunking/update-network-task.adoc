@@ -30,6 +30,9 @@ LIS和NIC的一对一映射可获得最大的性能提升、但不需要启用�
 +
 `network port show`
 
++
+有关的详细信息 `network port show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-port-show.html["ONTAP 命令参考"^]。
+
 . 创建中继故障转移组或修改现有中继故障转移组：
 +
 `network interface failover-groups create -vserver <svm_name> -failover-group <failover_group_name> -targets <ports_list>`
@@ -71,6 +74,9 @@ NOTE: 虽然不要求具有故障转移组、但强烈建议这样做。
 ** 您可以使用指定IP地址 `-address` 和 `-netmask` 选项
 ** 手动分配IP地址(不使用子网)时、如果其他IP子网上有客户端或域控制器、则可能需要配置网关的默认路由。 `network route create`命令页面包含有关在SVM中创建静态路由的信息。有关的详细信息 `network route create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-route-create.html["ONTAP 命令参考"^]。
 ** `-service-policy` - LIF的服务策略。如果未指定策略、则会自动分配默认策略。使用 `network interface service-policy show` 命令以查看可用的服务策略。
++
+有关的详细信息 `network interface service-policy show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-service-policy-show.html["ONTAP 命令参考"^]。
+
 ** `-auto-revert` 指定在启动、更改管理数据库状态或建立网络连接等情况下、数据LIF是否自动还原到其主节点。*默认设置为false*，但您可以根据环境中的网络管理策略将其设置为true。
 +
 对中继组中所需的每个附加LIF重复此步骤。

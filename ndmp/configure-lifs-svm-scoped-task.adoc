@@ -34,6 +34,9 @@ NOTE: 从ONTAP 9.10.1开始、防火墙策略已弃用、并完全替换为LIF�
 +
 `network interface service-policy show`
 
++
+有关的详细信息 `network interface service-policy show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-service-policy-show.html["ONTAP 命令参考"^]。
+
 . 确保已为所有 LIF 正确设置故障转移策略：
 +
 .. 验证集群管理LIF的故障转移策略是否设置为 `broadcast-domain-wide`、并且集群间和节点管理的生命周期管理的策略设置为 `local-only` 使用 `network interface show -failover` 命令：
@@ -144,6 +147,9 @@ Vserver     Interface         Admin/Oper Address/Mask    Node          Port    H
 cluster1    cluster1-1_mgmt1  up/up      192.0.2.69/24   cluster1-1    e0M     true
             cluster1-2_mgmt1  up/up      192.0.2.70/24   cluster1-2    e0M     true
 ----
++
+有关的详细信息 `network interface show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["ONTAP 命令参考"^]。
+
 . 确保已为集群间、集群管理(`cluster-mgmt`和节点管理)的NDMP启用防火墙策略(`node-mgmt`：
 +
 .. 使用验证是否已为NDMP启用防火墙策略 `system services firewall policy show` 命令：
@@ -262,6 +268,9 @@ cluster1-2 cluster1-2_mgmt1   cluster1-2:e0m    local-only            Default
 ----
 cluster1::> network interface modify -vserver cluster1 -lif IC1 -failover-policy local-only
 ----
++
+有关的详细信息 `network interface modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-modify.html["ONTAP 命令参考"^]。
+
 
 
 . 使用指定数据连接所需的生命周期 `vserver services ndmp modify` 命令 `preferred-interface-role` 参数。

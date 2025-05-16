@@ -62,7 +62,7 @@ SVM 通过一个或多个网络逻辑接口（ LIF ）向客户端提供数据�
 
 * 必须为支持 SAN 的每个 Storage Virtual Machine （ SVM ）配置一个 LIF 处理管理流量。
 * NVMe LIF 和命名空间必须托管在同一节点上。
-* 每个 SVM 只能配置一个处理数据流量的 NVMe LIF 。
+* 每个节点上的每个SVM最多可以配置两个NVMe SVM来处理数据流量。
 * 创建具有子网的网络接口时、ONTAP 会自动从选定子网中选择一个可用的IP地址并将其分配给网络接口。如果有多个子网、您可以更改此子网、但不能更改IP地址。
 * 在为网络接口创建(添加) SVM时、不能指定现有子网范围内的IP地址。您将收到子网冲突错误。此问题描述 会发生在网络接口的其他工作流中、例如在SVM设置或集群设置中创建或修改集群间网络接口。
 * 从ONTAP 9.10.1开始、 `network interface`命令行界面命令包含一个 `-rdma-protocols`用于基于RDMA配置的NFS的参数。从ONTAP 9.12.1开始、System Manager支持为基于RDMA的NFS配置创建网络接口。有关详细信息，请参见 xref:../nfs-rdma/configure-lifs-task.html[通过RDMA为NFS配置LIF]。
@@ -178,9 +178,12 @@ network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _se
 
 . *可选*：在-address选项中分配IPv6地址：
 +
-.. 使用 network ndp prefix show 命令查看在各种接口上获取的 RA 前缀列表。
+.. 使用 `network ndp prefix show` 命令以查看在各种接口上获取的RA前缀列表。
 +
 。 `network ndp prefix show` 命令可在高级权限级别下使用。
+
++
+有关的详细信息 `network ndp prefix show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-ndp-prefix-show.html["ONTAP 命令参考"^]。
 
 .. 使用格式 `prefix::id` 手动构建IPv6地址。
 +
