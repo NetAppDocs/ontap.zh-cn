@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: snapmirror-active-sync/mediator-install-task.html 
 keywords: SM-BC, SMBC, cluster, peering, ONTAP Mediator, initialize, snapmirror active sync 
-summary: SnapMirror活动同步要求您安装并初始化ONTAP调解器、并确保集群对等关系正确。 
+summary: SnapMirror 主动同步要求您安装和初始化 ONTAP Mediator 并确保正确的集群对等连接。 
 ---
-= 为ONTAP活动同步配置SnapMirror调解器和集群
+= 为 SnapMirror 主动同步配置 ONTAP 调解器和集群
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,15 +14,15 @@ summary: SnapMirror活动同步要求您安装并初始化ONTAP调解器、并�
 
 
 [role="lead"]
-SnapMirror主动同步会在发生故障转移时使用对等集群来保护数据。ONTAP调解器是一种关键资源、可通过监控每个集群的运行状况来实现业务连续性。要配置SnapMirror主动同步、必须先安装ONTAP调解器、并验证主集群和二级集群配置是否正确。
+SnapMirror主动同步会在发生故障转移时使用对等集群来保护数据。ONTAP 调解器是一项关键资源，它通过监控每个集群的运行状况来确保业务连续性。要配置 SnapMirror 主动同步，您必须首先安装 ONTAP 调解器，并验证主集群和辅助集群是否已正确配置。
 
-安装ONTAP调解器并配置集群后，<<initialize-the-ontap-mediator,使用自签名证书初始化用于SnapMirror活动同步的ONTAP调解器>>。您必须这样xref:protect-task.html[为SnapMirror活动同步创建、初始化和映射一致性组]。
+安装 ONTAP Mediator 并配置集群后， <<initialize-the-ontap-mediator,使用自签名证书初始化 ONTAP 调解器以进行 SnapMirror 主动同步>> 。您必须这样xref:protect-task.html[为SnapMirror活动同步创建、初始化和映射一致性组]。
 
 
 
 == ONTAP 调解器
 
-ONTAP调解器可为SnapMirror活动同步关系中的ONTAP集群使用的高可用性(HA)元数据提供永久性隔离存储。此外、ONTAP调解器还提供了同步节点运行状况查询功能来帮助确定仲裁、并充当用于检测控制器是否可用的ping代理。
+ONTAP 调解器为 SnapMirror 主动同步关系中的 ONTAP 集群使用的高可用性 (HA) 元数据提供持久且受保护的存储。此外、ONTAP调解器还提供了同步节点运行状况查询功能来帮助确定仲裁、并充当用于检测控制器是否可用的ping代理。
 
 每个集群对等关系只能与一个ONTAP调解器实例关联。不支持HA调解器实例。如果一个集群与其他集群处于多个对等关系中、则可以使用以下ONTAP调解器选项：
 
@@ -32,24 +32,24 @@ ONTAP调解器可为SnapMirror活动同步关系中的ONTAP集群使用的高可
 
 例如、如果集群B与集群A、集群C和集群D具有对等关系、则在为这三个集群对等关系配置了SnapMirror活动同步后、这三个关系都可以具有唯一关联的ONTAP调解器实例。或者、集群B也可以对所有三个对等关系使用同一个ONTAP调解器实例。在这种情况下、同一个ONTAP调解器实例会为集群列出三次。
 
-.ONTAP 调解器的前提条件
-* ONTAP 调解器包括自己的一组前提条件。在安装ONTAP调解器之前、必须满足这些前提条件。
+.ONTAP 调解器的先决条件
+* ONTAP Mediator 本身包含一组先决条件。您必须先满足这些先决条件，然后才能安装 ONTAP Mediator。
 +
-有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["准备安装 ONTAP 调解器服务"^]。
+有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["准备安装 ONTAP 调解器"^]。
 
-* 默认情况下， ONTAP 调解器通过 TCP 端口 31784 提供服务。您应确保端口31784在ONTAP集群和ONTAP调解器之间处于打开状态且可用。
-
-
+* 默认情况下，ONTAP 调解器通过 TCP 端口 31784 提供服务。您应确保端口 31784 在 ONTAP 集群和 ONTAP 调解器之间处于打开状态且可用。
 
 
-== 安装ONTAP调解器并确认集群配置
 
-执行以下每个步骤以安装ONTAP调解器并验证集群配置。对于每个步骤，您都应确认已执行特定配置。每个步骤都包含一个指向需要遵循的特定过程的链接。
+
+== 安装 ONTAP 调解器并确认集群配置
+
+执行以下每个步骤来安装 ONTAP 调解器并验证集群配置。对于每个步骤，您都应确认已执行特定配置。每个步骤都包含一个指向需要遵循的特定过程的链接。
 
 .步骤
-. 请先安装ONTAP调解器服务、然后再验证源集群和目标集群是否配置正确。
+. 在验证源集群和目标集群是否配置正确之前，请安装 ONTAP 调解器。
 +
-xref:../mediator/index.html[准备安装或升级ONTAP 调解器服务]
+xref:../mediator/index.html[准备安装或升级 ONTAP 调解器]
 
 . 确认集群之间存在集群对等关系。
 +
@@ -87,15 +87,15 @@ xref:../san-admin/provision-storage.html[创建 LUN 并映射 igroup]
 
 
 
-== 使用自签名证书初始化用于SnapMirror活动同步的ONTAP调解器
+== 使用自签名证书初始化 ONTAP 调解器以进行 SnapMirror 主动同步
 
-安装ONTAP调解器并确认集群配置后、必须初始化ONTAP调解器以进行集群监控。您可以使用System Manager或ONTAP命令行界面初始化ONTAP调解器。
+安装 ONTAP 调解器并确认集群配置后，必须初始化 ONTAP 调解器以进行集群监控。您可以使用 System Manager 或 ONTAP CLI 初始化 ONTAP 调解器。
 
 
 
 === System Manager
 
-使用System Manager、您可以配置ONTAP调解器服务器以实现自动故障转移。如果您尚未将自签名 SSL 和 CA 替换为经过第三方验证的 SSL 证书和 CA ，也可以将其替换为。
+使用系统管理器，您可以配置 ONTAP 调解器以实现自动故障转移。如果您尚未将自签名 SSL 和 CA 替换为经过第三方验证的 SSL 证书和 CA ，也可以将其替换为。
 
 
 IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务连续性(SM-BC)。
@@ -105,7 +105,7 @@ IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务�
 .ONTAP调解器1.9及更高版本
 --
 . 导航到 * 保护 > 概述 > 调解器 > 配置 * 。
-. 选择*Add*，然后输入以下ONTAP调解器服务器信息：
+. 选择“*添加*”，然后输入以下 ONTAP 调解器信息：
 +
 ** IPv4 地址
 ** Username
@@ -124,7 +124,7 @@ IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务�
 image:configure-mediator-system-manager.png["添加System Manager调解器"]
 
 +
-证书添加完成后、ONTAP调解器将添加到ONTAP集群中。
+证书添加完成后，ONTAP 调解器将添加到 ONTAP 集群中。
 
 +
 下图显示了一个成功的ONTAP调解器配置：
@@ -140,7 +140,7 @@ image:successful-mediator-installation.png["调解器添加成功"]。
 .ONTAP调解器1.8及更早版本
 --
 . 导航到 * 保护 > 概述 > 调解器 > 配置 * 。
-. 选择*Add*，然后输入以下ONTAP调解器服务器信息：
+. 选择“*添加*”，然后输入以下 ONTAP 调解器信息：
 +
 ** IPv4 地址
 ** Username
@@ -159,7 +159,7 @@ image:successful-mediator-installation.png["调解器添加成功"]。
 image:configure-mediator-system-manager.png["添加System Manager调解器"]
 
 +
-证书添加完成后、ONTAP调解器将添加到ONTAP集群中。
+证书添加完成后，ONTAP 调解器将添加到 ONTAP 集群中。
 
 +
 下图显示了一个成功的ONTAP调解器配置：
@@ -177,9 +177,9 @@ image:successful-mediator-installation.png["调解器添加成功"]。
 
 === 命令行界面
 
-您可以使用ONTAP命令行界面从主集群或二级集群初始化ONTAP调解器。问题描述时 `mediator add` 命令时、ONTAP调解器会自动添加到另一个集群上。
+您可以使用 ONTAP CLI 从主集群或辅助集群初始化 ONTAP 调解器。当您发出 `mediator add`命令时，ONTAP Mediator 会自动添加到另一个集群中。
 
-使用ONTAP调解器监控SnapMirror活动同步关系时、如果没有有效的自签名证书或证书颁发机构(CA)证书、则无法在ONTAP中初始化此调解器。您可以向对等集群的证书存储添加有效证书。使用ONTAP调解器监控MetroCluster IP系统时、初始配置后不会使用HTTPS；因此、不需要证书。
+使用 ONTAP 调解器监控 SnapMirror 主动同步关系时，如果没有有效的自签名证书或证书颁发机构 (CA) 证书，则无法在 ONTAP 中初始化 ONTAP 调解器。您可以向对等集群的证书存储添加有效证书。使用 ONTAP 调解器监控 MetroCluster IP 系统时，初始配置后不会使用 HTTPS；因此，不需要证书。
 
 [role="tabbed-block"]
 ====
@@ -193,12 +193,12 @@ image:successful-mediator-installation.png["调解器添加成功"]。
 +
 [listing]
 ----
-[root@ontap-mediator server_config]# cat intermediate.crt
+[root@ontap-mediator_config]# cat intermediate.crt
 -----BEGIN CERTIFICATE-----
 <certificate_value>
 -----END CERTIFICATE-----
 ----
-. 将ONTAP调解器CA证书添加到ONTAP集群。出现提示时、插入从ONTAP调解器获取的CA证书。对所有对等集群重复上述步骤：
+. 将ONTAP调解器CA证书添加到ONTAP集群。出现提示时，插入从 ONTAP Mediator 获取的 CA 证书。对所有对等集群重复上述步骤：
 +
 `security certificate install -type server-ca -vserver <vserver_name>`
 
@@ -210,7 +210,7 @@ image:successful-mediator-installation.png["调解器添加成功"]。
 ----
 [root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
 
-[root@ontap-mediator server_config]# cat intermediate.crt
+[root@ontap-mediator_config]# cat intermediate.crt
 -----BEGIN CERTIFICATE-----
 <certificate_value>
 -----END CERTIFICATE-----
@@ -254,7 +254,7 @@ C1_test_cluster
     Certificate Authority: ONTAP Mediator CA
           Expiration Date: Thu Feb 15 14:35:25 2029
 ----
-. 在其中一个集群上初始化ONTAP调解器。系统会自动为另一个集群添加ONTAP调解器：
+. 在其中一个集群上初始化 ONTAP 调解器。ONTAP 调解器将自动添加到另一个集群：
 +
 `snapmirror mediator add -mediator-address <ip_address> -peer-cluster <peer_cluster_name> -username user_name`
 
@@ -324,7 +324,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 1.2.3.4          C2_test_cluster   connected        true
 ....
 +
-`Quorum Status` 指示SnapMirror一致性组关系是否已与ONTAP调解器同步；状态为 `true` 表示同步成功。
+`Quorum Status`指示 SnapMirror 一致性组关系是否与 ONTAP 调解器同步；状态为 `true`表示同步成功。
 
 
 
@@ -339,7 +339,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 +
 [listing]
 ----
-[root@ontap-mediator server_config]# cat ca.crt
+[root@ontap-mediator_config]# cat ca.crt
 -----BEGIN CERTIFICATE-----
 <certificate_value>
 -----END CERTIFICATE-----
@@ -356,7 +356,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 ----
 [root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
 
-[root@ontap-mediator server_config]# cat ca.crt
+[root@ontap-mediator_config]# cat ca.crt
 -----BEGIN CERTIFICATE-----
 <certificate_value>
 -----END CERTIFICATE-----
@@ -400,7 +400,7 @@ C1_test_cluster
     Certificate Authority: ONTAP Mediator CA
           Expiration Date: Thu Feb 15 14:35:25 2029
 ----
-. 在其中一个集群上初始化ONTAP调解器。系统会自动为另一个集群添加ONTAP调解器：
+. 在其中一个集群上初始化 ONTAP 调解器。ONTAP 调解器将自动添加到另一个集群：
 +
 `snapmirror mediator add -mediator-address <ip_address> -peer-cluster <peer_cluster_name> -username user_name`
 
@@ -470,7 +470,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 1.2.3.4          C2_test_cluster   connected        true
 ....
 +
-`Quorum Status` 指示SnapMirror一致性组关系是否已与ONTAP调解器同步；状态为 `true` 表示同步成功。
+`Quorum Status`指示 SnapMirror 一致性组关系是否与 ONTAP 调解器同步；状态为 `true`表示同步成功。
 
 
 
@@ -480,21 +480,21 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 
 == 使用第三方证书重新初始化ONTAP调解器
 
-您可能需要重新初始化ONTAP调解器服务。有时可能需要重新初始化ONTAP调解器服务、例如ONTAP调解器IP地址更改、证书到期等。
+您可能需要重新初始化 ONTAP 调解器。在某些情况下，例如 ONTAP 调解器 IP 地址更改、证书过期等，可能需要重新初始化 ONTAP 调解器。
 
 以下操作步骤说明了在需要将自签名证书替换为第三方证书的特定情况下重新初始化ONTAP调解器的过程。
 
 .关于此任务
-您需要将SnapMirror活动同步集群的自签名证书替换为第三方证书、从ONTAP中删除ONTAP调解器配置、然后添加ONTAP调解器。
+您需要将 SnapMirror 主动同步集群的自签名证书替换为第三方证书，从 ONTAP 中删除 ONTAP 调解器配置，然后添加 ONTAP 调解器。
 
 
 
 === System Manager
 
-使用System Manager时、您需要从ONTAP集群中删除使用旧自签名证书配置的ONTAP调解器、然后使用新的第三方证书重新配置ONTAP集群。
+使用系统管理器，您需要从 ONTAP 集群中删除使用旧的自签名证书配置的 ONTAP 调解器版本，然后使用新的第三方证书重新配置 ONTAP 集群。
 
 .步骤
-. 选择菜单选项图标并选择*Remove*以删除ONTAP调解器。
+. 选择菜单选项图标并选择*删除*以删除 ONTAP Mediator。
 +
 
 NOTE: 此步骤不会从ONTAP集群中删除自签名server-ca。NetApp建议在执行下面的步骤添加第三方证书之前，导航到*Certifice*选项卡并手动将其删除：
@@ -502,10 +502,10 @@ NOTE: 此步骤不会从ONTAP集群中删除自签名server-ca。NetApp建议在
 +
 image:remove-mediator.png["System Manager调解器已删除"]
 
-. 使用正确的证书重新添加ONTAP调解器。
+. 使用正确的证书再次添加 ONTAP 调解器。
 
 
-现在、ONTAP调解器已配置新的第三方自签名证书。
+ONTAP 调解器现已配置新的第三方自签名证书。
 
 image:configure-mediator-system-manager.png["添加System Manager调解器"]
 
@@ -513,7 +513,7 @@ image:configure-mediator-system-manager.png["添加System Manager调解器"]
 
 === 命令行界面
 
-您可以从主集群或二级集群重新初始化ONTAP调解器、方法是使用ONTAP命令行界面将自签名证书替换为第三方证书。
+您可以使用 ONTAP CLI 将自签名证书替换为第三方证书，从而从主集群或辅助集群重新初始化 ONTAP 调解器。
 
 [role="tabbed-block"]
 ====
@@ -568,7 +568,7 @@ NOTE: 具有某些属性、这些属性是从需要发送到PKI颁发机构的�
 [listing]
 ----
 [root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
-[root@ontap-mediator server_config]# cat intermediate.crt
+[root@ontap-mediator_config]# cat intermediate.crt
 -----BEGIN CERTIFICATE-----
 <certificate_value>
 -----END CERTIFICATE-----
@@ -615,7 +615,7 @@ Info: [Job 86] 'mediator remove' job queued
 C1_test_cluster::*> snapmirror mediator show
 This table is currently empty.
 ----
-. 再次添加ONTAP调解器：
+. 再次添加 ONTAP 调解器：
 +
 * 示例 *
 
@@ -693,7 +693,7 @@ NOTE: 具有某些属性、这些属性是从需要发送到PKI颁发机构的�
 [listing]
 ----
 [root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
-[root@ontap-mediator server_config]# cat ca.crt
+[root@ontap-mediator_config]# cat ca.crt
 -----BEGIN CERTIFICATE-----
 <certificate_value>
 -----END CERTIFICATE-----
@@ -740,7 +740,7 @@ Info: [Job 86] 'mediator remove' job queued
 C1_test_cluster::*> snapmirror mediator show
 This table is currently empty.
 ----
-. 再次添加ONTAP调解器：
+. 再次添加 ONTAP 调解器：
 +
 * 示例 *
 

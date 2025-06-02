@@ -76,7 +76,7 @@ link:repair_port_reachability.html["修复端口可访问性"]
 | 端口的 IP 空间将更新为广播域的 IP 空间值。 | 这些端口将移至 " 默认 "IP 空间，而不具有广播域属性。 
 |===
 
-NOTE: 如果使用删除接口组的最后一个成员端口 `network port ifgrp remove-port` 命令中、则会导致接口组端口从广播域中删除、因为广播域中不允许使用空接口组端口。
+NOTE: 如果使用命令删除接口组的最后一个成员端口 `network port ifgrp remove-port`、则会导致接口组端口从广播域中删除、因为广播域中不允许使用空接口组端口。有关的详细信息 `network port ifgrp remove-port`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-port-ifgrp-remove-port.html["ONTAP 命令参考"^]。
 
 .步骤
 . 使用显示当前已分配或未分配给广播域的端口 `network port show` 命令：
@@ -123,6 +123,8 @@ NOTE: 如果使用删除接口组的最后一个成员端口 `network port ifgrp
 以下命令将从默认 IP 空间的广播域 bcast1 中删除节点 cluster1-01 上的端口 e0e ：
 
 `cluster-1::> network port broadcast-domain remove-ports -broadcast-domain bcast1 -ports cluster-1-01:e0e`
+
+有关的详细信息 `network port broadcast-domain remove-ports`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-port-broadcast-domain-remove-ports.html["ONTAP 命令参考"^]。
 
 .相关信息
 * link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]

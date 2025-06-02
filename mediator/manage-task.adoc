@@ -1,17 +1,17 @@
 ---
 permalink: mediator/manage-task.html 
 sidebar: sidebar 
-keywords: mediator, service, username, user name, password, change, uninstall, self-signed certificate, self signed certificate, regenerate, stop mediator service, uninstall scst 
-summary: 管理ONTAP调解器服务、包括用户凭据管理、服务控制、运行状况验证、SCST维护以及证书管理和故障排除。 
+keywords: mediator, username, user name, password, change, uninstall, self-signed certificate, self signed certificate, regenerate, stop mediator, uninstall scst 
+summary: 管理 ONTAP Mediator，包括用户凭证管理、服务控制、健康验证、SCST 维护以及证书管理和故障排除。 
 ---
-= 管理ONTAP调解器服务
+= 管理ONTAP调解器
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-管理ONTAP调解器服务、包括更改用户凭据、停止并重新启用该服务、验证其运行状况以及安装或卸载SCST以进行主机维护。您还可以管理证书、例如重新生成自签名证书、将其替换为受信任的第三方证书以及解决证书相关问题。
+管理 ONTAP Mediator，包括更改用户凭据、停止和重新启用服务、验证其运行状况以及安装或卸载 SCST 以进行主机维护。您还可以管理证书、例如重新生成自签名证书、将其替换为受信任的第三方证书以及解决证书相关问题。
 
 
 
@@ -20,7 +20,7 @@ summary: 管理ONTAP调解器服务、包括用户凭据管理、服务控制、
 您可以使用以下操作步骤更改用户名。
 
 .关于此任务
-在安装了ONTAP调解器服务的Linux主机上执行此任务。
+在安装了 ONTAP Mediator 的 Linux 主机上执行此任务。
 
 如果无法访问此命令，则可能需要使用完整路径运行此命令，如以下示例所示：
 
@@ -60,7 +60,7 @@ summary: 管理ONTAP调解器服务、包括用户凭据管理、服务控制、
 您可以使用以下操作步骤更改密码。
 
 .关于此任务
-在安装了ONTAP调解器服务的Linux主机上执行此任务。
+在安装了 ONTAP Mediator 的 Linux 主机上执行此任务。
 
 如果无法访问此命令，则可能需要使用完整路径运行此命令，如以下示例所示：
 
@@ -98,12 +98,12 @@ summary: 管理ONTAP调解器服务、包括用户凭据管理、服务控制、
 
 
 
-== 停止ONTAP 调解器服务
+== 停止 ONTAP 调解器
 
-要停止ONTAP 调解器服务、请执行以下步骤：
+要停止 ONTAP 调解器，请执行以下步骤：
 
 .步骤
-. 停止ONTAP调解器：
+. 停止 ONTAP 调解器：
 +
 `systemctl stop ontap_mediator`
 
@@ -111,7 +111,7 @@ summary: 管理ONTAP调解器服务、包括用户凭据管理、服务控制、
 +
 `systemctl stop mediator-scst`
 
-. 禁用ONTAP调解器和SCST：
+. 禁用 ONTAP 调解器和 SCST：
 +
 `systemctl diable ontap_mediator mediator-scst`
 
@@ -119,12 +119,12 @@ summary: 管理ONTAP调解器服务、包括用户凭据管理、服务控制、
 
 
 
-== 重新启用ONTAP 调解器服务
+== 重新启用 ONTAP 调解器
 
-要重新启用ONTAP 调解器服务、请执行以下步骤：
+要重新启用 ONTAP 调解器，请执行以下步骤：
 
 .步骤
-. 启用ONTAP调解器和SCST：
+. 启用 ONTAP 调解器和 SCST：
 +
 `systemctl enable ontap_mediator mediator-scst`
 
@@ -140,12 +140,12 @@ summary: 管理ONTAP调解器服务、包括用户凭据管理、服务控制、
 
 
 
-== 确认ONTAP 调解器运行状况良好
+== 验证 ONTAP 调解器是否正常运行
 
-安装ONTAP 调解器后、您应验证ONTAP 调解器服务是否正在运行。
+安装 ONTAP Mediator 后，请验证它是否成功运行。
 
 .步骤
-. 查看ONTAP 调解器服务的状态：
+. 查看 ONTAP 调解器的状态：
 +
 .. `systemctl status ontap_mediator`
 +
@@ -186,7 +186,7 @@ CGroup: /system.slice/ontap_mediator.service
 ----
 
 
-. 确认ONTAP 调解器服务使用的端口：
+. 确认 ONTAP 调解器使用的端口：
 +
 `netstat`
 
@@ -356,22 +356,22 @@ _module-filename_
 
 
 
-== 卸载 ONTAP 调解器服务
+== 卸载 ONTAP 调解器
 
-如有必要，您可以删除 ONTAP 调解器服务。
+如有必要，您可以删除 ONTAP Mediator。
 
 .开始之前
-删除ONTAP调解器服务之前、必须先将ONTAP调解器与ONTAP断开连接。
+您必须先断开 ONTAP 调解器与 ONTAP 之间的连接，然后才能将其移除。
 
 .关于此任务
-您需要在安装了ONTAP调解器服务的Linux主机上执行此任务。
+在安装了 ONTAP Mediator 的 Linux 主机上执行此任务。
 
 如果无法访问此命令，则可能需要使用完整路径运行此命令，如以下示例所示：
 
 `/usr/local/bin/uninstall_ontap_mediator`
 
 .步骤
-. 卸载 ONTAP 调解器服务：
+. 卸载 ONTAP 调解器：
 +
 `uninstall_ontap_mediator`
 
@@ -397,15 +397,15 @@ _module-filename_
 NOTE: 只有运行ONTAP调解器1.7或更高版本的系统才支持此过程。
 
 .关于此任务
-* 您可以在安装了ONTAP调解器服务的Linux主机上执行此任务。
-* 只有在安装ONTAP调解器后、由于主机的主机名或IP地址发生更改、生成的自签名证书已废弃时、才能执行此任务。
+* 在安装了 ONTAP Mediator 的 Linux 主机上执行此任务。
+* 仅当安装 ONTAP 调解器后，由于主机的主机名或 IP 地址发生更改而导致生成的自签名证书已过时时，您才可以执行此任务。
 * 在临时自签名证书被可信的第三方证书替换后、您不能使用此任务重新生成证书。如果没有自签名证书、则发生原因此操作步骤将失败。
 
 
 .步骤
 要为当前主机重新生成新的临时自签名证书、请执行以下步骤：
 
-. 重新启动ONTAP调解器服务：
+. 重新启动 ONTAP 调解器：
 +
 `./make_self_signed_certs.sh overwrite`
 
@@ -448,15 +448,15 @@ Getting CA Private Key
 
 ====
 .关于此任务
-* 您可以在安装了ONTAP调解器服务的Linux主机上执行此任务。
+* 在安装了 ONTAP Mediator 的 Linux 主机上执行此任务。
 * 如果生成的自签名证书需要替换为从受信任的从属证书颁发机构(CA)获取的证书、则可以执行此任务。为此、您应有权访问可信的公共密钥基础架构(PKI)颁发机构。
 * 下图显示了每个ONTAP调解器证书的用途。
 +
 image:mediator-cert-purposes.png["ONTAP调解器证书用途"]
 
-* 下图显示了Web服务器设置和ONTAP调解器服务器设置的配置。
+* 下图显示了 Web 服务器设置和 ONTAP Mediator 设置的配置。
 +
-image:mediator-certs-index.png["Web服务器设置和ONTAP调解器服务器设置配置"]
+image:mediator-certs-index.png["Web 服务器设置和 ONTAP 调解器设置配置"]
 
 
 
@@ -470,8 +470,7 @@ image:mediator-certs-index.png["Web服务器设置和ONTAP调解器服务器设�
 
 [NOTE]
 ====
-* 此示例说明了ONTAP调解器服务所需证书的必要条件。您可以通过与此操作步骤不同的方式从PKI颁发机构获取证书。根据您的业务需求调整此过程。
-
+该示例说明了 ONTAP 调解器所需证书的必要标准。您可以通过与此操作步骤不同的方式从PKI颁发机构获取证书。根据您的业务需求调整此过程。
 
 ====
 [role="tabbed-block"]
@@ -513,7 +512,7 @@ PKI授权机构验证请求并签署 `.csr`，生成证书 `intermediate.crt`。
 
 +
 
-NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `intermediate.crt` `root_intermediate.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为ONTAP活动同步配置SnapMirror调解器和集群"]
+NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `intermediate.crt` `root_intermediate.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为 SnapMirror 主动同步配置 ONTAP 调解器和集群"]
 
 
 
@@ -555,7 +554,7 @@ PKI授权机构验证请求并签署 `.csr`，生成证书 `ca.crt`。此外、�
 
 +
 
-NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `ca.crt` `root_ca.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为ONTAP活动同步配置SnapMirror调解器和集群"]
+NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `ca.crt` `root_ca.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为 SnapMirror 主动同步配置 ONTAP 调解器和集群"]
 
 
 
@@ -628,7 +627,7 @@ NOTE: 这些文件是从PKI颁发机构获得的。如果您使用的是其他�
 ====
 .ONTAP调解器1.9及更高版本
 --
-证书配置将通过位于的配置文件提供给ONTAP调解器服务 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。此文件包含以下属性：
+证书配置通过位于以下位置的配置文件提供给 ONTAP 调解器 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml` 。此文件包含以下属性：
 
 [listing]
 ----
@@ -673,7 +672,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/int
 ** Linux权限： `600`
 
 
-. 重新启动ONTAP调解器：
+. 重新启动 ONTAP 调解器：
 +
 `systemctl restart ontap_mediator`
 
@@ -682,7 +681,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/int
 --
 .ONTAP调解器1.8及更早版本
 --
-证书配置将通过位于的配置文件提供给ONTAP调解器服务 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml`。此文件包含以下属性：
+证书配置通过位于以下位置的配置文件提供给 ONTAP 调解器 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml` 。此文件包含以下属性：
 
 [listing]
 ----
@@ -727,7 +726,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.
 ** Linux权限： `600`
 
 
-. 重新启动ONTAP调解器：
+. 重新启动 ONTAP 调解器：
 +
 `systemctl restart ontap_mediator`
 
@@ -805,7 +804,7 @@ NOTE: 您应已在此过程的前面部分从PKI颁发机构获取 `intermediate
 ***  `ca_certificate`值是文件的路径 `root_intermediate.crt` 。
 +
 
-NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `intermediate.crt` `root_intermediate.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为ONTAP活动同步配置SnapMirror调解器和集群"]
+NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `intermediate.crt` `root_intermediate.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为 SnapMirror 主动同步配置 ONTAP 调解器和集群"]
 
 
 
@@ -817,7 +816,7 @@ NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `i
 
 
 
-. 在配置文件中更新证书后、重新启动ONTAP调解器：
+. 当配置文件中的证书更新后，重新启动 ONTAP 调解器：
 +
 `systemctl restart ontap_mediator`
 
@@ -888,7 +887,7 @@ NOTE: 您应已在此过程的前面部分从PKI颁发机构获取 `ca.crt` 和 
 ***  `ca_certificate`值是文件的路径 `root_ca.crt` 。
 +
 
-NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `ca.crt` `root_ca.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为ONTAP活动同步配置SnapMirror调解器和集群"]
+NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `ca.crt` `root_ca.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为 SnapMirror 主动同步配置 ONTAP 调解器和集群"]
 
 
 
@@ -900,7 +899,7 @@ NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `c
 
 
 
-. 在配置文件中更新证书后、重新启动ONTAP调解器：
+. 当配置文件中的证书更新后，重新启动 ONTAP 调解器：
 +
 `systemctl restart ontap_mediator`
 
@@ -1030,7 +1029,7 @@ Certificate:
 
 。 `v3_req` 中定义的属性 `openssl_server.cnf` 配置文件显示为 `X509v3 extensions` 在证书中。
 
-在以下示例中、您可以在中获取变量 `alt_names` 部分 `hostname -A` 和 `hostname -I` 在安装了ONTAP调解器的Linux VM上。
+在下面的例子中，你可以获取 `alt_names`通过运行命令 `hostname -A`和 `hostname -I`在安装了 ONTAP Mediator 的 Linux VM 上。
 
 请与网络管理员联系、了解变量的正确值。
 

@@ -18,10 +18,10 @@ summary: 在安装过程中、您需要先升级主机操作系统、然后再�
 
 由于.rpm文件是作为ONTAP 调解器安装程序的一部分安装的、因此会包含在该搜索中。但是、由于.rpm文件是作为安装程序的一部分解压缩的、并且未从注册的存储库下载、因此无法找到升级。在这种情况下、leapp-upgrade工具将卸载该软件包。
 
-为了保留用于鉴别支持案例的日志文件、您应在操作系统升级之前备份这些文件、并在重新安装ONTAP 调解器软件包之后还原这些文件。由于正在重新安装ONTAP 调解器、因此、在新安装后、需要重新连接与其连接的所有ONTAP 集群。
+为了保留用于分类支持案例的日志文件，您应该在升级操作系统之前备份这些文件，并在重新安装 ONTAP Mediator 软件包后恢复它们。安装 ONTAPMediator 后，需要重新连接连接到该软件包的 ONTAP 集群。
 
 
-NOTE: 应按顺序执行以下步骤。  重新安装ONTAP 调解器后、您应立即停止ONTAP调解器服务、替换日志文件并重新启动该服务。这将确保日志不会丢失。
+NOTE: 应按顺序执行以下步骤。重新安装 ONTAP Mediator 后，应立即停止 ontap_mediator，替换日志文件，然后重新启动它。这样做是为了确保日志不会丢失。
 
 .步骤
 . 备份日志文件。
@@ -67,7 +67,7 @@ ONTAP Mediator: Self Extracting Installer
   ..<snip installation>..
 [rootmediator-host ~]#
 ....
-. 停止ONTAP调解器服务。
+. 停止 ontap_mediator。
 +
 ....
 [rootmediator-host ~]# systemctl stop ontap_mediator
@@ -79,7 +79,7 @@ ONTAP Mediator: Self Extracting Installer
 [rootmediator-host ~]# tar -xf ontap_mediator_log_backup.tgz -C /opt/netapp/lib/ontap_mediator
 [rootmediator-host ~]#
 ....
-. 启动ONTAP调解器服务。
+. 启动 ontap_mediator。
 +
 ....
 [rootmediator-host ~]# systemctl start ontap_mediator

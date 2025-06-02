@@ -1,17 +1,17 @@
 ---
 permalink: mediator/index.html 
 sidebar: sidebar 
-keywords: ontap mediator service, install requirements, mediator requirements 
-summary: 要安装 ONTAP 调解器服务，必须确保满足所有前提条件，获取安装包并在主机上运行安装程序。 
+keywords: ontap mediator, install requirements, mediator requirements 
+summary: 要安装 ONTAP Mediator，您必须确保满足所有先决条件、获取安装包并在主机上运行安装程序。 
 ---
-= 准备安装或升级ONTAP 调解器服务
+= 准备安装或升级 ONTAP 调解器
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-要安装ONTAP调解器服务、必须确保满足所有前提条件、提取安装包并在主机上运行安装程序。此操作步骤用于安装或升级现有安装。
+要安装 ONTAP Mediator，您必须确保满足所有先决条件、获取安装包并在主机上运行安装程序。此操作步骤用于安装或升级现有安装。
 
 * 从ONTAP 9.7开始、您可以使用任何版本的ONTAP 调解器来监控MetroCluster IP配置。
 * 从ONTAP 9.8开始、您可以使用任何版本的ONTAP调解器监控SnapMirror活动同步关系。
@@ -21,13 +21,13 @@ summary: 要安装 ONTAP 调解器服务，必须确保满足所有前提条件�
 
 == 安装和升级注意事项
 
-在升级或安装ONTAP调解器之前、请查看以下注意事项。
+在升级或安装 ONTAP 调解器之前，请先查看以下注意事项。
 
 
 CAUTION: ONTAP调解器1.8及更早版本与Red Hat Enterprise Linux FIPS模式不兼容、将导致其无法成功安装。您可以使用命令检查是否已启用FIPS模式 `fips-mode-setup --check` 。您可以使用命令禁用FIPS模式 `fips-modesetup --disable` 。禁用FIPS模式后重新启动、以成功安装ONTAP调解器1.8或更早版本。
 
-* 您应将ONTAP调解器升级到可用的最新版本。早期版本的ONTAP调解器与所有ONTAP版本保持向后兼容、但最新版本包括所有第三方元素的安全修补程序。
-* 升级到新的ONTAP调解器版本时、安装程序会自动升级到建议的SCST版本、除非有更高版本可用。有关手动安装较高版本SCST的说明，请参阅link:manage-task.html["管理调解器服务"]。有关支持的版本，请参见link:whats-new-concept.html#scst-support-matrix["SCST支持列表"]。
+* 您应该将 ONTAP Mediator 升级到可用的最新版本。早期版本的ONTAP调解器与所有ONTAP版本保持向后兼容、但最新版本包括所有第三方元素的安全修补程序。
+* 升级到新的ONTAP调解器版本时、安装程序会自动升级到建议的SCST版本、除非有更高版本可用。有关手动安装较高版本SCST的说明，请参阅link:manage-task.html["管理ONTAP调解器"]。有关支持的版本，请参见link:whats-new-concept.html#scst-support-matrix["SCST支持列表"]。
 +
 
 CAUTION: 如果安装失败、您可能需要升级到更高版本的ONTAP调解器。
@@ -48,7 +48,7 @@ CAUTION: 如果安装失败、您可能需要升级到更高版本的ONTAP调解
 ====
 .Linux分发要求
 * 根据Red Hat的最佳实践安装RHEL或Rocky's Linux。由于CentOS 8.x已达到使用寿命、因此不建议使用兼容版本的CentOS 8.x。
-* 安装ONTAP调解器服务时、请确保系统有权访问所需的存储库、以便安装程序可以检索并安装所有必需的软件依赖项。
+* 安装 ONTAP Mediator 时，请确保系统可以访问所需的存储库，以便安装程序可以检索并安装所有必需的软件依赖项。
 * 要使yum安装程序能够在RHEL存储库中查找相关软件、请在安装期间或之后使用有效的Red Hat订阅注册系统。
 +
 [NOTE]
@@ -214,7 +214,7 @@ ONTAP 调解器 iSCSI 目标
 
 
 .操作系统所需的软件包
-ONTAP 调解器服务需要以下软件包：
+ONTAP 调解器需要以下软件包：
 
 
 NOTE: 软件包可以是预安装的、也可以是由ONTAP调解器安装程序自动安装的。
@@ -299,7 +299,7 @@ ONTAP调解器可以安装在启用或不启用UEFI安全启动的系统上。
 有关禁用UEFI安全启动的详细说明、请参阅适用于您的主机操作系统的文档。
 
 ====
-要在启用了UEFI安全启动的情况下安装ONTAP调解器、必须先注册安全密钥、然后才能启动服务。密钥是在SCST安装的编译步骤中生成的、并保存为计算机上的私有-公共密钥对。使用 `mokutil`实用程序将公共密钥作为计算机所有者密钥(Machine Owner Key、MOK)添加到UEFI固件中、以使系统信任并加载签名模块。请将密码短语保存 `mokutil`在安全位置、因为在重新启动系统以激活MOK时需要使用此密码短语。
+要安装启用了 UEFI 安全启动的 ONTAP Mediator，您必须先注册安全密钥，然后服务才能启动。密钥是在SCST安装的编译步骤中生成的、并保存为计算机上的私有-公共密钥对。使用 `mokutil`实用程序将公共密钥作为计算机所有者密钥(Machine Owner Key、MOK)添加到UEFI固件中、以使系统信任并加载签名模块。请将密码短语保存 `mokutil`在安全位置、因为在重新启动系统以激活MOK时需要使用此密码短语。
 
 .步骤
 . [[STEP_1_UEFI]]检查系统上是否启用了UEFI安全启动：
@@ -327,7 +327,7 @@ ONTAP调解器可以安装在启用或不启用UEFI安全启动的系统上。
  a| 
 已禁用UEFI安全启动
  a| 
-link:upgrade-host-os-mediator-task.html["升级主机操作系统、然后升级ONTAP 调解器"]
+link:upgrade-host-os-mediator-task.html["升级主机操作系统，然后升级 ONTAP Mediator"]
 
 |===
 +

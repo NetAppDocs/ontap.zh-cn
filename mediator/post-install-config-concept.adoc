@@ -2,7 +2,7 @@
 permalink: mediator/post-install-config-concept.html 
 sidebar: sidebar 
 keywords: mediator, new, release, update, install, configuration, post-installation, after installation, metrocluster ip, snapmirror business continuity, snapmirror active sync 
-summary: 安装并运行ONTAP 调解器服务后、必须在ONTAP 存储系统中执行其他配置任务才能使用调解器功能。 
+summary: 安装并运行 ONTAP Mediator 后，必须在 ONTAP 存储系统中执行其他配置任务才能使用 Mediator 功能。 
 ---
 = 安装后ONTAP调解器配置
 :allow-uri-read: 
@@ -11,23 +11,23 @@ summary: 安装并运行ONTAP 调解器服务后、必须在ONTAP 存储系统�
 
 
 [role="lead"]
-安装并运行ONTAP 调解器服务后、必须在ONTAP 存储系统中执行其他配置任务才能使用调解器功能：
+安装并运行 ONTAP Mediator 后，必须在 ONTAP 存储系统中执行其他配置任务才能使用 ONTAP Mediator 功能：
 
-* 要在 MetroCluster IP 配置中使用 ONTAP 调解器服务，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["从 MetroCluster IP 配置配置 ONTAP 调解器服务"^]。
-* 要使用SnapMirror活动同步、请参见 link:../snapmirror-active-sync/mediator-install-task.html["安装 ONTAP 调解器服务并确认 ONTAP 集群配置"]。
+* 要在 MetroCluster IP 配置中使用 ONTAP 调解器，请参阅link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["通过 MetroCluster IP 配置来配置 ONTAP 调解器"^] 。
+* 要使用SnapMirror active sync，请参见link:../snapmirror-active-sync/mediator-install-task.html["安装 ONTAP 调解器并确认 ONTAP 集群配置"]。
 
 
 
 
 == 配置ONTAP 调解器安全策略
 
-ONTAP 调解器服务器支持多种可配置的安全设置。所有设置的默认值均在只读文件中提供 `low_space_threshold_mib: 10`：
+ONTAP 调解器支持多种可配置的安全设置。所有设置的默认值均在只读文件中提供 `low_space_threshold_mib: 10`：
 
 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.user_config.yaml`
 
 放置在中的所有值 `ontap_mediator.user_config.yaml` 将覆盖默认值、并在所有ONTAP 调解器升级中保持不变。
 
-修改后 `ontap_mediator.user_config.yaml`，重新启动ONTAP 调解器服务：
+修改后 `ontap_mediator.user_config.yaml` ，重新启动 ONTAP 调解器：
 
 `systemctl restart ontap_mediator`
 
@@ -52,7 +52,7 @@ NOTE: 不应更改中的其他默认值 `ontap_mediator.config.yaml`、因为在
 * `/opt/netapp/lib/ontap_mediator/uwsgi/ontap_mediator.ini`
 
 
-这些文件中的变量用于控制ONTAP调解器服务使用的证书文件。
+这些文件中的变量用于控制 ONTAP Mediator 使用的证书文件。
 
 [role="tabbed-block"]
 ====
@@ -155,7 +155,7 @@ NOTE: 不应更改中的其他默认值 `ontap_mediator.config.yaml`、因为在
 |===
 --
 ====
-如果修改了这些属性、请重新启动ONTAP调解器服务以应用更改。有关如何将默认证书替换为第三方证书的详细说明，请参阅link:../mediator/manage-task.html#replace-self-signed-certificates-with-trusted-third-party-certificates["将自签名证书替换为受信任的第三方证书"]。
+如果修改这些属性，请重新启动 ONTAP 调解器以应用更改。有关如何将默认证书替换为第三方证书的详细说明，请参阅link:../mediator/manage-task.html#replace-self-signed-certificates-with-trusted-third-party-certificates["将自签名证书替换为受信任的第三方证书"]。
 
 
 
@@ -223,7 +223,7 @@ low_space_threshold_mib: 10
 
 === 控制预留日志空间
 
-保留日志空间由特定设置控制。默认情况下、ONTAP调解器服务器安装会为日志创建单独的磁盘空间。安装程序会创建一个新的固定大小文件、其中总磁盘空间为700 MB、将明确用于调解器日志记录。
+保留日志空间由特定设置控制。默认情况下，ONTAP Mediator 安装会为日志创建单独的磁盘空间。安装程序会创建一个新的固定大小文件，其磁盘空间总计为 700MB，专门用于 ONTAP Mediator 日志记录。
 
 要禁用此功能并使用默认磁盘空间、请执行以下步骤：
 

@@ -194,8 +194,6 @@ image:AddLag01.png["添加滞后图形"]
 --
 *使用命令行界面创建接口组*
 
-有关适用于端口接口组link:https://docs.netapp.com/us-en/ontap-cli/network-port-ifgrp-add-port.html["ONTAP 命令参考"^]的配置限制的详细信息 `network port ifgrp add-port`，请参见。
-
 创建多模式接口组时，您可以指定以下任一负载平衡方法：
 
 * `port`：网络流量基于传输层(TCP/UDP)端口分布。这是建议的负载平衡方法。
@@ -250,13 +248,13 @@ NOTE: 接口组的 MAC 地址取决于底层端口的顺序以及这些端口在
 
 `network port ifgrp add-port`
 
-有关的详细信息 `network port ifgrp add-port`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-port-ifgrp-add-port.html["ONTAP 命令参考"^]。
-
 以下示例显示了如何将端口 e0c 添加到名为 a0a 的接口组：
 
 `network port ifgrp add-port -node _cluster-1-01_ -ifgrp _a0a_ -port _e0c_`
 
 从 ONTAP 9.8 开始，在将第一个物理端口添加到接口组后大约一分钟，接口组会自动放置到相应的广播域中。如果您不希望ONTAP执行此操作、而希望手动将ifgrp置于广播域中、请指定 `-skip-broadcast-domain-placement` 参数作为的一部分 `ifgrp add-port` 命令：
+
+有关适用于端口接口组link:https://docs.netapp.com/us-en/ontap-cli/network-port-ifgrp-add-port.html["ONTAP 命令参考"^]的配置限制的详细信息 `network port ifgrp add-port`，请参见。
 
 --
 ====

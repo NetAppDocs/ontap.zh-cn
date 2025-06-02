@@ -49,8 +49,28 @@ summary: '您可以通过手动选择要创建FlexGroup卷的本地层(聚合)�
 
 
 
+[role="tabbed-block"]
+====
+.System Manager
+--
+使用系统管理器，您可以创建 FlexGroup 卷。
+
 .步骤
-. 创建FlexGroup卷： `volume create -vserver svm_name -volume flexgroup_name -aggr-list aggr1,aggr2,.. -aggr-list-multiplier constituents_per_aggr -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-granular-data advanced]`
+. 导航至“存储”>“卷”并选择image:icon_add.gif["添加图标"] 。
+. 在*添加卷*窗口中，输入卷名称和大小，然后选择*更多选项*。
+. 在*存储和优化*部分中，选择*在集群中分发卷数据（FlexGroup）*。
+. 完成卷的剩余信息并选择*保存*。
+
+
+--
+.命令行界面
+--
+. 创建FlexGroup卷：
++
+[source, cli]
+----
+volume create -vserver <svm_name> -volume <flexgroup_name> -aggr-list aggr1,aggr2,.. -aggr-list-multiplier <constituents_per_aggr> -size <fg_size> [–encrypt true] [-qos-policy-group qos_policy_group_name] [-granular-data advanced]
+----
 +
 **  `-aggr-list`参数用于指定要用于FlexGroup成员卷的本地层列表。
 +
@@ -79,11 +99,9 @@ link:../performance-admin/index.html["性能管理"]
 要创建加密卷，必须已安装卷加密许可证和密钥管理器。
 
 +
-[NOTE]
-====
-您必须在创建 FlexGroup 卷时对其启用加密。您不能对现有 FlexGroup 卷启用加密。
 
-====
+NOTE: 您必须在创建 FlexGroup 卷时对其启用加密。您不能对现有 FlexGroup 卷启用加密。
+
 +
 link:../encryption-at-rest/index.html["空闲数据加密"]
 
@@ -118,5 +136,7 @@ cluster1::> volume mount -vserver vs0 -volume fg2 -junction-path /fg
 # ls /mnt/fg2
 file1  file2
 ----
+--
+====
 .相关信息
 https://www.netapp.com/pdf.html?item=/media/12385-tr4571pdf.pdf["NetApp 技术报告 4571 ：《 NetApp FlexGroup 最佳实践和实施指南》"^]

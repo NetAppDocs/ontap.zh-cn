@@ -33,23 +33,23 @@ summary: 从tls.16.1开始、您可以为NVMe/TCP连接启用和禁用ONTAP 9安
 .命令行界面
 --
 .步骤
-. 添加支持TLS安全通道的NVMe子系统主机。您可以使用参数提供预共享密钥(PSK)、也可以使用参数使用生成的 `tls-generated-psk`PSK `tls-configured-psk`：
+. 添加支持TLS安全通道的NVMe子系统主机。您可以使用 `tls-configured-psk`争论：
 +
 [source, cli]
 ----
-vserver nvme subsystem host add -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> {-tls-configured-psk <key_text> | -tls-generated-psk true}
+vserver nvme subsystem host add -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-configured-psk <key_text>
 ----
 . 验证是否已为NVMe子系统主机配置TLS安全通道。您可以选择使用 `tls-key-type`参数仅显示正在使用该密钥类型的主机：
 +
 [source, cli]
 ----
-vserver nvme subsystem host show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured|generated}
+vserver nvme subsystem host show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured}
 ----
 . 验证是否已为NVMe子系统主机控制器配置TLS安全通道。您可以选择使用任何 `tls-key-type`、 `tls-identity`或 `tls-cipher`参数仅显示具有这些TLS属性的控制器：
 +
 [source, cli]
 ----
-vserver nvme subsystem controller show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured|generated} -tls-identity <text> -tls-cipher {none|TLS_AES_128_GCM_SHA256|TLS_AES_256_GCM_SHA384}
+vserver nvme subsystem controller show -vserver <svm_name> -subsystem <subsystem> -host-nqn <host_nqn> -tls-key-type {none|configured} -tls-identity <text> -tls-cipher {none|TLS_AES_128_GCM_SHA256|TLS_AES_256_GCM_SHA384}
 ----
 
 
