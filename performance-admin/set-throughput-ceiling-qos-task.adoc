@@ -41,7 +41,10 @@ summary: 您可以使用策略组的 max-throughput 字段为存储对象工作�
 `qos policy-group create -policy-group _policy_group_ -vserver _SVM_ -max-throughput _number_of_iops_|Mb/S|iops,Mb/S -is-shared true|false`
 
 +
-有关的详细信息 `qos policy-group create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html["ONTAP 命令参考"^]。您可以使用 `qos policy-group modify`命令调整吞吐量上限。
+有关的详细信息 `qos policy-group create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html["ONTAP 命令参考"^]。
+
++
+您可以使用 `qos policy-group modify`命令调整吞吐量上限。
 
 +
 以下命令将创建共享策略组 `pg-vs1` 最大吞吐量为5、000次IOPS：
@@ -67,6 +70,9 @@ cluster1::> qos policy-group create -policy-group pg-vs3 -vserver vs3 -max-throu
 ----
 cluster1::> qos policy-group create -policy-group pg-vs4 -vserver vs4 -is-shared false
 ----
++
+有关的详细信息 `qos policy-group modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-modify.html["ONTAP 命令参考"^]。
+
 . 将策略组应用于 SVM ，文件，卷或 LUN ：
 +
 `_storage_object_ create -vserver _SVM_ -qos-policy-group _policy_group_`

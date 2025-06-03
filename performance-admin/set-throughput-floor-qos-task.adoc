@@ -39,26 +39,26 @@ summary: 您可以使用策略组的 min-throughput 字段为存储对象工作�
 +
 有关的详细信息 `qos policy-group create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html["ONTAP 命令参考"^]。
 
-
-
-您可以使用 `qos policy-group modify`命令调整吞吐量下限。
-
-+以下命令将创建最小吞吐量为1、000 IOPS的共享策略组 `pg-vs2`：
+. 您可以使用 `qos policy-group modify`命令调整吞吐量下限。
++
+以下命令将创建最小吞吐量为1、000 IOPS的共享策略组 `pg-vs2`：
 
 +
-
 [listing]
 ----
 cluster1::> qos policy-group create -policy group pg-vs2 -vserver vs2 -min-throughput 1000iops -is-shared true
 ----
-+以下命令将创建无吞吐量限制的非共享策略组 `pg-vs4`：
++
+以下命令将创建非共享策略组 `pg-vs4` 无吞吐量限制：
 
 +
-
 [listing]
 ----
 cluster1::> qos policy-group create -policy group pg-vs4 -vserver vs4 -is-shared false
 ----
++
+有关的详细信息 `qos policy-group modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-modify.html["ONTAP 命令参考"^]。
+
 . 将策略组应用于卷或 LUN ：
 +
 `_storage_object_ create -vserver _SVM_ -qos-policy-group _policy_group_`
