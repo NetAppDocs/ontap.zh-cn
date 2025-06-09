@@ -2,7 +2,7 @@
 permalink: flexgroup/increase-capacity-task.html 
 sidebar: sidebar 
 keywords: increase, size, flexgroup, volume, flex group 
-summary: 您可以通过向FlexGroup卷的现有成分卷添加更多容量或使用新成员卷扩展FlexGroup卷来增加FlexGroup卷的大小。 
+summary: 通过向卷的现有组成部分添加更多容量或通过使用新成员卷扩展 FlexGroup 卷来增加 FlexGroup 卷的大小。 
 ---
 = 增加ONTAP FlexGroup卷的大小
 :allow-uri-read: 
@@ -26,6 +26,13 @@ summary: 您可以通过向FlexGroup卷的现有成分卷添加更多容量或�
 * FlexGroup卷的现有成员卷已达到硬件的最大FlexVol大小(如果已启用、则为100 TB或300 TB)、因此、如果不添加其他成员卷、link:../volumes/enable-large-vol-file-support-task.html["支持大卷"]则无法调整FlexGroup卷的大小。
 
 
+[NOTE]
+====
+如果您修改 FlexGroup 卷以包含更多成员，则先前创建的快照将被视为“部分”，并且只能由来自 `.snapshot`目录或“*以前的版本*”选项卡。
+
+如果快照被视为“部分”，则不能用于 SnapRestore 操作。但是，部分快照可用于从 `.snapshot`目录或“*以前的版本*”选项卡。
+
+====
 在ONTAP 9.3之前的版本中、建立FlexGroup关系后、请勿扩展SnapMirror卷。如果在 ONTAP 9.3 之前的版本中中断 SnapMirror 关系后扩展源 FlexGroup 卷，则必须再次向目标 FlexGroup 卷执行基线传输。从 ONTAP 9.3 开始，您可以扩展 SnapMirror 关系中的 FlexGroup 卷。
 
 .步骤
