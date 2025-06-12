@@ -18,6 +18,8 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 
 如果您使用的是MetroCluster配置、则必须运行 `security key-manager onboard enable` 命令、然后运行 `security key-manager onboard sync` 命令、并在每个上使用相同的密码短语。运行时 `security key-manager onboard enable` 命令、然后在远程集群上同步、则不需要运行 `enable` 命令。
 
+有关和的 `security key-manager onboard sync`详细信息 `security key-manager onboard enable`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+onboard["ONTAP 命令参考"^]。
+
 默认情况下，重新启动节点时不需要输入密钥管理器密码短语。您可以使用 `cc-mode-enabled=yes` 选项、要求用户在重新启动后输入密码短语。
 
 对于NVE (如果已设置) `cc-mode-enabled=yes`、使用创建的卷 `volume create` 和 `volume move start` 命令会自动加密。适用于 `volume create`，则无需指定 `-encrypt true`。适用于 `volume move start`，则无需指定 `-encrypt-destination true`。
@@ -84,7 +86,7 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 +
 [NOTE]
 ====
- `security key-manager key query`命令将取代 `security key-manager query key`命令。有关的详细信息 `security key-manager key query`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["ONTAP 命令参考"^]。
+ `security key-manager key query`命令将取代 `security key-manager query key`命令。
 
 ====
 +
@@ -114,6 +116,9 @@ node1                                 NSE-AK   AES-256      true
 
 2 entries were displayed.
 ----
++
+有关的详细信息 `security key-manager key query`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["ONTAP 命令参考"^]。
+
 . (可选)将纯文本卷转换为加密卷。
 +
 `volume encryption conversion start`
@@ -127,3 +132,7 @@ node1                                 NSE-AK   AES-256      true
 将密码短语复制到存储系统以外的安全位置，以供将来使用。
 
 配置板载密钥管理器密码短语时，您还应手动将信息备份到存储系统以外的安全位置，以便在发生灾难时使用。请参见 link:backup-key-management-information-manual-task.html["手动备份板载密钥管理信息"]。
+
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["安全密钥管理器设置"^]
+

@@ -24,14 +24,19 @@ summary: 要安装 ONTAP Mediator，您必须确保满足所有先决条件、�
 在升级或安装 ONTAP 调解器之前，请先查看以下注意事项。
 
 
-CAUTION: ONTAP调解器1.8及更早版本与Red Hat Enterprise Linux FIPS模式不兼容、将导致其无法成功安装。您可以使用命令检查是否已启用FIPS模式 `fips-mode-setup --check` 。您可以使用命令禁用FIPS模式 `fips-modesetup --disable` 。禁用FIPS模式后重新启动、以成功安装ONTAP调解器1.8或更早版本。
+NOTE: ONTAP调解器1.8及更早版本与Red Hat Enterprise Linux FIPS模式不兼容、将导致其无法成功安装。您可以使用命令检查是否已启用FIPS模式 `fips-mode-setup --check` 。您可以使用命令禁用FIPS模式 `fips-modesetup --disable` 。禁用FIPS模式后重新启动、以成功安装ONTAP调解器1.8或更早版本。
 
 * 您应该将 ONTAP Mediator 升级到可用的最新版本。早期版本的ONTAP调解器与所有ONTAP版本保持向后兼容、但最新版本包括所有第三方元素的安全修补程序。
 * 升级到新的ONTAP调解器版本时、安装程序会自动升级到建议的SCST版本、除非有更高版本可用。有关手动安装较高版本SCST的说明，请参阅link:manage-task.html["管理ONTAP调解器"]。有关支持的版本，请参见link:whats-new-concept.html#scst-support-matrix["SCST支持列表"]。
-+
 
-CAUTION: 如果安装失败、您可能需要升级到更高版本的ONTAP调解器。
 
+[NOTE]
+====
+* 如果安装失败、您可能需要升级到更高版本的ONTAP调解器。
+* 自 2025 年 6 月 15 日起，您将无法安装或升级 ONTAP Mediator 1.8 和 1.9，因为它们的代码签名证书已过期。如果安装或升级失败，请改用 ONTAP Mediator 1.9.1 补丁程序版本。
+
+
+====
 * 如果安装 `yum-utils` 软件包中、您可以使用 `needs-restarting` 命令：
 
 

@@ -11,7 +11,7 @@ summary: 您可以使用 security login create 命令使 LDAP 或 NIS 用户帐�
 
 
 [role="lead"]
-您可以使用 `security login create`命令使LDAP或NIS用户帐户能够访问管理员或数据SVM。如果尚未配置对 SVM 的 LDAP 或 NIS 服务器访问，则必须先配置此访问权限，然后帐户才能访问此 SVM 。有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。
+您可以使用 `security login create`命令使LDAP或NIS用户帐户能够访问管理员或数据SVM。如果尚未配置对 SVM 的 LDAP 或 NIS 服务器访问，则必须先配置此访问权限，然后帐户才能访问此 SVM 。
 
 .关于此任务
 * 不支持组帐户。
@@ -50,6 +50,9 @@ link:config-worksheets-reference.html["创建或修改登录帐户"]
 ----
 cluster1::>security login create -vserver engCluster -user-or-group-name guest2 -application ssh -authmethod nsswitch -role backup
 ----
++
+有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。
+
 . 为 LDAP 或 NIS 用户启用 MFA 登录：
 +
 ``security login modify -user-or-group-name rem_usr1 -application ssh -authentication-method nsswitch -role admin -is-ns-switch-group no -second-authentication-method publickey``

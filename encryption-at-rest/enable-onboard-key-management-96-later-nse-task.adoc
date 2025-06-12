@@ -18,6 +18,8 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 .关于此任务
 您必须运行 `security key-manager onboard enable` 命令。在MetroCluster配置中、您必须运行 `security key-manager onboard enable` 首先在本地集群上运行 `security key-manager onboard sync` 在远程集群上、在每个上使用相同的密码短语。
 
+有关和的 `security key-manager onboard sync`详细信息 `security key-manager onboard enable`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+onboard["ONTAP 命令参考"^]。
+
 默认情况下，重新启动节点时不需要输入密钥管理器密码短语。除了在MetroCluster中、您可以使用 `cc-mode-enabled=yes` 选项、要求用户在重新启动后输入密码短语。
 
 [NOTE]
@@ -54,7 +56,7 @@ link:delete-key-management-database-task.html["从外部密钥管理过渡到板
 
 +
 
-NOTE: 设置 `cc-mode-enabled=yes` 要求用户在重新启动后输入密钥管理器密码短语。。 `- cc-mode-enabled` 选项在MetroCluster配置中不受支持。    。 `security key-manager onboard enable` 命令用于替换 `security key-manager setup` 命令：
+NOTE: 设置 `cc-mode-enabled=yes`为要求用户在重新启动后输入密钥管理器密码短语。MetroCluster配置不支持此 `- cc-mode-enabled`选项。 `security key-manager onboard enable`命令将取代 `security key-manager setup`命令。
 
 +
 以下示例将在 cluster1 上启动密钥管理器设置命令，而无需在每次重新启动后输入密码短语：
@@ -79,7 +81,7 @@ NOTE: 如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密�
 
 +
 
-NOTE:  `security key-manager key query`命令将取代 `security key-manager query key`命令。有关的详细信息 `security key-manager key query`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html?q=security+key-manager+key+query["ONTAP 命令参考"^]。
+NOTE:  `security key-manager key query`命令将取代 `security key-manager query key`命令。
 
 +
 以下示例将验证是否已为创建身份验证密钥 `cluster1`：
@@ -110,9 +112,16 @@ node1                                 NSE-AK    yes
 node2                                 NSE-AK    yes
     Key ID: <id_value>
 ----
++
+有关的详细信息 `security key-manager key query`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html?q=security+key-manager+key+query["ONTAP 命令参考"^]。
+
 
 
 .完成后
 将密码短语复制到存储系统以外的安全位置，以供将来使用。
 
 所有密钥管理信息都会自动备份到集群的复制数据库（ RDB ）。您还应手动备份此信息，以便在发生灾难时使用。
+
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["安全密钥管理器设置"^]
+
