@@ -2,7 +2,7 @@
 permalink: upgrade/remove-ems-lif-service-task.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, after, post, ems, event, management, system, lifs, messages, not, delivered 
-summary: 从ONTAP 9.7或更早版本升级到9.8或更高版本后、如果您使用的是EMS、则可能需要从某些网络服务策略中删除EMS LIF服务。 
+summary: 从 ONTAP 9.7 或更早版本升级到 9.8 或更高版本后，如果您使用 EMS，则可能需要从某些网络服务策略中删除 EMS LIF 服务。 
 ---
 = 升级ONTAP后、从网络服务策略中删除EMS LIF服务
 :allow-uri-read: 
@@ -11,14 +11,16 @@ summary: 从ONTAP 9.7或更早版本升级到9.8或更高版本后、如果您�
 
 
 [role="lead"]
-如果在从ONTAP 9.7或更早版本升级到ONTAP 9.8或更高版本之前设置了事件管理系统(EMS)消息、则在升级之后、可能无法传送EMS消息。
+如果您在从 ONTAP 9.7 或更早版本升级到 ONTAP 9.8 或更高版本之前设置了事件管理系统 (EMS) 消息，则升级后您的 EMS 消息可能无法传递。
 
-在升级期间、EMS-EMS (即EMS LIF服务)会添加到所有现有服务策略中。  这样、可以从与任何服务策略关联的任何LIF发送EMS消息。  如果选定LIF无法访问事件通知目标、则不会传送消息。
+在升级过程中，  `management-ems` （即 EMS LIF 服务）已添加到管理和系统 SVM 中所有现有的服务策略。这样，就可以从与服务策略关联的任何 LIF 发送 EMS 消息。如果选定LIF无法访问事件通知目标、则不会传送消息。
 
-为防止出现这种情况、升级后、您应从不提供目标可访问性的网络服务策略中删除EMS LIF服务。
+为防止这种情况，升级后您应该从不提供目标可达性的网络服务策略中删除 EMS LIF 服务。
+
+link:../networking/lifs_and_service_policies96.html#service-policies-for-system-svms["了解有关 ONTAP LIF 和服务策略的更多信息"](英文)
 
 .步骤
-. 确定可用于发送EMS消息的LIF以及关联的网络服务策略：
+. 确定可通过其发送 EMS 消息的 LIF 和关联的网络服务策略：
 +
 [source, cli]
 ----
@@ -28,15 +30,11 @@ network interface show -fields service-policy -services management-ems
 [listing]
 ----
 vserver        lif            service-policy
--------------- ------------ ------------------
-cluster-1      cluster_mgmt
-                                      default-management
-cluster-1      node1-mgmt
-                                      default-management
-cluster-1      node2-mgmt
-                                      default-management
-cluster-1      inter_cluster
-                                      default-intercluster
+-------------- ------------   ------------------
+cluster-1      cluster_mgmt   default-management
+cluster-1      node1-mgmt     default-management
+cluster-1      node2-mgmt     default-management
+cluster-1      inter_cluster  default-intercluster
 4 entries were displayed.
 ----
 . 检查每个LIF是否与EMS目标连接：
@@ -64,7 +62,7 @@ no answer from 10.10.10.10
 ----
 set advanced
 ----
-. 对于无法访问的LIF、请从相应的服务策略中删除management-EMS LIF服务：
+. 对于不具有可达性的 LIF，删除 `management-ems`相应服务策略中的 LIF 服务：
 +
 [source, cli]
 ----
@@ -80,6 +78,3 @@ network interface service-policy remove-service -vserver <svm_name> -policy <ser
 network interface show -fields service-policy -services management-ems
 ----
 
-
-.相关链接
-link:../networking/lifs_and_service_policies96.html#service-policies-for-system-svms["ONTAP 9.6及更高版本中的LIF和服务策略"]
