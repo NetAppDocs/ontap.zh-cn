@@ -2,7 +2,7 @@
 permalink: smb-hyper-v-sql/verify-domain-accounts-map-default-unix-user-task.html 
 sidebar: sidebar 
 keywords: verfiy, domain, account, default, unix, server, smb, share, user 
-summary: Hyper-V 和 SQL Server 使用域帐户创建与持续可用共享的 SMB 连接。要成功创建连接，计算机帐户必须成功映射到 UNIX 用户。为此，最方便的方法是将计算机帐户映射到默认 UNIX 用户。 
+summary: Hyper-V 和 SQL Server 要求将域计算机帐户映射到 UNIX 用户才能进行 SMB 访问。最简单的方法是将它们映射到默认 UNIX 用户。 
 ---
 = 验证域帐户是否映射到ONTAP中的默认UNIX用户
 :allow-uri-read: 
@@ -16,45 +16,65 @@ Hyper-V 和 SQL Server 使用域帐户创建与持续可用共享的 SMB 连接�
 .关于此任务
 Hyper-V 和 SQL Server 使用域计算机帐户创建 SMB 连接。此外， SQL Server 还使用域用户帐户作为服务帐户，该帐户还会建立 SMB 连接。
 
-创建Storage Virtual Machine (SVM)时、ONTAP会自动创建名为"`pcuser`"(UID为 `65534`)和名为"`pcuser`"的组(GID为 `65534`)、并将默认用户添加到"`pcuser`"组。如果要在将集群升级到 Data ONTAP 8.2 之前存在的 SVM 上配置基于 SMB 解决方案的 Hyper-V ，则默认用户和组可能不存在。否则，必须先创建它们，然后再配置 CIFS 服务器的默认 UNIX 用户。
+创建存储虚拟机 (SVM) 时，ONTAP 会自动创建名为 `pcuser` （UID 为 `65534` ) 和名为 `pcuser` （GID 为 `65534` ），并将默认用户添加到 `pcuser`团体。如果要在将集群升级到 Data ONTAP 8.2 之前存在的 SVM 上配置基于 SMB 解决方案的 Hyper-V ，则默认用户和组可能不存在。否则，必须先创建它们，然后再配置 CIFS 服务器的默认 UNIX 用户。
 
 .步骤
 . 确定是否存在默认 UNIX 用户：
 +
-`*vserver cifs options show -vserver _vserver_name_*`
-
+[source, cli]
+----
+vserver cifs options show -vserver <vserver_name>
+----
 . 如果未设置默认用户选项，请确定是否存在可指定为默认 UNIX 用户的 UNIX 用户：
 +
-`*vserver services unix-user show -vserver _vserver_name_*`
-
-. 如果未设置默认用户选项，并且没有可指定为默认 UNIX 用户的 UNIX 用户，请创建默认 UNIX 用户和默认组，然后将默认用户添加到组中。
+[source, cli]
+----
+vserver services unix-user show -vserver <vserver_name>
+----
+. 如果未设置默认用户选项，并且没有可指定为默认 UNIX 用户的 UNIX 用户，则创建默认组和默认 UNIX 用户，并将默认用户添加到该组。
 +
-通常、系统会为默认用户提供用户名"`pcuser`"、并且必须为其分配UID `65534`。默认组通常被指定为组名称 "`pcuser` " 。分配给组的GID必须为 `65534`。
+通常，默认用户的用户名是“pcuser”，并且必须分配 UID  `65534` .默认组一般被赋予组名“pcuser”。分配给组的GID必须为 `65534`。
 
 +
 .. 创建默认组：
 +
-`*vserver services unix-group create -vserver _vserver_name_ -name pcuser -id 65534*`
+[source, cli]
+----
+vserver services unix-group create -vserver <vserver_name> -name pcuser -id 65534
+----
 .. 创建默认用户并将默认用户添加到默认组：
 +
-`*vserver services unix-user create -vserver _vserver_name_ -user pcuser -id 65534 -primary-gid 65534*`
+[source, cli]
+----
+vserver services unix-user create -vserver <vserver_name> -user pcuser -id 65534 -primary-gid 65534
+----
 .. 验证是否已正确配置默认用户和默认组：
 +
-`*vserver services unix-user show -vserver _vserver_name_*`
+[source, cli]
+----
+vserver services unix-user show -vserver <vserver_name>
+----
 +
-`*vserver services unix-group show -vserver _vserver_name_ -members*`
+[source, cli]
+----
+vserver services unix-group show -vserver <vserver_name> -members
+----
 
 
 . 如果未配置 CIFS 服务器的默认用户，请执行以下操作：
 +
 .. 配置默认用户：
 +
-`*vserver cifs options modify -vserver *vserver_name* -default-unix-user pcuser*`
-
+[source, cli]
+----
+vserver cifs options modify -vserver <vserver_name> -default-unix-user pcuser
+----
 .. 验证是否已正确配置默认 UNIX 用户：
 +
-`*vserver cifs options show -vserver _vserver_name_*`
-
+[source, cli]
+----
+vserver cifs options show -vserver <vserver_name>
+----
 
 
 . 要验证应用程序服务器的计算机帐户是否正确映射到默认用户、请将驱动器映射到驻留在SVM上的共享、然后使用确认Windows用户到UNIX用户的映射 `vserver cifs session show` 命令：
@@ -64,7 +84,7 @@ Hyper-V 和 SQL Server 使用域计算机帐户创建 SMB 连接。此外， SQL
 
 
 .示例
-以下命令确定未设置 CIFS 服务器的默认用户，但确定 "`pcuser` " 用户和 "`pcuser` " 组存在。在 SVM vs1 上，将 "`pcuser` " 用户分配为 CIFS 服务器的默认用户。
+。 `pcuser`用户被指定为 SVM vs1 上的 CIFS 服务器的默认用户。
 
 [listing]
 ----
