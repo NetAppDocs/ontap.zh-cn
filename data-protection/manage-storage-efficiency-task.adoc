@@ -31,14 +31,17 @@ https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["�
 * 使用存储进行逻辑传输：从ONTAP 9.3开始、不再需要手动更新即可重新启用存储效率。如果 SnapMirror 检测到已禁用后处理压缩，则会在下次计划更新时自动重新启用存储效率。源和目标都必须运行 ONTAP 9.3 。
 * 从 ONTAP 9.3 开始，在将目标卷设为可写后， AFF 系统对存储效率设置的管理方式与 FAS 系统不同：
 +
-** 在使用命令将目标卷设置为可写后 `snapmirror break`、卷上的缓存策略会自动设置为"`auto`"(默认设置)。有关的详细信息 `snapmirror break`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["ONTAP 命令参考"^]。
+** 使用以下方法将目标卷设置为可写后 `snapmirror break`命令，卷上的缓存策略将自动设置为 `auto` （默认）。
 +
 [NOTE]
 ====
 此行为仅适用于 FlexVol 卷，不适用于 FlexGroup 卷。
 
 ====
-** 重新同步时，缓存策略会自动设置为 "`none` " ，并且无论您的原始设置如何，重复数据删除和实时压缩都会自动禁用。您必须根据需要手动修改这些设置。
++
+有关的详细信息 `snapmirror break`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-break.html["ONTAP 命令参考"^]。
+
+** 重新同步时，缓存策略会自动设置为 `none` ，并且无论您的原始设置如何，重复数据删除和内联压缩都会自动禁用。您必须根据需要手动修改这些设置。
 
 
 

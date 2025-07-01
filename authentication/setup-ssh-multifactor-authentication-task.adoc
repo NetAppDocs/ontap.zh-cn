@@ -15,7 +15,10 @@ summary: '通过多因素身份验证(MFA)、您可以要求用户提供两种�
 
 .关于此任务
 * 您必须是集群管理员才能执行此任务。
-* 如果您不确定要分配给登录帐户的访问控制角色、可以稍后使用命令添加此角色。 `security login modify`有关的详细信息 `security login modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["ONTAP 命令参考"^]。
+* 如果您不确定要分配给登录帐户的访问控制角色、可以稍后使用命令添加此角色。 `security login modify`
++
+有关的详细信息 `security login modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["ONTAP 命令参考"^]。
+
 +
 link:modify-role-assigned-administrator-task.html["修改分配给管理员的角色"]
 
@@ -121,17 +124,21 @@ security login create -vserver <svm_name> -user-or-group-name <user_or_group_nam
 ----
 security login modify -vserver <svm_name> -user-or-group-name <user_or_group_name> -application ssh -authentication-method publickey -second-authentication-method totp -role <role> -comment <comment>
 ----
++
+有关的详细信息 `security login modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html["ONTAP 命令参考"^]。
+
 . 验证是否已启用具有TOTP的MFA：
 +
 [listing]
 ----
 security login show
 ----
++
+有关的详细信息 `security login show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-show.html["ONTAP 命令参考"^]。
+
 
 
 --
-有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。
-
 ====
 .完成后
 * 如果您尚未将公有密钥与管理员帐户关联，则必须先将其关联，然后该帐户才能访问 SVM 。

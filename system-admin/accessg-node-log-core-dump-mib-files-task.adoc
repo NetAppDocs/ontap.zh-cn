@@ -25,13 +25,16 @@ summary: 默认情况下，服务处理器基础架构（ Service Processor Infr
 有关的详细信息 `network interface show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-show.html["ONTAP 命令参考"^]。
 
 * 您必须使用本地用户帐户访问 `spi` 不支持Web服务、域用户帐户。
-* 如果您的用户帐户没有"`admin`"角色(该角色有权访问 `spi` Web服务)、则必须为您的访问控制角色授予对的访问权限 `spi` Web服务。
+* 如果您的用户帐户没有 `admin`角色（有权访问 `spi` web 服务），您的访问控制角色必须被授予访问 `spi`网络服务。
 +
 。 `vserver services web access show` 命令可显示为哪些角色授予了对哪些Web服务的访问权限。
 
-* 如果您未使用"`admin`"用户帐户(其中包括 `http` 访问方法)、则必须使用设置您的用户帐户 `http` 访问方法。
+* 如果您不使用 `admin`用户帐户（包括 `http`访问方法），您的用户帐户必须设置 `http`访问方法。
 +
 。 `security login show` 命令显示用户帐户的访问和登录方法及其访问控制角色。
+
++
+有关的详细信息 `security login show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-show.html["ONTAP 命令参考"^]。
 
 * 如果要使用 HTTPS 进行安全 Web 访问，则必须启用 SSL 并安装数字证书。
 +
@@ -42,7 +45,7 @@ summary: 默认情况下，服务处理器基础架构（ Service Processor Infr
 .关于此任务
 。 `spi` 默认情况下、Web服务处于启用状态、可以手动禁用此服务 (`vserver services web modify -vserver * -name spi -enabled false`）。
 
-将为"`admin`"角色授予对的访问权限 `spi` Web服务、并且可以手动禁用访问 (`services web access delete -vserver _cluster_name_ -name spi -role admin`）。
+这 `admin`角色被授予访问权限 `spi`默认的 Web 服务，可以手动禁用访问(`services web access delete -vserver _cluster_name_ -name spi -role admin` ）。
 
 .步骤
 . 将Web浏览器指向 `spi` 以下格式之一的Web服务URL：

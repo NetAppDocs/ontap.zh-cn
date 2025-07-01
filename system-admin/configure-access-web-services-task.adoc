@@ -40,6 +40,9 @@ summary: 通过配置对 Web 服务的访问，授权用户可以使用 HTTP 或
 
 . 要配置集群级别的Web协议引擎并使Web服务内容可访问、请使用 `system services web modify` 命令：
 . 如果您计划使用安全Web服务(HTTPS)、请使用为集群或SVM启用SSL并提供数字证书信息 `security ssl modify` 命令：
++
+有关的详细信息 `security ssl modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-ssl-modify.html["ONTAP 命令参考"^]。
+
 . 要为集群或SVM启用Web服务、请使用 `vserver services web modify` 命令：
 +
 必须对要为集群或 SVM 启用的每个服务重复此步骤。
@@ -48,14 +51,20 @@ summary: 通过配置对 Web 服务的访问，授权用户可以使用 HTTP 或
 +
 您授予访问权限的角色必须已存在。您可以使用显示现有角色 `security login role show` 命令或使用创建新角色 `security login role create` 命令：
 
++
+有关和的 `security login role create`详细信息 `security login role show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+login+role["ONTAP 命令参考"^]。
+
 . 对于已授权访问Web服务的角色、请检查的输出、确保为其用户配置了正确的访问方法 `security login show` 命令：
 +
 以访问ONTAP API Web服务  `ontapi`)、则必须为用户配置 `ontapi` 访问方法。要访问所有其他Web服务、必须为用户配置 `http` 访问方法。
 
 +
+有关的详细信息 `security login show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-show.html["ONTAP 命令参考"^]。
+
++
 [NOTE]
 ====
-您可以使用 `security login create` 用于为用户添加访问方法的命令。
+您可以使用 `security login create`命令为用户添加访问方法。有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。
 
 ====
 
