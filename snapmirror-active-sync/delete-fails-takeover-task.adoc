@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: snapmirror-active-sync/delete-fails-takeover-task.html 
 keywords: troubleshooting, SM-BC, SMBC, SnapMirror, delete, takeover, consistency group, snapmirror active sync 
-summary: '如果在集群上安装了ONTAP 9.9.1、则执行 `snapmirror delete` 如果SnapMirror活动同步一致性组关系处于接管状态、则命令将失败。' 
+summary: '在集群上安装 ONTAP 9.9.1 时，执行 `snapmirror delete`当 SnapMirror 活动同步一致性组关系处于接管状态时，命令失败。' 
 ---
 = SnapMirror 删除操作在接管状态下失败
 :hardbreaks:
@@ -15,7 +15,7 @@ summary: '如果在集群上安装了ONTAP 9.9.1、则执行 `snapmirror delete`
 
 .问题描述 ：
 [role="lead"]
-如果在集群上安装了ONTAP 9.9.1、则执行 `snapmirror delete` 如果SnapMirror活动同步一致性组关系处于接管状态、则命令将失败。
+在集群上安装 ONTAP 9.9.1 时，执行 `snapmirror delete`当 SnapMirror 活动同步一致性组关系处于接管状态时，命令失败。
 
 ....
 C2_cluster::> snapmirror delete  vs1:/cg/dd
@@ -23,7 +23,7 @@ C2_cluster::> snapmirror delete  vs1:/cg/dd
 Error: command failed: RPC: Couldn't make connection
 ....
 .解决方案
-如果SnapMirror活动同步关系中的节点处于接管状态、请在将"-force "选项设置为true的情况下执行SnapMirror删除和释放操作。
+当 SnapMirror 主动同步关系中的节点处于接管状态时，将“-force”选项设置为 true 执行 SnapMirror 删除和释放操作。
 
 ....
 C2_cluster::> snapmirror delete  vs1:/cg/dd -force true

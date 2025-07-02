@@ -40,7 +40,7 @@ summary: 您可以随时开始保护同一集群上的现有 S3 存储分段；�
 +
 请参见 link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组"] 有关详细信息 ...
 
-. 如果您没有SnapMirror S3策略、并且不想使用默认策略、请创建此策略：
+. 如果您没有现有的 SnapMirror S3 策略并且不想使用默认策略，请创建一个 SnapMirror S3 策略：
 +
 .. 单击 * 保护 > 概述 * ，然后单击 * 本地策略设置 * 。
 .. 单击 image:../media/icon_arrow.gif["箭头图标"] *Protection Policies*旁边的，然后单击*Add*。
@@ -133,7 +133,7 @@ GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucket
 ----
 clusterA::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 如果您没有SnapMirror S3策略、并且不想使用默认策略、请创建此策略：
+. 如果您没有现有的 SnapMirror S3 策略并且不想使用默认策略，请创建一个 SnapMirror S3 策略：
 +
 `snapmirror policy create -vserver _svm_name_ -policy _policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment text] [_additional_options_]`
 
@@ -165,7 +165,7 @@ clusterA::> snapmirror policy create -vserver vs0 -type continuous -rpo 0 -polic
 
 
 
-. 创建SnapMirror S3关系：
+. 创建 SnapMirror S3 关系： 
 `snapmirror create -source-path _src_svm_name_:/bucket/_bucket_name_ -destination-path _dest_peer_svm_name_:/bucket/_bucket_name_, ...} [-policy policy_name]`
 +
 您可以使用创建的策略或接受默认值。

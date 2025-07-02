@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: s3-snapmirror/create-cloud-backup-new-bucket-task.html 
 keywords: create, backup, relationship, new, bucket 
-summary: '创建新的S3分段时、您可以立即将其备份到对象存储提供程序(可以是StorageGRID系统或Amazon S3部署)上的SnapMirror S3目标分段。' 
+summary: 创建新的 S3 存储桶时，您可以立即将它们备份到对象存储提供商上的 SnapMirror S3 目标存储桶，该提供商可以是 StorageGRID 系统或 Amazon S3 部署。 
 ---
 = 为新的ONTAP S3存储分段创建云备份关系
 :hardbreaks:
@@ -16,7 +16,7 @@ summary: '创建新的S3分段时、您可以立即将其备份到对象存储�
 
 
 [role="lead"]
-创建新的S3分段时、您可以立即将其备份到对象存储提供程序(可以是StorageGRID系统或Amazon S3部署)上的SnapMirror S3目标分段。
+创建新的 S3 存储桶时，您可以立即将它们备份到对象存储提供商上的 SnapMirror S3 目标存储桶，该提供商可以是 StorageGRID 系统或 Amazon S3 部署。
 
 .开始之前
 * 您拥有对象存储提供程序的有效帐户凭据和配置信息。
@@ -54,7 +54,7 @@ summary: '创建新的S3分段时、您可以立即将其备份到对象存储�
 
 
 
-. 如果您没有SnapMirror S3策略、并且不想使用默认策略、请创建此策略：
+. 如果您没有现有的 SnapMirror S3 策略并且不想使用默认策略，请创建一个 SnapMirror S3 策略：
 +
 .. 单击*Protection > Overview*，然后单击*Local Policy Settings*。
 .. 单击 image:../media/icon_arrow.gif["箭头图标"] *Protection Policies*旁边的，然后单击*Add*。
@@ -109,7 +109,7 @@ GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucket
 ----
 clusterA::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 如果您没有SnapMirror S3策略、并且不想使用默认策略、请创建此策略：
+. 如果您没有现有的 SnapMirror S3 策略并且不想使用默认策略，请创建一个 SnapMirror S3 策略： 
 `snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
 参数：* `type continuous`—SnapMirror S3关系的唯一策略类型(必需)。* `-rpo`–指定恢复点目标的时间(以秒为单位)(可选)。* `-throttle`–指定吞吐量/带宽的上限(以千字节/秒为单位)(可选)。
@@ -136,7 +136,7 @@ parameters：* `-object-store-name`—本地ONTAP系统上的对象存储目标�
 ----
 src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
 ----
-. 创建SnapMirror S3关系：
+. 创建 SnapMirror S3 关系： 
 `snapmirror create -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _object_store_name_:/objstore -policy _policy_name_`
 +
 Parameters

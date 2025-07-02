@@ -32,7 +32,7 @@ summary: 您可以随时开始备份现有的 S3 存储分段；例如，如果�
 +
 请参见 link:../task_object_provision_add_s3_users_groups.html["添加 S3 用户和组"] 有关详细信息 ...
 
-. 如果您没有SnapMirror S3策略、并且不想使用默认策略、请创建此策略：
+. 如果您没有现有的 SnapMirror S3 策略并且不想使用默认策略，请创建一个 SnapMirror S3 策略：
 +
 .. 单击 * 保护 > 概述 * ，然后单击 * 本地策略设置 * 。
 .. 单击 image:../media/icon_arrow.gif["箭头图标"] *Protection Policies*旁边的，然后单击*Add*。
@@ -96,7 +96,7 @@ summary: 您可以随时开始备份现有的 S3 存储分段；例如，如果�
 ----
 clusterA::> vserver object-store-server bucket policy add-statement -bucket test-bucket -effect allow -action GetObject,PutObject,DeleteObject,ListBucket,GetBucketAcl,GetObjectAcl,ListBucketMultipartUploads,ListMultipartUploadParts -principal - -resource test-bucket, test-bucket /*
 ----
-. 如果您没有SnapMirror S3策略、并且不想使用默认策略、请创建此策略：
+. 如果您没有现有的 SnapMirror S3 策略并且不想使用默认策略，请创建一个 SnapMirror S3 策略： 
 `snapmirror policy create -vserver svm_name -policy policy_name -type continuous [-rpo _integer_] [-throttle _throttle_type_] [-comment _text_] [_additional_options_]`
 +
 参数：* `type continuous`—SnapMirror S3关系的唯一策略类型(必需)。* `-rpo`–指定恢复点目标的时间(以秒为单位)(可选)。* `-throttle`–指定吞吐量/带宽的上限(以千字节/秒为单位)(可选)。
@@ -123,7 +123,7 @@ parameters：* `-object-store-name`—本地ONTAP系统上的对象存储目标�
 ----
 src_cluster::> snapmirror object-store config create -vserver vs0 -object-store-name sgws-store -usage data -provider-type SGWS -server sgws.example.com -container-name target-test-bucket -is-ssl-enabled true -port 443 -access-key abc123 -secret-password xyz890
 ----
-. 创建SnapMirror S3关系：
+. 创建 SnapMirror S3 关系： 
 `snapmirror create -source-path _svm_name_:/bucket/_bucket_name_ -destination-path _object_store_name_:/objstore  -policy _policy_name_`
 +
 Parameters
