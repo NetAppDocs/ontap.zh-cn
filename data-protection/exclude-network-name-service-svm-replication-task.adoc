@@ -18,8 +18,6 @@ summary: 您可以使用 snapmirror create 命令的 -identity-preserve false �
 .关于此任务
 有关保留的协议和名称服务设置的列表，请参见 link:snapmirror-svm-replication-concept.html#configurations-replicated-in-svm-disaster-recovery-relationships["在 SVM DR 关系中复制的配置"]。
 
-有关的详细信息 `snapmirror create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["ONTAP 命令参考"^]。
-
 .开始之前
 源和目标集群以及 SVM 必须建立对等关系。
 
@@ -111,6 +109,9 @@ cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup
 ----
 cluster_dst::> snapmirror create -source-path svm1: -destination-path svm_backup: -type XDP -schedule my_daily -policy my_unified -identity-preserve false
 ----
++
+有关的详细信息 `snapmirror create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["ONTAP 命令参考"^]。
+
 . 停止目标 SVM ：
 +
 `vserver stop`
@@ -133,6 +134,9 @@ destination_cluster::> vserver stop -vserver dvs1
 . 从目标 SVM 或目标集群初始化 SVM 复制关系：
 +
 `snapmirror initialize -source-path _SVM_name_: -destination-path _SVM_name_:`
+
++
+有关的详细信息 `snapmirror initialize`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["ONTAP 命令参考"^]。
 
 
 
