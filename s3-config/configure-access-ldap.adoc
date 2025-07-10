@@ -105,14 +105,14 @@ ONTAP S3的默认配置不包括HTTP、而是仅使用HTTPS和传输层安全(Tr
 
 [listing]
 ----
-$curl -siku <user>:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user>,"<key_time_to_live>":"PT6H3M"}'
+$curl -siku <user>:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user>,"key_time_to_live":"PT6H3M"}
 ----
 
 NOTE: 将API定向到集群管理LIF、而不是SVM的数据LIF。如果要允许用户生成自己的密钥、则必须向其角色添加HTTP权限才能使用CURL。此权限是对S3 API权限的补充。
 
 
 
-== 为Active Directory或CIFS服务器配置S3访问
+== 为 Active Directory 或 SMB 服务器配置 S3 访问
 
 如果在b分 段策略语句中指定的鼻组或属于鼻组的用户未设置UID和GID、则在未找到这些属性时、查找将失败。Active Directory使用SID、而不是UID。如果SID条目无法映射到UID、则需要将必要的数据提供给ONTAP。
 
@@ -120,7 +120,7 @@ NOTE: 将API定向到集群管理LIF、而不是SVM的数据LIF。如果要允�
 
 或者、使用link:../authentication/enable-ad-users-groups-access-cluster-svm-task.html["创建Vserver CIFS"]在Active Directory域中创建SMB服务器。
 
-为避免查找失败、NetApp建议使用受信任域以UPN格式进行资源授权： `nasgroup/group@trusted_domain.com`
+如果名称服务器和对象存储使用不同的域名，则可能会遇到查找失败的情况。为避免查找失败， NetApp建议使用 UPN 格式的受信任域进行资源授权：  `nasgroup/group@trusted_domain.com`受信任域是指已添加到 SMB 服务器受信任域列表中的域。了解如何link:../smb-admin/add-remove-replace-trusted-domains-preferred-lists-task.html["添加、删除和修改首选信任域"]在 SMB 服务器列表中。
 
 
 
@@ -130,7 +130,7 @@ NOTE: 将API定向到集群管理LIF、而不是SVM的数据LIF。如果要允�
 
 [listing]
 ----
-$curl -siku FQDN\\user:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user@fqdn>,"<key_time_to_live>":"PT6H3M"}'
+$curl -siku FQDN\\user:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user@fqdn>,"key_time_to_live":"PT6H3M"}
 ----
 
 NOTE: 将API定向到集群管理LIF、而不是SVM的数据LIF。如果要允许用户生成自己的密钥、则必须向其角色添加HTTP权限才能使用CURL。此权限是对S3 API权限的补充。
@@ -143,7 +143,7 @@ NOTE: 将API定向到集群管理LIF、而不是SVM的数据LIF。如果要允�
 
 [listing]
 ----
-$curl -siku FQDN\\user:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user[@fqdn]>,"<key_time_to_live>":"PT6H3M"}'
+$curl -siku FQDN\\user:<user_password> -X POST https://<LIF_IP_Address>/api/protocols/s3/services/<SVM_UUID>/users -d {"comment":"<S3_user_name>", "name":<user[@fqdn]>,"key_time_to_live":"PT6H3M"}
 ----
 
 NOTE: 将API定向到集群管理LIF、而不是SVM的数据LIF。如果要允许用户生成自己的密钥、则必须向其角色添加HTTP权限才能使用CURL。此权限是对S3 API权限的补充。只有在不存在受信任域的情况下、才需要向用户名添加可选域值(@FQDN)。

@@ -2,7 +2,7 @@
 permalink: fabricpool/object-tagging-user-created-custom-tags-task.html 
 sidebar: sidebar 
 keywords: object, tagging, user-created, custom tags, fabricpool, fabric pool, sort, fabricpool sorting, fabricpool data 
-summary: 从 ONTAP 9.8 开始， FabricPool 支持使用用户创建的自定义标记进行对象标记，以便对对象进行分类和排序，从而简化管理。如果您是具有管理员权限级别的用户，则可以创建新的对象标记，以及修改，删除和查看现有标记。 
+summary: 从 ONTAP 9.8 开始， FabricPool 支持使用用户创建的自定义标记进行对象标记，以便对对象进行分类和排序，从而简化管理。 
 ---
 = 使用用户创建的自定义标记管理ONTAP FabricPool卷
 :allow-uri-read: 
@@ -22,7 +22,7 @@ summary: 从 ONTAP 9.8 开始， FabricPool 支持使用用户创建的自定义
 .关于此任务
 您只能在连接到 StorageGRID 的 FabricPool 卷上设置标记。这些标记会在卷移动期间保留。
 
-* 每个卷最多允许4个标记。
+* 每个卷最多允许四个标签。
 * 在命令行界面中、每个对象标记都必须是一个键值对、并以等号分隔。
 * 在命令行界面中、多个标记必须以逗号分隔。
 * 每个标记值最多可包含127个字符。
@@ -98,12 +98,12 @@ volume modify [ -vserver <vserver name> ] -volume <volume_name> -tiering-object-
 <key3=value3>,<key4=value4> ]
 ----
 +
-以下示例将现有标记 type=abc 的名称更改为 type=xyz 。
+以下示例更改现有标签的名称 `type=abc`到 `type=xyz` 。
 
 +
 [listing]
 ----
-vol create -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=xyz,content=data
+vol modify -volume fp_volume1 -vserver vs0 -tiering-object-tags project=fabricpool,type=xyz,content=data
 ----
 
 
