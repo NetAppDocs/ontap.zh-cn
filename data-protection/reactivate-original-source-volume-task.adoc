@@ -45,9 +45,6 @@ cluster_src::> snapmirror resync -source-path svm_backup:volA_dst -destination-p
 `vserver stop -vserver _SVM_`
 
 +
-有关的详细信息 `vserver stop`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-stop.html["ONTAP 命令参考"^]。
-
-+
 [NOTE]
 ====
 您必须从原始目标SVM或原始目标集群运行此命令。此命令将停止用户对整个原始目标SVM的访问。您可能希望使用其他方法停止对原始目标卷的访问。
@@ -61,12 +58,12 @@ cluster_src::> snapmirror resync -source-path svm_backup:volA_dst -destination-p
 ----
 cluster_dst::> vserver stop svm_backup
 ----
++
+有关的详细信息 `vserver stop`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-stop.html["ONTAP 命令参考"^]。
+
 . 更新已反转的关系：
 +
 `snapmirror update -source-path _SVM:volume_ -destination-path _SVM:volume_`
-
-+
-有关的详细信息 `snapmirror update`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["ONTAP 命令参考"^]。
 
 +
 [NOTE]
@@ -82,6 +79,9 @@ cluster_dst::> vserver stop svm_backup
 ----
 cluster_src::> snapmirror update -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
++
+有关的详细信息 `snapmirror update`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["ONTAP 命令参考"^]。
+
 . 从初始源SVM或初始源集群停止已反转关系的计划传输：
 +
 `snapmirror quiesce -source-path _SVM:volume_ -destination-path _SVM:volume_`
@@ -163,12 +163,12 @@ cluster_src::> snapmirror delete -source-path svm_backup:volA_dst -destination-p
 ----
 cluster_dst::> snapmirror release -source-path svm_backup:volA_dst -destination-path svm1:volA
 ----
++
+有关的详细信息 `snapmirror release`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-release.html["ONTAP 命令参考"^]。
+
 . 从原始目标重新建立初始数据保护关系：
 +
 `snapmirror resync -source-path _SVM:volume_ -destination-path _SVM:volume_`
-
-+
-有关的详细信息 `snapmirror resync`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-resync.html["ONTAP 命令参考"^]。
 
 +
 以下示例将重新建立初始源卷之间的关系、 `volA` 开启 `svm1`和初始目标卷、 `volA_dst` 开启 `svm_backup`：
@@ -178,12 +178,12 @@ cluster_dst::> snapmirror release -source-path svm_backup:volA_dst -destination-
 ----
 cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+有关的详细信息 `snapmirror resync`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-resync.html["ONTAP 命令参考"^]。
+
 . 如果需要、启动初始目标SVM：
 +
 `vserver start -vserver _SVM_`
-
-+
-有关的详细信息 `vserver start`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-start.html["ONTAP 命令参考"^]。
 
 +
 以下示例将启动初始目标SVM：
@@ -193,6 +193,9 @@ cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_ba
 ----
 cluster_dst::> vserver start svm_backup
 ----
++
+有关的详细信息 `vserver start`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-start.html["ONTAP 命令参考"^]。
+
 
 
 .完成后
