@@ -1,8 +1,8 @@
 ---
 permalink: revert/task_download_and_install_ontap_software_image.html 
 sidebar: sidebar 
-keywords: ontap, software, image, download, downloading, install, installing 
-summary: 您必须先下载 ONTAP 软件，然后才能进行安装。 
+keywords: ontap, software, revert, image, download, downloading, install, installing 
+summary: 在恢复当前ONTAP软件之前，您必须先下载该软件，然后安装它。 
 ---
 = 下载并安装 ONTAP 软件映像
 :allow-uri-read: 
@@ -24,7 +24,7 @@ NOTE: 如果要从ONTAP 9.5或更高版本还原使用NetApp卷加密的系统�
 
 .步骤
 . 在link:http://mysupport.netapp.com/NOW/cgi-bin/software["软件下载"^]NetApp支持站点的区域中找到目标ONTAP软件。
-. 从NetApp支持站点复制软件映像(例如97_q_image.tgz)
+. 复制软件映像（例如，  `97_q_image.tgz` ）来自NetApp支持站点
 +
 您可以将映像复制到HTTP服务器或FTP服务器上要提供映像的目录或本地文件夹。
 
@@ -53,7 +53,7 @@ set -privilege advanced
 +
 [source, cli]
 ----
-system node image update -node * -package location -replace-package true -setdefault true -background true
+system node image update -node * -package <http://example.com/downloads/image.tgz> -replace-package true -replace {image1|image2} -background true -setdefault true
 ----
 +
 此命令可同时在所有节点上下载并安装软件映像。要逐一在每个节点上下载并安装映像、请勿指定参数。 `-background`此命令还会使用扩展查询将作为备用映像安装的目标软件映像更改为节点的默认映像。
@@ -62,7 +62,7 @@ system node image update -node * -package location -replace-package true -setdef
 +
 [source, cli]
 ----
-system node image update -node * -package location -replace-package true true -background true -setdefault false
+system node image update -node * -package <http://example.com/downloads/image.tgz> -replace-package true -replace {image1|image2} -background true -setdefault false
 ----
 +
 此命令可同时在所有节点上下载并安装软件映像。要逐一在每个节点上下载并安装映像、请勿指定参数。 `-background`此命令还会使用扩展查询来更改目标软件映像、该映像会作为备用映像安装在每个节点上。
@@ -77,7 +77,7 @@ system node image update -node * -package location -replace-package true true -b
 system node image show-update-progress -node *
 ----
 +
-此命令将显示软件映像下载和安装的当前状态。您应继续运行此命令、直到所有节点报告*运行状态*为"exited"、*退出状态*为"success。
+此命令将显示软件映像下载和安装的当前状态。您应该继续运行此命令，直到所有节点报告“运行状态”为“退出”，并且“退出状态”为“成功”。
 
 +
 system node image update 命令可能会失败并显示错误或警告消息。解决任何错误或警告后，您可以再次运行此命令。
@@ -103,4 +103,8 @@ Status of most recent operation:
         Exit Message:   After a clean shutdown, image2 will be set as the default boot image on node1.
 2 entries were acted on.
 ----
+
+
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/system-node-image-update.html["系统节点映像更新"^]
 
