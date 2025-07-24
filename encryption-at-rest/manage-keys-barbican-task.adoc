@@ -1,0 +1,231 @@
+---
+permalink: encryption-at-rest/manage-keys-barbican-task.html 
+sidebar: sidebar 
+keywords: openstack, barbican, key vault, NVE keys, kms, keys, encryption, netapp volume encryption 
+summary: 使用 Barbican KMS 管理ONTAP NVE 密钥。 
+---
+= 使用 Barbican KMS 管理ONTAP密钥
+:hardbreaks:
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.17.1 开始，您可以使用 OpenStack 的link:https://docs.openstack.org/barbican/latest/["巴比肯 KMS"^]保护ONTAP加密密钥。BarbicanKMS 是一项安全存储和访问密钥的服务。BarbicanKMS 可用于保护数据 SVM 的NetApp卷加密 (NVE) 密钥。Barbican依赖于link:https://docs.openstack.org/keystone/latest/["OpenStack Keystone"^] ，OpenStack 的身份服务，用于身份验证。
+
+.关于此任务
+您可以使用 CLI 或ONTAP REST API 使用 Barbican KMS 配置密钥管理。在 9.17.1 版本中，Barbican KMS 支持存在以下限制：
+
+* Barbican KMS 不支持NetApp存储加密 (NSE) 和NetApp聚合加密 (NAE)。或者，您可以使用link:enable-external-key-management-96-later-nve-task.html["外部 KMIP"]或link:enable-onboard-key-management-96-later-nve-task.html["板载密钥管理器 (OKM)"]用于 NSE 和 NVE 密钥。
+* MetroCluster配置不支持 Barbican KMS。
+* Barbican KMS 只能为数据 SVM 配置，不适用于管理 SVM。
+
+
+除非另有说明，管理员 `admin`特权级别可以执行以下操作过程。
+
+.开始之前
+* 必须配置 Barbican KMS 和 OpenStack Keystone 。您用于 Barbican 的 SVM 必须能够通过网络访问 Barbican 和 OpenStack Keystone服务器。
+* 如果您正在为 Barbican 和 OpenStack Keystone服务器使用自定义证书颁发机构 (CA)，则必须使用 `security certificate install -type server-ca -vserver <admin_svm>` 。
+
+
+
+
+== 创建并激活 Barbican KMS 配置
+
+您可以为 SVM 创建新的 Barbican KMS 配置并将其激活。一个 SVM 可以有多个非活动的 Barbican KMS 配置，但一次只能有一个处于活动状态。
+
+.步骤
+. 为 SVM 创建新的非活动 Barbican KMS 配置：
++
+[source, cli]
+----
+security key-manager external barbican create-config -vserver <svm_name> -config-name <unique_config_name> -key-id <key_id> -keystone-url <keystone_url> -application-cred-id <keystone_applications_credentials_id>
+----
++
+** `-key-id`是 Barbican 密钥加密密钥 (KEK) 的密钥标识符。请输入完整的 URL，包括 `https://` 。
+
+
++
+
+NOTE: 某些 URL 包含问号 (?)。问号用于激活ONTAP命令行活动帮助。要输入带有问号的 URL，您需要先使用以下命令禁用活动帮助 `set -active-help false` 。稍后可以使用以下命令重新启用主动帮助 `set -active-help true`了解更多信息link:https://docs.netapp.com/us-en/ontap-cli/set.html["ONTAP 命令参考"] 。
+
++
+** `-keystone-url`是 OpenStack Keystone授权主机的 URL。请输入完整的 URL，包括 `https://` 。
+** `-application-cred-id`是应用程序凭证 ID。
++
+输入此命令后，系统将提示您输入应用程序凭据密钥。此命令将创建一个非活动的 Barbican KMS 配置。
+
++
+以下示例创建一个名为的非活动 Barbican KMS 配置 `config1`对于SVM  `svm1` ：
+
++
+[listing]
+----
+cluster1::> security key-manager external barbican create-config -vserver svm1 -config-name config1 -keystone-url https://172.21.76.152:5000/v3 -application-cred-id app123 -key-id https://172.21.76.153:9311/v1/secrets/<id_value>
+
+Enter the Application Credentials Secret for authentication with Keystone: <key_value>
+----
+
+
+. 激活新的 Barbican KMS 配置：
++
+[source, cli]
+----
+security key-manager keystore enable -vserver <svm_name> -config-name <unique_config_name> -keystore barbican
+----
++
+您可以使用此命令在 Barbican KMS 配置之间切换。如果 SVM 上已存在活动的 Barbican KMS 配置，则该配置将处于非活动状态，并激活新的配置。
+
+. 验证新的 Barbican KMS 配置是否处于活动状态：
++
+[source, cli]
+----
+security key-manager external barbican check -vserver <svm_name> -node <node_name>
+----
++
+此命令将提供 SVM 或节点上活动的 Barbican KMS 配置的状态。例如，如果 SVM  `svm1`在节点上 `node1`具有活动的 Barbican KMS 配置，以下命令将返回该配置的状态：
+
++
+[listing]
+----
+cluster1::> security key-manager external barbican check -node node1
+
+Vserver: svm1
+Node: node1
+
+Category: service_reachability
+              Status: OK
+
+Category: kms_wrapped_key_status
+              Status: OK
+----
+
+
+
+
+== 更新 Barbican KMS 配置的凭据和设置
+
+您可以查看和更新活动或非活动的 Barbican KMS 配置的当前设置。
+
+.步骤
+. 查看 SVM 的当前 Barbican KMS 配置：
++
+[source, cli]
+----
+security key-manager external barbican show -vserver <svm_name>
+----
++
+显示 SVM 上每个 Barbican KMS 配置的密钥 ID、OpenStack Keystone URL 和应用程序凭据 ID。
+
+. 更新 Barbican KMS 配置的设置：
++
+[source, cli]
+----
+security key-manager external barbican update-config -vserver <svm_name> -config-name <unique_config_name> -timeout <timeout> -verify <true|false> -verify-host <true|false>
+----
++
+此命令更新指定 Barbican KMS 配置的超时和验证设置。  `timeout`确定ONTAP在连接失败前等待 Barbican 响应的时间（以秒为单位）。默认 `timeout`是十秒。  `verify`和 `verify-host`确定在连接之前是否应分别验证 Barbican 主机的身份和主机名。默认情况下，这些参数设置为 `true` 。这 `vserver`和 `config-name`参数是必需的。其他参数是可选的。
+
+. 如果需要，请更新活动或非活动的 Barbican KMS 配置的凭据：
++
+[source, cli]
+----
+security key-manager external barbican update-credentials -vserver <svm_name> -config-name <unique_config_name> -application-cred-id <keystone_applications_credentials_id>
+----
++
+输入此命令后，系统将提示您输入新的应用程序凭据密钥。
+
+. 如果需要，为活动的 Barbican KMS 配置恢复丢失的 SVM 密钥加密密钥 (KEK)：
++
+.. 使用以下方式恢复丢失的 SVM KEK  `security key-manager external barbican restore` ：
++
+[source, cli]
+----
+security key-manager external barbican restore -vserver <svm_name>
+----
++
+此命令将通过与 Barbican 服务器通信来恢复活动 Barbican KMS 配置的 SVM KEK。
+
+
+
+. 如果需要，请为 Barbican KMS 配置重新密钥 SVM KEK：
++
+.. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+.. 使用以下方式重新密钥 SVM KEK  `security key-manager external barbican rekey-internal` ：
++
+[source, cli]
+----
+security key-manager external barbican rekey-internal -vserver <svm_name>
+----
++
+此命令会为指定的 SVM 生成新的 SVM KEK，并使用新的 SVM KEK 重新封装卷加密密钥。新的 SVM KEK 将受到有效的 Barbican KMS 配置的保护。
+
+
+
+
+
+
+
+== 在 Barbican KMS 和 Onboard Key Manager 之间迁移密钥
+
+您可以将密钥从 Barbican KMS 迁移到板载密钥管理器 (OKM)，反之亦然。要了解有关 OKM 的更多信息，请参阅link:enable-onboard-key-management-96-later-nse-task.html["在 ONTAP 9.6 及更高版本中启用板载密钥管理"] 。
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 如果需要，将密钥从 Barbican KMS 迁移到 OKM：
++
+[source, cli]
+----
+security key-manager key migrate -from-vserver <svm_name> -to-vserver <admin_svm_name>
+----
++
+`svm_name`是具有 Barbican KMS 配置的 SVM 的名称。
+
+. 如果需要，将密钥从 OKM 迁移到 Barbican KMS：
++
+[source, cli]
+----
+security key-manager key migrate -from-vserver <admin_svm_name> -to-vserver <svm_name>
+----
+
+
+
+
+== 禁用并删除 Barbican KMS 配置
+
+您可以禁用没有加密卷的活动 Barbican KMS 配置，并且可以删除非活动的 Barbican KMS 配置。
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 禁用活动的 Barbican KMS 配置：
++
+[source, cli]
+----
+security key-manager keystore disable -vserver <svm_name>
+----
++
+如果 SVM 上存在 NVE 加密卷，则必须解密它们，否则<<在 Barbican KMS 和 Onboard Key Manager 之间迁移密钥,迁移密钥>>在禁用 Barbican KMS 配置之前。激活新的 Barbican KMS 配置不需要解密 NVE 卷或迁移密钥，并且会禁用当前活动的 Barbican KMS 配置。
+
+. 删除不活动的 Barbican KMS 配置：
++
+[source, cli]
+----
+security key-manager keystore delete -vserver <svm_name> -config-name <unique_config_name> -type barbican
+----
+

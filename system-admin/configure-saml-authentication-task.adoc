@@ -1,17 +1,17 @@
 ---
 permalink: system-admin/configure-saml-authentication-task.html 
 sidebar: sidebar 
-keywords: tdp, ldap, identity, provider, saml, security, assertion, markup, lanaguage, active, directory, disable, authentication, idp, active directory, troubleshoot, repair 
+keywords: tdp, ldap, identity, provider, saml, security, assertion, markup, language, active, directory, disable, authentication, idp, active directory, troubleshoot, repair 
 summary: 从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记语言（ SAML ）身份验证。 
 ---
-= 配置 SAML 身份验证
+= 为远程ONTAP用户配置 SAML 身份验证
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记语言（ SAML ）身份验证。配置并启用 SAML 身份验证后，用户将通过外部身份提供程序（ Identity Provider ， IdP ）进行身份验证，而不是 Active Directory 和 LDAP 等目录服务提供程序进行身份验证。禁用SAML身份验证后、将使用配置的目录服务提供程序(如Active Directory和LDAP)进行身份验证
+从ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记语言 (SAML) 身份验证。配置并启用 SAML 身份验证后，用户将通过外部身份提供程序 (IdP) 进行身份验证，而不是通过 Active Directory 和 LDAP 等目录服务提供程序进行身份验证。禁用 SAML 身份验证后，将使用已配置的目录服务提供程序（例如 Active Directory 和 LDAP）进行身份验证。
 
 
 
@@ -20,48 +20,65 @@ summary: 从 ONTAP 9.3 开始，您可以为 Web 服务配置安全断言标记�
 要使用System Manager或命令行界面启用SAML身份验证、请执行以下步骤。如果集群运行的是ONTAP 9.7或更早版本、则需要遵循的System Manager步骤有所不同。请参阅系统上提供的System Manager联机帮助。
 
 
-NOTE: 启用SAML身份验证后、只有远程用户才能访问System Manager图形用户界面。启用 SAML 身份验证后，本地用户无法访问 System Manager 图形用户界面。
+NOTE: 启用 SAML 身份验证后，只有配置了 SAML 身份验证的远程用户才能访问系统管理器 GUI。启用 SAML 身份验证后，本地用户将无法访问系统管理器 GUI。
 
-image:workflow_security_mfa_setup.gif["使用SAML设置多因素身份验证的任务工作流"]
-
-.开始之前
-* 必须配置计划用于远程身份验证的 IdP 。
-+
-[NOTE]
-====
-请参见您配置的 IdP 提供的文档。
-
-====
-* 您必须具有 IdP 的 URI 。
-
+image:workflow_security_mfa_setup.gif["使用 SAML 设置多因素身份验证的任务工作流程"]
 
 .关于此任务
-* SAML身份验证仅适用于 `http` 和 `ontapi` 应用程序。
+* SAML 身份验证仅适用于ONTAP  `http`和 `ontapi`应用程序。
 +
-。 `http` 和 `ontapi` 应用程序由以下Web服务使用：服务处理器基础架构、ONTAP API或System Manager。
+这 `http`和 `ontapi`应用程序由以下 Web 服务使用：服务处理器基础架构、 ONTAP API 和系统管理器。
 
 * SAML 身份验证仅适用于访问管理 SVM 。
+* 从ONTAP 9.17.1 开始，IdP 提供的组信息可以映射到ONTAP角色。这样，您就可以根据 IdP 中定义的组为用户分配角色。有关更多信息，请参阅link:../authentication/authentication-groups.html["在ONTAP中使用 OAuth 2.0 或 SAML IdP 组"] 。
 
 
 以下IDP已通过System Manager的验证：
 
+* Microsoft Entra ID（已通过ONTAP 9.17.1 及更高版本验证）
 * Active Directory联合身份验证服务
-* Cisco Duo (已通过以下ONTAP版本的验证：)
+* Cisco Duo（已通过以下ONTAP版本验证：）
 +
 ** 9.7P21及更高版本9.7 (请参阅 https://docs.netapp.com/us-en/ontap-system-manager-classic/online-help-96-97/task_setting_up_saml_authentication.html["System Manager经典文档"^])
-** 9.8P17及更高版本9.8
-** 9.9.1P13及更高版本9.9
-** 9.10.1P9及更高版本9.10
-** 9.11.1P4及更高的9.11版本
+** 9.8P17 及更高版本的 9.8 补丁版本
+** 9.9.1P13 及更高版本的 9.9.1 补丁版本
+** 9.10.1P9 及更高版本的 9.10.1 补丁版本
+** 9.11.1P4 及更高版本的 9.11.1 补丁版本
 ** 9.12.1及更高版本
 
 
 * Shibboleth
 
 
-根据您的环境执行以下步骤：
+.开始之前
+* 您计划用于远程身份验证的 IdP 必须是 <<配置第三方 IdP,配置>>。您必须拥有 IdP 的 URI IdP。URI 是ONTAP向其发送身份验证请求并接收响应的 Web 地址
+* ONTAP集群和 IdP 之间必须打开端口 443。
+* ONTAP集群和 IdP 必须能够 ping 通对方的完全限定域名。确保 DNS 配置正确，且集群证书未过期。
+* 如果需要，请将 IdP 的受信任证书颁发机构 (CA) 添加到ONTAP。您可以link:../authentication/manage-certificates-sm-task.html["使用系统管理器管理ONTAP证书"] 。您可能需要在 IdP 中配置ONTAP集群证书。
+* 您必须能够访问ONTAP集群的link:../system-admin/sp-concept.html["服务处理器 (SP)"]控制台。如果 SAML 配置错误，则需要从SP控制台将其禁用。
+* 如果您使用的是 Entra ID（从ONTAP 9.17.1 开始已验证），则必须在创建ONTAP SAML 配置之前使用ONTAP元数据配置 Entra ID。EntraID 只有在配置了ONTAP元数据后才会提供 IdP URI。创建ONTAP SAML 配置需要 IdP URI。
++
+** 如果您使用 System Manager 配置 SAML，请将 IdP URI 字段留空，直到 System Manager 提供ONTAP元数据。使用ONTAP元数据配置 Entra ID，然后将 IdP URI 复制到 System Manager 中，然后再启用 SAML 配置。
+** 如果您使用ONTAP CLI 配置 SAML，则必须先生成ONTAP元数据，然后才能启用ONTAP SAML 配置。您可以使用以下命令生成ONTAP元数据文件：
++
+[source, cli]
+----
+security saml-sp default-metadata create -sp-host <ontap_host_name>
+----
++
+`ontap_host_name`是 SAML 服务提供商主机（在本例中为ONTAP系统）的主机名或 IP 地址。默认情况下，使用集群管理 IP 地址。您可以选择提供ONTAP服务器证书信息。默认情况下，使用ONTAP Web 服务器证书信息。
+
++
+使用提供的元数据配置 Entra ID。您必须在创建ONTAP SAML 配置之前配置 Entra ID。配置 Entra 后，继续执行以下 CLI 过程。
+
+** 在集群中的所有节点都达到版本 9.17.1 之前，您无法生成 Entra ID 的ONTAP元数据。
+
+
+
 
 .步骤
+根据您的环境执行以下步骤：
+
 [role="tabbed-block"]
 ====
 .System Manager
@@ -69,8 +86,8 @@ image:workflow_security_mfa_setup.gif["使用SAML设置多因素身份验证的�
 . 单击 * 集群 > 设置 * 。
 . 在*SAML身份验证*旁边，单击 image:icon_gear.gif["操作图标"]。
 . 确保选中 * 启用 SAML 身份验证 * 复选框。
-. 输入 IdP URI 的 URL （包括 "https://"[]）。
-. 根据需要修改主机系统地址。
+. 输入 IdP URI 的 URL（包括"https://"[] ）。如果您使用Entra ID，请跳过此步骤。
+. 如果需要，请修改主机系统地址。这是 IdP 在身份验证后将定向到的地址。默认值为集群管理 IP 地址。
 . 确保使用的证书正确：
 +
 ** 如果您的系统只映射了一个类型为 "server" 的证书，则该证书将被视为默认证书，不会显示。
@@ -78,10 +95,10 @@ image:workflow_security_mfa_setup.gif["使用SAML设置多因素身份验证的�
 
 
 . 单击 * 保存 * 。此时将显示一个确认窗口，其中包含已自动复制到剪贴板的元数据信息。
-. 转到指定的 IdP 系统，然后从剪贴板复制元数据以更新系统元数据。
+. 转到您指定的 IdP 系统，并从剪贴板复制元数据以更新系统元数据。如果您使用的是 Entra ID，请在使用系统元数据配置 Entra ID 后，将 IdP URI 复制到ONTAP中。
 . 返回到确认窗口（在 System Manager 中）并选中复选框 * 我已使用主机 URI 或元数据配置 IdP * 。
 . 单击 * 注销 * 以启用基于 SAML 的身份验证。  IdP 系统将显示身份验证屏幕。
-. 在 IdP 系统中，输入基于 SAML 的凭据。验证凭据后，您将转到 System Manager 主页。
+. 在 IdP 登录页面，输入您的基于 SAML 的凭据。凭据验证完成后，您将被定向到系统管理器主页。
 
 
 --
@@ -96,7 +113,7 @@ image:workflow_security_mfa_setup.gif["使用SAML设置多因素身份验证的�
 
 +
 
-NOTE: 问号(`?`()将激活命令行活动帮助。要在URI中输入问号，必须使用命令禁用活动帮助 `set -active-help false`。稍后可以使用命令重新启用活动帮助 `set -active-help true`。有关的详细信息 `set`，请参见link:https://docs.netapp.com/us-en/ontap-cli/set.html["ONTAP 命令参考"^]。
+NOTE: 某些 URL 包含问号 (?)。问号用于激活ONTAP命令行活动帮助。要输入带有问号的 URL，您需要先使用以下命令禁用活动帮助 `set -active-help false` 。稍后可以使用以下命令重新启用主动帮助 `set -active-help true`了解更多信息link:https://docs.netapp.com/us-en/ontap-cli/set.html["ONTAP 命令参考"] 。
 
 +
 `ontap_host_name` 是SAML服务提供程序主机的主机名或IP地址、此处为ONTAP系统。默认情况下，使用集群管理 LIF 的 IP 地址。
@@ -115,25 +132,22 @@ Do you want to continue? {y|n}: y
 [Job 179] Job succeeded: Access the SAML SP metadata using the URL:
 https://10.0.0.1/saml-sp/Metadata
 
-Configure the IdP and Data ONTAP users for the same directory server domain to ensure that users are the same for different authentication methods. See the "security login show" command for the Data ONTAP user configuration.
+Configure the IdP and ONTAP users for the same directory server domain to ensure that users are the same for different authentication methods. See the "security login show" command for the ONTAP user configuration.
 ----
 +
 此时将显示用于访问 ONTAP 主机元数据的 URL 。
 
-. 在 IdP 主机中，使用 ONTAP 主机元数据配置 IdP 。
-+
-有关配置 IdP 的详细信息，请参见 IdP 文档。
-
-. 启用 SAML 配置：
+. 从 IdP 主机， <<配置第三方 IdP,配置 IdP>>使用ONTAP主机元数据。如果您使用的是 Entra ID，则已完成此步骤。
+. 配置 IdP 后，启用 SAML 配置：
 +
 `security saml-sp modify -is-enabled true`
 
 +
 访问的任何现有用户 `http` 或 `ontapi` 系统会自动为应用程序配置SAML身份验证。
 
-. 如果要为创建用户 `http` 或 `ontapi` 应用程序在配置SAML后、指定SAML作为新用户的身份验证方法。
+. 如果你想为 `http`或者 `ontapi`配置 SAML 后，请将 SAML 指定为新用户的身份验证方法。在ONTAP 9.17.1 之前的版本中，系统会自动为现有用户创建 SAML 登录名 `http`或者 `ontapi`启用 SAML 时，用户必须配置新用户。从ONTAP 9.17.1 开始，所有使用 `password` ，  `domain` ， 或者 `nsswitch`当启用 SAML 时，身份验证方法会自动针对 IdP 进行身份验证。
 +
-.. 使用SAML身份验证为新用户创建登录方法：
+.. 为新用户创建使用 SAML 身份验证的登录方法。  `user_name`必须与 IdP 中配置的用户名匹配：
 +
 
 NOTE: 此 `user_name`值区分大小写。仅包含用户名、不包含域的任何部分。
@@ -147,7 +161,7 @@ NOTE: 此 `user_name`值区分大小写。仅包含用户名、不包含域的�
 +
 [listing]
 ----
-cluster_12::> security login create -user-or-group-name admin1 -application http -authentication-method saml -vserver  cluster_12
+cluster_12::> security login create -user-or-group-name admin1 -application http -authentication-method saml -vserver cluster_12
 ----
 .. 验证是否已创建此用户条目：
 +
@@ -190,7 +204,7 @@ admin1         http        password      backup           no     none
 
 == 禁用 SAML 身份验证
 
-如果要停止使用外部身份提供程序（ IdP ）对 Web 用户进行身份验证，则可以禁用 SAML 身份验证。禁用 SAML 身份验证后，将使用已配置的目录服务提供程序（例如 Active Directory 和 LDAP ）进行身份验证。
+当您想要停止使用外部身份提供程序 (IdP) 对远程系统管理器用户进行身份验证时，可以禁用 SAML 身份验证。禁用 SAML 身份验证后，系统将使用本地用户身份验证或已配置的目录服务提供商（例如 Active Directory 和 LDAP）对用户进行身份验证。
 
 根据您的环境执行以下步骤：
 
@@ -216,6 +230,105 @@ admin1         http        password      backup           no     none
 `security saml-sp delete`
 
 
+
+--
+====
+
+
+== 配置第三方 IdP
+
+.关于此任务
+为了使用ONTAP进行身份验证，您可能需要更改 IdP 的设置。以下部分提供了受支持的 IdP 的配置信息。
+
+[role="tabbed-block"]
+====
+.输入ID
+--
+配置 Entra ID 时，创建一个新的应用程序，并使用ONTAP提供的元数据配置 SAML 登录。创建应用程序后，编辑应用程序 SAML 设置的“属性和声明”部分，以匹配以下内容：
+
+[cols="2,2"]
+|===
+| 正在设置 ... | 价值 
+
+
+| Name | urn：oid：0.9.2342.19200300.100.1.1 
+
+
+| 命名空间 | _留空_ 
+
+
+| 名称格式 | URI 
+
+
+| 源 | 属性 
+
+
+| 源属性 | 用户.用户主体名称 
+|===
+如果您想使用具有 Entra ID 的组，请使用以下设置添加组声明：
+
+[cols="2,2"]
+|===
+| 正在设置 ... | 价值 
+
+
+| Name | urn：oid：1.3.6.1.4.1.5923.1.5.1.1 
+
+
+| 命名空间 | _留空_ 
+
+
+| 源属性 | 组 ID 
+|===
+Entra ID 以 UUID 格式提供群组信息。有关使用 Entra ID 群组的更多信息，请参阅link:../authentication/authentication-groups.html#manage-groups-with-uuids["管理具有UID的组"] 。
+
+应用程序 SAML 设置的“SAML 证书”部分中提供的“应用程序联合元数据 URL”是您将在ONTAP中输入的 IdP URI。
+
+有关配置 Entra ID 多因素身份验证的信息，请参阅link:https://learn.microsoft.com/en-us/entra/identity/authentication/howto-mfa-getstarted["规划 Microsoft Entra 多重身份验证部署"^] 。
+
+欲了解更多信息，请参阅link:https://learn.microsoft.com/en-us/entra/identity/["Entra ID 文档"^] 。
+
+--
+.Active Directory联合身份验证服务
+--
+配置 Active Directory 联合身份验证服务 (AD FS) 时，必须使用ONTAP提供的服务提供商元数据添加新的可感知声明的依赖方信任。创建依赖方信任后，使用“将 LDAP 属性作为声明发送”模板将以下声明规则添加到依赖方信任的声明颁发策略中：
+
+[cols="1,2,2"]
+|===
+| 属性存储 | LDAP 属性 | 传出索赔类型 
+
+
+| Active Directory | SAM 帐户名称 | 姓名 ID 
+
+
+| Active Directory | SAM 帐户名称 | urn：oid：0.9.2342.19200300.100.1.1 
+
+
+| Active Directory | 名称格式 | urn:oasis:names:tc:SAML:2.0:attrname-format:uri 
+
+
+| Active Directory | 令牌组 - 按域名限定 | urn：oid：1.3.6.1.4.1.5923.1.5.1.1 
+
+
+| Active Directory | sAM账户名称 | urn:oid:1.2.840.113556.1.4.221 
+|===
+AD FS 以名称格式提供组信息。有关在 AD FS 中使用组的更多信息，请参阅link:../authentication/authentication-groups.html#manage-groups-with-names["管理具有名称的组"] 。
+
+欲了解更多信息，请参阅link:https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview["AD FS 文档"^] 。
+
+--
+.Cisco Duo
+--
+请参阅link:https://duo.com/docs/sso-netapp-ontap["Cisco Duo文档"^]获取配置信息。
+
+--
+.Shibboleth
+--
+在配置 Shibboleth IdP 之前，您必须已经配置了 LDAP 服务器。
+
+在ONTAP上启用 SAML 时，请保存提供的主机元数据 XML。在安装了 Shibboleth 的主机上，将以下内容替换为 `metadata/sp-metadata.xml`使用 Shibboleth IdP 主目录中的主机元数据 XML。
+
+有关详细信息，请参阅link:https://www.shibboleth.net["Shibboleth"^] 。
 
 --
 ====

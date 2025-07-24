@@ -4,7 +4,7 @@ permalink: snapmirror-active-sync/prerequisites-reference.html
 keywords: SM-BC, SMBC, prerequisites, planning, software, hardware, licensing, protocols, network, snapmirror active sync 
 summary: 在规划SnapMirror主动同步解决方案部署时、您应考虑以下几个前提条件。 
 ---
-= 在ONTAP中执行SnapMirror活动同步的前提条件
+= ONTAP SnapMirror主动同步的先决条件
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -26,7 +26,7 @@ summary: 在规划SnapMirror主动同步解决方案部署时、您应考虑以�
 |===
 
 
-| 集群类型 | 支持的型号 | 支持的功能 | 支持的节点 
+| 集群类型 | 支持的型号 | 支持的功能 | 支持的最大集群节点数 
 
 
  a| 
@@ -36,34 +36,35 @@ A系列、C系列
  a| 
 自动双工故障转移(对称主动/主动)、自动故障转移(非对称主动/主动)
  a| 
-双节点或四节点集群^1^
+* 2（ONTAP 9.9.1 或更高版本）
+* 4（采用对称 AA 配置的ONTAP 9.16.1）
+
 
 
 
  a| 
-全SAN阵列(ASA)
+ASA
  a| 
 A系列、C系列
  a| 
 自动双工故障转移(Symmetric AA)、自动故障转移(非对称AA)
  a| 
-双节点或四节点集群^1^
+* 2（ONTAP 9.9.1 或更高版本
+* 4（采用对称 AA 配置的ONTAP 9.16.1）
+
 
 
 
  a| 
 ASA r2
  a| 
--
+全部
  a| 
 自动故障转移双工(对称AA)
  a| 
-双节点高可用性(HA)集群
+2.
 
 |===
-. 从9.16.1 9.161开始、可支持四节点集群、但需要对称AA。
-
-
 下表概述了集群类型之间的复制功能。
 
 [cols="33,33,33"]
@@ -92,16 +93,22 @@ ASA
 
 
  a| 
-ASA ^1^
+ASA
  a| 
 ASA r2
  a| 
 否
 
+
+
+ a| 
+ASA r2
+ a| 
+ASA r2
+ a| 
+是的。
+
 |===
-. 有关ASA支持的集群类型的详细信息，请参见link:../asa/support-limitations.html["纯闪存SAN阵列配置限制和支持"]。
-
-
 
 
 == 软件
@@ -116,6 +123,20 @@ ASA r2
 
 
 | ONTAP 调解器版本 | 支持的 Linux 版本 
+
+
+ a| 
+1.10
+ a| 
+* Red Hat Enterprise Linux
++
+** 兼容：9.5 ^1^
+** 推荐：8.10、9.4、9.6 和 10
+
+
+* Rocky Linux 8.10、9.6 和 10
+
+
 
 
  a| 
@@ -235,10 +256,33 @@ NOTE: 如果您的ONTAP存储系统是在2019年6月之前购买的、请参见 
 
 == 支持的协议
 
-* 仅支持SAN协议(不支持NFS/SMB)。
-* 仅支持光纤通道和iSCSI协议。
-* 对于集群对等关系、SnapMirror活动同步需要默认IP空间。不支持自定义 IP 空间。
+SnapMirror主动同步支持 SAN 协议。
 
+* 从ONTAP 9.9.1 开始支持 FC 和 iSCSI 协议。
+* 从ONTAP 9.17.1 开始，VMware 工作负载支持 NVMe 协议。
++
+
+NOTE: NVMe/TCP 与 VMware 的结合取决于 VMware Bug ID：TR1049746 的解决方案。
+
++
+SnapMirror主动同步不支持以下 NVMe 协议：
+
++
+** 4 节点对称主动/主动配置
+** 一致性组大小的变化
++
+当使用带有SnapMirror活动同步的 NVMe 协议时，无法扩展或缩小一致性组。
+
+** 不支持同一一致性组中的 LUN 和命名空间共存。
+
+
+
+
+
+
+== IP 空间
+
+对于集群对等关系、SnapMirror活动同步需要默认IP空间。不支持自定义 IP 空间。
 
 
 

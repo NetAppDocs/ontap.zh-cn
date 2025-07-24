@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: anti-ransomware/index.html 
 keywords: ransomware, arp, autonomous protection, ai, arp ai, security, detect, detection, threat, attack, suspect, anti-ransomware, entropy, abnormal volume activity, antiransomware, extension conformity, ransomware protection strategy 
-summary: 自主勒索软件保护可通过NAS环境中的工作负载分析来检测可能是勒索软件攻击的异常活动并发出警告。 
+summary: 自主勒索软件防护使用 NAS 或 SAN 环境中的工作负载分析来检测并警告可能为勒索软件攻击的异常活动。 
 ---
 = 了解ONTAP自动防兰软件保护
 :hardbreaks:
@@ -16,38 +16,17 @@ summary: 自主勒索软件保护可通过NAS环境中的工作负载分析来�
 
 
 [role="lead"]
-从ONTAP 9.10.1开始、自动勒索软件保护(ARP)功能使用NAS (NFS和SMB)环境中的工作负载分析功能主动检测并警告可能指示勒索软件攻击的异常活动。
+从ONTAP 9.10.1 开始， ONTAP管理员可以启用自主勒索软件防护 (ARP) 功能，在 NAS（NFS 和 SMB）环境中执行工作负载分析，从而主动检测并警告可能预示勒索软件攻击的异常活动。从ONTAP 9.17.1 开始，ARP 还支持块设备卷，包括包含 LUN 的 SAN 卷，或包含来自 VMware、Hyper-V 和 KVM 等虚拟机管理程序的虚拟磁盘的 NAS 卷。
 
 ARP 直接内置于 ONTAP 中，确保与 ONTAP 的其他功能实现集成控制和协调。ARP实时运行，在文件系统中写入或读取数据时进行处理，并快速检测和响应潜在的勒索软件攻击。
 
-当怀疑受到攻击时，ARP 除了计划快照提供的现有保护之外，还会创建新的快照。
-
-
-
-== 利用人工智能(ARP/AI)实现自主防兰功能
-
-从ARP.16.1开始、ONTAP 9采用机器学习模型进行反勒索软件分析、以99%的准确性检测不断演变的勒索软件形式、从而提高网络故障恢复能力。在模拟勒索软件攻击前后、ARP的机器学习模型都是针对大型文件数据集进行预先训练的。此资源密集型培训在ONTAP外部完成、但从该培训中学到的知识用于ONTAP内部的模型。
-
-.使用FlexVol卷立即过渡到ARP/AI的主动保护
-对于ARP/AI和FlexVol卷，没有<<学习和主动模式,学习期>>。安装或升级到9.16后、ARP/AI将立即启用并激活。将集群升级到ARP.16.1后、如果已为现有和新的FlexVol卷启用了ONTAP 9、则这些卷将自动启用ARP/AI。
-
-link:enable-arp-ai-with-au.html["详细了解如何启用ARP/AI"]
-
-.ARP/AI自动更新
-为了保持对最新勒索软件威胁的最新保护、ARP/AI可在常规ONTAP升级和发布周期之外频繁自动更新。如果您选择了自动更新安全文件、则link:../update/enable-automatic-updates-task.html["已启用自动更新"]还可以开始接收ARP/AI的自动安全更新。您还可以选择手动进行这些更新、并控制更新发生的时间。
-
-从System Manager.16.1开始、除了系统和固件更新之外、还可以使用ONTAP 9提供ARP/AI的安全更新。
-
-
-IMPORTANT: ARP/AI功能目前仅支持NAS。尽管自动更新功能会显示可在System Manager中部署的新安全文件的可用性、但这些更新仅适用于NAS工作负载保护。
-
-link:arp-ai-automatic-updates.html["了解有关ARP/AI更新的更多信息"]
+ARP 会定期创建锁定快照，并根据计划创建快照，以增强保护。它会智能地管理快照的保留时长。如果未检测到异常活动，则会快速回收快照。但是，如果检测到攻击，则会将攻击开始前创建的快照保留更长时间。
 
 
 
 == 许可证和支持
 
-ARP支持包含在中link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and_later_licensing_overview["ONTAP One许可证"^]。如果您没有ONTAP One许可证、则可以使用其他许可证、具体取决于您的ONTAP版本。
+ARP 支持包含在link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and_later_licensing_overview["ONTAP One许可证"^] 。如果您没有ONTAP One 许可证，则可以使用其他许可证来用于 ARP，具体取决于您的ONTAP版本。
 
 [cols="2*"]
 |===
@@ -57,21 +36,21 @@ ARP支持包含在中link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and
  a| 
 ONTAP 9.11.1及更高版本
  a| 
-反勒索软件
+`Anti_ransomware`
 
 
 
  a| 
 ONTAP 9.10.1
  a| 
-MT_EK_Mgmt (多租户密钥管理)
+`MT_EK_MGMT` （多租户密钥管理）
 
 |===
-* 如果您要从ONTAP 9 ARP.10.1升级到．11.1或更高版本、并且系统上已配置了ONTAP 9、则无需安装新的防勒索软件许可证。对于新的ARP配置、需要新的许可证。
-* 如果您要从ONTAP 9.11.1或更高版本还原到ONTAP 9.10.1、并且已使用防勒索软件许可证启用ARP、则会看到一条警告消息、可能需要重新配置ARP。
+* 如果您要从ONTAP 9.10.1 升级到ONTAP 9.11.1 或更高版本，并且系统上已配置 ARP，则无需安装新的 `Anti-ransomware`许可证。对于新的 ARP 配置，需要新的许可证。
+* 如果您从ONTAP 9.11.1 或更高版本恢复到ONTAP 9.10.1，并且已使用 Anti_ransomware 许可证启用 ARP，您将看到一条警告消息，可能需要重新配置 ARP。link:../revert/anti-ransomware-license-task.html["了解还原ARP的相关信息"] 。
 
 
-link:../revert/anti-ransomware-license-task.html["了解还原ARP的相关信息"](英文)
+link:enable-task.html["您可以在现有卷上启用自主勒索软件保护 (ARP)，或者创建新卷并启用 ARP"] 。
 
 
 
@@ -81,96 +60,215 @@ link:../revert/anti-ransomware-license-task.html["了解还原ARP的相关信息
 
 一个比喻是车辆的安全特性。您不需要依靠安全带等单一功能来在发生事故时为您提供全面保护。安全袋，防抱死制动器和前向碰撞警告都是额外的安全功能，可以带来更好的结果。应以相同方式查看勒索软件保护。
 
-虽然ONTAP包括FPolicy、Snapshot、SnapLock和Active IQ数字顾问(也称为数字顾问)等功能来帮助防止勒索软件、但以下信息侧重于具有机器学习功能的ARP机载功能。
+虽然ONTAP包含 FPolicy、快照、 SnapLock和Active IQ Digital Advisor （也称为Digital Advisor）等功能来帮助防御勒索软件，但以下信息重点介绍具有机器学习功能的 ARP 功能。
 
-要了解有关ONTAP的其他反勒索软件功能的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-technical-reports/ransomware-solutions/ransomware-active-iq.html["勒索软件和NetApp的保护产品组合"^]。
+要详细了解NetApp产品组合中防范勒索软件的其他功能，请参阅link:https://docs.netapp.com/us-en/ontap-technical-reports/ransomware-solutions/ransomware-active-iq.html["勒索软件和NetApp的保护产品组合"^] 。
 
 
 
 == ARP检测到的内容
 
-ARP旨在防止攻击者在支付赎金之前扣留数据的拒绝服务攻击。ARP提供基于以下各项的实时勒索软件检测：
+ONTAP ARP 旨在防御拒绝服务攻击，即攻击者扣留数据直至支付赎金。ARP基于以下方式提供实时勒索软件检测：
 
-* 将传入数据标识为加密或纯文本。
+* 将传入数据识别为加密或纯文本。
 * 可检测以下内容的分析：
 +
-** **平均值**：对文件中数据的随机性的评估
-** **文件扩展名类型**：不符合正常扩展名类型的扩展名
-** **文件IOP**：使用数据加密时异常卷活动激增(从ONTAP 9.11.1开始)
+** *熵*：（用于 NAS 和 SAN）对文件中数据随机性的评估
+** *文件扩展名类型*：（仅在 NAS 中使用）不符合预期扩展名类型的文件扩展名
+** *文件 IOPS*：（仅在ONTAP 9.11.1 开始的 NAS 中使用）数据加密时异常卷活动激增
 
 
 
 
-在对少量文件进行加密后、ARP可以检测到大多数勒索软件攻击的蔓延、并自动采取措施保护数据、并提醒您可疑攻击正在发生。
+ARP 只需少量文件被加密即可检测到大多数勒索软件攻击的传播，自动响应以保护数据，并提醒您疑似攻击正在发生。
 
 
 NOTE: 任何勒索软件检测或预防系统都无法完全保证免遭勒索软件攻击的安全。虽然攻击可能无法检测到、但如果防病毒软件未能检测到入侵、ARP则会作为一个重要的额外防御层。
 
 
 
-== 学习和主动模式
+== 了解 ARP 模式
 
-对于使用9.10.1 9.10.1 9.15.1运行的所有ARP以及使用ONTAP 9.161的FlexGroup卷使用的ARP、ARP有两种模式：
+为卷启用 ARP 后，它会经历两种不同的模式。ARP使用学习或评估期来建立正常工作负载行为的基准。在此期间，ARP 会分析系统指标以生成警报配置文件，然后再启用主动保护。ARP转换为主动检测模式后，它会开始实时监控异常活动，并在检测到异常行为时自动采取保护措施并生成警报。
 
-* *学习模式*(或"演练"模式)
-* *活动模式*(或"启用"模式)
-
+对于 ARP，学习模式和主动模式行为因ONTAP版本、卷类型和协议（NAS 或 SAN）而异。
 
 
-NOTE: 从ARP/AI的ARP.16.1开始ONTAP 9、FlexVol卷不会使用ARP/AI。安装或升级到9.161后、FlexVol卷上的ARP/AI将立即启用并处于活动状态。如果对FlexGroup卷使用ARP.161和ONTAP 9、则在过渡到活动模式之前、仍需要一个学习阶段。
 
-.学习模式
-对于使用ARP.10.1 9.15.1运行的所有ONTAP 9以及使用ARP.161的卷使用的FlexGroup、启用ONTAP 9后、它将在_leARP.16模式下运行。在学习模式下、ONTAP系统会根据分析区域(熵、文件扩展名类型和文件IOPS)开发警报配置文件。在学习模式下运行ARP并有足够的时间来评估工作负载特征后、您可以切换到活动模式并开始保护数据。
+=== NAS 环境和模式类型
 
-建议您将ARP保留在学习模式30天。从ARP.13.1.开始、ONTAP 9会自动确定最佳学习间隔并自动执行交换机操作、这可能会在30天之前发生。
+NAS 环境使用学习和主动模式。对于<<arp-ai,ARP/AI>>从ONTAP 9.16.1 开始在 NAS 环境中运行时，当 ARP 与FlexVol卷一起使用时没有学习期。
+
+下表总结了ONTAP 9.10.1 与 NAS 环境的更高版本之间的差异。
+
+[cols="1,5,1"]
+|===
+| 模式 | Description | 卷类型和版本 
+
+
+| 学习  a| 
+对于ONTAP 9.10.1 到 9.15.1 版本，启用 ARP 后，ARP 会自动设置为学习模式。在学习模式下， ONTAP系统会根据以下分析领域（熵、文件扩展名类型和文件 IOPS）制定警报配置文件。建议您将 ARP 保持在学习模式 30 天。从ONTAP 9.13.1 开始，ARP 会自动确定最佳学习间隔并自动切换，切换可能在 30 天之前完成。对于ONTAP 9.13.1 之前的版本，您可以手动进行切换。
+
+link:switch-learning-to-active-mode.html["了解有关从学习模式切换到主动模式的更多信息"] 。
 
 
 TIP: 命令可 `security anti-ransomware volume workload-behavior show`显示在卷中检测到的文件扩展名。如果您在学习模式早期运行此命令、并且此命令显示了文件类型的准确表示、则不应将此数据用作迁移到活动模式的基础、因为ONTAP仍在收集其他指标。有关的详细信息 `security anti-ransomware volume workload-behavior show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-show.html["ONTAP 命令参考"^]。
-
-.活动模式
-对于使用9.10.1 9.10.1到9.15.1运行的ARP、在完成最佳学习周期后、ARP将切换到_active mode_。在ARP切换到活动模式后、ONTAP会创建ARP快照、以便在检测到威胁时保护数据。
-
-在活动模式下、如果文件扩展名被标记为异常、则应评估警报。您可以对警报采取措施来保护您的数据、也可以将警报标记为误报。将警报标记为误报可更新警报配置文件。例如、如果警报由新文件扩展名触发、而您将警报标记为误报、则下次观察到该文件扩展名时、您不会收到警报。
+ a| 
+* FlexVol卷（采用ONTAP 9.10.1 至 9.15.1）
+* 带有ONTAP 9.13.1 及更高版本的 FlexGroup卷
 
 
-NOTE: 从ONTAP 9.11.1开始、您可以自定义ARP的检测参数。有关详细信息，请参见 xref:manage-parameters-task.html[管理ARP攻击检测参数]。
 
+
+| 活动  a| 
+在学习模式下运行 ARP 足够长的时间以评估工作负载特征后，您可以切换到主动模式并开始保护数据。从ONTAP 9.13.1 开始，ARP 会自动确定最佳学习间隔并自动切换，切换可能在 30 天之前完成。
+
+在ONTAP 9.10.1 到 9.15.1 版本中，ARP 会在最佳学习期结束后切换到主动模式。ARP切换到主动模式后，如果检测到威胁， ONTAP会创建 ARP 快照来保护数据。
+
+在主动模式下，如果文件扩展名被标记为异常，您应该评估该警报。您可以根据警报采取行动来保护数据，也可以将警报标记为误报。将警报标记为误报会更新警报配置文件。例如，如果警报是由新的文件扩展名触发的，并且您将警报标记为误报，则下次观察到该文件扩展名时，您将不会收到警报。
+ a| 
+所有受支持的ONTAP版本以及FlexVol和FlexGroup卷
+
+|===
+
+
+=== SAN 环境和模式类型
+
+SAN 环境会使用评估期（类似于 NAS 环境中的学习模式），然后自动过渡到主动检测。下表总结了评估模式和主动模式。
+
+[cols="1,5,1"]
+|===
+| 模式 | Description | 卷类型和版本 
+
+
+| 评估  a| 
+会进行为期两到四周的评估期，以确定基线加密行为。您可以通过运行 `security anti-ransomware volume show`指挥和检查 `Block device detection status` 。
+
+link:respond-san-entropy-eval-period.html["了解有关 SAN 卷和熵评估期的更多信息"] 。
+ a| 
+* 带有ONTAP 9.17.1 及更高版本的FlexVol卷
+
+
+
+
+| 活动  a| 
+评估期结束后，您可以通过运行 `security anti-ransomware volume show`指挥和检查 `Block device detection status` .的状态 `Active_suitable_workload`表示可以成功监测到评估的熵值。ARP会根据评估过程中审查的数据自动调整自适应阈值。
+ a| 
+* 带有ONTAP 9.17.1 及更高版本的FlexVol卷
+
+
+|===
 
 
 == 威胁评估和ARP快照
 
-当处于活动状态而未处于学习模式时、ARP会根据根据根据所学分析测量的传入数据评估威胁概率。当ARP检测到威胁时、将分配一个度量值：
+ARP 根据学习分析测量的传入数据来评估威胁概率。当 ARP 检测到异常时，会分配一个测量值。快照可能会在检测时或定期分配。
+
+
+
+=== ARP 阈值
 
 * *Low*：检测到卷中存在异常的最早时间(例如、在卷中观察到新的文件扩展名)。此检测级别仅适用于ONTAP 9不具有ARP/AI的ARP.16.1之前的版本。
-* *Moder*：观察到多个文件具有相同的"从未见过"文件扩展名。
 +
 ** 在ONTAP 9.10.1中、升级到"中等"的阈值为100个或更多文件。
-** 从ONTAP 9.11.1开始、文件数量可进行编辑；其默认值为20。
+** 从ONTAP 9.11.1 开始，您可以link:manage-parameters-task.html["自定义ARP检测参数"] 。
 
 
+* *中等*：检测到高熵，或观察到多个具有相同前所未见文件扩展名的文件。这是ONTAP 9.16.1 及更高版本中带有 ARP/AI 的基准检测级别。
 
 
-在威胁较低的情况下、ONTAP会检测到一个错误并创建卷的快照、以创建最佳恢复点。ONTAP会在ARP快照的名称前面加上 `Anti-ransomware-backup`，以便于识别；例如 `Anti_ransomware_backup.2022-12-20_1248`。
-
-在ONTAP运行分析报告以确定此非正常情况是否与勒索软件配置文件匹配后、此威胁会升级为中等。当攻击概率为中等时、ONTAP 会生成EMS通知、提示您评估威胁。ONTAP不会发送有关低威胁的警报，但是，从ONTAP 9.14.1开始，您可以发送警报xref:manage-parameters-task.html#modify-alerts[修改警报设置]。有关详细信息，请参见 xref:respond-abnormal-task.html[应对异常活动。]。
+当ONTAP运行分析报告确定异常是否与勒索软件配置文件匹配时，威胁会升级为中等。当攻击概率为中等时， ONTAP会生成 EMS 通知，提示您评估威胁。ONTAPONTAP不会发送有关低威胁的警报；但是，从ONTAP9.14.1 开始，您可以 link:manage-parameters-task.html#modify-alerts["修改默认警报设置"]。link:respond-abnormal-task.html["应对异常活动。"] 。
 
 您可以在System Manager的*事件*部分或使用命令查看有关中等威胁的信息 `security anti-ransomware volume show`。在不包含ARP/AI的9.16.1 9.161之前的版本中、也可以使用命令查看低威胁事件 `security anti-ransomware volume show`。有关的详细信息 `security anti-ransomware volume show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["ONTAP 命令参考"^]。
 
-单个ARP快照会保留两天。如果存在多个ARP快照、则默认情况下、这些快照会保留五天。从ONTAP 9.11.1开始、您可以修改保留设置。有关详细信息，请参见 xref:modify-automatic-shapshot-options-task.html[修改快照选项]。
 
+
+=== ARP Snapshot
+
+在ONTAP 9.16.1 及更早版本中，ARP 会在检测到攻击的早期迹象时创建快照。然后进行详细分析，以确认或排除潜在攻击。由于 ARP 快照是主动创建的，即使在攻击得到完全确认之前，某些合法应用程序也可能定期生成快照。这些快照的存在不应被视为异常。如果确认了攻击，则攻击概率将升级为 `Moderate` ，并生成攻击通知。
+
+从ONTAP 9.17.1 开始，NAS 和 SAN 卷都会定期生成 ARP 快照。ONTAPONTAP在 ARP 快照前添加一个名称，以便于识别。
+
+从ONTAP 9.11.1 开始，您可以修改保留设置。有关更多信息，请参阅link:modify-automatic-shapshot-options-task.html["修改快照选项"] 。
+
+下表总结了ONTAP 9.16.1 及更早版本与ONTAP 9.17.1 之间的 ARP 快照差异。
+
+[cols="1,3,3"]
+|===
+| 功能 | ONTAP 9.16.1 及更早版本 | ONTAP 9.17.1 及更高版本 
+
+
+| 创建触发器  a| 
+* 检测到高熵
+* 检测到新的文件扩展名（9.15.1 及更早版本）
+* 检测到文件操作激增（9.15.1 及更早版本）
+
+
+快照创建间隔基于触发器类型。
+ a| 
+快照每隔 4 小时固定创建一次，与任何特定触发器无关，并不一定表示发生了攻击。
+
+
+
+| 前缀名称约定 | “反勒索软件备份” | “反勒索软件定期备份” 
+
+
+| 删除行为 | ARP快照被锁定，管理员无法删除 | ARP快照被锁定，管理员无法删除 
+
+
+| 最大快照数 | link:modify-automatic-snapshot-options-task.html["六个快照可配置限制"] | link:modify-automatic-snapshot-options-task.html["六个快照可配置限制"] 
+
+
+| 保留期  a| 
+* 根据触发条件确定（不固定）
+* 攻击之前创建的快照将保留，直到管理员将攻击标记为真或误报（明确嫌疑）。
+
+ a| 
+快照通常保留 12 小时。
+
+* NAS 卷：如果通过文件分析确认了攻击，则攻击前创建的快照将保留，直到管理员将攻击标记为真或误报（明确怀疑）。
+* SAN 卷或 VM 数据存储：如果通过块熵分析确认了攻击，则攻击前创建的快照将保留 10 天（可配置）。
++
+攻击发生前创建的快照的保留期延长至 10 天（可配置）。
+
+
+
+
+
+| 明确嫌疑行动  a| 
+管理员可以执行清除嫌疑的操作，该操作根据确认设置保留：
+
+* 误报保留时间为 24 小时
+* 真实阳性保留时间为 7 天
+
+
+此预防性保留行为在ONTAP 9.16.1 之前不存在
+ a| 
+管理员可以执行清除嫌疑的操作，该操作根据确认设置保留：
+
+* 误报保留时间为 24 小时
+* 真实阳性保留时间为 7 天
+
+
+
+
+| 到期通知 | 无 | 所有快照均设置到期时间，以通知管理员 
+|===
 
 
 == 如何在勒索软件攻击后在 ONTAP 中恢复数据
 
-如果怀疑受到攻击、系统会在该时间点创建卷快照并锁定该副本。如果稍后确认攻击、则可以使用ARP快照还原卷。
+ARP 基于成熟的ONTAP数据保护和灾难恢复技术，可有效应对勒索软件攻击。在ONTAP 9.16.1 及更早版本中，ARP 会在检测到攻击的早期迹象时创建锁定快照；在 ONTAP 9.17.1 及更高版本中，ARP 会定期创建锁定快照。您需要首先确认攻击是真实攻击还是误报。如果您确认存在攻击，则可以使用 ARP 快照恢复卷。
 
 锁定的快照无法正常删除。但是，如果您稍后决定将此攻击标记为误报，则锁定的副本将被删除。
 
 了解受影响的文件和攻击时间后、可以有选择地从各种快照中恢复受影响的文件、而不是简单地将整个卷还原到其中一个快照。
 
-因此、ARP建立在经验证的ONTAP 数据保护和灾难恢复技术之上、可应对勒索软件攻击。有关恢复数据的详细信息，请参见以下主题。
+有关应对攻击和恢复数据的更多信息，请参阅以下主题：
 
-* link:../data-protection/restore-contents-volume-snapshot-task.html["从快照恢复"]
+* link:respond-abnormal-task.html["应对异常活动。"]
+* link:recover-data-task.html["从 ARP 快照恢复数据"]
+* link:../data-protection/restore-contents-volume-snapshot-task.html["从ONTAP快照恢复"]
 * link:https://www.netapp.com/blog/smart-ransomware-recovery["智能勒索软件恢复"^]
 
 
@@ -179,6 +277,24 @@ NOTE: 从ONTAP 9.11.1开始、您可以自定义ARP的检测参数。有关详�
 == 为ARP提供多管理员验证保护
 
 从ONTAP 9.13.1开始、建议启用多管理员验证(MAV)、以便需要两个或更多经过身份验证的用户管理员才能进行自动防病毒(ARP)配置。有关详细信息，请参见 link:../multi-admin-verify/enable-disable-task.html["启用多管理员验证"]。
+
+
+
+== 利用人工智能(ARP/AI)实现自主防兰功能
+
+从ONTAP 9.16.1 开始，ARP 采用机器学习模型进行反勒索软件分析，从而提升了网络弹性。该模型能够在 NAS 环境中以 99% 的准确率检测不断演变的勒索软件形式。的机器学习模型在模拟勒索软件攻击前后都基于大量文件数据集进行了预训练。这种资源密集型的训练是在ONTAP之外进行的，使用开源取证研究数据集来训练模型。整个建模流程不会使用客户数据，因此不存在隐私问题。此训练生成的预训练模型随ONTAP一起提供。但无法通过ONTAP CLI 或ONTAP API 访问或修改此模型。
+
+.使用FlexVol卷立即过渡到ARP/AI的主动保护
+有了 ARP/AI 和FlexVol卷，就没有 .NET 卷了<<了解 ARP 模式,学习期>>。安装或升级到 9.16 后，ARP/AI 将立即启用并处于活动状态。集群升级到ONTAP 9.16.1 后，如果现有和新的FlexVol卷已启用 ARP，则 ARP/AI 将自动启用。
+
+link:enable-arp-ai-with-au.html["详细了解如何启用ARP/AI"]
+
+.ARP/AI自动更新
+为了持续提供针对最新勒索软件威胁的最新保护，ARP/AI 提供频繁的自动更新，这些更新在ONTAP常规升级和发布周期之外进行。如果您link:../update/enable-automatic-updates-task.html["已启用自动更新"]在您选择安全文件自动更新后，您也将能够开始接收 ARP/AI 的自动安全更新。您还可以选择link:arp-ai-automatic-updates.html#manually-update-arpai-with-the-latest-security-package["手动进行这些更新"]并控制更新发生的时间。
+
+从System Manager.16.1开始、除了系统和固件更新之外、还可以使用ONTAP 9提供ARP/AI的安全更新。
+
+link:arp-ai-automatic-updates.html["了解有关ARP/AI更新的更多信息"]
 
 .相关信息
 * link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]

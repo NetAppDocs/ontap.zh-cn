@@ -21,19 +21,20 @@ summary: '从SVM.10.1开始、您可以配置、以便默认情况下为新卷�
 如果只想配置单个新卷或现有卷而不将ARP设为默认卷，请参见此link:enable-task.html["相关ARP过程"]。
 
 .关于此任务
-默认情况下、系统会在禁用ARP的情况下创建新卷。默认情况下、只有在为NAS卷启用ARP功能后、才会在SVM中创建的新卷上启用ARP。
+默认情况下，新创建的卷的 ARP 处于禁用模式。只有在启用反勒索软件功能后，SVM 中创建的新卷才会默认启用 ARP。
 
-现有卷不会自动启用ARP。此过程中所述的设置更改仅会影响新卷。了解如何link:enable-task.html["为现有卷启用ARP"]。
+ARP 不会在现有卷上自动启用。此过程中描述的设置更改仅影响新卷。了解如何link:enable-task.html["为现有卷启用ARP"] 。
 
-* *默认情况下，对于带有FlexGroup卷的ARP.10.1 9.15.1和ONTAP 9，启用了ARP.10.1的新卷将设置为(或“演练”)模式，在此模式下，系统将link:index.html#learning-and-active-modes["学习模式"]分析工作负载以确定正常行为特征。学习模式可以手动(所有ARP版本)或自动(从ARP 9.131开始)转换为活动模式。对于9.13.1及更高版本、ARP分析中添加了自适应学习功能、以便自动从学习模式切换到活动模式。
-* *对于带有FlexVol卷的9.16.1 9.161及更高版本*，启用ARP后，ARP/AI保护将立即启用并处于活动状态。无需学习。
+* *（仅限 NAS 环境）对于ONTAP 9.10.1 至 9.15.1 或带有FlexGroup卷的 ARP* 默认情况下，启用 ARP 的新卷设置为link:index.html#learn-about-arp-modes["学习模式"] （或“试运行”状态），系统会分析工作负载以表征正常行为。学习模式可以手动（所有 ARP 版本）或自动（从 ARP 9.13.1 开始）转换为主动模式。在 ARP 9.13.1 及更高版本中，自适应学习已添加到 ARP 分析中，以便自动从学习模式切换到主动模式。
+* *（仅限 NAS 环境）适用于带有FlexVol卷的ONTAP 9.16.1 及更高版本* 使用系统管理器或命令行界面 (CLI) 启用 ARP 时，ARP/AI 保护将立即启用并生效。无需学习期。
+* *（仅限 SAN 环境）适用于包含FlexVol卷的ONTAP 9.17.1 及更高版本* 使用 System Manager 或命令行界面 (CLI) 启用 ARP 时，ARP/AI 功能将自动启用。在 SAN 卷上启用后， link:respond-san-entropy-eval-period.html["ARP/AI 在评估期间持续监测数据"]确定工作负载是否适合ARP并设置最佳加密检测阈值。
 
 
 .开始之前
-* 。 xref:index.html[正确的许可证] 必须为您的ONTAP 版本安装。
-* 卷的容量必须小于100%。
-* 接合路径必须处于活动状态。
-* 从ONTAP 9.13.1开始、建议您启用多管理员验证(MAV)、以便反勒索软件操作需要两个或更多经过身份验证的用户管理员。link:../multi-admin-verify/enable-disable-task.html["了解更多信息。"](英文)
+* 这link:index.html["正确的许可证"]必须为您的ONTAP版本安装。
+* 卷的占用率必须低于 100%。
+* （仅限 NAS 环境）要设置 ARP 的卷必须受到保护，并且具有活动的link:../concepts/namespaces-junction-points-concept.html["接合路径"] 。
+* 从ONTAP 9.13.1 开始，建议您启用多管理员验证 (MAV)，以便反勒索软件操作需要两个或更多经过身份验证的用户管理员。link:../multi-admin-verify/enable-disable-task.html["了解更多信息。"] 。
 
 
 .步骤
@@ -43,14 +44,10 @@ summary: '从SVM.10.1开始、您可以配置、以便默认情况下为新卷�
 ====
 .System Manager
 --
-. 选择*存储> Storage VM*、然后选择包含要使用ARP保护的卷的Storage VM。
-. 导航到*Settings*选项卡。在*安全性*下，找到**反勒索软件**磁贴，然后选择image:icon_pencil.gif["编辑图标"]。
-. 选中此框可为NAS卷启用ARP。选中附加框可在Storage VM中所有符合条件的NAS卷上启用ARP。
-+
-
-NOTE: 对于ONTAP 9.16.1、这些操作会将ARP/AI保护作为新FlexVol卷的默认设置、并且不需要任何学习期。
-
-. 如果已升级到9.13.1或更高版本，可选择*在充分学习后自动从学习模式切换到活动模式*。这样、ARP就可以确定最佳学习周期间隔、并自动切换到活动模式。
+. 选择*存储*或*集群*（取决于您的环境），选择*存储虚拟机*，然后选择包含您想要使用 ARP 保护的卷的存储虚拟机。
+. 导航到“设置”选项卡。在“安全”下，找到“反勒索软件”磁贴，然后选择image:icon_pencil.gif["编辑图标"] 。
+. 勾选此框以启用反勒索软件 (ARP)。勾选附加框可在存储虚拟机中所有符合条件的卷上启用 ARP。
+. 对于ONTAP 9.13.1 或更高版本，可以选择“充分学习后自动从学习模式切换到主动模式”。这允许 ARP 确定最佳学习间隔并自动切换到主动模式。
 
 
 --
@@ -58,25 +55,27 @@ NOTE: 对于ONTAP 9.16.1、这些操作会将ARP/AI保护作为新FlexVol卷的�
 --
 * 修改现有SVM、以便在新卷中默认启用ARP：
 +
-
-NOTE: 对于9.15.1 9.151及更早版本以及FlexGroup卷、新卷将开始处于学习模式。对于带有FlexVol卷的9.16.1 9.161及更高版本、系统会立即启用ARP/AI。无论哪种情况、均使用 `dry-run`作为值。
-
+** 对于没有 ARP/AI 的 NAS 环境或FlexGroup卷，请使用 `dry-run`状态，以便新卷以学习模式开始。
+** 对于运行ONTAP 9.16.1 或更高版本的 NAS 环境或具有ONTAP 9.17.1 的 SAN 环境，请使用 `enabled`状态。
 +
 [source, cli]
 ----
-vserver modify -vserver <svm_name> -anti-ransomware-default-volume-state dry-run
+vserver modify -vserver <svm_name> -anti-ransomware-default-volume-state <dry-run|enabled>
 ----
+
+
 * 为新卷创建一个默认启用ARP的新SVM：
 +
-
-NOTE: 对于9.15.1 9.151及更早版本以及FlexGroup卷、新卷将开始处于学习模式。对于带有FlexVol卷的9.16.1 9.161及更高版本、系统会立即启用ARP/AI。无论哪种情况、均使用 `dry-run`作为值。
-
+** 对于没有 ARP/AI 的 NAS 环境或FlexGroup卷，请使用 `dry-run`状态，以便新卷以学习模式开始。
+** 对于运行ONTAP 9.16.1 或更高版本的 NAS 环境或具有ONTAP 9.17.1 的 SAN 环境，请使用 `enabled`状态。
 +
 [source, cli]
 ----
-vserver create -vserver <svm_name> -anti-ransomware-default-volume-state dry-run <other parameters as needed>
+vserver create -vserver <svm_name> -anti-ransomware-default-volume-state <dry-run|enabled>
 ----
-* 如果您从9.13.1 9.131升级到9.15.1 9.151，并且默认状态为 `dry-run`，则会启用自适应学习，以便自动更改 `active`状态。如果不希望自动启用此行为、请修改现有SVM：
+
+
+* 如果您通过ONTAP 9.15.1 升级到ONTAP 9.13.1，并且默认状态为 `dry-run` （学习模式），自适应学习已启用，因此更改为 `enabled`状态（主动模式）会自动启用。如果您不想自动启用此行为，请修改现有的 SVM：
 +
 [source, cli]
 ----

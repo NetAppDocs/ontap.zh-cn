@@ -1,0 +1,93 @@
+---
+permalink: system-admin/use-hsts-task.html 
+sidebar: sidebar 
+keywords: manage, http, https, hsts, strict transport security, security, web, access, certificate, encrypted, connection, server, browser, web services 
+summary: 使用 HSTS 强制ONTAP Web 服务的 HTTPS 连接。 
+---
+= 将 HSTS 用于ONTAP Web 服务
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+HTTP 严格传输安全 (HSTS) 是一种 Web 安全策略机制，可帮助保护网站免受中间人攻击，例如协议降级攻击和 Cookie 劫持。通过强制使用 HTTPS，HSTS 可确保用户浏览器与服务器之间的所有通信都经过加密。从ONTAP 9.17.1 开始， ONTAP可以为ONTAP Web 服务强制使用 HTTPS 连接。
+
+
+NOTE: 仅当与ONTAP建立初始安全 HTTPS 连接后，Web 浏览器才会强制执行 HSTS。如果浏览器未建立初始安全连接，则不会强制执行 HSTS。有关 HSTS 管理的信息，请参阅您的浏览器文档。
+
+.关于此任务
+* 对于 9.17.1 及更高版本，新安装的ONTAP集群默认启用 HSTS。升级到 9.17.1 后，HSTS 默认不启用。您必须在升级后启用 HSTS。
+* 所有产品均支持 HSTS link:../system-admin/manage-web-services-concept.html["ONTAP Web 服务"] 。
+
+
+.开始之前
+* 以下任务需要高级权限。
+
+
+
+
+== 显示 HSTS 配置
+
+您可以显示当前的 HSTS 配置以检查它是否已启用并查看最大年龄设置。
+
+.步骤
+. 使用 `system services web show`命令显示当前的 Web 服务配置，包括 HSTS 设置：
++
+[listing]
+----
+cluster-1::system services web*> show
+
+                   External Web Services: true
+                               HTTP Port: 80
+                              HTTPS Port: 443
+                         Protocol Status: online
+                       Per Address Limit: 80
+                     Wait Queue Capacity: 192
+                            HTTP Enabled: true
+                 CSRF Protection Enabled: true
+Maximum Number of Concurrent CSRF Tokens: 500
+       CSRF Token Idle Timeout (Seconds): 900
+   CSRF Token Absolute Timeout (Seconds): 0
+          Allow Web Management via Cloud: true
+Enforce Network Interface Service-Policy: -
+                            HSTS Enabled: true
+                  HSTS max age (Seconds): 63072000
+----
+
+
+
+
+== 启用 HSTS 并设置最大使用期限
+
+从ONTAP 9.17.1 开始，新的ONTAP集群默认启用 HSTS。如果您将现有集群升级到 9.17.1 或更高版本，则需要在集群上手动启用 HSTS 以强制使用 HTTPS。您可以启用 HSTS 并设置最长使用期限。如果已启用 HSTS，您可以随时更改最长使用期限。启用 HSTS 后，浏览器仅在建立初始安全连接后才会开始强制执行安全连接。
+
+.步骤
+. 使用 `system services web modify`启用 HSTS 或修改最大年龄的命令：
++
+[source, cli]
+----
+system services web modify -hsts-enabled true -hsts-max-age <seconds>
+----
++
+`-hsts-max-age`指定浏览器记住强制执行 HTTPS 的时长（以秒为单位）。默认值为 63072000 秒（两年）。
+
+
+
+
+
+== 禁用 HSTS
+
+浏览器会在每次连接时保存 HSTS 最长使用期限设置，即使在ONTAP上禁用 HSTS，它们也会在整个连接期间继续强制执行 HSTS。禁用 HSTS 后，浏览器需要等待配置的最长使用期限才能停止强制执行 HSTS。如果在此期间无法建立安全连接，则强制执行 HSTS 的浏览器将不允许访问ONTAP Web 服务，直到问题解决或浏览器的最长使用期限到期。
+
+.步骤
+. 使用 `system services web modify`命令：
++
+[source, cli]
+----
+system services web modify -hsts-enabled false
+----
+
+
+.相关信息
+link:https://datatracker.ietf.org/doc/html/rfc6797["RFC 6797 - HTTP 严格传输安全 (HSTS)"^]

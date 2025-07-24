@@ -13,6 +13,8 @@ summary: 使用 NVMe 时，必须将命名空间映射到子系统。
 [role="lead"]
 通过将NVMe命名空间映射到子系统、可以从主机访问数据。  您可以在配置存储时将NVMe命名空间映射到子系统、也可以在配置存储后进行映射。
 
+从ONTAP 9.17.1 开始，如果您使用SnapMirror主动同步配置，则可以在将主机添加到 NVMe 子系统时，将 SVM 添加到主机作为近端虚拟服务器。NVMe子系统中命名空间的主动优化路径仅从配置为近端虚拟服务器的 SVM 发布到主机。
+
 从ONTAP 9.14.1开始、您可以确定特定主机的资源分配优先级。默认情况下、将主机添加到NVMe子系统时、会为其指定常规优先级。您可以使用ONTAP命令行界面(CLI)手动将默认优先级从常规更改为高。  分配了高优先级的主机将分配更大的I/O队列计数和队列深度。
 
 
@@ -20,6 +22,10 @@ NOTE: 如果要为已添加到ONTAP 9.131或更早版本的子系统中的主机
 
 .开始之前
 您的命名空间和子系统应已创建。如果需要创建命名空间和子系统、请参见 link:create-nvme-namespace-subsystem-task.html["配置 NVMe 存储"]。
+
+
+
+== 映射 NVMe 命名空间
 
 .步骤
 . 从主机获取 NQN 。
@@ -31,6 +37,9 @@ vserver nvme subsystem host add -vserver <SVM_name> -subsystem <subsystem_name> 
 ----
 +
 如果要将主机的默认优先级从常规更改为高、请使用 `-priority high`选项。此选项从ONTAP 9.14.1开始提供。有关的详细信息 `vserver nvme subsystem host add`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-nvme-subsystem-host-add.html["ONTAP 命令参考"^]。
+
++
+如果您想添加 SVM 作为 `proximal-vserver`在将主机添加到SnapMirror主动同步配置中的 NVMe 子系统时，您可以使用 `-proximal-vservers`选项。此选项从ONTAP 9.17.1 开始可用。您可以添加源 SVM 或目标 SVM，或同时添加两者。运行此命令的 SVM 是默认 SVM。
 
 . 将命名空间映射到子系统：
 +

@@ -1,0 +1,35 @@
+---
+permalink: revert/anti-ransomware-disable-san.html 
+sidebar: sidebar 
+keywords: revert, reverting, reversion, anti-ransomware, san, autonomous, protection, arp 
+summary: 在恢复到ONTAP 9.16.1 或更早版本之前，请禁用 SAN 卷上的 ARP，以避免不必要地消耗 CPU 和磁盘空间。 
+---
+= 从ONTAP 9.17.1 还原之前，请禁用 SAN 卷上的自主勒索软件防护
+:allow-uri-read: 
+
+
+[role="lead"]
+ONTAP 9.16.1 及更早版本不支持 SAN 卷的ONTAP ARP 功能。建议您在还原到ONTAP 9.16.1 或更早版本之前禁用 SAN 卷上的 ARP，以防止该功能保持活动状态并占用 CPU 和磁盘资源，而无需对还原的版本执行任何实际检测。
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择“*存储 > 卷*”，然后选择卷的名称。
+. 在 *Volumes* 概览的 *Security* 选项卡中，选择 *Status* 从 Enabled 切换到 Disabled。
+
+
+--
+.命令行界面
+--
+. 禁用卷上的勒索软件保护：
++
+[source, cli]
+----
+security anti-ransomware volume disable -volume <vol_name> -vserver <svm_name>
+----
+
+
+--
+====

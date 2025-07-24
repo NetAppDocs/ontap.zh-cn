@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: multiprotocol, s3, configuration, overview, nfs, smb, multipart 
 summary: 从ONTAP 9.12.1开始、您可以使运行S3协议的客户端访问为使用NFS和SMB协议的客户端提供的相同数据、而无需重新格式化。 
 ---
-= ONTAP中的S3多协议支持
+= 了解ONTAP S3 多协议支持
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -17,11 +17,11 @@ S3多协议功能可解决两种使用情形：
 
 . 使用S3客户端访问现有NAS数据
 +
-如果您的现有数据是使用传统NAS客户端(NFS或SMB)创建的、并且位于NAS卷(FlexVol 或FlexGroup 卷)上、则现在可以使用S3客户端上的分析工具访问此数据。
+如果您现有的数据是使用传统 NAS 客户端（NFS 或 SMB）创建的，并且位于 NAS 卷（FlexVol或FlexGroup卷）上，则您可以使用 S3 客户端上的分析工具来访问此数据。
 
 . 为能够使用NAS和S3协议执行I/O的现代客户端提供后端存储
 +
-现在、您可以为Spark和Kafka等应用程序提供集成访问、这些应用程序可以使用NAS和S3协议读写相同的数据。
+您可以为 Spark 和 Kafka 等可以使用 NAS 和 S3 协议读取和写入相同数据的应用程序提供集成访问。
 
 
 
@@ -82,7 +82,11 @@ NOTE: S3 NAS分段中的多部分对象必须按1 MB大小对齐。例如、一�
 
 * AbortMultipartUpload
 * CompleteMultipartUpload
+* CopyObject（从ONTAP 9.17.1 开始）
 * CreateMultipartUpload
++
+从ONTAP 9.17.1 开始，CreateMultipartUpload 支持标记和用户元数据键/值对。
+
 * ListMultipartUpload
 * 上传部件
 
@@ -111,7 +115,6 @@ FabricPool 容量层:: 无法将S3 NAS分段配置为FabricPool的容量层。
 +
 --
 * ByPassGovernance保留
-* CopyObject
 * DeleteBucketLifecycleConfiguration
 * GetBucketLifecycleConfiguration
 * GetBucketObjectLockConfiguration
@@ -134,6 +137,8 @@ NOTE: 在S3 NAS存储分段中使用S3时、尤其不支持这些S3操作。使�
 AWS用户元数据::
 +
 --
+* 从ONTAP 9.17.1 开始，支持具有多部分对象的元数据。
+* 从ONTAP 9.16.1 开始，支持具有单一艺术对象的元数据。
 * 对于9.15.1 9.151及更早版本、作为S3用户元数据的一部分收到的密钥值对不会与对象数据一起存储在磁盘上。
 * 对于9.15.1 9.151及更早版本、将忽略前缀为"x-AMZ-meta "的请求标头。
 
@@ -142,6 +147,8 @@ AWS用户元数据::
 AWS标记::
 +
 --
+* 从ONTAP 9.17.1 开始，支持具有多部分对象的标签。
+* 从ONTAP 9.16.1 开始，支持带有单一艺术对象的标签。
 * 对于Put对象和多部分启动请求上的9.15.1 9.151及更早版本、将忽略前缀为"x-AMZ-tag (x-AMZ-tag)"的标头。
 * 对于9.15.1 9.151及更早版本，更新现有文件上标记的请求(带有?taging query-string的Put、GET和Delete请求)将被拒绝，并显示错误。
 

@@ -41,7 +41,7 @@ summary: 您可以删除零RTO SnapMirror同步保护并删除SnapMirror活动�
 
 
 
-== 删除对称主动/主动配置
+== 删除 iSCSI 或 FC 对称主动/主动配置
 
 您可以使用System Manager或ONTAP命令行界面删除对称配置。在这两个界面中、的步骤不同 xref:index.html#key-concepts[统一和非统一配置]。
 
@@ -129,6 +129,54 @@ SiteB::> igroup delete -vserver <svm_name> -igroup <igroup_name>`
 +
 `SiteA::> snapmirror release -destination-path <destination_path>`
 
+. 重新发现路径以验证主机是否只能使用本地路径。
+
+
+--
+====
+
+
+== 删除 NVMe 对称主动/主动配置
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+.步骤
+. 在源集群上，导航到*保护>复制*。
+. 找到要删除的关系，选择image:icon_kabob.gif["菜单选项图标"]并选择*删除*。
+
+
+--
+.命令行界面
+--
+. 从目标集群中删除SnapMirror活动同步关系。
++
+`snapmirror delete -destination-path <destination_path> -unmap-namespace true`
+
++
+示例
+
++
+[listing]
+----
+DST::> snapmirror delete -destination-path vs1:/cg/cg_dst_1 -force true
+----
++
+子系统及其命名空间已从辅助集群中删除。
+
+. 从源集群中，从主站点释放SnapMirror主动同步关系。
++
+`snapmirror release -destination-path <destination_path>`
+
++
+示例
+
++
+[listing]
+----
+SRC::> snapmirror release -destination-path vs1:/cg/cg_dst_1
+----
 . 重新发现路径以验证主机是否只能使用本地路径。
 
 

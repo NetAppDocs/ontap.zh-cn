@@ -50,6 +50,15 @@ RHEL 9.x
 
 
  a| 
+RHEL 10.x
+ a| 
+** rhel-10-for-x86_64-baseos-rpms
+** rhel-10-for-x86_64-appstream-rpms
+
+
+
+
+ a| 
 CentOS 7.x
  a| 
 ** C7.6.1810 —基本存储库
@@ -73,6 +82,15 @@ CentOS 7.x
 ** baseos
 
 
+
+
+ a| 
+Rocky Linux 10
+ a| 
+** AppStream
+** baseos
+
+
 |===
 . 使用以下过程之一启用对上面列出的存储库的访问、以便ONTAP 调解器可以在安装过程中访问所需的软件包。
 
@@ -88,8 +106,10 @@ NOTE: 如果 ONTAP 调解器依赖于“extras”和“optional”存储库中�
 .步骤
 . 订阅所需的存储库：
 +
-`subscription-manager repos --enable rhel-7-server-optional-rpms`
-
+[source, cli]
+----
+subscription-manager repos --enable rhel-7-server-optional-rpms
+----
 +
 以下示例显示了此命令的执行情况：
 
@@ -130,11 +150,15 @@ repolist: 46,205
 .步骤
 . 订阅所需的存储库：
 +
-`subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms`
-
+[source, cli]
+----
+subscription-manager repos --enable rhel-8-for-x86_64-baseos-rpms
+----
 +
-`subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms`
-
+[source, cli]
+----
+subscription-manager repos --enable rhel-8-for-x86_64-appstream-rpms
+----
 +
 以下示例显示了此命令的执行情况：
 
@@ -161,11 +185,15 @@ Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
 .步骤
 . 订阅所需的存储库：
 +
-`subscription-manager repos --enable rhel-9-for-x86_64-baseos-rpms`
-
+[source, cli]
+----
+subscription-manager repos --enable rhel-9-for-x86_64-baseos-rpms
+----
 +
-`subscription-manager repos --enable rhel-9-for-x86_64-appstream-rpms`
-
+[source, cli]
+----
+subscription-manager repos --enable rhel-9-for-x86_64-appstream-rpms
+----
 +
 以下示例显示了此命令的执行情况：
 
@@ -176,6 +204,41 @@ Repository 'rhel-8-for-x86_64-appstream-rpms' is enabled for this system.
 Repository 'rhel-9-for-x86_64-baseos-rpms' is enabled for this system.
 [root@localhost ~]# subscription-manager repos --enable rhel-9-for-x86_64-appstream-rpms
 Repository 'rhel-9-for-x86_64-appstream-rpms' is enabled for this system.
+----
+. 运行 `yum repolist` 命令：
++
+新订阅的存储库应显示在列表中。
+
+
+
+====
+.RHEL 10.x 操作系统的安装步骤
+[#rhel10x%collapsible]
+====
+如果您的操作系统是 *RHEL 10.x*，请使用此过程来启用对存储库的访问：
+
+.步骤
+. 订阅所需的存储库：
++
+[source, cli]
+----
+subscription-manager repos --enable rhel-10-for-x86_64-baseos-rpms
+----
++
+[source, cli]
+----
+subscription-manager repos --enable rhel-10-for-x86_64-appstream-rpms
+----
++
+以下示例显示了此命令的执行情况：
+
++
+[listing]
+----
+[root@localhost ~]# subscription-manager repos --enable rhel-10-for-x86_64-baseos-rpms
+Repository 'rhel-10-for-x86_64-baseos-rpms' is enabled for this system.
+[root@localhost ~]# subscription-manager repos --enable rhel-10-for-x86_64-appstream-rpms
+Repository 'rhel-10-for-x86_64-appstream-rpms' is enabled for this system.
 ----
 . 运行 `yum repolist` 命令：
 +
@@ -196,7 +259,7 @@ NOTE: 以下示例显示的是CentOS 7.6的存储库、可能不适用于其他C
 . 添加 C7.6.1810 —基本存储库。C7.6.1810 -基本存储库包含ONTAP 调解器所需的"kernel-devel"软件包。
 . 将以下行添加到 /etc/yum.repos.d/Centos-vault.repo.
 +
-[listing]
+[source, cli]
 ----
 [C7.6.1810-base]
 name=CentOS-7.6.1810 - Base
@@ -231,27 +294,35 @@ repolist: 21,433
 
 
 ====
-.适用于Rocky Linux 8或9操作系统的操作步骤
-[#rocky-linux-8-9%collapsible]
+.Rocky Linux 8、9 或 10 操作系统的程序
+[#rocky-linux-8-9-10%collapsible]
 ====
-如果您的操作系统是*Rocky Linux 8*或*Rocky Linux 9*，请使用此操作步骤 来访问存储库：
+如果您的操作系统是 *Rocky Linux 8*、*Rocky Linux 9* 或 *Rocky Linux 10*，请使用以下步骤来启用对存储库的访问：
 
 .步骤
 . 订阅所需的存储库：
 +
-`dnf config-manager --set-enabled baseos`
-
+[source, cli]
+----
+dnf config-manager --set-enabled baseos
+----
 +
-`dnf config-manager --set-enabled appstream`
-
+[source, cli]
+----
+dnf config-manager --set-enabled appstream
+----
 . 执行 `clean` 操作：
 +
-`dnf clean all`
-
+[source, cli]
+----
+dnf clean all
+----
 . 验证存储库列表：
 +
-`dnf repolist`
-
+[source, cli]
+----
+dnf repolist
+----
 
 
 ....
@@ -272,6 +343,16 @@ baseos                         Rocky Linux 8 - BaseOS
 repo id                        repo name
 appstream                      Rocky Linux 9 - AppStream
 baseos                         Rocky Linux 9 - BaseOS
+[root@localhost ~]#
+....
+....
+[root@localhost ~]# dnf config-manager --set-enabled baseos
+[root@localhost ~]# dnf config-manager --set-enabled appstream
+[root@localhost ~]# dnf clean all
+[root@localhost ~]# dnf repolist
+repo id                        repo name
+appstream                      Rocky Linux 10 - AppStream
+baseos                         Rocky Linux 10 - BaseOS
 [root@localhost ~]#
 ....
 ====

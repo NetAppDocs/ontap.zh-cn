@@ -24,7 +24,7 @@ summary: 如果要通过添加或删除卷来更改一致性组的构成，则�
 +
 如果要通过添加或删除卷来更改一致性组的构成，则必须先删除原始关系，然后使用新的构成重新创建一致性组。
 
-* 从ONTAP 9.13.1开始、您可以从源或目标无系统地向具有活动SnapMirror关系的一致性组添加卷。
+* 从ONTAP 9.13.1 开始，您可以无中断地从源或目标向具有活动SnapMirror关系的一致性组添加卷。NVMe协议不支持此操作。
 +
 删除卷会造成系统中断。在删除卷之前、必须先删除SnapMirror关系。
 
@@ -76,7 +76,7 @@ NOTE: 目标 LUN 将取消映射，而主副本上的 LUN 将继续为主机 I/O
 +
 `source::>snapmirror release -destination-path vs1_dst:/cg/cg_dst -relationship-info-only true`
 
-. **如果使用的是ONTAP 9.10.1到9.13.0**，请删除并重新创建源上具有正确构成的一致性组。按照中的步骤进行操作 xref:../consistency-groups/delete-task.html[删除一致性组] 然后 xref:../consistency-groups/configure-task.html[配置一个一致性组]。在ONTAP 9.10.1及更高版本中、您必须在System Manager中或使用ONTAP REST API执行删除和创建操作；没有命令行界面操作步骤。
+. **如果您使用的是ONTAP 9.10.1 至 9.13.0，**请删除源上的一致性组，然后重新创建该一致性组，并使其组成正确。按照link:../consistency-groups/delete-task.html["删除一致性组"] 中的步骤操作，然后link:../consistency-groups/configure-task.html["配置一个一致性组"]。ONTAP必须在系统管理器中或使用ONTAP REST API 执行删除和创建操作；没有 CLI 过程。
 +
 **如果使用的是ONTAP 9.9.1，请跳到下一步。**
 

@@ -1,0 +1,63 @@
+---
+permalink: system-admin/audit-manage-cross-cluster-requests.html 
+sidebar: sidebar 
+keywords: audit, peered, cross cluster, log, cluster, get request 
+summary: 启用跨集群审计来记录从对等集群发起的操作并改进集群之间的操作跟踪。 
+---
+= 启用ONTAP跨集群审核
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.17.1 以及ONTAP 9.16.1 P4 和更高版本的 9.16.1 修补程序版本开始，您可以在ONTAP中启用跨集群审计功能，以记录从对等集群发起的操作。这种远程审计功能在多个ONTAP集群交互的环境中尤其有用，可以提供远程操作的可追溯性和责任追究。
+
+跨集群审计可以区分用户发起的 GET（读取）或 SET（创建/修改/删除）操作。默认情况下，目标集群仅会审计用户发起的 SET 操作。任何读取数据的请求，例如 GET 或 `show` CLI 中的命令，无论请求是否跨集群，默认情况下都不会受到审核。
+
+.开始之前
+* 你必须有 `advanced`级别权限
+* 该集群必须与另一个集群对等，并且两个集群都必须运行ONTAP 9.16.1 P4 或更高版本。
++
+
+NOTE: 在部分节点（而非所有节点）升级到ONTAP 9.16.1 P4 或更高版本的环境中，审计日志记录仅在运行升级版本的节点上进行。建议将所有节点升级到受支持的版本，以确保一致的审计行为。
+
+
+
+
+
+== 启用或禁用跨集群审计
+
+.步骤
+. 通过设置 `cluster-peer`参数 `on`或者 `off` ：
++
+[source, cli]
+----
+security audit modify -cluster-peer {on|off}
+----
+. 通过检查当前审核状态来确认集群对等设置是启用还是禁用：
++
+[listing]
+----
+security audit show
+----
++
+回复：
+
++
+[listing]
+----
+    Audit Setting State
+    ------------- -----
+         CLI GET: off
+        HTTP GET: off
+      ONTAPI GET: off
+    Cluster Peer: on
+----
+
+
+
+
+== 启用 GET 审计的效果
+
+从ONTAP 9.17.1 开始，如果您 https://docs.netapp.com/us-en/ontap-cli/security-audit-modify.html["启用 CLI、HTTP、ONTAPI GET 审计"^]在对等集群上，您还可以启用跨集群用户发起的 GET 请求的审计。在早期ONTAP版本中，GET 审计仅适用于本地集群上的请求。在ONTAP 9.17.1 中，如果您使用 `cluster-peer`选项设置为 `on` ，本地集群和跨集群请求都将被审核。

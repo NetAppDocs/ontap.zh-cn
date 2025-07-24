@@ -4,27 +4,36 @@ sidebar: sidebar
 keywords: perform, directory, delete, files, asynchronous, share, flexvol, flex vol, flexgroup, flex group, cancel 
 summary: 从ONTAP 9.8开始、您可以使用volume file async-delete命令在后台从Linux和Windows客户端共享中删除文件和目录。您可以对 FlexVol 和 FlexGroup 卷执行异步删除。 
 ---
-= 使用 FlexGroups 在 ONTAP 集群上异步删除目录
+= 从ONTAP FlexGroup卷异步删除目录
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从Linux-8开始、您可以使用异步删除功能异步(即在后台)从ONTAP 9和Windows客户端共享中删除目录。集群和SVM管理员可以对FlexVol 和FlexGroup 卷执行异步删除操作。
+从ONTAP 9.8 开始，您可以异步（即在后台）从 Linux 和 Windows 客户端共享中删除目录。集群和 SVM 管理员可以在FlexVol和FlexGroup卷上执行异步删除操作。
 
-如果您使用的ONTAP版本早于SVM.11.1、则必须是使用高级权限模式的集群管理员或ONTAP 9管理员。
+.关于此任务
+您必须是集群管理员或使用高级权限模式的 SVM 管理员。
+
+从CLI.8开始、您可以使用ONTAP ONTAP 9使用异步删除功能。从ONTAP 9.1.1开始、您可以在System Manager中使用此功能。有关此过程的详细信息，请参见link:../task_nas_file_system_analytics_take_corrective_action.html["根据 FSA 中的 ONTAP 分析采取纠正措施"]。
 
 从ONTAP 9.11.1开始、存储管理员可以授予对卷的权限、以允许NFS和SMB客户端执行异步删除操作。有关详细信息，请参见 link:manage-client-async-dir-delete-task.html["管理客户端异步删除目录的权限"]。
 
-从CLI.8开始、您可以使用ONTAP ONTAP 9使用异步删除功能。从ONTAP 9.1.1开始、您可以在System Manager中使用此功能。有关此过程的详细信息，请参见link:../task_nas_file_system_analytics_take_corrective_action.html["根据 FSA 中的 ONTAP 分析采取纠正措施"]。
+您可以使用 `volume file async-delete show`命令检查正在进行的异步删除作业的状态，并且从ONTAP 9.17.1 开始，还会显示从客户端发出的异步删除作业的状态。
+
+
+
+== 异步删除目录
+
+您可以使用 System Manager 或ONTAP CLI 异步删除目录。
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
 |===
-| 在 ONTAP 9.8 和 9.9.1 中 | 从ONTAP 9.10.1开始 
+| 在ONTAP 9.9.1 中 | 从ONTAP 9.10.1开始 
 
 
  a| 
@@ -54,22 +63,26 @@ NOTE: 删除目录和文件后，不会立即显示新的存储容量值。
 
 . 进入高级权限模式：
 +
-`-privilege advance`
+`set -privilege advanced`
 
 . 删除FlexVol 或FlexGroup 卷上的目录：
 +
-`volume file async-delete start -vserver vserver_name -volume volume_name -path file_path -throttle throttle`
+`volume file async-delete start -vserver <SVM_name> -volume <volume_name> -path <file_path> -throttle <throttle>`
 
 +
-最小限制值为 10 ，最大值为 100 ， 000 ，默认值为 5000 。
+最小节流值为 10，最大值为 100,000，默认值为 5000。较低的节流值使用较少的资源，这会导致较慢的删除速度，而较高的节流值使用较多的资源，但会导致较快的删除速度。
 
 +
 以下示例将删除名为 d2 的目录，该目录位于名为 d1 的目录中。
 
 +
 ....
-cluster::*>volume file async-delete start -vserver vs1 -volume vol1 -path d1/d2
+cluster::*> volume file async-delete start -vserver vs1 -volume vol1 -path d1/d2
 ....
+. （可选）检查正在进行的异步删除作业的状态：
++
+`volume file async-delete show`
+
 . 验证是否已删除此目录：
 +
 `event log show`
@@ -79,17 +92,22 @@ cluster::*>volume file async-delete start -vserver vs1 -volume vol1 -path d1/d2
 
 +
 ....
-cluster-cli::*> event log show
-Time                 Node             Severity      Event
--------------------  ---------------- ------------- --------------------
-MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success: Async delete job on path d1/d2 of volume (MSID: 2162149232) was completed.
+cluster::*> event log show
+
+Time                Node             Severity      Event
+------------------- ---------------- ------------- ---------------------------
+7/7/2025 09:04:04   cluster-vsim     NOTICE        asyncDelete.message.success: Async delete job on path d1/d2 of volume (MSID: 2162149232) was completed. Number of files deleted: 7, Number of directories deleted: 5. Total number of bytes deleted: 135168.
 ....
 +
 有关的详细信息 `event log show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/event-log-show.html["ONTAP 命令参考"^]。
 
 
 
-*取消目录删除作业*
+--
+====
+
+
+== 取消目录删除作业
 
 . 进入高级权限模式：
 +
@@ -104,9 +122,6 @@ MM/DD/YYYY 00:11:11  cluster-vsim     INFORMATIONAL asyncDelete.message.success:
 
 . 取消目录删除：
 +
-`volume file async-delete cancel -vserver _SVM_name_ -volume _volume_name_ -jobid _job_id_`
+`volume file async-delete cancel -vserver <SVM_name> -volume <volume_name> -jobid <job_id>`
 
 
-
---
-====

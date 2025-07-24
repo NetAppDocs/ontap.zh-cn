@@ -4,13 +4,8 @@ permalink: snapmirror-active-sync/mediator-install-task.html
 keywords: SM-BC, SMBC, cluster, peering, ONTAP Mediator, initialize, snapmirror active sync 
 summary: SnapMirror 主动同步要求您安装和初始化 ONTAP Mediator 并确保正确的集群对等连接。 
 ---
-= 为 SnapMirror 主动同步配置 ONTAP 调解器和集群
-:hardbreaks:
+= 为SnapMirror主动同步配置ONTAP调解器
 :allow-uri-read: 
-:nofooter: 
-:icons: font
-:linkattrs: 
-:imagesdir: ../media/
 
 
 [role="lead"]
@@ -32,12 +27,14 @@ ONTAP 调解器为 SnapMirror 主动同步关系中的 ONTAP 集群使用的高�
 
 例如、如果集群B与集群A、集群C和集群D具有对等关系、则在为这三个集群对等关系配置了SnapMirror活动同步后、这三个关系都可以具有唯一关联的ONTAP调解器实例。或者、集群B也可以对所有三个对等关系使用同一个ONTAP调解器实例。在这种情况下、同一个ONTAP调解器实例会为集群列出三次。
 
+从ONTAP 9.17.1 开始，您可以配置link:cloud-mediator-config-task.html["ONTAP云调解器"]但是，要在SnapMirror主动同步配置中监控集群的运行状况，您不能同时使用这两个中介器。
+
 .ONTAP 调解器的先决条件
 * ONTAP Mediator 本身包含一组先决条件。您必须先满足这些先决条件，然后才能安装 ONTAP Mediator。
 +
-有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/task_configuring_the_ontap_mediator_service_from_a_metrocluster_ip_configuration.html["准备安装 ONTAP 调解器"^]。
+有关详细信息，请参阅link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html["准备安装ONTAP调解器服务"^] 。
 
-* 默认情况下，ONTAP 调解器通过 TCP 端口 31784 提供服务。您应确保端口 31784 在 ONTAP 集群和 ONTAP 调解器之间处于打开状态且可用。
+* 默认情况下， ONTAP调解器通过 TCP 端口 31784 提供服务。您应确保端口 31784 在ONTAP集群和ONTAP调解器之间处于打开状态且可用。
 
 
 
@@ -57,32 +54,8 @@ xref:../mediator/index.html[准备安装或升级 ONTAP 调解器]
 NOTE: 对于集群对等关系、SnapMirror活动同步需要默认IP空间。不支持自定义IP空间。
 
 +
-xref:../peering/create-cluster-relationship-93-later-task.html[创建集群对等关系]
+link:cluster-config-task.html["为SnapMirror主动同步配置ONTAP集群"]
 
-. 确认已在每个集群上创建SVM。
-+
-xref:../smb-config/create-svms-data-access-task.html[创建 SVM]
-
-. 确认每个集群上的SVM之间存在对等关系。
-+
-xref:../peering/create-intercluster-svm-peer-relationship-93-later-task.html[创建 SVM 对等关系]
-
-. 确认 LUN 存在卷。
-+
-xref:../smb-config/create-volume-task.html[Creating a volume]
-
-. 确认在集群中的每个节点上至少创建了一个 SAN LIF 。
-+
-link:../san-admin/manage-lifs-all-san-protocols-concept.html["集群 SAN 环境中 LIF 的注意事项"]
-
-+
-link:../networking/create_a_lif.html["创建 LIF"]
-
-. 确认已创建必要的LUN并将其映射到igrop、igrop用于将LUN映射到应用程序主机上的启动程序。
-+
-xref:../san-admin/provision-storage.html[创建 LUN 并映射 igroup]
-
-. 重新扫描应用程序主机以发现任何新的LUN。
 
 
 
@@ -188,7 +161,7 @@ image:successful-mediator-installation.png["调解器添加成功"]。
 . 从ONTAP调解器Linux VM/主机软件安装位置查找ONTAP调解器CA证书 `cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`。
 . 向对等集群上的证书存储添加有效的证书颁发机构。
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -203,7 +176,7 @@ image:successful-mediator-installation.png["调解器添加成功"]。
 `security certificate install -type server-ca -vserver <vserver_name>`
 
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -240,7 +213,7 @@ C1_test_cluster::*>
 `security certificate show -common-name <common_name>`
 
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -259,7 +232,7 @@ C1_test_cluster
 `snapmirror mediator add -mediator-address <ip_address> -peer-cluster <peer_cluster_name> -username user_name`
 
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -272,7 +245,7 @@ Enter the password again: ******
 ----
 . (可选)检查作业ID状态 `job show -id`以验证SnapMirror调解器添加命令是否成功。
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -334,7 +307,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 . 从ONTAP调解器Linux VM/主机软件安装位置查找ONTAP调解器CA证书 `cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`。
 . 向对等集群上的证书存储添加有效的证书颁发机构。
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -349,7 +322,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 `security certificate install -type server-ca -vserver <vserver_name>`
 
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -386,7 +359,7 @@ C1_test_cluster::*>
 `security certificate show -common-name <common_name>`
 
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -405,7 +378,7 @@ C1_test_cluster
 `snapmirror mediator add -mediator-address <ip_address> -peer-cluster <peer_cluster_name> -username user_name`
 
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -418,7 +391,7 @@ Enter the password again: ******
 ----
 . (可选)检查作业ID状态 `job show -id`以验证SnapMirror调解器添加命令是否成功。
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -521,7 +494,7 @@ image:configure-mediator-system-manager.png["添加System Manager调解器"]
 --
 . 删除先前在对所有集群使用自签名证书时安装的自签名 `intermediate.crt`证书。在以下示例中、有两个集群：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -534,7 +507,7 @@ image:configure-mediator-system-manager.png["添加System Manager调解器"]
 ----
 . 使用从SnapMirror活动同步集群中删除先前配置的ONTAP调解器 `-force true`：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -562,7 +535,7 @@ NOTE: 具有某些属性、这些属性是从需要发送到PKI颁发机构的�
 
 . 从ONTAP调解器Linux VM/主机软件安装位置添加新的第三方ONTAP调解器CA证书 `intermediate.crt`：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -575,7 +548,7 @@ NOTE: 具有某些属性、这些属性是从需要发送到PKI颁发机构的�
 ----
 . 将文件添加 `intermediate.crt`到对等集群。对所有对等集群重复此步骤：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -599,7 +572,7 @@ C1_test_cluster::*>
 ----
 . 从SnapMirror活动同步集群中删除先前配置的ONTAP调解器：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -617,7 +590,7 @@ This table is currently empty.
 ----
 . 再次添加 ONTAP 调解器：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -646,7 +619,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 --
 . 删除先前在对所有集群使用自签名证书时安装的自签名 `ca.crt`证书。在以下示例中、有两个集群：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -659,7 +632,7 @@ Mediator Address Peer Cluster     Connection Status Quorum Status
 ----
 . 使用从SnapMirror活动同步集群中删除先前配置的ONTAP调解器 `-force true`：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -687,7 +660,7 @@ NOTE: 具有某些属性、这些属性是从需要发送到PKI颁发机构的�
 
 . 从ONTAP调解器Linux VM/主机软件安装位置添加新的第三方ONTAP调解器CA证书 `ca.crt`：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -700,7 +673,7 @@ NOTE: 具有某些属性、这些属性是从需要发送到PKI颁发机构的�
 ----
 . 将文件添加 `intermediate.crt`到对等集群。对所有对等集群重复此步骤：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -724,7 +697,7 @@ C1_test_cluster::*>
 ----
 . 从SnapMirror活动同步集群中删除先前配置的ONTAP调解器：
 +
-* 示例 *
+示例
 
 +
 [listing]
@@ -742,7 +715,7 @@ This table is currently empty.
 ----
 . 再次添加 ONTAP 调解器：
 +
-* 示例 *
+示例
 
 +
 [listing]

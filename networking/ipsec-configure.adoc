@@ -99,7 +99,7 @@ NOTE: ONTAP LIF 可以共享证书。不需要在证书和 LIF 之间进行一�
 
 NOTE: 客户端必须使用预共享密钥（ psk ）支持 Internet 密钥交换版本 2 （ IKEv2 ）。
 
-.. 可选。选择细化的流量参数、例如上层协议(UDP、TCP、ICMP等) )、本地端口号和用于保护流量的远程端口号。相应的参数为 `protocols`， `local-ports` 和 `remote-ports` 。
+.. 可选择细粒度的流量参数，例如上层协议（UDP、TCP、ICMP 等）、本地端口号和远程端口号，以保护流量。相应的参数如下 `protocols` ，  `local-ports`和 `remote-ports`分别。
 +
 跳过此步骤可保护 ONTAP IP 地址和客户端 IP 地址之间的所有流量。默认情况下，保护所有流量。
 
@@ -113,9 +113,12 @@ NOTE:  `local-identity`如果主机和客户端均使用strong、并且未为主
 ... 如果输入PKI、则还需要输入 `cert-name`， `local-identity`， `remote-identity` parameters如果远程端证书标识未知、或者如果需要多个客户端标识、请输入特殊标识 `ANYTHING`。
 
 
+.. 从ONTAP 9.17.1 开始，可以选择输入后量子预共享密钥 (PPK) 身份 `ppk-identity`参数。PPK提供了额外的安全保障，以抵御未来潜在的量子计算机攻击。输入 PPK 身份时，系统会提示您输入 PPK 密钥。PPK仅支持 PSK 身份验证。
 
 
 
+
+详细了解 `security ipsec policy create`在link:https://docs.netapp.com/us-en/ontap-cli/security-ipsec-policy-create.html["ONTAP 命令参考"^] 。
 
 ....
 security ipsec policy create -vserver vs1 -name test34 -local-ip-subnets 192.168.134.34/32 -remote-ip-subnets 192.168.134.44/32

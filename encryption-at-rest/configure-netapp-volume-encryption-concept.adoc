@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: volume encryption, nve, aggregate-level, support details, data encryption, encrypt data at rest, storage encryption, key 
 summary: NetApp 卷加密（ NVE ）是一种基于软件的技术，用于一次对一个卷上的空闲数据进行加密。只有存储系统可以访问的加密密钥可确保在底层设备被重新利用，退回，放置在不当位置或被盗时无法读取卷数据。 
 ---
-= 配置 NetApp 卷加密概述
+= 了解ONTAP NetApp卷和聚合加密
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -71,7 +71,11 @@ NVE 和 NAE 卷可以同时位于同一聚合上。默认情况下，在聚合�
 
 * 您可以使用 _cluster scopter_ 为集群中的所有 SVM 配置外部密钥管理。集群管理员可以访问存储在服务器上的每个密钥。
 * 从 ONTAP 9.6 开始，您可以使用 _SVM scopter_ 为集群中的指定 SVM 配置外部密钥管理。这最适合多租户环境，其中每个租户都使用不同的 SVM （或一组 SVM ）来提供数据。只有给定租户的 SVM 管理员才能访问该租户的密钥。
-* 从 ONTAP 9.10.1 开始，您可以使用 xref:manage-keys-azure-google-task.html[Azure 密钥存储和 Google Cloud KMS] 仅保护数据SVM的NVE密钥。从9.12.0开始、此功能可用于AWS的KMS。
++
+** 从 ONTAP 9.10.1 开始，您可以使用 xref:manage-keys-azure-google-task.html[Azure 密钥存储和 Google Cloud KMS] 仅保护数据SVM的NVE密钥。从9.12.0开始、此功能可用于AWS的KMS。
+** 从ONTAP 9.17.1 开始，您可以使用xref:manage-keys-barbican-task.html[巴比肯 KMS]仅保护数据 SVM 的 NVE 密钥。
+
+
 
 
 您可以在同一集群中使用这两个范围。如果为 SVM 配置了密钥管理服务器，则 ONTAP 仅使用这些服务器来保护密钥。否则， ONTAP 将使用为集群配置的密钥管理服务器来保护密钥。
@@ -125,7 +129,7 @@ NOTE: Azure密钥存储和AWS KMS等云KMS提供商不支持KMIP。因此、它�
  a| 
 ONTAP
  a| 
-所有 ONTAP 实施。ONTAP 9.5 及更高版本支持 ONTAP 云。
+所有ONTAP实施。ONTAP9.5 及更高版本支持Cloud Volumes ONTAP 。
 
 
 

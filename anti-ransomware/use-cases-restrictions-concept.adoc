@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: anti-ransomware/use-cases-restrictions-concept.html 
 keywords: anti-ransomware workloads, anti-ransomware requirements, anti-ransomware performance, volumes, anti-ransomware encryption, anti-ransomware system configurations, arp 
-summary: NAS工作负载支持ARP。它最适合NFS存储上的数据库、Windows或Linux主目录以及视频和图像工作负载。 
+summary: ARP 支持 NAS 和 SAN 工作负载。它最适合 NFS 存储上的数据库、Windows 或 Linux 主目录以及视频和图像工作负载。 
 ---
 = ONTAP自主防网络软件保护的用例和注意事项
 :hardbreaks:
@@ -16,7 +16,7 @@ summary: NAS工作负载支持ARP。它最适合NFS存储上的数据库、Windo
 
 
 [role="lead"]
-从ONTAP 9 10.1开始、可为NAS工作负载提供自动防兰软件保护(ARP)。在部署ARP之前、您应了解建议的用途和支持的配置以及对性能的影响。
+自主勒索软件防护 (ARP) 适用于从ONTAP 9.10.1 开始的 NAS 工作负载和从ONTAP 9.17.1 开始的 SAN 工作负载。在部署 ARP 之前，您应该了解其推荐用途、支持的配置以及性能影响。
 
 
 
@@ -28,12 +28,12 @@ summary: NAS工作负载支持ARP。它最适合NFS存储上的数据库、Windo
 
 === 合适的工作负载
 
-ARP适用于：
+ARP 适用于以下类型的工作负载：
 
-* NFS 存储上的数据库
+* NFS 或 SAN 存储上的数据库
 * Windows 或 Linux 主目录
 +
-由于用户可能会创建在学习期间未检测到扩展名的文件、因此在此工作负载中出现误报的可能性更大。
+对于没有 ARP/AI 的环境，用户可能会创建一些在学习期间无法检测到的扩展名的文件。因此，此类工作负载中出现误报的可能性更大。
 
 * 图像和视频
 +
@@ -45,104 +45,90 @@ ARP适用于：
 
 === 不适合的工作负载
 
-ARP不适用于：
+ARP 不适合以下类型的工作负载：
 
-* 文件创建或删除频率较高的工作负载(几秒钟内即可创建数十万个文件；例如测试/开发工作负载)。
-* ARP的威胁检测取决于其识别文件创建、重命名或删除活动异常激增的能力。如果应用程序本身是文件活动的源、则无法有效地将其与勒索软件活动区分开来。
-* 应用程序或主机对数据进行加密的工作负载。
-ARP取决于将传入数据区分为已加密或未加密。如果应用程序本身正在对数据进行加密，则此功能的有效性将会降低。但是、该功能仍可根据文件活动(删除、覆盖或创建、或者使用新文件扩展名创建或重命名)和文件类型来工作。
+* 具有高频率文件创建或删除操作的工作负载（几秒钟内数十万个文件；例如，测试/开发工作负载）。
+* ARP 的威胁检测依赖于其识别文件创建、重命名或删除操作异常激增的能力。如果应用程序本身是文件活动的来源，则无法有效区分勒索软件活动。
+* 应用程序或主机加密数据的工作负载。
++
+ARP 依赖于区分传入数据是加密的还是未加密的。如果应用程序本身正在加密数据，则该功能的有效性会降低。但是，ARP 仍然可以根据文件活动（删除、覆盖、创建，或者创建文件或使用新的文件扩展名重命名）和文件类型进行工作。
+
 
 
 
 
 === 支持的配置
 
-从ARP.10.1开始、ONTAP 9可用于内部ONTAP系统中的NFS和SMB FlexVol卷。
+从ONTAP 9.10.1 开始，ARP 可用于 NAS NFS 和 SMB FlexVol卷。从 9.17.1 开始，ARP 可用于 iSCSI、FC 和带有 SAN 存储的 NVMe 的 SAN FlexVol卷。
 
 以下ONTAP版本支持其他配置和卷类型：
 
 |===
-|  | ONTAP 9.16.1. | ONTAP 9.15.1. | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
+|  | ONTAP 9.17.1 | ONTAP 9.16.1. | ONTAP 9.15.1. | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
 
 
-| 使用SnapMirror异步保护的卷 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| 使用SnapMirror异步保护的卷 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 使用SnapMirror异步保护SVM (SVM灾难恢复) | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| 使用SnapMirror异步保护SVM (SVM灾难恢复) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| SVM 数据移动性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| SVM 数据移动性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| FlexGroup卷* | ✓ | ✓ | ✓ | ✓ |  |  |  
+| FlexGroup卷^1^ | ✓ | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| 多管理员验证 | ✓ | ✓ | ✓ | ✓ |  |  |  
+| 多管理员验证 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  |  
 
 
-| ARP/AI、具有自动更新功能 | ✓ |  |  |  |  |  |  
+| ARP/AI、具有自动更新功能 | ✓ | ✓ |  |  |  |  |  |  
 |===
-*ARP/AI不支持FlexGroup卷。升级到ARP.16.1后、启用了的FlexGroup卷将继续使用ARP/AI之前使用的相同ONTAP 9模式运行。
+^1^ ARP/AI 不支持FlexGroup卷。升级到ONTAP 9.16.1 后，启用 ARP 的FlexGroup卷将继续使用 ARP/AI 之前使用的 ARP 模型运行。
 
 
 
 ==== SnapMirror和ARP互操作性
 
-从ARP.12.1开始、SnapMirror异步目标卷支持ONTAP 9。SnapMirror同步**不支持ARP。
+从ONTAP 9.12.1 开始， SnapMirror异步目标卷支持 ARP。SnapMirrorSnapMirror或SnapMirror主动同步*不*支持 ARP。
 
-如果SnapMirror源卷启用了ARP、则SnapMirror目标卷会自动获取源卷的ARP配置状态(学习、启用等)、ARP训练数据以及ARP创建的快照。无需显式启用。
+如果SnapMirror源卷启用了 ARP，则SnapMirror目标卷会自动获取 ARP 配置状态（例如 `dry-run`或者 `enabled` )、ARP 训练数据以及 ARP 创建的源卷快照。无需明确启用。
 
-虽然目标卷包含只读(RO)快照、但不会对其数据进行ARP处理。但是、当SnapMirror目标卷转换为读写(rw)时、将自动在RW转换的目标卷上启用ARP。除了已记录在源卷上的内容之外、目标卷不需要任何其他学习操作步骤。
+尽管目标卷包含只读 (RO) 快照，但其数据不会进行任何 ARP 处理。但是，当SnapMirror目标卷转换为读写 (RW) 时，ARP 会在已转换为 RW 的目标卷上自动启用。除了源卷上已记录的内容外，目标卷不需要任何其他学习过程。
 
-在ARP.10.1和9.11.1中、SnapMirror不会将ONTAP 9配置状态、训练数据和快照从源卷传输到目标卷。因此、在将SnapMirror目标卷转换为RW后、必须在转换后的学习模式下明确启用目标卷上的ARP。
+在ONTAP 9.10.1 和 9.11.1 中， SnapMirror不会将 ARP 配置状态、训练数据和快照从源卷传输到目标卷。因此，当SnapMirror目标卷转换为 RW 时，必须在转换后在学习模式下明确启用目标卷上的 ARP。
 
 
 
 ==== ARP和虚拟机
 
-虚拟机(VM)支持ARP。对于VM内部和外部的更改、ARP检测的行为有所不同。建议不要对虚拟机中具有大量熵文件的工作负载使用ARP。
+虚拟机 (VM) 支持 ARP。ARP检测对于虚拟机内部和外部的更改有不同的行为。对于虚拟机中涉及大量高度压缩文件（例如 7z 和 ZIP）或加密文件（例如受密码保护的 PDF、DOC 或 ZIP）的工作负载，不建议使用 ARP。
 
 .虚拟机外部的更改
-如果新扩展进入加密卷、或者文件扩展名发生更改、ARP可以检测VM外部NFS卷上的文件扩展名更改。可检测到的文件扩展名更改包括：
-
-* vmx
-* vmxf
-* vmdk
-* -fl.vmdk
-* .NVRAM
-* .vmm
-* vms
-* vmsn
-* .vswp
-* vmss
-* .log
-* -\#.log
-
+如果新扩展名以加密状态进入卷或文件扩展名发生变化，ARP 可以检测到 VM 外部 NFS 卷上的文件扩展名变化。
 
 .虚拟机内部的更改
-如果勒索软件攻击以虚拟机为目标、而虚拟机内部的文件在未在虚拟机外部进行更改的情况下发生更改、则在虚拟机的默认熵较低(例如.txt、.DOCX或.mp4文件)时、ARP会检测到威胁。虽然在此情形下ARP会创建一个保护性快照、但它不会生成威胁警报、因为虚拟机外部的文件扩展名未被篡改。
+如果勒索软件攻击更改了虚拟机内部的文件，而没有更改虚拟机外部的文件，并且虚拟机的默认熵较低（例如 .txt、.docx 或 .mp4 文件），ARP 就会检测到威胁。对于ONTAP 9.16.1 及更早版本，ARP 会在这种情况下创建保护性快照，但不会生成威胁警报，因为虚拟机外部的文件扩展名未被篡改。从ONTAP 9.17.1 中的 SAN 支持开始，如果 ARP 检测到虚拟机内部的熵异常，还会生成威胁警报。
 
-默认情况下、如果文件的熵较高(例如.gzip或受密码保护的文件)、则ARP的检测功能会受到限制。在这种情况下、ARP仍可创建主动快照；但是、如果文件扩展名未被外部篡改、则不会触发任何警报。
+如果文件默认为高熵文件（例如 .gzip 文件或受密码保护的文件），ARP 的检测能力就会受到限制。在这种情况下，ARP 仍然可以主动拍摄快照；但是，如果文件扩展名未被外部篡改，则不会触发警报。
+
+对于 SAN，ARP 在卷级别分析熵统计数据，并在发现熵异常时触发检测。
 
 
 
 === 不支持的配置
 
-以下系统配置不支持ARP：
-
-* ONTAP S3 环境
-* SAN 环境
-
+ONTAP S3 环境不支持 ARP。
 
 ARP不支持以下卷配置：
 
-* FlexGroup卷(在ONTAP 9.10.1到9.12.1中。从ARP.13.1开始、支持FlexGroup卷、但仅限于ARP/AI之前使用的ONTAP 9模型)
+* FlexGroup卷（在ONTAP 9.10.1 至 9.12.1 中）。从ONTAP 9.13.1 开始，支持FlexGroup卷，但仅限于 ARP/AI 之前使用的 ARP 模型。
 * FlexCache卷(原始FlexVol卷支持ARP、但缓存卷不支持ARP)
 * 使卷脱机
-* SAN-only volumes
 * SnapLock 卷
+* SnapMirror活动同步
 * SnapMirror同步
-* SnapMirror异步(仅在ONTAP 9 10.1和9.11.1中不受支持。从ONTAP 9 .12.1开始、支持SnapMirror异步。有关详细信息，请参见<<SnapMirror>>。)
+* SnapMirror异步（在ONTAP 9.10.1 和 9.11.1 中）。从ONTAP 9.12.1 开始支持SnapMirror异步。有关更多信息，请参阅<<SnapMirror>> 。
 * 受限卷
 * Storage VM的根卷
 * 已停止Storage VM的卷
@@ -152,21 +138,26 @@ ARP不支持以下卷配置：
 
 == ARP性能和频率注意事项
 
-根据吞吐量和峰值IOPS衡量、ARP对系统性能的影响最小。ARP功能的影响取决于特定的卷工作负载。对于常见工作负载、建议遵循以下配置限制：
+ARP 对系统性能（以吞吐量和峰值 IOPS 衡量）的影响极小。ARP功能的影响取决于具体的卷工作负载。对于常见工作负载，建议采用以下配置限制：
 
 [cols="30,20,30"]
 |===
-| 工作负载特征 | 每个节点的建议卷限制 | 超出每节点卷限制时性能下降传递：[*] 
+| 工作负载特征 | 每个节点的建议卷限制 | 当每个节点的卷限制超过上限时，性能会下降^1^ 
 
 
-| 读取密集型数据或数据可以压缩。 | 150 | 最大IOPS的4% 
+| 读取密集型或数据可以压缩 | 150 | 最大IOPS的4% 
 
 
-| 写入密集型、无法压缩数据。 | 60 | 最大IOPS的10% 
+| 写入密集且数据无法压缩 | 60  a| 
+* NAS： ONTAP 9.15.1 及更早版本的最大 IOPS 的 10%
+* NAS： ONTAP 9.16.1 及更高版本的最大 IOPS 的 4%
+* SAN： ONTAP 9.17.1 及更高版本的最大 IOPS 的 5%
+
+
 |===
-密码：[*]无论添加的卷数是否超过建议的限制、系统性能均不会超过这些百分比。
+^1^ 无论添加的卷数量超过建议的限制多少，系统性能都不会下降超过这些百分比。
 
-由于ARP分析按优先级顺序运行、因此随着受保护卷数量的增加、在每个卷上运行分析的频率会降低。
+由于 ARP 分析按优先级顺序运行，因此随着受保护卷数量的增加，每个卷上运行的分析频率会降低。
 
 
 
@@ -178,7 +169,7 @@ ARP不支持以下卷配置：
 
 有关、 `security anti-ransomware volume pause`和的详细信息 `security anti-ransomware volume disable`， `security anti-ransomware volume attack clear-suspect`请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware+volume["ONTAP 命令参考"^]。
 
-从ARP.14.1开始、ONTAP 9可提供有关创建ARP快照和观察新文件扩展名的警报。默认情况下、这些事件的警报处于禁用状态。可以在卷或SVM级别设置警报。您可以使用在SVM级别创建MAV规则，也可以使用在卷级别 `security anti-ransomware volume event-log modify`创建MAV规则 `security anti-ransomware vserver event-log modify`。
+从ONTAP 9.14.1 开始，ARP 会在创建 ARP 快照和发现新文件扩展名时发出警报。这些事件的警报默认处于禁用状态。警报可以在卷或 SVM 级别设置。您可以使用以下命令启用警报 `security anti-ransomware vserver event-log modify`或使用 `security anti-ransomware volume event-log modify` 。
 
 有关和的 `security anti-ransomware volume event-log modify`详细信息 `security anti-ransomware vserver event-log modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware["ONTAP 命令参考"^]。
 

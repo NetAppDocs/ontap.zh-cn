@@ -4,7 +4,7 @@ permalink: snapmirror-active-sync/index.html
 keywords: SM-BC, SMBC, failover, terms, benefits, snapmirror active sync, TR-4878 
 summary: 使用SnapMirror主动同步保护具有LUN的应用程序、使应用程序能够透明地进行故障转移、从而确保发生灾难时的业务连续性。 
 ---
-= ONTAP中的SnapMirror主动同步概述
+= 了解ONTAP SnapMirror主动同步
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -16,9 +16,68 @@ summary: 使用SnapMirror主动同步保护具有LUN的应用程序、使应用�
 [role="lead"]
 SnapMirror主动同步(也称为SnapMirror业务连续性_[SM-BC]_)支持业务服务即使在站点完全瘫痪的情况下仍可继续运行、从而支持应用程序使用二级副本透明地进行故障转移。使用SnapMirror活动同步触发故障转移无需手动干预或自定义脚本。
 
-从ONTAP 9.9.1开始、AFF集群、纯闪存SAN阵列(ASA)集群和C系列(AFF或ASA)均支持SnapMirror主动同步。主集群和二级集群的类型必须相同：ASA或AFF。SnapMirror主动同步可通过iSCSI或FCP LUN保护应用程序。
+对SnapMirror主动同步的支持因ONTAP版本的不同而有所差异：
 
-从ONTAP 9.151开始，SnapMirror主动同步支持xref:architecture-concept.html[对称主动/主动功能]。对称主动/主动允许通过双向同步复制从受保护LUN的两个副本执行读写I/O操作、以便两个LUN副本都可以在本地处理I/O操作。在ONTAP 9.15.1之前的版本中、SnapMirror主动同步仅支持非对称主动/主动配置、在这种配置中、二级站点上的数据会代理到LUN。从9.16.1 9.161 GA开始、四节点ONTAP集群还支持对称主动/主动。
+[cols="4*"]
+|===
+
+
+| ONTAP 版本 | 支持的集群 | 支持的协议 | 支持的配置 
+
+
+| 9.17.1 及更高版本  a| 
+* AFF
+* ASA
+* C系列
+* ASA r2
+
+ a| 
+* iSCSI
+* FC
+* NVMe
+
+ a| 
+* 非对称主动/主动
+
+
+
+NOTE: 非对称主动/主动不支持ASA r2 和 NVMe。有关 NVMe 支持的更多信息，请参阅link:../nvme/support-limitations.html["NVMe配置、支持和限制"] 。
+
+* 对称主动/主动
+
+
+
+
+| 9.15.1 及更高版本  a| 
+* AFF
+* ASA
+* C系列
+
+ a| 
+* iSCSI
+* FC
+
+ a| 
+* 非对称主动/主动
+* 对称主动/主动 对称主动/主动配置支持ONTAP 9.15.1 中的 2 节点集群。ONTAPONTAP及更高版本支持 4 节点集群。
+
+
+
+
+| 9.9.1 及更高版本  a| 
+* AFF
+* ASA
+* C系列*
+
+ a| 
+* iSCSI
+* FC
+
+ a| 
+非对称主动/主动
+
+|===
+主集群和辅助集群必须是同一类型： link:../san-admin/learn-about-asa.html["ASA"] ， link:https://docs.netapp.com/us-en/asa-r2/get-started/learn-about.html["ASA r2"^]或AFF。
 
 
 NOTE: 从2024年7月开始、以前以PDF格式发布的技术报告中的内容已与ONTAP产品文档集成。ONTAP SnapMirror主动同步文档现在包含了_TR-4878：SnapMirror active sync_中的内容。
@@ -35,35 +94,34 @@ SnapMirror主动同步具有以下优势：
 * 能够测试每个应用程序的故障转移。
 * 即时创建镜像克隆、而不影响应用程序可用性。
 * 能够在同一ONTAP集群中部署受保护和非受保护的工作负载。
-* LUN标识保持不变、因此应用程序会将其视为共享虚拟设备。
+* LUN、NVMe 命名空间、NVMe 子系统或存储单元身份保持不变，因此应用程序将它们视为共享虚拟设备。
 * 能够重复使用二级集群、并灵活地创建即时克隆以供应用程序使用、以用于开发测试、UAT或报告目的、而不会影响应用程序性能或可用性。
 
 
-SnapMirror主动同步支持您保护数据LUN、从而使应用程序能够透明地进行故障转移、以便在发生灾难时保持业务连续性。有关详细信息，请参见 link:use-cases-concept.html["用例"]。
+SnapMirror主动同步功能可保护您的数据 LUN 或 NVMe 命名空间，使应用程序能够透明地进行故障转移，从而在发生灾难时保持业务连续性。有关更多信息，请参阅link:use-cases-concept.html["用例"] 。
 
 
 
 == 关键概念
 
-SnapMirror主动同步使用一致性组和ONTAP调解器来确保即使在发生灾难的情况下也能复制和提供数据。在规划SnapMirror主动同步部署时、了解SnapMirror主动同步及其架构中的基本概念非常重要。
+SnapMirror主动同步使用一致性组和ONTAP调解器（或从ONTAP 9.17.1 开始使用ONTAP云调解器）来确保即使在发生灾难的情况下也能复制和提供数据。在规划SnapMirror主动同步部署时，务必了解SnapMirror主动同步及其架构中的基本概念。
 
 .不对称和对称
-SnapMirror主动同步支持非对称解决方案、并且从ONTAP 9.15.1开始支持对称主动/主动解决方案。这些选项是指主机如何访问存储路径和写入数据。在非对称配置中、二级站点上的数据会代理到LUN。在对称主动/主动配置中、两个站点均可访问本地存储以执行活动I/O
+在对称主动/主动配置中，两个站点均可访问本地存储进行主动 I/O。对称主动/主动配置针对集群应用程序进行了优化，包括 VMware vMSC、Windows 故障转移群集（带 SQL）以及 Oracle RAC。
 
-对称主动/主动已针对集群应用程序进行了优化、包括VMware VMSC、采用SQL的Windows故障转移集群和Oracle RAC。
-
+ In asymmetric active/active configurations data on the secondary site is proxied to a LUN, namespace or storage unit.
 有关详细信息，请参见 xref:architecture-concept.html[SnapMirror主动同步架构]。
 
 .一致性组
-答 link:../consistency-groups/index.html["一致性组"] 是一组FlexVol卷、可为必须受到保护才能实现业务连续性的应用程序工作负载提供一致性保证。
+对于AFF和ASA系统link:../consistency-groups/index.html["一致性组"]是FlexVol卷的集合，为必须保护以保证业务连续性的应用程序工作负载提供一致性保证。在ASA r2 系统中，一致性组是存储单元的集合。
 
-一致性组的目的是同时为多个卷创建Snapshot映像、从而确保在某个时间点为一组卷创建崩溃状态一致的副本。一致性组可确保数据集的所有卷先处于静音状态、然后在完全相同的时间点进行对等。这样可以在支持数据集的卷之间提供数据一致的还原点。因此、一致性组可以保持依赖写入顺序的一致性。如果您决定保护应用程序以实现业务连续性、则必须将与此应用程序对应的一组卷添加到一致性组中、以便在源一致性组和目标一致性组之间建立数据保护关系。源和目标一致性必须包含相同数量和类型的卷。
+一致性组的目的是同时对卷或存储单元集合进行快照，从而确保在某个时间点集合的崩溃一致性副本。一致性组确保数据集的所有卷都处于静止状态，然后在同一时间点进行快照。这为支持数据集的卷或存储单元提供了数据一致的还原点。因此，一致性组可以维护相关的写入顺序一致性。如果您决定保护应用程序以实现业务连续性，则必须将与此应用程序对应的卷或存储单元组添加到一致性组中，以便在源一致性组和目标一致性组之间建立数据保护关系。源一致性组和目标一致性组必须包含相同数量和类型的卷。
 
 .成分卷
-在SnapMirror活动同步关系中受保护的一致性组中的单个卷或LUN。
+单个卷、LUN 或 NVMe 命名空间（从ONTAP 9.17.1 开始），是SnapMirror活动同步关系中受保护的一致性组的一部分。
 
 .ONTAP 调解器
-。 link:../mediator/index.html["ONTAP 调解器"] 接收有关对等ONTAP集群和节点的运行状况信息、在这两个集群之间进行编排、并确定每个节点/集群是否运行正常。ONTAP调解器可提供有关以下内容的运行状况信息：
+这link:../mediator/index.html["ONTAP 调解器"]接收有关对等ONTAP集群和节点的运行状况信息，在两者之间进行协调，并确定每个节点/集群是否运行正常且正在运行。ONTAP调解ONTAP提供以下方面的运行状况信息：
 
 * 对等ONTAP集群
 * 对等ONTAP集群节点
@@ -80,6 +138,9 @@ SnapMirror主动同步支持非对称解决方案、并且从ONTAP 9.15.1开始�
 
 
 NOTE: 从ONTAP 9.15.1开始、System Manager将显示任一集群的SnapMirror活动同步关系的状态。您还可以从System Manager中的任一集群监控ONTAP调解器的状态。在早期版本的ONTAP中、System Manager会显示源集群中SnapMirror活动同步关系的状态。
+
+.ONTAP云调解器
+ONTAP Cloud Mediator 从ONTAP 9.17.1 开始可用。ONTAPONTAP Mediator 提供与ONTAP Mediator 相同的服务，不同之处在于它使用BlueXP托管在云中。
 
 .计划内故障转移
 用于更改SnapMirror活动同步关系中副本角色的手动操作。主站点将成为二级站点、而二级站点将成为主站点。

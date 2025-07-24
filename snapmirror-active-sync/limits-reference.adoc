@@ -61,21 +61,21 @@ summary: 使用SnapMirror主动同步时、还存在一些其他限制。
 SnapMirror主动同步中的卷限制是根据端点数量计算的、而不是根据关系数量计算的。包含12个卷的一致性组会在主集群和二级集群上提供12个端点。SnapMirror活动同步和SnapMirror同步关系都会影响端点总数。
 
 
-IMPORTANT: 这些限制适用于FAS、AFF和当前ASA系统。如果您有 ASA r2 系统（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30），请参阅link:https://docs.netapp.com/us-en/asa-r2/data-protection/manage-consistency-groups.html["ASA R2文档"^] 。
+IMPORTANT: 这些限制适用于FAS、 AFF和ASA系统。如果您拥有ASA r2 系统（ASA A1K、 ASA A90、 ASA A70、 ASA A50、 ASA A30 或ASA A20），请参阅link:https://docs.netapp.com/us-en/asa-r2/data-protection/manage-consistency-groups.html["ASA R2文档"^] 。
 
 下表列出了每个平台的最大端点数量。
 
 |===
-| S否 | 平台 3+| 每个HA的端点、用于SnapMirror活动同步 3+| 每个HA的整体同步和SnapMirror活动同步端点 
+| 平台 3+| 每个HA的端点、用于SnapMirror活动同步 3+| 每个HA的整体同步和SnapMirror活动同步端点 
 
 
-|  |  | ONTAP 9.11.1及更高版本 | ONTAP 9.10.1 | ONTAP 9.9.1 | ONTAP 9.11.1及更高版本 | ONTAP 9.10.1 | ONTAP 9.9.1 
+|  | ONTAP 9.11.1及更高版本 | ONTAP 9.10.1 | ONTAP 9.9.1 | ONTAP 9.11.1及更高版本 | ONTAP 9.10.1 | ONTAP 9.9.1 
 
 
-| 1. | AFF | 400* | 200 | 60 | 400 | 200 | 80 
+| AFF | 400* | 200 | 60 | 400 | 200 | 80 
 
 
-| 2. | ASA | 400* | 200 | 60 | 400 | 200 | 80 
+| ASA | 400* | 200 | 60 | 400 | 200 | 80 
 |===
 ｛Asterisk｝从ONTAP 9.161开始、SnapMirror主动同步支持采用对称主动/主动配置的四节点集群。一个四节点集群的端点总数限制为800个。
 
@@ -86,7 +86,7 @@ IMPORTANT: 这些限制适用于FAS、AFF和当前ASA系统。如果您有 ASA r
 下表列出了SAN对象限制。这些限制适用于任何平台。
 
 |===
-| SnapMirror活动同步关系中的对象 | 计数 
+| SnapMirror主动同步关系中的对象 | 计数 
 
 
 | 每个卷的 LUN 数  a| 
@@ -96,19 +96,49 @@ IMPORTANT: 这些限制适用于FAS、AFF和当前ASA系统。如果您有 ASA r
 
 
 
-| 每个2 x 2 SnapMirror主动同步解决方案的唯一LUN数量 | 4、096 
+| 每个 2 x 2 SnapMirror主动同步解决方案的唯一 LUN、命名空间或存储单元的数量 | 4、096 
 
 
-| 每个4 x 4 SnapMirror主动同步解决方案的唯一LUN数量(从ONTAP 9.16.1开始提供) | 6、144 
+| 每个 4 x 4 SnapMirror主动同步解决方案的唯一 LUN、命名空间或存储单元的数量（从ONTAP 9.16.1 开始提供） | 6、144 
 
 
-| 每个SVM的SVM数量(一个SnapMirror活动同步关系中至少有一个卷) | 256. 
+| 每个 SVM 的 LIF（至少有一个卷处于SnapMirror主动同步关系中） | 256. 
 
 
 | 每个节点的集群间 LIF | 4. 
 
 
 | 每个集群的集群间 LIF | 8. 
+|===
+
+
+== NVMe 对象限制
+
+从ONTAP 9.17.1 开始， SnapMirror主动同步支持 NVMe 协议。下表列出了 NVMe 对象的限制。
+
+|===
+| SnapMirror主动同步关系中的最大对象数 | 计数 
+
+
+| 每个节点的命名空间映射数量 | 4K 
+
+
+| 簇大小 | 2个节点 
+
+
+| 每个 HA 对的一致性组数量 | 50. 
+
+
+| 单个 NVMe SnapMirror活动同步一致性组中的卷数 | 80 
+
+
+| HA 对中的卷数 | 400 
+
+
+| 每个一致性组的 NVMe 子系统 | 16. 
+
+
+| 每个一致性组的命名空间映射 | 256. 
 |===
 .相关信息
 * link:https://hwu.netapp.com/["Hardware Universe"^]

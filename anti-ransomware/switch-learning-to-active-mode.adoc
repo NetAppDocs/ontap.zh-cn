@@ -2,14 +2,16 @@
 sidebar: sidebar 
 permalink: anti-ransomware/switch-learning-to-active-mode.html 
 keywords: ransomware, arp, mode, switch, active, learning, autonomous ransomware protection 
-summary: '对于自动防兰软件保护(ARP 9.15.1及更早版本)、手动或自动将已启用ARP的卷从学习模式切换到活动模式。' 
+summary: 对于 NAS 环境中的 ARP 9.15.1 及更早版本，手动或自动将启用 ARP 的卷从学习模式切换到活动模式。 
 ---
 = 学习一段时间后、在ONTAP ARP中切换到活动模式
 :allow-uri-read: 
 
 
 [role="lead"]
-对于自动防兰软件保护(ARP 9.15.1及更早版本或随FlexGroup卷一起运行的ARP)、手动或自动将启用了ARP的卷从学习模式切换到活动模式。在ARP完成至少30天的学习模式运行后、您可以手动切换到活动模式。从ARP.13.1.开始、ONTAP 9会自动确定最佳学习周期间隔并自动执行交换机操作、这可能会在30天之前发生。
+对于 NAS 环境，手动或自动将启用 ARP 的卷从学习模式切换到活动模式。如果您在ONTAP 9.15.1 及更早版本中使用 ARP，或者您的 ARP 在FlexGroup卷上运行，则需要切换模式。
+
+ARP 完成建议至少 30 天的学习模式运行后，您可以手动切换到活动模式。从ONTAP 9.13.1 开始，ARP 会自动确定最佳学习周期间隔并自动切换，切换可能在 30 天之前发生。
 
 如果在运行9.16.1 9.161或更高版本的FlexVol卷上使用ARP、则ARP/AI保护将启用并自动变为活动状态。无需学习。
 
@@ -20,13 +22,18 @@ NOTE: 在现有卷中、学习和活动模式仅适用于新写入的数据、�
 
 == 记忆期过后、手动切换到激活模式
 
-对于带有FlexGroup卷的ARP.10.1 9.15.1和ONTAP、您可以使用System Manager或ONTAP 9命令行界面手动从ARP.10.1学习模式过渡到活动模式。
+对于ONTAP 9.10.1 至 9.15.1 以及带有FlexGroup卷的 ARP，您可以在学习期结束后使用系统管理器或ONTAP CLI 手动从 ARP 学习模式过渡到主动模式。
+
+.关于此任务
+本过程中描述的学习期后手动过渡到主动模式特定于 NAS 环境。
+
+.步骤
+您可以使用系统管理器或ONTAP CLI 从学习模式切换到主动模式。
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
-.步骤
 . 选择*存储>卷*，然后选择已准备好进入活动模式的卷。
 . 在*Volumes*概述的*Security*选项卡中，在Anti-勒索 软件框中选择*切换到活动模式*。
 . 您可以在*Anti-勒索 软件*框中验证卷的ARP状态。
@@ -35,8 +42,7 @@ NOTE: 在现有卷中、学习和活动模式仅适用于新写入的数据、�
 --
 .命令行界面
 --
-.步骤
-. 学习期结束后、如果尚未自动修改受保护卷以切换到活动模式、请将其修改为：
+. 如果尚未自动完成，则修改受保护的卷以切换到活动模式：
 +
 [source, cli]
 ----
@@ -64,7 +70,7 @@ security anti-ransomware volume show
 
 == 自动从学习模式切换到活动模式
 
-从ONTAP 9.131开始、ARP分析增加了自适应学习功能、并自动从学习模式切换到主动模式。ARP自动决定从学习模式切换到活动模式取决于以下选项的配置设置：
+从ONTAP 9.13.1 开始，自适应学习已添加到 ARP 分析中，并且可以自动从学习模式切换到主动模式。ARP自动从学习模式切换到主动模式的自主决策基于以下选项的配置设置：
 
 [listing]
 ----
@@ -74,7 +80,7 @@ security anti-ransomware volume show
  -anti-ransomware-auto-switch-minimum-file-count
  -anti-ransomware-auto-switch-minimum-file-extension
 ----
-学习30天后、卷会自动切换到活动模式、即使其中一个或多个条件不满足也是如此。也就是说、如果启用了自动切换、则卷将在最长30天后切换到活动模式。30天的最大值是固定的、不可修改。
+如果启用自动切换功能，即使未满足所有条件，卷也会在最多 30 天后自动切换到活动模式。此 30 天的限制是固定的，无法更改。
 
 有关ARP配置选项(包括默认值)的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-auto-switch-to-enable-mode-show.html["ONTAP 命令参考"^]。
 

@@ -1,0 +1,162 @@
+---
+permalink: release-notes/whats-new-9171.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.17.1' 
+summary: 了解ONTAP 9.17.1 中提供的新功能。 
+---
+= ONTAP 9.17.1 的新增功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解ONTAP 9.17.1 中提供的新功能。
+
+有关最新ONTAP 9版本中的已知问题、限制和升级注意事项的详细信息、请参阅 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]。您必须使用NetApp帐户登录或创建帐户才能访问发行说明。
+
+* 了解新增功能和增强功能 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["ONTAP MetroCluster功能"^]。
+* 了解 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9171.html["适用于NetApp ASA r2 系统的全新增强型ONTAP软件功能"^] 。
+* 了解 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["对AFF、 ASA和FAS系统以及支持的交换机的全新和增强支持"^] 。
+* 了解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["ONTAP REST API"^]。
+
+
+要升级到最新版本的ONTAP，请参见link:../upgrade/create-upgrade-plan.html["准备升级ONTAP"]。
+
+
+
+== 数据保护
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+xref:../nvme/support-limitations.html#features[SnapMirror主动同步支持通过 NVMe 进行主机访问]
+ a| 
+SnapMirror主动同步功能新增了对 VMware 工作负载的 NVMe 访问支持，支持 NVMe/TCP 和 NVMe/FC 主机访问，适用于双节点ONTAP集群。VMware工作负载对 NVMe/TCP 的支持取决于 VMware 漏洞的修复情况。
+
+
+
+ a| 
+xref:../snapmirror-active-sync/index.html[ONTAP Cloud Mediator 支持SnapMirror主动同步]
+ a| 
+ONTAP Cloud Mediator 是ONTAP 9.17.1 中引入的新功能，支持SnapMirror主动同步关系。基于云的调解器（例如ONTAP Mediator）可充当SnapMirror主动同步关系的仲裁见证，确保透明的故障转移，同时降低维护和管理第三个站点的操作复杂性。
+
+|===
+
+
+== S3对象存储
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+xref:../s3-multiprotocol/index.html[ONTAP S3 NAS 存储桶中的 ObjectCopy 操作支持]
+ a| 
+ONTAP S3 NAS 存储桶内支持 ObjectCopy 操作。
+
+
+
+ a| 
+xref:../s3-multiprotocol/index.html#object-multipart-upload[支持将 S3 NAS 存储桶链接到连接路径]
+ a| 
+使用ONTAP CLI 创建 S3 NAS 存储桶时，您可以选择将存储桶链接到卷，而不是使用连接路径。链接到卷时，如果路径发生变化（例如，卸载或挂载卷时），连接路径会自动更新。
+
+
+
+ a| 
+xref:../s3-multiprotocol/index.html#object-multipart-upload[S3 多协议支持标记和元数据]
+ a| 
+使用 S3 多协议的 CreateMultipartUpload 操作支持标记和用户元数据键/值对。
+
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+xref:../system-admin/use-hsts-task.html[HTTP 严格传输安全 (HSTS) 支持]
+ a| 
+ONTAP支持 Web 服务的 HTTP 严格传输安全，从而能够在用户浏览器和ONTAP之间实施安全的 HTTPS 通信。
+
+
+
+ a| 
+xref:../networking/ipsec-prepare.html[通过链路聚合组进行 IPsec 硬件卸载]
+ a| 
+ONTAP支持链路聚合组的 IPsec 硬件卸载，扩展了 9.16.1 中引入的硬件卸载支持。
+
+
+
+ a| 
+xref:../networking/ipsec-prepare.html[IPsec 后量子预共享密钥支持]
+ a| 
+ONTAP支持 IPsec 的后量子预共享密钥，以防止未来潜在的量子计算机攻击。
+
+
+
+ a| 
+xref:../encryption-at-rest/manage-keys-barbican-task.html[OpenStack Barbican 密钥管理器支持]
+ a| 
+ONTAP支持 OpenStack 的 Barbican 密钥管理器用于NetApp卷加密 (NVE) 密钥。
+
+
+
+ a| 
+xref:../authentication/configure-jit-elevation-task.html[即时 (JIT) 权限提升支持]
+ a| 
+ONTAP支持基于角色的访问控制 (RBAC) 的 JIT 权限提升。用户可以请求临时提升到已配置的角色，从而按需访问特权命令。集群管理员可以配置哪些人可以访问 JIT 权限提升，以及何时允许访问以及允许访问多长时间。
+
+
+
+ a| 
+xref:../system-admin/configure-saml-authentication-task.html[支持 Entra IdP 和 IdP 组支持 SAML 身份验证]
+ a| 
+ONTAP支持使用 Microsoft Entra 作为 SAML 身份提供程序。此外，IdP 提供的组信息可以映射到ONTAP角色。
+
+
+
+ a| 
+xref:../system-admin/audit-manage-cross-cluster-requests.html[跨集群请求审计]
+ a| 
+您可以在启动源集群和目标（执行）集群上配置并运行审计操作。在以前的版本中，只有接收客户端请求的集群才会执行审计。借助此功能，满足跨集群请求的对等集群也会记录该活动。这些审计操作可以启用并扩展到在ONTAP中发起的任何 SET 或 GET 请求。
+
+
+
+ a| 
+xref:../anti-ransomware/index.html[支持具有自主勒索软件防护功能的 SAN]
+ a| 
+ARP 支持基于加密的异常检测功能，可支持 SAN 卷，引入用于详细熵统计的新命令，并统一了系统管理器中先前专注于 NAS 的勒索软件防护消息传递。可配置的检测阈值和更确定性的快照保留功能可为各种工作负载提供更大的灵活性。
+
+|===
+
+
+== 存储资源管理增强功能
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+xref:../task_nas_file_system_analytics_enable.html[默认情况下，新卷启用 FSA]
+ a| 
+在ONTAP集群上新建的 SVM 上创建的卷（如果已分配 NAS 协议）默认启用文件系统分析 (FSA)。FSA会在卷创建后立即自动激活，无需额外配置即可提供即时分析功能。
+
+
+
+ a| 
+xref:../flexgroup/fast-directory-delete-asynchronous-task.html[增强了对查看FlexGroup卷上的直接删除进度的支持]
+ a| 
+ONTAP CLI 命令 `volume file async-delete show`已得到增强，包括从客户端发出的异步删除作业。
+
+|===

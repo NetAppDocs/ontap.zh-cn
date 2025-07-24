@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: snapmirror-active-sync/protect-task.html 
-keywords: SM-BC, snapmirror business continuity, consistency group, remote protection, destination 
+keywords: SM-BC, snapmirror business continuity, consistency group, remote protection, destination, scsi, nvme 
 summary: 为业务连续性配置保护涉及选择 ONTAP 源集群上的 LUN 并将其添加到一致性组。 
 ---
-= 在ONTAP中使用SnapMirror活动同步进行保护
+= 使用ONTAP SnapMirror主动同步进行保护
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -43,7 +43,7 @@ SnapMirror主动同步可提供非对称保护、从ONTAP 9.15.1开始、还可�
 .步骤
 您可以使用ONTAP命令行界面或系统管理器配置一致性组。
 
-从ONTAP 9.10.1开始、ONTAP在System Manager中提供了一个一致性组端点和菜单、用于提供其他管理实用程序。如果您使用的是9.10.1 9.10.1或更高版本、请参见link:../consistency-groups/configure-task.html["配置一致性组"]和link:../consistency-groups/protect-task.html["配置保护"]以创建SnapMirror活动同步关系。
+从ONTAP 9.10.1 开始， ONTAP在 System Manager 中提供了一致性组端点和菜单，从而提供了额外的管理实用程序。如果您使用的是ONTAP 9.10.1 或更高版本，请参阅link:../consistency-groups/configure-task.html["配置一致性组"]然后link:../consistency-groups/protect-task.html["配置保护"]创建SnapMirror主动同步关系。
 
 
 IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务连续性(SM-BC)。
@@ -115,9 +115,16 @@ IMPORTANT: 从ONTAP 9.8到9.14.1、SnapMirror主动同步称为SnapMirror业务�
 ** 您可以使用四节点配置升级存储和控制器。此过程不会造成系统中断、并会在将卷移至新节点时扩展集群。有关详细信息，请参见 link:upgrade-revert-task.html#refresh-a-cluster["刷新集群"]。
 
 
+* 从ONTAP 9.17.1 开始，仅当两个集群都运行ONTAP 9.17.1 或更高版本时，您才能在 NVMe 命名空间上配置对称主动/主动保护。
 
+
+
+
+== 使用 SCSI SnapMirror主动同步配置来配置对称主动/主动保护
 
 .步骤
+您可以使用 System Manager 或ONTAP CLI 通过 SCSI 协议主机映射配置对称主动/主动保护。
+
 [role="tabbed-block"]
 ====
 .System Manager
@@ -193,7 +200,7 @@ NOTE: 从ONTAP 9.161开始、请在此命令中使用 `-proximal-vserver peer`�
 
 
 .非一致配置的步骤
-. 创建一个新的SnapMirror关系、对应用程序中的所有卷进行分组。请确保指定`AutomatedFailOver双 工`策略以建立双向同步复制。
+. 创建一个新的SnapMirror关系、对应用程序中的所有卷进行分组。请确保指定 `AutomatedFailOverDuplex` 用于建立双向同步复制的策略。
 +
 `snapmirror create -source-path <source_path> -destination-path <destination_path> -cg-item-mappings <source_volume:@destination_volume> -policy AutomatedFailOverDuplex`
 
@@ -214,6 +221,89 @@ SiteA::> igroup create -vserver <svm_name> -igroup <igroup_name> -initiator <hos
 SiteB::> igroup create -vserver <svm_name> -igroup <igroup_name> -initiator <host_2_name>`
 
 . 从主机中、发现路径、并验证主机是否具有从首选集群到存储LUN的主动/优化路径。
+. 部署应用程序并在集群之间分布VM工作负载、以实现所需的负载平衡。
+
+
+--
+====
+
+
+== 使用 NVMe SnapMirror主动同步配置来配置对称主动/主动保护
+
+.开始之前
+除了配置对称主动/主动保护的要求之外，您还应该注意使用 NVMe 协议时支持和不支持的配置。
+
+* 一致性组可以有一个或多个子系统。
+* 一致性组内的卷可以具有来自多个子系统的命名空间映射。
+* 子系统不能具有属于多个一致性组的命名空间映射。
+* 子系统不能具有一些属于一致性组的命名空间映射和一些不属于一致性组的命名空间映射。
+* 子系统必须具有属于同一一致性组的命名空间映射。
+
+
+.步骤
+从ONTAP 9.17.1 开始，您可以使用 System Manager 或ONTAP CLI 创建一致性组并使用 NVMe 协议主机映射配置对称主动/主动保护。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 在主站点上， link:../consistency-groups/configure-task.html#create-a-consistency-group-with-new-luns-or-volumes["使用新卷或 NVMe 命名空间创建一致性组。"^]
+. 选择 *+添加* 并选择 *使用新的 NVMe 命名空间*。
+. 输入一致性组名称。
+. 选择*更多*。
+. 在“保护”部分中，选择“启用SnapMirror”，然后选择 `AutomatedFailoverDuplex`政策。
+. 在 *主机映射* 部分中，选择 *现有 NVMe 子系统* 或 *新 NVMe 子系统*。
+. 选择“邻近”可更改近端 SVM。默认选择源 SVM。
+. 如果需要，添加另一个 NVMe 子系统。
+
+
+--
+.命令行界面
+--
+. 创建新的SnapMirror关系，将所有包含应用程序使用的所有 NVMe 命名空间的卷分组。确保指定 `AutomatedFailOverDuplex`建立双向同步复制的策略。
++
+`snapmirror create -source-path <source_path> -destination-path <destination_path> -cg-item-mappings <source_volume:@destination_volume> -policy AutomatedFailOverDuplex`
+
++
+示例
+
++
+[listing]
+----
+DST::> snapmirror create -source-path vs_src:/cg/cg_src_1 -destination-path vs_dst:/cg/cg_dst_1 -cg-item-mappings vs_src_vol1:@vs_dst_vol1,vs_src_vol2:@vs_dst_vol2 -policy AutomatedFailOverDuplex
+----
+. 初始化SnapMirror关系：
+`snapmirror initialize -destination-path <destination-consistency-group>`
++
+示例
+
++
+[listing]
+----
+DST::> snapmirror initialize -destination-path vs1:/cg/cg_dst_1
+----
+. 等待以确认操作已成功 `Mirrored State` 以显示为 `SnapMirrored` 和 `Relationship Status` 作为 `Insync`。
++
+`snapmirror show -destination-path <destination_path>`
+
++
+与主卷中的 NVMe 命名空间关联的 NVMe 子系统会自动复制到辅助集群。
+
+. 在主机上、根据需要配置主机连接并访问每个集群。
+. 指定与每个主机最接近的 SVM。这样，主机就可以使用首选集群中的路径访问 NVMe 命名空间。这可能是主集群中的 SVM，也可能是 DR 集群中的 SVM。
++
+以下命令表示SVM VS_A距离主机H1较近，并将VS_A设置为近端SVM：
+
++
+`SiteA::> vserver nvme subsystem host add -subsystem ss1 -host-nqn <H1_NQN> -proximal-vservers <VS_A>`
+
++
+以下命令表示 SVM VS_B 距离主机 H2 较近，并将 VS_B 设置为近端 SVM：
+
++
+`SiteB::> vserver nvme subsystem host add -subsystem ss1 -host-nqn <H2_NQN> -proximal-vservers <VS_B>`
+
+. 从主机发现路径并验证主机是否具有从首选集群到存储的活动/优化路径。
 . 部署应用程序并在集群之间分布VM工作负载、以实现所需的负载平衡。
 
 

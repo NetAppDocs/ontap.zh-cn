@@ -1,0 +1,56 @@
+---
+permalink: authentication/elevate-jit-access-task.html 
+sidebar: sidebar 
+keywords: just in time, just-in-time, privilege elevation, password, security, authentication, JIT, elevation 
+summary: 配置即时权限提升，允许ONTAP用户临时提升其权限来执行某些任务。 
+---
+= 在ONTAP中访问 JIT 权限提升
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.17.1 开始，集群管理员可以link:configure-jit-elevation-task.html["配置即时（JIT）权限提升"]允许ONTAP用户临时提升其权限以执行某些任务。为用户配置 JIT 后，用户可以将其权限临时提升到具有执行任务所需权限的角色。会话到期后，用户将恢复其原始访问级别。
+
+集群管理员可以配置用户访问 JIT 提升的时长。例如，集群管理员可以将用户访问 JIT 提升的权限配置为每次会话 30 分钟（会话有效期），为期 30 天（JIT 有效期）。在 30 天的期限内，用户可以根据需要多次提升权限，但每次会话的时长限制为 30 分钟。
+
+.关于此任务
+* JIT 权限提升仅适用于使用 SSH 访问ONTAP的用户。提升的权限仅在当前 SSH 会话中可用，但您可以根据需要在任意数量的并发 SSH 会话中提升权限。
+* JIT 权限提升仅支持使用密码、nsswitch 或域身份验证登录的用户。JIT 权限提升不支持多重身份验证 (MFA)。
+* 如果配置的会话或 JIT 有效期到期，或者集群管理员撤销用户的 JIT 访问权限，则用户的 JIT 会话将被终止。
+
+
+.开始之前
+* 要访问 JIT 权限提升，集群管理员必须为您的帐户配置 JIT 访问权限。集群管理员将确定您可以提升权限的角色，以及您可以访问提升权限的时长。
+
+
+.步骤
+. 暂时将您的权限提升至配置的角色：
++
+[source, cli]
+----
+security jit-privilege elevate
+----
++
+输入此命令后，系统会提示您输入登录密码。如果您的帐户配置了 JIT 访问权限，您将在配置的会话时长内获得提升的访问权限。会话时长到期后，您将恢复到原始访问级别。您可以在配置的 JIT 有效期内根据需要多次提升权限。
+
+. 查看 JIT 会话中的剩余时间：
++
+[source, cli]
+----
+security jit-privilege show-remaining-time
+----
++
+如果您当前处于 JIT 会话中，此命令将显示剩余时间。
+
+. 如果需要，请提前结束 JIT 会话：
++
+[source, cli]
+----
+security jit-privilege reset
+----
++
+如果您当前处于 JIT 会话中，此命令将结束 JIT 会话并恢复您的原始访问级别。
+
+

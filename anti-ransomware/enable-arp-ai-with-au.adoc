@@ -2,9 +2,9 @@
 sidebar: sidebar 
 permalink: anti-ransomware/enable-arp-ai-with-au.html 
 keywords: ransomware, arp, enable, ai, automatic, update, upgrade, autonomous ransomware protection 
-summary: 从ARP.16.1开始、在启用ONTAP 9的情况下自动为FlexVol安装启用ARP/AI、或者在满足前提条件后手动启用ARP/AI。 
+summary: 从ONTAP 9.16.1 开始，可以自动为FlexVol安装启用 ARP/AI，也可以在满足先决条件后手动启用它。 
 ---
-= 通过自动更新启用ONTAP ARP/AI
+= 启用ONTAP ARP/AI
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,27 +16,36 @@ summary: 从ARP.16.1开始、在启用ONTAP 9的情况下自动为FlexVol安装�
 
 
 [role="lead"]
-从ARP.16.1开始、ONTAP 9采用人工智能自动防兰软件(ARP/AI)来改进威胁检测和响应。将集群升级到ONTAP 9 ARP.16.1后、如果已为FlexVol卷启用了ARP/AI、则这些卷将自动启用ARP/AI。如果尚未为集群启用ARP或启用自动更新、则应遵循此过程中所述的方案之一。
+从ONTAP 9.16.1 开始，ARP 已采用人工智能自主勒索软件防护 (ARP/AI) 来改进威胁检测和响应。将集群升级到ONTAP 9.16.1（适用于 NAS）或ONTAP 9.17.1（适用于 SAN）后，如果已为FlexVol卷启用 ARP，则 ARP/AI 将自动为这些卷启用。如果您尚未启用 ARP 或尚未启用ONTAP link:../update/enable-automatic-updates-task.html["自动更新"]对于您的集群，您应该遵循此过程中描述的场景之一。
 
 
-IMPORTANT: 在升级到ONTAP 9．16．1之前，link:../upgrade/arp-warning-clear.html["关闭任何现有ARP发现"]。
+IMPORTANT: 在升级到支持 ARP/AI 的ONTAP版本之前， link:../upgrade/arp-warning-clear.html["关闭任何现有ARP发现"] 。
 
 .开始之前
-* 要使用ARP/AI、您必须具有FlexVol卷。如果您有FlexGroup卷、则在升级到ARP/AI之前使用的ONTAP 9模型将在升级到ARP.16.1之后继续运行。
+* 您必须拥有FlexVol卷才能使用 ARP/AI。如果您拥有FlexGroup卷，则升级到ONTAP 9.16.1 或更高版本后，ARP/AI 之前使用的 ARP 模型将继续运行。
 
 
 
-NOTE: 升级到ONTAP 9.161后、系统会为具有FlexVol卷的任何现有ARP实例启用ARP并自动激活。由于ARP/AI采用广泛的机器学习模型进行训练、因此不再需要学习阶段。升级前未完成的任何学习期间将自动结束、并将卷转换为活动ARP/AI。
+NOTE: （仅限 NAS 环境）升级到ONTAP 9.16.1 或更高版本时，ARP 将启用并自动为所有具有FlexVol卷的现有 ARP 实例激活。由于 ARP/AI 已在广泛的机器学习模型上进行训练，因此不再需要学习期。升级前未完成的任何学习期将自动结束，卷将转换为活动 ARP/AI。
 
 .步骤
 . 请按照特定于您的配置的方案进行操作：
 +
-** *对于运行ONTAP 9．16．1*的新群集：link:enable-task.html["启用ARP"]。默认情况下、不会启用ARP。启用ARP后、ARP/AI功能将在您选择保护的卷上自动启用并处于活动状态。
-** *对于最近升级到ARP.16.1且已启用ONTAP 9的现有集群*：不需要执行任何操作。ARP/AI将在您选择保护的FlexVol卷上自动成为新的威胁保护ARP方法。
-** *对于最近升级到ARP.16.1但未启用ONTAP 9的现有集群*：link:enable-task.html["启用ARP"]。启用ARP后、ARP/AI将自动成为新的威胁保护ARP方法。
+** *仅限 NAS 环境*
++
+*** *对于使用FlexVol卷运行ONTAP9.16.1 或更高版本的新群集*：link:enable-task.html["启用ARP"]。ARP 未启用。启用 ARP 后，您选择保护的FlexVol卷上将自动启用 ARP/AI 功能。
+*** *对于最近升级到ONTAP 9.16.1 及更高版本且已启用 ARP 的现有集群*：无需采取任何措施。ARP/AI 将自动成为您选择保护的FlexVol卷上的新 ARP 威胁防护方法。
+*** *对于最近升级到ONTAP 9.16.1 及更高版本且未启用 ARP 的现有集群*： link:enable-task.html["启用ARP"] .启用 ARP 后，ARP/AI 将自动成为新的 ARP 威胁防护方法。
 
 
-. 启用ARP/AI后、确定是否要交付并安装ARP/AI保护更新link:arp-ai-automatic-updates.html["自动或手动"]。
+** *仅限 SAN 环境*
++
+*** *对于运行ONTAP 9.17.1 或更高版本且带有FlexVol卷的新集群和现有集群*：升级到或安装ONTAP 9.17.1 或更高版本时，您应该link:enable-task.html["启用 ARP"]在您要保护的卷上。使用 System Manager 或 CLI 启用 ARP 时，ARP/AI 功能将自动启用。在 SAN 卷上启用后， link:respond-san-entropy-eval-period.html["ARP/AI 在评估期间持续监测数据"]确定工作负载是否适合ARP并设置最佳检测加密阈值。
+
+
+
+
+. 启用 ARP/AI 后，决定是否要交付和安装 ARP/AI 保护更新link:arp-ai-automatic-updates.html["自动或手动"] 。
 
 
 .相关信息

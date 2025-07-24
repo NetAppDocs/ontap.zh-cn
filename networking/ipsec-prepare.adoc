@@ -37,10 +37,10 @@ IPsec是IETF维护的一种Internet标准。它可以为IP级别网络端点之�
 
 == ONTAP IPsec实施的演变
 
-IPsec. 8首次推出ONTAP 9。执行工作继续不断发展和改进，如下所述。
+IPsec 最初是在ONTAP 9.8 中引入的。该实现在后续ONTAP版本中不断发展，如下所述。
 
-
-NOTE: 从特定ONTAP版本开始引入某项功能时、除非另有说明、否则后续版本也支持该功能。
+.ONTAP 9.17.1
+IPsec 硬件卸载支持扩展至link:../networking/combine_physical_ports_to_create_interface_groups.html["链路聚合组"] 。link:../networking/ipsec-configure.html#define-the-security-policy-database-spd["后量子预共享密钥（PPK）"]支持 IPsec 预共享密钥 (PSK) 身份验证。
 
 .ONTAP 9.16.1.
 加密和完整性检查等多个加密操作可以卸载到受支持的NIC卡。有关详细信息、请参见 <<IPsec硬件卸载功能>> 。
@@ -49,7 +49,7 @@ NOTE: 从特定ONTAP版本开始引入某项功能时、除非另有说明、否
 MetroCluster IP和MetroCluster光纤连接配置支持IPSec前端主机协议。随MetroCluster集群提供的IPsec支持仅限于前端主机流量、MetroCluster集群间LIS不支持此功能。
 
 .ONTAP 9.10.1
-除了预共享密钥(PSK)之外、证书还可用于IPsec身份验证。在PSM.10.1之前的版本中、仅支持ONTAP 9进行身份验证。
+除了 PSK 之外，证书还可用于 IPsec 身份验证。在ONTAP 9.10.1 之前的版本中，仅支持使用 PSK 进行身份验证。
 
 .ONTAP 9.9.1
 IPsec使用的加密算法已通过FIPS 140-2验证。这些算法由ONTAP中的NetApp加密模块处理、该模块执行FIPS 140-2验证。
@@ -70,35 +70,39 @@ IPsec使用的加密算法已通过FIPS 140-2验证。这些算法由ONTAP中的
 在使用IPsec硬件卸载功能之前，应考虑几个要求。
 
 .支持的以太网卡
-您只需要安装和使用支持的以太网卡。以下平台支持9.16.1 9.161中的以下以太网卡。有关支持的平台和卡的详细信息、请参见link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
+您只需安装并使用受支持的以太网卡。从ONTAP 9.16.1 开始，支持以下以太网卡：
 
 * X50131A (2p、40G/100G/200g/400G以太网控制器)
-+
-以下平台支持X50131A卡：
-
-+
-** ASA A1K
-** ASA A90
-** ASA A70
-** AFF A1K
-** AFF A90
-** AFF A70
-
-
 * X60132A (4p、10G25G以太网控制器)
-+
-以下平台支持X60132A卡：
-
-+
-** ASA A50
-** ASA A30
-** ASA A20
-** AFF A50
-** AFF A30
-** AFF A20
 
 
+ONTAP 9.17.1 增加了对以下以太网卡的支持：
 
+* X50135A（2p，40G/100G以太网控制器）
+* X60135A（2p，40G/100G以太网控制器）
+
+
+以下平台支持 X50131A 和 X50135A 卡：
+
+* ASA A1K
+* ASA A90
+* ASA A70
+* AFF A1K
+* AFF A90
+* AFF A70
+
+
+以下平台支持 X60132A 和 X60135A 卡：
+
+* ASA A50
+* ASA A30
+* ASA A20
+* AFF A50
+* AFF A30
+* AFF A20
+
+
+查看link:https://hwu.netapp.com/["NetApp Hardware Universe"^]有关支持的平台和卡的更多信息。
 
 .集群范围
 IPsec硬件卸载功能是为集群全局配置的。因此、例如、命令 `security ipsec config`将应用于集群中的所有节点。
@@ -124,13 +128,15 @@ security ipsec config modify -replay-window 0
 在使用IPsec硬件卸载功能之前，应考虑一些限制。
 
 .IPv6
-IPsec硬件卸载功能不支持IP版本6。只有IPsec软件实施才支持IPv6。
+IPsec 硬件卸载功能不支持 IPv6。IPv6仅在 IPsec 软件实现中受支持。
 
 .扩展序列号
 硬件卸载功能不支持IPsec扩展序列号。仅使用正常的32位序列号。
 
 .链路聚合
-IPsec硬件卸载功能不支持链路聚合。因此、它不能与通过ONTAP命令行界面上的命令管理的接口或链路聚合组结合使用 `network port ifgrp`。
+从ONTAP 9.17.1 开始，您可以将 IPsec 硬件卸载功能与link:../networking/combine_physical_ports_to_create_interface_groups.html["链路聚合组"] 。
+
+在 9.17.1 之前的版本中，IPsec 硬件卸载功能不支持链路聚合。它不能与通过以下方式管理的接口或链路聚合组一起使用：  `network port ifgrp` ONTAP CLI 中的命令。
 
 
 
