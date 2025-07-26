@@ -70,9 +70,6 @@ cluster_dst::> job schedule cron create -name my_weekly -dayofweek "Saturday" -h
 `snapmirror policy create -vserver _SVM_ -policy _policy_ -type async-mirror|vault|mirror-vault -comment _comment_ -tries transfer_tries -transfer-priority low|normal -is-network-compression-enabled true|false -discard-configs network`
 
 +
-有关的详细信息 `snapmirror policy create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["ONTAP 命令参考"^]。
-
-+
 以下示例将为 SnapMirror 灾难恢复创建一个自定义复制策略，该策略会排除 LIF ：
 
 +
@@ -94,6 +91,9 @@ cluster_dst::> snapmirror policy create -vserver svm1 -policy unified_exclude_LI
 请考虑在源集群上创建相同的自定义SnapMirror策略、以供将来进行故障转移和故障恢复时使用。
 
 ====
++
+有关的详细信息 `snapmirror policy create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["ONTAP 命令参考"^]。
+
 . 从目标 SVM 或目标集群运行以下命令以创建复制关系：
 +
 `snapmirror create -source-path _SVM_: -destination-path _SVM_: -type DP|XDP -schedule _schedule_ -policy _policy_ -identity-preserve true|false -discard-configs true|false`
@@ -161,4 +161,5 @@ cluster_dst::> snapmirror initialize -source-path svm1: -destination-path svm_ba
 .相关信息
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["SnapMirror 创建"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["SnapMirror 初始化"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["snapmirror policy create"^]
 

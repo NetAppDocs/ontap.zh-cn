@@ -11,7 +11,7 @@ summary: 您可以使用SnapMirror快照所有者create命令在镜像-存储部
 
 
 [role="lead"]
-您可以使用 `snapmirror snapshot-owner create`命令在镜像-存储部署中的二级系统上保留带标签的快照。这样可确保存在用于更新存储关系的通用快照。有关的详细信息 `snapmirror snapshot-owner create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-snapshot-owner-create.html["ONTAP 命令参考"^]。
+您可以使用 `snapmirror snapshot-owner create`命令用于在镜像-保险库部署中的辅助服务器上保留带标签的快照。这样做可以确保存在用于更新保险库关系的通用快照。
 
 .关于此任务
 如果您使用组合镜像-存储扇出或级联部署、则应注意、如果源卷和目标卷上不存在通用快照、更新将失败。
@@ -34,6 +34,9 @@ summary: 您可以使用SnapMirror快照所有者create命令在镜像-存储部
 clust1::> snapmirror snapshot-owner create -vserver vs1 -volume vol1
 -snapshot snap1 -owner ApplicationA
 ----
++
+详细了解 `snapmirror snapshot-owner create`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-snapshot-owner-create.html["ONTAP 命令参考"^] 。
+
 . 更新镜像关系，如中所述 link:update-replication-relationship-manual-task.html["手动更新复制关系"]。
 +
 或者，您也可以等待按计划更新镜像关系。
@@ -41,9 +44,6 @@ clust1::> snapmirror snapshot-owner create -vserver vs1 -volume vol1
 . 将带标签的快照传输到存储目标：
 +
 `snapmirror update -source-path <SVM:volume>|<cluster://SVM/volume>, ... -destination-path <SVM:volume>|<cluster://SVM/volume>, ... -source-snapshot snapshot`
-
-+
-有关的详细信息 `snapmirror update`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["ONTAP 命令参考"^]。
 
 +
 以下示例将传输 `snap1`快照::
@@ -55,6 +55,8 @@ clust1::> snapmirror update -vserver vs1 -volume vol1
 -source-snapshot snap1
 ----
 更新存储关系时、带标签的快照将保留。
+
+有关的详细信息 `snapmirror update`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-update.html["ONTAP 命令参考"^]。
 
 --
 

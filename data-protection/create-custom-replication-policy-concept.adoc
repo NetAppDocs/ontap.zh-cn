@@ -92,9 +92,6 @@ sync-mirror
 snapmirror policy create -vserver <SVM> -policy _policy_ -type <async-mirror|vault|mirror-vault|strict-sync-mirror|sync-mirror> -comment <comment> -tries <transfer_tries> -transfer-priority <low|normal> -is-network-compression-enabled <true|false>
 ----
 +
-有关的详细信息 `snapmirror policy create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["ONTAP 命令参考"^]。
-
-+
 从ONTAP 9.5开始、您可以使用参数指定为SnapMirror同步关系创建通用快照计划的计划 `-common-snapshot-schedule`。默认情况下、SnapMirror同步关系的通用快照计划为一小时。您可以为SnapMirror同步关系的快照计划指定一个介于30分钟到两小时之间的值。
 
 +
@@ -129,12 +126,17 @@ cluster_dst::> snapmirror policy create -vserver svm1 -policy my_unified -type m
 ----
 cluster_dst::> snapmirror policy create -vserver svm1 -policy my_strictsync -type strict-sync-mirror -common-snapshot-schedule my_sync_schedule
 ----
++
+有关的详细信息 `snapmirror policy create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-create.html["ONTAP 命令参考"^]。
+
 
 
 .完成后
 对于"`vor`"和"`mirrer-vor`"策略类型、您必须定义规则来确定在初始化和更新期间传输哪些快照。
 
-使用 `snapmirror policy show`命令验证是否已创建SnapMirror策略。有关的详细信息 `snapmirror policy show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-show.html["ONTAP 命令参考"^]。
+使用 `snapmirror policy show`命令验证SnapMirror策略是否已创建。
+
+详细了解 `snapmirror policy show`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-show.html["ONTAP 命令参考"^] 。
 
 --
 ====

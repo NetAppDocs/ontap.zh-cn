@@ -244,7 +244,7 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 snapmirror resync -source-path <SVM:volume> -destination-path <SVM:volume>
 ----
 +
-为了缩短重新同步时间、您可以使用 `-quick-resync`选项、但您应注意、存储效率节省的空间可能会丢失。有关的详细信息 `snapmirror resync`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-resync.html#parameters.html["ONTAP 命令参考"^]。
+为了缩短重新同步时间，您可以使用 `-quick-resync`选项，但您应该意识到存储效率节省可能会丢失。
 
 +
 [NOTE]
@@ -260,6 +260,9 @@ snapmirror resync -source-path <SVM:volume> -destination-path <SVM:volume>
 ----
 cluster_dst::> snapmirror resync -source-path svm1:volA -destination-path svm_backup:volA_dst
 ----
++
+详细了解 `snapmirror resync`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-resync.html#parameters.html["ONTAP 命令参考"^] 。
+
 . 如果您禁用了快照自动删除、请重新启用它：
 +
 [source, cli]
@@ -270,6 +273,9 @@ volume snapshot autodelete modify -vserver <SVM> -volume <volume> -enabled true
 
 .完成后
 . 使用 `snapmirror show` 命令以验证是否已创建SnapMirror关系。
++
+有关的详细信息 `snapmirror show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html["ONTAP 命令参考"^]。
+
 . SnapMirror XDP目标卷开始按照SnapMirror策略的定义更新快照后、使用源集群中的命令输出 `snapmirror list-destinations`显示新的SnapMirror XDP关系。
 
 
@@ -392,4 +398,5 @@ options replication.create_data_protection_rels.enable on
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-delete.html["SnapMirror删除"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-quiesce.html["SnapMirror 静默"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-release.html["SnapMirror 发布"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-resync.html["snapmirror resync"^]
 

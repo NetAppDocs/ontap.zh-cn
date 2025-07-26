@@ -17,7 +17,7 @@ summary: S3用户可以使用API重新生成用于访问S3客户端的密钥。
 您必须在Storage VM上执行一些配置步骤、才能创建自定义角色并将其分配给调用API以生成访问密钥的用户。
 
 
-NOTE: 如果禁用了LDAP、您可以将配置link:configure-access-ldap.html["使用基于域的身份验证的Active Directory和SMB"]为允许用户生成访问密钥。
+NOTE: 如果 LDAP 被禁用，您可以link:configure-access-ldap.html["为ONTAP S3 访问配置外部目录服务"]允许用户生成访问密钥。
 
 .开始之前
 确保满足以下要求：
@@ -35,9 +35,14 @@ NOTE: 如果禁用了LDAP、您可以将配置link:configure-access-ldap.html["�
 
 == 配置用户以生成访问密钥
 
+.步骤
+[role="tabbed-block"]
+====
+.LDAP 用户
+--
 . 指定LDAP作为组的Storage VM的_name service database _、并为LDAP设置密码：
 +
-[listing]
+[source, cli]
 ----
 ns-switch modify -vserver <vserver-name> -database group -sources files,ldap
 ns-switch modify -vserver <vserver-name> -database passwd -sources files,ldap
@@ -56,9 +61,9 @@ security login rest-role create -vserver svm-1 -role s3role -api "/api/protocols
 +
 有关的详细信息 `security login rest-role create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-rest-role-create.html["ONTAP 命令参考"^]。
 
-. 使用security login命令创建一个LDAP用户组、然后添加用于访问S3用户REST API端点的新自定义角色。有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli//security-login-create.html["ONTAP 命令参考"^]。
+. 使用以下方式创建 LDAP 用户组 `security login`命令并添加用于访问 S3 用户 REST API 端点的新自定义角色。详细了解 `security login create`在link:https://docs.netapp.com/us-en/ontap-cli//security-login-create.html["ONTAP 命令参考"^] 。
 +
-[listing]
+[source, cli]
 ----
 security login create -user-or-group-name <ldap-group-name> -application http -authentication-method nsswitch -role <custom-role-name> -is-ns-switch-group yes
 ----
@@ -78,16 +83,57 @@ security login create -user-or-group-name ldap-group-1 -application http -authen
 
 
 
-将自定义角色添加到域或LDAP组后、该组中的用户可以对ONTAP进行有限的访问 `/api/protocols/s3/services/{svm.uuid}/users` 端点。通过调用API、域或LDAP组用户可以生成自己的访问权限和机密密钥来访问S3客户端。他们只能为自己生成密钥、而不能为其他用户生成密钥。
+将自定义角色添加到 LDAP 组允许该组中的用户对ONTAP进行有限的访问 `/api/protocols/s3/services/{svm.uuid}/users`端点。通过调用 API，LDAP 组用户可以生成自己的访问密钥和密钥来访问 S3 客户端。他们只能为自己生成密钥，而不能为其他用户生成密钥。
 
+--
+.域用户
+--
+. 创建可以访问 S3 用户 REST API 端点的自定义角色：
+
+
+[source, cli]
+----
+security login rest-role create -vserver <vserver-name> -role <custom-role-name> -api "/api/protocols/s3/services/*/users" -access <access-type>
+----
+在此示例中，  `s3-role`为存储虚拟机上的用户生成角色 `svm-1` ，授予所有访问权限，即读取、创建和更新。
+
+[listing]
+----
+security login rest-role create -vserver svm-1 -role s3role -api "/api/protocols/s3/services/*/users" -access all
+----
+有关的详细信息 `security login rest-role create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-rest-role-create.html["ONTAP 命令参考"^]。
+
+. 使用以下方式创建域用户组 `security login`命令并添加用于访问 S3 用户 REST API 端点的新自定义角色。详细了解 `security login create`在link:https://docs.netapp.com/us-en/ontap-cli//security-login-create.html["ONTAP 命令参考"^] 。
++
+[source, cli]
+----
+security login create -vserver <vserver-name> -user-or-group-name domain\<group-name> -application http -authentication-method domain -role <custom-role-name>
+----
++
+在此示例中，域组 `domain\group1`创建于 `svm-1`以及自定义角色 `s3role`添加到其中以访问 API 端点。
+
++
+[listing]
+----
+security login create -user-or-group-name domain\group1 -application http -authentication-method domain -role s3role -vserver svm-1
+----
++
+有关的详细信息 `security login create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["ONTAP 命令参考"^]。
+
+
+
+将自定义角色添加到域组允许该组中的用户对ONTAP进行有限的访问 `/api/protocols/s3/services/{svm.uuid}/users`端点。通过调用 API，域组用户可以生成自己的访问密钥和密钥来访问 S3 客户端。他们只能为自己生成密钥，而不能为其他用户生成密钥。
+
+--
+====
 
 
 == 作为S3或LDAP用户、生成您自己的访问密钥
 
 从ONTAP 9.14.1开始、如果管理员已授予您生成自己密钥的角色、您可以生成自己的访问权限和机密密钥来访问S3客户端。您只能使用以下ONTAP REST API端点为自己生成密钥。
 
-.HTTP方法和端点
-此REST API调用使用以下方法和端点。有关此端点的其他方法的信息、请参见参考 https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html#access-a-copy-of-the-ontap-rest-api-reference-documentation["API文档"]。
+.创建 S3 用户并生成密钥
+此 REST API 调用使用以下方法和端点。有关此端点的更多信息，请参阅参考 https://docs.netapp.com/us-en/ontap-automation/reference/api_reference.html#access-a-copy-of-the-ontap-rest-api-reference-documentation["API文档"] 。
 
 [cols="25,75"]
 |===
@@ -96,6 +142,8 @@ security login create -user-or-group-name ldap-group-1 -application http -authen
 
 | 发布 | /api/protocols、s3/services /｛svm.unid｝/用户 
 |===
+对于域用户，请使用以下格式作为 S3 用户名：  `user@fqdn` ， 在哪里 `fqdn`是域的完全限定域名。
+
 .curl 示例
 [source, curl]
 ----
@@ -105,7 +153,7 @@ curl
 --include \
 --header "Accept: */*" \
 --header "Authorization: Basic $BASIC_AUTH"
---data '{"name":"_name_"}'
+--data '{"name":"user1@example.com"}'
 ----
 .JSON 输出示例
 [listing]
@@ -113,7 +161,7 @@ curl
 {
   "records": [
     {
-      "access_key": "Pz3SB54G2B_6dsXQPrA5HrTPcf478qoAW6_Xx6qyqZ948AgZ_7YfCf_9nO87YoZmskxx3cq41U2JAH2M3_fs321B4rkzS3a_oC5_8u7D8j_45N8OsBCBPWGD_1d_ccfq",
+      "access_key": "4KX07KF7ML8YNWY01JWG",
       "_links": {
         "next": {
           "href": "/api/resourcelink"
@@ -122,8 +170,48 @@ curl
           "href": "/api/resourcelink"
         }
       },
-      "name": "user-1",
-      "secret_key": "A20_tDhC_cux2C2BmtL45bXB_a_Q65c_96FsAcOdo14Az8V31jBKDTc0uCL62Bh559gPB8s9rrn0868QrF38_1dsV2u1_9H2tSf3qQ5xp9NT259C6z_GiZQ883Qn63X1"
+      "name": "user1@example.com",
+      "secret_key": "<secret_key_value>"
+    }
+  ],
+  "num_records": "1"
+}
+
+----
+.为 S3 用户重新生成密钥
+如果 S3 用户已存在，您可以重新生成其访问密钥和密钥。此 REST API 调用使用以下方法和端点。
+
+[cols="25,75"]
+|===
+| HTTP 方法 | 路径 
+
+
+| 修补 | /api/protocols/s3/services/{svm.uuid}/用户/{名称} 
+|===
+.curl 示例
+[source, curl]
+----
+curl
+--request PATCH \
+--location "https://$FQDN_IP /api/protocols/s3/services/{svm.uuid}/users/{name} " \
+--include \
+--header "Authorization: Basic $BASIC_AUTH" \
+--data '{"regenerate_keys":"True"}'
+----
+.JSON 输出示例
+[listing]
+----
+{
+  "records": [
+    {
+      "access_key": "DX12U609DMRVD8U30Z1M",
+      "_links": {
+        "self": {
+          "href": "/api/resourcelink"
+        }
+      },
+      "name": "user1@example.com",
+      "secret_key": "<secret_key_value>"
     }
   ],
   "num_records": "1"
