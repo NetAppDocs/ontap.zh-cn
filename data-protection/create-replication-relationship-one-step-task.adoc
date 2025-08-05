@@ -11,7 +11,7 @@ summary: 从 ONTAP 9.3 开始，您可以使用 snapmirror protect 命令一步�
 
 
 [role="lead"]
-从ONTAP 9.3开始、您可以使用 `snapmirror protect`命令一步配置数据保护关系。您可以指定要复制的卷列表、目标集群上的SVM、作业计划和SnapMirror策略。 `snapmirror protect`完成其余操作。有关的详细信息 `snapmirror protect`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-protect.html["ONTAP 命令参考"^]。
+从ONTAP 9.3 开始，您可以使用 `snapmirror protect`命令通过一个步骤配置数据保护关系。您指定要复制的卷列表、目标集群上的 SVM、作业计划和SnapMirror策略。 `snapmirror protect`完成剩下的工作。
 
 .开始之前
 * 源和目标集群以及 SVM 必须建立对等关系。
@@ -33,7 +33,7 @@ https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["�
 
 目标卷的名称格式为 `_source_volume_name_dst_`。如果与现有名称发生冲突，此命令会在卷名称后附加一个数字。您可以在命令选项中指定前缀和 / 或后缀。后缀将替换系统提供的 `dst` 后缀。
 
-在ONTAP 9.3及更早版本中、一个目标卷最多可包含251个快照。在ONTAP 9.4及更高版本中、一个目标卷最多可包含1019个快照。
+在ONTAP 9.4 及更高版本中，目标卷最多可包含 1019 个快照。在ONTAP 9.3 及更早版本中，目标卷最多可包含 251 个快照。
 
 [NOTE]
 ====
@@ -41,6 +41,8 @@ https://docs.netapp.com/us-en/ontap-system-manager-classic/peering/index.html["�
 
 ====
 从ONTAP 9．5开始，可以使用 `snapmirror protect`命令创建SnapMirror同步关系。
+
+详细了解 `snapmirror protect`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-protect.html["ONTAP 命令参考"^] 。
 
 .步骤
 . 一步创建并初始化复制关系：
@@ -111,5 +113,4 @@ cluster_dst::> snapmirror protect -path-list svm1:volA, svm1:volB -destination-v
 
 .相关信息
 * link:https://docs.netapp.com/us-en/ontap-cli/job-show.html["作业显示"^]
-* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-protect.html["SnapMirror保护"^]
 

@@ -109,7 +109,9 @@ NOTE: 从FPolicy.8开始、ONTAP除了为出站ONTAP 9连接提供客户端LIF�
 
 持久存储将保持接收到最后一个事件、发生意外重新启动或FPolicy被禁用并再次启用时的状态。接管操作完成后、配对节点将存储和处理新事件。在执行了恢复操作之后、永久性存储将恢复处理节点接管发生后可能仍存在的任何未处理事件。实时事件的优先级高于不经过处理的事件。
 
-如果永久性存储卷从同一SVM中的一个节点移至另一个节点、则尚未处理的通知也会移至新节点。移动卷后、您需要在任一节点上重新运行此 `fpolicy persistent-store create`命令、以确保将待定通知发送到外部服务器。有关的详细信息 `fpolicy persistent-store create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-fpolicy-persistent-store-create.html["ONTAP 命令参考"^]。
+如果持久存储卷从同一 SVM 中的一个节点移动到另一个节点，则尚未处理的通知也会移动到新节点。您需要重新运行 `fpolicy persistent-store create`移动卷后，在任一节点上执行命令，以确保待处理的通知传递到外部服务器。
+
+详细了解 `fpolicy persistent-store create`在link:https://docs.netapp.com/us-en/ontap-cli/vserver-fpolicy-persistent-store-create.html["ONTAP 命令参考"^] 。
 
 
 
@@ -202,8 +204,6 @@ NOTE: 您必须处于诊断模式才能收集与FPolicy相关的统计信息。
 +
 .. `statistics show -object fpolicy -instance <instance_name> -sample-id <ID>`
 .. `statistics show -object fpolicy_server -instance <instance_name> -sample-id <ID>`
-
-
 +
 --
 。 `fpolicy` 和 `fpolicy_server` 计数器可提供有关下表中所述的多个性能参数的信息。
@@ -267,7 +267,10 @@ NOTE: 您必须处于诊断模式才能收集与FPolicy相关的统计信息。
 --
 
 
++
 有关和的 `statistics show`详细信息 `statistics start`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=statistics["ONTAP 命令参考"^]。
+
+
 
 
 
@@ -305,4 +308,5 @@ NetApp建议在进行任何配置更改之前禁用FPolicy策略。例如、如�
 
 .相关信息
 * link:https://docs.netapp.com/us-en/ontap-cli/statistics-show.html["统计数据显示"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/statistics-start.html["统计开始"^]
 

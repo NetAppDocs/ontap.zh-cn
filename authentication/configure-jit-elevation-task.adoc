@@ -24,7 +24,7 @@ JIT 权限提升支持最小权限原则，允许用户执行需要提升权限�
 * 允许临时访问 `security audit log show`在合规性检查期间启用审计日志审查和导出。
 
 
-详细了解这些示例中描述的命令 https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^] 。如需查看更详细的常见 JIT 用例列表，请参阅<<常见的 JIT 用例>> 。
+如需查看更详细的常见 JIT 用例列表，请参阅<<常见的 JIT 用例>> 。
 
 集群管理员可以为ONTAP用户设置 JIT 访问权限，并在整个集群范围内或为特定 SVM 配置默认 JIT 有效期。
 
@@ -130,91 +130,143 @@ security jit-privilege user delete -username <username> -vserver <svm_name>
 
 
 | 用户和角色管理  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html["创建安全登录"] ， link:https://docs.netapp.com/us-en/ontap-cli/security-login-delete.html["7a414cbc26ad99f3f688affc1ecabe6f"]
+* `security login create`
+* `security login delete`
+
 | 在入职或离职期间临时提升添加/删除用户或更改角色的权限。 
 
 
 | 证书管理  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-create.html["9ea06376db2d229da0b3a4c13ce61404"] ， link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-install.html["安全证书安装"]
+* `security certificate create`
+* `security certificate install`
+
 | 授予证书安装或更新的短期访问权限。 
 
 
 | SSH/CLI 访问控制  a| 
-`link:https://docs.netapp.com/us-en/ontap-cli/security-login-create.html[security login create] -application ssh`
+* `security login create -application ssh`
+
 | 临时授予 SSH 访问权限以进行故障排除或供应商支持。 
 
 
 | 许可证管理  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/system-license-add.html["6c25ae7b27db9a62b5c245ad70b9d7cc"] ， link:https://docs.netapp.com/us-en/ontap-cli/system-license-delete.html["5f3eb0e0b3c2143bc24467a3ed94289e"]
+* `system license add`
+* `system license delete`
+
 | 授予在功能激活或停用期间添加或删除许可证的权限。 
 
 
 | 系统升级和修补  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/system-node-image-update.html["系统节点映像更新"] ， link:https://docs.netapp.com/us-en/ontap-cli/system-node-upgrade-revert-upgrade.html["3375ab72573f54f214f0e7b4b9759e15"]
+* `system node image update`
+* `system node upgrade-revert`
+
 | 提升升级窗口，然后撤销。 
 
 
 | 网络安全设置  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/security-login-role-create.html["创建安全登录角色"] ， link:https://docs.netapp.com/us-en/ontap-cli/security-login-role-modify.html["c44e895fab96f3c7a61edd2ebae0fd59"]
+* `security login role create`
+* `security login role modify`
+
 | 允许对网络相关的安全角色进行临时更改。 
 
 
 | 集群管理  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/cluster-add-node.html["集群添加节点"] ， link:https://docs.netapp.com/us-en/ontap-cli/cluster-remove-node.html["cluster remove-node"] ， link:https://docs.netapp.com/us-en/ontap-cli/cluster-modify.html["集群修改"]
+* `cluster add-node`
+* `cluster remove-node`
+* `cluster modify`
+
 | 提升集群扩展或重新配置。 
 
 
 | SVM 管理  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/vserver-create.html["创建SVM"] ， link:https://docs.netapp.com/us-en/ontap-cli/vserver-delete.html["a75eb9196380a98a2a2a693496267088"] ， link:https://docs.netapp.com/us-en/ontap-cli/vserver-modify.html["vserver修改"]
+* `vserver create`
+* `vserver delete`
+* `vserver modify`
+
 | 临时授予 SVM 管理员权限以进行配置或停用。 
 
 
 | 卷管理  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/volume-create.html["卷创建"] ， link:https://docs.netapp.com/us-en/ontap-cli/volume-delete.html["卷删除"] ， link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["卷修改"]
+* `volume create`
+* `volume delete`
+* `volume modify`
+
 | 提升卷配置、调整大小或删除的权限。 
 
 
 | Snapshot 管理  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-create.html["ceb6830d4a1748af1adc615d6239b127"] ， link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-delete.html["1cf71c15916b07b46dc8360baf4bd9d5"] ， link:https://docs.netapp.com/us-en/ontap-cli/volume-snapshot-restore.html["8f381ba1024744332b561ba609495012"]
+* `volume snapshot create`
+* `volume snapshot delete`
+* `volume snapshot restore`
+
 | 提升快照删除或在恢复期间恢复的权限。 
 
 
 | 网络配置：  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/network-interface-create.html["8e4b4cb9c44fdee9551da126fb754f8a"] ， link:https://docs.netapp.com/us-en/ontap-cli/network-port-vlan-create.html["733be7dba8f13ff258d7f73e2740324c"]
+* `network interface create`
+* `network port vlan create`
+
 | 授予在维护时段内进行网络更改的权利。 
 
 
 | 磁盘/聚合管理  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/storage-disk-assign.html["3c698d76925a2f101122edd72990fc94"] ， link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-create.html["1b40ef6e34df7d2fb54b5d639e14412d"] ， link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-add-disks.html["be260f7e87b5ae56c1d81f359067a35f"]
+* `storage disk assign`
+* `storage aggregate create`
+* `storage aggregate add-disks`
+
 | 提升添加或删除磁盘或管理聚合的能力。 
 
 
 | 数据保护  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["SnapMirror 创建"] ， link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-modify.html["snapmirror modify"] ， link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-restore.html["SnapMirror 恢复"]
+* `snapmirror create`
+* `snapmirror modify`
+* `snapmirror restore`
+
 | 暂时提升以配置或恢复SnapMirror关系。 
 
 
 | 性能调优  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html["qos policy-group create"] ， link:https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-modify.html["92e30cc5fff2e2aead2254497baabf90"]
+* `qos policy-group create`
+* `qos policy-group modify`
+
 | 提升性能故障排除或调整。 
 
 
 | 审计日志访问  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/security-audit-log-show.html["8886c6249c30eca960ab30fed3c6746b"]
+* `security audit log show`
+
 | 在合规性检查期间暂时提升审计日志审查或导出权限。 
 
 
 | 事件和警报管理  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/event-notification-create.html["64b1a654c15b96443ae00ee82d8ea7ad"] ， link:https://docs.netapp.com/us-en/ontap-cli/event-notification-modify.html["3289b87193da03bd8309fc4b2ea2e02e"]
+* `event notification create`
+* `event notification modify`
+
 | 提升配置或测试事件通知或 SNMP 陷阱的权限。 
 
 
 | 合规性驱动的数据访问  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/volume-show.html["volume show"] ， link:https://docs.netapp.com/us-en/ontap-cli/security-audit-log-show.html["8886c6249c30eca960ab30fed3c6746b"]
+* `volume show`
+* `security audit log show`
+
 | 授予审计员临时只读访问权限以审查敏感数据或日志。 
 
 
 | 特权访问审查  a| 
-link:https://docs.netapp.com/us-en/ontap-cli/security-login-show.html["025c83c1a746b39471a98aa72befe950"] ， link:https://docs.netapp.com/us-en/ontap-cli/security-login-role-show.html["c964d7ae2ca92e255e3199e128824eb9"]
+* `security login show`
+* `security login role show`
+
 | 暂时提升权限以审查和报告特权访问权限。在限定时间内授予只读权限。 
 |===
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster["集群"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=event+notification["事件通知"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=network["network"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=qos+policy-group["QoS策略组"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security["安全性"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=snapmirror["SnapMirror"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=storage["存储"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=system["系统"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=volume["volume"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver["vserver"^]
+
