@@ -19,6 +19,7 @@ summary: 您可以使用 SnapMirror 将 WORM 文件复制到其他地理位置�
 .关于此任务
 * 从 ONTAP 9.5 开始，您可以使用 XDP （扩展数据保护）类型的 SnapMirror 关系复制 WORM 文件，而不是使用 DP （数据保护）类型的关系。XDP 模式与 ONTAP 版本无关，并且能够区分存储在同一块中的文件，从而更容易重新同步复制的 Compliance 模式卷。有关如何将现有 DP 类型关系转换为 XDP 类型关系的信息，请参见 link:../data-protection/index.html["数据保护"]。
 * 如果 SnapLock 确定 Compliance 模式卷的 DP 类型 SnapMirror 关系将导致数据丢失，则对该关系执行重新同步操作将失败。如果重新同步操作失败、您可以使用 `volume clone create` 命令创建目标卷的克隆。然后，您可以将源卷与克隆重新同步。
+* SnapLock卷的SnapMirror关系仅支持 `MirrorAllSnapshots`异步镜像类型策略。 SnapLock卷的保留期由其所保存的所有 WORM 文件的最大保留期决定。由于目标是源的 DR 副本，因此目标SnapLock卷的保留期将与源相同。
 * SnapLock 兼容卷之间的 XDP 类型的 SnapMirror 关系支持在中断后重新同步，即使在中断后目标上的数据与源上的数据发生了差异也是如此。
 +
 在重新同步时，如果检测到源目标与通用快照之间存在数据差异，则会在目标上创建一个新快照以捕获此差异。新快照和通用快照都将锁定，并保留如下所示的保留时间：
@@ -78,7 +79,7 @@ image:snapmirror_steps_clustered.png["此图显示了初始化SnapMirror关系�
 
 +
 
-NOTE: 从 ONTAP 9.10.1 开始， SnapLock 卷和非 SnapLock 卷可以位于同一聚合上；因此，如果使用的是 ONTAP 9.10.1 ，则不再需要创建单独的 SnapLock 聚合。您可以使用volume -SnapLock-type选项指定Compliance或Enterprise SnapLock 卷类型。在ONTAP 9.10.1之前的ONTAP 版本中、SnapLock 模式-合规性或企业-是从聚合继承的。不支持版本灵活的目标卷。目标卷的语言设置必须与源卷的语言设置匹配。
+NOTE: 从ONTAP 9.10.1 开始， SnapLock和非SnapLock卷可以存在于同一个聚合上；因此，如果您使用ONTAP 9.10.1，则不再需要创建单独的SnapLock聚合。您可以使用volume -snaplock-type选项指定Compliance或Enterprise SnapLock卷类型。在ONTAP 9.10.1 之前的ONTAP版本中， SnapLock模式（Compliance 或 Enterprise）是从聚合继承的。目标卷的语言设置必须与源卷的语言设置相匹配。
 
 +
 以下命令将创建一个2 GB的SnapLock `Compliance` 名为的卷 `dstvolB` 在中 `SVM2` 在聚合上 `node01_aggr`：

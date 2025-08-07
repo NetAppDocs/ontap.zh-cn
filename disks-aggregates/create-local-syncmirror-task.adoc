@@ -1,0 +1,63 @@
+---
+permalink: disks-aggregates/create-local-syncmirror-task.html 
+sidebar: sidebar 
+keywords: ontap 9, create, aggregates, syncmirror, sync mirror, add, local tier 
+summary: 您可以在手动创建本地层时启用SyncMirror ，以同步镜像本地层数据。 
+---
+= 添加启用SyncMirror的ONTAP本地层
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以在手动创建本地层时启用SyncMirror ，以同步镜像本地层数据。
+
+详细了解link:../concepts/mirrored-unmirrored-aggregates-concept.html["镜像和非镜像本地层"] 。
+
+.开始之前
+* 必须仅使用内部存储来初始化集群。
+* 必须在两个节点上完成集群设置。
+
+
+.关于此任务
+此过程在每个集群节点上创建大小相同的镜像数据本地层，每个本地层的磁盘数为 44。
+
+.步骤
+. 禁用存储自动分配：
++
+`storage disk option modify -node * -autoassign off`
+
+. 确认自动分配已禁用：
++
+`storage disk option show`
+
+. 安装外部搁板。
+. 将外部驱动器分配给指定池 1 的每个节点：
++
+`storage disk assign -disk <disk ID> -owner <node name> -pool 1`
+
+. 在每个节点上镜像根本地层：
++
+`storage aggregate mirror -aggregate <node1 root-aggr>`
+
++
+`storage aggregate mirror -aggregate <node2 root-aggr>`
+
++
+
+NOTE: 池 1 中的驱动器会自动分区以匹配丛 0 中的驱动器。
+
+. 在节点 1 上，使用磁盘数量 44 创建镜像数据本地层。这将从池 0 中选择 22 个分区，从池 1 中选择 22 个分区。
++
+`storage aggregate create -node <node1 name> -aggregate <node1 aggr-name> -diskcount 44 -mirror true`
+
+. 在节点 2 上，使用磁盘数量 44 创建镜像数据本地层。这将从池 0 中选择 22 个分区，从池 1 中选择 22 个分区。
++
+`storage aggregate create -node <node2 name> -aggregate <node2 aggr-name> -diskcount 44 -mirror true`
+
+. 验证是否成功创建了大小相同的本地层：
++
+`storage aggregate show`
+
+
