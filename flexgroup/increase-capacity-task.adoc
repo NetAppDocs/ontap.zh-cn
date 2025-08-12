@@ -11,7 +11,9 @@ summary: 通过向卷的现有组成部分添加更多容量或通过使用新�
 
 
 [role="lead"]
-您可以通过向FlexGroup卷的现有成员卷(成分卷)添加更多容量或使用新成员卷扩展FlexGroup卷来增加FlexGroup卷的大小。一个FlexGroup卷的成员卷不能超过200个。
+您可以通过向FlexGroup卷的所有现有成员卷（组成部分）添加更多容量或通过使用新成员卷扩展FlexGroup卷来增加FlexGroup卷的大小。  FlexGroup卷不能有超过 200 个成员卷。
+
+如果需要，您还可以增加FlexGroup卷中单个卷的大小。
 
 .开始之前
 聚合中必须有足够的可用空间。
@@ -47,9 +49,9 @@ summary: 通过向卷的现有组成部分添加更多容量或通过使用新�
  a| 
 FlexGroup 卷的容量
  a| 
-调整FlexGroup卷的成员卷大小：
+调整FlexGroup卷的所有成员卷的大小：
 
-`volume modify -vserver vserver_name -volume fg_name -size new_size`
+`volume modify -vserver <svm_name> -volume <fg_name> -size <new_size>`
 
 
 
@@ -95,3 +97,22 @@ cluster1::> volume modify -vserver svm1 -volume volX -size +20TB
 cluster1::> volume expand -vserver svm1 -volume fg1 -aggr-list aggr1,aggr2 -aggr-list-multiplier 2
 ----
 新成员卷的大小与现有成员卷的大小相同。
+
+.增加单个卷的大小
+如果要增加FlexGroup卷中单个成员卷的大小，可以使用 `volume resize`命令。
+
+.步骤
+. 增加单个FlexGroup成员卷的大小：
++
+`volume size -volume <volume_name> -vserver <svm1> -new-size <new_size>`
+
++
+以下示例将FlexGroup成员卷 FG_0003 的大小增加到 3.7GB：
+
++
+[listing]
+----
+volume size -volume FG__0003 -vserver svm1 -new-size 3.7GB
+vol size: Volume "svm1:FG__0003" size set to 3.70g.
+----
+
