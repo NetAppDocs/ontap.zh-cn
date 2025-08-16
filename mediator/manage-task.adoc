@@ -205,12 +205,18 @@ CGroup: /system.slice/ontap_mediator.service
 
 
 
-== 手动卸载SCST以执行主机维护
+== 执行主机维护
+
+如果运行ONTAP Mediator 的 VM 需要使用较新的内核进行升级，则这可能会导致与ONTAP Mediator 使用的 SCST 内核模块出现兼容性问题。在这种情况下， NetApp建议您手动卸载并重新安装 SCST。
+
+
+
+=== 步骤 1：手动卸载 SCST
 
 要卸载SCST、您需要安装的ONTAP 调解器版本所使用的SCST tar包。
 
 .步骤
-. 下载相应的SCST捆绑包(如下表所示)并对其进行解压缩。
+. 下载适当的 SCST 包（如下表所示）并解压。
 +
 [cols="50,50"]
 |===
@@ -295,7 +301,13 @@ ONTAP 调解器1.0
 scst-3.3.0.tar.bz2.
 
 |===
-. 在"scst"目录中问题描述 以下命令：
++
+.. 从访问开源包link:https://scst.sourceforge.net/downloads.html["SCST sourceforge 下载"^]。
+.. 选择*下载已发布版本*。
+.. 将捆绑包提取到您的虚拟机。
+
+
+. 在 `scst`目录：
 +
 .. `systemctl stop mediator-scst`
 .. `make scstadm_uninstall`
@@ -309,11 +321,14 @@ scst-3.3.0.tar.bz2.
 
 
 
-== 手动安装SCST以执行主机维护
+=== 步骤 2：手动安装 SCST
 
-要手动安装SCST、您需要安装的ONTAP 调解器版本所使用的SCST tar包(请参见 <<scst-bundle-table,上表>>）。
+要手动安装 SCST，您需要用于已安装ONTAP Mediator 版本的 SCST tar 包（请参阅<<scst-bundle-table,SCST 表>>）。
 
-. 在"scst"目录中问题描述 以下命令：
+
+NOTE: 在安装ONTAP调解器之前执行此步骤。如果您使用的 SCST 版本比ONTAP Mediator 安装程序捆绑的版本新，则安装程序将跳过此步骤。
+
+. 在 `scst`目录：
 +
 .. `make 2release`
 .. `make scst_install`
@@ -321,13 +336,25 @@ scst-3.3.0.tar.bz2.
 .. `make iscsi_install`
 .. `make scstadm_install`
 .. `depmod`
++
+[NOTE]
+====
+如果您是首次安装并且想要预安装ONTAP Mediator，请在继续下一步之前运行以下命令：
+
+`mkdir -p /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys` 。
+
+====
 .. `cp scst/src/certs/scst_module_key.der /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/`
 .. `patch /etc/init.d/scst < /opt/netapp/lib/ontap_mediator/systemd/scst.patch`
++
+
+NOTE: 如果您是首次安装并且想要在安装ONTAP Mediator 之前预安装 SCST，则可以跳过此步骤。  ONTAP调解器安装程序在安装过程中将任何相关修补程序应用于 SCST 组件。
+
 
 
 . (可选)如果已启用安全启动、则在重新启动之前、请执行以下步骤：
 +
-.. 确定"scst_vdisk"、"scst"和"iSCSI_scst"模块的每个文件名：
+.. 确定每个文件名 `scst_vdisk`， `scst` ， 和 `iscsi_scst`模块：
 +
 ....
 [root@localhost ~]# modinfo -n scst_vdisk
@@ -339,7 +366,7 @@ scst-3.3.0.tar.bz2.
 ....
 [root@localhost ~]# uname -r
 ....
-.. 使用内核对每个文件进行签名：
+.. 使用内核对每个模块文件进行签名：
 +
 ....
 [root@localhost ~]# /usr/src/kernels/<KERNEL-RELEASE>/scripts/sign-file \sha256 \
@@ -347,7 +374,7 @@ scst-3.3.0.tar.bz2.
 /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der \
 _module-filename_
 ....
-.. 使用UEFI固件安装正确的密钥。
+.. 使用固件安装 UEFI 密钥。
 +
 有关安装UEFI密钥的说明、请参见：
 
@@ -362,7 +389,7 @@ _module-filename_
 
 
 
-. 执行重新启动：
+. 重新启动系统：
 +
 `reboot`
 

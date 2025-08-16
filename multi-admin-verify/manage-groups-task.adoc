@@ -20,6 +20,8 @@ MAV功能可支持现有的基于角色的访问控制(Role-Based Access Control
 
 您可以将MAV配置为向MAV管理员发出批准请求待处理的警报。为此，您必须配置电子邮件通知，特别是 `Mail From` 和 `Mail Server` 参数--或者，您可以清除这些参数以禁用通知。如果没有电子邮件警报、MAV管理员必须手动检查批准队列。
 
+从ONTAP 9.15.1 开始，您可以将 Active Directory (AD) 用户配置为 MAV 管理员。  AD 用户必须是link:../authentication/grant-access-active-directory-users-groups-task.html["配置为ONTAP管理员"]。
+
 
 
 == System Manager 操作步骤
@@ -117,7 +119,7 @@ cluster01::> event config show
 +
 ** `-vserver` -此版本仅支持管理SVM。
 ** `-name` - MAV组名称，最多64个字符。
-** `-approvers` -一个或多个审批人的列表。
+** `-approvers`- 一个或多个审批人的列表。对于 AD 用户，使用格式 `domain\user`。例如，  `mydomain\pavan` 。
 ** `-email` -创建、批准、否决或执行请求时通知的一个或多个电子邮件地址。
 +
 *示例：*以下命令将创建一个包含两个成员和关联电子邮件地址的MAV组。
