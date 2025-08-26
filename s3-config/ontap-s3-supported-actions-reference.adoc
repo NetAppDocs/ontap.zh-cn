@@ -16,6 +16,19 @@ summary: ONTAP S3 支持的操作。
 
 NOTE: 在ONTAP中使用本机S3分段时、尤其支持这些S3操作。使用时不支持其中某些操作，例如与版本控制、对象锁定和其他功能关联的操作link:../s3-multiprotocol/index.html["S3 NAS分段(多协议NAS卷中的S3)"]。
 
+除非针对特定操作另有说明，否则从ONTAP 9.8 开始支持以下常见请求标头：
+
+* `Authorization`
+* `Connection`
+* `Content-Length`
+* `Content-MD5`
+* `Content-Type`
+* `Date`
+* `Expect`
+* `Host`
+* `x-amz-date`
+
+
 
 
 == 存储分段操作
@@ -26,41 +39,72 @@ ONTAP支持使用AWS S3 API执行以下操作：
 | 存储分段操作 | ONTAP 支持、从开始 
 
 
-| CreateBucket | ONTAP 9.11.1 
+ a| 
+CreateBucket
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加标头：
+
+* `x-amz-bucket-object-lock-enabled`
+
+| ONTAP 9.11.1 
 
 
-| DeleteBucket | ONTAP 9.11.1 
+ a| 
+DeleteBucket
+
+ONTAP S3 支持此请求的所有常用参数和标头。
+| ONTAP 9.11.1 
 
 
-| DeleteBucketPolicy | ONTAP 9.12.1 
+| DeleteBucketCors ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.8 
 
 
-| GetBucketAcl | ONTAP 9.8 
+| DeleteBucketLifecycle ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.8 
 
 
-| GetBucketLifecycleConfiguration | ONTAP 9.13.1及更高版本
-*仅支持过期操作 
+ a| 
+DeleteBucketPolicy
+
+ONTAP S3 支持此请求的所有常用参数和标头。
+| ONTAP 9.12.1 
 
 
-| GetBucketLocation | ONTAP 9.10.1 
+| GetBucketAcl ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.8 
 
 
-| GetBucketPolicy | ONTAP 9.12.1 
+| GetBucketCors ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.8 
 
 
-| HeadBucket | ONTAP 9.8 
+ a| 
+GetBucketLifecycleConfiguration
+
+ONTAP S3 支持此请求的所有常用参数和标头。
+ a| 
+ONTAP 9.13.1
+
+*仅支持到期操作
 
 
-| ListAllMyBuc桶 | ONTAP 9.8 
+
+| GetBucketLocation ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.10.1 
 
 
-| List桶 | ONTAP 9.8 
+| GetBucketPolicy ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.12.1 
 
 
-| ListBucketVersioning | ONTAP 9.11.1 
+| GetBucketVersioning ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.11.1 
 
 
-| ListObjectVersies | ONTAP 9.11.1 
+| HeadBucket ONTAP S3 支持此请求的所有常见参数和标头。 | ONTAP 9.8 
+
+
+| ListAllMyBuckets ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.8 
+
+
+| ListBuckets ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.8 
+
+
+| ListBucketVersions ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.11.1 
 
 
 | PutBucket  a| 
@@ -70,11 +114,18 @@ ONTAP支持使用AWS S3 API执行以下操作：
 
 
 
-| PutBucketLifecycleConfiguration | ONTAP 9.13.1及更高版本
-*仅支持过期操作 
+| PutBucketCors ONTAP S3 支持此请求的所有常用参数和标头。  a| 
+ONTAP 9.8
 
 
-| PutBucketPolicy | ONTAP 9.12.1 
+
+| PutBucketLifecycleConfiguration ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.13.1 * 仅支持过期操作 
+
+
+| PutBucketPolicy ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.12.1 
+
+
+| PutBucketVersioning ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.11.1 
 |===
 
 
@@ -103,83 +154,263 @@ ONTAP支持使用AWS S3 API执行以下操作：
 * PutBucketVersioning
 
 
+除非针对特定操作另有说明，否则支持以下 URI 查询参数：
+
+* `versionId`（根据ONTAP 9.12.1 开始的对象操作要求）
+
+
 |===
 | 对象操作 | ONTAP 支持、从开始 
 
 
-| AbortMultipartUpload | ONTAP 9.8 
+ a| 
+AbortMultipartUpload
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加 URI 查询参数：
+`uploadId`
+ a| 
+ONTAP 9.8
 
 
-| CompleteMultipartUpload | ONTAP 9.8 
+
+ a| 
+CompleteMultipartUpload
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加 URI 查询参数：
+`uploadId`
+ a| 
+ONTAP 9.8
 
 
-| CopyObject | ONTAP 9.12.1 
+
+ a| 
+CopyObject
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加标头：
+
+* `x-amz-copy-source`
+* `x-amz-copy-source-if-match`
+* `x-amz-copy-source-if-modified-since`
+* `x-amz-copy-source-if-none-match`
+* `x-amz-copy-source-if-unmodified-since`
+* `x-amz-metadata-directive`
+* `x-amz-object-lock-mode`
+* `x-amz-object-lock-retain-until-date`
+* `x-amz-tagging`
+* `x-amz-tagging-directive`
+* `x-amz-meta-<metadata-name>`
+
+| ONTAP 9.12.1 
 
 
-| CreateMultipartUpload | ONTAP 9.8 
+ a| 
+CreateMultipartUpload
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加标头：
+
+* `Cache-Control`
+* `Content-Disposition`
+* `Content-Encoding`
+* `Content-Language`
+* `Expires`
+* `x-amz-tagging`
+* `x-amz-object-lock-mode`
+* `x-amz-object-lock-retain-until-date`
+* `x-amz-meta-<metadata-name>`
+
+| ONTAP 9.8 
 
 
-| DeleteObject | ONTAP 9.8 
+ a| 
+DeleteObject
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加标头：
+
+* `x-amz-bypass-governance-retention`
+
+| ONTAP 9.8 
 
 
-| DeleteObjects | ONTAP 9.11.1 
+| DeleteObjects ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加标头：* `x-amz-bypass-governance-retention` | ONTAP 9.11.1 
 
 
-| DeleteObjectTagging | ONTAP 9.9.1 
+ a| 
+DeleteObjectTagging
+
+ONTAP S3 支持此请求的所有常用参数和标头。
+| ONTAP 9.9.1 
 
 
-| GetBucketVersioning | ONTAP 9.11.1 
+ a| 
+GetObject
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加 URI 查询参数：
+
+* `partNumber`
+* `response-cache-control`
+* `response-content-disposition`
+* `response-content-encoding`
+* `response-content-language`
+* `response-content-type`
+* `response-expires`
 
 
-| GetObject | ONTAP 9.8 
+还有这个附加的请求标头：
+
+* 范围
+
+| ONTAP 9.8 
 
 
-| GetObjectAcl | ONTAP 9.8 
+| GetObjectAcl ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.8 
 
 
-| GetObject保留 | ONTAP 9.14.1 
+ a| 
+获取对象属性
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加标头：
+
+* `x-amz-object-attributes`
+
+| ONTAP 9.17.1 
 
 
-| GetObjectTagging | ONTAP 9.9.1 
+| GetObjectRetention ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.14.1 
 
 
-| HeadObject | ONTAP 9.8 
+| GetObjectTagging ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.9.1 
 
 
-| ListMultipartUpload | ONTAP 9.8 
+| HeadObject ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.8 
 
 
-| ListObjects | ONTAP 9.8 
+ a| 
+ListMultipartUpload
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加 URI 参数：
+
+* `delimiter`
+* `key-marker`
+* `max-uploads`
+* `prefix`
+* `upload-id-marker`
+
+| ONTAP 9.8 
 
 
-| List对象V2 | ONTAP 9.8 
+ a| 
+ListObjects
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加 URI 参数：
+
+* `delimiter`
+* `encoding-type`
+* `marker`
+* `max-keys`
+* `prefix`
+
+| ONTAP 9.8 
 
 
-| ListBucketVersions | ONTAP 9.11.1 
+ a| 
+List对象V2
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加 URI 参数：
+
+* `continuation-token`
+* `delimiter`
+* `encoding-type`
+* `fetch-owner`
+* `max-keys`
+* `prefix`
+* `start-after`
+
+| ONTAP 9.8 
 
 
-| ListParts | ONTAP 9.8 
+ a| 
+ListObjectVersies
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加 URI 参数：
+
+* `delimiter`
+* `encoding-type`
+* `key-marker`
+* `max-keys`
+* `prefix`
+* `version-id-marker`
+
+| ONTAP 9.11.1 
 
 
-| PutBucketVersioning | ONTAP 9.11.1 
+ a| 
+ListParts
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加 URI 参数：
+
+* `max-parts`
+* `part-number-marker`
+* `uploadId`
+
+| ONTAP 9.8 
 
 
-| PutObject | ONTAP 9.8 
+ a| 
+PutObject
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加标头：
+
+* `Cache-Control`
+* `Content-Disposition`
+* `Content-Encoding`
+* `Content-Language`
+* `Expires`
+* `x-amz-tagging`
+* `x-amz-object-lock-mode`
+* `x-amz-object-lock-retain-until-date`
+* `x-amz-meta-<metadata-name>`
+
+| ONTAP 9.8 
 
 
-| PutObjectLockConfiguration | ONTAP 9.14.1 
+| PutObjectLockConfiguration ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.14.1 
 
 
-| PutObject保留 | ONTAP 9.14.1 
+ a| 
+PutObject保留
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加标头：
+
+* `x-amz-bypass-governance-retention`
+
+| ONTAP 9.14.1 
 
 
-| PutObjectTagging | ONTAP 9.9.1 
+| PutObjectTagging ONTAP S3 支持此请求的所有常用参数和标头。 | ONTAP 9.9.1 
 
 
 | 上传部件 | ONTAP 9.8 
 
 
-| 上传PartCopy | ONTAP 9.12.1 
+ a| 
+上传PartCopy
+
+ONTAP S3 支持此请求的所有常用参数和标头，以及以下附加 URI 参数：
+
+* `partNumber`
+* `uploadId`
+
+
+以及这些额外的请求标头：
+
+* `x-amz-copy-source`
+* `x-amz-copy-source-if-match`
+* `x-amz-copy-source-if-modified-since`
+* `x-amz-copy-source-if-none-match`
+* `x-amz-copy-source-if-unmodified-since`
+* `x-amz-copy-source-range`
+
+| ONTAP 9.12.1 
 |===
 
 
@@ -240,7 +471,8 @@ ONTAP 9 12.1增加了对分段策略的支持以及复制对象的功能。
 .ONTAP 9.11.1
 API.11.1增加了对版本控制、预先签名的、分块上传以及使用S3 ONTAP 9创建和删除存储分段等常见S3操作的支持。
 
-* 现在、ONTAP S3支持使用x-amz-content-SHA256：流传输-aWS4-hMAC-SHA256-payload处理chunked上传签名请求
+* ONTAP S3 现在支持使用以下方式对分块上传签名请求进行支持 `x-amz-content-sha256:
+STREAMING-AWS4-HMAC-SHA256-PAYLOAD`
 * 现在、ONTAP S3支持使用预先签名的URL的客户端应用程序共享对象、或者允许其他用户上传对象而无需用户凭据。
 * CreateBucket
 * DeleteBucket
