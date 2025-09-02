@@ -1,7 +1,7 @@
 ---
 permalink: flexgroup/manage-client-async-dir-delete-task.html 
 sidebar: sidebar 
-keywords: perform, directory, enable, delete, files, asynchronous, client rights, SMB, NFS, share, flexvol, flex vol, flexgroup, flex group 
+keywords: perform, directory, enable, delete, asynchronous, client rights, SMB, NFS, share, flexvol, flex vol, flexgroup, flex group 
 summary: '从NFS.11.1开始、存储管理员可以授予对卷的权限、以允许ONTAP 9和SMB客户端执行异步删除操作。启用async delete后、NFS客户端可以使用命令、SMB客户端 `mv`可以使用 `rename`命令删除指定卷上的目录、并将该目录移动到默认名为.ontaptrashbin的隐藏目录。' 
 ---
 = 管理客户端权限以使用 FlexGroups 异步删除 ONTAP 目录
@@ -11,7 +11,13 @@ summary: '从NFS.11.1开始、存储管理员可以授予对卷的权限、以�
 
 
 [role="lead"]
-从NFS.11.1开始、存储管理员可以授予对卷的权限、以允许ONTAP 9和SMB客户端自行执行异步删除操作。在集群上启用异步删除后、Linux客户端用户可以使用 `mv`命令、而Windows客户端用户可以使用 `rename`命令将指定卷上的目录移动到默认名为.ontaptrashbin的隐藏目录中、从而删除该目录。
+从ONTAP 9.11.1 开始，存储管理员可以授予卷上的权限，以允许 NFS 和 SMB 客户端执行异步删除操作。当集群启用异步删除时，Linux 客户端用户可以使用 `mv`命令和 Windows 客户端用户可以使用 `rename`命令通过将目录移动到默认名为 .ontaptrashbin 的隐藏目录来删除指定卷上的目录。
+
+权利是按卷授予的。  NFS 客户端用户应该在 NFS 客户端上具有 root 访问权限，并在 NFS 导出上具有超级用户访问权限。
+
+您只能移动目录。您不能将文件移动到 .ontaptrashbin 目录。
+
+link:fast-directory-delete-asynchronous-task.html#delete-directories-asynchronously["了解如何使用ONTAP从FlexGroup卷异步删除目录"] 。
 
 
 
@@ -19,7 +25,7 @@ summary: '从NFS.11.1开始、存储管理员可以授予对卷的权限、以�
 
 .步骤
 . 从集群命令行界面进入高级权限模式： `-privilege advance`
-. 启用客户端异步删除、并根据需要为trashbin目录提供备用名称：
+. 在卷的挂载点启用客户端异步删除，并且如果需要，为垃圾桶目录提供备用名称：
 +
 `volume file async-delete client enable volume _volname_ vserver _vserverName_ trashbinname _name_`
 

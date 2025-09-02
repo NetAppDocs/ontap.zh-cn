@@ -11,36 +11,57 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
 
 
 [role="lead"]
-您可以通过访问节点的 SP 并运行 SP 命令行界面命令来执行节点管理任务来远程管理节点。对于几个常用的远程节点管理任务，您还可以从集群中的另一个节点使用 ONTAP 命令。某些 SP 命令是特定于平台的，可能在您的平台上不可用。
+您可以通过访问其SP并运行SP CLI 命令，或者访问BMC并运行BMC CLI 命令来远程执行节点管理任务。对于几个常见的远程节点管理任务，您还可以从集群中的另一个节点使用ONTAP命令。某些SP和BMC命令是特定于平台的，可能在您的平台上不可用。
+
+某些命令类型可以在SP和BMC命令集中使用。当输入命令行时就会显示它们之间的区别。
+
+.示例
+* 这 `help`SP中的命令： `SP> help`
+* 这 `help`BMC中的命令： `BMC> help`
+
+
+详细了解 `help`可用于SP和BMC 的命令选项link:https://docs.netapp.com/us-en/ontap/system-admin/online-help-at-sp-bmc-cli-task.html["在ONTAP SP或BMC命令行界面中查看帮助信息"^]。
+
+了解有关相应ONTAP BMC CLI 的更多信息link:https://docs.netapp.com/us-en/ontap/system-admin/bmc-cli-commands-reference.html["ONTAP基板管理控制器支持的命令行界面命令"^]。
 
 |===
-| 如果您要 ... | 使用此 SP 命令 ... | 使用此BMC命令 | 或此 ONTAP 命令 ... 
+| 如果您要 ... | 使用此 SP 命令 ... | 使用此BMC命令 | 使用此ONTAP命令... 
 
 
  a| 
-显示指定 SP 命令的可用 SP 命令或子命令
+显示SP/ BMC/ ONTAP的可用命令或指定命令的子命令
  a| 
 `help` [`command`]
  a| 
+`help` [`command`]
  a| 
+不适用
 
 
 
  a| 
-显示 SP 命令行界面的当前权限级别
+显示SP/ BMC/ ONTAP CLI 的当前权限级别
  a| 
 `priv show`
  a| 
+`priv` `show`
  a| 
+不适用
 
 
 
  a| 
-设置访问 SP 命令行界面的指定模式的权限级别
+设置权限级别以访问SP/ BMC/ ONTAP CLI 的指定模式
  a| 
-`priv set` {`admin` 我们可以为您提供 `advanced` 我们可以为您提供 `diag`｝
+`priv set`
+
+{`admin`| `advanced` | `diag` }
  a| 
+`priv set`
+
+{`admin`| `advanced` | `diag` | `test` }
  a| 
+不适用
 
 
 
@@ -49,42 +70,58 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
  a| 
 `date`
  a| 
+`date`
  a| 
 `date`
 
 
 
  a| 
-显示 SP 记录的事件
+显示SP/ BMC/ ONTAP记录的事件
  a| 
-`events` {`all` 我们可以为您提供 `info` 我们可以为您提供 `newest` `number` 我们可以为您提供 `oldest number` 我们可以为您提供 `search keyword`｝
+`events`
+
+{`all`| `info` | `newest` `number` | `oldest number` | `search keyword` }
  a| 
+`events`
+
+{`all`| `info` | `newest` | `oldest` | `search` }
  a| 
+不适用
 
 
 
  a| 
-显示 SP 状态和网络配置信息
+显示SP/ BMC/ ONTAP状态和网络配置信息
  a| 
-`sp status` [`-v` 我们可以为您提供 `-d`]
+`sp status`
 
-。 `-v` 选项以详细格式显示SP统计信息。。 `-d` 选项会将SP调试日志添加到显示内容中。
+[`-v`| `-d` ]
+
+* 这 `-v`选项以详细形式显示SP统计信息。
+* 这 `-d`选项将SP调试日志添加到显示中。
+
  a| 
-`bmc status` [`-v` 我们可以为您提供 `-d`]
+`bmc status`
 
-。 `-v` 选项以详细格式显示SP统计信息。。 `-d` 选项会将SP调试日志添加到显示内容中。
+[`-v`| `-d` ]
+
+* 这 `-v`选项以详细形式显示SP统计信息。
+* 这 `-d`选项将SP调试日志添加到显示中。
+
  a| 
 `system service-processor show`
 
 
 
  a| 
-显示 SP 已运行的时间长度以及运行队列中过去 1 分钟， 5 分钟和 15 分钟的平均作业数
+显示SP/ BMC/ ONTAP启动的时间长度以及过去 1、5 和 15 分钟内运行队列中的平均作业数
  a| 
 `sp uptime`
  a| 
 `bmc uptime`
  a| 
+不适用
 
 
 
@@ -93,17 +130,28 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
  a| 
 `system log`
  a| 
+`system log`
+
+[`-a`]
  a| 
+`system log`
+
+（打印系统控制台日志）
 
 
 
  a| 
-显示 SP 日志归档或归档中的文件
+显示SP/ BMC/ ONTAP日志档案或档案中的文件
  a| 
-`sp log history show` [`-archive` {`latest` 我们可以为您提供{`all` 我们可以为您提供 `archive-name`}] [`-dump` {`all` 我们可以为您提供 `file-name`}]
+`sp log history show`
+
+[`-archive` {`latest`|{`all` | `archive-name` }][`-dump` {`all` | `file-name` }]
  a| 
-`bmc log history show` [`-archive` {`latest` 我们可以为您提供{`all` 我们可以为您提供 `archive-name`}] [`-dump` {`all` 我们可以为您提供 `file-name`}]
+`bmc log history show`
+
+[`-archive` {`latest`|{`all` | `archive-name` }][`-dump` {`all` | `file-name` }]
  a| 
+不适用
 
 
 
@@ -112,6 +160,7 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
  a| 
 `system power status`
  a| 
+`system power status`
  a| 
 `system node power show`
 
@@ -122,16 +171,22 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
  a| 
 `system battery show`
  a| 
+`system battery show`
  a| 
+不适用
 
 
 
  a| 
 显示扩展器传感器的 ACP 信息或状态
  a| 
-`system acp` [`show` 我们可以为您提供 `sensors show`]
+`system acp`
+
+[`show`| `sensors show` ]
  a| 
+不适用
  a| 
+不适用
 
 
 
@@ -140,7 +195,9 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
  a| 
 `system fru list`
  a| 
+`system fru list`
  a| 
+不适用
 
 
 
@@ -149,24 +206,39 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
  a| 
 `system fru show` `fru_id`
  a| 
+`system fru show`
+
+[ `show <id>` ]
  a| 
+不适用
 
 
 
  a| 
 显示 FRU 数据历史记录日志
  a| 
-`system fru log show` （高级权限级别）
+`system fru log show`
+
+（高级权限级别）
  a| 
+`system fru log show`
  a| 
+不适用
 
 
 
  a| 
 显示环境传感器的状态，包括其状态和当前值
  a| 
-`system sensors` 或 `system sensors show`
+`system sensors`
+
+或
+
+`system sensors show`
  a| 
+`system sensors`
+
+{`show`| `filter <sensor_string>` }
  a| 
 `system node environment sensors show`
 
@@ -179,56 +251,80 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
 
 您可以获取 `sensor_name` 使用 `system sensors` 或 `system sensors show` 命令：
  a| 
+`system sensors`
+
+[ `get` ]
  a| 
+不适用
 
 
 
  a| 
-显示 SP 固件版本信息
+显示SP/ BMC/ ONTAP固件版本信息
  a| 
 `version`
  a| 
+`version`
  a| 
 `system service-processor image show`
 
 
 
  a| 
-显示 SP 命令历史记录
+显示SP/ BMC/ ONTAP命令历史记录
  a| 
-`sp log audit` （高级权限级别）
+`sp log audit`
+
+（高级权限级别）
  a| 
 `bmc log audit`
+
+（高级权限级别）
  a| 
+不适用
 
 
 
  a| 
-显示 SP 调试信息
+显示SP/ BMC/ ONTAP调试信息
  a| 
-`sp log debug` （高级权限级别）
+`sp log debug`
+
+（高级权限级别）
  a| 
-`bmc log debug` （高级权限级别）
+`bmc log debug`
+
+（高级权限级别）
  a| 
+不适用
 
 
 
  a| 
-显示 SP 消息文件
+显示SP/ BMC/ ONTAP消息文件
  a| 
-`sp log messages` （高级权限级别）
+`sp log messages`
+
+（高级权限级别）
  a| 
-`bmc log messages` （高级权限级别）
+`bmc log messages`
+
+（高级权限级别）
  a| 
+不适用
 
 
 
  a| 
 显示用于收集 watchdog 重置事件的系统取证信息的设置，显示在 watchdog 重置事件期间收集的系统取证信息，或者清除收集的系统取证信息
  a| 
-`system forensics` [`show` 我们可以为您提供 `log dump` 我们可以为您提供 `log clear`]
+`system forensics`
+
+[`show`| `log dump` | `log clear` ]
  a| 
+不适用
  a| 
+不适用
 
 
 
@@ -237,6 +333,7 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
  a| 
 `system console`
  a| 
+`system console`
  a| 
 `system node run-console`
 
@@ -252,22 +349,29 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
  a| 
 `system power` `on`
  a| 
+`system power` `on`
  a| 
-`system node power on` （高级权限级别）
+`system node power on`
+
+（高级权限级别）
 
 
 
  a| 
 `system power` `off`
  a| 
+`system power` `off`
  a| 
+不适用
 
 
 
  a| 
 `system power` `cycle`
  a| 
+`system power` `cycle`
  a| 
+不适用
 
 
 
@@ -288,6 +392,7 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
 
 。 `-f` 选项用于强制创建核心转储并重置节点。
  a| 
+`system core`
  a| 
 `system node coredump trigger`
 
@@ -303,12 +408,17 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
  a| 
 使用可选指定的 BIOS 固件映像（主，备份或当前）重新启动节点，以从节点启动设备映像损坏等问题中恢复
  a| 
-`system reset` {`primary` 我们可以为您提供 `backup` 我们可以为您提供 `current`｝
- a| 
- a| 
-`system node reset` 使用 `-firmware` {`primary` 我们可以为您提供 `backup` 我们可以为您提供 `current`}参数(高级权限级别)
+`system reset`
 
-`system node reset`
+{`primary`| `backup` | `current` }
+ a| 
+`system reset`
+
+{ `current` | `primary` | `backup` }
+ a| 
+`system node reset`与 `-firmware` {`primary`| `backup` | `current` } 范围
+
+（高级权限级别）
 
 
 
@@ -323,13 +433,17 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
 
 
  a| 
-显示电池固件自动更新的状态，或者在下次 SP 启动时启用或禁用电池固件自动更新
+显示电池固件自动更新的状态，或在下次SP启动时启用或禁用电池固件自动更新
  a| 
-`system battery auto_update` [`status` 我们可以为您提供 `enable` 我们可以为您提供 `disable`]
+`system battery auto_update`
+
+[`status`| `enable` | `disable` ]
 
 （高级权限级别）
  a| 
+不适用
  a| 
+不适用
 
 
 
@@ -342,39 +456,56 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
 
 条件 `image_URL` 未指定、则使用默认电池固件映像进行比较。
  a| 
+`system battery verify` [`image_URL`]
+
+（高级权限级别）
+
+条件 `image_URL` 未指定、则使用默认电池固件映像进行比较。
  a| 
+不适用
 
 
 
  a| 
 从指定位置的映像更新电池固件
  a| 
-`system battery flash` `image_URL`
+`system battery flash` [`image_URL`]
 
 （高级权限级别）
 
 如果电池固件自动升级过程因某种原因失败，请使用此命令。
  a| 
+不适用
  a| 
+不适用
 
 
 
  a| 
-使用指定位置的映像更新 SP 固件
+使用指定位置的映像更新SP/ BMC/ ONTAP固件
  a| 
-`sp update` `image_URL image_URL` 不得超过200个字符。
+`sp update`
+
+`image_URL`
+
+`image_URL`不得超过 200 个字符。
  a| 
-`bmc update` `image_URL image_URL` 不得超过200个字符。
+`bmc update`
+
+`image_URL`
+
+`image_URL`不得超过 200 个字符。
  a| 
 `system service-processor image update`
 
 
 
  a| 
-重新启动 SP
+重新启动SP/ BMC/ ONTAP
  a| 
 `sp reboot`
  a| 
+`bmc reboot`
  a| 
 `system service-processor reboot-sp`
 
@@ -383,20 +514,28 @@ summary: 您可以通过访问节点的 SP 并运行 SP 命令行界面命令来
  a| 
 擦除 NVRAM 闪存内容
  a| 
-`system nvram flash clear` （高级权限级别）
+`system nvram flash clear`
+
+（高级权限级别）
 
 控制器电源关闭时、无法启动此命令 (`system power off`）。
  a| 
+不适用
  a| 
+不适用
 
 
 
  a| 
-退出 SP 命令行界面
+退出SP/ BMC/ ONTAP CLI
  a| 
 `exit`
  a| 
+`exit`
  a| 
+不适用
 
 |===
-有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]
+
