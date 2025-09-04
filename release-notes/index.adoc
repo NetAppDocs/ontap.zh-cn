@@ -29,7 +29,45 @@ ONTAP 9数据管理软件的每个版本都提供了一些新增功能和增强�
 
 == ONTAP 9.17.1 亮点
 
-ONTAP 9.17.1 在安全管理、数据保护、S3 对象存储和存储管理方面提供了新功能和增强功能。有关新功能和增强功能的完整列表，请参阅xref:whats-new-9171.adoc[ONTAP 9.17.1 的新增功能] 。
+ONTAP 9.17.1 在 AI 驱动的 SAN 自主勒索软件防护方面提供了创新，并通过SnapMirror主动同步和一致性组分层管理增加了 NVMe 前端主机支持。这些增强功能巩固了 NetApp 在数据安全和网络弹性方面的领导地位，提高了ONTAP 的性能、可扩展性、效率和业务连续性。有关新功能和增强功能的完整列表，请参阅xref:whats-new-9171.adoc[ONTAP 9.17.1 的新增功能] 。
+
+* xref:../anti-ransomware/index.html[支持具有自主勒索软件防护功能的 SAN]
++
+ARP 支持基于加密的异常检测功能，可支持 SAN 卷，引入用于详细熵统计的新命令，并统一了系统管理器中先前专注于 NAS 的勒索软件防护消息传递。可配置的检测阈值和更确定性的快照保留功能可为各种工作负载提供更大的灵活性。
+
+* xref:../system-admin/use-hsts-task.html[HTTP 严格传输安全 (HSTS) 支持]
++
+ONTAP 9.17.1 支持 Web 服务的 HTTP 严格传输安全，从而能够在用户浏览器和ONTAP之间实施安全的 HTTPS 通信。
+
+* xref:../networking/ipsec-prepare.html[通过链路聚合组进行 IPsec 硬件卸载]
++
+ONTAP 9.17.1 支持链路聚合组的 IPsec 硬件卸载，扩展了ONTAP 9.16.1 中引入的硬件卸载支持。
+
+* xref:../networking/ipsec-prepare.html[IPsec 后量子预共享密钥支持]
++
+ONTAP支持 IPsec 的后量子预共享密钥，以防止未来潜在的量子计算机攻击。
+
+* xref:../encryption-at-rest/manage-keys-barbican-task.html[OpenStack Barbican 密钥管理器支持]
++
+ONTAP支持 OpenStack 的 Barbican 密钥管理器用于NetApp卷加密 (NVE) 密钥。
+
+* xref:../authentication/configure-jit-elevation-task.html[即时 (JIT) 权限提升支持]
++
+ONTAP支持基于角色的访问控制 (RBAC) 的 JIT 权限提升。用户可以请求临时提升到已配置的角色，从而按需访问特权命令。集群管理员可以配置哪些人可以访问 JIT 权限提升，以及何时允许访问以及允许访问多长时间。
+
+* xref:../system-admin/configure-saml-authentication-task.html[支持 Entra IdP 和 IdP 组支持 SAML 身份验证]
++
+ONTAP支持使用 Microsoft Entra 作为 SAML 身份提供程序。此外，IdP 提供的组信息可以映射到ONTAP角色。
+
+* xref:../nvme/support-limitations.html#features[SnapMirror主动同步支持通过 NVMe 进行主机访问]
++
+SnapMirror主动同步功能新增了对 VMware 工作负载的 NVMe 访问支持，支持 NVMe/TCP 和 NVMe/FC 主机访问，适用于双节点ONTAP集群。VMware
+
+* xref:../snapmirror-active-sync/index.html[ONTAP Cloud Mediator 支持SnapMirror主动同步]
++
+ONTAP Cloud Mediator 是ONTAP 9.17.1 中引入的新功能，支持SnapMirror主动同步关系。基于云的调解器（例如ONTAP Mediator）可充当SnapMirror主动同步关系的仲裁见证，确保透明的故障转移，同时降低维护和管理第三个站点的操作复杂性。
+
+
 
 
 
@@ -55,7 +93,7 @@ ARP已通过新的AI功能进行了升级、能够以99%的精确度检测和响
 
 * xref:../san-admin/enable-space-allocation.html[支持NVMe空间取消分配]
 +
-现在、NVMe命名空间支持空间取消分配(也称为"打孔"和"取消映射")。空间删除有助于精简配置的卷和NVMe命名空间在主机应用程序删除数据时回收未使用的空间。这样可以显著提高整体存储效率、尤其是对于数据周转量较高的文件系统。
+NVMe 命名空间现在支持空间释放（也称为“打洞”和“取消映射”）。当主机应用程序删除数据时，空间释放可帮助精简配置卷和 NVMe 命名空间回收未使用的空间。这极大地提高了整体存储效率，特别是对于数据周转率高的文件系统。
 
 * xref:../flexgroup/enable-adv-capacity-flexgroup-task.html[适用于FlexGroup卷的高级容量平衡]
 +
