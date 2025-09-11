@@ -25,7 +25,10 @@ summary: 在MetroCluster配置上升级ONTAP软件之前、集群必须满足特
 
 * 两个集群中的聚合不能处于正在重新同步 RAID 状态。
 +
-在 MetroCluster 修复期间，镜像聚合会重新同步。您可以使用命令验证MetroCluster配置是否处于此状态 `storage aggregate plex show -in-progress true`。如果正在同步任何聚合，则在重新同步完成之前，不应执行升级。有关的详细信息 `storage aggregate plex show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-plex-show.html["ONTAP 命令参考"^]。
+在MetroCluster修复期间，镜像聚合会重新同步。您可以使用以下方式验证MetroCluster配置是否处于此状态 `storage aggregate plex show -in-progress true`命令。如果正在同步任何聚合，则不应执行升级，直到重新同步完成。
+
++
+详细了解 `storage aggregate plex show`在link:https://docs.netapp.com/us-en/ontap-cli/storage-aggregate-plex-show.html["ONTAP 命令参考"^] 。
 
 * 升级过程中，协商切换操作将失败。
 +
