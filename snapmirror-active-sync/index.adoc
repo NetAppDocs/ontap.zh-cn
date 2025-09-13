@@ -16,69 +16,6 @@ summary: 使用SnapMirror主动同步保护具有LUN的应用程序、使应用�
 [role="lead"]
 SnapMirror主动同步(也称为SnapMirror业务连续性_[SM-BC]_)支持业务服务即使在站点完全瘫痪的情况下仍可继续运行、从而支持应用程序使用二级副本透明地进行故障转移。使用SnapMirror活动同步触发故障转移无需手动干预或自定义脚本。
 
-对SnapMirror主动同步的支持因ONTAP版本的不同而有所差异：
-
-[cols="4*"]
-|===
-
-
-| ONTAP 版本 | 支持的集群 | 支持的协议 | 支持的配置 
-
-
-| 9.17.1 及更高版本  a| 
-* AFF
-* ASA
-* C系列
-* ASA r2
-
- a| 
-* iSCSI
-* FC
-* NVMe
-
- a| 
-* 非对称主动/主动
-
-
-
-NOTE: 非对称主动/主动不支持ASA r2 和 NVMe。有关 NVMe 支持的更多信息，请参阅link:../nvme/support-limitations.html["NVMe配置、支持和限制"] 。
-
-* 对称主动/主动
-
-
-
-
-| 9.15.1 及更高版本  a| 
-* AFF
-* ASA
-* C系列
-
- a| 
-* iSCSI
-* FC
-
- a| 
-* 非对称主动/主动
-* 对称主动/主动 对称主动/主动配置支持ONTAP 9.15.1 中的 2 节点集群。ONTAPONTAP及更高版本支持 4 节点集群。
-
-
-
-
-| 9.9.1 及更高版本  a| 
-* AFF
-* ASA
-* C系列*
-
- a| 
-* iSCSI
-* FC
-
- a| 
-非对称主动/主动
-
-|===
-主集群和辅助集群必须是同一类型： link:../san-admin/learn-about-asa.html["ASA"] ， link:https://docs.netapp.com/us-en/asa-r2/get-started/learn-about.html["ASA r2"^]或AFF。
-
 
 NOTE: 从2024年7月开始、以前以PDF格式发布的技术报告中的内容已与ONTAP产品文档集成。ONTAP SnapMirror主动同步文档现在包含了_TR-4878：SnapMirror active sync_中的内容。
 
@@ -178,3 +115,87 @@ RPO表示恢复点目标、即在给定时间段内视为可接受的数据丢�
 
 .零RTO
 RTO表示恢复时间目标、是指在发生中断、故障或其他数据丢失事件后、应用程序可以无中断地恢复正常运行的时间量。RTO为零表示任何停机时间都不可接受。
+
+
+
+== ONTAP版本支持的SnapMirror主动同步配置
+
+对SnapMirror主动同步的支持因ONTAP版本的不同而有所差异：
+
+[cols="4*"]
+|===
+
+
+| ONTAP 版本 | 支持的集群 | 支持的协议 | 支持的配置 
+
+
+| 9.17.1 及更高版本  a| 
+* AFF
+* ASA
+* C系列
+* ASA r2
+
+ a| 
+* iSCSI
+* FC
+* 适用于 VMware 工作负载的 NVMe
+
+ a| 
+* 非对称主动/主动
+
+
+
+NOTE: 非对称主动/主动不支持ASA r2 和 NVMe。有关 NVMe 支持的更多信息，请参阅link:../nvme/support-limitations.html["NVMe配置、支持和限制"] 。
+
+* 对称主动/主动
+
+
+
+
+| 9.16.1及更高版本  a| 
+* AFF
+* ASA
+* C系列
+* ASA r2
+
+ a| 
+* iSCSI
+* FC
+
+ a| 
+* 非对称主动/主动
+* 对称主动/主动 对称主动/主动配置支持ONTAP 9.16.1 及更高版本中的 4 节点集群。对于ASA r2，仅支持 2 节点集群。
+
+
+
+
+| 9.15.1 及更高版本  a| 
+* AFF
+* ASA
+* C系列
+
+ a| 
+* iSCSI
+* FC
+
+ a| 
+* 非对称主动/主动
+* 对称主动/主动 对称主动/主动配置支持ONTAP 9.15.1 中的 2 节点集群。ONTAPONTAP及更高版本支持 4 节点集群。
+
+
+
+
+| 9.9.1 及更高版本  a| 
+* AFF
+* ASA
+* C系列
+
+ a| 
+* iSCSI
+* FC
+
+ a| 
+非对称主动/主动
+
+|===
+主集群和辅助集群必须是同一类型： link:../san-admin/learn-about-asa.html["ASA"] ， link:https://docs.netapp.com/us-en/asa-r2/get-started/learn-about.html["ASA r2"^]或AFF。
