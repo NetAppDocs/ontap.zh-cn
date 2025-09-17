@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: manage, node, scope, ndmp, mode, flexvol, volume, command, option, backup, restore 
 summary: 您可以使用 NDMP 选项和命令在节点级别管理 NDMP 。您可以使用 options 命令修改 NDMP 选项。要执行磁带备份和还原操作，您必须使用特定于 NDMP 的凭据来访问存储系统。 
 ---
-= 在ONTAP中管理FlexVol卷的节点范围的NDMP模式概述
+= 了解如何管理FlexVol卷的ONTAP节点范围 NDMP 模式
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -14,6 +14,177 @@ summary: 您可以使用 NDMP 选项和命令在节点级别管理 NDMP 。您�
 您可以使用 NDMP 选项和命令在节点级别管理 NDMP 。您可以使用修改NDMP选项 `options` 命令：要执行磁带备份和还原操作，您必须使用特定于 NDMP 的凭据来访问存储系统。
 
 有关的详细信息 `options`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=options["ONTAP 命令参考"^]。
+
+
+
+== 用于管理ONTAP节点范围 NDMP 模式的命令
+
+您可以使用 `system services ndmp` 用于在节点级别管理NDMP的命令。其中某些命令已弃用，将在未来的主要版本中删除。
+
+以下 NDMP 命令只能在高级权限级别使用：
+
+* `system services ndmp service terminate`
+* `system services ndmp service start`
+* `system services ndmp service stop`
+* `system services ndmp log start`
+* `system services ndmp log stop`
+
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+启用 NDMP 服务
+ a| 
+`system services ndmp on`*
+
+
+
+ a| 
+禁用 NDMP 服务
+ a| 
+`system services ndmp off`*
+
+
+
+ a| 
+显示NDMP配置
+ a| 
+`system services ndmp show`*
+
+
+
+ a| 
+修改NDMP配置
+ a| 
+`system services ndmp modify`*
+
+
+
+ a| 
+显示默认 NDMP 版本
+ a| 
+`system services ndmp version`*
+
+
+
+ a| 
+显示 NDMP 服务配置
+ a| 
+`system services ndmp service show`
+
+
+
+ a| 
+修改 NDMP 服务配置
+ a| 
+`system services ndmp service modify`
+
+
+
+ a| 
+显示所有 NDMP 会话
+ a| 
+`system services ndmp status`
+
+
+
+ a| 
+显示有关所有 NDMP 会话的详细信息
+ a| 
+`system services ndmp probe`
+
+
+
+ a| 
+终止指定的 NDMP 会话
+ a| 
+`system services ndmp kill`
+
+
+
+ a| 
+终止所有 NDMP 会话
+ a| 
+`system services ndmp kill-all`
+
+
+
+ a| 
+更改 NDMP 密码
+ a| 
+`system services ndmp password`*
+
+
+
+ a| 
+启用节点范围的 NDMP 模式
+ a| 
+`system services ndmp node-scope-mode on`*
+
+
+
+ a| 
+禁用节点范围的 NDMP 模式
+ a| 
+`system services ndmp node-scope-mode off`*
+
+
+
+ a| 
+显示节点范围的 NDMP 模式状态
+ a| 
+`system services ndmp node-scope-mode status`*
+
+
+
+ a| 
+强制终止所有 NDMP 会话
+ a| 
+`system services ndmp service terminate`
+
+
+
+ a| 
+启动 NDMP 服务守护进程
+ a| 
+`system services ndmp service start`
+
+
+
+ a| 
+停止 NDMP 服务守护进程
+ a| 
+`system services ndmp service stop`
+
+
+
+ a| 
+启动对指定 NDMP 会话的日志记录
+ a| 
+`system services ndmp log start`*
+
+
+
+ a| 
+停止对指定 NDMP 会话的日志记录
+ a| 
+`system services ndmp log stop`*
+
+|===
+* 这些命令已弃用，将在未来的主要版本中删除。
+
+
+有关的详细信息 `system services ndmp`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=system+services+ndmp["ONTAP 命令参考"^]。
+
+
+
+== 节点范围的 NDMP 模式下的用户身份验证
+
+在节点范围的 NDMP 模式下，您必须使用特定于 NDMP 的凭据来访问存储系统，才能执行磁带备份和还原操作。
+
+默认用户 ID 为 "`root` " 。在节点上使用 NDMP 之前，您必须确保更改与 NDMP 用户关联的默认 NDMP 密码。您还可以更改默认 NDMP 用户 ID 。
 
 .相关信息
 xref:commands-manage-node-scoped-ndmp-reference.adoc[用于管理节点范围的 NDMP 模式的命令]

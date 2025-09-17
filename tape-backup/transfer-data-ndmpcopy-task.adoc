@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: transfer, data, ndmpcopy, incremental, full, qtree, directory, files, v4, ndmp 
 summary: ndmpcopy 命令可在支持 NDMP v4 的存储系统之间传输数据。您可以执行完整数据传输和增量数据传输。您可以传输完整或部分卷， qtree ，目录或单个文件。 
 ---
-= 使用 ndmpcopy 传输数据
+= 使用 ndmpcopy 传输ONTAP数据
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -122,3 +122,92 @@ ndmpcopy 不支持 DNS 名称。您必须提供源和目标的 IP 地址。源 I
 
 
 有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。
+
+
+
+== ndmpcopy 命令的选项
+
+要成功执行nokeshell命令，您应了解可用的选项 `ndmpcopy`link:transfer-data-ndmpcopy-task.html["传输数据"]。
+
+下表列出了可用选项。
+
+|===
+| 选项 | Description 
+
+
+ a| 
+`-sa` `username`：[`password`]
+ a| 
+此选项用于设置用于连接到源存储系统的源身份验证用户名和密码。这是一个必需选项。
+
+对于没有管理员权限的用户，您必须指定用户系统生成的 NDMP 专用密码。管理员和非管理员用户都必须使用系统生成的密码。
+
+
+
+ a| 
+`-da` `username`：[`password`]
+ a| 
+此选项用于设置用于连接到目标存储系统的目标身份验证用户名和密码。这是一个必需选项。
+
+
+
+ a| 
+`-st` {`md5`|`text`｝
+ a| 
+此选项用于设置在连接到源存储系统时要使用的源身份验证类型。这是一个强制选项、因此用户应提供 `text` 或 `md5` 选项
+
+
+
+ a| 
+`-dt` {`md5`|`text`｝
+ a| 
+此选项用于设置连接到目标存储系统时要使用的目标身份验证类型。
+
+
+
+ a| 
+`-l`
+ a| 
+此选项会将传输所使用的转储级别设置为指定的级别值。有效值为 `0`， `1`至 `9`、其中 `0` 表示已完成传输、然后 `1` to `9` 指定增量传输。默认值为 `0`。
+
+
+
+ a| 
+`-d`
+ a| 
+使用此选项可以生成 ndmpcopy 调试日志消息。ndmpcopy调试日志文件位于中 `/mroot/etc/log` 根卷。ndmpcopy调试日志文件名位于中 `ndmpcopy.yyyymmdd` 格式。
+
+
+
+ a| 
+`-f`
+ a| 
+此选项将启用强制模式。此模式允许在中覆盖系统文件 `/etc` 目录。
+
+
+
+ a| 
+`-h`
+ a| 
+此选项将打印帮助消息。
+
+
+
+ a| 
+`-p`
+ a| 
+此选项会提示您输入源授权和目标授权的密码。此密码将覆盖为指定的密码 `-sa` 和 `-da` 选项
+
+[NOTE]
+====
+只有当命令在交互式控制台中运行时，才能使用此选项。
+
+====
+
+
+ a| 
+`-exclude`
+ a| 
+此选项会从为数据传输指定的路径中排除指定的文件或目录。该值可以是目录或文件名(如或 `*.txt`)的逗号分隔列表 `*.pst`。支持的最大排除模式数为32、支持的最大字符数为255。
+
+|===

@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: manage, svm, scope, ndmp, flexvol, volumes, vserver, modify 
 summary: 您可以使用 NDMP 选项和命令按 SVM 管理 NDMP 。您可以使用 vserver services ndmp modify 命令修改 NDMP 选项。在 SVM 范围的 NDMP 模式下，用户身份验证与基于角色的访问控制机制集成在一起。 
 ---
-= 在ONTAP中管理FlexVol卷的SVM范围的NDMP模式概述
+= 了解如何管理FlexVol卷的ONTAP SVM 范围的 NDMP 模式
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -16,6 +16,128 @@ summary: 您可以使用 NDMP 选项和命令按 SVM 管理 NDMP 。您可以使
 您可以使用在允许或不允许的协议列表中添加NDMP `vserver modify` 命令：默认情况下， NDMP 位于允许的协议列表中。如果将 NDMP 添加到不允许的协议列表中，则无法建立 NDMP 会话。
 
 您可以使用选项来控制建立NDMP数据连接所使用的LIF类型 `-preferred-interface-role`。在建立 NDMP 数据连接期间， NDMP 会选择属于此选项指定的 LIF 类型的 IP 地址。如果 IP 地址不属于上述任何 LIF 类型，则无法建立 NDMP 数据连接。有关的详细信息 `vserver services ndmp modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-services-ndmp-modify.html["ONTAP 命令参考"^]。
+
+
+
+== 用于管理ONTAP SVM 范围的 NDMP 模式的命令
+
+您可以使用 `vserver services ndmp` 用于在每个Storage Virtual Machine (SVM、以前称为Vserver)上管理NDMP的命令。
+
+|===
+| 如果您要 ... | 使用此命令 ... 
+
+
+ a| 
+启用 NDMP 服务
+ a| 
+`vserver services ndmp on`
+
+[NOTE]
+====
+必须始终在集群中的所有节点上启用 NDMP 服务。您可以使用在节点上启用NDMP服务 `system services ndmp on` 命令：默认情况下，节点上始终启用 NDMP 服务。
+
+====
+
+
+ a| 
+禁用 NDMP 服务
+ a| 
+`vserver services ndmp off`
+
+
+
+ a| 
+显示NDMP配置
+ a| 
+`vserver services ndmp show`
+
+
+
+ a| 
+修改NDMP配置
+ a| 
+`vserver services ndmp modify`
+
+
+
+ a| 
+显示默认 NDMP 版本
+ a| 
+`vserver services ndmp version`
+
+
+
+ a| 
+显示所有 NDMP 会话
+ a| 
+`vserver services ndmp status`
+
+
+
+ a| 
+显示有关所有 NDMP 会话的详细信息
+ a| 
+`vserver services ndmp probe`
+
+
+
+ a| 
+终止指定的 NDMP 会话
+ a| 
+`vserver services ndmp kill`
+
+
+
+ a| 
+终止所有 NDMP 会话
+ a| 
+`vserver services ndmp kill-all`
+
+
+
+ a| 
+生成 NDMP 密码
+ a| 
+`vserver services ndmp generate-password`
+
+
+
+ a| 
+显示 NDMP 扩展状态
+ a| 
+`vserver services ndmp extensions show`
+
+此命令可在高级权限级别下使用。
+
+
+
+ a| 
+修改（启用或禁用） NDMP 扩展状态
+ a| 
+`vserver services ndmp extensions modify`
+
+此命令可在高级权限级别下使用。
+
+
+
+ a| 
+启动对指定 NDMP 会话的日志记录
+ a| 
+`vserver services ndmp log start`
+
+此命令可在高级权限级别下使用。
+
+
+
+ a| 
+停止对指定 NDMP 会话的日志记录
+ a| 
+`vserver services ndmp log stop`
+
+此命令可在高级权限级别下使用。
+
+|===
+有关的详细信息 `vserver services ndmp`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+services+ndmp["ONTAP 命令参考"^]。
 
 .相关信息
 xref:commands-manage-svm-scoped-ndmp-reference.adoc[用于管理 SVM 范围的 NDMP 模式的命令]
