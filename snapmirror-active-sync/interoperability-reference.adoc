@@ -21,7 +21,7 @@ NOTE: 有关此处未介绍的具体可支持性和互操作性详细信息，�
 
 == 应用程序主机
 
-SnapMirror主动同步支持应用程序主机包括Hyper-V、Red Hat Enterprise Linux (RHEL)、VMware、VMware vSphere Metro Storage Cluster (VMSC)、Windows Server、以及从ONTAP 9.14.1开始的Windows Server故障转移集群。
+SnapMirror主动同步支持虚拟机管理程序，包括 Hyper-V、ESXi、Red Hat Enterprise Linux (RHEL)、Windows Server 等操作系统以及 vSphere Metro Storage Cluster (vMSC) 等集群解决方案，以及从ONTAP 9.14.1 开始的 Windows Server 故障转移集群。
 
 
 
@@ -32,7 +32,6 @@ SnapMirror主动同步支持多种操作系统、包括：
 * 通过PVR的AIX (从ONTAP 9.11.1开始)
 * HP-UX (从ONTAP 9.10.1开始)
 * Solaris 11.4 (从ONTAP 9.10.1开始)
-* ESXi 支持 NVMe（从ONTAP 9.17.1 开始）
 
 
 
@@ -54,7 +53,7 @@ SnapMirror主动同步支持多种操作系统、包括：
 从ONTAP 9.10.1开始、支持适用于HP-UX的SnapMirror活动同步。
 
 .使用HP-UX自动执行计划外故障转移
-如果主集群与二级集群之间的连接断开、并且主集群与调解器之间的连接也断开、则可能会在隔离的主集群上发生自动计划外故障转移(AUFO)事件。与其他 AINFO 事件不同，此事件被视为罕见事件。
+当主集群和辅助集群之间的连接丢失，并且主集群和中介集群之间的连接也丢失时，双事件故障可能会导致隔离主集群上发生自动计划外故障转移 (AUFO) 事件。与其他 AUFO 事件不同，这被认为是一种罕见事件。
 
 * 在这种情况下、在HP-UX主机上恢复I/O可能需要120秒以上的时间。根据正在运行的应用程序，此操作可能不会导致任何 I/O 中断或错误消息。
 * 要进行修复、必须在中断容错小于120秒的HP-UX主机上重新启动应用程序。
@@ -84,7 +83,7 @@ SnapMirror主动同步支持FabricPool聚合上的源卷和目标卷、分层策
 
 === 扇出配置
 
-在中 xref:../data-protection/supported-deployment-config-concept.html[扇出配置]，源卷可以镜像到SnapMirror活动同步目标端点以及一个或多个SnapMirror异步关系。
+在xref:../data-protection/supported-deployment-config-concept.html[扇出配置]，您的源卷可以镜像到SnapMirror活动同步目标端点和一个SnapMirror异步关系。
 
 image:fanout-diagram.png["扇出配置示意图"]
 

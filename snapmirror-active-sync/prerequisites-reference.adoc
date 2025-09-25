@@ -260,8 +260,10 @@ ASA r2
 
 == 许可
 
-* 必须同时在两个集群上应用SnapMirror同步许可证。
-* 必须同时在两个集群上应用SnapMirror许可证。
+以下SnapMirror许可证作为ONTAP One 许可证套件的一部分提供，并且必须在两个集群上应用：
+
+* SnapMirror同步
+* SnapMirror
 +
 
 NOTE: 如果您的ONTAP存储系统是在2019年6月之前购买的、请参见 link:https://mysupport.netapp.com/site/systems/master-license-keys["NetApp ONTAP 主许可证密钥"^] 以获取所需的SnapMirror同步许可证。
@@ -294,11 +296,12 @@ SnapMirror主动同步不支持以下 NVMe 协议：
 
 +
 ** 4 节点对称主动/主动配置
+** 非对称主动/主动配置
 ** 一致性组大小的变化
 +
 当使用带有SnapMirror活动同步的 NVMe 协议时，无法扩展或缩小一致性组。
 
-** 不支持同一一致性组中的 LUN 和命名空间共存。
+** 同一一致性组中的 LUN 和命名空间共存。
 
 
 
@@ -307,7 +310,7 @@ SnapMirror主动同步不支持以下 NVMe 协议：
 
 == IP 空间
 
-对于集群对等关系、SnapMirror活动同步需要默认IP空间。不支持自定义 IP 空间。
+SnapMirror主动同步需要使用默认 IP 空间来建立集群对等关系。不支持自定义 IP 空间。
 
 
 
@@ -330,8 +333,8 @@ SnapMirror活动同步卷*不支持NTFS安全模式。
 
 == 其他前提条件
 
-* 读写目标卷不支持SnapMirror活动同步关系。在使用读写卷之前，必须先创建卷级 SnapMirror 关系，然后删除此关系，将其转换为 DP 卷。有关详细信息，请参见 link:convert-active-sync-task.html["将现有SnapMirror关系转换为SnapMirror活动同步"]。
-* 使用SnapMirror主动同步的Storage VM无法作为客户端计算加入Active Directory。
+* 在ONTAP 9.15.1 之前的版本中，读写目标卷（在非对称主动-主动模式下从 DP 转换为读写的卷）不支持SnapMirror主动同步关系。在使用读写卷之前，您必须先创建卷级SnapMirror关系（异步或同步），然后删除该关系，将其转换为 DP 卷。有关详细信息，请参阅link:convert-active-sync-task.html["将现有SnapMirror关系转换为SnapMirror活动同步"] 。
+* 使用SnapMirror主动同步的存储虚拟机无法作为客户端计算机加入 Active Directory。
 
 
 

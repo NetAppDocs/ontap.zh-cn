@@ -14,7 +14,15 @@ summary: 使用SnapMirror主动同步保护具有LUN的应用程序、使应用�
 
 
 [role="lead"]
-SnapMirror主动同步(也称为SnapMirror业务连续性_[SM-BC]_)支持业务服务即使在站点完全瘫痪的情况下仍可继续运行、从而支持应用程序使用二级副本透明地进行故障转移。使用SnapMirror活动同步触发故障转移无需手动干预或自定义脚本。
+SnapMirror主动同步，也称为SnapMirror业务连续性 (SM-BC)，允许业务服务在整个站点发生故障时继续运行。该技术使应用程序能够无缝地故障转移到辅助副本，而无需人工干预或自定义脚本。
+
+NetApp SnapMirror主动同步 (SM-as) 旨在提供更细粒度、更低成本、更易于使用的应用程序级保护，并具有自动故障转移功能。 SnapMirror主动同步使关键任务业务服务即使在整个站点发生故障时也能继续运行。借助SnapMirror主动同步，您现在可以在不同地理位置的站点之间同步复制应用程序的多个卷（通过将它们添加到一致性组）。当主副本发生中断时，您可以自动故障转移到辅助副本，从而实现第一层应用程序的业务连续性。
+
+一些国家针对金融机构的规定要求企业定期从其二级数据中心提供服务。  SnapMirror主动同步及其高可用性集群可实现这些数据中心切换，从而实现业务连续性。
+
+从ONTAP 9.9.1 开始， SnapMirror主动同步在AFF和全闪存 SAN 阵列 (ASA) 集群上受支持。主集群和辅助集群必须是同一类型： ASA、 ASA r2 或AFF。  SnapMirror主动同步使用 iSCSI 或 FCP LUN 或 NVMe 命名空间保护应用程序。
+
+SnapMirror主动同步支持对称和非对称配置。 ONTAP 9.15.1 中引入了对对称主动/主动的支持。对称主动/主动配置允许受保护 LUN 的两个副本通过双向同步复制执行读写 I/O 操作，从而使每个 LUN 副本能够满足本地 I/O 请求。
 
 
 NOTE: 从2024年7月开始、以前以PDF格式发布的技术报告中的内容已与ONTAP产品文档集成。ONTAP SnapMirror主动同步文档现在包含了_TR-4878：SnapMirror active sync_中的内容。
@@ -41,7 +49,7 @@ SnapMirror主动同步功能可保护您的数据 LUN 或 NVMe 命名空间，�
 
 == 关键概念
 
-SnapMirror主动同步使用一致性组和ONTAP调解器（或从ONTAP 9.17.1 开始使用ONTAP云调解器）来确保即使在发生灾难的情况下也能复制和提供数据。在规划SnapMirror主动同步部署时，务必了解SnapMirror主动同步及其架构中的基本概念。
+SnapMirror主动同步使用一致性组来确保您的数据被复制。 SnapMirror主动同步使用ONTAP Mediator，或者从ONTAP 9.17.1 开始使用 Cloud Mediator 进行自动故障转移，确保在发生灾难时提供数据。在规划SnapMirror主动同步部署时，务必了解SnapMirror主动同步及其架构中的基本概念。
 
 .不对称和对称
 在对称主动/主动配置中，两个站点均可访问本地存储进行主动 I/O。对称主动/主动配置针对集群应用程序进行了优化，包括 VMware vMSC、Windows 故障转移群集（带 SQL）以及 Oracle RAC。
@@ -83,6 +91,9 @@ ONTAP Cloud Mediator 从ONTAP 9.17.1 开始可用。ONTAPONTAP Mediator 提供�
 .计划内故障转移
 用于更改SnapMirror活动同步关系中副本角色的手动操作。主站点将成为二级站点、而二级站点将成为主站点。
 
+.自动计划外故障转移(AUTOFO)
+对镜像副本执行故障转移的自动操作。此操作需要ONTAP调解器的帮助才能检测到主副本不可用。
+
 .主要-优先和主要偏倚
 SnapMirror主动同步采用主优先原则、在网络分区情况下、优先使用主副本来提供I/O。
 
@@ -90,13 +101,10 @@ SnapMirror主动同步采用主优先原则、在网络分区情况下、优先�
 
 从ONTAP 9.15.1开始、SnapMirror主动同步支持主优先级和主优先级偏差。主副本在System Manager中指定、并通过REST API和命令行界面输出。
 
-.自动计划外故障转移(AUTOFO)
-对镜像副本执行故障转移的自动操作。此操作需要ONTAP调解器的帮助才能检测到主副本不可用。
-
 .不同步(OOS)
 如果应用程序I/O未复制到二级存储系统，则会报告为**不同步**。不同步状态表示二级卷未与主卷(源卷)同步、并且未进行SnapMirror复制。
 
-如果镜像状态为 `Snapmirrored`，表示传输失败或由于操作不受支持而失败。
+如果镜像状态是 `Snapmirrored`，这表明SnapMirror关系已建立且数据传输已完成，这意味着目标卷与源卷保持同步。
 
 SnapMirror主动同步支持自动重新同步、使副本能够返回到InSync状态。
 
