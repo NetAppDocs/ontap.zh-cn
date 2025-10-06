@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: data-protection/cloud-backup-using-cbs-task.html 
-keywords: cloud, data, backup, back up, storage, volume, lun, connector, secret key, access key, BlueXP back and recovery service, Cloud Backup service, CBS, restore data, protect volumes, ipspace, storagegrid, storage grid, archive, archival, archiving, cost, calculator, glacier, deep archive 
-summary: 从ONTAP 9.9.1开始、您可以使用System Manager通过BlueXP  备份和恢复服务备份云中的数据。 
+keywords: cloud, data, backup, back up, storage, volume, lun, connector, secret key, access key, bluexp back and recovery service, Cloud Backup service, CBS, restore data, protect volumes, ipspace, storagegrid, storage grid, archive, archival, archiving, cost, calculator, glacier, deep archive 
+summary: 从ONTAP 9.9.1 开始，您可以使用 System Manager 通过NetApp备份和恢复服务备份云中的数据。 
 ---
-= 使用BlueXP  备份和恢复来备份数据
+= 使用NetApp Backup and Recovery 备份数据
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,17 +16,17 @@ summary: 从ONTAP 9.9.1开始、您可以使用System Manager通过BlueXP  备�
 
 
 [role="lead"]
-从ONTAP 9.9.1开始、您可以使用System Manager通过BlueXP  备份和恢复(原Cloud Backup Service)备份云中的数据。
+从ONTAP 9.9.1 开始，您可以使用 System Manager 通过NetApp备份和恢复服务备份云中的数据。
 
-BlueXP  备份和恢复支持FlexVol读写卷和数据保护(DP)卷。从ONTAP 9.12.1开始、BlueXP  备份和恢复支持FlexGroup卷和SnapLock卷。
+备份和恢复支持FlexVol读写卷和数据保护 (DP) 卷。从ONTAP 9.12.1 开始，备份和恢复支持FlexGroup卷和SnapLock卷。
 
-详细了解 link:https://docs.netapp.com/us-en/bluexp-backup-recovery/index.html["BlueXP备份和恢复"^]。
+详细了解link:https://docs.netapp.com/us-en/data-services-backup-recovery/index.html["NetApp备份和恢复"^] 。
 
 .开始之前
-要在BlueXP中建立帐户、您应执行以下过程。对于服务帐户，您需要创建 " 帐户管理员 " 角色。（其他服务帐户角色没有从 System Manager 建立连接所需的权限。）
+您应该执行以下步骤在NetApp控制台中建立一个帐户。对于服务帐户，您需要创建“帐户管理员”角色。  （其他服务帐户角色没有从系统管理器建立连接所需的权限。）
 
-. link:https://docs.netapp.com/us-en/bluexp-setup-admin/task-logging-in.html["在BlueXP中创建帐户"^](英文)
-. link:https://docs.netapp.com/us-en/bluexp-setup-admin/concept-connectors.html["在BlueXP中创建连接器"^]使用以下云提供商之一：
+. link:https://docs.netapp.com/us-en/console-setup-admin/task-logging-in.html["在NetApp控制台中创建帐户"^] 。
+. link:https://docs.netapp.com/us-en/console-setup-admin/concept-connectors.html["在NetApp控制台中创建控制台代理"^]与以下云提供商之一合作：
 +
 ** Microsoft Azure
 ** Amazon Web Services （ AWS ）
@@ -34,23 +34,23 @@ BlueXP  备份和恢复支持FlexVol读写卷和数据保护(DP)卷。从ONTAP 
 ** StorageGRID (ONTAP 9.10.1)
 +
 
-NOTE: 从ONTAP 9.10.1开始、您可以选择StorageGRID作为云备份提供程序、但前提是BlueXP  部署在内部。BlueXP  连接器必须安装在内部、并可通过BlueXP  软件即服务(Software-as a-Service、SaaS)应用程序访问。
+NOTE: 从ONTAP 9.10.1 开始，您可以选择StorageGRID作为云备份提供商，但前提是NetApp Console 部署在本地。控制台代理必须安装在本地，并可通过NetApp控制台软件即服务 (SaaS) 应用程序使用。
 
 
 
-. link:https://docs.netapp.com/us-en/bluexp-backup-recovery/concept-backup-to-cloud.html["在BlueXP  中订阅BlueXP  备份和恢复"^](需要相应的许可证)。
-. link:https://docs.netapp.com/us-en/bluexp-setup-admin/concept-identity-and-access-management.html["使用BlueXP生成访问密钥和机密密钥"^] 。
+. link:https://docs.netapp.com/us-en/data-services-backup-recovery/concept-backup-to-cloud.html["在NetApp控制台中订阅NetApp备份和恢复"^]（需要适当的许可证）。
+. link:https://docs.netapp.com/us-en/console-setup-admin/concept-identity-and-access-management.html["使用NetApp控制台生成访问密钥和密钥"^] 。
 
 
 
 
-== 向BlueXP注册集群
+== 使用NetApp控制台注册集群
 
-您可以使用BlueXP或System Manager向BlueXP注册集群。
+您可以使用控制台或系统管理器向NetApp控制台注册集群。
 
 .步骤
 . 在 System Manager 中，转到 * 保护概述 * 。
-. 在* BlueXP  backup and recovery *下，提供以下详细信息：
+. 在 * NetApp Backup and Recovery* 下，提供以下详细信息：
 +
 ** 客户端 ID
 ** 客户端密钥
@@ -61,9 +61,9 @@ NOTE: 从ONTAP 9.10.1开始、您可以选择StorageGRID作为云备份提供程
 
 
 
-== 启用BlueXP备份和恢复
+== 启用NetApp备份和恢复
 
-向BlueXP  注册集群后、您需要启用BlueXP  备份和恢复、并启动首次备份到云。
+在集群注册到NetApp控制台后，您需要启用NetApp备份和恢复并启动第一次备份到云端。
 
 .步骤
 . 在System Manager中，选择*保护>概述*，然后滚动到* Cloud Backup Service *部分。
@@ -73,7 +73,7 @@ NOTE: 从ONTAP 9.10.1开始、您可以选择StorageGRID作为云备份提供程
 NOTE: 从ONTAP 9.10.1开始、您可以选择*详细了解使用云的成本*来了解使用云的成本。
 
 . 选择*连接并启用Cloud Backup Service。
-. 在*启用BlueXP  备份和恢复*页面上，根据您选择的提供程序提供以下详细信息。
+. 在“启用NetApp备份和恢复”页面上，根据您选择的提供商提供以下详细信息。
 +
 [cols="35,65"]
 |===
@@ -115,7 +115,7 @@ Google Cloud Project （ GCP ）
 
 
  a| 
-StorageGRID (9.10.1 9.10.1及更高版本、仅适用于BlueXP  的内部部署)
+StorageGRID （ONTAP 9.10.1 及更高版本，仅适用于NetApp控制台的本地部署）
  a| 
 ** 服务器
 ** SG访问密钥
@@ -152,9 +152,9 @@ IMPORTANT: 如果使用 Azure 或 AWS 为卷启用归档，则无法禁用归档
 
 
 
-== 编辑用于BlueXP  备份和恢复的保护策略
+== 编辑用于NetApp备份和恢复的保护策略
 
-您可以更改在BlueXP  备份和恢复中使用的保护策略。
+您可以更改NetApp Backup and Recovery 使用的保护策略。
 
 .步骤
 . 在System Manager中，选择*保护>概述*，然后滚动到* Cloud Backup Service *部分。
@@ -203,13 +203,13 @@ IMPORTANT: 如果使用 Azure 或 AWS 为卷启用归档，则无法禁用归档
 
 * 集群不能位于 MetroCluster 环境中。
 * 不支持 SVM-DR 。
-* 无法使用BlueXP  备份和恢复来备份FlexGroup卷。
+* 无法使用NetApp Backup and Recovery 备份FlexGroup卷。
 
 
 .步骤
 . 配置卷或 LUN 时，在 System Manager 的 * 保护 * 页面上，选中标记为 * 启用 SnapMirror （本地或远程） * 的复选框。
-. 选择BlueXP  备份和恢复策略类型。
-. 如果未启用BlueXP  备份和恢复，请选择*启用使用BlueXP  备份和恢复的备份*。
+. 选择备份和恢复策略类型。
+. 如果未启用备份和恢复，请选择*使用NetApp备份和恢复启用备份*。
 
 
 
@@ -220,14 +220,14 @@ IMPORTANT: 如果使用 Azure 或 AWS 为卷启用归档，则无法禁用归档
 
 .步骤
 . 选择现有卷或LUN、然后选择*保护*。
-. 在*Protect Volumes*页面上，为保护策略指定*Backup using BlueXP  backup and recovery *。
+. 在“保护卷”页面上，指定“使用NetApp备份和恢复进行备份”作为保护策略。
 . 选择*保护*。
 . 在 * 保护 * 页面上，选中标记为 * 启用 SnapMirror （本地或远程） * 的复选框。
-. 选择*连接并启用BlueXP  备份和恢复*。
+. 选择*连接并启用NetApp备份和恢复*。
 
 
 
 
 == 从备份文件还原数据
 
-仅当使用BlueXP界面时，您才可以执行备份管理操作，例如恢复数据、更新关系和删除关系。请参阅link:https://docs.netapp.com/us-en/bluexp-backup-recovery/prev-ontap-backup-manage.html["从备份文件还原数据"^]了解更多信息。
+只有在使用NetApp控制台时，您才可以执行备份管理操作，例如还原数据、更新关系和删除关系。请参阅link:https://docs.netapp.com/us-en/data-services-backup-recovery/prev-ontap-backup-manage.html["从备份文件还原数据"^]了解更多信息。
