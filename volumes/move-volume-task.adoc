@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: move, volume 
 summary: '将FlexVol volume移动到同一个Storage Virtual Machine (SVM)中的其他聚合或节点或这两者以平衡存储容量。' 
 ---
-= 移动卷
+= 移动ONTAP卷
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -18,12 +18,32 @@ summary: '将FlexVol volume移动到同一个Storage Virtual Machine (SVM)中的
 
 您必须是集群管理员才能执行此任务。
 
-.步骤
-. 如果要移动数据保护镜像、但尚未初始化镜像关系、请使用命令初始化镜像关系 `snapmirror initialize`。有关的详细信息 `snapmirror initialize`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["ONTAP 命令参考"^]。
+.开始之前
+* 如果您要将使用 8K 自适应压缩的卷移动到以下平台之一，您应该link:increase-volume-active-file-system-size.html["增加卷的活动文件系统的大小"]在移动音量之前。这些平台上的数据压缩方式不同，因此节省的空间是在聚合级别而不是卷级别。由于这种差异，卷的活动文件系统的大小应该增加 8k 压缩节省量，以防止卷在卷移动期间耗尽空间。
++
+** 支持专用卸载处理器存储效率的AFF和FAS平台
++
+详细了解支持以下功能的AFF和FAS平台link:../concepts/builtin-storage-efficiency-concept.html["专用卸载处理器存储效率"]。
+
+** AFF C 系列平台
++
+查看link:https://hwu.netapp.com/["Hardware Universe"^]了解 C 系列平台的完整列表。
+
+
+
+* 如果您正在移动数据保护镜像并且尚未初始化镜像关系，请使用 `snapmirror initialize`命令初始化镜像关系。详细了解 `snapmirror initialize`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["ONTAP 命令参考"^] 。
 +
 必须先初始化数据保护镜像关系，然后才能移动其中一个卷。
 
-. 使用确定可将卷移动到的聚合 `volume move target-aggr show` 命令：
+
+
+.步骤
+. 确定可以将卷移动到的聚合：
++
+[source, cli]
+----
+volume move target-aggr show
+----
 +
 您选择的聚合必须具有足够的空间来容纳卷；也就是说，可用大小大于要移动的卷。
 
@@ -46,8 +66,21 @@ node12a_aggr4    10.36GB          hdd
 +
 有关的详细信息 `volume move target-aggr show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-move-target-aggr-show.html["ONTAP 命令参考"^]。
 
-. 使用命令运行验证检查、以验证卷是否可以移动到预期聚合 `volume move start -perform-validation-only`。有关的详细信息 `volume move start`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-move-start.html["ONTAP 命令参考"^]。
-. 使用移动卷 `volume move start` 命令：
+. 执行验证检查以确认卷可以移动到目标聚合：
++
+[source, cli]
+----
+volume move start -perform-validation-only
+----
++
+有关的详细信息 `volume move start`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-move-start.html["ONTAP 命令参考"^]。
+
+. 移动音量：
++
+[source, cli]
+----
+volume move start
+----
 +
 以下命令会将 vs2 SVM 上的 user_max 卷移动到 node12a_aggr3 聚合。移动操作将作为后台进程运行。
 
@@ -57,7 +90,12 @@ node12a_aggr4    10.36GB          hdd
 cluster1::> volume move start -vserver vs2 -volume user_max
 -destination-aggregate node12a_aggr3
 ----
-. 使用确定卷移动操作的状态 `volume move show` 命令：
+. 确定卷移动操作的状态：
++
+[source, cli]
+----
+volume move show
+----
 +
 以下示例显示了已完成复制阶段且处于转换阶段的卷移动的状态：
 
@@ -75,6 +113,16 @@ vs2       user_max   healthy  cutover     -                -
 
 +
 有关的详细信息 `volume move show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-move-show.html["ONTAP 命令参考"^]。
+
+. 或者，查看压缩节省：
++
+[source, cli]
+----
+volume show-footprint -vserver <SVM> -volume <volume_name>
+----
++
+
+NOTE: 通过在卷移动完成后不久自动运行的后处理转换扫描，可以实现额外的聚合级节省。
 
 
 
