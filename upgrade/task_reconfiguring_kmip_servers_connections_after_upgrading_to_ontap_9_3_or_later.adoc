@@ -45,7 +45,7 @@ security key-manager query
 security key-manager create-key -prompt-for-key true
 ----
 +
-密码短语必须至少包含 32 个字符。
+设置至少包含 32 个字符的密码。
 
 . 查询新的身份验证密钥：
 +
@@ -61,7 +61,7 @@ storage encryption disk modify -disk <disk_ID> -data-key-id <key_ID>
 ----
 +
 
-NOTE: 确保使用查询中的新身份验证密钥。
+NOTE: 使用查询中的新身份验证密钥。
 
 . 如果需要、将FIPS密钥分配给SED：
 +
@@ -70,11 +70,11 @@ NOTE: 确保使用查询中的新身份验证密钥。
 storage encryption disk modify -disk <disk_id> -fips-key-id <fips_authentication_key_id>
 ----
 +
-如果您的安全设置要求您使用不同的密钥进行数据身份验证和 FIPS 140-2 身份验证，则应为每个密钥创建一个单独的密钥。否则，您可以使用与数据访问相同的身份验证密钥来满足 FIPS 合规性要求。
+如果您的安全设置要求您使用不同的密钥进行数据认证和 FIPS 140-2 认证，则您应该为每个认证创建单独的密钥。否则，对两者使用相同的身份验证密钥。
 
 
 
 .相关信息
-* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["安全密钥管理器设置"^]
+* link:https://docs.netapp.com/us-en/ontap-cli-9161/security-key-manager-setup.html["安全密钥管理器设置"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/storage-encryption-disk-modify.html["存储加密磁盘修改"^]
 

@@ -6,8 +6,6 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 ---
 = 在ONTAP 9.6 及更高版本中启用 NVE 的板载密钥管理
 :allow-uri-read: 
-:icons: font
-:imagesdir: ../media/
 
 
 [role="lead"]
@@ -18,13 +16,13 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 
 如果您使用的是MetroCluster配置、则必须运行 `security key-manager onboard enable` 命令、然后运行 `security key-manager onboard sync` 命令、并在每个上使用相同的密码短语。运行时 `security key-manager onboard enable` 命令、然后在远程集群上同步、则不需要运行 `enable` 命令。
 
-有关和的 `security key-manager onboard sync`详细信息 `security key-manager onboard enable`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+onboard["ONTAP 命令参考"^]。
+详细了解 `security key-manager onboard enable`和 `security key-manager onboard sync`在link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-enable.html["ONTAP 命令参考"^]。
 
 默认情况下，重新启动节点时不需要输入密钥管理器密码短语。您可以使用 `cc-mode-enabled=yes` 选项、要求用户在重新启动后输入密码短语。
 
 对于NVE (如果已设置) `cc-mode-enabled=yes`、使用创建的卷 `volume create` 和 `volume move start` 命令会自动加密。适用于 `volume create`，则无需指定 `-encrypt true`。适用于 `volume move start`，则无需指定 `-encrypt-destination true`。
 
-配置 ONTAP 空闲数据加密时，为了满足分类商业解决方案（ CSFC ）的要求，您必须将 NSE 与 NVE 结合使用，并确保在通用标准模式下启用板载密钥管理器。请参见 link:https://assets.netapp.com/m/128a1e9f4b5d663/original/Commercial-Solutions-for-Classified.pdf["CSFC 解决方案简介"^] 有关 CSFC 的详细信息，请参见。
+在配置ONTAP数据加密时，为了满足商业机密解决方案 (CSfC) 的要求，您必须将 NSE 与 NVE 一起使用，并确保在通用标准模式下启用板载密钥管理器。看link:https://assets.netapp.com/m/128a1e9f4b5d663/original/Commercial-Solutions-for-Classified.pdf["CSFC 解决方案简介"^]。
 
 [NOTE]
 ====
@@ -32,17 +30,17 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 
 * 在通用标准模式下运行时，系统会监控连续失败的集群密码短语尝试。
 +
-如果在启动时未输入正确的集群密码短语，则不会挂载加密卷。要更正此问题，您必须重新启动节点并输入正确的集群密码短语。启动后，对于需要使用集群密码短语作为参数的任何命令，系统最多允许连续 5 次尝试在 24 小时内正确输入集群密码短语。如果已达到限制（例如，您连续 5 次未正确输入集群密码短语），则必须等待 24 小时超时期限过后，或者重新启动节点，才能重置此限制。
+如果 5 次输入集群密码失败，请等待 24 小时或重新启动节点以重置限制。
 
 * 系统映像更新使用 NetApp RSA-3072 代码签名证书以及 SHA-384 代码签名摘要来检查映像完整性，而不是使用通常的 NetApp RSA-2048 代码签名证书和 SHA-256 代码签名摘要。
 +
-upgrade 命令可通过检查各种数字签名来验证映像内容是否未被更改或损坏。如果验证成功，映像更新过程将继续执行下一步；否则，映像更新将失败。有关的详细信息 `cluster image`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["ONTAP 命令参考"^]。
+升级命令通过检查各种数字签名来验证图像内容是否被更改或损坏。如果验证成功，系统将继续进行图像更新过程的下一步；否则，图像更新失败。详细了解 `cluster image`在link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["ONTAP 命令参考"^]。
 
 
 
 ====
 
-NOTE: 板载密钥管理器将密钥存储在易失性内存中。系统重新启动或暂停后，易失性内存内容将被清除。在正常运行条件下，系统暂停后，易失性内存内容将在 30 秒内清除。
+NOTE: 板载密钥管理器将密钥存储在易失性存储器中。当系统重新启动或停止时，易失性存储器的内容将被清除。系统停止后 30 秒内清除易失性内存。
 
 .开始之前
 * 您必须是集群管理员才能执行此任务。
@@ -60,18 +58,7 @@ NOTE: 板载密钥管理器将密钥存储在易失性内存中。系统重新�
 设置 `cc-mode-enabled=yes` 要求用户在重新启动后输入密钥管理器密码短语。对于NVE (如果已设置) `cc-mode-enabled=yes`、使用创建的卷 `volume create` 和 `volume move start` 命令会自动加密。。 `- cc-mode-enabled` 选项在MetroCluster配置中不受支持。    。 `security key-manager onboard enable` 命令用于替换 `security key-manager setup` 命令：
 
 ====
-+
-以下示例将在 cluster1 上启动密钥管理器设置命令，而无需在每次重新启动后输入密码短语：
-
-+
-[listing]
-----
-cluster1::> security key-manager onboard enable
-
-Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
-Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
-----
-. 在密码短语提示符处，输入 32 到 256 个字符的密码短语，或者对于 "`cc-mode` " ，输入 64 到 256 个字符的密码短语。
+. 输入一个介于 32 到 256 个字符之间的密码，或者对于“`cc-mode`”，输入一个介于 64 到 256 个字符之间的密码。
 +
 [NOTE]
 ====
@@ -90,36 +77,9 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 
 ====
 +
-以下示例将验证是否已为创建身份验证密钥 `cluster1`：
-
-+
-[listing]
-----
-cluster1::> security key-manager key query -key-type NSE-AK
-               Node: node1
-            Vserver: cluster1
-        Key Manager: onboard
-   Key Manager Type: OKM
- Key Manager Policy: -
-
- Key Tag                               Key Type Encryption   Restored
-
-------------------------------------  -------- ------------ --------
-
-node1                                 NSE-AK   AES-256      true
-
-    Key ID: <id_value>
-
-node1                                 NSE-AK   AES-256      true
-
-    Key ID: <id_value>
-
-2 entries were displayed.
-----
-+
 有关的详细信息 `security key-manager key query`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["ONTAP 命令参考"^]。
 
-. (可选)将纯文本卷转换为加密卷。
+. 您可以选择将纯文本卷转换为加密卷。
 +
 `volume encryption conversion start`
 
@@ -131,8 +91,11 @@ node1                                 NSE-AK   AES-256      true
 .完成后
 将密码短语复制到存储系统以外的安全位置，以供将来使用。
 
-配置板载密钥管理器密码短语时，您还应手动将信息备份到存储系统以外的安全位置，以便在发生灾难时使用。请参见 link:backup-key-management-information-manual-task.html["手动备份板载密钥管理信息"]。
+配置板载密钥管理器密码后，手动将信息备份到存储系统外部的安全位置。看link:backup-key-management-information-manual-task.html["手动备份板载密钥管理信息"]。
 
 .相关信息
-* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["安全密钥管理器设置"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["集群图像命令"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-enable.html["安全密钥管理器外部启用"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["安全密钥管理器密钥查询"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-enable.html["安全密钥管理器板载启用"^]
 

@@ -4,14 +4,14 @@ sidebar: sidebar
 keywords: transitioning, onboard key management, external key management 
 summary: 如果要从外部密钥管理切换到板载密钥管理，则必须先删除外部密钥管理配置，然后才能启用板载密钥管理。 
 ---
-= 从外部密钥管理过渡到ONTAP板载密钥管理
+= 从外部密钥管理切换到ONTAP板载密钥管理
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果要从外部密钥管理切换到板载密钥管理，则必须先删除外部密钥管理配置，然后才能启用板载密钥管理。
+要切换到板载密钥管理，请在启用板载密钥管理之前删除外部密钥管理配置。
 
 .开始之前
 * 对于基于硬件的加密，必须将所有 FIPS 驱动器或 SED 的数据密钥重置为默认值。
@@ -46,16 +46,18 @@ NOTE: 在MetroCluster 环境中、必须对管理SVM的两个集群重复此命�
 
 
 
+详细了解 `security key-manager external disable`在link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-disable.html["ONTAP 命令参考"^]。
+
 --
 .ONTAP 9.5 及更早版本
 --
 使用命令：
 `security key-manager delete-kmip-config`
 
-有关的详细信息 `security key-manager delete-kmip-config`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-delete-kmip-config.html["ONTAP 命令参考"^]。
+详细了解 `security key-manager delete-kmip-config`在link:https://docs.netapp.com/us-en/ontap-cli-9161/security-key-manager-delete-kmip-config.html["ONTAP 命令参考"^]。
 
 --
 ====
 .相关信息
-* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+external["安全密钥管理器外部"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-disable.html["安全密钥管理器外部禁用"^]
 

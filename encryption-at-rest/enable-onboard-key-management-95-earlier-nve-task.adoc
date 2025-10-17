@@ -30,12 +30,12 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 NOTE: 密码短语尝试失败后，必须重新启动节点。
 
 .开始之前
-* 如果将NSE或NVE与外部密钥管理(KMIP)服务器结合使用、则必须事先删除外部密钥管理器数据库。
+* 如果您将 NSE 或 NVE 与外部密钥管理 (KMIP) 服务器一起使用，请删除外部密钥管理器数据库。
 +
 link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
 
 * 您必须是集群管理员才能执行此任务。
-* 在配置板载密钥管理器之前，您必须配置 MetroCluster 环境。
+* 在配置板载密钥管理器之前，请先配置MetroCluster环境。
 
 
 .步骤
@@ -76,12 +76,12 @@ Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
 . 在密码短语确认提示符处，重新输入密码短语。
 . 验证是否已为所有节点配置密钥：
 +
-`security key-manager key show`
+`security key-manager show-key-store`
 
 +
 [listing]
 ----
-cluster1::> security key-manager key show
+cluster1::> security key-manager show-key-store
 
 Node: node1
 Key Store: onboard
@@ -98,22 +98,24 @@ Key ID                                                           Used By
 <id_value> NSE-AK
 ----
 +
-有关的详细信息 `security key-manager key show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+key+show["ONTAP 命令参考"^]。
+详细了解 `security key-manager show-key-store`在link:https://docs.netapp.com/us-en/ontap-cli-9161/security-key-manager-show-key-store.html["ONTAP 命令参考"^]。
 
 . (可选)将纯文本卷转换为加密卷。
 +
 `volume encryption conversion start`
 
 +
-转换卷之前、必须完全配置板载密钥管理器。在MetroCluster环境中、必须同时在两个站点上配置板载密钥管理器。
+在转换卷之前配置板载密钥管理器。在MetroCluster环境中，在两个站点上进行配置。
 
 
 
 .完成后
 将密码短语复制到存储系统以外的安全位置，以供将来使用。
 
-配置板载密钥管理器密码短语时，您还应手动将信息备份到存储系统以外的安全位置，以便在发生灾难时使用。请参见 link:backup-key-management-information-manual-task.html["手动备份板载密钥管理信息"]。
+配置板载密钥管理器密码时，请将信息备份到存储系统外部的安全位置，以防发生灾难。看link:backup-key-management-information-manual-task.html["手动备份板载密钥管理信息"]。
 
 .相关信息
-* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["安全密钥管理器设置"^]
+* link:backup-key-management-information-manual-task.html["手动备份板载密钥管理信息"]
+* link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
+* link:https://docs.netapp.com/us-en/ontap-cli-9161/security-key-manager-show-key-store.html["安全密钥管理器显示密钥库"^]
 

@@ -11,10 +11,10 @@ summary: 有时，您可能需要还原板载密钥管理加密密钥。确认�
 
 
 [role="lead"]
-根据您的ONTAP版本、您还原板载密钥管理加密密钥所遵循的操作步骤会有所不同。
+有时，您可能需要恢复板载密钥管理加密密钥。确认需要恢复密钥后，您可以设置板载密钥管理器来恢复密钥。恢复板载密钥管理加密密钥所遵循的步骤因ONTAP版本的不同而不同。
 
 .开始之前
-* 如果您将 NSE 与外部密钥管理 (KMIP) 服务器结合使用，则必须已删除外部密钥管理器数据库。有关更多信息，请参阅link:delete-key-management-database-task.html["从外部密钥管理过渡到ONTAP板载密钥管理"] 。
+* 如果您将 NSE 与外部 KMIP 服务器一起使用，请删除外部密钥管理器数据库。有关详细信息，请参阅link:delete-key-management-database-task.html["从外部密钥管理过渡到ONTAP板载密钥管理"]。
 * 您必须是集群管理员才能执行此任务。
 
 
@@ -36,16 +36,6 @@ IMPORTANT: 如果您运行的是ONTAP 9.8或更高版本，并且根卷已加密
 . 还原密钥：+
 `security key-manager onboard sync`
 +
-以下 ONTAP 9.6 命令可同步板载密钥层次结构中的密钥：
-
-+
-[listing]
-----
-cluster1::> security key-manager onboard sync
-
-Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
-----
-+
 有关的详细信息 `security key-manager onboard sync`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-sync.html["ONTAP 命令参考"^]。
 
 . 在密码短语提示符处，输入集群的板载密钥管理密码短语。
@@ -62,7 +52,7 @@ Enter the cluster-wide passphrase for onboard key management in Vserver "cluster
 . 在提示符处，输入集群的板载密钥管理密码短语。
 . 在提示符处，输入备份密钥数据。
 +
-节点将返回到启动菜单。
+输入备份密钥数据后，节点返回启动菜单。
 
 . 从启动菜单中、选择选项 `(1) Normal Boot`。
 
@@ -73,14 +63,10 @@ Enter the cluster-wide passphrase for onboard key management in Vserver "cluster
 
 . 验证是否需要还原密钥：+
 `security key-manager key show`
-. 如果您运行的是 ONTAP 9.8 及更高版本，并且根卷已加密，请完成以下步骤：
-+
-如果您运行的是 ONTAP 9.6 或 9.7 ，或者运行的是 ONTAP 9.8 或更高版本，并且根卷未加密，请跳过此步骤。
-
 . 还原密钥：+
 `security key-manager setup -node _node_`
 +
-有关的详细信息 `security key-manager setup`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["ONTAP 命令参考"^]。
+详细了解 `security key-manager setup`在link:https://docs.netapp.com/us-en/ontap-cli-9161/security-key-manager-setup.html["ONTAP 命令参考"^]。
 
 . 在密码短语提示符处，输入集群的板载密钥管理密码短语。
 

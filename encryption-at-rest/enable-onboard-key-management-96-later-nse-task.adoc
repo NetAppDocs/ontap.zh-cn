@@ -18,7 +18,7 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 .关于此任务
 您必须运行 `security key-manager onboard enable` 命令。在MetroCluster配置中、您必须运行 `security key-manager onboard enable` 首先在本地集群上运行 `security key-manager onboard sync` 在远程集群上、在每个上使用相同的密码短语。
 
-有关和的 `security key-manager onboard sync`详细信息 `security key-manager onboard enable`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+onboard["ONTAP 命令参考"^]。
+详细了解 `security key-manager onboard enable`和 `security key-manager onboard sync`在link:https://docs.netapp.com/us-en/ontap-cli//security-key-manager-onboard-enable.html["ONTAP 命令参考"^]。
 
 默认情况下，重新启动节点时不需要输入密钥管理器密码短语。除了在MetroCluster中、您可以使用 `cc-mode-enabled=yes` 选项、要求用户在重新启动后输入密码短语。
 
@@ -32,7 +32,7 @@ summary: 您可以使用板载密钥管理器保护集群用于访问加密数�
 
 * 系统映像更新使用 NetApp RSA-3072 代码签名证书以及 SHA-384 代码签名摘要来检查映像完整性，而不是使用通常的 NetApp RSA-2048 代码签名证书和 SHA-256 代码签名摘要。
 +
-upgrade 命令可通过检查各种数字签名来验证映像内容是否未被更改或损坏。如果验证成功，映像更新过程将继续执行下一步；否则，映像更新将失败。有关的详细信息 `cluster image`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["ONTAP 命令参考"^]。
+升级命令通过检查各种数字签名来验证图像内容是否被更改或损坏。如果验证有效，图像更新将进入下一步。如果验证无效，则图像更新失败。详细了解 `cluster image`在link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["ONTAP 命令参考"^]。
 
 
 
@@ -46,7 +46,7 @@ NOTE: 板载密钥管理器将密钥存储在易失性内存中。系统重新�
 link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
 
 * 您必须是集群管理员才能执行此任务。
-* 在配置板载密钥管理器之前，您必须先配置 MetroCluster 环境。
+* 在配置板载密钥管理器之前，您必须配置 MetroCluster 环境。
 
 
 .步骤
@@ -61,21 +61,13 @@ NOTE: 设置 `cc-mode-enabled=yes`为要求用户在重新启动后输入密钥�
 +
 以下示例将在 cluster1 上启动密钥管理器设置命令，而无需在每次重新启动后输入密码短语：
 
-+
-[listing]
-----
-cluster1::> security key-manager onboard enable
-
-Enter the cluster-wide passphrase for onboard key management in Vserver "cluster1"::    <32..256 ASCII characters long text>
-Reenter the cluster-wide passphrase:    <32..256 ASCII characters long text>
-----
-. 在密码短语提示符处，输入 32 到 256 个字符的密码短语，或者对于 "`cc-mode` " ，输入 64 到 256 个字符的密码短语。
+. 输入一个介于 32 到 256 个字符之间的密码，或者对于“`cc-mode`”，输入一个介于 64 到 256 个字符之间的密码。
 +
 
 NOTE: 如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置操作再次显示密码短语提示之前会有五秒的延迟。
 
 . 在密码短语确认提示符处，重新输入密码短语。
-. 验证是否已创建身份验证密钥：
+. 验证系统是否创建了身份验证密钥：
 +
 `security key-manager key query -node node`
 
@@ -84,44 +76,19 @@ NOTE: 如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密�
 NOTE:  `security key-manager key query`命令将取代 `security key-manager query key`命令。
 
 +
-以下示例将验证是否已为创建身份验证密钥 `cluster1`：
-
-+
-[listing]
-----
-cluster1::> security key-manager key query
-       Vserver: cluster1
-   Key Manager: onboard
-          Node: node1
-
-Key Tag                               Key Type  Restored
-------------------------------------  --------  --------
-node1                                 NSE-AK    yes
-    Key ID: <id_value>
-node1                                 NSE-AK    yes
-    Key ID: <id_value>
-
-       Vserver: cluster1
-   Key Manager: onboard
-          Node: node2
-
-Key Tag                               Key Type  Restored
-------------------------------------  --------  --------
-node1                                 NSE-AK    yes
-    Key ID: <id_value>
-node2                                 NSE-AK    yes
-    Key ID: <id_value>
-----
-+
-有关的详细信息 `security key-manager key query`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html?q=security+key-manager+key+query["ONTAP 命令参考"^]。
+有关的详细信息 `security key-manager key query`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["ONTAP 命令参考"^]。
 
 
 
 .完成后
 将密码短语复制到存储系统以外的安全位置，以供将来使用。
 
-所有密钥管理信息都会自动备份到集群的复制数据库（ RDB ）。您还应手动备份此信息，以便在发生灾难时使用。
+系统自动将关键管理信息备份到集群的复制数据库（RDB）。您还应该手动备份此信息以用于灾难恢复。
 
 .相关信息
-* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-setup.html["安全密钥管理器设置"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=cluster+image["集群图像命令"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-enable.html["安全密钥管理器外部启用"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-query.html["安全密钥管理器密钥查询"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-enable.html["安全密钥管理器板载启用"^]
+* link:delete-key-management-database-task.html["从外部密钥管理过渡到板载密钥管理"]
 

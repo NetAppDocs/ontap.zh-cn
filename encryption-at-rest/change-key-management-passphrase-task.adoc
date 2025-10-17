@@ -2,18 +2,19 @@
 permalink: encryption-at-rest/change-key-management-passphrase-task.html 
 sidebar: sidebar 
 keywords: changing, onboard, key, management, passphrase 
-summary: 安全最佳做法是定期更改板载密钥管理密码短语。您应将新的板载密钥管理密码短语复制到存储系统以外的安全位置，以供将来使用。 
+summary: 定期更改板载密钥管理密码。将新密码存储在存储系统之外的安全位置。 
 ---
 = 更改ONTAP板载密钥管理密码
 :allow-uri-read: 
 
 
 [role="lead"]
-安全最佳做法是定期更改板载密钥管理密码短语。您应将新的板载密钥管理密码短语复制到存储系统以外的安全位置，以供将来使用。
+定期更改板载密钥管理密码。将新密码存储在存储系统之外的安全位置。
 
 .开始之前
 * 要执行此任务，您必须是集群或 SVM 管理员。
 * 此任务需要高级权限。
+* 如果您正在管理ONTAP MetroCluster环境，则必须更新两个集群上的密码
 
 
 .步骤
@@ -43,21 +44,7 @@ ONTAP 9.5 及更早版本
 `security key-manager update-passphrase`
 
 |===
-+
-以下ONTAP 9.6命令可用于更改的板载密钥管理密码短语 `cluster1`：
-
-+
-[listing]
-----
-clusterl::> security key-manager onboard update-passphrase
-Warning: This command will reconfigure the cluster passphrase for onboard key management for Vserver "cluster1".
-Do you want to continue? {y|n}: y
-Enter current passphrase:
-Enter new passphrase:
-----
-. 输入 ... `y` 在提示更改板载密钥管理密码短语时。
-. 在当前密码短语提示符处输入当前密码短语。
-. 在新的密码短语提示符处，输入 32 到 256 个字符的密码短语，或者对于 "`cc-mode` " ，输入 64 到 256 个字符的密码短语。
+. 输入一个介于 32 到 256 个字符之间的密码，或者对于“`cc-mode`”，输入一个介于 64 到 256 个字符之间的密码。
 +
 如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置操作再次显示密码短语提示之前会有五秒的延迟。
 
@@ -65,12 +52,6 @@ Enter new passphrase:
 
 
 .完成后
-在 MetroCluster 环境中，您必须更新配对集群上的密码短语：
-
-* 在ONTAP 9.5及更早版本中、必须运行 `security key-manager update-passphrase` 在配对集群上使用相同密码短语。
-* 在ONTAP 9.6及更高版本中、系统会提示您运行 `security key-manager onboard sync` 在配对集群上使用相同密码短语。
-
-
 您应将板载密钥管理密码短语复制到存储系统以外的安全位置，以供将来使用。
 
 更改板载密钥管理密码短语时，您应手动备份密钥管理信息。
@@ -78,5 +59,4 @@ Enter new passphrase:
 .相关信息
 * link:backup-key-management-information-manual-task.html["手动备份板载密钥管理信息"]
 * link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-onboard-update-passphrase.html["安全密钥管理器板载更新密码短语"^]
-* link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-update-passphrase.html["安全密钥管理器更新密码短语"^]
 
