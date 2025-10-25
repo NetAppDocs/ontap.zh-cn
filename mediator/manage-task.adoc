@@ -357,11 +357,11 @@ Enter pass phrase for intermediate.key:
 ----
 . 将证书签名请求发送 `intermediate.csr`到PKI颁发机构进行签名。
 +
-PKI授权机构验证请求并签署 `.csr`，生成证书 `intermediate.crt`。此外、您还需要从PKI颁发机构获取 `root_intermediate.crt` 对证书进行签名的证书 `intermediate.crt` 。
+PKI 机构验证请求并签署 `.csr`，生成证书 `intermediate.crt`。此外，您还需要获得 `root_ca.crt`签署的证书 `intermediate.crt`来自 PKI 机构的证书。
 
 +
 
-NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `intermediate.crt` `root_intermediate.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为 SnapMirror 主动同步配置 ONTAP 调解器和集群"]
+NOTE: 对于SnapMirror业务连续性 (SM-BC) 集群，您必须添加 `intermediate.crt`和 `root_ca.crt`证书到ONTAP集群。看link:../snapmirror-active-sync/mediator-install-task.html["为 SnapMirror 主动同步配置 ONTAP 调解器和集群"]。
 
 
 
@@ -474,7 +474,61 @@ NOTE: 这些文件是从PKI颁发机构获得的。如果您使用的是其他�
 
 [role="tabbed-block"]
 ====
-.ONTAP调解器1.9及更高版本
+.ONTAP调解器 1.10 及更高版本
+--
+证书配置通过位于以下位置的配置文件提供给 ONTAP 调解器 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml` 。此文件包含以下属性：
+
+[listing]
+----
+cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt'
+key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key'
+ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt'
+ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.key'
+ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.srl'
+----
+* `cert_path` 和 `key_path` 是服务器证书变量。
+* `ca_cert_path`， `ca_key_path`，和 `ca_serial_path` 是CA证书变量。
+
+
+.步骤
+. 将所有文件替换 `intermediate.*` 为第三方证书。
+. 从和证书创建证书链 `intermediate.crt` `ontap_mediator_server.crt` ：
++
+`cat ontap_mediator_server.crt intermediate.crt > ontap_mediator_server_chain.crt`
+
+. 更新 `/opt/netapp/lib/ontap_mediator/uvicorn/config.json`文件。
++
+更新 `ssl_keyfile`， `ssl_certfile` ， 和 `ssl_ca_certs`：
+
++
+`ssl_keyfile`： `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key`
+
++
+`ssl_certfile`： `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server_chain.crt`
+
++
+`ssl_ca_certs`： `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_ca.crt`
+
++
+** 这 `ssl_keyfile`值是关键路径 `ontap_mediator_server.crt`文件，即 `ontap_mediator_server.key`。
+** 这 `ssl_certfile`值是 `ontap_mediator_server_chain.crt`文件。
+** 这 `ssl_ca_certs`值是 `root_ca.crt`文件。
+
+
+. 验证新生成的证书的以下属性是否设置正确：
++
+** Linux组所有者： `netapp:netapp`
+** Linux权限： `600`
+
+
+. 重新启动 ONTAP 调解器：
++
+`systemctl restart ontap_mediator`
+
+
+
+--
+.ONTAP调解器 1.9.1 和 1.9
 --
 证书配置通过位于以下位置的配置文件提供给 ONTAP 调解器 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.config.yaml` 。此文件包含以下属性：
 
@@ -507,12 +561,12 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/int
 `set-placeholder = mediator_key = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key`
 
 +
-`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_intermediate.crt`
+`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_ca.crt`
 
 +
 **  `mediator_cert`值是文件的路径 `ontap_mediator_server_chain.crt` 。
 **  `mediator_key value`是文件中的密钥路径 `ontap_mediator_server.crt` ，即 `ontap_mediator_server.key`。
-**  `ca_certificate`值是文件的路径 `root_intermediate.crt` 。
+**  `ca_certificate`值是文件的路径 `root_ca.crt` 。
 
 
 . 验证新生成的证书的以下属性是否设置正确：
@@ -589,7 +643,7 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ca.
 
 [role="tabbed-block"]
 ====
-.ONTAP调解器1.9及更高版本
+.ONTAP调解器 1.10 及更高版本
 --
 您可以使用与以外的其他名称的第三方证书、也可以 `intermediate.*`将第三方证书存储在其他位置。
 
@@ -626,7 +680,90 @@ ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/int
 
 ----
 +
-.. 如果您使用的证书结构中的 `root_intermediate.crt` 证书提供了 `intermediate.crt` 用于对证书签名的证书 `ontap_mediator_server.crt` 、请从和证书创建证书链 `intermediate.crt` `ontap_mediator_server.crt` ：
+.. 如果您使用的证书结构 `root_ca.crt`证书提供了 `intermediate.crt`签署证书 `ontap_mediator_server.crt`证书，从创建证书链 `intermediate.crt`和 `ontap_mediator_server.crt`证书：
++
+
+NOTE: 您应已在此过程的前面部分从PKI颁发机构获取 `intermediate.crt` 和 `ontap_mediator_server.crt` 证书。
+
++
+`cat ontap_mediator_server.crt intermediate.crt > ontap_mediator_server_chain.crt`
+
+.. 更新 `/opt/netapp/lib/ontap_mediator/uvicorn/config.json`文件。
++
+更新 `ssl_keyfile`， `ssl_certfile` ， 和 `ssl_ca_certs`：
+
++
+`ssl_keyfile`： `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key`
+
++
+`ssl_certfile`： `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server_chain.crt`
+
++
+`ssl_ca_certs`： `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_ca.crt`
+
++
+*** 这 `ssl_keyfile`值是关键路径 `ontap_mediator_server.crt`文件，即 `ontap_mediator_server.key`。
+*** 这 `ssl_certfile`值是 `ontap_mediator_server_chain.crt`文件。
+*** 这 `ssl_ca_certs`值是 `root_ca.crt`文件。
++
+
+NOTE: 对于SnapMirror业务连续性 (SM-BC) 集群，您必须添加 `intermediate.crt`和 `root_ca.crt`证书到ONTAP集群。看link:../snapmirror-active-sync/mediator-install-task.html["为 SnapMirror 主动同步配置 ONTAP 调解器和集群"]。
+
+
+
+.. 验证新生成的证书的以下属性是否设置正确：
++
+*** Linux组所有者： `netapp:netapp`
+*** Linux权限： `600`
+
+
+
+
+. 当配置文件中的证书更新后，重新启动 ONTAP 调解器：
++
+`systemctl restart ontap_mediator`
+
+
+
+--
+.ONTAP调解器 1.9.1 和 1.9
+--
+您可以使用与以外的其他名称的第三方证书、也可以 `intermediate.*`将第三方证书存储在其他位置。
+
+.步骤
+. 配置 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator.user_config.yaml` 文件以覆盖文件中的默认变量值 `ontap_mediator.config.yaml` 。
++
+如果您是从PKI颁发机构获得 `intermediate.crt` 的，并且将其私钥存储 `intermediate.key` 在该位置 `/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`，则该 `ontap_mediator.user_config.yaml` 文件应类似于以下示例：
+
++
+
+NOTE: 如果您曾 `intermediate.crt` 对证书签名 `ontap_mediator_server.crt` 、则会生成此  `intermediate.srl` 文件。有关详细信息、请参见 <<step_2_intermediate_info_v9,第2步：使用第三方CA认证签名生成服务器证书>> 。
+
++
+[listing]
+----
+[root@scs000216655 server_config]# cat  ontap_mediator.user_config.yaml
+
+# This config file can be used to override the default settings in ontap_mediator.config.yaml
+# To override a setting, copy the property key from ontap_mediator.config.yaml to this file and
+# set the property to the desired value. e.g.,
+#
+# The default value for 'default_mailboxes_per_target' is 4 in ontap_mediator.config.yaml
+#
+# To override this value with 6 mailboxes per target, add the following key/value pair
+# below this comment:
+#
+# 'default_mailboxes_per_target': 6
+#
+cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.crt'
+key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key'
+ca_cert_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.crt'
+ca_key_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.key'
+ca_serial_path: '/opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/intermediate.srl'
+
+----
++
+.. 如果您使用的证书结构 `root_ca.crt`证书提供了 `intermediate.crt`签署证书 `ontap_mediator_server.crt`证书，从创建证书链 `intermediate.crt`和 `ontap_mediator_server.crt`证书：
 +
 
 NOTE: 您应已在此过程的前面部分从PKI颁发机构获取 `intermediate.crt` 和 `ontap_mediator_server.crt` 证书。
@@ -645,15 +782,15 @@ NOTE: 您应已在此过程的前面部分从PKI颁发机构获取 `intermediate
 `set-placeholder = mediator_key = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/ontap_mediator_server.key`
 
 +
-`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_intermediate.crt`
+`set-placeholder = ca_certificate = /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config/root_ca.crt`
 
 +
 ***  `mediator_cert`值是文件的路径 `ontap_mediator_server_chain.crt` 。
 ***  `mediator_key`值是文件中的密钥路径 `ontap_mediator_server.crt` ，即 `ontap_mediator_server.key`。
-***  `ca_certificate`值是文件的路径 `root_intermediate.crt` 。
+***  `ca_certificate`值是文件的路径 `root_ca.crt` 。
 +
 
-NOTE: 对于SnapMirror业务连续性(SM-BC)集群、必须将和证书添加 `intermediate.crt` `root_intermediate.crt` 到ONTAP集群。请参阅。 link:../snapmirror-active-sync/mediator-install-task.html["为 SnapMirror 主动同步配置 ONTAP 调解器和集群"]
+NOTE: 对于SnapMirror业务连续性 (SM-BC) 集群，您必须添加 `intermediate.crt`和 `root_ca.crt`证书到ONTAP集群。看link:../snapmirror-active-sync/mediator-install-task.html["为 SnapMirror 主动同步配置 ONTAP 调解器和集群"]。
 
 
 
