@@ -225,16 +225,32 @@ supported
 如果您计划向集群添加新节点、并且这些节点所需的最低ONTAP版本高于集群中当前运行的版本、则在添加新节点之前、您需要对集群中的现有节点执行任何受支持的软件升级。理想情况下、您应将所有现有节点升级到计划添加到集群的节点所需的最低ONTAP版本。但是、如果由于某些现有节点不支持更高版本的ONTAP而无法做到这一点、则在升级过程中、您需要在有限时间内进入混合版本状态。
 
 .步骤
-. link:concept_upgrade_methods.html["升级"] 不支持新控制器所需的最低ONTAP版本到其所支持的最高ONTAP版本的节点。
+. link:concept_upgrade_methods.html["升级"] 不支持新控制器所需的最低ONTAP版本的节点，应升级到它们支持的最高ONTAP版本。
 +
-例如、如果您的FAS8080运行的是ONTAP 9.5、而您要添加运行ONTAP 9.12.1的新C系列平台、则应将FAS8080升级到ONTAP 9.8 (这是它支持的最大ONTAP版本)。
+例如，如果您有一台运行ONTAP 9.5 的 FAS8080，并且您正在添加一台运行ONTAP 9.12.1 的新 C 系列平台，则应将 FAS8080 升级到ONTAP 9.8（这是它支持的最高ONTAP版本）。
 
 . link:../system-admin/add-nodes-cluster-concept.html["将新节点添加到集群中"^]。
 . link:https://docs.netapp.com/us-en/ontap-systems-upgrade/upgrade/upgrade-create-aggregate-move-volumes.html["迁移数据"^] 从要从集群中删除的节点到新添加的节点。
 . link:../system-admin/remove-nodes-cluster-concept.html["从集群中删除不受支持的节点"^](英文)
-. link:concept_upgrade_methods.html["升级"] 将集群中的其余节点升级到与新节点版本相同的版本。
+. link:concept_upgrade_methods.html["升级"] 将集群迁移到与新节点上运行的ONTAP版本和补丁级别相同的环境，或者迁移到…… link:https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU2["最新建议的修补程序版本"^] 适用于在新节点上运行的ONTAP版本。
+. 请确认所有节点运行的ONTAP版本是否相同。
 +
-(可选)将整个集群(包括新节点)升级到 link:https://kb.netapp.com/Support_Bulletins/Customer_Bulletins/SU2["最新建议的修补程序版本"] 新节点上运行的ONTAP版本。
+.. 显示集群上运行的ONTAP版本：
++
+[source, cli]
+----
+version
+----
+.. 显示集群中每个节点上运行的ONTAP版本：
++
+[source, cli]
+----
+version *
+----
+
+
++
+如果输出中报告的ONTAP版本存在差异，则 `version *` （集群）和 `version` （单个节点）命令，通过运行以下命令将所有节点更新到相同的ONTAP和补丁版本： link:concept_upgrade_methods.html["集群镜像更新"]。
 
 
 
