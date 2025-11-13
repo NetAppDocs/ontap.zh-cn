@@ -2,20 +2,22 @@
 permalink: svm-migrate/index.html 
 sidebar: sidebar 
 keywords: svm, migrate, workflow, relocate, prerequisites, data mobility 
-summary: 从 ONTAP 9.10.1 开始，集群管理员可以无中断地将 SVM 从源集群重新定位到目标集群，以管理容量和负载平衡，或者启用设备升级或数据中心整合。从ONTAP 9.12.1开始、FAS 和AFF 平台以及混合聚合均支持此功能。 
+summary: 从ONTAP 9.10.1 开始，集群管理员可以无中断地将 SVM 从源集群迁移到目标集群，以管理容量和负载均衡，或启用设备升级或数据中心整合。从ONTAP 9.12.1 开始， FAS和AFF系统以及混合聚合体均支持此功能。 
 ---
-= SVM 数据移动性概述
+= 了解ONTAP SVM 数据迁移
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从ONTAP 9.10.1开始、集群管理员可以使用ONTAP命令行界面无中断地将SVM从源集群重新定位到目标集群、以管理容量和负载平衡、或者启用设备升级或数据中心整合。
+从ONTAP 9.10.1 开始，集群管理员可以无中断地将 SVM 从源集群迁移到目标集群，以管理容量和负载均衡，或启用设备升级或数据中心整合。
 
-在ONTAP 9.10.1和9.11.1中、AFF平台支持此无中断SVM重新定位功能。从ONTAP 9.12.1开始、FAS和AFF平台以及混合聚合均支持此功能。
+ONTAP 9.10.1 和 9.11.1 版本支持在AFF系统上进行非中断式 SVM 迁移。从ONTAP 9.12.1 开始， FAS和AFF系统以及混合聚合体均支持此功能。
 
 迁移后， SVM 的名称和 UUID 以及数据 LIF 名称， IP 地址和对象名称（例如卷名称）均保持不变。SVM 中对象的 UUID 将不同。
+
+从ONTAP 9.18.1 开始，支持从ASA存储系统到ASA r2 存储系统的 SVM 迁移。如果您拥有ASA r2 存储系统（ASA A1K、 ASA A90、 ASA A70、 ASA A50、 ASA A30、 ASA A20 或ASA C30），并且想要将 SVM 从ASA系统迁移到您的ASA r2 系统，请按以下步骤操作。link:https://docs.netapp.com/us-en/asa-r2/manage-data/migrate-svm.html["这些步骤"^] 。
 
 
 
@@ -27,7 +29,7 @@ image:workflow_svm_migrate.gif["SVM迁移工作流。下面总结了接下来的
 
 
 
-== SVM迁移平台支持
+== SVM迁移系统支持
 
 [cols="1,1"]
 |===
@@ -36,16 +38,19 @@ image:workflow_svm_migrate.gif["SVM迁移工作流。下面总结了接下来的
 | 控制器系列 | 支持的ONTAP版本 
 
 
-| AFF A系列 | ONTAP 9.10.1 及更高版本 
+| ASA | ONTAP 9.18.1 及更高版本 关注link:https://docs.netapp.com/us-en/asa-r2/manage-data/migrate-svm.html["这些步骤"^]用于将 SVM 从ASA迁移到ASA r2 系统。 
 
 
 | AFF C系列 | ONTAP 9.12.1修补程序4及更高版本 
 
 
 | FAS | ONTAP 9.12.1及更高版本 
+
+
+| AFF A系列 | ONTAP 9.10.1 及更高版本 
 |===
 
-NOTE:  从AFF 集群迁移到包含混合聚合的FAS 集群时、自动卷放置将尝试执行类似聚合的匹配。例如、如果源集群包含60个卷、则卷放置将尝试在目标上查找AFF 聚合以放置这些卷。如果AFF聚合上没有足够的空间、则卷将放置在具有非闪存磁盘的聚合上。
+NOTE: 从AFF集群迁移到具有混合聚合的FAS集群时，自动卷放置将尝试执行类似的聚合匹配。例如，如果源集群有 60 个卷，则卷放置操作将尝试在目标集群上找到AFF聚合来放置这些卷。当AFF聚合空间不足时，卷将被放置在具有非闪存磁盘的聚合上。
 
 
 
@@ -58,7 +63,7 @@ NOTE:  从AFF 集群迁移到包含混合聚合的FAS 集群时、自动卷放�
 | ONTAP 版本 | 源和目标中的HA对 
 
 
-| ONTAP 9.14.1 | 12. 
+| ONTAP 9.14.1及更高版本 | 12. 
 
 
 | ONTAP 9.13.1 | 6. 
@@ -94,7 +99,7 @@ NOTE:  从AFF 集群迁移到包含混合聚合的FAS 集群时、自动卷放�
 |===
 
 
-| 源 | 目标 | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1及更早版本 
+| 源 | 目标 | ONTAP 9.14.1及更高版本 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1及更早版本 
 
 
 | AFF | AFF | 400 | 200 | 100 | 100 
@@ -201,7 +206,7 @@ NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"s
 | FlexCache 卷 | 不支持 |  
 
 
-| FlexGroup | 不支持 |  
+| FlexGroup 卷 | 不支持 |  
 
 
 | IPsec策略 | 不支持 |  
@@ -287,7 +292,7 @@ NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"s
 
 
 | SMB协议 | ONTAP 9.12.1  a| 
-SMB迁移会造成系统中断、需要在迁移后刷新客户端。
+中小企业迁移会造成混乱，迁移后需要对客户端进行更新。
 
 
 

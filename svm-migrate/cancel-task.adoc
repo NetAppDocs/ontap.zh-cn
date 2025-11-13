@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: svm, migrate, cancel, abort 
 summary: 如果您需要在 SVM 迁移完成之前取消它，则只能在操作处于暂停或失败状态时取消 SVM 迁移。 
 ---
-= 取消 SVM 迁移
+= 取消ONTAP SVM 迁移
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -14,18 +14,24 @@ summary: 如果您需要在 SVM 迁移完成之前取消它，则只能在操作
 如果您需要在 SVM 迁移完成之前取消它，您可以使用 `vserver migrate abort`命令。仅当操作处于暂停或失败状态时，您才可以取消 SVM 迁移。当状态为“切换已开始”或切换完成后，您无法取消 SVM 迁移。您不能使用 `abort`SVM 迁移正在进行时的选项。
 
 .步骤
-. 检查迁移状态：
+. 在目标集群上，检查迁移状态：
 +
-`dest_cluster> vserver migrate show -vserver <vserver name>`
-
+[source, cli]
+----
+vserver migrate show -vserver <SVM_name>
+----
 . 取消迁移：
 +
-`dest_cluster> vserver migrate abort -vserver <vserver name>`
-
+[source, cli]
+----
+vserver migrate abort -vserver <SVM_name>
+----
 . 检查取消操作的进度：
 +
-`dest_cluster> vserver migrate show`
-
+[source, cli]
+----
+vserver migrate show
+----
 +
 在执行取消操作期间、迁移状态将显示migration-aborging。取消操作完成后，迁移状态不会显示任何内容。
 

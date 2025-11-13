@@ -4,41 +4,41 @@ sidebar: sidebar
 keywords: ontap mediator, install requirements, mediator requirements 
 summary: 要安装 ONTAP Mediator，您必须确保满足所有先决条件、获取安装包并在主机上运行安装程序。 
 ---
-= 准备安装或升级 ONTAP 调解器
+= 安装或升级ONTAP Mediator
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-要安装 ONTAP Mediator，您必须确保满足所有先决条件、获取安装包并在主机上运行安装程序。此操作步骤用于安装或升级现有安装。
+要安装或升级ONTAP Mediator，您需要满足所有先决条件，下载安装包，并在主机上运行安装程序。
 
 * 从ONTAP 9.8开始、您可以使用任何版本的ONTAP调解器监控SnapMirror活动同步关系。
-* 从ONTAP 9.7开始、您可以使用任何版本的ONTAP 调解器来监控MetroCluster IP配置。
+* 您可以使用任何版本的ONTAP Mediator 来监控MetroCluster IP 配置。
 
 
 
 
 == 安装和升级注意事项
 
-在升级或安装 ONTAP 调解器之前，请先查看以下注意事项。
+在升级或安装ONTAP Mediator 之前，请先查看以下几点。
 
 
-NOTE: ONTAP Mediator 1.8 及更早版本与 Red Hat Enterprise Linux (RHEL) FIPS 模式不兼容，因此将阻止其成功安装。您可以使用以下方式检查 FIPS 模式是否已启用 `fips-mode-setup --check`命令。您可以使用 `fips-modesetup --disable`命令。禁用 FIPS 模式后重新启动以成功安装ONTAP Mediator 1.8 或更早版本。
+NOTE: ONTAP Mediator 1.8 及更早版本与 Red Hat Enterprise Linux (RHEL) FIPS 模式不兼容，导致无法成功安装。您可以使用以下命令检查是否启用了 FIPS 模式： `fips-mode-setup --check`命令。您可以使用以下方法禁用 FIPS 模式： `fips-modesetup --disable`命令。禁用 FIPS 模式后重新启动以成功安装ONTAP Mediator 1.8 或更早版本。
 
-* 您应该将 ONTAP Mediator 升级到可用的最新版本。早期版本的ONTAP调解器与所有ONTAP版本保持向后兼容、但最新版本包括所有第三方元素的安全修补程序。
+* 您应该将ONTAP Mediator 升级到最新版本。旧版本仍然可以与所有ONTAP版本兼容，但新版本包含针对第三方组件的安全补丁。
 * 升级到新的ONTAP调解器版本时、安装程序会自动升级到建议的SCST版本、除非有更高版本可用。有关手动安装较高版本SCST的说明，请参阅link:manage-task.html["管理ONTAP调解器"]。有关支持的版本，请参见link:whats-new-concept.html#scst-support-matrix["SCST支持列表"]。
 
 
 [NOTE]
 ====
-* 如果安装失败、您可能需要升级到更高版本的ONTAP调解器。
+* 如果安装失败，您可能需要升级到更新版本的ONTAP Mediator。
 * 自 2025 年 6 月 15 日起，您无法安装或升级ONTAP Mediator 1.9 和 1.8，因为它们的代码签名证书已过期。如果安装或升级失败，请改用ONTAP Mediator 1.9.1 补丁版本。
 
 
 ====
 * 如果安装 `yum-utils` 软件包中、您可以使用 `needs-restarting` 命令：
-* ONTAP Mediator 1.10 及更早版本不支持 IPv6。
+* 从ONTAP Mediator 1.11 开始，支持 MCCIP 的 IPv6。
 
 
 
@@ -53,7 +53,7 @@ NOTE: ONTAP Mediator 1.8 及更早版本与 Red Hat Enterprise Linux (RHEL) FIPS
 
 ====
 .Linux分发要求
-* 根据Red Hat的最佳实践安装RHEL或Rocky's Linux。由于CentOS 8.x已达到使用寿命、因此不建议使用兼容版本的CentOS 8.x。
+* 按照红帽最佳实践安装 RHEL 或 Rocky Linux。由于 CentOS 8.x 已停止维护，因此不建议使用与 CentOS 8.x 兼容的版本。
 * 安装 ONTAP Mediator 时，请确保系统可以访问所需的存储库，以便安装程序可以检索并安装所有必需的软件依赖项。
 * 要使yum安装程序能够在RHEL存储库中查找相关软件、请在安装期间或之后使用有效的Red Hat订阅注册系统。
 +
@@ -111,14 +111,12 @@ ONTAP 调解器 iSCSI 目标
 (对于MCCIP为必需)邮箱的iSCSI数据连接
 
 |===
-. 对于SMBC客户、ONTAP不需要启用或连接端口3260。
-+
-** 如果使用第三方防火墙，请参阅link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["ONTAP 调解器的防火墙要求"^]。
-** 对于无法访问Internet的Linux主机、请确保所需的软件包在本地存储库中可用。
+对于SMBC客户、ONTAP不需要启用或连接端口3260。
+
+* 如果使用第三方防火墙，请参阅link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#firewall-requirements-for-ontap-mediator["ONTAP 调解器的防火墙要求"^]。
+* 对于无法访问Internet的Linux主机、请确保所需的软件包在本地存储库中可用。
 +
 如果您在Linux环境中使用链路聚合控制协议(Link Aggregation" Control Protocol, LacP)，请配置内核并将设置 `sysctl net.ipv4.conf.all.arp_ignore`为 `2`。
-
-
 
 
 
@@ -141,15 +139,30 @@ ONTAP 调解器 iSCSI 目标
 
 
  a| 
+1.11
+ a| 
+* Red Hat Enterprise Linux
++
+** 兼容：9.5 ^1^
+** 推荐：10.1、10.0、9.7、9.6、9.4 和 8.10
+
+
+* Rocky Linux 10.1、9.7 和 8.10
+* Oracle Linux 10.0 和 9.6
+
+
+
+
+ a| 
 1.10
  a| 
 * Red Hat Enterprise Linux
 +
 ** 兼容：9.5 ^1^
-** 推荐：10、9.6、9.4 和 8.10
+** 推荐：10.0、9.6、9.4 和 8.10
 
 
-* Rocky Linux 10、9.6 和 8.10
+* Rocky Linux 10.0、9.6 和 8.10
 
 
 
@@ -314,17 +327,17 @@ NOTE: 软件包可以是预安装的、也可以是由ONTAP调解器安装程序
 * 安装脚本。
 
 
-建议提供有效的SSL认证。
+建议使用有效的SSL证书。
 
 
 
 === 操作系统升级注意事项和内核兼容性
 
-* 除了内核之外、所有库软件包都可以安全地更新、但可能需要重新启动才能在ONTAP调解器应用程序中应用更改。需要重新启动时、建议使用服务窗口。
-* 您应使操作系统内核保持最新。内核可以升级到中列为受支持的版本link:whats-new-concept.html#scst-support-matrix["ONTAP调解器版本表"]。重新启动是必需的、因此您应该为中断计划一个维护窗口。
+* 您可以更新除内核之外的所有库软件包，但您可能需要重新启动才能使ONTAP Mediator 中的更改生效。如果需要重启，请安排停机时间。
+* 你应该保持操作系统内核处于最新状态。将内核核心升级到列表中列出的受支持版本。link:whats-new-concept.html#scst-support-matrix["ONTAP调解器版本表"] 。您必须重启系统，因此请为此次停机维护安排一个时间段。
 +
-** 必须先卸载SCST内核模块，然后再重新引导。
-** 在开始内核操作系统升级之前、您必须准备好受支持的SCST版本以重新安装。
+** 重启前卸载 SCST 内核模块，重启后再重新安装。
+** 在开始内核操作系统升级之前，请准备好受支持的 SCST 版本进行重新安装。
 
 
 
@@ -332,7 +345,7 @@ NOTE: 软件包可以是预安装的、也可以是由ONTAP调解器安装程序
 [NOTE]
 ====
 * 内核版本必须与操作系统版本匹配。
-* 不支持升级到特定ONTAP调解器版本支持的操作系统版本以外的内核。(这可能表示测试的SCST模块不会编译)。
+* 请勿将内核升级到ONTAP Mediator 版本支持的操作系统版本以上，因为测试过的 SCST 模块可能无法正常工作。
 
 
 ====
@@ -393,17 +406,4 @@ link:upgrade-host-os-mediator-task.html["升级主机操作系统，然后升级
 +
 `yum install mokutil`
 
-. 将公共密钥添加到MOK列表：
-+
-`mokutil --import /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/scst_module_key.der`
-
-+
-
-NOTE: 您可以将私钥保留在其默认位置、也可以将其移动到安全位置。但是、公共密钥必须保留在其现有位置、以供启动管理器使用。有关详细信息，请参见以下README.MODUP-signing文件：
-
-+
-`[root@hostname ~]# ls /opt/netapp/lib/ontap_mediator/ontap_mediator/SCST_mod_keys/
-README.module-signing  scst_module_key.der  scst_module_key.priv`
-
-. 重新启动主机、然后使用设备的UEFI Boot Manager批准新的MOK。您需要中为实用程序提供的密码短语 `mokutil`<<step_1_uefi,检查系统上是否启用了UEFI安全启动的步骤>>。
 

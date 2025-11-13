@@ -1,0 +1,129 @@
+---
+permalink: release-notes/whats-new-9181.html 
+sidebar: sidebar 
+keywords: 'what"s new, release notes, 9.18.1' 
+summary: 了解ONTAP 9.18.1 中提供的新功能。 
+---
+= ONTAP 9.18.1 的新增功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+了解ONTAP 9.17.1 中提供的新功能。
+
+有关最新ONTAP 9版本中的已知问题、限制和升级注意事项的详细信息、请参阅 https://library.netapp.com/ecm/ecm_download_file/ECMLP2492508["《 ONTAP 9 发行说明》"^]。您必须使用NetApp帐户登录或创建帐户才能访问发行说明。
+
+* 了解新增功能和增强功能 https://docs.netapp.com/us-en/ontap-metrocluster/releasenotes/mcc-new-features.html["ONTAP MetroCluster功能"^]。
+* 了解 https://docs.netapp.com/us-en/ontap-afx/release-notes/whats-new-9171.html["适用于NetApp AFX 存储系统的全新增强型ONTAP软件功能"^] 。
+* 了解 https://docs.netapp.com/us-en/asa-r2/release-notes/whats-new-9171.html["适用于NetApp ASA r2 存储系统的全新增强型ONTAP软件功能"^] 。
+* 了解 https://docs.netapp.com/us-en/ontap-systems/whats-new.html["对AFF、 ASA和FAS系统以及支持的交换机的全新和增强支持"^] 。
+* 了解的更新 https://docs.netapp.com/us-en/ontap-automation/whats_new.html["ONTAP REST API"^]。
+
+
+要升级到最新版本的ONTAP，请参见link:../upgrade/create-upgrade-plan.html["准备升级ONTAP"]。
+
+
+
+== 网络
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+xref:../networking/ipsec-prepare.html[IPsec 硬件卸载 IPv6 支持]
+ a| 
+IPsec硬件卸载支持已扩展到IPv6。
+
+
+
+ a| 
+xref:../networking/configure_network_security_using_federal_information_processing_standards_fips.html[OpenSSL PQC 算法]
+ a| 
+ONTAP支持用于 SSL 的后量子计算加密算法。这些算法可针对未来潜在的量子计算攻击提供额外保护，并且在 SSL FIPS 模式禁用时可用。
+
+
+
+ a| 
+xref:../networking/configure-backend-encryption.html[ONTAP后端集群网络加密]
+ a| 
+您可以为ONTAP后端集群网络上的传输中数据启用 TLS 加密。
+
+
+
+ a| 
+xref:../high-availability/ha-pair-encryption.html[ONTAP HA 流量网络加密]
+ a| 
+您可以为高可用性 (HA) 对中的节点之间的流量启用加密。
+
+|===
+
+
+== SAN
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+xref:../san-admin/nvme-copy-offload.html[NVMe 复制卸载]
+ a| 
+NVMe 复制卸载功能使 NVMe 主机能够将复制操作从其 CPU 卸载到ONTAP存储控制器的 CPU。主机可以将数据从一个 NVMe 命名空间复制到另一个 NVMe 命名空间，同时将其 CPU 资源保留给应用程序工作负载。
+
+|===
+
+
+== S3对象存储
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+xref:../s3-snapshots/list-restore-s3-snapshot.html[支持恢复 S3 快照（时间点）]
+ a| 
+能够恢复 S3 存储桶中损坏的对象，或者将整个存储桶恢复到现有存储桶之上。
+
+|===
+
+
+== 安全性
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurations[FlexGroup卷支持 ARP/AI]
+ a| 
+NetApp FlexGroup卷支持 ARP/AI，提供基于机器学习的高级勒索软件检测和保护。在ONTAP 9.17.1 及更早版本中， FlexGroup卷仅支持第一代 ARP。从ONTAP 9.18.1 开始， FlexGroup卷在本地ONTAP平台（AFF和FAS）和虚拟ONTAP部署（包括Cloud Volumes ONTAP和ONTAP Select ）上与FlexVol卷具有同等功能。因此，ARP/AI 成为FlexVol和FlexGroup卷的默认 ARP 技术。
+
+|===
+
+
+== 存储资源管理增强功能
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+xref:../performance-admin/adaptive-qos-policy-groups-task.html[支持在SVM和卷上设置两级嵌套的QoS策略组]
+ a| 
+您可以同时为 SVM 和 SVM 下的卷分配 QoS 策略。
+
+
+
+ a| 
+xref:../flexcache/create-volume-task.html[在 SVM-DR 关系中创建源卷的 SVM FlexCache卷]
+ a| 
+您可以创建属于 SVM-DR 关系的源卷的 SVM FlexCache卷。
+
+|===

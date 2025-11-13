@@ -1,0 +1,99 @@
+---
+sidebar: sidebar 
+permalink: networking/configure-backend-encryption.html 
+keywords: cluster network, encryption, TLS, data-in-flight, backend network 
+summary: 配置集群网络加密设置 
+---
+= 配置ONTAP后端集群网络加密
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.18.1 开始，您可以为后端集群网络上的传输中数据配置传输层安全 (TLS) 加密。此加密技术可在后端集群网络上的ONTAP节点之间传输客户数据时，保护存储在ONTAP中的客户数据。
+
+.关于此任务
+* 后端集群网络加密默认处于禁用状态。
+* 启用后端集群网络加密后，存储在ONTAP中的所有客户数据在后端集群网络上的ONTAP节点之间传输时都会被加密。集群网络的部分流量（例如控制路径数据）未加密。
+* 默认情况下，后端集群网络加密将使用集群中每个节点自动生成的证书。你可以<<管理集群网络加密证书>>每个节点都使用自定义安装的证书。
+
+
+.开始之前
+* 您必须是ONTAP管理员。 `admin`执行以下任务所需的权限级别。
+* 集群中的所有节点必须运行ONTAP 9.18.1 或更高版本才能启用后端集群网络加密。
+
+
+
+
+== 启用或禁用集群网络通信加密
+
+.步骤
+. 查看当前集群网络加密状态：
++
+[source, cli]
+----
+security cluster-network show
+----
++
+此命令显示集群网络加密的当前状态：
+
++
+[source]
+----
+Cluster-1::*> security cluster-network show
+
+Enabled: true
+
+Mode: tls
+
+Status: READY
+----
+. 启用或禁用TLS后端集群网络加密：
++
+[source, cli]
+----
+security cluster-network modify -enabled <true|false>
+----
++
+此命令启用或禁用后端集群网络上客户传输数据的加密通信。
+
+
+
+
+
+== 管理集群网络加密证书
+
+. 查看当前集群网络加密证书信息：
++
+[source, cli]
+----
+security cluster-network certificate show
+----
++
+此命令显示当前集群网络加密证书信息：
+
++
+[source]
+----
+security cluster-network certificate show
+Node                  Certificate Name                      CA
+--------------------- -----------------------------------   --------------
+node1                 -                                     Cluster-1_Root_CA
+node2                 -                                     Cluster-1_Root_CA
+node3                 google_issued_cert1                   Google_CA1
+node4                 google_issued_cert2                   Google_CA1
+----
++
+集群中每个节点的证书和证书颁发机构 (CA) 名称均已显示。
+
+. 修改节点的集群网络加密证书：
++
+[source, cli]
+----
+security cluster-network certificate modify -node <node_name> -name <certificate_name>
+----
++
+此命令修改特定节点的集群网络加密证书。运行此命令之前，必须先安装证书并由已安装的 CA 进行签名。有关证书管理的更多信息，请参阅link:../authentication/manage-certificates-sm-task.html["使用System Manager管理ONTAP证书"]。如果 `-name`如果未指定，则使用自动生成的默认证书。
+
+

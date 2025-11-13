@@ -21,20 +21,46 @@ summary: '从SVM.10.1开始、您可以配置、以便默认情况下为新卷�
 如果只想配置单个新卷或现有卷而不将ARP设为默认卷，请参见此link:enable-task.html["相关ARP过程"]。
 
 .关于此任务
-默认情况下，新创建的卷的 ARP 处于禁用模式。只有在启用反勒索软件功能后，SVM 中创建的新卷才会默认启用 ARP。
+默认情况下，新建卷的 ARP 功能是禁用的。您需要启用 ARP 功能，并将其设置为在 SVM 中创建的新卷上默认启用。
 
-ARP 不会在现有卷上自动启用。此过程中描述的设置更改仅影响新卷。了解如何link:enable-task.html["为现有卷启用ARP"] 。
+当您更改 SVM 的默认设置时，未启用 ARP 的现有卷不会自动更改 ARP 启用状态。本程序中描述的 SVM 设置更改仅影响新生成的卷。学习如何link:enable-task.html["为现有卷启用ARP"]。
 
-* *（仅限 SAN 环境）适用于包含FlexVol卷的ONTAP 9.17.1 及更高版本* 使用 System Manager 或命令行界面 (CLI) 启用 ARP 时，ARP/AI 功能将自动启用。在 SAN 卷上启用后， link:respond-san-entropy-eval-period.html["ARP/AI 在评估期间持续监测数据"]确定工作负载是否适合ARP并设置最佳加密检测阈值。
-* *（仅限 NAS 环境）适用于带有FlexVol卷的ONTAP 9.16.1 及更高版本* 使用系统管理器或命令行界面 (CLI) 启用 ARP 时，ARP/AI 保护将立即启用并生效。无需学习期。
-* *（仅限 NAS 环境）对于ONTAP 9.15.1 至 9.10.1 或带有FlexGroup卷的 ARP* 默认情况下，启用 ARP 的新卷设置为link:index.html#learn-about-arp-modes["学习模式"] （或“试运行”状态），系统会分析工作负载以表征正常行为。学习模式可以手动（所有 ARP 版本）或自动（从 ARP 9.13.1 开始）转换为主动模式。在 ARP 9.13.1 及更高版本中，自适应学习已添加到 ARP 分析中，以便自动从学习模式切换到主动模式。
+启用 ARP 后，ARP 可能会进入过渡期，具体取决于您的环境和ONTAP版本：
+
+[cols="25,25,50"]
+|===
+| Volume type | ONTAP 版本 | 启用后的行为 
 
 
+.2+| NAS FlexGroup | ONTAP 9.18.1 及更高版本 | ARP/AI 无需学习期即可立即生效 
+
+
+| ONTAP 9.13.1 至 9.17.1 | ARP启动后将进入学习模式，持续30天。 
+
+
+.2+| NAS FlexVol | ONTAP 9.16.1 及更高版本 | ARP/AI 无需学习期即可立即生效 
+
+
+| ONTAP 9.10.1 至 9.15.1 | ARP启动后将进入学习模式，持续30天。 
+
+
+| SAN卷 | ONTAP 9.17.1 及更高版本 | ARP/AI 立即启动，启动评估期，以确定合适的警报阈值，然后再从初始的保守阈值过渡。 
+|===
 .开始之前
-* 这link:index.html["正确的许可证"]必须为您的ONTAP版本安装。
-* 卷的占用率必须低于 100%。
-* （仅限 NAS 环境）要设置 ARP 的卷必须受到保护，并且具有活动的link:../concepts/namespaces-junction-points-concept.html["接合路径"] 。
-* 从ONTAP 9.13.1 开始，建议您启用多管理员验证 (MAV)，以便反勒索软件操作需要两个或更多经过身份验证的用户管理员。link:../multi-admin-verify/enable-disable-task.html["了解更多信息。"] 。
+启用 ARP 之前，请确保您的环境具备以下条件：
+
+.NAS 特定要求
+* 启用了 NFS 或 SMB（或两者）协议的存储虚拟机 (SVM)。
+* 积极link:../concepts/namespaces-junction-points-concept.html["接合路径"]就音量而言。
+
+
+.SAN 特定要求
+* 启用了 iSCSI、FC 或 NVMe 协议的存储虚拟机 (SVM)。
+
+
+.一般要求
+* 这link:index.html#licenses-and-enablement["正确的许可证"]适用于您的ONTAP版本。
+* （推荐）启用多管理员验证（MAV）（ONTAP 9.13.1+）。看link:../multi-admin-verify/enable-disable-task.html["启用多管理员验证"]。
 
 
 .步骤
@@ -44,56 +70,44 @@ ARP 不会在现有卷上自动启用。此过程中描述的设置更改仅影�
 ====
 .System Manager
 --
-. 选择*存储*或*集群*（取决于您的环境），选择*存储虚拟机*，然后选择包含您想要使用 ARP 保护的卷的存储虚拟机。
+. 选择“存储”或“集群”（取决于您的环境），选择“存储虚拟机”，然后选择将包含要使用 ARP 保护的卷的存储虚拟机。
 . 导航到“设置”选项卡。在“安全”下，找到“反勒索软件”磁贴，然后选择image:icon_pencil.gif["编辑图标"] 。
 . 勾选此框以启用反勒索软件 (ARP)。勾选附加框可在存储虚拟机中所有符合条件的卷上启用 ARP。
-. 对于ONTAP 9.13.1 或更高版本，可以选择“充分学习后自动从学习模式切换到主动模式”。这允许 ARP 确定最佳学习间隔并自动切换到主动模式。
+. 对于有建议学习期的ONTAP版本，请选择“*学习足够时间后自动从学习模式切换到活动模式*”。这允许 ARP 确定最佳学习间隔并自动切换到主动模式。
 
 
 --
 .命令行界面
 --
-* 修改现有SVM、以便在新卷中默认启用ARP：
-+
-** 对于没有 ARP/AI 的 NAS 环境或FlexGroup卷，请使用 `dry-run`状态，以便新卷以学习模式开始。
-** 对于运行ONTAP 9.16.1 或更高版本的 NAS 环境或具有ONTAP 9.17.1 的 SAN 环境，请使用 `enabled`状态。
-+
+.修改现有SVM，使其在新卷中默认启用ARP。
+选择 `dry-run`如果您的 ARP 版本需要<<arp-enablement-default-behavior-table,学习期>>。否则，请选择 `enabled`。
+
 [source, cli]
 ----
 vserver modify -vserver <svm_name> -anti-ransomware-default-volume-state <dry-run|enabled>
 ----
+.创建一个新的SVM，并默认为新卷启用ARP。
+选择 `dry-run`如果您的 ARP 版本需要<<arp-enablement-default-behavior-table,学习期>>。否则，请选择 `enabled`。
 
-
-* 为新卷创建一个默认启用ARP的新SVM：
-+
-** 对于没有 ARP/AI 的 NAS 环境或FlexGroup卷，请使用 `dry-run`状态，以便新卷以学习模式开始。
-** 对于运行ONTAP 9.16.1 或更高版本的 NAS 环境或具有ONTAP 9.17.1 的 SAN 环境，请使用 `enabled`状态。
-+
 [source, cli]
 ----
 vserver create -vserver <svm_name> -anti-ransomware-default-volume-state <dry-run|enabled>
 ----
+.修改现有SVM，禁用自动学习到主动模式的转换
+如果您已从ONTAP 9.13.1 升级到ONTAP 9.15.1，并且默认状态为 `dry-run`（学习模式），启用自适应学习，以便进行更改 `enabled`状态（活动模式）是自动完成的。您可以禁用此自动切换功能，以便手动控制所有关联音量从学习模式切换到活动模式：
 
-
-* 如果您通过ONTAP 9.15.1 升级到ONTAP 9.13.1，并且默认状态为 `dry-run` （学习模式），自适应学习已启用，因此更改为 `enabled`状态（主动模式）会自动启用。如果您不想自动启用此行为，请修改现有的 SVM：
-+
 [source, cli]
 ----
 vserver modify <svm_name> -anti-ransomware-auto-switch-from-learning-to-enabled false
 ----
-* 验证启用了ARP的卷是否显示 `enabled`状态。
-+
+.验证 ARP 状态
 [source, cli]
 ----
 security anti-ransomware volume show
 ----
-+
-有关的详细信息 `security anti-ransomware volume show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["ONTAP 命令参考"^]。
-
-
-
 --
 ====
 .相关信息
 * link:switch-learning-to-active-mode.html["学习一段时间后切换到活动模式"]
+* https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["安全反勒索软件卷显示"^]
 

@@ -26,7 +26,7 @@ ARP 会定期创建锁定快照，并根据计划创建快照，以增强保护�
 
 == 许可证和支持
 
-ARP 支持包含在link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and_later_licensing_overview["ONTAP One许可证"^] 。如果您没有ONTAP One 许可证，则可以使用其他许可证来用于 ARP，具体取决于您的ONTAP版本。
+ARP 支持包含在内link:https://kb.netapp.com/onprem/ontap/os/ONTAP_9.10.1_and_later_licensing_overview["ONTAP One 许可证"^]。如果您没有ONTAP One 许可证，则可以使用其他许可证来用于 ARP，具体取决于您的ONTAP版本。
 
 [cols="2*"]
 |===
@@ -95,9 +95,9 @@ NOTE: 没有任何勒索软件检测系统可以保证完全的安全。如果�
 
 === NAS 环境和模式类型
 
-NAS 环境使用学习和主动模式。对于<<arp-ai,ARP/AI>>从ONTAP 9.16.1 开始在 NAS 环境中运行时，当 ARP 与FlexVol卷一起使用时没有学习期。
-
 下表总结了ONTAP 9.10.1 与 NAS 环境的更高版本之间的差异。
+
+对于采用早期 ARP 模型的版本，建议在开始主动监控之前先进行一段时间的学习。对于支持 NAS 的环境<<arp-ai,ARP/AI>>没有学习期，立即开始主动监控。
 
 [cols="1,5,1"]
 |===
@@ -105,24 +105,28 @@ NAS 环境使用学习和主动模式。对于<<arp-ai,ARP/AI>>从ONTAP 9.16.1 �
 
 
 | 学习  a| 
-对于ONTAP 9.15.1 到 9.10.1 版本，启用 ARP 后，ARP 会自动设置为学习模式。在学习模式下， ONTAP系统会根据以下分析领域（熵、文件扩展名类型和文件 IOPS）制定警报配置文件。建议您将 ARP 保持在学习模式 30 天。从ONTAP 9.13.1 开始，ARP 会自动确定最佳学习间隔并自动切换，切换可能在 30 天之前完成。对于ONTAP 9.13.1 之前的版本，您可以手动进行切换。
+对于某些版本的ONTAP和某些卷类型，启用 ARP 时，ARP 会自动设置为学习模式。在学习模式下， ONTAP系统会根据以下分析领域（熵、文件扩展名类型和文件 IOPS）制定警报配置文件。
+
+建议您将 ARP 保持在学习模式 30 天。从ONTAP 9.13.1 开始，ARP 会自动确定最佳学习间隔并自动切换，切换可能在 30 天之前完成。对于ONTAP 9.13.1 之前的版本，您可以手动进行切换。
+
+从ONTAP 9.16.1 开始， FlexVol卷仅存在活动模式，任何升级到此版本或更高版本的FlexVol卷都会自动从学习模式过渡到活动模式。
+
+对于ONTAP 9.16.1 到 9.17.1，ARP/AI 尚不支持FlexGroup卷，并继续运行较旧的 ARP 模型。因此，对于这些带有FlexGroup卷的版本，仍然建议留出一段学习期。
+
+从ONTAP 9.18.1 开始， FlexVol和FlexGroup卷都只有活动模式。任何升级后的卷都会自动切换到活动模式。
 
 link:switch-learning-to-active-mode.html["了解有关从学习模式切换到主动模式的更多信息"] 。
 
 
 TIP: 命令可 `security anti-ransomware volume workload-behavior show`显示在卷中检测到的文件扩展名。如果您在学习模式早期运行此命令、并且此命令显示了文件类型的准确表示、则不应将此数据用作迁移到活动模式的基础、因为ONTAP仍在收集其他指标。有关的详细信息 `security anti-ransomware volume workload-behavior show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-show.html["ONTAP 命令参考"^]。
  a| 
-* FlexVol卷（采用ONTAP 9.15.1 至 9.10.1）
-* 带有ONTAP 9.13.1 及更高版本的 FlexGroup卷
+* FlexVol卷（采用ONTAP 9.10.1 至 9.15.1）
+* FlexGroup卷，版本从ONTAP 9.13.1 到ONTAP 9.17.1
 
 
 
 
 | 活动  a| 
-在学习模式下运行 ARP 足够长的时间以评估工作负载特征后，您可以切换到主动模式并开始保护数据。从ONTAP 9.13.1 开始，ARP 会自动确定最佳学习间隔并自动切换，切换可能在 30 天之前完成。
-
-在ONTAP 9.15.1 到 9.10.1 版本中，ARP 会在最佳学习期结束后切换到主动模式。ARP切换到主动模式后，如果检测到威胁， ONTAP会创建 ARP 快照来保护数据。
-
 在主动模式下，如果文件扩展名被标记为异常，您应该评估该警报。您可以根据警报采取行动来保护数据，也可以将警报标记为误报。将警报标记为误报会更新警报配置文件。例如，如果警报是由新的文件扩展名触发的，并且您将警报标记为误报，则下次观察到该文件扩展名时，您将不会收到警报。
  a| 
 所有受支持的ONTAP版本以及FlexVol和FlexGroup卷
@@ -140,7 +144,7 @@ SAN 环境会使用评估期（类似于 NAS 环境中的学习模式），然�
 
 
 | 评估  a| 
-会进行为期两到四周的评估期，以确定基线加密行为。您可以通过运行 `security anti-ransomware volume show`指挥和检查 `Block device detection status` 。
+进行为期两到四周的评估期，以确定基线加密行为，同时 ARP/AI 在评估期内为 SAN 卷提供即时主动保护。在建立基线阈值期间，可以进行检测并发出警报。您可以通过运行以下命令来确定评估期是否结束： `security anti-ransomware volume show`命令和检查 `Block device detection status`。
 
 link:respond-san-entropy-eval-period.html["了解有关 SAN 卷和熵评估期的更多信息"] 。
  a| 
@@ -283,10 +287,15 @@ ARP 基于成熟的ONTAP数据保护和灾难恢复技术，可有效应对勒�
 
 从ONTAP 9.16.1 开始，ARP 采用机器学习模型进行反勒索软件分析，从而提升了网络弹性。该模型能够在 NAS 环境中以 99% 的准确率检测不断演变的勒索软件形式。的机器学习模型在模拟勒索软件攻击前后都基于大量文件数据集进行了预训练。这种资源密集型的训练是在ONTAP之外进行的，使用开源取证研究数据集来训练模型。整个建模流程不会使用客户数据，因此不存在隐私问题。此训练生成的预训练模型随ONTAP一起提供。但无法通过ONTAP CLI 或ONTAP API 访问或修改此模型。
 
-.使用FlexVol卷立即过渡到ARP/AI的主动保护
-有了 ARP/AI 和FlexVol卷，就没有 .NET 卷了<<了解 ARP 模式,学习期>>。安装或升级到 9.16 后，ARP/AI 将立即启用并处于活动状态。集群升级到ONTAP 9.16.1 后，如果现有和新的FlexVol卷已启用 ARP，则 ARP/AI 将自动启用。
+.立即过渡到主动防御ARP/AI
+使用ARP/AI，就没有<<了解 ARP 模式,学习期>>。对于以下受支持的卷类型，ARP/AI 在安装或升级后立即激活：
 
-link:enable-arp-ai-with-au.html["详细了解如何启用ARP/AI"]
+* NAS FlexVol卷，支持ONTAP 9.16.1 及更高版本
+* NAS FlexGroup卷， ONTAP9.18.1 及更高版本
+* 使用ONTAP 9.17.1 及更高版本的 SAN 卷（立即激活，即使在期间）link:respond-san-entropy-eval-period.html["评估期"] ）
+
+
+对于已启用 ARP 功能的现有卷和新卷，将集群升级到支持 ARP/AI 的ONTAP版本后，ARP/AI 保护将自动激活。
 
 .ARP/AI自动更新
 为了持续提供针对最新勒索软件威胁的最新保护，ARP/AI 提供频繁的自动更新，这些更新在ONTAP常规升级和发布周期之外进行。如果您link:../update/enable-automatic-updates-task.html["已启用自动更新"]在您选择安全文件自动更新后，您也将能够开始接收 ARP/AI 的自动安全更新。您还可以选择link:arp-ai-automatic-updates.html#manually-update-arpai-with-the-latest-security-package["手动进行这些更新"]并控制更新发生的时间。

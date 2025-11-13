@@ -16,10 +16,17 @@ summary: 通过ONTAP S3快照功能、您可以从S3客户端查看、浏览和�
 
 
 [role="lead"]
-通过ONTAP S3快照功能、您可以查看和浏览S3客户端中存储分段的S3快照内容。此外、您还可以从S3快照还原S3客户端上的单个对象、一组对象或整个存储分段。
+从ONTAP 9.16.1 开始，您可以从 S3 客户端查看和浏览存储桶的 S3 快照数据。从ONTAP 9.18.1 开始，可以使用ONTAP CLI 直接访问 S3 快照存储桶。此外，您还可以从 S3 快照在 S3 客户端上恢复单个对象、一组对象或整个存储桶。
 
 .开始之前
-要查看、浏览和还原存储分段上的ONTAP S3快照、应事先创建快照、并可通过S3协议客户端访问S3基本存储分段。
+* 集群中的所有节点必须运行ONTAP 9.18.1 或更高版本，才能在ONTAP CLI 中以原生方式执行存储桶快照恢复操作。从ONTAP 9.18,1 开始，不再需要 S3 浏览器，但操作仍然受支持。
+* 在给定的存储桶上，一次只允许执行一次快照恢复操作。
+
+
+.关于此任务
+从ONTAP 9.16.1 开始， ONTAP S3 快照功能为ONTAP S3 存储桶提供基本的快照功能，包括手动和计划快照的创建和删除、S3 存储桶的快照策略以及基于 S3 客户端的快照浏览。
+
+从ONTAP 9.18.1 开始， ONTAP增加了对原生快照恢复的支持，使ONTAP管理员无需使用 S3 浏览器即可实现时间点恢复功能。快照中仅捕获当前存储桶版本。版本历史记录不会被捕获，也不会通过 S3 快照还原操作进行还原。
 
 
 
@@ -35,9 +42,9 @@ summary: 通过ONTAP S3快照功能、您可以从S3客户端查看、浏览和�
 vserver object-store-server bucket snapshot show
 ----
 +
-您可以查看快照名称、Storage VM、分段、创建时间以及 `instance-uuid`为集群上的所有分段创建的S3快照。
+您可以查看集群上所有存储桶创建的 S3 快照的快照名称、存储虚拟机、存储桶、创建时间和实例 UUID。
 
-. 您还可以指定分段名称、以查看为该特定分段创建的所有S3快照的名称、创建时间和创建时间 `instance-uuid`。
+. 您还可以指定存储桶名称，以查看为该特定存储桶创建的所有 S3 快照的名称、创建时间和实例 UUID。
 +
 [listing]
 ----
@@ -51,9 +58,9 @@ vserver object-store-server bucket snapshot show -vserver <svm_name> -bucket <bu
 
 如果您发现环境中存在任何故障或问题、可以浏览S3存储分段快照的内容以确定错误。您还可以浏览S3快照以确定要还原的无错误内容。
 
-S3快照会作为快照分段提供给S3客户端。快照分段名称的格式为 `<base_bucket_name>-s3snap-<snapshot_name>`。您可以使用S3 API操作查看Storage VM中的所有Snapshot分段 `ListBuckets`。
+S3 快照以快照存储桶的形式呈现给 S3 客户端。快照存储桶名称的格式为： `<base_bucket_name>-s3snap-<snapshot_name>` 。您可以使用以下方法查看存储虚拟机中的所有快照存储桶： `ListBuckets` S3 API 操作。
 
-S3快照分段会继承基本分段的访问策略、并且仅支持只读操作。如果您有权访问基本存储分段，则还可以对S3快照存储分段执行只读S3 API操作，例如 `HeadObject`、、 `GetObject`、 `GetObjectTagging`、 `ListObjects` `ListObjectVersions` `GetObjectAcl`和 `CopyObject`。
+S3 快照存储桶继承了基础存储桶的访问策略，并且仅支持只读操作。禁止执行删除和写入操作。如果您拥有访问基础存储桶的权限，您还可以对 S3 快照存储桶执行只读的 S3 API 操作，例如： `HeadObject` ， `GetObject` ， `GetObjectTagging` ， `ListObjects` ， `ListObjectVersions` ， `GetObjectAcl` ， 和 `CopyObject`。
 
 
 NOTE: 只有当S3快照分段是源分段的快照时、才支持此 `CopyObject`操作、而不是当它是快照的存储目标时。
@@ -62,16 +69,39 @@ NOTE: 只有当S3快照分段是源分段的快照时、才支持此 `CopyObject
 
 
 
-== 从S3快照还原内容
+== 使用ONTAP从 S3 快照恢复存储桶
 
-您可以在S3客户端上执行还原操作、通过将内容从快照分段复制到原始分段或其他分段来恢复单个对象、一组对象或整个分段。您可以浏览快照以确定应复制哪些快照内容。
+从ONTAP 9.18.1 开始，您可以使用ONTAP CLI 通过ONTAP S3 快照恢复整个存储桶。您只能恢复在创建所选快照时存在的存储桶版本。
 
-您可以使用命令还原整个存储分段、带前缀的对象或单个对象 `aws s3 cp`。
+.步骤
+. 确定要用于恢复存储桶的快照：
++
+[listing]
+----
+vserver object-store-server bucket snapshot show
+----
+. 恢复存储桶：
++
+[listing]
+----
+vserver object-store-server bucket snapshot restore start -vserver <storage VM name> -bucket <bucket name> -snapshot <snapshot name>
+----
+
+
+
+
+== 使用 S3 客户端从 S3 存储桶快照恢复数据
+
+除了在ONTAP中恢复整个存储桶之外，您还可以使用 S3 客户端（如 S3cmd 或 S3 Browser）从 S3 快照恢复单个对象、一组对象或整个存储桶。
+
+link:index.html#snapshots-on-versioned-and-non-versioned-buckets["了解更多关于版本化快照和非版本化快照的信息。"]
+
+您可以使用以下方法恢复整个存储桶、具有特定前缀的对象或单个对象： `aws s3 cp`命令。
 
 .步骤
 . 为基础S3存储分段创建快照。
 +
-[listing]
+[source, cli]
 ----
 vserver object-store-server bucket snapshot create -vserver <svm_name> -bucket <base_bucket_name> -snapshot <snapshot_name>
 ----
@@ -79,19 +109,19 @@ vserver object-store-server bucket snapshot create -vserver <svm_name> -bucket <
 +
 ** 还原整个存储分段。使用格式的快照分段名称 `<base_bucket_name>-s3snap-<snapshot_name>`。
 +
-[listing]
+[source, cli]
 ----
 aws --endpoint http://<IP> s3 cp s3://<snapshot-bucket-name> s3://<base-bucket>  --recursive
 ----
 ** 还原目录中带有前缀的对象 `dir1`：
 +
-[listing]
+[source, cli]
 ----
 aws --endpoint http://<IP> s3 cp s3://<snapshot-bucket-name>/dir1 s3://<base_bucket_name>/dir1 --recursive
 ----
 ** 还原名为的单个对象 `web.py`：
 +
-[listing]
+[source, cli]
 ----
 aws --endpoint http://<IP> s3 cp s3:// <snapshot-bucket-name>/web.py s3://<base_bucket_name>/web.py
 ----

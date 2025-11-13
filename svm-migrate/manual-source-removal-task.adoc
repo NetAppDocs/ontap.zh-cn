@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: svm, migrate, remove, cleanup, source, manual 
 summary: 如果在禁用源清理的情况下执行 SVM 迁移，则可以在客户端转换完成后手动删除源 SVM 。 
 ---
-= 在客户端转换后手动删除源 SVM
+= 客户端切换后手动移除源ONTAP SVM
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -14,12 +14,16 @@ summary: 如果在禁用源清理的情况下执行 SVM 迁移，则可以在客
 如果在禁用源清理的情况下执行 SVM 迁移，则可以在客户端转换完成后手动删除源 SVM 。
 
 .步骤
-. 验证其状态是否已准备好进行源清理：
+. 确认状态为已准备好进行源清理：
 +
-`dest_cluster> vserver migrate show`
-
+[source, cli]
+----
+vserver migrate show
+----
 . 清理源：
 +
-`dest_cluster> vserver migrate source-cleanup -vserver <vserver_name>`
-
+[source, cli]
+----
+vserver migrate source-cleanup -vserver <SVM_name>
+----
 

@@ -1,0 +1,58 @@
+---
+sidebar: sidebar 
+permalink: high-availability/ha-pair-encryption.html 
+keywords: cluster network, encryption, TLS, data-in-flight 
+summary: 配置HA节点对之间的加密通信 
+---
+= 配置ONTAP HA 流量的加密
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.18.1 开始，您可以配置高可用性 (HA) 对节点之间网络流量的加密。此加密技术可保护高可用性 (HA) 对中节点之间传输的客户数据和元数据。
+
+.关于此任务
+* 默认情况下，HA流量加密功能处于禁用状态。
+* 启用或禁用 HA 流量加密会影响集群中的所有 HA 对。您无法为单个节点启用或禁用加密。
+* 启用 HA 流量加密后，HA 对节点之间传输的所有客户数据和元数据都将进行加密。部分高可用性流量（例如文件系统元数据和心跳消息）未加密。
+* 启用 HA 流量加密后，如果向集群添加了新的 HA 对，则需要通过重新运行以下命令手动为新节点启用 HA 流量加密： `security ha-network modify -enabled true`命令。
+
+
+.开始之前
+* 您必须是ONTAP管理员。 `admin`执行以下步骤所需的权限级别。
+* 启用高可用性流量加密之前，您必须：link:../encryption-at-rest/configure-external-key-management-concept.html["配置外部密钥管理"] 。
+* 集群中的所有节点必须运行ONTAP 9.18.1 或更高版本才能启用 HA 流量加密。
+
+
+.步骤
+. 查看HA流量的当前加密状态：
++
+[source, cli]
+----
+security ha-network show
+----
++
+此命令显示每个节点的 HA 流量加密的当前状态：
+
++
+[source]
+----
+security ha-network show
+Node                  Enabled
+--------------------- --------------------
+node1                 true
+node2                 true
+node3                 true
+node4                 true
+4 entries were displayed.
+----
+. 启用或禁用高可用性流量加密：
+
+
+[source, cli]
+----
+security ha-network modify -enabled <true|false>
+----
+此命令启用或禁用集群中所有节点的加密高可用性流量。当向集群添加新的 HA 对时，您需要重新运行此命令以启用新节点的 HA 流量加密。

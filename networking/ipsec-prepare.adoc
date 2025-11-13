@@ -39,6 +39,9 @@ IPsec是IETF维护的一种Internet标准。它可以为IP级别网络端点之�
 
 IPsec 最初是在ONTAP 9.8 中引入的。该实现在后续ONTAP版本中不断发展，如下所述。
 
+.ONTAP 9.18.1
+IPsec硬件卸载支持已扩展到IPv6流量。
+
 .ONTAP 9.17.1
 IPsec 硬件卸载支持扩展至link:../networking/combine_physical_ports_to_create_interface_groups.html["链路聚合组"] 。link:../networking/ipsec-configure.html#define-the-security-policy-database-spd["后量子预共享密钥（PPK）"]支持 IPsec 预共享密钥 (PSK) 身份验证。
 
@@ -128,7 +131,7 @@ security ipsec config modify -replay-window 0
 在使用IPsec硬件卸载功能之前，应考虑一些限制。
 
 .IPv6
-IPsec 硬件卸载功能不支持 IPv6。IPv6仅在 IPsec 软件实现中受支持。
+从ONTAP 9.18.1 开始，IPsec 硬件卸载功能支持 IPv6。在ONTAP 9.18.1 之前的版本中，IPsec 硬件卸载不支持 IPv6。
 
 .扩展序列号
 硬件卸载功能不支持IPsec扩展序列号。仅使用正常的32位序列号。

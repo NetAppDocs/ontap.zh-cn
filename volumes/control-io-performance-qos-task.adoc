@@ -24,7 +24,10 @@ summary: '您可以使用存储服务质量(QoS)策略组来管理工作负载�
 +
 您可以在创建策略组时指定 SVM 。
 
-* 如果将卷分配给策略组，则不能将包含该卷的 SVM 或任何子 LUN 或文件分配给策略组。
+* 从ONTAP 9.18.1 开始，您可以将 QoS 策略分配给包含在具有 QoS 策略的其他对象中的对象，例如 SVM 中包含的卷。使用嵌套 QoS 策略时，将应用限制性最强的策略。
++
+在ONTAP 9.18.1 之前的版本中，您可以将 QoS 策略分配给包含在其他具有 QoS 策略的对象中的对象，但这些对象由 QoS 单独跟踪，并且不会相互交互。例如，如果您有一个 50 IOPS 上限的 SVM 和一个 100 IOPS 上限的 FlexVol volume，则FlexVol volume受 100 IOPS 上限的限制，但 QoS 不会将其计入 SVM 工作负载。
+
 
 
 有关如何使用存储 QoS 的详细信息，请参见 link:../system-admin/index.html["《系统管理参考》"]。
@@ -38,6 +41,7 @@ summary: '您可以使用存储服务质量(QoS)策略组来管理工作负载�
 
 .相关信息
 * link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=qos+policy-group["QoS策略组"^]
+* 链接： https://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html ://docs.netapp.com/us-en/ontap-cli/qos-policy-group-create.html [qos policy-group create]
 * link:https://docs.netapp.com/us-en/ontap-cli/volume-create.html["卷创建"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["卷修改"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=qos+statistics["QoS统计信息"^]

@@ -24,7 +24,7 @@ summary: 从ONTAP 9.11.1开始、可以根据工作负载修改自主防兰软�
 
 当自主勒索软件防护 (ARP) 处于学习或评估模式时，它会为卷行为制定基准值。这些基准值包括熵、文件扩展名以及（从ONTAP 9.11.1 开始的）IOPS。这些基准用于评估勒索软件威胁。有关这些标准的更多信息，请参阅link:index.html#what-arp-detects["ARP检测到的内容"] 。
 
-某些卷和工作负载需要使用不同的检测参数。例如、启用了ARP的卷可能会托管多种类型的文件扩展名、在这种情况下、您可能需要将前所未见文件扩展名的阈值计数修改为大于默认值20的数字、或者禁用基于前所未见文件扩展名的警告。从ONTAP 9.11.1开始、您可以修改攻击检测参数、使其更适合您的特定工作负载。
+不同的数据量和工作负载需要不同的检测参数。例如，启用 ARP 的卷可能托管多种类型的文件扩展名，在这种情况下，您可能需要将从未见过的文件扩展名的阈值计数修改为大于默认值 20 的数字，或者禁用基于从未见过的文件扩展名的警告。从ONTAP 9.11.1 开始，您可以修改攻击检测参数，使其更好地适应您的特定工作负载。
 
 从ONTAP 9.14.1开始、您可以在ARP发现新文件扩展名以及创建快照时配置警报。有关详细信息，请参见 <<modify-alerts>>。
 
@@ -72,8 +72,8 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
                  File Create Rate Surge Notify Percentage : 100
                  File Rename Rate Surge Notify Percentage : 100
                  File Delete Rate Surge Notify Percentage : 100
- Never Seen before File Extensions Count Notify Threshold : 20
-       Never Seen before File Extensions Duration in Hour : 24
+ Never Seen before File Extensions Count Notify Threshold : 5
+       Never Seen before File Extensions Duration in Hour : 48
 ....
 . 所有显示的字段均可使用布尔值或整数值进行修改。要修改字段，请使用 `security anti-ransomware volume attack-detection-parameters modify`命令。
 +
@@ -90,8 +90,10 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .报告一次性激增
 . 如果在已知情况下发生一次性激增、而您希望ARP在未来情况下报告类似的激增、请从工作负载行为中清除该激增：
 +
-`security anti-ransomware volume workload-behavior clear-surge -vserver <svm_name> -volume <volume_name>`
-
+[source, cli]
+----
+security anti-ransomware volume workload-behavior clear-surge -vserver <svm_name> -volume <volume_name>
+----
 +
 有关的详细信息 `security anti-ransomware volume workload-behavior clear-surge`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-clear-surge.html["ONTAP 命令参考"^]。
 
@@ -100,8 +102,10 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .修改基线喘振
 . 如果报告的浪涌应视为正常应用行为、则报告此浪涌以修改基线浪涌值。
 +
-`security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver <svm_name> -volume <volume_name>`
-
+[source, cli]
+----
+security anti-ransomware volume workload-behavior update-baseline-from-surge -vserver <svm_name> -volume <volume_name>
+----
 +
 详细了解 `security anti-ransomware volume workload-behavior update-baseline-from-surge`在link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-update-baseline-from-surge.html["ONTAP 命令参考"^] 。
 
@@ -148,24 +152,32 @@ security anti-ransomware volume attack-detection-parameters show -vserver vs1 -v
 .为卷设置警报
 * 要为新文件扩展名设置警报、请执行以下操作：
 +
-`security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-new-file-extension-seen true`
-
+[source, cli]
+----
+security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-new-file-extension-seen true`
+----
 * 要为创建ARP快照设置警报、请执行以下操作：
 +
-`security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-snapshot-copy-creation true`
-
+[source, cli]
+----
+security anti-ransomware volume event-log modify -vserver <svm_name> -volume <volume_name> -is-enabled-on-snapshot-copy-creation true
+----
 * 使用确认设置 `anti-ransomware volume event-log show` 命令：
 
 
 .为SVM设置警报
 * 要为新文件扩展名设置警报、请执行以下操作：
 +
-`security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-new-file-extension-seen true`
-
+[source, cli]
+----
+security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-new-file-extension-seen true
+----
 * 要为创建ARP快照设置警报、请执行以下操作：
 +
-`security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true`
-
+[source, cli]
+----
+security anti-ransomware vserver event-log modify -vserver <svm_name> -is-enabled-on-snapshot-copy-creation true
+----
 * 使用确认设置 `security anti-ransomware vserver event-log show` 命令：
 
 
