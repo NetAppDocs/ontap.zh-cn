@@ -1,0 +1,48 @@
+---
+permalink: nfs-admin/nconnect-concept.html 
+sidebar: sidebar 
+keywords: nconnect, nfs, performance, tcp connections, nfsv3, nfsv4.2 nfsv4.1 
+summary: nconnect 通过为单个挂载点启用多个 TCP 连接来提高 NFS 性能。 
+---
+= 了解 nconnect 如何提升 NFS 性能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.8 开始，启用 NFSv4.1 时，nconnect 功能默认可用。nconnect 通过允许单个挂载点建立多个 TCP 连接来提升 NFS 客户端性能。
+
+
+
+== nconnect 的工作原理
+
+早期的 NFS 客户端实施仅使用挂载的单个 TCP 连接。在 ONTAP 中，单个 TCP 连接可能会随着 IOPS 的增加而成为瓶颈。
+
+启用 nconnect 的客户端可以为单个 NFS 挂载点建立多个 TCP 连接（最多 16 个）。nconnect 仅使用一个 IP 地址，并通过该 IP 地址建立多个 TCP 连接来挂载 NFS 导出。NFS 客户端以轮询方式将文件操作分配到多个 TCP 连接上，从而从可用的网络带宽中获得更高的吞吐量。
+
+
+
+== 支持的 NFS 版本
+
+* 建议将 nconnect 用于 NFSv3、NFSv4.2 和 NFSv4.1 挂载。
+* 不建议将 nconnect 用于 NFSv4.0 挂载。
++
+
+NOTE: 为了获得最佳性能， NetApp建议使用 nconnect 搭配 NFSv4.1，而不是 NFSv4.0。虽然 NFSv4.0 支持多个连接，但 NFSv4.1 与 nconnect 结合使用可提供更好的负载分配和更高的吞吐量。
+
+
+
+
+
+== 客户支持
+
+请参见 NFS 客户端文档以确认您的客户端版本是否支持 nconnect 。
+
+
+
+== 相关信息
+
+* link:ontap-support-nfsv41-concept.html["了解 ONTAP 对 NFSv4.1 的支持"]
+* link:ontap-support-nfsv42-concept.html["了解 ONTAP 对 NFSv4.2 的支持"]
+
