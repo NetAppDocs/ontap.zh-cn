@@ -9,12 +9,12 @@ summary: 定期更改板载密钥管理密码。将新密码存储在存储系�
 
 
 [role="lead"]
-定期更改板载密钥管理密码。将新密码存储在存储系统之外的安全位置。
+NetApp建议您定期更改板载密钥管理密码。您必须将新密码短语存储在存储系统之外的安全位置。
 
 .开始之前
 * 要执行此任务，您必须是集群或 SVM 管理员。
 * 此任务需要高级权限。
-* 如果您正在管理ONTAP MetroCluster环境，则必须更新两个集群上的密码
+* 在MetroCluster环境中，在本地集群上更新密码短语后，同步伙伴集群上的密码短语更新。
 
 
 .步骤
@@ -22,39 +22,63 @@ summary: 定期更改板载密钥管理密码。将新密码存储在存储系�
 +
 `set -privilege advanced`
 
-. 更改板载密钥管理密码短语：
+. 更改机载密钥管理密码。您使用的命令取决于您运行的ONTAP版本。
 +
-[cols="25,75"]
-|===
-
-
-| 对于此 ONTAP 版本 ... | 使用此命令 ... 
-
-
- a| 
-ONTAP 9.6 及更高版本
- a| 
+[role="tabbed-block"]
+====
+.ONTAP 9.6 及更高版本
+--
 `security key-manager onboard update-passphrase`
 
-
-
- a| 
-ONTAP 9.5 及更早版本
- a| 
+--
+.ONTAP 9.5 及更早版本
+--
 `security key-manager update-passphrase`
 
-|===
+--
+====
 . 输入一个介于 32 到 256 个字符之间的密码，或者对于“`cc-mode`”，输入一个介于 64 到 256 个字符之间的密码。
 +
 如果指定的 "`cc-mode` " 密码短语少于 64 个字符，则在密钥管理器设置操作再次显示密码短语提示之前会有五秒的延迟。
 
 . 在密码短语确认提示符处，重新输入密码短语。
+. 如果您使用的是MetroCluster配置，请在伙伴集群上同步更新后的密码短语。
++
+.. 通过选择适合您ONTAP版本的正确命令，在伙伴集群上同步密码短语：
++
+[role="tabbed-block"]
+====
+.ONTAP 9.6 及更高版本
+--
+`security key-manager onboard sync`
+
+--
+.ONTAP 9.5 及更早版本
+--
+*** 在ONTAP 9.5 中，运行：
++
+`security key-manager setup -sync-metrocluster-config`
+
+*** 在ONTAP 9.4 及更早版本中，更新本地集群上的密码短语后，等待 20 秒，然后在伙伴集群上运行以下命令：
++
+`security key-manager setup`
+
+
+
+--
+====
+.. 出现提示时，请输入新的密码。
++
+两个集群必须使用相同的密码短语。
+
+
+
 
 
 .完成后
-您应将板载密钥管理密码短语复制到存储系统以外的安全位置，以供将来使用。
+将板载密钥管理密码短语复制到存储系统外部的安全位置，以备将来使用。
 
-更改板载密钥管理密码短语时，您应手动备份密钥管理信息。
+每次更改机载密钥管理密码时，请手动备份密钥管理信息。
 
 .相关信息
 * link:backup-key-management-information-manual-task.html["手动备份板载密钥管理信息"]
