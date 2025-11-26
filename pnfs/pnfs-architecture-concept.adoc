@@ -1,0 +1,180 @@
+---
+permalink: pnfs/pnfs-architecture-concept.html 
+sidebar: sidebar 
+keywords: tr-4063, pnfs, architecture, metadata server, data server, parallel nfs, layout, technical report 
+summary: pNFS架构将元数据和数据路径分离，通过数据本地化和并行化提供性能优势。 
+---
+= 了解ONTAP中的 pNFS 架构
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+pNFS 架构由三个主要组件构成：支持 pNFS 的 NFS 客户端、为元数据操作提供专用路径的元数据服务器以及提供文件本地化路径的数据服务器。
+
+客户端访问 pNFS 需要与 NFS 服务器上的数据和元数据路径建立网络连接。如果 NFS 服务器包含客户端无法访问的网络接口，则服务器可能会向客户端通告无法访问的数据路径，从而导致服务中断。
+
+
+
+== 元数据服务器
+
+当客户端使用 NFSv4.1 或更高版本发起挂载，且 NFS 服务器上启用了 pNFS 时，pNFS 中的元数据服务器就会建立。完成此操作后，所有元数据流量都将通过此连接发送，并在挂载期间保持在此连接上，即使接口迁移到另一个节点也是如此。
+
+.在ONTAP的 pNFS 中建立元数据服务器
+image::pNFS_fig_007.png[在ONTAP的 pNFS 中建立元数据服务器]
+
+pNFS 支持是在挂载调用期间确定的，具体是在 EXCHANGE_ID 调用中确定的。在 NFS 操作下方的数据包捕获中可以看到这个标志。当 pNFS 标志 `EXCHGID4_FLAG_USE_PNFS_DS` 和 `EXCHGID4_FLAG_USE_PNFS_MDS` 如果设置为 1，则该接口符合 pNFS 中的数据和元数据操作条件。
+
+.pNFS挂载的数据包捕获
+image::pNFS_fig_008.png[pNFS挂载的数据包捕获]
+
+NFS 中的元数据通常包括文件和文件夹属性，例如文件句柄、权限、访问和修改时间以及所有权信息。元数据还可以包括创建和删除调用、链接和取消链接调用以及重命名。
+
+在 pNFS 中，还有一部分元数据调用是 pNFS 特性特有的，这些调用将在后续章节中进行更详细的介绍。 link:https://www.rfc-editor.org/rfc/rfc5661.html#section-12.3["RFC 5661"^]。这些调用用于帮助确定 pNFS 合格设备、设备到数据集的映射以及其他所需信息。下表列出了 pNFS 特有的元数据操作。
+
+[cols="30,70"]
+|===
+| 操作 | Description 
+
+
+| 布局获取 | 从元数据服务器获取数据服务器映射。 
+
+
+| 布局委员会 | 服务器提交布局并更新元数据映射。 
+
+
+| 布局返回 | 返回布局；如果数据被修改，则返回新布局。 
+
+
+| 获取设备信息 | 客户端获取存储集群中数据服务器的最新信息。 
+
+
+| 获取设备列表 | 客户端请求提供参与存储集群的所有数据服务器的列表。 
+
+
+| CB_LAYOUTRECALL | 如果检测到冲突，服务器会从客户端调用数据布局。 
+
+
+| CB_RECALL_ANY | 将所有布局返回给元数据服务器。 
+
+
+| CB_NOTIFY_DEVICEID | 设备 ID 发生任何变更时发出通知。 
+|===
+
+
+== 数据路径信息
+
+元数据服务器建立并开始数据操作后， ONTAP开始跟踪符合 pNFS 读取和写入操作条件的设备 ID，以及将集群中的卷与本地网络接口关联起来的设备映射。当对挂载点执行读取或写入操作时，就会发生此过程。元数据调用，例如 `GETATTR`不会触发这些设备映射。因此，运行一个 `ls` 挂载点内的命令不会更新映射。
+
+可以使用ONTAP CLI 的高级权限查看设备和映射，如下所示。
+
+[listing]
+----
+::*> pnfs devices show -vserver DEMO
+  (vserver nfs pnfs devices show)
+Vserver Name     Mapping ID      Volume MSID     Mapping Status  Generation
+---------------  --------------- --------------- --------------- -------------
+DEMO             16              2157024470      available       1
+
+::*> pnfs devices mappings show -vserver SVM
+  (vserver nfs pnfs devices mappings show)
+Vserver Name    Mapping ID      Dsid            LIF IP
+--------------  --------------- --------------- --------------------
+DEMO            16              2488            10.193.67.211
+----
+
+NOTE: 这些命令中没有卷名称。相反，将使用与这些卷关联的数字 ID：主集 ID (MSID) 和数据集 ID (DSID)。要查找与映射相关的体积，您可以使用 `volume show -dsid [dsid_numeric]` 或者 `volume show -msid [msid_numeric]` 具备ONTAP CLI 的高级权限。
+
+当客户端尝试读取或写入位于远离元数据服务器连接的节点上的文件时，pNFS 将协商适当的访问路径，以确保这些操作的数据本地性，并且客户端将重定向到已发布的 pNFS 设备，而不是尝试穿越集群网络来访问该文件。这有助于降低CPU占用率和网络延迟。
+
+.使用 NFSv4.1 的远程读取路径，无需 pNFS
+image::pNFS_fig_009.png[使用 NFSv4.1 的远程读取路径，无需 pNFS]
+
+.使用 pNFS 的本地化读取路径
+image::pNFS_fig_010.png[使用 pNFS 的本地化读取路径]
+
+
+
+== pNFS 控制路径
+
+除了 pNFS 的元数据和数据部分之外，还有一个 pNFS 控制路径。控制路径由 NFS 服务器用于同步文件系统信息。在ONTAP集群中，后端集群网络会定期复制，以确保所有 pNFS 设备和设备映射保持同步。
+
+
+
+== pNFS 设备群体工作流程
+
+以下描述了客户端请求读取或写入卷中的文件后，pNFS 设备如何在ONTAP中填充。
+
+. 客户端请求读取或写入；执行 OPEN 操作并检索文件句柄。
+. 执行 OPEN 操作后，客户端通过元数据服务器连接，以 LAYOUTGET 调用的方式将文件句柄发送到存储设备。
+. LAYOUTGET 向客户端返回有关文件布局的信息，例如状态 ID、条带大小、文件段和设备 ID。
+. 然后客户端获取设备 ID，并向服务器发送 GETDEVINFO 调用以检索与该设备关联的 IP 地址。
+. 存储设备会发送一条回复，其中包含用于本地访问该设备的关联 IP 地址列表。
+. 客户端通过存储设备返回的本地 IP 地址继续进行 NFS 通信。
+
+
+
+
+== pNFS与FlexGroup体积的交互
+
+ONTAP中的FlexGroup卷将存储呈现为跨越集群中多个节点的FlexVol volume组成部分，从而允许工作负载利用多个硬件资源，同时保持单个挂载点。由于多个具有多个网络接口的节点与工作负载交互，因此在ONTAP中看到远程流量穿越后端集群网络是很自然的结果。
+
+.在不使用 pNFS 的情况下， FlexGroup卷中的单个文件访问
+image::pNFS_fig_011.png[在不使用 pNFS 的情况下， FlexGroup卷中的单个文件访问]
+
+使用 pNFS 时， ONTAP会跟踪FlexGroup卷的文件和卷布局，并将它们映射到集群中的本地数据接口。例如，如果包含正在访问的文件的组成卷位于节点 1 上，则ONTAP将通知客户端将数据流量重定向到节点 1 上的数据接口。
+
+.在FlexGroup卷中使用 pNFS 进行单文件访问
+image::pNFS_fig_012.png[在FlexGroup卷中使用 pNFS 进行单文件访问]
+
+pNFS 还提供了从单个客户端向文件呈现并行网络路径的功能，而没有 pNFS 的 NFSv4.1 则不具备此功能。例如，如果客户端想要使用 NFSv4.1（不使用 pNFS）从同一挂载点同时访问四个文件，则所有文件都将使用相同的网络路径， ONTAP集群将改为向这些文件发送远程请求。挂载路径可能会成为操作的瓶颈，因为它们都遵循一条路径到达同一个节点，并且还要处理元数据操作以及数据操作。
+
+.在不使用 pNFS 的情况下， FlexGroup卷中可同时访问多个文件。
+image::pNFS_fig_013.png[在不使用 pNFS 的情况下， FlexGroup卷中可同时访问多个文件。]
+
+当使用 pNFS 从单个客户端同时访问相同的四个文件时，客户端和服务器会协商每个节点上的文件本地路径，并使用多个 TCP 连接进行数据操作，而挂载路径则作为所有元数据操作的位置。这样既可以利用本地文件路径来降低延迟，也可以通过使用多个网络接口来提高吞吐量，前提是客户端可以发送足够的数据来使网络饱和。
+
+.在FlexGroup卷中使用 pNFS 实现多个文件同时访问
+image::pNFS_fig_014.png[在FlexGroup卷中使用 pNFS 实现多个文件同时访问]
+
+下面显示的是在单个 RHEL 9.5 客户端上进行简单测试运行的结果，其中使用 dd 并行读取四个 10GB 文件（全部位于两个ONTAP集群节点的不同组成卷上）。使用 pNFS 时，每个文件的整体吞吐量和完成时间都得到了提高。当不使用 pNFS 而使用 NFSv4.1 时，挂载点本地文件和远程文件之间的性能差异比使用 pNFS 时更大。
+
+[cols="40,30,30"]
+|===
+| 测试 | 每个文件的吞吐量（MB/s） | 每个文件的完成时间 
+
+
+| NFSv4.1：无 pNFS  a| 
+* 文件 1–228（本地）
+* 文件.2–227（本地）
+* 文件.3–192（远程）
+* 文件.4–192（远程）
+
+ a| 
+* 文件.1–46（本地）
+* 文件.2–46.1（本地）
+* 文件.3–54.5（远程）
+* 文件.4–54.5（远程）
+
+
+
+
+| NFSv4.1：与 pNFS  a| 
+* 文件 1–248（本地）
+* 文件.2–246（本地）
+* 文件.3–244（本地通过pNFS）
+* 文件.4–244（本地通过pNFS）
+
+ a| 
+* 文件.1–42.3（本地）
+* 文件.2–42.6（本地）
+* 文件.3–43（本地通过pNFS）
+* 文件 4–43（本地通过 pNFS）
+
+
+|===
+.相关信息
+* link:../flexgroup/index.html["FlexGroup 卷管理"]
+* https://www.netapp.com/pdf.html?item=/media/12385-tr4571pdf.pdf["NetApp技术报告 4571： FlexGroup最佳实践"^]
+

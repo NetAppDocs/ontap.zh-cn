@@ -1,0 +1,55 @@
+---
+permalink: pnfs/pnfs-deployment-strategy-concept.html 
+sidebar: sidebar 
+keywords: tr-4063, pnfs, deployment, strategy, configuration, traditional nfs, benefits, technical report 
+summary: 了解传统 NFS 的挑战以及 pNFS 如何解决这些挑战，有助于您规划有效的 pNFS 部署。 
+---
+= ONTAP中的 pNFS 部署策略
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+pNFS 的引入是为了改进传统的 NFS，它分离元数据和数据路径，提供数据本地化，并支持并行操作。
+
+
+
+== 传统NFS的挑战和pNFS的优势
+
+下表列出了传统 NFS 面临的挑战，并解释了ONTAP中的 pNFS 如何解决这些挑战。
+
+[cols="40,60"]
+|===
+| 挑战 | pNFS 获益 
+
+
+| *元数据和数据走同一条路径* 在传统的 NFS 中，元数据和数据走同一条路径，这可能会导致网络和 CPU 饱和，因为一条路径会连接到集群中的单个硬件节点。当许多用户尝试访问同一个 NFS 导出时，这种情况会更加严重。 | *元数据和数据路径分离，数据路径并行化* 通过分离 NFS 流量的元数据和数据路径，并为数据路径提供多条网络路径， ONTAP集群中的 CPU 和网络资源得到最大化利用，从而提高了工作负载的扩展性。 
+
+
+| *工作负载分配挑战* 在ONTAP NAS 集群中，最多可以有 24 个节点，每个节点都可以有自己的一组数据卷和网络接口。每个卷都可以承载自己的工作负载，或者工作负载的子集；而使用FlexGroup卷，为了简化操作，工作负载可以存在于访问单个命名空间的多个节点上。当客户端挂载 NFS 导出时，网络流量将在单个节点上建立。当被访问的数据位于集群中的单独节点上时，就会发生远程流量，这会增加工作负载的延迟和管理的复杂性。 | *本地并行数据结构路径* 由于 pNFS 将数据路径与元数据分离，并根据卷在集群中的位置提供多个并行数据路径，因此可以通过减少集群中网络流量的距离以及利用集群中的多个硬件资源来降低延迟。此外，由于ONTAP中的 pNFS 会自动重定向数据流量，管理员无需管理多个导出路径和位置。 
+
+
+| *NFS 挂载点迁移* 挂载点建立后，卸载并重新挂载卷会造成干扰。ONTAP提供了在节点之间迁移网络接口的功能，但这会增加管理开销，并且会对使用 NFSv4.x 的有状态 NFS 连接造成干扰。重新定位挂载点的部分原因与数据本地性挑战有关。 | *自动路径重定位* 使用 pNFS 时，NFS 服务器会维护一个网络接口和卷位置的表。当客户端通过 pNFS 中的元数据路径请求数据结构时，服务器将向客户端提供优化的网络路径，然后客户端将使用该路径进行数据操作。这大大降低了工作负载的管理开销，并且在某些情况下可以提高性能。 
+|===
+
+
+== 配置要求
+
+在NetApp ONTAP中配置 pNFS 需要以下步骤：
+
+* 支持 pNFS 且挂载于 NFSv4.1 或更高版本的 NFS 客户端
+* ONTAP中的 NFS 服务器已启用 NFSv4.1 (`nfs modify -v4.1 enabled`（默认关闭）
+* ONTAP中的 NFS 服务器已启用 pNFS (`nfs modify -v4.1-pnfs enabled`（默认禁用）
+* 每个节点至少需要一个可路由至 NFS 客户端的网络接口。
+* SVM 中具有允许 NFSv4 导出策略和规则的数据卷
+
+
+image::pNFS_fig_020.png[pNFS 配置要求]
+
+满足上述配置要求后，pNFS 即可自行运行。
+
+.相关信息
+* link:../nfs-config/index.html["NFS配置"]
+* link:../nfs-admin/ontap-support-nfsv41-concept.html["ONTAP对 NFSv4.1 的支持"]
+

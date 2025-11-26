@@ -1,0 +1,53 @@
+---
+permalink: pnfs/pnfs-overview.html 
+sidebar: sidebar 
+keywords: tr-4063, technical report, pnfs, parallel nfs, nfsv4.1, nfsv4.2, performance, metadata, data path 
+summary: '并行 NFS (pNFS) 允许 NFS 客户端直接并行地对存储设备执行读/写操作，从而绕过 NFS 服务器这一潜在瓶颈，提高了性能。' 
+---
+= 了解ONTAP中的并行 NFS (pNFS)
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+并行 NFS 于 2010 年 1 月作为 RFC 标准 RFC-5661 推出，旨在通过分离元数据和数据路径，允许客户端直接访问 NFSv4.1 服务器上的文件数据。这种直接访问方式通过数据本地化、CPU效率和操作并行化带来性能优势。2018 年编写了后续的 RFC，涵盖 pNFS 布局类型（RFC-8434），其中定义了文件、块和对象布局的标准。ONTAP利用 pNFS 操作的文件布局类型。
+
+
+NOTE: 从 2024 年 7 月开始，之前以 PDF 形式发布的技术报告内容已与ONTAP产品文档集成。ONTAP NFS 存储管理文档现在包含了来自 _TR-4063： NetApp ONTAP 中的并行网络文件系统 (pNFS)_ 的内容。
+
+多年来，NFSv3 一直是 NFS 协议的标准版本，几乎适用于所有用例。然而，该协议存在一些局限性，例如缺乏状态性、权限模型简陋以及基本的锁定功能。NFSv4.0 (RFC 7530) 在 NFSv3 的基础上进行了一系列改进，随后的 NFSv4.1 (RFC 5661) 和 NFSv4.2 (RFC 7862) 版本进一步改进了这些改进，增加了并行 NFS (pNFS) 等功能。
+
+
+
+== NFSv4.x 的优势
+
+NFSv4.x 相较于 NFSv3 具有以下优势：
+
+* 由于 NFSv4 仅使用单个端口（2049）进行操作，因此对防火墙友好。
+* 高级且积极的缓存管理，例如 NFSv4.x 中的委托机制
+* 采用密码学的强大 RPC 安全选项
+* 字符国际化
+* 复合操作
+* 仅支持 TCP
+* 有状态协议（不像NFSv3那样是无状态的）
+* 全面集成 Kerberos，实现高效的身份验证机制
+* NFS转诊
+* 支持与 UNIX 和 Windows 兼容的访问控制
+* 基于字符串的用户和组标识符
+* pNFS（NFSv4.1）
+* 扩展属性（NFSv4.2）
+* 安全标签（NFSv4.2）
+* 稀疏文件操作（FALLOCATE）（NFSv4.2）
+
+
+有关 NFSv4.x 的更多信息，包括最佳实践和功能详情，请参阅 https://www.netapp.com/pdf.html?item=/media/10720-tr-4067.pdf["NetApp 技术报告 4067 ：《 NFS 最佳实践和实施指南》"^]。
+
+.相关信息
+* link:../nfs-config/index.html["NFS 配置概述"]
+* link:../nfs-admin/index.html["NFS 管理概述"]
+* link:../flexgroup/index.html["FlexGroup 卷管理"]
+* link:../nfs-trunking/index.html["NFS中继概述"]
+* https://www.netapp.com/pdf.html?item=/media/19370-tr-4523.pdf[]
+* link:https://www.netapp.com/pdf.html?item=/media/19384-tr-4616.pdf["NetApp 技术报告 4616 ：《采用 Microsoft Active Directory 的 ONTAP 中的 NFS Kerberos 》"^]
+
