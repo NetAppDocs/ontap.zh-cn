@@ -44,16 +44,15 @@ summary: 通过创建集群为外部密钥管理服务器提供更多支持。
 如果SVM已启用最多四个主密钥服务器、则必须先删除其中一个现有主密钥服务器、然后再添加新的主密钥服务器。
 . 启用主密钥管理器：
 `security key-manager external enable -vserver _svm_name_ -key-servers _server_ip_ -client-cert _client_cert_name_ -server-ca-certs _server_ca_cert_names_`
-. 修改主密钥服务器以添加二级密钥服务器。。 `-secondary-key-servers` 参数可接受最多包含三个密钥服务器的逗号分隔列表。
+. 修改主密钥服务器，添加辅助密钥服务器。这 `-secondary-key-servers` 该参数接受以逗号分隔的最多三个密钥服务器列表。辅助密钥服务器无需提供端口号。
 `security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
 
 
 --
 .将二级密钥服务器添加到现有主密钥服务器
 --
-. 修改主密钥服务器以添加二级密钥服务器。。 `-secondary-key-servers` 参数可接受最多包含三个密钥服务器的逗号分隔列表。
-`security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
-有关二级密钥服务器的详细信息、请参见  <<mod-secondary>>。
+. 修改主密钥服务器，添加辅助密钥服务器。这 `-secondary-key-servers` 该参数接受以逗号分隔的最多三个密钥服务器列表。辅助密钥服务器无需提供端口号。
+`security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`有关辅助密钥服务器的更多信息，请参阅 <<mod-secondary>>。
 
 
 --
@@ -76,7 +75,7 @@ summary: 通过创建集群为外部密钥管理服务器提供更多支持。
 
 === 修改二级密钥服务器
 
-二级密钥服务器通过进行管理 `-secondary-key-servers` 的参数 `security key-manager external modify-server` 命令：。 `-secondary-key-servers` 参数接受逗号分隔列表。此列表中二级密钥服务器的指定顺序决定了二级密钥服务器的访问顺序。可以通过运行命令来修改访问顺序 `security key-manager external modify-server` 次密钥服务器按不同顺序输入。
+辅助密钥服务器由以下方式管理： `-secondary-key-servers` 参数 `security key-manager external modify-server` 命令。这 `-secondary-key-servers` 参数接受以逗号分隔的列表。列表中辅助密钥服务器的指定顺序决定了辅助密钥服务器的访问顺序。可以通过运行以下命令来修改访问顺序 `security key-manager external modify-server` 辅助密钥服务器的输入顺序不同。辅助密钥服务器无需提供端口号。
 
 要删除辅助密钥服务器、请 `-secondary-key-servers` 参数应包括要保留的密钥服务器、而不包括要删除的密钥服务器。要删除所有辅助密钥服务器、请使用参数 `-`，表示无。
 
