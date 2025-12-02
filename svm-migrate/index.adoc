@@ -50,7 +50,7 @@ image:workflow_svm_migrate.gif["SVM迁移工作流。下面总结了接下来的
 | AFF A系列 | ONTAP 9.10.1 及更高版本 
 |===
 
-NOTE: 从AFF集群迁移到具有混合聚合的FAS集群时，自动卷放置将尝试执行类似的聚合匹配。例如，如果源集群有 60 个卷，则卷放置操作将尝试在目标集群上找到AFF聚合来放置这些卷。当AFF聚合空间不足时，卷将被放置在具有非闪存磁盘的聚合上。
+NOTE: 从AFF集群迁移到具有混合聚合的FAS集群时，自动卷放置会尝试执行类似的聚合匹配。例如，如果源集群有 60 个卷，则卷放置操作会尝试在目标集群上找到一个AFF聚合来放置这些卷。当AFF聚合空间不足时，卷将被放置在具有非闪存磁盘的聚合上。
 
 
 
@@ -119,23 +119,27 @@ NOTE: 从AFF集群迁移到具有混合聚合的FAS集群时，自动卷放置�
 
 在启动SVM迁移之前、您必须满足以下前提条件：
 
-* 您必须是集群管理员。
-* link:../peering/create-cluster-relationship-93-later-task.html["源集群和目标集群必须彼此建立对等关系"]。
-* 源集群和目标集群必须同步SnapMirror link:../system-admin/install-license-task.html["已安装许可证"]。此许可证包含在中 link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
-* 源集群中的所有节点都必须运行ONTAP 9.10.1或更高版本。有关特定的ONTAP阵列控制器支持、请参见 link:https://hwu.netapp.com/["Hardware Universe"^]。
-* 源集群中的所有节点都必须运行相同版本的ONTAP。
-* 目标集群中的所有节点都必须运行相同版本的ONTAP。
-* 目标集群ONTAP版本必须与源集群版本相同或不超过两个主要较新版本。
-* 源集群和目标集群必须支持相同的IP子网才能进行数据LIF访问。
-* 源SVM中的必须少于 xref:Maximum supported volumes per SVM[此版本支持的最大数据卷数]。
-* 目标上必须有足够的空间用于放置卷。
-* 如果源 SVM 具有加密卷，则必须在目标上的集群级别配置板载密钥管理器或外部密钥管理。
+* 您是集群管理员。
+* link:../peering/create-cluster-relationship-93-later-task.html["源集群和目标集群彼此互联"]。
+* 源集群和目标集群具有同步的SnapMirror 。 link:../system-admin/install-license-task.html["已安装许可证"]。此许可证包含在内 link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
+* 源集群中的所有节点均运行ONTAP 9.10.1 或更高版本。有关ONTAP阵列控制器的具体支持，请参阅 link:https://hwu.netapp.com/["Hardware Universe"^]。
+* 源集群中的所有节点都运行相同的ONTAP版本。
+* 目标集群中的所有节点都运行相同的ONTAP版本。
+* 目标集群的ONTAP版本与源集群的 ONTAP 版本相同，或者最多比源集群的新两个主要版本。
+* 源集群和目标集群支持相同的 IP 子网以进行数据 LIF 访问。
+* 源SVM包含的数量少于 xref:Maximum supported volumes per SVM[此版本支持的最大数据卷数]。
+* 目的地有足够的空间放置书籍。
+* 如果源 SVM 具有加密卷，则需要在目标集群级别配置板载密钥管理器或外部密钥管理。
 +
-** 在这种情况下，在源服务器上的 SVM 级别配置的密钥管理器将不会迁移到目标服务器上。目标服务器将使用集群级别的密钥管理器。
+** 在这种情况下，在源端 SVM 级别配置的密钥管理器不会迁移到目标端。目标位置使用集群级密钥管理器。
 
 
 * 如果源具有加密卷并且配置了NetApp聚合加密 (NAE)，则目标也必须配置为 NAE。
 * 如果要在非MetroCluster配置和MetroCluster配置之间或两个MetroCluster配置之间迁移SVM、请验证您的配置是否满足以下要求：
++
+
+NOTE: 在MetroCluster配置中，不支持在本地集群和伙伴集群之间迁移 SVM。
+
 +
 ** 源和目标MetroCluster集群处于"正常"状态。这意味着它们不能处于切换模式或"正在等待切回"状态。
 ** 源和目标MetroCluster集群未处于FC-IP过渡或硬件更新过程中。
@@ -159,12 +163,12 @@ NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"s
 
 == SVM操作
 
-您应检查是否存在可能与 SVM 迁移冲突的操作：
+检查是否存在可能与 SVM 迁移冲突的操作：
 
 * 未执行任何故障转移操作
 * WAFLIRON 无法运行
 * 指纹未在进行中
-* 卷移动，重新托管，克隆，创建，转换或分析未运行
+* 流量移动、重新托管、克隆、创建、转换或分析功能未运行
 * 目标集群上没有运行SVM迁移程序。任何时候都只允许进行一次SVM迁移。
 
 
@@ -239,19 +243,20 @@ NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"s
 
 * 在两个MetroCluster FC配置之间迁移SVM
 * 在非MetroCluster配置和MetroCluster FC配置之间迁移SVM
+* 在相同的MetroCluster配置中，将 SVM 从本地集群迁移到伙伴集群。
 
 
 查看<<前提条件,前提条件>>在MetroCluster配置中迁移 SVM。
 
 
 
-| NetApp 聚合加密（ NAE ） | ONTAP 9.11.1 | NAE卷必须放置在支持目标的NAE上。如果没有可用的NAE目标、迁移操作将失败。 
+| NetApp 聚合加密（ NAE ） | ONTAP 9.11.1 | NAE 卷必须放置在 NAE 支持的目标位置。如果没有可用的 NAE 目标，则迁移操作失败。 
 
 
 | NDMP配置 | 不支持 |  
 
 
-| NetApp 卷加密（ NVE ） | ONTAP 9.10.1 | NVE卷将作为目标上的NVE卷进行迁移。 
+| NetApp 卷加密（ NVE ） | ONTAP 9.10.1 | NVE 卷将作为 NVE 卷迁移到目标位置。 
 
 
 | NFS和SMB审核日志 | ONTAP 9.13.1  a| 
@@ -305,7 +310,7 @@ NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"s
 
 | SnapMirror异步源 | ONTAP 9.11.1  a| 
 * 在大多数迁移过程中、FlexVol SnapMirror关系上的传输可以继续正常进行。
-* 转换期间会取消所有正在进行的传输、转换期间新传输会失败、并且在迁移完成之前无法重新启动这些传输。
+* 切换期间，所有正在进行的转账都会被取消，新的转账也会失败。迁移完成之前，它们无法重新启动。
 * 迁移期间取消或错过的计划传输不会在迁移完成后自动启动。
 +
 [NOTE]
