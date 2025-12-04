@@ -11,9 +11,28 @@ summary: '您可以将AFF卷的存储效率模式从更 `default`改为 `efficie
 
 
 [role="lead"]
-从ONTAP 9 10.1开始、只有AFF系统才支持卷级存储效率模式_default_和_高效_。通过这些模式、您可以选择文件压缩(默认)(创建新AFF卷时的默认模式)或温度敏感型存储效率(高效)(启用温度敏感型存储效率)。您可以使用 `volume efficiency modify`命令将AFF卷的存储效率模式从更 `default`改为 `efficient`、也可以在尚未设置卷效率时设置效率模式。
+从ONTAP 9.10.1 开始，卷级存储效率模式 _default_ 和 _efficient_ 仅对AFF系统受支持。这些模式提供了两种选择：文件压缩（默认），这是创建新AFF卷时的默认模式；或者温度敏感存储效率（高效），它可以启用温度敏感存储效率。
 
 .步骤
+您可以使用ONTAP系统管理器或ONTAP命令行界面执行此任务。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+从 ONTAP 9.10.1 开始，您可以使用 System Manager 通过对温度敏感的存储效率功能提高存储效率。默认情况下，基于性能的存储效率处于启用状态。
+
+. 单击 * 存储 > 卷 * 。
+. 找到要启用或禁用存储效率的卷，然后单击 image:icon_kabob.gif["菜单选项图标"]。
+. 单击*编辑>卷*，然后滚动到*存储效率*。
+. 选择 * 启用更高的存储效率 * 。
+
+
+--
+.命令行界面
+--
+你可以使用 `volume efficiency modify` 用于更改AFF卷存储效率模式的命令 `default` 到 `efficient`或者，当音量效率尚未设置时，您可以设置效率模式。
+
 . 更改卷效率模式：
 +
 [listing]
@@ -22,4 +41,6 @@ volume efficiency modify -vserver <vserver name> -volume <volume name> -storage-
 ----
 
 
+--
+====
 有关的详细信息 `volume efficiency modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-efficiency-modify.html["ONTAP 命令参考"^]。

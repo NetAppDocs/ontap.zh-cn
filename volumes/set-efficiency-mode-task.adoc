@@ -14,53 +14,28 @@ summary: 从 ONTAP 9.10.1 开始，您可以在创建新 AFF 卷时设置存储�
 从 ONTAP 9.10.1 开始，您可以在创建新 AFF 卷时设置存储效率模式。
 
 .关于此任务
-您可以使用参数控制新AFF卷上的存储效率模式 `-storage-efficiency-mode`。您可以选择两个选项来设置存储效率模式： `default`或 `efficient`。您选择的存储效率模式取决于您希望在卷上获得更高的性能还是存储效率。注意： `-storage-efficiency-mode`非AFF卷或数据保护卷不支持此参数。
+您可以使用以下参数控制新AFF卷的存储效率模式 `-storage-efficiency-mode`。您可以选择以下两种选项来设置存储效率模式： `default` 或者 `efficient`。您选择的存储效率模式取决于您想要更高的性能还是更高的存储效率。参数 `-storage-efficiency-mode` 在非AFF卷或数据保护卷上不受支持。
+
+创建新的AFF卷时，如果启用存储效率模式，则默认设置为性能模式。
 
 link:enable-temperature-sensitive-efficiency-concept.html["详细了解对温度敏感的存储效率和存储效率模式"](英文)
 
 .步骤
-您可以使用ONTAP系统管理器或ONTAP命令行界面执行此任务。
-
-[role="tabbed-block"]
-====
-.System Manager
---
-从 ONTAP 9.10.1 开始，您可以使用 System Manager 通过对温度敏感的存储效率功能提高存储效率。默认情况下，基于性能的存储效率处于启用状态。
-
-. 单击 * 存储 > 卷 * 。
-. 找到要启用或禁用存储效率的卷，然后单击 image:icon_kabob.gif["菜单选项图标"]。
-. 单击*编辑>卷*，然后滚动到*存储效率*。
-. 选择 * 启用更高的存储效率 * 。
-
-
---
-.命令行界面
---
-.使用效率模式创建新卷
-要在创建新卷时设置对温度敏感的存储效率模式、您可以使用 `-storage-efficiency-mode` 参数和值 `efficient`。
-
-. 创建启用了效率模式的新卷：
+. 创建新卷并设置效率模式：
 +
-`volume create -vserver <vserver name> -volume <volume name> -aggregate <aggregate name> -size <volume size> -storage-efficiency-mode efficient`
+[source, cli]
+----
+volume create -vserver <vserver name> -volume <volume name> -aggregate <aggregate name> -size <volume size> -storage-efficiency-mode <efficient|default>
+----
++
+放 `-storage-efficiency-mode` 到 `efficient` 为了提高效率模式或 `default` 用于性能模式。
 
 +
+在以下示例中，aff_vol1 是以效率模式创建的。
+
+
+
 [listing]
 ----
 volume create -vserver vs1 -volume aff_vol1 -aggregate aff_aggr1 -storage-efficiency-mode efficient -size 10g
 ----
-
-
-.使用性能模式创建新卷
-默认情况下、在创建具有存储效率的新AFF卷时会设置性能模式。虽然不是必需的、但您也可以选择使用 `default` 值 `-storage-efficiency-mode` 参数AFF。
-
-. 使用性能存储效率模式"默认"创建新卷：
-+
-`volume create -vserver <vserver name> -volume <volume name> -aggregate <aggregate name> -size <volume size> -storage-efficiency-mode default`
-
-+
-`volume create -vserver vs1 -volume aff_vol1 -aggregate aff_aggr1 -storage-efficiency-mode default -size 10g`
-
-
-
---
-====

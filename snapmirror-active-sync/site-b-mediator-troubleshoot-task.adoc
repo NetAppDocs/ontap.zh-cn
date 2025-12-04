@@ -54,7 +54,37 @@ C1_cluster 			  1-80-000011           Unavailable    ok
 .解决方案
 强制执行故障转移以启用站点 B 的 I/O ，然后从站点 B 到站点 A 建立零 RTO 关系要在站点 B 上执行强制故障转移，请完成以下步骤
 
-. 从站点 B 取消映射属于一致性组的所有 LUN
+. 从站点 B 取消映射属于一致性组的所有 LUN。这将失败，因此您必须先修改 igroup 以删除复制对等 SVM，然后再删除 LUN 映射。
+
+
+示例
+
+[listing]
+----
+C1_cluster::> lun mapping show
+Vserver    Path                                      Igroup   LUN ID  Protocol
+---------- ----------------------------------------  -------  ------  --------
+vs0        /vol/cg1_lun/lun_1                        igroup1       0  mixed
+vs0        /vol/cg1_lun/lun_2                        igroup1       1  mixed
+2 entries were displayed.
+
+C1_cluster::> lun mapping delete -path /vol/cg1_lun/lun_5 -igroup igroup1
+Error: command failed: The peer cluster is unreachable and a SnapMirror
+       Mediator is not configured. The configuration is locked for replicated
+       objects in this Vserver peer relationship on both clusters. The only
+       supported configuration change is to manually disable replication on
+       both sides of the relationship, after which configuration changes are
+       supported.
+C1_cluster::> igroup modify -igroup igroup1 -replication-peer -
+
+C1_cluster::> lun mapping delete -path /vol/cg1_lun/lun_1 -igroup igroup1
+
+C1_cluster::> lun mapping show
+Vserver    Path                                      Igroup   LUN ID  Protocol
+---------- ----------------------------------------  -------  ------  --------
+vs0        /vol/cg1_lun/lun_2                        igroup1       1  mixed
+1 entries were displayed.
+----
 . 使用 force 选项删除 SnapMirror 一致性组关系。
 . 输入SnapMirror中断命令 (`snapmirror break -destination_path _svm_:_volume_`)以将卷从DP转换为RW、从而启用站点B的I/O
 +
