@@ -21,13 +21,16 @@ summary: 在开始 ONTAP 还原之前，您需要考虑还原问题和限制。
 +
 还原会影响集群中的所有节点；但是，在还原其他 HA 对之前，必须在每个 HA 对上执行并完成还原。
 
++
+link:https://docs.netapp.com/us-en/ontap-afx/administer/revert-ontap.html["AFX 存储系统"^]不支持回滚。
+
 * 当所有节点都运行新的目标版本时，还原完成。
 +
 当集群处于混合版本状态时，除非为了满足还原要求而需要，否则不应输入任何更改集群操作或配置的命令；允许执行监控操作。
 
 +
 
-IMPORTANT: 如果已还原部分节点，但并非所有节点，请勿尝试将集群升级回源版本。
+IMPORTANT: 如果您已经还原了部分节点，但并非全部节点，请不要尝试将集群升级回源版本。
 
 * 还原节点时，它会清除 Flash Cache 模块中缓存的数据。
 +
@@ -36,9 +39,9 @@ IMPORTANT: 如果已还原部分节点，但并非所有节点，请勿尝试将
 * 将 LUN 备份到 ONTAP 9.x 上运行的磁带时， LUN 只能还原到 9.x 及更高版本，而不能还原到早期版本。
 * 如果您当前版本的 ONTAP 支持带内 ACP （ IBACP ）功能，而您还原到不支持 IBACP 的 ONTAP 版本，则磁盘架的备用路径将被禁用。
 * 如果任何 Storage Virtual Machine （ SVM ）使用 LDAP ，则必须先禁用 LDAP 转介，然后才能还原。
-* 在使用符合 MetroCluster 但未经 MetroCluster 验证的交换机的 MetroCluster IP 系统中，从 ONTAP 9.7 还原到 9.6 会造成中断，因为不支持使用 ONTAP 9.6 及更早版本的系统。
+* 在使用符合MetroCluster标准但未经MetroCluster验证的交换机的MetroCluster IP 系统中，从ONTAP 9.7 回滚到 9.6 会造成干扰，因为不支持使用ONTAP 9.6 及更早版本的系统。
 * 在将节点还原到ONTAP 9.131或更早版本之前、您需要先将加密的SVM根卷转换为非加密卷
 +
-如果您尝试还原到不支持SVM根卷加密的版本、系统将做出响应并发出警告、并阻止还原。
+如果您尝试恢复到不支持 SVM 根卷加密的ONTAP版本，系统将发出警告并阻止恢复。
 
 

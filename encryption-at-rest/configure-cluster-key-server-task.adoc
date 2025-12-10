@@ -14,19 +14,18 @@ summary: 通过创建集群为外部密钥管理服务器提供更多支持。
 
 
 [role="lead"]
-从ONTAP 9.11.1开始、您可以配置与SVM上的集群模式外部密钥管理服务器的连接。使用集群模式密钥服务器、您可以在SVM上指定主密钥服务器和二级密钥服务器。注册密钥时、ONTAP 会先尝试访问主密钥服务器、然后再按顺序尝试访问二级服务器、直到操作成功完成、从而防止密钥重复。
+从ONTAP 9.11.1 开始，您可以在 SVM 上配置与集群外部密钥管理服务器的连接。使用集群密钥服务器，您可以在 SVM 上指定主密钥服务器和辅助密钥服务器。注册或检索密钥时， ONTAP首先尝试访问主密钥服务器，然后依次尝试访问辅助服务器，直到操作成功完成。
 
-外部密钥服务器可用于NSE、NVE、NAE和SED密钥。一个SVM最多可支持四个主外部KMIP服务器。每个主服务器最多可支持三个二级密钥服务器。
+您可以使用外部密钥服务器来获取NetApp存储加密 (NSE)、 NetApp卷加密 (NVE) 和NetApp聚合加密 (NAE) 密钥。一个 SVM 最多可以支持四个主外部 KMIP 服务器。每个主服务器最多可支持三个辅助密钥服务器。
 
-
-
-== 开始之前
-
-* link:install-ssl-certificates-hardware-task.html["必须为SVM启用KMIP密钥管理"]。
+.关于此任务
 * 此过程仅支持使用KMIP的密钥服务器。有关支持的密钥服务器列表、请查看 link:http://mysupport.netapp.com/matrix/["NetApp 互操作性表工具"^]。
+
+
+.开始之前
+* link:install-ssl-certificates-hardware-task.html["必须为SVM启用KMIP密钥管理"]。
 * 集群中的所有节点都必须运行ONTAP 9.11.1或更高版本。
-* 服务器的顺序列出中的参数 `-secondary-key-servers` 参数反映外部密钥管理(KMIP)服务器的访问顺序。
-* 有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。
+* 服务器的排列顺序 `-secondary-key-servers`该参数反映了外部密钥管理（KMIP）服务器的访问顺序。
 
 
 
@@ -39,21 +38,59 @@ summary: 通过创建集群为外部密钥管理服务器提供更多支持。
 ====
 .将主密钥服务器和二级密钥服务器添加到SVM
 --
-. 确认尚未为集群启用密钥管理：
-`security key-manager external show -vserver _svm_name_`
-如果SVM已启用最多四个主密钥服务器、则必须先删除其中一个现有主密钥服务器、然后再添加新的主密钥服务器。
+.步骤
+. 确认集群（admin SVM）未启用任何密钥管理功能：
++
+`security key-manager external show -vserver <svm_name>`
+
++
+如果 SVM 已启用最多四个主密钥服务器，则必须先删除一个现有的主密钥服务器，然后再添加新的主密钥服务器。
+
 . 启用主密钥管理器：
-`security key-manager external enable -vserver _svm_name_ -key-servers _server_ip_ -client-cert _client_cert_name_ -server-ca-certs _server_ca_cert_names_`
-. 修改主密钥服务器，添加辅助密钥服务器。这 `-secondary-key-servers` 该参数接受以逗号分隔的最多三个密钥服务器列表。辅助密钥服务器无需提供端口号。
-`security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`
++
+`security key-manager external enable -vserver <svm_name> -key-servers <primary_key_server_ip> -client-cert <client_cert_name> -server-ca-certs <server_ca_cert_names>`
+
++
+** 如果您没有在参数中指定端口， `-key-servers`如果使用参数，则默认使用端口 5696。
++
+
+NOTE: 如果你正在运行 `security key-manager external enable`对于MetroCluster配置中的管理 SVM 命令，必须在两个集群上运行该命令。如果你要为单个数据 SVM 运行命令，则无需在两个集群上运行该命令。  NetApp强烈建议在两个集群上使用相同的密钥服务器。
+
+
+
+. 修改主密钥服务器，添加辅助密钥服务器。这 `-secondary-key-servers`该参数接受一个以逗号分隔的列表，最多可包含三个密钥服务器：
++
+`security key-manager external modify-server -vserver <svm_name> -key-servers <primary_key_server> -secondary-key-servers <list_of_key_servers>`
+
++
+** 请勿在辅助密钥服务器中包含端口号。 `-secondary-key-servers`范围。它使用与主密钥服务器相同的端口号。
++
+
+NOTE: 如果你正在运行 `security key-manager external`对于MetroCluster配置中的管理 SVM 命令，必须在两个集群上运行该命令。如果你要为单个数据 SVM 运行命令，则无需在两个集群上运行该命令。  NetApp强烈建议在两个集群上使用相同的密钥服务器。
+
+
+
 
 
 --
 .将二级密钥服务器添加到现有主密钥服务器
 --
-. 修改主密钥服务器，添加辅助密钥服务器。这 `-secondary-key-servers` 该参数接受以逗号分隔的最多三个密钥服务器列表。辅助密钥服务器无需提供端口号。
-`security key-manager external modify-server -vserver _svm_name_ -key-servers _primary_key_server_ -secondary-key-servers _list_of_key_servers_`有关辅助密钥服务器的更多信息，请参阅 <<mod-secondary>>。
+.步骤
+. 修改主密钥服务器，添加辅助密钥服务器。这 `-secondary-key-servers`该参数接受一个以逗号分隔的列表，最多可包含三个密钥服务器：
++
+`security key-manager external modify-server -vserver <svm_name> -key-servers <primary_key_server> -secondary-key-servers <list_of_key_servers>`
 
++
+** 请勿在辅助密钥服务器中包含端口号。 `-secondary-key-servers`范围。它使用与主密钥服务器相同的端口号。
++
+
+NOTE: 如果你正在运行 `security key-manager external modify-server`对于MetroCluster配置中的管理 SVM 命令，必须在两个集群上运行该命令。如果你要为单个数据 SVM 运行命令，则无需在两个集群上运行该命令。  NetApp强烈建议在两个集群上使用相同的密钥服务器。
+
+
+
+
+
+有关辅助密钥服务器的更多信息，请参阅 <<mod-secondary>>。
 
 --
 ====
@@ -61,24 +98,64 @@ summary: 通过创建集群为外部密钥管理服务器提供更多支持。
 
 == 修改集群模式密钥服务器
 
-您可以通过更改特定密钥服务器的状态(主或二级)、添加和删除二级密钥服务器或更改二级密钥服务器的访问顺序来修改外部密钥服务器集群。
-
-
-
-=== 转换主密钥服务器和辅助密钥服务器
-
-要将主密钥服务器转换为二级密钥服务器、必须先使用将其从SVM中删除 `security key-manager external remove-servers` 命令：
-
-要将二级密钥服务器转换为主密钥服务器、必须先从其现有主密钥服务器中删除二级密钥服务器。请参见 <<mod-secondary>>。如果在删除现有密钥的同时将二级密钥服务器转换为主服务器、则在完成删除和转换之前尝试添加新服务器可能会导致密钥重复。
+您可以通过添加和删除辅助密钥服务器、更改辅助密钥服务器的访问顺序或更改特定密钥服务器的指定（主密钥服务器或辅助密钥服务器）来修改集群外部密钥服务器。如果在MetroCluster配置中修改集群外部密钥服务器， NetApp强烈建议在两个集群上使用相同的密钥服务器。
 
 
 
 === 修改二级密钥服务器
 
-辅助密钥服务器由以下方式管理： `-secondary-key-servers` 参数 `security key-manager external modify-server` 命令。这 `-secondary-key-servers` 参数接受以逗号分隔的列表。列表中辅助密钥服务器的指定顺序决定了辅助密钥服务器的访问顺序。可以通过运行以下命令来修改访问顺序 `security key-manager external modify-server` 辅助密钥服务器的输入顺序不同。辅助密钥服务器无需提供端口号。
+使用 `security key-manager external modify-server`命令的 `-secondary-key-servers` 命令的KiKi参数来管理辅助密钥服务器。这 `-secondary-key-servers` 参数接受以逗号分隔的列表。列表中辅助密钥服务器的指定顺序决定了辅助密钥服务器的访问顺序。您可以修改访问顺序，方法是运行  `security key-manager external modify-server` 命令，并按不同的顺序输入二级密钥服务器。辅助密钥服务器无需提供端口号。
 
-要删除辅助密钥服务器、请 `-secondary-key-servers` 参数应包括要保留的密钥服务器、而不包括要删除的密钥服务器。要删除所有辅助密钥服务器、请使用参数 `-`，表示无。
 
+NOTE: 如果你正在运行 `security key-manager external modify-server`对于MetroCluster配置中的管理 SVM 命令，必须在两个集群上运行该命令。如果你要为单个数据 SVM 运行命令，则无需在两个集群上运行该命令。
+
+要移除辅助密钥服务器，请将要保留的密钥服务器添加到列表中。 `-secondary-key-servers`参数，并省略要删除的参数。要删除所有辅助密钥服务器，请使用以下参数 `-`表示无。
+
+
+
+=== 转换主密钥服务器和辅助密钥服务器
+
+您可以使用以下步骤更改特定密钥服务器的指定（主密钥服务器或辅助密钥服务器）。
+
+[role="tabbed-block"]
+====
+.将主密钥服务器转换为辅助密钥服务器
+--
+.步骤
+. 从SVM中移除主密钥服务器：
++
+`security key-manager external remove-servers`
+
++
+
+NOTE: 如果你正在运行 `security key-manager external remove-servers`对于MetroCluster配置中的管理 SVM 命令，必须在两个集群上运行该命令。如果你要为单个数据 SVM 运行命令，则无需在两个集群上运行该命令。
+
+. 执行<<创建集群密钥服务器>>使用原主密钥服务器作为辅助密钥服务器进行此过程。
+
+
+--
+.将辅助密钥服务器转换为主密钥服务器
+--
+.步骤
+. 从现有的主密钥服务器中移除辅助密钥服务器：
++
+`security key-manager external modify-server -secondary-key-servers`
+
++
+[NOTE]
+====
+** 如果你正在运行 `security key-manager external modify-server -secondary-key-servers`对于MetroCluster配置中的管理 SVM 命令，必须在两个集群上运行该命令。如果你要为单个数据 SVM 运行命令，则无需在两个集群上运行该命令。
+** 如果在删除现有密钥服务器的同时将辅助密钥服务器转换为主密钥服务器，则在完成删除和转换之前尝试添加新的密钥服务器可能会导致密钥重复。
+
+
+====
+. 执行<<创建集群密钥服务器>>使用原辅助密钥服务器作为新集群密钥服务器的主密钥服务器进行此过程。
+
+
+请参阅<<mod-secondary>>了解更多信息。
+
+--
+====
 .相关信息
-* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+external["安全密钥管理器外部"^]
+* 了解更多 `security key-manager external`在link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+key-manager+external["ONTAP 命令参考"^]
 
