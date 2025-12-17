@@ -24,17 +24,45 @@ summary: 在ONTAP升级之前、您不需要更新固件。  适用于集群的�
 
 要为平稳更新做好准备、您应在升级开始之前重新启动SP或BMC。
 
-.步骤
-. 在升级之前重新启动SP或BMC：
+使用ONTAP CLI、 SP或BMC重启。
+
+[role="tabbed-block"]
+====
+.命令行界面
+--
+. 重启SP或BMC：
 +
 [source, cli]
 ----
 system service-processor reboot-sp -node <node_name>
 ----
+
+
+--
+.SP
+--
+. 重启SP：
 +
+[source, cli]
+----
+sp reboot
+----
+
+
+--
+.BMC
+--
+. 重启BMC：
++
+[source, cli]
+----
+bmc reboot
+----
+
+
+--
+====
 一次只能重新启动一个SP或BMC。  等待重新启动的SP或BMC完全回收、然后再重新启动下一个。
-
-
 
 您也可以link:../update/firmware-task.html["手动更新固件"]在两次ONTAP升级之间进行。如果您有Digital Advisor，则可以link:https://activeiq.netapp.com/system-firmware/["查看ONTAP 映像中当前包含的固件版本列表"^]。
 
