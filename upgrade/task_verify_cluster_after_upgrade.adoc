@@ -21,11 +21,17 @@ summary: 升级ONTAP后、请验证集群版本、集群运行状况和存储运
 
 集群版本是集群中任何节点上运行的最低 ONTAP 版本。如果集群版本不是目标 ONTAP 版本，则可以升级集群。
 
+. 更改为高级权限级别：
++
+[source, cli]
+----
+set -privilege advanced
+----
 . 验证集群版本是否为目标 ONTAP 版本：
 +
 [source, cli]
 ----
-version
+system node image show -version
 ----
 . 如果集群版本不是目标ONTAP版本、则应验证所有节点的升级状态：
 +
@@ -59,12 +65,6 @@ node1                 true    true
 +
 如果任何节点运行状况不正常或不符合条件，请检查 EMS 日志中的错误并采取更正措施。
 
-. 将权限级别设置为高级：
-+
-[source, cli]
-----
-set -privilege advanced
-----
 . 验证每个 RDB 进程的配置详细信息。
 +
 ** 每个节点的关系数据库 epoch 和数据库 epochs 应匹配。
@@ -142,6 +142,12 @@ Node              Node              Status        Status        Status
 cluster1-01       cluster1-01       in-quorum     true          operational
                   cluster1-02       in-quorum     true          operational
 2 entries were displayed.
+----
+. 将权限级别返回给管理员：
++
+[source, cli]
+----
+set -privilege admin
 ----
 
 
