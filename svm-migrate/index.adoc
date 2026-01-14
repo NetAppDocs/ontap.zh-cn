@@ -130,6 +130,7 @@ NOTE: 在混合集群中，每个 SVM 可迁移的最大卷数取决于支持卷
 * 目标集群中的所有节点都运行相同的ONTAP版本。
 * 目标集群的ONTAP版本与源集群的 ONTAP 版本相同，或者最多比源集群的新两个主要版本。
 * 源集群和目标集群支持相同的 IP 子网以进行数据 LIF 访问。
+* 源集群和目标集群都必须至少有一个接口可以访问所有迁移的 SVM 网络，否则迁移预检查将失败。
 * 源SVM包含的数量少于 xref:Maximum supported volumes per SVM[此版本支持的最大数据卷数]。
 * 目的地有足够的空间放置书籍。
 * 如果源 SVM 具有加密卷，则需要在目标集群级别配置板载密钥管理器或外部密钥管理。
@@ -190,7 +191,26 @@ NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"s
 | 功能 | 支持先发布 | 注释 
 
 
+| 审计日志（NFS 和 SMB） | ONTAP 9.13.1  a| 
+[NOTE]
+====
+对于启用了审核的内部SVM迁移、您应在源SVM上禁用审核、然后执行迁移。
+
+====
+迁移SVM之前：
+
+* link:../nas-audit/enable-disable-auditing-svms-task.html["必须在目标集群上启用审计日志。"]。
+* link:../nas-audit/commands-modify-auditing-config-reference.html?q=audit+log+destination+path["必须在目标集群上创建源SVM的审核日志目标路径"]。
+
+
+
+
 | 自主勒索软件保护 | ONTAP 9.12.1 |  
+
+
+| 云实例 | 不支持  a| 
+不支持将 SVM 从本地实例迁移到云端或从本地实例迁移到云端。
+
 
 
 | Cloud Volumes ONTAP | 不支持 |  
@@ -262,20 +282,6 @@ NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"s
 | NetApp 卷加密（ NVE ） | ONTAP 9.10.1 | NVE 卷将作为 NVE 卷迁移到目标位置。 
 
 
-| NFS和SMB审核日志 | ONTAP 9.13.1  a| 
-[NOTE]
-====
-对于启用了审核的内部SVM迁移、您应在源SVM上禁用审核、然后执行迁移。
-
-====
-迁移SVM之前：
-
-* link:../nas-audit/enable-disable-auditing-svms-task.html["必须在目标集群上启用审核日志重定向"]。
-* link:../nas-audit/commands-modify-auditing-config-reference.html?q=audit+log+destination+path["必须在目标集群上创建源SVM的审核日志目标路径"]。
-
-
-
-
 | NFS v3、NFS v4.1和NFS v4.2 | ONTAP 9.10.1 |  
 
 
@@ -291,6 +297,9 @@ NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"s
 | 在源集群上启用了通用标准模式的板载密钥管理器(OKM) | 不支持 |  
 
 
+| ONTAP Select | 不支持 | 不支持将 SVM 迁移到 ONTAP Select 实例或从ONTAP Select实例迁移 SVM。 
+
+
 | qtree | ONTAP 9.14.1 |  
 
 
@@ -300,7 +309,7 @@ NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"s
 | S3 | 不支持 |  
 
 
-| SMB协议 | ONTAP 9.12.1  a| 
+| SMB协议 | ONTAP 9.12.1 但是不支持 SMB1 协议。  a| 
 中小企业迁移会造成混乱，迁移后需要对客户端进行更新。
 
 
@@ -429,3 +438,10 @@ NOTE: 如果目标是MetroCluster集群、则在目标上创建的SVM始终为"s
 
 | 从快照还原文件 | 允许 | 允许 | 不支持 
 |===
+
+
+== 移民后信息
+
+* 迁移后，本地快照策略会带有 -MIG 扩展名，这可能会破坏某些自动化功能。您应该搜索此扩展程序并重命名所需的策略。
+* 迁移到 Vault 目标SnapMirror卷必须执行重新同步才能重新激活保护。需要重新同步存储库，因为迁移会在迁移 SVM 之间创建一个新的基线，该基线比存储库之前的基线更新。执行重新同步操作会重新激活存储库，同时也会删除比当前存储库基线更新的任何数据，特别是迁移期间生成的快照。
+

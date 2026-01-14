@@ -2,7 +2,7 @@
 permalink: upgrade/snapmirror-cascade-relationship-blocked.html 
 sidebar: sidebar 
 keywords: ontap, upgrade, 9.9.1. 9.10.1, update, cascade, LTR, long term retention, snapshots, considerations, secondary storage 
-summary: '如果您在集群上配置了SnapMirror级联关系、则可能需要在升级之前禁用长期保留(LTR)快照' 
+summary: 如果您的集群上配置了SnapMirror级联关系，则可能需要在升级前禁用长期保留快照。 
 ---
 = 在ONTAP升级之前禁用长期保留快照
 :allow-uri-read: 
@@ -11,13 +11,13 @@ summary: '如果您在集群上配置了SnapMirror级联关系、则可能需要
 
 
 [role="lead"]
-在级联卷关系中，所有版本的ONTAP 9 中，仅在级联的最终SnapMirror目标卷上支持长期保留 (LTR) 快照。在级联中的任何中间卷上启用 LTR 快照会导致错过备份和快照。
+在级联卷的关系中， ONTAP 9 的所有版本仅支持在级联的最终SnapMirror目标卷上保留长期快照。在级联备份的任何中间卷上启用长期保留快照会导致备份和快照丢失。
 
 详细了解link:../data-protection/long-term-retention-snapshots-concept.html["长期保留快照"]。
 
-如果您有一个不受支持的配置，其中在级联的任何中间卷上启用了 LTR 快照，请联系技术支持并参考link:https://kb.netapp.com/on-prem/ontap/DP/SnapMirror/SnapMirror-KBs/Cascading_a_volume_with_Long-Term_Retention_(LTR)_snapshots_enabled_is_not_supported["NetApp知识库：不支持级联启用长期保留 (LTR) 快照的卷"^]寻求帮助。
+如果您在级联的任何中间卷上启用了长期保留快照，且配置不受支持，请联系技术支持并参考以下链接： https://kb.netapp.com/on-prem/ontap/DP/SnapMirror/SnapMirror-KBs/Cascading_a_volume_with_Long-Term_Retention_ (long-term retention)_snapshots_enabled_is_not_supported[ NetApp知识库：不支持启用长期保留 (LTR) 快照的卷级联^] 以获取帮助。
 
-以下ONTAP版本不允许您在级联中的任何卷上启用 LTR 快照（最终SnapMirror目标卷除外）。
+以下ONTAP版本不允许您在级联中的任何卷上启用长期保留快照，但最终的SnapMirror目标卷除外。
 
 * 9.15.1 及更高版本
 * 9.14.1P2 和 P4 至 P14
@@ -28,12 +28,12 @@ summary: '如果您在集群上配置了SnapMirror级联关系、则可能需要
 * 9.9.1P20
 
 
-在从允许您在级联中间卷上启用 LTR 快照的ONTAP版本升级到阻止该功能的ONTAP版本之前，您需要禁用 LTR 快照以避免错过备份和快照。
+在从允许您在级联中间卷上启用长期保留快照的 ONTAP版本升级到阻止该功能的 ONTAP版本之前，您需要禁用长期保留快照，以避免错过备份和快照。
 
 在以下情况下、您需要采取措施：
 
-* 长期保留(LTR)快照配置在"A > B > C" SnapMirror级联中的"B"卷上、或者配置在较大级联中的另一个中间SnapMirror目标卷上。
-* LTR快照由应用于SnapMirror策略规则的计划定义。此规则不会从源卷复制快照、而是直接在目标卷上创建快照。
+* 长期保留快照配置在“A > B > C” SnapMirror级联中的“B”卷上，或者配置在更大的级联中的另一个中间SnapMirror目标卷上。
+* 长期保留快照由应用于SnapMirror策略规则的计划定义。此规则不会从源卷复制快照，而是直接在目标卷上创建快照。
 +
 
 NOTE: 有关计划和SnapMirror策略的更多信息，请参阅link:https://kb.netapp.com/on-prem/ontap/DP/SnapMirror/SnapMirror-KBs/How_does_the_schedule_parameter_in_an_ONTAP_9_SnapMirror_policy_rule_work["NetApp知识库： ONTAP 9 SnapMirror策略规则中的“schedule”参数如何工作？"^]。
@@ -41,7 +41,7 @@ NOTE: 有关计划和SnapMirror策略的更多信息，请参阅link:https://kb.
 
 
 .步骤
-. 从级联中间卷上的SnapMirror策略中删除LTR规则：
+. 从级联中间卷的SnapMirror策略中移除长期保留规则：
 +
 [listing]
 ----
@@ -50,7 +50,7 @@ Secondary::> snapmirror policy remove-rule -vserver <> -policy <> -snapmirror-la
 +
 详细了解 `snapmirror policy remove-rule`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-remove-rule.html["ONTAP 命令参考"^] 。
 
-. 再次为不使用LTR计划的SnapMirror标签添加规则：
+. 再次为SnapMirror标签添加规则，但不设置长期保留期限：
 +
 [listing]
 ----
@@ -58,7 +58,7 @@ Secondary::> snapmirror policy add-rule -vserver <> -policy <> -snapmirror-label
 ----
 +
 
-NOTE: 从SnapMirror策略规则中删除LTR快照意味着SnapMirror将从源卷中提取具有给定标签的快照。您可能还需要在源卷的快照策略上添加或修改计划、以创建标记正确的快照。
+NOTE: 从SnapMirror策略规则中删除长期保留快照意味着SnapMirror将从源卷中提取具有给定标签的快照。您可能还需要在源卷的快照策略中添加或修改计划，以创建正确标记的快照。
 
 +
 有关的详细信息 `snapmirror policy add-rule`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-add-rule.html["ONTAP 命令参考"^]。
@@ -77,4 +77,4 @@ Primary::> volume snapshot policy add-schedule -vserver <> -policy <> -schedule 
 
 
 
-NOTE: 在SnapMirror级联配置中、仍然可以在最终SnapMirror目标卷上启用LTR快照。
+NOTE: 在SnapMirror级联配置中，仍然可以在最终的SnapMirror目标卷上启用长期保留快照。
