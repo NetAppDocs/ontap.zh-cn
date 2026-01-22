@@ -23,6 +23,11 @@ NOTE: 在ONTAP 9.7之前的版本中、System Manager会使用术语_AGREL_来�
 * 硬盘驱动器(HDD)本地层可以从RAID-DP转换为RAID-TEC。这包括Flash Pool本地层中的HDD层。
 
 
+.闪存池/混合聚合的过程，其中需要使用 -disktype 来更改每个磁盘类型
+[-T, -disktype {ATA | BSAS | FCAL | FSAS | LUN | MSATA | SAS | SSD | VMDISK | SSD-NVM | SSD-CAP | SSD-ZNS | VMLUN | VMLUN-SSD}] - 磁盘类型
+
+此参数指定要修改的 RAID 组的磁盘类型。对于 Flash Pool，它指定 HDD 层或 SSD 层。如果 HDD 层由多个类型的磁盘组成，则指定任何正在使用的磁盘类型都会导致修改该层。如果当前聚合 RAID 类型为 mixed_raid_type，则此参数为必需参数。
+
 .步骤
 . 验证本地层是否已联机且至少具有六个磁盘：
 +
