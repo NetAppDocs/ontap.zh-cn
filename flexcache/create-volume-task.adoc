@@ -11,16 +11,17 @@ summary: 您可以在同一集群中创建 FlexCache 卷，以提高访问热对
 
 
 [role="lead"]
-您可以在同一集群中创建 FlexCache 卷，以提高访问热对象时的性能。如果数据中心位于不同位置，则可以在远程集群上创建 FlexCache 卷，以加快数据访问速度。
+您可以在同一个 ONTAP 群集中创建 FlexCache 卷，以提高访问热对象时的性能。如果您在不同位置拥有数据中心，则可以在远程 ONTAP 群集上创建 FlexCache 卷，以加速数据访问。
 
 .关于此任务
-* 从ONTAP 9.5开始、FlexCache支持将FlexVol卷用作初始卷、并将FlexGroup卷用作FlexCache卷。
-* 从ONTAP 9.7开始、支持将FlexVol volume和FlexGroup卷作为初始卷。
-* 从ONTAP 9.14.0开始、您可以从加密源创建未加密的FlexCache卷。
+* 从 ONTAP 9.18.1 开始，您可以通过在创建 FlexCache 卷时将 `-is-s3-enabled`选项设置为 `true`来在卷上启用 NAS S3 存储桶访问。此选项默认处于禁用状态。
 * 从ONTAP 9.18.1 开始， FlexCache支持为具有 SVM-DR 关系的 SVM 的源卷创建缓存卷。
 +
 如果您运行的是ONTAP 9.18.1 或更高版本，则存储管理员必须先将缓存 SVM 与 SVM-DR 关系中的主源 SVM 和辅助源 SVM 建立对等关系，然后再创建属于 SVM-DR 关系的源卷的缓存卷。
 
+* 从ONTAP 9.14.0开始、您可以从加密源创建未加密的FlexCache卷。
+* 从 ONTAP 9.7 开始，FlexVol 卷和 FlexGroup 卷都支持作为源卷。
+* 从ONTAP 9.5开始、FlexCache支持将FlexVol卷用作初始卷、并将FlexGroup卷用作FlexCache卷。
 
 
 .开始之前
@@ -39,7 +40,7 @@ NOTE: HA 对使用时 link:https://docs.netapp.com/us-en/ontap/encryption-at-res
 ====
 .System Manager
 --
-. 如果FlexCache卷与初始卷位于不同的集群上、请创建集群对等关系：
+. 如果 FlexCache 卷位于与原始卷不同的 ONTAP 群集上，请创建群集对等关系：
 +
 .. 在本地集群中，单击 * 保护 > 概述 * 。
 .. 展开*Intercluster Settings*，单击*Add Network Interfaces*并为集群添加集群间网络接口。
@@ -144,7 +145,7 @@ vserver peer create -vserver <local_SVM> -peer-vserver <remote_SVM> -peer-cluste
 +
 [source, cli]
 ----
-volume flexcache create -vserver <cache_svm> -volume <cache_vol_name> -auto-provision-as flexgroup -size <vol_size> -origin-vserver <origin_svm> -origin-volume <origin_vol_name>
+volume flexcache create -vserver <cache_svm> -volume <cache_vol_name> -auto-provision-as flexgroup -size <vol_size> -origin-vserver <origin_svm> -origin-volume <origin_vol_name> -is-s3-enabled true|false
 ----
 +
 以下示例将创建一个 FlexCache 卷并自动选择要配置的现有聚合：
@@ -161,8 +162,16 @@ cluster1::> volume flexcache create -vserver vs_1 -volume fc1 -auto-provision-as
 +
 [listing]
 ----
-cluster1::> flexcache create -vserver vs34 -volume fc4 -aggr-list aggr34,aggr43 -origin-volume origin1 -size 400m -junction-path /fc4
+cluster1::> volume flexcache create -vserver vs34 -volume fc4 -aggr-list aggr34,aggr43 -origin-volume origin1 -size 400m -junction-path /fc4
 [Job 903] Job succeeded: Successful
+----
++
+以下示例在 FlexCache 卷上启用 S3 访问：
+
++
+[listing]
+----
+cluster1::> volume flexcache create -vserver vs3 -volume cache_vs3_vol33 -origin-volume vol33 -origin-vserver vs3 -junction-path /cache_vs3_vol33 -is-s3-enabled true
 ----
 . 验证 FlexCache 卷和原始卷的 FlexCache 关系。
 +

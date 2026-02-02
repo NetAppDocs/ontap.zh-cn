@@ -1,0 +1,74 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/default-enable-change.html 
+keywords: ransomware, arp, enable, set up, autonomous ransomware protection 
+summary: 从 ONTAP 9.18.1 开始，默认情况下自动启用 ARP。您可以在 12 小时宽限期内或之后选择退出此默认启用。 
+---
+= 选择退出 ONTAP Autonomous Ransomware Protection 默认启用
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.18.1 开始，如果安装了 ARP 许可证，则在升级或新安装后 12 小时的预热期后，自主勒索软件保护 (ARP) 会在 AFF A 系列和 AFF C 系列、ASA 和 ASA r2 系统的所有新卷上默认自动启用。您可以在 12 小时宽限期内或之后使用 System Manager 或 ONTAP CLI 选择退出此默认启用。
+
+
+NOTE: 现有卷必须link:enable-task.html["手动启用"]用于 ARP。
+
+.关于此任务
+您可以稍后更改为此过程选择的设置。宽限期结束后，您可以随时灵活开启或关闭默认启用功能：
+
+[source, cli]
+----
+security anti-ransomware auto-enable modify -new-volume-auto-enable false|true
+----
+.步骤
+您可以使用 System Manager 或 ONTAP CLI 管理 ARP 默认启用选项。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*集群>设置*。
+. 执行以下操作之一：
++
+** 在活动宽限期内禁用：
++
+... 在 *Anti-ransomware* 部分，您将看到一条消息，指示启用 ARP 之前的剩余小时数。选择 *Don't enable*。
+... 在下一个对话框中选择*禁用*，以确认新卷的默认 ARP 启用已关闭。
+
+
+** 宽限期后禁用：
++
+... 在 *Anti-ransomware* 部分，选择 image:icon_pencil.gif["编辑图标"]。
+... 选中复选框，然后 *保存* 以禁用新卷的默认 ARP 启用。
+
+
+
+
+
+
+--
+.命令行界面
+--
+. 检查默认启用状态：
++
+[source, cli]
+----
+security anti-ransomware auto-enable show
+----
+. 禁用新卷的默认启用：
++
+[source, cli]
+----
+security anti-ransomware auto-enable modify -new-volume-auto-enable false
+----
+
+
+--
+====
+.相关信息
+* link:enable-task.html["在单个卷上启用 ONTAP 自主勒索软件保护"]
+

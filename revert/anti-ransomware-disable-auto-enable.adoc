@@ -1,0 +1,27 @@
+---
+permalink: revert/anti-ransomware-disable-auto-enable.html 
+sidebar: sidebar 
+keywords: revert, reverting, reversion, anti-ransomware, enable, autonomous, protection, arp 
+summary: 在还原到 ONTAP 9.17.1 或更早版本之前，禁用已升级到 ONTAP 9.18.1 的卷上 ARP 的自动启用。 
+---
+= 在从 ONTAP 9.18.1 还原之前禁用 Autonomous Ransomware Protection 的自动启用
+:allow-uri-read: 
+
+
+[role="lead"]
+如果您将卷升级到 ONTAP 9.18.1，则可能在短暂的宽限期（12 小时）后为您的卷设置了 ONTAP ARP 自动启用。建议您在还原到 ONTAP 9.17.1 或更早版本之前，在升级到 ONTAP 9.18.1 的卷上禁用此自动启用设置。
+
+.步骤
+. 确定是否已在已升级到 ONTAP 9.18.1 或更高版本的卷上激活自动启用选项：
++
+[source, cli]
+----
+security anti-ransomware auto-enable show
+----
+. 在 SVM 上的所有卷上禁用勒索软件保护的自动启用选项：
++
+[source, cli]
+----
+security anti-ransomware volume disable -volume * -auto-enabled-volumes-only true
+----
+
