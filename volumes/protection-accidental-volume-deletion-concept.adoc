@@ -15,6 +15,9 @@ summary: 默认卷删除行为有助于恢复意外删除的 FlexVol 卷。
 
 答 `volume delete` 针对类型为的卷的请求 `RW` 或 `DP` (如中所示 `volume show` 命令输出)将使该卷变为部分删除状态。默认情况下，它会在恢复队列中保留至少 12 小时，然后才会被完全删除。
 
+
+NOTE: 删除包含已删除卷的 SVM 将清除卷恢复队列 (VRQ)。仅当您确定不需要恢复 SVM 拥有的卷时，才删除 SVM。删除拥有的 SVM 时，卷恢复队列中的卷不能存在。
+
 .相关信息
 * link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_use_the_Volume_Recovery_Queue["如何使用卷恢复队列"^]
 * link:https://docs.netapp.com/us-en/ontap-cli/volume-delete.html["卷删除"^]
