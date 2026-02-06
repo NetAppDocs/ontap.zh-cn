@@ -1,0 +1,148 @@
+= 
+:allow-uri-read: 
+
+
+. 将权限级别更改为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 识别集群中具有 epsilon 的节点：
++
+[source, cli]
+----
+cluster show
+----
++
+在以下示例中，"node0" 当前持有 epsilon：
+
++
+[listing]
+----
+cluster::*>
+Node                 Health  Eligibility  Epsilon
+-------------------- ------- ------------ ------------
+node0                true    true         true
+node1                true    true         false
+node2                true    true         false
+node3                true    true         false
+----
+. [[epsilon-true]]如果您要删除的节点包含 epsilon：
++
+.. 从要删除的节点中移动 epsilon：
++
+[source, cli]
+----
+cluster modify -node <name_of_node_to_be_removed> -epsilon false
+----
+.. 将 epsilon 移至未移除的节点：
++
+[source, cli]
+----
+cluster modify -node <node_name> -epsilon true
+----
+
+
+. 确定当前主节点：
++
+[source, cli]
+----
+cluster ring show
+----
++
+主节点是存放、、 `vldb` `vifmgr`、 `bcomd`和 `crs`等进程的节点 `mgmt`。
+
+. 如果您要删除的节点是当前主节点，请启用集群中的另一个节点被选为主节点：
++
+.. 使当前主节点不符合加入集群的条件：
++
+[source, cli]
+----
+cluster modify -node <node_name> -eligibility false
+----
++
+在恢复资格之前，节点被标记为不健康。当主节点变得不合格时，剩余的节点之一由集群仲裁选举为新的主节点。
+
++
+[NOTE]
+====
+如果要在 HA 对中的第一个节点上执行此步骤，则应仅将该节点标记为不合格。请勿修改 HA 合作伙伴的状态。
+
+如果选择合作伙伴节点作为新的主节点，则需要在使其不合格之前验证它是否保持 epsilon。如果合作伙伴节点持有 epsilon，则需要将 epsilon 移动到保留在集群中的其他节点，然后才能使其不合格。在重复这些步骤以删除合作伙伴节点时，请执行此操作。
+
+====
+.. 使上一个主节点有资格重新加入集群：
++
+[source, cli]
+----
+cluster modify -node <node_name> -eligibility true
+----
+
+
+. 登录到未从群集中删除的节点上的远程节点管理 LIF 或群集管理 LIF。
+. 从集群中删除节点：
++
+|===
+| 对于此 ONTAP 版本 ... | 使用此命令 ... 
+
+
+ a| 
+ONTAP 9.3
+ a| 
+[source, cli]
+----
+cluster unjoin
+----
+
+
+ a| 
+ONTAP 9.4及更高版本
+ a| 
+具有节点名称：
+
+[source, cli]
+----
+cluster remove-node -node <node_name>
+----
+使用节点IP：
+
+[source, cli]
+----
+cluster remove-node -cluster_ip <node_ip>
+----
+|===
++
+如果您使用的是混合版本集群、并且要删除最后一个较低版本的节点、请使用 `-skip-last-low-version-node-check` 参数。
+
++
+系统会通知您以下信息：
+
++
+** 您还必须从集群中删除节点的故障转移配对节点。
+** 删除节点后，在其重新加入集群之前，必须使用引导菜单选项 *(4) Clean configuration and initialize all disks* 或选项 *(9) Configure Advanced Drive Partitioning* 来清除节点的配置并初始化所有磁盘。
++
+如果在删除节点之前必须解决某些条件，则会生成一条失败消息。例如，此消息可能指示节点具有必须删除的共享资源，或者节点采用必须禁用的集群 HA 配置或存储故障转移配置。
+
++
+如果节点是仲裁主节点，则集群将暂时丢失，然后返回仲裁状态。此仲裁丢失是临时的，不会影响任何数据操作。
+
+
+
+. 如果失败消息指示错误情况、请解决这些情况并重新运行 `cluster remove-node` 或 `cluster unjoin` 命令：
++
+从集群中成功删除后，节点会自动重新启动。
+
+. 如果要重新利用节点，请擦除节点配置并初始化所有磁盘：
++
+.. 在启动过程中，当系统提示时，按 Ctrl-C 显示启动菜单。
+.. 选择启动菜单选项 *(4) Clean configuration and initialize all disks*。
+
+
+. [[return-admin]]返回管理员权限级别：
++
+[source, cli]
+----
+set -privilege admin
+----
+
