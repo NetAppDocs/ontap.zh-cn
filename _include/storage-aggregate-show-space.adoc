@@ -1,0 +1,9 @@
+= 
+:allow-uri-read: 
+
+
+从 ONTAP 9.18.1 开始， `storage aggregate show-space` 命令更改逻辑参考容量和逻辑未参考容量的报告方式。Logical Referenced Capacity 报告所有对象中的引用块和碎片化对象中的未引用块。Logical Unreferenced Capacity 仅报告已超过满度阈值且符合对象删除和碎片整理条件的对象中的未引用块。
+
+例如，当您对 ONTAP S3 和 StorageGRID 使用默认聚合满度阈值 40% 时，在将块报告为未引用容量之前，必须取消引用对象中 60% 的块。
+
+在早于 ONTAP 9.18.1 的版本中，逻辑引用容量报告所有对象（完整和碎片对象）中的引用块。逻辑未引用容量报告所有对象中的未引用块。
