@@ -1,0 +1,244 @@
+---
+sidebar: sidebar 
+permalink: concepts/capacity-measurements.html 
+keywords: capacity, measurement, physical, logical, storage, used storage, local tier capacity, aggregate capacity, block, capacity concern, add capacity, volume, used capacity, available capacity, total capacity, inactive capacity, static insights, dynamic insights, snapshot copy, snapshot copies, inactive data, overprovision, overflows, snapshot copy policy, snapshot copy reserves, reserves, policy, top volumes 
+summary: '您的 ONTAP 存储容量可以用物理空间或逻辑空间来衡量。如何报告这些测量值取决于您的 ONTAP 版本以及您使用的是 System Manager 还是命令行界面 (CLI)。在监控存储使用情况时，了解与容量相关的各种术语、物理容量和逻辑容量之间的差异以及容量类型的报告方式非常重要。' 
+---
+= 了解 ONTAP 容量报告和测量
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+您的 ONTAP 存储容量可以用物理空间和逻辑空间来衡量。如何报告这些测量值取决于您的 ONTAP 版本以及您使用的是 System Manager 还是命令行界面 (CLI)。在监控存储使用情况时，了解与容量相关的各种术语、物理容量和逻辑容量之间的差异以及容量类型的报告方式非常重要。
+
+* *物理容量*：物理空间是指卷或本地层中使用的物理存储块。由于存储效率功能（例如重复数据删除和数据压缩）中的数据减少，物理已用容量值通常小于逻辑已用容量值。
+* *逻辑容量*：逻辑空间是指卷或本地层中的可用空间(逻辑块)。逻辑空间是指在不考虑重复数据删除或数据压缩结果的情况下如何使用理论空间。已用逻辑空间值是从已用物理空间量加上已配置的存储效率功能（例如重复数据删除和数据压缩）节省的空间得出的。此度量值通常看起来大于已用物理容量、因为它包括快照、克隆和其他组件、并且不反映数据压缩和物理空间的其他缩减。因此，总逻辑容量可能会高于配置的空间。
+
+
+
+
+== CLI 中的容量报告
+
+在 ONTAP CLI 中，物理已用空间的报告方式会根据您的 ONTAP 版本而有所不同。在 ONTAP 9.13.1 及更早版本中， `physical used` 参数在  `volume show` 命令输出中显示，包括应用于卷的所有存储效率节省。从 ONTAP 9.14.1 开始， `physical used` 参数不包括聚合级别的存储效率节省，例如温度敏感存储（TSSE）、内联压缩、压缩和跨卷重复数据删除，因此无法准确反映卷的物理已用空间。在 ONTAP 9.14.1 及更高版本中，您应使用  `vol show-footprint` 命令和  `effective_total_footprint` 参数来查看卷的准确物理已用空间。
+
+[cols="4"]
+|===
+| ONTAP 版本 | 命令 | 参数 | Description 
+
+
+.3+| 9.14.1 及更高版本 | `volume show-footprint` | `effective_total_footprint` | 反映实际使用的磁盘空间，包括从聚合中节省的空间。 
+
+
+| `volume show-space` | `physical used` | 反映了卷级存储效率节省量，包括汇总节省量。 
+
+
+| `volume show` | `physical used` | 不包括聚合级存储效率节省，因此不能准确反映 link:..volumes/enable-temperature-sensitive-efficiency-concept.html["支持 TSSE 的平台"] 的卷的物理使用空间。 
+
+
+.3+| 9.13.1 及更早版本 | `volume show-footprint` | `effective_total_footprint` | 反映实际使用的磁盘空间，包括从聚合中节省的空间。 
+
+
+| `volume show-space` | `physical used` | 仅反映卷级存储效率节省量。 
+
+
+| `volume show` | `total physical used` | 仅反映卷级存储效率节省量。 
+|===
+.相关信息
+* 详细了解 link:https://kb.netapp.com/on-prem/ontap/OHW/OHW-KBs/What_is_the_Change_in_Physical_Used_Space_Reporting_for_9.14.1_and_later["9.14.1 及更高版本的实际已用空间报告的变化"^]。
+* 详细了解 link:../volumes/commands-display-space-usage-reference.html["用于显示空间使用量信息的命令"]。
+
+
+
+
+== System Manager 中的容量报告
+
+根据 ONTAP 版本的不同，系统管理器中显示的已用容量测量值会有所不同。从 ONTAP 9.7 开始，系统管理器提供物理和逻辑容量的测量。
+
+
+NOTE: 在 System Manager 中，容量表示不考虑根存储层（聚合）容量。
+
+[cols="30,30,40"]
+|===
+
+
+| System Manager 版本 | 容量术语 | 引用的容量类型 
+
+
+ a| 
+9.9.1 及更高版本
+ a| 
+已用逻辑容量
+ a| 
+已用逻辑空间
+如果已启用存储效率设置)
+
+
+
+ a| 
+9.7 和 9.8
+ a| 
+已用
+ a| 
+已用逻辑空间
+(如果已启用存储效率设置)
+
+
+
+ a| 
+9.5和9.6
+(经典视图)
+ a| 
+已用
+ a| 
+已用物理空间
+
+|===
+
+
+== 容量测量术语
+
+在描述容量时，使用以下术语：
+
+* *已分配容量*：已为Storage VM中的卷分配的空间量。
+* *可用*：可用于在Storage VM或本地层中存储数据或配置卷的物理空间量。
+* *卷间容量*：Storage VM上所有卷的已用存储与可用存储之和。
+* *客户端数据*：客户端数据(物理或逻辑)使用的空间量。
++
+** 从ONTAP 9.131开始，客户端数据使用的容量称为*逻辑使用的容量*，快照使用的容量将单独显示。
+** 在9.12.1 9.12.1及更早版本中、添加到快照使用的容量中的客户端数据所使用的容量称为*逻辑使用容量*。
+
+
+* *已提交*：本地层的已提交容量。
+* *数据缩减*：所采集数据的大小与所存储数据的大小之比。
++
+** 从ONTAP 9 .13.1开始、数据精简会考虑重复数据删除和数据压缩等大多数存储效率功能的结果；但是、快照和精简配置不会计入数据精简率。
+** 在ONTAP 9.12.1及更早版本中、数据精简率显示如下：
++
+*** "*容量*"面板上显示的数据精简值是所有逻辑已用空间与物理已用空间之比、其中包括使用快照和其他存储效率功能所带来的优势。
+*** 显示详细信息面板时，您将看到概览面板上显示的*总体*比率，以及仅由客户端数据使用的逻辑已用空间与仅由客户端数据使用的物理已用空间之比(称为*不包含快照和克隆*)。
+
+
+
+
+* *逻辑使用量*：
++
+** 从ONTAP 9.131开始，客户端数据使用的容量称为*逻辑使用的容量*，快照使用的容量将单独显示。
+** 在9.12.1 9.12.1及更早版本中、添加到快照使用的容量中的客户端数据所使用的容量称为*逻辑使用容量*。
+
+
+* *逻辑使用量%*：当前逻辑使用容量与配置大小之比(不包括快照预留)。此值可以大于 100% ，因为它包括卷中的效率节省。
+* *最大容量*：为Storage VM上的卷分配的最大空间量。
+* *物理已用*：卷或本地层的物理块中已用的容量。
+* *物理已用%*：卷的物理块中已用容量与配置大小之比。
+* *已配置容量*：已从Cloud Volumes ONTAP系统分配并已准备好存储用户或应用程序数据的文件系统(卷)。
+* *预留*：为本地层中已配置卷预留的空间量。
+* *已用*：包含数据的空间量。
+* *已用和预留*：已用物理空间与预留空间之和。
+
+
+
+
+== Storage VM的容量
+
+Storage VM的最大容量由为卷分配的总空间加上剩余的未分配空间决定。
+
+* 为卷分配的空间等于已用容量与FlexVol 卷、FlexGroup 卷和FlexCache 卷的可用容量之和。
+* 即使卷在删除后受到限制、脱机或位于恢复队列中、卷的容量也会计入总和。
+* 如果为卷配置了自动增长、则会在总和中使用卷的最大自动大小值。  如果不使用自动增长、则会使用卷的实际容量作为总和。
+
+
+下图说明了卷间容量的衡量指标与最大容量限制之间的关系。
+
+image:max-cap-limit-cap-x-volumes.gif["最大容量限制由已分配的空间和可用空间组成、卷间的容量仅占用已分配的空间。"]
+
+从ONTAP 9.13.1开始、集群管理员可以执行此操作 link:../manage-max-cap-limit-svm-in-sm-task.html["为Storage VM启用最大容量限制"]。但是、对于包含用于数据保护的卷的Storage VM、在SnapMirror关系或MetroCluster 配置中、不能设置存储限制。此外、不能将配额配置为超过Storage VM的最大容量。
+
+设置最大容量限制后、不能将其更改为小于当前分配的容量的大小。
+
+当Storage VM达到其最大容量限制时、无法执行某些操作。System Manager可为中的后续步骤提供建议 link:../insights-system-optimization-task.html["*洞察力* "]。
+
+
+
+== System Manager 中的容量测量单位
+
+System Manager 会根据 1024 （ 2^10^ ）字节的二进制单元计算存储容量。
+
+* 从ONTAP 9.10.1开始、存储容量单位在System Manager中显示为KiB、MiB、GiB、TiB和PIB。
+* 在ONTAP 9.10.0及更早版本中、这些单位在System Manager中显示为KB、MB、GB、TB和PB。
+
+
+
+NOTE: 对于所有版本的 ONTAP ， System Manager 中用于吞吐量的单位仍为 KB/ 秒， MB/ 秒， Gb/ 秒， TB/ 秒和 PB / 秒。
+
+[cols="20,20,30,30"]
+|===
+
+
+| 对于 ONTAP 9.10.0 及更早版本， System Manager 中会显示容量单位 | 对于ONTAP 9.10.1及更高版本、System Manager中显示的容量单位 | 计算 | 以字节为单位的值 
+
+
+ a| 
+知识库
+ a| 
+KiB
+ a| 
+1024
+ a| 
+1024 字节
+
+
+
+ a| 
+MB
+ a| 
+MIB
+ a| 
+1024 * 1024
+ a| 
+1 ， 048 ， 576 字节
+
+
+
+ a| 
+GB
+ a| 
+GIB
+ a| 
+1024 * 1024 * 1024
+ a| 
+1 ， 073 ， 741 ， 824 字节
+
+
+
+ a| 
+TB
+ a| 
+TIB
+ a| 
+1024 * 1024 * 1024 * 1024
+ a| 
+1 ， 099 ， 511 ， 627 ， 776 字节
+
+
+
+ a| 
+PB
+ a| 
+PIB
+ a| 
+1024 * 1024 * 1024 * 1024 * 1024
+ a| 
+1、125、899、905、843、024字节
+
+|===
+.相关信息
+link:../task_admin_monitor_capacity_in_sm.html["在System Manager中监控集群、层和SVM容量"]
+
+link:../volumes/logical-space-reporting-enforcement-concept.html["卷的逻辑空间报告和强制实施"]
