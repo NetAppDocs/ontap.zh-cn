@@ -1,26 +1,30 @@
 ---
 permalink: upgrade/create-upgrade-plan.html 
 sidebar: sidebar 
-keywords: ontap, upgrade, plan, planning, upgrade advisor, advisor, digital advisor, active iq, create an upgrade plan, estimate upgrade, 
-summary: Digital Advisor中的Upgrade Advisor服务提供智能信息、可帮助您规划升级并最大限度地降低不确定性和风险。 
+keywords: ontap, upgrade, plan, planning, upgrade advisor, upgrade health checker, advisor, digital advisor, active iq, create an upgrade plan 
+summary: 您可以在 Active IQ Digital Advisor 或 Upgrade Health Checker 中使用 Upgrade Advisor，以自动生成特定于您的环境和集群配置的升级报告。 
 ---
-= 使用Upgrade Advisor准备ONTAP升级
+= 使用 Upgrade Advisor 或 Upgrade Health Checker 准备 ONTAP 升级
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-如果您拥有的有效link:https://www.netapp.com/us/services/support-edge.aspx["SupportEdge 服务"^]合同link:https://docs.netapp.com/us-en/active-iq/upgrade_advisor_overview.html["Digital Advisor"^]，建议您使用Upgrade Advisor生成升级计划。
-
-Digital Advisor中的Upgrade Advisor服务提供智能信息、可帮助您规划升级并最大限度地降低不确定性和风险。
-
-Digital Advisor可确定您的环境中可以通过升级到较新版本的ONTAP来解决的问题。Upgrade Advisor 服务可帮助您规划成功升级，并提供有关要升级到的 ONTAP 版本中可能需要注意的问题的报告。
+您可以在 Active IQ Digital Advisor 或 Upgrade Health Checker 中使用 Upgrade Advisor，以自动生成特定于您的环境和集群配置的升级报告。这两个工具都提供智能，可帮助您规划升级、识别阻塞程序和警告，并将不确定性和风险降至最低。
 
 
-NOTE: Upgrade Advisor需要AutoSupport日志才能创建报告。如果您启用了AutoSupport、则升级顾问可以访问日志并成功创建报告。如果尚未启用AutoSupport，则可以 https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-KBs/How_to_manually_upload_AutoSupport_messages_to_NetApp_in_ONTAP_9["手动上传AutoSupport文件"^]。
 
-如果您没有有效的Digital Advisor Support Edge服务合同，则应link:prepare.html["在不使用Upgrade Advisor的情况下准备升级"]。
+== 准备使用Upgrade Advisor进行升级
+
+Upgrade Advisor 识别环境中可以通过升级到较新版本的 ONTAP 来解决的问题，并提供您在要升级到的 ONTAP 版本中可能需要注意的问题报告。Upgrade Advisor 还提供建议的升级路径，并生成特定于群集配置的升级计划。
+
+Upgrade Advisor 特别适用于环境较小的用户，他们更喜欢基于云的、以 UI 为中心的体验。
+
+.开始之前
+* 要使用 Upgrade Advisor，必须为 link:https://docs.netapp.com/us-en/active-iq/upgrade_advisor_overview.html["Digital Advisor"^] 拥有一个有效的 link:https://www.netapp.com/us/services/support-edge.aspx["SupportEdge 服务"^] 合同。
+* AutoSupport 必须启用，Upgrade Advisor 才能自动访问生成升级计划所需的 AutoSupport 日志。如果尚未启用 AutoSupport，则可以 https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-KBs/How_to_manually_upload_AutoSupport_messages_to_NetApp_in_ONTAP_9["手动上传AutoSupport文件"^]。
+
 
 .步骤
 . https://aiq.netapp.com/["启动Active IQ数字顾问"^]
@@ -33,5 +37,23 @@ NOTE: Upgrade Advisor需要AutoSupport日志才能创建报告。如果您启用
 
 .下一步行动
 * 您应查看 link:../release-notes/index.html["《 ONTAP 发行说明》"] 对于Upgrade Advisor为您的集群建议的目标ONTAP版本、您应按照Upgrade Advisor生成的计划升级集群。
+* 您应该 link:reboot-sp-bmc.html["重新启动SP或BMC"] 升级开始之前。
+
+
+
+
+== 使用 Upgrade Health Checker 准备升级
+
+升级运行状况检查器是一种现场工具，适用于环境庞大或复杂、互联网访问受限或现有自动化和协调框架的用户。无需 SupportEdge 合同即可使用升级运行状况检查器。
+
+.开始之前
+您必须link:https://docs.netapp.com/us-en/upgrade-health-checker/set-up-upgrade-health-checker.html["下载并设置 Upgrade Health Checker"]，然后才能使用它生成升级计划。
+
+.步骤
+. link:https://docs.netapp.com/us-en/upgrade-health-checker/generate-report-upgrade-health-checker.html["使用 Upgrade Health Checker 生成升级计划"^]。
+
+
+.下一步行动
+* 您应查看为您的集群推荐的目标 ONTAP 版本的link:../release-notes/index.html["《 ONTAP 发行说明》"]；然后应按照 Upgrade Health Checker 生成的计划升级您的集群。
 * 您应该 link:reboot-sp-bmc.html["重新启动SP或BMC"] 升级开始之前。
 
