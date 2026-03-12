@@ -34,7 +34,7 @@ AFF
  a| 
 A系列、C系列
  a| 
-自动双工故障转移(对称主动/主动)、自动故障转移(非对称主动/主动)
+自动故障转移双工（对称 Active/Active）、自动故障转移（非对称 Active/Passive）
  a| 
 * 2（ONTAP 9.9.1 或更高版本）
 * 4（采用对称主动/主动配置的ONTAP 9.16.1）
@@ -47,7 +47,7 @@ ASA
  a| 
 A系列、C系列
  a| 
-自动双工故障转移(对称主动/主动)、自动故障转移(非对称主动/主动)
+自动故障转移双工（对称 Active/Active）、自动故障转移（非对称 Active/Passive）
  a| 
 * 2（ONTAP 9.9.1 或更高版本
 * 4（采用对称主动/主动配置的ONTAP 9.16.1）
@@ -309,7 +309,7 @@ SnapMirror主动同步不支持以下 NVMe 协议：
 
 +
 ** 4 节点对称主动/主动配置
-** 非对称主动/主动配置
+** 非对称主动/被动配置
 ** 一致性组大小的变化
 +
 使用带有 SnapMirror 活动同步的 NVMe 协议时，不能无中断地扩展或缩小一致性组。使用带有 SnapMirror 活动同步的 NVMe 协议时，一致性组扩展和收缩操作具有中断性。
@@ -346,7 +346,7 @@ SnapMirror活动同步卷*不支持NTFS安全模式。
 
 == 其他前提条件
 
-* 在ONTAP 9.15.1 之前的版本中，读写目标卷（在非对称主动-主动模式下从 DP 转换为读写的卷）不支持SnapMirror主动同步关系。在使用读写卷之前，您必须先创建卷级SnapMirror关系（异步或同步），然后删除该关系，将其转换为 DP 卷。有关详细信息，请参阅link:convert-active-sync-task.html["将现有SnapMirror关系转换为SnapMirror活动同步"] 。
+* 在早于 ONTAP 9.15.1 的版本中，读写目标卷（在非对称主动-被动模式下从 DP 转换为读写的卷）不支持 SnapMirror 活动同步关系。在使用读写卷之前，必须通过创建卷级 SnapMirror 关系（异步或同步），然后删除该关系，将其转换为 DP 卷。有关详细信息，请参见link:convert-active-sync-task.html["将现有SnapMirror关系转换为SnapMirror活动同步"]。
 * 使用SnapMirror主动同步的存储虚拟机无法作为客户端计算机加入 Active Directory。
 
 
