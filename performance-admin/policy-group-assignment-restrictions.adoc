@@ -1,0 +1,62 @@
+---
+permalink: performance-admin/policy-group-assignment-restrictions.html 
+sidebar: sidebar 
+keywords: use, adaptive, qos, policy, groups 
+summary: 您可以使用自适应 QoS 策略组自动将吞吐量上限或下限扩展到卷大小，从而在卷大小发生变化时保持 IOPS 与 TBSGB 的比率。如果您要在大型部署中管理数百或数千个工作负载，则这是一项显著优势。 
+---
+= QoS 策略组分配限制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从ONTAP 9.18.1 开始，您可以使用嵌套的 QoS 策略，该策略允许将策略组分配给包含对象（例如 SVM）及其子对象（例如卷）。在多租户环境中，嵌套的 QoS 策略使管理员能够将 SVM 上的 QoS 限制细分到 SVM 内的各个卷和 qtree，从而能够在计算环境中平衡存储资源，同时还能优先处理关键任务工作负载。
+
+以下对象对支持嵌套 QoS 策略：
+
+* SVM 和 SVM 包含的FlexVol或FlexGroup卷。
+* FlexVol或FlexGroup卷以及卷内的 qtree。
+
+
+对于嵌套的 QoS 策略，采用最严格的适用策略。
+
+下表列出了各项限制。
+
+|===
+| 如果您分配 ... | 那么你就无法将其分配到策略组…… 
+
+
+ a| 
+SVM 到策略组
+ a| 
+SVM 中包含的任何存储对象。
+
+
+NOTE: 如果您运行的是ONTAP 9.18.1，则 SVM 中包含的FlexVol和FlexGroup卷_可以_分配给策略组。
+
+
+
+ a| 
+卷到策略组
+ a| 
+包含该卷或任何子 LUN 的 SVM。
+
+
+NOTE: 如果您运行的是ONTAP 9.18.1 及更高版本，则包含卷的 SVM _可以_分配给策略组。此外，还可以分配FlexVol或FlexGroup卷中的 qtree。
+
+
+
+ a| 
+将LUN分配给策略组
+ a| 
+包含 LUN 的卷或 SVM
+
+
+
+ a| 
+文件到策略组
+ a| 
+包含文件的卷或 SVM
+
+|===
