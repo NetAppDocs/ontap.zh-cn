@@ -11,9 +11,13 @@ summary: 启用自动更新、以便ONTAP无需您的干预即可下载和安装
 
 
 [role="lead"]
-启用自动更新、以便ONTAP无需您的干预即可下载和安装固件、系统和安全更新。
+使用 System Manager 启用自动更新，并允许 ONTAP 在无需您干预的情况下下载并安装固件、系统和安全更新。
 
-启用自动更新需要您接受 EULA 的条款并根据您的环境确认或配置每个系统组件的默认更新行为。
+您可以使用 ONTAP CLI 仅管理 SP/BMC 固件更新。
+
+* 详细了解link:../system-admin/methods-manage-sp-bmc-firmware-updates-concept.html["管理 ONTAP SP/BMC 固件更新"]。
+* 如需详细了解 System Manager 和 CLI 管理自动更新之间的区别，请参阅知识库文章：link:https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-KBs/Why_do_GUI_and_CLI_show_different_status_for_ONTAP_automatic_updates_configuration["为什么 GUI 和 CLI 对 ONTAP 自动更新配置显示不同的状态？"]。
+
 
 每个系统组件的自动更新的可用性取决于您的ONTAP版本。
 
@@ -48,6 +52,21 @@ summary: 启用自动更新、以便ONTAP无需您的干预即可下载和安装
 
 
 |===
+如果您的ONTAP版本没有自动更新、或者您未启用自动更新、则可以手动执行固件、时区数据库和安全更新。
+
+.关于此任务
+启用自动更新需要您接受 EULA 的条款并根据您的环境确认或配置每个系统组件的默认更新行为。
+
+对于在 ONTAP 9.16.1 或更早版本中创建然后升级到 9.16.1 或更高版本的集群：
+
+* 如果在升级前启用了自动更新功能，则升级后不会更改系统组件更新默认值。
+* 如果在升级前未启用自动更新，则将应用 ONTAP 9.16.1 及更高版本中的系统组件更新默认设置。
+
+
+自动系统组件更新默认设置为自动更新或显示通知，具体取决于您的ONTAP版本。在完成该过程之前，请确认这些设置适合您的环境。
+
+这 https://www.youtube.com/watch?v=GoABILT85hQ["视频"^]简要显示了如何使用自动更新过程。
+
 .开始之前
 * 您必须拥有当前的支持授权。您可以在*系统详细信息*页面中的中查看此link:https://mysupport.netapp.com/site/["NetApp 支持站点"^]信息。
 * 要启用自动更新、必须先启用AutoSupport with HTTPS。如果集群上未启用AutoSupport、或者使用另一个传输协议在集群上启用了、则可以在此过程中使用HTTPS启用AutoSupport。
@@ -63,17 +82,6 @@ NOTE: 默认情况下、AutoSupport OnDemand处于启用状态、如果配置为
 
 
 
-
-.关于此任务
-对于在ONTAP 9.16.1 之前创建并升级到 9.16.1 或更高版本的集群：
-
-* 如果已启用自动更新功能，则升级后系统组件更新默认值不会改变。
-* 如果尚未启用自动更新，则将应用ONTAP 9.16.1 及更高版本中的系统组件更新默认值。
-
-
-自动系统组件更新默认设置为自动更新或显示通知，具体取决于您的ONTAP版本。在完成该过程之前，请确认这些设置适合您的环境。
-
-这 https://www.youtube.com/watch?v=GoABILT85hQ["视频"^]简要显示了如何使用自动更新过程。
 
 .步骤
 [role="tabbed-block"]
@@ -102,6 +110,8 @@ NOTE: 默认情况下、AutoSupport OnDemand处于启用状态、如果配置为
 --
 .命令行界面
 --
+您可以使用 ONTAP CLI 仅管理 SP/BMC 固件更新
+
 . 启用自动固件更新：
 +
 [source, cli]
@@ -113,6 +123,17 @@ system service-processor image modify -node <node_name> -autoupdate true
 --
 ====
 .相关信息
+* link:firmware-task.html["了解如何手动更新固件"]
+* link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/How_to_update_time_zone_information_in_ONTAP_9["知识库文章How to update time zone information in ONTAP 9"^]
+* link:../anti-ransomware/enable-arp-ai-with-au.html["了解如何手动进行安全更新"]
 * link:../system-admin/requirements-autosupport-reference.html["准备使用AutoSupport"]
 * link:../system-admin/troubleshoot-autosupport-https-task.html["对通过 HTTPS 传送 AutoSupport 消息进行故障排除"]
 
+
+
+
+== 视频：自动固件更新
+
+了解从ONTAP 9.10.1开始提供的自动固件更新功能。
+
+video::GoABILT85hQ[youtube,width=848,height=480]
