@@ -1,0 +1,63 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/network-port-requirements.html 
+keywords: SM-BC, SMBC, SM-AS, restrictions, firewall, network ports, snapmirror active sync 
+summary: ONTAP SnapMirror 活动同步网络端口要求 
+---
+= 网络端口要求
+:allow-uri-read: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+SnapMirror 活动同步复制有几个网络端口要求。
+
+例如，复制中涉及的每个节点都需要监控其合作伙伴节点的运行状况，控制复制活动，并且必须复制数据本身。此外，ONTAP Mediator 或 ONTAP Cloud Mediator 需要与所有节点通信，以提供仲裁服务并协助故障转移。所有这些功能都有不同的端点和端口要求。
+
+在大多数情况下，SnapMirror 活动同步复制将在没有端口或基于目标的限制的内部网络上运行。如果 IP 流量受到防火墙、路由器、网络拓扑或其他机制的限制，则应验证以下连接要求。
+
+
+
+== 使用集群间/对等链路的节点之间的通信
+
+|===
+| Port | 源 | 方向 | 目标 | 目的 
+
+
+| 3260/tcp | 集群间 LIF | 两者 | 集群间 LIF | LUN 共识 
+
+
+ a| 
+11104/tcp + 11105/tcp
+| 集群间 LIF | 两者 | 集群间 LIF  a| 
+集群间通信
+
+SnapMirror 数据传输
+
+
+
+| 443/tcp（HTTPS） | 集群间 LIF | 两者 | 集群间 LIF | 集群间管理 
+
+
+| 10000/tcp  a| 
+集群管理 LIF + 节点管理 LIF
+| 两者 | 可选 | 与 Active IQ Unified Manager 通信 
+|===
+
+
+== 介体和集群节点之间的通信
+
+|===
+| Port | 源 | 方向 | 目标 | 目的 
+
+
+| 22/tcp（SSH） | 管理主机 | 入站 | ONTAP 调解器 | ONTAP Mediator 管理 
+
+
+| 31784/tcp（HTTPS） | 集群管理 LIF | 入站 | ONTAP 调解器 Web 服务器 | REST API 
+
+
+| 31784 TCP | 节点管理 LIF | 入站 | ONTAP 调解器 Web 服务器 | 仲裁服务 
+|===
