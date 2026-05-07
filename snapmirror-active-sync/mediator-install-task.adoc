@@ -155,113 +155,63 @@ image:successful-mediator-installation.png["调解器添加成功"]。
 
 您可以使用 ONTAP CLI 从主集群或辅助集群初始化 ONTAP 调解器。当您发出 `mediator add`命令时，ONTAP Mediator 会自动添加到另一个集群中。
 
-使用 ONTAP Mediator 监视 SnapMirror 活动同步关系时，如果没有有效的自签名证书或证书颁发机构 (CA) 证书，则无法在 ONTAP 中初始化 ONTAP Mediator。您需要将有效证书添加到对等集群的证书存储中。
+使用 ONTAP Mediator 监视 SnapMirror 活动同步关系时，如果没有有效的自签名或证书颁发机构 (CA) 证书，则无法在 ONTAP 中初始化 ONTAP Mediator。您可以将有效证书添加到对等集群的证书存储中。使用 ONTAP Mediator 监控 MetroCluster IP 系统时，初始配置后不使用 HTTPS；因此，不需要证书。
 
 [role="tabbed-block"]
 ====
 .ONTAP调解器1.9及更高版本
 --
-. 从 ONTAP Mediator Linux VM/主机软件安装位置找到 ONTAP Mediator CA 证书：
+. 从ONTAP调解器Linux VM/主机软件安装位置查找ONTAP调解器CA证书 `cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`。
+. 向对等集群上的证书存储添加有效的证书颁发机构。
 +
-`[root@ontap-mediator ~] cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config`
-
-+
-您应该看到类似以下示例的输出：
-
-+
-[listing]
-----
-1-ontap-mediator.rules  intermediate.crt   make_self_signed_certs.sh      ontap_mediator_server_chain.crt  ontap_mediator.user_config.yaml  root_ca.crt
-config_migration        intermediate.key   netapp_sudoers                 ontap_mediator_server.crt        openssl_ca.cnf                   root_ca.key
-config.pyc              intermediate.srl   ontap_mediator.config.yaml     ontap_mediator_server.csr        openssl_intermediate.cnf
-__init__.pyc            logging.conf.yaml  ontap_mediator.constants.yaml  ontap_mediator_server.key        openssl_server.cnf
-----
-. 显示根 CA 证书的内容：
-+
-`[root@ontap-mediator ~] cat root_ca.crt`
+示例
 
 +
 [listing]
 ----
+[root@ontap-mediator_config]# cat intermediate.crt
 -----BEGIN CERTIFICATE-----
 <certificate_value>
 -----END CERTIFICATE-----
 ----
-. 显示中间 CA 证书的内容：
-+
-`[root@ontap-mediator ~] cat intermediate.crt`
-
-+
-[listing]
-----
------BEGIN CERTIFICATE-----
-<certificate_value>
------END CERTIFICATE-----
-----
-. 在主集群或二级集群上安装根 CA 证书和中间 CA 证书：
-+
-.. 安装根 CA 证书：
+. 将 ONTAP Mediator CA 证书添加到 ONTAP 集群。出现提示时，插入从 ONTAP Mediator 获得的 CA 证书。在所有对等集群上重复这些步骤：
 +
 `security certificate install -type server-ca -vserver <vserver_name>`
 
 +
-在出现提示时输入  `root.crt`，如以下示例所示：
+示例
 
++
+[listing]
+----
+[root@ontap-mediator ~]# cd /opt/netapp/lib/ontap_mediator/ontap_mediator/server_config
+
+[root@ontap-mediator_config]# cat intermediate.crt
+-----BEGIN CERTIFICATE-----
+<certificate_value>
+-----END CERTIFICATE-----
+----
 +
 [listing]
 ----
 C1_test_cluster::*> security certificate install -type server-ca -vserver C1_test_cluster
 
-Enter certificate: Press <Enter> when done
+Please enter Certificate: Press when done
 -----BEGIN CERTIFICATE-----
 <certificate_value>
 -----END CERTIFICATE-----
 
-You should keep a copy of the CA-signed digital certificate for future
-reference.
+You should keep a copy of the CA-signed digital certificate for future reference.
 
 The installed certificate's CA and serial number for reference:
 CA: ONTAP Mediator CA
-serial: <serial_value>
+serial: D86D8E4E87142XXX
 
 The certificate's generated name for reference: ONTAPMediatorCA
 
 C1_test_cluster::*>
-
 ----
-
-
-. 安装中间 CA 证书：
-+
-`security certificate install -type server-ca -vserver <vserver_name>`
-
-+
-在出现提示时输入  `intermediate.crt`，如以下示例所示：
-
-+
-[listing]
-----
-C1_test_cluster::*> security certificate install -type server-ca -vserver C1_test_cluster
-
-Enter certificate: Press <Enter> when done
------BEGIN CERTIFICATE-----
-<certificate_value>
------END CERTIFICATE-----
-
-You should keep a copy of the CA-signed digital certificate for future
-reference.
-
-The installed certificate's CA and serial number for reference:
-CA: ONTAP Mediator CA
-serial: <serial_value>
-
-The certificate's generated name for reference: ONTAPMediatorCA
-
-C1_test_cluster::*>
-
-----
-. 重复上一步以在对等集群上安装根和中间 CA 证书。
-. 查看使用证书生成名称安装的自签名 CA 证书：
+. 查看使用生成的证书名称安装的自签名CA证书：
 +
 `security certificate show -common-name <common_name>`
 
@@ -272,17 +222,13 @@ C1_test_cluster::*>
 [listing]
 ----
 C1_test_cluster::*> security certificate show -common-name ONTAPMediatorCA
-Vserver         Serial Number   Certificate Name                       Type
-----------      --------------- -------------------------------------- ------------
-C1_test_cluster <serial_number> ONTAPMediatorCA                        server-ca
+Vserver    Serial Number   Certificate Name                       Type
+---------- --------------- -------------------------------------- ------------
+C1_test_cluster
+           6BFD17DXXXXX7A71BB1F44D0326D2DEEXXXXX
+                           ONTAPMediatorCA                        server-ca
     Certificate Authority: ONTAP Mediator CA
-          Expiration Date: Thu Nov 28 05:26:07 2030
-
-C1_test_cluster <serial_number> ONTAPMediatorCA                        server-ca
-    Certificate Authority: ONTAP Mediator CA
-          Expiration Date: Thu Nov 28 05:26:07 2030
-
-2 entries were displayed.
+          Expiration Date: Thu Feb 15 14:35:25 2029
 ----
 . 在其中一个集群上初始化 ONTAP 调解器。ONTAP 调解器将自动添加到另一个集群：
 +
