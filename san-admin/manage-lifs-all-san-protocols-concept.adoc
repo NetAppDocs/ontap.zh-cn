@@ -4,26 +4,23 @@ sidebar: sidebar
 keywords: manage, lifs, san protocols 
 summary: LIF 连接到 SAN 主机。可以从端口集中删除它们、将它们移动到存储虚拟机中的不同节点以及删除它们。 
 ---
-= 管理所有 SAN 协议的 LIF
+= 了解适用于 SAN 环境的 ONTAP LIF
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-对于SAN环境中的集群、启动程序必须使用多路径I/O (Multipath I/O、MPIO)和非对称逻辑单元访问(ALOA)实现故障转移功能。如果某个节点发生故障， LIF 不会迁移或假定出现故障的配对节点的 IP 地址。相反，在主机上使用 ALUA 的 MPIO 软件负责选择通过 LIF 访问 LUN 的适当路径。
+ONTAP 系统中的 LUN 和命名空间包含在 Storage Virtual Machine (SVM) 中。网络接口 (LIF) 允许您的 SAN 客户端连接到 SVM 并访问其包含的 LUN 和命名空间中的数据。
 
-您需要使用逻辑接口（ Logical Interface ， LIF ）从 HA 对中的每个节点创建一个或多个 iSCSI 路径，以允许访问由 HA 对提供服务的 LUN 。  您应为支持 SAN 的每个 Storage Virtual Machine （ SVM ）配置一个管理 LIF 。
-
-支持直接连接或使用以太网交换机进行连接。您必须为这两种类型的连接创建LIS。
-
-* 您应为支持 SAN 的每个 Storage Virtual Machine （ SVM ）配置一个管理 LIF 。
-您可以为每个节点配置两个 LIF ，每个 LIF 用于与 FC 一起使用的每个网络结构，并为 iSCSI 分隔以太网网络。
+* 您应该为每个支持 SAN 的 Storage Virtual Machine (SVM) 配置一个管理 LIF。
+* 您可以为每个节点配置两个 LIF，一个用于与 FC 一起使用的每个交换矩阵，另一个用于 iSCSI 的单独以太网网络。
+* 支持直接连接或使用以太网交换机进行连接。必须为两种类型的连接配置 LIF。
 
 
-创建完后、可以从端口集中将其删除、将其移动到Storage Virtual Machine (SVM)中的不同节点以及将其删除。
+学习 link:../networking/create_a_lif.html["创建 LIF"]
 
 .相关信息
-* link:../networking/configure_lifs_cluster_administrators_only_overview.html#lif-failover-and-giveback["配置文件配置概览"]
-* link:../networking/create_a_lif.html["创建 LIF"]
+* link:../networking/configure_lifs_cluster_administrators_only_overview.html["详细了解 LIF 配置"]
+* link:multipath-automatic-lif-failover-support.html["了解对 SAN 自动 LIF 故障转移的支持"].
 

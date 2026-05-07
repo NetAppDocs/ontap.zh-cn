@@ -1,0 +1,106 @@
+---
+permalink: san-config/configure-fc-ports-direct-attachment.html 
+sidebar: sidebar 
+keywords:  
+summary:  
+---
+= 配置 ONTAP FC 端口以直接连接到 FC 和 FC-NVMe 主机
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.19.1 开始，无需 FC 交换机即可在 FC 和 FC-NVMe 主机与 ONTAP 存储之间建立连接。主机可以直接连接到 AFF、ASA、ASA r2 和 FAS 系统上的 FC 适配器端口。在简单性至关重要的远程站点和混合环境中，直接连接功能尤其有价值。您必须先使 FC 端口脱机并修改其拓扑，然后才能将其直接连接到主机。
+
+直连配置中使用的 FC 端口有下列限制：
+
+* 端口只能分配给一个存储虚拟机 (SVM)。
+* 将端口配置为直接连接后，只能将一个网络接口 (LIF) 分配给该端口。
+* 该端口可以支持 FC 协议或 FC-NVMe 协议，但不能同时支持这两种协议。
+
+
+.开始之前
+您必须是集群管理员。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 在 System Manager 中，选择 *Network > FC ports*。
+. 选择要配置为直接连接的端口旁边的 image:icon_kabob.gif["选择图标"]，然后选择 *Edit topology*。
+. 在 *拓扑* 下，选择 *直接*，然后选择 *我想更改拓扑并使端口脱机*。
+. 选择 *Save。*
+. 将目标端口的电缆直接连接到主机启动器。
+. 如果您有 ASA r2 系统，请按照 link:https://docs.netapp.com/us-en/asa-r2/administer/manage-client-vm-access.html#create-a-lif-network-interface["此 System Manager 过程"^] 创建 LIF。如果您有 AFF、ASA 或 FAS 系统，请按照以下步骤创建 LIF：
++
+.. 选择 *Network > Interfaces*，然后选择 image:icon_add.gif["添加图标"]。
+.. 选择 FC 或 NVMe/FC 协议。
+.. 命名 LIF 或接受 ONTAP 生成的名称。
+.. 如果至少配置了一个子网，则可以为 LIF 选择一个子网。
+.. 如果未选择子网，则可以指定广播域的 IP 地址和子网掩码。
+.. 从广播域中选择主端口。
++
+根据广播域或子网选择显示主端口控制
+
+.. 选择 * 保存 * 。
++
+创建 LIF 时，端口将自动联机。
+
+
+
+
+
+.下一步是什么？
+在 System Manager 中，选择 *Network > FC ports*，然后验证 *Topology* 是否显示为 *Direct*。
+
+--
+.命令行界面
+--
+. 查看用于适配器端口的 LIF 的管理和运行状态：
++
+[source, cli]
+----
+network interface show -vserver <SVM_name>
+----
+. 使适配器脱机：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter_port> -status-admin down
+----
+. 从适配器端口中删除所有 LIF：
++
+[source, cli]
+----
+network interface delete -vserver <SVM_name> -lif <lif_name>,<lif_name>
+----
+. 将适配器端口拓扑更改为 direct：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter_port> -topology direct
+----
+. 将目标端口的电缆直接连接到主机启动器。
+. 创建单个 LIF 接口：
++
+[source, cli]
+----
+network interface create -vserver <SVM_name> -lif <lif_name> -data protocol fcp|fcp-nvme -home-node <node_name> -home-port <port_name>
+----
++
+此端口在 LIF 创建后自动启用。
+
+. 验证该端口是否配置为直接连接：
++
+[source, cli]
+----
+network fcp adapter show -fields topologies-supported
+----
++
+拓扑应显示为直接。
+
+
+
+--
+====

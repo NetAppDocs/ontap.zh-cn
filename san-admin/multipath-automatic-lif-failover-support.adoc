@@ -1,0 +1,233 @@
+---
+sidebar: sidebar 
+permalink: san-admin/multipath-automatic-lif-failover-support.html 
+keywords: netapp, ontap, san, multipath, automatic lif failover, supported configurations, active-active, local-active, active-active-scsi-only, multipathing, 
+summary: 您可以无中断地更新集群上的 ONTAP 版本。 
+---
+= 了解适用于 ONTAP 系统的 SAN 多路径和自动 LIF 故障转移支持
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+在多路径配置中，在主机和存储系统之间配置了多个网络路径，以便在一条路径不可用时，I/O 可以重定向到其他路径以防止服务中断。自动 LIF 故障转移允许逻辑接口 (LIF) 在其主端口不正常或发生存储故障转移时自动迁移到其他端口。使用自动 LIF 故障转移的多路径将 I/O 无缝重新路由到最优化的可用路径，而无需故障转移路径转换。
+
+
+
+== SAN 支持的多路径配置
+
+SAN 环境支持以下多路径配置。
+
+本地主动:: 拥有 LUN 或命名空间的节点上的路径处于活动状态并已优化。HA 合作伙伴上的路径处于活动状态，但未优化。
+主动-主动:: 拥有 LUN 或命名空间的 HA 对中的所有路径均处于活动状态并已优化。
+主动-主动 SCSI 专用:: 拥有 LUN 或命名空间的节点上的路径处于活动状态并已优化。HA 合作伙伴上的路径可以是主动优化或主动非优化，具体取决于 SAN 协议。仅 ASA 系统支持 active-active-scsi-only 配置。
+
+
+对 SAN 多路径配置的支持因您的存储系统和 ONTAP 版本而异。
+
+[cols="1,1,1,1"]
+|===
+| 系统 | ONTAP 版本 | 支持的多路径配置 | 默认多路径配置 
+
+
+| FAS | 9.0及更高版本 | 本地主动 | 本地主动 
+
+
+.2+| AFF | 9.19.1 及更高版本  a| 
+* 主动-主动
+* 本地主动
+
+| 本地主动 
+
+
+| 9.18.1 及更早版本 | 本地主动 | 本地主动 
+
+
+.2+| ASA | 9.19.1 及更高版本  a| 
+* 主动-主动
+* 主动-主动 SCSI 专用
+
+| 主动-主动 
+
+
+| 9.18.1 及更早版本  a| 
+* 主动-主动
+* 主动-主动 SCSI 专用
+
+| 主动-主动 SCSI 专用 
+
+
+| ASA r2 | 9.16.1及更高版本 | 主动-主动 | 主动-主动 
+|===
+
+
+== 按配置的默认 LIF 故障转移行为
+
+根据多路径配置，主机和存储系统之间的路径可以是主动优化路径，也可以是主动非优化路径。当使用主动优化路径进行存储故障转移时，主机不需要等待故障转移路径的 ALUA 或 ANA 转换来恢复 I/O。对于主动非优化路径，ALUA 或 ANA 必须将 I/O 从故障路径转换到 HA 合作伙伴，然后才能恢复 I/O。详细了解 link:../san-config/host-support-multipathing-concept.html["ALUA 和 ANA"]。
+
+[cols="1,1,1,1,1"]
+|===
+| 多路径配置 | 协议 | 默认 LIF 故障转移策略 | 拥有节点路径 | HA 合作伙伴路径 
+
+
+| 本地主动  a| 
+* iSCSI
+* NVMe/TCP
+* NVMe/FC
+
+| 仅限本地 | 主动优化 | 活动-非优化 
+
+
+.2+| 主动-主动  a| 
+* iSCSI
+* NVMe/TCP
+
+| 仅限 sfo 合作伙伴 | 主动优化 | 主动优化 
+
+
+ a| 
+* FCP
+* NVMe/FC
+
+| 不适用 永久端口用于故障转移 | 主动优化 | 主动优化 
+
+
+.4+| active-active-scsi-only（仅适用于 ASA 平台） | iSCSI | 仅限 sfo 合作伙伴 | 主动优化 | 主动优化 
+
+
+| NVMe/TCP | 仅限本地 | 主动优化 | 活动-非优化 
+
+
+| FC | 不适用 永久端口用于故障转移 | 主动优化 | 主动优化 
+
+
+| NVMe/FC | 不适用 永久端口用于故障转移 | 主动优化 | 活动-非优化 
+|===
+
+
+== 支持自动 LIF 故障转移
+
+运行 iSCSI 和 NVMe/TCP 协议的主动-主动多路径配置以及运行 iSCSI 协议的主动-主动-仅 scsi 的多路径配置支持自动 LIF 故障转移。默认情况下，LIF 配置为使用系统创建的 sfo-partner-only 故障转移策略。可以修改 sfo-partner-only 默认策略。
+
+本地-活动多路径配置不支持自动 LIF 故障转移。无法修改仅本地默认策略。
+
+运行 FC 或 NVMe-FC 协议的主动-主动多路径配置使用永久端口进行故障转移。从 ONTAP 9.8 开始支持永久端口，并且不使用故障转移策略。详细了解link:../san-config/asa-support-limitations.html["支持持久端口"]。
+
+支持自动 LIF 故障转移取决于您的存储系统、ONTAP 版本和 SAN 协议。
+
+[cols="1,1,1,1"]
+|===
+| 系统 | ONTAP 版本 | SAN 协议 | LIF 故障转移支持 
+
+
+| FAS | 9.0及更高版本 | 全部 | 不支持 
+
+
+.4+| AFF .3+| 9.19.1 及更高版本 | iSCSI | 具有主动-主动或主动-主动-仅 SCSI 多路径配置的自动 LIF 故障转移 
+
+
+| NVMe/TCP | 具有主动-主动多路径配置的自动 LIF 故障转移 
+
+
+ a| 
+* FC
+* NVMe/FC
+
+| 使用永久端口进行故障转移 
+
+
+| 9.18.1 及更早版本 | 全部 | 不支持 
+
+
+.9+| ASA .3+| 9.19.1 及更高版本 | iSCSI | 具有主动-主动或主动-主动-仅 SCSI 多路径配置的自动 LIF 故障转移 
+
+
+| NVMe/TCP | 具有主动-主动多路径配置的自动 LIF 故障转移 
+
+
+ a| 
+* FC
+* NVMe/FC
+
+| 使用永久端口进行故障转移 
+
+
+.3+| 9.11.1 至 9.18.1 | iSCSI | 自动 LIF 故障转移 
+
+
+| FC | 使用永久端口进行故障转移 
+
+
+ a| 
+* NVMe/FC
+* NVMe/TCP
+
+| 不支持 
+
+
+.2+| 9.8 至 9.10.1 | FC | 使用永久端口进行故障转移 
+
+
+ a| 
+* iSCSI
+* NVMe/FC
+* NVMe/TCP
+
+| 不支持 
+
+
+| 9.7. | 全部 | 不支持 
+
+
+.2+| ASA r2 .2+| 9.19.1 及更高版本  a| 
+* iSCSI
+* NVMe/TCP
+
+| 具有主动-主动多路径配置的自动 LIF 故障转移 
+
+
+ a| 
+* FC
+* NVMe/FC
+
+| 使用永久端口进行故障转移 
+|===
+
+
+== 多路径配置限制
+
+对于 SnapMirror 活动同步关系中的存储虚拟机 (SVM) 和 MetroCluster 配置，存在 SAN 多路径配置限制。
+
+* *SnapMirror 主动同步*
++
+如果您的 SVM 处于 SnapMirror 活动同步关系中，则源 SVM 和目标 SVM 上的多路径配置必须相同。不支持源 SVM 和目标 SVM 的不同多路径配置。
+
+* *MetroCluster 配置*
++
+主站点和辅助站点中的存储系统类型必须相同。
+
+
+
+
+
+== AFF 系统上的主动-主动多路径
+
+从 ONTAP 9.19.1 开始，AFF 系统支持 SAN 环境中 SVM 级别的主动-主动多路径和自动 LIF 故障转移。这缩短了故障转移时间，使 SAN 客户能够在 AFF 系统上运行关键任务工作负载，并具有以前仅在 ASA 系统上可用的相同无中断路径弹性和负载平衡。AFF 系统上的主动-主动多路径支持和自动 LIF 故障转移允许您整合管理域、优化存储占用空间、利用现有 NAS 投资并在单个存储系统上实现标准化，以满足您的所有协议需求，同时仍然满足严格的可用性和性能 SLA。
+
+在 AFF 系统上，只有在 ONTAP 9.19.1 及更高版本中创建新的 SVM 时，才能配置主动-主动多路径。SVM 不能从本地-主动配置转换为主动-主动配置。
+
+您可以将现有 LUN 和命名空间从配置为本地-活动多路径的 SVM 移动到配置为活动-活动多路径的 SVM。如果将 LUN 或命名空间移动到新的 SVM，则必须在开始提供数据之前将主机重新映射到新的 SVM。
+
+
+NOTE: 如果您的集群运行的是 ONTAP 9.19.1 或更高版本，并且同时包括 FAS 和 AFF 系统，则应为所有系统使用本地活动多路径配置。不建议在同一集群中对 FAS 系统使用本地活动配置而对 AFF 系统使用主动-主动配置。
+
+.相关信息
+* 详细了解 link:asa-iscsi-lif-fo-task.html:["ASA 系统上的自动 iSCSI LIF 故障转移"]。
+* 详细了解 link:https://docs.netapp.com/us-en/asa-r2/administer/manage-client-vm-access.html#create-a-lif-network-interface["ASA r2 系统上的自动 iSCSI LIF 故障转移"^]。
+

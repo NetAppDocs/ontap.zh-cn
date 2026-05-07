@@ -131,6 +131,33 @@ ONTAP 9.8
 
 == 对象操作
 
+从 ONTAP 9.19.1 开始，ONTAP S3 支持强制执行对象上传的条件写入和对象删除的条件删除。条件写入和删除提供了一种防止覆盖或意外删除对象的方法。只有在通过 TLS 连接使用 AWS_V4 签名方法发出请求时，条件操作才有效。支持以下条件标头和对象操作：
+
+|===
+| 对象操作 | 条件标头 
+
+
+ a| 
+PutObject
+
+CopyObject
+
+CompleteMultipartUpload
+ a| 
+if-none-match
+
+if-match
+
+
+
+ a| 
+DeleteObject
+
+DeleteObjects
+ a| 
+If-match
+
+|===
 从 ONTAP 9.1.1 开始， ONTAP S3 支持对象元数据和标记。
 
 * PutObject和CreateMultipartUpload使用包括键值对 `x-amz-meta-<key>.`

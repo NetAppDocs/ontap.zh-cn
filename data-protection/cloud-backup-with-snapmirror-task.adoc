@@ -4,7 +4,7 @@ permalink: data-protection/cloud-backup-with-snapmirror-task.html
 keywords: netapp, ontap, System Manager, ONTAP 9.9.1, cloud backup, SnapMirror cloud, cloud object store, add cloud object store, remove cloud object store, StorageGRID, ONTAP S3, cloud restore, restore from cloud 
 summary: 从 ONTAP 9.1.1 开始，您可以使用 System Manager 将数据备份到云，并将数据从云存储还原到其他卷。您可以使用 StorageGRID 或 ONTAP S3 作为云对象存储。 
 ---
-= 使用ONTAP SnapMirror将数据备份到云
+= 使用 ONTAP SnapMirror 云将数据备份到云端
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -16,7 +16,20 @@ summary: 从 ONTAP 9.1.1 开始，您可以使用 System Manager 将数据备份
 
 
 [role="lead"]
-从 ONTAP 9.1.1 开始，您可以使用 System Manager 将数据备份到云，并将数据从云存储还原到其他卷。您可以使用 StorageGRID 或 ONTAP S3 作为云对象存储。
+从 ONTAP 9.9.1 开始，当您想要将数据保护工作流转换到云时，可以使用 _SnapMirror cloud_。您可以使用对象存储作为长期数据保留和存档的替代存储库，而不是传统的磁带备份架构。您可以使用 Amazon S3、Azure Blob、Google Cloud Storage、StorageGRID 或 ONTAP S3 等提供商作为您的云对象存储。
+
+从 ONTAP 9.9.1 开始，您可以使用 System Manager 备份和还原您的数据。
+
+从 ONTAP 9.19.1 开始：
+
+* SnapMirror 云将每个集群支持的 S3 对象存储桶的数量从 6 个增加到 100 个。此限制适用于在 ONTAP 集群上的所有 SnapMirror 云对象存储端点上配置的对象存储总数。使用此功能时，请注意以下注意事项：
++
+** 当每个集群使用超过 6 个存储桶时，应为支持它的提供商使用虚拟托管式 URL 配置，包括 AWS S3、阿里云、StorageGrid、Google Cloud Storage、IBM Cloud 对象存储、ONTAP S3 和其他 S3 兼容提供商。建议使用此配置以启用可扩展对象存储寻址并避免潜在限制。
+** 默认情况下，按需还原处于启用状态。
+** 根据系统中有多少并发恢复处于活动状态，按需恢复期间的读取延迟可能会更高。
+
+
+
 
 从 ONTAP 9.18.1 开始：
 

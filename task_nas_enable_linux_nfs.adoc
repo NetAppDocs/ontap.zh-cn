@@ -28,20 +28,28 @@ image:workflow_nas_enable_linux_nfs.png["工作流摘要：1启用NFS 2打开根
 .步骤
 . 在Storage VM上启用NFS。
 +
-** 对于新的Storage VM：单击*存储> Storage VM*、单击*添加*、输入Storage VM名称、然后在* SMB/CIFS/NFS、S3*选项卡中选择*启用NFS*。
+** 对于新存储 VM：选择 *Storage > Storage VMs*，选择 *Add*，输入存储 VM 名称，然后在 *SMB/CIFS、NFS、S3* 选项卡中选择 *Enable NFS*。
 +
 ... 确认默认语言。
 ... 添加网络接口。
 ... 更新Storage VM管理员帐户信息(可选)。
 
 
-** 对于现有Storage VM：单击*存储> Storage VM*、选择一个Storage VM、单击*设置*、然后单击*NFS* image:icon_gear.gif["操作图标"] 下的。
+** 对于现有的存储虚拟机：选择*集群 > 存储虚拟机*，选择存储虚拟机，选择*设置*，然后在 *NFS* 下选择 image:icon_gear.gif["操作图标"] 或 image:icon-edit-pencil-blue-outline.png["编辑图标"]，并选择*启用 NFS*。
++
+... 根据需要启用或禁用特定 NFS 协议版本和选项。
++
+
+NOTE: 不支持对 NFSv4.2 文件访问事件的 FPolicy 监视。如果配置 FPolicy 监控，则需要在 SVM 上禁用 NFSv4.2。有关参考信息，请参阅link:nfs-admin/enable-disable-nfs-task.html["为 ONTAP SVM 启用或禁用 NFS"]。
+
+
+
 
 
 . 打开 Storage VM 根卷的导出策略：
 +
-.. 单击 * 存储 > 卷 * ，选择 Storage VM 的根卷（默认为 _volume-name_ _root ），然后单击 * 导出策略 * 下显示的策略。
-.. 单击 * 添加 * 以添加规则。
+.. 选择 *Storage > Volumes*，选择存储 VM 的根卷（默认为 _volume-name_ _root），然后选择 *Export Policy* 下显示的策略。
+.. 选择 *Add* 以添加规则。
 +
 *** 客户端规范= `0.0.0.0/0`
 *** 访问协议 = NFS
@@ -50,17 +58,17 @@ image:workflow_nas_enable_linux_nfs.png["工作流摘要：1启用NFS 2打开根
 
 
 
-. 配置DNS进行主机名解析：单击*存储> Storage VM*、选择Storage VM、单击*设置*、然后单击* DNS * image:icon_gear.gif["操作图标"] 下的。
+. 为主机名解析配置 DNS：选择 *Storage > Storage VMs*，选择存储 VM，选择 *Settings*，然后在 *DNS* 下选择 image:icon_gear.gif["操作图标"]。
 . 根据需要配置名称服务。
 +
-.. 单击*存储> Storage VM*、选择Storage VM、单击*设置*、然后单击 image:icon_gear.gif["操作图标"] LDAP或NIS。
-.. 单击 image:icon_pencil.gif["编辑图标"] 名称服务切换磁贴以包含任何更改。
+.. 选择 *Storage > Storage VMs*，选择存储 VM，选择 *Settings*，然后选择 image:icon_gear.gif["操作图标"] LDAP 或 NIS。
+.. 在名称服务切换图块中选择 image:icon_pencil.gif["编辑图标"] 以包括任何更改。
 
 
 . 根据需要配置 Kerberos ：
 +
-.. 单击 * 存储 > 存储 VM* ，选择此 Storage VM ，然后单击 * 设置 * 。
-.. 单击 image:icon_arrow.gif["箭头图标"] Kerberos磁贴，然后单击*Add*。
+.. 选择 *Storage > Storage VMs*，选择 storage VM，然后选择 *Settings*。
+.. 在 Kerberos 图块中选择 image:icon_arrow.gif["箭头图标"]，然后选择 *添加*。
 
 
 

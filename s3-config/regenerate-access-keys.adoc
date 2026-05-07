@@ -2,7 +2,7 @@
 permalink: s3-config/regenerate-access-keys.html 
 sidebar: sidebar 
 keywords: regenerate, s3, access keys, secret keys 
-summary: 可以重新生成用于访问S3客户端的密钥、并更改其有效性。 
+summary: 可以重新生成用于访问 S3 客户端的密钥，并更改其有效性，或者可以生成或删除第二个访问密钥。 
 ---
 = 重新生成ONTAP S3密钥并修改其保留期限
 :hardbreaks:
@@ -12,20 +12,25 @@ summary: 可以重新生成用于访问S3客户端的密钥、并更改其有效
 
 
 [role="lead"]
-在用户创建期间、系统会自动生成访问密钥和机密密钥、以便启用S3客户端访问。如果某个密钥已过期或泄露、您可以为用户重新生成密钥。
+访问密钥和机密密钥在用户创建期间自动生成，用于启用 S3 客户端访问。如果密钥过期或泄露，您可以为用户重新生成密钥。从 ONTAP 9.19.1 开始，您还可以为 S3 用户生成或删除第二个访问密钥，以便他们在原始访问密钥过期时可以访问 S3 资源。
 
 有关生成访问密钥的信息、请参见 link:../s3-config/create-s3-user-task.html["创建 S3 用户"]。
+
+
+
+== 重新生成 S3 访问密钥
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
-. 单击 * 存储 > 存储 VM* ，然后选择此 Storage VM 。
-. 在*Settings*选项卡中，单击 image:icon_pencil.gif["编辑图标"] *S3*磁贴。
+. 选择*存储> Storage VM*、然后选择Storage VM。
+. 在 *设置* 选项卡中，选择 *S3* 图块中的 image:icon_pencil.gif["编辑图标"]。
 . 在*USERS*选项卡中，确认没有访问密钥，或者该密钥已过期。
-. 如果需要重新生成密钥，请单击 image:icon_kabob.gif["菜单选项图标"] 用户旁边的，然后单击*Regerate Key*。
-. 默认情况下、生成的密钥的有效期不定。从9.14.1开始、您可以修改其保留期限、超过此期限、密钥将自动过期。输入保留期限、以天、小时、分钟或秒为单位。
-. 单击 * 保存 * 。此时将重新生成密钥。对密钥保留期限所做的任何更改都将立即生效。
+. 如果需要重新生成密钥，请选择用户旁边的 image:icon_kabob.gif["菜单选项图标"]，然后选择 *重新生成密钥*。
+. 默认情况下，生成的密钥的有效性值为 0 且永不过期。从 ONTAP 9.14.1 开始，您可以修改其保留期，之后密钥会自动过期。输入以天、小时、分钟或秒为单位的保留期。
+. 从 ONTAP 9.19.1 开始，用户可以拥有第二个访问密钥。如果用户有第二个访问密钥，请选择要重新生成的访问密钥。您可以选择两个访问密钥进行重新生成。
+. 选择 *Storage > Storage VMs*，然后选择 Storage VM。*保存*。密钥已重新生成。密钥保留期的任何更改都将立即生效。
 . 下载或保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
 
 
@@ -33,14 +38,125 @@ summary: 可以重新生成用于访问S3客户端的密钥、并更改其有效
 .命令行界面
 --
 . 通过运行为用户重新生成访问和机密密钥 `vserver object-store-server user regenerate-keys` 命令：
-. 默认情况下、生成的密钥无限期有效。从9.14.1开始、您可以修改其保留期限、超过此期限、密钥将自动过期。您可以按以下格式添加保留期限： `P[<integer>D]T[<integer>H][<integer>M][<integer>S] | P<integer>W`
-例如、如果要输入一天、两小时、三分钟和四秒的保留期限、请将值输入为 `P1DT2H3M4S`。
+. 默认情况下，生成的密钥无限期有效。从 ONTAP 9.14.1 开始，您可以修改其保留期，之后密钥会自动过期。您可以按此格式添加保留期： `P[<integer>D]T[<integer>H][<integer>M][<integer>S] | P<integer>W` 例如，如果要输入一天、两小时、三分钟和四秒的保留期，请将值输入为 `P1DT2H3M4S`。
+. 从 ONTAP 9.19.1 开始，如果用户有多个访问密钥，您可以选择要重新生成的密钥。按以下格式指定密钥： `[-key-id {1..2}]`
++
+** 如果不需要指定 key-id，则重新生成 key 1。
+** 要指定键 1，请将值输入为 `-key-id 1`。
+** 要指定键 2，请将值输入为 `-key-id 2`。
+** 要指定键 1 和 2，请将值输入为 `-key-id 1 2`。例如，要重新生成密钥 1：
 +
 [listing]
 ----
-vserver object-store-server user regenerate-keys -vserver svm_name -user user -key-time-to-live 0
+vserver object-store-server user regenerate-keys -vserver svm_name -user user -key-id 1 -key-time-to-live 0
+----
+
+
+. 保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
+
+
+--
+====
+
+
+== 生成第二个 S3 访问密钥
+
+从 ONTAP 9.19.1 开始，您可以为用户生成第二个访问密钥。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储> Storage VM*、然后选择Storage VM。
+. 选择 *Storage > Storage VMs*，然后选择 storage VM。*Storage > Storage VMs*，然后选择 storage VM。
+. 在 *设置* 选项卡中，选择 *S3* 图块中的 image:icon_pencil.gif["编辑图标"]。
+. 在 *用户* 选项卡中，选择用户旁边的 image:icon_kabob.gif["菜单选项图标"]，然后选择 *添加其他密钥*。
+. 默认情况下，生成的密钥的有效性值为 0 且永不过期。从 ONTAP 9.14.1 开始，您可以修改其保留期，之后密钥会自动过期。输入以天、小时、分钟或秒为单位的保留期。
+. 选择 *Storage > Storage VMs*，然后选择 Storage VM。*添加*。生成第二个密钥。指定的密钥保留期立即生效。
+. 下载或保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
+
+
+--
+.命令行界面
+--
+. 通过运行 `vserver object-store-server user regenerate-keys`命令为用户生成第二个访问权限和密钥。
+. 默认情况下，生成的密钥无限期有效。从 ONTAP 9.14.1 开始，您可以修改其保留期，之后密钥会自动过期。您可以按此格式添加保留期： `P[<integer>D]T[<integer>H][<integer>M][<integer>S] | P<integer>W` 例如，如果要输入一天、两小时、三分钟和四秒的保留期，请将值输入为 `P1DT2H3M4S`。
+. 从 ONTAP 9.19.1 开始，您可以生成以下格式的第二个访问密钥： `[-key-id 2]`
++
+例如：
+
++
+[listing]
+----
+vserver object-store-server user regenerate-keys -vserver svm_name -user user -key-id 2 -key-time-to-live 0
 ----
 . 保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
+
+
+--
+====
+
+
+== 显示 S3 访问密钥
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储> Storage VM*、然后选择Storage VM。
+. 在 *设置* 选项卡中，选择 *S3* 图块中的 image:icon_pencil.gif["编辑图标"]。
+. 在 *Users* 选项卡中，验证 S3 用户没有第二个访问密钥。
+
+
+--
+.命令行界面
+--
+通过运行  `vserver object-store-server user show` 命令查看用户的访问权限和密钥。
+
+例如：
+
+[listing]
+----
+vserver object-store-server user show -vserver svm_name -user user
+----
+--
+====
+
+
+== 删除 S3 访问密钥
+
+从 ONTAP 9.19.1 开始，您可以为用户删除其中一个访问密钥。要删除用户的两个密钥，应删除该用户。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储> Storage VM*、然后选择Storage VM。
+. 在 *设置* 选项卡中，选择 *S3* 图块中的 image:icon_pencil.gif["编辑图标"]。
+. 在 *用户* 选项卡中，选择用户旁边的 image:icon_kabob.gif["菜单选项图标"]，然后选择 *添加其他密钥*。
+. 选择 *Remove key 1* 或 *Remove key 2*。
+. 选择 *Save*。所选密钥将被删除。
+. 下载或保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
+
+
+--
+.命令行界面
+--
+. 通过运行 `vserver object-store-server user delete-keys`命令删除用户的访问权限和密钥。
+. 您可以通过以下格式指定密钥来选择要删除的密钥： `[-key-id {1..2}]`
++
+** 如果用户只有一个密钥，则不需要指定 key-id。
+** 要指定键 1，请将值输入为 `-key-id 1`。
+** 要指定键 2，请将值输入为 `-key-id 2`。
+** 如果未指定密钥 ID，则命令默认为删除密钥 2。
+** 要删除这两个键，请删除用户。例如：
++
+[listing]
+----
+vserver object-store-server user delete-keys -vserver svm_name -user user -key-id 2
+----
+
+
 
 
 --

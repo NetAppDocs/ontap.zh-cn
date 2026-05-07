@@ -22,6 +22,8 @@ summary: 创建具有特定权限和访问期限的S3用户。
 
 为了增强安全性、从ONTAP 9.15.1开始、访问密钥和机密密钥仅在创建S3用户时显示、不能再次显示。如果密钥丢失，link:regenerate-access-keys.html["必须重新生成新密钥"]。
 
+为了在原始访问密钥过期时维护对 S3 资源的访问，从 ONTAP 9.19.1 开始，您可以为每个 S3 用户link:regenerate-access-keys.html#generate-a-second-s3-access-key["生成第二个访问密钥"]。
+
 您可以在存储分段策略或对象服务器策略中为 S3 用户授予特定访问权限。
 
 [NOTE]
@@ -47,6 +49,14 @@ summary: 创建具有特定权限和访问期限的S3用户。
 ----
 vserver object-store-server user create -vserver vs0 -user sm_user1 -key-time-to-live P1W
 ----
++
+在  `-access-key` 和  `-secret-key` 参数中创建用户时，您也可以手动定义自己的访问密钥和密钥。例如：
+
++
+[listing]
+----
+vserver object-store-server user create -vserver svm1 -user user1 -access-key "20-characters" -secret-key "40-characters"
+----
 
 
 . 请务必保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
@@ -55,11 +65,11 @@ vserver object-store-server user create -vserver vs0 -user sm_user1 -key-time-to
 --
 .System Manager
 --
-. 单击 * 存储 > 存储 VM* 。选择需要添加用户的Storage VM、选择*设置*、然后单击S3下的。 image:icon_pencil.gif["编辑图标"]
-. 要添加用户，请单击*用户>添加*。
+. 选择 *Storage > Storage VMs*。选择需要添加用户的 storage VM，选择 *Settings*，然后在 S3 下选择 image:icon_pencil.gif["编辑图标"]。
+. 要添加用户，请选择 *Users > Add*。
 . 输入用户的名称。
 . 从ONTAP 9.14.1开始、您可以指定为用户创建的访问密钥的保留期限。您可以指定密钥自动过期的保留期限(以天、小时、分钟或秒为单位)。默认情况下、该值设置为 `0` 这表示密钥无限期有效。
-. 单击 * 保存 * 。此时将创建用户、并为该用户生成访问密钥和机密密钥。
+. 选择 *Save*。将创建用户，并为用户生成访问密钥和密钥。
 . 下载或保存访问密钥和机密密钥。从S3客户端访问时需要使用它们。
 
 

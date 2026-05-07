@@ -1,0 +1,65 @@
+---
+sidebar: sidebar 
+permalink: task-svm-admin-dashboard-sm.html 
+keywords: netapp, system manager, ontap, administration, svm, storage vm, volume, vserver, dashboard, administrator, tenant, multi-tenancy, protocol, network interface, performance 
+summary: 集群管理员可以为其 SVM 管理员提供监控和管理 SVM 的访问权限。SVM 管理员可以使用 ONTAP System Manager 中的 SVM 管理员仪表板监控和管理 SVM。 
+---
+= 使用 System Manager 管理和监控 ONTAP SVM
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ./media/
+
+
+[role="lead"]
+从 ONTAP 9.19.1 开始，SVM 管理员可以使用专用的 System Manager 仪表板监控和管理自己的 SVM。
+
+.开始之前
+集群管理员必须为您提供：
+
+* 到 SVM 的管理 IP 地址
+* SVM System Manager 仪表板的凭据（用户名和密码）（必须解锁 vsadmin 用户）
+* （可选）在 SVM 上添加卷的权限
+
+
+.步骤
+. 在浏览器中输入 SVM 的管理 IP 地址。
+. 请输入 SVM 管理员 (vsadmin) 的用户名和密码。
+. 选择 *Sign in*。
++
+ONTAP System Manager 仪表板打开。
+
+. 您可以查看有关 SVM 的以下信息：
++
+[cols="1,2"]
+|===
+| SVM 信息 | Description 
+
+
+| 协议 | 在 SVM 上启用的协议。 
+
+
+| 详细信息 | NIS 和 LDAP 信息、语言以及删除卷后的保留期。 
+
+
+| 性能 | 所选协议的延迟、IOPS 和吞吐量性能统计（按小时、天、周、月或年）。 
+|===
+. 或者，您可以下载逗号分隔值 (csv) 文件中的数据以进行进一步分析。
+. 选择 * 存储 > 卷 * 。
++
+此时将打开 Volumes 控制面板页面。
+
++
+集群管理员可以授予您向 SVM 添加卷的权限。如果未授予此权限，则选择 *Add* 按钮失败，并显示错误消息。
+
+
+
+.相关信息
+* link:concepts/cluster-svm-administrators-concept.html["集群和 SVM 管理"]
+* link:task_cp_dashboard_tour.html#performance["了解 ONTAP System Manager 仪表板上的集群管理（性能部分）"]
+* link:volumes/manage-volumes-task.html["使用系统管理器管理 ONTAP 卷"]
+
