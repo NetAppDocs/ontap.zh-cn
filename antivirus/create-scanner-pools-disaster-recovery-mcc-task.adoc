@@ -33,7 +33,7 @@ image:metrocluster-av-config.png["MetroCluster/DR配置"]
 .步骤
 . 创建扫描程序池：
 +
-`vserver vscan scanner-pool create -vserver _data_SVM|cluster_admin_SVM_ -scanner-pool _scanner_pool_ -hostnames _Vscan_server_hostnames_ -privileged-users _privileged_users_`
+`vserver vscan scanner-pool create -vserver <data_SVM|cluster_admin_SVM> -scanner-pool <scanner_pool> -hostnames <Vscan_server_hostnames> -privileged-users <privileged_users>`
 
 +
 ** 为为为单个 SVM 定义的池指定数据 SVM ，并为为为集群中的所有 SVM 定义的池指定集群管理员 SVM 。
@@ -56,36 +56,36 @@ image:metrocluster-av-config.png["MetroCluster/DR配置"]
 +
 [listing]
 ----
-cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
-scanner-pool pool1_for_site1 -hostnames scan1 -privileged-users cifs
+site_A::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool1_for_siteA -hostnames scan1 -privileged-users cifs
 \u1,cifs\u2
 
-cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
-scanner-pool pool1_for_site2 -hostnames scan1 -privileged-users cifs
+site_B::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool1_for_siteB -hostnames scan1 -privileged-users cifs
 \u1,cifs\u2
 
-cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
-scanner-pool pool2_for_site1 -hostnames scan2 -privileged-users cifs
+site_A::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool2_for_siteA -hostnames scan2 -privileged-users cifs
 \u1,cifs\u2
 
-cluster1::> vserver vscan scanner-pool create -vserver cifssvm1 -
-scanner-pool pool2_for_site2 -hostnames scan2 -privileged-users cifs
+site_B::> vserver vscan scanner-pool create -vserver cifssvm1 -
+scanner-pool pool2_for_siteB -hostnames scan2 -privileged-users cifs
 \u1,cifs\u2
 ----
 . 验证是否已创建扫描程序池：
 +
-`vserver vscan scanner-pool show -vserver _data_SVM|cluster_admin_SVM_ -scanner-pool _scanner_pool_`
+`vserver vscan scanner-pool show -vserver <data_SVM|cluster_admin_SVM> -scanner-pool <scanner_pool>`
 
 +
-以下命令显示扫描程序池的详细信息 `pool1`：
+以下命令显示 scanner pool `pool1_for_siteA` 的详细信息：
 
 +
 [listing]
 ----
-cluster1::> vserver vscan scanner-pool show -vserver cifssvm1 -scanner-pool pool1_for_site1
+site_A::> vserver vscan scanner-pool show -vserver cifssvm1 -scanner-pool pool1_for_siteA
 
                                     Vserver: cifssvm1
-                               Scanner Pool: pool1_for_site1
+                               Scanner Pool: pool1_for_siteA
                              Applied Policy: idle
                              Current Status: off
          Cluster on Which Policy Is Applied: -
