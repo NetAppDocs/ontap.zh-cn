@@ -11,7 +11,7 @@ summary: 您可以从现有SnapMirror关系中的源卷或目标卷创建FlexClo
 
 
 [role="lead"]
-您可以从现有卷 SnapMirror 关系中的源卷或目标卷创建 FlexClone 卷。但是，这样做可能会阻止未来的 SnapMirror 复制操作成功完成。
+您可以从现有卷 SnapMirror 关系中的源卷或目标卷创建一个 FlexClone 卷。但是，如果您使用的是早于 ONTAP 9.12.1 的 ONTAP 版本，并且类型为 DP 的关系使用 `DPDefault` 策略，这样做可能会导致后续的 SnapMirror 复制操作无法成功完成。
 
 复制可能不起作用、因为在创建FlexClone卷时、您可能会锁定SnapMirror使用的快照。如果发生这种情况， SnapMirror 将停止复制到目标卷，直到 FlexClone 卷被销毁或从其父卷拆分为止。您可以通过两种方法来解决此问题描述：
 
@@ -24,3 +24,7 @@ summary: 您可以从现有SnapMirror关系中的源卷或目标卷创建FlexClo
 通过这种在SnapMirror源卷中创建快照的方法、您可以在创建克隆时不锁定SnapMirror正在使用的快照。
 
 
+
+如果将 XDP 关系与 ONTAP 9.12.1 或更高版本的 `MirrorAllSnapshots`策略一起使用，则不应遇到此问题。
+
+相关信息：link:../data-protection/convert-snapmirror-version-flexible-task.html["将现有的ONTAP SnapMirror DP类型关系转换为XDP"]

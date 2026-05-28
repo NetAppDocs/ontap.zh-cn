@@ -134,17 +134,12 @@ network fcp adapter modify -node _node_name_ -adapter _adapter_port_ -state up
 . 在 *拓扑* 下，选择 *直接*，然后选择 *我想更改拓扑并使端口脱机*。
 . 选择 *Save。*
 . 将目标端口的电缆直接连接到主机启动器。
-. 如果您有 ASA r2 系统，请按照 link:https://docs.netapp.com/us-en/asa-r2/administer/manage-client-vm-access.html#create-a-lif-network-interface["此 System Manager 过程"^] 创建 LIF。如果您有 AFF、ASA 或 FAS 系统，请按照以下步骤创建 LIF：
+. 如果您有 AFF、ASA 或 FAS 系统，请按照以下步骤创建 LIF：如果您有 ASA r2 系统，请按照link:https://docs.netapp.com/us-en/asa-r2/administer/manage-client-vm-access.html#create-a-lif-network-interface["此 System Manager 过程"^]创建 LIF。
 +
 .. 选择 *Network > Interfaces*，然后选择 image:icon_add.gif["添加图标"]。
 .. 选择 FC 或 NVMe/FC 协议。
 .. 命名 LIF 或接受 ONTAP 生成的名称。
-.. 如果至少配置了一个子网，则可以为 LIF 选择一个子网。
-.. 如果未选择子网，则可以指定广播域的 IP 地址和子网掩码。
-.. 从广播域中选择主端口。
-+
-根据广播域或子网选择显示主端口控制
-
+.. 选择主端口。
 .. 选择 * 保存 * 。
 +
 创建 LIF 时，端口将自动联机。
@@ -175,13 +170,13 @@ network interface show -vserver <SVM_name>
 +
 [source, cli]
 ----
-network interface modify -vserver <SVM_name> -lif* -status-admin down
+network interface modify -vserver <SVM_name> -lif * -home-port <adapter_port> -status-admin down
 ----
 . 从适配器端口中删除所有 LIF：
 +
 [source, cli]
 ----
-network interface delete -vserver <SVM_name> -lif <lif_name>,<lif_name>
+network interface delete -vserver <SVM_name> -lif * -home-port <adapter_port>
 ----
 . 使适配器脱机：
 +

@@ -22,3 +22,12 @@ _Snapshot _是卷的只读时间点映像。此映像占用的存储空间极少
 从ONTAP 9.8开始、FlexGroup卷可以包含1023个快照。有关详细信息，请参见 link:../flexgroup/protect-snapshot-copies-task.html["使用快照保护FlexGroup卷"]。
 
 ====
+有几种常见的 ONTAP 快照类型：
+
+* `sched_created`：基于预定义的时间表（例如，每小时、每天、每周或每月），由 ONTAP 快照策略自动生成的快照。
+* `sm_created`：由于 SnapMirror 复制传输（更新或初始化操作）而自动创建的快照。
+* `application_created`：由主机级或数据库级集成软件（如 SnapCenter 或 SnapDrive）生成的快照。
+* `user_created`：快照由管理员使用 ONTAP CLI 或 System Manager 手动触发。
+* `sv_created`：在集群操作期间自动创建的快照，例如 Storage Virtual Machine (SVM) DR 或特定保护工作流。
+* `luns_created`：为备份或捕获 LUN 或 NVMe 命名空间克隆的状态而创建的快照。
+
