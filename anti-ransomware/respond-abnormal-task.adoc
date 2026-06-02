@@ -11,15 +11,23 @@ summary: 了解ONTAP中的ARP通知、确定是否发生勒索软件攻击以及
 
 
 [role="lead"]
-当自主勒索软件保护(ARP)检测到受保护卷中的异常活动时、它会发出警告。您应评估通知以确定活动是否可接受(误报)或攻击是否看起来是恶意的。对攻击进行分类后、您可以清除有关可疑文件的警告和通知。
+当 Autonomous Ransomware Protection (ARP) 检测到受保护卷中的异常活动时，它会发出警告。您应该评估通知，以确定该活动是否可接受（误报），或者攻击是否看起来是恶意的。对攻击进行分类后，您可以清除有关异常活动的警告和通知。
 
-对攻击进行分类时，ARP 快照要么在分类操作启动后保留一段较短的时间（ONTAP 9.16.1 及更高版本），要么立即删除（ONTAP 9.15.1 及更早版本）。
+对攻击进行分类时，ARP 快照要么保留由分类操作启动的缩短期（ONTAP 9.16.1 及更高版本），要么在清除可疑事件时立即删除（ONTAP 9.15.1 及更早版本）。
 
 
 NOTE: 从ONTAP 9.11.1 开始，您可以修改link:modify-automatic-snapshot-options-task.html["保留设置"]用于 ARP 快照。
 
 .关于此任务
-当 ARP 检测到高数据熵、包含数据加密的异常卷活动以及异常文件扩展名的任意组合时，它会显示可疑文件列表。从适用于 NAS 和 SAN 环境的ONTAP 9.17.1 开始，系统管理器中的“反勒索软件”页面还会报告熵峰值的详细信息。
+对于 NAS 卷，当 ARP 检测到高数据熵、带有数据加密的异常卷活动和不寻常的文件扩展名的任何组合时，会显示可疑文件的列表。
+
+从 ONTAP 9.17.1 开始：
+
+* *对于 NAS 卷*：ARP 继续提供可疑文件和文件类型。
+* *对于 SAN 卷*（包含 LUN 或 NVMe 命名空间的卷）：ARP 仅在卷级别评估熵。ONTAP 不会在 LUN 或命名空间中看到单个文件，因此可疑文件列表和文件类型*不可用*。相反，ARP 报告加密百分比的卷级峰值（熵峰值）。
+
+
+NAS 和 SAN 卷的熵峰值详细信息在 System Manager 中的反勒索软件页面上报告。
 
 当发出 ARP 警告通知时，请通过以下两种方式之一指定活动进行响应：
 
@@ -35,89 +43,51 @@ NOTE: 从ONTAP 9.11.1 开始，您可以修改link:modify-automatic-snapshot-opt
 
 在您更新您的决定并清除 ARP 通知后，系统将恢复正常监控。ARP会将您的评估记录到威胁评估配置文件中，并使用您的选择来监控后续的文件活动。
 
-如果发生可疑攻击、您必须确定是否为攻击、如果是、则对其做出响应、并在清除通知之前还原受保护的数据。 link:index.html#how-to-recover-data-in-ontap-after-a-ransomware-attack["详细了解如何从勒索软件攻击中恢复"]。
-
-
-NOTE: 如果还原整个卷、则不需要清除任何通知。
+在怀疑遭受攻击的情况下，您必须确定是否为攻击，如果是，则进行响应，然后按照您的恢复方法和 ONTAP 版本要求的顺序清除通知并恢复数据。link:index.html#how-to-recover-data-in-ontap-after-a-ransomware-attack["详细了解如何从勒索软件攻击中恢复"].
 
 .开始之前
 ARP 必须主动保护卷，而不是处于学习或评估模式。
 
 .步骤
-您可以使用System Manager或ONTAP命令行界面来响应异常活动。
+在需要对异常活动进行分类时，请按照以下步骤进行操作：
+
+. <<查看异常活动详细信息,查看异常活动详细信息>>
+. <<清除可疑事件时了解快照行为和审批,清除可疑事件时了解快照行为和审批>>
+. 执行以下操作之一：
++
+** <<归类为误报并恢复监控,归类为误报并恢复监控>>
+** <<分类为潜在勒索软件攻击并恢复数据,归类为潜在的勒索软件攻击，恢复数据并最终确定>>
+
+
+
+
+如果需要还原数据，请使用 link:recover-data-task.html["在发生勒索软件攻击后从ONTAP ARP快照还原数据"] 中的步骤。
+
+
+
+== 查看异常活动详细信息
+
+您可以使用 System Manager 或 ONTAP CLI 在选择响应流程之前查看 ARP 警告详细信息。
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
-. 当您收到“异常活动”通知时，请点击链接。或者，导航到“卷”概览的“安全”选项卡。
+. 当您收到"异常活动"通知时，请点击链接。或者，导航到 *Storage > Volumes*，找到受影响的卷，然后选择 *Security* 选项卡。
 +
-警告显示在*Events*菜单的*Overview*窗格中。
+警告显示在 *Events* 菜单的 System Manager 仪表板 *Overview* 窗格中。
 
-. 在“*安全*”选项卡中，查看可疑文件类型或熵峰值报告。
+. 在 *Security* 选项卡中，查看异常活动详细信息：
 +
-** 对于可疑文件，请检查“可疑文件类型”对话框中的每种文件类型，并分别标记。
-** 对于熵峰值，请检查熵报告。
+** 对于 NAS 卷，请查看 *可疑文件类型* 报告。*可疑文件类型* 对话框显示 ARP 已识别的文件扩展名和文件计数。
+** 对于 NAS 和 SAN 卷，请查看熵峰值报告，其中显示时间窗口、持续时间、写入数据量和熵值。
 
 
-. 记录你的回答：
-+
-[cols="25,75"]
-|===
-
-
-| 如果选择此值... | 执行此操作 ... 
-
-
- a| 
-误报
- a| 
-.. 执行以下操作之一：
-+
-*** 对于文件类型警告，请选择 *Update and Clear Suspected File Types* 。
-*** 对于熵尖峰，选择*标记为假阳性*。
-+
-这些操作可清除有关可疑文件或活动的警告通知。ARP随后将恢复对卷的正常监控。对于ONTAP 9.16.1 及更高版本中的 ARP/AI，ARP 快照会在分类操作触发的缩短保留期后自动删除。对于ONTAP 9.15.1 及更早版本，清除可疑文件类型后，相关的 ARP 快照会自动删除。
-
-+
-
-NOTE: 从ONTAP 9.13.1 开始，如果您使用 MAV 来保护 ARP 设置，清除可疑项操作会提示您获得一个或多个其他管理员的批准。link:../multi-admin-verify/request-operation-task.html["必须获得所有管理员的批准"]与 MAV 审批小组相关，否则操作将会失败。
-
-
-
-
-
-
-
- a| 
-潜在勒索软件攻击
- a| 
-.. 回应攻击：
-+
-*** 对于文件类型警告，将选定的文件标记为*潜在勒索软件攻击*，并link:recover-data-task.html["还原受保护的数据"] 。
-*** 对于表示攻击的熵峰值，选择“标记为潜在勒索软件攻击”并link:recover-data-task.html["还原受保护的数据"] 。
-
-
-.. 数据恢复完成后，记录您的决定并恢复正常的ARP监控：
-+
-*** 对于文件类型警告，请选择 *Update and Clear Suspected File Types* 。
-*** 对于熵峰值，选择*标记为潜在勒索软件攻击*并选择*保存并关闭*。
-
-
-
-
-
-NOTE: 如果您已恢复整个卷，则无需清除任何可疑文件类型通知。
-
-记录您的决定将清除攻击报告。对于ONTAP 9.16.1 及更高版本中的 ARP/AI，ARP 快照会在分类操作触发的缩短保留期后自动删除。对于ONTAP 9.15.1 及更早版本，还原卷后，ARP 快照将自动删除。
-
-|===
 
 
 --
 .命令行界面
 --
-.验证攻击
 . 收到可疑勒索软件攻击的通知后，请验证此攻击的时间和严重性：
 +
 [source, cli]
@@ -145,7 +115,159 @@ Attack Detected By: encryption_percentage_analysis
 ----
 event log show -message-name callhome.arw.activity.seen
 ----
-. 生成攻击报告并指定保存位置：
+. （可选，NAS 和 SAN）查看最近在卷上检测到的熵峰值：
++
+[source, cli]
+----
+security anti-ransomware volume entropy-stat show-recent-high-encryption-stat -vserver <svm_name> -volume <vol_name>
+----
++
+此命令总结 ONTAP 检测到高加密百分比（熵峰值）的时间窗口。它适用于 NAS 和 SAN 卷。
+
+. (可选) 查看加密百分比随时间变化的直方图：
++
+[source, cli]
+----
+security anti-ransomware volume entropy-stat show-encryption-percentage-histogram -vserver <svm_name> -volume <vol_name>
+----
+
+
+--
+====
+
+
+== 清除可疑事件时了解快照行为和审批
+
+* 对于 `volume snapshot restore` ONTAP 9.16.1 及更高版本，首先清除可疑事件，然后执行还原。清除可疑文件后，将根据您对活动的分类方式保留 ARP 快照：如果将活动标记为潜在的勒索软件攻击，则保留 7 天（默认情况下）；如果将其标记为误报，则保留 24 小时。首先清除不会删除您的还原目标。此外，清除疑点选项在卷还原后变得不可用，因此您必须在还原前清除。
+* 对于 `volume snapshot restore` ONTAP 9.15.1 及更早版本，请先执行还原，然后清除可疑事件。清除可疑文件时会立即删除 ARP 快照，因此必须在清除之前完成还原，以避免在还原操作运行之前丢失快照。
+* 对于 `volume snapshot restore`（例如，FlexClone 或单个文件 SnapRestore）以外的恢复方法，请先执行数据恢复，然后清除可疑事件。这些方法不会影响清除可疑选项的可用性。
+* 从 ONTAP 9.13.1 开始，如果您使用 MAV 来保护 ARP 设置，则 `clear-suspect`操作可能需要额外的批准。link:../multi-admin-verify/request-operation-task.html["必须获得所有管理员的批准"]与 MAV 批准组关联，否则操作将失败。
+
+
+
+
+== 归类为误报并恢复监控
+
+当工作负载的已识别文件类型或熵峰值为_预期_时，请使用此流。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 记录你的回答：
++
+** 对于 NAS 文件类型警告，请选择受影响的文件，选择*标记为误报*，然后选择*更新并清除可疑文件类型*。
+** 对于熵峰值（NAS 和 SAN），选择 *Mark as false positive*，然后选择 *Save and dismiss*。
+
+
+
+
+这些操作清除了有关可疑文件 (NAS) 或异常活动 (NAS 和 SAN) 的警告通知。然后，ARP 恢复对卷的正常监控。
+
+--
+.命令行界面
+--
+. 运行以下命令之一来记录您的决定并恢复正常的自主勒索软件防护监控：
++
+** 对于 NAS 文件扩展名：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension_identifiers>] -false-positive true
+----
++
+使用以下可选参数仅将特定扩展标识为误报： `[-extension <text>, ... ]`
+
+** 对于熵峰值（NAS 和 SAN）：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> -start-time <MM/DD/YYYY HH:MM:SS> -end-time <MM/DD/YYYY HH:MM:SS> -false-positive true
+----
++
+对于 SAN 卷，这是对异常活动进行分类的唯一支持方法；没有可疑的文件列表或文件扩展名。
+
+
+
+. 从 ONTAP 9.18.1 开始，您可以确定 `clear-suspect`操作的状态：
++
+[source, cli]
+----
+security anti-ransomware volume show -clear-suspect-status -volume <vol_name> -vserver <svm_name>
+----
+
+
+--
+====
+
+
+== 分类为潜在勒索软件攻击并恢复数据
+
+当工作负载的已识别文件类型或熵峰值为_意外_时，使用此流。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 对活动进行分类：
++
+** 对于 NAS 文件类型警告，请将所选文件标记为*潜在勒索软件攻击*。
+** 对于熵峰值（NAS 和 SAN），请选择 *标记为潜在的勒索软件攻击*。
+
+
+. 在恢复数据之前，您应该考虑link:recover-data-task.html#choose-a-recovery-method["恢复方法选项"]。然后执行以下操作之一：
++
+** *如果您计划使用 ONTAP 9.16.1 及更高版本还原卷*：清除通知，然后还原卷：
++
+... [[arp-snapshot-decision-sm-pre-restore]]清除潜在攻击的通知：
++
+**** 对于 NAS 文件类型警告，请选择 *Update and Clear Suspected File Types*。
+**** 对于熵峰值（NAS 和 SAN），选择 *保存并关闭*。
++
+
+NOTE: 清除可疑文件后，ARP 快照将保留 7 天（默认情况下）。如果您需要更多时间进行数据恢复，link:modify-automatic-snapshot-options-task.html["调整 ARP 快照设置"]将快照的保留时间增加到所需的值。完成所有数据恢复后，您可以减少保留时间。
+
+
+
+... 使用 link:recover-data-task.html["最新的 ARP 快照或更早的快照"] 恢复数据。
+
+
+** *如果您计划使用 ONTAP 9.15.1 及更早版本还原卷*：还原卷，然后清除通知：
++
+... 使用 link:recover-data-task.html["最新的 ARP 快照或更早的快照"] 恢复数据。
+... [[arp-snapshot-decision-sm-post-restore]]在数据恢复后完成分类以恢复正常的 ARP 监控：
++
+**** 对于 NAS 文件类型警告，请选择 *Update and Clear Suspected File Types*。
+**** 对于熵峰值（NAS 和 SAN），选择 *保存并关闭*。
+
+
+
+
+** *如果您计划使用其他还原方法*：首先还原数据，然后清除通知：
++
+... link:recover-data-task.html["使用 FlexClone 或单个文件 SnapRestore 恢复数据"]。
+... 在数据恢复后完成分类，以恢复正常的 ARP 监测：
++
+**** 对于 NAS 文件类型警告，请选择 *Update and Clear Suspected File Types*。
+**** 对于熵峰值（NAS 和 SAN），选择 *保存并关闭*。
++
+
+NOTE: 记录您的决定将清除攻击报告。
+
+
+
+
+
+
+
+
+
+--
+.命令行界面
+--
+. （仅限 NAS 卷）创建攻击报告：
++
+.. 生成攻击报告并指定保存位置。
 +
 [source, cli]
 ----
@@ -163,79 +285,111 @@ security anti-ransomware volume attack generate-report -vserver vs0 -volume vol1
 示例输出：
 
 +
-[listing]
-----
+....
 Report "report_file_vs0_vol1_14-09-2021_01-21-08" available at path "vs0:vol1/"
-----
-. 在管理客户端系统上查看报告。例如：
+....
+.. 在管理客户端系统上查看报告。例如：
 +
 [listing]
 ----
 cat report_file_vs0_vol1_14-09-2021_01-21-08
 ----
++
+
+NOTE: 包含 LUN 或 NVMe 命名空间（SAN 工作负载）的卷*不支持*此命令。
 
 
-.采取行动
-. 根据您对文件扩展名或熵峰值的评估，执行以下操作之一：
-+
-** 误报
-+
-运行以下命令之一来记录您的决定并恢复正常的自主勒索软件防护监控：
 
+. 选择 link:recover-data-task.html["恢复方法"]。然后执行以下操作之一：
 +
-*** 对于文件扩展名：
+** *如果您计划使用 `volume snapshot restore`*：按照特定于版本的顺序：
 +
-[source, cli]
-----
-anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension_identifiers>] -false-positive true
-----
+*** *ONTAP 9.16.1 及更高版本*：首先清除攻击，然后运行 `volume snapshot restore`：
 +
-使用以下可选参数仅将特定扩展识别为误报：
-
+.... [[arp-snapshot-decision-cli-pre-restore]]运行以下命令之一以清除可疑文件：
 +
-**** `[-extension <text>, … ]`：文件扩展名
-
-
-*** 对于熵尖峰：
+***** 对于 NAS 文件扩展名：
 +
 [source, cli]
 ----
-security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> -start-time <MM/DD/YYYY HH:MM:SS> -end-time <MM/DD/YYYY HH:MM:SS> -false-positive true
-----
-
-
-** 潜在的勒索软件攻击
-+
-应对攻击和 link:../anti-ransomware/recover-data-task.html["从ARP创建的备份快照恢复数据"]。运行以下命令之一记录您的决定并恢复正常的 ARP 监控：
-
-+
-*** 对于文件扩展名：
-+
-[source, cli]
-----
-anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive false
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive false
 ----
 +
-使用以下可选参数仅将特定扩展识别为潜在勒索软件：
+使用以下可选参数仅将特定扩展名识别为潜在的勒索软件： `[-extension <text>, ... ]`
 
-+
-**** `[-extension <text>, … ]`：文件扩展名
-
-
-*** 对于熵尖峰：
+***** 对于熵峰值（NAS 和 SAN）：
 +
 [source, cli]
 ----
 security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> -start-time <MM/DD/YYYY HH:MM:SS> -end-time <MM/DD/YYYY HH:MM:SS> -false-positive false
 ----
-
-
-
-
 +
-这 `clear-suspect`操作会清除攻击报告。如果您还原了整个卷，则无需清除任何可疑文件类型通知。对于ONTAP 9.16.1 及更高版本中的 ARP/AI，ARP 快照会在分类操作触发的缩短保留期后自动删除。对于ONTAP 9.15.1 及更早版本，还原卷或清除可疑事件后，ARP 快照会自动删除。
+对于 SAN 卷，使用此命令在恢复前确认攻击。这将更新 SAN 工作负载的 ARP 威胁评估。
 
-. 从 9.18.1 版本开始，您可以确定以下状态： `clear-suspect`手术：
+
+
+.... 使用 link:recover-data-task.html["最近的 ARP 快照或更早的快照"] 恢复数据。
+
+
+*** *ONTAP 9.15.1 及更早版本*：首先运行  `volume snapshot restore`，然后清除攻击：
++
+.... 使用 link:recover-data-task.html["最近的 ARP 快照或更早的快照"] 恢复数据。
+.... [[arp-snapshot-decision-cli-post-restore]][[arp-snapshot-decision-cli]]运行以下命令之一以清除可疑文件：
++
+***** 对于 NAS 文件扩展名：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive false
+----
++
+使用以下可选参数仅将特定扩展名识别为潜在的勒索软件： `[-extension <text>, ... ]`
+
+***** 对于熵峰值（NAS 和 SAN）：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> -start-time <MM/DD/YYYY HH:MM:SS> -end-time <MM/DD/YYYY HH:MM:SS> -false-positive false
+----
++
+对于 SAN 卷，使用此命令在恢复后确认攻击。这将更新 SAN 工作负载的 ARP 威胁评估。
+
+
+
+
+
+
+
+** *如果您计划使用其他恢复方法*：先还原数据，然后清除攻击：
++
+... 使用 link:recover-data-task.html["FlexClone 或单个文件 SnapRestore"] 恢复数据。
+... 运行以下命令之一以清除可疑文件：
++
+**** 对于 NAS 文件扩展名：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive false
+----
++
+使用以下可选参数仅将特定扩展名识别为潜在的勒索软件： `[-extension <text>, ... ]`
+
+**** 对于熵峰值（NAS 和 SAN）：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> -start-time <MM/DD/YYYY HH:MM:SS> -end-time <MM/DD/YYYY HH:MM:SS> -false-positive false
+----
++
+对于 SAN 卷，使用此命令在恢复后确认攻击。这将更新 SAN 工作负载的 ARP 威胁评估。
+
+
+
+
+
+
+
+. 从 ONTAP 9.18.1 开始，您可以确定 `clear-suspect`操作的状态：
 +
 [source, cli]
 ----
@@ -243,16 +397,21 @@ security anti-ransomware volume show -clear-suspect-status -volume <vol_name> -v
 ----
 
 
-.MAV选项
-. 如果您使用的是MAV和预期的 `clear-suspect` 运营需要额外批准、每个MAV组批准人必须：
-+
-.. 显示请求：
+--
+====
+
+
+== 多管理员验证选项
+
+如果使用多管理员验证（MAV），并且预期 `clear-suspect`操作需要额外的批准，则每个 MAV 组审批人必须：
+
+. 显示请求：
 +
 [source, cli]
 ----
 security multi-admin-verify request show
 ----
-.. 批准恢复正常反勒索软件监控的请求：
+. 批准恢复正常反勒索软件监控的请求：
 +
 [source, cli]
 ----
@@ -263,16 +422,12 @@ security multi-admin-verify request approve -index[<number returned from show re
 
 
 
-. 如果您正在使用MAV、并且您是MAV组批准者、您还可以拒绝可疑交易请求：
-+
+如果您正在使用MAV、并且您是MAV组批准者、您还可以拒绝可疑交易请求：
+
 [source, cli]
 ----
 security multi-admin-verify request veto -index[<number returned from show request>]
 ----
-
-
---
-====
 .相关信息
 * link:https://kb.netapp.com/onprem%2Fontap%2Fda%2FNAS%2FUnderstanding_Autonomous_Ransomware_Protection_attacks_and_the_Autonomous_Ransomware_Protection_snapshot#["NetApp知识库：了解自主勒索软件防护攻击和自主勒索软件防护快照"^]
 * link:modify-automatic-snapshot-options-task.html["修改自动快照选项"]
