@@ -1,0 +1,202 @@
+---
+permalink: smb-admin/manage-local-user-accounts.html 
+sidebar: sidebar 
+keywords: modify, local, user, account, change, exist, name, description, enable, disable, rename, compromise, administrative, modify local user accounts 
+summary: 您可以启用本地用户帐户以允许通过 SMB 访问 SVM 数据，也可以禁用该帐户以阻止访问。您还可以修改帐户以更新用户的全名、描述或启用状态。如果需要，您可以出于管理原因（例如用户名被盗用）重命名帐户。您还可以查看用户所属的本地组，这有助于确定文件和文件夹访问权限并解决访问问题。 
+---
+= 管理本地 ONTAP SMB 用户帐户
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以启用本地用户帐户以允许通过 SMB 访问 SVM 数据，也可以禁用该帐户以阻止访问。您还可以修改帐户以更新用户的全名、描述或启用状态。如果需要，您可以出于管理原因（例如用户名被盗用）重命名帐户。您还可以查看用户所属的本地组，这有助于确定文件和文件夹访问权限并解决访问问题。
+
+|===
+| 如果您要 ... | 输入命令 ... 
+
+
+ a| 
+更改本地用户的密码
+ a| 
+`vserver cifs users-and-groups local-user set-password -vserver <SVM_name> -user-name <user_name>`
+
+
+
+ a| 
+启用或禁用本地用户帐户
+ a| 
+`vserver cifs users-and-groups local-user modify -vserver <SVM_name> -user-name <user_name> -is-account-disabled {true|false}`
+
+
+
+ a| 
+显示用户的详细帐户信息
+ a| 
+`vserver cifs users-and-groups local-user show -instance -vserver <SVM_name> -user-name <user_name>`
+
+
+
+ a| 
+显示指定本地用户的本地用户成员资格信息
+ a| 
+`vserver cifs users-and-groups local-user show-membership -user-name <user_name>`
+
+
+
+ a| 
+显示此本地用户所属本地组的本地用户成员资格信息
+ a| 
+`vserver cifs users-and-groups local-user show-membership -membership _group_name_`
+
+
+
+ a| 
+显示与指定 Storage Virtual Machine （ SVM ）关联的本地用户的用户成员资格信息
+ a| 
+`vserver cifs users-and-groups local-user show-membership -vserver <SVM_name>`
+
+
+
+ a| 
+显示指定 SVM 上所有本地用户的详细信息
+ a| 
+`vserver cifs users-and-groups local-user show-membership -instance -vserver <SVM_name>`
+
+
+
+ a| 
+显示有关 Storage Virtual Machine （ SVM ）上所有用户的信息
+ a| 
+`vserver cifs users-and-groups local-user show -vserver <SVM_name>`
+
+
+
+ a| 
+修改本地用户的问题描述
+ a| 
+`vserver cifs users-and-groups local-user modify -vserver <SVM_name> -user-name <user_name> -description text`
+
+如果描述包含空格，则必须用双引号括起来。
+
+
+
+ a| 
+修改本地用户的全名
+ a| 
+`vserver cifs users-and-groups local-user modify -vserver <SVM_name> -user-name <user_name> -full-name text`
+
+如果全名包含空格，则必须用双引号括起来。
+
+
+
+ a| 
+重命名本地用户帐户
+ a| 
+`vserver cifs users-and-groups local-user rename -vserver <SVM_name> -user-name <user_name> -new-user-name <new_user_name>`
+
+重命名本地用户时，新用户名必须与旧用户名关联到相同的 CIFS 服务器。
+
+|===
+.示例
+以下示例将 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 上的本地用户 "`CIFS_SERVER\sue` " 重命名为 "`CIFS_SERVER\sue_new` " ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user rename -user-name CIFS_SERVER\sue -new-user-name CIFS_SERVER\sue_new -vserver vs1
+----
+.示例
+以下示例显示了有关 SVM vs1 上所有本地用户的信息：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user show -vserver vs1
+Vserver  User Name                   Full Name     Description
+-------- --------------------------- ------------- -------------
+vs1      CIFS_SERVER\Administrator   James Smith   Built-in administrator account
+vs1      CIFS_SERVER\sue             Sue   Jones
+----
+.示例
+以下示例将为与 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 关联的本地用户 "`CIFS_SERVER\sue` " 设置密码：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user set-password -user-name CIFS_SERVER\sue -vserver vs1
+
+Enter the new password:
+Confirm the new password:
+----
+.示例
+以下示例显示 SVM vs1 上所有本地用户的成员资格信息；用户 "`CIFS_SERVER\Administrator` " 是 "`BUILTIN\Administrators` " 组的成员， "`CIFS_SERVER\sue` " 是 "`CIFS_SERVER\G1` " 组的成员：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user show-membership -vserver vs1
+Vserver    User Name                    Membership
+---------- ---------------------------- ------------------------
+vs1        CIFS_SERVER\Administrator    BUILTIN\Administrators
+           CIFS_SERVER\sue              CIFS_SERVER\g1
+----
+.相关信息
+* 有关的详细信息 `vserver cifs`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=vserver+cifs["ONTAP 命令参考"^]。
+* xref:enable-disable-password-complexity-local-users-task.adoc[配置本地用户的密码复杂度]
+* xref:display-server-security-settings-task.adoc[显示有关服务器安全设置的信息]
+
+
+
+
+== 删除本地 ONTAP SMB 用户帐户
+
+如果不再需要本地用户帐户对 CIFS 服务器进行本地 SMB 身份验证或确定对 SVM 中数据的访问权限，则可以从 Storage Virtual Machine （ SVM ）中删除这些帐户。
+
+.关于此任务
+删除本地用户时，请记住以下几点：
+
+* 文件系统未更改。
++
+不会调整引用此用户的文件和目录上的 Windows 安全描述符。
+
+* 所有对本地用户的引用都将从成员资格和权限数据库中删除。
+* 无法删除众所周知的标准用户，例如管理员。
+
+
+.步骤
+. 确定要删除的本地用户帐户的名称：
++
+[source, cli]
+----
+vserver cifs users-and-groups local-user show -vserver <SVM_name>
+----
+. 删除本地用户：
++
+[source, cli]
+----
+vserver cifs users-and-groups local-user delete -vserver <SVM_name> -user-name <user_name>
+----
+. 验证用户帐户是否已删除：
++
+[source, cli]
+----
+vserver cifs users-and-groups local-user show -vserver <SVM_name>
+----
+
+
+以下示例将删除与 SVM vs1 关联的本地用户 "`CIFS_SERVER\sue` " ：
+
+[listing]
+----
+cluster1::> vserver cifs users-and-groups local-user show -vserver vs1
+Vserver  User Name                   Full Name      Description
+-------- --------------------------- -------------- -------------
+vs1      CIFS_SERVER\Administrator   James Smith    Built-in administrator account
+vs1      CIFS_SERVER\sue             Sue   Jones
+
+
+cluster1::> vserver cifs users-and-groups local-user delete -vserver vs1 -user-name CIFS_SERVER\sue
+
+cluster1::> vserver cifs users-and-groups local-user show -vserver vs1
+Vserver      User Name                   Full Name      Description
+-------- --------------------------- -------------- -------------
+vs1      CIFS_SERVER\Administrator   James Smith    Built-in administrator account
+----

@@ -4,17 +4,30 @@ sidebar: sidebar
 keywords: offer, caching, service, certain, share, offer, cache, disable, branchcache, exist, smb, disable branchcache on a single smb share 
 summary: 如果您不希望在先前提供缓存内容的某些共享上提供缓存服务，则可以在现有 SMB 共享上禁用 BranchCache 。 
 ---
-= 在单个 ONTAP SMB 共享上禁用 BranchCache
+= 在 SMB 共享上禁用 BranchCache
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
+如果您不希望在某些 SMB 共享上提供 BranchCache 缓存服务，但稍后可能希望在这些共享上提供缓存服务，则可以在共享基础上禁用 BranchCache 。如果已将 BranchCache 配置为在所有共享上提供缓存，但您希望暂时禁用所有缓存服务，则可以修改 BranchCache 配置以停止对所有共享的自动缓存。
+
+如果 SMB 共享上的 BranchCache 在首次启用后随后被禁用，则 ONTAP 将停止向请求客户端发送元数据。需要数据的客户端直接从内容服务器（ Storage Virtual Machine （ SVM ）上的 CIFS 服务器）检索数据。
+
+
+
+== 在单个 ONTAP SMB 共享上禁用 BranchCache
+
 如果您不希望在先前提供缓存内容的某些共享上提供缓存服务，则可以在现有 SMB 共享上禁用 BranchCache 。
 
 .步骤
-. 输入以下命令： `vserver cifs share properties remove -vserver vserver_name -share-name share_name -share-properties branchcache`
+. 输入以下命令：
++
+[source, cli]
+----
+vserver cifs share properties remove -vserver <SVM_name> -share-name <share_name> -share-properties branchcache
+----
 +
 此时将删除 BranchCache 共享属性。其他应用的共享属性仍有效。
 
@@ -68,3 +81,45 @@ File Attribute Cache Lifetime: 10s
                 Offline Files: manual
 Vscan File-Operations Profile: standard
 ----
+
+
+== 停止所有 ONTAP SMB 共享上的自动缓存
+
+如果 BranchCache 配置自动对每个 Storage Virtual Machine （ SVM ）上的所有 SMB 共享启用缓存，则可以修改 BranchCache 配置以停止自动缓存所有 SMB 共享的内容。
+
+.关于此任务
+要停止所有 SMB 共享上的自动缓存，请将 BranchCache 操作模式更改为每共享缓存。
+
+.步骤
+. 配置 BranchCache 以停止对所有 SMB 共享的自动缓存：
++
+[source, cli]
+----
+vserver cifs branchcache modify -vserver <SVM_name> -operating-mode per-share
+----
+. 验证 BranchCache 配置是否正确：
++
+[source, cli]
+----
+vserver cifs branchcache show -vserver <SVM_name>
+----
+
+
+.示例
+以下命令将更改 Storage Virtual Machine （ SVM ，以前称为 Vserver ） vs1 上的 BranchCache 配置，以停止对所有 SMB 共享的自动缓存：
+
+[listing]
+----
+cluster1::> vserver cifs branchcache modify -vserver vs1 -operating-mode per-share
+
+cluster1::> vserver cifs branchcache show -vserver vs1
+
+                                 Vserver: vs1
+          Supported BranchCache Versions: enable_all
+                      Path to Hash Store: /hash_data
+          Maximum Size of the Hash Store: 20GB
+Encryption Key Used to Secure the Hashes: -
+        CIFS BranchCache Operating Modes: per_share
+----
+.相关信息
+xref:configure-branchcache-enabled-shares-concept.adoc[了解如何配置启用 BranchCache 的共享]

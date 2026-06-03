@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: enable, branchcache, smb, create, share, setting, property, create a bracnhcache-enabled smb share 
 summary: 通过设置 BranchCache 共享属性，您可以在创建共享时在 SMB 共享上启用 BranchCache 。 
 ---
-= 创建启用 BranchCache 的 ONTAP SMB 共享
+= 在新 SMB 共享上启用 BranchCache
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -28,9 +28,18 @@ summary: 通过设置 BranchCache 共享属性，您可以在创建共享时在 
 
 
 .步骤
-. 创建启用了anchCache的SMB共享：+
-`vserver cifs share create -vserver _vserver_name_ -share-name _share_name_ -path _path_ -share-properties branchcache[,...]`
-. 使用验证是否已在SMB共享上设置了anchCache共享属性 `vserver cifs share show` 命令：
+. 创建启用 BranchCache 的 SMB 共享：
++
+[source, cli]
+----
+vserver cifs share create -vserver <SVM_name> -share-name <share_name> -path <path> -share-properties branchcache[,...]
+----
+. 验证 SMB 共享上是否设置了 BranchCache 共享属性：
++
+[source, cli]
+----
+vserver cifs share show
+----
 
 
 .示例

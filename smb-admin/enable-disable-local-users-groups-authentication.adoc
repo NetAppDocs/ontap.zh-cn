@@ -1,0 +1,140 @@
+---
+permalink: smb-admin/enable-disable-local-users-groups-authentication.html 
+sidebar: sidebar 
+keywords: local, user, group, access, control, ntfs, security-style, data, enable, authentication, disable, enable or disable local users and groups functionality 
+summary: 在使用本地用户和组访问 NTFS 安全模式数据之前，必须启用本地用户和组功能。此外，如果要使用本地用户进行 SMB 身份验证，则必须启用本地用户身份验证功能。 
+---
+= 启用或禁用本地 ONTAP SMB 用户和组功能
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在使用本地用户和组访问 NTFS 安全模式数据之前，必须启用本地用户和组功能。此外，如果要使用本地用户进行 SMB 身份验证，则必须启用本地用户身份验证功能。
+
+默认情况下，本地用户和组功能以及本地用户身份验证处于启用状态。如果未启用它们，则必须先启用它们，然后才能配置和使用本地用户和组。您可以随时禁用本地用户和组功能。
+
+除了显式禁用本地用户和组功能之外，如果集群中的任何节点还原到不支持本地用户和组功能的 ONTAP 版本，则 ONTAP 还会禁用此功能。只有当集群中的所有节点都运行支持本地用户和组功能的 ONTAP 版本时，才会启用此功能。
+
+.相关信息
+* xref:manage-local-user-accounts.html[修改本地用户帐户]
+* xref:manage-local-groups.html[修改本地组]
+* xref:manage-local-privileges.html[向本地或域用户或组添加权限]
+
+
+
+
+== 在 ONTAP SMB 服务器上启用或禁用本地用户和组
+
+您可以在 Storage Virtual Machine （ SVM ）上启用或禁用 SMB 访问的本地用户和组。默认情况下，本地用户和组功能处于启用状态。
+
+.关于此任务
+您可以在配置 SMB 共享和 NTFS 文件权限时使用本地用户和组，也可以选择在创建 SMB 连接时使用本地用户进行身份验证。要使用本地用户进行身份验证，还必须启用本地用户和组身份验证选项。
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 启用或禁用本地用户和组：
++
+** 启用本地用户和组：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <SVM_name> -is-local-users-and-groups-enabled true
+----
+** 禁用本地用户和组：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <SVM_name> -is-local-users-and-groups-enabled false
+----
+
+
+. 返回到管理权限级别：
++
+[source, cli]
+----
+set -privilege admin
+----
+
+
+.示例
+以下示例将在 SVM vs1 上启用本地用户和组功能：
+
+[listing]
+----
+cluster1::> set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -is-local-users-and-groups-enabled true
+
+cluster1::*> set -privilege admin
+----
+.相关信息
+* xref:manage-local-user-accounts.adoc[管理本地用户帐户] == 在 ONTAP SMB 服务器上启用或禁用本地用户身份验证
+
+
+您可以为 Storage Virtual Machine （ SVM ）上的 SMB 访问启用或禁用本地用户身份验证。默认设置为允许本地用户身份验证，当 SVM 无法联系域控制器或您选择不使用域级别访问控制时，此功能非常有用。
+
+.开始之前
+必须在 CIFS 服务器上启用本地用户和组功能。
+
+.关于此任务
+您可以随时启用或禁用本地用户身份验证。如果要在创建 SMB 连接时使用本地用户进行身份验证，则还必须启用 CIFS 服务器的本地用户和组选项。
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 启用或禁用本地用户身份验证：
++
+** 启用本地用户身份验证：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <SVM_name> -is-local-auth-enabled true
+----
+** 禁用本地用户身份验证：
++
+[source, cli]
+----
+vserver cifs options modify -vserver <SVM_name> -is-local-auth-enabled false
+----
+
+
+. 返回到管理权限级别：
++
+[source, cli]
+----
+set -privilege admin
+----
+
+
+.示例
+以下示例将在 SVM vs1 上启用本地用户身份验证：
+
+[listing]
+----
+cluster1::>set -privilege advanced
+Warning: These advanced commands are potentially dangerous; use them
+only when directed to do so by technical support personnel.
+Do you wish to continue? (y or n): y
+
+cluster1::*> vserver cifs options modify -vserver vs1 -is-local-auth-enabled true
+
+cluster1::*> set -privilege admin
+----
+.相关信息
+* xref:local-user-authentication-concept.adoc[了解本地用户身份验证]
+* xref:enable-disable-local-users-groups-authentication.html[启用或禁用服务器上的本地用户和组]
+

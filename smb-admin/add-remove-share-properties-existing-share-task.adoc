@@ -11,14 +11,94 @@ summary: 您可以通过添加或删除共享属性来自定义现有 SMB 共享
 
 
 [role="lead"]
-您可以通过添加或删除共享属性来自定义现有 SMB 共享。如果您要更改共享配置以满足环境中不断变化的要求，此功能将非常有用。
+可以通过添加或删除共享属性来自定义现有 SMB 共享。
+
+可用的共享属性如下：
+
+[cols="2,4"]
+|===
+| 共享属性 | Description 
+
+
+ a| 
+`oplocks`
+ a| 
+此属性指定共享使用机会锁，也称为客户端缓存。
+
+
+
+ a| 
+`browsable`
+ a| 
+此属性允许 Windows 客户端浏览共享。
+
+
+
+ a| 
+`showsnapshot`
+ a| 
+此属性指定客户端可以查看和遍历快照。
+
+
+
+ a| 
+`changenotify`
+ a| 
+此属性指定共享支持更改通知请求。对于 SVM 上的共享，这是默认的初始属性。
+
+
+
+ a| 
+`attributecache`
+ a| 
+通过此属性，可以在 SMB 共享上缓存文件属性，从而加快属性访问速度。默认情况下，禁用属性缓存。只有当有客户端通过 SMB 1.0 连接到共享时，才应启用此属性。如果客户端通过 SMB 2.x 或 SMB 3.0 连接到共享，则此共享属性不适用。
+
+
+
+ a| 
+`continuously-available`
+ a| 
+此属性允许支持它的 SMB 客户端以持久方式打开文件。以这种方式打开的文件不会受到故障转移和交还等中断事件的影响。
+
+
+
+ a| 
+`branchcache`
+ a| 
+此属性指定共享允许客户端对此共享中的文件请求 BranchCache 哈希。只有在 CIFS BranchCache 配置中将 "`per-share` " 指定为操作模式时，此选项才有用。
+
+
+
+ a| 
+`access-based-enumeration`
+ a| 
+此属性指定已在此共享上启用 _Access Based 枚举 _ （ ABE ）。用户可以根据用户的访问权限查看 ABE 筛选的共享文件夹，从而防止显示用户无权访问的文件夹或其他共享资源。
+
+
+
+ a| 
+`namespace-caching`
+ a| 
+此属性指定连接到此共享的 SMB 客户端可以缓存 CIFS 服务器返回的目录枚举结果，从而提高性能。默认情况下， SMB 1 客户端不会缓存目录枚举结果。由于默认情况下 SMB 2 和 SMB 3 客户端会缓存目录枚举结果，因此指定此共享属性仅会为 SMB 1 客户端连接提供性能优势。
+
+
+
+ a| 
+`encrypt-data`
+ a| 
+此属性指定访问此共享时必须使用 SMB 加密。访问 SMB 数据时不支持加密的 SMB 客户端将无法访问此共享。
+
+|===
+
+
+== 在现有 ONTAP SMB 共享上添加共享属性
+
+您可以通过添加共享属性来自定义现有 SMB 共享。如果要更改共享配置以满足环境中不断变化的要求，这可能很有用。
 
 .开始之前
 要修改其属性的共享必须存在。
 
 .关于此任务
-添加共享属性的准则：
-
 * 您可以使用逗号分隔列表添加一个或多个共享属性。
 * 先前指定的任何共享属性仍有效。
 +
@@ -31,33 +111,19 @@ summary: 您可以通过添加或删除共享属性来自定义现有 SMB 共享
 
 
 
-删除共享属性的准则：
-
-* 您可以使用逗号分隔列表删除一个或多个共享属性。
-* 先前指定但未删除的任何共享属性仍有效。
-
-
 .步骤
-. 输入相应的命令：
+. 添加共享属性：
 +
-|===
-| 如果您要 ... | 输入命令 ... 
-
-
- a| 
-添加共享属性
- a| 
-`+vserver cifs share properties add -vserver _vserver_name_ -share-name _share_name_ -share-properties _properties_,...+`
-
-
-
- a| 
-删除共享属性
- a| 
-`+vserver cifs share properties remove -vserver _vserver_name_ -share-name _share_name_ -share-properties _properties_,...+`
-
-|===
-. 验证共享属性设置： `vserver cifs share show -vserver vserver_name -share-name share_name`
+[source, cli]
+----
+vserver cifs share properties add -vserver <SVM_name> -share-name <share_name> -share-properties <properties>,...
+----
+. 验证共享属性设置：
++
+[source, cli]
+----
+vserver cifs share show -vserver vserver_name -share-name share_name
+----
 
 
 .示例
@@ -75,6 +141,33 @@ vs1        share1  /share1   oplocks      -          Everyone / Full Control
                              changenotify
                              showsnapshot
 ----
+
+
+== 删除现有 ONTAP SMB 共享的共享属性
+
+您可以通过删除共享属性来自定义现有 SMB 共享。如果要更改共享配置以满足环境中不断变化的要求，这可能很有用。
+
+.关于此任务
+* 您可以使用逗号分隔列表删除一个或多个共享属性。
+* 先前指定但未删除的任何共享属性仍有效。
+
+
+.步骤
+. 删除共享属性：
++
+[source, cli]
+----
+vserver cifs share properties remove -vserver <SVM_name> -share-name <share_name> -share-properties <properties>,...
+----
+. 验证共享属性设置：
++
+[source, cli]
+----
+vserver cifs share show -vserver <SVM_name> -share-name <share_name>
+----
+
+
+.示例
 以下命令将删除 `browsable` SVM VS1上名为`shre2`的共享中的共享属性：
 
 [listing]

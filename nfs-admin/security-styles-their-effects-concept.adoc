@@ -17,37 +17,44 @@ summary: 有四种不同的安全样式 - UNIX、NTFS、混合和统一。每种
 
 例如，如果某个卷使用 UNIX 安全模式，则由于 ONTAP 的多协议性质， SMB 客户端仍可访问数据（前提是它们正确进行身份验证和授权）。但是， ONTAP 使用的是 UNIX 权限，只有 UNIX 客户端才能使用原生工具进行修改。
 
-[cols="5*"]
+[cols="5"]
 |===
 | 安全风格 | 可以修改权限的客户端 | 客户端可以使用的权限 | 生成的有效安全模式 | 可以访问文件的客户端 
 
 
-.2+| "unix" .2+| NFS | NFSv3 模式位 .2+| "unix" .9+| NFS 和 SMB 
+| "unix" | NFS  a| 
+* NFSv3 模式位
+* NFSv4.x ACL
+
+| "unix" | NFS 和 SMB 
 
 
-| NFSv4.x ACL 
+| NTFS | SMB | NTFS ACL | NTFS | NFS 和 SMB 
 
 
-| NTFS | SMB | NTFS ACL | NTFS 
+| 混合 | NFS 或 SMB  a| 
+* NFSv3 模式位
+* NFSv4.x ACL
+* NTFS ACL
+
+ a| 
+* UNIX（用于 NFSv3 模式位和 NFSv4.x ACL）
+* NTFS（用于 NTFS ACL）
+
+| NFS 和 SMB 
 
 
-.3+| 混合 .3+| NFS 或 SMB | NFSv3 模式位 .2+| "unix" 
+| 统一：
+(仅限无限卷、在ONTAP 9.4及更早版本中。) | NFS 或 SMB  a| 
+* NFSv3 模式位
+* NFSv4.1 ACL
+* NTFS ACL
 
+ a| 
+* UNIX（用于 NFSv3 模式位和 NFSv4.1 ACL）
+* NTFS（用于 NTFS ACL）
 
-| NFSv4.ACL 
-
-
-| NTFS ACL | NTFS 
-
-
-.3+| 统一：
-(仅限无限卷、在ONTAP 9.4及更早版本中。) .3+| NFS 或 SMB | NFSv3 模式位 .2+| "unix" 
-
-
-| NFSv4.1 ACL 
-
-
-| NTFS ACL | NTFS 
+| NFS 和 SMB 
 |===
 FlexVol卷支持UNIX、NTFS和混合安全模式。混合或统一安全模式时，有效权限取决于上次修改权限的客户端类型，因为用户会逐个设置安全模式。如果修改权限的最后一个客户端是 NFSv3 客户端，则权限为 UNIX NFSv3 模式位。如果最后一个客户端是 NFSv4 客户端，则权限为 NFSv4 ACL 。如果最后一个客户端是 SMB 客户端，则权限为 Windows NTFS ACL 。
 
