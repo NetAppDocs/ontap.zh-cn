@@ -11,7 +11,9 @@ summary: 对于使用 NVMe 协议的系统，您必须创建一个或多个 NVMe
 
 
 [role="lead"]
-按照以下步骤为现有Storage VM上任何受NVMe支持的主机创建命名空间并配置存储。
+调配存储时，可以使 NVMe 主机能够从 ONTAP 存储系统读取和写入数据。对于使用 NVMe 协议的系统，必须创建一个或多个 NVMe 命名空间和子系统。然后，可以将每个命名空间映射到 NVMe 子系统，以允许从主机访问数据。
+
+如果包含 NVMe 子系统的存储虚拟机 (SVM) 同时具有 NVMe/FC 和 NVMe/TCP 网络接口，则映射到 NVMe 子系统的命名空间可以通过 NVMe/FC 和 NVMe/TCP 传输协议进行访问。从 ONTAP 9.4 及更高版本开始提供 NVMe 对 FC 的支持。ONTAP 9.10.1 及更高版本提供 NVMe 对 TCP 的支持。如果您需要对命名空间进行特定于协议的访问，则应为每个协议link:configure-svm-nvme-task.html["配置 SVM"]。
 
 .关于此任务
 此程序适用于 FAS、AFF 和 ASA 系统。如果您拥有 ASA r2 系统（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30），请遵循link:https://docs.netapp.com/us-en/asa-r2/manage-data/provision-san-storage.html["这些步骤"^]来配置您的存储。ASA R2系统可为仅使用SAN的客户提供简化的ONTAP体验。
