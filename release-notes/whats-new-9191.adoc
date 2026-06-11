@@ -62,6 +62,23 @@ xref:../data-protection/snapmirror-synchronous-disaster-recovery-basics-concept.
 |===
 
 
+== NAS
+
+[cols="30%,70%"]
+|===
+| 更新 | Description 
+
+
+ a| 
+xref:../flexcache/index.html[NAS 性能增强]
+ a| 
+ONTAP 9.19.1 允许更多 CPU 资源处理小型 NAS 目录的列表请求。这种增强功能使拥有数百到数千个客户端的客户受益，这些客户端同时列出相同的小型 NAS 目录，大小为 2 MB 或更小（约 25,000 个文件）。
+
+此增强功能减少了使用本地 FlexCache 卷等变通方法来支持高客户端数执行目录列表的需要。对于较低的客户端数量，性能不会受到负面影响。此性能增强是自动的，不需要配置。
+
+|===
+
+
 == 网络
 
 [cols="30%,70%"]
@@ -168,7 +185,7 @@ xref:../anti-ransomware/use-cases-restrictions-concept.html#supported-configurat
 ARP/AI 支持在支持的平台上参与 SnapMirror 同步（NAS 和 SAN）和 SnapMirror 活动同步 SAN 关系的卷。ARP/AI 可以保护 FAS、AFF 和 AFX 系统上 SnapMirror 同步关系中的主卷，以及 AFF 和 ASA r2 系统上 SnapMirror 活动同步 SAN 关系中的主卷。ARP/AI 在关系中的活动读写主卷上运行，创建仅主 ARP 快照，并提供基于机器学习的勒索软件检测。
 
 
-NOTE: 升级到 ONTAP 9.19.1 RC 并在属于 SnapMirror 同步或 SnapMirror 活动同步关系的卷上启用 ARP 后，该关系可能会出现短暂的同步外状态。这种情况是暂时的，关系应该在没有任何干预的情况下自动重新同步。
+NOTE: 升级到 ONTAP 9.19.1 RC 并在属于 SnapMirror 同步或 SnapMirror 活动同步关系的卷上启用 ARP 后，该关系可能会出现短暂的同步外状态。这种情况是暂时的，关系将自动重新同步，无需任何干预。
 
 
 
@@ -176,23 +193,6 @@ NOTE: 升级到 ONTAP 9.19.1 RC 并在属于 SnapMirror 同步或 SnapMirror 活
 xref:../networking/configure-tls-offload.html[TLS 卸载配置]
  a| 
 您可以通过利用受支持的以太网卡上的资源，配置 TLS 卸载以提高 TLS 握手后性能。此功能可卸载加密和解密，降低 CPU 开销并提高性能。
-
-|===
-
-
-== 存储效率
-
-[cols="30%,70%"]
-|===
-| 更新 | Description 
-
-
- a| 
-xref:../flexcache/index.html[NAS 性能增强]
- a| 
-ONTAP 9.19.1 允许更多 CPU 资源处理小型 NAS 目录的列表请求。这种增强功能使拥有数百到数千个客户端的客户受益，这些客户端同时列出相同的小型 NAS 目录，大小为 2 MB 或更小（约 25,000 个文件）。
-
-此增强功能减少了使用本地 FlexCache 卷等变通方法来支持高客户端数执行目录列表的需要。对于较低的客户端数量，性能不会受到负面影响。此性能增强是自动的，不需要配置。
 
 |===
 
