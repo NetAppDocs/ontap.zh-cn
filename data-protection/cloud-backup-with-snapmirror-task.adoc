@@ -16,9 +16,16 @@ summary: 从 ONTAP 9.1.1 开始，您可以使用 System Manager 将数据备份
 
 
 [role="lead"]
-从 ONTAP 9.9.1 开始，当您想要将数据保护工作流转换到云时，可以使用 _SnapMirror cloud_。您可以使用对象存储作为长期数据保留和存档的替代存储库，而不是传统的磁带备份架构。您可以使用 Amazon S3、Alibaba Cloud、Azure Blob、Google Cloud Storage、IBM Cloud Object Storage、StorageGRID 或 ONTAP S3 等提供商作为您的云对象存储。
+_SnapMirror cloud_ 提供到对象存储目标的 ONTAP 复制。这使您可以用对象存储取代传统的磁带备份架构，以实现长期数据保留和存档。您可以使用 Amazon S3、Alibaba Cloud、Azure Blob、Google Cloud Storage、IBM Cloud Object Storage、NetApp StorageGRID 或 ONTAP S3 等提供商作为云对象存储。
 
-从 ONTAP 9.9.1 开始，您可以使用 System Manager 备份和还原您的数据。
+
+NOTE: 由 SystemManager 管理的 SnapMirror Cloud 复制仅支持将 StorageGrid 和 ONTAP S3 作为对象存储目标。不支持其他提供商。
+
+
+NOTE: 支持将 SnapMirror 云复制到其他对象存储提供商以及其他备份和恢复产品的情况因供应商而异。请咨询您的第三方供应商，了解其支持政策。
+
+
+NOTE: 使用 SnapMirror 云 API 通常仅限于备份合作伙伴。希望开发自己的基于 API 的解决方案的客户应联系其 NetApp 客户团队，了解有关许可条款的信息。
 
 从 ONTAP 9.19.1 开始：
 
@@ -36,13 +43,12 @@ summary: 从 ONTAP 9.1.1 开始，您可以使用 System Manager 将数据备份
 * SnapMirror cloud 支持在 MetroCluster 配置中的 FlexGroup 卷进行备份和恢复操作，使用现有的 link:https://docs.netapp.com/us-en/ontap-automation/get-started/access_rest_api.html["ONTAP REST API"^]。此功能使您能够为在切换和切回后由合作站点维护的 MetroCluster 配置中的 FlexGroup 卷创建 SnapMirror cloud 关系。
 
 
-从ONTAP 9.16.1.开始：
+在使用 SnapMirror 云功能之前，您应该从 NetApp 支持站点申请 SnapMirror 云 API 许可证密钥：link:https://mysupport.netapp.com/site/tools/snapmirror-cloud-api-key["请求SnapMirror云API许可证密钥"^]。
 
-* SnapMirror云备份支持扇出关系。这意味着可以在两个不同的对象存储上同时创建SnapMirror备份。在ONTAP 9.161中、SnapMirror Cloud支持两个扇出关系。扇出可以是两个对象存储以及两个不同对象存储中的一个或两个分段。尝试创建两个以上的扇出关系将失败。
-* SnapMirror Cloud支持使用现有的更高效的同步过程对迁移到云的卷进行备份link:https://docs.netapp.com/us-en/ontap-automation/get-started/access_rest_api.html["ONTAP REST API"^]。该功能支持将SnapMirror云备份从云中的已迁移卷备份到同一目标对象存储端点、而无需执行重新基线操作。支持FlexVol和FlexGroup卷。
+按照说明，您应提供业务机会的简单描述，并通过向提供的电子邮件地址发送电子邮件来请求 API 密钥。您应会在 24 小时内收到电子邮件回复，其中包含有关如何获取 API 密钥的进一步说明。
 
 
-在使用SnapMirror云功能之前，您应从NetApp支持站点请求SnapMirror云API许可证密钥：link:https://mysupport.netapp.com/site/tools/snapmirror-cloud-api-key["请求SnapMirror云API许可证密钥"^]。按照说明、您应提供一个简单的业务机会问题描述 、并通过向提供的电子邮件地址发送电子邮件来请求API密钥。您应在24小时内收到一封电子邮件回复、其中包含有关如何获取API密钥的进一步说明。
+NOTE: 您可能需要 SnapMirror Cloud 许可证密钥和 API 密钥。虽然 ONTAP One 包括 SnapMirror Cloud 许可证本身，但需要许可证密钥才能启用 SnapMirror Cloud 功能。可能需要单独生成和安装许可证密钥。
 
 
 
