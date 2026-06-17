@@ -1,0 +1,38 @@
+---
+permalink: revert/delete-active-active-svms.html 
+sidebar: sidebar 
+keywords: delete, active-active, SVMs, storage virtual machines, revert 
+summary: 如果为客户端连接启用了中继、而还原到ONTAP 9.12.1之前的版本、则必须在还原之前在任何NFSv4.1服务器上禁用中继。 
+---
+= 在从 ONTAP 9.19.1 还原之前删除主动-主动 SVM
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 9.18.1 及更早版本不支持 SAN active-active multipathing。在从 ONTAP 9.19.1 还原之前，您必须删除任何具有 active-active 配置的存储虚拟机 (SVM)。
+
+.步骤
+. 识别为 active-active 或 active-active-scsi-only 配置了 san-multipathing 选项的任何 SVM：
++
+[source, cli]
+----
+vserver show
+----
+. 删除为 active-active 或 active-active-scsi-only 多路径配置的所有 SVM：
++
+[source, cli]
+----
+vserver delete -vserver <SVM>
+----
+. 验证 SVM 是否已删除：
++
+[source, cli]
+----
+vserver show
+----
+
+
+.相关信息
+详细了解 link:../san-admin/multipath-automatic-lif-failover-support.html["SAN 主动-主动多路径支持"] 在 ONTAP 9.19.1 及更高版本中的信息。
