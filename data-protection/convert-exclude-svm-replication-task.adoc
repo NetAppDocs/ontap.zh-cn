@@ -1,0 +1,40 @@
+---
+permalink: data-protection/convert-exclude-svm-replication-task.html 
+sidebar: sidebar 
+keywords: exclude, network, name service, other settings, svm replication, disaster recovery, convert 
+summary: '您可以使用 `-identity-preserve true`参数将复制过程中排除 SVM 配置信息的 SVM DR 关系转换为复制配置信息的关系。' 
+---
+= 转换 ONTAP SnapMirror SVM 复制关系以包含 SVM 配置信息
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用 `-identity-preserve true`参数将复制过程中排除 SVM 配置信息的 SVM DR 关系转换为复制配置信息的关系。
+
+.开始之前
+如果有任何正在进行的 SnapMirror 传输，请等待其完成或中止。
+
+.步骤
+. 在目标集群中，暂停此关系：
++
+`snapmirror quiesce -destination-path <destination_svm>`:
+
+. 当关系状态为暂停时，从目标集群中删除该关系：
++
+`snapmirror delete -destination-path <destination_svm>`:
+
+. 从源集群中，在不删除SnapMirror快照信息的情况下释放该关系：
++
+`snapmirror release -destination-path <destination_svm>: -relationship-info-only true`
+
+. 从目标，使用 `-identity-preserve true`重新创建复制关系：
++
+`snapmirror create -source-path <source_svm>: -destination-path <destination_svm>: -policy <policy> -schedule <schedule> -identity-preserve true`
+
+. 从目标集群重新同步 SnapMirror 关系：
++
+`snapmirror resync -destination-path <destination_svm>:`
+
+
