@@ -29,6 +29,10 @@ NOTE: 从ONTAP 9.11.1 开始，您可以修改link:modify-automatic-snapshot-opt
 
 NAS 和 SAN 卷的熵峰值详细信息在 System Manager 中的反勒索软件页面上报告。
 
+虽然 ARP 可以自动检测和创建快照，但最终确定文件或事件是否真正具有恶意性需要人工调查。ARP 无法确定事件是否是真正的勒索软件攻击。它会标记可疑活动，但您需要调查并确认该事件是实际的勒索软件还是误报（良性活动）。
+
+link:determine-ransomware-tips.html["确定文件或事件是否真正具有恶意"].
+
 当发出 ARP 警告通知时，请通过以下两种方式之一指定活动进行响应：
 
 * *误报*
@@ -288,6 +292,10 @@ security anti-ransomware volume attack generate-report -vserver vs0 -volume vol1
 ....
 Report "report_file_vs0_vol1_14-09-2021_01-21-08" available at path "vs0:vol1/"
 ....
++
+
+NOTE: 此报告文件并非攻击期间所有可疑文件的详尽列表。
+
 .. 在管理客户端系统上查看报告。例如：
 +
 [listing]

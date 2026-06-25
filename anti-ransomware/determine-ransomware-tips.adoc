@@ -1,0 +1,52 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/determine-ransomware-tips.html 
+keywords: abnormal activity, data entropy, unusual file extensions, potential ransomware attack, false positive, ransomware attack, abnormal activity notification, ransomware alert, detected abnormal volume, suspected file types 
+summary: 了解如何确定勒索软件攻击是否真的发生以及如何应对。 
+---
+= 确定 ONTAP 中的勒索软件攻击是否真实存在
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+当 Autonomous Ransomware Protection (ARP) 检测到受保护卷中的异常活动时，它会发出警告，并显示可疑文件或熵峰值详细信息。您有责任评估这种异常活动，以确定其是否可以接受（误报）或存在潜在恶意行为。
+
+虽然 ARP 可以自动检测和创建快照，但最终确定文件或事件是否真正具有恶意性需要人工调查。ARP 无法确定事件是否是真正的勒索软件攻击。它会标记可疑活动，但您需要调查并确认该事件是实际的勒索软件还是误报（良性活动）。
+
+以下示例可以帮助您确定是否正在发生勒索软件攻击。
+
+
+IMPORTANT: 您全权负责评估所有警报，调查可疑文件，并确定对环境中潜在安全威胁的适当响应。这些示例调查仅供参考，并不全面。
+
+.分析文件扩展名
+检查报告文件的文件扩展名。勒索软件的一个明显迹象是存在名称后附加了不寻常或随机字符组合的文件。例如，名为 `document.docx`的文件可能变为 `document.docx.wcry`。
+
+已知的勒索软件扩展包括 `.wcry`、 `.locked`、 `.akira`、 `.zcrypt`、 `.phobos`等。可在线或使用 AI 工具研究该扩展。
+
+如果扩展名未与勒索软件相关联，则警报可能为误报。如果扩展名与勒索软件相关联，则发生真实攻击的可能性更大。
+
+
+NOTE: 某些勒索软件不会更改文件扩展名。没有异常扩展名并不能消除勒索软件攻击的可能性。
+
+.考虑提醒的时间
+如果警报在启用 ARP 后的几小时或几天内发生，则可能是误报。如果在启用 ARP 后几天内没有发生警报，然后出现警报，则发生真正攻击的可能性更大。
+
+.尝试打开文件
+尝试使用关联的应用程序打开标记的文件。
+
+如果文件打开且内容正常，则可能是误报。如果文件无法打开或内容无法读取，则可能已被勒索软件加密。
+
+
+CAUTION: 打开可疑文件存在风险。尝试访问可能受损的文件时，请确保遵循组织的安全协议。
+
+.查找勒索软件备注
+检查受影响目录中的勒索软件注释（例如， `README.txt`或 `DECRYPT_INSTRUCTIONS.html`）。
+
+.分析系统和应用程序行为
+如果系统和应用程序正常运行，则此警报可能为误报。文件系统活动（读取、写入和删除）突然出现无法解释的峰值，通常表示后台正在执行勒索软件加密。
+
+.相关信息
+* link:respond-abnormal-task.html["应对异常活动。"]
+
