@@ -1,0 +1,171 @@
+---
+permalink: volumes/quota-reports.html 
+sidebar: sidebar 
+keywords: how, use, quota report, see, quotas in effect 
+summary: 查看配额报告、了解哪些配额在您明确创建的配额之外生效。 
+---
+= 了解 ONTAP 配额报告
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+您可以使用配额报告查看详细信息、例如配额规则和策略的配置、已实施和已配置的配额以及在调整配额大小和重新初始化期间发生的错误。
+
+在以下情况下，查看配额信息非常有用：
+
+* 配置配额、例如配置配额和验证配置
+* 响应有关即将达到或已达到磁盘空间或文件限制的通知
+* 响应更多空间请求
+
+
+
+
+== 使用配额报告查看哪些 ONTAP 配额生效
+
+由于配额的交互方式多种多样，因此有效的配额多于您明确创建的配额。要查看正在生效的配额，您可以查看配额报告。
+
+以下示例显示了应用于 FlexVol 卷 vol1 和该卷中的 qtree q1 的不同配额类型的配额报告：
+
+.未为qtree指定用户配额的示例
+在此示例中，卷 vol1 包含一个 qtree q1 。管理员创建了三个配额：
+
+* vol1上的默认树配额限制为400 MB
+* vol1上的默认用户配额限制为100 MB
+* 用户jsmith在vol1上的显式用户配额限制为200 MB
+
+
+这些配额的配额规则类似于以下示例：
+
+[listing]
+----
+cluster1::*> volume quota policy rule show -vserver vs1 -volume vol1
+
+Vserver: vs1               Policy: default           Volume: vol1
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+tree   ""        ""      -           400MB        -       -        -          -
+user   ""        ""      off         100MB        -       -        -          -
+user   jsmith    ""      off         200MB        -       -        -          -
+----
+这些配额的配额报告类似于以下示例：
+
+[listing]
+----
+cluster1::> volume quota report
+Vserver: vs1
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1     -          tree   *           0B  400MB       0       -   *
+vol1     -          user   *           0B  100MB       0       -   *
+vol1     -          user   jsmith    150B  200MB       7       -   jsmith
+vol1     q1         tree   1           0B  400MB       6       -   q1
+vol1     q1         user   *           0B  100MB       0       -
+vol1     q1         user   jsmith      0B  100MB       5       -
+vol1     -          user   root        0B    0MB       1       -
+vol1     q1         user   root        0B    0MB       8       -
+----
+配额报告的前三行显示管理员指定的三个配额。由于其中两个配额是默认配额，因此 ONTAP 会自动创建派生配额。
+
+第四行显示了从 vol1 中每个 qtree 的默认树配额派生的树配额（在此示例中，仅为 q1 ）。
+
+第五行显示了由于卷上存在默认用户配额和 qtree 配额而为 qtree 创建的默认用户配额。
+
+第六行显示为 qtree 上的 jsmith 创建的派生用户配额，因为 qtree （第 5 行）具有默认用户配额，而用户 jsmith 拥有该 qtree 上的文件。请注意、在qtree q1中应用于用户jsmith的限制不是由显式用户配额限制(200 MB)决定的。这是因为卷上存在显式用户配额限制，因此不会影响 qtree 的限制。而是由qtree的默认用户配额(100 MB)决定qtree的派生用户配额限制。
+
+最后两行显示的用户配额更多，这些配额是从卷和 qtree 上的默认用户配额派生的。已在卷和 qtree 上为 root 用户创建派生用户配额，因为 root 用户同时拥有卷和 qtree 上的文件。由于 root 用户在配额方面受到特殊对待，因此其派生配额仅跟踪配额。
+
+.为qtree指定了用户配额的示例
+此示例与上一个示例类似，只是管理员已在 qtree 上添加了两个配额。
+
+仍然存在一个卷 vol1 和一个 qtree q1 。管理员已创建以下配额：
+
+* vol1上的默认树配额限制为400 MB
+* vol1上的默认用户配额限制为100 MB
+* vol1上用户jsmith的显式用户配额限制为200 MB
+* qtree q1上的默认用户配额限制为50 MB
+* qtree q1上用户jsmith的显式用户配额限制为75 MB
+
+
+这些配额的配额规则如下所示：
+
+[listing]
+----
+cluster1::> volume quota policy rule show -vserver vs1 -volume vol1
+
+Vserver: vs1               Policy: default           Volume: vol1
+                                               Soft             Soft
+                         User         Disk     Disk   Files    Files
+Type   Target    Qtree   Mapping     Limit    Limit   Limit    Limit  Threshold
+-----  --------  ------- -------  --------  -------  ------  -------  ---------
+tree   ""        ""      -           400MB        -       -        -          -
+user   ""        ""      off         100MB        -       -        -          -
+user   ""        q1      off          50MB        -       -        -          -
+user   jsmith    ""      off         200MB        -       -        -          -
+user   jsmith    q1      off          75MB        -       -        -          -
+----
+这些配额的配额报告如下所示：
+
+[listing]
+----
+
+cluster1::> volume quota report
+Vserver: vs1
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol1     -          tree   *           0B  400MB       0       -   *
+vol1     -          user   *           0B  100MB       0       -   *
+vol1     -          user   jsmith   2000B  200MB       7       -   jsmith
+vol1     q1         user   *           0B   50MB       0       -   *
+vol1     q1         user   jsmith      0B   75MB       5       -   jsmith
+vol1     q1         tree   1           0B  400MB       6       -   q1
+vol1     -          user   root        0B    0MB       2       -
+vol1     q1         user   root        0B    0MB       1       -
+----
+配额报告的前五行显示了管理员创建的五个配额。由于其中某些配额是默认配额，因此 ONTAP 会自动创建派生配额。
+
+第六行显示了从 vol1 中每个 qtree 的默认树配额派生的树配额（在此示例中，仅为 q1 ）。
+
+最后两行显示了从卷和 qtree 上的默认用户配额派生的用户配额。已在卷和 qtree 上为 root 用户创建派生用户配额，因为 root 用户同时拥有卷和 qtree 上的文件。由于 root 用户在配额方面受到特殊对待，因此其派生配额仅跟踪配额。
+
+未创建其他默认配额或派生配额，原因如下：
+
+* 即使用户同时拥有卷和 qtree 上的文件，也未为 jsmith 用户创建派生用户配额，因为用户在这两个级别都已具有显式配额。
+* 没有为其他用户创建派生用户配额，因为其他用户不拥有卷或 qtree 上的文件。
+* 卷上的默认用户配额未在 qtree 上创建默认用户配额，因为 qtree 已具有默认用户配额。
+
+
+
+
+== 使用 ONTAP 配额报告来确定哪些配额限制对特定文件的写入
+
+您可以使用 volume quota report 命令和特定的文件路径来确定哪些配额限制会影响对文件的写入操作。这有助于您了解哪个配额阻止了写入操作。
+
+.步骤
+. 使用带有 -path 参数的 volume quota report 命令。
+
+
+.显示影响特定文件的配额的示例
+以下示例显示了命令和输出，用于确定写入文件 file1 的有效配额，该文件位于 FlexVol 卷 vol2 的 qtree q1 中：
+
+[listing]
+----
+cluster1:> volume quota report -vserver vs0 -volume vol2 -path /vol/vol2/q1/file1
+Virtual Server: vs0
+                                    ----Disk----  ----Files-----   Quota
+Volume   Tree      Type    ID        Used  Limit    Used   Limit   Specifier
+-------  --------  ------  -------  -----  -----  ------  ------   ---------
+vol2     q1        tree    jsmith     1MB  100MB       2   10000   q1
+vol2     q1        group   eng        1MB  700MB       2   70000
+vol2               group   eng        1MB  700MB       6   70000   *
+vol2               user    corp\jsmith
+                                      1MB   50MB       1       -   *
+vol2     q1        user    corp\jsmith
+                                      1MB   50MB       1       -
+5 entries were displayed.
+----
