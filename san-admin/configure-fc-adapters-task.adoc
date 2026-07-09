@@ -19,6 +19,7 @@ summary: 每个板载 FC 端口可以单独配置为启动器或目标。某些 
 
 
 
+[[configure-fc-adapters-for-initiator-mode]]
 == 为启动程序模式配置 FC 适配器
 
 启动器模式用于将端口连接到磁带驱动器、磁带库或带有 link:https://docs.netapp.com/us-en/ontap-fli/get-started/learn-about-san-data-migration.html["外部 LUN 导入 (FLI)"^] 的第三方存储。
@@ -72,6 +73,7 @@ node run -node _node_name_ storage enable adapter _adapter_port_
 
 
 
+[[configure-fc-adapters-for-target-mode]]
 == 为目标模式配置 FC 适配器
 
 目标模式用于将端口连接到 FC 启动程序。
@@ -111,6 +113,7 @@ network fcp adapter modify -node _node_name_ -adapter _adapter_port_ -state up
 
 
 
+[[configure-fc-adapters-for-direct-attachment-to-fc-and-fc-nvme-hosts]]
 == 配置 FC 适配器以直接连接到 FC 和 FC-NVMe 主机
 
 从 ONTAP 9.19.1 开始，无需 FC 交换机即可在 FC 和 FC-NVMe 主机与 ONTAP 存储之间建立连接。主机可以直接连接到 AFF、ASA、ASA r2 和 FAS 系统上的 FC 适配器端口。在简单性至关重要的远程站点和混合环境中，直接连接功能尤其有价值。您必须先使 FC 端口脱机并修改其拓扑，然后才能将其直接连接到主机。
@@ -219,6 +222,7 @@ network fcp interface show
 
 
 
+[[configure-fc-adapter-speed]]
 == 配置FC适配器速度
 
 您应将适配器目标端口速度配置为与其所连接设备的速度匹配、而不是使用自动协调。在接管 / 交还或其他中断后，设置为自动协商的端口可能需要较长时间才能重新连接。

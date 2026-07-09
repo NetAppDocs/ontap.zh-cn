@@ -38,6 +38,7 @@ ARP 使用以下前缀名称之一创建快照：
 
 
 
+[[choose-a-recovery-method]]
 == 选择一种恢复方法
 
 根据数据损坏的程度和您的操作要求，选择这些恢复方法之一或组合。
@@ -57,6 +58,7 @@ ARP 使用以下前缀名称之一创建快照：
 
 
 
+[[recovery-constraints-and-considerations]]
 == 恢复限制和注意事项
 
 * 对于 ONTAP 9.15.1 及更早版本，释放 ARP 快照锁定会立即删除 ARP 快照。仅当您不打算从 ARP 快照还原时，才释放锁定。
@@ -72,6 +74,8 @@ ARP 使用以下前缀名称之一创建快照：
 
 
 
+[[restore-after-system-attack]]
+[[restore-after-a-system-attack]]
 == 在系统受到攻击后恢复
 
 对于卷快照恢复，根据快照源和情况选择以下流程之一：
@@ -82,6 +86,8 @@ ARP 使用以下前缀名称之一创建快照：
 
 
 
+[[restore-from-arp-snapshot]]
+[[restore-from-the-most-recent-arp-snapshot]]
 === 从最新的 ARP 快照还原
 
 当您可以放心地从最新的 ARP 快照中恢复时，请选择此流程，这是可用于恢复的最新快照。
@@ -123,6 +129,8 @@ volume snapshot restore -vserver <svm> -volume <volume> -snapshot <snapshot>
 ====
 
 
+[[restore-from-earlier-snapshot]]
+[[restore-from-an-earlier-snapshot]]
 === 从早期快照还原
 
 当您对最新快照缺乏信心并希望从早期快照还原时，请选择此流程。在从早期快照还原之前，请释放对最新 ARP 快照的锁定。
@@ -212,6 +220,8 @@ cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.20
 ====
 
 
+[[restore-without-attack]]
+[[restore-when-a-system-attack-is-not-identified]]
 == 未识别出系统攻击时还原
 
 当没有发现攻击时，首先从最近的 ARP 快照还原，然后从您选择的早期快照还原。

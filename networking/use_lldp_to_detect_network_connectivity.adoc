@@ -60,6 +60,7 @@ NOTE: LLDP 规范定义了通过 SNMP MIB 访问收集的信息。但是， ONTA
 
 
 
+[[enable-or-disable-lldp]]
 == 启用或禁用LDP
 
 要发现公告并将其发送到符合LDP的相邻设备、必须在集群的每个节点上启用LDP。从 ONTAP 9.7 开始，默认情况下会在节点的所有端口上启用 LLDP 。
@@ -123,6 +124,7 @@ options lldp.enable {on|off}
 
 
 
+[[view-lldp-neighbor-information]]
 == 查看LDP邻居信息
 
 您可以查看有关连接到集群节点的每个端口的相邻设备的信息，前提是该端口连接到 LLDP 兼容的设备。您可以使用 network device-discovery show 命令查看邻居信息。
@@ -152,6 +154,7 @@ cluster-1_01/lldp
 
 
 
+[[adjust-the-interval-for-transmitting-lldp-advertisements]]
 == 调整传输 LLDP 公告的间隔
 
 将定期向lld邻居发送lld公告。您可以根据网络流量和网络拓扑的变化增加或减少发送LLDP公告的间隔。
@@ -192,6 +195,7 @@ options lldp.xmit.interval <interval>
 
 
 
+[[adjust-the-time-to-live-value-for-lldp-advertisements]]
 == 调整 LLDP 公告的生存时间值
 
 生存时间（ TTL ）是 LLDP 公告存储在相邻 LLDP 兼容设备的缓存中的时间段。TTL 会在每个 LLDP 数据包中公布，并在节点收到 LLDP 数据包时进行更新。可以在传出 LLDP 帧中修改 TTL 。
@@ -236,6 +240,7 @@ options lldp.xmit.hold <hold_value>
 
 
 
+[[view-or-clear-lldp-statistics]]
 == 查看或清除LLDP统计信息
 
 您可以查看每个节点上集群和非集群端口的LLDP统计信息、以检测潜在的网络连接问题。LLDP统计信息是自上次清除以来累积的。
@@ -270,6 +275,7 @@ options lldp.xmit.hold <hold_value>
 |===
 
 
+[[show-and-clear-statistics-example]]
 === 显示并清除统计信息示例
 
 以下命令显示清除前的LLDP统计信息。输出将显示自上次清除统计信息以来已发送和接收的数据包总数。

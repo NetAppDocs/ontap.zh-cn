@@ -15,6 +15,7 @@ summary: SnapMirror 统一复制允许您在同一目标卷上配置灾难恢复
 
 
 
+[[how-unified-data-protection-relationships-are-initialized]]
 == 如何初始化统一数据保护关系
 
 与 SnapMirror 一样，统一数据保护会在您首次调用时执行基线传输。此关系的 SnapMirror 策略用于定义基线内容以及任何更新。
@@ -23,6 +24,7 @@ summary: SnapMirror 统一复制允许您在同一目标卷上配置灾难恢复
 
 
 
+[[how-unified-data-protection-relationships-are-updated]]
 == 如何更新统一数据保护关系
 
 在策略下的每次更新时 `MirrorAndVault`、SnapMirror都会为源卷创建一个快照、并传输该快照以及自上次更新以来创建的任何快照、前提是它们的标签与快照策略规则中定义的标签匹配。在策略命令的 `MirrorAndVault`以下输出中 `snapmirror policy show`、请注意以下几点：
@@ -57,6 +59,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAndVault -instance
 ----
 
 
+[[unified7year-policy]]
 == Unified7year 策略
 
 预配置 `Unified7year`策略的工作方式与完全相同 `MirrorAndVault`，只是第四条规则传输每月快照并将其保留七年。
@@ -73,6 +76,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAndVault -instance
 ----
 
 
+[[protect-against-possible-data-corruption]]
 == 防止可能的数据损坏
 
 统一复制会将基线传输的内容限制为初始化时由SnapMirror创建的快照。每次更新时、SnapMirror都会为源创建另一个快照、并传输该快照以及标签与快照策略规则中定义的标签匹配的任何新快照。
@@ -81,6 +85,7 @@ cluster_dst::> snapmirror policy show -policy MirrorAndVault -instance
 
 
 
+[[when-to-use-unified-data-replication]]
 == 何时使用统一数据复制
 
 您需要权衡维护完整镜像的优势与统一复制在减少二级存储数量，限制基线传输数量以及减少网络流量方面的优势。

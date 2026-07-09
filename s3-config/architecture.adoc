@@ -28,10 +28,12 @@ image:s3-svm-layout.png["S3 SVM存储分段访问"]
 ====
 
 
+[[bucket-limits]]
 == 存储分段限制
 
 
 
+[[minimum-capacity]]
 === 最低容量
 
 最小桶容量由ONTAP平台决定。
@@ -43,18 +45,21 @@ image:s3-svm-layout.png["S3 SVM存储分段访问"]
 
 
 
+[[maximum-size]]
 === 最小大小
 
 最大桶容量限制为最大FlexGroup尺寸 60PB。
 
 
 
+[[maximum-number-of-buckets]]
 === 最大桶数
 
 每个FlexGroup卷最多可容纳 1000 个桶，或者每个集群最多可容纳 12,000 个桶（使用 12 个FlexGroup卷）。
 
 
 
+[[automatic-flexgroup-sizing-with-ontap-9-14-1-and-later]]
 == 使用ONTAP 9.14.1及更高版本自动调整FlexGroup大小
 
 从ONTAP 9.14.1开始、默认FlexGroup大小基于其包含的分段大小。添加或删除存储分段时、FlexGroup卷将自动增长或缩减。
@@ -67,6 +72,7 @@ image:s3-svm-layout.png["S3 SVM存储分段访问"]
 
 
 
+[[fixed-default-flexgroup-sizes-in-ontap-9-13-1-and-earlier]]
 == 修复了ONTAP 9.131及更早版本中的默认FlexGroup大小
 
 要为存储分段扩展提供容量、FlexGroup卷上所有存储分段的已用总容量应小于最大FlexGroup卷容量的33%(具体取决于集群上的可用存储聚合)。如果无法满足此要求、则会在自动创建的新FlexGroup卷上配置要创建的新存储分段。

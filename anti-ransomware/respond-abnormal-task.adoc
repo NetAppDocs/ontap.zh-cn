@@ -69,6 +69,7 @@ ARP 必须主动保护卷，而不是处于学习或评估模式。
 
 
 
+[[review-abnormal-activity-details]]
 == 查看异常活动详细信息
 
 您可以使用 System Manager 或 ONTAP CLI 在选择响应流程之前查看 ARP 警告详细信息。
@@ -140,6 +141,7 @@ security anti-ransomware volume entropy-stat show-encryption-percentage-histogra
 ====
 
 
+[[understand-snapshot-behavior-and-approvals-when-you-clear-a-suspected-event]]
 == 清除可疑事件时了解快照行为和审批
 
 * 对于 `volume snapshot restore` ONTAP 9.16.1 及更高版本，首先清除可疑事件，然后执行还原。清除可疑文件后，将根据您对活动的分类方式保留 ARP 快照：如果将活动标记为潜在的勒索软件攻击，则保留 7 天（默认情况下）；如果将其标记为误报，则保留 24 小时。首先清除不会删除您的还原目标。此外，清除疑点选项在卷还原后变得不可用，因此您必须在还原前清除。
@@ -150,6 +152,7 @@ security anti-ransomware volume entropy-stat show-encryption-percentage-histogra
 
 
 
+[[classify-as-false-positive-and-resume-monitoring]]
 == 归类为误报并恢复监控
 
 当工作负载的已识别文件类型或熵峰值为_预期_时，请使用此流。
@@ -205,6 +208,7 @@ security anti-ransomware volume show -clear-suspect-status -volume <vol_name> -v
 ====
 
 
+[[classify-as-potential-ransomware-attack-and-recover-data]]
 == 分类为潜在勒索软件攻击并恢复数据
 
 当工作负载的已识别文件类型或熵峰值为_意外_时，使用此流。
@@ -409,6 +413,7 @@ security anti-ransomware volume show -clear-suspect-status -volume <vol_name> -v
 ====
 
 
+[[multi-admin-verification-options]]
 == 多管理员验证选项
 
 如果使用多管理员验证（MAV），并且预期 `clear-suspect`操作需要额外的批准，则每个 MAV 组审批人必须：
