@@ -84,7 +84,7 @@ Vserver Name    Mapping ID      Dsid            LIF IP
 DEMO            16              2488            10.193.67.211
 ----
 
-NOTE: 这些命令中没有卷名称。相反，将使用与这些卷关联的数字 ID：主集 ID (MSID) 和数据集 ID (DSID)。要查找与映射相关的体积，您可以使用 `volume show -dsid [dsid_numeric]` 或者 `volume show -msid [msid_numeric]` 具备ONTAP CLI 的高级权限。
+NOTE: 在这些命令中，卷名不存在。而是使用与这些卷关联的数字 ID：MSID 和 DSID。要查找与映射关联的卷，您可以在 ONTAP CLI 的高级权限中使用 `volume show -dsid [dsid_numeric]`或 `volume show -msid [msid_numeric]`。
 
 当客户端尝试读取或写入位于远离元数据服务器连接的节点上的文件时，pNFS 将协商适当的访问路径，以确保这些操作的数据本地性，并且客户端将重定向到已发布的 pNFS 设备，而不是尝试穿越集群网络来访问该文件。这有助于降低CPU占用率和网络延迟。
 
