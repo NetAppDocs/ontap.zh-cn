@@ -2,7 +2,7 @@
 permalink: system-admin/accounts-access-sp-concept.html 
 sidebar: sidebar 
 keywords: account, access, sp, cluster, user, cli, node 
-summary: 尝试访问 SP 时，系统会提示您提供凭据。使用 service-processor 应用程序类型创建的集群用户帐户可以访问集群中任何节点上的 SP CLI 。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。从ONTAP 9.1.1开始、SP用户帐户必须具有管理员角色。 
+summary: 尝试访问 SP 时，系统会提示您输入凭据。使用服务处理器应用程序类型创建的集群用户帐户可以访问集群任何节点上的 SP CLI。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。从 ONTAP 9.15.1 开始，SP 用户帐户可以选择使用公钥作为第二种身份验证方法的双因素身份验证。从 ONTAP 9.9.1 开始，SP 用户帐户必须具有 admin 角色。 
 ---
 = 使用集群用户帐户访问ONTAP服务处理器
 :allow-uri-read: 
@@ -11,9 +11,9 @@ summary: 尝试访问 SP 时，系统会提示您提供凭据。使用 service-p
 
 
 [role="lead"]
-尝试访问 SP 时，系统会提示您提供凭据。使用创建的集群用户帐户 `service-processor` 应用程序类型可以在集群的任何节点上访问SP命令行界面。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。从ONTAP 9.9.1开始、SP用户帐户必须具有 `admin` 角色。
+当您尝试访问 SP 时，系统会提示您输入凭据。使用 `service-processor`应用程序类型创建的集群用户帐户可以访问集群任意节点上的 SP CLI。SP 用户帐户通过 ONTAP 进行管理，并通过密码进行身份验证。从 ONTAP 9.15.1 开始，SP 用户帐户可以选择使用公钥作为第二种身份验证方法的双因素身份验证。从 ONTAP 9.9.1 开始，SP 用户帐户必须具有 `admin`角色。
 
-用于访问 SP 的用户帐户通过 ONTAP 而不是 SP 命令行界面进行管理。如果使用创建了集群用户帐户、则该帐户可以访问SP `-application` 的参数 `security login create` 命令设置为 `service-processor` 和 `-authmethod` 参数设置为 `password`。SP 仅支持密码身份验证。
+用于访问 SP 的用户帐户是从 ONTAP 而不是 SP CLI 进行管理的。如果集群用户帐户在创建时，将  `security login create` 命令的  `-application` 参数设置为  `service-processor`，并将  `-authmethod` 参数设置为  `password`，则该帐户可以访问 SP。从 ONTAP 9.15.1 开始，您可以通过使用  `security login modify` 命令将第二种身份验证方法设置为  `publickey`，然后使用  `security login publickey create` 命令关联公钥，从而选择为 SP 帐户配置双重身份验证。
 
 您必须指定 `-role` 参数。
 
@@ -32,4 +32,4 @@ ONTAP 会阻止您使用为系统预留的名称（例如 "`root` " 和 "`naroot
 
 您可以使用显示当前SP用户帐户 `-application service-processor` 的参数 `security login show` 命令：
 
-有关的详细信息 `security login show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-login-show.html["ONTAP 命令参考"^]。
+详细了解 ONTAP 命令参考中的 link:https://docs.netapp.com/us-en/ontap-cli/security-login-modify.html[`security login modify`^]、link:https://docs.netapp.com/us-en/ontap-cli/security-login-publickey-create.html[`security login publickey create`^] 和 link:https://docs.netapp.com/us-en/ontap-cli/security-login-show.html[`security login show`^]。

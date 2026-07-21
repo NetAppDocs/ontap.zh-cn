@@ -113,7 +113,7 @@ image:fanout-diagram.png["扇出配置示意图"]
 
 SnapMirror 主动同步支持 SAN，支持xref:../data-protection/supported-deployment-config-concept.html[扇出配置]与 `MirrorAllSnapshots`策略，从 ONTAP 9.11.1 开始，还支持 `MirrorAndVault`策略。扇出配置在使用 `XDPDefault`策略的 SnapMirror 主动同步中不受支持。
 
-从 ONTAP 9.15.1 开始，SnapMirror 主动同步支持在故障转移事件后在扇出支路中自动重新配置。如果从主站点到辅助站点的故障转移成功，则第三站点将自动重新配置，以将辅助站点视为源站点。异步扇出分支可以是 SAN 配置中的一致性组关系，也可以是独立的卷关系。重新配置将适用于任一情况。重新配置由计划内或计划外故障转移触发。故障回复到主站点时也会发生重新配置。
+从 ONTAP 9.15.1 开始，SnapMirror 主动同步支持在故障转移事件后在扇出支路中自动重新配置。如果从主站点到辅助站点的故障转移成功，则在异步扇出支路的下一次计划更新期间启动扇出关系的重新配置。它不会在 SnapMirror 主动同步故障转移后立即触发。异步扇出支路可以是 SAN 配置中的一致性组关系，也可以是独立的卷关系。重新配置将适用于任一情况。重新配置由计划内或计划外故障转移触发。故障回复到主站点时也会发生重新配置。
 
 有关在早期版本的ONTAP中管理扇出配置的信息、请参阅 xref:recover-unplanned-failover-task.adoc[在扇出配置中恢复保护]。
 
