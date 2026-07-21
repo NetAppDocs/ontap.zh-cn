@@ -50,21 +50,13 @@ NOTE: ONTAP Mediator 1.8 及更早版本与 Red Hat Enterprise Linux (RHEL) FIPS
 === 适用于 ONTAP Mediator 的 HTTPS 和 iSCSI 安装选项
 
 * 在 ONTAP Mediator 中，SCST 包用于为 MetroCluster IP 配置中的通信提供 iSCSI。SCST 包是在安装过程中编译的内核模块。从 ONTAP Mediator 1.12 开始，您可以配置使用 HTTPS 而不是 iSCSI 监控 MetroCluster IP 配置的 ONTAP Mediator。
-
-
-[CAUTION]
-====
-* 当在 MetroCluster IP 配置中使用 HTTPS 协议配置 ONTAP Mediator 时，单个 ONTAP Mediator 实例只能监控一个 MetroCluster IP 配置。不支持同时监控多个 MetroCluster IP 配置。
-* 如果您需要使用 HTTPS 配置 ONTAP Mediator 来监控多个 MetroCluster IP 配置，则必须为每个 MetroCluster IP 配置配置单独的 ONTAP Mediator 实例。在选择使用 HTTPS 为 MetroCluster IP 配置 ONTAP Mediator 之前，必须仔细评估 MetroCluster IP 环境的要求。
-
-
-====
 * 安装或升级到 ONTAP Mediator 1.12 或更高版本时，您可以选择安装支持 iSCSI 和 HTTPS 的 ONTAP Mediator，或仅支持 HTTPS。如果您选择安装仅支持 HTTPS 的 ONTAP Mediator，则不会安装 SCST 包。
 * 如果您从安装了 SCST 的 ONTAP Mediator 1.11 或更早版本升级，并且在升级期间选择了 HTTPS only 选项，则会卸载 SCST 包，并且新的 ONTAP Mediator 版本不包含 SCST 包。
+* 如果您计划使用 ONTAP Mediator 来监控多个 MetroCluster IP 配置，则支持取决于您的 Mediator 类型、ONTAP 版本和操作系统。有关详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-metrocluster/install-ip/concept_mediator_requirements.html#mediator-multiple-mccip["使用 ONTAP Mediator 监控多个 MetroCluster IP 配置"^]。
 * 仅对以下用例支持安装支持 HTTPS 的 ONTAP Mediator：
 +
 ** 您计划仅使用 ONTAP Mediator 来监控您的 SnapMirror 活动同步集群。
-** 您计划使用 HTTPS 配置 ONTAP Mediator，以监控每个 ONTAP Mediator 实例的单个 MetroCluster IP 配置。
+** 您计划使用 HTTPS 配置 ONTAP Mediator 以监视一个或多个 MetroCluster IP 配置。
 
 
 * 在以下情况下，必须安装支持 iSCSI 和 HTTPS 的 ONTAP Mediator：
@@ -196,6 +188,21 @@ NOTE: 对于使用 HTTPS 进行通信的 SnapMirror 活动同步或 MetroCluster
 
 
 | ONTAP 调解器版本 | 支持的 Linux 版本 
+
+
+ a| 
+1.12.1
+ a| 
+* Red Hat Enterprise Linux
++
+** 兼容：10.1 和 9.7 ^1^
+** 推荐：10.2、10.0、9.8、9.6、9.4 和 8.10
+
+
+* Rocky Linux 10.2、9.8 和 8.10
+* Oracle Linux 10.1 和 9.7
+
+
 
 
  a| 

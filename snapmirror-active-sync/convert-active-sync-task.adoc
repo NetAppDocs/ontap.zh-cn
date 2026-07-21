@@ -1,10 +1,10 @@
 ---
 sidebar: sidebar 
 permalink: snapmirror-active-sync/convert-active-sync-task.html 
-keywords: SM-BC, SMBC, convert, SnapMirror synchronous, existing, snapmirror active sync 
+keywords: SM-BC, SMBC, convert, SnapMirror synchronous, SAN, existing, snapmirror active sync 
 summary: 将SnapMirror关系转换为SnapMirror活动同步。 
 ---
-= 将现有的ONTAP SnapMirror关系转换为SnapMirror主动同步关系
+= 将现有 ONTAP SnapMirror SAN 关系转换为适用于 SAN 关系的 SnapMirror 活动同步
 :hardbreaks:
 :allow-uri-read: 
 :nofooter: 
@@ -14,7 +14,9 @@ summary: 将SnapMirror关系转换为SnapMirror活动同步。
 
 
 [role="lead"]
-如果您已配置SnapMirror保护、则可以将此关系转换为SnapMirror活动同步。从ONTAP 9.15.1开始、您可以转换此关系以使用对称主动/主动保护。
+如果您已配置 SnapMirror 保护，则可以将 SAN 关系转换为适用于 SAN 的 SnapMirror 活动同步。从 ONTAP 9.15.1 开始，您可以将关系转换为使用对称主动/主动保护。
+
+有关将 SVM-DR 关系转换为适用于 NAS 关系的 SnapMirror 活动同步的信息，请参见 link:protect-nas-task.html#convert-an-svm-dr-relationship-to-a-snapmirror-active-sync-relationship["将 SVM DR 关系转换为 SnapMirror 活动同步关系"]。
 
 
 
@@ -35,7 +37,6 @@ summary: 将SnapMirror关系转换为SnapMirror活动同步。
 .开始之前
 * 主集群和辅助集群之间必须存在零 RPO SnapMirror同步关系。
 * 必须取消映射目标卷上的所有LUN、然后才能创建零RTO SnapMirror关系。
-* SnapMirror主动同步仅支持SAN协议(而不支持NFS/CCIFS)。确保未挂载一致性组的任何成分卷以进行 NAS 访问。
 * link:mediator-install-task.html["ONTAP 调解器"] 必须为SnapMirror主动同步进行配置。
 
 

@@ -1,0 +1,311 @@
+---
+permalink: nfs-admin/enable-nfs-over-tls-task.html 
+sidebar: sidebar 
+keywords: nfs over tls, encryption, nfs traffic, mutual tls 
+summary: '从 ONTAP 9.19.1 开始，您可以使用 TLS 1.3 加密已启用 NFS 的 SVM 的传输中 NFS 流量。NFS over TLS 支持每 LIF TLS 配置，并包括可选的双向 TLS (mTLS) 主机身份验证和导出策略控制，这些控制可以拒绝匹配客户端的非 TLS TCP 访问。' 
+---
+= 启用 NFS over TLS 以加密传输中的 NFS 流量
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.19.1 开始，您可以使用 TLS 1.3 加密已启用 NFS 的 SVM 的传输中 NFS 流量。NFS over TLS 支持每 LIF TLS 配置，并包括可选的双向 TLS (mTLS) 主机身份验证和导出策略控制，这些控制可以拒绝匹配客户端的非 TLS TCP 访问。
+
+NFS over TLS 在 ONTAP 9.19.1 及更高版本中受支持，适用于本地 ONTAP 平台。它不适用于云平台。NFS over TLS 仅支持 TCP。ONTAP 9.19.1 不支持基于 RDMA 的 TLS。
+
+.关于此任务
+NFS over TLS 可与现有的 ONTAP NFS 基础架构配合使用，因此应用程序继续正常使用 NFS，而 TLS 则对传输中的 NFS 流量进行加密。管理员使用 X.509 证书对存储系统进行身份验证并建立加密会话。您可以在单个数据 LIF 上启用 mTLS，以选择性地要求客户端证书验证。NFS over TLS 在 ONTAP 9.19.1 中最多支持 10,000 个合格的 NFS over TLS 连接。如果您需要更高的连接上限，请联系 NetApp 支持寻求帮助。
+
+.开始之前
+* 必须为每个启用 TLS 的 NFS 数据 LIF 提供 X.509 服务器证书。证书可以在 ONTAP 中生成、从外部 CA 安装，也可以从与所需 LIF 身份检查匹配的现有已安装证书中选择。
++
+[NOTE]
+====
+使用者备用名称 (SAN) 必须将 `ipaddr`设置为 LIF IP 地址，或将 `dns`名称设置为 LIF FQDN。
+
+====
+* 客户端必须支持 RPC-with-TLS over TCP，必须配置为在挂载时请求 TLS，并且必须信任对 NFS 服务器证书进行签名的证书颁发机构。此处未记录客户端配置步骤，因为这些步骤因客户端而异。
+
+
+
+
+[[configure-nfs-over-tls-on-your-ontap-system-to-encrypt-in-transit-data]]
+== 在 ONTAP 系统上配置 NFS over TLS 以加密传输中的数据
+
+您可以逐步在 NFS SVM 数据 LIF 上配置 NFS over TLS，也可以仅在需要 TLS 访问的位置进行配置。
+
+默认情况下，启用 TLS 的 LIF 还可以接受不请求 TLS 的客户端通过 TCP 发送的非 TLS NFS，除非您使用 allow-nfs-tls-only 配置导出策略规则强制执行。当需要拒绝匹配客户端的非 TLS 访问时，请使用此设置。
+
+
+
+[[step-1-prepare-to-enable-nfs-over-tls]]
+== 步骤 1：准备启用 NFS over TLS
+
+通过验证以下要求是否满足，为基于 TLS 的 NFS 准备您的 ONTAP 系统。
+
+.步骤
+. 确认已在 SVM 上配置 NFS：
++
+[source, cli]
+----
+vserver nfs show -vserver <vserver_name>
+----
+. 确认 NFS 数据 LIF 存在：
++
+[source, cli]
+----
+network interface show -role data -instance -data-protocol nfs -vserver <vserver_name>
+----
+
+
+
+
+[[step-2-verify-or-install-a-valid-x-509-server-certificate-for-each-tls-enabled-nfs-data-lif]]
+== 步骤 2：为每个启用 TLS 的 NFS 数据 LIF 验证或安装有效的 X.509 服务器证书
+
+请确保为每个启用 TLS 的 NFS 数据 LIF 提供有效的 X.509 服务器证书。如果您没有有效的证书，请生成并安装证书。
+
+.步骤
+. 查看已安装的服务器证书：
++
+[source, cli]
+----
+security certificate show -type server -vserver <vserver_name>
+----
++
+验证证书是否与启用 TLS 的 LIF 关联：
+
++
+[source, cli]
+----
+vserver nfs tls interface show -fields certificate-name -vserver <vserver_name> -lif <lif_name>
+----
++
+如果您没有有效的证书，请按照说明生成并安装证书： link:https://docs.netapp.com/us-en/ontap/authentication/install-server-certificate-cluster-svm-ssl-server-task.html["安装 CA 签名的服务器证书"]。
+
+. 确认 NFS 客户端支持 TCP 上的 RPC-with-TLS，并信任签署服务器证书的证书颁发机构。
+
+
+
+
+[[step-3-enable-nfs-over-tls]]
+== 步骤 3：启用 NFS over TLS
+
+请使用 ONTAP System Manager 或 ONTAP CLI 在 NFS SVM 数据 LIF 上启用 NFS over TLS。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+使用 ONTAP System Manager 在为 NFS 流量提供服务的 SVM 的一个或多个 NFS 数据 LIF 上配置 TLS。
+
+.步骤
+. 在 System Manager 中，选择 *Cluster > Storage VMs*，选择启用 NFS 的存储 VM，选择 *Settings*，然后选择 NFS 卡上的 NFS over TLS settings 选项。
+. 选择一个或多个 TLS 状态为"已禁用"的数据 LIF，然后选择 *Enable TLS*。选择已安装的证书、创建新证书或提供外部 CA 签名的证书和私钥。
+. 编辑或禁用 TLS。对于 TLS 状态为已启用的接口，请选择 *Edit TLS* 以查看或更改证书和主机身份验证设置，或选择 *Disable TLS* 以关闭一个或多个接口的 TLS。
+. 可选：您还可以选择*强制主机身份验证 (mTLS)*。*跳过使用者可选名称*验证选项在启用工作流中可用，默认情况下已清除。仅当证书使用者可选名称与接口不匹配时，才使用此选项。
+. 可选：在导出策略规则中强制执行 TLS。在 NFSv3 和 NFSv4 的 NFS 导出配置工作流中，当您希望拒绝匹配客户端的非 TLS TCP 访问时，请选择该选项以强制执行 NFS 的 TLS。
+
+
+--
+.命令行界面
+--
+请使用 ONTAP CLI 在为 NFS 流量提供服务的 SVM 的一个或多个 NFS 数据 LIF 上配置 TLS。
+
+.步骤
+. 验证启用 TLS 的 LIF。您可以使用 SVM 或 LIF 作为密钥来筛选条目。
++
+[source, cli]
+----
+vserver nfs tls interface show -status enabled
+----
+. 在数据 LIF 上启用 TLS 并关联证书。
++
+[source, cli]
+----
+ vserver nfs tls interface enable -vserver <vserver_name> -lif <lif_name> -certificate-name <certificate_name>
+----
++
+此示例演示如何在数据 LIF 上启用 TLS 并关联证书：
+
++
+[listing]
+----
+vserver nfs tls interface enable -vserver vs1 -lif data1 -certificate-name tls_server_cert
+----
+. 可选：为 NFS over TLS 启用双向 TLS (mTLS) 主机身份验证。默认情况下，NFS over TLS 使用仅服务器主机身份验证。为了实现更高级别的安全性，您可以强制执行双向 TLS (mTLS) 主机身份验证。您可以按 LIF 配置双向主机身份验证实施。默认情况下，此功能处于禁用状态。确保 NFS 客户端已安装有效的签名证书，然后使用以下两种方法之一在 ONTAP 集群上安装客户端证书：
++
+.. 当要显式信任特定客户端证书时，请直接安装客户端证书：
++
+[source, cli]
+----
+security certificate install -type client
+----
+.. 当要信任由特定 CA 签名的所有客户端证书时，请安装客户端证书签名机构 (CA)：
++
+[source, cli]
+----
+security certificate install -type client-ca
+----
++
+*** 在所需 LIF 上的 TLS 握手期间强制执行客户端证书验证：
++
+[source, cli]
+----
+vserver nfs tls interface modify
+----
++
+此示例演示如何在所需 LIF 上的 TLS 握手期间强制执行客户端证书验证：
+
++
+[listing]
+----
+vserver nfs tls interface modify -vserver <vserver_name> -lif <lif_name> -enforce-host-auth true
+----
+
+
+
+
+. 可选：对匹配的客户端强制执行仅 TLS 访问。
++
+** 拒绝匹配客户端的非 TLS TCP 访问。
++
+[source, cli]
+----
+allow-nfs-tls-only
+----
+** 更新规则后，请验证设置：
++
+[source, cli]
+----
+vserver export-policy rule show -fields allow-nfs-tls-only,clientmatch
+----
++
+这仅适用于 TCP 连接。基于 RDMA 的连接不强制执行此限制。
+
++
+此示例显示了如何对匹配的客户端强制执行仅 TLS 访问：
+
++
+[listing]
+----
+vserver export-policy rule modify -vserver vs1 -policyname default -ruleindex 10 -allow-nfs-tls-only true
+vserver export-policy rule show -vserver vs1 -policyname default -fields clientmatch,allow-nfs-tls-only
+----
+
+
+
+
+--
+====
+
+
+[[step-4-verify-the-configuration]]
+== 步骤 4：验证配置
+
+配置 NFS over TLS 后，请验证设置。
+
+.步骤
+. 验证启用 TLS 的接口：
++
+[source, cli]
+----
+vserver nfs tls interface show -status enabled
+----
+. （可选）验证已在 LIF 上启用双向主机身份验证：
++
+[source, cli]
+----
+vserver nfs tls interface show -vserver <vserver_name> -lif <lif_name> -instance
+----
+. （可选）验证导出策略 TLS 强制执行：
++
+[source, cli]
+----
+vserver export-policy rule show -fields allow-nfs-tls-only,clientmatch
+----
+
+
+使用以下示例解释验证命令。
+
+示例：vserver nfs tls interface show
+
+[listing]
+----
+cluster1::> vserver nfs tls interface show
+
+         Logical                                                   Enforce Host
+Vserver  Interface  Address      TLS Status  TLS Certificate Name  Authentication
+-------- ---------- ------------ ---------- --------------------- --------------
+vs1      data1      192.0.2.10   enabled     tls_server_cert       false
+vs1      data2      192.0.2.11   disabled    -                     false
+
+2 entries were displayed.
+----
+示例：vserver nfs tls interface show -instance
+
+[listing]
+----
+cluster1::> vserver nfs tls interface show -vserver vs1 -lif data1 -instance
+Vserver: vs1
+Logical Interface: data1
+IP Address: 192.0.2.10
+TLS Status: enabled
+TLS Certificate Name: tls_server_cert
+TLS Certificate UUID: 11111111-2222-3333-4444-555555555555
+Enforce Host Authentication : true
+----
+示例：vserver export-policy rule show -fields clientmatch,allow-nfs-tls-only
+
+[listing]
+----
+
+cluster1::> vserver export-policy rule show -vserver vs1 -policyname default -fields clientmatch,allow-nfs-tls-only
+
+vserver  policyname  ruleindex  clientmatch     allow-nfs-tls-only
+-------  ----------  ---------  --------------  ------------------
+vs1      default     1          0.0.0.0/0       false
+vs1      default     10         192.0.2.0/24    true
+
+2 entries were displayed.
+----
+使用 TLS 和 mTLS 客户端行为矩阵了解在 SVM 上配置 TLS 和 mTLS 时客户端的行为：
+
+[cols="4*"]
+|===
+| 客户端行为 | 仅强制 TLS | 已强制执行 mTLS | 预期结果 
+
+
+| 客户端请求 TLS | 否 | 否 | 通过 TLS 挂载成功 
+
+
+| 客户端未请求 TLS | 否 | 否 | 通过非 TLS TCP 挂载成功 
+
+
+| 客户端未请求 TLS | 是的。 | 否 | 访问被导出策略拒绝 
+
+
+| 客户端请求 TLS，但未提供有效的客户端证书 | 否或是 | 是的。 | TLS协商失败 
+
+
+| 客户端请求 TLS 但不信任服务器证书 | 否或是 | 否或是 | 挂载失败，因为客户端上的证书验证失败 
+|===
+
+
+[[whats-next]]
+== 下一步行动
+
+* 验证客户端行为：确保 Linux 客户端请求 TLS 并信任 ONTAP 使用的证书颁发机构。
+* 查看 EMS 和统计信息：使用 EMS 消息和 TLS 相关统计信息对象，例如 `nfs_tls`和 `nfs_tls_config_cache`来调查握手或配置问题。
+
+
+
+
+[[related-information]]
+== 相关信息
+
+* link:https://hwu.netapp.com["NetApp Hardware Universe"]
+* link:https://docs.netapp.com/us-en/ontap/authentication/install-server-certificate-cluster-svm-ssl-server-task.html["安装 CA 签名的服务器证书"]
+

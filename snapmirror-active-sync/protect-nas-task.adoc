@@ -1,0 +1,304 @@
+---
+sidebar: sidebar 
+permalink: snapmirror-active-sync/protect-nas-task.html 
+keywords: SM-BC, snapmirror business continuity, svm, remote protection, destination, nfs, smb 
+summary: 在 NAS 配置中配置业务连续性保护涉及选择要保护的 SVM 及其卷并创建目标 SVM。 
+---
+= 使用适用于 NAS 的 ONTAP SnapMirror 活动同步进行保护
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+
+
+[[configure-snapmirror-active-sync-for-nas]]
+== 为 NAS 配置 SnapMirror 活动同步
+
+从 ONTAP 9.19.1 开始，您可以为 NAS 配置配置 SnapMirror 活动同步。
+
+.开始之前
+* SnapMirror active sync 关系中的两个集群都必须运行 ONTAP 9.19.1 或更高版本。
+* 您必须是集群管理员。
+* 您必须已配置 ONTAP Mediator 或 ONTAP Cloud Mediator。
+* 源集群和目标集群必须建立对等关系。
+
+
+.具有 NAS SnapMirror 活动同步的 ONTAP 支持和不支持的功能
+下表描述了适用于 NAS 的 SnapMirror active sync 支持和不支持的 ONTAP 功能。
+
+|===
+| ONTAP 功能 | 由 SnapMirror 主动同步支持 | 追加信息 
+
+
+| 应用程序一致性组 | 否 |  
+
+
+| 审核 | 是的。 | 仅复制 SVM 中的合并日志。 
+
+
+| DP 卷 | 否 |  
+
+
+| FabricPool | 部分 |  `all` 分层策略不允许用于 SnapMirror 活动同步 NAS 卷。 
+
+
+| 文件系统分析 | 部分 | 在辅助 SVM 上，File System Analytics 默认设置为 `Off`，您必须在故障转移后手动将其设置为 `On`。 
+
+
+| FlexCache 卷 | 否 |  
+
+
+| FlexGroup 卷 | 否 |  
+
+
+| Fpolicy和防病毒扫描 | 是的。 |  
+
+
+| 负载共享镜像 | 否 | 在 ONTAP 9.19.1 中，适用于 NAS 的 SnapMirror 活动同步仅支持 AFF 集群中的 2 个节点。 
+
+
+| MetroCluster 配置 | 否 |  
+
+
+| NAS 命令的多管理员验证 | 否 |  
+
+
+| S3 NAS | 否 |  
+
+
+| SnapMirror active sync NAS 保护的 SVM 中的 SAN 卷 | 否 | SnapMirror active sync for NAS 初始化失败（如果托管 LUN 的卷存在于 SVM 中）。 
+
+
+| SnapLock | 否 |  
+
+
+| SnapMirror 到云 | 否 |  
+
+
+| SVM 迁移 | 否 |  
+|===
+.关于此任务
+要为 NAS 启用 SnapMirror 活动同步，请创建目标 SVM。目标 SVM 保持休眠状态，直到发生故障转移。
+
+.步骤
+您可以使用 System Manager 或 ONTAP CLI 为 NAS 配置 SnapMirror 活动同步。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 从源集群中，导航到 Cluster > Storage VMs。
+. 单击要配置的 SVM 名称旁边的 image:icon_kabob.gif["菜单选项图标"]，然后选择 *Protect*。
+. 在 *Protect Storage VM* 窗口中，选择目标集群。
+. 选择 `AutomatedFailOver`作为复制策略。
+. 输入在目标上创建的存储 VM 的名称。
+. 请选择要保护的卷：
++
+.. *保护所有卷* – 默认情况下，所有卷都受到保护
+.. *选择要保护的卷* - 仅选定卷受保护
+.. *选择要排除的卷* - 选定卷将被排除在保护范围之外
+
+
+. 单击 *Initialize relationship*。
+. 单击 * 保存 * 。
+. 在 *Protect Storage VM* 窗口中，验证 *Protection* 列中的 SVM 保护状态。
+
+
+--
+.命令行界面
+--
+. 在目标集群上，创建 dp-destination 类型的 SVM：
++
+`vserver create -vserver <SVM name> -sub-type dp-destination`
+
++
+示例
+
++
+[listing]
+----
+destination::> vserver create -vserver vs_b -sub-type dp-destination
+----
+. 创建与源 SVM 的 SVM 对等关系：
++
+`vserver peer create -vserver <destination SVM> -peer-vserver <souce SVM> -peer-cluster <source cluster> -applications snapmirror`
+
++
+示例
+
++
+[listing]
+----
+destination::> vserver peer create -vserver vs_b -peer-vserver vs_a -peer-cluster SiteA -applications snapmirror
+----
+. 在源 SVM 上，接受对等请求：
++
+`vserver peer accept -vserver <source SVM name> -peer-vserver <destination SVM name>vserver peer accept -vserver <source SVM name> -peer-vserver <destination SVM name>`
+
++
+示例
+
++
+[listing]
+----
+source::> vserver peer accept -vserver vs_a -peer-vserver vs_b
+----
+. 创建 SnapMirror 关系：
++
+`snapmirror create -source-path <source SVM name>: -destination-path <destination SVM name>: -policy AutomatedFailOver`
+
++
+示例
+
++
+[listing]
+----
+destination::> snapmirror create -source-path vs_a: -destination-path vs_b: -policy AutomatedFailOver
+----
+. 验证已创建的关系并检查状态：
++
+'snapmirror show'
+
++
+示例
+
++
+[listing]
+----
+destination::> snapmirror show
+Progress
+	Source            Destination Mirror        Relationship   Total             Last
+	Path        Type  Path        State         Status         Progress  Healthy Updated
+	----------- ---- ------------ -------       -------------- --------- ------- --------
+	vs_a:       XDP  vs_b:        Uninitialized Idle           -         true    -
+
+----
+. 在目标 SVM 上，初始化关系：
++
+`snapmirror initialize -destination-path <SVM name>:`
+
++
+示例
+
++
+[listing]
+----
+destination::> snapmirror initialize -destination-path vs_b:
+----
+. 检查初始化状态：
++
+`snapmirror show`
+
++
+示例
+
++
+[listing]
+----
+	destination::> snapmirror show
+	                                                                             Progress
+	Source            Destination Mirror        Relationship   Total             Last
+	Path        Type  Path        State         Status         Progress  Healthy Updated
+	----------- ---- ------------ -------       -------------- --------- ------- --------
+	vs_a:       XDP  vs_b:        Snapmirrored  InSync         -         true    -
+
+----
+
+
+--
+====
+
+
+[[create-an-unprotected-volume-in-a-snapmirror-active-sync-nas-configuration]]
+== 在 SnapMirror 活动同步 NAS 配置中创建未受保护的卷
+
+如果不需要保护，则可以从 SnapMirror 活动同步中排除卷；例如，在创建用于开发测试的 FlexClone 卷时。
+
+.步骤
+您可以使用 System Manager 或 ONTAP CLI 从适用于 NAS 的 SnapMirror 活动同步中排除克隆卷。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 从源集群中，导航到 *存储 > 卷*。
+. 在卷列表中，单击要克隆的卷名称旁边的 image:icon_kabob.gif["菜单选项图标"]，然后选择*克隆*。
+. 在*克隆卷*窗口中，确保取消选择*在业务连续性保护中包括克隆*。
+. 单击 *Clone*。
+
+
+--
+.命令行界面
+--
+. 从源集群中，将未受保护的卷添加到现有 SnapMirror 活动同步配置：
++
+`volume clone create -vserver <SVM name> -flexclone <clone vol name> -parent-vserver <SVM name> -parent-volume <vol name> -parent-snapshot <snapshot name>`
+`volume add -vserver <SVM name> -volume <volume name> -smas-protection unprotected`
+
+
+
+--
+====
+
+
+[[use-the-ontap-cli-to-exclude-a-volume-from-a-snapmirror-active-sync-nas-configuration]]
+== 使用 ONTAP CLI 从 SnapMirror 活动同步 NAS 配置中排除卷
+
+如果不再需要保护，或者要删除卷，则可以从 SnapMirror 活动同步 NAS 配置中排除该卷。
+
+
+NOTE: 将当前受保护的卷标记为未受保护会对 SnapMirror 活动同步关系启动收缩操作。收缩操作会删除源和目标上该卷的 SnapMirror 条目。
+
+
+NOTE: 将卷标记为未受保护不会自动删除主关系或辅助关系上的卷。如果要删除该卷，可以在主 SVM 和辅助 SVM 上手动将其删除。
+
+.步骤
+. 从 SnapMirror 活动 NAS 保护中删除卷：
++
+`volume modify -vserver <SVM name> -volume <volume name> -smas-protection unprotected`
+
+
+
+
+
+[[convert-an-svm-dr-relationship-to-a-snapmirror-active-sync-relationship]]
+== 将 SVM DR 关系转换为 SnapMirror 活动同步关系
+
+在 ONTAP 9.19.1 中，您不能直接将 SVM DR 关系转换为适用于 NAS 的 SnapMirror 活动同步关系。您必须删除 SVM DR 关系，创建新的目标 SVM，建立新的 SnapMirror 活动同步关系，然后初始化该关系。
+
+
+NOTE: 当前不支持 `snapmirror resync`命令。
+
+. 在目标集群上，删除 SnapMirror 关系：
++
+`snapmirror delete -destination-path`
+
+. 在主集群上，释放关系信息：
++
+`snapmirror release -relationship-info-only true`
+
+. 在目标集群上，使用 dp-destination 子类型创建 SVM：
++
+`vserver create -vserver <SVM name> -sub-type dp-destination`
+
+. 在目标集群上，使用  `AutomatedFailover` 策略创建 SnapMirror 关系：
++
+`snapmirror create -source-path <source SVM name> -destination-path <destination SVM name> -policy AutomatedFailOver`
+
+. 在目标集群上，初始化关系：
++
+`snapmirror initialize -destination-path <SVM name>`
+
+
+
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-create.html["SnapMirror 创建"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["SnapMirror 初始化"^]
+* link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-show.html["snapmirror show"^]
+

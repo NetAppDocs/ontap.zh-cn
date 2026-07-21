@@ -1,0 +1,50 @@
+---
+sidebar: sidebar 
+permalink: networking/improve-tcp-wan-performance.html 
+keywords: tcp, wan, performance, tcp wan performance, prr, proportional rate reduction, rack, recent acknowledgment, tlp, tail loss probe, loss recovery, lossy network, high latency, congestion window, retransmission, duplicate ack, out of order packets, ipspace, tcp stack, network ipspace modify, network ipspace show, lif, nfs, smb, iscsi, nvme tcp, s3, snapmirror, flexcache, intercluster network, ontap 9.19.1 
+summary: ONTAP 通过将两个丢包恢复功能（PRR 和 RACK）集成到 ONTAP TCP 堆栈中，提高了在高丢包率、高延迟 WAN 链路上的 TCP 数据传输性能。 
+---
+= 使用 PRR 和 RACK 提高 ONTAP TCP WAN 性能
+:hardbreaks:
+:allow-uri-read: 
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.19.1 开始，ONTAP 通过将两个丢包恢复功能 PRR 和 RACK 集成到 ONTAP TCP 堆栈中，提高了有损耗、高延迟 WAN 链路上的 TCP 数据传输性能。PRR 适用于所有网络，默认情况下处于启用状态。RACK 适用于链路速度约为 25 千兆位/秒的拥塞网络，默认情况下处于禁用状态。
+
+* *比例速率降低（PRR）：*以与丢包恢复期间减少的拥塞窗口紧密匹配的速率发送恢复数据，避免利用不足和过度重传突发。
+* *最近确认（RACK）：* 使用基于时间的检测，而不是传统的重复 ACK 计数，以更快、更准确地识别丢失的数据包，即使数据包乱序到达也是如此。RACK 包括尾部丢失探测（TLP），即使特定 RPC 的一个关键最终数据包丢失，且新数据只有在上一个请求完成后才可用，也能更快地完成事务通信。这样可以更快地完成请求，并减少在具有挑战性的网络链路（如 WLAN（WiFi）、WAN、Internet VPN 和云隧道）上的不必要重传。
+
+
+PRR 和 RACK 与所用协议无关，可改善 NFS、SMB、iSCSI、NVMe/TCP 和 S3 访问，以及使用集群间网络的 ONTAP 功能的性能，包括通过 WAN 连接使用的 SnapMirror 和 FlexCache。所有 NetApp 存储系统均支持这些功能。
+
+
+NOTE: 仅建议对链路速度约为 25 Gigabits/second 的拥塞网络启用 RACK。在链路速度为 25 Gigabits/second 或更高的干净网络环境中，RACK 可能无法产生与标准堆栈相同的吞吐量。
+
+.步骤
+默认情况下，PRR 处于启用状态。默认情况下，RACK 处于禁用状态。如果您的环境适合 RACK，则可以使用以下步骤启用它。
+
+. 为 IPspace 启用 RACK TCP 堆栈功能：
++
+[source, cli]
+----
+network ipspace modify -ipspace <ipspace_name> -tcp-stack rack
+----
++
+
+NOTE: 此更改仅影响新连接。要在到 IPspace 的任何现有连接上使用 RACK，请在节点之间迁移 LIF，或暂时禁用然后重新启用 LIF。
+
+. 确认已对 IPspace 进行更改：
++
+[source, cli]
+----
+network ipspace show -fields tcp-stack
+----
+
+
+.相关信息
+link:migrate_a_lif.html["迁移 LIF"]
