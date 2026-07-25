@@ -26,12 +26,15 @@ summary: 从 ONTAP 9.6 开始，您可以使用 security key-manager external mo
 
 . 修改集群的外部密钥管理器服务器属性：
 +
-`security key-manager external modify-server -vserver admin_SVM -key-server host_name|IP_address:port,... -timeout 1...60 -username user_name`
+`security key-manager external modify-server -vserver admin_SVM -key-server host_name|IP_address:port,... -timeout 0...60 -username user_name`
 
 +
 [NOTE]
 ====
-超时值以秒为单位。如果您修改了用户名，系统将提示您输入新密码。    如果在集群登录提示符处运行命令、 `_admin_SVM_` 默认为当前集群的管理SVM。您必须是集群管理员才能修改外部密钥管理器服务器属性。
+** 超时值是与 KMIP 服务器建立连接所需的时间，以秒为单位。如果指定 0，则不会超时，连接请求可以无限期等待。如果指定 1-60 范围内的任何值，则在指定秒数内无法创建到 KMIP 密钥服务器的连接时，连接请求将超时。
+** 如果修改用户名，系统会提示您输入新密码。
+** 如果在集群登录提示符下运行该命令， `_admin_SVM_`则默认为当前集群的 admin SVM。您必须是集群管理员才能修改外部密钥管理器服务器属性。
+
 
 ====
 +
@@ -42,14 +45,17 @@ summary: 从 ONTAP 9.6 开始，您可以使用 security key-manager external mo
 ----
 clusterl::> security key-manager external modify-server -vserver cluster1 -key-server ks1.local -timeout 45
 ----
-. 修改 SVM 的外部密钥管理器服务器属性（仅限 NVE ）：
+. 修改 SVM 的外部密钥管理器服务器属性：
 +
-`security key-manager external modify-server -vserver SVM -key-server host_name|IP_address:port,... -timeout 1...60 -username user_name`
+`security key-manager external modify-server -vserver SVM -key-server host_name|IP_address:port,... -timeout 0...60 -username user_name`
 
 +
 [NOTE]
 ====
-超时值以秒为单位。如果您修改了用户名，系统将提示您输入新密码。    如果在SVM登录提示符处运行命令、 `_SVM_` 默认为当前SVM。您必须是集群或 SVM 管理员才能修改外部密钥管理器服务器属性。
+** 超时值是与 KMIP 服务器建立连接所需的时间，以秒为单位。如果指定 0，则不会超时，连接请求可以无限期等待。如果指定 1-60 范围内的任何值，则在指定秒数内无法创建到 KMIP 密钥服务器的连接时，连接请求将超时。
+** 如果修改用户名，系统会提示您输入新密码。
+** 如果在 SVM 登录提示符下运行命令， `_SVM_`则默认为当前 SVM。您必须是集群或 SVM 管理员才能修改外部密钥管理器服务器属性。
+
 
 ====
 +

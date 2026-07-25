@@ -12215,12 +12215,7 @@ VLAN 名称是端口（或接口组）名称和网络交换机 VLAN 标识符的
   <block id="03cc126e2caff1c542a6ddab4c9823dd" category="paragraph">从ONTAP 9.6开始、您可以使用<block ref="148b68957f094088c8b50c7e8764a58b" prefix=" " category="inline-code"></block> 用于更改外部密钥管理服务器的I/O超时和用户名的命令。</block>
   <block id="5bfe49fcad19b32d824541b6e12d03be" category="list-text">在MetroCluster 环境中、必须对管理SVM的两个集群重复这些步骤。</block>
   <block id="c37b9766e3e6327fac06d344e8a35eb5" category="list-text">修改集群的外部密钥管理器服务器属性：</block>
-  <block id="e04ff7b5b3fc8f1da430169d128430a9" category="paragraph"><block ref="5d69eb3def5f852939baa4c751465215" prefix="" category="inline-code"></block></block>
-  <block id="fd35e3d955aad84b03e77d01d0e42317" category="paragraph">超时值以秒为单位。如果您修改了用户名，系统将提示您输入新密码。    如果在集群登录提示符处运行命令、<block ref="ff290f247e82063dfaf6618fab82f830" prefix=" " category="inline-code"></block> 默认为当前集群的管理SVM。您必须是集群管理员才能修改外部密钥管理器服务器属性。</block>
   <block id="6fc9bcf15692172b1d99f25409f90aad" category="paragraph">以下命令会将的超时值更改为45秒<block ref="fb56c6cfda5b5fd176697c125dc11863" prefix=" " category="inline-code"></block> 侦听默认端口5696的外部密钥管理服务器：</block>
-  <block id="adc8983fe7ff78d6470d3ec39ee65204" category="list-text">修改 SVM 的外部密钥管理器服务器属性（仅限 NVE ）：</block>
-  <block id="b51b860f1a8754c07f9bffc0c6a951d6" category="paragraph"><block ref="ff49ad8772f7d6001cb24d60567caf6e" prefix="" category="inline-code"></block></block>
-  <block id="f44956cdd630f824de411b7dcf6d0c15" category="paragraph">超时值以秒为单位。如果您修改了用户名，系统将提示您输入新密码。    如果在SVM登录提示符处运行命令、<block ref="cd1001994f72499b4e03299b81ba8e2d" prefix=" " category="inline-code"></block> 默认为当前SVM。您必须是集群或 SVM 管理员才能修改外部密钥管理器服务器属性。</block>
   <block id="072c89d9a89a67f531df7fad0c2a551c" category="paragraph">以下命令将更改的用户名和密码<block ref="3568c00ad84b08a31b2dfadbfd8ee221" prefix=" " category="inline-code"></block> 侦听默认端口5696的外部密钥管理服务器：</block>
   <block id="eadfe41148a3bbfb568f3f2283f7fc02" category="summary">配置板载密钥管理器密码短语时，应将板载密钥管理信息复制到存储系统外的安全位置。</block>
   <block id="8eabb763c6442a78080d51a43b260dce" category="paragraph">所有密钥管理信息都会自动备份到集群的复制数据库（ RDB ）。您还应手动备份密钥管理信息，以便在发生灾难时使用。</block>
@@ -14723,10 +14718,8 @@ Cisco Nexus 9336C-x2</block>
   <block id="11257db99ba33ed6b06a82974b80c96d" category="paragraph">如果为 Storage Virtual Machine （ SVM ）配置了文件共享事件并启用了审核，则会生成审核事件。使用修改SMB网络共享时会生成文件共享事件<block ref="eac66d61c781409b2c25610f21b676ee" prefix=" " category="inline-code"></block> 相关命令。</block>
   <block id="6bf6601e418fb6ec372e458d46e70586" category="paragraph">在为 SVM 添加，修改或删除 SMB 网络共享时，将生成事件 ID 为 5142 ， 5143 和 5144 的文件共享事件。可使用修改SMB网络共享配置<block ref="61ea5c6f2bcbffe05fb9388eb7c8ddfc" prefix=" " category="inline-code"></block> 命令</block>
   <block id="de8a6156fd5ef133f305a4a936054f74" category="paragraph">以下示例显示了在创建名为 "audit_dest" 的共享对象时生成的文件共享事件， ID 为 5143 ：</block>
-  <block id="e9cf9e74622f1f0842c9fc40cf4e4778" category="summary">如果暂存卷或包含审核事件日志的卷上没有足够的空间，则可能会出现问题。如果空间不足，则无法创建新的审核记录，从而阻止客户端访问数据，并且访问请求将失败。您应了解如何对这些卷空间问题进行故障排除和解决。</block>
   <block id="a2b76bd9de03c9bd88b41613cdd67f6b" category="doc">对审核和暂存卷空间问题进行故障排除</block>
   <block id="894ed03a3227c63d304229c7adca1778" category="section-title">对与事件日志卷相关的空间问题进行故障排除</block>
-  <block id="b7cb910efffd35857ff406a9d9ebbcf2" category="paragraph">如果包含事件日志文件的卷用尽空间，审核将无法将日志记录转换为日志文件。这会导致客户端访问失败。您必须了解如何对与事件日志卷相关的空间问题进行故障排除。</block>
   <block id="1b3909a5eb4b9aa9e6e40bf80c7df603" category="list-text">如果包含事件日志的卷空间不足， SVM 和集群管理员可以通过删除某些事件日志文件或增加卷大小来解决空间问题。</block>
   <block id="fffccef64895f5358a60138ebafa400a" category="paragraph">如果包含事件日志卷的聚合已满，则必须先增加聚合的大小，然后才能增加卷的大小。只有集群管理员才能增加聚合的大小。</block>
   <block id="0969e7125f51d9e50e032d76c96a4888" category="list-text">可以通过修改审核配置将事件日志文件的目标路径更改为另一个卷上的目录。</block>
@@ -14736,7 +14729,6 @@ Cisco Nexus 9336C-x2</block>
   <block id="69345c1025cecf9474288ec0be5a4113" category="inline-link-macro">如何查看有关聚合和管理聚合的信息</block>
   <block id="797c76467d08d0e1c414214141973ce2" category="list-text"><block ref="4ee878122d9d1410f219361424522f2d" category="inline-link-macro-rx"></block>。</block>
   <block id="56fd27eccbb9a7a5b65e8f140f9f8584" category="section-title">对与暂存卷相关的空间问题进行故障排除</block>
-  <block id="103dd08422fc65bb2c91b7e933141054" category="paragraph">如果包含 Storage Virtual Machine （ SVM ）暂存文件的任何卷用尽空间，审核将无法将日志记录写入暂存文件。这会导致客户端访问失败。要对此问题描述进行故障排除，您需要通过显示有关卷使用情况的信息来确定 SVM 中使用的任何暂存卷是否已满。</block>
   <block id="d14f6325a063fdf290250817d261fec5" category="paragraph">如果包含整合事件日志文件的卷具有足够的空间，但由于空间不足仍存在客户端访问失败的情况，则暂存卷可能会空间不足。SVM 管理员必须与您联系，以确定包含 SVM 暂存文件的暂存卷是否空间不足。如果由于暂存卷空间不足而无法生成审核事件，则审核子系统将生成 EMS 事件。此时将显示以下消息：<block ref="9e5b486193c8dbe8b218159e809a7453" prefix=" " category="inline-code"></block>。只有您才能查看暂存卷的相关信息； SVM 管理员无法查看此信息。</block>
   <block id="fe34dd4cff709f2b57a295da337017f8" category="paragraph">所有暂存卷名称均以开头<block ref="dab9c19a370b6fe268c958a82aaf0a99" prefix=" " category="inline-code"></block> 后跟该暂存卷所在聚合的UUID。以下示例显示了管理 SVM 上的四个系统卷，这些系统卷是在为集群中的数据 SVM 创建文件服务审核配置时自动创建的：</block>
   <block id="854ef87a47a1089bf6eb634f8283a39e" category="paragraph">如果暂存卷中的空间不足，您可以通过增加卷的大小来解决空间问题。</block>
@@ -16292,7 +16284,6 @@ Cisco Nexus 9336C-x2</block>
   <block id="25fef42d8a5265619da8d1ce9bef180d" category="sidebar">使用 FlexClone 文件和 FlexClone LUN 为文件和 LUN 创建高效副本</block>
   <block id="a9e38a0a0ee6eff4ce422540958b41ce" category="sidebar">使用 qtree 对 FlexVol 卷进行分区</block>
   <block id="83af8cc1c6f14be840cf31b49a93ebf8" category="sidebar">使用配额限制或跟踪资源使用情况</block>
-  <block id="d2abadaec09ef38036e971f230328976" category="sidebar">配额过程概述</block>
   <block id="a9ed45fdce87ebb1b4b6881298137466" category="sidebar">特殊类型的配额</block>
   <block id="12dba032347e1bcad9d67c218976df00" category="sidebar">配额如何与用户和组配合使用</block>
   <block id="8eb3f3a1d62b585852454040a6502b9f" category="sidebar">qtree 更改如何影响配额</block>
@@ -28173,7 +28164,6 @@ FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 Snap
   <block id="36df56f28037b8d48e44d956260d610f" category="list-text">确认 SSD 缓存是否存在及其大小：</block>
   <block id="ccdba30615fb95f1b3a828beb3420add" category="paragraph"><block ref="a12866070c41a2038f0e952fc2000bd5" prefix="" category="inline-code"></block></block>
   <block id="c59f8c483de4b977f348bdd9c1fc13ad" category="paragraph">下列出了缓存的大小<block ref="de0a2f64b84982d32ab4003bfacac6b2" prefix=" " category="inline-code"></block>。</block>
-  <block id="462495e44ca2b273125c316da27211b2" category="inline-link">NetApp 技术报告 4070 ：《 Flash Pool 设计和实施指南》</block>
   <block id="5b0406b91e2f701754247ae42acf80db" category="inline-link-macro">将 SSD 添加到 SSD 存储池</block>
   <block id="7777b07e1e90f1c52c7d6287e9243b7d" category="paragraph"><block ref="056f75662ab5a00bee9b640313ef50ac" prefix="" category="inline-code"></block></block>
   <block id="fd6cc07f153a1353446d9e318c0bb882" category="list-text">您必须已确定要添加的SSD、并且这些SSD必须归要创建Flash Pool本地层的节点所有。</block>
@@ -28965,7 +28955,6 @@ FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 Snap
   <block id="595c8580fb253dbdfb60f35ecaaa4f61" category="sidebar">文件和目录命名依赖关系</block>
   <block id="d2a928bd71626904da2d542288e7bbbf" category="sidebar">准备配置NFS</block>
   <block id="f39bd40f73c75156080b36285dcac8fb" category="sidebar">创建存储容器</block>
-  <block id="6a4b03f75f0ca691e161c3c0da678f24" category="sidebar">自定义复制策略</block>
   <block id="79268cea67ecd3c82851376e7d6542e3" category="sidebar">从SnapMirror目标卷提供数据</block>
   <block id="7fa0e9f34ebf449dabf5d82b27d63ff7" category="sidebar">在集群中配置外部密钥管理</block>
   <block id="5131bcbbfb885fd698c772d1e7f3b99e" category="sidebar">卷和文件或LUN配置组合</block>
@@ -33933,7 +33922,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="74aa775254d81d4c2a040788c79e7637" category="list-text">可选： <block ref="84d0ee3929a839d089aa0cd03b7631c7" category="inline-link-macro-rx"></block>。</block>
   <block id="983799f6e14fdba500ee61fa09130b43" category="list-text">单击 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block> 存储分段名称旁边的，然后选择*Edit*。</block>
   <block id="7b6b2832c72560c8467695eaa6658094" category="list-text">在*Settings*选项卡中，单击 <block ref="58d565a214601e9d4902eae84c80b895" category="inline-image-macro-rx" type="image"></block> *S3*磁贴。</block>
-  <block id="c902b5771ffd379a64d109db8742ce99" category="list-text">单击*存储&gt; Storage VM*、选择一个NAS就绪的Storage VM、单击设置、然后单击 <block ref="7d54718dbc3f6ea214f7c0852ad5f778" category="inline-image-macro-rx" type="image"></block> S3下的。</block>
   <block id="c921c96d7cdfdad447cadf19285302af" category="list-text">选择*Settings*，然后单击 <block ref="15e4db7d54738597deeb336dd26320a4" category="inline-image-macro-rx" type="image"></block> *Name Mapping*(在*Host Users and Groups*下)。</block>
   <block id="b7231e594097059daa420d1757c20251" category="list-text">单击*Storage &gt; Buckets*，单击所需S3存储分段旁边的，然后单击 <block ref="2e4fa1d5403170da7db51a75f20a53a5" category="inline-image-macro-rx" type="image"></block> *Edit*。</block>
   <block id="8c7bf11d0df635d30be3df80a3d9b3c2" category="list-text">验证是否已正确定义用户和组：单击*存储&gt; Storage VM*、单击存储VM、单击*设置*、然后单击S3下的。 <block ref="58d565a214601e9d4902eae84c80b895" category="inline-image-macro-rx" type="image"></block></block>
@@ -34983,7 +34971,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="6e1f03da360ff2f4db5aac0d5276ce61" category="paragraph"><block ref="6e1f03da360ff2f4db5aac0d5276ce61" category="inline-image-macro-rx" type="image"></block></block>
   <block id="359b644aba2aab59a223131b53a62845" category="inline-image-macro">SVM灾难恢复工作流。此处显示了激活目标SVM的步骤。</block>
   <block id="861279e324c4fc8f79bfe1a5e0323dd1" category="paragraph"><block ref="861279e324c4fc8f79bfe1a5e0323dd1" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="c6ca5d4f7193632286d54d80d7ce8ebc" category="paragraph"><block ref="c6ca5d4f7193632286d54d80d7ce8ebc" category="inline-link-rx"></block></block>
   <block id="2a7e0c5b8e814e03c21799cbb69f2d18" category="paragraph"><block ref="2a7e0c5b8e814e03c21799cbb69f2d18" category="inline-link-rx"></block></block>
   <block id="e21360dd35f27084558acc5c49983870" category="paragraph"><block ref="e21360dd35f27084558acc5c49983870" category="inline-link-rx"></block></block>
   <block id="4d425048ca97c21b95d238d660671ad1" category="inline-image-macro">NetApp卷加密工作流。此处显示了在卷上启用加密的步骤。</block>
@@ -37161,7 +37148,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="97c30e4ac53088a286f42d19ee9d9073" category="cell"><block ref="9f6e24bb776ac0c6a5b1dd6b9562153e" prefix="" category="inline-code"></block></block>
   <block id="503ad3e0a576a09c22b6feba7d66cf56" category="cell"><block ref="b1bbabc3962f067d7560bf21dde6f309" prefix="" category="inline-code"></block></block>
   <block id="cb134f392c4d0aa6710f4456a02bc961" category="cell"><block ref="3992f7b26c8265ef3170e116f4cecf97" prefix="" category="inline-code"></block></block>
-  <block id="a3c4ffc5b1586befd09ca0f9f2c53a4e" category="list-text">X50131A (2p、40G/100G/200g/400G以太网控制器)</block>
   <block id="bb8917b538ccb8a7e1b5863be366fde2" category="list-text">X60132A (4p、10G25G以太网控制器)</block>
   <block id="84621d601f6b7bd1714240b0cfde2213" category="summary">从ONTAP 9.12.1开始、您可以锁定非SnapLock卷上的快照、以防止勒索软件攻击。锁定快照可确保它们不会被意外或恶意删除。</block>
   <block id="5e8c9d081a4e7ca510072e15483c4571" category="doc">锁定快照以防止勒索软件攻击</block>
@@ -37410,7 +37396,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="29114884fd90ee6cb3c35a1026d913a9" category="paragraph">有关的详细信息<block ref="e6ebf77095ce261f6b81f38fb7b5eed1" prefix=" " category="inline-code"></block>，请参见<block ref="0e91e110b7822cc1681ca0087eb3cb38" category="inline-link-macro-rx"></block>。</block>
   <block id="126041390f1f5d5ef0e21f98f85258fb" category="paragraph">有关其他可选参数的详细信息，请参见<block ref="bc2602c5a66493ba7d85e8bd5d0e7f9b" category="inline-link-macro-rx"></block>。</block>
   <block id="08ccf451e4e866faa7f249160e1fd9f2" category="paragraph">您可以使用 network interface modify 命令将防火墙策略应用于现有 LIF 。有关此过程中所述命令的更多信息，请参见<block ref="bc2602c5a66493ba7d85e8bd5d0e7f9b" category="inline-link-macro-rx"></block>。</block>
-  <block id="61b546a79857943607ef9ccc17720cdb" category="paragraph">有关的详细信息<block ref="6d1ff1fe379ad7135a1488c876be6574" prefix=" " category="inline-code"></block>，请参见<block ref="3291cd2d667e1ab92bcb51904664aac3" category="inline-link-macro-rx"></block>。</block>
   <block id="6716e1c0cdfc047209c14040b38bd39f" category="admonition">默认情况下， authenticationFailure 陷阱处于禁用状态。必须使用<block ref="241030f4454e1568f70c97d2eb3d4759" prefix=" " category="inline-code"></block> 命令启用陷阱。有关的详细信息<block ref="241030f4454e1568f70c97d2eb3d4759" prefix=" " category="inline-code"></block>，请参见<block ref="75a41b6ab1e36ac70d344316aae055ec" category="inline-link-macro-rx"></block>。</block>
   <block id="aa772607cc5be6eb2486c55e9d4695e6" category="paragraph">有关的详细信息<block ref="3b1343510b893361ba224919be3dd1eb" prefix=" " category="inline-code"></block>，请参见<block ref="fd4084eda58424b05c4c74abbcabefa2" category="inline-link-macro-rx"></block>。</block>
   <block id="f276bd023818b6ee0387e4d32001f43e" category="paragraph">有关的详细信息<block ref="014fbdab8ed751e10ca8b7fd551fd0d5" prefix=" " category="inline-code"></block>，请参见<block ref="52ba95d6241f84e96738efb427dbae93" category="inline-link-macro-rx"></block>。</block>
@@ -40666,7 +40651,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="5cfb7ad357062c1ebdf2e542ea9a6df0" category="sidebar">SnapMirror 复制工作流</block>
   <block id="f5b4a3874246cc0a3a0967c54a253497" category="sidebar">创建SnapMirror目标卷</block>
   <block id="57b7bc7771b226d9a1e67b1225567b56" category="sidebar">创建SnapMirror复制作业计划</block>
-  <block id="f6a45f80926af1df625feb18ad3c1a67" category="sidebar">自定义SnapMirror复制策略</block>
   <block id="2f0c83b9b49badf70effe4220333b595" category="sidebar">创建自定义SnapMirror复制策略</block>
   <block id="c39cdf01800b6d5bcf671a5baa940783" category="sidebar">为SnapMirror策略定义规则</block>
   <block id="1e9da25f4a0a8950553271392a89dc01" category="sidebar">定义SnapMirror计划以在目标上创建本地副本</block>
@@ -43510,9 +43494,7 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="f0f6ad502570d6c78a9b2ac657dec83e" category="paragraph">除了 PSK 之外，证书还可用于 IPsec 身份验证。在ONTAP 9.10.1 之前的版本中，仅支持使用 PSK 进行身份验证。</block>
   <block id="063e01b31730ffc6c145a5ce7599a5a2" category="paragraph">您只需安装并使用受支持的以太网卡。从ONTAP 9.16.1 开始，支持以下以太网卡：</block>
   <block id="ee1b7c8373ee00bcd4c9f88ac3fc6441" category="paragraph">ONTAP 9.17.1 增加了对以下以太网卡的支持：</block>
-  <block id="4a5de9d6a058ff88b7a7bc223e95c9ad" category="list-text">X50135A（2p，40G/100G以太网控制器）</block>
   <block id="12632730705c69a23b48c4bb255ea800" category="list-text">X60135A（2p，40G/100G以太网控制器）</block>
-  <block id="febb0fae6d703923bc7214e29cd41e3f" category="paragraph">以下平台支持 X50131A 和 X50135A 卡：</block>
   <block id="1bd3d2dde7c16728209289384c84aa60" category="paragraph">以下平台支持 X60132A 和 X60135A 卡：</block>
   <block id="b1b229cd5f527d47f0b97993c54937ff" category="paragraph">查看<block ref="41f66f34b3a905f864500c9319fdff8f" category="inline-link-macro-rx"></block>有关支持的平台和卡的更多信息。</block>
   <block id="e60612df1980adf168ee06b4e9868cd3" category="inline-link-macro">链路聚合组</block>
@@ -46125,7 +46107,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="e8a0f7824f71ae02582a324d633313b8" category="list-text"><block ref="e8a0f7824f71ae02582a324d633313b8" category="inline-link-macro-rx"></block></block>
   <block id="41d9b5d5bb9c791118b5bec44830b2b4" category="paragraph">默认情况下，pNFS 要求 SVM 中的任何数据 LIF 都可路由到 NFS 客户端上的接口，因为 pNFS 设备列表将填充 SVM 中的任何数据 LIF。因此，可能会选择不可路由的数据 LIF，这可能会造成中断情况。最佳实践是，仅在使用 pNFS 时配置可路由数据 LIF。</block>
   <block id="d7bacb4636b4a050e776b34e5e0402a9" category="paragraph">从ONTAP 9.18.1 RC1 及更高版本开始，您可以按子网指定哪些接口符合 pNFS 流量的条件，从而允许混合使用可路由接口和不可路由接口。请联系NetApp支持部门获取有关命令的信息。</block>
-  <block id="0e9987b557a618ed08becdbaa7d3ed71" category="paragraph">从ONTAP 9.16.1 开始，您可以为 NVMe/TCP 连接配置 TLS 安全通道。您可以使用系统管理器或ONTAP CLI 添加启用了 TLS 的新 NVMe 子系统，或者为现有的 NVMe 子系统启用 TLS。ONTAP不支持 TLS 硬件卸载。</block>
   <block id="8190e257e3b4a58b9a80396c7e1cfdd3" category="paragraph">这<block ref="96cf306e4040200feb7a7bf5e785fe7b" prefix=" " category="inline-code"></block> 选项指的是您要恢复到的ONTAP版本。只需要ONTAP版本的前两个值。例如，如果您要从 9.14.1 版本回滚到 9.13.1 版本，则正确的值为：<block ref="96cf306e4040200feb7a7bf5e785fe7b" prefix=" " category="inline-code"></block> 选项为 9.13。</block>
   <block id="5259c1ef00b0e620c30d0eb43dd56aa9" category="paragraph">使用ONTAP CLI、 SP或BMC重启。</block>
   <block id="37982d39d5ad7024147ce610205a91b9" category="list-text">重启SP或BMC：</block>
@@ -46177,7 +46158,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="fde34246eab48caf30e3085c8480aeae" category="list-text">迁移到 Vault 目标SnapMirror卷必须执行重新同步才能重新激活保护。需要重新同步存储库，因为迁移会在迁移 SVM 之间创建一个新的基线，该基线比存储库之前的基线更新。执行重新同步操作会重新激活存储库，同时也会删除比当前存储库基线更新的任何数据，特别是迁移期间生成的快照。</block>
   <block id="2387799aae311c35f9cbefc08f3bae06" category="summary">如果您的集群上配置了SnapMirror级联关系，则可能需要在升级前禁用长期保留快照。</block>
   <block id="33104e45d4ee037b1df9c6c463877526" category="paragraph">在级联卷的关系中， ONTAP 9 的所有版本仅支持在级联的最终SnapMirror目标卷上保留长期快照。在级联备份的任何中间卷上启用长期保留快照会导致备份和快照丢失。</block>
-  <block id="d12d0497202e64a394d7a5e2cee1b01b" category="paragraph">如果您在级联的任何中间卷上启用了长期保留快照，且配置不受支持，请联系技术支持并参考以下链接： https://kb.netapp.com/on-prem/ontap/DP/SnapMirror/SnapMirror-KBs/Cascading_a_volume_with_Long-Term_Retention_ (long-term retention)_snapshots_enabled_is_not_supported[ NetApp知识库：不支持启用长期保留 (LTR) 快照的卷级联^] 以获取帮助。</block>
   <block id="3da7c7c0bb376449a4f790902b525361" category="paragraph">在从允许您在级联中间卷上启用长期保留快照的 ONTAP版本升级到阻止该功能的 ONTAP版本之前，您需要禁用长期保留快照，以避免错过备份和快照。</block>
   <block id="d654691f967528fb4ffe8ca8d755db1a" category="list-text">长期保留快照配置在“A &gt; B &gt; C” SnapMirror级联中的“B”卷上，或者配置在更大的级联中的另一个中间SnapMirror目标卷上。</block>
   <block id="3785bb6a833e582becd87a1ab3019808" category="list-text">长期保留快照由应用于SnapMirror策略规则的计划定义。此规则不会从源卷复制快照，而是直接在目标卷上创建快照。</block>
@@ -47671,7 +47651,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="d3cd17653f3da7da964b8061bc333331" category="paragraph">您可以将现有 LUN 和命名空间从配置为本地-活动多路径的 SVM 移动到配置为活动-活动多路径的 SVM。如果将 LUN 或命名空间移动到新的 SVM，则必须在开始提供数据之前将主机重新映射到新的 SVM。</block>
   <block id="3643b6a786555903dc499aa281695d80" category="admonition">如果您的集群运行的是 ONTAP 9.19.1 或更高版本，并且同时包括 FAS 和 AFF 系统，则应为所有系统使用本地活动多路径配置。不建议在同一集群中对 FAS 系统使用本地活动配置而对 AFF 系统使用主动-主动配置。</block>
   <block id="95dc16afc99c1f1cbc848279980c5d00" category="inline-link-macro">ASA 系统上的自动 iSCSI LIF 故障转移</block>
-  <block id="ae5113a51c636cac5e7e6677b33e4061" category="list-text">详细了解 <block ref="1974aa1419798d14fdce703af01f1f31" category="inline-link-macro-rx"></block>。</block>
   <block id="3b2d690e20c8633158879d2817088632" category="inline-link-macro">ASA r2 系统上的自动 iSCSI LIF 故障转移</block>
   <block id="2655120dfa77b377870a764aa34770d6" category="list-text">详细了解 <block ref="3568de4be0f82609f253699bd07c36ca" category="inline-link-macro-rx"></block>。</block>
   <block id="c7e9b5353c80d9bb04eee79cbb25bc8c" category="summary">您可以将 FC 和 FC-NVMe SAN 主机配置为通过一个或多个结构连接到 HA 对，或者根据您的 ONTAP 版本，您可以直接将 FC 或 FC-NVMe SAN 主机连接到 HA 对，而无需使用交换机。</block>
@@ -48937,7 +48916,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="054052039bfa6bb9b4daf45b50861291" category="list-text"><block ref="054052039bfa6bb9b4daf45b50861291" category="inline-xref-macro-rx"></block></block>
   <block id="9fcb94e32c5760de0a8c5457936185d5" category="paragraph">AFF 系统通过自动 LIF 故障转移提供主动-主动多路径，使所有 SAN 路径保持活动优化状态，从而确保主机 I/O 在故障转移期间立即继续运行。 </block>
   <block id="29316a40956e411f0354bde35a4ad12e" category="inline-xref-macro">FLI 中的 iSCSI 支持</block>
-  <block id="4b56ee616077b9ab0530fdf2341d42c2" category="list-text"><block ref="4b56ee616077b9ab0530fdf2341d42c2" category="inline-xref-macro-rx"></block></block>
   <block id="09116f57cb69822cee7d9d4506c513fa" category="paragraph">添加了对外部 LUN 导入 (FLI) 的 iSCSI 支持，支持使用现有的 iSCSI 连接将块数据从第三方存储系统迁移到 ONTAP，同时将中断降至最低。 </block>
   <block id="746d9863727620f27f335bda43fd0ff9" category="inline-xref-macro">S3 条件写入和删除</block>
   <block id="33c9acb685ed3cdc6c77045abec8c8e1" category="list-text"><block ref="33c9acb685ed3cdc6c77045abec8c8e1" category="inline-xref-macro-rx"></block></block>
@@ -49218,5 +49196,32 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="caa6941cc670ae7bf2ade1c4fb560921" category="list-text"><block ref="caa6941cc670ae7bf2ade1c4fb560921" category="inline-link-macro-rx"></block></block>
   <block id="d3008fc5d3784506fdae96c5c6c4bbb3" category="paragraph">如需了解有关<block ref="6e5e9a57d5633d1a6b78cfd2abd93a91" prefix=" " category="inline-code"></block>的更多信息，请参阅<block ref="6d34713ad195829950dc7de25b26cc21" category="inline-link-macro-rx"></block>。</block>
   <block id="38d916e198bbe19eae68117d1a5d5c06" category="inline-link-macro">security ssh publickey show -vserver &amp;lt;vsname&amp;gt; -host-key-algorithm &amp;lt;algorithm&amp;gt; 命令</block>
-  <block id="6286f2f82c23cd0cbf3d40f1b0d1a399" category="list-text">从 ONTAP 9.19.1 开始，管理员可以使用 <block ref="e07e196d523e45b94de02018aff7a0bb" category="inline-link-macro-rx"></block> 查看 ONTAP 主机密钥指纹。这使管理员能够验证此指纹是否与 ONTAP 中存储的指纹匹配。</block>
+  <block id="2de4965fc4daf9cf963e42c825a75049" category="list-text">Oracle Linux 10.1 和 9.8</block>
+  <block id="03e3f38d640d4a916c98f165d25ba54c" category="paragraph"><block ref="58d115ba35a35a8b14a460336d9789ec" prefix="" category="inline-code"></block></block>
+  <block id="accee56c578f321127ba1bf32c5bd782" category="list-text">超时值是与 KMIP 服务器建立连接所需的时间，以秒为单位。如果指定 0，则不会超时，连接请求可以无限期等待。如果指定 1-60 范围内的任何值，则在指定秒数内无法创建到 KMIP 密钥服务器的连接时，连接请求将超时。</block>
+  <block id="e330e6613c2f922a0845040f8440ed03" category="list-text">如果修改用户名，系统会提示您输入新密码。</block>
+  <block id="2f1f5e0b47a6b7d77cf2f923fe630726" category="list-text">如果在集群登录提示符下运行该命令，<block ref="ff290f247e82063dfaf6618fab82f830" prefix=" " category="inline-code"></block>则默认为当前集群的 admin SVM。您必须是集群管理员才能修改外部密钥管理器服务器属性。</block>
+  <block id="ee8a44f86431a9efe764abd1dd638999" category="list-text">修改 SVM 的外部密钥管理器服务器属性：</block>
+  <block id="e803314c6722cd858aaa2de1094c5cc7" category="paragraph"><block ref="ff25e2350e53f10d22adcf8b2e757db9" prefix="" category="inline-code"></block></block>
+  <block id="dce81498087d6b8a1e99c1512ca2f790" category="list-text">如果在 SVM 登录提示符下运行命令，<block ref="cd1001994f72499b4e03299b81ba8e2d" prefix=" " category="inline-code"></block>则默认为当前 SVM。您必须是集群或 SVM 管理员才能修改外部密钥管理器服务器属性。</block>
+  <block id="acd913a5269fd9ee68854d6f9c7fc55c" category="summary">当暂存卷或包含审计事件日志的卷上空间不足时，可能会出现问题。如果空间不足，则无法创建新的审计记录。启用审核保证后，可能会阻止客户端访问数据并导致访问请求失败。您应该了解如何排查和解决这些卷空间问题。</block>
+  <block id="138a8e101f5d7cf82df5bd21bde5d66d" category="paragraph">此行为在启用审核保证时适用。有关详细信息，请参见<block ref="57c8579b422ceb48503640224a0bd73f" category="inline-link-macro-rx"></block>。</block>
+  <block id="e1592ce43850fbb153b84eb221212273" category="paragraph">如果包含事件日志文件的卷空间不足，审核无法将日志记录转换为日志文件。启用审核保证时，会导致客户端访问失败。您必须知道如何解决与事件日志卷相关的空间问题。</block>
+  <block id="934fa357e3a439271ceb1a10250f0147" category="paragraph">如果包含存储虚拟机 (SVM) 暂存文件的任何卷空间不足，审核将无法将日志记录写入暂存文件。启用审核保证时，这将导致客户端访问失败。要解决此问题，需要通过显示有关卷使用情况的信息来确定 SVM 中使用的任何暂存卷是否已满。</block>
+  <block id="0ad9ff0cfa3ca4cff02a15582411c8f5" category="paragraph">如需了解有关<block ref="6d1ff1fe379ad7135a1488c876be6574" prefix=" " category="inline-code"></block>的更多信息，请参阅<block ref="25bce3dc5a30e48459cec79ee6f29cbb" category="inline-link-macro-rx"></block>。</block>
+  <block id="f55ab61a8f9ae4e3994c84a0aa6df7d5" category="list-text">X50131A（IO 模块，2PT，100/200GbE）</block>
+  <block id="37f200a91111d9882200c299a9131df4" category="list-text">X50131B（IO Module，2PT，200/400GbE，B）</block>
+  <block id="e7faec76700aea2af0e0efa610af46ab" category="list-text">X50135A (IO Module, 2PT, 100GbE, Encrypt)</block>
+  <block id="40d4abacbe7db24e83d83b9a1f586ade" category="paragraph">X50131A、X50131B 和 X50135A 卡在以下平台上受支持：</block>
+  <block id="5d516e30122cf168cf5e2ff6de42baf4" category="paragraph">从 ONTAP 9.16.1 开始，您可以为 NVMe/TCP 连接配置 TLS 安全通道。您可以使用 System Manager 或 ONTAP CLI 添加启用了 TLS 的新 NVMe 子系统，或为现有 NVMe 子系统启用 TLS。从 ONTAP 9.19.1 开始，支持 TLS 硬件卸载。</block>
+  <block id="a71de286ec74ecfae1e56e7657842a2f" category="list-text"><block ref="a71de286ec74ecfae1e56e7657842a2f" category="inline-link-macro-rx"></block></block>
+  <block id="b17d25196e38e68944c90a6536367ca6" category="list-text">单击 *存储 &gt; 存储 VM*，选择一个支持 NAS 的存储 VM，单击 *设置*，然后在 *协议 &gt; S3* 下单击 S3 下的 <block ref="7d54718dbc3f6ea214f7c0852ad5f778" category="inline-image-macro-rx" type="image"></block>。</block>
+  <block id="44699e5e6e6032196b4cb71d8c989f34" category="list-text">单击 *Cluster &gt; Storage VMs*，选择一个已准备好 NAS 的存储 VM，单击 *Settings*，然后在 *Protocols &gt; S3* 下单击 <block ref="7d54718dbc3f6ea214f7c0852ad5f778" category="inline-image-macro-rx" type="image"></block>。</block>
+  <block id="e11331ff1eeb9cfa654f417922a297c6" category="list-text">如果再次需要证书信息：单击 *Cluster &gt; Storage VMs*，选择 Storage VM，然后单击 *Settings*。</block>
+  <block id="4c968336e2b5e79de3e31ae7956951f6" category="list-text">详细了解<block ref="9f23ddd0b03507a080c4b38a88267124" category="inline-link-macro-rx"></block>。</block>
+  <block id="bf18869fff5dcaec5e30f0245c7a98be" category="list-text">从 ONTAP 9.19.1 开始，管理员可以使用 <block ref="54234680f092ec7473fd411d9c14e9c9" category="inline-link-macro-rx"></block> 查看 ONTAP 主机密钥指纹。这使管理员能够验证此指纹是否与 ONTAP 中存储的指纹匹配。</block>
+  <block id="d4bdeec6a8be5cfb68700fe8e79cf346" category="paragraph">如果您有一个不受支持的配置，其中已在级联的任何中间卷上启用了长期保留快照，请联系技术支持并参考<block ref="b75f73b0359ea06ce0481d0230f9ec08" category="inline-link-macro-rx"></block>以获得帮助。</block>
+  <block id="5b9074b096aeb918ffa51a926265b419" category="sidebar">了解配额</block>
+  <block id="f1671437514826b9255a5056e17af5f9" category="sidebar">了解配额和qtree</block>
+  <block id="6e512211beb8fd6a952723c4e1c7368b" category="sidebar">管理配额</block>
 </blocks>
