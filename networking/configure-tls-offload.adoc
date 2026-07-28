@@ -19,48 +19,81 @@ summary: 配置 TLS 卸载设置
 * 未卸载 TLS 握手阶段。仅卸载握手后数据阶段。
 * 网络逻辑接口 (LIF) 迁移到不支持卸载的端口会导致自动软件回退。
 +
-对于 TLS 卸载连接，TLS 加密操作通常绕过软件，并由具有卸载功能的 NIC 处理。如果与此连接关联的 LIF 迁移到没有 TLS 卸载功能的网络端口，则加密操作回退到软件并由系统内核处理。
+对于 TLS 卸载连接，TLS 加密操作通常绕过软件，由支持卸载的 NIC 处理。如果与此连接关联的 LIF 迁移到没有 TLS 卸载功能的网络端口，则加密操作将回退到软件并由系统内核处理。
 
 * 管理界面（HTTPS、REST API）不受此设置影响。
 * TLS 硬件卸载设置是集群范围的。
 
 
 .支持的网卡和平台
-TLS 硬件卸载需要支持的网卡。支持以下网卡：
+TLS 硬件卸载需要支持的网卡。下表按平台列出了支持的网卡。
 
+[cols="1,2,3a"]
+|===
+| 平台系列 | 平台 | 支持的网卡 
+
+
+| AFF 和 FAS | AFF A20、AFF A30、AFF A50、AFF C30、AFF C60、FAS50  a| 
 * 4 端口 CX7 10/25 GbE
-* 2 端口 CX6-Dx 40/100 GbE
+* 2 端口 CX6-DX 40/100 GbE
 * 2 端口 CX7 40/100 GbE
-* 2 端口 CX7 40/100/200
 
 
-以下 AFF 平台支持 4 端口 CX7 10/25 GbE、2 端口 CX6-Dx 40/100 GbE 和 2 端口 CX7 40/100 GbE 卡：
-
-* AFF A20
-* AFF A30
-* AFF A50
-* AFF C30
-* AFF C60
 
 
-以下 AFF 和 FAS 平台支持 4 端口 2 端口 CX6-Dx 40/100 GbE、2 端口 CX7 40/100 GbE 和 2 端口 CX7 40/100/200 GbE 卡：
-
-* AFF A70-90
-* AFF C80
-* FAS70
-* FAS90
-* AFF A1K
+| AFF 和 FAS | AFF A70、AFF A90、AFF C80、FAS70、FAS90、AFF A1K  a| 
+* 2 端口 CX6-DX 40/100 GbE
+* 2 端口 CX7 40/100 GbE
+* 2 端口 CX7 40/100/200/400 GbE
 
 
+
+
+| ASA | ASA A20、ASA A30、ASA A50、ASA C30  a| 
+* 4 端口 CX7 10/25 GbE
+* 2 端口 CX6-DX 40/100 GbE
+* 2 端口 CX7 40/100 GbE
+
+
+
+
+| ASA | ASA A70、ASA A90、ASA A1K  a| 
+* 2 端口 CX6-DX 40/100 GbE
+* 2 端口 CX7 40/100 GbE
+* 2 端口 CX7 40/100/200/400 GbE
+
+
+
+
+| AFX | AFX 1K  a| 
+* 2 端口 CX6-DX 40/100 GbE
+* 2 端口 CX7 40/100 GbE
+* 2 端口 CX7 40/100/200/400 GbE
+
+
+
+
+| AFX | AFX 2K  a| 
+* 2 端口 CX7 40/100/200/400 GbE
+
+
+|===
 .支持的流量类型
 TLS 硬件卸载支持以下流量类型：
 
+* NFS
 * NVMe/TCP
 * 集群对等加密
 * FabricPool
 * S3
 * NFS
 
+
+
+NOTE: 在 ASA 系统上，TLS 硬件卸载仅适用于 NVMe/TCP 流量。ASA 平台不支持 NFS over TLS、FabricPool 和 S3。
+
+
+NOTE: 在 AFX 平台上，TLS 硬件卸载支持 NFS 和 S3 前端流量类型。AFX 平台不支持 NVMe/TCP，因为 AFX 不支持 SAN/块协议。
 
 .开始之前
 * 您必须是ONTAP管理员。 `admin`执行以下任务所需的权限级别。
@@ -101,19 +134,11 @@ false      TLSv1.3,  false   TLS_RSA_WITH_AES_128_CCM,
 +
 [source, cli]
 ----
-security config modify -is-offload-enabled {true|false}
+security config modify * -is-offload-enabled {true|false}
 ----
 +
 此命令在新连接上启用或禁用 TLS 数据阶段的硬件卸载。在启用 TLS 卸载功能之前创建的现有连接不会被卸载，直到这些连接被删除并重新创建。
 
-+
-启用 TLS 卸载时，必须指定接口：
-
-+
-[source, cli]
-----
-security config modify -is-offload-enabled true -interface SSL
-----
 
 
 .相关信息
