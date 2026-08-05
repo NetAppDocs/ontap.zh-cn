@@ -204,17 +204,17 @@ NOTE: 在SVM DR关系中、源卷和目标卷不需要使用FabricPool聚合、�
 
 
 
-[[how-tiering-policies-work-with-cloud-migration]]
-== 分层策略如何与云迁移配合使用
+[[how-cloud-retrieval-policies-work-with-tiering-policies]]
+== 云检索策略如何与分层策略配合使用
 
-FabricPool 云数据检索由分层策略控制，分层策略可根据读取模式确定从云层到性能层的数据检索。读取模式可以是顺序模式，也可以是随机模式。
+FabricPool 云数据检索由检索策略控制，这些策略确定何时将数据写回本地层。读取模式可以是顺序的，也可以是随机的。
 
-下表列出了每个策略的分层策略和云数据检索规则。
+下表列出了卷分层策略以及每个策略的默认检索行为。
 
 |===
 
 
-| Tiering policy | 检索行为 
+| Tiering policy | 默认检索行为 
 
 
  a| 
@@ -257,30 +257,44 @@ FabricPool 云数据检索由分层策略控制，分层策略可根据读取模
  a| 
 default
  a| 
-分层`d决定了应将哪些数据提取回、因此使用"默认"功能时、云数据检索不会发生任何变化,`" `cloud-retrieval-policy`。无论托管聚合类型如何，此策略都是任何卷的默认值。
+当读取卷中的冷块时，它们将使用其卷分层策略的默认行为。无论托管聚合类型如何，此策略都是任何卷的默认值。
 
 
 
  a| 
 读写
  a| 
-所有客户端驱动的数据读取都会从云层提取到性能层。
+当云检索策略设置为"`On-Read`"的卷中的冷块被随机或按顺序读取时，它们将变为热块并写入本地层。
+
+使用顺序读取的应用程序通过将卷云检索策略设置为"`On-Read`"来触发对本地层的回写。这对于需要从活动工作负载正在读取的先前冷数据中获得本地层性能的应用程序来说可能是有益的
 
 
 
  a| 
 从不
  a| 
-客户端驱动的数据不会从云层提取到性能层
+当读取云检索策略设置为"`Never`"的卷中的冷块时，它们将保持冷状态，并保留在云层上。它们不会写回本地层。
+
+将云检索策略设置为"`Never`"类似于 All tiering 策略，因为不允许数据返回到本地层，但与 All tiering 策略不同的是，它继续使用卷的 tiering-minimum-cooling-days 设置，而不是尽快进行分层。
+
+例如，使用自动分层策略默认设置的卷在 31 天不活动后才会将数据标记为冷数据。31 天后，非活动数据将分层到对象存储，并且在读取时不会返回，因为卷的云检索策略已设置为"`Never`"。
 
 
 
  a| 
 提升
  a| 
-* 对于分层策略 "`none ，` " ，所有云数据都会从云层提取到性能层
-* 对于分层策略 " `snapshot-only ，` "AFS 数据将被提取。
+* 对于分层策略"`none,`"，所有分层数据都会写回本地层。
+* 对于分层策略"`snapshot-only,`"，已分层的非快照数据将写回本地层。
 
 
 |===
-有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。
+.修改云检索策略的示例
+以下示例将卷的分层策略更改为 `none`，检索策略更改为 `promote`：
+
+[listing]
+----
+set -privilege advanced
+
+volume modify -vserver vs1 -volume myvol -tiering-policy none -cloud-retrieval-policy promote
+----

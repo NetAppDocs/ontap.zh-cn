@@ -1,0 +1,41 @@
+---
+permalink: fabricpool/modify-cloud-retrieval-policy-task.html 
+sidebar: sidebar 
+keywords: cloud retrieval, controls, volume, default, tiering policy 
+summary: 您可以使用 ONTAP 9.8 中引入的 -cloud-retrieval-policy 选项更改卷的云检索策略。 
+---
+= 修改卷的云检索策略
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+FabricPool 云数据检索由检索策略控制，这些策略确定何时将数据写回本地层。读取模式可以是顺序的，也可以是随机的。
+
+例如，在使用"Auto"卷分层策略时，如果按顺序读取冷块，它们将保持冷态并保留在云层上。对于大多数客户端应用程序来说，这是理想的行为，可防止防病毒和分析应用程序常见的深度文件扫描将冷数据写回本地层
+
+从 ONTAP 9.8 开始，您可以更改卷的云检索策略以覆盖 link:tiering-policies-concept.html#how-cloud-retrieval-policies-work-with-tiering-policies["默认云检索"] 行为。
+
+.开始之前
+* 使用修改卷 `-cloud-retrieval-policy` 选项需要ONTAP 9.8或更高版本。
+* 要执行此操作，您必须具有高级权限级别。
+* 您应了解使用分层策略的行为 `-cloud-retrieval-policy`。
++
+link:tiering-policies-concept.html#how-cloud-retrieval-policies-work-with-tiering-policies["云检索策略如何与分层策略配合使用"]
+
+
+
+.步骤
+. 使用带有  `volume modify` 命令和  `-cloud-retrieval-policy` 选项修改现有卷的云检索策略：
++
+[listing]
+----
+volume create -volume <volume_name> -vserver <vserver_name> - tiering-policy <policy_name> -cloud-retrieval-policy
+----
++
+[listing]
+----
+vol modify -volume fp_volume4 -vserver vs0 -cloud-retrieval-policy promote
+----
+
