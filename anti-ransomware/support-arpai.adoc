@@ -1,0 +1,244 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/support-arpai.html 
+keywords: ARP AI, arpai, autonomous ransomware protection AI, ONTAP 9.16.1, supported configurations, SAN ransomware, NAS ransomware, machine learning ransomware, hypervisor ransomware, SnapMirror ARP AI, AFF ransomware protection, ASA ransomware, FlexVol ARP AI, FlexGroup ARP AI, current ARP AI model ONTAP, ARP AI requirements ONTAP, SAN ransomware support ONTAP 
+summary: ARP/AI（ONTAP 9.16.1 及更高版本）是当前的勒索软件保护模型，支持 AFF、ASA、FAS 和 ASA r2 系统上 FlexVol 和 FlexGroup 卷中的 NAS 和 SAN 工作负载。 
+---
+= 支持的 ONTAP Autonomous Ransomware Protection with AI 配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+具有 AI 的自主勒索软件防护（ARP/AI）可用于 NAS（从 ONTAP 9.16.1 开始）和 SAN（从 ONTAP 9.17.1 开始）工作负载。在部署 ARP/AI 之前，请查看支持的配置和用例，并确认您的环境符合要求。
+
+
+NOTE: 如果运行的是 ONTAP 9.15.1 或更早版本，请参见 link:support-arp.html["支持的 ARP 配置"]。
+
+
+
+[[suitable-workloads]]
+== 合适的工作负载
+
+ARP/AI 适用于这些类型的工作负载：
+
+* NFS 或 SAN 存储上的数据库
+* Windows 或 Linux 主目录
+* 图像和视频（例如，医疗记录和电子设计自动化 (EDA) 数据）
+* 包含 LUN 或 NVMe 命名空间的卷上的 SAN 工作负载（ONTAP 9.17.1 及更高版本）
+* VMware、Hyper-V、KVM 和 OpenStack 上的虚拟机工作负载（ONTAP 9.17.1 及更高版本）
+
+
+
+
+[[unsuitable-workloads]]
+== 不适合的工作负载
+
+ARP/AI不适合以下类型的工作负载：
+
+* 具有高频率文件创建或删除操作的工作负载（几秒钟内数十万个文件；例如，测试/开发工作负载）。
++
+ARP/AI 的威胁检测取决于其识别文件创建、重命名或删除操作异常激增的能力。如果应用程序本身是文件活动的来源，则无法有效地将其与勒索软件活动区分开来。
+
+* 应用程序或主机加密数据的工作负载。
++
+ARP/AI 依赖于将传入的数据区分为加密或未加密。如果应用程序本身正在对数据进行加密，则该功能的有效性会降低。但是，ARP/AI 仍然可以根据文件活动（删除、覆盖或创建，或者使用新的文件扩展名创建或重命名）和文件类型来工作。
+
+* 虚拟机中涉及大量高度压缩或加密文件的工作负载（例如 7z、ZIP 或受密码保护的 PDF 或 DOC 文件）。
+
+
+
+
+[[supported-configurations]]
+== 支持的配置
+
+ARP/AI 支持跨多个 ONTAP 版本和环境的 NAS 和 SAN 工作负载。在部署 ARP/AI 之前，请查看支持的功能以确认您的环境受支持。
+
+
+
+[[baseline-support]]
+=== 基线支持
+
+ARP/AI 支持从 ONTAP 9.16.1 开始，包括 FlexVol 卷和 MetroCluster 配置上的 NAS 工作负载（NFS 和 SMB），无需学习期。
+
+
+
+[[protocol-and-hypervisor-support-by-ontap-version]]
+=== ONTAP 版本支持的协议和虚拟机监控程序
+
+* ONTAP 9.17.1 及更高版本：SAN 块设备工作负载（包含 LUN 或 NVMe 命名空间的卷）和包含 VMware 虚拟磁盘的 NAS 卷。
+* ONTAP 9.17.1P5 及更高版本：包含 Hyper-V、KVM 和 OpenStack 虚拟机管理程序的 NAS 卷。
+
+
+
+
+[[feature-and-configuration-support-matrix]]
+=== 功能和配置支持矩阵
+
+以下 ONTAP 版本支持其他配置和卷类型：
+
+|===
+|  | ONTAP 9.19.1 | ONTAP 9.18.1 | ONTAP 9.17.1 | ONTAP 9.16.1. 
+
+
+| 使用SnapMirror异步保护的卷 | ✓ | ✓ | ✓ | ✓ 
+
+
+| 使用 SnapMirror 同步^1^保护的卷 | ✓ |  |  |  
+
+
+| 使用 SnapMirror 活动同步^1^保护的卷 | ✓ |  |  |  
+
+
+| 使用SnapMirror异步保护SVM (SVM灾难恢复) | ✓ | ✓ | ✓ | ✓ 
+
+
+| SVM 数据移动性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ 
+
+
+| FlexGroup 卷 | ✓ | ✓ | ✓ ^2^ | ✓ ^2^ 
+
+
+| 多管理员验证 | ✓ | ✓ | ✓ | ✓ 
+
+
+| ARP/AI 默认启用 | ✓ | ✓ |  |  
+|===
+^1^ 从 ONTAP 9.19.1 开始，ARP/AI 支持 FAS、AFF A-series、AFF C-series 和 AFX 系统上 NAS 和 SAN SnapMirror 同步关系中的主卷，以及 AFF A-series、AFF C-series 和 ASA r2 系统上 SnapMirror 活动同步 SAN 关系中的主卷。有关详细信息，请参见 <<SnapMirror>>。
+
+^2^ ONTAP 9.16.1 和 9.17.1 FlexGroup 卷在 ARP/AI 之前使用 ARP 模型；对 FlexGroup 卷的完整 ARP/AI 支持从 ONTAP 9.18.1 开始。
+
+
+
+[[snapmirror-and-arpai-interoperability]]
+[[snapmirror]]
+== SnapMirror 和 ARP/AI 互操作性
+
+从 ONTAP 9.12.1 开始，SnapMirror 异步目标卷支持 ARP。
+
+从 ONTAP 9.19.1 开始，ARP/AI 支持参与 SnapMirror 同步和 SnapMirror 活动同步 SAN 关系的主卷，其行为如下：
+
+* ARP/AI 在 FAS、AFF A 系列、AFF C 系列和 AFX 系统上的 NAS 和 SAN 的 SnapMirror 同步关系中的 _primary_ 卷上受支持。
+* 在 AFF A 系列、AFF C 系列和 ASA r2 系统上的 SnapMirror 活动同步 SAN 关系中的_主_卷上支持 ARP/AI。
+* ARP/AI 分析仅在 SnapMirror 同步和 SnapMirror 活动同步 SAN 关系中的活动读写主卷上运行。
+* ARP/AI 快照不会复制到 SnapMirror 同步或 SnapMirror 活动同步关系中的辅助卷。故障转移后，您需要在恢复卷上 link:enable-arpai.html["再次启用 ARP/AI"]。
+
+
+
+NOTE: 由于每个写入操作都将提交给同步镜像关系中的两个卷，因此仅在主卷上启用 ARP/AI 就足以检测异常。由主卷上的 ARP/AI 分析生成的内部元数据将复制到辅助卷。因此，如果在故障转移后在辅助卷上启用了 ARP/AI，则所需的元数据将已经存在。
+
+如果 SnapMirror _asynchronous_ 源卷启用了 ARP/AI，则 SnapMirror 目标卷会自动获取源卷的 ARP/AI 配置状态（如 `enabled`）、ARP/AI 安全数据和 ARP/AI 创建的快照。无需显式启用。
+
+虽然异步目标卷由只读（RO）快照组成，但不会对其数据进行 ARP/AI 处理。但是，当 SnapMirror 异步目标卷转换为读写（RW）时，ARP/AI 将在 RW 转换的目标卷上自动启用。
+
+
+
+[[arpai-and-virtual-machines]]
+== ARP/AI 和虚拟机
+
+ARP/AI 支持 VMware、Hyper-V、KVM 和 OpenStack 上的虚拟机 (VM)。VMware 支持从 ONTAP 9.17.1 开始；Hyper-V、KVM 和 OpenStack 支持从 ONTAP 9.17.1P5 开始。ARP/AI 对虚拟机内外的变化检测行为有所不同。对于涉及虚拟机内大量高度压缩文件（如 7z 和 ZIP）或加密文件（如受密码保护的 PDF、DOC 或 ZIP）的工作负载，不建议使用 ARP/AI。
+
+.虚拟机外部的更改
+如果新扩展名以加密状态进入卷或文件扩展名发生更改，ARP/AI 可以检测虚拟机外部 NFS 卷上的文件扩展名更改。
+
+.虚拟机内部的更改
+如果勒索软件攻击更改虚拟机内部的文件而不在虚拟机外部进行更改，且虚拟机的默认熵较低（例如 .txt、.docx 或 .mp4 文件），则 ARP/AI 将检测威胁。从 ONTAP 9.17.1 中的 SAN 支持开始，如果 ARP/AI 检测到虚拟机内的熵异常，则还会生成威胁警报。
+
+如果默认情况下文件具有较高的熵（例如 .gzip 或受密码保护的文件），则 ARP/AI 的检测能力受到限制。在这种情况下，ARP/AI 仍然可以主动拍摄快照；但是，如果文件扩展名未被外部篡改，则不会触发警报。
+
+
+NOTE: 在ONTAP 9.18.1 及更高版本中，仅FlexVol卷可检测 VM 内发生的攻击，如果 VM 数据存储配置在FlexGroup卷上，则无法检测 VM 内发生的攻击。
+
+
+
+[[unsupported-configurations]]
+== 不支持的配置
+
+ARP/AI 在 ONTAP S3 环境中不受支持。
+
+[[unsupported-configurations]]
+ARP/AI不支持以下卷配置：
+
+* FlexGroup 卷与 ONTAP 9.16.1 和 9.17.1（FlexGroup 卷在这些版本中使用较旧的 ARP 模型；对 FlexGroup 卷的 ARP/AI 支持从 ONTAP 9.18.1 开始）
+* FlexCache 卷（ARP/AI 在原始 FlexVol 卷上受支持，但在缓存卷上不受支持）
+* 使卷脱机
+* SnapLock 卷
+* ONTAP 9.18.1 及更早版本中的 SnapMirror 活动同步
+* ONTAP 9.18.1 及更早版本中的 SnapMirror 同步
+* 从 SnapMirror 同步目标卷级联配置
+* 受限卷
+* Storage VM的根卷
+* 已停止Storage VM的卷
+* FlexVol 到 FlexGroup 转换（转换前必须禁用 ARP/AI）
+
+
+
+
+[[arpai-performance-and-frequency-considerations]]
+== ARP/AI 性能和频率注意事项
+
+从吞吐量和峰值 IOPS 来看，ARP/AI 对系统性能的影响极小。影响取决于具体的卷工作负载。对于常见工作负载，建议采用以下配置限制：
+
+[cols="30,20,30"]
+|===
+| 工作负载特征 | 每个节点的建议卷限制 | 当每个节点的卷限制超过上限时，性能会下降^1^ 
+
+
+| 读取密集型或数据可以压缩 | 150 | 最大IOPS的4% 
+
+
+| 写入密集且数据无法压缩 | 60  a| 
+* NAS：ONTAP 9.16.1 及更高版本最大 IOPS 的 4%
+* SAN： ONTAP 9.17.1 及更高版本的最大 IOPS 的 5%
+
+
+|===
+^1^ 无论添加的卷数量超过建议的限制多少，系统性能都不会下降超过这些百分比。
+
+[NOTE]
+====
+在大量新卷上默认启用 ARP/AI 可能会增加系统资源使用率。在卷上启用 ARP/AI 时，请考虑快照等竞争进程的空间需求。
+
+====
+从 ONTAP 9.18.1 开始，ARP/AI 支持根据平台类型和 CPU 核心数量增加卷限制：
+
+[cols="40,30"]
+|===
+| 平台类型 | 每个节点支持 ARP/AI 的最大卷数 
+
+
+| 低端（最多 20 个 CPU 内核的系统） | 250 
+
+
+| 中（最多 64 个 CPU 内核的系统） | 750 
+
+
+| 高端（CPU 内核超过 64 个的系统） | 1000 
+|===
+
+NOTE: CPU 核心计数适用于双节点 HA 对中的每个单独节点。
+
+
+
+[[upgrade-considerations-for-existing-clusters]]
+[[arp-upgrade-considerations]]
+== 现有集群的升级注意事项
+
+
+NOTE: 如果您正在部署新的 ONTAP 9.18.1 或更高版本集群，则默认情况下会自动在新卷上启用 ARP/AI。请参阅 link:learn-about-arpai.html["了解ARP/AI"]。
+
+在 AFF A 系列、AFF C 系列、ASA 或 ASA r2 系统上升级到 ONTAP 9.18.1 或更高版本时，经过 12 小时宽限期后，ARP/AI 默认自动为新卷启用。在宽限期内，您可以link:default-enable-change-arpai.html["选择退出自动启用"]。现有卷不会更改；您必须在现有卷上link:enable-arpai.html["手动启用 ARP/AI"]。
+
+对于从 ONTAP 9.17.1 或更早版本升级到 ONTAP 9.18.1 的 FlexGroup 卷，ARP/AI 将自动可用，处于学习模式的卷将转换为活动模式。
+
+
+
+[[multi-admin-verification-with-arpai-protected-volumes]]
+== 使用受 ARP/AI 保护的卷进行多管理员验证
+
+从 ONTAP 9.13.1 开始，您可以使用 ARP/AI 启用多管理员验证 (MAV)，以提高安全性。MAV 确保至少需要两名或多名经过身份验证的管理员关闭 ARP/AI、暂停 ARP/AI 或将受保护卷上的可疑攻击标记为误报。了解如何 link:../multi-admin-verify/enable-disable-task.html["为受 ARP/AI 保护的卷启用 MAV"]。
+
+需要为 MAV 组定义管理员，并为要保护的 `security anti-ransomware volume disable`、 `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect`命令创建 MAV 规则。
+
+有关、 `security anti-ransomware volume pause`和的详细信息 `security anti-ransomware volume disable`， `security anti-ransomware volume attack clear-suspect`请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware+volume["ONTAP 命令参考"^]。

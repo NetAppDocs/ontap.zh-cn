@@ -1,0 +1,112 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/enable-default-arpai.html 
+keywords: ARP AI, arpai, enable by default, autonomous ransomware protection AI, default volume state, ONTAP 9.18.1, automatic enablement, SVM default, cluster default, machine learning ransomware 
+summary: 从 ONTAP 9.16.1 开始，配置 SVM，以便默认情况下使用 ARP/AI 启用新卷。从 ONTAP 9.18.1 开始，集群级自动启用在受支持的系统上可用。 
+---
+= 默认情况下，在新卷中启用 ONTAP ARP/AI
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.16.1 开始，您可以配置存储虚拟机（SVM），以便默认情况下为新卷启用基于 AI 的自主勒索软件保护（ARP/AI）。从 ONTAP 9.18.1 开始，ARP/AI 将在 12 小时宽限期后在集群级别自动为 link:support-arpai.html["支持的系统"] 启用。当您需要在 SVM 级别而非集群级别为新卷默认启用 ARP/AI 时，请使用此过程。
+
+对于 ONTAP 9.17.1 及更早版本，在 SVM 级别进行配置是默认情况下在新卷上启用 ARP 的唯一方法。
+
+
+NOTE: 如果运行的是 ONTAP 9.15.1 或更早版本，请参见 link:enable-default-arp.html["默认情况下，在新卷中启用 ARP"]。
+
+
+NOTE: 对于 ONTAP 9.13.1 至 9.17.1，FlexGroup 卷使用较早的 ARP 模型，需要一个学习期。请参阅 link:enable-default-arp.html["默认情况下，在新卷中启用 ARP"]。
+
+.关于此任务
+在集群级别未自动启用 ARP/AI 的系统上，新卷在创建时默认禁用 ARP/AI 功能。您必须启用 ARP/AI，并将其配置为默认对在 SVM 中创建的新卷启用。
+
+未启用 ARP/AI 的现有卷在您更改 SVM 默认值时不会自动更改 ARP/AI 启用状态。此过程中描述的 SVM 设置仅影响新卷。了解如何link:enable-arpai.html["为现有卷启用 ARP/AI"]。
+
+[[arp-enablement-default-behavior-table]]
+启用自主勒索软件防护后，它可能会进入过渡期，具体取决于您的环境和 ONTAP 版本：
+
+[cols="25,25,50"]
+|===
+| Volume type | ONTAP 版本 | 启用后的行为 
+
+
+.2+| NAS FlexGroup | ONTAP 9.18.1 及更高版本 | ARP/AI 无需学习期即可立即生效 
+
+
+| ONTAP 9.13.1 至 9.17.1 | ARP启动后将进入学习模式，持续30天。 
+
+
+.2+| NAS FlexVol | ONTAP 9.16.1 及更高版本 | ARP/AI 无需学习期即可立即生效 
+
+
+| ONTAP 9.10.1 至 9.15.1 | ARP启动后将进入学习模式，持续30天。 
+
+
+| SAN卷 | ONTAP 9.17.1 及更高版本 | ARP/AI 立即启动，启动评估期，以确定合适的警报阈值，然后再从初始的保守阈值过渡。 
+|===
+.开始之前
+在默认情况下启用 ARP/AI 之前，请确保您的环境具有以下功能：
+
+.NAS 特定要求
+* 启用了 NFS 或 SMB（或两者）协议的存储虚拟机 (SVM)。
+* 积极link:../concepts/namespaces-junction-points-concept.html["接合路径"]就音量而言。
+
+
+.SAN 特定要求
+* 启用了 iSCSI、FC 或 NVMe 协议的存储虚拟机 (SVM)。
+
+
+.一般要求
+* link:index.html#licenses-for-autonomous-ransomware-protection["正确的许可证"] 适用于您的 ONTAP 版本。
+* （推荐）启用多管理员验证 (MAV)（ONTAP 9.13.1 及更高版本）。看link:../multi-admin-verify/enable-disable-task.html["启用多管理员验证"]。
+
+
+.步骤
+您可以使用 System Manager 或 ONTAP CLI 在 SVM 级别为新卷默认启用 ARP/AI。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择 *Storage* 或 *Cluster*（取决于您的环境），选择 *Storage VMs*，然后选择将包含要使用 ARP/AI 保护的卷的存储 VM。
+. 导航到“设置”选项卡。在“安全”下，找到“反勒索软件”磁贴，然后选择image:icon_pencil.gif["编辑图标"] 。
+. 选中复选框以启用反勒索软件 (ARP/AI)。选中附加复选框以在存储 VM 中的所有符合条件的卷上启用 ARP/AI。
++
+
+NOTE: ARP/AI 立即进入活动模式；无需学习周期。
+
+
+
+--
+.命令行界面
+--
+.修改现有 SVM 以在新卷中默认启用 ARP/AI
+[source, cli]
+----
+vserver modify -vserver <svm_name> -anti-ransomware-default-volume-state enabled
+----
+.创建新 SVM，默认为新卷启用 ARP/AI
+[source, cli]
+----
+vserver create -vserver <svm_name> -anti-ransomware-default-volume-state enabled
+----
+.验证 ARP/AI 状态
+[source, cli]
+----
+security anti-ransomware volume show
+----
+--
+====
+.相关信息
+* link:default-enable-change-arpai.html["选择退出 ARP/AI 自动启用"]
+* link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["安全反勒索软件卷显示"^]
+

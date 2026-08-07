@@ -1,0 +1,95 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/switch-learning-arp.html 
+keywords: ARP, learning mode, active mode, switch, autonomous ransomware protection, ONTAP 9.10.1, dry-run, NAS, FlexGroup, legacy ARP learning mode, ONTAP 9.15.1 or earlier 
+summary: 在学习模式下至少 30 天后，手动或自动将 ARP 从学习模式切换到活动模式，适用于 ONTAP 9.10.1 至 9.15.1 NAS 卷。 
+---
+= 学习一段时间后、在ONTAP ARP中切换到活动模式
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+对于 NAS 环境，手动或自动将启用 ARP 的卷从学习模式切换到活动模式。如果您将 ARP 与 ONTAP 9.10.1 到 9.15.1 配合使用，或者 ARP 正在 ONTAP 9.13.1 到 9.17.1 的 FlexGroup 卷上运行，则需要切换模式。
+
+
+NOTE: ARP/AI（ONTAP 9.16.1 及更高版本）不需要学习期。ARP/AI 保护立即在 FlexVol 卷上激活。对于 FlexGroup 卷，ARP/AI 需要 ONTAP 9.18.1。ARP/AI 没有等效的切换模式程序。如果您正在运行 ONTAP 9.16.1 或更高版本，请参阅 link:index.html["了解自主勒索软件防护"]。
+
+在 ARP 完成建议至少 30 天的学习模式运行后，您可以手动切换到活动模式。从 ONTAP 9.13.1 开始，ARP 自动确定最佳学习周期间隔并自动切换，这可能在 30 天之前发生。
+
+
+NOTE: 在现有卷中、学习和活动模式仅适用于新写入的数据、而不适用于卷中已有的数据。不会扫描和分析现有数据、因为在为卷启用ARP后、系统会根据新数据假设先前正常数据流量的特征。
+
+
+
+[[manually-switch-to-active-mode-after-a-learning-period]]
+== 学习期结束后手动切换到活动模式
+
+对于 ONTAP 9.10.1 至 9.15.1（以及 ONTAP 9.13.1 至 9.17.1 中的 FlexGroup 卷），您可以在学习期结束后使用 System Manager 或 ONTAP CLI 手动从 ARP 学习模式转换为活动模式。
+
+.步骤
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储>卷*，然后选择已准备好进入活动模式的卷。
+. 在*Volumes*概述的*Security*选项卡中，在Anti-勒索 软件框中选择*切换到活动模式*。
+. 在“反勒索软件”框中验证卷的 ARP 状态。
+
+
+--
+.命令行界面
+--
+. 将受保护的卷切换到活动模式：
++
+[source, cli]
+----
+security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>
+----
++
+您也可以使用以下 `volume modify`命令切换到活动模式：
+
++
+[source, cli]
+----
+volume modify -volume <vol_name> -vserver <svm_name> -anti-ransomware-state enabled
+----
+. 验证卷的 ARP 状态：
++
+[source, cli]
+----
+security anti-ransomware volume show
+----
+
+
+--
+====
+
+
+[[automatic-switching-from-learning-mode-to-active-mode]]
+== 自动从学习模式切换到活动模式
+
+从ONTAP 9.13.1 开始，自适应学习已添加到 ARP 分析中，并且可以自动从学习模式切换到主动模式。ARP自动从学习模式切换到主动模式的自主决策基于以下选项的配置设置：
+
+[listing]
+----
+ -anti-ransomware-auto-switch-minimum-incoming-data-percent
+ -anti-ransomware-auto-switch-duration-without-new-file-extension
+ -anti-ransomware-auto-switch-minimum-learning-period
+ -anti-ransomware-auto-switch-minimum-file-count
+ -anti-ransomware-auto-switch-minimum-file-extension
+----
+如果启用自动切换功能，即使未满足所有条件，卷也会在最多 30 天后自动切换到活动模式。此 30 天的限制是固定的，无法更改。
+
+如果您希望手动控制转换，可以禁用 SVM 中所有卷从学习到活动模式的自动切换：
+
+[source, cli]
+----
+vserver modify <svm_name> -anti-ransomware-auto-switch-from-learning-to-enabled false
+----
+有关ARP配置选项(包括默认值)的详细信息、请参见 link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-auto-switch-to-enable-mode-show.html["ONTAP 命令参考"^]。
+
+.相关信息
+* link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware+volume["安全反勒索软件量"^]
+

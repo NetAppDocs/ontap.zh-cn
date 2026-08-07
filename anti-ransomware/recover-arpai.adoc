@@ -1,0 +1,252 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/recover-arpai.html 
+keywords: ARP AI, arpai, recover data, ransomware attack, ARP AI snapshot, restore, FlexClone, SnapRestore, ONTAP 9.16.1, machine learning ransomware, SnapMirror 
+summary: 在确认勒索软件攻击后，使用 ARP/AI 快照或您选择的其他快照来还原数据。 
+---
+= 使用 ONTAP ARP/AI 在勒索软件攻击后恢复数据
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+使用 AI 的自主勒索软件防护 (ARP/AI) 可创建快照，以防范勒索软件威胁。您可以使用 ARP/AI 快照或卷的其他快照来还原数据。
+
+
+NOTE: 如果运行的是 ONTAP 9.15.1 或更早版本，请参见 link:recover-arp.html["使用 ARP 在勒索软件攻击后恢复数据"]。
+
+.关于此任务
+根据潜在的攻击情况，您可以通过以下方式之一还原数据：
+
+* *<<restore-from-arp-snapshot,从最新的 ARP/AI 快照还原>>*：当您对其完整性有信心时，请使用最新的 ARP/AI 快照。
+* *<<restore-from-earlier-snapshot,从早期快照还原>>*：释放对最新 ARP/AI 快照的锁定，然后从早期快照还原。
+* *<<restore-without-attack,未报告攻击时还原>>*：首先从最近的 ARP/AI 快照还原，然后从您选择的快照完成后续还原。
+
+
+ARP/AI 使用以下前缀名称之一创建快照：
+
+* `Anti_ransomware_periodic_backup`：在 ONTAP 9.17.1 及更高版本中用于按常规 4 小时间隔创建的快照。例如， `Anti_ransomware_periodic_backup.2025-06-01_1248`。
+* `Anti_ransomware_attack_backup`：在 ONTAP 9.17.1 及更高版本中用于响应异常创建的快照。这些快照的默认保留期为 10 天。例如， `Anti_ransomware_attack_backup.2025-08-25_1248`。
+* `Anti_ransomware_backup`：在 ONTAP 9.16.1 及更早版本中用于响应异常创建的快照。例如， `Anti_ransomware_backup.2022-12-20_1248`。
+
+
+.开始之前
+* 如果您正在响应异常活动警告，请在继续进行数据还原之前link:respond-arpai.html#classify-as-potential-ransomware-attack-and-recover-data["您必须首先将其归类为潜在的勒索软件攻击"]。
+* 选择 <<choose-a-recovery-method,还原方法>> 并查看 <<recovery-constraints-and-considerations,恢复约束>>，然后再完成还原过程。
+
+
+
+
+[[choose-a-recovery-method]]
+== 选择一种恢复方法
+
+根据数据损坏的程度和您的操作要求，选择这些恢复方法之一或组合。
+
+* *Volume snapshot restore*：将整个卷回滚到选定的快照（ARP/AI 或计划）。这是最快的方法，但会删除在还原点之后创建的所有快照。
+* *从干净的快照创建 FlexClone*：从所选快照创建克隆卷，保留原始卷及其所有快照，以进行取证分析或进行其他恢复。建议从父卷拆分克隆，以将受感染的父卷与干净的克隆隔离开来。
++
+详细了解 link:../volumes/create-flexclone-task.html["从快照创建 FlexClone 卷"] 和 link:../volumes/split-flexclone-from-parent-task.html["将 FlexClone 从其父项拆分"]。
+
+* *单个文件 SnapRestore*：从快照还原单个文件。每个文件都可以来自不同的快照。当受影响的文件数量相对较少时，这种方法非常实用。
++
+详细了解link:../data-protection/restore-single-file-snapshot-task.html["从 Snapshot 还原单个文件"]。
+
+* *从  `.snapshot` 目录复制数据*：使用标准文件复制操作将数据从快照装载点复制到新卷。此方法保留原始卷和快照以供分析。
+* *混合方法*：首先使用 SnapRestore 将卷回滚到最近的干净快照，然后从另一个快照或外部备份单独恢复任何剩余的损坏文件。
+
+
+
+
+[[recovery-constraints-and-considerations]]
+== 恢复限制和注意事项
+
+* 对于 ONTAP 9.16.1 及更高版本：首先清除可疑事件（在 link:respond-arpai.html["应对异常活动。"] 中），然后执行还原。清除后，将根据您对活动的分类方式保留 ARP/AI 快照。从 ONTAP 9.17.1 开始，默认值为 7 天（实际攻击）或 24 小时（误报）。在 ONTAP 9.16.1 中，默认值为 5 天（实际攻击）或 48 小时（误报）。清除疑点选项在卷还原后不可用，因此必须在还原前清除。
+* 只有在使用 `volume snapshot restore`从早期快照恢复时，才需要释放 ARP/AI 快照锁定。FlexClone、单文件 SnapRestore、数据复制操作或类似方法不需要此操作。
+* 对于仅通过熵分析检测到攻击的 SAN 卷，只有在攻击时间线之前创建的快照和攻击快照才会保留较长时间（默认情况下为 10 天，可配置）。其他定期快照继续遵循正常的保留规则。这与 NAS 卷不同，NAS 卷会保留攻击时间线之前创建的所有快照，直到管理员执行清除可疑操作为止。
+
+
+.SnapMirror 注意事项
+* 如果卷是 ONTAP 9.19.1 中 SnapMirror 同步或 SnapMirror 活动同步 SAN 关系的一部分，并且您计划执行卷级还原，请在还原前静默或 link:../data-protection/make-destination-volume-writeable-task.html["在恢复之前断开关系"]，然后在还原后重新建立保护。
+* 如果在参与 SnapMirror 关系时从快照恢复受 ARP/AI 保护的卷，请在恢复后手动更新所有镜像副本。否则，镜像副本可能无法使用，可能需要删除并重新创建。
+
+
+有关完整 SnapMirror 和 ARP/AI 互操作性行为，请参见 link:support-arpai.html#snapmirror["SnapMirror 和 ARP/AI 互操作性"]。
+
+
+
+[[restore-after-a-system-attack]]
+[[restore-after-system-attack]]
+== 在系统受到攻击后恢复
+
+对于卷快照恢复，根据快照源和情况选择以下流程之一：
+
+* <<restore-from-arp-snapshot,从最新的 ARP/AI 快照还原>>
+* <<restore-from-earlier-snapshot,从早期快照还原>>
+* <<restore-without-attack,未发现攻击时还原>>
+
+
+
+
+[[restore-from-the-most-recent-arpai-snapshot]]
+[[restore-from-arp-snapshot]]
+=== 从最新的 ARP/AI 快照还原
+
+当您可以放心地从最新的 ARP/AI 快照恢复时，请选择此流程，该快照是可用于恢复的最新快照。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储>卷*，然后选择卷和*Snapshot副本*。
+. 在运行卷还原之前， link:respond-arpai.html#arp-snapshot-decision-sm-pre-restore["清除可疑文件"]。
++
+
+NOTE: 清除可疑文件后，ARP/AI 快照将默认保留 7 天。如果您需要更多时间来恢复数据，link:modify-snapshot-options-arpai.html["调整 ARP/AI 快照设置"]以增加保留时间。所有数据恢复完成后，您可以缩短保留时间。
+
+. 选择您要恢复的最新 ARP/AI 快照 (`Anti_ransomware`) 旁边的 image:icon_kabob.gif["菜单选项图标"]，然后选择 *恢复*。
+
+
+--
+.命令行界面
+--
+. 列出卷中的快照：
++
+[source, cli]
+----
+volume snapshot show -vserver <svm> -volume <volume>
+----
+. 在运行 `volume snapshot restore`之前，link:respond-arpai.html#arp-snapshot-decision-cli-pre-restore["清除可疑文件"]。
+. 从快照还原卷的内容：
++
+[source, cli]
+----
+volume snapshot restore -vserver <svm> -volume <volume> -snapshot <snapshot>
+----
+
+
+--
+====
+
+
+[[restore-from-an-earlier-snapshot]]
+[[restore-from-earlier-snapshot]]
+=== 从早期快照还原
+
+如果要从早期快照还原，请选择此流。在从早期快照还原之前，请释放对最新 ARP/AI 快照的锁定。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 释放对最新 ARP/AI 快照的锁定：
++
+.. 选择 * 存储 > 卷 * 。
+.. 选择*安全性*，然后选择*查看可疑文件类型*。
+.. 将文件标记为"潜在勒索软件攻击"。
+.. 选择 *Update and Clear Suspected File Types*。
+
+
+. 选择*存储>卷*，然后选择卷和*Snapshot副本*。
+. 选择要还原的早期快照旁边的 image:icon_kabob.gif["菜单选项图标"]，然后选择 *Restore*。
+
+
+--
+.命令行界面
+--
+. 将攻击标记为潜在勒索软件 (`-false-positive false`）并清除可疑文件以释放锁定：
++
+[source, cli]
+----
+security anti-ransomware volume attack clear-suspect -vserver <svm_name> -volume <vol_name> [<extension identifiers>] -false-positive false
+----
+. 列出卷中的快照：
++
+[source, cli]
+----
+volume snapshot show -vserver <svm> -volume <volume>
+----
++
+以下示例显示了中的快照 `vol1`：
+
++
+[listing]
+----
+
+clus1::> volume snapshot show -vserver vs1 -volume vol1
+
+Vserver Volume Snapshot                State    Size  Total% Used%
+------- ------ ---------- ----------- ------   -----  ------ -----
+vs1	    vol1   hourly.2013-01-25_0005  valid   224KB     0%    0%
+               daily.2013-01-25_0010   valid   92KB      0%    0%
+               hourly.2013-01-25_0105  valid   228KB     0%    0%
+               hourly.2013-01-25_0205  valid   236KB     0%    0%
+               hourly.2013-01-25_0305  valid   244KB     0%    0%
+               hourly.2013-01-25_0405  valid   244KB     0%    0%
+               hourly.2013-01-25_0505  valid   244KB     0%    0%
+
+7 entries were displayed.
+----
+. 从快照还原卷的内容：
++
+[source, cli]
+----
+volume snapshot restore -vserver <svm> -volume <volume> -snapshot <snapshot>
+----
++
+以下示例将还原的内容 `vol1`：
+
++
+[listing]
+----
+cluster1::> volume snapshot restore -vserver vs0 -volume vol1 -snapshot daily.2013-01-25_0010
+----
+
+
+--
+====
+
+
+[[restore-when-no-attack-is-identified]]
+[[restore-without-attack]]
+== 未发现攻击时还原
+
+当未识别出攻击时，首先从最新的 ARP/AI 快照中恢复，然后从较早的快照中恢复。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储>卷*，然后选择卷和*Snapshot副本*。
+. 选择 image:icon_kabob.gif["菜单选项图标"]，然后选择最新的  `Anti_ransomware` 快照。
+. 选择 * 还原 * 。
+. 返回 *Snapshot Copies* 菜单，然后选择要使用的早期快照。
+. 选择 * 还原 * 。
+
+
+--
+.命令行界面
+--
+. 首先从最新的 ARP/AI 快照还原：
++
+.. 列出卷中的快照：
++
+[source, cli]
+----
+volume snapshot show -vserver <svm> -volume <volume>
+----
+.. 从快照还原卷的内容：
++
+[source, cli]
+----
+volume snapshot restore -vserver <svm> -volume <volume> -snapshot <snapshot>
+----
+
+
+. 选择要使用的早期快照，然后重复还原。
+
+
+有关的详细信息 `volume snapshot`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=volume+snapshot["ONTAP 命令参考"^]。
+
+--
+====

@@ -1,0 +1,165 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/support-arp.html 
+keywords: ARP, autonomous ransomware protection, ONTAP 9.10.1, supported configurations, NAS, FlexVol, FlexGroup, SnapMirror, MAV, multi-admin verification, 4000 file extensions, NFS, SMB, learning mode, legacy ARP, ONTAP 9.10.1 through 9.15.1 
+summary: ARP（ONTAP 9.10.1 至 9.15.1）支持 FlexVol 和 FlexGroup 卷上的 NAS 工作负载。在部署 ARP 之前，请查看支持的配置和限制。 
+---
+= ONTAP ARP 支持的配置
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+自主勒索软件防护 (ARP) 适用于从 ONTAP 9.10.1 到 ONTAP 9.15.1 的 NAS 工作负载。在部署 ARP 之前，您应该了解推荐的用途和支持的配置以及性能影响。
+
+
+NOTE: ARP/AI 是适用于 ONTAP 9.16.1 及更高版本的当前 ONTAP 勒索软件保护模型。如果您运行的是 ONTAP 9.16.1 或更高版本，请参见 link:support-arpai.html["支持的 ARP/AI 配置"]。
+
+
+
+[[suitable-workloads]]
+== 合适的工作负载
+
+ARP 适用于以下类型的工作负载：
+
+* 基于 NFS 存储的数据库
+* Windows 或 Linux 主目录
++
+用户可以创建在学习期间未检测到的扩展名的文件，因此此工作负载中出现误报的可能性更大。
+
+* 图像和视频
++
+例如、医疗保健记录和电子设计自动化(Electronic Design Automation、EDA)数据
+
+
+
+
+
+[[unsuitable-workloads]]
+== 不适合的工作负载
+
+ARP 不适合以下类型的工作负载：
+
+* 具有高频率文件创建或删除操作的工作负载（几秒钟内数十万个文件；例如，测试/开发工作负载）。
++
+ARP 的威胁检测依赖于其识别文件创建、重命名或删除操作异常激增的能力。如果应用程序本身是文件活动的来源，则无法有效区分勒索软件活动。
+
+* 具有 4,000 多个唯一文件扩展名的卷上的工作负载。
++
+ARP（ONTAP 9.10.1 至 9.15.1）每卷最多可以分析 4,000 个文件扩展名。如果卷上的唯一文件扩展名数量超过此限制，则 ARP 无法有效检测勒索软件活动，该工作负载将被视为不适用。
+
+* 应用程序或主机加密数据的工作负载。
++
+ARP 依赖于区分传入数据是加密的还是未加密的。如果应用程序本身正在加密数据，则该功能的有效性会降低。但是，ARP 仍然可以根据文件活动（删除、覆盖、创建，或者创建文件或使用新的文件扩展名重命名）和文件类型进行工作。
+
+* SAN 工作负载。
++
+ARP（9.10.1 至 9.15.1）不支持 SAN 卷。SAN 支持已在 ONTAP 9.17.1 中随 ARP/AI 引入。 link:learn-about-arpai.html["有关 SAN 的详细信息，请参见 ARP/AI 文档。"]
+
+
+
+
+
+[[supported-configurations]]
+== 支持的配置
+
+ARP（9.10.1 至 9.15.1）支持 NFS 和 SMB 协议上的 NAS 工作负载，适用于 FlexVol 卷，以及从 ONTAP 9.13.1 开始，适用于 FlexGroup 卷。
+
+|===
+| Configuration | ONTAP 9.15.1. | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
+
+
+| FlexVol 卷（NAS） | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+
+
+| FlexGroup 卷（NAS） | ✓ | ✓ | ✓ |  |  |  
+
+
+| 具有 SnapMirror 异步功能的卷 | ✓ | ✓ | ✓ | ✓ |  |  
+
+
+| 具有 SnapMirror 异步功能的 SVM（SVM 灾难恢复） | ✓ | ✓ | ✓ | ✓ |  |  
+
+
+| SVM 数据移动性 (`vserver migrate`） | ✓ | ✓ | ✓ | ✓ |  |  
+
+
+| 多管理员验证(MAV) | ✓ | ✓ | ✓ |  |  |  
+
+
+| MetroCluster 配置 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+|===
+
+
+[[snapmirror-and-arp-interoperability]]
+[[snapmirror]]
+== SnapMirror和ARP互操作性
+
+从 ONTAP 9.12.1 开始，ARP 支持 SnapMirror 异步目标卷。SnapMirror 同步和 SnapMirror 活动同步仅从 ONTAP 9.19.1 开始支持 ARP/AI。
+
+如果 SnapMirror 源卷启用了 ARP，则 SnapMirror 目标卷会自动获取源卷的 ARP 配置状态（如 `dry-run`或 `enabled`）、ARP 训练数据和 ARP 创建的快照。无需为 ARP 单独启用目标。
+
+虽然目标卷由只读 (RO) 快照组成，但不会对其数据执行 ARP 处理。但是，当 SnapMirror 目标卷转换为读写 (RW) 时，ARP 将自动在 RW 转换的目标卷上启用。
+
+
+NOTE: 在 ONTAP 9.10.1 和 9.11.1 中，SnapMirror 不会将 ARP 配置状态、训练数据和快照从源卷传输到目标卷。当 SnapMirror 目标卷转换为读写时，转换后必须在学习模式下显式启用目标卷上的 ARP 。
+
+
+
+[[unsupported-configurations]]
+== 不支持的配置
+
+ARP不支持以下卷配置：
+
+* FlexCache卷(原始FlexVol卷支持ARP、但缓存卷不支持ARP)
+* 使卷脱机
+* SnapLock 卷
+* SnapMirror同步
+* SnapMirror活动同步
+* SnapMirror 异步目标卷（在 ONTAP 9.10.1 和 9.11.1 中，从 ONTAP 9.12.1 开始支持）
+* 受限卷
+* Storage VM的根卷
+* 已停止Storage VM的卷
+* FlexVol 到 FlexGroup 转换（转换前必须禁用 ARP）
+
+
+
+
+[[performance-and-volume-limits]]
+== 性能和卷限制
+
+ARP 对系统性能（以吞吐量和峰值 IOPS 衡量）的影响极小。ARP功能的影响取决于具体的卷工作负载。对于常见工作负载，建议采用以下配置限制：
+
+[cols="2,1,2"]
+|===
+| 工作负载特征 | 每个节点的建议卷限制 | 当每个节点的卷限制超过上限时，性能会下降^1^ 
+
+
+| 读取密集型或数据可以压缩 | 150 | 最大IOPS的4% 
+
+
+| 写入密集且数据无法压缩 | 60 | 最大 IOPS 的 10% 
+|===
+^1^ 无论添加的卷数量超过建议的限制多少，系统性能都不会下降超过这些百分比。
+
+由于 ARP 分析按优先级顺序运行，因此随着受保护卷数量的增加，每个卷上运行的分析频率会降低。
+
+
+NOTE: 在大量新卷上默认启用 ARP 可能会增加系统资源使用率。在卷上启用 ARP 时，请考虑快照等竞争流程的空间需求。
+
+
+
+[[multi-admin-verificationmulti-admin-verification-with-arp-protected-volumes]]
+== [[multi-admin-verification]]使用 ARP 保护的卷进行多管理员验证
+
+从ONTAP 9.13.1开始、您可以使用ARP启用多管理员验证(MAV)、以提高安全性。MAV可确保至少需要两个或更多经过身份验证的管理员在受保护的卷上关闭ARP、暂停ARP或将可疑攻击标记为误报。了解如何link:../multi-admin-verify/enable-disable-task.html["为受ARP保护的卷启用MAV"]。
+
+需要为 MAV 组定义管理员，并为要保护的 `security anti-ransomware volume disable`、 `security anti-ransomware volume pause`和 `security anti-ransomware volume attack clear-suspect`命令创建 MAV 规则。
+
+有关、 `security anti-ransomware volume pause`和的详细信息 `security anti-ransomware volume disable`， `security anti-ransomware volume attack clear-suspect`请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware+volume["ONTAP 命令参考"^]。
+
+.相关信息
+* link:enable-arp.html["在卷上启用 ARP"]
+* link:enable-default-arp.html["默认情况下，在新卷中启用 ARP"]
+

@@ -1,0 +1,210 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/enable-arpai.html 
+keywords: ARP AI, arpai, enable, autonomous ransomware protection AI, ONTAP 9.16.1, NAS, SAN, FlexVol, FlexGroup, machine learning ransomware, active mode, enable ransomware protection ONTAP 9.16.1, enable ARP AI SAN volumes, no learning period ARP AI enablement 
+summary: 从 ONTAP 9.16.1 开始，在支持的卷上启用 ARP/AI，实现无学习期的即时主动保护。SAN 和 FlexGroup 支持在后续版本中提供。 
+---
+= 在卷上启用 ONTAP ARP/AI
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.16.1 开始，您可以在现有卷上启用人工智能自主勒索软件保护（ARP/AI），也可以在启用 ARP/AI 的情况下创建新卷。ARP/AI 即时激活，无需学习周期。
+
+
+NOTE: 如果运行的是 ONTAP 9.15.1 或更早版本，请参见 link:enable-arp.html["在卷上启用 ARP"]。
+
+.关于此任务
+ARP/AI 是 ONTAP 9.16.1 及更高版本的当前勒索软件保护模型。要启用 ARP/AI，请在确保环境满足要求后，按照与您的环境相匹配的程序进行操作：
+
+* <<enable-nas-flexvol,带有FlexVol卷的 NAS>> （ONTAP 9.16.1 及更高版本）
+* <<enable-nas-flexgroup,带有FlexGroup卷的 NAS>> （ONTAP 9.18.1 及更高版本）
+* <<enable-san,SAN卷>> （ONTAP 9.17.1 及更高版本）
+
+
+启用自主勒索软件防护后，它可能会进入过渡期，具体取决于您的环境和 ONTAP 版本：
+
+[cols="25,25,50"]
+|===
+| Volume type | ONTAP 版本 | 启用后的行为 
+
+
+.2+| NAS FlexGroup | ONTAP 9.18.1 及更高版本 | ARP/AI 无需学习期即可立即生效 
+
+
+| ONTAP 9.13.1 至 9.17.1 | ARP启动后将进入学习模式，持续30天。 
+
+
+.2+| NAS FlexVol | ONTAP 9.16.1 及更高版本 | ARP/AI 无需学习期即可立即生效 
+
+
+| ONTAP 9.10.1 至 9.15.1 | ARP启动后将进入学习模式，持续30天。 
+
+
+| SAN卷 | ONTAP 9.17.1 及更高版本 | ARP/AI 立即启动，启动评估期，以确定合适的警报阈值，然后再从初始的保守阈值过渡。 
+|===
+.开始之前
+在启用 ARP/AI 之前，请确保您的环境具有以下条件：
+
+.NAS 特定要求
+* 启用了 NFS 或 SMB（或两者）协议的存储虚拟机 (SVM)。
+* 已配置客户端的 NAS 工作负载。
+* 积极link:../concepts/namespaces-junction-points-concept.html["接合路径"]就音量而言。
+
+
+.SAN 特定要求
+* 启用了 iSCSI、FC 或 NVMe 协议的存储虚拟机 (SVM)。
+* 已配置客户端的 SAN 工作负载。
+
+
+.一般要求
+* link:index.html#licenses-for-autonomous-ransomware-protection["正确的许可证"] 适用于您的 ONTAP 版本。
+* （推荐）启用多管理员验证 (MAV)（ONTAP 9.13.1 及更高版本）。看link:../multi-admin-verify/enable-disable-task.html["启用多管理员验证"]。
+
+
+
+
+[[enable-arpai-on-nas-flexvol-volumes]]
+[[enable-nas-flexvol]]
+== 在 NAS FlexVol 卷上启用 ARP/AI
+
+从 ONTAP 9.16.1 开始，ARP/AI 在为 NAS FlexVol 卷启用后立即处于活动状态。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储>卷*，然后选择要保护的卷。
+. 在*Volumes*概述的*Security*选项卡中，选择*Status*从Disabled切换为Enabled。
+. 在*反勒索软件*框中验证卷的 ARP/AI 状态。
++
+要显示所有卷的 ARP/AI 状态：在*卷*窗格中，选择*显示/隐藏*，然后确保选中*反勒索软件*状态。
+
+
+
+--
+.命令行界面
+--
+*在现有卷上启用 ARP/AI：*
+
+[source, cli]
+----
+security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>
+----
+*创建启用了 ARP/AI 的新卷：*
+
+[source, cli]
+----
+volume create -volume <vol_name> -vserver <svm_name> -aggregate <aggr_name> -size <nn> -anti-ransomware-state enabled -junction-path </path_name>
+----
+*验证 ARP/AI 状态：*
+
+[source, cli]
+----
+security anti-ransomware volume show
+----
+有关的详细信息 `security anti-ransomware volume show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["ONTAP 命令参考"^]。
+
+--
+====
+
+
+[[enable-arpai-on-nas-flexgroup-volumes]]
+[[enable-nas-flexgroup]]
+== 在 NAS FlexGroup 卷上启用 ARP/AI
+
+从 ONTAP 9.18.1 开始，ARP/AI 在为 FlexGroup 卷启用后立即处于活动状态。
+
+
+NOTE: 对于 ONTAP 9.13.1 至 9.17.1，FlexGroup 卷使用较早的 ARP 模型，需要一个学习期。请参阅 link:enable-arp.html#enable-arp-on-nas-flexgroup-volumes["在 NAS FlexGroup卷上启用 ARP"]。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择“存储 > 卷”，然后选择要保护的FlexGroup卷。
+. 在*Volumes*概述的*Security*选项卡中，选择*Status*从Disabled切换为Enabled。
+. 在*反勒索软件*框中验证卷的 ARP/AI 状态。
++
+要显示所有卷的 ARP/AI 状态：在*卷*窗格中，选择*显示/隐藏*，然后确保选中*反勒索软件*状态。
+
+
+
+--
+.命令行界面
+--
+*在现有 FlexGroup 卷上启用 ARP/AI：*
+
+[source, cli]
+----
+security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>
+----
+*创建启用了 ARP/AI 的新 FlexGroup 卷：*
+
+[source, cli]
+----
+volume create -volume <vol_name> -vserver <svm_name> -aggr-list <aggregate name> -aggr-list-multiplier <integer> -size <nn> -anti-ransomware-state enabled -junction-path </path_name>
+----
+*验证 ARP/AI 状态：*
+
+[source, cli]
+----
+security anti-ransomware volume show
+----
+--
+====
+
+
+[[enable-arpai-on-san-volumes]]
+[[enable-san]]
+== 在 SAN 卷上启用 ARP/AI
+
+从 ONTAP 9.17.1 开始，您可以在 SAN 卷上启用 ARP/AI。ARP/AI 在启用后立即自动激活，并在 link:entropy-eval-period-arpai.html["熵评估周期"] 期间开始监控和保护 SAN 卷，同时确定工作负载是否适合 ARP/AI，并为检测设置最佳加密阈值。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择“存储 > 卷”，然后选择要保护的 SAN 卷。
+. 在*Volumes*概述的*Security*选项卡中，选择*Status*从Disabled切换为Enabled。
+. ARP/AI自动进入评估期。
+. 在*Anti-ransomware*框中验证 ARP/AI 状态和评估状态。
++
+要显示所有卷的 ARP/AI 状态：在*卷*窗格中，选择*显示/隐藏*，然后确保选中*反勒索软件*状态。
+
+
+
+--
+.命令行界面
+--
+*在现有 SAN 卷上启用 ARP/AI：*
+
+[source, cli]
+----
+security anti-ransomware volume enable -volume <vol_name> -vserver <svm_name>
+----
+*创建启用了 ARP/AI 的新 SAN 卷：*
+
+[source, cli]
+----
+volume create -volume <vol_name> -vserver <svm_name> -aggregate <aggr_name> -size <nn> -anti-ransomware-state enabled
+----
+*验证 ARP/AI 状态和评估状态：*
+
+[source, cli]
+----
+security anti-ransomware volume show
+----
+检查 `Block device detection status`字段以监控评估期进度。详细了解  `security anti-ransomware volume show`，请参阅 link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["ONTAP 命令参考"^]。
+
+--
+====
+
+
+[[related-information]]
+== 相关信息
+
+* link:entropy-eval-period-arpai.html["SAN 卷的 ARP/AI 熵评估期"]
+

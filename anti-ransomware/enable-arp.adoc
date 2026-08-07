@@ -1,0 +1,169 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/enable-arp.html 
+keywords: ARP, enable, autonomous ransomware protection, ONTAP 9.10.1, NAS, FlexVol, FlexGroup, learning mode, dry-run, ransomware, legacy ARP enablement, ONTAP 9.15.1 or earlier 
+summary: 从 ONTAP 9.10.1 到 ONTAP 9.15.1，在现有或新的 NAS 卷上启用传统 ARP，以在学习模式下启动勒索软件检测。 
+---
+= 在卷上启用 ONTAP ARP
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.10.1 开始，您可以在现有 NAS 卷上启用自主勒索软件保护 (ARP)，或在启用 ARP 的情况下创建新卷。
+
+
+NOTE: 如果运行的是 ONTAP 9.16.1 或更高版本，请参见 link:enable-arpai.html["在卷上启用 ARP/AI"]。
+
+.关于此任务
+针对 NAS 工作负载的 ARP（ONTAP 9.10.1 至 9.15.1）在 link:learn-about-arp.html#arp-protection-modes["学习模式"] (`dry-run` 状态下启动）。系统会分析工作负载以确定正常行为特征，然后再切换到活动模式进行威胁检测。在学习期结束前启动活动模式可能会导致过多的误报。
+
+对于 ONTAP 9.10.1 至 9.12.1，建议您让 ARP 在学习模式下运行至少 30 天。从 ONTAP 9.13.1 开始，ARP 自动确定最佳学习周期间隔并自动切换，这可能在 30 天之前发生。
+
+ARP 不支持 ONTAP 9.10.1 至 9.15.1 中的 SAN 卷。请参阅 link:support-arp.html["ARP 支持的配置"]。
+
+
+NOTE: 在现有卷中、学习和活动模式仅适用于新写入的数据、而不适用于卷中已有的数据。不会扫描和分析现有数据、因为在为卷启用ARP后、系统会根据新数据假设先前正常数据流量的特征。
+
+启用自主勒索软件防护后，它可能会进入过渡期，具体取决于您的环境和 ONTAP 版本：
+
+[cols="25,25,50"]
+|===
+| Volume type | ONTAP 版本 | 启用后的行为 
+
+
+.2+| NAS FlexGroup | ONTAP 9.18.1 及更高版本 | ARP/AI 无需学习期即可立即生效 
+
+
+| ONTAP 9.13.1 至 9.17.1 | ARP启动后将进入学习模式，持续30天。 
+
+
+.2+| NAS FlexVol | ONTAP 9.16.1 及更高版本 | ARP/AI 无需学习期即可立即生效 
+
+
+| ONTAP 9.10.1 至 9.15.1 | ARP启动后将进入学习模式，持续30天。 
+
+
+| SAN卷 | ONTAP 9.17.1 及更高版本 | ARP/AI 立即启动，启动评估期，以确定合适的警报阈值，然后再从初始的保守阈值过渡。 
+|===
+.开始之前
+* 启用了 NFS 或 SMB（或两者）协议的存储虚拟机 (SVM)。
+* 已配置客户端的 NAS 工作负载。
+* 积极link:../concepts/namespaces-junction-points-concept.html["接合路径"]就音量而言。
+* link:index.html#licenses-for-autonomous-ransomware-protection["正确的许可证"] 适用于您的 ONTAP 版本。
+* （推荐）启用多管理员验证 (MAV)（ONTAP 9.13.1 及更高版本）。看link:../multi-admin-verify/enable-disable-task.html["启用多管理员验证"]。
+
+
+
+
+[[enable-arp-on-nas-flexvol-volumes]]
+== 在 NAS FlexVol卷上启用 ARP
+
+您可以使用 System Manager 或 ONTAP CLI 在 NAS FlexVol 卷上启用 ARP。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*存储>卷*，然后选择要保护的卷。
+. 在*Volumes*概述的*Security*选项卡中，选择*Status*从Disabled切换为Enabled。
+. 在“反勒索软件”框中选择“在学习模式下启用”。
++
+
+NOTE: 如果要手动控制从学习模式到活动模式的过渡，您可以 link:enable-default-arp.html["禁用关联 Storage VM 上的自动学习到活动模式转换"]。
+
++
+
+NOTE: 在现有卷中、学习和活动模式仅适用于新写入的数据、而不适用于卷中已有的数据。不会扫描和分析现有数据、因为在为卷启用ARP后、系统会根据新数据假设先前正常数据流量的特征。
+
+. 在“反勒索软件”框中验证卷的 ARP 状态。
++
+要显示所有卷的ARP状态：在*卷*窗格中，选择*显示/隐藏*，然后确保选中*反勒索软件*状态。
+
+
+
+--
+.命令行界面
+--
+*在现有卷上启用 ARP（在学习模式下）：*
+
+[source, cli]
+----
+security anti-ransomware volume dry-run -volume <vol_name> -vserver <svm_name>
+----
+有关的详细信息 `security anti-ransomware volume dry-run`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-dry-run.html["ONTAP 命令参考"^]。
+
+*启用 ARP 创建新卷（在学习模式下）：*
+
+[source, cli]
+----
+volume create -volume <vol_name> -vserver <svm_name> -aggregate <aggr_name> -size <nn> -anti-ransomware-state dry-run -junction-path </path_name>
+----
+*禁用从学习模式到活动模式的自动切换（可选）：*
+
+如果您正在运行 ONTAP 9.13.1 至 9.15.1，并希望手动控制与 SVM 关联的所有卷从学习模式切换到活动模式：
+
+[source, cli]
+----
+vserver modify <svm_name> -anti-ransomware-auto-switch-from-learning-to-enabled false
+----
+*验证ARP状态：*
+
+[source, cli]
+----
+security anti-ransomware volume show
+----
+--
+====
+
+
+[[enable-arp-on-nas-flexgroup-volumes]]
+== 在 NAS FlexGroup卷上启用 ARP
+
+从 ONTAP 9.13.1 开始，NAS FlexGroup 卷支持 ARP。
+
+
+NOTE: FlexGroup 卷在 ONTAP 9.13.1 到 9.17.1 中使用具有学习模式的原始 ARP 模型，而不是 ARP/AI。适用于 FlexGroup 卷的具有即时激活模式的 ARP/AI 需要 ONTAP 9.18.1。请参阅 link:enable-arpai.html["在卷上启用 ARP/AI"]。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择“存储 > 卷”，然后选择要保护的FlexGroup卷。
+. 在*Volumes*概述的*Security*选项卡中，选择*Status*从Disabled切换为Enabled。
+. 在“反勒索软件”框中选择“在学习模式下启用”。
++
+
+NOTE: 如果要手动控制从学习模式到活动模式的过渡，您可以 link:enable-default-arp.html["禁用自动从学习模式转换到活动模式"]。
+
+. 在“反勒索软件”框中验证卷的 ARP 状态。
+
+
+--
+.命令行界面
+--
+*在现有 FlexGroup 卷上启用 ARP（在学习模式下）：*
+
+[source, cli]
+----
+security anti-ransomware volume dry-run -volume <vol_name> -vserver <svm_name>
+----
+*启用 ARP 创建新 FlexGroup 卷（在学习模式下）：*
+
+[source, cli]
+----
+volume create -volume <vol_name> -vserver <svm_name> -aggr-list <aggregate name> -aggr-list-multiplier <integer> -size <nn> -anti-ransomware-state dry-run -junction-path </path_name>
+----
+*验证ARP状态：*
+
+[source, cli]
+----
+security anti-ransomware volume show
+----
+--
+====
+.相关信息
+* link:switch-learning-arp.html["从学习模式切换到活动模式"]
+* link:enable-default-arp.html["默认情况下，在新卷中启用 ARP"]
+

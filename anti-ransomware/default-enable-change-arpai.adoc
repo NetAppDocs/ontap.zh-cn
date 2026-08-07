@@ -1,0 +1,83 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/default-enable-change-arpai.html 
+keywords: ARP AI, arpai, opt out, disable automatic enablement, autonomous ransomware protection AI, ONTAP 9.18.1, grace period, AFF, ASA, upgrade 
+summary: 在受支持的 AFF 和 ASA 系统上升级到 ONTAP 9.18.1 或更高版本时，ARP/AI 在宽限期后默认为新卷启用。可随时选择退出或更改设置。 
+---
+= 在升级期间管理 ONTAP ARP/AI 自动启用
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:imagesdir: ../media/
+
+
+[role="lead"]
+升级到 ONTAP 9.18.1 或更高版本时，如果安装了反勒索软件许可证，则在 12 小时宽限期后，AFF A-series、AFF C-series、ASA 和 ASA r2 系统的所有新卷上将自动默认启用 AI 自主勒索软件保护（ARP/AI）。使用此过程可在宽限期内或之后选择退出自动默认启用，或在升级后随时更改设置。
+
+
+NOTE: 如果运行的是 ONTAP 9.15.1 或更早版本，请参见 link:index.html["了解自主勒索软件防护"]。
+
+
+NOTE: 如果您运行的是 ONTAP 9.17.1 或更早版本，则自动集群级默认启用不适用。您可以使用 link:enable-default-arpai.html["默认情况下，在新卷中启用 ARP/AI"] 配置 SVM 级默认启用。
+
+
+NOTE: 现有卷必须link:enable-arpai.html["手动启用"]才能用于 ARP/AI。
+
+
+NOTE: 从 ONTAP 9.19.1 开始，默认 ARP/AI 启用适用于包含 SnapMirror 同步和 SnapMirror 活动同步 SAN 关系的集群。在 ONTAP 9.18.1 中，这些配置的默认启用被禁止。对于跨集群 SnapMirror 同步关系，默认启用在源集群和目标集群均升级到 ONTAP 9.19.1 后激活。
+
+.关于此任务
+您选择的设置可以稍后更改。宽限期结束后，您可以随时灵活地打开或关闭自动默认启用功能：
+
+[source, cli]
+----
+security anti-ransomware auto-enable modify -new-volume-auto-enable false|true
+----
+.步骤
+您可以使用 System Manager 或 ONTAP CLI 管理 ARP/AI 自动默认启用。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择*集群>设置*。
+. 执行以下操作之一：
++
+** 在活动宽限期内禁用：
++
+... 在*反勒索软件*部分，您将看到一条消息，指示启用 ARP/AI 之前的剩余小时数。选择*不启用*。
+... 在下一个对话框中选择*禁用*，以确认新卷的默认 ARP/AI 启用已关闭。
+
+
+** 宽限期后禁用：
++
+... 在 *Anti-ransomware* 部分，选择 image:icon_pencil.gif["编辑图标"]。
+... 选中复选框，然后*保存*以禁用新卷的自动默认 ARP/AI 启用。
+
+
+
+
+
+
+--
+.命令行界面
+--
+. 检查自动启用状态：
++
+[source, cli]
+----
+security anti-ransomware auto-enable show
+----
+. 禁用新卷的自动默认启用：
++
+[source, cli]
+----
+security anti-ransomware auto-enable modify -new-volume-auto-enable false
+----
+
+
+--
+====
+.相关信息
+* link:enable-arpai.html["在单个卷上启用 ARP/AI"]
+

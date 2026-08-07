@@ -1,0 +1,194 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/learn-about-arp.html 
+keywords: ransomware, arp, autonomous protection, security, detect, detection, threat, attack, learning mode, anti-ransomware, entropy, file extension, file IOPS, NAS 
+summary: 原始 ARP 模型使用学习期来建立行为基线，然后切换到主动勒索软件检测。适用于 ONTAP 9.10.1 至 9.15.1 中的 NAS FlexVol 卷以及 ONTAP 9.13.1 至 9.17.1 中的 FlexGroup 卷。 
+---
+= 了解 ONTAP ARP（ONTAP 9.10.1 至 9.15.1）
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+对于 ONTAP 9.10.1 至 9.15.1，自主勒索软件防护 (ARP) 使用学习期监控 NAS 环境，以确定行为基线，然后切换到主动勒索软件检测。ARP 分析数据熵、文件扩展名更改和文件 IOPS 模式，以识别潜在的勒索软件攻击。对于 FlexGroup 卷，原始 ARP 模型也适用于 ONTAP 9.17.1。
+
+
+NOTE: 原始 ARP 模型在 ONTAP 9.14.1 之后未收到任何新的功能改进。如果您在 FlexVol 卷上运行 ONTAP 9.16.1 或更高版本，请参阅 link:learn-about-arpai.html["了解ARP/AI"]。FlexGroup 卷通过 ONTAP 9.17.1 使用原始 ARP 模型，并从 ONTAP 9.18.1 开始受 ARP/AI 支持。
+
+
+
+[[what-arp-detects]]
+== ARP检测到的内容
+
+ARP将传入数据识别为加密或纯文本，并使用以下离散信号来检测勒索软件活动：
+
+* *熵*：对文件中数据随机性的评估（仅适用于 NAS）
+* *文件扩展名类型*：不符合预期扩展名类型的文件扩展名（仅限 NAS）
+* *文件 IOPS*：使用数据加密的异常卷活动激增（仅限 NAS；ONTAP 9.11.1 及更高版本）
+
+
+ARP 只需少量文件被加密即可检测到大多数勒索软件攻击的传播，自动响应以保护数据，并提醒您疑似攻击正在发生。
+
+
+NOTE: 没有任何勒索软件检测系统可以保证完全的安全。如果防病毒软件无法检测到入侵，ARP 可提供额外的防御层。
+
+
+
+[[enablement-options-for-arp]]
+== ARP 的启用选项
+
+ARP 按卷手动启用，或在 SVM 级别默认对新卷进行配置。
+
+* 要在 SVM 的所有新卷上默认启用 ARP，请参见 link:enable-default-arp.html["默认情况下，在新卷中启用 ARP"]。
+* 要在特定卷上启用 ARP，请参见 link:enable-arp.html["在卷上启用 ARP"]。
+
+
+
+
+[[arp-protection-modes]]
+== ARP 保护模式
+
+ARP从学习模式开始，在切换到主动检测之前建立行为基线。
+
+
+
+[[nas-volumes]]
+=== NAS 卷
+
+下表总结了 NAS 环境的 ARP 模式。
+
+[cols="1,5,1"]
+|===
+| 模式 | Description | 卷类型和版本 
+
+
+| 学习  a| 
+启用 ARP 时，它会自动设置为学习模式。在学习模式下，ONTAP 系统根据分析区域（熵、文件扩展名类型和文件 IOPS）开发警报配置文件。
+
+建议您将 ARP 保持在学习模式 30 天。从ONTAP 9.13.1 开始，ARP 会自动确定最佳学习间隔并自动切换，切换可能在 30 天之前完成。对于ONTAP 9.13.1 之前的版本，您可以手动进行切换。
+
+link:switch-learning-arp.html["了解有关从学习模式切换到主动模式的更多信息"]。
+
+
+TIP: 命令可 `security anti-ransomware volume workload-behavior show`显示在卷中检测到的文件扩展名。如果您在学习模式早期运行此命令、并且此命令显示了文件类型的准确表示、则不应将此数据用作迁移到活动模式的基础、因为ONTAP仍在收集其他指标。有关的详细信息 `security anti-ransomware volume workload-behavior show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-workload-behavior-show.html["ONTAP 命令参考"^]。
+ a| 
+* FlexVol卷（采用ONTAP 9.10.1 至 9.15.1）
+* FlexGroup 卷，适用于 ONTAP 9.13.1 至 9.17.1
+
+
+
+
+| 活动  a| 
+学习期结束后，ARP 会监控工作负载活动，并在检测到异常行为时自动响应。如果文件扩展名被标记为异常，则应评估警报。您可以根据警报采取行动以保护您的数据，也可以将警报标记为误报。将警报标记为误报会更新警报配置文件。例如，如果警报由新文件扩展名触发，并且您将警报标记为误报，则下次观察到该文件扩展名时，您将不会收到警报。
+ a| 
+* FlexVol卷（采用ONTAP 9.10.1 至 9.15.1）
+* FlexGroup 卷，适用于 ONTAP 9.13.1 至 9.17.1
+
+
+|===
+
+
+[[threat-assessment]]
+== 威胁评估
+
+ARP 使用两个级别评估威胁概率：
+
+* *低*：最早检测到卷中的异常（例如，在卷中观察到新的文件扩展名）。此检测级别仅在原始 ARP 模型中可用。
++
+** 从 ONTAP 9.11.1 开始，您可以 link:manage-parameters-arp.html["自定义ARP检测参数"]。
+
+
+* *中等*：检测到高熵，或观察到多个文件具有相同的从未见过的文件扩展名。在 ONTAP 运行分析报告以确定异常是否与勒索软件配置文件匹配后，威胁升级为中等。当攻击概率为中等时，ONTAP 会生成一个 EMS 通知，提示您评估威胁。
+
+
+ONTAP 不会发送有关低威胁的警报；但是，从 ONTAP 9.14.1 开始，您可以link:manage-parameters-arp.html#modify-alerts["修改默认警报设置"]。有关详细信息，请参见link:respond-arp.html["应对异常活动。"]。
+
+您可以在 System Manager 的*事件*部分或使用 `security anti-ransomware volume show`命令查看有关中等威胁的信息。也可以使用 `security anti-ransomware volume show`命令查看低威胁事件。了解有关 `security anti-ransomware volume show`的更多信息，请参阅link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["ONTAP 命令参考"^]。
+
+
+
+[[arp-snapshots]]
+== ARP Snapshot
+
+ARP 会在检测到攻击的早期迹象时创建快照。然后进行详细分析，以确认或排除潜在的攻击。由于 ARP 快照甚至在攻击完全确认之前就已主动创建，因此不应将其视为异常。如果确认存在可能的攻击，则攻击概率将升级为 `Moderate`，并生成攻击通知。
+
+从 ONTAP 9.11.1 开始，您可以 link:modify-snapshot-options-arp.html["修改快照的保留设置"]。
+
+下表总结了 ARP 快照行为。
+
+[cols="1,3"]
+|===
+| 功能 | 原始 ARP 模型（ONTAP 9.15.1 及更早版本） 
+
+
+| 创建触发器  a| 
+* 检测到高熵
+* 检测到新的文件扩展名
+* 检测到文件操作激增（ONTAP 9.11.1 及更高版本）
+
+
+快照创建间隔基于触发器类型。
+
+
+
+| 前缀名称约定 | “反勒索软件备份” 
+
+
+| 删除行为 | ARP快照被锁定，管理员无法删除 
+
+
+| 最大快照数 | link:modify-snapshot-options-arp.html["六个快照可配置限制"] 
+
+
+| 保留期  a| 
+* 根据触发条件确定（不固定）
+* 攻击前创建的快照将保留，直到管理员将攻击标记为真实攻击或误报（清除可疑）。
+
+
+
+
+| 明确嫌疑行动 | 管理员可以执行清除可疑操作来取消警报并释放锁定的快照。 
+
+
+| 到期时间 | 无 
+|===
+
+
+[[respond-to-and-assess-an-attack]]
+== 应对和评估攻击
+
+当检测到攻击的早期迹象时，ARP 会创建锁定的快照。您需要确认攻击是真实的还是误报的。锁定的快照无法通过正常方式删除。但是，如果您稍后决定将攻击标记为误报，ONTAP 将删除锁定的副本。
+
+* link:respond-arp.html["应对异常活动：ARP"]
+* link:determine-ransomware-tips.html["确定勒索软件攻击是否真实存在"]
+
+
+
+
+[[recover-data-after-an-attack]]
+== 在发生攻击后恢复数据
+
+如果确认攻击，可以使用 ARP 快照还原卷。您可以从选定的快照中恢复受影响的文件，而不是还原整个卷。
+
+* link:recover-arp.html["从 ARP 快照恢复数据"]
+* link:../data-protection/restore-contents-volume-snapshot-task.html["从ONTAP快照恢复"]
+* link:https://www.netapp.com/blog/smart-ransomware-recovery["智能勒索软件恢复"^]
+
+
+
+
+[[multi-admin-verification]]
+== 多管理员验证
+
+从 ONTAP 9.13.1 开始，建议您启用多管理员验证 (MAV)，以便 ARP 配置需要两个或多个经过身份验证的用户管理员。有关详细信息，请参见link:../multi-admin-verify/enable-disable-task.html["启用多管理员验证"]。
+
+.相关信息
+* link:support-arp.html["ARP 支持的配置"]
+* link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]
+

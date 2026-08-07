@@ -1,0 +1,98 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/pause-arp.html 
+keywords: ARP, arpai, ARP AI, pause, resume, autonomous ransomware protection, workload event, MAV, multi-admin verification 
+summary: 在预期异常工作负载事件期间，暂停和恢复 ARP 或 ARP/AI 分析。 
+---
+= 暂停 ONTAP ARP 或 ARP/AI 保护，以从分析中排除工作负载事件
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+如果您预计会发生异常工作负载事件，您可以随时暂停和恢复自动勒索软件防护（ARP 和 ARP/AI）分析。
+
+从 ONTAP 9.13.1 开始，您可以启用多管理员验证 (MAV)，以便需要两个或多个经过身份验证的用户管理员来暂停 ARP 或 ARP/AI。
+
+link:../multi-admin-verify/enable-disable-task.html["了解有关MAV的更多信息"](英文)
+
+.关于此任务
+在 ARP 或 ARP/AI 暂停期间，ONTAP 不会记录新写入的事件或操作；但会继续在后台对早期日志进行分析。
+
+
+NOTE: 不要使用 ARP 或 ARP/AI 禁用功能来暂停分析。这样做将禁用对卷的保护，并且与已学习工作负载行为有关的所有现有信息都将丢失。对于 ARP（ONTAP 9.10.1 至 9.15.1），需要重新启动学习期。对于 ARP/AI（ONTAP 9.16.1 及更高版本），所有累积的工作负载行为数据都将丢失。对于 SAN 卷，评估期将从头开始重新计算。
+
+.步骤
+您可以使用 System Manager 或 ONTAP CLI 暂停 ARP 或 ARP/AI。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 选择 *存储 > 卷*，然后选择要暂停 ARP 或 ARP/AI 的卷。
+. 在卷概览的“安全”选项卡中，选择“反勒索软件”框中的“暂停反勒索软件”。
++
+
+NOTE: 从 ONTAP 9.13.1 开始，如果您使用 MAV 来保护 ARP 或 ARP/AI 设置，暂停操作会提示您获得一个或多个其他管理员的批准。link:../multi-admin-verify/request-operation-task.html["必须获得所有管理员的批准"]与 MAV 批准组相关联，否则该操作将失败。
+
+. 要恢复监控，请选择*恢复反勒索软件*。
+
+
+--
+.命令行界面
+--
+. 暂停卷上的 ARP 或 ARP/AI：
++
+[source, cli]
+----
+security anti-ransomware volume pause -vserver <svm_name> -volume <vol_name>
+----
+. 要恢复处理、请使用 `resume` 命令：
++
+[source, cli]
+----
+security anti-ransomware volume resume -vserver <svm_name> -volume <vol_name>
+----
++
+有关的详细信息 `security anti-ransomware volume`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+anti-ransomware+volume+["ONTAP 命令参考"^]。
+
+. 如果使用 MAV 保护 ARP 或 ARP/AI 设置，暂停操作会提示您获得一个或多个其他管理员的批准。必须从与 MAV 审批组关联的所有管理员处获得批准，否则操作将失败。
++
+如果您正在使用MAV、并且预期的暂停操作需要额外的审批、则每个MAV组审批人将执行以下操作：
+
++
+.. 显示请求：
++
+[source, cli]
+----
+security multi-admin-verify request show
+----
+.. 批准申请：
++
+[source, cli]
+----
+security multi-admin-verify request approve -index[<number returned from show request>]
+----
++
+如果您正在使用MAV、并且您是MAV组批准者、则可以拒绝暂停操作请求：
+
++
+[source, cli]
+----
+security multi-admin-verify request veto -index[<number returned from show request>]
+----
++
+有关的详细信息 `security multi-admin-verify request`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+multi-admin-verify+request["ONTAP 命令参考"^]。
+
+
+
+
+
+--
+====

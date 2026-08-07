@@ -1,0 +1,254 @@
+---
+sidebar: sidebar 
+permalink: anti-ransomware/learn-about-arpai.html 
+keywords: ransomware, arpai, arp ai, autonomous protection, ai, machine learning, security, detect, detection, threat, attack, anti-ransomware, entropy, snapshot, NAS, SAN, automatic updates, evaluation period 
+summary: 从 ONTAP 9.16.1 开始，ARP/AI 使用预先训练的机器学习模型，为 NAS 和 SAN 环境提供即时的主动勒索软件保护，无需学习周期。 
+---
+= 了解 ONTAP ARP/AI（ONTAP 9.16.1 及更高版本）
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.16.1 开始，Autonomous Ransomware Protection 使用预先训练的机器学习模型 (ARP/AI) 来检测 NAS 和 SAN 环境中不断演变的勒索软件形式。ARP/AI 提供无需学习期的即时主动保护，并支持独立于 ONTAP 版本的自动安全更新。
+
+ARP/AI与ONTAP 9.10.1至9.15.1中使用的早期ARP模型不同，后者在主动保护之前需要一段学习期。有关并排功能比较，请参见 link:index.html#autonomous-ransomware-protection-with-ai-arp-ai-and-legacy-arp-feature-comparison["ARP/AI 和传统 ARP 功能比较"]。
+
+
+
+[[how-arpai-works]]
+== ARP/AI 的工作原理
+
+ARP/AI 的机器学习模型在模拟勒索软件攻击前后均在大型文件数据集上进行了预训练。这种资源密集型训练在 ONTAP 外部使用开源取证研究数据集完成。客户数据不会在整个建模流程中使用。预训练模型随 ONTAP 内置提供，无法通过 ONTAP CLI 或 ONTAP API 访问或修改。
+
+.立即保护支持的卷
+ARP/AI为以下受支持的卷类型提供即时主动保护：
+
+* NAS FlexVol卷，支持ONTAP 9.16.1 及更高版本
+* NAS FlexGroup卷， ONTAP9.18.1 及更高版本
+* 使用 ONTAP 9.17.1 及更高版本的 SAN FlexVol 卷（即使在 link:entropy-eval-period-arpai.html["评估期"] 期间也会立即激活）
+
+
+
+NOTE: 有关特定于升级的行为，例如从早期 ARP 功能过渡，请参见 link:support-arpai.html#arp-upgrade-considerations["现有集群的升级注意事项"]。
+
+.自动安全更新
+为了保持对最新勒索软件威胁的最新防护，ARP/AI 提供在常规 ONTAP 升级和发布节奏之外进行的频繁自动更新。如果有link:../update/enable-automatic-updates-task.html["已启用自动更新"]，您还可以在为安全文件选择自动更新后接收 ARP/AI 的自动安全更新。您还可以link:update-arpai.html#manually-update-arpai-with-the-latest-security-package["手动进行这些更新"]并控制其发生时间。
+
+从System Manager.16.1开始、除了系统和固件更新之外、还可以使用ONTAP 9提供ARP/AI的安全更新。
+
+link:update-arpai.html["了解有关ARP/AI更新的更多信息"]
+
+
+
+[[what-arpai-detects]]
+== ARP/AI 检测到什么
+
+ARP/AI将传入的数据识别为加密或纯文本，并使用预先训练的机器学习模型，同时评估多个基于熵的信号和文件行为模式，以实时检测勒索软件活动。
+
+ARP/AI 在仅加密少量文件后即可检测大多数勒索软件攻击的传播，自动响应以保护数据，并提醒您正在发生可疑攻击。
+
+
+NOTE: 没有勒索软件检测系统可以保证完全安全。如果防病毒软件无法检测到入侵，ARP/AI 可提供额外的防御层。
+
+
+
+[[enablement-options-for-arpai]]
+== ARP/AI 的启用选项
+
+ARP/AI在集群、SVM和卷级别提供灵活的启用选项。
+
+.在新卷上自动默认启用
+从 ONTAP 9.18.1 开始，ARP/AI 在 AFF A-series、AFF C-series、ASA 和 ASA r2 系统的所有新卷上默认启用。此自动默认启用不适用于link:support-arpai.html#unsupported-configurations["不受支持的卷或配置"]。您可以link:enable-arpai.html["在现有卷上手动启用 ARP/AI"]。
+
+您可以在部署后的任何时间link:default-enable-change-arpai.html["打开或关闭默认启用"]。
+
+
+NOTE: 有关特定于升级的启用行为，包括宽限期和 SnapMirror 版本要求，请参见 link:support-arpai.html#arp-upgrade-considerations["现有集群的升级注意事项"]。
+
+.在新卷上手动启用默认设置
+如果您在集群级别禁用了自动默认启用，您也可以选择在 SVM 级别link:enable-default-arpai.html["默认情况下，在所有新卷上手动启用 ARP/AI"]。对于 ONTAP 9.17.1 及更早版本，这是将 ARP/AI 配置为在新卷上默认启用的唯一方法。
+
+.对所有或特定现有卷启用
+从 ONTAP 9.18.1 开始，您可以从集群级别手动在所有现有卷上启用 ARP/AI（选择*集群 > 安全*，然后在*反勒索软件*部分中 image:icon_kabob.gif["菜单选项图标"] 选择*在所有现有卷上启用*）。
+
+要在特定卷上启用 ARP/AI，请参见 link:enable-arpai.html["在卷上启用 ARP/AI"]。
+
+
+
+[[arpai-protection-modes]]
+== ARP/AI保护模式
+
+ARP/AI 在没有学习周期的情况下立即保护卷。下表按卷类型描述了保护的行为方式。
+
+
+
+[[nas-volumes]]
+=== NAS 卷
+
+[cols="1,5,1"]
+|===
+| 模式 | Description | 卷类型和版本 
+
+
+| 评估  a| 
+执行两到四周的评估期以确定基线加密行为，而 ARP/AI 在评估期内提供即时的主动保护。在建立基线阈值时，可能会发生检测和警报。您可以通过运行 `security anti-ransomware volume show`命令并检查 `Block device detection status`来确定评估期是否完成。
+
+link:entropy-eval-period-arpai.html["了解块设备工作负载的 ARP/AI 评估期"]。
+ a| 
+包含 ONTAP 检测到的虚拟机管理程序虚拟磁盘的 NAS FlexVol 卷（适用于 ONTAP 9.17.1P5 及更高版本）
+
+
+
+| 活动  a| 
+ARP/AI 监控工作负载活动，并在检测到表明存在勒索软件攻击的异常行为时自动响应。您可以根据警报采取行动以保护您的数据，也可以将警报标记为误报。将警报标记为误报会更新检测模型。如果警报是由异常文件行为触发的，并且您将其标记为误报，则下次观察到该模式时，您将不会收到警报。
+ a| 
+* NAS FlexVol卷，支持ONTAP 9.16.1 及更高版本
+* NAS FlexGroup卷， ONTAP9.18.1 及更高版本
+
+
+|===
+
+
+[[san-volumes]]
+=== SAN卷
+
+[cols="1,5,1"]
+|===
+| 模式 | Description | 卷类型和版本 
+
+
+| 评估  a| 
+进行为期两到四周的评估期，以确定基线加密行为，同时 ARP/AI 在评估期内为 SAN 卷提供即时主动保护。在建立基线阈值期间，可以进行检测并发出警报。您可以通过运行以下命令来确定评估期是否结束： `security anti-ransomware volume show`命令和检查 `Block device detection status`。
+
+link:entropy-eval-period-arpai.html["了解块设备工作负载的 ARP/AI 评估期"]。
+ a| 
+采用 ONTAP 9.17.1 及更高版本的 SAN FlexVol 卷
+
+
+
+| 活动  a| 
+评估期结束后，您可以通过运行 `security anti-ransomware volume show`命令并检查 `Block device detection status`来确定 ARP/AI SAN 保护是否处于活动状态。状态为 `Active_suitable_workload`表示可以成功监控评估的熵量。ARP/AI 根据评估期间查看的数据自动调整自适应阈值。
+ a| 
+采用 ONTAP 9.17.1 及更高版本的 SAN FlexVol 卷
+
+|===
+
+
+[[threat-assessment]]
+== 威胁评估
+
+当数据写入存储时，ARP/AI 会持续评估威胁概率。当机器学习模型确定活动与勒索软件配置文件匹配时，ONTAP 会生成*中等*威胁级别的 EMS 通知，提示您评估威胁。ARP/AI 不使用低威胁级别；所有检测都报告为中等级别。
+
+您可以在 System Manager 的 *Events* 部分或使用  `security anti-ransomware volume show` 命令查看有关中等威胁的信息。详细了解  `security anti-ransomware volume show`，请参阅 link:https://docs.netapp.com/us-en/ontap-cli/security-anti-ransomware-volume-show.html["ONTAP 命令参考"^]。
+
+有关详细信息，请参见link:respond-arpai.html["应对异常活动。"]。
+
+
+
+[[arpai-snapshots]]
+== ARP/AI 快照
+
+当检测到攻击的早期迹象时，ARP/AI 会创建快照。然后进行分析以确认或排除潜在的攻击。由于 ARP/AI 也会每隔 4 小时定期生成快照，因此这些快照的存在不应被视为异常。如果确认攻击，则攻击概率将设置为 `Moderate`，并生成攻击通知。
+
+下表总结了 ARP/AI 快照行为。
+
+[cols="1,3"]
+|===
+| 功能 | ARP/AI 模型（ONTAP 9.16.1 及更高版本） 
+
+
+| 创建触发器  a| 
+* 快照以固定的 4 小时间隔创建，无论任何特定触发器如何
+* 确认攻击
+
+
+根据触发类型创建“定期”或“攻击”快照。
+
+
+
+| 前缀名称约定 | “反勒索软件定期备份” “反勒索软件攻击备份” 
+
+
+| 删除行为 | ARP/AI快照已锁定，管理员无法删除 
+
+
+| 最大快照数 | link:modify-snapshot-options-arpai.html["六个快照可配置限制"] 
+
+
+| 保留期  a| 
+快照通常保留 12 小时。
+
+* NAS 卷：如果通过文件分析确认了攻击，则攻击前创建的快照将保留，直到管理员将攻击标记为真或误报（明确怀疑）。
+* SAN 卷或 VM 数据存储：如果通过块熵分析确认了攻击，则攻击前创建的快照将保留 10 天（可配置）。
+
+
+
+
+| 明确嫌疑行动  a| 
+管理员可以执行清除嫌疑的操作，该操作根据确认设置保留：
+
+* 误报保留时间为 24 小时
+* 真实阳性保留时间为 7 天
+
+
+
+
+| 到期时间 | 所有快照均设置了到期时间 
+|===
+
+
+[[snapmirror-synchronous-and-active-sync]]
+=== SnapMirror 同步和主动同步
+
+从 ONTAP 9.19.1 开始，为参与 SnapMirror 同步或 SnapMirror 活动同步关系的卷创建的 ARP/AI 快照遵循以下附加规则：
+
+* ARP/AI 快照在主卷上创建并保留。
+* ARP/AI 快照不会作为 SnapMirror 同步或 SnapMirror 活动同步的一部分复制到辅助端。故障转移后，您需要在恢复卷上 link:enable-arpai.html["再次启用 ARP/AI"]。
+
+
+
+NOTE: 在 SnapMirror 同步或 SnapMirror active sync SAN 卷上进行卷级恢复（(`volume snapshot restore`）可能需要您临时暂停或中断 SnapMirror 同步或 SnapMirror active sync 关系。在许多情况下，您可以通过在主卷上使用 ARP/AI 或其他 Snapshot 副本中的 FlexClone 或文件级恢复操作，来避免中断 SnapMirror 同步或 SnapMirror active sync。
+
+link:support-arpai.html#snapmirror["详细了解对 SnapMirror 同步和 SnapMirror active sync 的支持"]。
+
+
+
+[[respond-to-and-assess-an-attack]]
+== 应对和评估攻击
+
+ARP/AI 会在检测到攻击的早期迹象时创建锁定的快照。您需要确认攻击是真实的还是误报的。锁定的快照无法通过正常方式删除。但是，如果您稍后决定将攻击标记为误报，ONTAP 将删除锁定的副本。
+
+* link:respond-arpai.html["应对异常活动：ARP/AI"]
+* link:determine-ransomware-tips.html["确定勒索软件攻击是否真实存在"]
+
+
+
+
+[[recover-data-after-an-attack]]
+== 在发生攻击后恢复数据
+
+如果您确认攻击，可以使用 ARP/AI 快照还原卷。您可以从选定的快照中恢复受影响的文件，而不是还原整个卷。
+
+* link:recover-arpai.html["从 ARP/AI 快照恢复数据"]
+* link:../data-protection/restore-contents-volume-snapshot-task.html["从ONTAP快照恢复"]
+* link:https://www.netapp.com/blog/smart-ransomware-recovery["智能勒索软件恢复"^]
+
+
+
+
+[[multi-admin-verification]]
+== 多管理员验证
+
+从 ONTAP 9.13.1 开始，建议您启用多管理员验证 (MAV)，以便 ARP/AI 配置需要两个或多个经过身份验证的用户管理员。有关详细信息，请参见link:../multi-admin-verify/enable-disable-task.html["启用多管理员验证"]。
+
+.相关信息
+* link:support-arpai.html["ARP/AI支持的配置"]
+* link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]
+
