@@ -4,84 +4,30 @@ sidebar: sidebar
 keywords: fc, target, port, configuration, recommendations 
 summary: 为了获得最佳性能和最高可用性，您应使用建议的 FC 目标端口配置。 
 ---
-= ONTAP系统的建议FC目标端口配置和速度
+= 确定 ONTAP 系统支持的 FC 目标端口速度
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-FC目标端口的配置和使用方式与FC协议的配置和使用方式完全相同。对FC-NVMe协议的支持因平台和ONTAP版本而异。使用NetApp Hardware Universe验证是否支持。
+FC 目标端口可以按照与 FC 协议完全相同的方式为 FC-NVMe 协议进行配置和使用。
 
-为了获得最佳性能和最高可用性、您应针对特定平台使用中列出的建议目标端口配置 https://hwu.netapp.com["NetApp Hardware Universe"^]。
+为了获得最佳性能和最高可用性，您应该使用针对特定 ONTAP 系统在 https://hwu.netapp.com["NetApp Hardware Universe"^]中列出的建议目标端口配置。
 
+每个板载 FC 端口和扩展适配器端口可以根据支持的不同速度单独配置。支持的速度因 ONTAP 系统和 HBA 而异。给定主机使用的所有目标端口应设置为相同的速度。
 
+作为最佳做法，您应该在所有启动器、交换机和目标端口上配置通用速度。如果端口和启动器速度不同，并且无法协商通用速度，则无法建立会话。不建议使用自动协商来确定端口速度。自动协商可能会在中断后减慢会话建立和重新连接的速度。
 
-[[configuration-for-fc-target-ports-with-shared-asics]]
-== 使用共享ASIC的FC目标端口的配置
+支持的速度列在每个 ONTAP 系统的 NetApp Hardware Universe 的 *Supported Adapter Cards* 下。
 
-以下平台具有具有共享应用程序专用集成电路(Application-Specific Integrated Circuits、ASIC)的端口对。如果在这些平台上使用扩展适配器、则应配置FC端口、以使其不使用同一ASIC进行连接。
-
-[cols="3*"]
-|===
-| 控制器 | 具有共享 ASIC 的端口对 | 目标端口数：建议的端口 
-
-
- a| 
-* FAS8200
-* AFF A300
-
- a| 
-0g+0h
- a| 
-1：0g 2：0g、0h
+.步骤
+. 转到 link:https://hwu.netapp.com["NetApp Hardware Universe"^]。
+. 选择*产品*。
+. 在*平台*下，选择您的系统类型。
+. 选择您的特定系统，然后选择您的 ONTAP 版本。
+. 选择*显示结果*，然后选择*支持的适配器卡*。
++
+FC 适配器卡在*类别*下列为"Block Access (Target)"，支持的速度在*支持的协议*下列出。
 
 
-
- a| 
-* FAS2750
-* AFF A220
-
- a| 
-0c+0d 0e+0f
- a| 
-1：0C 2：0C、0e 3：0C、0e、0d 4：0C、0e、0d、0f
-
-|===
-
-
-[[fc-target-port-supported-speeds]]
-== FC 目标端口支持的速度
-
-可以将 FC 目标端口配置为以不同的速度运行。给定主机使用的所有目标端口都应设置为相同的速度。您应设置目标端口速度，使其与所连接设备的速度一致。请勿对端口速度使用自动验证。在接管 / 交还或其他中断后，设置为自动协商的端口可能需要较长时间才能重新连接。
-
-您可以将板载端口和扩展适配器配置为以以下速度运行。可以根据需要为每个控制器和扩展适配器端口分别配置不同的速度。
-
-[cols="4*"]
-|===
-| 4 Gb 端口 | 8 Gb端口 | 16 Gb端口 | 32 Gb端口 
-
-
- a| 
-* 4 GB
-* 2 GB
-* 1 GB
-
- a| 
-* 8 GB
-* 4 GB
-* 2 GB
-
- a| 
-* 16 GB
-* 8 GB
-* 4 GB
-
- a| 
-* 32 GB
-* 16 GB
-* 8 GB
-
-
-|===
-有关支持的适配器及其支持速度的完整列表，请参见 https://hwu.netapp.com["NetApp Hardware Universe"^]。
