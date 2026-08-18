@@ -4,15 +4,17 @@ sidebar: sidebar
 keywords: 4-node MetroCluster configurations,8-node MetroCluster configurations, upgrade, upgrading, manual, manually 
 summary: 手动升级四节点或八节点MetroCluster配置涉及准备和更新每个DR组中的DR对以及执行升级后任务 
 ---
-= 使用命令行界面手动对四节点或八节点MetroCluster配置进行无中断ONTAP升级
+= 在四节点或八节点 MetroCluster 配置上手动执行 ONTAP NDU
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-手动升级四节点或八节点MetroCluster配置涉及准备更新、同时更新一个或两个DR组中每个DR对以及执行升级后任务。
+四节点或八节点 MetroCluster 配置的手动无中断升级 (NDU) 包括准备更新、同时更新一个或两个 DR 组中的每个 DR 对以及执行升级后任务。
 
+.关于此任务
+* 必须使用 ONTAP 命令行界面 (CLI) 来执行此任务。
 * 此任务将对以下配置进行适用场景处理：
 +
 ** 运行 ONTAP 9.2 或更早版本的四节点 MetroCluster FC 或 IP 配置
@@ -84,6 +86,7 @@ image:mcc_dr_groups_8_node.gif["八节点MetroCluster 配置图。"]
 
 image:mcc_dr_groups_8_node.gif["八节点MetroCluster 配置图。"]
 
+.步骤
 . 确定配置中的DR对：
 +
 [source, cli]
@@ -274,6 +277,7 @@ NOTE: 您应记下客户端操作不断增加的每种协议、以便在升级�
 
 如果您已升级第一个DR组上的ONTAP软件、并且现在要升级八节点MetroCluster配置中的第二个DR组、则在此任务中、您需要更新NODE_A_3和NODE_B_3。
 
+.步骤
 . 将所有数据生命周期迁移出节点：
 +
 [source, cli]
@@ -530,6 +534,7 @@ system image show
 
 如果您已升级第一个DR组上的ONTAP软件、并且现在正在更新八节点MetroCluster配置中的第二个DR组、则在此任务中、您将更新NODE_A_4和NODE_B_4。
 
+.步骤
 . 将所有数据生命周期迁移出节点：
 +
 [source, cli]
