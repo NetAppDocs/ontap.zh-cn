@@ -16,21 +16,25 @@ summary: 您可以无中断地更新集群上的 ONTAP 版本。
 
 
 [role="lead"]
-执行自动升级时、ONTAP会自动在每个节点上安装目标ONTAP映像、并验证集群是否可以成功升级、然后执行任一 xref:concept_upgrade_methods.html[批量升级或滚动升级] 根据集群中的节点数在后台运行。
+执行自动无中断升级 (ANDU) 时，ONTAP 自动在每个节点上安装目标 ONTAP 映像，验证集群是否可以成功升级，然后根据集群中的节点数量在后台执行 xref:concept_upgrade_methods.html[批量升级或滚动升级]。
 
 如果您的配置支持此功能、则应使用System Manager执行自动升级。  如果您的配置不支持使用System Manager自动升级、则可以使用ONTAP命令行界面(CLI)执行自动升级。
 
 
-NOTE: 如果您通过NetApp升级到ONTAP 9.15.1 或更高版本，请按照link:https://docs.netapp.com/us-en/console-software-updates/get-started/software-updates.html["NetApp控制台文档中的升级过程"^]。
+NOTE: 如果您通过NetApp控制台升级到ONTAP 9.15.1 或更高版本，请按照link:https://docs.netapp.com/us-en/console-software-updates/get-started/software-updates.html["NetApp控制台文档中的升级过程"^]。
 
 
-IMPORTANT: 在自动无中断升级(andu)开始之前修改命令选项的设置 `storage failover modify-auto-giveback`不会对升级过程产生任何影响。在更新所需的接管 / 交还期间， andu 进程会忽略此选项的任何预设值。例如、在开始ANDU之前将设置 `-autogiveback`为false不会中断交还前的自动升级。有关的详细信息 `storage failover modify-auto-giveback`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=storage+failover+modify-auto-giveback["ONTAP 命令参考"^]。
+IMPORTANT: 在开始 ANDU 之前修改 `storage failover modify-auto-giveback`命令选项的设置对升级过程没有影响。在更新所需的接管/回馈期间，ANDU 过程将忽略此选项的任何预设值。例如，在开始 ANDU 之前将 `-autogiveback`设置为 false，不会在回馈之前中断自动升级。如需了解有关 `storage failover modify-auto-giveback`的更多信息，请参阅link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=storage+failover+modify-auto-giveback["ONTAP 命令参考"^]。
 
 .开始之前
 * 您应该 link:prepare.html["准备升级"]。
 * 您应该 link:download-software-image.html["下载ONTAP软件映像"] 目标ONTAP版本。
 +
 如果要执行link:../upgrade/concept_upgrade_paths.html#types-of-upgrade-paths["直接多跳升级"]，则需要下载特定所需的两个ONTAP映像link:../upgrade/concept_upgrade_paths.html#supported-upgrade-paths["升级路径"]。
+
+* 或者，link:../update/pre-stage-system-firmware.html["为单次重启升级预暂存系统固件"]。
++
+从 ONTAP 9.17.1 开始，如果在执行 ANDU 之前，节点的启动设备上已存在较新的 BIOS 或 LOADER 固件，则升级过程将保留较新的固件，而不是用 ONTAP 映像中捆绑的版本覆盖它。这样，ONTAP 软件升级和固件更新均可在一个重新启动周期内完成。
 
 * 对于每个 HA 对，每个节点应在同一广播域上具有一个或多个端口。
 +
@@ -373,6 +377,9 @@ metrocluster show
 
 --
 ====
+.下一步是什么？
+如果您预先暂存了固件，请使用 `system node firmware bootmedia show`命令验证每个节点上的预期固件版本是否处于活动状态。
+
 
 
 [[resume-ontap-software-upgrade-after-an-error-in-the-automated-upgrade-process]]

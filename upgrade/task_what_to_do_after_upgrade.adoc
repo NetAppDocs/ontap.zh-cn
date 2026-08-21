@@ -4,7 +4,7 @@ sidebar: sidebar
 keywords: ontap, upgrade, plan, planning, upgrade, how, post-checks 
 summary: 升级 ONTAP 软件后，您应执行多项任务来验证集群是否就绪。 
 ---
-= 验证 ONTAP 升级后的集群准备情况
+= ONTAP 升级后验证工作流程
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
@@ -13,21 +13,18 @@ summary: 升级 ONTAP 软件后，您应执行多项任务来验证集群是否�
 [role="lead"]
 升级ONTAP后、您应执行几项任务来验证集群是否就绪。
 
-.步骤
-. link:task_verify_cluster_after_upgrade.html["验证集群"]。
-+
-升级ONTAP后、您应验证集群版本、集群运行状况和存储运行状况。如果您使用的是 MetroCluster FC 配置，则还需要验证集群是否已启用自动计划外切换。
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-1.png["一个"] 验证您的集群。
+[role="quick-margin-para"]
+升级 ONTAP 后，您应该link:task_verify_cluster_after_upgrade.html["验证集群版本、集群运行状况和存储运行状况"]。如果使用 MetroCluster FC 配置，还需要验证集群是否已启用自动计划外切换。
 
-. link:task_enabling_and_reverting_lifs_to_home_ports_post_upgrade.html["验证所有的SIFs是否都位于主端口上"]。
-+
-在重新启动期间，某些 LIF 可能已迁移到其分配的故障转移端口。升级集群后，您必须启用并还原不在其主端口上的任何 LIF 。
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-2.png["两个"] 确认所有 LIF 都在主端口上。
+[role="quick-margin-para"]
+在重新启动期间，某些 LIF 可能已迁移到其分配的故障转移端口。升级集群后，您必须link:task_enabling_and_reverting_lifs_to_home_ports_post_upgrade.html["启用和还原不在其主端口上的任何 LIF"]。
 
-. 验证 link:concept_special_configurations_post_checks.html["特殊注意事项"] 特定于您的集群。
-+
-如果集群上存在某些配置、您可能需要在升级后执行其他步骤。
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-3.png["三个"] 验证特定于集群的特殊注意事项。
+[role="quick-margin-para"]
+如果集群上存在某些配置，则可能需要 link:concept_special_configurations_post_checks.html["升级后执行其他步骤"]。
 
-. link:concept_when_you_need_to_update_the_disk_qualification_package.html["更新磁盘认证包(DQP)"]。
-+
-在 ONTAP 升级过程中，不会更新 DQP 。
-
-
+.image:https://raw.githubusercontent.com/NetAppDocs/common/main/media/number-4.png["四个"] 更新磁盘认证包(DQP)。
+[role="quick-margin-para"]
+在 ONTAP 升级过程中不会更新 DQP。升级后必须 link:concept_when_you_need_to_update_the_disk_qualification_package.html["更新 DQP"]。

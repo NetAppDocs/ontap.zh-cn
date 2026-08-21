@@ -1,0 +1,68 @@
+---
+permalink: update/pre-stage-system-firmware.html 
+sidebar: sidebar 
+keywords: ontap, upgrade, andu, bios, loader, firmware, pre-stage, single reboot, slipstream, system firmware, boot media, cluster image update 
+summary: 从 ONTAP 9.17.1 开始，您可以在 ONTAP 升级之前在节点上预先暂存较新的 BIOS 或 LOADER 固件，以便在单个重新启动周期内完成这两项更新。 
+---
+= 在 ONTAP 软件升级之前预暂存系统固件
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.17.1 开始，如果在执行自动无中断升级 (ANDU) 之前，节点的引导设备上已存在较新的 BIOS 或 LOADER 固件，则升级过程将保留较新的固件，而不是用 ONTAP 映像中捆绑的版本覆盖它。这样，ONTAP 软件升级和固件更新均可在一个重新启动周期内完成。
+
+在 ONTAP 9.16.1 及更早版本中，ANDU 始终会安装目标 ONTAP 映像中捆绑的 BIOS 和 LOADER 固件，无论启动设备上已有哪种固件版本。如果已独立下载较新的 BIOS 或 LOADER 服务映像，则在 ONTAP 升级后需要单独的接管和回馈周期来激活较新的固件。
+
+从 ONTAP 9.17.1 开始，ONTAP 将每个节点的引导设备上的 BIOS 和 LOADER 固件版本与目标 ONTAP 映像中捆绑的版本进行比较。如果引导设备已包含比捆绑版本更新的版本，则不安装捆绑的固件。现有的较新固件将予以保留。如果捆绑的版本等于或高于引导设备上的版本，则安装捆绑的固件。
+
+在节点作为正常 ANDU 工作流程的一部分重新启动后，启动设备上的固件将被激活，从而使 ONTAP 升级和固件更新在一次重新启动中完成。
+
+.开始之前
+* 集群中的所有节点都必须运行 ONTAP 9.17.1 或更高版本。
+* 您必须已从 link:https://mysupport.netapp.com/site/downloads/firmware/system-firmware-diagnostics["NetApp 支持站点"^] 下载较新的 BIOS 或 LOADER 服务映像。
++
+您需要高级权限级别才能将固件下载到节点的启动设备。
+
+
+
+.步骤
+. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+. 将较新的服务映像下载到每个节点的启动设备：
++
+[source, cli]
+----
+system node firmware download -node <node_name> -package
+----
++
+对集群中应接收较新固件的每个节点重复此步骤。
+
+. 返回管理员权限：
++
+[source, cli]
+----
+set -privilege admin
+----
+. 验证每个节点的引导设备上当前的固件版本：
++
+[source, cli]
+----
+system node firmware bootmedia show
+----
++
+预先暂存的固件版本应高于目标 ONTAP 映像中捆绑的版本。
+
+
+
+.下一步是什么？
+* 预先准备好固件后，您就可以link:../upgrade/automated-upgrade-task.html["执行自动 ONTAP 升级"]了。
++
+在升级过程中，ONTAP 检测到引导设备已包含更新的 BIOS 和 LOADER 固件，并将其保留。捆绑的固件不会安装在已存在更高版本的节点上。
+
+
