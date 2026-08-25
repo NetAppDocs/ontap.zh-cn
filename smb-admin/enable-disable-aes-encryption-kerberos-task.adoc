@@ -30,7 +30,9 @@ summary: 要利用基于 Kerberos 的通信的最强安全性，可以在 SMB �
 |===
 从ONTAP 9.12.1开始、使用启用和禁用AES加密 `-advertised-enc-types` 选项、用于指定向AD KDC公布的加密类型。默认设置为 `rc4` 和 `des`、但如果指定了AES类型、则会启用AES加密。您还可以使用选项显式禁用较弱的RC4和DES加密类型。在ONTAP 9.11.1及更早版本中、必须使用 `-is-aes-encryption-enabled` 用于启用和禁用AES加密的选项、并且无法指定加密类型。
 
-为了增强安全性， Storage Virtual Machine （ SVM ）会在每次修改 AES 安全选项时更改 AD 中的计算机帐户密码。更改密码可能需要包含计算机帐户的组织单位（ OU ）的管理 AD 凭据。
+修改  `-advertised-enc-types` 参数时，指定的加密类型将替换任何先前配置的类型。所有先前的加密类型设置均已删除。
+
+为了增强安全性，每次修改 AES 安全选项时，Storage Virtual Machine (SVM) 都会在 AD 中更改其计算机帐户密码。更改密码可能需要包含计算机帐户的组织单位 (OU) 的管理 AD 凭据。只有当 ONTAP 必须在 Active Directory 中重置计算机帐户密码，并且您的 AD 配置需要包含计算机帐户的组织单位的管理凭据时，才会显示凭据提示。如果您的 AD 已同步并启用了自动重置，则不会显示提示。
 
 如果将SVM配置为不保留身份的灾难恢复目标( `-identity-preserve` 选项设置为 `false` 在SnapMirror配置中)、非默认SMB服务器安全设置不会复制到目标。如果已在源SVM上启用AES加密、则必须手动启用它。
 

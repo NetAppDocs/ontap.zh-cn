@@ -141,7 +141,7 @@ ONTAP Select
 | 混合协议访问(NFS v3和SMB) | ONTAP 9.6 |  
 
 
-| NDMP还原 | ONTAP 9.13.1 | 源集群和目标集群都必须运行ONTAP 9.13.1或更高版本、才能将NDMP与SnapMirror同步结合使用。有关详细信息，请参见 xref:../tape-backup/transfer-data-ndmpcopy-task.html[使用NDMP副本传输数据]。 
+| NDMP还原 | ONTAP 9.13.1 | 源集群和目标集群都必须运行 ONTAP 9.13.1 或更高版本，才能对 SnapMirror 同步卷执行基于转储或 SMTape 的 NDMP 备份。不支持对 SnapMirror 活动同步或 SnapMirror 同步关系中的目标卷执行基于转储或 SMTape 的 NDMP 还原。 
 
 
 | 无中断SnapMirror同步操作(Non AFF)、仅适用于ASA平台。 | ONTAP 9.12.1 | 通过对无中断运行的支持、您无需计划停机时间即可执行许多常见维护任务。支持的操作包括接管和交还以及卷移动、前提是两个集群中的每个集群都有一个节点运行正常。 
@@ -215,7 +215,7 @@ SnapMirror同步关系不支持以下功能：
 同一个卷或 SVM 不支持 LUN 和 NVMe 命名空间。
 * SnapCenter
 * SnapLock 卷
-* 使用目标卷上的转储和 SMTape 进行磁带备份或还原
+* 转储或基于 SMTape 的 NDMP 还原到 SnapMirror 活动同步或 SnapMirror 同步关系中的目标卷
 * 源卷的吞吐量下限（ QoS 最小值）
 * Volume SnapRestore
 * VVOL
