@@ -4240,8 +4240,6 @@ LUN的实际最大大小可能不完全为16 TB。  ONTAP 会将限制取低一�
   <block id="140a44e7a81487c16050bc9e2f850961" category="inline-link-macro">基于副本的过渡</block>
   <block id="320182cf012fbd4ce890d17ab967f1c1" category="summary">对于以太网光纤通道（ FCoE ）， CNA 的以太网适配器部分的巨型帧应配置为 9000 MTU 。CNA 的 FCoE 适配器部分的巨型帧应配置为 1500 MTU 以上。只有当启动程序，目标和所有中间交换机支持巨型帧并为巨型帧配置巨型帧时，才配置巨型帧。</block>
   <block id="09af7498311538e3f23aeb27e2bcb853" category="doc">FCoE 巨型帧的建议 MTU 配置</block>
-  <block id="de23d8842253a452cd2e4fa7e59939c2" category="summary">创建 LUN 后，您可以通过多种方式对其进行管理。例如，您可以控制 LUN 可用性，从 igroup 取消映射 LUN ，删除 LUN 以及增加 LUN 大小。</block>
-  <block id="b7e0fcb925854bf49dd8de376dc295f8" category="doc">管理 FC 和 iSCSI 的 LUN 概述</block>
   <block id="a846fcc72fb0c00df231962c331bc56c" category="summary">从ONTAP 9.11.1开始、您可以使用ONTAP 命令行界面将现有LUN过渡到单个NVMe命名空间、而不会丢失任何数据</block>
   <block id="1aec504307cd33e89d37f23a7993b4be" category="doc">将LUN转换为命名空间</block>
   <block id="3ea1264f4fe0e8297d12245679e58cc5" category="paragraph">从ONTAP 9.11.1开始、您可以使用ONTAP 命令行界面将现有LUN原位转换为NVMe命名空间。</block>
@@ -4370,7 +4368,6 @@ LUN的实际最大大小可能不完全为16 TB。  ONTAP 会将限制取低一�
   <block id="7ddad86c65632958e62c073901f17a91" category="list-text"><block ref="7ddad86c65632958e62c073901f17a91" category="inline-link-macro-rx"></block></block>
   <block id="55300150e4d1dd9f878c2a627b7fa5a6" category="summary">在虚拟化环境中， LIF 使主机（客户端）能够通过优化和非优化路径访问 LUN 。</block>
   <block id="4693fcdb64539c921b0081d8654a4955" category="doc">LUN 访问在虚拟化环境中的工作原理</block>
-  <block id="42501dcadea7715efc0edbb649df8ca0" category="paragraph">LIF 是一个逻辑接口，用于将 SVM 连接到物理端口。尽管多个 SVM 可以在同一端口上具有多个 LIF ，但一个 LIF 属于一个 SVM 。您可以通过 SVM LIF 访问 LUN 。</block>
   <block id="7117cc2b5c6a8cac3cbaaa12a72bcaea" category="paragraph-title">集群中单个SVM的LUN访问示例</block>
   <block id="1ffbb0e92187569189d83f8bc09bb822" category="paragraph">在以下示例中，主机 1 连接到 SVM-1 中的 LIF1.1 和 LIF1.2 以访问 LUN1 。LIF1.1 使用物理端口 node1 ： 0c ， LIF1.2 使用 node2 ： 0c 。LIF1.1 和 LIF1.2 仅属于 SVM-1 。如果在节点 1 或节点 2 上为 SVM-1 创建了新的 LUN ，则它可以使用这些相同的 LIF 。如果创建了新的 SVM ，则可以使用两个节点上的物理端口 0c 或 0d 创建新的 LIF 。</block>
   <block id="eb52240113fc1364e726b58311b6391e" category="image-alt">对 LUN1 的 SVM 访问</block>
@@ -31572,22 +31569,14 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="920379e478bf146b3eaad0bbfa2f20f8" category="paragraph">以下示例将从本地节点"/mroot/etc/lic_file"安装许可证(如果此文件位于此位置)：</block>
   <block id="d9374af96a68f98b2e73d35fada43a6f" category="doc">ONTAP许可概述</block>
   <block id="a167444fdea2847400372052380975f2" category="section-title">ONTAP One附带的许可证</block>
-  <block id="8ace346aed2263afea8ccd0160e6b30f" category="paragraph">ONTAP One包含所有可用的许可功能。它包含以前的Core捆绑包、数据保护捆绑包、安全与合规性捆绑包、混合云捆绑包和加密捆绑包的内容组合、如表所示。加密在受限国家/地区不可用。</block>
-  <block id="8cfdad4bcdb63dc9d42b9a48f129f985" category="cell">以前的捆绑包名称</block>
   <block id="3af5239361083813685ae4a7fb1cac04" category="cell">包括ONTAP密钥</block>
-  <block id="035270eab607dda9573a979638d5c864" category="cell">核心包</block>
   <block id="1cc4944bf9485eca6feb53bc7161cb17" category="cell">NFS、SMB、S3</block>
   <block id="bc296dd22b5e1f772bc326900fa78e29" category="cell">FC、iSCSI</block>
   <block id="437775dd6c655bed204f91aadc9cfcd8" category="cell">NVMe-oF</block>
-  <block id="93b3831b307e5486a75d3e9e4382f565" category="cell">安全性与合规性包</block>
   <block id="b39bd50bd7de7241bbf947a16d2cf267" category="cell">MTKM</block>
-  <block id="0fa4a1b803cad030ee10383930c968b2" category="cell">数据保护包</block>
-  <block id="f2ba6d5b5a246e16a1cc7cab8e183236" category="cell">混合云捆绑包</block>
-  <block id="42cb2bb3633bc1d5a8f3f0a7f081ab33" category="cell">加密包</block>
   <block id="8d897952723da3030fa7033bcabfeca4" category="cell">可信平台模块</block>
   <block id="8cbf24aa9a1a38a46bfdf28893888b87" category="section-title">ONTAP One不提供许可证</block>
   <block id="0180e4cdde6d111025e50db1c7db10c1" category="paragraph">ONTAP One不包括NetApp的任何云交付服务、包括以下服务：</block>
-  <block id="981bffcb165038c7fa06d58ef1c4cdaf" category="list-text">数据监管</block>
   <block id="bbb18242f5a893895e4031c06f63f842" category="section-title">适用于现有系统的ONTAP One</block>
   <block id="887ed067d8995340cb9aa527c6b73bbf" category="paragraph">如果您的现有系统当前受NetApp支持、但尚未升级到ONTAP One、则这些系统上的现有许可证仍然有效、并继续按预期工作。例如、如果已在现有系统上安装了SnapMirror许可证、则无需升级到ONTAP One即可获得新的SnapMirror许可证。但是、如果现有系统上未安装SnapMirror许可证、则获取该许可证的唯一方法是升级到ONTAP One、但需额外付费。</block>
   <block id="d6f327233729ee8d91a5936153375d3a" category="inline-link-macro">升级到ONTAP One或ONTAP基本兼容包</block>
@@ -35543,7 +35532,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="360a78378750a63aa8b01550010e2426" category="list-text">为9.16.1.新增了受规则保护的命令</block>
   <block id="c88716252f91e6472b1df0324bfe0d7b" category="paragraph">*此命令仅适用于命令行界面、在某些版本中不适用于System Manager。</block>
   <block id="b4229437ec9c491fc6979f9d34753006" category="admonition">即使请求者位于批准组中、也无法批准自己的请求(尽管他们可以收到自己请求的电子邮件通知)。不属于批准组的请求者(即不是MAV管理员)不会收到电子邮件通知。</block>
-  <block id="ca69fae3834b86b7f5b6d57a746c0d45" category="doc">配置ONTAP虚拟IP (VIP) LUN</block>
   <block id="33a776b053998ffcb8d86fcf8a4ee051" category="paragraph">某些下一代数据中心使用第3层(IP)网络机制、这些机制要求在子网之间对所有的生命周期进行故障转移。ONTAP支持虚拟IP (VIP)数据LUN以及相关的路由协议(即边界网关协议(BGP))、以满足这些下一代网络的故障转移要求。</block>
   <block id="4ea59ffd8a06fae2b589f11f7e3cb07c" category="paragraph">从BGP.9.1开始、提供可选的默认路由自动化功能、并使用ONTAP 9对等组简化配置。</block>
   <block id="a813bc3b4b92b28d57b44752a8b00663" category="admonition">ONTAP 不会处理从路由器传入的任何路由公告；因此，您应将对等路由器配置为不向集群发送任何路由更新。这样可以缩短与对等方进行通信所需的时间、使其完全正常工作、并减少ONTAP中的内部内存使用量。</block>
@@ -37721,7 +37709,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="b553bacf0cb58a8e606d6b6a91fbcd4e" category="paragraph">下表列出了从ONTAP 9.11.1开始的数据SVM中的内置LUN策略。对于其他版本，使用以下命令显示服务策略及其详细信息：</block>
   <block id="32564eeab3083947ffcdd8f503d5dde4" category="paragraph">由传输面向块的SAN数据流量的LIF使用。从ONTAP 9.10.1开始、已弃用"default-data-blocks"策略。请改用"default-data-iscsi"服务策略。</block>
   <block id="ce3bff03cd80e7030413a74aaa3128f6" category="paragraph">下表列出了可在数据SVM上使用的服务、以及从ONTAP 9.11.1开始、每个服务对LIF的故障转移策略施加的任何限制：</block>
-  <block id="7e69ce313f9d1a5711a6f5549670fa3a" category="paragraph">TTL 以毫秒为单位。从9.10.1 9.10.1及更高版本开始、默认值为1小时(3、600、000毫秒)。在ONTAP 9.9.1及更早版本中、默认值为24小时(86、400、000毫秒)。此值的允许范围为 1 分钟（ 60000 毫秒）到 7 天（ 604 ， 800 ， 000 毫秒）。</block>
   <block id="c1533063fe30bfe03f6b0b0b23c81990" category="doc">了解ONTAP中基于RDMA的NFS</block>
   <block id="fa583f5b4e4f990b41f5e77f9a6a846c" category="paragraph">如果使用9.16.1 9.161或更高版本以及Red Hat Enterprise Linux 8.7或更高版本(适用于RHEL 8)或9.2或更高版本(适用于RHEL 9)作为Linux客户端、则中继组只需要一个挂载点。使用以下选项、使用此命令挂载导出的卷<block ref="108fd47ee55441802d3323d3bf1c9ef4" prefix=" " category="inline-code"></block>：</block>
   <block id="51b8143b681fcbe84c8cb3eb5970f228" category="paragraph">否则、中继组中的每个连接都需要一个单独的挂载点。使用选项、使用类似于以下内容的命令挂载导出的卷<block ref="00e22bb98dec9bdffb01e63da76e0682" prefix=" " category="inline-code"></block>：</block>
@@ -39569,11 +39556,8 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="2274aaf338e78342a7c38c2e6fea0c7d" category="admonition">ONTAP 9.7及更早版本中创建广播域的过程有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上创建广播域，请参见<block ref="fca9300ff4dcfc0b09178df351199c9c" category="inline-link-macro-rx"></block>。</block>
   <block id="13e26dfaf68d087a2c92fa03d51a981d" category="paragraph">您也可以手动创建广播域。</block>
   <block id="4b824a66f398b166350a63b01d0ad749" category="doc">在负载平衡区域中添加或删除ONTAP LIF</block>
-  <block id="f3edd495cb9463ef9bf926eab7bad805" category="doc">在ONTAP网络的子网中添加或删除IP地址</block>
   <block id="e7258a09eed355db1e1c54c417383fae" category="doc">在ONTAP广播域中添加或删除端口</block>
   <block id="300851f80b64359c0d60713cfb0ed405" category="admonition">在ONTAP 9.7及更早版本中、为广播域添加或删除端口的过程有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上的广播域中添加或删除端口，请参阅<block ref="f32be1e1e97ce4dcc5eb26ea1dd8630f" category="inline-link-macro-rx"></block>。</block>
-  <block id="8a673372a0bb76d16cfccb7cf168c7be" category="doc">使用DNS负载平衡优化ONTAP网络流量</block>
-  <block id="e51a26a8a612c94fb724784fc0150414" category="doc">更改ONTAP网络的子网属性</block>
   <block id="e02dbffb8cc8785729c0a1d016c77018" category="doc">更改ONTAP广播域中端口的MTU值</block>
   <block id="a3feaf33dc7e71f526d4de1b33cb36de" category="admonition">在ONTAP 9.7及更早版本中、更改广播域端口的MTU值的过程有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上更改广播域端口的MTU值，请参阅<block ref="4ebcac6b35b770b7d98c0b2dae23f46b" category="inline-link-macro-rx"></block>。</block>
   <block id="1bd31ffe03be42987c88a06c8cf22ff7" category="inline-link-macro">network port broadcast-domain modify</block>
@@ -39588,23 +39572,18 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="54361fc748a971112b886b525767166b" category="doc">为ONTAP网络配置UTA X1143A-R6端口</block>
   <block id="44c983b2eab46dbd417f47d5bd835344" category="doc">了解ONTAP广播域</block>
   <block id="2013c178fc24fafddc224dc5ac3f46ef" category="admonition">在ONTAP 9.7及更早版本中、广播域的管理有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上管理广播域，请参见<block ref="de52df6398831245fa7dd005fcab6128" category="inline-link-macro-rx"></block>。</block>
-  <block id="16f4b980938e182b48901771defd8c93" category="doc">为ONTAP网络配置DNS以进行主机名解析</block>
   <block id="42843000d3d4fafda72176847241c002" category="doc">为ONTAP网络配置DNS服务</block>
   <block id="9ce4062d7fec0a98aab312b5b9e5dcf4" category="doc">为ONTAP网络配置动态DNS服务</block>
   <block id="f43b2d608e7ec0cd326172f06f1607e9" category="doc">了解ONTAP网络上的LIF故障转移</block>
   <block id="a680ba46cb98559ac9ed41c285722080" category="doc">在LIF上配置ONTAP故障转移设置</block>
-  <block id="bc2a4d3e7da696148e1ec1cbe969f9e4" category="doc">为ONTAP网络中的LUN配置防火墙策略</block>
   <block id="ab500280f18d3302ad6b985b54b4e5fb" category="doc">了解ONTAP网络的主机名解析</block>
   <block id="689c03b87021159cef4746ef2add403e" category="doc">了解ONTAP IP空间配置</block>
   <block id="6b17733b597dac192d107918ffa0377f" category="doc">为ONTAP集群配置LIF服务策略</block>
   <block id="bf381ff843b2b206fd2bf96070a38d43" category="doc">了解ONTAP集群的LIF配置</block>
   <block id="0de16ab1bbbc3b615e20fb02788d7779" category="list-text">ONTAP 9.7及更早版本：<block ref="7099b27122419f9f6d179b0d33adb32b" category="inline-link-macro-rx"></block></block>
-  <block id="0e39b789f7717bc975ea58eaf0db4905" category="doc">使用FIPS为所有ONTAP连接配置SSL网络安全性</block>
-  <block id="0847f2737b8282450ee31fdf4a243e57" category="doc">了解ONTAP网络服务质量(QoS)</block>
   <block id="1b7ff3aa798bc5d6cc266cfd969e3c16" category="doc">在ONTAP集群中配置SNMPv3用户</block>
   <block id="21fd77d055cd6c4ecdf5a1530656f96c" category="doc">了解ONTAP网络的子网</block>
   <block id="a82845a25d653554a12ce926b4a84829" category="doc">在ONTAP网络上为SNMP配置陷阱主机</block>
-  <block id="7f33cdf954066a19220c3663b48fec27" category="doc">通过物理端口配置ONTAP VLAN</block>
   <block id="544cde06a3bb81469142acc513c2a26b" category="doc">转换ONTAP网络的CNA/UTA2光纤模块</block>
   <block id="e8a9467258284e526f25f7f205b7a6d3" category="doc">转换要在ONTAP网络中使用的UTA2端口</block>
   <block id="66e3bbff4ad1050c979384f8a0e9204a" category="doc">通过转换40GbE NIC端口为ONTAP网络创建10GbE端口</block>
@@ -39638,7 +39617,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="000a132dcc0cdd931f3d10dd8f203c3a" category="doc">查看ONTAP LIF故障转移目标</block>
   <block id="75574483f118a01e34a51176c9e63ad9" category="doc">查看ONTAP LIF信息</block>
   <block id="5a7baaade69d3e3a48e58c499dbce500" category="doc">查看负载平衡区域中的ONTAP LUN</block>
-  <block id="9c28f16fb81c50391148acb76b1b3647" category="doc">查看使用邻居发现协议的ONTAP网络连接</block>
   <block id="5b6e48deeb36f0fa8199f6600b0db443" category="doc">查看ONTAP网络端口信息</block>
   <block id="c9085bff5e23223c475e1d1bb71140c2" category="doc">查看ONTAP网络QoS标记值</block>
   <block id="e0cdc8ef26d17bcb30d604a112466b47" category="doc">查看ONTAP路由信息</block>
@@ -39647,16 +39625,11 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="3dabac93f1c1233b0617b57dd4b90e2f" category="doc">为ONTAP网络启用多路径路由</block>
   <block id="97ae60e53ba543d285f34f8c92a798fe" category="doc">了解ONTAP网络的DNS负载平衡</block>
   <block id="68852b93a73d565bf943b2e28d4c653b" category="doc">配置ONTAP网络的IP安全性</block>
-  <block id="8f1df3d891a92d7cf641c00a5d10a5e1" category="doc">准备在ONTAP网络上使用IP安全性</block>
-  <block id="91589397006b5e28cc739080a7c6586d" category="doc">了解ONTAP LIF与端口类型的兼容性</block>
-  <block id="04041a5242565dd35e59f3f71b61df50" category="doc">了解ONTAP LUN和服务策略</block>
   <block id="eeb6e097f5908a7fab8912e0dfe3e125" category="admonition">ONTAP 9.7及更早版本中的网络流量管理方法有所不同。如果需要管理运行ONTAP 9.7及更早版本的网络上的流量，请参见<block ref="3a38e5d2bad2bda03b677fa353d64916" category="inline-link-macro-rx"></block>。</block>
   <block id="4e5efd8167f08c488fa3bc6f718e7db8" category="inline-link-macro">network interface service-policy show</block>
   <block id="438c65a7905dbcf27a65244c381cbe9f" category="list-text"><block ref="438c65a7905dbcf27a65244c381cbe9f" category="inline-link-macro-rx"></block></block>
-  <block id="206bdff02cbe773e4baa121fdabcf655" category="doc">了解ONTAP网络上的SVM路由</block>
   <block id="07785293409e8c2c687ee05497a30719" category="doc">了解ONTAP网络上的SNMP</block>
   <block id="f12bd2af6e1d16adbeb5fbd8de0c1ab1" category="doc">您的ONTAP版本支持的LIF服务策略和角色</block>
-  <block id="3d645f66f80b954714a275a9ed2018c4" category="doc">用于管理ONTAP主机表的ONTAP命令</block>
   <block id="a8c1681635b16376aa80302284cbe59a" category="doc">合并ONTAP广播域</block>
   <block id="941550594d4e03667ce223669f303cf9" category="inline-link-macro">合并广播域(ONTAP 9.7或更早版本)</block>
   <block id="82096b0f5d917944c6d90b23206cda87" category="admonition">合并广播域的过程在ONTAP 9.7及更早版本中有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上合并广播域，请参见<block ref="281a3246e46c4f631ade2b95e6920c64" category="inline-link-macro-rx"></block>。</block>
@@ -39675,15 +39648,11 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="5fecc79f9c75e1fc5837ff9ca6fb2cb9" category="doc">ONTAP网络布线最佳实践</block>
   <block id="368c163598fbcbf4d5e1914bb5b5cc16" category="doc">了解ONTAP集群的网络组件</block>
   <block id="4d4237eb8e4348d3af79724168539255" category="doc">使用System Manager直观地显示ONTAP网络</block>
-  <block id="52fa9133415c22fe3227f02c5bdc7bdb" category="doc">了解ONTAP内部端口</block>
-  <block id="204cfe339226c8fc5c3f2c8c0f1ae8a6" category="doc">了解ONTAP网络上的端口使用情况</block>
   <block id="43a30dacdae8284eeaf581f9ba8cd28e" category="doc">恢复配置不正确的ONTAP LIF</block>
-  <block id="980ab05620e8d7d03c2cd3867472131b" category="doc">确定要在ONTAP网络中使用的LIF故障转移策略</block>
   <block id="8d760974c62e1ed62d8b1c1f1503a954" category="doc">从ONTAP网络的路由表中删除动态路由</block>
   <block id="cfe81f8007bced6a4dbeb712ffd03598" category="paragraph">出于维护目的，您可能需要从插槽中删除故障 NIC 或将此 NIC 移至其他插槽。</block>
   <block id="0e05fc145826813f7836ce8f287492d1" category="admonition">ONTAP 9.7及更早版本中删除NIC的过程有所不同。如果需要从运行ONTAP 9.7及更早版本的ONTAP集群节点中删除NIC，请参阅过程<block ref="06987025bddf943dbb61a3069f46691d" category="inline-link-macro-rx"></block>。</block>
   <block id="7d9d538c7c17141c87438cd0a22ca1d8" category="doc">修复ONTAP端口可访问问题</block>
-  <block id="957a5e13ca425566ed0796afe808f474" category="doc">在ONTAP节点故障转移或端口迁移之后、将LIF还原到其主端口</block>
   <block id="717c44a027fbeaab033865c7d2ee2017" category="doc">拆分ONTAP广播域</block>
   <block id="b902e4375913c0c736773da9b2d92bc1" category="admonition">拆分广播域的过程在ONTAP 9.7及更早版本中有所不同。如果需要在运行ONTAP 9.7及更早版本的网络上拆分广播域，请参阅<block ref="be612b105da7ef247930b51e3629552a" category="inline-link-macro-rx"></block>。</block>
   <block id="c3fa7d69f082ef4f3dbbf90cf26adfa3" category="inline-link-macro">网络端口广播域拆分</block>
@@ -42674,7 +42643,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="2a3d5416e6a3a5474990ed475e5bfea8" category="paragraph">您必须从原始源SVM或原始源集群运行此命令。虽然重新同步不需要基线传输，但它可能非常耗时。您可能希望在非高峰时段运行重新同步。如果源和目标上不存在通用快照、则命令将失败。使用<block ref="933e67aa13ad8ddaabb6373f048e0dac" prefix=" " category="inline-code"></block> 重新初始化此关系。有关的详细信息<block ref="933e67aa13ad8ddaabb6373f048e0dac" prefix=" " category="inline-code"></block>，请参见<block ref="a5ed044261aa862efed2fc99837ae6ff" category="inline-link-macro-rx"></block>。</block>
   <block id="7d3a18ac8456bea240f1eae293ab99f1" category="inline-link-macro">snapmirror modify</block>
   <block id="485b0881203a6774ec3677b47e6e5e8f" category="list-text"><block ref="485b0881203a6774ec3677b47e6e5e8f" category="inline-link-macro-rx"></block></block>
-  <block id="9406fb3af0e8e2bf8446823785c0e069" category="list-text">数据基础架构洞察力</block>
   <block id="aa84985dbf2bf9b5cdf4cf26ddaecd50" category="list-text">*通过SMB/CIFS共享*：使用自动生成的名称创建共享、您可以对其进行编辑。访问权限<block ref="f9ae5e5c44e59f94680af569879f704a" prefix=" " category="inline-code"></block> 。此外、您还可以指定权限级别。</block>
   <block id="dfc5c450d3e8a875b032a8bde768d348" category="summary">借助数据基础设施洞察，您可以监控、排除故障并优化所有资源，包括公共云和私有数据中心。</block>
   <block id="1a2913af7840bc0cb6e0dfa2bae780a6" category="paragraph">NetApp 数据基础架构洞察是一款监控工具，可让您深入了解整个基础架构。借助数据基础架构洞察，您可以监控、排除故障并优化所有资源，包括公有云和私有数据中心。</block>
@@ -46442,7 +46410,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="8400f04add5adb513fcf6d571fb7891b" category="summary">Internet 存储名称服务是一种支持在 TCP/IP 存储网络上自动发现和管理 iSCSI 设备的协议。iSNS 服务器维护有关网络上活动 iSCSI 设备的信息，包括其 IP 地址、iSCSI 节点名称 IQN 和门户组。</block>
   <block id="1e370e074df12cc0d33db77cdd479866" category="summary">NetApp 全闪存 SAN 阵列从 ONTAP 9.7 开始提供。ASA 是基于经过验证的 AFF NetApp 平台构建的全闪存仅限 SAN 的解决方案。</block>
   <block id="cf26583f2346c6ae85037488398f192d" category="summary">除了使用 Selective LUN Map 之外，还可以通过 igroup 和 portset 限制对 LUN 的访问。</block>
-  <block id="34fc4af485aae88db8d0aaae761fdea7" category="summary">在虚拟化环境中，LIF 使主机能够通过优化和未优化的路径访问 LUN。</block>
   <block id="c17920c208fb571c8ccd68625d5c1546" category="summary">LIF 连接到 SAN 主机。可以从端口集中删除它们、将它们移动到存储虚拟机中的不同节点以及删除它们。</block>
   <block id="c9bbda1ce0de9969132053649bad4ebf" category="summary">您可以使用非易失性内存快速协议在 SAN 环境中提供存储。NVMe 协议针对固态存储的性能进行了优化。</block>
   <block id="82708ebcf7b03a02c70d7ffa2b2078d3" category="summary">您可以使用 System Manager 查看和管理启动器组和启动器。</block>
@@ -47125,7 +47092,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="7682dd0967fc59a379b72ef390feac9e" category="section-title">直连式 FC 和 FC-NVMe 配置</block>
   <block id="1b5b339994fe8e4a84260247983246c7" category="inline-image-macro">直连配置</block>
   <block id="a81f271d641480cf02e801944ebdeaae" category="paragraph"><block ref="a81f271d641480cf02e801944ebdeaae" category="inline-image-macro-rx" type="image"></block></block>
-  <block id="2c8141c153d3b244e7e186d0040dd838" category="inline-link-macro">配置 ONTAP FC 端口以直接连接到 FC 和 FC-NVMe 主机</block>
   <block id="577585c37ce3f60eb35705c858ffa83f" category="paragraph">从 ONTAP 9.19.1 开始，无需 FC 交换机即可在 FC 和 FC-NVMe 主机与 ONTAP 存储之间建立连接。主机可以直接连接到 AFF、ASA、ASA r2 和 FAS 系统上的 FC 适配器端口。在简单性至关重要的远程站点和混合环境中，直接连接功能尤其有价值。您必须先使 FC 端口脱机并修改其拓扑，然后才能将其直接连接到主机。</block>
   <block id="dda07461378cbf5b8ea97ff3f2c0760e" category="paragraph">直连配置中使用的 FC 端口有下列限制：</block>
   <block id="7faf47d244c8a5fd328b867976b35067" category="list-text">端口只能分配给一个存储虚拟机 (SVM)。</block>
@@ -47138,15 +47104,10 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="1a6ec73993197f77d422dc7cc8987ab4" category="list-text">选择 *Save。*</block>
   <block id="f98908d4038eb68192adcbb39f7fbffa" category="list-text">将目标端口的电缆直接连接到主机启动器。</block>
   <block id="a1fede4503fbbf7f235b796b4567f229" category="inline-link-macro">此 System Manager 过程</block>
-  <block id="200c159547e217b1b32da900d5ec158a" category="list-text">如果您有 ASA r2 系统，请按照 <block ref="5e442b0923dbffa7e2fbea37073d3466" category="inline-link-macro-rx"></block> 创建 LIF。如果您有 AFF、ASA 或 FAS 系统，请按照以下步骤创建 LIF：</block>
   <block id="7104882c009110b9584f53d54d9581e6" category="inline-image-macro">添加图标</block>
   <block id="ba727e2b158cc22f20f858e5ef698ec9" category="list-text">选择 *Network &gt; Interfaces*，然后选择 <block ref="e9509663eb221e58bedb9fd19731c43d" category="inline-image-macro-rx" type="image"></block>。</block>
   <block id="5795e53dadb74c8b2af5162ac8ece37c" category="list-text">选择 FC 或 NVMe/FC 协议。</block>
   <block id="dfdc76fc356a89b7c9c878525e995b9b" category="list-text">命名 LIF 或接受 ONTAP 生成的名称。</block>
-  <block id="1298d84b2949ca3a5681015f38f0dec5" category="list-text">如果至少配置了一个子网，则可以为 LIF 选择一个子网。</block>
-  <block id="fa53bb3d21a1f1b582232889338dd11f" category="list-text">如果未选择子网，则可以指定广播域的 IP 地址和子网掩码。</block>
-  <block id="e4a5b7d70ddc4504f0d0cc4923976e62" category="list-text">从广播域中选择主端口。</block>
-  <block id="99c2d427c0aefbf1b9533944cf08ac40" category="paragraph">根据广播域或子网选择显示主端口控制</block>
   <block id="4408c04956536e08ba8913487e6d70ab" category="paragraph">创建 LIF 时，端口将自动联机。</block>
   <block id="8f45b37ea8ef19452a0156303840ac56" category="paragraph">在 System Manager 中，选择 *Network &gt; FC ports*，然后验证 *Topology* 是否显示为 *Direct*。</block>
   <block id="df4b6f903ea1f019452f1af5affba541" category="list-text">查看用于适配器端口的 LIF 的管理和运行状态：</block>
@@ -49531,4 +49492,29 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="abc3cfe9d437f8bb06b6a880f33e69bc" category="list-text">客户端必须支持 RPC-with-TLS over TCP，必须配置为在挂载时请求 TLS，并且必须信任对 NFS 服务器证书进行签名的证书颁发机构。此处未记录客户端配置步骤，因为这些步骤因客户端而异。有关 Linux 客户端的端到端演练，请参阅 <block ref="28920ba717b553cf078f834461ac8a01" category="inline-link-macro-rx"></block>。</block>
   <block id="3f7773acceca9bd6d7fb6b16db8d84cb" category="paragraph">修改 <block ref="ddde30b98188e05b2f6907c7b9415c27" prefix=" " category="inline-code"></block> 参数时，指定的加密类型将替换任何先前配置的类型。所有先前的加密类型设置均已删除。</block>
   <block id="889a400c95ca500d790674eca2dfea8d" category="paragraph">为了增强安全性，每次修改 AES 安全选项时，Storage Virtual Machine (SVM) 都会在 AD 中更改其计算机帐户密码。更改密码可能需要包含计算机帐户的组织单位 (OU) 的管理 AD 凭据。只有当 ONTAP 必须在 Active Directory 中重置计算机帐户密码，并且您的 AD 配置需要包含计算机帐户的组织单位的管理凭据时，才会显示凭据提示。如果您的 AD 已同步并启用了自动重置，则不会显示提示。</block>
+  <block id="c36043c7ca863698655c324dad114bbd" category="doc">从 ONTAP 子网添加或删除 IP 地址</block>
+  <block id="0d3857b6b937db41bf79bb16bf3e23fc" category="doc">ONTAP DNS 负载平衡的工作原理</block>
+  <block id="d3eb73c583096b6eb3b0625de3483e1d" category="doc">更改 ONTAP 子网属性</block>
+  <block id="b569825cd90b04c9a49e0c8d6aeaa0a6" category="doc">在 ONTAP 上配置 DNS 以进行主机名解析</block>
+  <block id="f9d0f72e44cf744a10a8244707e7e001" category="doc">为 LIF 配置 ONTAP 防火墙策略</block>
+  <block id="44890e746a29da6050d535a01b8f0b90" category="doc">使用 FIPS 配置 ONTAP 网络安全</block>
+  <block id="e97303556aceec333806b58121520a8c" category="doc">了解 ONTAP 网络 QoS 标记</block>
+  <block id="78281e4006a17cd1458a5e79d74a7c38" category="doc">配置 ONTAP VIP LIF</block>
+  <block id="9065859c57d989c788df4bcae9cabf1d" category="doc">ONTAP 网络连接的邻居发现协议</block>
+  <block id="6e1a201059eacdfe52d8a06136a06dd4" category="doc">查找更多 ONTAP 网络资源</block>
+  <block id="e30fdeefc5c0aec2077ae1ee0e2e02ab" category="doc">了解 ONTAP 网络上的 IP 安全</block>
+  <block id="7f27eac6fa2198e8b69ebb3411700410" category="doc">ONTAP LIF与端口类型的兼容性</block>
+  <block id="f00ec3b36207e6adcfd0e5e7f58137ea" category="doc">ONTAP LIF 服务策略</block>
+  <block id="fef0f34f0e8448cbb23d513ba0e418ec" category="doc">ONTAP 如何在 SVM 中路由网络流量</block>
+  <block id="6ca266e3e066b97e2eb3dd8e37d4b54a" category="doc">用于管理 ONTAP 中主机表的命令</block>
+  <block id="9a6d8c84840ffb0929efa5283f4b1017" category="doc">System Manager 如何可视化 ONTAP 网络</block>
+  <block id="e4b44f126de6011860958b0a3a104c62" category="doc">ONTAP 广播域、故障转移组和策略的工作原理</block>
+  <block id="d0e4a9e5fa2534f5347a21dea3e88639" category="doc">在 ONTAP 中将 LIF 还原到其主端口</block>
+  <block id="5726ec21b3cdc5cfd7293867e879a5dc" category="doc">您可以在 ONTAP 中查看的网络信息</block>
+  <block id="e789f20d704dc9a291693a25e542a7f2" category="doc">适用于 ONTAP 的 NAS 路径故障转移工作流</block>
+  <block id="dfff017ab256322b89811005e806598c" category="paragraph">TTL 以毫秒为单位。从 ONTAP 9.17.1 及更高版本开始，默认值为 1 小时（3,600,000 毫秒）。在 ONTAP 9.16.1 及更早版本中，默认值为 24 小时（86,400,000 毫秒）。此值的允许范围为 1 分钟（60,000 毫秒）到 7 天（604,800,000 毫秒）。</block>
+  <block id="c1849ba34b5c587eff591aa70320fe5a" category="cell">ONTAP SVM 缓存正凭据的生存时间 (TTL)</block>
+  <block id="35c42a3dd6da0a09b5041b8f54a81dfa" category="cell">从 ONTAP 9.17.1 开始，ONTAP SVM 缓存的正向凭据的生存时间（TTL）已从 24 小时（86,400,000 毫秒）减少为 1 小时（3,600,000 毫秒）。</block>
+  <block id="98b6b3b18d90efce4a81d1913278590d" category="paragraph">LIF 是将存储虚拟机 (SVM) 连接到物理端口的逻辑接口。虽然多个 SVM 可以在同一端口上有多个 LIF，但 LIF 属于一个 SVM。您可以通过 SVM 的 LIF 访问 LUN。</block>
+  <block id="283624dcdc29bc04aa328e98008d6f44" category="paragraph">ONTAP One 包含所有可用的许可功能。它包含前 Core 捆绑包、Data Protection 捆绑包、Security and Compliance 捆绑包、Hybrid Cloud 捆绑包和 Encryption 捆绑包内容的组合。加密在受限国家/地区不可用。</block>
 </blocks>
