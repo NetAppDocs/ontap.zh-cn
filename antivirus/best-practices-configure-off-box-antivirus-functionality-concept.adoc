@@ -39,9 +39,7 @@ TIP: 如果Vscan流量的LIF配置在与客户端流量的LIF不同的端口上�
 * 使防病毒引擎和定义保持最新。请咨询合作伙伴、了解有关更新频率的建议。
 * 在多租户环境中、可以与多个SVM共享一个扫描程序池(Vscan服务器池)、但前提是Vscan服务器和SVM属于同一个域或受信任域。
 * 受感染文件的防病毒软件策略应设置为"delete"或"隔离 区"、这是大多数防病毒供应商设置的默认值。如果"vscand-fileop-profile"设置为"write_only "、并且发现受感染的文件、则该文件将保留在共享中、并且可以打开、因为打开文件不会触发扫描。只有在关闭文件后、才会触发防病毒扫描。
-* 。 `scan-engine timeout` 值应小于 `scanner-pool request-timeout` 价值。
-如果设置为较高的值、则访问文件可能会延迟、并且最终可能会超时。
-要避免这种情况、请配置 `scan-engine timeout` 比低5秒 `scanner-pool request-timeout` 价值。有关如何更改的说明，请参阅扫描引擎供应商的文档 `scan-engine timeout` 设置。。 `scanner-pool timeout` 可以在高级模式下使用以下命令并为提供适当的值来更改 `request-timeout` 参数：
+* The `scan-queue-timeout`值应小于 `scanner-pool request-timeout`值。如果设置为更高的值，则对文件的访问可能会延迟，并可能最终超时。为避免这种情况，请将 `scan-queue-timeout`配置为比 `scanner-pool request-timeout`值少 5 秒。有关如何更改 `scan-queue-timeout`设置的说明，请参阅扫描引擎供应商的文档。 `scanner-pool timeout`可以通过在高级模式下使用以下命令并为 `request-timeout`参数提供适当的值来更改：
 `vserver vscan scanner-pool modify`。
 * 对于为实时扫描工作负载调整规模并需要使用按需扫描的环境、NetApp建议将按需扫描作业计划在非高峰时间进行、以避免现有防病毒基础架构产生额外负载。
 
