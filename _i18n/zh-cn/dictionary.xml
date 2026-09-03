@@ -3483,7 +3483,6 @@ false</block>
   <block id="402edf79d9e94200ed06f5c079b68eed" category="paragraph-title">自动计划外故障转移(AUTOFO)</block>
   <block id="8fb293fea12c99804749bfab1c09f465" category="list-text">执行主机重新扫描以更新 LUN 清单。</block>
   <block id="4810d9e2d949fbb06ce658095e98bc61" category="list-text">从 ONTAP 9.10.1 开始，删除 SnapMirror 关系不会删除一致性组。如果要删除一致性组，必须使用 System Manager 或 ONTAP REST API 。请参见 <block ref="e483780f8fdafa606750bab2af5f046d" category="inline-xref-macro-rx"></block> 有关详细信息 ...</block>
-  <block id="d3c31439fb2c02db160ec2cf0fd83dc5" category="summary">当主集群关闭或隔离时，会发生自动计划外故障转移（ AUTOFO ）操作。  如果发生这种情况，二级集群将转换为主集群，并开始为客户端提供服务。</block>
   <block id="446da433a0bc9559ae19f7ebf7c97588" category="doc">自动计划外故障转移操作</block>
   <block id="d2b05c88509738c24a77db236b233afb" category="summary">如果任何目标卷设置了重定向隔离，则 SnapMirror 删除操作将失败。</block>
   <block id="49b21ad0d38942f635877e7bbc5d7a1e" category="paragraph-title">解决方案</block>
@@ -28214,7 +28213,6 @@ FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 Snap
   <block id="3cf9d21ec461a1f2bfbf40c1cf7e095d" category="paragraph"><block ref="d1c4839c4e497964e10d0eebfe613132" prefix="" category="inline-code"></block></block>
   <block id="c5a23389a9330cd1660ee78ce4cb1291" category="doc">从自动计划外故障转移操作中恢复</block>
   <block id="3e1793747e6eaaf4132b7f17315ba4c3" category="section-title">在计划外故障转移后重新建立保护关系</block>
-  <block id="f6f6925ddb2094f3a5df8486eb3c651c" category="paragraph">您可以使用System Manager或ONTAP命令行界面重新建立保护关系。</block>
   <block id="b9814648b88f1fa5376e728362eb4172" category="paragraph">您可以使用监控自动计划外故障转移的状态<block ref="89b1a411b9945c3e22fdcbde1e8cdf6c" prefix=" " category="inline-code"></block> 命令：</block>
   <block id="fa550f69df3ae28230a6a22ca3f7ff73" category="section-title">故障转移后、在扇出配置中恢复保护</block>
   <block id="3c251edba2cc4602e8db87d4eb9713dd" category="list-text">重新同步此关系：<block ref="49fb7d5f38808fdd46075cc959a63f19" prefix=" " category="inline-code"></block></block>
@@ -33813,7 +33811,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="7b51cee3056e1a6e1e46246c7efbb73a" category="list-text">找到*Snapshot Policies*，然后选择 <block ref="3bd97179928ca34721f5824ef7a7a5c9" category="inline-image-macro-rx" type="image"></block>。</block>
   <block id="02ff99a313218c90c07296d77a1c631b" category="list-text">找到要添加卷的SnapMirror配置。选择，然后选择 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block> **展开**。</block>
   <block id="f42cd57e1e9a4bed23e53e3a27ab1c79" category="list-text">在*保护&gt;关系*下、找到一致性组上的SnapMirror活动同步关系。选择，然后选择 <block ref="2e4fa1d5403170da7db51a75f20a53a5" category="inline-image-macro-rx" type="image"></block>*Delete*以删除SnapMirror活动同步关系。</block>
-  <block id="998436a58556aa3ccb14aecbae01929e" category="list-text">要恢复初始源集群上的操作、请单击 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block> 并选择*故障转移*。</block>
   <block id="7d72052f64d7bd3b8ae9706a16c3593b" category="inline-link-macro">管理集群时间(仅限集群管理员)</block>
   <block id="d8489f78601e5bafe3f4cb8bbee14ec8" category="paragraph">应在您的站点上设置网络时间协议（ Network Time Protocol ， NTP ）服务器。从 ONTAP 9.5 开始，您可以使用对称身份验证设置 NTP 服务器。有关详细信息，请参见的文档 <block ref="4e9a90496e53f8f2ec62372afd665829" category="inline-link-macro-rx"></block>。</block>
   <block id="53ba109696904e39d483624646b75c6a" category="list-text">rsh命令需要高级权限。</block>
@@ -45643,7 +45640,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="a2fd1cb1b92ddc9c9b02d483472dc226" category="admonition">如果您已经还原了部分节点，但并非全部节点，请不要尝试将集群升级回源版本。</block>
   <block id="f5b7ad3b857af41eec374957c177b5cf" category="list-text">在使用符合MetroCluster标准但未经MetroCluster验证的交换机的MetroCluster IP 系统中，从ONTAP 9.7 回滚到 9.6 会造成干扰，因为不支持使用ONTAP 9.6 及更早版本的系统。</block>
   <block id="b408b3dc571bcdaa4dd089c047bc3d38" category="paragraph">如果您尝试恢复到不支持 SVM 根卷加密的ONTAP版本，系统将发出警告并阻止恢复。</block>
-  <block id="2e3f0fba0ff6b32abc16d7f2fc3ca6ac" category="paragraph">当主集群宕机或隔离时，会触发自动非计划故障转移 (AUFO) 操作。ONTAP Mediator 检测故障转移发生时，并自动执行到辅助集群的非计划故障转移。 此操作只能在ONTAP中介器的协助下执行。辅助集群将转换为主集群并开始为客户端提供服务。只有在ONTAP调解器协助下才能执行此操作。</block>
   <block id="0952e29d1bbf2f905cfab7aafd7c0b3b" category="inline-link-macro">pNFS 的网络接口连接</block>
   <block id="e8a0f7824f71ae02582a324d633313b8" category="list-text"><block ref="e8a0f7824f71ae02582a324d633313b8" category="inline-link-macro-rx"></block></block>
   <block id="41d9b5d5bb9c791118b5bec44830b2b4" category="paragraph">默认情况下，pNFS 要求 SVM 中的任何数据 LIF 都可路由到 NFS 客户端上的接口，因为 pNFS 设备列表将填充 SVM 中的任何数据 LIF。因此，可能会选择不可路由的数据 LIF，这可能会造成中断情况。最佳实践是，仅在使用 pNFS 时配置可路由数据 LIF。</block>
@@ -49516,4 +49512,10 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="283624dcdc29bc04aa328e98008d6f44" category="paragraph">ONTAP One 包含所有可用的许可功能。它包含前 Core 捆绑包、Data Protection 捆绑包、Security and Compliance 捆绑包、Hybrid Cloud 捆绑包和 Encryption 捆绑包内容的组合。加密在受限国家/地区不可用。</block>
   <block id="2adcaf6c813214093f6ca4dea279b1e0" category="list-text">The<block ref="f11fcf005a7ded5de6d0c7f54bf2119a" prefix=" " category="inline-code"></block>值应小于<block ref="203574655dae053fd4896f836f6a89ca" prefix=" " category="inline-code"></block>值。如果设置为更高的值，则对文件的访问可能会延迟，并可能最终超时。为避免这种情况，请将<block ref="f11fcf005a7ded5de6d0c7f54bf2119a" prefix=" " category="inline-code"></block>配置为比<block ref="203574655dae053fd4896f836f6a89ca" prefix=" " category="inline-code"></block>值少 5 秒。有关如何更改<block ref="f11fcf005a7ded5de6d0c7f54bf2119a" prefix=" " category="inline-code"></block>设置的说明，请参阅扫描引擎供应商的文档。<block ref="c61d24d801d3a54a3a191b1dc755fa65" prefix=" " category="inline-code"></block>可以通过在高级模式下使用以下命令并为<block ref="35864bfa38d1ae8eb74cdcbfbc2f28fe" prefix=" " category="inline-code"></block>参数提供适当的值来更改：<block ref="5571bc175542a1cd92402dd4667c7086" prefix=" " category="inline-code"></block>。</block>
   <block id="4c9c1a486f27c40404ddd07fdad8fe6a" category="list-text">确保 FlexCache 卷名不超过 197 个字符。</block>
+  <block id="afc99716304bff6f6639d3b262bce508" category="summary">当主集群关闭或隔离时，会发生自动计划外故障转移 (AUFO) 操作。SnapMirror 活动同步会检测此类故障，并启动到辅助集群的自动计划外故障转移。辅助集群将转换为主集群并开始为客户端提供服务。</block>
+  <block id="867840e2c22eabb25431741747f71fbf" category="paragraph">当主集群关闭或隔离时，会发生自动计划外故障转移 (AUFO) 操作。SnapMirror 活动同步会检测到此类故障，并启动自动计划外故障转移到辅助集群。辅助集群将转换为主集群（首选集群），并开始为客户端提供服务。请注意，故障检测和故障转移处理只能在 ONTAP Mediator 的帮助下执行。</block>
+  <block id="f8d8544874cd4c4e0b2c120a44ec2851" category="paragraph">一旦原始主集群（例如集群 A）恢复，SnapMirror 活动同步将自动反向建立保护。如果要恢复原始状态，使集群 A 成为主要的首选集群，则可以通过使用 System Manager 或 ONTAP CLI 启动计划的故障转移操作来执行手动故障恢复。</block>
+  <block id="ca4a29f07e5233b1248bcc0715714393" category="list-text">要在原始源集群上执行故障回复和恢复操作，请单击 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block> 并选择 *Failover*。</block>
+  <block id="aeb8b243bd3e5f25e59b007bfc2b6877" category="paragraph">可以使用原始主集群上的 <block ref="8511c2f3ef6c5e8c42a150c01bd8495c" prefix=" " category="inline-code"></block> 命令监视反向保护关系的状态。</block>
+  <block id="07adf7ed14155f33ef9b2ae41a070b12" category="paragraph">您可以使用 <block ref="14d30280111212a70deb032d40f55925" prefix=" " category="inline-code"></block> 命令对原始主集群执行故障回复。</block>
 </blocks>

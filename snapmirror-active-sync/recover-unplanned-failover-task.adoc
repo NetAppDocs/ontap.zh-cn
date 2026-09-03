@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: snapmirror-active-sync/recover-unplanned-failover-task.html 
 keywords: fan-out, snapmirror active sync, unplanned failover 
-summary: 当主集群关闭或隔离时，会发生自动计划外故障转移（ AUTOFO ）操作。  如果发生这种情况，二级集群将转换为主集群，并开始为客户端提供服务。 
+summary: '当主集群关闭或隔离时，会发生自动计划外故障转移 (AUFO) 操作。SnapMirror 活动同步会检测此类故障，并启动到辅助集群的自动计划外故障转移。辅助集群将转换为主集群并开始为客户端提供服务。' 
 ---
 = 从自动的、计划外的ONTAP集群故障转移操作中恢复
 :hardbreaks:
@@ -14,7 +14,7 @@ summary: 当主集群关闭或隔离时，会发生自动计划外故障转移�
 
 
 [role="lead"]
-当主集群宕机或隔离时，会触发自动非计划故障转移 (AUFO) 操作。ONTAP Mediator 检测故障转移发生时，并自动执行到辅助集群的非计划故障转移。 此操作只能在ONTAP中介器的协助下执行。辅助集群将转换为主集群并开始为客户端提供服务。只有在ONTAP调解器协助下才能执行此操作。
+当主集群关闭或隔离时，会发生自动计划外故障转移 (AUFO) 操作。SnapMirror 活动同步会检测到此类故障，并启动自动计划外故障转移到辅助集群。辅助集群将转换为主集群（首选集群），并开始为客户端提供服务。请注意，故障检测和故障转移处理只能在 ONTAP Mediator 的帮助下执行。
 
 
 NOTE: 在自动计划外故障转移之后，请务必重新扫描主机路径，以免丢失 I/O 路径。
@@ -24,7 +24,7 @@ NOTE: 在自动计划外故障转移之后，请务必重新扫描主机路径�
 [[reestablish-the-protection-relationship-after-an-unplanned-failover]]
 == 在计划外故障转移后重新建立保护关系
 
-您可以使用System Manager或ONTAP命令行界面重新建立保护关系。
+一旦原始主集群（例如集群 A）恢复，SnapMirror 活动同步将自动反向建立保护。如果要恢复原始状态，使集群 A 成为主要的首选集群，则可以通过使用 System Manager 或 ONTAP CLI 启动计划的故障转移操作来执行手动故障恢复。
 
 [role="tabbed-block"]
 ====
@@ -35,7 +35,7 @@ NOTE: 在自动计划外故障转移之后，请务必重新扫描主机路径�
 IMPORTANT: 从 ONTAP 9.8 到 ONTAP 9.14.1，SnapMirror 主动同步称为 SnapMirror 业务连续性（SM-BC）。
 
 . 导航到*保护>关系*并等待关系状态显示“InSync”。
-. 要恢复初始源集群上的操作、请单击 image:icon_kabob.gif["菜单选项图标"] 并选择*故障转移*。
+. 要在原始源集群上执行故障回复和恢复操作，请单击 image:icon_kabob.gif["菜单选项图标"] 并选择 *Failover*。
 
 
 --
@@ -57,6 +57,25 @@ Primary Data Cluster: cluster-2
 Last Progress Update: -
        Failover Type: unplanned
   Error Reason codes: -
+....
+可以使用原始主集群上的  `snapmirror show` 命令监视反向保护关系的状态。
+
+例如：
+
+....
+ClusterA::> snapmirror show
+                                                                               Progress
+Source             Destination  Mirror        Relationship   Total             Last
+Path         Type  Path         State         Status         Progress  Healthy Updated
+-----------  ----  ------------ -------       -------------- --------- ------- --------
+vs3:/cg/dcg3 XDP   vs1:/cg/scg3 Snapmirrored  InSync          -         true    -
+....
+您可以使用  `snapmirror failover start` 命令对原始主集群执行故障回复。
+
+例如：
+
+....
+ClusterA::> snapmirror failover start -destination-path vs1:/cg/scg3
 ....
 请参见 link:https://docs.netapp.com/us-en/ontap-ems-9131/smbc-aufo-events.html["EMS参考"^] 了解事件消息和更正操作。
 
