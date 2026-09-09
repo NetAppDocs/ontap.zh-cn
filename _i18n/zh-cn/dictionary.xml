@@ -5378,7 +5378,6 @@ Microsoft TechNet库包含有关Windows服务器和客户端上支持的ODX应�
   <block id="b414fc52814b38c5d36d9fd3697e085a" category="list-text">AbortMultipartUpload</block>
   <block id="aa4ee3f8c2fb5dabe1ea532e7382121b" category="list-text">CompleteMultipartUpload</block>
   <block id="8e6d3ba461bc713f4b2b4fcc42726627" category="list-text">CreateMultipartUpload</block>
-  <block id="0dc5f8821c1cadd52725c6388719b350" category="list-text">ListMultipartUpload</block>
   <block id="81e890c38845e571ed7f0685ab4a34ba" category="summary">启用S3协议访问包括确保启用了NAS的SVM满足与启用了S3的服务器相同的要求、包括添加对象存储服务器以及验证网络连接和身份验证要求。</block>
   <block id="4d754dcb7f943cbe9f5615b8b282b361" category="paragraph">对于新的ONTAP 安装、建议在将SVM配置为向客户端提供NAS数据后启用对SVM的S3协议访问。要了解有关NAS协议配置的信息、请参见：</block>
   <block id="ce01c3d053c4a47e3bed8690021af24c" category="paragraph">在启用S3协议之前、必须配置以下内容：</block>
@@ -47298,7 +47297,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="28216fa2878101d24775477bde33fd6a" category="list-text">早期 ONTAP 版本：最多支持 255 个集群对等体。</block>
   <block id="fa823ae2ebe162d7679db67051dbcec5" category="cell">集群对等</block>
   <block id="944b7240322e7c0f7649b2a2625cb88d" category="cell">支持的集群对等限制从 255 个增加到 400 个，提高了具有大量集群对等关系的环境的可扩展性。</block>
-  <block id="48ae74d62968ed8720d29d719f63343e" category="list-text">安装或升级到 ONTAP Mediator 1.12 或更高版本时，您可以选择安装支持 iSCSI 和 HTTPS 的 ONTAP Mediator，或仅支持 HTTPS。如果您选择安装仅支持 HTTPS 的 ONTAP Mediator，则不会安装 SCST 包。</block>
   <block id="0575e131726193c75dc0eb99beb88ea3" category="list-text">如果您从安装了 SCST 的 ONTAP Mediator 1.11 或更早版本升级，并且在升级期间选择了 HTTPS only 选项，则会卸载 SCST 包，并且新的 ONTAP Mediator 版本不包含 SCST 包。</block>
   <block id="b9fc3e6281faea5f565f838d0ad8ac27" category="list-text">仅对以下用例支持安装支持 HTTPS 的 ONTAP Mediator：</block>
   <block id="22ebf50baa22eca107164392e48fabe5" category="list-text">您计划仅使用 ONTAP Mediator 来监控您的 SnapMirror 活动同步集群。</block>
@@ -47329,7 +47327,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="27352c146c5270e9116f5a19f4d403bc" category="paragraph">在升级或安装 ONTAP Mediator 之前，请查看下列信息。</block>
   <block id="f4fd85713eb15780db93bc86078dd5ef" category="list-text">当您升级到包含 SCST 包的新 ONTAP Mediator 版本时，安装程序会自动升级到推荐的 SCST 版本，除非有更高版本可用。有关手动安装更高 SCST 版本的说明，请参见 <block ref="a8383ce744dc1bf288cb215bbe5f3cdb" category="inline-link-macro-rx"></block>。有关支持的版本，请参见 <block ref="58024d60f7a8b223d4f2c1e07e2f8033" category="inline-link-macro-rx"></block>。</block>
   <block id="aee8b11880bbfda9a19f6b5c0201bb10" category="section-title">适用于 ONTAP Mediator 的 HTTPS 和 iSCSI 安装选项</block>
-  <block id="c16d2b8cfb36a2f029054699c85539a8" category="list-text">在 ONTAP Mediator 中，SCST 包用于为 MetroCluster IP 配置中的通信提供 iSCSI。SCST 包是在安装过程中编译的内核模块。从 ONTAP Mediator 1.12 开始，您可以配置使用 HTTPS 而不是 iSCSI 监控 MetroCluster IP 配置的 ONTAP Mediator。</block>
   <block id="69cecc7a15b3f657e822c87c8fad2241" category="section-title">防火墙和网络要求</block>
   <block id="671e00f956495c99ae5aae5896e8542a" category="paragraph">ONTAP Mediator 使用多个端口与特定服务进行通信。</block>
   <block id="861ef6676813cbc81369ee701ae73269" category="list-text">如果您使用的是第三方防火墙：</block>
@@ -47357,7 +47354,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="9e5f52fbf54a88f3546daad7843dad0a" category="paragraph">ONTAP Mediator 使用 SCST 为 MetroCluster IP 配置中的通信提供 iSCSI。SCST 包是在安装过程中编译的内核模块。更新内核后，可能需要重新安装 SCST。或者，卸载 ONTAP Mediator，然后重新安装并重新配置 ONTAP 关系。请参阅 <block ref="6c6c0b982087c71ca9a00a75bd9ab966" category="inline-link-macro-rx"></block> 以了解有关 SCST 的更多信息。</block>
   <block id="34e5e47f5c7b2affb68fc3b25008aa3a" category="admonition">您应该在 ONTAP 维护窗口中协调对服务器操作系统内核的任何更新。</block>
   <block id="0d99e45d04eeac38e25baf7e6e2d48b9" category="section-title">支持 HTTPS 和 iSCSI</block>
-  <block id="4632a10c0d2aab80061d1edbdc0dc26b" category="paragraph">从 ONTAP Mediator 1.12 开始，您可以配置使用 HTTPS 或 iSCSI 监控 MetroCluster IP 配置的 ONTAP Mediator。您可以选择安装支持 iSCSI 和 HTTPS 或仅支持 HTTPS 的 ONTAP Mediator。如果安装 ONTAP Mediator 时仅支持 HTTPS，则未安装 SCST 包。有关详细信息，请参见 <block ref="c1766aa5c48d52f9cdf010ccaac3e9da" category="inline-link-macro-rx"></block>。</block>
   <block id="33ddec60e94a5b1e351c678518710bc0" category="doc">升级主机操作系统并重新安装或升级 ONTAP Mediator</block>
   <block id="ffce34b1ff0e0f672d07e29eaf72f284" category="paragraph">要将安装了 SCST 的 ONTAP Mediator 的主机操作系统升级到更高版本，您必须卸载 ONTAP Mediator。操作系统升级后，您可以重新安装当前版本的 ONTAP Mediator 或升级到较新版本。</block>
   <block id="fa24f39a798f2dffd1d52ae6d6771a7a" category="list-text">此任务适用于安装了 SCST 的 ONTAP Mediator 版本。如果您安装了仅支持 HTTPS 的 ONTAP Mediator 1.12 或更高版本，则未安装 SCST 软件包，您可以升级主机操作系统而不会影响 ONTAP Mediator。有关操作系统升级说明，请参阅主机操作系统供应商的文档。升级主机操作系统后，如果需要升级 ONTAP Mediator 版本，请参阅 <block ref="7bbc278d4f7076df8bbc2b54bf8e89a2" category="inline-link-macro-rx"></block>。</block>
@@ -47368,7 +47364,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="1a1727a6918fd3fa55075b30a8c19c43" category="list-text">支持 Rocky Linux 10.2、9.8 和 8.10。</block>
   <block id="6082f1d9d6234f1a22ac348bcaf40bfc" category="list-text">支持使用 rhck 和 uek 内核的 Oracle Linux 10.1 和 9.7。</block>
   <block id="f891556a6688c140ff5a993b15949efd" category="inline-link-macro">详细了解 ONTAP Mediator 的 HTTPS 和 iSCSI 安装选项</block>
-  <block id="d3e728a574a71b225f333ebfcd59c500" category="list-text">支持配置使用 HTTPS 进行 MetroCluster IP 配置中通信的 ONTAP Mediator。HTTPS 通过使用 SSL/TLS 加密整个会话来提高安全性。您可以选择安装仅使用 HTTPS 协议的 ONTAP Mediator。如果使用此安装方法，则不会安装 SCST 包。<block ref="a64233a3f11178c79e178332c809edd1" category="inline-link-macro-rx"></block>。</block>
   <block id="098e6488f292a2a967f044215af1d052" category="list-text">支持 RHEL 10.1、10.0、9.7、9.6、9.4 和 8.10。</block>
   <block id="684a4237791e6b7accb3359916149a47" category="list-text">支持使用 rhck 和 uek 内核的 Oracle Linux 10.0 和 9.6。</block>
   <block id="91c808163778b1252a5964a6166084bb" category="list-text">支持 RHEL 10.0、9.6、9.4 和 8.10。</block>
@@ -49518,4 +49513,11 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="ca4a29f07e5233b1248bcc0715714393" category="list-text">要在原始源集群上执行故障回复和恢复操作，请单击 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block> 并选择 *Failover*。</block>
   <block id="aeb8b243bd3e5f25e59b007bfc2b6877" category="paragraph">可以使用原始主集群上的 <block ref="8511c2f3ef6c5e8c42a150c01bd8495c" prefix=" " category="inline-code"></block> 命令监视反向保护关系的状态。</block>
   <block id="07adf7ed14155f33ef9b2ae41a070b12" category="paragraph">您可以使用 <block ref="14d30280111212a70deb032d40f55925" prefix=" " category="inline-code"></block> 命令对原始主集群执行故障回复。</block>
+  <block id="cbfd7219fd814c56c9349bea1cd0273f" category="list-text">从 ONTAP 9.19.1 和 ONTAP Mediator 1.12 开始，您可以选择安装支持 iSCSI 和 HTTPS 的 ONTAP Mediator，或仅支持 HTTPS。如果您选择安装仅支持 HTTPS 的 ONTAP Mediator，则不会安装 SCST 软件包。</block>
+  <block id="2a08bdb6aadd6253c98572c1f40dd895" category="list-text">在 ONTAP Mediator 中，SCST 包用于为 MetroCluster IP 配置中的通信提供 iSCSI。SCST 包是在安装过程中编译的内核模块。从 ONTAP 9.19.1 和 ONTAP Mediator 1.12 开始，您可以配置使用 HTTPS 而不是 iSCSI 监控 MetroCluster IP 配置的 ONTAP Mediator。</block>
+  <block id="f193834bd92e229bc0f4dabb3e14b64b" category="inline-link-macro">为 MetroCluster IP 配置配置 ONTAP Mediator</block>
+  <block id="442f5e4b297f07b28616114b4feb3d50" category="admonition">对于使用配置了 HTTPS 的 ONTAP Mediator 的 SnapMirror 业务连续性 (SM-BC) 集群和 MetroCluster IP 配置，必须将<block ref="9e1f34d274d54e077ab71c2c0fe0badd" prefix=" " category="inline-code"></block>和<block ref="f93035d1d7d45fa37bc8cf1cd447ea1b" prefix=" " category="inline-code"></block>证书添加到 ONTAP 集群。请参阅<block ref="397e1771aa14c22b065d69f360cf6a4a" category="inline-link-macro-rx"></block>和<block ref="17fdc58adf7488af5cac0a397597b31a" category="inline-link-macro-rx"></block>。</block>
+  <block id="45de01b9cf9ce0fc6a0ddb2dd8f0cbab" category="paragraph">从 ONTAP 9.19.1 和 ONTAP Mediator 1.12 开始，您可以配置使用 HTTPS 或 iSCSI 监控 MetroCluster IP 配置的 ONTAP Mediator。您可以选择安装支持 iSCSI 和 HTTPS 或仅支持 HTTPS 的 ONTAP Mediator。如果安装 ONTAP Mediator 时仅支持 HTTPS，则不会安装 SCST 软件包。有关详细信息，请参见 <block ref="c1766aa5c48d52f9cdf010ccaac3e9da" category="inline-link-macro-rx"></block>。</block>
+  <block id="b2499cbb3cd1ebfa98398970fe74ecaf" category="list-text">从 ONTAP 9.19.1 和 ONTAP Mediator 1.12 开始，您可以在 MetroCluster IP 配置中配置使用 HTTPS 进行通信的 ONTAP Mediator。HTTPS 通过使用 SSL/TLS 加密整个会话来提高安全性。您可以选择安装仅支持 HTTPS 的 ONTAP Mediator。如果使用此安装方法，则不会安装 SCST 软件包。<block ref="a64233a3f11178c79e178332c809edd1" category="inline-link-macro-rx"></block>。</block>
+  <block id="ce0147152f43c0c7be5963e1fa6cac57" category="paragraph">ListMultipartUploads</block>
 </blocks>
