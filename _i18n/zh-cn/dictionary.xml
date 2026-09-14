@@ -46776,13 +46776,11 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="b0789998a8993c9d062c472eae06575f" category="paragraph">了解 <block ref="66d919b844737f130289ef8ca7328395" category="inline-link-macro-rx"></block>。</block>
   <block id="93fe8cb24d3c7187b63e8073a2d7dc63" category="summary">配置 TLS 卸载设置</block>
   <block id="8863838c87c7804c533b11593435d494" category="doc">配置 ONTAP TLS 硬件卸载</block>
-  <block id="3aa3699df2eb8bb8b6fac65752dad31d" category="paragraph">从 ONTAP 9.19.1 开始，您可以通过利用支持的以太网卡上的资源来配置 TLS 卸载，以提高 TLS 握手后的性能。此功能卸载加密和解密，减少 CPU 开销并提高性能。</block>
   <block id="a9b36a6ee9738f7c98a64bf70ebd07c4" category="list-text">默认情况下，TLS 卸载处于禁用状态。</block>
   <block id="3b410efbd5f63a911aebe8af2d370805" category="list-text">仅卸载 AES-GCM 密码套件（TLSv1.2/TLSv1.3，128/256 位）。</block>
   <block id="8872551887f70b5cc2558349d1f75275" category="list-text">未卸载 TLS 握手阶段。仅卸载握手后数据阶段。</block>
   <block id="31918cd39bc0f5372cee40be75f1bdc0" category="list-text">网络逻辑接口 (LIF) 迁移到不支持卸载的端口会导致自动软件回退。</block>
   <block id="f4b448a67530e9e455eb1efa5b6638c3" category="list-text">管理界面（HTTPS、REST API）不受此设置影响。</block>
-  <block id="2a3022fac3408e3b3cf9a7fcfd526e34" category="list-text">TLS 硬件卸载设置是集群范围的。</block>
   <block id="6ed83b48824ce8475314525a8072d55d" category="list-text">4 端口 CX7 10/25 GbE</block>
   <block id="ac75d0f709657733b95e3796ba5c5ec8" category="list-text">2 端口 CX7 40/100 GbE</block>
   <block id="cb6e1fcae385d9b3ef55b4a4fa379d3d" category="list-text">所有节点必须运行 ONTAP 9.19.1 或更高版本。</block>
@@ -47596,7 +47594,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="16875cc1334626fee30ba2a0a6597598" category="paragraph"><block ref="60e64e1ba1836139f785621c02abc082" prefix="" category="inline-code"></block></block>
   <block id="2f19f5cbb8730f912c6e7b9092aa4bcf" category="paragraph">您可以使用以下命令启用 SSLv3。如果您运行的是 ONTAP 9.9.1 或更高版本，则不会看到警告消息。</block>
   <block id="ea2a16c9a7dd80668144cb301bbf9e4f" category="list-text">如果您运行的是 ONTAP 9.8 或更低版本，请单独手动重新启动集群中的每个节点。</block>
-  <block id="96006e246f271674f724179d78ac7e14" category="paragraph">TLS 硬件卸载支持以下流量类型：</block>
   <block id="eff9591a74101237cfb7eecfbef1e474" category="paragraph">Microsoft 不再建议使用<block ref="dbbfdc279d3cdb25ad3ef5b63ed4d2d5" prefix=" " category="inline-code"></block>或<block ref="d05657c53d946af67792b9579f5f6306" prefix=" " category="inline-code"></block>组策略设置。Microsoft 也不再建议使用<block ref="2a8e045e31c6cc158b81ffb22f7afe5b" prefix=" " category="inline-code"></block>注册表设置。这些选项仅影响 SMB 1 行为，可以由<block ref="b5b21003cae6f1e37ddf0ab8f9af9db2" prefix=" " category="inline-code"></block>组策略设置或<block ref="105b182fe41a0754f575cbf714c36c10" prefix=" " category="inline-code"></block>注册表设置替换。</block>
   <block id="afeb89d95272bef407fc3674e1017cf5" category="admonition">如果 HA 对使用<block ref="220286b0a4d2a8e1b63be85ee026df7e" category="inline-link-rx"></block>，则在初始化系统（引导选项 4 或 9）之前，必须按照主题<block ref="cb427ed28e3cb771225a0fad05cd271a" category="inline-link-rx"></block>中关于 HA 对内所有驱动器的说明进行操作。如果未能做到这一点，在驱动器被重新调整用途时可能会导致将来的数据丢失。</block>
   <block id="b417099cfca3d858eab3a72922a57ef4" category="paragraph">根据潜在的攻击情况，您可以通过以下方式之一还原数据：</block>
@@ -48564,7 +48561,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="03a70507b7d040ed5990e474d0b55688" category="cell">AFX 1K</block>
   <block id="23b43ede4557b73e6fa354124a73ba91" category="cell">AFX 2K</block>
   <block id="d19041aa9c8295e4c367cd926b41373d" category="admonition">在 ASA 系统上，TLS 硬件卸载仅适用于 NVMe/TCP 流量。ASA 平台不支持 NFS over TLS、FabricPool 和 S3。</block>
-  <block id="736e235b19e52edff4ed990d79e62f60" category="admonition">在 AFX 平台上，TLS 硬件卸载支持 NFS 和 S3 前端流量类型。AFX 平台不支持 NVMe/TCP，因为 AFX 不支持 SAN/块协议。</block>
   <block id="cb17a18ac1c63a3d9c4bd533f4db0ebf" category="admonition">每个 RDMA 端口最多可包含 127 个 LIF。当您添加更多 LIF 时，或当 LIF 故障切换到超过该限制的端口时，新添加的 LIF 或故障切换的 LIF 无法提供 RDMA 流量。</block>
   <block id="f73946896696e2b01a16305cdfde8b9f" category="list-text">选择Storage VM和主节点。分配*名称*、*IP地址*和*子网掩码*。</block>
   <block id="be1376ff9d05a0f1cfca8a7cbc06eb70" category="list-text">The<block ref="e7f31f518110f3c17739edd51d047922" prefix=" " category="inline-code"></block> 参数接受一个默认为空的列表。当<block ref="61c4ea0665eded0925f4c1c1b212936b" prefix=" " category="inline-code"></block> 作为值添加时，只能在支持 RoCE 卸载的端口上配置 LIF，这会影响 LIF 迁移和故障转移。</block>
@@ -49521,4 +49517,20 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="b2499cbb3cd1ebfa98398970fe74ecaf" category="list-text">从 ONTAP 9.19.1 和 ONTAP Mediator 1.12 开始，您可以在 MetroCluster IP 配置中配置使用 HTTPS 进行通信的 ONTAP Mediator。HTTPS 通过使用 SSL/TLS 加密整个会话来提高安全性。您可以选择安装仅支持 HTTPS 的 ONTAP Mediator。如果使用此安装方法，则不会安装 SCST 软件包。<block ref="a64233a3f11178c79e178332c809edd1" category="inline-link-macro-rx"></block>。</block>
   <block id="ce0147152f43c0c7be5963e1fa6cac57" category="paragraph">ListMultipartUploads</block>
   <block id="ac7aaa15d6c88f358146f97bc9d76b78" category="paragraph">仅 ONTAP 9.17.1</block>
+  <block id="68897d04bec690aad08bb1fc975a1416" category="paragraph">从 ONTAP 9.19.1 开始，您可以使用受支持的以太网卡上的资源配置 TLS 卸载，以提高 TLS 握手后的性能。此功能可卸载加密和解密操作，从而降低 CPU 开销并提高性能。</block>
+  <block id="68061540e751c246aaa86fe4b9e2bb42" category="paragraph">只能对使用 KTLS 的流量启用 TLS 卸载。此设置不适用于所有启用 TLS 的流量。HTTPS 和 REST API 流量等管理流量不受此设置影响。不支持 HA 流量。</block>
+  <block id="8dc8623f4f660e1a7947a35a0a79088c" category="list-text">TLS 硬件卸载是集群范围的设置。</block>
+  <block id="335b6b2532fbb4c1dbb4746d355a88ca" category="list-text">HA 流量不支持 TLS 硬件卸载。</block>
+  <block id="868536f454dee62c86b1b245ac6a4a10" category="paragraph">下表显示了每种流量类型是否支持 TLS 硬件卸载。</block>
+  <block id="89652e228f31afd994aaf865c5a3cf43" category="cell">流量类型</block>
+  <block id="c87e4f5e162b05916902cf5c8e92bbe2" category="cell">支持在支持 TLS 卸载的平台和网卡上使用。</block>
+  <block id="d17fd236ea111dd9795be4946942a765" category="cell">支持集群网络流量。这不包括 HA 流量。</block>
+  <block id="4ade1e690485ace608877ec90f1e5fbc" category="cell">基于 TLS 的 NFS</block>
+  <block id="88ed83755bc71af2af79877f5c44ee71" category="cell">是，从 ONTAP 9.19.1 开始</block>
+  <block id="2b38e89ddb74267053dbdf60bb3e4249" category="cell">支持使用 KTLS 的 ONTAP NFS over TLS 流量。</block>
+  <block id="5a2c55bb167f4f0fcfe52384fe7a4f0b" category="cell">KMIP</block>
+  <block id="b77fdfcbeb49b754c87ad08c3896bb78" category="cell">管理界面不受此设置影响。</block>
+  <block id="324af02eeb4236b07aa1d33e99f2dba8" category="cell">HA 流量</block>
+  <block id="7ca9449a9a4cc9fa6e499b1686242135" category="cell">TLS 硬件卸载不适用于 HA 流量。</block>
+  <block id="d404291011eac4d076d928297923f6f1" category="admonition">在 AFX 平台上，TLS 硬件卸载支持 NFS over TLS 和 S3 前端流量类型。AFX 平台不支持 NVMe/TCP，因为 AFX 不支持 SAN/块协议。</block>
 </blocks>
