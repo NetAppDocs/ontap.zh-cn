@@ -41,8 +41,7 @@ S3对象保留在_bep桶_中。它们不会作为文件嵌套在其他目录的�
 ** 您可以选择底层聚合和FlexGroup组件(需要高级权限命令选项)：您可以选择手动选择必须创建存储分段和所属FlexGroup卷的聚合、然后指定每个聚合上的成分卷数。添加其他分段时：
 +
 *** 如果为新存储分段指定聚合和成分卷，则会为新存储分段创建新的 FlexGroup 。
-*** 如果不为新存储分段指定聚合和成分卷，则新存储分段将添加到现有 FlexGroup 中。
-请参见 xref:../flexgroup/index.html[FlexGroup 卷管理] 有关详细信息 ...
+*** 如果未指定新存储桶的聚合和组成部分，则新存储桶将被添加到现有 FlexGroup，但仅当 `retention-mode`设置与现有存储桶的 `retention-mode`设置匹配且 FlexGroup 类型为(`compliance`、 `non-snaplock`、 `enterprise`）时。有关详细信息，请参见xref:../flexgroup/index.html[FlexGroup 卷管理]。
 +
 在创建存储分段时指定聚合和成分卷时，不会应用任何 QoS 策略组，默认或自定义。您可以稍后使用执行此操作 `vserver object-store-server bucket modify` 命令：
 
