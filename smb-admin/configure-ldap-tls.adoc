@@ -20,8 +20,14 @@ summary: 为 ONTAP SMB 服务器配置 LDAP over TLS，以保护 SMB 服务器�
 
 要使用基于 SSL/TLS 的 LDAP 确保 Active Directory 通信安全，必须先将 Active Directory 证书服务的自签名根 CA 证书副本导出到证书文件，然后将其转换为 ASCII 文本文件。ONTAP 使用此文本文件在 Storage Virtual Machine （ SVM ）上安装证书。
 
-必须已为 CIFS 服务器所属的域安装并配置 Active Directory Certificate Service。您可以通过查阅 http://technet.microsoft.com/en-us/library/["Microsoft TechNet 库： technet.microsoft.com"]来查找有关安装和配置 Active Directory Certificate Services 的信息。Step
+必须已为 CIFS 服务器所属的域安装并配置 Active Directory 证书服务。有关安装和配置 Active Directory 证书服务的信息，请参阅 http://technet.microsoft.com/en-us/library/["Microsoft TechNet 库： technet.microsoft.com"]
 
+[NOTE]
+====
+从 ONTAP 9.13.1 开始，如果为 SMB 服务器启用了 `-use-start-tls-for-ad-ldap`或 `-use-ldaps-for-ad-ldap`，请确保为受信任域以及主域安装所需的 CA 证书。ONTAP 必须能够与受信任域的域控制器建立 TLS 或 LDAPS 连接，以确定其站点信息。
+
+====
+.步骤
 . 获取中域控制器的根CA证书 `.pem` 文本格式。
 +
 http://technet.microsoft.com/en-us/library/["Microsoft TechNet 库： technet.microsoft.com"]
@@ -93,6 +99,12 @@ security certificate show -vserver <SVM_name>
 ----
 vserver cifs security modify -vserver <SVM_name> -use-start-tls-for-ad-ldap true
 ----
++
+[NOTE]
+====
+从 ONTAP 9.13.1 开始，当为 Active Directory 连接启用安全 LDAP 通信时，ONTAP 也会在联系受信任域的域控制器时使用这些安全连接。如果未为受信任域的域控制器安装所需的证书，则 ONTAP 可能无法确定受信任域的站点信息。
+
+====
 . 验证 LDAP over TLS 安全设置是否设置为 `true`：
 +
 [source, cli]

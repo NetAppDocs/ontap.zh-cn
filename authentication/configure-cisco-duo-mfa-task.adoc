@@ -222,6 +222,11 @@ security login duo modify -vserver <STORAGE_VM_NAME> -is-enabled false
 ----
 
 
+[NOTE]
+====
+设置 `-is-enabled false`会禁用 Duo 身份验证，但不会从 SSH 登录路径中删除 Duo 配置。在某些环境中，SSH 登录仍然需要交互式身份验证流，这可能会阻止非交互式 SSH 登录。要恢复非交互式 SSH 登录行为，请使用 `security login duo delete -vserver <STORAGE_VM_NAME>`完全删除 Duo 配置。
+
+====
 
 
 [[exclude-duo-group-users]]

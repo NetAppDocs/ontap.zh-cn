@@ -7,6 +7,7 @@
 
 .开始之前
 * 创建证书的服务器， KMIP 服务器和集群上的时间必须同步。
+* 要执行此任务，您必须是集群或 SVM 管理员。
 * 您必须已获取集群的公有 SSL KMIP 客户端证书。
 * 您必须已获取与集群的 SSL KMIP 客户端证书关联的专用密钥。
 * SSL KMIP 客户端证书不能受密码保护。
@@ -17,10 +18,13 @@
 
 NOTE: 在集群上安装客户端和服务器证书之前或之后，您可以在 KMIP 服务器上安装这些证书。
 
+
+NOTE: `admin_SVM` 是集群的管理 SVM。在以下示例中，管理 SVM 命名为 `cluster1`，因此 `cluster1`同时出现在命令提示符(`cluster1::>`）中，以及作为 `-vserver`的值。
+
 .步骤
 . 为集群安装 SSL KMIP 客户端证书：
 +
-`security certificate install -vserver admin_svm_name -type client`
+`security certificate install -vserver admin_SVM -type client`
 
 +
 系统将提示您输入 SSL KMIP 公有和专用证书。
@@ -30,7 +34,7 @@ NOTE: 在集群上安装客户端和服务器证书之前或之后，您可以�
 
 . 为 KMIP 服务器的根证书颁发机构（ CA ）安装 SSL 公有证书：
 +
-`security certificate install -vserver admin_svm_name -type server-ca`
+`security certificate install -vserver admin_SVM -type server-ca`
 
 +
 `cluster1::> security certificate install -vserver cluster1 -type server-ca`
