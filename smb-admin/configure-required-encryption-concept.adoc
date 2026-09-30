@@ -23,16 +23,20 @@ SVM 上的 SMB 加密通过两种设置控制：
 * 一种SMB共享属性、用于基于共享配置SMB加密设置
 
 
-您可以决定是要求加密才能访问 SVM 上的所有数据，还是要求 SMB 加密才能仅访问选定共享中的数据。SVM 级别的设置将取代共享级别的设置。
+您可以决定是否要求加密以访问 SVM 上的所有数据，或者要求 SMB 加密以仅访问所选共享中的数据。 `encrypt-data` 共享属性需要 SMB 加密才能访问共享。从 ONTAP 9.11.1 开始， `allow-unencrypted-access` 共享属性允许 SMB2 客户端在启用  `encrypt-data` 时无需加密即可访问共享，而 SMB3 客户端则继续使用加密。
+
+SVM 级别设置取代共享级别设置。
 
 有效的 SMB 加密配置取决于这两种设置的组合，下表对此进行了介绍：
 
 |===
-| 已启用 SMB 服务器 SMB 加密 | 已启用共享加密数据设置 | 服务器端加密行为 
+| 已启用 SMB 服务器 SMB 加密 | 已启用共享加密数据设置 | 共享允许未加密访问设置已启用 | 服务器端加密行为 
 
 
  a| 
 true
+ a| 
+false
  a| 
 false
  a| 
@@ -45,6 +49,8 @@ true
  a| 
 true
  a| 
+false
+ a| 
 无论共享级别加密如何， SVM 中的所有共享都会启用服务器级别加密。使用此配置时，整个 SMB 会话都会进行加密。
 
 
@@ -54,10 +60,14 @@ false
  a| 
 true
  a| 
-已为特定共享启用共享级别加密。使用此配置时，会从树连接进行加密。
+false
+ a| 
+已为特定共享启用共享级别加密。SMB3 客户端使用加密，但 SMB2 客户端可以在没有加密的情况下访问共享，因为 `allow-unencrypted-access`属性已启用。
 
 
 
+ a| 
+false
  a| 
 false
  a| 
@@ -65,7 +75,24 @@ false
  a| 
 未启用加密。
 
+
+
+ a| 
+false
+ a| 
+false
+ a| 
+true
+ a| 
+未启用任何加密。除非启用了  `encrypt-data`，否则  `allow-unencrypted-access` 属性无效。
+
 |===
 不支持加密的SMB客户端无法连接到需要加密的SMB服务器或共享。
 
 对加密设置所做的更改将对新连接生效。现有连接不受影响。
+
+
+NOTE: 从 ONTAP 9.11.1 开始支持 `allow-unencrypted-access`属性。
+
+
+NOTE: SVM 级 SMB 加密将覆盖共享级设置。
