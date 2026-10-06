@@ -21,11 +21,49 @@ summary: 您可以删除零RTO SnapMirror同步保护并删除SnapMirror活动�
 [[remove-an-asymmetric-san-configuration]]
 == 删除非对称 SAN 配置
 
+
+
+[[unmap-luns-on-the-destination-cluster]]
+=== 取消映射目标集群上的 LUN
+
+.关于此任务
 * 删除 SnapMirror 活动同步 SAN 关系之前，必须先取消映射目标集群中的所有 LUN。
 * 取消映射 LUN 并重新扫描主机后， SCSI 目标会通知主机 LUN 清单已更改。删除零 RTO 关系后，零 RTO 二级卷上的现有 LUN 将发生更改，以反映新的身份。主机会将二级卷 LUN 发现为与源卷 LUN 无关系的新 LUN 。
 * 删除关系后，二级卷仍保留 DP 卷。您可以问题描述 `snapmirror break` 命令将其转换为读/写。
 * 如果关系未反转，则在故障转移状态下不允许删除此关系。
 
+
+.步骤
+在删除 SnapMirror 活动同步 SAN 关系之前，必须取消映射目标集群上属于该关系的所有 LUN。在删除非对称 SAN 配置之前，请完成以下步骤。
+
+. 如果目标 LUN 是通过复制的 igroup 映射的，则必须先检查并从源集群中删除该 igroup 复制，然后才能删除目标集群上的 LUN 映射：
++
+`SiteB::> igroup show -igroup <igroup_name>  -vserver <vserver_name> -fields replication-peer`
+
+. 如果已复制 igroup，请从源集群中删除 replication-peer 关联：
++
+`SiteA::> igroup modify -vserver <svm_name> -igroup <igroup_name> -replication-peer "-"`
+
+. 验证 igroup 是否不再复制：
++
+`SiteB::> igroup show -igroup <igroup_name> -vserver <vserver_name> -fields replication-peer`
+
+. 删除目标端 LUN 映射：
++
+`SiteB::> lun mapping delete -vserver <svm_name> -igroup <igroup_name> -path <lun_path>`
+
+. 如果没有其他 LUN 映射到 igroup，请删除 igroup：
++
+`SiteB::> igroup delete -vserver <svm_name> -igroup <igroup_name>`
+
+
+
+
+
+[[delete-the-snapmirror-active-sync-san-relationship]]
+=== 删除 SnapMirror 活动同步 SAN 关系
+
+取消映射 LUN 后，删除 SnapMirror 活动同步关系。
 
 .步骤
 . 从二级集群中、删除源端点与目标端点之间的SnapMirror活动同步一致性组关系：
