@@ -1,8 +1,8 @@
 ---
 sidebar: sidebar 
 permalink: networking/configure_network_security_using_federal_information_processing_standards_fips.html 
-keywords: fips 140-2, compliant, ssl, connections, tlsv1.2, tlsv1.1, tlsv1, enable fips, disable fips, compliance status, SSL 
-summary: 所有 SSL 连接均符合联邦信息处理标准 140-2。 
+keywords: fips 140-2, fips 140-3,compliant, ssl, connections, tlsv1.2, tlsv1.1, tlsv1, enable fips, disable fips, compliance status, SSL 
+summary: 所有 SSL 连接均符合联邦信息处理标准 140-2 和 140-3。 
 ---
 = 使用 FIPS 配置 ONTAP 网络安全
 :hardbreaks:
@@ -14,8 +14,29 @@ summary: 所有 SSL 连接均符合联邦信息处理标准 140-2。
 
 
 [role="lead"]
-ONTAP 的所有 SSL 连接均符合联邦信息处理标准 (FIPS) 140-2。您可以打开和关闭 SSL FIPS 模式，全局设置 SSL 协议，并关闭ONTAP中的任何弱密码。
+ONTAP 符合所有 SSL 连接的联邦信息处理标准（FIPS）。您可以开启和关闭 SSL FIPS 模式，全局设置 SSL 协议，并关闭 ONTAP 中的任何弱密码。
 
+支持的 FIPS 合规性版本取决于您的 ONTAP 版本：
+
+[cols="2"]
+|===
+| 支持的 FIPS 合规性 | ONTAP 版本 
+
+
+| FIPS 140-3  a| 
+* 9.19.1P2 及更高版本
+* 9.18.1P6 及更高版本的 9.18.1 补丁版本
+
+
+
+
+| FIPS 140-2  a| 
+* 9.19.1
+* 9.19.1P1
+* 9.18.1P5 及更早版本
+
+
+|===
 默认情况下、ONTAP上的SSL设置为禁用FIPS合规并启用以下TLS协议：
 
 * TLSv1.3 (从ONTAP 9.11.1开始)

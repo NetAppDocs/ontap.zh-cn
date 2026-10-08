@@ -14,84 +14,81 @@ summary: 创建一个 LIF ，此 LIF 是与物理或逻辑端口关联的 IP 地
 
 
 [role="lead"]
-SVM 通过一个或多个网络逻辑接口（ LIF ）向客户端提供数据。您必须在要用于访问数据的端口上创建 LIF 。LIF (网络接口)是与物理或逻辑端口关联的IP地址。如果组件出现故障，则 LIF 可以故障转移到或迁移到其他物理端口，从而继续与网络通信。
-
-.最佳实践
-连接到ONTAP的交换机端口应配置为生成树边缘端口、以减少LIF迁移期间的延迟。
+Storage Virtual Machine （SVM）通过一个或多个逻辑接口（LIF）向客户端提供数据，LIF 是与物理或逻辑端口关联的 IP 地址。您必须在要用于访问数据的端口上创建 LIF。如果组件发生故障，LIF 可以故障转移或迁移到不同的物理端口，以便它继续与网络通信。
 
 .开始之前
 * 您必须是集群管理员才能执行此任务。
-* 底层物理或逻辑网络端口必须已配置为管理启动状态。
-* 如果您计划使用子网名称为 LIF 分配 IP 地址和网络掩码值，则此子网必须已存在。
-+
-子网包含属于同一第 3 层子网的 IP 地址池。它们是使用System Manager或创建的 `network subnet create` 命令：
-
-+
-有关的详细信息 `network subnet create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-subnet-create.html["ONTAP 命令参考"^]。
-
-* 用于指定 LIF 处理的流量类型的机制已发生更改。对于 ONTAP 9.5 及更早版本， LIF 使用角色指定要处理的流量类型。从 ONTAP 9.6 开始， LIF 使用服务策略指定要处理的流量类型。
+* 底层物理或逻辑网络端口必须处于管理 `up`状态。
 
 
 .关于此任务
+您可以在同一网络端口上创建 IPv4 和 IPv6 LIF 。
+
+.使用子网创建 LIF
+* NetApp 建议在数据 SVM 上为所有 LIF 创建子网对象。这对于 MetroCluster 配置尤其重要，其中子网对象使 ONTAP 能够确定目标集群上的故障转移目标，因为每个子网对象都有一个关联的广播域。如果您计划使用子网名称为 LIF 分配 IP 地址和网络掩码值，则该子网必须已存在。有关说明，请参阅 link:../networking/create_a_subnet.html["创建子网"]。
+* 处理节点之间集群内流量的 LIF 不应与处理管理流量的 LIF 或处理数据流量的 LIF 位于同一子网上。
+* 在创建群集间网络接口时，不能指定现有子网范围内的 IP 地址。
+* 从 ONTAP 9.7 开始，当您使用子网创建网络接口时，ONTAP 会自动从所选子网中选择一个可用的 IP 地址并将其分配给网络接口。如果有多个子网，您可以更改子网，但不能更改 IP 地址。
+
+
+.各 ONTAP 版本对 LIF 创建功能的支持
+对 LIF 创建相关功能的支持因 ONTAP 版本而异。
+
+[cols="2"]
+|===
+| 从 ONTAP 版本 | 功能 
+
+
+| 9.12.1. | 支持在 System Manager 中为 NFS over RDMA 配置创建网络接口。有关详细信息，请参见 xref:../nfs-rdma/configure-lifs-task.html[通过RDMA为NFS配置LIF]。 
+
+
+| 9.11.1. | 支持全闪存 SAN 阵列（ASA）系统上的自动 iSCSI LIF 故障切换。对于新的 iSCSI LIF，如果 SVM 没有现有的 iSCSI LIF，或者在所有现有的 iSCSI LIF 上都启用了故障切换，则会自动启用故障切换，采用 `sfo-partner-only`策略，并将自动还原设置为 `true`。升级到 ONTAP 9.11.1 或更高版本后，如果未在同一 SVM 中的现有 iSCSI LIF 上启用故障切换，则新的 iSCSI LIF 将继承 `disabled`故障切换策略。详细了解 link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故障转移"] 
+
+
+| 9.10.1. |  `network interface` 命令包含用于 NFS over RDMA 配置的  `-rdma-protocols` 参数 
+
+
+| 9.7. | 如果同一子网中已存在 SVM 的其他 LIF，则无需指定 LIF 的主端口。ONTAP 会自动选择与同一子网中已配置的其他 LIF 相同广播域中指定主节点上的随机端口。 
+
+
+| 9.6.  a| 
+LIF 使用服务策略来指定其处理的流量类型。角色用于在 ONTAP 9.5 及更早版本中指定流量类型
+
+|===
+.LIF 创建限制
 * 您不能将 NAS 和 SAN 协议分配给同一个 LIF 。
 +
-支持的协议包括 SMB ， NFS ， FlexCache ， iSCSI 和 FC ； iSCSI 和 FC 不能与其他协议结合使用。但是， NAS 和基于以太网的 SAN 协议可以位于同一物理端口上。
-
-+
-** 您不应将传输SMB流量的LUN配置为自动还原到其主节点。如果SMB服务器要托管解决方案、以便通过基于SMB的Hyper-V或SQL Server实现无中断运行、则必须遵循此建议。
-
-
-* 您可以在同一网络端口上创建 IPv4 和 IPv6 LIF 。
-* SVM 使用的所有名称映射和主机名解析服务，例如 DNS ， NIS ， LDAP 和 Active Directory 。 必须可从至少一个处理 SVM 数据流量的 LIF 进行访问。
-* 处理节点之间集群内流量的 LIF 不应与处理管理流量的 LIF 或处理数据流量的 LIF 位于同一子网上。
-* 如果创建的 LIF 没有有效的故障转移目标，则会显示一条警告消息。
-* 如果集群中存在大量LIF、则可以验证集群上支持的LIF容量：
-+
-** System Manager：从ONTAP 9.12.0开始、查看网络接口网格上的吞吐量。
-** 命令行界面：使用 `network interface capacity show` 命令以及每个节点上支持的LIF容量 `network interface capacity details show` 命令(在高级权限级别)。
-+
-有关和的 `network interface capacity details show`详细信息 `network interface capacity show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=network+interface+capacity+show["ONTAP 命令参考"^]。
-
-
-
-* 从 ONTAP 9.7 开始，如果同一子网中已存在 SVM 的其他 LIF ，则无需指定 LIF 的主端口。ONTAP 会自动在与已在同一子网中配置的其他 LIF 位于同一广播域的指定主节点上选择一个随机端口。
-+
-从 ONTAP 9.4 开始，支持 FC-NVMe 。如果要创建 FC-NVMe LIF ，应注意以下事项：
-
-+
-** 创建 LIF 的 FC 适配器必须支持 NVMe 协议。
-** FC-NVMe 可以是数据 LIF 上的唯一数据协议。
-
+但是，NAS 和基于以太网的 SAN 协议可以存在于同一个物理端口上。
 
 * 必须为支持 SAN 的每个 Storage Virtual Machine （ SVM ）配置一个 LIF 处理管理流量。
-* NVMe LIF 和命名空间必须托管在同一节点上。
-* 每个节点上的每个SVM最多可以配置两个NVMe SVM来处理数据流量。
-* 创建具有子网的网络接口时、ONTAP 会自动从选定子网中选择一个可用的IP地址并将其分配给网络接口。如果有多个子网、您可以更改此子网、但不能更改IP地址。
-* 在为网络接口创建(添加) SVM时、不能指定现有子网范围内的IP地址。您将收到子网冲突错误。此问题描述 会发生在网络接口的其他工作流中、例如在SVM设置或集群设置中创建或修改集群间网络接口。
-* 从ONTAP 9.10.1开始、 `network interface`命令行界面命令包含一个 `-rdma-protocols`用于基于RDMA配置的NFS的参数。从ONTAP 9.12.1开始、System Manager支持为基于RDMA的NFS配置创建网络接口。有关详细信息，请参见 xref:../nfs-rdma/configure-lifs-task.html[通过RDMA为NFS配置LIF]。
-* 从ONTAP 9.11.1开始、全闪存SAN阵列(ASA)平台可提供自动iSCSI LIF故障转移功能。
+* NVMe LIF
 +
-系统会自动启用iSCSI LIF故障转移(故障转移策略设置为) `sfo-partner-only` 自动还原值设置为 `true`)在新创建的iSCSI LIF上(如果指定SVM中不存在iSCSI LIF、或者指定SVM中的所有现有iSCSI LIF均已启用iSCSI LIF故障转移)。
-
+** 创建 LIF 的 FC 适配器必须支持 NVMe 协议。
+** NVMe LIF 和命名空间必须托管在同一节点上。
+** 每个节点上的每个SVM最多可以配置两个NVMe SVM来处理数据流量。
+** 数据 LIF 不能在 NVMe 和任何其他协议之间共享。NVMe 只能是 NVMe 数据 LIF 上的唯一协议。
 +
-如果在升级到ONTAP 9.11.1或更高版本后、某个SVM中存在未启用iSCSI LIF故障转移功能的现有iSCSI LIF、而您又在同一SVM中创建了新的iSCSI LIF、则新的iSCSI LIF将采用相同的故障转移策略 (`disabled`)。
+详细了解link:../nvme/support-limitations.html["NVMe配置、支持和限制"]。
 
+
+
+* SMB LIF
 +
-link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故障转移"]
+** 如果 SMB 服务器托管使用 Hyper-V 或 SQL Server over SMB 进行无中断操作的解决方案，请勿将承载 SMB 流量的 LIF 配置为自动还原到其主节点。
 
 
 
-从 ONTAP 9.7 开始，只要该 IP 空间的同一子网中至少已存在一个 LIF ， ONTAP 就会自动选择 LIF 的主端口。ONTAP 会选择与该子网中的其他 LIF 位于同一广播域中的主端口。您仍然可以指定主端口，但不再需要此端口（除非指定 IP 空间中的子网中尚不存在 LIF ）。
 
-从ONTAP 9.12.0开始、您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
+.步骤
+使用 System Manager 或 CLI 创建 LIF。
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
-*使用System Manager添加网络接口*
+.开始之前
+如果您的集群中有大量 LIF，则可以在创建其他 LIF 之前验证集群上支持的 LIF 容量。从 ONTAP 9.12.1 开始，您可以在 System Manager 中的网络接口网格上查看吞吐量。
 
-.步骤
 . 选择*网络>概述>网络接口*。
 . 选择 ... image:icon_add.gif["添加图标"]。
 . 选择以下接口角色之一：
@@ -117,7 +114,7 @@ link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故
 .. 如果选择子网、请从下拉列表中选择它。
 .. 如果继续操作而不使用子网、则会显示广播域下拉列表：
 +
-... 指定IP地址。如果此IP地址正在使用中、则会显示一条警告消息。
+... 指定 IP 地址。如果 IP 地址正在使用中，则会显示一条警告消息。
 ... 指定子网掩码。
 
 
@@ -130,13 +127,31 @@ link:../san-admin/asa-iscsi-lif-fo-task.html["适用于ASA 平台的iSCSI LIF故
 --
 .命令行界面
 --
-*使用命令行界面创建LIF*
+. （可选）将权限级别设置为 advanced 以查看和网络接口容量。
++
+.. 将权限级别设置为高级：
++
+[source, cli]
+----
+set -privilege advanced
+----
+.. 查看每个节点支持的 LIF 容量：
++
+[source, cli]
+----
+network interface capacity details show
+----
++
+详细了解此  `network interface capacity details show` 命令 link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=network+interface+capacity+show["ONTAP 命令参考"^]。
 
-.步骤
+
+
 . 确定要用于 LIF 的广播域端口。
 +
-`network port broadcast-domain show -ipspace _ipspace1_`
-
+[source, cli]
+----
+network port broadcast-domain show -ipspace _ipspace1_
+----
 +
 ....
 IPspace     Broadcast                       Update
@@ -153,20 +168,19 @@ ipspace1
 
 . 验证要用于 LIF 的子网是否包含足够的未使用 IP 地址。
 +
-`network subnet show -ipspace _ipspace1_`
-
+[source, cli]
+----
+network subnet show -ipspace _ipspace1_
+----
 +
 有关的详细信息 `network subnet show`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-subnet-show.html["ONTAP 命令参考"^]。
 
 . 在要用于访问数据的端口上创建一个或多个 LIF 。
 +
-
-CAUTION: NetApp建议为数据SVM上的所有LUN创建子网对象。这对于MetroCluster配置尤为重要、因为子网对象使ONTAP能够确定目标集群上的故障转移目标、因为每个子网对象都有一个关联的广播域。有关说明，请参阅link:../networking/create_a_subnet.html["创建子网"]。
-
-+
-....
+[source, cli]
+----
 network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _service_policy_name_ -home-node _node_name_ -home-port port_name {-address _IP_address_ - netmask _Netmask_value_ | -subnet-name _subnet_name_} -firewall- policy _policy_ -auto-revert {true|false}
-....
+----
 +
 ** `-home-node` 是LIF返回到的节点 `network interface revert` 命令将在LIF上运行。
 +
@@ -176,7 +190,7 @@ network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _se
 有关的详细信息 `network interface revert`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-interface-revert.html["ONTAP 命令参考"^]。
 
 ** `-home-port` 是LIF返回到的物理或逻辑端口 `network interface revert` 命令将在LIF上运行。
-** 您可以使用指定IP地址 `-address` 和 `-netmask` 选项、或者使用启用从子网分配 `-subnet_name` 选项
+** 您可以使用  `-address` 和  `-netmask` 选项指定 IP 地址，也可以使用  `-subnet_name` 选项启用从子网分配。
 ** 使用子网提供 IP 地址和网络掩码时，如果使用网关定义了子网，则在使用该子网创建 LIF 时，系统会自动向 SVM 添加指向该网关的默认路由。
 ** 如果您手动分配 IP 地址（而不使用子网），则在其他 IP 子网上存在客户端或域控制器时，可能需要配置指向网关的默认路由。有关的详细信息 `network route create`，请参见link:https://docs.netapp.com/us-en/ontap-cli/network-route-create.html["ONTAP 命令参考"^]。
 ** `-auto-revert` 用于指定在启动、更改管理数据库状态或建立网络连接等情况下、数据LIF是否自动还原到其主节点。默认设置为 `false`，但您可以将其设置为 `true` 具体取决于您环境中的网络管理策略。
@@ -185,7 +199,7 @@ network interface create -vserver _SVM_name_ -lif _lif_name_ -service-policy _se
 ** `-data-protocol` 用于创建支持FCP或NVMe/FC协议的LIF。创建 IP LIF 时不需要此选项。
 
 
-. *可选*：在-address选项中分配IPv6地址：
+. （可选）在 -address 选项中分配 IPv6 地址：
 +
 .. 使用 `network ndp prefix show` 命令以查看在各种接口上获取的RA前缀列表。
 +
@@ -232,8 +246,7 @@ vs1
 Failover Targets: node1:e0d, node1:e0e, node2:e0d, node2:e0e
 ....
 . 验证配置的 IP 地址是否可访问：
-
-
++
 |===
 
 
@@ -245,21 +258,29 @@ Failover Targets: node1:e0d, node1:e0e, node2:e0d, node2:e0e
 
 | IPv6地址 | 网络 ping6. 
 |===
++
 .示例
 以下命令将使用创建LIF并指定IP地址和网络掩码值 `-address` 和 `-netmask` 参数：
 
++
 ....
 network interface create -vserver vs1.example.com -lif datalif1 -service-policy default-data-files -home-node node-4 -home-port e1c -address 192.0.2.145 -netmask 255.255.255.0 -auto-revert true
 ....
++
 以下命令将创建一个 LIF ，并从指定子网（名为 client1_sub ）分配 IP 地址和网络掩码值：
 
++
 ....
 network interface create -vserver vs3.example.com -lif datalif3 -service-policy default-data-files -home-node node-3 -home-port e1c -subnet-name client1_sub - auto-revert true
 ....
++
 以下命令将创建NVMe/FC LIF并指定 `nvme-fc` 数据协议：
 
++
 ....
 network interface create -vserver vs1.example.com -lif datalif1 -data-protocol nvme-fc -home-node node-4 -home-port 1c -address 192.0.2.145 -netmask 255.255.255.0 -auto-revert true
 ....
+
+
 --
 ====
