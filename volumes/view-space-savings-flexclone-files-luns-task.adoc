@@ -14,29 +14,16 @@ summary: 您可以查看包含FlexClone文件和FlexClone LUN的卷上通过块�
 您可以查看包含FlexClone文件和FlexClone LUN的卷上通过块共享节省的磁盘空间百分比。您可以在容量规划过程中执行此操作。
 
 .步骤
-. 要查看因 FlexClone 文件和 FlexClone LUN 而节省的空间，请输入以下命令：
+. 查看由于 FlexClone 文件和 FlexClone LUN 而节省的空间：
 +
-`df -s volname`
-
-+
-`volname` 是FlexVol卷的名称。
-
+[source, cli]
+----
+volume show -volume <vol_name> -vserver <SVM> -fields used, sis-space-saved, dedupe-space-saved, compression-space-saved
+----
 +
 [NOTE]
 ====
-如果您运行的是 `df -s` 命令时、您可以在启用了重复数据删除的FlexVol卷上查看通过重复数据删除以及FlexClone文件和LUN节省的空间。
+如果在启用重复数据删除的 FlexVol 卷上运行此命令，则可以查看重复数据删除以及 FlexClone 文件和 LUN 节省的空间。
 
 ====
 
-
-.示例
-以下示例显示了 FlexClone 卷 test1 上的空间节省：
-
-[listing]
-----
-systemA> df -s test1
-
-Filesystem         used   saved   %saved Vserver
-/vol/test1/        4828    5744     54%  vs1
-----
-有关此过程中所述命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]。

@@ -6437,8 +6437,6 @@ SSS-RSA</block>
   <block id="4e72dbc6d75fb97e782f19ffcdfd390a" category="paragraph">这是NetApp提供的软件、用于处理SVM与防病毒软件之间的扫描请求和响应通信。它可以在虚拟机上运行、但为了获得最佳性能、请使用物理机。您可以从NetApp 支持站点 下载此软件(需要登录)。</block>
   <block id="24e103004f27c652e1c060ec9d2c1a35" category="list-text">* 防病毒软件 *</block>
   <block id="6d582c36ee4ebf0335acbe559df26b92" category="paragraph">这是合作伙伴提供的软件、用于扫描文件中的病毒或其他恶意代码。您可以指定在配置软件时对受感染文件采取的补救措施。</block>
-  <block id="229c54f44d37ee742e217119790323de" category="section-title">Vscan软件设置</block>
-  <block id="30627ba5bfc8c75e5dc285ea2a0c8971" category="paragraph">您必须在Vscan服务器上配置这些软件设置。</block>
   <block id="d8b5755ea3c05e0fd8ff56ebbd7519f3" category="list-text">* 扫描程序池 *</block>
   <block id="d809d7778bd6d11cabad89ab03ccea20" category="paragraph">此设置用于定义可连接到SVM的Vscan服务器和有权限的用户。它还定义了扫描请求超时期限，之后，如果有备用 Vscan 服务器，则会将扫描请求发送到该服务器。</block>
   <block id="ccc1bb01ee5504acfae6ad3648731378" category="paragraph">您应将Vscan服务器上防病毒软件的超时期限设置为比扫描程序池扫描请求超时期限少五秒。这样可以避免因软件超时期限大于扫描请求超时期限而导致文件访问延迟或被完全拒绝的情况。</block>
@@ -6453,9 +6451,7 @@ SSS-RSA</block>
   <block id="68e1fdd9878b041bfcc6625f8d2114db" category="list-text"><block ref="cb4ad223556712c006d486c65b332ab1" prefix="" category="inline-code"></block> 启用只读卷扫描。</block>
   <block id="9a7d82bea667b95ba26db25f5e7de166" category="list-text"><block ref="e5b19ac7771ad33d25ef4c6d87d5ae70" prefix="" category="inline-code"></block> 限制对通过执行访问打开的文件的扫描。</block>
   <block id="5991832a0ff630a712ab8f2c8ae8c4cc" category="paragraph">"`执行访问`"不同于"`执行权限。`" 仅当可执行文件是使用"`execute intent`"打开时、给定客户端才会对该文件具有"`execute access`"。</block>
-  <block id="ebea622ce78522c0bb53e7b1eaaaf26e" category="paragraph">您可以设置<block ref="42421470692997cb60ed7d6bef614a3b" prefix=" " category="inline-code"></block> 选项设置为off、用于指定在没有可用于病毒扫描的Vscan服务器时允许文件访问。在实时模式下、您可以从以下两个互斥选项中进行选择：</block>
   <block id="cc3df7e499be4889b238103da53ff091" category="list-text">必填：使用此选项、Vscan会尝试向服务器传送扫描请求、直到超时期限到期为止。如果服务器未接受扫描请求、则客户端访问请求将被拒绝。</block>
-  <block id="c24f1c2d7223a9e010510d39d6b34042" category="list-text">Non-Mandatory:使用此选项时，无论Vscan服务器是否可用于病毒扫描，Vscan始终允许客户端访问。</block>
   <block id="bbfa6fec2650b400988f6b8b43e198e6" category="list-text">* 按需任务 *</block>
   <block id="e71bd2cf2955e8ab4677592d8b167519" category="paragraph">此设置定义按需扫描的范围。您可以指定要扫描的最大文件大小、要包括在扫描中的文件扩展名和路径以及要从扫描中排除的文件扩展名和路径。默认情况下会扫描子目录中的文件。</block>
   <block id="952dc3be83ace6c98a981ff409d6ed87" category="list-text">* Vscan 文件操作配置文件（仅限实时扫描） *</block>
@@ -6563,7 +6559,6 @@ Vscan服务器存在瓶颈。
   <block id="b8c0608da6060821045a89c2600df3e8" category="paragraph">如果在SMB服务器上使用导出策略、则必须将每个Vscan服务器添加到此导出策略中。</block>
   <block id="420cebae710ce78dfe1215f0fe4cf249" category="cell">解决方案文档</block>
   <block id="e7b73d8cbef4648d4d02ed78f81f4c72" category="cell">互操作性详细信息</block>
-  <block id="0c5bc65bb59cc30cd297d0226c48968a" category="cell">Trellix (前身为McAfee)</block>
   <block id="bc9bc2e63fa75e34a32781aca837916d" category="inline-link-macro">Trellix产品文档</block>
   <block id="cfde928dd2edc49cf12a6e902c5e8388" category="cell">Symantec</block>
   <block id="b75800014d091b9ab69fc17b57dfe309" category="inline-link-macro">Symantec Protection Engine 9.0.0</block>
@@ -14240,9 +14235,6 @@ Cisco Nexus 9336C-x2</block>
   <block id="9f7365483c422cb078725e94745f5b94" category="list-text">您希望使用以下方法之一创建和维护审核配置：</block>
   <block id="2fafab4cec2a43aedd64fad74129ffcc" category="list-text">原生 ONTAP 功能</block>
   <block id="0a2d98d76094e65fd535f492ba3fee52" category="list-text">外部 FPolicy 服务器</block>
-  <block id="109aa0029e741d8c2e0382bab7ddfed8" category="summary">如果您计划还原集群，则应注意，当集群中存在启用了审核的 Storage Virtual Machine （ SVM ）时， ONTAP 会遵循以下还原过程。还原之前，必须执行某些操作。</block>
-  <block id="414f394af218092caa6e9d2444dad5e9" category="section-title">还原到不支持审核SMB登录和注销事件以及中央访问策略暂存事件的ONTAP版本</block>
-  <block id="d540cb91e9c18cd3b15d8968d35f96b4" category="paragraph">从集群模式Data ONTAP 8.3开始、支持审核SMB登录和注销事件以及中央访问策略暂存事件。如果要还原到不支持这些事件类型的 ONTAP 版本，并且您的审核配置监控这些事件类型，则必须在还原之前更改已启用审核的 SVM 的审核配置。您必须修改配置，以便仅审核文件操作事件。</block>
   <block id="94a494997979ec21df19099cf8f5cc10" category="summary">如果为 Storage Virtual Machine （ SVM ）配置了 authorization-policy-change 事件并启用了审核，则会生成审核事件。</block>
   <block id="f5e7dfbe356c14a082a782b98711404f" category="doc">管理 authorization-policy-change 事件</block>
   <block id="47b1bb7c459e0a58023991eedd1c8b64" category="paragraph">每当为 SMB 用户和 SMB 组授予或撤消授权权限时，都会生成事件 ID 为 4704 和 4705 的 authorization-policy-change 事件。使用分配或撤消授权权限时、将生成authorize-policy-change事件<block ref="9e1ee6f8f2b027dfefa9831545c8c3de" prefix=" " category="inline-code"></block> 相关命令。</block>
@@ -15041,8 +15033,6 @@ Cisco Nexus 9336C-x2</block>
   <block id="b9f97c895b3e83786f6627faa4473bd6" category="paragraph">成功测试SMB客户端访问之后、您可以执行高级SMB配置或添加SAN访问。成功测试 NFS 客户端访问后，您可以执行高级 NFS 配置或添加 SAN 访问。协议访问完成后，您应保护 SVM 的根卷。</block>
   <block id="fb9670348ec4c1bbfa64831756a9a7a8" category="paragraph">您可以使用以下命令进一步配置SMB访问：</block>
   <block id="1c9d612ec1de82821eecf69b433a2554" category="paragraph">介绍如何使用SMB协议配置和管理文件访问。</block>
-  <block id="df7018e8b5dea8270e2b53ed45ca3664" category="inline-link">NetApp 技术报告 4191 ：《集群模式 Data ONTAP 8.2 Windows 文件服务最佳实践指南》</block>
-  <block id="40261511a12711af686f66a0ba5aee3e" category="paragraph">简要概述 SMB 实施和其他 Windows 文件服务功能，并提供有关 ONTAP 的建议和基本故障排除信息。</block>
   <block id="f34506326aba5bd2e96ea949212bfb7f" category="inline-link">NetApp 技术报告 3740 ：《 Data ONTAP 中的 SMB 2 下一代 CIFS 协议》</block>
   <block id="61e501f46c7150f878e0af89f471c9ef" category="paragraph">介绍 SMB 2 的功能，配置详细信息及其在 ONTAP 中的实施。</block>
   <block id="9b6052dbd374ba138463996cc76d0158" category="paragraph">您可以使用以下命令进一步配置NFS访问：</block>
@@ -17120,7 +17110,6 @@ Cisco Nexus 9336C-x2</block>
   <block id="d15dd85b2c4b94a37de34bc82531e284" category="paragraph">您可以使用转储备份将文件系统数据（例如目录，文件及其关联的安全设置）备份到磁带设备。您可以备份整个卷，整个 qtree 或既不是整个卷也不是整个 qtree 的子树。</block>
   <block id="b8c21aebf9ea282dc091f7a8cd63be6d" category="paragraph">您可以使用符合 NDMP 的备份应用程序执行转储备份或还原。</block>
   <block id="580908880a091e74ad5cccc605751271" category="paragraph">您可以使用转储引擎对磁带执行级别 0 备份，增量备份或差异备份。</block>
-  <block id="68eee2e1ac5813b90840b2b9026b8988" category="paragraph">还原到 Data ONTAP 8.3 之前的版本后，必须先执行基线备份操作，然后再执行增量备份操作。</block>
   <block id="f9cf9415d2ebe0c1351e0f7a1221a2d8" category="inline-link">升级，还原或降级</block>
   <block id="6ab922dabb5964299f58ef0a97303c42" category="summary">序列号（ SN ）是磁带驱动器或介质更换器的唯一标识符。ONTAP 会根据 SN 而非 WWN 生成别名。</block>
   <block id="bff88fe6ed331e1de7ffe5c59f663010" category="paragraph">由于 SN 是磁带驱动器或介质更换器的唯一标识符，因此无论磁带驱动器或介质更换器的多个连接路径如何，别名都保持不变。这有助于存储系统在磁带库配置中跟踪同一个磁带驱动器或介质更换器。</block>
@@ -17137,7 +17126,6 @@ Cisco Nexus 9336C-x2</block>
   <block id="e3652c029bd2fed13b283f038bc1b1b8" category="list-text">UNIX 文件权限</block>
   <block id="3fabfbd2744533c3c888e15445477652" category="list-text">ACL</block>
   <block id="ba4d86b149c5b677d2384d05dc0190d0" category="paragraph">如果将仅具有 UNIX 文件权限的文件还原到 NTFS qtree 或卷，则该文件不具有 Windows NT ACL 。在该文件上创建 Windows NT ACL 之前，存储系统仅使用此文件的 UNIX 文件权限。</block>
-  <block id="fe06493d34379b057f093feaff993e0b" category="paragraph">如果将从运行 Data ONTAP 8.2 的存储系统备份的 ACL 还原到运行 Data ONTAP 8.1.x 及更早版本且 ACE 限制低于 1 ， 024 的存储系统，则会还原默认 ACL 。</block>
   <block id="0dfaa5e8bb68aedaec3de30c03046a28" category="list-text">qtree 信息</block>
   <block id="a2a7282603ba26c3376afddbad79f419" category="paragraph">只有当 qtree 还原到卷的根目录时，才会使用 qtree 信息。如果将qtree还原到较低的目录(例如)、则不会使用qtree信息<block ref="fd8d0d2321300173a599bbf8fabacbd1" prefix=" " category="inline-code"></block>而不再是qtree。</block>
   <block id="58a826418f1516e259a0623b5824c4c8" category="list-text">所有其他文件和目录属性</block>
@@ -17421,7 +17409,6 @@ Cisco Nexus 9336C-x2</block>
   <block id="c04792b20d4898dd29d399522144910f" category="paragraph">可以调整别名以指向新地址。</block>
   <block id="1e98fed193db72d0d3582ce8d472c637" category="paragraph">多个系统使用特定磁带设备时</block>
   <block id="e07cb5d98b5ea2c36b065083352b9150" category="paragraph">用户可以将所有系统的别名设置为相同。</block>
-  <block id="03ac997c483519de278f2a034c5da82d" category="paragraph">从 Data ONTAP 8.1.x 升级到 Data ONTAP 8.2.x 时， Data ONTAP 8.2.x 的磁带别名功能会修改现有磁带别名。在这种情况下，您可能需要更新备份应用程序中的磁带别名。</block>
   <block id="6d40a60c8047b488e6c326136b0df537" category="paragraph">分配磁带别名可在备份设备的逻辑名称（例如 st0 或 mc1 ）与永久分配给端口，磁带驱动器或介质更换器的名称之间建立对应关系。</block>
   <block id="3895b82f66e493169ec966737496bb79" category="paragraph">st0 和 st00 是不同的逻辑名称。</block>
   <block id="f3d496506e79e68ea324deaa03b4bb21" category="paragraph">逻辑名称和序列号仅用于访问设备。访问设备后，它会使用物理路径名称返回所有错误消息。</block>
@@ -17474,8 +17461,6 @@ Cisco Nexus 9336C-x2</block>
   <block id="d0e4e86f99efe5d8663f70777725a9e5" category="paragraph"><block ref="14fcf2a8f31d3454ccd181c12a0b28fa" prefix="" category="inline-code"></block></block>
   <block id="0a4f5ba25c67280393f562cd5ccb264c" category="paragraph">在当前活动作业完成后重试备份。</block>
   <block id="d24f8ed0cd403535fe06ff2312a4d5c3" category="doc">关于 NDMP 操作模式</block>
-  <block id="b40c6db01cc156017dafc7a604c5d165" category="paragraph">如果从 Data ONTAP 8.2 升级到 Data ONTAP 8.3 ，则在从 8.2 升级到 8.3 后， 8.2 中使用的 NDMP 操作模式将继续保留。</block>
-  <block id="babc0a88160053434706833c7a94e71c" category="paragraph">如果使用 Data ONTAP 8.2 或更高版本安装新集群，则 NDMP 默认处于 SVM 范围的 NDMP 模式。要在节点范围的 NDMP 模式下执行磁带备份和还原操作，您必须明确启用节点范围的 NDMP 模式。</block>
   <block id="5cd9c7746a368e57d22f618d1c7dc4cb" category="summary">当前正在使用的活动本地磁带 I/O 线程的最大数量。最多可以有 16 个活动本地磁带驱动器。</block>
   <block id="6d039b9aac26b3880abd0bc597fe50de" category="doc">资源限制：没有可用的线程</block>
   <block id="9ebb7d5bda17045294ba5325b8b07f2d" category="paragraph"><block ref="6d039b9aac26b3880abd0bc597fe50de" prefix="" category="inline-code"></block></block>
@@ -17672,10 +17657,8 @@ Cisco Nexus 9336C-x2</block>
   <block id="937890d87b169af318d829a57dad399e" category="paragraph">您可以备份整个 LUN 对象，但不能备份 LUN 对象中的单个文件。同样，您可以还原整个 LUN 对象，但不能还原 LUN 中的单个文件。</block>
   <block id="c93d8996c09e9b0523f2326386672ab0" category="paragraph">转储引擎将 LUN 克隆备份为独立的 LUN 。</block>
   <block id="9e66a5a7ac296adab32cfb29b699c023" category="list-text">VM-aligned 文件</block>
-  <block id="018c6ca60dfbd405f837065ef31c0f12" category="paragraph">Data ONTAP 8.1.2 之前的版本不支持备份与 VM 对齐的文件。</block>
   <block id="fda1796996d94c05cd2113e0153652c9" category="paragraph">当 Snapshot 支持的 LUN 克隆从 7- 模式 Data ONTAP 过渡到 ONTAP 时，它将成为不一致的 LUN 。转储引擎不会备份不一致的 LUN 。</block>
   <block id="7b3952e889e19b8ce879b63da8efd0bc" category="paragraph">将数据还原到卷时，将限制要还原的 LUN 上的客户端 I/O 。只有在转储还原操作完成后，才会删除 LUN 限制。同样，在 SnapMirror 单个文件或 LUN 还原操作期间，客户端 I/O 会同时受限于要还原的文件和 LUN 。只有在单个文件或 LUN 还原操作完成后，才会删除此限制。如果对正在执行转储还原或 SnapMirror 单个文件或 LUN 还原操作的卷执行转储备份，则具有客户端 I/O 限制的文件或 LUN 不会包含在备份中。如果删除了客户端 I/O 限制，这些文件或 LUN 将包含在后续备份操作中。</block>
-  <block id="b25ab5b2d5be2c5602e5c8535048eeab" category="paragraph">在 Data ONTAP 8.3 上运行并备份到磁带的 LUN 只能还原到 8.3 及更高版本，而不能还原到早期版本。如果将 LUN 还原到早期版本，则 LUN 将还原为文件。</block>
   <block id="7acee361d87c06a486c0fc7401796ca3" category="paragraph">将 SnapVault 二级卷或卷 SnapMirror 目标备份到磁带时，只会备份卷上的数据。不会备份关联的元数据。因此，在尝试还原卷时，只会还原该卷上的数据。有关卷 SnapMirror 关系的信息在备份中不可用，因此不会还原。</block>
   <block id="d0219fc03daecc247def36e87d4eae0e" category="paragraph">如果转储一个仅具有 Windows NT 权限的文件并将其还原到 UNIX 模式的 qtree 或卷，则该文件将获得该 qtree 或卷的默认 UNIX 权限。</block>
   <block id="2e1612e105f3f63d2891175b999bb52b" category="paragraph">如果转储一个仅具有 UNIX 权限的文件并将其还原到 NTFS 模式的 qtree 或卷，则该文件将获得该 qtree 或卷的默认 Windows 权限。</block>
@@ -18131,7 +18114,6 @@ Cisco Nexus 9336C-x2</block>
   <block id="c3832c377d8b885ee9283c3e9a392b5d" category="doc">区块无序</block>
   <block id="ba2390d1a1b291c4d8b5952f6c91ccc0" category="paragraph"><block ref="c3832c377d8b885ee9283c3e9a392b5d" prefix="" category="inline-code"></block></block>
   <block id="b5e59718db314e7cd750be2a971055be" category="paragraph">重试还原操作并按正确顺序加载磁带。</block>
-  <block id="8ad29fd3da1e4c61c3dacb27f9114659" category="summary">在节点范围的 NDMP 模式下，您可以在节点级别执行磁带备份和还原操作。从 8.2 升级到 8.3 后， Data ONTAP 8.2 中使用的 NDMP 操作模式将继续保留。</block>
   <block id="c1382d2bd662e050fabba9bd3f1e2db7" category="paragraph">在节点范围的 NDMP 模式下，您可以在拥有卷的节点上执行磁带备份和还原操作。要执行这些操作，您必须在拥有卷或磁带设备的节点上托管的 LIF 上建立 NDMP 控制连接。</block>
   <block id="b81e9b7001e106554284120906641141" category="paragraph">此模式已弃用，将在未来的主要版本中删除。</block>
   <block id="466e77ed172a1c8fb9aaa087cab23c21" category="summary">启用自动数据平衡器（ ADB ）后，该平衡器将分析聚合的使用情况统计信息，以确定已超过配置的高阈值使用百分比的聚合。</block>
@@ -21076,11 +21058,6 @@ Cisco Nexus 9336C-x2</block>
   <block id="72f9d9b7c80cb6e91b2f7fe533079b95" category="cell">允许的值</block>
   <block id="21f1ee07e53b365577e9e8b19bcb5c7e" category="paragraph">0、100</block>
   <block id="b4e0d45ea504b07d9e8c4cafce54035b" category="doc">查看因 FlexClone 文件和 FlexClone LUN 而节省的空间</block>
-  <block id="a16875eabcc0ed5145fe8a14e7c8f012" category="list-text">要查看因 FlexClone 文件和 FlexClone LUN 而节省的空间，请输入以下命令：</block>
-  <block id="d9c76738c140686ebf6d7b5f84da2106" category="paragraph"><block ref="a3bae26a021a26eef63c22720806732f" prefix="" category="inline-code"></block></block>
-  <block id="91ad92a1f434309afe91dad2b682e0e4" category="paragraph"><block ref="603fa48956e46ded019521cb6ec993df" prefix="" category="inline-code"></block> 是FlexVol卷的名称。</block>
-  <block id="8d6a42746d2b9d0eb68c553660223473" category="paragraph">如果您运行的是<block ref="8fa5e3e3ea6ac911f392500999c3bf17" prefix=" " category="inline-code"></block> 命令时、您可以在启用了重复数据删除的FlexVol卷上查看通过重复数据删除以及FlexClone文件和LUN节省的空间。</block>
-  <block id="c24ff271fa90598d83efb8e8bcf73811" category="paragraph">以下示例显示了 FlexClone 卷 test1 上的空间节省：</block>
   <block id="b6b93602d785878d997a71e00fa00057" category="doc">将 FlexVol 卷配置为自动删除 FlexClone 文件和 FlexClone LUN</block>
   <block id="b265de55d536b9d8875a123310ea2296" category="list-text">FlexVol 卷必须包含 FlexClone 文件和 FlexClone LUN ，并且必须处于联机状态。</block>
   <block id="cb5f7babeea4fcfb207841abf65a3d95" category="list-text">FlexVol 卷不能是只读卷。</block>
@@ -23185,13 +23162,6 @@ SSS-RSA</block>
   <block id="796d3a90e43ce105cbf37298c5065f7e" category="cell">9.1.</block>
   <block id="cf5f238fca8b6e155078aa41c175743a" category="cell">9.0</block>
   <block id="1142d3c327d3d337a2ea27072fc92f20" category="cell">您的手动升级路径为…</block>
-  <block id="de78eb7ec26241150020f871006c8816" category="paragraph">请务必使用验证您的平台是否可以运行目标ONTAP 版本<block ref="f73c85a53b5d65cc9c35da0b9e0d2f09" category="inline-link-rx"></block>。</block>
-  <block id="41500358ffe1645da9479b8bdb6bb16e" category="inline-link">NetApp Bug Online 中的错误 ID 805277</block>
-  <block id="dce5ca759612a73fbb00a3823f9cfad6" category="paragraph">*注：*《Data ONTAP 8.3升级指南》错误地指出、在四节点集群中、您应计划最后升级持有epsilon的节点。从 Data ONTAP 8.2.3 开始，升级不再需要此功能。有关详细信息，请参见<block ref="46642dff6a4913c1b70e5c47363becfb" category="inline-link-rx"></block>。</block>
-  <block id="a38b3bc68b667dc2c5be397be3520b78" category="list-text">从 Data ONTAP 8.3.x 开始</block>
-  <block id="452ba1ec2d7971da94fd8574a5f9762d" category="list-text">您可以直接升级到ONTAP 9.1、然后升级到更高版本。</block>
-  <block id="adda8e73226ec3153c9aec30fbe89320" category="list-text">从 8.3.x 之前的 Data ONTAP 版本开始，包括 8.2.x</block>
-  <block id="f24c93d590e21a0fefcd28c287d16528" category="list-text">您必须先升级到Data ONTAP 8.3.x、然后升级到ONTAP 9.1、再升级到更高版本。</block>
   <block id="8bcac596ba2e83696059234710566356" category="summary">升级方法取决于您的配置。  如果可用，则首选使用 System Manager 进行自动无中断升级（ ANDU ）。</block>
   <block id="f327d10f9def35dfaf6cd66e63df4b8c" category="inline-xref-macro">使用 System Manager 实现自动化无中断</block>
   <block id="b0ca9f2228e864a86b6dd377fcd44f75" category="list-text"><block ref="b0ca9f2228e864a86b6dd377fcd44f75" category="inline-xref-macro-rx"></block></block>
@@ -28612,7 +28582,6 @@ FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 Snap
   <block id="aa8bf7ea7803977b3dd452db51b2bdc9" category="list-text">更改管理员密码：<block ref="86c7c10e5e8a300f1053032d976987ae" prefix=" " category="inline-code"></block></block>
   <block id="8fba9eeba4601dcc3bec144a6108b2d7" category="paragraph">接口组也称为链路聚合组(Link Aggregation Group、LAG)、它是通过将同一节点上的两个或更多物理端口组合为一个逻辑端口来创建的。逻辑端口可提高故障恢复能力，提高可用性并实现负载共享。</block>
   <block id="16499ef87ff8c134ecc4dc48d82d1699" category="paragraph">未绑定到特定服务的功能将使用系统定义的行为为出站连接选择生命周期。</block>
-  <block id="75aeba78346fb2a37725ac411806a028" category="sidebar">了解集群还原的含义</block>
   <block id="9aa10764640aa1112bcac458406099a4" category="paragraph">强制执行故障转移以启用站点 B 的 I/O ，然后从站点 B 到站点 A 建立零 RTO 关系要在站点 B 上执行强制故障转移，请完成以下步骤</block>
   <block id="8a7180cf232b9fdeb43042c6cbafd3e7" category="list-text">问题描述<block ref="562007dcf7d55742abbc5fd0809cb393" prefix=" " category="inline-code"></block> 命令以同步关系。</block>
   <block id="3b78411b448acc4b51266c4f85346000" category="list-text">在站点B与站点A之间创建一致性组关系</block>
@@ -29450,7 +29419,6 @@ FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 Snap
   <block id="64571b70468b74349f47e3c1dda7d534" category="open-title">手动升级路径</block>
   <block id="e9290c5c170ded3a094fcdb15c0db764" category="section-title">从ONTAP 9.4-9.0开始</block>
   <block id="d391a9295ce75805cc9a2f9bb99cd1d3" category="example-title">自动升级</block>
-  <block id="c177eaaa169e24456aa43d6afe000fc6" category="section-title">Data ONTAP 8.</block>
   <block id="b0275898af7a7a8721194aeaa246fa6c" category="paragraph">要重新分配以太网端口、请执行以下步骤：</block>
   <block id="5838add9afd4c454a32ffdfa4b935384" category="list-text">选择*网络&gt;概述*。</block>
   <block id="918687557e820da6cb61e1635788ff42" category="list-text">在*编辑广播域*页上，取消选择要重新分配给另一个域的以太网端口。</block>
@@ -30153,7 +30121,6 @@ FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 Snap
   <block id="447dcce982a4b646bfecb20d68154be9" category="summary">FlexCache初始卷和FlexCache卷支持的功能和协议会有所不同。</block>
   <block id="ad75d5e3b3b8452c96b921088fea3fe1" category="paragraph">从ONTAP 9.6开始、您可以创建和修改qtrees。在源上创建的qtrees可在缓存上访问。</block>
   <block id="ba3fa6c5d504c2352091729d03648b6d" category="paragraph">使用FlexCache writearound模式(默认模式)时、缓存上的写入将转发到初始卷。配额在源站强制实施。</block>
-  <block id="99d6c45db9b728df982593cae7bd0de6" category="inline-link-macro">NetApp技术报告4743：《ONTAP中的FlexCache》</block>
   <block id="176f3530ae8f59407b1ff3786a1c5bcb" category="list-text">如果要升级MetroCluster配置、请对集群B重复上述步骤</block>
   <block id="a97e098133a1c5882fe2c9f221d38750" category="list-text">如果要升级双节点MetroCluster FC配置、请验证集群是否已启用自动计划外切换。</block>
   <block id="b3bfc5921399f38e3c83046c7ec3365e" category="admonition">如果要升级的是标准配置、MetroCluster IP配置或MetroCluster FC配置超过2个节点、则无需执行此步骤。</block>
@@ -30381,7 +30348,6 @@ FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 Snap
   <block id="a564d3b44367d2ea8b0f1bcc8daeea3d" category="paragraph">在此任务中、将升级NODE_A_2和NODE_B_2。</block>
   <block id="990dec0f2e5e5ff5c2eeccaca569a630" category="paragraph">如果您已升级第一个DR组上的ONTAP软件、并且现在正在更新八节点MetroCluster配置中的第二个DR组、则在此任务中、您将更新NODE_A_4和NODE_B_4。</block>
   <block id="c0a479e7e5941d6a985d5a64c1eb13e7" category="paragraph">ONTAP 9.2 或 ONTAP 9.1</block>
-  <block id="d8881a6630d9f4a0cff874f5aaa03588" category="paragraph">ONTAP 9.0 或 Data ONTAP 8.3.x</block>
   <block id="0214fff59fa84cf57a1ca27641abc370" category="admonition">如果启用了AutoSupport、则会发送AutoSupport消息、指示节点脱离集群仲裁关系。您可以安全地忽略此通知并继续升级。</block>
   <block id="0fa4d1c99ec010e0a32fc285090a3e24" category="list-text">对于HA对中的每个节点、启用自动交还：</block>
   <block id="6cb0f0ec105b0d888bd813c6bcce192c" category="list-text">验证是否已启用自动交还：</block>
@@ -31484,7 +31450,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="da1b748dd409a374fb5387a605b2cbbd" category="section-title">ONTAP Base附带的许可证</block>
   <block id="80370486a53216d66aaf9a2ac90e210c" category="paragraph">ONTAP Base是一个可选软件套件、可替代适用于ONTAP系统的ONTAP One。它适用于不需要数据保护技术(如SnapMirror和SnapCenter)以及安全功能(如自动防软件)的特定使用情形、例如专用测试或开发环境的非生产系统。无法向ONTAP Base添加其他许可证。如果您需要SnapMirror等其他许可证、则必须升级到ONTAP One。</block>
   <block id="9949132a86e08247d7e18cffc78d8188" category="section-title">其他许可证交付方法</block>
-  <block id="7cc8592eea95513fa72707a11ece7048" category="paragraph">在 ONTAP 8.2 到 ONTAP 9.1.1 中，许可证密钥以 28 个字符串的形式提供，每个 ONTAP 功能有一个密钥。如果您使用的是ONTAP 8.2到ONTAP 9.9.1、则可以使用ONTAP命令行界面安装许可证密钥。</block>
   <block id="7a4009d77cd46afd583647924d4867b5" category="inline-link">如何在系统已具有NLFS时获取ONTAP One许可证</block>
   <block id="e6c044654b23501c1025e9d7a9dc6531" category="paragraph"><block ref="e6c044654b23501c1025e9d7a9dc6531" category="inline-link-rx"></block></block>
   <block id="b05cc644bdf7728b35474d3810ce403b" category="inline-link">如何使用支持站点验证ONTAP软件授权和相关许可证密钥</block>
@@ -36489,7 +36454,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="7a7122131ffdc0457c6ca65964f9381a" category="summary">使用FlexCache回写时、请遵循以下准则以确保性能最佳。</block>
   <block id="67de46ed3899084d4992e9435a5f0a51" category="doc">ONTAP FlexCache回写准则</block>
   <block id="ed9c782497b450c2837810f6585bee7d" category="paragraph">以下准则已在NetApp内部经过充分测试。*_잿 쇒_*붨 틩 您待在他们里面。否则、可能会发生意外行为。</block>
-  <block id="a93ef1bc6a745c13a3d5bd52ab9d1117" category="list-text">在当前迭代过程中、应为FlexCache回写缓存配置一个成分卷来容纳整个FlexCache卷。多成分卷FlexCaches可能会导致从缓存中意外删除数据。</block>
   <block id="82ab829db03a0b7d5d96de51c09dea43" category="list-text">写入SMB备用数据流会导致主文件从缓存中逐出。需要先将主文件的所有脏数据转储到原始文件、然后才能对该文件执行任何其他操作。备用数据流也会转发到源。</block>
   <block id="dc9d56b9fc793d4e43a4dab91171865d" category="list-text">重命名文件会导致文件从缓存中逐出。需要先将文件的所有脏数据转储到源、然后才能对该文件执行任何其他操作。</block>
   <block id="ccd9e772ad08b646dc3d5014eeabf59f" category="list-text">此时、只能对启用了回写的FlexCache卷上的文件更改或设置以下属性：</block>
@@ -40471,7 +40435,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="d686a6d74ddcc400c9a1a660db9e037a" category="doc">管理用户帐户ONTAP事件</block>
   <block id="9a0a8d6c6be0adc5afd60f28175255a1" category="doc">手动轮换审核事件日志以查看特定的ONTAP SVM事件日志</block>
   <block id="f33f06ffa3323207911d6df9546aa978" category="doc">规划ONTAP SVM上的审核配置</block>
-  <block id="6eb4dfc757c593b99d9fb122d43dd4b0" category="doc">了解还原经过审核的ONTAP集群的含义</block>
   <block id="962bc2f50017fc417b5fd10f81e2c47e" category="doc">ONTAP审核的前提条件</block>
   <block id="e8cd304b70137552108243d92b197626" category="doc">了解ONTAP可以审核以解释结果的SMB事件</block>
   <block id="f659b4a7bf775aad5e552b26500545e9" category="doc">了解ONTAP审核事件日志支持的格式</block>
@@ -42245,7 +42208,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="760042a6666db7aa603c1759de3c17f8" category="admonition">如果您曾<block ref="9e1f34d274d54e077ab71c2c0fe0badd" prefix=" " category="inline-code"></block> 对证书签名<block ref="4d389575bb215bbefa0d6232cd02d8f9" prefix=" " category="inline-code"></block> 、则会生成此 <block ref="41799a9f1cb27f52842c90e3f9f9efdf" prefix=" " category="inline-code"></block> 文件。有关详细信息、请参见 <block ref="176f27458d3e2a3c3a9ec02498de4a9f" category="inline-xref-macro-rx"></block> 。</block>
   <block id="757d497aac644c5208241004b9c07c58" category="admonition">如果您曾<block ref="017ce4f89360621e0345c257b6136b21" prefix=" " category="inline-code"></block> 对证书签名<block ref="4d389575bb215bbefa0d6232cd02d8f9" prefix=" " category="inline-code"></block> 、则会生成此 <block ref="6d9cf61db5ec1375b2846eaf8102c57d" prefix=" " category="inline-code"></block> 文件。有关详细信息、请参见 <block ref="4f20cf3f9f80bb54f26eaac3d64146c4" category="inline-xref-macro-rx"></block> 。</block>
   <block id="70f2db3add5b32721c8d64a340cb8e59" category="summary">Hyper-V 和 SQL Server 要求将域计算机帐户映射到 UNIX 用户才能进行 SMB 访问。最简单的方法是将它们映射到默认 UNIX 用户。</block>
-  <block id="e4792c8cdc05c5dcc45cbb114976c7ff" category="paragraph">创建存储虚拟机 (SVM) 时，ONTAP 会自动创建名为<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block> （UID 为<block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block> ) 和名为<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block> （GID 为<block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block> ），并将默认用户添加到<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block>团体。如果要在将集群升级到 Data ONTAP 8.2 之前存在的 SVM 上配置基于 SMB 解决方案的 Hyper-V ，则默认用户和组可能不存在。否则，必须先创建它们，然后再配置 CIFS 服务器的默认 UNIX 用户。</block>
   <block id="b4d35aa99d0d29074a49abef930e723a" category="list-text">如果未设置默认用户选项，并且没有可指定为默认 UNIX 用户的 UNIX 用户，则创建默认组和默认 UNIX 用户，并将默认用户添加到该组。</block>
   <block id="c8a9c9677d220b68e6d75e1644cab2c9" category="paragraph">通常，默认用户的用户名是“pcuser”，并且必须分配 UID <block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block> .默认组一般被赋予组名“pcuser”。分配给组的GID必须为<block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block>。</block>
   <block id="3b11c15d85c13edbe20b8c5234ba8a09" category="list-text">创建默认组：</block>
@@ -44641,7 +44603,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="5175d311abea9fd953abd2a80148f041" category="list-text">ONTAP 9.17.1P1 引入了对FlexCache回写功能的重大增强。强烈建议您在源集群和缓存集群上，在 9.17.1P1 版本之后运行当前推荐版本。如果您无法运行 9.17.1 代码线，建议使用最新的 P 版本 9.16.1。ONTAP 9.15.1 尚未包含FlexCache回写所需的全部修复和改进，因此不建议用于生产工作负载。</block>
   <block id="57e39f46662d1e17c38e8591175ed421" category="list-text">测试针对小于 100GB 的文件进行，缓存和源之间的 WAN 往返时间不超过 200ms。超出这些限制的任何工作负载都可能导致意想不到的性能特征。</block>
   <block id="8e94df8bfa53bf22503e8a16e1e22a78" category="list-text">启用回写功能的FlexCache卷不支持 SMB 机会锁（Oplocks）写入。</block>
-  <block id="2f2696665d248a128095fdbfd0c9c20d" category="list-text">低带宽和/或有损的集群间网络会对FlexCache写回性能产生显著的负面影响。虽然没有具体的带宽要求，因为它很大程度上取决于您的工作负载，但强烈建议您确保缓存和源之间的集群间链路的健康状况。</block>
   <block id="a18a0e17d9a95a68832380f05ee7f722" category="list-text">在SnapMirror/ SnapVault关系中，除了转换过程之外，不支持将 FlexGroups 与FlexVol卷混合使用。</block>
   <block id="32429dbb125ce4d663f89c29ac28a3fd" category="paragraph"><block ref="85c0e4ec022ac99f64d0e9835cac3a45" prefix="" category="inline-code"></block></block>
   <block id="5caac37c617f05ba919423680b196cb9" category="paragraph">是FlexCache 的写回功能高度依赖于缓存和源之间的集群间链路。低带宽和/或丢包网络会对性能产生显著的负面影响。没有具体的带宽要求，因为它很大程度上取决于您的工作负载。</block>
@@ -45829,7 +45790,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="5e5c1e133b052cb824956a34d3dad5fb" category="list-text">您可以选择使用 <block ref="ee703c88a52e9d2bb01fee9a4af7ee64" prefix=" " category="inline-code"></block> 选项将 SMB 服务器添加到其他 OU。</block>
   <block id="0ae47f813a25e76d6fc9fb1ae66a6259" category="paragraph">SnapMirror 活动同步不支持防篡改快照。</block>
   <block id="c9eb593214a75cb8ec32ae0033f3a99f" category="paragraph">您可以通过使用<block ref="745a1be36f8a005c1ed0b3ce36df78cc" prefix=" " category="inline-code"></block> 设置，并通过<block ref="acd96993edb256d739763832d3f9f184" prefix=" " category="inline-code"></block> 端点进行操作。使用 GET 检索当前值，使用 POST 在创建新 qtree 时进行设置，使用 PATCH 修改现有 qtree 的设置。</block>
-  <block id="080fc244a058655af01cd933a3036796" category="paragraph">如下表所示，Trellix 和 Trend Micro 的互操作性详细信息保留在 NetApp 互操作性表中。Trellix、Deep Instinct 和 OPSWAT 的互操作性详细信息也可以在合作伙伴网站上找到。合作伙伴将在其网站上维护 Sentinel One、Symantec、Deep Instinct、OPSWAT 和其他新合作伙伴的互操作性详细信息。</block>
   <block id="c3f8d389b2b0cad745940b72f8e21cf1" category="paragraph">查看 Storage Virtual Machine (SVM) 上的安全跟踪过滤器详细信息，以标识每个过滤器跟踪的访问事件。</block>
   <block id="dc545cd90003a0eac1dd99704445650b" category="paragraph">从 ONTAP 9.6 开始，您可以使用 System Manager 在 SVM 上跟踪文件访问。</block>
   <block id="13afb59ecccad6c5d310cb04ede1663a" category="list-text">打开 System Manager 仪表板。</block>
@@ -46432,7 +46392,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="bc4293c46525148fe110597849594b7b" category="list-text">从本地群集分层到 Google Cloud Storage 时需要 <block ref="1bdbbd031fafd176ebde0eb66ba6ea69" category="inline-link-macro-rx"></block>。</block>
   <block id="4082a99221e61eb71ff75684e141887a" category="list-text">从本地集群分层到 IBM Cloud Object Storage 时，需要<block ref="1bdbbd031fafd176ebde0eb66ba6ea69" category="inline-link-macro-rx"></block>。</block>
   <block id="167c0dd62e8115ec45795b3b49abc5bb" category="paragraph">如果为 NFS 客户端启用了大容量卷和文件支持，则必须在新的最大文件大小生效之前重新装入该客户端。</block>
-  <block id="8665c4a5ef20b44f2705f5ede3f106c2" category="list-text">当原始卷的可用空间降至 20% 或更低时，写回缓存会自动切换到写绕模式。这有助于防止原点空间不足，这将导致将脏数据孤立在启用写回的缓存中。但是，如果原始卷调配过度，即其逻辑调配大小大于聚合中的可用空间，则报告的可用空间百分比可能会比预期更早触发此阈值。20% 的阈值将根据原始卷报告的可用空间和聚合的可用物理容量进行评估。</block>
   <block id="5e8784782477be08ff8add860c332997" category="paragraph">您需要群集 UUID 才能从 NetApp 支持站点获取 NetApp 许可证文件 (NLF)。</block>
   <block id="5804b9a7462c2bbbcedaf92042779770" category="summary">非活动数据报告 (IDR) 是一个很好的工具，用于确定可以从本地层分层的非活动（冷）数据量。</block>
   <block id="f7ec19912c09376e5217d139a981561f" category="paragraph">默认情况下，IDR 使用 31 天的冷却期来确定哪些数据被视为非活动数据。分层的冷数据量取决于在卷上设置的分层策略。在早于 ONTAP 9.8 的版本中，IDR 使用固定的 31 天冷却期。</block>
@@ -47645,9 +47604,7 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="ed3dd7d3e2ab1968bc176c9c9a94e022" category="list-text">SnapMirror 同步目标不能作为 SVM 灾难恢复源，因为 SVM 灾难恢复不支持 DP 卷的复制。同步源的反向重新同步将导致 SVM 灾难恢复排除目标集群中的 DP 卷。</block>
   <block id="45445410b29d8db0d8eec37b7b5c1815" category="list-text"><block ref="45445410b29d8db0d8eec37b7b5c1815" category="inline-link-rx"></block></block>
   <block id="9c3c8a8599754601b45533d7331968af" category="paragraph"><block ref="9c3c8a8599754601b45533d7331968af" category="inline-link-rx"></block></block>
-  <block id="57ee3cc2179babf317d185c2425dc74b" category="admonition">在早于 9.5 的 ONTAP 9 版本中，原始 FlexVol 卷只能为在 7-Mode 下运行 Data ONTAP 8.2.x 的系统上创建的 FlexCache 卷提供数据。从 ONTAP 9.5 开始，原始 FlexVol 卷还可以向 ONTAP 9 系统上的 FlexCache 卷提供数据。有关从 7-Mode FlexCache 迁移到 ONTAP 9 FlexCache 的信息，请参阅 <block ref="85fe5eed7a74fd8a8fda34cfb24b8219" category="inline-link-macro-rx"></block>。</block>
   <block id="d34c44590e477ae7ac510890813da60b" category="paragraph"><block ref="d34c44590e477ae7ac510890813da60b" category="inline-link-rx"></block></block>
-  <block id="ffdf4ffa43b40057d375fcf7a2527909" category="list-text"><block ref="ffdf4ffa43b40057d375fcf7a2527909" category="inline-link-rx"></block></block>
   <block id="85937592f790d6e3d8b684c96c89c085" category="list-text"><block ref="85937592f790d6e3d8b684c96c89c085" category="inline-link-rx"></block></block>
   <block id="b60ea7d3371f308b279a425ddc7f4577" category="list-text"><block ref="b60ea7d3371f308b279a425ddc7f4577" category="inline-link-rx"></block></block>
   <block id="b0d1072738c297ba0914bbc708440c94" category="paragraph">有关 ONTAP 系统中 SNMP 支持的详细信息，请参见<block ref="010101e1a0ea4465ba9ab03058d97b65" category="inline-link-rx"></block>。</block>
@@ -49570,4 +49527,23 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="93c9d4ff21582c79a7cddb11d4a3829d" category="doc">ONTAP 手动升级准备工作流程</block>
   <block id="165e9ffb20a53bc1f7011ca5414d2161" category="doc">手动升级 ONTAP 四节点或八节点 MetroCluster 配置</block>
   <block id="c67fe6e6b4e25a2f3dba975eccebb39d" category="doc">在 ONTAP 升级之前，确认 netgroup 文件存在于所有节点上</block>
+  <block id="c9e1753e0145773b68524bcd983a0a6a" category="section-title">Vscan ONTAP 设置</block>
+  <block id="0dc9bb6e297d8293cbc7a446a3518cff" category="paragraph">您必须在 ONTAP 系统上配置以下 Vscan 设置。</block>
+  <block id="0a0ccf36f0676a7604b292d166cd1e7f" category="paragraph">您可以将<block ref="42421470692997cb60ed7d6bef614a3b" prefix=" " category="inline-code"></block>选项设置为<block ref="3262d48df5d75e3452f0f16b313b7808" prefix=" " category="inline-code"></block>，以指定在没有可用于病毒扫描的 Vscan 服务器时允许文件访问。在 on-access 模式下，您可以从以下两个互斥的选项中进行选择：</block>
+  <block id="68961559705ee734d72247c2c042bf0c" category="list-text">非强制性：使用此选项，Vscan 始终允许客户端访问，无论 Vscan 服务器是否可用于病毒扫描。</block>
+  <block id="4045df8b5dc92daea045388573f5aa94" category="paragraph">如下表所示，Trellix 和 Trend Micro 的互操作性详细信息保存在 NetApp 互操作性矩阵工具中。对于所有其他合作伙伴，包括 Sentinel One、Symantec、Deep Instinct 和 OPSWAT，互操作性详细信息均保存在其各自的合作伙伴网站上。</block>
+  <block id="fc5c4b423ac83d8102c39331e7623935" category="cell">Trellix（前身为 McAfee）</block>
+  <block id="ff7119a33dc0439f1e944ce8cf5fcb59" category="list-text">在每个相应的版本系列中，ONTAP 9.19.1 GA、9.18.1P2、9.17.1P3、9.16.1P10 及更高版本的 P 版本支持多组成部分 FlexCache 回写缓存。对于较早的 ONTAP 版本，必须对整个 FlexCache 卷使用单个组成部分。早期版本上的多组成部分 FlexCaches 可能会导致数据从缓存中被意外逐出。</block>
+  <block id="2521cde500082718d3c5ef4580a2c13d" category="list-text">当原始卷的可用空间降至 20% 或更低时，回写缓存会自动切换到绕写模式。这有助于防止原始卷空间不足，否则会导致脏数据孤立在启用了回写的缓存中。如果原始卷过度配置，其逻辑配置大小将大于聚合中的可用空间。20% 阈值将根据原始卷的可用空间和聚合的可用物理容量进行评估。<block ref="42d1a6ca89f2521a475c70f1e4815f7f" prefix=" " category="inline-code"></block> 和 <block ref="7bd14a231864e618e1840c7e117e59c1" prefix=" " category="inline-code"></block> 在可用空间已低于该阈值时仍可能显示 0%。</block>
+  <block id="a5eae52f529b7281691dfc0030e03c40" category="paragraph">以下示例是过度配置的原始卷。几乎没有写入任何数据，但聚合无法支持完整的逻辑大小：</block>
+  <block id="caacd6d231105cc2cbbfd511dc0883be" category="paragraph">请注意，<block ref="42d1a6ca89f2521a475c70f1e4815f7f" prefix=" " category="inline-code"></block> 为 0%，但可用空间为 19.70 TB 中的 1.33 TB，即 1.33 / 19.70，约有 7% 的可用空间。这已经低于 20% 的阈值，因此该源的写回缓存将切换到绕写模式。</block>
+  <block id="9698f3194dbe6e3288c69a4bb6a58f6f" category="paragraph">请注意，<block ref="7bd14a231864e618e1840c7e117e59c1" prefix=" " category="inline-code"></block> 也为 0%，仅使用了 515MB。可用空间为 18TB 中的 1363GB，约占文件系统的 7%。百分比列显示存储的数据量极小。它们并未显示聚合实际能提供多大的卷空间。</block>
+  <block id="2fce22f88994a11ab3a8f16942c4ba41" category="inline-link-macro">TCP RACK</block>
+  <block id="6da27d8af98b1091e9ed39a8309555d5" category="list-text">低带宽和/或有损耗的集群间网络可能会对 FlexCache 回写性能产生显著的负面影响。虽然没有特定的带宽要求，因为它高度依赖于您的工作负载，但*_强烈_*建议您确保缓存和源之间的集群间链路的运行状况。如果您的网络容易丢包，并且您正在运行 ONTAP 9.19.1 或更高版本，请考虑使用 <block ref="6100f6d0700ba5986ec142263d6235de" category="inline-link-macro-rx"></block> 来提高性能。</block>
+  <block id="64c93b8a694a76602cf5ad17aed5afd9" category="paragraph">创建 storage virtual machine (SVM) 时，ONTAP 会自动创建名为<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block>（UID 为<block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block>）的默认用户和名为<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block>（GID 为<block ref="f9df942af967185fc775031b3c286856" prefix=" " category="inline-code"></block>）的组，并将默认用户添加到<block ref="68b79d57b5efe5cd122cd25bf3570cb9" prefix=" " category="inline-code"></block>组。</block>
+  <block id="a48bc6076c0a40afc96de0e6f2b3154f" category="paragraph">要在节点作用域 NDMP 模式下执行磁带备份和还原操作，必须显式启用节点作用域 NDMP 模式。</block>
+  <block id="c679367f9f87c88ce490b9d553ec2ab1" category="paragraph">在节点作用域 NDMP 模式下，可以在节点级别执行磁带备份和还原操作。</block>
+  <block id="015c0c3c38a424f34c855a6845892e10" category="paragraph">ONTAP 9.0</block>
+  <block id="0b86181e75ac9dd963d28fee4a64e251" category="list-text">查看由于 FlexClone 文件和 FlexClone LUN 而节省的空间：</block>
+  <block id="0e02eaf79e3306ff6a58686c821d7933" category="paragraph">如果在启用重复数据删除的 FlexVol 卷上运行此命令，则可以查看重复数据删除以及 FlexClone 文件和 LUN 节省的空间。</block>
 </blocks>
