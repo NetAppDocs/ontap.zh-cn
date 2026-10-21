@@ -10,14 +10,14 @@ summary: FlexClone 文件和 FlexClone LUN 会继承其父文件和 LUN 的访�
 :imagesdir: ../media/
 
 
-[role="lead"]
+[role="lead lead"]
 当卷在 ONTAP 系统之间迁移时，源卷可能使用与目标卷不同的数据压缩类型。
 
 支持的压缩类型包括二级、自适应 8K 和温度敏感型存储（TSSE）。在迁移期间，这些压缩类型可以在目标卷上暂时共存，如下所示：
 
 [cols="4"]
 |===
-| 源卷 | 目标卷 | 支持迁移共存 | 应用程序 I/O 读/写大小 
+| 源卷 | 目标卷 | 支持迁移共存 | 目标卷上的应用程序 I/O 读/写大小 
 
 
 | 二级压缩类型 | TSSE/32k 内联压缩类型 | 是的。 | 自动 
@@ -28,14 +28,8 @@ summary: FlexClone 文件和 FlexClone LUN 会继承其父文件和 LUN 的访�
 
 | 二级压缩类型 | 自适应 8k 压缩类型 | 否 | 不支持 
 |===
-.从二级和自适应 8k 压缩迁移到 TSSE 压缩
-在迁移后通过后台进程，或者在迁移过程中将数据重写到目标卷时，二级卷和 8k 自适应卷会逐渐转换为适用于 QuickAssist 技术（QAT）和其他受支持系统的 TSSE/32k 内联压缩。
-
-将卷从辅助或自适应 8K 压缩迁移到 TSSE 压缩后， `volume efficiency show` 命令输出中显示的*压缩类型*即使在所有现有块已转换后也不会更改。对于转换后的辅助卷，压缩类型仍为*辅助*，对于转换后的自适应 8K 卷，压缩类型仍为*自适应*。
+将压缩类型从二级或自适应 8K 压缩更改为 TSSE/32K 内联压缩后，即使所有现有块均已转换， `volume efficiency show` 命令输出中显示的 *compression type* 也不会更改。对于转换后的二级卷，压缩类型仍为 *secondary*，对于转换后的自适应 8K 卷，压缩类型仍为 *adaptive*。
 
 写入从辅助或自适应 8K 压缩转换的卷的新数据使用 TSSE 进行压缩。
-
-.从二次压缩迁移到自适应 8k 压缩
-不支持在同一卷上直接共存二级和自适应 8k 压缩。
 
 学习 link:move-between-secondary-adaptive-compression-task.html["在二级和自适应压缩之间移动"]。
