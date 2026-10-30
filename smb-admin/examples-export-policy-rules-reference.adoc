@@ -43,7 +43,7 @@ cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifs1 ‑
 
 * 策略名称： cifsnfs1.
 * 索引编号：2
-* 客户端匹配：匹配所有客户端
+* 客户端匹配：仅匹配 192.168.1.0/24 网络上的客户端
 * 协议： SMB 和 NFS 访问
 * 只读访问：对所有客户端
 * 读写访问：使用 Kerberos （ NFS 和 SMB ）或 NTLM 身份验证（ SMB ）的客户端
@@ -53,7 +53,7 @@ cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifs1 ‑
 
 [listing]
 ----
-cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifsnfs1 ‑ruleindex 2 -protocol cifs,nfs -clientmatch 0.0.0.0/0 -rorule any -rwrule krb5,ntlm -anon 65534 -allow-suid true
+cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifsnfs1 ‑ruleindex 2 -protocol cifs,nfs -clientmatch 192.168.1.0/255.255.255.0 -rorule any -rwrule krb5,ntlm -anon 65534 -allow-suid true
 ----
 
 
@@ -64,7 +64,7 @@ cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifsnfs1 
 
 * 策略名称：ntlm1
 * 索引号： 1
-* 客户端匹配：匹配所有客户端
+* 客户端匹配：仅匹配 192.168.1.0/24 网络上的客户端
 * 协议：仅启用 SMB 访问
 * 只读访问：仅适用于使用 NTLM 的客户端
 * 读写访问：仅适用于使用 NTLM 的客户端
@@ -77,5 +77,5 @@ cluster1::> vserver export-policy rule create -vserver vs1 -policyname cifsnfs1 
 ====
 [listing]
 ----
-cluster1::> vserver export-policy rule create -vserver vs1 -policyname ntlm1 ‑ruleindex 1 -protocol cifs -clientmatch 0.0.0.0/0 -rorule ntlm -rwrule ntlm
+cluster1::> vserver export-policy rule create -vserver vs1 -policyname ntlm1 ‑ruleindex 1 -protocol cifs -clientmatch 192.168.1.0/255.255.255.0 -rorule ntlm -rwrule ntlm
 ----

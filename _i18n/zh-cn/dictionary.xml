@@ -570,7 +570,6 @@
   <block id="1a3b47e05c52d70692f3aeea791abedf" category="paragraph">以下命令会在名为 "` vs1` " 的 SVM 上创建一个导出规则，该规则具有以下配置：</block>
   <block id="99342b4007817ecf2e8edd3907e5bdbe" category="list-text">策略名称： cifsnfs1.</block>
   <block id="2de6a4e9afb046a5ad3aaddd3ccb5f2b" category="list-text">索引编号：2</block>
-  <block id="a42ab0ecd3880c39bd388d43fd452a4c" category="list-text">客户端匹配：匹配所有客户端</block>
   <block id="5b6920bd8e42096359ec24ecc98f145e" category="list-text">协议： SMB 和 NFS 访问</block>
   <block id="f1e397e7572336e42279b12ef246b1eb" category="list-text">只读访问：对所有客户端</block>
   <block id="f5bf8db4c3beef3c0df8e4079abaeedc" category="list-text">读写访问：使用 Kerberos （ NFS 和 SMB ）或 NTLM 身份验证（ SMB ）的客户端</block>
@@ -8725,20 +8724,6 @@ VLAN 名称是端口（或接口组）名称和网络交换机 VLAN 标识符的
   <block id="86554767e9874406e845da28cd086b0b" category="paragraph">LIF 可以具有不同的特性来支持不同的端口类型。</block>
   <block id="ad678c0f71ca384bc3202876203e73d2" category="admonition">如果在同一子网中配置了集群间和管理 LIF ，则管理流量可能会被外部防火墙阻止，并且 AutoSupport 和 NTP 连接可能会失败。您可以通过运行来恢复系统<block ref="e45e69ed720963371e10ec51bc780559" prefix=" " category="inline-code"></block> 命令切换集群间LIF。但是，您应在不同子网中设置集群间 LIF 和管理 LIF ，以避免使用此问题描述。</block>
   <block id="95416f2c916dabe21f738406546ebc53" category="cell">LIF</block>
-  <block id="72618f91e0500b0de0f483f4ac9372c7" category="cell">与 Storage Virtual Machine （ SVM ）关联并用于与客户端通信的 LIF 。
-一个端口上可以有多个数据 LIF 。这些接口可以在整个集群中进行迁移或故障转移。您可以通过将数据 LIF 的防火墙策略修改为 mgmt 来将其用作 SVM 管理 LIF 。
-
-与 NIS ， LDAP ， Active Directory ， WINS 和 DNS 服务器建立的会话使用数据 LIF 。</block>
-  <block id="bb6b3eeeeea530b9d443139aa98bab5b" category="cell">一种 LIF ，用于在集群中的节点之间传输集群内流量。必须始终在集群端口上创建集群 LIF 。
-
-集群 LIF 可以在同一节点上的集群端口之间进行故障转移，但不能迁移或故障转移到远程节点。当新节点加入集群时，系统会自动生成 IP 地址。但是，如果要手动为集群 LIF 分配 IP 地址，则必须确保新 IP 地址与现有集群 LIF 位于同一子网范围内。</block>
-  <block id="fdb61a9372481ce365c4df0d03c756b9" category="cell">为整个集群提供一个管理接口的 LIF 。
-
-集群管理 LIF 可以故障转移到集群中的任何节点。它无法故障转移到集群或集群间端口</block>
-  <block id="c46b415b735a844431face26e3dd78c5" category="cell">一种用于跨集群通信，备份和复制的 LIF 。您必须先在集群中的每个节点上创建一个集群间 LIF ，然后才能建立集群对等关系。
-
-这些 LIF 只能故障转移到同一节点中的端口。它们不能迁移或故障转移到集群中的另一个节点。</block>
-  <block id="cc6ff18647a66c1d43119d8291d3ab95" category="cell">一种 LIF ，用于提供用于管理集群中特定节点的专用 IP 地址。节点管理 LIF 是在创建或加入集群时创建的。这些 LIF 用于系统维护，例如，当节点无法从集群访问时。</block>
   <block id="960e2e9197894ba266cc974be53f97d7" category="cell">VIP LIF</block>
   <block id="4b39bb47dea269040d5389e36a560e3d" category="paragraph">您可以通过更改主节点或当前节点，管理状态， IP 地址，网络掩码，故障转移策略等属性来修改 LIF 。 防火墙策略和服务策略。您还可以将 LIF 的地址系列从 IPv4 更改为 IPv6 。</block>
   <block id="88af1d1f6f6b9e1a0ac27809576f63fd" category="list-text">将 LIF 的管理状态修改为 down 时，任何未完成的 NFSv4 锁定都将保持，直到 LIF 的管理状态恢复为 up 为止。</block>
@@ -35981,7 +35966,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="aaa0926959481a380c623250cf7aee17" category="inline-link">ONTAP REST API的新增功能</block>
   <block id="b8e07ee130842c6360c09fb9da1746c1" category="inline-link">IPsec端点</block>
   <block id="fcbc078b41f8ea4c4bb53a099d48993e" category="paragraph">从ONTAP自动化文档中了解有关ONTAP REST API的更多信息，包括<block ref="5a62402f4eb0a1dd8bfdfac5725ef9cf" category="inline-link-rx"></block>。有关的详细信息，您还应查看ONTAP自动化文档<block ref="40b8bcff9d85e29d4dcf335573374556" category="inline-link-rx"></block>。</block>
-  <block id="1e95f2bb91366d9573942dc324e74c11" category="cell">VIP LIF 是指在 VIP 端口上创建的任何数据 LIF 。要了解更多信息，请参阅<block ref="a7179264dd2f35ea2c150b71a7246696" category="inline-link-macro-rx"></block>。</block>
   <block id="6307629bef173bd4931a102051e87648" category="paragraph"><block ref="6307629bef173bd4931a102051e87648" category="inline-xref-macro-rx"></block></block>
   <block id="88cd898c2db92154a58676708297e658" category="paragraph"><block ref="88cd898c2db92154a58676708297e658" category="inline-link-macro-rx"></block></block>
   <block id="5bfe513c35c2c46da7880888a3308666" category="paragraph">要了解更多信息，请访问<block ref="c528a3b8fe5bcb93f8e90074cd8523d7" category="inline-link-rx"></block>。</block>
@@ -48784,4 +48768,31 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="38ee55d5b669748055ecf402bc413600" category="section-title">ONTAP HotFix 升级</block>
   <block id="642d96f0cde3ee795370d1fb85613176" category="inline-link-macro">ONTAP HotFix 版本</block>
   <block id="4f1c83437ecbd776b1a3e79d2ad51521" category="paragraph">HotFix 升级可提供对时间敏感的修补程序，适用于广泛的客户群。有关 <block ref="c2db4e5efcbf7c2449779e7d85eda844" category="inline-link-macro-rx"></block> 的详细信息，请访问 NetApp 支持站点。</block>
+  <block id="684e04e9cef22aa87cd0a0af7e6c586e" category="list-text">验证您是否已为 HTTP 应用程序创建用户帐户，并已分配对 <block ref="a00c50b90749f90a36742b8673eb5362" prefix=" " category="inline-code"></block> 和 <block ref="988c1fa850a7f28af6d297a4fcaf635f" prefix=" " category="inline-code"></block> REST API 具有（至少为只读）访问权限的角色。</block>
+  <block id="a5da7f8871afd7d4a18d1254d6800bc7" category="paragraph">LIF 可具有不同的特性以支持不同的端口类型。LIF 可托管在 IPspace 中的物理或逻辑端口上。每个端口仅与一个 IPspace 相关联。</block>
+  <block id="97af8eedbbce18dd0aa0ce556efa9b57" category="paragraph">下表总结了 LIF 类型、其兼容端口类型及其故障转移或迁移行为。</block>
+  <block id="07ea719175e49a5b50c51d409da3bab8" category="paragraph">用于在集群中的节点之间传输集群内流量的 LIF。</block>
+  <block id="447347484d40e37f2d951a4d4063e049" category="list-text">集群 LIF 必须始终在集群端口上创建。</block>
+  <block id="4f9507943fe3b0522a0fc4fbe61066e4" category="list-text">集群 LIF 可以在同一节点上的集群端口之间进行故障转移，但不能迁移或故障转移到远程节点。当新节点加入集群时，IP 地址会自动生成。但是，如果要将 IP 地址手动分配给集群 LIF，则必须确保新 IP 地址与现有集群 LIF 位于相同的子网范围内。</block>
+  <block id="2fc430e6e712c74fd7f804f31aade34a" category="paragraph">为整个集群提供单一管理界面的 LIF。</block>
+  <block id="18c28c1c9746503204502a53c92fa2fe" category="list-text">集群管理 LIF 可以故障转移到集群中的任何节点。它不能故障转移到集群或集群间端口。</block>
+  <block id="319ae8b892b82f44da56a16cc9fc7cd0" category="paragraph">与存储虚拟机（SVM）关联并用于与客户端通信的 LIF。</block>
+  <block id="a4acbf82bc139c31fa2ac5fd01223892" category="list-text">每个 SVM 都与特定的 IPspace 相关联。数据 SVM 通常位于“Default” IPspace 中，但不一定。</block>
+  <block id="0f3854f5c216d866a8eb1b9c3315d0cb" category="list-text">您可以在一个端口上托管多个数据 LIF。这些数据 LIF 可以在整个集群中迁移或故障转移。您可以通过将数据 LIF 的防火墙策略修改为 mgmt，将其修改为用作 SVM 管理 LIF。</block>
+  <block id="ed1e22b945e8ed5a5e80c33a31c83d67" category="list-text">与 NIS、LDAP、Active Directory、WINS 和 DNS 服务器建立的会话使用数据 LIF。</block>
+  <block id="c037744dd0c66542ca8f02335fc7c191" category="paragraph">用于跨集群通信、备份和复制的 LIF。</block>
+  <block id="753de00e46785c430041d2e8a1a90246" category="list-text">在建立集群对等关系之前，必须在集群中的每个节点上创建集群间 LIF。这些 LIF 只能故障转移到同一节点中的端口。它们无法迁移或故障转移到集群中的其他节点。</block>
+  <block id="91ba88e95aece1ac89b4efb40f3e5142" category="paragraph">提供用于管理集群中特定节点的专用 IP 地址的 LIF。</block>
+  <block id="442193c860accf7bfc6d81cf776095ad" category="list-text">节点管理 LIF 是在创建或加入集群时创建的。这些 LIF 用于系统维护，例如，当节点无法从集群访问时。</block>
+  <block id="a954bd55e944d7b65a02512356ab0177" category="cell">SVM 管理 LIF</block>
+  <block id="7eb3c16096c2ff1a72285c7cde8fd9b2" category="paragraph">提供到 SVM 的管理连接的 LIF，支持该 SVM 的管理操作（通常通过端口 443）和管理相关服务。</block>
+  <block id="6215b5b3d2f4e21d87f5002aba1ca95d" category="list-text">每个 SVM 都与特定的 IPspace 相关联。</block>
+  <block id="2769f5bd1ca10159de28b7eef534b0dc" category="list-text">LIF 可以根据故障转移策略迁移或故障转移到另一个节点或端口。</block>
+  <block id="fbd43e1e8d072e6a1db09a56473d4502" category="list-text">您可以在一个端口上托管多个 SVM 管理 LIF。</block>
+  <block id="e58a631048eac29af1a79b2be34cb8fc" category="list-text">当您在多租户环境中托管时，SVM 管理 LIF 非常有用。</block>
+  <block id="975479f5c675274676df2cf5a669d2e6" category="paragraph">虚拟 IP （VIP） LIF 是在 VIP 端口上创建的任何数据 LIF。</block>
+  <block id="aa588eb58d9238ea17a606d1c7c85a8c" category="paragraph">如需了解更多信息，请参见 <block ref="a7179264dd2f35ea2c150b71a7246696" category="inline-link-macro-rx"></block>。</block>
+  <block id="f67cbf9fe6ab6c46bd55d283d7e7847b" category="list-text"><block ref="f67cbf9fe6ab6c46bd55d283d7e7847b" category="inline-link-macro-rx"></block></block>
+  <block id="22182403b887cf7ca5c8e3e1dedb336a" category="list-text"><block ref="22182403b887cf7ca5c8e3e1dedb336a" category="inline-link-macro-rx"></block></block>
+  <block id="55b55918fbe4abda28fb1e2d711c035e" category="cell">LIF 故障转移到另一个非 HA 合作伙伴的节点。</block>
 </blocks>
