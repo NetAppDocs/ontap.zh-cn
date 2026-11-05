@@ -31,6 +31,10 @@ summary: 从ONTAP 9.12.1开始、您可以锁定非SnapLock卷上的快照、以
 
 .支持防篡改快照的功能
 * link:https://docs.netapp.com/us-en/storage-management-cloud-volumes-ontap/reference-worm-snaplock.html["Cloud Volumes ONTAP"^]
+* FlexCache 原始卷
++
+从ONTAP 9.16.1 开始受支持。
+
 * FlexGroup 卷
 +
 FlexGroup卷支持快照锁定。快照锁定仅在根成分卷快照上进行。只有在根成分卷过期时间已过的情况下、才允许删除FlexGroup 卷。
@@ -39,15 +43,23 @@ FlexGroup卷支持快照锁定。快照锁定仅在根成分卷快照上进行�
 +
 您可以将具有锁定快照的FlexVol volume转换为FlexGroup卷。转换后、快照将保持锁定状态。
 
+* SnapMirror 适用于 NAS 的活动同步
++
+从 ONTAP 9.20.1 开始，您可以在 SVM 级别关系中的 SnapMirror 活动同步 NAS FlexVol 卷上创建防篡改快照。
+
 * SnapMirror异步
 +
 必须在源和目标上初始化Compliance时钟。
+
+* 使用的SnapMirror策略规则 `-schedule` 参数
+* SnapMirror同步
++
+从 ONTAP 9.19.1 开始，您只能在创建快照期间指定到期时间。您不能设置或延长现有快照的到期时间。
 
 * SVM数据移动性(用于将SVM从源集群迁移或重新定位到目标集群)
 +
 从ONTAP 9.14.1开始支持。
 
-* 使用的SnapMirror策略规则 `-schedule` 参数
 * SVM 灾难恢复
 +
 必须在源和目标上初始化Compliance时钟。
@@ -55,14 +67,6 @@ FlexGroup卷支持快照锁定。快照锁定仅在根成分卷快照上进行�
 * 卷克隆和文件克隆
 +
 您可以从锁定的快照创建卷克隆和文件克隆。
-
-* FlexCache 原始卷
-+
-从ONTAP 9.16.1 开始受支持。
-
-* SnapMirror同步
-+
-从 ONTAP 9.19.1 开始，您只能在创建快照期间指定到期时间。您不能设置或延长现有快照的到期时间。
 
 
 
@@ -75,7 +79,7 @@ FlexGroup卷支持快照锁定。快照锁定仅在根成分卷快照上进行�
 防篡改快照可提供不可删除的不可变更保护。由于FabricPool要求能够删除数据、因此不能在同一个卷上启用FabricPool和Snapshot锁定。
 
 * SMtape
-* SnapMirror活动同步
+* SnapMirror 适用于 SAN 的活动同步
 
 
 

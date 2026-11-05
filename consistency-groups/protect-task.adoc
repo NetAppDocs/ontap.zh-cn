@@ -14,18 +14,34 @@ summary: 使用一致性组通过本地快照、SnapMirror异步、SnapMirror活
 [role="lead"]
 一致性组可为跨多个卷的 SAN ， NAS 和 NVMe 应用程序提供轻松管理的本地和远程保护。
 
-创建一致性组不会自动启用保护。可以在创建一致性组时或创建一致性组后设置保护策略。您可以使用以下方法保护一致性组：
+创建一致性组不会自动启用保护。可以在创建一致性组时或创建之后设置保护策略。
 
-* 本地快照
-* SnapMirror主动同步(在9.15.1之前的ONTAP版本中称为SnapMirror业务连续性)
-* xref:index.html#mcc[MetroCluster (从9.11.1开始)]
-* SnapMirror异步(从9.13.1开始)
-* 异步SVM灾难恢复(从9.14.1开始)
+一致性组可用的数据保护类型因您的 ONTAP 版本而异。
+
+[cols="2"]
+|===
+| 从 ONTAP 开始提供…… | 一致性组的数据保护 
 
 
+| 9.20.1 | SnapLock 用于 SnapVault（来自非 SnapLock 卷） 
+
+
+| 9.14.1. | SVM 灾难恢复 
+
+
+| 9.13.1. | SnapMirror异步 
+
+
+| 9.11.1. | 一致性组提供<<two-phase,创建两阶段一致性组快照>>。两阶段快照操作执行预检查，确保成功捕获快照。 
+
+
+| 9.10.1.  a| 
+* Snapshot 策略
+* SnapMirror活动同步
+
+
+|===
 如果要使用嵌套一致性组、则可以为父一致性组和子一致性组设置不同的保护策略。
-
-从ONTAP 9.11.1开始，一致性组提供了<<two-phase,创建两阶段一致性组快照>>。两阶段快照操作将执行预检查、以确保成功捕获快照。
 
 可以对整个一致性组，分层配置中的单个一致性组或一致性组中的单个卷进行恢复。要实现恢复、可以选择要从中恢复的一致性组、选择快照类型、然后确定用作恢复基础的快照。有关此过程的详细信息，请参见link:../task_dp_restore_from_vault.html["从早期的快照还原卷"]。
 
@@ -201,7 +217,14 @@ For more information about the ONTAP REST API, see link:https://docs.netapp.com/
 [[set-remote-protection-for-a-consistency-group]]
 == 为一致性组设置远程保护
 
-一致性组可通过SnapMirror主动同步以及从ONTAP 9 .13.1开始的SnapMirror异步提供远程保护。
+根据您的 ONTAP 版本，一致性组通过 SnapMirror 主动同步、SnapMirror 异步和 SnapLock（用于 SnapVault 关系）提供远程保护。
+
+从 ONTAP 9.20.1 开始，提供 SnapLock 以用于 SnapVault 保护。从 ONTAP 9.13.1 开始，提供 SnapMirror 异步保护。
+
+.开始之前
+* 您必须 link:../peering/create-cluster-relationship-93-later-task.html["创建集群对等关系"]。
+* 您必须 link:../peering/create-intercluster-svm-peer-relationship-93-later-task.html["创建群集间 SVM 对等关系"]。
+
 
 
 
@@ -247,6 +270,12 @@ TIP: 要使用命令行界面配置SnapMirror活动同步、请参见 xref:../ta
 在使用卷粒度快照重新同步SnapMirror关系时、您可以使用标志保留卷粒度快照 `-preserve`。系统会保留比一致性组快照更新的卷粒度快照。如果没有一致性组快照、则无法在重新同步操作中传输任何卷粒度快照。
 
 .开始之前
+* 从 ONTAP 9.20.1 开始，您可以在现有 FC 结构上配置后端 SnapMirror 复制。如果要使用 FC 结构进行复制，则必须link:..//data-protection/configure-backend-fc-replication.html["配置系统以进行后端 FC 复制"]。您还必须：
++
+** 创建要在 FC 结构上进行复制的异步 SnapMirror 关系时，请选择 FC 作为传输协议。默认情况下，后端复制使用 IP 协议。
+** 使用受支持的异步保护策略。link:../data-protection/default-protection-policies-concept.html["了解后端 FC 复制支持哪些默认异步数据保护策略"]。
+
+
 * SnapMirror异步保护仅适用于一个一致性组。分层一致性组不支持此功能。要将分层一致性组转换为单个一致性组、请参见 xref:modify-geometry-task.html[修改一致性组架构]。
 * 源集群和目标集群中的策略标签必须匹配。
 * 您可以无干扰地运行 xref:modify-task.html#add-volumes-to-a-consistency-group[将卷添加到一致性组] 具有活动的SnapMirror异步关系。对一致性组进行任何其他更改都需要中断SnapMirror关系、修改一致性组、然后重新建立并重新同步此关系。
@@ -275,6 +304,109 @@ NOTE: 对于采用SnapMirror异步的一致性组、支持的最小计划(恢复
 . 此一致性组需要初始化和同步。返回到*一致性组*菜单，确认同步已成功完成。旁边会显示*SnapMirror (Remote)*状态 `Protected` image:../media/icon_shield.png["屏蔽图标"]。
 
 
+
+
+[[configure-snaplock-for-snapvault-replication-from-a-non-snaplock-source]]
+=== 为非 SnapLock 源配置 SnapLock 以进行 SnapVault 复制
+
+从 ONTAP 9.20.1 开始，您可以将一致性组从非 SnapLock 源卷复制到 SnapLock for SnapVault 目标卷。目标上受 SnapLock for SnapVault 保护的快照无法被意外或恶意删除。
+
+.开始之前
+* 您应该link:../system-admin/manage-license-task.html["验证是否已安装SnapLock许可证"]。如果节点上未安装 SnapLock 许可证，则必须link:..//system-admin/install-license-task.html["安装它"]。此许可证包含在link:..//system-admin/manage-licenses-concept.html["ONTAP One"]中。
+* 两个集群节点上的 link:..//snaplock/initialize-complianceclock-task.html["必须初始化合规时钟"]。
+* 您可以为现有 FC 光纤上的 SnapVault 复制配置后端 SnapLock。如果要使用 FC 光纤进行复制，则必须 link:..//data-protection/configure-backend-fc-replication.html["配置系统以进行后端 FC 复制"]。您还必须：
++
+** 创建要通过 FC 结构复制的 SnapLock for SnapVault 关系时，请选择 FC 作为传输协议。默认情况下，后端复制使用 IP 协议。
+** 使用 MirrorAndVault 异步保护策略..
+
+
+
+
+.步骤
+使用 System Manager 或 CLI 配置 SnapLock 以用于 SnapVault 复制关系
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+在 System Manager 中，通过选择 _vault_ 复制策略，然后选择锁定目标快照，为 SnapVault 启用 SnapLock。
+
+. 在 System Manager 中，选择 *“保护” > “一致性组”*。
+. 选择一致性组，然后选择*保护*。
++
+System Manager 自动填充源端信息。
+
+. 选择目标集群和 Storage VM 。
+. 选择保护策略。
++
+您必须选择使用保留规则配置的 _vault_ 复制策略。在 ONTAP 9.20.1 及更高版本中，要使用后端 FC 复制，您必须选择 _MirrorAndVault_ 策略。
+
+. 选择*锁定目标一致性组*。
+. 请确保已选择*初始化关系*。
+. 选择 * 保存 * 。
+
+
+--
+.命令行界面
+--
+. 为源一致性组创建 SnapLock 目标卷：
++
+[source, cli]
+----
+volume create -vserver <dst_svm> -volume <dst_vol> -aggregate <aggr> -size <size> -type DP -snaplock-type enterprise
+----
+. 创建 SnapMirror 保管库策略：
++
+[source, cli]
+----
+snapmirror policy create -vserver <dst_svm> -policy <policy_name> -type vault
+----
+. 将保留规则添加到策略：
++
+[source, cli]
+----
+snapmirror policy add-rule -vserver <dst_svm> -policy <policy_name> -snapmirror-label daily -keep <retention_length> -retention-period <retention_period>
+----
++
+在以下示例中，保留期设置为 1 年：
+
++
+`snapmirror policy add-rule -vserver svm1 -policy vault -snapmirror-label monthly -keep 12 -retention-period "1 years"`
+
++
+在以下示例中，保留期设置为 30 天：
+
++
+`snapmirror policy add-rule -vserver svm1 -policy vault -snapmirror-label daily -keep 30 -retention-period "30 days"`
+
+. 创建 SnapLock for SnapVault 关系：
++
+[source, cli]
+----
+snapmirror create -source-path <src_svm>:/cg/<src_cg> -destination-path <dst_svm>:/cg/<dst_cg> -policy <policy_name>
+----
+. 初始化关系：
++
+[source, cli]
+----
+snapmirror initialize -destination-path <dst_svm>:<dst_vol>
+----
+. 确认已建立关系：
++
+[source, cli]
+----
+snapmirror show -destination-path <dst_svm>:<dst_vol> -fields policy,status,state
+----
+. 验证快照在目标上是否已锁定：
++
+[source, cli]
+----
+volume snapshot show -vserver <dst_svm> -volume <dst_vol> -fields snapshot,snaplock-expiry-time,is-snaplock-expiry-locked
+----
+
+
+--
+====
 
 
 [[configure-svm-disaster-recovery]]

@@ -4,7 +4,7 @@ permalink: task_cp_dashboard_tour.html
 keywords: netapp, ontap, cluster, performance, dashboard, cluster dashboard, headroom, cpu, cpus, usage, latency, guided setup, guided set up, performance values, workload, work load, peak usage 
 summary: System Manager信息板可从一个集中位置快速全面地查看集群。 
 ---
-= 了解 ONTAP System Manager 仪表板上的集群管理
+= 从 ONTAP System Manager 仪表板查看集群信息
 :hardbreaks:
 :toclevels: 1
 :allow-uri-read: 
@@ -18,7 +18,7 @@ summary: System Manager信息板可从一个集中位置快速全面地查看集
 [role="lead"]
 System Manager信息板可从一个位置快速全面地查看您的ONTAP集群。
 
-使用System Manager信息板、您可以查看有关重要警报和通知、存储层和卷的效率和容量、集群中可用的节点、高可用性(HA)对中节点的状态、最活跃的应用程序和对象、 以及集群或节点的性能指标。
+从 System Manager 仪表板，您可以查看有关群集运行状况、容量、网络和性能的信息，包括重要警报、存储层和卷的效率和容量、群集节点的状态和可用性、最活跃的应用程序和对象以及性能指标。
 
 从 ONTAP 9.19.1 开始，SVM 管理员可以使用 ONTAP System Manager 中的专用 SVM 管理员仪表板来监控和管理自己的 SVM。有关详细信息，请参见link:task-svm-admin-dashboard-sm.html["使用 System Manager 管理和监控 SVM"]。
 
@@ -26,43 +26,47 @@ System Manager信息板可从一个位置快速全面地查看您的ONTAP集群�
 
 
 
-[[health]]
-== 运行状况
+[[view-the-cluster-health]]
+== 查看集群运行状况
 
-运行状况视图可显示有关集群中所有可发现节点的整体运行状况信息。
+在 ONTAP System Manager 仪表板的 *Health* 部分，您可以查看有关集群的一般信息，例如其名称、ONTAP 版本和创建日期。您还可以查看集群节点的整体运行状况、集群级错误、警告、警报以及旨在提高集群性能的建议修改。
 
-此外、运行状况视图还会显示集群级别的错误和警告、例如未配置的节点详细信息、指示可以修改以提高集群性能的特征。
+从 ONTAP 9.20.1 开始，在集群或存储虚拟机（SVM）证书过期前 30 天会显示运行状况警报。该警报每天都会更新，以显示距离过期的剩余天数。您可以将默认的 30 天警报阈值修改为 0 到 90 之间的任何天数，将其禁用以不显示任何警报，或者禁止显示已过期证书的警报，同时继续接收即将过期的警报。
 
-单击 image:icon_arrow.gif["箭头图标"] 以展开"Health"视图、以获取集群概况、例如集群名称、版本、集群创建日期和时间等。您还可以监控与集群关联的节点的运行状况相关的统计信息。您可以管理用于对环境中的资源进行分组和标识的标记。"洞察力"部分可帮助您优化系统的容量、安全合规性和配置。
+* 要查看集群健康信息，请选择仪表板上 *健康* 旁边的 image:icon_arrow.gif["箭头图标"]。
+* 要修改证书到期设置，请选择警报，然后选择*证书设置*。
 
 
 
-[[capacity]]
-== Capacity
 
-容量视图可显示集群的存储空间。您可以查看已用总逻辑空间、已用总物理空间和可用磁盘空间。
+[[view-the-cluster-capacity]]
+== 查看集群容量
 
-您可以选择向ActiveIQ注册以查看历史集群数据。单击 image:icon_arrow.gif["箭头图标"] 以展开容量视图、以查看与集群关联的层的概述。您可以查看有关每个层的容量信息：总空间、已用空间和可用空间。此时将显示吞吐量、IOPS和延迟的详细信息。link:./concepts/capacity-measurements-in-sm-concept.html["在System Manager中详细了解这些容量测量结果"](英文)
+在 ONTAP System Manager 仪表板的*容量*部分中，您可以查看集群的存储空间。您可以查看已使用的总逻辑空间、已使用的总物理空间和可用磁盘空间。
+
+您可以选择向 ActiveIQ 注册以查看历史集群数据。
+
+选择仪表板上 *容量* 旁边的 image:icon_arrow.gif["箭头图标"]，查看集群容量信息，包括与集群关联的层的概述，例如总空间、已用空间和可用空间。此外，还会显示吞吐量、IOPS 和延迟的详细信息。link:./concepts/capacity-measurements.html["了解 ONTAP 如何报告已用存储"]。
 
 您可以使用容量视图选择添加本地层或云层。有关详细信息，请参阅 link:task_admin_monitor_capacity_in_sm.html["查看集群的容量"]。
 
 
 
-[[network]]
-== 网络
+[[view-the-cluster-network]]
+== 查看集群网络
 
-网络视图可显示网络中的物理端口、网络接口和Storage VM。
+在 ONTAP System Manager 仪表板的 *网络* 部分，您可以查看网络中的物理端口、网络接口和存储 VM。
 
 网络视图显示连接到网络的客户端的类型。其中每个网络连接客户端均由一个数字表示(例如、"NVMe/FC 16")。选择该数字可查看有关每个网络元素的特定详细信息。
 
-单击 image:icon_arrow.gif["箭头图标"] 可查看涵盖网络上的端口、网络接口、Storage VM和主机的网络全屏视图。
+选择仪表板上 *网络* 旁边的 image:icon_arrow.gif["箭头图标"] ，以查看包含网络上的端口、网络接口、存储虚拟机和主机的网络扩展全页视图。
 
 
 
-[[performance]]
-== 性能
+[[view-the-cluster-performance]]
+== 查看集群性能
 
-性能视图可显示性能统计信息、以帮助监控ONTAP集群的运行状况和效率。这些统计信息包括以图形表示的关键集群性能指标、例如延迟、吞吐量和IOPS。
+在 ONTAP System Manager 仪表板的 *性能* 部分，您可以查看性能统计信息，以帮助监控 ONTAP 集群的运行状况和效率。这些统计数据包括以图形表示的关键集群性能指标，如延迟、吞吐量和 IOPS。
 
 性能视图按天、小时、周或年显示不同时间间隔的性能统计信息。您可以使用各种图形快速分析集群性能、并确定可能需要优化的特征。此快速分析可帮助您确定如何添加或移动工作负载。您还可以查看峰值使用时间以规划潜在的更改。
 
@@ -72,4 +76,4 @@ System Manager信息板可从一个位置快速全面地查看您的ONTAP集群�
 
 性能值每 3 秒刷新一次，性能图每 15 秒刷新一次。如果有关集群性能的信息不可用、则不会显示图形。
 
-单击 image:icon-expansion-arrows.png["扩展图标"] 可按小时、天、周、月和年查看性能指标的全页视图。您还可以下载本地系统中的性能指标报告。
+选择控制面板上 *性能* 旁边的 image:icon-expansion-arrows.png["扩展图标"]，即可按小时、天、周、月和年查看性能指标的全页视图。您还可以将性能指标报告下载到本地系统。

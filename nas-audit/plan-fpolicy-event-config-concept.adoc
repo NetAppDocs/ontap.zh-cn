@@ -18,13 +18,13 @@ summary: 在配置 FPolicy 事件之前，您必须了解创建 FPolicy 事件�
 [[what-it-means-to-create-an-fpolicy-event]]
 == 创建 FPolicy 事件的含义
 
-创建 FPolicy 事件意味着定义 FPolicy 进程需要用于确定要监控的文件访问操作以及应将哪些受监控事件通知发送到外部 FPolicy 服务器的信息。FPolicy 事件配置定义了以下配置信息：
+创建 FPolicy 事件意味着定义 FPolicy 进程需要的信息，以确定要监视哪些文件访问操作以及应将哪些受监视事件通知发送到外部 FPolicy 服务器。FPolicy 事件配置定义了以下配置信息：
 
 * Storage Virtual Machine （ SVM ）名称
 * 事件名称
 * 要监控的协议
 +
-从ONTAP 9.15.1开始、FPolicy可以监控SMB、NFSv3、NFSv4以及NFSv4.1文件访问操作。
+FPolicy 可以监控 SMB、NFSv3、NFSv4、NFSv4.1（从 ONTAP 9.15.1 开始）和 S3（从 ONTAP 9.20.1 开始）文件访问操作。
 
 * 要监控的文件操作
 +
@@ -104,16 +104,13 @@ _ 协议 _
 * `cifs`
 * `nfsv3`
 * `nfsv4`
+* `nfsv4.1` （从 ONTAP 9.15.1 开始）
+* `s3`（从 ONTAP 9.20.1 开始）
 
 
 [NOTE]
 ====
 如果指定 `-protocol`则必须在中指定有效值 `-file-operations` 参数。协议版本发生变化时，有效值可能会发生变化。
-
-====
-[NOTE]
-====
-从ONTAP 9.15.1开始、您可以通过NFSv4捕获NFSv4.0和NFSv4.1事件。
 
 ==== a| 
 `-protocol` `protocol`
@@ -135,6 +132,9 @@ _File operations_
 * `getattr` 获取属性操作
 * `link` 用于链路操作
 * `lookup` 查找操作
+* `object_create` 用于 S3 文件操作
+* `object_delete` 用于 S3 文件操作
+* `object_tag` 用于 S3 文件操作
 * `open` 用于文件打开操作
 * `read` 用于文件读取操作
 * `write` 用于文件写入操作
@@ -163,11 +163,17 @@ _Filters_
 如果指定 `-filters` 参数、则还必须为指定有效值 `-file-operations` 和 `-protocol` parameters
 
 ====
-* `monitor-ads` 用于筛选客户端对备用数据流的请求的选项。
 * `close-with-modification` 用于筛选客户端请求以关闭并修改的选项。
 * `close-without-modification` 用于筛选客户端请求以进行关闭而不进行修改的选项。
 * `first-read` 用于筛选客户端请求以进行首次读取的选项。
 * `first-write` 用于筛选客户端请求以进行首次写入的选项。
+* `monitor-ads` 用于筛选客户端对备用数据流的请求的选项。
+* `object-create-with-put` 选项来筛选 S3 对象。
+* `object-create-with-copy` 用于筛选 S3 对象的选项。
+* `object-create-with-complete-mpu` 选项来筛选 S3 对象。
+* `exclude-multi-delete` 选项来筛选 S3 对象。
+* `object-tag-put` 用于筛选 S3 对象的选项。
+* `object-tag-delete` 选项来筛选 S3 对象。
 * `offline-bit` 用于筛选脱机位集的客户端请求的选项。
 +
 设置此筛选器会使 FPolicy 服务器仅在访问脱机文件时收到通知。

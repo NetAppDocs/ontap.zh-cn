@@ -1,0 +1,96 @@
+---
+sidebar: sidebar 
+permalink: data-protection/modify-svm-dr-dest-vol-capacity-task.html 
+keywords: netapp, ontap, system manager, data, VM, resynchronize, resynchronization, resync, source, SVM, source SVM, source storage VM, destination, destination storage VM, destination SVM, protection, relationship, protection relationship, relationships, capacity 
+summary: 从 ONTAP 9.20.1 开始，存储管理员和数据保护管理员可以调整 SVM DR 目标卷上的一些卷容量属性，使目标自动调整大小限制与源增长保持一致，以增加目标保留的快照预留，并且服务提供商管理员可以根据目标容量准确管理多租户 DR 客户。 
+---
+= 修改 ONTAP SVM DR 关系中的目标卷容量
+:hardbreaks:
+:toclevels: 1
+:allow-uri-read: 
+:toclevels: 1
+:nofooter: 
+:icons: font
+:linkattrs: 
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.20.1 开始，存储管理员和数据保护管理员可以调整 SVM DR 目标卷上的一些卷容量属性，使目标自动调整大小限制与源增长保持一致，以增加目标保留的快照预留，并且服务提供商管理员可以根据目标容量准确管理多租户 DR 客户。
+
+
+
+[[adjust-the-maximum-size-svm-dr-destination-volumes-can-grow-automatically]]
+== 调整 SVM DR 目标卷可自动增长的最大大小
+
+.步骤
+. 要修改卷的最大自动大小值，请输入以下命令：
++
+`volume modify -vserver <dest svm name> -volume <vol name> -max-autosize <integer>`
+
++
+示例
+
++
+[listing]
+----
+volume modify -vserver svmdr_dst -volume vol1 -max-autosize 10TB
+----
+
+
+
+
+[[adjust-the-minimum-size-svm-dr-volumes-can-shrink-automatically]]
+== 调整 SVM DR 卷可以自动收缩的最小大小
+
+. 要修改卷的最小自动大小值，请输入以下命令：
++
+`volume modify -vserver <dest svm name> -volume vol1 -min-autosize <integer>`
+
++
+示例
+
++
+[listing]
+----
+volume modify -vserver svmdr_dst -volume vol1 -min-autosize 1TB
+----
+
+
+
+
+[[change-the-volumes-autosize-mode]]
+== 更改卷的自动调整大小模式
+
+. 要更改自动调整大小模式，请输入以下命令：
++
+`volume modify -vserver svmdr_dst -volume vol1 -autosize-mode`
+
++
+示例
+
++
+[listing]
+----
+volume modify -vserver svmdr_dst -volume vol1 -autosize-mode grow
+----
+
+
+
+
+[[adjust-the-amount-of-space-reserved-for-snapshots]]
+== 调整为快照预留的空间量
+
+. 要更改为快照保留的空间百分比，请输入以下命令：
++
+`volume modify -vserver <dest svm name> -volume <vol name> -percent-snapshot-space <integer>`
+
++
+示例
+
++
+[listing]
+----
+volume modify -vserver svmdr_dst -volume vol1 -percent-snapshot-space 25
+----
+

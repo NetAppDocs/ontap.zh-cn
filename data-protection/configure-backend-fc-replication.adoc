@@ -1,0 +1,223 @@
+---
+permalink: data-protection/configure-backend-fc-replication.html 
+sidebar: sidebar 
+keywords: configure, backend, FC, replication 
+summary: 从 ONTAP 9.20.1 开始，您可以通过现有光纤通道 （FC） 结构配置后端 SnapMirror 异步复制以及适用于 SnapVault 的 SnapLock。要通过 FC 启用数据复制，必须配置后端 FC 复制。。 
+---
+= 将 ONTAP 系统配置为通过 FC 进行后端复制
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.20.1 开始，您可以通过现有光纤通道 （FC） 网络结构配置后端 SnapMirror 异步复制和 SnapLock for SnapVault。要通过 FC 启用数据复制，必须配置后端 FC 复制。
+
+
+NOTE: 通过 FC 配置后端复制时，FC 架构和集群间 IP 网络都必须正常运行。复制数据可以通过 FC 架构传输，但集群通信和复制管理功能需要集群间 IP 网络。
+
+.关于此任务
+通过 FC 进行后端复制时，不支持直连 FC 配置和使用自动结构分区的配置。
+
+.开始之前
+源和目标集群上的节点必须满足下列配置要求：
+
+* 至少需要四个存储节点参与复制关系：源集群中的两个节点和目标集群中的两个节点。
+* 每个节点必须至少配置以下端口：
++
+** 2 个专用 FC 启动器端口
+** 2 个 FC 目标端口，用于 FC 前端连接
+** 2 个 FC 目标端口，用于 FC 后端连接
+
+
+* 连接源和目标集群的交换矩阵必须至少有 16 个可用端口，以及专用于后端流量的匹配 SFP。详细了解 link:../san-config/fc-config-best-practices.html["FC 结构配置最佳实践"]。
+* 为了保证链路稳定性，复制路径中的所有 HBA、SFP 和交换机端口都应以相同的固定速度运行。
+
+
+.步骤
+. 确定源和目标集群上用作后端启动器的 FC 网络适配器：
++
+[source, cli]
+----
+network fcp adapter show
+----
++
+在以下示例中，ssan-a50-06a-06b 是源集群，ssan-a50-07a-07b 是目标集群。源集群的示例输出如下：
+
++
+[listing]
+----
+ssan-a50-06a-06b::*>network fcp adapter show
+                  Connection  Port    Admin    Operational
+Node         Adapter  Established Address Status   Status
+------------ -------- ----------- ------- -------- ---------------
+ssan-a50-06a 3a       false       0       up       link not connected
+ssan-a50-06a 3b       false       0       up       link not connected
+ssan-a50-06a 3c       false       0       up       link not connected
+ssan-a50-06a 3d       false       0       up       link not connected
+ssan-a50-06b 3a       false       0       up       link not connected
+ssan-a50-06b 3b       false       0       up       link not connected
+ssan-a50-06b 3c       false       0       up       link not connected
+ssan-a50-06b 3d       false       0       up       link not connected
+----
++
+目标集群的示例输出如下所示：
+
++
+[listing]
+----
+ssan-a50-07a-07b::*>network fcp adapter show
+ssan-a50-07a 3a       false       0       up       link not connected
+ssan-a50-07a 3b       false       0       up       link not connected
+ssan-a50-07a 3c       false       0       up       link not connected
+ssan-a50-07a 3d       false       0       up       link not connected
+ssan-a50-07b 3a       false       0       up       link not connected
+ssan-a50-07b 3b       false       0       up       link not connected
+ssan-a50-07b 3c       false       0       up       link not connected
+ssan-a50-07b 3d       false       0       up       link not connected
+----
+. 在源和目标集群上复制关系中的每个节点上配置 2 个启动器模式端口：
++
+.. 使适配器脱机：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter> -status-admin down
+----
++
+在以下示例中，端口 3c 脱机。
+
++
+[listing]
+----
+network fcp adapter modify -node ssan-a50-06a -adapter 3c -status-admin down
+----
+.. 将适配器配置为启动器模式：
++
+[source, cli]
+----
+system hardware unified-connect modify -t initiator <adapter_port>
+----
++
+请勿重新启动节点以应用适配器修改。在配置所有必需的适配器并将其重新联机后，为每个节点执行存储故障转移，以无中断地应用更改。
+
+.. 使适配器联机：
++
+[source, cli]
+----
+network fcp adapter modify -node <node_name> -adapter <adapter> -status-admin up
+----
+.. 对需要配置为启动器模式的每个端口重复这些步骤。
+.. 验证所有端口是否联机并配置为启动器：
++
+[source, cli]
+----
+network fcp adapter show
+----
+
+
+. 在为 FC 复制配置的每个 HA 对上执行手动存储故障转移。
++
+存储故障转移使得适配器修改得以完成，而无需进行中断性节点重新启动。
+
++
+.. 对 HA 对中的第一个节点执行存储故障转移：
++
+[source, cli]
+----
+storage failover takeover
+----
+.. 验证存储故障转移是否成功：
++
+[source, cli]
+----
+storage failover show-takeover
+----
++
+默认情况下，自动交还处于启用状态。节点被接管并完成重新启动后，伙伴节点会自动发起交还。
+
+.. 完成第一个节点的自动交回后，对 HA 对中的第二个节点执行存储故障转移。
+.. 在为 FC 复制配置的每个 HA 对上重复存储故障转移步骤。
+
+
+. 确认正在为 FC 复制配置的所有节点上的网络 FC 端口已联机并已配置为启动器：
++
+[source, cli]
+----
+system hardware unified-connect show
+----
+. 验证板载系统 FC 适配器是否配置为目标：
++
+[source, cli]
+----
+network fcp adapter show
+----
++
+默认情况下，板载系统适配器配置为目标。
+
+. 使用推荐的布线图完成 FC 目标端口和启动器端口之间的 FC 布线。
+. 布线后，对每个 HA 对的 FC 目标和启动器端口进行分区。
++
+每个区域只能有一个启动器和一个目标。
+
++
+以下是在节点 san-a50-06a/6b 和 san-a50-07a/7b 之间创建的区域的示例：
+
++
+[listing]
+----
+zone-6a-7a-1 → Ports san-a50-06a:3c & san-a50-07a:3a
+zone-6a-7a-2 → Ports san-a50-06a:3d & san-a50-07a:3a
+zone-6a-7a-3 → Ports san-a50-06a:3c & san-a50-07a:3b
+zone-6a-7a-4 → Ports san-a50-06a:3d & san-a50-07a:3b
+zone-6b-7a-1 → Ports san-a50-06b:3c & san-a50-07a:3a
+zone-6b-7a-2 → Ports san-a50-06b:3d & san-a50-07a:3a
+zone-6b-7a-3 → Ports san-a50-06b:3c & san-a50-07a:3b
+zone-6b-7a-4 → Ports san-a50-06b:3d & san-a50-07a:3b
+zone-6a-7b-1 → Ports san-a50-06a:3c & san-a50-07b:3a
+zone-6a-7b-2 → Ports san-a50-06a:3d & san-a50-07b:3a
+zone-6a-7b-3 → Ports san-a50-06a:3c & san-a50-07b:3b
+zone-6a-7b-4 → Ports san-a50-06a:3d & san-a50-07b:3b
+zone-6b-7b-1 → Ports san-a50-06b:3c & san-a50-07b:3a
+zone-6b-7b-2 → Ports san-a50-06b:3d & san-a50-07b:3a
+zone-6b-7b-3 → Ports san-a50-06b:3c & san-a50-07b:3b
+zone-6b-7b-4 → Ports san-a50-06b:3d & san-a50-07b:3b
+----
+. 在源集群上，然后在目标集群上创建后端 FC 目标网络接口（LIF）：
++
+[source, cli]
+----
+network interface create -vserver <SVM> -lif <fcp_backend_target_lif> -data-protocol fcp -home-node <home_node> -home-port <home_port> -status-admin up
+----
++
+在以下示例中，在群集 A 上创建后端 FC LIF：ssan-a50-06a。
+
++
+[listing]
+----
+network interface create -vserver ssan-a50-06a -lif fcp_backend_target_lif_1 -data-protocol fcp -home-node ssan-a50-06a -home-port 3a -status-admin up
+network interface create -vserver ssan-a50-06a -lif fcp_backend_target_lif_2 -data-protocol fcp -home-node ssan-a50-06a -home-port 3b -status-admin up
+network interface create -vserver ssan-a50-06b -lif fcp_backend_target_lif_1 -data-protocol fcp -home-node ssan-a50-06b -home-port 3a -status-admin up
+network interface create -vserver ssan-a50-06b -lif fcp_backend_target_lif_2 -data-protocol fcp -home-node ssan-a50-06b -home-port 3b -status-admin up
+----
++
+在以下示例中，在群集 B 上创建后端 FC LIF：ssan-a50-07a
+
++
+[listing]
+----
+network interface create -vserver ssan-a50-07a -lif fcp_backend_target_lif_1 -data-protocol fcp -home-node ssan-a50-07a -home-port 3a -status-admin up
+network interface create -vserver ssan-a50-07a -lif fcp_backend_target_lif_2 -data-protocol fcp -home-node ssan-a50-07a -home-port 3b -status-admin up
+network interface create -vserver ssan-a50-07b -lif fcp_backend_target_lif_1 -data-protocol fcp -home-node ssan-a50-07b -home-port 3a -status-admin up
+network interface create -vserver ssan-a50-07b -lif fcp_backend_target_lif_2 -data-protocol fcp -home-node ssan-a50-07b -home-port 3b -status-admin up
+----
+. 验证是否已创建 LIF：
++
+[source, cli]
+----
+network interface show -vserver <SVM>
+----
+
+
+.下一步是什么？
+您已准备好link:create-replication-relationship-task.html["配置 SnapMirror 复制"]使用 FC 作为后端传输协议。

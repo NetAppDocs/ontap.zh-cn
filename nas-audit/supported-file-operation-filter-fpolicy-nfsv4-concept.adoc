@@ -17,10 +17,12 @@ summary: 在配置 FPolicy 事件时，您需要注意，在监控 NFSv4 文件�
 
 从 ONTAP 9.19.1 开始，管理员可以在 SVM 级别控制 NFSv4.2 的可用性，使用 System Manager、CLI 或 REST API 为各个存储 VM 启用或禁用该协议。
 
+从 ONTAP 9.20.1 开始，FPolicy 支持监控 NFSv4.2 文件访问事件，包括扩展属性（xattr）写入的新文件操作和标记 NFS 活动的安全标签筛选器。详细了解 link:../nfs-admin/enable-disable-nfs-task.html["为 ONTAP SVM 启用或禁用 NFS"]。
 
-NOTE: 不支持对 NFSv4.2 文件访问事件的 FPolicy 监视。如果配置 FPolicy 监控，则需要在 SVM 上禁用 NFSv4.2。有关参考信息，请参阅 link:../nfs-admin/enable-disable-nfs-task.html["为 ONTAP SVM 启用或禁用 NFS"]。
 
-下表列出了对NFSv4或NFSv4.1文件访问事件执行FPolicy监控时支持的文件操作和筛选器组合：
+NOTE: 安全标签筛选器(`setattr_with_security_label_change`和 `getattr_with_security_label_read`）要求在 SVM 上启用 NFSv4.2 安全标签（已标记 NFS）。了解有关 link:../nfs-admin/enable-nfsv42-security-labels-task.html["启用 NFSv4.2 安全标签"] 的详细信息。 `getxattr`和 `listxattrs`是只读操作，不受 FPolicy 监控。
+
+下表提供了 NFSv4、NFSv4.1 或 NFSv4.2 文件访问事件的 FPolicy 监控支持的文件操作和筛选器组合列表：
 
 [cols="30,70"]
 |===
@@ -67,7 +69,7 @@ delete_dir
  a| 
 getattr
  a| 
-脱机位，排除目录
+offline-bit, exclude-directory getattr_with_security_label_read （从 ONTAP 9.20.1 开始，支持此过滤器，需要标记的 NFS）
 
 
 
@@ -123,7 +125,21 @@ rename_dir
  a| 
 SETATTR
  a| 
-脱机位， setattr_and_owner_change ， setattr_and_group_change ， setattr_and_mode_change ， setattr_and_sacl_change ， setattr_and_dacl_change ， setattr_and_modify_time_change ， setattr_and_access_time_change ， setattr_and_size_change ， exclude_directory
+offline-bit, setattr_with_owner_change, setattr_with_group_change, setattr_with_mode_change, setattr_with_sacl_change, setattr_with_dacl_change, setattr_with_modify_time_change, setattr_with_access_time_change, setattr_with_size_change, exclude_directory setattr_with_security_label_change （从 ONTAP 9.20.1 开始，此过滤器受支持，并且需要 Labeled NFS）
+
+
+
+ a| 
+setxattr
+ a| 
+从 ONTAP 9.20.1 开始，此文件操作受支持，需要 Labeled NFS。当前不支持对此文件操作使用筛选器。
+
+
+
+ a| 
+removexattr
+ a| 
+从 ONTAP 9.20.1 开始，此文件操作受支持，需要 Labeled NFS。当前不支持对此文件操作使用筛选器。
 
 
 
@@ -133,7 +149,7 @@ SETATTR
 脱机位
 
 |===
-从ONTAP 9.13.1开始、用户可以收到因缺少权限而导致文件操作失败的通知。下表列出了对NFSv4或NFSv4.1文件访问事件执行FPolicy监控时支持的拒绝访问文件操作和筛选器组合：
+从 ONTAP 9.13.1 开始，用户可以接收由于缺乏权限而导致文件操作失败的通知。下表提供了 NFSv4、NFSv4.1 或 NFSv4.2 文件访问事件的 FPolicy 监控支持的拒绝访问文件操作和筛选器组合的列表：
 
 [cols="30,70"]
 |===

@@ -11,39 +11,37 @@ summary: 从 ONTAP 9.7 开始，您可以将 FlexVol 卷原位转换为 FlexGrou
 
 
 [role="lead"]
-从 ONTAP 9.7 开始，您可以将 FlexVol 卷原位转换为 FlexGroup 卷，而无需数据副本或额外的磁盘空间。
+从 ONTAP 9.7 开始，您可以将 FlexVol volume 就地转换为 FlexGroup 卷，而无需数据副本或额外的磁盘空间。当您想要将 FlexVol volume 扩展到其空间限制之外时，可以转换该卷。将 FlexVol volume 转换为 FlexGroup 卷可提供更高的性能以及自动负载分配和可扩展性。
+
+.关于此任务
+* 将 FlexVol 卷转换为 FlexGroup 卷是一项无中断操作。转换通常需要几秒钟，不会使卷脱机或重新挂载共享和导出，因此客户端可以继续访问数据。
+* FlexVol 卷上的操作和配置必须与转换过程兼容。
+* 从 ONTAP 9.20.1 开始，当您修改 FlexVol volume 容量时，ONTAP 会通过 EMS 通知和 CLI 提示提供将 FlexVol volume 转换为 FlexGroup volume 的建议。执行转换时，您可以在转换时扩展 FlexGroup volume，而无需创建与原始 FlexVol volume 容量相同的 FlexGroup volume。
+
 
 .开始之前
-* 从ONTAP 9.8开始、可以将已转换的卷转换为FlexGroup卷。
 * 要转换的 FlexVol 卷必须处于联机状态。
-* 将 FlexVol 卷转换为 FlexGroup 卷是一项无中断操作。转换通常需要几秒钟，不会使卷脱机或重新挂载共享和导出，因此客户端可以继续访问数据。
 * FlexVol 卷上的操作和配置必须与转换过程兼容。
 +
 检查以下可能阻止转换成功的条件：
 
 +
-** 已使用7MTT从7-模式过渡FlexVol卷(ONTAP 9.7)。
-+
-从ONTAP 9.8开始、可以转换已转换的卷。
-
-** 卷上启用了 FlexGroup 卷尚不支持的功能；例如，SAN LUN、Windows NFS、SMB1、快照命名/自动删除、vmalign 设置、早于 ONTAP 9.11.1 版本的 SnapLock（从 ONTAP 9.11.1 开始支持 SnapLock）、空间 SLO 或逻辑空间强制执行/报告。有关详细信息，请参阅 link:supported-unsupported-config-concept.html["支持和不支持 FlexGroup 卷的配置"]。
-** 对于早于 ONTAP 9.10.1 的版本，要转换的 FlexVol volume 所在的 SVM 当前正在使用 SVM-DR。从 ONTAP 9.10.1 开始，您可以 link:convert-flexvol-svm-dr-relationship-task.html["将 FlexVol volume 转换为 SVM-DR 源上的 FlexGroup volume"]。
-** NetApp FlexClone 卷存在，且 FlexVol 卷是父卷。要转换的卷不能是父卷或克隆卷。
-** 此卷是NetApp FlexCache初始卷。
+** 卷上尚未被 FlexGroup 卷支持的任何内容都已被禁用或删除；例如，SAN LUN、Windows NFS、SMB1、快照命名/自动删除、vmalign set、早于 ONTAP 9.11.1 版本的 SnapLock（从 ONTAP 9.11.1 开始支持 SnapLock）、空间 SLO 或逻辑空间强制/报告。有关详细信息，请参见 link:supported-unsupported-config-concept.html["支持和不支持 FlexGroup 卷的配置"]。
+** 对于早于 ONTAP 9.10.1 的版本，在拥有 FlexVol 卷的 SVM 上禁用 SVM-DR。从 ONTAP 9.10.1 开始，您可以 link:convert-flexvol-svm-dr-relationship-task.html["将 FlexVol volume 转换为 SVM-DR 源上的 FlexGroup volume"]。
+** FlexVol 卷不能是 NetApp FlexClone 卷的父级。要转换的卷不能是父卷或克隆卷。
+** 该卷不能是 NetApp FlexCache 源卷。
 ** 对于ONTAP 9.7及更早版本、NetApp快照不能超过255个。对于ONTAP 9.8及更高版本、支持1023个快照。
-** 已启用存储效率。必须禁用这些功能、并可在转换后重新启用。
-** 此卷是SnapMirror关系的源、尚未转换此目标。
-** 此卷属于活动(非静音) SnapMirror关系。
+** 您无法转换使用 7MTT 从 7-Mode 过渡的 FlexVol 卷（ONTAP 9.7）。从 ONTAP 9.8 开始，您可以转换已过渡的卷。
+** 卷不得与应用程序关联。这仅适用于 ONTAP 9.7。ONTAP 9.8 中移除了此限制。
+** 存储效率已被禁用。转换后可以重新启用。
+** 如果卷是 SnapMirror 关系的源，并且目标尚未转换，则无法转换。
+** 如果卷是活动（未停顿）的 SnapMirror 关系的一部分，则必须停顿该关系。
 ** 此卷上的 Autonomous Ransomware Protection 已被禁用。在转换完成之前，您不应再次启用此功能。
-** 已启用配额。必须禁用这些功能、并可在转换后重新启用。
-** 卷名称长度超过197个字符。
-** 卷与应用程序关联。
-+
-这仅适用于ONTAP 9.7。在ONTAP 9.8中已删除此限制。
-
-** ONTAP进程正在运行、例如镜像、作业、waflIron、NDMP备份、 和正在进行的Inode转换。
-** 此卷是SVM根卷。
-** 卷过满。
+** 配额已被禁用。转换后可以重新启用。
+** 卷名不超过 197 个字符。
+** ONTAP 进程不得处于运行状态，例如镜像、作业、wafliron、NDMP 备份以及正在进行的 inode 转换。
+** 卷不能是 SVM 根卷。
+** 卷不能太满。
 +
 如果存在上述任何不符合性、则在FlexVol卷和卷转换中止的情况下会生成错误消息。您可以采取更正操作并重试转换。
 

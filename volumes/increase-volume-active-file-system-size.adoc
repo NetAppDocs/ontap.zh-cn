@@ -11,19 +11,16 @@ summary: 如果要将卷从不支持专用卸载处理器存储效率的平台�
 
 
 [role="lead"]
-支持8k自适应压缩的平台在卷级别节省空间。 AFF C 系列平台和支持 32k 压缩的平台可在聚合级别节省空间。将卷从 8k 自适应压缩迁移到AFF C 系列平台或具有 32k 压缩的平台时，您需要通过 8k 压缩节省来增加卷的活动文件系统的大小。这可以防止卷移动期间耗尽可用空间。
+支持 8k 自适应压缩的系统可在卷级别节省空间。支持 QuickAssist 技术（QAT）32k 压缩的系统可在聚合级别节省空间。在 ONTAP 9.19.1 及更早版本中，将卷从支持 8k 自适应压缩的系统迁移到支持 QAT 和 32k 压缩的系统时，需要将卷的活动文件系统大小增加 8k 压缩节省的空间。这可以防止卷在卷移动期间耗尽可用空间。
 
-以下系统支持 32k 压缩：
+以下系统支持 QAT 和 32k 压缩：
 
-* AFF A 系列系统：AFF A90、AFF A70、AFF A50、AFF A30
-* AFF A1K
+* AFF A 系列系统：AFF A1K、AFF A90、AFF A70、AFF A50、AFF A30
 * AFF C 系列系统：AFF C80、AFF C60、AFF C30
 * FAS 系统：FAS90、FAS70、FAS50
 
 
-详细了解link:../concepts/builtin-storage-efficiency-concept.html["支持 32k 压缩的AFF和FAS平台"] 。
-
-查看link:https://hwu.netapp.com/["Hardware Universe"^]以获取AFF C 系列平台的完整列表。
+详细了解link:../concepts/builtin-storage-efficiency-concept.html["支持 QAT 和 32k 压缩的 AFF 和 FAS 平台"]。
 
 .关于此任务
 如果您使用卷移动操作迁移数据，请执行以下步骤。如果您使用SnapMirror操作迁移数据，则无需手动增加活动文件系统的大小。  SnapMirror目标卷默认使用卷自动调整大小，因此由于在聚合层而不是卷层实现压缩节省，预计不会耗尽空间。

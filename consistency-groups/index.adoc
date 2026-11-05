@@ -67,17 +67,30 @@ NOTE: 在 ONTAP 9.13.1 中，您只能使用 ONTAP REST API 检索历史指标�
 [[protect-consistency-groups]]
 == 保护一致性组
 
-一致性组提供应用程序一致性保护，确保跨多个卷或 LIF 的数据一致性。创建一致性组的快照时，会在一致性组上建立"围栏"。在快照操作完成之前，围栏会启动 I/O 队列，以确保一致性组中所有实体的数据的时间点一致性。在快照创建操作（如计划快照策略或使用 System Manager 创建快照）期间，围栏可能会导致延迟暂时激增。在 link:https://kb.netapp.com/on-prem/ontap/DM/REST-API["ONTAP REST API文档"^] 和 link:https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^] 中了解有关 ONTAP REST API 和 ONTAP CLI 上下文的更多信息。
+一致性组提供应用程序一致性保护，确保跨多个卷或 LIF 的数据一致性。创建一致性组的快照时，会在一致性组上建立"围栏"。在快照操作完成之前，围栏会启动 I/O 队列，以确保一致性组中所有实体的数据的时间点一致性。在快照创建操作（如计划快照策略或使用 System Manager 创建快照）期间，围栏可能会导致延迟暂时激增。
 
-一致性组可通过以下方式提供保护：
+一致性组可用的数据保护类型因您的 ONTAP 版本而异。
 
+[cols="2"]
+|===
+| 从 ONTAP 开始提供…… | 一致性组的数据保护 
+
+
+| 9.20.1 | link:protect-task.html#configure-snaplock-for-snapvault-replication-from-a-non-snaplock-source["SnapLock 用于 SnapVault（来自非 SnapLock 卷）"] 
+
+
+| 9.14.1. | link:../data-protection/snapmirror-svm-replication-concept.html["SVM 灾难恢复"] 
+
+
+| 9.13.1. | xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror异步] 
+
+
+| 9.10.1.  a| 
 * Snapshot 策略
 * xref:../snapmirror-active-sync/index.html[SnapMirror活动同步]
-* <<mcc>> (从ONTAP 9.11.1开始)
-* xref:../data-protection/snapmirror-disaster-recovery-concept.html[SnapMirror异步] (从ONTAP 9.13.1开始)
-* link:../data-protection/snapmirror-svm-replication-concept.html["SVM 灾难恢复"] (从ONTAP 9.14.1开始)
 
 
+|===
 创建一致性组不会自动启用保护。可以在创建一致性组时或创建一致性组之后设置本地和远程保护策略。
 
 要为一致性组配置保护、请参见 link:protect-task.html["保护一致性组"]。
@@ -125,9 +138,7 @@ NOTE: 为了获得最佳存储性能和可用性，建议您为镜像聚合保�
 [[upgrade-considerations]]
 == 升级注意事项
 
-升级到ONTAP 9．10.1或更高版本时，在System ONTAP 9．8 9.9.1中使用SnapMirror active sync (以前称为SnapMirror业务连续性)创建的一致性组将自动升级，并可在System Manager或ONTAP REST API的*存储>一致性组*下进行管理。有关从ONTAP 9．8或9．1升级link:../snapmirror-active-sync/upgrade-revert-task.html["SnapMirror主动同步升级和还原注意事项"]的详细信息，请参阅。
-
-在 ONTAP REST API 中创建的一致性组快照可以通过 System Manager 的一致性组界面和一致性组 ONTAP REST API 端点进行管理。从 ONTAP 9.14.1 开始，一致性组快照也可以使用 ONTAP CLI 进行管理。
+升级到 ONTAP 9.10.1 或更高版本时，在 ONTAP 9.8 和 9.9.1 中使用 SnapMirror 活动同步（以前称为 SnapMirror 业务连续性）创建的一致性组将自动升级，并可在 System Manager 中的 *Storage > Consistency Groups* 下或通过 ONTAP REST API 进行管理。有关从 ONTAP 9.8 或 9.9.1 升级的详细信息，请参见 link:../snapmirror-active-sync/upgrade-revert-task.html["SnapMirror主动同步升级和还原注意事项"]。
 
 
 NOTE: 使用ONTAP命令创建的快照 `cg-start` `cg-commit`不会被识别为一致性组快照、因此无法通过System Manager的一致性组界面或ONTAP REST API中的一致性组端点进行管理。从ONTAP 9.14.1开始、如果您使用的是SnapMirror异步策略、则可以将这些快照镜像到目标卷。有关详细信息，请参见 xref:protect-task.html#configure-snapmirror-asynchronous[配置SnapMirror异步]。
@@ -137,60 +148,58 @@ NOTE: 使用ONTAP命令创建的快照 `cg-start` `cg-commit`不会被识别为�
 [[supported-features-by-release]]
 == 支持的功能(按版本)
 
-[cols="3,1,1,1,1,1,1,1"]
+[cols="2"]
 |===
-|  | ONTAP 9.16.1. | ONTAP 9.15.1. | ONTAP 9.14.1 | ONTAP 9.13.1 | ONTAP 9.12.1 | ONTAP 9.11.1 | ONTAP 9.10.1 
+| 从ONTAP 开始... | 支持的功能 
 
 
-| 分层一致性组 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+| 9.20.1 | SnapLock 用于辅助系统上的 SnapVault 保护 
 
 
-| 使用快照进行本地保护 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+| 9.16.1  a| 
+多管理员验证
 
 
-| SnapMirror活动同步 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ 
+
+| 9.14.1.  a| 
+* SVM 灾难恢复（仅限单一一致性组）
+* CLI支持
 
 
-| 支持 MetroCluster | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  
 
 
-| 两阶段提交(仅限REST API) | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |  
+| 9.13.1.  a| 
+* 在子一致性组之间移动卷
+* 修改一致性组几何结构
+* 监控
+* SnapMirror异步(仅限单个一致性组)
 
 
-| 应用程序和组件标记 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 克隆一致性组 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
+| 9.12.1.  a| 
+* 添加和删除卷
+* 应用程序和组件标记
+* 克隆一致性组
+* 使用新 NAS 卷创建 CG（仅限 REST API）
+* 使用 NVMe 命名空间创建 CG（仅限 REST API）
 
 
-| 添加和删除卷 | ✓ | ✓ | ✓ | ✓ | ✓ |  |  
 
 
-| 使用新NAS卷创建CGS | ✓ | ✓ | ✓ | ✓ | 仅限REST API |  |  
+| 9.11.1.  a| 
+* MetroCluster 配置
+* 两阶段提交(仅限REST API)
 
 
-| 使用新NVMe命名卷创建CGS | ✓ | ✓ | ✓ | ✓ | 仅限REST API |  |  
 
 
-| 在子一致性组之间移动卷 | ✓ | ✓ | ✓ | ✓ |  |  |  
+| 9.10.1.  a| 
+* 分层一致性组
+* 使用快照进行本地保护
+* SnapMirror活动同步
 
 
-| 修改一致性组几何结构 | ✓ | ✓ | ✓ | ✓ |  |  |  
-
-
-| 监控 | ✓ | ✓ | ✓ | ✓ |  |  |  
-
-
-| 多管理员验证 | ✓ |  |  |  |  |  |  
-
-
-| SnapMirror异步(仅限单个一致性组) | ✓ | ✓ | ✓ | ✓ |  |  |  
-
-
-| SVM灾难恢复(仅限单个一致性组) | ✓ | ✓ | ✓ |  |  |  |  
-
-
-| CLI支持 | ✓ | ✓ | ✓ |  |  |  |  
 |===
 
 

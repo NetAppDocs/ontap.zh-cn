@@ -11,7 +11,7 @@ summary: Vscan是NetApp开发的防病毒扫描解决方案、支持客户保护
 
 
 [role="lead"]
-Vscan是NetApp开发的防病毒扫描解决方案、支持客户保护其数据免受病毒或其他恶意代码的危害。它将合作伙伴提供的防病毒软件与ONTAP功能相结合、为客户提供管理文件扫描所需的灵活性。
+Vscan 是一种防病毒扫描解决方案，可让您保护数据免受病毒或其他恶意代码的侵害。它将合作伙伴提供的防病毒软件与 ONTAP 功能相结合，为您提供管理文件扫描所需的灵活性。
 
 
 
@@ -34,6 +34,42 @@ NFS 不支持实时扫描。
 
 通常、您会在SVM上同时启用实时和按需扫描模式。在任一模式下、防病毒软件都会根据您的软件设置对受感染的文件采取补救措施。
 
-ONTAP 防病毒连接器由 NetApp 提供并安装在外部服务器上，用于处理存储系统与防病毒软件之间的通信。
+ONTAP 防病毒连接器由 NetApp 提供并安装在外部服务器上，用于处理存储系统与防病毒软件之间的通信。从 ONTAP 9.20.1 开始，ONTAP 支持基于互联网内容适配协议（ICAP）的扫描路径，从而无需使用防病毒连接器。每个 SVM 只能使用 ICAP 或防病毒连接器，不能同时使用两者。
+
+
+NOTE: 基于 ICAP 的 Vscan 仅支持访问时扫描。
+
+
+
+[[icap-based-vscan-compared-with-the-antivirus-connector]]
+== 基于 ICAP 的 Vscan 与 Antivirus Connector 的比较
+
+下表总结了 Antivirus Connector 和基于 ICAP 的 Vscan 之间的差异：
+
+[cols="30,35,35"]
+|===
+
+
+| 功能 | Antivirus Connector | 基于 ICAP 的 Vscan 
+
+
+| 组件 | Windows 服务器上安装的 ONTAP 防病毒连接器 | 不需要；ONTAP 直接连接到扫描引擎 
+
+
+| 通信协议 | SMB 命名管道和 MS-RPC | 基于 TCP 的 ICAP 
+
+
+| 基础架构 | 专用 Vscan 连接管理器 | FPolicy 共享内存通知管道 
+
+
+| 支持的扫描引擎操作系统 | 仅限 Windows | Windows 和 Linux 
+
+
+| 可扩展性 | 每个 Antivirus Connector 实例限制为 400 个 LIF 连接 | 利用 FPolicy 连接池实现更高的可扩展性 
+
+
+| 发现机制 | 基于轮询的 SVM 和 LIF 发现 | 通过 FPolicy 进行事件驱动连接管理 
+|===
+以下示例显示了 Antivirus Connector 通信方法。
 
 image:how-virus-scanning-works-new.gif["病毒扫描工作流。这说明了连接器如何处理存储系统和防病毒软件之间的通信。"]

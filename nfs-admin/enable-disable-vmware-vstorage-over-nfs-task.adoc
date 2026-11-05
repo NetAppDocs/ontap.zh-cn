@@ -11,15 +11,17 @@ summary: 您可以使用 vserver nfs modify 命令在存储虚拟机上启用或
 
 
 [role="lead"]
-您可以使用在Storage Virtual Machine (SVM)上启用或禁用对基于NFS的VMware vStorage的支持 `vserver nfs modify` 命令：
+您可以使用  `vserver nfs modify` 命令在 Storage Virtual Machine (SVM) 上启用或禁用对 VMware vStorage over NFS 的支持。此设置控制 VMware VAAI over NFS 操作，如复制卸载和空间保留。
 
 .关于此任务
 默认情况下，不支持基于 NFS 的 VMware vStorage 。
 
+从 ONTAP 9.20.1 开始，启用 VMware vStorage over ONTAP NFS 还支持对精简配置的 NFSv3 和 NFSv4.1 数据存储进行自动空间回收。
+
 .步骤
-. 显示 SVM 的当前 vStorage 支持状态：
+. 验证 SVM 的当前 VMware vStorage over NFS 设置：
 +
-`vserver nfs show -vserver vserver_name -instance`
+`vserver nfs show -vserver vserver_name -fields vstorage`
 
 . 执行以下操作之一：
 +
@@ -41,10 +43,18 @@ summary: 您可以使用 vserver nfs modify 命令在存储虚拟机上启用或
 `vserver nfs modify -vserver vserver_name -vstorage disabled`
 
 |===
+. 验证设置是否已更新：
++
+`vserver nfs show -vserver vserver_name -fields vstorage`
+
 
 
 .完成后
-您必须先安装适用于 VMware VAAI 的 NFS 插件，然后才能使用此功能。有关详细信息，请参见 _Installing the NetApp NFS Plug-in for VMware VAAI_ 。
+必须先安装 NetApp NFS Plug-in for VMware VAAI，然后才能使用此功能。自动空间回收需要 3.0 或更高版本。
+
+有关 VMware 主机、插件和互操作性要求，请参阅适用于 VMware VAAI 的 NetApp NFS 插件文档和 NetApp 互操作性矩阵工具。
 
 .相关信息
 http://mysupport.netapp.com/documentation/productlibrary/index.html?productID=61278["NetApp 文档：适用于 VMware VAAI 的 NetApp NFS 插件"^]
+
+https://mysupport.netapp.com/matrix["NetApp 互操作性表工具"^]

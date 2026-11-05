@@ -2,7 +2,7 @@
 permalink: data-protection/calculate-reclaimable-space-task.html 
 sidebar: sidebar 
 keywords: snapshot, snapshot copy, calculate, space, reclaimable 
-summary: 从ONTAP 9.10.1开始、您可以使用System Manager选择要删除的快照并计算可申请空间、然后再将其删除。 
+summary: 可以选择要删除的快照，并在删除之前计算可回收空间。 
 ---
 = 在删除快照之前计算可申请空间
 :allow-uri-read: 
@@ -11,12 +11,32 @@ summary: 从ONTAP 9.10.1开始、您可以使用System Manager选择要删除的
 
 
 [role="lead"]
-从ONTAP 9.10.1开始、您可以使用System Manager选择要删除的快照并计算可申请空间、然后再将其删除。
+可以选择要删除的快照，并在删除之前计算可回收空间。
+
+在早于 ONTAP 9.20.1 的版本中，FlexVol 卷支持计算可回收空间，而对于 FlexGroup 卷，则需要您手动合并各个 FlexGroup 成分卷的快照使用量。从 ONTAP 9.20.1 开始，您可以计算 FlexGroup 卷中快照的可回收空间。
 
 .步骤
+您可以从System Manager或ONTAP命令行界面执行此任务。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
 . 单击 * 存储 > 卷 * 。
 . 选择要从中删除快照的卷。
 . 单击“*快照*”。
 . 选择一个或多个快照。
 . 单击 * 计算可回收空间 * 。
 
+
+--
+.命令行界面
+--
+. 计算可回收空间：
++
+`volume snapshot compute-reclaimable -vserver <svm_name> -volume <volume_name> -snapshots <snap1,snap2,snap3>`
+
+
+
+--
+====

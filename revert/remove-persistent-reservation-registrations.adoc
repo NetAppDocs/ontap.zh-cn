@@ -1,0 +1,39 @@
+---
+permalink: revert/remove-persistent-reservation-registrations.html 
+sidebar: sidebar 
+keywords: revert, persistent reservation, registrations, SCSI-3, LUN, 9.20.1 
+summary: 如果任何 LUN 历史上曾超过 182 个 SCSI-3 永久保留注册，ONTAP 将阻止还原到早于 ONTAP 9.20.1 的版本。在还原之前，请检查每个 LUN 并删除所有注册。 
+---
+= 在从 ONTAP 9.20.1 还原之前删除永久保留注册
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+早于 9.20.1 的 ONTAP 版本每个 LUN 最多支持 182 个 SCSI-3 永久保留注册。从 ONTAP 9.20.1 开始，此限制增加到 256。如果任何 LUN 历史上的注册数曾超过 182 个，则无论当前注册计数如何，ONTAP 都会阻止还原。在从 9.20.1 还原到 9.19.1 之前，请识别并删除受影响 LUN 上的永久保留注册。
+
+
+IMPORTANT: 删除持久保留注册可能需要在集群环境中重新配置主机端。根据主机操作系统和集群软件的不同，您可能需要使集群资源脱机，从集群管理中删除受影响的 LUN，并在还原后重新建立集群访问。在还原之前，请查看您的集群解决方案文档并在测试环境中验证恢复工作流。
+
+.步骤
+. 检查是否有任何 LUN 历史上已超过 182 个永久保留注册：
++
+[source, cli]
+----
+lun show -field persistent-reservation-scale-tier
+----
++
+persistent-reservation-scale-tier 字段中的值超过 182 表示 LUN 已分配其他永久保留元数据。无论当前注册计数如何，这都会阻止还原。
+
+. 对于每个受影响的 LUN，显示当前活动的注册计数：
++
+[source, cli]
+----
+lun persistent-reservation show -vserver <vserver_name> -path <lun_path>
+----
+. 删除所有受影响 LUN 上的永久保留注册。
++
+运行还原预检查。如果检测到此情况，则预检查输出包括所需的特定清理命令。
+
+

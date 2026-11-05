@@ -1,8 +1,8 @@
 ---
 permalink: volumes/cautions-increasing-maximum-directory-size-concept.html 
 sidebar: sidebar 
-keywords: flexvol, maximum, limits, maxdir-size, maxdirsize, caution, caveats, directory, size, directory size, max, allowed, default, volume 
-summary: FlexVol 卷的默认最大目录大小取决于型号，并针对系统内存大小进行了优化。在增加最大目录大小之前，请联系技术支持。 
+keywords: flexvol, flexgroup, maximum, limits, maxdir-size, maxdirsize, directory, size, directory size, max, 25 million files, large directory, directory index, is-dir-index-transfer-enabled 
+summary: 您可以配置 FlexVol 卷上目录的最大大小。您应设置的最大大小取决于 ONTAP 版本和您的特定配置。ONTAP 目录大小强制功能在 ONTAP 9.20.1 中得到了增强，以支持更大的目录大小。 
 ---
 = ONTAP FlexVol 卷的最大目录大小
 :allow-uri-read: 
@@ -11,8 +11,106 @@ summary: FlexVol 卷的默认最大目录大小取决于型号，并针对系统
 
 
 [role="lead"]
-您可以使用以下方法增加特定FlexVol volume的默认最大目录大小： `-maxdir-size`选项 `volume modify`命令，但这样做可能会影响系统性能。查看link:https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_is_maxdirsize["NetApp知识库：什么是 maxdirsize？"^]。
+您可以配置 FlexVol 卷上目录的最大大小。您应设置的最大大小取决于 ONTAP 版本和您的特定配置。ONTAP 目录大小强制功能在 ONTAP 9.20.1 中得到了增强，以支持更大的目录大小。
 
-要了解有关FlexVol 卷的与型号相关的最大目录大小的详细信息、请访问 link:https://hwu.netapp.com/["NetApp Hardware Universe"^]。
 
-有关的详细信息 `volume modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/volume-modify.html["ONTAP 命令参考"^]。
+NOTE: 配置最大目录大小适用于单个 FlexVol 卷以及 FlexGroup 中的所有卷。
+
+
+
+[[considerations-for-directory-size-limit-processing]]
+== 目录大小限制处理的注意事项
+
+目录的大小取决于它所包含的文件、文件夹和其他条目的数量以及名称的长度。随着总大小的增加，它会影响性能以及 ONTAP 高效管理目录的能力。您可以使用 `maxdir-size` 命令参数限制目录的最大大小。最大目录大小针对特定卷设置一次，并应用于该卷上的每个文件夹。
+
+
+
+[[operational-characteristics]]
+=== 操作特性
+
+与建立和实施最大大小相关的 ONTAP 目录处理有几个特点。
+
+默认最大值:: 9.20.1 之前的 ONTAP 版本的默认最大目录大小为 320 MB。确切的值取决于型号，并针对平台上的系统内存量进行了优化。请参阅 https://hwu.netapp.com/["NetApp Hardware Universe"^]了解特定于型号的详细信息和默认值。
+增大最大目录大小:: 默认最大值适用于大多数支持典型业务应用程序的工作负载；大多数环境无需更改此值。如有需要，您可以使用 CLI 命令 `volume create`和 `volume modify`上的 `-maxdir-size`参数来增加允许的最大目录大小。
+建议的上限:: NetApp 通常建议不要将目录扩展到 1 GB 以上，即使已观察到某些目录可以安全地超过此大小。在 ONTAP 9.20.1 之前，过大的大小会带来性能风险。
+
+
+
+
+[[performance-considerations]]
+=== 性能注意事项
+
+目录的大小直接影响查找性能，特别是对于非常大且活跃的目录。随着目录的增长，ONTAP 会自动构建内部索引以加快名称查找，因此大多数请求不需要扫描整个目录。
+
+但是，在持续高速创建和删除文件的情况下，索引管理进程可能会落后于传入更改的速度。在某些情况下，这可能会导致出现大型的部分索引目录。在这种情况下，查找和目录列表请求可能会遇到严重的性能下降，这种情况会一直持续到索引进程赶上为止。
+
+
+
+[[enhanced-directory-size-supporting-25-million-files]]
+== 增强的目录大小，支持 2500 万个文件
+
+从 ONTAP 9.20.1 开始，您可以安全地增加最大目录大小值，超出以前 ONTAP 版本的限制。9.20.1 及更高版本的上限为 4 GB；这为大约 2500 万个文件、文件夹和其他条目提供了支持。此增强功能旨在支持需要单个目录中大量文件的工作负载，例如 AI。
+
+
+
+[[two-step-configuration-process]]
+=== 两步配置流程
+
+配置卷以安全地支持较大的目录是一个分为两步的过程。您可以在创建卷时或通过修改现有卷来执行配置。具体步骤如下：
+
+* 启用该功能。您需要使用 `volume create`或 `volume modify`命令，针对特定卷将参数 `-is-dir-index-transfer-enabled`从默认值 `false`设置为 `true`。
+* 增加最大目录大小。您可以在卷创建或后续修改期间使用  `-maxdir-size` 参数设置卷的最大值。这与 9.20.1 之前的 ONTAP 系统使用的参数相同。
+
+
+这两个设置是独立的，因此您执行配置的顺序是灵活的。但是，NetApp 建议先启用增强大小选项 (`-is-dir-index-transfer-enabled`），然后再允许卷目录增长到配置的最大大小。在启用该功能之前变大的目录，在启用该选项并完成相关的后台转换过程之前，不会完全受益于这些改进。
+
+
+
+[[benefits]]
+=== 优势
+
+扩展的最大目录大小提供了几项改进：
+
+* 增强的目录索引可跟上快速、高容量文件创建和删除请求的步伐，从而降低大型未索引目录的风险。
+* 目录索引信息将复制到 SnapMirror 目标卷；即使 SnapMirror 关系中断，目标卷仍会保持索引状态并具有良好的性能。
+* 后台一致性检查期间的目录访问速度更快，从而减少大型目录对系统运行状况检查的影响。
+* 查找性能在更广泛的操作范围内更加一致，即使目录的索引不可用，也能提供可靠的回退。
+
+
+
+
+[[enhanced-internal-processing]]
+=== 增强的内部处理
+
+当您启用增强型目录最大大小选项时， ONTAP 会启动一个后台扫描程序，将卷的现有目录索引信息转换为新的灵活格式。此过程异步运行，需要一些时间才能完成，特别是对于具有许多现有目录的卷。在扫描过程完成之前，大型现有目录可能无法完全实现性能和复制优势。
+
+在卷上启用该选项后，不应尝试禁用它。禁用它会触发后台扫描程序，将目录索引信息转换回其原始格式；在完全还原该选项之前，扫描程序必须完成。
+
+
+
+[[restrictions-and-cautions]]
+=== 限制和注意事项
+
+在使用  `-is-dir-index-transfer-enabled` 参数启用该功能之前，请注意以下限制：
+
+* 它与 S3 二元性不兼容。S3 二元性可以支持的目录内对象数量存在已知限制。这两个功能是相互排斥的，不应一起使用。
+* 对于处于或打算置于 SnapMirror 同步或 SnapMirror 活动同步 NAS 关系中的卷，不支持此功能。
+* 在作为 SVM 迁移候选项的卷上不受支持。
+* SnapMirror 异步和 SnapMirror 云目标必须运行 ONTAP 9.17.1 或更高版本；不支持复制到更早版本。
+* 启用此功能的卷不支持逻辑目录复制（LDR）。
+* 它不能直接在 SnapMirror 目标（DP）卷上启用；其状态始终跟随源卷。
+* FlexCache 卷从不缓存来自其源卷的目录索引信息。此功能的启用状态会从源卷同步到其缓存，但底层索引转换仅适用于源卷。
+
+
+在卷上启用此功能之前，请务必查看您的数据保护拓扑。这些限制可能会影响现有或未来的计划，包括 SnapMirror 关系和 SVM 迁移。
+
+
+
+[[related-information]]
+== 相关信息
+
+* link:../volumes/enable-large-dir-max-support-task.html["启用 ONTAP 对大目录最大大小的支持"]
+* https://kb.netapp.com/Advice_and_Troubleshooting/Data_Storage_Software/ONTAP_OS/What_is_maxdirsize["NetApp知识库：什么是 maxdirsize？"^]
+* https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-KBs/How_to_modify_the_maxdir-size_in_ONTAP_9["NetApp 知识库：如何在 ONTAP 9 中修改 maxdir-size"^]
+* https://hwu.netapp.com/["NetApp Hardware Universe"^]
+

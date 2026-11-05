@@ -327,6 +327,40 @@ Job ID Name                 Vserver    Node           State
 ----
 
 
+
+
+[[verify-key-manager-state-before-reverting]]
+== 在还原前验证密钥管理器状态
+
+在从 ONTAP 9.20.1 还原到较早的 ONTAP 版本之前，请验证密钥管理器配置对于目标版本处于有效状态。
+
+.步骤
+. 查看密钥管理器状态：
++
+[source, cli]
+----
+security key-manager keystore show
+----
+. 如果有任何配置是 `inactive`，请在继续还原之前将其删除：
++
+[source, cli]
+----
+security key-manager keystore delete -vserver <svm_name>
+----
+. 检查是否有任何密钥管理器作业仍在运行：
++
+[source, cli]
+----
+job show -name *keymanager*
+----
+. 如果任何密钥管理器作业仍在初始化，请等待其完成后再开始还原。
+
+
+[NOTE]
+====
+活动密钥库配置作为标准还原过程的一部分进行处理。主要的还原问题是 ONTAP 9.20.1 密钥管理器工作流引入的非活动密钥库条目或正在进行的密钥管理器作业。
+
+====
 .相关信息
 * link:https://docs.netapp.com/us-en/ontap-cli/storage-disk-show.html["storage disk show"^]
 

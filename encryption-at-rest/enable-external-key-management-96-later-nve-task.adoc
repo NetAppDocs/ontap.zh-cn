@@ -37,6 +37,15 @@ summary: 您可以使用一个或多个 KMIP 服务器来保护集群用于访�
 
 有关的详细信息 `security key-manager key migrate`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-key-migrate.html["ONTAP 命令参考"^]。
 
+[NOTE]
+====
+从 ONTAP 9.20.1 开始，当您在数据 SVM 上配置外部密钥管理器时，ONTAP 可以自动迁移当前由管理员作用域密钥管理器管理的任何 NVE 密钥。在此工作流程中，您无需运行单独的  `security key-manager key migrate` 命令。
+
+如果数据 SVM 已包含加密卷，ONTAP 会在启用操作过程中迁移密钥。密钥库直接从非活动状态转换为活动状态，无需单独的迁移步骤。
+
+此工作流仅支持数据 SVM。管理 SVM（集群作用域）不支持此项。
+
+====
 .开始之前
 * 必须已安装 KMIP SSL 客户端和服务器证书。
 * KMIP 服务器必须能够从每个节点的节点管理 LIF 访问。
@@ -57,7 +66,7 @@ summary: 您可以使用一个或多个 KMIP 服务器来保护集群用于访�
 
 +
 
-NOTE: 这 `security key-manager external enable`命令替换 `security key-manager setup`命令。如果在群集登录提示符下运行该命令， `_admin_SVM_`默认为当前集群的管理 SVM。您可以运行 `security key-manager external modify`命令来更改外部密钥管理配置。
+NOTE: 从 ONTAP 9.6 开始， `security key-manager external enable` 命令将替换  `security key-manager setup` 命令。如果在集群登录提示符下运行该命令，则  `_admin_SVM_` 默认为当前集群的 admin SVM。您可以运行  `security key-manager external modify` 命令来更改外部密钥管理配置。
 
 +
 以下命令将为启用外部密钥管理 `cluster1` 使用三个外部密钥服务器。第一个密钥服务器使用其主机名和端口指定，第二个密钥服务器使用 IP 地址和默认端口指定，第三个密钥服务器使用 IPv6 地址和端口指定：
@@ -67,7 +76,7 @@ NOTE: 这 `security key-manager external enable`命令替换 `security key-manag
 ----
 clusterl::> security key-manager external enable -vserver cluster1 -key-servers ks1.local:15696,10.0.0.10,[fd20:8b1e:b255:814e:32bd:f35c:832c:5a09]:1234 -client-cert AdminVserverClientCert -server-ca-certs AdminVserverServerCaCert
 ----
-. 配置密钥管理器 SVM ：
+. 为 SVM 配置密钥管理器：
 +
 `security key-manager external enable -vserver SVM -key-servers host_name|IP_address:port,... -client-cert client_certificate -server-ca-cert server_CA_certificates`
 
@@ -91,7 +100,7 @@ svm1l::> security key-manager external enable -vserver svm1 -key-servers keyserv
 +
 [NOTE]
 ====
-您也可以使用 `security key-manager external add-servers`命令配置其他SVM。 `security key-manager external add-servers`命令将取代 `security key-manager add`命令。有关的详细信息 `security key-manager external add-servers`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-add-servers.html["ONTAP 命令参考"^]。
+您还可以使用  `security key-manager external add-servers` 命令配置其他 SVM。从 ONTAP 9.6 开始， `security key-manager external add-servers` 命令将替换  `security key-manager add` 命令。有关  `security key-manager external add-servers` 的详细信息，请参见 link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-add-servers.html["ONTAP 命令参考"^]。
 
 ====
 . 验证所有已配置的 KMIP 服务器是否均已连接：
@@ -101,7 +110,7 @@ svm1l::> security key-manager external enable -vserver svm1 -key-servers keyserv
 +
 [NOTE]
 ====
- `security key-manager external show-status`命令将取代 `security key-manager show -status`命令。有关的详细信息 `security key-manager external show-status`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-show-status.html["ONTAP 命令参考"^]。
+ `security key-manager external show-status` 命令从 ONTAP 9.6 开始取代 `security key-manager show -status` 命令。在link:https://docs.netapp.com/us-en/ontap-cli/security-key-manager-external-show-status.html["ONTAP 命令参考"^]中了解有关 `security key-manager external show-status`的更多信息。
 
 ====
 +

@@ -131,6 +131,63 @@ NOTE: 在 System Manager 中，容量表示不考虑根存储层（聚合）容�
 
 
 
+[[view-the-data-reduction-rate]]
+== 查看数据缩减率
+
+数据缩减率表示在应用了压缩、压实和重复数据删除等存储效率功能后，数据所消耗的存储量减少了多少。
+
+从 ONTAP 9.20.1 开始，数据缩减率（DRR）在包含和不含可缩减数据的情况下进行报告。可缩减数据是指在应用存储效率功能后实现空间节省的数据。在 ONTAP 9.19.1 及更早版本中，DRR 包括可缩减和不可缩减的数据。不可缩减数据是指在应用存储效率功能后未实现空间节省的数据，或者无法应用存储效率功能的数据。不含可缩减数据的 DDR 更准确地反映了 ONTAP 存储效率所节省的空间。
+
+.步骤
+您可以使用 ONTAP CLI 或 System Manager 查看您的 DRR。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+从 ONTAP 9.13.1 开始，System Manager 中显示的数据缩减率会考虑大多数存储效率功能的结果；但是，快照和精简配置不计入数据缩减率的一部分。在 ONTAP 9.12.1 及更早版本中，您可以选择在不包含快照和克隆的情况下查看此速率。
+
+.要查看聚合级别的 DRR：
+. 在 System Manager 中，选择 *存储 > 层*。
+. 选择要查看 DRR 的本地层（聚合）。
++
+DRR 列在 *本地层容量* 下。
+
+
+
+.要在集群级别查看 DRR：
+. 在 System Manager 中，选择*仪表板*。
++
+DRR 显示在容量下。
+
+
+
+--
+.命令行界面
+--
+您在 CLI 中查看数据缩减率的方式因 ONTAP 版本而异。
+
+
+NOTE: 您不应使用 `df -S`命令查看数据缩减率。如果在自动化过程中使用该 `df -S`命令，请将其替换为如图所示的 volume show 命令。
+
+[cols="1,3,3,3"]
+|===
+| ONTAP 版本 | 查看群集级别 DRR 的步骤 | 要查看聚合级别的 DRR | 查看卷级 DRR 的步骤 
+
+
+| 9.20.1 及更高版本 | `cluster-show` | `storage aggregate show-cumulated-efficiency`  a| 
+* `volume efficiency`
+* `volume show -volume <vol_name> -vserver <SVM> -fields used, sis-space-saved, dedupe-space-saved, compression-space-saved`
+
+
+
+
+| 9.19.1 及更早版本 | `cluster-show` | `cluster space show` | `volume show -volume <vol_name> -vserver <SVM> -fields used, sis-space-saved, dedupe-space-saved, compression-space-saved` 
+|===
+--
+====
+
+
 [[view-the-capacity-of-the-volumes-in-a-storage-vm]]
 == 查看Storage VM中卷的容量
 

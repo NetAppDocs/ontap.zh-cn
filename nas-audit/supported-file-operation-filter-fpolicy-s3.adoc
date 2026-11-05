@@ -1,0 +1,71 @@
+---
+permalink: nas-audit/supported-file-operation-filter-fpolicy-s3.html 
+sidebar: sidebar 
+keywords: ontap 9, supported file operation, filter combinations, fpolicy, monitor, s3 
+summary: 在配置 FPolicy 事件时，您需要注意，监控 S3 对象访问操作仅支持文件操作和筛选器的特定组合。 
+---
+= ONTAP FPolicy 针对 S3 监控的受支持文件操作和筛选器组合
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+在配置 FPolicy 事件时，您需要注意，监控 S3 对象访问操作仅支持文件操作和筛选器的特定组合。
+
+从 ONTAP 9.20.1 开始，FPolicy 支持 NAS 存储桶上 S3 对象事件的通知。S3 FPolicy 仅在异步、非强制模式下运行。
+
+下表提供了 S3 对象访问事件的 FPolicy 监控支持的文件操作和筛选器组合列表：
+
+[cols="30,70"]
+|===
+
+
+| 支持的文件操作 | 支持的筛选器 
+
+
+ a| 
+object_create
+ a| 
+object-create-with-put、object-create-with-copy、object-create-with-complete-mpu
+
+
+
+ a| 
+object_delete
+ a| 
+exclude-multi-delete
+
+
+
+ a| 
+object_tag
+ a| 
+object-tag-put、object-tag-delete
+
+|===
+
+
+[[filter-descriptions]]
+== 筛选说明
+
+以下列表描述了每个 S3 FPolicy 筛选器：
+
+* object-create-with-put：监视使用 PUT 请求执行的对象创建操作。
+* object-create-with-copy：监视使用 COPY 请求执行的对象创建操作。
+* object-create-with-complete-mpu：监控通过完成分段上传而执行的对象创建操作。
+* exclude-multi-delete：排除作为多删除请求一部分而删除的对象的通知。设置此筛选器后，FPolicy 仅为单对象删除操作生成通知。
+* object-tag-put：监视添加或修改对象标记的操作。
+* object-tag-delete：监控删除对象标签的操作。
+
+
+
+
+[[additional-considerations-for-s3-fpolicy-events]]
+== S3 FPolicy 事件的其他注意事项
+
+* 只有成功的、客户端驱动的 S3 操作才能生成 FPolicy 通知。内部生成的操作（如对象过期或快照还原）和失败的操作不会生成通知。
+* S3 FPolicy 监控不支持 GET (read) 操作。
+* 多重删除请求最多可以删除 1,000 个对象。FPolicy 为每个成功删除的对象生成一个通知。同一多重删除请求中的每个通知共享相同的 FPolicy 请求 ID 和 S3 请求 ID 以进行关联。
+* S3 事件不支持拒绝访问通知。
+

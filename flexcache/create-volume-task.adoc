@@ -14,7 +14,10 @@ summary: 您可以在同一集群中创建 FlexCache 卷，以提高访问热对
 您可以在同一个 ONTAP 群集中创建 FlexCache 卷，以提高访问热对象时的性能。如果您在不同位置拥有数据中心，则可以在远程 ONTAP 群集上创建 FlexCache 卷，以加速数据访问。
 
 .关于此任务
-* 从 ONTAP 9.18.1 开始，您可以通过在创建 FlexCache 卷时将 `-is-s3-enabled`选项设置为 `true`来在卷上启用 NAS S3 存储桶访问。此选项默认处于禁用状态。
+* 从 ONTAP 9.18.1 开始，您可以在创建卷时通过将 `-is-s3-enabled`选项设置为 `true`，在 FlexCache 卷上启用 S3 NAS 存储桶访问。默认情况下，此选项处于禁用状态。
++
+在 ONTAP 9.18.1 和 9.19.1 中，仅当源卷为 FlexGroup 卷时，才支持对 FlexCache 卷进行 S3 NAS 存储桶访问。从 ONTAP 9.20.1 开始，以 FlexVol 为源的 FlexCache 卷也支持 S3 NAS 存储桶访问。
+
 * 从ONTAP 9.18.1 开始， FlexCache支持为具有 SVM-DR 关系的 SVM 的源卷创建缓存卷。
 +
 如果您运行的是ONTAP 9.18.1 或更高版本，则存储管理员必须先将缓存 SVM 与 SVM-DR 关系中的主源 SVM 和辅助源 SVM 建立对等关系，然后再创建属于 SVM-DR 关系的源卷的缓存卷。

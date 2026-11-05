@@ -1,0 +1,109 @@
+---
+permalink: antivirus/icap-vscan.html 
+sidebar: sidebar 
+keywords: antivirus, vscan, icap, on-access scanning, smb 
+summary: 从 ONTAP 9.20.1 开始，为 SMB 访问时扫描配置基于 ICAP 的 Vscan。 
+---
+= 配置基于 ICAP 的 Vscan 进行按访问扫描
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.20.1 开始，您可以配置基于互联网内容适配协议（ICAP）的 Vscan，直接向支持 ICAP 的扫描引擎发送按访问防病毒扫描请求，而无需安装 ONTAP 防病毒连接器。基于 ICAP 的 Vscan 使用现有的 FPolicy 共享内存通知基础架构来管理连接并传送扫描请求。
+
+基于 ICAP 的 Vscan 使用称为 FILEMOD（文件请求修改）的专有 ICAP 扩展，而不是标准的 ICAP REQMOD 或 RESPMOD 方法：
+
+* *基于路径的扫描*：ONTAP 仅在 ICAP 请求标头中发送文件路径和元数据。它不会通过网络将文件内容流式传输到扫描引擎。
+* *直接文件访问*：扫描引擎挂载相关的 ONTAP 共享，并使用配置的特权用户帐户直接通过 SMB 协议读取文件数据。
+* *优势*：这种方法避免了流式传输大型文件的 CPU 和内存开销，减少了网络流量，并保持了 Antivirus Connector 使用的高效读取路径。
+
+
+
+
+[[supported-scan-engines]]
+== 支持的扫描引擎
+
+支持以下支持 ICAP 的扫描引擎：
+
+* Symantec Protection Engine (SPE)
+* OPSWAT MetaDefender
+
+
+
+
+[[configuration-considerations]]
+== 配置注意事项
+
+配置基于 ICAP 的 Vscan 时，请记住以下几点：
+
+* 每个 SVM 必须使用基于 ICAP 的 Vscan 配置或 Antivirus Connector 扫描程序池，您不能在同一 SVM 上配置两者。要在它们之间切换，您必须首先删除现有配置。
+* 基于 ICAP 的 Vscan 仅支持 SMB 的按访问扫描。不支持按需扫描和 NFS 按访问扫描。
+* 在将 ONTAP 9.20.1 还原到早期版本之前，请删除所有基于 ICAP 的 Vscan 配置。
+
+
+.开始之前
+* 集群必须运行 ONTAP 9.20.1 或更高版本。
+* SVM 必须配置并启用 SMB。
+* 必须在可从集群网络访问的服务器上安装并运行支持 ICAP 的防病毒扫描引擎（如 SPE 或 OPSWAT）。
+* SVM 不能具有现有的防病毒连接器配置。每个 SVM 支持基于 ICAP 的 Vscan 或防病毒连接器，但不能同时支持两者。
+* 如果 ICAP 连接需要 TLS 加密，请在集群上安装相应的服务器 CA 证书。
+
+
+.步骤
+. 为 SVM 创建 ICAP 配置。每个 SVM 仅支持一个 ICAP 配置：
++
+`vserver vscan icap-config create -vserver <svm_name> -server-ip <icap_server_ip> -port <port> -max-connections <max_conn> -service-path <service_path> -ssl-enabled {true|false} -skip-cert-validation {true|false}`
+
++
+.示例
+`cluster1::> vserver vscan icap-config create -vserver vs1 -server-ip 10.10.10.1 -port 1344 -max-connections 10 -service-path SYMCSCANRESPEX-AV -ssl-enabled false -skip-cert-validation false`
+
++
+[cols="25,20,15,40"]
+|===
+
+
+| 参数 | Default | 范围 | Description 
+
+
+ a| 
+`-port`
+| 1344 | 1-65535 | ICAP 扫描引擎的 TCP 端口 
+
+
+ a| 
+`-max-connections`
+| 10. | 1-256 | 到 ICAP 服务器的最大并发连接数 
+
+
+ a| 
+`-service-path`
+| SYMCSCANRESPEX-AV | 不适用 | 扫描引擎暴露的 ICAP 服务路径 
+
+
+ a| 
+`-ssl-enabled`
+| false | 不适用 | 为 ICAP 连接启用 TLS 加密 
+
+
+ a| 
+`-skip-cert-validation`
+| false | 不适用 | 跳过服务器证书验证 
+|===
+. 创建实时策略（如果尚不存在）。
++
+`vserver vscan on-access-policy create -vserver <svm_name> -policy-name <policy_name> -protocol CIFS -max-file-size <size> -filters <filter_list> -file-ext-to-exclude <extensions> -paths-to-exclude <paths>`
+
++
+
+NOTE: 如果以前的 Vscan 配置中已存在适合您的工作负载的按访问策略，则可以将其与 ICAP 路径一起重用。
+
+. 启用 Vscan 以开始拦截文件操作并将扫描请求路由到 ICAP 服务器。
++
+`vserver vscan enable -vserver <svm_name>`
+
+. 验证 ICAP 连接状态：
+`vserver vscan icap-connection-status show -vserver <svm_name>`
+

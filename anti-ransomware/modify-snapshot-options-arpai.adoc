@@ -4,17 +4,118 @@ permalink: anti-ransomware/modify-snapshot-options-arpai.html
 keywords: ARP AI, arpai, snapshot settings, retention, arw snap, autonomous ransomware protection AI, ONTAP 9.17.1, SAN snapshot parameters, machine learning ransomware 
 summary: 调整为响应潜在勒索软件威胁而自动生成的 ARP/AI 快照的创建和保留设置。 
 ---
-= 调整自动生成的 ONTAP ARP/AI 快照的设置
+= 配置 ONTAP ARP/AI 快照响应策略和设置
 :allow-uri-read: 
 :icons: font
 :imagesdir: ../media/
 
 
 [role="lead"]
-从 ONTAP 9.16.1 开始，您可以使用 CLI 控制针对可疑勒索软件攻击自动生成的 AI 自主勒索软件防护（ARP/AI）快照的保留设置。
+从 ONTAP 9.16.1 开始，您可以使用 CLI 控制使用 AI（ARP/AI）快照的自动勒索软件防护的创建和保留设置。从 ONTAP 9.20.1 开始，您还可以为定期和攻击快照配置快照响应策略，以控制 ARP/AI 在检测到异常活动时是否创建快照。
 
 
 NOTE: 如果运行的是 ONTAP 9.15.1 或更早版本，请参见 link:modify-snapshot-options-arp.html["调整自动生成的 ARP 快照的设置"]。
+
+
+
+[[configure-a-snapshot-response-policy]]
+== 配置快照响应策略
+
+从 ONTAP 9.20.1 开始，您可以为定期和攻击快照配置 ARP/AI 快照响应策略，以控制 ARP/AI 在检测到异常活动时是否创建快照。您可以在 SVM 级别设置策略（其中 SVM 上的所有卷都继承此设置）或在卷级别覆盖它。
+
+可使用以下快照响应策略：
+
+[cols="1,3"]
+|===
+| 策略 | 行为 
+
+
+| `alert-with-proactive-and-periodic-snapshot` | （默认）ARP/AI 生成警报和事件日志，定期创建快照，并在检测到攻击时创建额外快照。 
+
+
+| `alert-with-proactive-snapshot` | ARP/AI 仅在检测到攻击时生成警报和事件日志并创建快照。不会创建定期快照。 
+
+
+| `alert-only` | ARP/AI 仅生成警报和事件日志。不会创建 ARP/AI 快照。 
+|===
+
+CAUTION: 如果将策略设置为 `alert-only`，则 ARP/AI 不会创建快照。如果确认存在勒索软件攻击，则即使在主动攻击期间，也没有可用于数据恢复的 ARP/AI 快照。在使用 `alert-only`之前，请确保您有足够的外部数据保护，例如预定的 ONTAP 快照、SnapCenter 备份或其他备份解决方案。
+
+
+NOTE: 更改快照响应策略时，不会立即删除现有的 ARP/AI 快照。到达预定到期时间后，它们将被删除。不要期望在策略更改后立即回收存储容量。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+*在 SVM 级别配置快照响应策略：*
+
+. 选择 *Cluster* > *Storage VMs*，然后选择 storage VM。
+. 导航到 *设置* 选项卡。在 *安全* 下，找到 *反勒索软件* 图块并选择 image:icon_pencil.gif["编辑图标"]。
+. 在*保护级别*下，选择要应用于 SVM 上所有启用 ARP/AI 的卷的保护类型。
+. 选择 * 保存 * 。
+
+
+*在卷级别配置快照响应策略：*
+
+. 选择*存储* > *卷*，然后选择卷。
+. 在*安全*选项卡中，找到*反勒索软件*部分并选择 image:icon_pencil.gif["编辑图标"]。
+. 在*保护级别*下，选择快照响应策略以覆盖此卷的 SVM 级别设置。
+. 选择 * 保存 * 。
+
+
+--
+.命令行界面
+--
+. 显示当前 ARP/AI 快照响应策略：
++
+在 SVM 级别：
+
++
+[source, cli]
+----
+security anti-ransomware vserver snapshot-settings show -vserver <svm_name>
+----
++
+在卷级别：
+
++
+[source, cli]
+----
+security anti-ransomware volume snapshot-settings show -vserver <svm_name> -volume <volume_name>
+----
+. 配置 ARP/AI 快照响应策略：
++
+在 SVM 级别：
+
++
+[source, cli]
+----
+security anti-ransomware vserver snapshot-settings modify -vserver <svm_name> -anti-ransomware-snapshot-policy <policy>
+----
++
+
+NOTE: 此设置适用于启用了 ARP/AI 的卷。它不会追溯影响现有已启用 ARP/AI 的卷。
+
++
+在卷级别（覆盖 SVM 级别设置）：
+
++
+[source, cli]
+----
+security anti-ransomware volume snapshot-settings modify -vserver <svm_name> -volume <volume_name> -anti-ransomware-snapshot-policy <policy>
+----
+
+
+--
+====
+
+
+[[adjust-snapshot-creation-and-retention-settings]]
+== 调整快照创建和保留设置
+
+
+NOTE: 从 ONTAP 9.20.1 开始，以下设置仅在快照响应策略为 `alert-with-proactive-snapshot`或 `alert-with-proactive-and-periodic-snapshot`时适用。
 
 .开始之前
 您只能在 link:../system-admin/types-svms-concept.html["节点SVM"] 上修改 ARP/AI 快照选项，而不能在其他 SVM 类型上修改。
@@ -49,6 +150,9 @@ options -option-name <arw_setting_name> -option-value <arw_setting_value>
 
 | `arw.snap.max.count`  a| 
 指定在任何给定时间卷中可以存在的最大 ARP/AI 快照数。删除较旧的副本，以确保 ARP/AI 快照的总数保持在此限制范围内。
+
+
+NOTE: 从 ONTAP 9.20.1 开始，此设置仅在快照响应策略设置为 `alert-with-proactive-and-periodic-snapshot`时适用。当策略设置为 `alert-with-proactive-snapshot`或 `alert-only`时，ONTAP 会忽略此设置。
  a| 
 ONTAP 9.16.1 及更高版本
 
@@ -200,4 +304,5 @@ ONTAP 9.17.1 及更高版本
 .相关信息
 * link:learn-about-arpai.html#arp-ai-snapshots["威胁评估和ARP/AI快照"]
 * link:entropy-eval-period-arpai.html["SAN 卷的 ARP/AI 熵评估期"]
+* link:recover-arpai.html["使用 ARP/AI 在勒索软件攻击后恢复数据"]
 

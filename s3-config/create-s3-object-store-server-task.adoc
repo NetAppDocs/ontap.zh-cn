@@ -67,8 +67,12 @@ ONTAP 对象存储服务器将数据作为 S3 对象进行管理，而不是由 
 您可以在创建 S3 服务器时或以后任何时间指定其他选项。
 
 +
+** 从 ONTAP 9.20.1 开始，您可以使用 `-default-bucket-size`选项指定在不使用 `-size`选项的情况下创建的 S3 存储桶的大小。此设置适用于使用 ONTAP CLI、ONTAP REST API 或 S3 API 创建的存储桶。它不会更改现有存储桶。
++
+创建 S3 服务器后，使用 `vserver object-store-server modify`命令和 `-default-bucket-size`选项更改新存储桶的默认大小。
+
 ** 如果要配置本地分层、则SVM名称可以是数据SVM或系统SVM (集群)名称。
-** 证书名称应是服务器证书的名称(最终用户证书或叶证书)、而不是服务器CA证书(中间CA证书或根CA证书)。
+** 证书名称应为服务器证书的名称（最终用户或叶证书），而不是服务器 CA 证书的名称（中间或根 CA 证书）。
 ** 默认情况下， HTTPS 在端口 443 上处于启用状态。您可以使用更改端口号 `-secure-listener-port` 选项
 +
 启用HTTPS后、要与SSL/TLS正确集成、需要CA证书。从ONTAP 9.15.1开始、S3对象存储支持TLS 1.3。

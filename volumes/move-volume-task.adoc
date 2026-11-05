@@ -19,17 +19,9 @@ summary: 将一个 FlexVol 卷移动到同一存储虚拟机中的其他聚合�
 您必须是集群管理员才能执行此任务。
 
 .开始之前
-* 如果您要将使用 8K 自适应压缩的卷移动到以下平台之一，您应该link:increase-volume-active-file-system-size.html["增加卷的活动文件系统的大小"]在移动音量之前。这些平台上的数据压缩方式不同，因此节省的空间是在聚合级别而不是卷级别。由于这种差异，卷的活动文件系统的大小应该增加 8k 压缩节省量，以防止卷在卷移动期间耗尽空间。
+* 如果您运行的是 ONTAP 9.19.1 及更早版本，并且要将使用 8k 自适应压缩的卷移动到支持 QuickAssist Technology（QAT）和 32k 压缩的系统，则应在移动卷之前link:increase-volume-active-file-system-size.html["增加卷的活动文件系统的大小"]。在这些平台上，数据的压缩方式有所不同，从而在聚合级别而不是卷级别节省空间。由于存在这种差异，卷的活动文件系统大小应增加 8k 压缩节省的量，以防止卷在移动期间空间耗尽。
 +
-** 支持专用卸载处理器存储效率的AFF和FAS平台
-+
-详细了解支持以下功能的AFF和FAS平台link:../concepts/builtin-storage-efficiency-concept.html["专用卸载处理器存储效率"]。
-
-** AFF C 系列平台
-+
-查看link:https://hwu.netapp.com/["Hardware Universe"^]了解 C 系列平台的完整列表。
-
-
+详细了解link:../concepts/builtin-storage-efficiency-concept.html["支持 QAT 和 32k 压缩支持的系统"]。
 
 * 如果您正在移动数据保护镜像并且尚未初始化镜像关系，请使用 `snapmirror initialize`命令初始化镜像关系。详细了解 `snapmirror initialize`在link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-initialize.html["ONTAP 命令参考"^] 。
 +

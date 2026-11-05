@@ -34,9 +34,12 @@ Storage Virtual Machine （SVM）通过一个或多个逻辑接口（LIF）向�
 .各 ONTAP 版本对 LIF 创建功能的支持
 对 LIF 创建相关功能的支持因 ONTAP 版本而异。
 
-[cols="2"]
+[cols="1,6"]
 |===
 | 从 ONTAP 版本 | 功能 
+
+
+| 9.20.1 | 支持 AFF 和 FAS 系统上的 Broadcom 安全主机总线适配器（HBA）的光纤通道安全协议 3（FC-SP-3）身份验证和加密。在 System Manager 中选择 *传输安全性* 选项，或在创建 LIF 时使用 CLI 中的 `-fc-transport-security`选项来启用 FC-SP-3。详细了解link:../san-admin/fc-sp-3-security-support.html["ONTAP 对 FC-SP-3 的支持"]。 
 
 
 | 9.12.1. | 支持在 System Manager 中为 NFS over RDMA 配置创建网络接口。有关详细信息，请参见 xref:../nfs-rdma/configure-lifs-task.html[通过RDMA为NFS配置LIF]。 
@@ -95,19 +98,20 @@ LIF 使用服务策略来指定其处理的流量类型。角色用于在 ONTAP 
 +
 .. 数据
 .. 集群间
-.. SVM管理
+.. Storage VM 管理
 
 
 . 选择协议：
 +
-.. SMB/CIFS和NFS
+.. NFS、SMB/CIFS 和 S3
 .. iSCSI
 .. FC
 .. NVMe/FC
 .. NVMe/TCP
 
 
-. 为LIF命名或接受从先前选择生成的名称。
+. 为 LIF 选择 *Storage VM*。
+. 为 LIF 命名或接受生成的名称。
 . 接受主节点或使用下拉列表选择一个。
 . 如果在选定SVM的IP空间中至少配置了一个子网、则会显示子网下拉列表。
 +
@@ -121,7 +125,8 @@ LIF 使用服务策略来指定其处理的流量类型。角色用于在 ONTAP 
 
 
 . 从广播域中选择主端口、可以自动(建议)选择、也可以从下拉菜单中选择一个。主端口控制将根据广播域或子网选择显示。
-. 保存网络接口。
+. 如果您要创建 FC 或 NVMe/FC LIF 并且运行的是 ONTAP 9.20.1 或更高版本，请选择 FC-SP-3 *传输安全性* 选项。
+. 选择 * 添加 * 。
 
 
 --

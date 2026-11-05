@@ -1,7 +1,7 @@
 ---
 permalink: encryption-at-rest/configure-external-key-management-overview-concept.html 
 sidebar: sidebar 
-keywords: external key management, kmip, configure 
+keywords: external key management, kmip, configure, intracluster key sharing, key restore 
 summary: 您可以使用一个或多个外部密钥管理服务器来保护集群用于访问加密数据的密钥。外部密钥管理服务器是存储环境中的第三方系统，可使用密钥管理互操作性协议（ Key Management Interoperability Protocol ， KMIP ）为节点提供密钥。 
 ---
 = 了解如何使用ONTAP NetApp卷加密配置外部密钥管理
@@ -14,3 +14,14 @@ summary: 您可以使用一个或多个外部密钥管理服务器来保护集�
 您可以使用一个或多个外部密钥管理服务器来保护集群用于访问加密数据的密钥。外部密钥管理服务器是存储环境中的第三方系统，它使用密钥管理互操作性协议 (KMIP) 向节点提供密钥。除了板载密钥管理器之外， ONTAP还支持多个外部密钥管理服务器。
 
 从ONTAP 9.10.1 开始，您可以使用 xref:manage-keys-azure-google-task.html[Azure Key Vault 或 Google Cloud Key Manager 服务] 保护您的数据 SVM 的 NVE 密钥。从ONTAP 9.11.1 开始，您可以在集群中配置多个外部密钥管理器。看xref:configure-cluster-key-server-task.html[配置集群密钥服务器]。从ONTAP 9.12.0 开始，您可以使用 link:https://docs.aws.amazon.com/kms/latest/developerguide/overview.html["AWS的KMS"^] 保护您的数据 SVM 的 NVE 密钥。从ONTAP 9.17.1 开始，您可以使用 OpenStack 的 xref:manage-keys-barbican-task.html[巴比肯 KMS] 保护您的数据 SVM 的 NVE 密钥。
+
+[[intracluster-key-sharing]]
+从 ONTAP 9.20.1 开始，集群中使用外部 KMIP 密钥管理器的节点彼此共享加密密钥。共享密钥通过 AES-GCM-256 加密和验证。ONTAP 在两种情况下共享密钥：
+
+* *密钥创建。*当 ONTAP 创建新密钥时，例如当您创建加密的 FlexVol 卷、FlexGroup 卷或聚合时，创建密钥的节点会将其存储在密钥服务器上，然后将其发送到集群中的所有其他节点。
+* *重新启动后还原密钥。*当节点重新启动时，例如在自动无中断升级、接管和交还或计划外重新启动期间，节点将从其 HA 合作伙伴还原其密钥。ONTAP 仅针对合作伙伴无法提供的密钥联系密钥服务器。如果合作伙伴拥有所有密钥，则可以在密钥服务器不可用时完成密钥还原。
+
+
+在新的 ONTAP 9.20.1 集群上以及将集群升级到 ONTAP 9.20.1 时，此行为会自动启用。
+
+集群内密钥共享仅适用于外部 KMIP 密钥管理器。它不与 Onboard Key Manager、Azure Key Vault、Google Cloud Key Management Service、AWS KMS 或 Barbican 一起使用。配置 MetroCluster 时不使用此功能。重新启动后还原密钥要求 HA 伙伴处于联机状态并且其本身拥有这些密钥。

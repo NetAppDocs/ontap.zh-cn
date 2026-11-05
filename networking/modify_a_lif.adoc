@@ -33,26 +33,40 @@ summary: 通过更改 LIF 的属性来修改 LIF。
 +
 如果没有有效故障转移目标的 LIF 尝试进行故障转移，可能会发生中断。
 
-* 从 ONTAP 9.5 开始，您可以修改与 LIF 关联的服务策略。
-+
-在 ONTAP 9.5 中，只有集群间和 BGP 对等服务才支持服务策略。在 ONTAP 9.6 中，您可以为多个数据和管理服务创建服务策略。
-
-* 从ONTAP 9.11.1开始、全闪存SAN阵列(ASA)平台可提供自动iSCSI LIF故障转移功能。
-+
-对于已有的iSCSI LUN (即在升级到9.11.1或更高版本之前创建的LUN)、您可以将故障转移策略修改为 link:../san-admin/asa-iscsi-lif-fo-task.html["启用自动iSCSI LIF故障转移"]。
-
-* ONTAP利用网络时间协议 (NTP) 来同步整个集群的时间。更改 LIF IP 地址后，您可能需要更新 NTP 配置以防止同步失败。欲了解更多信息，请参阅link:https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-Issues/CONTAP-500629["NetApp知识库：LIF IP 更改后 NTP 同步失败"^]。
 
 
-您关注的操作步骤 取决于您使用的界面—System Manager或命令行界面：
+.各 ONTAP 版本对 LIF 修改功能的支持
+对 LIF 修改相关功能的支持因 ONTAP 版本而异。
+
+[cols="1,5"]
+|===
+| 从 ONTAP 版本 | 功能 
+
+
+| 9.20.1  a| 
+支持 AFF 和 FAS 系统上的 Broadcom 安全主机总线适配器（HBA）的光纤通道安全协议 3（FC-SP-3）身份验证和加密。
+
+在 System Manager 中选择 *传输安全性* 选项，或在修改 LIF 时使用 CLI 中的 `-fc-transport-security`选项来启用 FC-SP-3。详细了解link:../san-admin/fc-sp-3-security-support.html["ONTAP 对 FC-SP-3 的支持"]。
+
+
+
+| 9.11.1. | 支持全闪存 SAN 阵列 (ASA) 平台上的自动 iSCSI LIF 故障转移。对于预先存在的 iSCSI LIF，即在升级到 9.11.1 或更高版本之前创建的 LIF，您可以将故障转移策略修改为 link:../san-admin/asa-iscsi-lif-fo-task.html["启用自动iSCSI LIF故障转移"]。 
+
+
+| 9.6. | 您可以为多个数据和管理服务创建服务策略。 
+
+
+| 9.5. | 您可以修改与 LIF 关联的服务策略。仅群集间和 BGP 对等服务支持服务策略。 
+|===
+.步骤
+使用 System Manager 或 CLI 修改 LIF。
 
 [role="tabbed-block"]
 ====
 .System Manager
 --
-*从ONTAP 9.12.0开始、您可以使用System Manager编辑网络接口*
+从 ONTAP 9.12.0 开始，您可以使用 System Manager 编辑网络接口
 
-.步骤
 . 选择*网络>概述>网络接口*。
 . 选择 image:icon_kabob.gif["菜单选项图标"] 要更改的网络接口旁边的*>编辑*。
 . 更改一个或多个网络接口设置。有关详细信息，请参见 link:create_a_lif.html["创建 LIF"]。
@@ -62,9 +76,6 @@ summary: 通过更改 LIF 的属性来修改 LIF。
 --
 .命令行界面
 --
-*使用命令行界面修改LIF*
-
-.步骤
 . 使用修改LIF的属性 `network interface modify` 命令：
 +
 以下示例显示了如何使用子网 client1_sub 中的 IP 地址和网络掩码值修改 LIF datalif2 的 IP 地址和网络掩码：
@@ -111,3 +122,5 @@ IPv6地址
 
 --
 ====
+.下一步是什么？
+ONTAP利用网络时间协议 (NTP) 来同步整个集群的时间。更改 LIF IP 地址后，您可能需要更新 NTP 配置以防止同步失败。欲了解更多信息，请参阅link:https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-Issues/CONTAP-500629["NetApp知识库：LIF IP 更改后 NTP 同步失败"^]。

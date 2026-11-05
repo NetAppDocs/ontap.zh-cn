@@ -24,10 +24,22 @@ summary: '创建FlexGroup卷时、您可以通过自动选择本地层(聚合)�
 .关于此任务
 ONTAP会在每个节点上选择可用空间量最大的两个本地层来创建FlexGroup卷。如果两个本地层不可用、则ONTAP会为每个节点选择一个本地层来创建FlexGroup卷。
 
+从 ONTAP 9.20.1 开始，您可以使用存储配置文件来选择满足您需求的最佳性能级别。存储配置文件使您能够在标准和性能 FlexGroup 配置之间进行切换。-storage-profile 参数定义 ONTAP 使用的存储配置文件。
+
+* 性能：针对高性能工作负载的吞吐量优化配置。
+* 标准：针对通用工作负载的面向容量的配置。
+
+
 从ONTAP 9.15.1开始、在自动配置FlexGroup卷时、ONTAP会使用平衡放置(Balanced Placement、BP)来选择本地层和FlexGroup成员(成分卷)卷布局。BP的一个方面是、在创建"无"保证(精简配置) FlexGroup卷时、它如何限制过度配置本地层。整个FlexGroup卷的大小受本地层上可用空间量的限制、尽管该限制高于"卷"保证的(厚配置) FlexGroup卷。使用REST API或ONTAP命令行界面创建FlexGroup卷时 `auto-provision-as` 、由于此限制导致空间不足、配置可能会失败。您可以通过创建较小的FlexGroup卷或使用参数来避免这种情况 link:create-task.html["手动创建FlexGroup卷并选择本地层"] `aggr-list` 。
 
 .步骤
-. 配置 FlexGroup 卷：
+. 完成以下选项之一。
++
+.. 使用 ONTAP 9.20.1 或更高版本配置具有存储配置文件的 FlexGroup 卷：
++
+`volume create -vserver <svm name> -volume <fg_vol_name> -size <fg_size> [-storage-profile {standard|performance}]`
+
+.. 使用 ONTAP 9.19.1 或更早版本配置 FlexGroup 卷：
 +
 `volume create -vserver svm_name -volume fg_vol_name –auto-provision-as flexgroup -size fg_size [–encrypt true] [-qos-policy-group qos_policy_group_name] [-support-tiering true] [-granular-data advanced]`
 
@@ -72,6 +84,14 @@ Do you want to continue? {y|n}: y
 [Job 34] Job succeeded: Successful
 ----
 +
+从 ONTAP 9.20.1 开始，您可以使用存储配置文件调配 FlexGroup 卷。以下示例使用性能存储配置文件创建 100 TB 的 FlexGroup 卷：
+
++
+[listing]
+----
+cluster1::> volume create -vserver vs0 -volume fg -size 100TB -storage-profile performance
+----
++
 以下示例显示了如何为吞吐量上限创建 QoS 策略组以及如何将其应用于 FlexGroup 卷：
 
 +
@@ -105,6 +125,8 @@ FlexGroup卷在集群中的每个节点上创建有八个成员卷。成员卷�
 
 +
 默认情况下、FlexGroup卷是使用创建的 `volume` 空间保证设置(AFF系统除外)。对于AFF系统、默认情况下会使用创建FlexGroup卷 `none` 空间保证。
+
+
 
 . 使用接合路径挂载FlexGroup卷：
 +

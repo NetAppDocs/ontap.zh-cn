@@ -14,18 +14,13 @@ summary: SVM 迁移完成后，客户端将自动切换到目标集群，不必�
 SVM 迁移完成后，客户端将自动切换到目标集群，不必要的 SVM 将从源集群中删除。默认情况下，自动转换和自动源清理处于启用状态。如有必要，您可以禁用客户端自动转换，以便在发生转换之前暂停迁移，也可以禁用自动源 SVM 清理。
 
 .关于此任务
-此程序适用于FAS、 AFF和ASA系统。如果您拥有ASA r2 系统（ASA A1K、 ASA A90、 ASA A70、 ASA A50、 ASA A30、 ASA A20 或ASA C30），请按以下步骤操作。link:https://docs.netapp.com/us-en/asa-r2/manage-data/migrate-svm.html["这些步骤"^]迁移 SVM。ASA r2 系统为仅使用 SAN 的客户提供简化的ONTAP体验。
-
-从 ONTAP 9.19.1 开始，某些 AFF、ASA r2 和 FAS 系统支持直接连接 FC 和 FC-NVMe 配置。直接连接配置不支持 SVM 迁移。
-
-* 您可以使用 `-auto-cutover false` 可选择在正常情况下自动进行客户端转换时暂停迁移、然后在以后手动执行转换。
+* 本程序适用于 FAS、AFF 和 ASA 系统。如果您有 ASA r2 系统（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30）：
 +
-xref:manual-client-cutover-task.adoc[迁移 SVM 后手动转换客户端]
+** 要将 SVM 从 ASA 集群迁移到 ASA r2 集群，请按照 link:https://docs.netapp.com/us-en/asa-r2/manage-data/migrate-svm.html["这些步骤"^]
+** 从 ONTAP 9.20.1 开始，要将 SVM 从 ASA r2 集群迁移到 ASA 或 AFF 集群，请遵循 link:https://docs.netapp.com/us-en/asa-r2/manage-data/migrate-svm-from-asa-r2.html["这些步骤"^]。
 
-* 您可以使用高级权限 `-auto-source-cleanup false` 此选项可在转换后禁止删除源SVM、然后在转换后手动触发源清理。
-+
-xref:manual-source-removal-task.adoc[转换后手动删除源 SVM]
 
+* 从 ONTAP 9.19.1 开始，某些 AFF、ASA r2 和 FAS 系统支持直接连接 FC 和 FC-NVMe 配置。直接连接配置不支持 SVM 迁移。
 
 
 

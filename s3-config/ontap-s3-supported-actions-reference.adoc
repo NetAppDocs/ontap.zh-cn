@@ -29,6 +29,13 @@ NOTE: 在ONTAP中使用本机S3分段时、尤其支持这些S3操作。使用�
 * `x-amz-date`
 
 
+从 ONTAP 9.20.1 开始，S3 NAS 存储桶支持以下校验和标头：
+
+* `x-amz-checksum-algorithm`
+* `x-amz-checksum-crc64nvme`
+* `x-amz-checksum-type`
+
+
 
 
 [[bucket-operations]]
@@ -154,6 +161,13 @@ DeleteObjects
 If-Match
 
 |===
+从 ONTAP 9.20.1 开始，ONTAP S3 支持 S3 NAS 存储桶的灵活校验和。
+
+* 当客户端在请求中包含校验和标头时，ONTAP 会验证、存储并返回校验和。
+* 仅支持 CRC-64NVME 算法和 `FULL_OBJECT`校验和类型。
+* 灵活的校验和支持仅适用于 S3 NAS 存储桶。
+
+
 从 ONTAP 9.1.1 开始， ONTAP S3 支持对象元数据和标记。
 
 * PutObject和CreateMultipartUpload使用包括键值对 `x-amz-meta-<key>.`
@@ -276,7 +290,7 @@ ONTAP S3 支持以下附加 URI 查询参数：
 * `response-expires`
 
 
-还有这个附加的请求标头：
+以及这些额外的请求标头：
 
 * 范围
 
@@ -289,7 +303,7 @@ ONTAP S3 支持以下附加 URI 查询参数：
  a| 
 获取对象属性
 
-ONTAP S3 支持此附加标头：
+ONTAP S3 支持此请求的所有常见参数和标头，ONTAP S3 还支持此附加标头：
 
 * `x-amz-object-attributes`
 
@@ -302,7 +316,7 @@ ONTAP S3 支持此附加标头：
 | GetObjectTagging | ONTAP 9.9.1 
 
 
-| HeadObject | ONTAP 9.8 
+| HeadObject ONTAP S3 支持此请求的所有常见参数和标头。 | ONTAP 9.8 
 
 
  a| 
@@ -410,7 +424,7 @@ ONTAP S3 支持此附加标头：
 | PutObjectTagging | ONTAP 9.9.1 
 
 
-| 上传部件 | ONTAP 9.8 
+| UploadPart ONTAP S3 支持此请求的所有常见参数和标头。 | ONTAP 9.8 
 
 
  a| 
@@ -461,6 +475,25 @@ ONTAP S3 支持以下附加 URI 参数：
 
 [[s3-actions-by-release]]
 == S3操作(按版本)
+
+.ONTAP 9.20.1
+从 ONTAP 9.20.1 开始，FlexCache 卷上的 S3 NAS 存储桶支持使用 S3 `CopyObject` 和 `UploadPartCopy` API 的服务器端对象复制操作。您可以将同一 FlexCache NAS 存储桶内的对象，或由 FlexGroup 卷支持的 S3 NAS 存储桶中的对象，复制到 FlexCache NAS 存储桶。不支持从由 FlexVol 卷支持的 S3 NAS 存储桶复制到 FlexCache NAS 存储桶、在两个 FlexCache NAS 存储桶之间复制，或者从 FlexCache NAS 存储桶复制到非 FlexCache NAS 存储桶。
+
+ONTAP 9.20.1 使用 CRC-64NVME 算法为 S3 NAS 存储桶添加了对灵活校验和的支持。当客户端在请求中包含校验和标头时，ONTAP 会验证、存储并返回校验和。以下操作支持灵活的校验和标头：
+
+* PutObject
+* CreateMultipartUpload
+* 上传部件
+* CompleteMultipartUpload
+* CopyObject
+* 上传PartCopy
+* GetObject
+* HeadObject
+* List对象V2
+* ListParts
+
+
+仅支持 CRC-64NVME 算法和 FULL_OBJECT 校验和类型。灵活的校验和支持仅适用于 S3 NAS 存储桶。
 
 .ONTAP 9.14.1
 S3.14.1增加了对ONTAP 9对象锁定的支持。

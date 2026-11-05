@@ -13,6 +13,13 @@ summary: 使用Azure、Google Cloud或AWS密钥管理器简化对ONTAP加密密�
 
 AWS KMS、AKV和Cloud KMS可用于保护 link:configure-netapp-volume-encryption-concept.html["NetApp 卷加密（ NVE ）密钥"] 仅适用于数据SVM。
 
+[NOTE]
+====
+从 ONTAP 9.20.1 开始，当您在已经通过管理范围密钥管理器管理加密卷的数据 SVM 上启用云密钥管理器时，ONTAP 会自动将这些 NVE 密钥迁移到新的数据 SVM 密钥管理器。在此工作流程中，您无需运行单独的 `security key-manager key migrate`命令。
+
+此自动迁移适用于数据 SVM。如果要将管理 SVM 从板载密钥管理或集群范围外部密钥管理转换为数据-SVM 云密钥管理器，请先完成相应的管理范围转换任务。
+
+====
 .关于此任务
 可以使用命令行界面或ONTAP REST API启用云提供程序的密钥管理。
 
@@ -30,7 +37,7 @@ AWS KMS、AKV和Cloud KMS可用于保护 link:configure-netapp-volume-encryption
 * ONTAP集群的节点必须支持NVE。
 * link:../encryption-at-rest/install-license-task.html["您必须已安装卷加密(VE)和多租户加密密钥管理(MTEKM)许可证"](英文)这些许可证包含在中link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
 * 您必须是集群或SVM管理员。
-* 数据SVM不能包含任何加密卷、也不能使用密钥管理器。如果数据SVM包含加密卷、则必须先迁移这些卷、然后再配置KMS。
+* 对于 ONTAP 9.20.1 及更高版本，如果其 NVE 密钥由管理员作用域密钥管理器管理，则数据 SVM 可以包含加密卷。在启用操作期间，ONTAP 会自动迁移这些密钥。对于早期版本，请在配置云密钥管理器之前迁移密钥。
 
 
 
@@ -51,7 +58,8 @@ AWS KMS、AKV和Cloud KMS可用于保护 link:configure-netapp-volume-encryption
 ** `Encrypt`
 ** `Decrypt`
 +
-有关详细信息、请参见的AWS文档 link:https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant["赠款"^]。
+有关详细信息，请参见 link:https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html#grant["赠款"^] 的 AWS 文档。
+
 
 
 
@@ -108,9 +116,12 @@ AWS KMS、AKV和Cloud KMS可用于保护 link:configure-netapp-volume-encryption
 
 --
 ====
-如果已为数据SVM配置一个或多个加密卷、并且相应的NVE密钥由管理SVM板载密钥管理器管理、则这些密钥应迁移到外部密钥管理服务。要使用命令行界面执行此操作、请运行以下命令：
+从 ONTAP 9.20.1 开始，如果已经为数据 SVM 配置了一个或多个加密卷，并且相应的 NVE 密钥由管理范围密钥管理器管理，则 ONTAP 会在启用操作期间自动迁移这些密钥。您无需运行单独的 `security key-manager key migrate`命令。
+
+对于早于 9.20.1 的 ONTAP 版本，这些密钥应迁移到外部密钥管理服务。要使用 CLI 执行此操作，请运行以下命令：
 `security key-manager key migrate -from-Vserver _admin_SVM_ -to-Vserver _data_SVM_`
-只有在成功迁移数据SVM的所有NVE密钥之后、才能为租户的数据SVM创建新的加密卷。
+
+在成功迁移数据 SVM 的所有 NVE 密钥之前，无法为租户的数据 SVM 创建新的加密卷。
 
 .相关信息
 * link:https://docs.netapp.com/us-en/cloud-manager-cloud-volumes-ontap/task-encrypting-volumes.html["使用适用于Cloud Volumes ONTAP的NetApp加密解决方案加密卷"^]

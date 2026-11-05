@@ -100,6 +100,12 @@ security saml-sp default-metadata create -sp-host <ontap_host_name>
 . 返回到确认窗口（在 System Manager 中）并选中复选框 * 我已使用主机 URI 或元数据配置 IdP * 。
 . 单击 * 注销 * 以启用基于 SAML 的身份验证。  IdP 系统将显示身份验证屏幕。
 . 在 IdP 登录页面，输入您的基于 SAML 的凭据。凭据验证完成后，您将被定向到系统管理器主页。
++
+确保每个需要访问的远程用户都具有 SAML 登录方法。如果未自动创建 SAML 登录方法，请从 ONTAP CLI 为用户创建一个：
+
++
+`security login create -user-or-group-name <user_name> -application http -authentication-method saml -vserver <svm_name>`
+
 
 
 --

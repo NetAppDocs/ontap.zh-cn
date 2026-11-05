@@ -2,7 +2,7 @@
 sidebar: sidebar 
 permalink: data-protection/resync-svm-destination-task.html 
 keywords: netapp, ontap, system manager, data, VM, resynchronize, resynchronization, resync, source, SVM, source SVM, source storage VM, destination, destination storage VM, destination SVM, protection, relationship, protection relationship, relationships 
-summary: 从 ONTAP 9.8 开始，您可以使用 System Manager 将数据和配置详细信息从已断开保护关系的源 Storage VM 重新同步到目标 Storage VM ，并重新建立此关系。 
+summary: 可以在断开的保护关系中将数据和配置详细信息从源存储 VM 重新同步到目标存储 VM，并重新建立关系。 
 ---
 = 重新同步ONTAP SnapMirror目标SVM上的数据
 :hardbreaks:
@@ -16,9 +16,11 @@ summary: 从 ONTAP 9.8 开始，您可以使用 System Manager 将数据和配�
 
 
 [role="lead"]
+可以在断开的保护关系中将数据和配置详细信息从源存储 VM 重新同步到目标存储 VM，并重新建立关系。
+
 ONTAP 9.11.1提供了一个选项、可在执行灾难恢复预演时绕过完整的数据仓库重建、从而加快恢复生产的速度。
 
-从 ONTAP 9.8 开始，您可以使用 System Manager 将数据和配置详细信息从已断开保护关系的源 Storage VM 重新同步到目标 Storage VM ，并重新建立此关系。
+从 ONTAP 9.20.1 开始，您可以将 ONTAP CLI 中的 `quick-resync`选项与 SVM-DR 关系中的 FlexGroup 成分一起使用。ONTAP System Manager 不提供用于反向重新同步的快速重新同步选项。
 
 只能从原始关系的目标执行重新同步操作。重新同步将删除目标 Storage VM 中比源 Storage VM 中的数据更新的任何数据。
 

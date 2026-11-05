@@ -1,0 +1,68 @@
+---
+permalink: s3-config/delete-recover-bucket-with-data-task.html 
+sidebar: sidebar 
+keywords: s3, bucket, system manager, cli, delete, restore, recover 
+summary: 从 ONTAP 9.20.1 开始，您可以在对象存储服务器上安排存储桶删除操作，以删除存储桶，而无需首先清空它们。 
+---
+= 删除包含对象的 ONTAP S3 存储桶
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.20.1 开始，您可以在对象存储服务器上计划存储桶删除操作，以便在不先清空存储桶的情况下将其删除。为此，您可以使用可配置的基于保留期的恢复窗口，该窗口允许在保留期到期之前恢复存储桶。
+
+删除非空存储桶的功能可避免在删除存储桶之前手动逐个清理对象，从而有助于简化存储桶的停用，减少过期积压，并使容量更快地恢复可用。
+
+.开始之前
+* 您必须是集群管理员或 SVM 管理员。
+* 您必须处于高级权限级别。
+
+
+
+
+[[delete-a-bucket-that-contains-objects]]
+== 删除包含对象的存储桶
+
+您可以通过设置保留间隔来计划删除存储桶，而无需先将其清空。默认情况下，保留时间设置为 12 小时。
+
+.步骤
+您可以从System Manager或ONTAP命令行界面执行此任务。
+
+[role="tabbed-block"]
+====
+.System Manager
+--
+. 导航到 *存储 > 存储桶* 并找到要删除的存储桶。
+. 单击存储桶名称旁边，然后选择*删除*。
+. 如果存储桶不为空，在*删除存储桶*窗口中，选择删除数据的选项并清空存储桶，然后选择*删除*。
+
+
+--
+.命令行界面
+--
+. 指定保留间隔，在此之后存储桶将被永久删除：
++
+`object-store-server create -vserver <SVM name> -bucket-delete-retention-hours <integer>`
+
+. 启动存储桶删除计划：
++
+`object-store-server bucket delete -bucket <bucket name> -delete-objects tru`e
+
+
+
+--
+====
+
+
+[[recover-a-deleted-bucket]]
+== 恢复已删除的存储桶
+
+如果存储区被意外删除，您可以在指定的保留期内使用 ONTAP CLI 恢复它。
+
+. 输入以下命令以恢复已删除的存储桶：
++
+`object-store-server bucket recover-deleted-bucket -bucket <bucket name>`
+
+

@@ -11,15 +11,17 @@ summary: 服务器消息块是 Microsoft Windows 客户端和服务器使用的�
 
 
 [role="lead"]
-服务器消息块（ SMB ）是 Microsoft Windows 客户端和服务器使用的一种远程文件共享协议。支持所有SMB版本。您应验证 ONTAP SMB 服务器是否支持环境中所需的客户端和功能。
+服务器消息块（SMB）是 Microsoft Windows 客户端和服务器使用的远程文件共享协议。ONTAP 支持所有 SMB 版本。您应该验证 ONTAP SMB 服务器是否支持您的环境中所需的客户端和功能。
 
 有关 ONTAP 支持的 SMB 客户端和域控制器的最新信息，请参见 _Interoperability Matrix Tool_ 。
 
-默认情况下、ONTAP SMB服务器会启用SMB 2.0及更高版本、您可以根据需要启用或禁用这些版本。可以根据需要启用或禁用SMB 1.0。
+ONTAP SMB 服务器默认启用 SMB 2.0 及更高版本，可以根据需要启用或禁用。同样，可以根据需要启用或禁用 SMB 1.0。
+
+从 ONTAP 9.20.1 开始，ONTAP 支持对打开的文件和目录进行 SMB 标准化名称查询。Windows 客户端可以在单个请求中检索规范的文件和目录名称。
 
 [NOTE]
 ====
-与域控制器的 SMB 1.0 和 2.0 连接的默认设置也取决于 ONTAP 版本。有关的详细信息 `vserver cifs security modify`，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-cifs-security-modify.html["ONTAP 命令参考"^]。对于现有 CIFS 服务器运行 SMB 1.0 的环境，您应尽快迁移到更高的 SMB 版本，以便为增强安全性和合规性做好准备。有关详细信息，请联系您的 NetApp 代表。
+SMB 1.0 和 2.0 连接到域控制器的默认设置也取决于 ONTAP 版本。了解有关 `vserver cifs security modify`命令的更多信息，请参见link:https://docs.netapp.com/us-en/ontap-cli/vserver-cifs-security-modify.html["ONTAP 命令参考"^]。对于运行 SMB 1.0 的现有 CIFS 服务器环境，NetApp 建议尽快迁移到更高版本的 SMB，以便为安全性和合规性增强做好准备。请联系您的 NetApp 代表了解详情。
 
 ====
 下表显示了每个 SMB 版本支持的 SMB 功能。默认情况下，某些 SMB 功能处于启用状态，某些功能需要额外配置。
@@ -236,6 +238,16 @@ SMB 加密： AES-128-GCM
  a| 
 X
  a| 
+ a| 
+X
+
+
+
+ a| 
+对 Windows 客户端的标准化名称查询支持（从 ONTAP 9.20.1 开始）
+ a| 
+ a| 
+X
  a| 
 X
 

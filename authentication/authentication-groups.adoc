@@ -127,12 +127,20 @@ NOTE: 您也可以使用ONTAP REST API配置这些功能。要了解更多信息
 
 | `uuid` | 指定授权服务器或 SAML IdP 提供的组的通用唯一标识符。 
 |===
+
+NOTE: 从 ONTAP 9.20.1 开始，该 `-type`参数已被弃用；仅 `-uuid`就足以识别该组。
+
 以下是为ONTAP定义组的示例 CLI 命令。请注意，它使用示例访问令牌中的 UUID 组。
 
-.示例
+.示例（ONTAP 9.20.1 之前）
 [listing]
 ----
 security login group create -vserver ontap-cls-1 -name IAM_Dev -type entra -uuid 8ea4c5b0-bcad-4e66-8f1e-cd395474a448
+----
+.示例（从 ONTAP 9.20.1 开始）
+[listing]
+----
+security login group create -vserver ontap-cls-1 -name IAM_Dev -uuid 8ea4c5b0-bcad-4e66-8f1e-cd395474a448
 ----
 创建组后、将为该组生成唯一的只读整数标识符。
 

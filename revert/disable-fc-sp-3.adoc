@@ -1,0 +1,35 @@
+---
+permalink: revert/disable-fc-sp-3.html 
+sidebar: sidebar 
+keywords: disable, fc-sp-3, fc, security, revert 
+summary: 如果在 ONTAP 系统上为 FC-SP-3 启用了 FC 或 NVMe/FC 网络接口（LIF），则必须在还原到 ONTAP 9.19.1 之前将其禁用。 
+---
+= 在从 ONTAP 9.20.1 还原之前，在 FC LIF 上禁用 FC-SP-3
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.20.1 开始，ONTAP 支持在 AFF 和 FAS 系统上使用 Broadcom 安全主机总线适配器（HBA）进行光纤通道安全协议 3（FC-SP-3）身份验证和加密。如果在您的 ONTAP 系统上为 FC-SP-3 启用了 FC 或 NVMe/FC 网络接口（LIF），则必须在还原到 ONTAP 9.19.1 之前将其禁用。
+
+.步骤
+. 验证 LIFs 上的 FC-SP-3 配置：
++
+[source, cli]
+----
+network interface show -fields fc-transport-security
+----
+. 如果 *transport-security-state* 字段的状态不可用，则无需执行进一步操作。如果状态为*强制*或*首选*，请将其修改为*已禁用*：
++
+[source, cli]
+----
+network interface modify -vserver <vserver_name> -lif <lif_name> -fc-transport-security disabled
+----
+. 验证在先前启用的 LIF 上已禁用 FC-SP-3：
++
+[source, cli]
+----
+network interface show -fields fc-transport-security
+----
+

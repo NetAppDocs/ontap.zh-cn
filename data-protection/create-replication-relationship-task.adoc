@@ -13,17 +13,30 @@ summary: 主存储中的源卷与二级存储中的目标卷之间的关系称�
 [role="lead"]
 主存储中的源卷与二级存储中的目标卷之间的关系称为_data protection关系。_您可以使用命令创建SnapMirror DR、SnapVault或统一复制数据保护关系。 `snapmirror create`
 
+.关于此任务
+* 此程序适用于 FAS、AFF 和 ASA 系统。如果您拥有 ASA r2 系统（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30），请遵循link:https://docs.netapp.com/us-en/asa-r2/data-protection/snapshot-replication.html["这些步骤"^]创建复制关系。ASA R2系统可为仅使用SAN的客户提供简化的ONTAP体验。
+* 从 ONTAP 9.20.1 开始，您可以将后端 SnapMirror 异步复制配置为使用 IP 或 FC 传输。默认情况下，后端复制使用 IP 网络。在创建 SnapMirror 关系时，请使用受支持的异步数据保护策略和 `-transport fc`选项通过 FC 结构进行复制。link:default-protection-policies-concept.html["了解后端 FC 复制支持哪些默认异步数据保护策略"]。
++
+** 要在创建 SnapMirror 复制关系后更改所选传输协议，您必须删除并重新创建该关系。
+** 后端 FC 复制不支持直接连接的 FC 配置。
 
-NOTE: 此程序适用于 FAS、AFF 和 ASA 系统。如果您拥有 ASA r2 系统（ASA A1K、ASA A90、ASA A70、ASA A50、ASA A30、ASA A20 或 ASA C30），请遵循link:https://docs.netapp.com/us-en/asa-r2/data-protection/snapshot-replication.html["这些步骤"^]创建复制关系。ASA R2系统可为仅使用SAN的客户提供简化的ONTAP体验。
 
-从ONTAP 9.11.1开始、您可以使用System Manager选择预创建的自定义镜像和存储策略、显示和选择旧策略、以及在保护卷和Storage VM时覆盖保护策略中定义的传输计划。ONTAP 9.8P12及更高版本的ONTAP 9.8修补程序也提供了此功能。
-
+* 从ONTAP 9.11.1开始、您可以使用System Manager选择预创建的自定义镜像和存储策略、显示和选择旧策略、以及在保护卷和Storage VM时覆盖保护策略中定义的传输计划。ONTAP 9.8P12及更高版本的ONTAP 9.8修补程序也提供了此功能。
++
 [NOTE]
 ====
 如果您使用的是ONTAP 9.8P12或更高版本的ONTAP 9.8修补程序版本、并且使用System Manager配置了SnapMirror、则如果您计划升级到ONTAP 9.9.1或ONTAP 9.10.1版本、则应使用ONTAP 9.9.0.1P13或更高版本以及ONTAP 9.10.1P10或更高版本的修补程序。
 
 ====
+
+
 .开始之前
+* 在 ONTAP 9.20.1 及更高版本中，如果您将 SnapMirror 异步关系配置为使用 FC 作为传输协议：
++
+** 您的 ONTAP 系统后端必须配置为进行 FC 复制，并且 FC 结构和集群间 IP 网络都必须正常运行。复制数据可以通过 FC 结构传输，但集群通信和复制管理功能需要集群间 IP 网络。link:configure-backend-fc-replication.html["了解如何为 FC 复制配置 ONTAP 系统后端"]。
+** 在 MetroCluster 配置中，用于 MetroCluster 的存储启动器必须与用于通过 FC 进行复制的启动器分开。不支持在两者之间共享启动器存储。
+
+
 * 源和目标集群以及 SVM 必须建立对等关系。
 +
 link:../peering/index.html["集群和 SVM 对等"]
@@ -160,12 +173,12 @@ cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_ba
 cluster_dst::> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy XDPDefault
 ----
 +
-以下示例将使用默认值创建统一复制关系 `MirrorAndVault` 策略：
+以下示例使用默认 `MirrorAndVault`异步策略和 `fc`传输协议创建统一复制关系：
 
 +
 [listing]
 ----
-cluster_dst:> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy MirrorAndVault
+cluster_dst:> snapmirror create -source-path svm1:volA -destination-path svm_backup:volA_dst -type XDP -schedule my_daily -policy MirrorAndVault -transport fc
 ----
 +
 以下示例将使用自定义创建统一复制关系 `my_unified` 策略：

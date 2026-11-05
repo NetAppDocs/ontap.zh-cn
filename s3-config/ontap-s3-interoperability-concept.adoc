@@ -37,8 +37,6 @@ Cloud Volumes ONTAP
 * Cloud Sync
 * 对象锁定；监管与合规性(从ONTAP 9.14.1开始)
 * link:ontap-s3-supported-actions-reference.html#bucket-operations["对象版本控制"] (从ONTAP 9.11.1开始)
-* 未镜像MetroCluster聚合(从ONTAP 9.12.1开始)
-* 镜像MetroCluster聚合(从ONTAP 9.14.1开始)
 * link:../s3-snapmirror/index.html["SnapMirror S3"] (从ONTAP 9.10.1开始)
 * SnapMirror (仅限NAS卷；从ONTAP 9.12.1开始)
 * SnapLock (仅限NAS卷；从ONTAP 9.14.1开始)
@@ -50,7 +48,7 @@ Cloud Volumes ONTAP
 * SnapMirror （同步和异步）
 * SnapMirror云
 * SVM 灾难恢复
-* SyncMirror （从ONTAP 9.14.1 开始， MetroCluster配置支持SyncMirror镜像聚合。MetroClusterMetroCluster之外不支持SyncMirror 。）
+* SyncMirror （MetroCluster 配置中除外）
 
 
 
@@ -72,9 +70,13 @@ Cloud Volumes ONTAP
  a| 
 MetroCluster环境
  a| 
--
+* Bucket 生命周期管理（从 ONTAP 9.20.1 开始）
+* SnapMirror S3 （从 ONTAP 9.20.1 开始）
+* SyncMirror （从 ONTAP 9.14.1 开始的镜像 MetroCluster 聚合）
+* 未镜像MetroCluster聚合(从ONTAP 9.12.1开始)
+
  a| 
-SnapMirror S3
+-
 
 
 
@@ -108,21 +110,30 @@ link:../performance-admin/policy-group-assignment-restrictions.html["QoS 策略�
 
 
  a| 
+FabricPool
+ a| 
+* FabricPool 云层 (link:../s3-config/index.html["仅限本机 S3"])
+* FabricPool 本地层 (link:../s3-multiprotocol/index.html["仅 NAS 卷"])
+
+ a| 
+* FabricPool云层（仅限 NAS 卷）
+* FabricPool本地层（仅限原生 S3）
+
+
+
+
+ a| 
 其他功能
  a| 
 * 支持对构成 FlexGroup 卷的单个成员卷执行卷移动操作。
 * link:../s3-audit/index.html["审核 S3 事件"] (从ONTAP 9.10.1开始)
 * link:../s3-config/create-bucket-lifecycle-rule-task.html["存储分段生命周期管理"] (从ONTAP 9.13.1开始)
-* FabricPool 云层 (link:../s3-config/index.html["仅限本机 S3"])
-* FabricPool 本地层 (link:../s3-multiprotocol/index.html["仅 NAS 卷"])
 * link:../flexcache/supported-unsupported-features-concept.html#supported-features["FlexCache 卷"] （从 ONTAP 9.18.1 开始）
 
  a| 
 * fpolicy
 * qtree
 * 配额
-* FabricPool云层（仅限 NAS 卷）
-* FabricPool本地层（仅限原生 S3）
 
 
 |===

@@ -34,6 +34,7 @@ ARP/AI 使用以下前缀名称之一创建快照：
 .开始之前
 * 如果您正在响应异常活动警告，请在继续进行数据还原之前link:respond-arpai.html#classify-as-potential-ransomware-attack-and-recover-data["您必须首先将其归类为潜在的勒索软件攻击"]。
 * 选择 <<choose-a-recovery-method,还原方法>> 并查看 <<recovery-constraints-and-considerations,恢复约束>>，然后再完成还原过程。
+* 从 ONTAP 9.20.1 开始，如果 ARP/AI 快照响应策略设置为 `alert-only`，则不会创建 ARP/AI 快照，并且 ARP/AI 快照恢复不可用。要恢复数据，请使用计划的 ONTAP 快照或您自己的备份解决方案。
 
 
 
@@ -64,6 +65,12 @@ ARP/AI 使用以下前缀名称之一创建快照：
 * 对于 ONTAP 9.16.1 及更高版本：首先清除可疑事件（在 link:respond-arpai.html["应对异常活动。"] 中），然后执行还原。清除后，将根据您对活动的分类方式保留 ARP/AI 快照。从 ONTAP 9.17.1 开始，默认值为 7 天（实际攻击）或 24 小时（误报）。在 ONTAP 9.16.1 中，默认值为 5 天（实际攻击）或 48 小时（误报）。清除疑点选项在卷还原后不可用，因此必须在还原前清除。
 * 只有在使用 `volume snapshot restore`从早期快照恢复时，才需要释放 ARP/AI 快照锁定。FlexClone、单文件 SnapRestore、数据复制操作或类似方法不需要此操作。
 * 对于仅通过熵分析检测到攻击的 SAN 卷，只有在攻击时间线之前创建的快照和攻击快照才会保留较长时间（默认情况下为 10 天，可配置）。其他定期快照继续遵循正常的保留规则。这与 NAS 卷不同，NAS 卷会保留攻击时间线之前创建的所有快照，直到管理员执行清除可疑操作为止。
+* 对于 ONTAP 9.20.1 及更高版本：卷快照还原可以将卷的 ARP/AI 快照响应策略还原为捕获快照时有效的策略。在卷还原后，验证快照响应策略是否仍然正确：
++
+[source, cli]
+----
+security anti-ransomware volume snapshot-settings show -vserver <svm_name> -volume <volume_name>
+----
 
 
 .SnapMirror 注意事项

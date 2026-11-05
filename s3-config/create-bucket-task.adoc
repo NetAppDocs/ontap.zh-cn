@@ -38,7 +38,7 @@ S3对象保留在_bep桶_中。它们不会作为文件嵌套在其他目录的�
 *** 或者，您也可以指定存储分层是否会使用存储分段，在这种情况下， ONTAP 会尝试选择低成本介质，以便为分层数据提供最佳性能。
 
 
-** 您可以选择底层聚合和FlexGroup组件(需要高级权限命令选项)：您可以选择手动选择必须创建存储分段和所属FlexGroup卷的聚合、然后指定每个聚合上的成分卷数。添加其他分段时：
+** 您选择底层聚合和 FlexGroup 组件（需要高级特权命令选项）：您可以选择手动选择必须在其上创建存储桶和包含 FlexGroup 卷的聚合，然后指定每个聚合上的成分数。添加其他存储桶时：
 +
 *** 如果为新存储分段指定聚合和成分卷，则会为新存储分段创建新的 FlexGroup 。
 *** 如果未指定新存储桶的聚合和组成部分，则新存储桶将被添加到现有 FlexGroup，但仅当 `retention-mode`设置与现有存储桶的 `retention-mode`设置匹配且 FlexGroup 类型为(`compliance`、 `non-snaplock`、 `enterprise`）时。有关详细信息，请参见xref:../flexgroup/index.html[FlexGroup 卷管理]。
@@ -66,6 +66,9 @@ S3对象保留在_bep桶_中。它们不会作为文件嵌套在其他目录的�
 . 创建存储分段：
 +
 `vserver object-store-server bucket create -vserver <svm_name> -bucket <bucket_name> -size [integer{KB|MB|GB|TB|PB}] [-comment text] [additional_options]`
+
++
+从 ONTAP 9.20.1 开始，如果在创建存储桶时未指定 `-size`选项，则 ONTAP 会使用在 S3 服务器上配置的默认存储桶大小。如果未配置默认值，则 ONTAP 会使用平台最小存储桶大小。此行为也适用于通过 S3 API 或 ONTAP REST API 创建且未明确指定大小的存储桶。
 
 +
 Storage VM名称可以是数据Storage VM或 `Cluster` (系统Storage VM名称)。

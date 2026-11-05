@@ -2,7 +2,7 @@
 permalink: flexcache/sizing-concept.html 
 sidebar: sidebar 
 keywords: guidelines, sizing, flexcache, volume 
-summary: 在开始配置 FlexCache 卷之前，您必须了解卷的限制。 
+summary: FlexCache 大小限制取决于系统上安装的 ONTAP 版本。在开始配置 FlexCache 卷之前，您应验证您的 ONTAP 版本的限制。 
 ---
 = ONTAP FlexCache卷规模估算准则
 :allow-uri-read: 
@@ -11,30 +11,14 @@ summary: 在开始配置 FlexCache 卷之前，您必须了解卷的限制。
 
 
 [role="lead"]
-在开始配置 FlexCache 卷之前，您必须了解卷的限制。
+FlexCache 大小限制取决于系统上安装的 ONTAP 版本。在开始配置 FlexCache 卷之前，您应验证您的 ONTAP 版本的限制。
 
-FlexVol 卷的大小限制适用于原始卷。FlexCache 卷的大小可以小于或等于原始卷。对于 FlexCache 卷的大小，最佳做法是至少为原始卷大小的 10% 。
+FlexVol 卷的大小限制适用于源卷。FlexCache 卷的大小通常小于或等于源卷。您可以创建大于源卷的缓存，但这并不常见。FlexCache 卷大小的最佳实践是至少为源卷大小的 10%。
 
-此外，您还必须了解 FlexCache 卷的以下附加限制：
+要查找有关您的 ONTAP 版本的 FlexCache 大小限制的最新信息，请完成以下步骤：
 
-[cols="55,15,15,15"]
-|===
+. 转到 link:https://hwu.netapp.com/["NetApp Hardware Universe"]。
+. 在*产品*下，选择您的平台。
+. 选择您的 ONTAP 版本，然后选择*显示结果*。
+. 滚动到或搜索 *FlexCache 集群限制*。
 
-
-| limit | ONTAP 9.8及更高版本 | ONTAP 9.7 | ONTAP 9.6 - 9.5 
-
-
-| 可以从原始卷创建的最大 FlexCache 卷数 | 100 | 10. | 10. 
-
-
-| 每个节点的建议最大原始卷数 | 100 | 100 | 10. 
-
-
-| 每个节点的建议最大 FlexCache 卷数 | 100 | 100 | 10. 
-
-
-| 每个节点的 FlexCache 卷中的建议最大 FlexGroup 成分卷数 | 800 | 800 | 40. 
-
-
-| 每个节点每个 FlexCache 卷的最大成分卷数 | 32. | 32. | 32. 
-|===

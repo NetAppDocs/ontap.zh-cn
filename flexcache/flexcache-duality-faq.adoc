@@ -22,7 +22,9 @@ summary: 关于 ONTAP 9.18.1 中引入的 FlexCache 二元性的常见问题。
 Duality 支持使用文件 (NAS) 和对象 (S3) 协议统一访问相同的数据。在 ONTAP 9.12.1 中引入时不支持 FlexCache，duality 在 ONTAP 9.18.1 中得到扩展以包括 FlexCache 卷，允许 S3 协议访问 FlexCache 卷中缓存的 NAS 文件。
 
 .在 FlexCache S3 存储桶上支持哪些 S3 操作？
-标准 S3 NAS 存储区上支持的 S3 操作在 FlexCache S3 NAS 存储区上受支持，但  `COPY` 操作除外。有关标准 S3 NAS 存储区不支持的操作的最新列表，请访问 link:../s3-multiprotocol/index.html#s3-and-nas-interoperability["互操作性文档"]。
+标准 S3 NAS 存储桶支持的 S3 操作在 FlexCache S3 NAS 存储桶上也受支持，但 COPY 操作除外。从 ONTAP 9.20.1 开始 `CopyObject`，支持 `UploadPartCopy`在同一个 FlexCache NAS 存储桶内进行复制，以及从由 FlexGroup 卷支持的 S3 NAS 存储桶复制到 FlexCache NAS 存储桶。不支持从由 FlexVol 卷支持的 S3 NAS 存储桶复制到 FlexCache NAS 存储桶、在两个 FlexCache NAS 存储桶之间复制，或者从 FlexCache NAS 存储桶复制到非 FlexCache NAS 存储桶。
+
+有关不支持的操作的最新列表，请参见 link:../s3-multiprotocol/index.html#s3-and-nas-interoperability["互操作性文档"]。
 
 .我可以在具有 FlexCache 二元性的回写模式下使用 FlexCache 吗？
 不可以。如果在 FlexCache 卷上创建了 FlexCache S3 NAS 存储桶，则该 FlexCache 卷*必须*处于写入绕过模式。如果尝试在回写模式的 FlexCache 卷上创建 FlexCache S3 NAS 存储桶，则操作将失败。
@@ -38,9 +40,6 @@ S3 审核由 NAS 审核功能 FlexCache 卷使用提供。有关 FlexCache 卷�
 
 .如果缓存集群与原始集群断开连接，我应该期待什么？
 如果缓存集群与原始集群断开连接，则对 FlexCache S3 NAS 存储桶的 S3 请求将失败并出现 `503 Service Unavailable`错误。
-
-.我可以将多部分 S3 操作与 FlexCache 双重性一起使用吗？
-要使多部分 S3 操作正常工作，底层 FlexCache 卷必须将 granular-data 字段设置为 'advanced'。此字段设置为源卷设置的任何值。
 
 .FlexCache 双重性是否支持 HTTP 和 HTTPS 访问？
 是。默认情况下，HTTPS 是必需的。如果需要，您可以将 S3 服务配置为允许 HTTP 访问。

@@ -1,0 +1,99 @@
+---
+permalink: volumes/enable-large-dir-max-support-task.html 
+sidebar: sidebar 
+keywords: create, modify, volume, large directory, maxdir-size, directory size, 25 million files 
+summary: 您可以在创建新卷时启用对更大最大目录大小的支持，也可以修改现有卷。 
+---
+= 启用 ONTAP 对大目录最大大小的支持
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+从 ONTAP 9.20.1 开始，您可以在创建卷或修改现有卷时启用和配置对更大最大目录大小的支持。这允许目录包含基于最大 4GB 目录大小的大约 2500 万个文件、文件夹和其他条目。
+
+[CAUTION]
+====
+在增加最大目录大小后，如果不在卷上重新创建受影响的目录，则无法减少最大目录大小。
+
+====
+.开始之前
+在创建或修改卷以支持更大的最大目录大小之前，请确保您是群集或 SVM 管理员。
+
+
+
+[[create-a-new-volume]]
+== 创建新卷
+
+创建新卷时，可以设置较大的最大目录大小。
+
+.步骤
+. 创建启用了较大目录最大大小支持的卷：
++
+[source, cli]
+----
+volume create -vserver <svm_name> -volume <volume_name> -aggregate <aggr_name> -is-dir-index-transfer-enabled true
+----
++
+.示例
+[listing]
+----
+volume create -vserver vs1 -volume big_dir1 -aggregate aggr1 -is-dir-index-transfer-enabled true
+----
+. 增加最大目录大小，最高可达 4 GB：
++
+[source, cli]
+----
+volume modify -vserver <svm_name> -volume <volume_name> -maxdir-size <dir_size>
+----
++
+.示例
+[listing]
+----
+volume modify -vserver vs1 -volume big_dir1 -maxdir-size 4GB
+----
+
+
+
+
+[[modify-an-existing-volume]]
+== 修改现有卷
+
+您可以通过修改现有卷来设置更大的最大目录大小。
+
+.步骤
+. 在现有卷上启用对更大目录最大大小的支持：
++
+[source, cli]
+----
+volume modify -vserver <svm_name> -volume <volume_name> -is-dir-index-transfer-enabled true
+----
++
+.示例
+[listing]
+----
+volume modify -vserver vs2 -volume data_vol -is-dir-index-transfer-enabled true
+----
+. 将最大目录大小增加到 4 GB：
++
+[source, cli]
+----
+volume modify -vserver <svm_name> -volume <volume_name> -maxdir-size <dir_size>
+----
++
+.示例
+[listing]
+----
+volume modify -vserver vs2 -volume data_vol -maxdir-size 4GB
+----
+
+
+
+
+[[related-information]]
+== 相关信息
+
+* link:../volumes/cautions-increasing-maximum-directory-size-concept.html["ONTAP FlexVol 卷的最大目录大小"]
+* https://docs.netapp.com/us-en/ontap-cli/["ONTAP 命令参考"^]
+

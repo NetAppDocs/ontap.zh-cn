@@ -13,7 +13,7 @@ summary: 要启用防病毒扫描、您必须设置和配置一个或多个Vscan
 [role="lead"]
 设置一个或多个Vscan服务器、以确保系统上的文件已进行病毒扫描。按照供应商提供的说明在服务器上安装和配置防病毒软件。
 
-按照NetApp提供的自述文件中的说明安装和配置ONTAP防病毒连接器。或者、按照上的说明进行操作 link:install-ontap-antivirus-connector-task.html["安装ONTAP防病毒连接器页面"]。
+按照 NetApp 提供的 README 文件中的说明安装和配置 ONTAP Antivirus Connector。或者，按照 link:install-ontap-antivirus-connector-task.html["安装ONTAP防病毒连接器页面"] 说明操作。
 
 [NOTE]
 ====
@@ -26,7 +26,7 @@ summary: 要启用防病毒扫描、您必须设置和配置一个或多个Vscan
 == 防病毒软件要求
 
 * 有关防病毒软件要求的信息，请参见供应商文档。
-* 有关Vscan支持的供应商、软件和版本的信息、请参见link:../antivirus/vscan-partner-solutions.html["Vscan合作伙伴解决方案"]页面。
+* 有关 Vscan 支持的供应商、软件和版本的信息，请参见 link:../antivirus/vscan-partner-solutions.html["Vscan合作伙伴解决方案"]。
 
 
 
@@ -34,7 +34,9 @@ summary: 要启用防病毒扫描、您必须设置和配置一个或多个Vscan
 [[ontap-antivirus-connector-requirements]]
 == ONTAP 防病毒连接器要求
 
-* 您可以从NetApp 支持站点 上的*软件下载*页面下载ONTAP防病毒连接器。 link:http://mysupport.netapp.com/NOW/cgi-bin/software["NetApp 下载：软件"^]
+每个 SVM 都使用 ICAP 或防病毒连接器，而不是两者兼用。
+
+* 您可以从 NetApp 支持站点上的 link:http://mysupport.netapp.com/NOW/cgi-bin/software["软件下载"^] 页面下载 ONTAP 防病毒连接器。
 * 有关ONTAP防病毒连接器支持的Windows版本和互操作性要求的信息，请参见link:../antivirus/vscan-partner-solutions.html["Vscan合作伙伴解决方案"]。
 +
 [NOTE]
@@ -45,3 +47,19 @@ summary: 要启用防病毒扫描、您必须设置和配置一个或多个Vscan
 * Windows 服务器上必须安装 .NET 3.0 或更高版本。
 * 必须在 Windows 服务器上启用 SMB 2.0 。
 
+
+
+
+[[icap-capable-scan-engine-requirements]]
+== 支持 ICAP 的扫描引擎要求
+
+每个 SVM 都使用 ICAP 或防病毒连接器，而不是两者兼用。
+
+* 从 ONTAP 9.20.1 开始，ONTAP 支持基于 ICAP 的扫描路径，无需使用 Antivirus Connector。
+* ICAP 支持基于 Linux 的扫描引擎，不需要 Windows、.NET 或 SMB 2.0。
+
+
+
+NOTE: 如果从 ONTAP 9.20.1 还原到早期版本，则必须先删除所有 ICAP 配置。
+
+详细了解link:icap-vscan.html["基于 ICAP 的 Vscan 配置"]。

@@ -44,6 +44,13 @@ NOTE: 从FPolicy.8开始、ONTAP除了为出站ONTAP 9连接提供客户端LIF�
 
 
 
+* 从 ONTAP 9.20.1 开始，FPolicy 策略支持 S3 事件。要为 S3 对象事件配置 FPolicy，必须满足以下附加要求：
++
+** 集群中的所有节点都必须运行 ONTAP 9.20.1 或更高版本。混合版本的集群会阻止 S3 FPolicy 配置，直到所有节点都支持该功能。
+** 仅支持 NAS 存储桶，不支持原生 S3 存储桶。
+** 支持 protobuf 通知格式的外部 FPolicy 服务器。S3 事件不支持 XML 格式。
+
+
 
 
 
@@ -136,12 +143,41 @@ NOTE: 从FPolicy.8开始、ONTAP除了为出站ONTAP 9连接提供客户端LIF�
 +
 ** 监控最小文件操作类型并启用最大数量的筛选器、而不会违反使用情形。
 ** 对getattr、读取、写入、打开和关闭操作使用筛选器。SMB和NFS主目录环境中的这些操作所占比例较高。
+** 只有成功的 S3 客户端驱动操作才会生成通知。内部生成的操作（例如对象过期或快照触发还原）不会生成 FPolicy 通知。
+** 支持的 S3 操作包括：
++
+*** 对象创建（PUT、COPY 和 CompleteMultipartUpload）
+*** 对象删除（DELETE 和 multi-delete）
+*** 对象标记（标记 PUT 和标记 DELETE）
++
+
+NOTE: GET 和 read 事件不受监控。
+
+
+
+** 一个 S3 多删除请求最多可以删除 1,000 个对象，但 FPolicy 会为每个成功删除的对象发送一个通知（SHM 插槽限制为 32 KB）。请相应地规划外部服务器容量。
+** 使用 FPolicy 策略范围按名称包含或排除特定的 NAS 存储桶。如果配置的存储桶名称拼写错误或存储桶被删除，FPolicy 不会阻止操作，它只是不会为该存储桶生成通知。
 
 
 * 配置SVM的FPolicy范围：
 +
 将策略的范围限制为相关存储对象、例如共享、卷和导出、而不是在整个SVM中启用这些对象。NetApp建议检查目录扩展名。如果 `is-file-extension-check-on-directories-enabled` 参数设置为 `true`，目录对象将与常规文件一样进行扩展名检查。
 
+
+
+
+
+[[s3-fpolicy-limitations]]
+=== S3 FPolicy 限制
+
+从 ONTAP 9.20.1 开始，FPolicy 支持 S3 对象监控，但有以下限制：
+
+* S3 FPolicy 仅在异步、非强制模式下运行。S3 事件不支持同步模式、强制策略和原生阻止（基于文件扩展名的阻止）。
+* S3 FPolicy 通知不支持持久存储。
+* S3 通知不支持 FPolicy 外部引擎连接上的 SSL/TLS。
+* 特权数据访问和传递读取不适用于 S3 FPolicy。
+* 不支持保证送达。通知仅尽力而为，如果外部 FPolicy 服务器断开连接，或者共享内存缓冲区（SHM）在重试后仍然已满，则可能会被丢弃。
+* S3 事件不支持拒绝访问和失败的操作通知。
 
 
 
@@ -288,9 +324,13 @@ NOTE: 您必须处于诊断模式才能收集与FPolicy相关的统计信息。
 
 NetApp建议在进行任何配置更改之前禁用FPolicy策略。例如、如果要在为已启用策略配置的外部引擎中添加或修改某个IP地址、请先禁用该策略。
 
-如果将FPolicy配置为监控NetApp FlexCache卷、NetApp建议您不要将FPolicy配置为监控读取和getATTR文件操作。在ONTAP中监控这些操作需要检索索引节点到路径(i2P)数据。由于无法从FlexCache卷检索I2P数据、因此必须从初始卷检索这些数据。因此、监控这些操作会消除FlexCache可提供的性能优势。
+如果您将 FPolicy 配置为监控 NetApp FlexCache 卷，NetApp 建议您不要将 FPolicy 配置为监控 read 和 getattr 文件操作。在 ONTAP 中监控这些操作需要检索 inode-to-path (I2P) 数据。由于无法从 FlexCache 卷检索 I2P 数据，因此必须从源卷检索。因此，监控这些操作会消除 FlexCache 可提供的性能优势。对于 FlexCache 卷上的 S3 NAS 存储分段，对源卷的内部写回和绕写操作不会生成 FPolicy 通知。作为最佳实践，请在源 SVM 和 FlexCache SVM 上配置 FPolicy 以捕获所有 S3 事件。
 
 部署FPolicy和机下防病毒解决方案后、防病毒解决方案会首先收到通知。FPolicy处理仅在防病毒扫描完成后开始。正确估算防病毒解决方案的规模非常重要、因为速度较慢的防病毒扫描程序可能会影响整体性能。
+
+MetroCluster 配置支持 S3 FPolicy。切换后，如果配置了外部 FPolicy 服务器并且可以从该站点访问，则可以从远程（幸存）站点生成 FPolicy 通知。
+
+在节点接管和交还操作期间，如果关联的 LIF 迁移到其他节点，则 FPolicy 服务器连接可能会短暂中断。当合适的 LIF 可用时，会自动重新建立连接。在此窗口期间重试操作的 S3 客户端将在恢复连接时生成新的 FPolicy 通知。
 
 
 
@@ -306,6 +346,8 @@ NetApp建议在进行任何配置更改之前禁用FPolicy策略。例如、如�
 
 在将所有节点升级到支持 FPolicy 直通读取的 ONTAP 版本后，集群可以使用直通读取功能；但是，在现有 FPolicy 配置中，直通读取默认处于禁用状态。要对现有 FPolicy 配置使用直通读取，必须禁用 FPolicy 策略并修改配置，然后重新启用配置。
 
+所有节点升级到 ONTAP 9.20.1 或更高版本后，您可以使用 S3 协议和 S3 对象操作（对象创建、对象删除、对象标记）配置 FPolicy 事件。在混合版本集群中，S3 FPolicy 配置被阻止。
+
 
 
 [[reverting]]
@@ -318,6 +360,8 @@ NetApp建议在进行任何配置更改之前禁用FPolicy策略。例如、如�
 
 
 在还原到不支持永久性存储的ONTAP版本之前、请确保所有FPolicy策略均未配置永久性存储。如果配置了永久性存储、还原将失败。
+
+在还原到不支持 S3 FPolicy 的 ONTAP 版本之前，必须删除配置了 S3 协议的所有 FPolicy 事件。如果 S3 FPolicy 配置仍然存在，则还原将失败。
 
 .相关信息
 * link:https://docs.netapp.com/us-en/ontap-cli/statistics-show.html["统计数据显示"^]
