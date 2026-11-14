@@ -9592,7 +9592,6 @@ VLAN 名称是端口（或接口组）名称和网络交换机 VLAN 标识符的
   <block id="a4a94df107b902603379e41c5bbc1193" category="list-text">FAS8200、默认DP卷最大自动大小= 100 TB</block>
   <block id="dbdf91e0a065393db37896d4bdde0d53" category="paragraph">有关详细信息，请参见<block ref="bb9c67b5a4c15a85b5e6aa6c9afd0285" category="inline-link-rx"></block>。</block>
   <block id="4ed8d1625ef7a6879b32b6ac645d3cff" category="summary">当您不再需要从目标提供数据时，可以在源和目标 SVM 之间重新建立初始数据保护关系。在卷复制方面，操作步骤与操作步骤大致相同，但有一个例外。在重新激活源 SVM 之前，必须停止目标 SVM 。</block>
-  <block id="453e32180102576e59ec8f3e3f713549" category="paragraph">如果在提供目标卷数据时增加了目标卷的大小，则在重新激活源卷之前，应手动增加原始源卷上的最大自动大小，以确保其可以充分增长。</block>
   <block id="9609ef04727079fb4d7f77c4f4426147" category="paragraph"><block ref="9609ef04727079fb4d7f77c4f4426147" category="inline-link-macro-rx"></block></block>
   <block id="1a2afde9954edf3d66a5bdd231b3f3c4" category="admonition">快速重新同步不会保留目标卷的存储效率。启用快速重新同步可能会增加目标卷使用的卷空间。</block>
   <block id="df66bd84e871c542c5dad0737fcfd980" category="paragraph">此操作步骤假定原始源卷中的基线完好无损。如果基线不完好，则必须在执行操作步骤之前创建并初始化提供数据的卷与原始源卷之间的关系。</block>
@@ -9600,7 +9599,6 @@ VLAN 名称是端口（或接口组）名称和网络交换机 VLAN 标识符的
   <block id="914f2f68a0a9e66f41cc3f3bd7946941" category="list-text">从原始源 SVM 或原始源集群运行以下命令，以删除已反转的数据保护关系：</block>
   <block id="535e2aff25bd8b0b6c53654bea563961" category="paragraph">以下示例将删除初始目标SVM、<block ref="f2dcd1c21dd6e00e42ff4b9467c5e011" prefix=" " category="inline-code"></block>和初始源SVM、<block ref="3568c00ad84b08a31b2dfadbfd8ee221" prefix=" " category="inline-code"></block>：</block>
   <block id="a87d7c48d925b71b122f5d0d4f34d05f" category="list-text">从原始目标 SVM 或原始目标集群释放反转的数据保护关系：</block>
-  <block id="c45c4db019582765320560f9bdd26045" category="paragraph">以下示例将释放初始目标SVM svm_backup和初始源SVM之间的已反转关系、<block ref="3568c00ad84b08a31b2dfadbfd8ee221" prefix=" " category="inline-code"></block></block>
   <block id="39f6a5161928ddec8087e6775cfd8523" category="paragraph">异步镜像，镜像存储，同步， StrictSync</block>
   <block id="ec818b31f7a299184eb233f3139c481e" category="paragraph">all_source_snapshots</block>
   <block id="3f9aba2a69eb3eb37f49fd320e4b8243" category="paragraph">存储，镜像存储</block>
@@ -28618,7 +28616,6 @@ FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 Snap
   <block id="ab84e6df69c0fd52a73efc761e3099ea" category="inline-xref-macro">现有策略标签</block>
   <block id="1529987d7858ddaa2c637e76aabedf3c" category="section-title">修改现有策略以应用长期保留</block>
   <block id="b9e5d0f84af6a58cd2618a9fb2670be0" category="list-text">向现有SnapMirror策略添加规则：</block>
-  <block id="e3015c83fb1b34722f76c34eba731cd9" category="paragraph">以下示例将创建一个规则、将保留期限应用于名为"LockVault"的现有策略：</block>
   <block id="aea16b5b14cb004763e6ea24e28bc467" category="paragraph">下图显示了用于初始化SnapLock存储关系的操作步骤：</block>
   <block id="9e129cbe4f54a719d26cc58a668e4ea1" category="paragraph">从ONTAP 9.13.1开始、您可以创建生命周期管理规则来管理S3存储分段中的对象生命周期。您可以为存储分段中的特定对象定义删除规则、并通过这些规则使这些存储分段对象失效。这样、您就可以满足保留要求并高效管理整体S3对象存储。</block>
   <block id="7155143fac31cfd3f4bd7bb57b2f3039" category="admonition">如果为存储分段对象启用了对象锁定、则不会对锁定的对象应用对象到期的生命周期管理规则。有关对象锁定的信息、请参见 <block ref="c24df32643990d2e8a7c383df80311ce" category="inline-link-macro-rx"></block>。</block>
@@ -36007,14 +36004,10 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="edb7de5345c0e13b445ca56a1ac41e47" category="open-title">ONTAP调解器1.9及更高版本</block>
   <block id="924f0dc2963f2e4930b13d461565e506" category="open-title">ONTAP调解器1.8及更早版本</block>
   <block id="bb8917b538ccb8a7e1b5863be366fde2" category="list-text">X60132A (4p、10G25G以太网控制器)</block>
-  <block id="84621d601f6b7bd1714240b0cfde2213" category="summary">从ONTAP 9.12.1开始、您可以锁定非SnapLock卷上的快照、以防止勒索软件攻击。锁定快照可确保它们不会被意外或恶意删除。</block>
   <block id="5e8c9d081a4e7ca510072e15483c4571" category="doc">锁定快照以防止勒索软件攻击</block>
   <block id="8b9a79e7cc5f300c141dd7c278939b96" category="paragraph">从ONTAP 9.12.1开始、您可以锁定非SnapLock卷上的快照、以防止勒索软件攻击。锁定快照可确保它们不会被意外或恶意删除。</block>
   <block id="b2d747eadc51f2eb67a7db66db8c16c8" category="paragraph">您可以使用SnapLock Compliance时钟功能在指定时间段内锁定快照、以便在达到到期时间之前无法删除这些快照。锁定快照可使其防篡改、防止其受到勒索软件威胁。如果卷受到勒索软件攻击、您可以使用锁定的快照来恢复数据。</block>
-  <block id="172b197c353a5fe9dfef508ec34bf1a0" category="paragraph">从ONTAP 9.14.1开始、快照锁定支持SnapLock存储目标和非SnapLock SnapMirror目标卷上的长期保留快照。可通过使用与关联的SnapMirror策略规则设置保留期限来启用快照锁定<block ref="ded6b9b6cfc55c6433ead109aad587ab" category="inline-xref-macro-rx"></block>。此规则将覆盖在卷上设置的默认保留期限。如果SnapMirror标签没有关联的保留期限、则使用卷的默认保留期限。</block>
   <block id="658eabfbc09936df441511879ddd9205" category="list-title">防篡改快照要求和注意事项</block>
-  <block id="9ba6d91428dee1f51709985481ef8572" category="list-text">在卷上启用快照锁定后、您可以将集群升级到ONTAP 9.12.1之后的ONTAP版本；但是、只有在所有锁定的快照均已达到到期日期并被删除且快照锁定已禁用之前、您才能还原到早期版本的ONTAP。</block>
-  <block id="8e8ce627f1ddc06df230f8fc5a53a64e" category="list-text">锁定快照后、卷到期时间将设置为快照的到期时间。如果锁定了多个快照、则卷到期时间是所有快照中的最长到期时间。</block>
   <block id="03dd4daa5f7bc7945251ed79dd854dee" category="list-text">锁定快照的保留期限优先于快照保留计数、这意味着、如果锁定快照的快照保留期限未到期、则不会遵守保留计数限制。</block>
   <block id="79b2210dd83897a638c325cb5569f52a" category="list-text">在SnapMirror关系中、您可以为镜像-存储策略规则设置保留期限、如果目标卷启用了快照锁定、则会为复制到目标的快照应用保留期限。保留期限优先于保留计数；例如、即使超过保留计数、未超过到期时间的快照也会保留。</block>
   <block id="9d496dfbb59d2280a53cf15786eb7a9e" category="list-text">您可以重命名非SnapLock卷上的快照。只有当策略为MirrorAllSnapshots时、SnapMirror关系的主卷上的Snapshot重命名操作才会反映在二级卷上。对于其他策略类型、更新期间不会传播重命名的快照。</block>
@@ -36024,7 +36017,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="ece639b3be09d728380c9aec0671d060" category="paragraph">您可以将具有锁定快照的FlexVol volume转换为FlexGroup卷。转换后、快照将保持锁定状态。</block>
   <block id="0c39a77bf4051e469ae6ed0dadf8ad5c" category="paragraph">必须在源和目标上初始化Compliance时钟。</block>
   <block id="b39fec1f8d779120807149756262f595" category="paragraph">您可以从锁定的快照创建卷克隆和文件克隆。</block>
-  <block id="6843d841f73b15905aebb343eb44dca3" category="paragraph">防篡改快照当前不支持以下功能：</block>
   <block id="519637fcf202a3b9dfc537d904577f48" category="section-title">创建卷时启用快照锁定</block>
   <block id="e247c4237210d4f15a2a234e91d22033" category="paragraph">从ONTAP 9.12.1开始、您可以在创建新卷或修改现有卷时通过在命令行界面中将选项与和<block ref="9f9fc58b577820fbcd41ff15739ed6f0" prefix=" " category="inline-code"></block>命令结合<block ref="4784dd0ffa42c3d1b43b0afd079dfc17" prefix=" " category="inline-code"></block>使用来启用快照锁定<block ref="a3aabd91f02aa5f85ce99a47d482a668" prefix=" " category="inline-code"></block>。从ONTAP 9.13.1开始、您可以使用System Manager启用快照锁定。</block>
   <block id="71e3692dc4f2b7211b850fd62cb9b685" category="list-text">要创建新卷并启用快照锁定、请输入以下命令：</block>
@@ -36036,7 +36028,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="26b4e9ebf24ca7006f0e85d4c9fed4a9" category="paragraph">从ONTAP 9.12.1开始、您可以创建快照策略以应用快照保留期限、并将该策略应用于卷以锁定指定期限的快照。您也可以通过手动设置保留期限来锁定快照。从ONTAP 9.13.1开始、您可以使用System Manager创建快照锁定策略并将其应用于卷。</block>
   <block id="c3bdc87ed100230b1bd89645be241fda" category="section-title">创建快照锁定策略</block>
   <block id="7f1664b2cbda5a2895ad33c3d00a8caa" category="list-text">提供快照计划详细信息、包括计划名称、要保留的最大快照数和SnapLock保留期限。</block>
-  <block id="096108732f4478923d4531ac81f4f104" category="list-text">在* SnapLock保留期限*列中、输入快照保留的小时数、天数、月数或年数。例如、保留期限为5天的快照策略会将快照从创建之日起锁定5天、在此期间无法删除。支持以下保留期限范围：</block>
   <block id="40c1375a0050f61e9da4da7bb4730754" category="list-text">要创建快照策略、请输入以下命令：</block>
   <block id="02dd8a84f7ca9362aeb9a9d6b6200c69" category="paragraph">以下命令将创建快照锁定策略：</block>
   <block id="9657c93c6101640c73aa7011ea86da4f" category="paragraph">如果快照处于活动保留状态、则不会替换该快照；也就是说、如果存在尚未过期的锁定快照、则不会使用保留计数。</block>
@@ -36054,7 +36045,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="139b26d504158be8ac8b634e41c8586e" category="list-text">选择快照，选择<block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然后选择*Modify SnapLock Expiration time*。您可以选择日历来选择保留到期日期和时间。</block>
   <block id="fc27cd0394ada76e3ac40dea3c9d6aeb" category="list-text">要手动将保留期限应用于现有快照、请输入以下命令：</block>
   <block id="e6c579a0a2c3c0df75b542a7f4e322e0" category="paragraph">以下示例将保留期限应用于现有快照：</block>
-  <block id="c58091855169d27fe4d38bcd198f5a08" category="paragraph">从ONTAP 9.14.1开始、您可以通过添加规则来设置快照的长期保留来修改现有SnapMirror策略。此规则用于覆盖SnapLock存储目标和非SnapLock SnapMirror目标卷上的默认卷保留期限。</block>
   <block id="22421ba01185b452d160a85301c212d3" category="paragraph"><block ref="54ce562754112bd2c30ed1c955215936" prefix="" category="inline-code"></block></block>
   <block id="caba72de7441e3ac5072123ba7f61d78" category="list-text">*选项(A)*：选择*Import*导航到<block ref="017ce4f89360621e0345c257b6136b21" prefix=" " category="inline-code"></block>文件并导入。</block>
   <block id="28e6598b0d0084dbc2aaecb8893f570d" category="list-text">*选项(b)*：复制文件内容<block ref="017ce4f89360621e0345c257b6136b21" prefix=" " category="inline-code"></block>并将其粘贴到*Certifice*字段中。</block>
@@ -38511,7 +38501,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="44e33c8aa80d8adcdbf6f3bfdecbcda8" category="list-text">在三级目标集群上、为策略定义<block ref="f15d884fee5c1c1f6ac0fa41ba0da1ed" prefix=" " category="inline-code"></block>规则：</block>
   <block id="756ef84ce2a8f0fe3ff959c9f1560e6a" category="list-text">启用后<block ref="6a623c8871cfdca9220b553cbf376ae1" prefix=" " category="inline-code"></block>、您可以指定是否可以自动擦除FlexCache卷上的文件以及擦洗间隔：</block>
   <block id="cf140b40f437242c3431977ac42bff75" category="paragraph"><block ref="26981efd56500fad281084a7455e9d64" prefix="" category="inline-code"></block></block>
-  <block id="0d9d70ce35ffa8a547f0c910b22ae9be" category="paragraph">如果对分段启用了版本控制、则可以使用S3客户端将对象锁定保留时间放置在特定版本的对象上。锁定对象的特定版本不会阻止删除对象的其他版本。如果要为对象启用版本控制以便稍后恢复，请选择*Enable Versioning*。如果要在存储分段上启用对象锁定、则默认情况下会启用版本控制。有关对象版本控制的信息，请参见<block ref="b50a9a79e638b29595f9a351415e2311" category="inline-link-rx"></block>。</block>
   <block id="19b2e4b9be52e7a8ece485368b3a9586" category="paragraph">从9.14.1开始、S3存储分段支持对象锁定。创建分段时、必须启用S3对象锁定。无法对已有分段启用对象锁定。对象锁定只能在本机S3用例中使用。配置为使用S3协议的多协议NAS卷应使用SnapLock将数据提交到WORM存储。S3对象锁定需要标准SnapLock许可证。此许可证包含在中<block ref="f7dbe68b41c16767df4408fcc8699964" category="inline-link-macro-rx"></block>。</block>
   <block id="9ce298fb67f5d9b5d847fc509f21e671" category="paragraph">确认已安装SnapLock许可证后，要防止存储分段中的对象被删除或覆盖，请选择*Enable object locking*。锁定可以在所有或特定版本的对象上启用、并且只能在为集群节点初始化SnapLock Compliance时钟时才启用。请按照以下步骤操作：</block>
   <block id="10eec202a4ec02313d7f6f9b5a9b3ae6" category="list-text">在为客户端创建导出规则之前、客户端必须在DNS中具有"PTR "记录。</block>
@@ -38745,7 +38734,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="e255981be7fc6073adfec23ea3b23fd1" category="paragraph">有关的详细信息<block ref="7191f5eb2cfca6dcf721ad376b2bef37" prefix=" " category="inline-code"></block>，请参见<block ref="d29358cb651d8164b0e87cbb870ecff7" category="inline-link-macro-rx"></block>。</block>
   <block id="ad399144628d206575224c00ae51223c" category="paragraph">您可以使用<block ref="730d187801768a4d84de4567732a6c18" prefix=" " category="inline-code"></block>和<block ref="9685140cece962ad95fe159398d7fffd" prefix=" " category="inline-code"></block>命令删除SVM复制关系。然后，您可以手动删除不需要的目标卷。有关此过程中所述命令的更多信息，请参见<block ref="bc2602c5a66493ba7d85e8bd5d0e7f9b" category="inline-link-macro-rx"></block>。</block>
   <block id="d504622ca10484864531f89aed691e22" category="paragraph">有关的详细信息<block ref="ec8bfbd590d8678aad77b0e369355eb7" prefix=" " category="inline-code"></block>，请参见<block ref="0e819e7a9aa735d154700a2863625c15" category="inline-link-macro-rx"></block>。</block>
-  <block id="205b5d1f93258748036bd94c1504de2d" category="paragraph">从SVM.11.1开始、您可以<block ref="00568fdae21a828533b2e5b1b7949ff7" prefix=" " category="inline-code"></block><block ref="562007dcf7d55742abbc5fd0809cb393" prefix=" " category="inline-code"></block>在对ONTAP 9灾难恢复关系执行反向重新同步时使用命令的命令行界面选项来缩短灾难恢复预演期间的重新同步时间。快速重新同步可以绕过数据仓库重建和还原操作、从而缩短恢复生产所需的时间。有关的详细信息<block ref="562007dcf7d55742abbc5fd0809cb393" prefix=" " category="inline-code"></block>，请参见<block ref="235cbb955a58591179160b7a6cd1ff1d" category="inline-link-macro-rx"></block>。</block>
   <block id="29972ba62df1bdaf5ff5ff4a540e82dc" category="paragraph">有关的详细信息<block ref="ea77a400bf6e69bd7111d5c46dfec51c" prefix=" " category="inline-code"></block>，请参见<block ref="a0258d27aa07dba3f7b612d26d0c9f7a" category="inline-link-macro-rx"></block>。</block>
   <block id="367dfc2d53286622d7bd1e0f5b431fd4" category="paragraph">有关的详细信息<block ref="859f5842129c4a4759882f44afc53f67" prefix=" " category="inline-code"></block>，请参见<block ref="146c6b792023845f5eebba00f91d76e8" category="inline-link-macro-rx"></block>。</block>
   <block id="b608507d9a0dd4081a0931563d86df73" category="paragraph">您可以通过从快照还原将卷恢复到较早的时间点。您可以使用System Manager或<block ref="8f381ba1024744332b561ba609495012" prefix=" " category="inline-code"></block>命令从快照还原卷的内容。有关的详细信息<block ref="8f381ba1024744332b561ba609495012" prefix=" " category="inline-code"></block>，请参见<block ref="652ab39b1770adfaf5ce01531369d6d6" category="inline-link-macro-rx"></block>。</block>
@@ -44162,7 +44150,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="e525a0c85ae5bc92647b0afa0d512056" category="list-text">重启SP：</block>
   <block id="396262ee936f3d3e26ff0e60bea6cae0" category="open-title">BMC</block>
   <block id="c3645395a1004c3e93ef44f5099eb9f1" category="list-text">重启BMC：</block>
-  <block id="652e0cfcaf59ea183f052c8fc7b1ea91" category="admonition">集群管理员应在重新激活原始源 SVM 之前暂停客户端的写入操作，以避免数据丢失。</block>
   <block id="fb30db4e4395c9324f563fe3e0159f70" category="list-text">从客户端恢复对原始源 SVM 的写入操作。</block>
   <block id="b2e978dd3fa32c9b20e6c8c5b95bb992" category="list-text">不建议在用作本地或远程FabricPool容量层的存储桶上使用 S3 快照。</block>
   <block id="13b3c62fdbf9418a02dc296611c02206" category="list-text">KMIP 服务器必须能够从每个节点的节点管理 LIF 访问。</block>
@@ -44221,24 +44208,11 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="e3f32015c0c1388e646d8bdf26d24223" category="paragraph">从ONTAP 9.8 开始，您可以使用系统管理器在灾难发生后重新激活源存储 VM。</block>
   <block id="21714beb36feda9f7be0b843fccf42f8" category="paragraph">您可以使用系统管理器或ONTAP CLI 执行此任务。</block>
   <block id="009535d68eab225a562400eafd180320" category="open-title">系统管理器ONTAP 9.17.1 及更高版本</block>
-  <block id="6f9ca3bdf0a6b885df1a7eb4a382a37b" category="list-text">在目标集群上，选择所需的保护关系：单击“保护”&gt;“复制”。</block>
-  <block id="f9e3a75773e81904d7c79e747da28537" category="list-text">将鼠标悬停在源名称上，然后单击 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然后点击“反向同步”。</block>
   <block id="02814269ba2fc2bcfc83cd047c3426d6" category="paragraph">该关系从 *复制* 表中消失，现在由原始源集群管理。</block>
-  <block id="7851c0be02d96c32a64a2e6f5852c0b2" category="list-text">在原始源集群上，单击“保护”&gt;“复制”，然后检查状态是否显示“已镜像”，以验证反向重新同步是否完成。</block>
   <block id="a89cfe51feedfe0f2863a25e763e70e4" category="list-text">在原始目标集群上，导航至*集群 &gt; 存储虚拟机*。</block>
-  <block id="027e3ca7c6319e595e87d043723d0d82" category="list-text">找到存储虚拟机，将光标悬停在存储虚拟机名称上，然后单击 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然后点击“停止”。</block>
-  <block id="03b3665d6618dea524ded0a5f29081f2" category="list-text">在“停止存储虚拟机”窗口中，单击“停止”。</block>
-  <block id="8db9900d034597d286acc00917fd2233" category="list-text">在源集群上，导航至“保护”&gt;“复制”，找到要重新激活的存储虚拟机，将光标悬停在存储虚拟机名称上，然后单击 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然后单击“激活目标存储 VM”。</block>
-  <block id="dc7f8be17c9da708382825faca44cc3f" category="list-text">在“激活目标存储 VM”窗口中，选择“激活目标存储 VM 并断开连接”，然后单击“激活”。</block>
-  <block id="e4e009dfaef27ea0f7c7795bc7fad0fd" category="list-text">返回“复制”页面后，再次将光标悬停在存储虚拟机名称上，然后单击 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然后点击“反向同步”。</block>
   <block id="8652f71026ac455b8f950a83ef3a4372" category="open-title">系统管理器ONTAP 9.16.1 及更早版本</block>
-  <block id="649e260716256b597119f882cc088d9c" category="list-text">在目标集群上，选择所需的保护关系：单击“保护”&gt;“关系”。</block>
   <block id="41d27f8a4617faecc68a449185d0651c" category="paragraph">由于该关系现在由原始源集群管理，因此该关系从 *关系* 表中消失。</block>
-  <block id="884045e2208b8ac37716a337abbcf4e0" category="list-text">在原始源集群上，单击“保护 &gt; 关系”，然后检查状态是否显示为“已镜像”，以验证反向重新同步是否完成。</block>
   <block id="a0465bb00d28c88d8ecc0dbfd193f766" category="list-text">在原始目标集群上，导航至“存储 &gt; 存储虚拟机”。</block>
-  <block id="2ba447381e6bf86f53b67350e45d780d" category="list-text">在源集群上，找到存储虚拟机（现在是反向关系中的源 SVM），将光标悬停在 SVM 名称上，然后单击 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然后单击“激活目标存储 VM”。</block>
-  <block id="2367c22bf167d3636e2a565dd63304dc" category="list-text">在“激活目标存储 VM”窗口中，选择“激活目标存储 VM 并断开连接”，然后单击“激活”。</block>
-  <block id="78d5d4b5512a2bd3a8ee4dda84e9b808" category="list-text">返回“关系”页面后，再次将光标悬停在存储虚拟机名称上，然后单击 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>然后点击“反向同步”。</block>
   <block id="90b0718d4da02df7541cbf2e444ed300" category="list-text">从ONTAP 9.16.1 开始，支持包含单部分对象的元数据。</block>
   <block id="5508dfce6cbfe795c47582bc94a05a39" category="list-text">从ONTAP 9.16.1 开始，支持包含单个部分对象的标签。</block>
   <block id="b45299ccd3b6c2152ca74ce334f5b772" category="paragraph-title">闪存池/混合聚合的过程，其中需要使用 -disktype 来更改每个磁盘类型</block>
@@ -49432,4 +49406,35 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="7a2d847520dcdf3655d0bcc5f5257d19" category="cell">对于 SAN 和 NAS 配置，SnapMirror 活动同步将每个 HA 对支持的卷数量从 400 个增加到 600 个。</block>
   <block id="261d8342915863b4035b9b7d3bc5b49d" category="cell">每个 LUN 支持的最大 SCSI-3 永久保留注册数从 182 个增加到 256 个。</block>
   <block id="f24ce81f056d5acd59788df7f5ab36a1" category="cell">FlexCache</block>
+  <block id="080d1cd419d9c3bc98d0867f751e9d47" category="list-text">如果在提供数据时增加了目标卷的大小，请在重新激活源卷之前手动增加原始源卷上的 max-autosize，以确保其能够充分增长。</block>
+  <block id="155e02981b20d50aa04ce356503acf13" category="admonition">为避免数据丢失，请在重新激活原始源之前暂停客户端应用程序。当目标 SVM 停止时，客户端应用程序会经历 I/O 中断，直到源 SVM 重新激活。</block>
+  <block id="13cfea8d719c7d468fb6bd593f11d710" category="paragraph">从 ONTAP 9.11.1 开始，在对 SVM DR 关系执行反向重新同步时，您可以通过在<block ref="562007dcf7d55742abbc5fd0809cb393" prefix=" " category="inline-code"></block>命令中使用 CLI<block ref="00568fdae21a828533b2e5b1b7949ff7" prefix=" " category="inline-code"></block>选项来缩短灾难恢复演练期间的重新同步时间。快速重新同步可以通过绕过数据仓库重建和还原操作来缩短恢复生产所需的时间。了解有关<block ref="562007dcf7d55742abbc5fd0809cb393" prefix=" " category="inline-code"></block>的更多信息，请参阅<block ref="235cbb955a58591179160b7a6cd1ff1d" category="inline-link-macro-rx"></block>。</block>
+  <block id="3e2f7cdbd7f097e30e898cfbad633ebc" category="list-text">在目标集群上，选择所需的保护关系：选择*保护 &gt; 复制*。</block>
+  <block id="9fde9d8fda13bccd3985832c17b13696" category="list-text">将光标悬停在源名称上，选择 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然后选择 *反向重新同步*。</block>
+  <block id="08160ecbcaaeea647538978e6fc91f07" category="list-text">在*反向重新同步关系*窗口中，选择*反向重新同步*。</block>
+  <block id="85334bbc1bdd6e7776fea55ab7717c73" category="list-text">在原始源集群上，选择*保护 &gt; 复制*，并通过检查状态是否显示*镜像*来验证反向重新同步是否完成。</block>
+  <block id="4797137d8eb6a3ff20ce54dc2369a088" category="list-text">找到 storage VM，将光标悬停在 storage VM 名称上，选择 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然后选择 *Stop*。</block>
+  <block id="c9f399e705f9b73028314192a6e0e216" category="list-text">在 *Stop storage VM* 窗口中，选择 *Stop*。</block>
+  <block id="1b487728c2bccc29eaa5591684e9eb82" category="list-text">在源集群上，导航到 *保护 &gt; 复制*，找到要重新激活的存储虚拟机，将光标悬停在存储虚拟机名称上，选择 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然后选择 *激活目标存储虚拟机*。</block>
+  <block id="88c418e653328e6207a40c42e9da70b4" category="list-text">在*激活目标存储虚拟机*窗口中，选择*激活目标存储虚拟机并中断关系*，然后选择*激活*。</block>
+  <block id="82edf1a0f7722ca9b5468fb349031e67" category="list-text">当您返回 *复制* 页面时，再次将光标悬停在存储 VM 名称上，选择 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然后选择 *反向重新同步*。</block>
+  <block id="9a1a129eb58cbaeb8c83c3ef751e0adb" category="list-text">在目标集群上，选择所需的保护关系：选择 *保护 &gt; 关系*。</block>
+  <block id="fd4fb50a2b851302b2da3f441e7ebaa6" category="list-text">在原始源集群上，选择 *保护 &gt; 关系*，并通过检查状态是否显示为 *镜像* 来验证反向重新同步是否完成。</block>
+  <block id="65bd006e8a4661b6e15cd03d8a42c43c" category="list-text">在源集群上，找到存储虚拟机（现在是反向关系的源 SVM），将光标悬停在 SVM 名称上，选择 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然后选择 *激活目标存储虚拟机*。</block>
+  <block id="475240f1f3e7ff6af4b8a8b4012c646d" category="list-text">在*激活目标存储 VM*窗口中，选择*激活目标存储 VM 并中断关系*，然后选择*激活*。</block>
+  <block id="62007b35651dbd7f472d0cfacaabd4f0" category="list-text">当您返回*关系*页面时，再次将光标悬停在存储 VM 名称上，选择 <block ref="d47b50c0fc9a1e10d010a1d0b2f31ccd" category="inline-image-macro-rx" type="image"></block>，然后选择*反向重新同步*。</block>
+  <block id="72eb830bf05aea20f8febfd8f7b39a13" category="paragraph">以下示例更新了用于提供数据的初始目标 SVM <block ref="f2dcd1c21dd6e00e42ff4b9467c5e011" prefix=" " category="inline-code"></block> 与初始源 SVM <block ref="3568c00ad84b08a31b2dfadbfd8ee221" prefix=" " category="inline-code"></block> 之间的关系：</block>
+  <block id="0ec8e360ecfaea7ec407280f9ed7c349" category="paragraph">以下示例释放初始目标 SVM <block ref="f2dcd1c21dd6e00e42ff4b9467c5e011" prefix=" " category="inline-code"></block> 和初始源 SVM <block ref="3568c00ad84b08a31b2dfadbfd8ee221" prefix=" " category="inline-code"></block> 之间的反向关系。</block>
+  <block id="8c07231cc4602e59b9f8e5c898dd057b" category="paragraph">如果要为对象启用版本控制以供以后恢复，请选择*启用版本控制*。如果在存储桶上启用对象锁定，则默认情况下会启用版本控制。在存储桶上启用版本控制后，无法将其禁用。</block>
+  <block id="09d8faabb1a375bf10c7b8884f017e09" category="paragraph">可以通过取消选中 System Manager 中的*启用版本控制*框或使用 CLI 来暂停版本控制。</block>
+  <block id="703aac91108306f4f8b07e94f253f17f" category="paragraph">如果在存储桶上启用了版本控制，则可以使用 S3 客户端将对象锁定保留时间应用于对象的特定版本。锁定对象的特定版本不会阻止删除该对象的其他版本。</block>
+  <block id="e5fa74207a72a5712d50b354957d1402" category="paragraph">有关对象版本控制的详细信息，请参见<block ref="b50a9a79e638b29595f9a351415e2311" category="inline-link-rx"></block>。</block>
+  <block id="de1456ae3513c38788b03d315c043ee6" category="summary">您可以在非 SnapLock 卷上锁定快照，以提供免受勒索软件攻击的保护。锁定快照可确保它们不会被意外或恶意删除。</block>
+  <block id="c8f4f455f6bfa865f12f3e17485fe8fb" category="paragraph">从 ONTAP 9.14.1 开始，快照锁定支持非 SnapLock 保险存储和镜像保险存储 SnapMirror 目标卷上的长期保留快照。您可以通过使用与 <block ref="ded6b9b6cfc55c6433ead109aad587ab" category="inline-xref-macro-rx"></block> 关联的 SnapMirror 策略规则设置保留期来启用快照锁定。此规则将覆盖卷上设置的默认保留期。如果没有与 SnapMirror 标签关联的保留期，则使用卷的默认保留期。</block>
+  <block id="7955029cd8bdaafe410a74f3786726cc" category="list-text">在卷上启用快照锁定时，您可以将集群升级到高于 ONTAP 9.12.1 的 ONTAP 版本。但是，在所有锁定的快照都已到期并被删除且快照锁定被禁用之前，您无法恢复到早期版本的 ONTAP。</block>
+  <block id="6957eca128865d50d9262b567876b088" category="list-text">当快照被锁定时，卷到期时间设置为快照的到期时间。如果锁定了多个快照，则卷到期时间反映了所有快照中最大的到期时间。</block>
+  <block id="fb031f26738897f40fd3613a7e718ecd" category="paragraph">防篡改快照不支持以下功能：</block>
+  <block id="e1f70860abd9e5fc15cf85bb06afb9ec" category="list-text">在 *SnapLock 保留期* 列中，输入保留快照的小时数、天数、月数或年数。例如，保留期为五天的快照策略会将快照从创建之日起锁定五天，并且在此期间无法删除。支持以下保留期范围：</block>
+  <block id="81e27204de2e946d06a1948b3f7b1dc0" category="paragraph">从 ONTAP 9.14.1 开始，您可以通过添加规则来设置快照的长期保留，从而修改现有的 SnapMirror 策略。该规则会覆盖非 SnapLock 保管库和镜像保管库 SnapMirror 目标卷上的默认卷保留期。</block>
+  <block id="3fc3cc854447902027a622be128f1555" category="paragraph">以下示例创建了一个规则，该规则将 6 个月的保留期应用于名为“snapvault”的现有策略：</block>
 </blocks>

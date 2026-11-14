@@ -2,7 +2,7 @@
 permalink: snaplock/snapshot-lock-concept.html 
 sidebar: sidebar 
 keywords: snaplock, snapshot, lock, tamperproof 
-summary: 从ONTAP 9.12.1开始、您可以锁定非SnapLock卷上的快照、以防止勒索软件攻击。锁定快照可确保它们不会被意外或恶意删除。 
+summary: 您可以在非 SnapLock 卷上锁定快照，以提供免受勒索软件攻击的保护。锁定快照可确保它们不会被意外或恶意删除。 
 ---
 = 锁定ONTAP快照以防止勒索软件攻击
 :allow-uri-read: 
@@ -15,14 +15,14 @@ summary: 从ONTAP 9.12.1开始、您可以锁定非SnapLock卷上的快照、以
 
 您可以使用SnapLock Compliance时钟功能在指定时间段内锁定快照、以便在达到到期时间之前无法删除这些快照。锁定快照可使其防篡改、防止其受到勒索软件威胁。如果卷受到勒索软件攻击、您可以使用锁定的快照来恢复数据。
 
-从ONTAP 9.14.1开始、快照锁定支持SnapLock存储目标和非SnapLock SnapMirror目标卷上的长期保留快照。可通过使用与关联的SnapMirror策略规则设置保留期限来启用快照锁定xref:Modify an existing policy to apply long-term retention[现有策略标签]。此规则将覆盖在卷上设置的默认保留期限。如果SnapMirror标签没有关联的保留期限、则使用卷的默认保留期限。
+从 ONTAP 9.14.1 开始，快照锁定支持非 SnapLock 保险存储和镜像保险存储 SnapMirror 目标卷上的长期保留快照。您可以通过使用与 xref:Modify an existing policy to apply long-term retention[现有策略标签] 关联的 SnapMirror 策略规则设置保留期来启用快照锁定。此规则将覆盖卷上设置的默认保留期。如果没有与 SnapMirror 标签关联的保留期，则使用卷的默认保留期。
 
 .防篡改快照要求和注意事项
 * 如果使用的是ONTAP命令行界面、则集群中的所有节点都必须运行ONTAP 9.12.1或更高版本。如果使用的是System Manager、则所有节点都必须运行ONTAP 9.13.1或更高版本。
 * link:../system-admin/install-license-task.html["集群上必须安装SnapLock许可证"](英文)此许可证包含在中link:../system-admin/manage-licenses-concept.html#licenses-included-with-ontap-one["ONTAP One"]。
 * link:../snaplock/initialize-complianceclock-task.html["必须初始化集群上的Compliance时钟"](英文)
-* 在卷上启用快照锁定后、您可以将集群升级到ONTAP 9.12.1之后的ONTAP版本；但是、只有在所有锁定的快照均已达到到期日期并被删除且快照锁定已禁用之前、您才能还原到早期版本的ONTAP。
-* 锁定快照后、卷到期时间将设置为快照的到期时间。如果锁定了多个快照、则卷到期时间是所有快照中的最长到期时间。
+* 在卷上启用快照锁定时，您可以将集群升级到高于 ONTAP 9.12.1 的 ONTAP 版本。但是，在所有锁定的快照都已到期并被删除且快照锁定被禁用之前，您无法恢复到早期版本的 ONTAP。
+* 当快照被锁定时，卷到期时间设置为快照的到期时间。如果锁定了多个快照，则卷到期时间反映了所有快照中最大的到期时间。
 * 锁定快照的保留期限优先于快照保留计数、这意味着、如果锁定快照的快照保留期限未到期、则不会遵守保留计数限制。
 * 在SnapMirror关系中、您可以为镜像-存储策略规则设置保留期限、如果目标卷启用了快照锁定、则会为复制到目标的快照应用保留期限。保留期限优先于保留计数；例如、即使超过保留计数、未超过到期时间的快照也会保留。
 * 您可以重命名非SnapLock卷上的快照。只有当策略为MirrorAllSnapshots时、SnapMirror关系的主卷上的Snapshot重命名操作才会反映在二级卷上。对于其他策略类型、更新期间不会传播重命名的快照。
@@ -71,7 +71,7 @@ FlexGroup卷支持快照锁定。快照锁定仅在根成分卷快照上进行�
 
 
 .不支持的功能
-防篡改快照当前不支持以下功能：
+防篡改快照不支持以下功能：
 
 * 一致性组
 * link:../fabricpool/index.html["FabricPool"]
@@ -181,7 +181,7 @@ Do you want to continue: {yes|no}: y
 . 在*添加Snapshot策略*窗口中，输入策略名称。
 . 选择 ... image:icon_add.gif["添加图标"]。
 . 提供快照计划详细信息、包括计划名称、要保留的最大快照数和SnapLock保留期限。
-. 在* SnapLock保留期限*列中、输入快照保留的小时数、天数、月数或年数。例如、保留期限为5天的快照策略会将快照从创建之日起锁定5天、在此期间无法删除。支持以下保留期限范围：
+. 在 *SnapLock 保留期* 列中，输入保留快照的小时数、天数、月数或年数。例如，保留期为五天的快照策略会将快照从创建之日起锁定五天，并且在此期间无法删除。支持以下保留期范围：
 +
 ** 年：0 - 100
 ** 月：0 - 1200
@@ -322,19 +322,19 @@ cluster1> volume snapshot modify-snaplock-expiry-time -volume vol1 -snapshot sna
 
 在SnapMirror关系中、您可以为镜像-存储策略规则设置保留期限、如果目标卷启用了快照锁定、则会为复制到目标的快照应用保留期限。保留期限优先于保留计数；例如、即使超过保留计数、未超过到期时间的快照也会保留。
 
-从ONTAP 9.14.1开始、您可以通过添加规则来设置快照的长期保留来修改现有SnapMirror策略。此规则用于覆盖SnapLock存储目标和非SnapLock SnapMirror目标卷上的默认卷保留期限。
+从 ONTAP 9.14.1 开始，您可以通过添加规则来设置快照的长期保留，从而修改现有的 SnapMirror 策略。该规则会覆盖非 SnapLock 保管库和镜像保管库 SnapMirror 目标卷上的默认卷保留期。
 
 . 向现有SnapMirror策略添加规则：
 +
 `snapmirror policy add-rule -vserver <SVM name> -policy <policy name> -snapmirror-label <label name> -keep <number of snapshots> -retention-period [<integer> days|months|years]`
 
 +
-以下示例将创建一个规则、将保留期限应用于名为"LockVault"的现有策略：
+以下示例创建了一个规则，该规则将 6 个月的保留期应用于名为“snapvault”的现有策略：
 
 +
 [listing]
 ----
-snapmirror policy add-rule -vserver vs1 -policy lockvault -snapmirror-label test1 -keep 10 -retention-period "6 months"
+snapmirror policy add-rule -vserver vs1 -policy snapvault -snapmirror-label test1 -keep 10 -retention-period "6 months"
 ----
 +
 有关的详细信息 `snapmirror policy add-rule`，请参见link:https://docs.netapp.com/us-en/ontap-cli/snapmirror-policy-add-rule.html["ONTAP 命令参考"^]。

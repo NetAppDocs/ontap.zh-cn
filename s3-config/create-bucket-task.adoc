@@ -159,7 +159,17 @@ NOTE: 您不应使用 S3 root 用户管理 ONTAP 对象存储并共享其权限�
 
 如果要使用 S3 对象存储进行 FabricPool 分层，请考虑选择 * 用于分层 * （使用低成本介质，为分层数据提供最佳性能），而不是性能服务级别。
 
-如果对分段启用了版本控制、则可以使用S3客户端将对象锁定保留时间放置在特定版本的对象上。锁定对象的特定版本不会阻止删除对象的其他版本。如果要为对象启用版本控制以便稍后恢复，请选择*Enable Versioning*。如果要在存储分段上启用对象锁定、则默认情况下会启用版本控制。有关对象版本控制的信息，请参见 https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html["在适用于Amazon的S3存储分段中使用版本控制"]。
+如果要为对象启用版本控制以供以后恢复，请选择*启用版本控制*。如果在存储桶上启用对象锁定，则默认情况下会启用版本控制。在存储桶上启用版本控制后，无法将其禁用。
+
+可以通过取消选中 System Manager 中的*启用版本控制*框或使用 CLI 来暂停版本控制。
+
+[listing]
+----
+vserver object-store-server bucket modify -vserver <svm_name> -bucket <bucket_name> -versioning-state suspended
+----
+如果在存储桶上启用了版本控制，则可以使用 S3 客户端将对象锁定保留时间应用于对象的特定版本。锁定对象的特定版本不会阻止删除该对象的其他版本。
+
+有关对象版本控制的详细信息，请参见 https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html["在适用于Amazon的S3存储分段中使用版本控制"]。
 
 从9.14.1开始、S3存储分段支持对象锁定。创建分段时、必须启用S3对象锁定。无法对已有分段启用对象锁定。对象锁定只能在本机S3用例中使用。配置为使用S3协议的多协议NAS卷应使用SnapLock将数据提交到WORM存储。S3对象锁定需要标准SnapLock许可证。此许可证包含在中link:../system-admin/manage-licenses-concept.html["ONTAP One"]。
 
