@@ -2,7 +2,7 @@
 permalink: system-admin/generate-certificate-signing-request-cluster-task.html 
 sidebar: sidebar 
 keywords: generate, certificate, sign, request, cluster, csr, ca 
-summary: 您可以使用 security certificate generate-csr 命令生成证书签名请求。处理您的请求后，证书颁发机构向您发送签名的数字证书。 
+summary: 使用 security certificate generate-csr 命令生成证书签名请求，然后将其发送到证书颁发机构以获取已签名的数字证书。 
 ---
 = 在ONTAP中为集群生成证书签名请求
 :allow-uri-read: 
@@ -27,7 +27,7 @@ security certificate generate-csr -common-name <FQDN_or_common_name> -size 512|1
 有关的详细信息 `security certificate generate-csr`，请参见link:https://docs.netapp.com/us-en/ontap-cli/security-certificate-generate-csr.html["ONTAP 命令参考"^]。
 
 +
-以下命令将使用 SHA256 哈希函数生成的 2 ， 048 位专用密钥创建一个 CSR ，以供自定义公用名为 server1.companyname.com 的公司 IT 部门的软件组使用，该公司位于美国加利福尼亚州的森尼韦尔。SVM 联系管理员的电子邮件地址为 \web@example.com 。系统将在输出中显示 CSR 和私钥。
+以下命令为位于美国加利福尼亚州桑尼维尔的一家公司的 IT 部门的软件组创建 CSR。CSR 具有自定义通用名称 server1.companyname.com 和由 SHA256 哈希函数生成的 2,048 位私钥。SVM 联系人管理员的电子邮件地址为 \web@example.com。系统在输出中显示 CSR 和私钥。
 
 +
 [listing]
@@ -49,6 +49,10 @@ Note: Please keep a copy of your certificate request and private key
 for future reference.
 ----
 . 复制 CSR 输出中的证书请求，然后以电子形式（如电子邮件）将其发送到可信的第三方 CA 进行签名。
++
+
+NOTE: 证书颁发机构必须以 base64 编码的 PEM 或 PKCS12 格式返回已签名的证书。
+
 +
 处理完您的请求后， CA 会向您发送已签名的数字证书。您应保留一份私钥和 CA 签名数字证书的副本。
 

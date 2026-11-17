@@ -2,7 +2,7 @@
 permalink: authentication/install-server-certificate-cluster-svm-ssl-server-task.html 
 sidebar: sidebar 
 keywords: generate, install, ca-signed, server, certificate, csr, signing request, signed 
-summary: 在生产系统上，最佳做法是安装 CA 签名的数字证书，以便将集群或 SVM 作为 SSL 服务器进行身份验证。 
+summary: 生成证书签名请求并安装 CA 签名的服务器证书，以将 ONTAP 集群或 SVM 作为 SSL 服务器进行身份验证。 
 ---
 = 在ONTAP中生成并安装CA签名的服务器证书
 :allow-uri-read: 
@@ -11,7 +11,7 @@ summary: 在生产系统上，最佳做法是安装 CA 签名的数字证书，�
 
 
 [role="lead"]
-在生产系统上，最佳做法是安装 CA 签名的数字证书，以便将集群或 SVM 作为 SSL 服务器进行身份验证。您可以使用 `security certificate generate-csr`命令生成证书签名请求(CSR)、并使用 `security certificate install`命令安装从证书颁发机构收到的证书。有关和的 `security certificate install`详细信息 `security certificate generate-csr`，请参见link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+certificate["ONTAP 命令参考"^]。
+在生产系统上，最佳实践是安装 CA 签名的数字证书，以将集群或 SVM 身份验证为 SSL 服务器。您可以使用 `security certificate generate-csr`命令生成证书签名请求（CSR），并使用 `security certificate install`命令安装从证书颁发机构收到的证书。如需了解有关 `security certificate generate-csr`和 `security certificate install`的更多信息，请参阅 link:https://docs.netapp.com/us-en/ontap-cli/search.html?q=security+certificate["ONTAP 命令参考"^]。
 
 
 
@@ -31,7 +31,7 @@ summary: 在生产系统上，最佳做法是安装 CA 签名的数字证书，�
 security certificate generate-csr -common-name FQDN_or_common_name -size 512|1024|1536|2048 -country country -state state -locality locality -organization organization -unit unit -email-addr email_of_contact -hash-function SHA1|SHA256|MD5
 ----
 +
-以下命令将使用散列函数生成的2048位专用密钥创建CSR， `SHA256`以供自定义公用名为的公司所在部门的组 `IT`使用 `Software`，该公司 `server1.companyname.com`位于美国加利福尼亚州的桑尼维尔。SVM联系人管理员的电子邮件地址为 `web@example.com`。系统将在输出中显示 CSR 和私钥。
+以下命令使用由 `SHA256`哈希函数生成的 2048 位私钥创建 CSR。该 CSR 供位于美国加利福尼亚州 Sunnyvale 的公司 `IT`部门中的 `Software`组使用。该公司的自定义公用名为 `server1.companyname.com`。SVM 联系人管理员的电子邮件地址为 `web@example.com`。系统会在输出中显示 CSR 和私钥。
 
 +
 .创建CSR的示例
@@ -57,6 +57,10 @@ NOTE: Keep a copy of your certificate request and private key for future referen
 ====
 . 复制 CSR 输出中的证书请求，并以电子形式（如电子邮件）将其发送到可信的第三方 CA 进行签名。
 +
+
+NOTE: 证书颁发机构必须以 base64 编码的 PEM 或 PKCS12 格式返回已签名的证书。
+
++
 处理完您的请求后， CA 会向您发送已签名的数字证书。您应保留一份私钥和 CA 签名数字证书的副本。
 
 
@@ -81,14 +85,14 @@ security certificate install -vserver SVM_name -type certificate_type
 +
 [NOTE]
 ====
-ONTAP 会提示您输入 CA 根证书和中间证书，以构成服务器证书的证书链。此链从颁发服务器证书的 CA 的证书开始，最多可以包含 CA 的根证书。如果缺少任何中间证书，则会导致服务器证书安装失败。
+ONTAP 提示您输入构成服务器证书的证书链的 CA 根证书和中间证书。该链从颁发服务器证书的 CA 的证书开始，范围可达 CA 的根证书。缺少中间证书会导致服务器证书安装失败。
 
 ====
 +
 以下命令将在SVM上安装CA签名的服务器证书和中间证书 `engData2`。
 
 +
-.安装CA签名服务器证书中间证书的示例
+.安装 CA 签名的服务器证书和中间证书的示例
 [%collapsible]
 ====
 [listing]
