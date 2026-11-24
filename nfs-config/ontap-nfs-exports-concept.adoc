@@ -1,0 +1,38 @@
+---
+permalink: nfs-config/ontap-nfs-exports-concept.html 
+sidebar: sidebar 
+keywords: ONTAP, NFS exports, export policies, export rules 
+summary: ONTAP 通过分配给 SVM 中的卷或 qtree 的导出策略和规则来控制 NFS 客户端访问。 
+---
+= 了解 ONTAP NFS 导出
+:allow-uri-read: 
+:icons: font
+:imagesdir: ../media/
+
+
+[role="lead"]
+ONTAP 通过分配给卷或 qtree 的导出策略来控制 NFS 客户端访问。每个策略都包含定义哪些客户端可以访问数据以及它们所获权限的规则。
+
+
+
+[[export-policies-and-rules]]
+== 导出策略和规则
+
+一个 SVM 可以包含多个导出策略。每个策略可以包含零个或多个指定客户端匹配和访问权限的导出规则。空策略拒绝所有访问。您可以将导出策略应用于多个卷。
+
+
+
+[[apply-export-policies-to-volumes-and-qtrees]]
+== 将导出策略应用于卷和 qtree
+
+将导出策略分配给卷或 qtree，以控制 NFS 客户端对该存储的访问。分配给卷的策略适用于该卷的数据；当您需要控制对该 qtree 的访问时，可以直接将策略分配给该 qtree。
+
+
+
+[[volume-junction-paths]]
+== 卷接合路径
+
+卷挂载到 SVM 命名空间中的接合路径下。NFS 客户端使用此路径访问卷的数据。接合路径可能与卷名不同。
+
+.相关信息
+link:export-policies-concept.html["了解如何使用导出策略保护 NFS 访问"]
