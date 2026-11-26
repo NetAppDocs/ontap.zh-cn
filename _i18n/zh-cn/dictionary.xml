@@ -27649,7 +27649,6 @@ FlexGroup 卷不能是两个 SnapVault 关系，两个还原关系或一个 Snap
   <block id="af76282fbd1a8da0c7b61235ba6afc15" category="list-text">从 ONTAP 9.10.1 开始，建议您进行管理 <block ref="2aa14ba8e0c5223cc5347d8a5fc38d99" category="inline-link-macro-rx"></block> 通过 System Manager 或使用 ONTAP REST API 。</block>
   <block id="07df995eeae9fa7d6e3c7bf1d38733ea" category="list-text">当一致性组位于中时、您无法开始修改该一致性组<block ref="c2d2dc98c478a5a1743d85e03534f500" prefix=" " category="inline-code"></block> 状态。</block>
   <block id="8014ec93b1e7587756a03bffdf102738" category="paragraph">两个卷映射中显示的示例：<block ref="5583d76a9f7823271345fff52534f619" prefix=" " category="inline-code"></block> &lt;--&gt;<block ref="337bf6c22cf13961a2ef5940797fadea" prefix=" " category="inline-code"></block> 和<block ref="3d6af961720d650985b316432fdc2ce5" prefix=" " category="inline-code"></block> &lt;--&gt;<block ref="dff0f3689dad3c7a4b2959fa341adec3" prefix=" " category="inline-code"></block>，在端点之间的一致性组关系中<block ref="e28a2631e17a66244eefb295d4283f42" prefix=" " category="inline-code"></block> 和<block ref="6c00f121bf77ee9d796b65e16bebd098" prefix=" " category="inline-code"></block>。</block>
-  <block id="e530a431085e8f4730d7ff2375e353b6" category="list-text">删除一致性组关系：</block>
   <block id="07b0dc0f3b0e8507dfa110d52c5b1923" category="list-text">集群间延迟往返时间(RTT)必须小于10毫秒。</block>
   <block id="6bb7bf8bb5f97cf30e9854da426a4497" category="summary">此视频简要概述了如何使用System Manager通过FabricPool将Amazon S3存储分段附加到ONTAP聚合。</block>
   <block id="63a44d89887c34dd1aff3740a56ccb0d" category="list-title">将Amazon S3与FabricPool结合使用的注意事项</block>
@@ -43901,7 +43900,6 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="60170aa734e3a610ee5539f8581c0cc1" category="inline-link-macro">FlexGroup卷配置</block>
   <block id="c71dcc6cf8f10fc51921bfad18a9cb0a" category="list-text"><block ref="c71dcc6cf8f10fc51921bfad18a9cb0a" category="inline-link-macro-rx"></block></block>
   <block id="b0d9889a49167818dcbc580695e2c59a" category="paragraph">SnapLock是ONTAP的一项基于许可证的功能。一个许可证即可让您在严格的合规模式下使用SnapLock ，以满足 SEC 规则 17a-4(f) 等外部要求，以及在较为宽松的企业模式下使用 SnapLock，以满足内部强制规定的数字资产保护要求。SnapLock许可证是以下部分的一部分： <block ref="a62fc0122806ceec9dd8592aadbd3e06" category="inline-link-macro-rx"></block> 软件套件。</block>
-  <block id="50a9901279a07960aa40679dc0e932fe" category="admonition">在ONTAP 9.10.1 之前的版本中，如果您在将合规模式文件提交到 WORM 状态之前没有明确设置保留时间，并且没有修改默认值，则该文件将保留 30 年。此更改_无法_撤销。同样，在ONTAP 9.10.1 及更高版本中，如果您在将企业模式文件提交到 WORM 状态之前没有明确设置保留时间，并且没有修改默认值，则该文件将保留 0 年，或者实际上根本不会保留。</block>
   <block id="c0121291a5d78c7dd392d01763e4145b" category="list-text">目标集群上没有运行SVM迁移程序。任何时候都只允许进行一次SVM迁移。</block>
   <block id="777a12e289856707f7b372f4377dc65b" category="sidebar">配置 NFS</block>
   <block id="7dc123c4e087396baa0db49180ad3268" category="sidebar">管理 NFS</block>
@@ -49348,4 +49346,9 @@ AFF 9.12.1、ONTAP 9.11.1和ONTAP 9.10.1的最新修补版本也支持ONTAP C系
   <block id="8687ae861efc345fb88cb244c8ac3af7" category="paragraph">对于本地 FabricPool 分层或为外部 S3 应用程序提供服务，不需要集群间 LIF。</block>
   <block id="09c1b0a1d50bd671813081f6837a1070" category="paragraph">管理分配给 ONTAP SMB 服务器上的本地或域用户或组的权限。您可以添加、删除或重置权限以自定义每个用户或组可以执行的操作，并显示有关权限覆盖的信息。</block>
   <block id="84336c547960e27ad3f1ee2111f4ccc0" category="sidebar">了解 NFS 导出策略</block>
+  <block id="911e28a4460a536c3e8fa89e26d14c23" category="admonition">建议不要对托管长期保留（LTR）快照的读/写卷进行 SnapMirror 反向重新同步。</block>
+  <block id="925783a9350aa872c7e23d5186b27d65" category="admonition">在 ONTAP 9.10.1 之前的版本中，如果在将合规模式文件提交到 WORM 状态之前未明确设置保留时间，并且未修改默认值，则该文件将保留 30 年。此更改_无法_撤消。在 ONTAP 9.10.1 及更高版本中，该文件将保留 0 年，或者实际上根本不会保留。同样，如果在将企业模式文件提交到 WORM 状态之前没有明确设置保留时间，并且没有修改默认值，则该文件将保留 0 年，或者实际上根本不会保留。</block>
+  <block id="6d8743db7296f726e985644664d61f76" category="list-text">初始化完成后，中断并删除一致性组关系：</block>
+  <block id="b9f71937ec8c1b6cb1d742c389d5577a" category="paragraph"><block ref="132bdd8d078dad782b09a4ffd9532a8a" prefix="" category="inline-code"></block></block>
+  <block id="5f69d246a85ba62a2a81a935cb85eb60" category="paragraph"><block ref="2851bf84391bab66dd9f31b93986fdb8" prefix="" category="inline-code"></block></block>
 </blocks>
